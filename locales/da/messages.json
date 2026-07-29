@@ -42,11 +42,11 @@
         "message": "Opdatér siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og man mister alle ikke-gemte ændringer og iganværende operationer afbrydes.<br><br>Ønsker du at opdatere nu? Du kan også afvise beskeden og opdatere manuelt senere.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "Applikation er klar til brug offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Du kan installere Configurator som standalone program, hvis du vil. Søg efter indstillingen i din browser adresselinje eller menu.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -388,6 +388,18 @@
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Mislykkedes<\/span> at åbne seriel port"
     },
+    "connectionFailedTitle": {
+        "message": "Forbindelsen fejlede"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Mislykkedes<\/span> at oprette forbindelse til den valgte port. Undersøg om enheden er tilgængelig og at forbindelsesindstillingerne er opsat korrekt, prøv derefter igen."
+    },
+    "connectionLostTitle": {
+        "message": "Forbindelse mistet"
+    },
+    "connectionLostUnresponsive": {
+        "message": "FC <span class=\"message-negative\">svarer ikke længere<\/span>, og forbindelsen blev lukket. Genopret forbindelsen og prøv igen; hvis problemet fortsætter, sluk og tænd FC."
+    },
     "serialPortClosedOk": {
         "message": "Seriel port <span class=\"message-positive\">lukket<\/span>"
     },
@@ -686,8 +698,14 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware for liste over hardware muligheder.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight TX Lua Scripts<\/a><br \/><br \/>Firmware kildekode kan downloades <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/><br \/>Den seneste <b>STM USB VCP driver<\/b> kan downloades <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/>Ældre hardware brug en CP210x USB til seriel chip:<br \/>Den seneste <b>CP210x Drivers<\/b> kan downloades <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan downloades <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> kan downloades <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">her<\/a> <\/a>"
+    "defaultHardwareText": {
+        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware, for liste over kompatibel hardware.<br \/><br \/>Nyttige hardware værktøjer \/ drivere:<ul><li>For ældre hardware kan du have brug for den seneste CP210x USB driver til seriel chip <b>CP210x drivere<\/b> kan hentes fra <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan hentes fra <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> kan hentes <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -1109,7 +1127,7 @@
         "message": "Firmware info"
     },
     "initialSetupInfoFirmwareHelp": {
-        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud Build.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
+        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud byg.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
         "description": "Message that pops up to describe the Build \/ Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1137,7 +1155,7 @@
         "message": "Valg"
     },
     "initialSetupInfoBuildOptionList": {
-        "message": "Valg defineret i firmware build"
+        "message": "Valg defineret i firmware byg"
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Lokalt bygget - ingen Cloud Build information"
@@ -1417,10 +1435,118 @@
         "message": "Højderor grader"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Sideror grader"
+        "message": "Sideror°"
     },
-    "configurationGyroAlignment": {
-        "message": "Gyro justering"
+    "configurationMagAlignment": {
+        "message": "Kompas justering"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto registrer FC justering"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "FC justering guide"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Denne guide registrerer, hvordan din flycontroller er monteret ved at guide dig gennem fire enkle bevægelser. Placer faartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Start"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Trin"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Placer fartøj fladt med kameraet vendt væk fra dig (mod skærmen)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Vip næsen op til omkring 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Vip højre side ned til omkring 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Drej dronen omkring 45° med uret (som set fra oven)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Returner dronen til en plan position."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Hold stille..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Beregninger"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Bliv ved med at vippe"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Vend tilbage til plan"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Akse detekteret — hold stille"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Roter"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Beregner justering..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Registreret justering"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Din justering af FC ser korrekt ud - ikke nødvendigt med ændringer."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Nuværende"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Registreret"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Tilbage"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Anvend"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Annuller"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Prøv igen"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Registrering nu"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Kvalitet i registrering er reduceret — kontroller resultatet, før du gemmer konfiguration."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Et accelerometer er nødvendigt for at bruge denne guide."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Kalibrer accelerometeret før start af denne guide."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Nogle prøver kunne ikke hentes. Prøv igen."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "Accelerometeret kan ikke bestemme tyngdekraften. Sørg for, at FC er tilsluttet og ikke er i bevægelse."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere op."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Fladt"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Højderor"
     },
     "configurationGyroAlignmentHelp": {
         "message": "Gyro indstilling er orienteringen af gyro retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden gyro retning, det kan være nødvendigt at ændre denne indstilling."
@@ -1898,7 +2024,7 @@
         "message": "Skjul ubenyttede PID profiler"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "Profiluafhængige PID controller indstillinger"
+        "message": "Profil ikke-afhængige PID controller indstillinger"
     },
     "pidTuningAntiGravity": {
         "message": "Anti tyngekraft"
@@ -7703,5 +7829,923 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Lineal",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Brugerprofil"
+    },
+    "labelEmail": {
+        "message": "Mail"
+    },
+    "placeholderEmailAddress": {
+        "message": "Angiv mail adresse"
+    },
+    "userEmailRequired": {
+        "message": "Mail adresse er obligatorisk"
+    },
+    "profileLoginMessage": {
+        "message": "Log ind for at se din profil."
+    },
+    "tabBackups": {
+        "message": "Sikkerhedskopi"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Adgangsnøgle blev slettet"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Kunne ikke slette adgangsnøgle"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token blev slettet"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Kunne ikke slette token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Kunne ikke indlæse brugerprofil"
+    },
+    "userTokenLoadFailed": {
+        "message": "Kunne ikke indlæse brugers tokens"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Kunne ikke indlæse brugers adgangsnøgler"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Profil opdateret"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Kunne ikke opdatere profil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Kunne ikke indlæse sikkerhedskopier"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Kunne ikke hente sikkerhedskopi"
+    },
+    "userBackupFileEmpty": {
+        "message": "Sikkerhedskopi er tom"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Sikkerhedskopi opdateret"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Kunne ikke opdatere sikkerhedskopi"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Sikkerhedskopi slettet"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Kunne ikke slette sikkerhedskopi"
+    },
+    "actionRestore": {
+        "message": "Gendan fra sikkerhedskopi"
+    },
+    "titleRestoreBackup": {
+        "message": "Gendan sikkerhedskopi"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Indlæs sikkerhedskopi \"{{name}}\" i tilsluttede FC ? Den aktuelle konfiguration i FC vil blive overskrevet."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Gendanner sikkerhedskopi..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Sikkerhedskopi indlæst succesfuldt"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Kunne ikke indlæse sikkerhedskopi"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>ADVARSEL !<\/span><br\/>Sikkerhedskopi indeholder CLI fejl."
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Ingen adgangsnøgler tilgængelige"
+    },
+    "userTokenNoTokens": {
+        "message": "Ingen tokens tilgængelige"
+    },
+    "profileBackupSuccess": {
+        "message": "Sikkerhedskopiering ok"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Sikkerhedskopi gemt ok til $P1$"
+    },
+    "profileBackupApiFail": {
+        "message": "Sikkerhedskopi kunne ikke gemmes gennem API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Sikkerhedskopiering fejlet"
+    },
+    "labelLogin": {
+        "message": "Login"
+    },
+    "labelSignOut": {
+        "message": "Log ud"
+    },
+    "labelAvatarUrl": {
+        "message": "Avatar URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Angiv URL for din avatar"
+    },
+    "labelCreatePasskey": {
+        "message": "Opret adgangsnøgle"
+    },
+    "labelUsePasskey": {
+        "message": "Anvend adgangsnøgle"
+    },
+    "labelSignInWithPasskey": {
+        "message": "Log ind med adgangsnøgle"
+    },
+    "labelSendVerificationCode": {
+        "message": "Send bekræftelseskode"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Log ind med e-mail adgangskode i stedet"
+    },
+    "labelBackToPasskey": {
+        "message": "Tilbage til log ind"
+    },
+    "labelBack": {
+        "message": "Tilbage"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Har du ikke en adgangsnøgle ?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Konfigurer adgangsnøgle"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Brug din adgangsnøgle til at logge ind"
+    },
+    "descriptionCodeRequest": {
+        "message": "Vi sender dig en bekræftelseskode"
+    },
+    "descriptionCodeEntered": {
+        "message": "Indtast bekræftelseskode sendt til $1"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Indtast verifikationskode"
+    },
+    "labelVerificationCode": {
+        "message": "Verifikationskode"
+    },
+    "labelCode": {
+        "message": "Kode"
+    },
+    "userLoggingIn": {
+        "message": "Logger ind..."
+    },
+    "userSignedOut": {
+        "message": "Logget ud"
+    },
+    "userSignOutFailed": {
+        "message": "Kunne ikke logge ud"
+    },
+    "userLoginSuccess": {
+        "message": "Login ok"
+    },
+    "userLoginFailed": {
+        "message": "Login fejlet"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Mislykkedes at oprette en adgangsnøgle"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Adgangsnøgle oprettet"
+    },
+    "userVerifyingCode": {
+        "message": "Verificerer kode..."
+    },
+    "userCreatingPasskey": {
+        "message": "Opret adgangsnøgle..."
+    },
+    "userCodeRequired": {
+        "message": "Bekræftelseskode er påkrævet"
+    },
+    "userSendingCode": {
+        "message": "Sender bekræftelseskode..."
+    },
+    "userSendCodeFailed": {
+        "message": "Mislykkedes at sende bekræftelseskode"
+    },
+    "dataWaitingForData": {
+        "message": "Venter på data..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Oprettet"
+    },
+    "labelLastUsed": {
+        "message": "Sidst anvendt"
+    },
+    "labelActions": {
+        "message": "Handlinger"
+    },
+    "labelDetails": {
+        "message": "Detaljer"
+    },
+    "labelExpiry": {
+        "message": "Udløb"
+    },
+    "labelDescription": {
+        "message": "Beskriveslse"
+    },
+    "labelDate": {
+        "message": "Dato"
+    },
+    "actionDownload": {
+        "message": "Hent"
+    },
+    "actionBackup": {
+        "message": "Sikkerhedskopi"
+    },
+    "actionEdit": {
+        "message": "Rediger"
+    },
+    "actionDelete": {
+        "message": "Slet"
+    },
+    "actionSave": {
+        "message": "Gem"
+    },
+    "titleEditProfile": {
+        "message": "Rediger profil"
+    },
+    "titleLogin": {
+        "message": "Login"
+    },
+    "labelName": {
+        "message": "Navn"
+    },
+    "labelAddress": {
+        "message": "Adresse"
+    },
+    "labelCountry": {
+        "message": "Land"
+    },
+    "confirmDelete": {
+        "message": "Er du sikker på, at du vil slette dette element {{item}} ?"
+    },
+    "itemBackup": {
+        "message": "sikkerhedskopi"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "adgangsnøgle"
+    },
+    "notLoggedIn": {
+        "message": "Ikke logget ind"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Ingen sikkerhedskopier tilgængelige"
+    },
+    "backupRequiresConnection": {
+        "message": "Tilslut FC for at aktivere sikkerhedskopi",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "Rediger sikkerhedskopi"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU ukendt"
+    },
+    "sectionUserTokens": {
+        "message": "Bruger tokens"
+    },
+    "sectionUserPasskeys": {
+        "message": "Bruger adgangsnøgler"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Juster til position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Vælg position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Checkliste"
+    },
+    "preflightTitle": {
+        "message": "Checkliste vejr og omgivelser"
+    },
+    "preflightLocation": {
+        "message": "Fartøj position"
+    },
+    "preflightUseMyLocation": {
+        "message": "Brug min position"
+    },
+    "preflightDetecting": {
+        "message": "Scanner..."
+    },
+    "preflightOr": {
+        "message": "eller indtast koordinater:"
+    },
+    "preflightLatitude": {
+        "message": "Breddegrad"
+    },
+    "preflightLongitude": {
+        "message": "Længdegrad"
+    },
+    "preflightApply": {
+        "message": "Anvend"
+    },
+    "preflightLaunchStatus": {
+        "message": "Start status"
+    },
+    "preflightStatusGo": {
+        "message": "KØR"
+    },
+    "preflightStatusCaution": {
+        "message": "FORSIGTIG"
+    },
+    "preflightStatusWarning": {
+        "message": "ADVARSEL"
+    },
+    "preflightStatusNoGo": {
+        "message": "KØR IKKE"
+    },
+    "preflightStatusNoData": {
+        "message": "Ingen data"
+    },
+    "preflightCheckWind": {
+        "message": "Vind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Sigtbarhed"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Nedbør"
+    },
+    "preflightCheckSolar": {
+        "message": "Sol"
+    },
+    "preflightLevelUnknown": {
+        "message": "Ukendt"
+    },
+    "preflightWmoClearSky": {
+        "message": "Skyfri himmel"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Hovedsageligt skyfrit"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Delvist overskyet"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overskyet"
+    },
+    "preflightWmoFog": {
+        "message": "Tåge"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Rimdannende tåge"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Let støvregn"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderat støvregn"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Tæt støvregn"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Let isslag"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Tæt underafkølet støvregn"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Let regn"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderat regn"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Kraftig regn"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Let isslag"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Kraftig isslag"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Let sne"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderat sne"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Kraftig sne"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snefnug"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Lette regnbyger"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate regnbyger"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Alvorligt kraftige regnbyger"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Lette snebyger"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Kraftige snebyger"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Tordenvejr"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Tordenvejr med små hagl"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Tordenvejr med store hagl"
+    },
+    "preflightKpLow": {
+        "message": "Lav"
+    },
+    "preflightKpModerate": {
+        "message": "Moderat"
+    },
+    "preflightKpElevated": {
+        "message": "Forhøjet"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindCalm": {
+        "message": "Rolig"
+    },
+    "preflightWindLight": {
+        "message": "Let"
+    },
+    "preflightWindModerate": {
+        "message": "Moderat"
+    },
+    "preflightWindStrong": {
+        "message": "Stærk"
+    },
+    "preflightWindDangerous": {
+        "message": "Farlig"
+    },
+    "preflightVisExcellent": {
+        "message": "Fremragende"
+    },
+    "preflightVisGood": {
+        "message": "God"
+    },
+    "preflightVisReduced": {
+        "message": "Reduceret"
+    },
+    "preflightVisPoor": {
+        "message": "Dårlig"
+    },
+    "preflightPrecipNone": {
+        "message": "Ingen"
+    },
+    "preflightPrecipLight": {
+        "message": "Let"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderat"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Kraftig"
+    },
+    "preflightDewNoRisk": {
+        "message": "Ingen risiko"
+    },
+    "preflightDewLowRisk": {
+        "message": "Lav risiko"
+    },
+    "preflightDewFogLikely": {
+        "message": "Tåge\/forvent dråber på linser"
+    },
+    "preflightDewFogExpected": {
+        "message": "Tåge\/forvent duggede linser"
+    },
+    "preflightUvLow": {
+        "message": "Lav"
+    },
+    "preflightUvModerate": {
+        "message": "Moderat"
+    },
+    "preflightUvHigh": {
+        "message": "Høj"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Meget høj"
+    },
+    "preflightBatteryRisk": {
+        "message": "Batteri forbrug"
+    },
+    "preflightBatteryOk": {
+        "message": "Normalt område"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduceret ydeevne, pga kolde batterier"
+    },
+    "preflightBatteryCold": {
+        "message": "Stærkt reduceret kapacitet"
+    },
+    "preflightBatteryHot": {
+        "message": "Risiko for at svede, bliv i skyggen"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Fly ikke, ekstrem varme"
+    },
+    "preflightCheckBattery": {
+        "message": "Batteri"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Densitetshøjde"
+    },
+    "preflightFeelsLike": {
+        "message": "Føles som"
+    },
+    "preflightFogRisk": {
+        "message": "Risiko for tåge"
+    },
+    "preflightFogUnlikely": {
+        "message": "Usandsynlig"
+    },
+    "preflightFogLow": {
+        "message": "Lav risiko"
+    },
+    "preflightFogModerate": {
+        "message": "Moderat risiko"
+    },
+    "preflightFogHigh": {
+        "message": "Høj risiko"
+    },
+    "preflightElevation": {
+        "message": "Højde"
+    },
+    "preflightDensityAlt": {
+        "message": "Densitetshøjde"
+    },
+    "preflightDaNormal": {
+        "message": "Normal ydelse"
+    },
+    "preflightDaReduced": {
+        "message": "Let reduceret løft"
+    },
+    "preflightDaLow": {
+        "message": "Betydelig reduceret ydeevne"
+    },
+    "preflightDaPoor": {
+        "message": "Væsentlig reduktion af løft"
+    },
+    "preflightCivilTwilight": {
+        "message": "Skumringstid (civil)"
+    },
+    "preflightRefresh": {
+        "message": "Opdater"
+    },
+    "preflightCurrentWeather": {
+        "message": "Vejrsituation"
+    },
+    "preflightWind": {
+        "message": "Vindhastighed"
+    },
+    "preflightGusts": {
+        "message": "Vindstød"
+    },
+    "preflightVisibility": {
+        "message": "Sigtbarhed"
+    },
+    "preflightPrecipitation": {
+        "message": "Regn"
+    },
+    "preflightCloudCover": {
+        "message": "Skydække"
+    },
+    "preflightHumidity": {
+        "message": "Luftfugtighed"
+    },
+    "preflightPressure": {
+        "message": "Lufttryk"
+    },
+    "preflightDewPoint": {
+        "message": "Dugpunkt"
+    },
+    "preflightFlightWindow": {
+        "message": "Flyve vindue"
+    },
+    "preflightSunrise": {
+        "message": "Solopgang"
+    },
+    "preflightSunset": {
+        "message": "Solnedgang"
+    },
+    "preflightDaylight": {
+        "message": "Dagslys"
+    },
+    "preflightUvIndex": {
+        "message": "UV indeks"
+    },
+    "preflightTempRange": {
+        "message": "Temp. område"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Nuværende"
+    },
+    "preflightDaytime": {
+        "message": "Dagtimer"
+    },
+    "preflightNighttime": {
+        "message": "Nattetimer"
+    },
+    "preflightWindForecast": {
+        "message": "Vind prognose ved forventet højde"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Vindhastigheder i forskellige højder er kritiske for langtrækkende og høj højde FPV-flyvninger. Højere højde har typisk kraftigere vind."
+    },
+    "preflightTime": {
+        "message": "Tidspunkt"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Vindstød"
+    },
+    "preflightRainProb": {
+        "message": "Nedbør %"
+    },
+    "preflightWindUnit": {
+        "message": "Vindhastighed i m\/s. Højde over jordoverfladen (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Sol aktivitet"
+    },
+    "preflightSolarHelp": {
+        "message": "Høj solaktivitet (Kp > 5) forårsager ionosfærisk interferens, som kan forringe GPS-nøjagtighed og dermed påvirke pålidelighed ved GPS-fejlsikring."
+    },
+    "preflightGeoStorm": {
+        "message": "Geomagnetisk storm"
+    },
+    "preflightSolarRadiation": {
+        "message": "Solstråling"
+    },
+    "preflightRadioBlackout": {
+        "message": "Tab af radiosignal"
+    },
+    "preflightLastMeasurement": {
+        "message": "Sidste måling"
+    },
+    "preflightLoadingSolar": {
+        "message": "Indlæser soldata..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS status"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS satellitsignalkvalitet påvirkes af solaktivitet. Høje KP værdier kan forringe GPS positionsnøjagtighed og reducere pålidelighed ved GPS fejlsikring."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS nøjagtighed påvirkes af sol-\/geomagnetiske forhold. Forbind din drone til live-satellitdata på GPS fane."
+    },
+    "preflightKpEffect": {
+        "message": "Ionosfærisk påvirkning"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS fejlsikring status"
+    },
+    "preflightMagDeclination": {
+        "message": "Magnetisk deklination (horisontal vinkel)"
+    },
+    "preflightMagInclination": {
+        "message": "Magnetisk inklination (vertikal vinkel)"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS satellit planlægningsværktøj"
+    },
+    "preflightAirspace": {
+        "message": "Luftrum og flyvefri zoner"
+    },
+    "preflightAirspaceNote": {
+        "message": "Kontrollér altid lokale luftrumsrestriktioner og NOTAM'er før flyvning. Reglerne varierer efter land og region. I Danmark findes droneregler.dk."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Drone Safety kort (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace kort"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Kort over flyveplan"
+    },
+    "preflightNoData": {
+        "message": "Indstil en lokation hvor miljødata hentes"
+    },
+    "preflightAttribution": {
+        "message": "Vejrdata: Se Meteo.com (CC BY 4.0) eller Soldata: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Gemte lokationer ..."
+    },
+    "preflightLoadLocation": {
+        "message": "Indlæs"
+    },
+    "preflightSaveLocation": {
+        "message": "Gem"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maksimalt 5 gemte lokationer er nået"
+    },
+    "preflightLocationLabel": {
+        "message": "Navn for lokation (max 20 tegn)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Slet valgte lokation"
+    },
+    "preflightRenameLocation": {
+        "message": "Omdøb valgte lokation"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Omdøb"
+    },
+    "preflightCoordinates": {
+        "message": "Koordinater"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Gem placering"
+    },
+    "preflightConfirmSave": {
+        "message": "Gem"
+    },
+    "preflightCancel": {
+        "message": "Annuller"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Kan ikke bestemme placering. Angiv koordinater manuelt."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser kan ikke bestemme lokation. Din omtrentlige lokation kan findes ved hjælp af din IP-adresse via tredjepartstjeneste ipapi.co."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Tillad"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Nej tak"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellit visning"
+    },
+    "preflightMapHybrid": {
+        "message": "Satellit- og gade visning"
+    },
+    "preflightMapStreet": {
+        "message": "Gade visning"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom ind"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom ud"
+    },
+    "preflightMapFullscreen": {
+        "message": "Slå fuldskærm til\/fra"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal påvirkning af GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Mulig forringelse af GPS nøjagtighed"
+    },
+    "preflightKpSevere": {
+        "message": "Betydelig GPS interferens kan forventes"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Kontroller først solaktivitet"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Fejlsikring med GPS er pålidelig"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Fejlsikring med GPS kan være upålidelig"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Fejlsikring med GPS anbefales IKKE"
+    },
+    "preflightForecast": {
+        "message": "5-døgn prognose"
+    },
+    "preflightForecastHelp": {
+        "message": "Dagligt vejroverblik til hjælp med planlæggning af kommende flyvesessioner"
+    },
+    "preflightForecastDay": {
+        "message": "Dag"
+    },
+    "preflightForecastWeather": {
+        "message": "Vejr"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM kilde"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Deativeret"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, nøgle påkrævet)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Global luftrum, API-nøgle påkrævet)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA nøgle (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP nøgle"
+    },
+    "preflightNotamRadius": {
+        "message": "Søge omkreds"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Indstillinger til luftrumsdata"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Den valgte udbyder modtager dine luftrumsdata. Der overføres ingen yderligere personoplysninger."
+    },
+    "preflightNotamLoading": {
+        "message": "Henter luftrumsdata..."
+    },
+    "preflightNotamEmpty": {
+        "message": "Ingen meddelelser fundet for denne placering og radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "En nøgle kræves af den valgte udbyder. Indtast din nøgle i indstillingerne ovenfor."
+    },
+    "preflightNotamFetchError": {
+        "message": "Kunne ikke hente luftrumsdata"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Aktiv nu"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Udløbet"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Nedre"
+    },
+    "preflightNotamAltTo": {
+        "message": "Øvre"
+    },
+    "preflightNotamShowMore": {
+        "message": "Vis flere"
+    },
+    "preflightNotamShowLess": {
+        "message": "Vis mindre"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Sidst hentet"
     }
 }

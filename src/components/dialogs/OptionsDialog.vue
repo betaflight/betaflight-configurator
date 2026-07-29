@@ -18,7 +18,7 @@
                     <SettingRow :label="$t('cliAutoComplete')">
                         <USwitch v-model="settings.cliAutoComplete" size="sm" />
                     </SettingRow>
-                    <SettingRow :label="$t('showManualMode')">
+                    <SettingRow v-if="settings.expertMode" :label="$t('showManualMode')">
                         <USwitch v-model="settings.showManualMode" size="sm" />
                     </SettingRow>
                     <SettingRow v-if="settings.expertMode" :label="$t('showVirtualMode')">

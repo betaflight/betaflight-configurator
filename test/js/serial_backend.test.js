@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
@@ -219,6 +219,7 @@ import {
     disconnect,
     initializeSerialBackend,
     reinitializeConnection,
+    shouldConcludeRebootDialog,
 } from "../../src/js/serial_backend";
 import DeviceHandler from "../../src/js/device_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
@@ -766,5 +767,156 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
         } finally {
             vi.useRealTimers();
         }
+    });
+});
+
+describe("shouldConcludeRebootDialog", () => {
+    // Baseline: mid-reboot, nothing yet signals completion.
+    const base = {
+        connectionValid: false,
+        timeoutReached: false,
+        autoConnect: false,
+        portAvailable: false,
+        selectedDevice: "/dev/ttyACM0",
+        rebootWindowOpen: true,
+    };
+
+    it("concludes as soon as the FC answers, regardless of everything else", () => {
+        expect(shouldConcludeRebootDialog({ ...base, connectionValid: true })).toBe(true);
+        // Even with Auto-Connect on and the window still open.
+        expect(
+            shouldConcludeRebootDialog({
+                ...base,
+                connectionValid: true,
+                autoConnect: true,
+                selectedDevice: "bluetooth_1",
+            }),
+        ).toBe(true);
+    });
+
+    it("concludes when the reboot window has timed out", () => {
+        expect(shouldConcludeRebootDialog({ ...base, timeoutReached: true })).toBe(true);
+        expect(shouldConcludeRebootDialog({ ...base, timeoutReached: true, autoConnect: true })).toBe(true);
+    });
+
+    it("keeps waiting while Auto-Connect is on (the retry loop owns the reconnect)", () => {
+        // Serial, port already back — still wait, auto-connect will reconnect.
+        expect(shouldConcludeRebootDialog({ ...base, autoConnect: true, portAvailable: true })).toBe(false);
+        // BLE, window closed — still wait, auto-connect will reconnect.
+        expect(
+            shouldConcludeRebootDialog({
+                ...base,
+                autoConnect: true,
+                selectedDevice: "bluetooth_1",
+                rebootWindowOpen: false,
+            }),
+        ).toBe(false);
+    });
+
+    describe("Auto-Connect off", () => {
+        it("serial: waits for the port to re-enumerate, then concludes", () => {
+            expect(shouldConcludeRebootDialog({ ...base, portAvailable: false })).toBe(false);
+            expect(shouldConcludeRebootDialog({ ...base, portAvailable: true })).toBe(true);
+        });
+
+        it("BLE: waits for the reboot window to close (flush drops the stale link first)", () => {
+            // portAvailable never flips for BLE — must not gate on it.
+            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth_1", rebootWindowOpen: true })).toBe(
+                false,
+            );
+            expect(
+                shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth_1", rebootWindowOpen: false }),
+            ).toBe(true);
+            // Android BLE path id.
+            expect(
+                shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth-AA:BB", rebootWindowOpen: false }),
+            ).toBe(true);
+        });
+
+        it("manual/TCP: waits for the reboot window to close", () => {
+            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "manual", rebootWindowOpen: true })).toBe(
+                false,
+            );
+            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "manual", rebootWindowOpen: false })).toBe(
+                true,
+            );
+        });
+
+        it("serial ignores the reboot-window flag (only re-enumeration concludes it)", () => {
+            // A closed window must NOT conclude a serial reboot on its own — serial owns its
+            // own conclusion via portAvailable, so this stays false until the port is back.
+            expect(shouldConcludeRebootDialog({ ...base, portAvailable: false, rebootWindowOpen: false })).toBe(false);
+        });
+    });
+});
+
+describe("serial_backend MSP unresponsive-FC teardown", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+    });
+
+    afterEach(() => {
+        // These cases drive MSP.last_received_timestamp directly; clear the singleton so a
+        // later test can't inherit stale traffic state.
+        MSP.last_received_timestamp = null;
+    });
+
+    it("registers MSP.onTimeout on connect and clears it on teardown", () => {
+        establishConnection();
+        expect(typeof MSP.onTimeout).toBe("function");
+
+        serialHandlers.disconnect({ detail: true }); // teardown -> resetConnection
+        expect(MSP.onTimeout).toBeNull();
+    });
+
+    it("drops the link and shows a dialog when the FC has gone fully silent", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+        dialogStore.open.mockClear();
+
+        // last_received_timestamp older than DEAD_LINK_TIMEOUT (5 s): no inbound bytes for the
+        // whole window, so the link classifies as dead.
+        MSP.last_received_timestamp = Date.now() - 10_000;
+
+        // MSP.onTimeout hook — fired after an errorAware request exhausts MAX_RETRIES.
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        // Teardown runs via finishClose -> serial.disconnect, with no MSP round-trip to the dead FC.
+        expect(serial.disconnect).toHaveBeenCalledTimes(1);
+
+        // The protocol "disconnect" event drives onClosed, which raises the notice only after
+        // the close settles (so it is not clobbered by onClosed's dialog dismissal).
+        serialHandlers.disconnect({ detail: true });
+        expect(dialogStore.open).toHaveBeenCalledWith(
+            "InformationDialog",
+            expect.objectContaining({ title: "connectionLostTitle", text: "connectionLostUnresponsive" }),
+            expect.anything(),
+        );
+    });
+
+    it("keeps the link up when the FC is still sending data (slow, not dead)", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+
+        // last_received_timestamp inside DEAD_LINK_TIMEOUT: inbound traffic just arrived, so the
+        // exhausted request is a latency spike, not a dead link.
+        MSP.last_received_timestamp = Date.now();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
+    });
+
+    it("ignores the timeout hook when not connected", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(false);
+        serial.disconnect.mockClear();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
     });
 });

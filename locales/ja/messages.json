@@ -42,12 +42,12 @@
         "message": "最新の変更を取得するには、ページを更新する必要があります。今すぐ更新すると、ページが再読み込みされ、保存されていない変更が消失し、進行中の操作は中止されます。<br><br>今すぐ更新しますか？このメッセージを消去し、後で手動でページを更新することもできます。",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "アプリケーションはオフラインでも使用可能です",
+    "pwaOnOfflineReadyTitle": {
+        "message": "オフラインで使用できます",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
-        "message": "必要に応じてスタンドアロンのアプリケーションとしてインストールすることもできます。ブラウザのアドレスバー、またはメニューからオプションを検索してください。",
+    "pwaOnOfflineReadyText": {
+        "message": "お使いのデバイスに、単独で動作するアプリケーションとしてインストールできます。ブラウザのアドレスバーまたはメニューから、インストールの項目を探してください。",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
     "operationNotSupported": {
@@ -375,6 +375,18 @@
     },
     "serialPortOpenFail": {
         "message": "シリアルポートに<span class=\"message-negative\">接続できません<\/span>"
+    },
+    "connectionFailedTitle": {
+        "message": "接続に失敗しました"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">接続失敗<\/span>：選択したポートに接続できませんでした。デバイスと接続設定を確認してから、もう一度お試しください。"
+    },
+    "connectionLostTitle": {
+        "message": "接続が切断されました"
+    },
+    "connectionLostUnresponsive": {
+        "message": "フライトコントローラが <span class=\"message-negative\">応答しなくなった<\/span> ため、接続を終了しました。FCボードを接続し直して、もう一度お試しください。問題が解消しない場合は、フライトコントローラの電源を入れ直してください。"
     },
     "serialPortClosedOk": {
         "message": "シリアルポートは<span class=\"message-positive\">正常<\/span>に切断しました"
@@ -1062,6 +1074,10 @@
         "message": "ポジションホールドが有効",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "オートパイロットモードスイッチが有効になっているためアームできません",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1406,8 +1422,123 @@
     "configurationGyroAlignment": {
         "message": "ジャイロ アライメント"
     },
-    "configurationGyroAlignmentHelp": {
-        "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    "boardAlignmentWizard-Launch": {
+        "message": "FCボードのアライメントを自動検出"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "FCボード アライメントウィザード"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "このウィザードでは、4つの簡単な動作を行うことで、フライトコントローラの取り付け方向を検出します。カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置き、画面の指示に従ってください。"
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "スタート"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "ステップ"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置いてください。"
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "機首を約45°上に傾けてください。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "右側を約45°下に傾けてください。"
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "ドローンを約45°時計回りに回転させてください。(上から見た場合)"
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "ドローンを水平な姿勢に戻してください。"
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "動かさずにお待ちください..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "安定化中..."
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "傾けています"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "水平に戻してください"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "軸を検出しました — 動かさずにお待ちください"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "回転"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "アライメントを計算中..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "検出されたアライメント"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "ボードアライメントは正しく設定されています — 変更は不要です。"
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "現在の設定"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "検出結果"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "戻る"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "適用"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "キャンセル"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "再試行"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "今すぐ取得"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "検出の信頼度が低下しています。適用する前に、リアルタイムの姿勢表示と照らし合わせて結果を確認してください。"
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "このウィザードを実行するには、加速度センサーが必要です。"
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "このウィザードを実行する前に、加速度センサーをキャリブレーションしてください。"
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "一部のサンプルを取得できませんでした。再試行してください。"
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "加速度センサーが重力を検出していません。FCボードが接続され、動いていないことを確認してください。"
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "ピッチ操作を検出できませんでした。再試行し、機首をさらに上へ傾けてください。"
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "ロール操作を検出できませんでした。再試行し、右側をさらに下へ傾けてください。"
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "水平"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "ピッチ"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "ロール"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "ヨー"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "取得しました！"
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroActiveIMU": {
         "message": "IMU 有効"
@@ -1729,6 +1860,9 @@
     },
     "configurationSpiRX": {
         "message": "SPIバス受信プロトコル"
+    },
+    "configurationSaved": {
+        "message": "設定を保存しました"
     },
     "configurationButtonSave": {
         "message": "保存して再起動"
@@ -2857,6 +2991,9 @@
     "servosChangeDirection": {
         "message": "一致する送信機のサーボ有効範囲の変更"
     },
+    "servosForwardChannel": {
+        "message": "チャンネル {{channel}} をサーボ {{servo}} に転送"
+    },
     "servosName": {
         "message": "サーボ"
     },
@@ -3341,6 +3478,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "実行"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "設定内容のプレビュー"
     },
     "cliPanelTitle": {
         "message": "コマンドラインインターフェイス"
@@ -5202,6 +5342,21 @@
     "powerAmperageCalibratedScale": {
         "message": "電流スケール調整:"
     },
+    "powerBatteryProfile": {
+        "message": "バッテリー プロファイル"
+    },
+    "powerBatteryProfileOption": {
+        "message": "バッテリー プロファイル $1"
+    },
+    "powerReceivedBatteryProfile": {
+        "message": "バッテリープロファイル：<strong class=\"message-positive\">$1<\/strong> に設定しました"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "例: LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "プロファイル名"
+    },
     "powerBatteryHead": {
         "message": "バッテリー"
     },
@@ -5231,6 +5386,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD設定"
+    },
+    "osdToggleElementVisibility": {
+        "message": "プロファイル {{profile}} の {{element}} の表示／非表示を切り替え"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>警告:<\/b><\/span> OSDチップセットは検出されませんでした。一部のフライトコントローラは、バッテリーを接続しないとOSDチップセットへ適切に電力を供給できません。USB接続する前にバッテリーを接続してください。 (プロペラは外してください!)"
@@ -6633,6 +6791,29 @@
         "message": "フライトコントローラのCPU使用率が高すぎる場合の警告",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "ポジションホールドが失敗した場合 (例: GPSモード等に) 警告を表示"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "ポジションホールドに失敗しました",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "オートパイロットミッションが中止されました",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "オートパイロットミッション中止",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "不明 $1"
     },
@@ -7664,5 +7845,923 @@
     "osdSetupPreviewCheckRulers": {
         "message": "ルーラー",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "ユーザ プロファイル"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "メールアドレスを入力してください"
+    },
+    "userEmailRequired": {
+        "message": "メールアドレスは必須項目です"
+    },
+    "profileLoginMessage": {
+        "message": "プロファイルを表示するにはログインしてください。"
+    },
+    "tabBackups": {
+        "message": "バックアップ"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "パスキーを削除しました"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "パスキーの削除に失敗しました"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "トークンが正常に削除されました"
+    },
+    "userTokenDeleteFailed": {
+        "message": "トークンの削除に失敗しました"
+    },
+    "userProfileLoadFailed": {
+        "message": "ユーザプロファイルの読み込みに失敗しました"
+    },
+    "userTokenLoadFailed": {
+        "message": "ユーザ トークンの読み込みに失敗しました"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "ユーザ パスキーの読み込みに失敗しました"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "プロファイルが正常に更新されました"
+    },
+    "userProfileUpdateFailed": {
+        "message": "プロファイルの更新に失敗しました"
+    },
+    "userBackupsLoadFailed": {
+        "message": "バックアップの読み込みに失敗しました"
+    },
+    "userBackupDownloadFailed": {
+        "message": "バックアップのダウンロードに失敗しました"
+    },
+    "userBackupFileEmpty": {
+        "message": "バックアップファイルが空です"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "バックアップが正常に更新されました"
+    },
+    "userBackupUpdateFailed": {
+        "message": "バックアップの更新に失敗しました"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "バックアップが正常に削除されました"
+    },
+    "userBackupDeleteFailed": {
+        "message": "バックアップの削除に失敗しました"
+    },
+    "actionRestore": {
+        "message": "復元"
+    },
+    "titleRestoreBackup": {
+        "message": "バックアップから復元"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "バックアップ【{{name}}】を接続中のフライトコントローラに適用しますか？現在の設定は上書きされます。"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "バックアップから復元中..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "バックアップから復元されました"
+    },
+    "userBackupRestoreFailed": {
+        "message": "バックアップからの復元に失敗しました"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>CLIエラーがある状態でバックアップが適用されました。"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "利用可能なパスキーがありません"
+    },
+    "userTokenNoTokens": {
+        "message": "利用可能なトークンがありません"
+    },
+    "profileBackupSuccess": {
+        "message": "バックアップに成功しました"
+    },
+    "profileBackupApiSuccess": {
+        "message": "APIにバックアップを保存しました"
+    },
+    "profileBackupApiFail": {
+        "message": "バックアップをAPIに保存できませんでした"
+    },
+    "profileBackupEmptyResult": {
+        "message": "バックアップに失敗しました"
+    },
+    "labelLogin": {
+        "message": "ログイン"
+    },
+    "labelSignOut": {
+        "message": "サインアウト"
+    },
+    "labelAvatarUrl": {
+        "message": "アバター URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "アバターの画像URLを入力してください"
+    },
+    "labelCreatePasskey": {
+        "message": "パスキーを作成"
+    },
+    "labelUsePasskey": {
+        "message": "パスキーを使用"
+    },
+    "labelSignInWithPasskey": {
+        "message": "パスキーでログイン"
+    },
+    "labelSendVerificationCode": {
+        "message": "認証コードを送信"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "代わりにメールアドレスでログイン"
+    },
+    "labelBackToPasskey": {
+        "message": "パスキー ログインに戻る"
+    },
+    "labelBack": {
+        "message": "戻る"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "パスキーを持っていませんか？"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "セットアップする"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "パスキーを使用してログインする"
+    },
+    "descriptionCodeRequest": {
+        "message": "認証コードをメールで送信します"
+    },
+    "descriptionCodeEntered": {
+        "message": "$1 に送信したコードを入力してください"
+    },
+    "titleEnterVerificationCode": {
+        "message": "認証コードを入力"
+    },
+    "labelVerificationCode": {
+        "message": "認証コード"
+    },
+    "labelCode": {
+        "message": "コード"
+    },
+    "userLoggingIn": {
+        "message": "ログイン中..."
+    },
+    "userSignedOut": {
+        "message": "サインアウトしました"
+    },
+    "userSignOutFailed": {
+        "message": "サインアウトに失敗しました"
+    },
+    "userLoginSuccess": {
+        "message": "ログインに成功しました"
+    },
+    "userLoginFailed": {
+        "message": "ログインに失敗しました"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "パスキーの生成に失敗しました"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "パスワードが正常に作成されました"
+    },
+    "userVerifyingCode": {
+        "message": "コードを確認しています..."
+    },
+    "userCreatingPasskey": {
+        "message": "パスキーを作成中..."
+    },
+    "userCodeRequired": {
+        "message": "認証コードが必要です"
+    },
+    "userSendingCode": {
+        "message": "認証コードを送信中..."
+    },
+    "userSendCodeFailed": {
+        "message": "認証コードの送信に失敗しました"
+    },
+    "dataWaitingForData": {
+        "message": "データに書き込み中..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "作成日時"
+    },
+    "labelLastUsed": {
+        "message": "最終使用日時"
+    },
+    "labelActions": {
+        "message": "動作履歴"
+    },
+    "labelDetails": {
+        "message": "詳細"
+    },
+    "labelExpiry": {
+        "message": "有効期限"
+    },
+    "labelDescription": {
+        "message": "説明"
+    },
+    "labelDate": {
+        "message": "日時"
+    },
+    "actionDownload": {
+        "message": "ダウンロード"
+    },
+    "actionBackup": {
+        "message": "バックアップ"
+    },
+    "actionEdit": {
+        "message": "編集"
+    },
+    "actionDelete": {
+        "message": "削除"
+    },
+    "actionSave": {
+        "message": "保存"
+    },
+    "titleEditProfile": {
+        "message": "プロファイルの編集"
+    },
+    "titleLogin": {
+        "message": "ログイン"
+    },
+    "labelName": {
+        "message": "名称"
+    },
+    "labelAddress": {
+        "message": "住所"
+    },
+    "labelCountry": {
+        "message": "国\/地域"
+    },
+    "confirmDelete": {
+        "message": "この {{item}} を削除してもよろしいですか？"
+    },
+    "itemBackup": {
+        "message": "バックアップ"
+    },
+    "itemToken": {
+        "message": "トークン"
+    },
+    "itemPasskey": {
+        "message": "パスキー"
+    },
+    "notLoggedIn": {
+        "message": "ログインしていません"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "利用可能なバックアップはありません"
+    },
+    "backupRequiresConnection": {
+        "message": "この操作を有効にするには、フライトコントローラを接続してください",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "バックアップの編集"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU 不明"
+    },
+    "sectionUserTokens": {
+        "message": "ユーザ トークン"
+    },
+    "sectionUserPasskeys": {
+        "message": "ユーザ パスキー"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "ポジションに合わせる",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "ポジションを選択する",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "フライト前"
+    },
+    "preflightTitle": {
+        "message": "フライト前の環境チェック"
+    },
+    "preflightLocation": {
+        "message": "フライトの場所"
+    },
+    "preflightUseMyLocation": {
+        "message": "現在地情報を使用する"
+    },
+    "preflightDetecting": {
+        "message": "検出中..."
+    },
+    "preflightOr": {
+        "message": "または座標を入力:"
+    },
+    "preflightLatitude": {
+        "message": "緯度"
+    },
+    "preflightLongitude": {
+        "message": "経度"
+    },
+    "preflightApply": {
+        "message": "適用"
+    },
+    "preflightLaunchStatus": {
+        "message": "起動状態"
+    },
+    "preflightStatusGo": {
+        "message": "飛行可"
+    },
+    "preflightStatusCaution": {
+        "message": "注意"
+    },
+    "preflightStatusWarning": {
+        "message": "警告"
+    },
+    "preflightStatusNoGo": {
+        "message": "飛行不可"
+    },
+    "preflightStatusNoData": {
+        "message": "データなし"
+    },
+    "preflightCheckWind": {
+        "message": "風"
+    },
+    "preflightCheckVisibility": {
+        "message": "表示"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "降水量"
+    },
+    "preflightCheckSolar": {
+        "message": "太陽"
+    },
+    "preflightLevelUnknown": {
+        "message": "不明"
+    },
+    "preflightWmoClearSky": {
+        "message": "快晴"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "おおむね晴れ"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "ところにより曇り"
+    },
+    "preflightWmoOvercast": {
+        "message": "曇り"
+    },
+    "preflightWmoFog": {
+        "message": "霧"
+    },
+    "preflightWmoRimeFog": {
+        "message": "着氷を伴う霧"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "弱い霧雨"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "霧雨"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "濃い霧雨"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "弱い着氷を伴う霧雨"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "強い着氷を伴う霧雨"
+    },
+    "preflightWmoSlightRain": {
+        "message": "小雨"
+    },
+    "preflightWmoModerateRain": {
+        "message": "雨"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "大雨"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "弱い氷雨"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "激しい氷雨"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "小雪"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "雪"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "豪雪"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "粒雪"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "弱いにわか雨"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "にわか雨"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "激しいにわか雨"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "弱いにわか雨"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "激しいにわか雪"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "雷雨"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "わずかな雹のある雷雨"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "激しい雹を伴う雷雨"
+    },
+    "preflightKpLow": {
+        "message": "低"
+    },
+    "preflightKpModerate": {
+        "message": "中"
+    },
+    "preflightKpElevated": {
+        "message": "上"
+    },
+    "preflightKpStorm": {
+        "message": "ストーム"
+    },
+    "preflightWindCalm": {
+        "message": "穏やか"
+    },
+    "preflightWindLight": {
+        "message": "軽い"
+    },
+    "preflightWindModerate": {
+        "message": "中程度"
+    },
+    "preflightWindStrong": {
+        "message": "強い"
+    },
+    "preflightWindDangerous": {
+        "message": "危険"
+    },
+    "preflightVisExcellent": {
+        "message": "素晴らしい"
+    },
+    "preflightVisGood": {
+        "message": "良い"
+    },
+    "preflightVisReduced": {
+        "message": "減少"
+    },
+    "preflightVisPoor": {
+        "message": "悪い"
+    },
+    "preflightPrecipNone": {
+        "message": "なし"
+    },
+    "preflightPrecipLight": {
+        "message": "軽い"
+    },
+    "preflightPrecipModerate": {
+        "message": "中程度"
+    },
+    "preflightPrecipHeavy": {
+        "message": "重い"
+    },
+    "preflightDewNoRisk": {
+        "message": "リスクなし"
+    },
+    "preflightDewLowRisk": {
+        "message": "低リスク"
+    },
+    "preflightDewFogLikely": {
+        "message": "霧\/結露の可能性があります"
+    },
+    "preflightDewFogExpected": {
+        "message": "霧\/レンズの曇りが予想されます"
+    },
+    "preflightUvLow": {
+        "message": "低"
+    },
+    "preflightUvModerate": {
+        "message": "中"
+    },
+    "preflightUvHigh": {
+        "message": "高"
+    },
+    "preflightUvVeryHigh": {
+        "message": " 非常に高い"
+    },
+    "preflightBatteryRisk": {
+        "message": "バッテリーリスク"
+    },
+    "preflightBatteryOk": {
+        "message": "標準範囲"
+    },
+    "preflightBatteryCool": {
+        "message": "性能低下、バッテリー高温"
+    },
+    "preflightBatteryCold": {
+        "message": "バッテリー容量が大幅に低下"
+    },
+    "preflightBatteryHot": {
+        "message": "膨張のリスクあり、日陰で保管してください"
+    },
+    "preflightBatteryExtreme": {
+        "message": "飛行しないでください、極端に高温です"
+    },
+    "preflightCheckBattery": {
+        "message": "バッテリー"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightFeelsLike": {
+        "message": "体感温度"
+    },
+    "preflightFogRisk": {
+        "message": "霧のリスク"
+    },
+    "preflightFogUnlikely": {
+        "message": "可能性が低い"
+    },
+    "preflightFogLow": {
+        "message": "低リスク"
+    },
+    "preflightFogModerate": {
+        "message": "中リスク"
+    },
+    "preflightFogHigh": {
+        "message": "高リスク"
+    },
+    "preflightElevation": {
+        "message": "標高"
+    },
+    "preflightDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightDaNormal": {
+        "message": "通常のパフォーマンス"
+    },
+    "preflightDaReduced": {
+        "message": "わずかに揚力低下"
+    },
+    "preflightDaLow": {
+        "message": "顕著にパフォーマンス低下"
+    },
+    "preflightDaPoor": {
+        "message": "大幅に揚力低下"
+    },
+    "preflightCivilTwilight": {
+        "message": "薄暗い時間帯 [夜明け・夕暮れ]"
+    },
+    "preflightRefresh": {
+        "message": "更新"
+    },
+    "preflightCurrentWeather": {
+        "message": "現在の天気"
+    },
+    "preflightWind": {
+        "message": "風速"
+    },
+    "preflightGusts": {
+        "message": "突風"
+    },
+    "preflightVisibility": {
+        "message": "表示"
+    },
+    "preflightPrecipitation": {
+        "message": "降水量"
+    },
+    "preflightCloudCover": {
+        "message": "雲量"
+    },
+    "preflightHumidity": {
+        "message": "湿度"
+    },
+    "preflightPressure": {
+        "message": "気圧"
+    },
+    "preflightDewPoint": {
+        "message": "露点"
+    },
+    "preflightFlightWindow": {
+        "message": "フライト可能時間帯"
+    },
+    "preflightSunrise": {
+        "message": "日の出"
+    },
+    "preflightSunset": {
+        "message": "日の入り"
+    },
+    "preflightDaylight": {
+        "message": "昼間"
+    },
+    "preflightUvIndex": {
+        "message": "UV指数"
+    },
+    "preflightTempRange": {
+        "message": "気温範囲"
+    },
+    "preflightCurrentlyDay": {
+        "message": "現在"
+    },
+    "preflightDaytime": {
+        "message": "日中"
+    },
+    "preflightNighttime": {
+        "message": "夜間"
+    },
+    "preflightWindForecast": {
+        "message": "高度別風予報"
+    },
+    "preflightWindForecastHelp": {
+        "message": "異なる高度での風速は、長距離および高高度のFPVフライトにおいて重要です。一般的に、高度が高いほど風は強くなります。"
+    },
+    "preflightTime": {
+        "message": "時間"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "突風"
+    },
+    "preflightRainProb": {
+        "message": "雨 %"
+    },
+    "preflightWindUnit": {
+        "message": "風速は m\/s で表示されます。高度は地上高度 (AGL) で示されます。"
+    },
+    "preflightSolarActivity": {
+        "message": "太陽活動"
+    },
+    "preflightSolarHelp": {
+        "message": "太陽活動が活発 (Kp > 5) な場合、電離圏の影響によりGPS精度が低下し、GPSレスキューの信頼性に影響する可能性があります。"
+    },
+    "preflightGeoStorm": {
+        "message": "地磁気嵐"
+    },
+    "preflightSolarRadiation": {
+        "message": "日射量"
+    },
+    "preflightRadioBlackout": {
+        "message": "通信障害"
+    },
+    "preflightLastMeasurement": {
+        "message": "前回の測定"
+    },
+    "preflightLoadingSolar": {
+        "message": "太陽に関するデータを読み込んでいます..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS ステータス"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS衛星の信号品質は太陽活動の影響を受けます。Kp値が高い場合、GPS位置精度が低下し、GPSレスキューの信頼性が低下する可能性があります。"
+    },
+    "preflightGNSSNote": {
+        "message": "GPS精度は太陽活動や地磁気の影響を受けます。GPSタブでリアルタイムの衛星データを確認するには、機体を接続してください。"
+    },
+    "preflightKpEffect": {
+        "message": "電離層の影響"
+    },
+    "preflightGPSRescue": {
+        "message": "GPSレスキュー ステータス"
+    },
+    "preflightMagDeclination": {
+        "message": "コンパス偏角"
+    },
+    "preflightMagInclination": {
+        "message": "コンパス傾角"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS衛星計画ツール"
+    },
+    "preflightAirspace": {
+        "message": "空域および飛行禁止区域"
+    },
+    "preflightAirspaceNote": {
+        "message": "フライト前に必ず地域の空域制限およびNOTAMを確認してください。規則は国や地域によって異なります。"
+    },
+    "preflightDroneSafetyMap": {
+        "message": "ドローン安全マップ (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector 空域チャート"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (アメリカ)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU圏)"
+    },
+    "preflightMap": {
+        "message": "ロケーションマップ"
+    },
+    "preflightNoData": {
+        "message": "環境データを読み込む場所を設定します"
+    },
+    "preflightAttribution": {
+        "message": "気象データ: Open-Meteo.com (CC BY 4.0) ｜ 太陽データ: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "場所を保存中..."
+    },
+    "preflightLoadLocation": {
+        "message": "読み込み"
+    },
+    "preflightSaveLocation": {
+        "message": "保存"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "保存できるロケーションは最大5件までです"
+    },
+    "preflightLocationLabel": {
+        "message": "ロケーション名 (最大 20 文字)"
+    },
+    "preflightDeleteLocation": {
+        "message": "選択した場所を削除"
+    },
+    "preflightRenameLocation": {
+        "message": "選択した場所の名前を変更"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "名前を変更"
+    },
+    "preflightCoordinates": {
+        "message": "座標"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "場所を保存"
+    },
+    "preflightConfirmSave": {
+        "message": "保存"
+    },
+    "preflightCancel": {
+        "message": "キャンセル"
+    },
+    "preflightGeolocationFailed": {
+        "message": "位置を検出できませんでした。座標を手動で入力してください。"
+    },
+    "preflightIpConsentMessage": {
+        "message": "ブラウザで位置情報の取得に失敗しました。ipapi.co [サードパーティサービス] を使用して、IPアドレスからおおよその位置を検出できます。"
+    },
+    "preflightIpConsentAllow": {
+        "message": "許可"
+    },
+    "preflightIpConsentDeny": {
+        "message": "同意しない"
+    },
+    "preflightMapSatellite": {
+        "message": "衛星ビュー"
+    },
+    "preflightMapHybrid": {
+        "message": "ハイブリッド衛星とストリートビュー"
+    },
+    "preflightMapStreet": {
+        "message": "ストリートマップビュー"
+    },
+    "preflightMapZoomIn": {
+        "message": "拡大"
+    },
+    "preflightMapZoomOut": {
+        "message": "縮小"
+    },
+    "preflightMapFullscreen": {
+        "message": "フルスクリーン 切替"
+    },
+    "preflightKpMinimal": {
+        "message": "GPSへの影響最小値"
+    },
+    "preflightKpDegraded": {
+        "message": "GPS精度低下の可能性"
+    },
+    "preflightKpSevere": {
+        "message": "GPSに大きな干渉が予想されます"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "最初に太陽活動を確認してください"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPSレスキュー信頼性"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPSレスキューは信頼できない可能性があります"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPSレスキューは推奨されません"
+    },
+    "preflightForecast": {
+        "message": "5日間予報"
+    },
+    "preflightForecastHelp": {
+        "message": "フライト計画に役立つ日別の天気概要"
+    },
+    "preflightForecastDay": {
+        "message": "日"
+    },
+    "preflightForecastWeather": {
+        "message": "天気"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM プロバイダ"
+    },
+    "preflightNotamProviderNone": {
+        "message": "無効"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (米国、APIキーが必要)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (グローバル空域、APIキーが必要)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA APIキー (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API キー"
+    },
+    "preflightNotamRadius": {
+        "message": "検索半径"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "空域データ設定"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "空域データでは、選択したプロバイダに座標情報が送信されます。その他の個人データは送信されません。"
+    },
+    "preflightNotamLoading": {
+        "message": "空域データを取得しています..."
+    },
+    "preflightNotamEmpty": {
+        "message": "この位置と検索半径では通知は見つかりませんでした"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "選択したプロバイダにはAPIキーが必要です。上記の設定でキーを入力してください。"
+    },
+    "preflightNotamFetchError": {
+        "message": "空域データの取得に失敗しました"
+    },
+    "preflightNotamActiveNow": {
+        "message": "今すぐ有効にする"
+    },
+    "preflightNotamPermanent": {
+        "message": "恒久的"
+    },
+    "preflightNotamExpired": {
+        "message": "期限切れ"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "下限"
+    },
+    "preflightNotamAltTo": {
+        "message": "上限"
+    },
+    "preflightNotamShowMore": {
+        "message": "もっと表示"
+    },
+    "preflightNotamShowLess": {
+        "message": "表示を減らす"
+    },
+    "preflightNotamLastFetched": {
+        "message": "最終取得日時"
     }
 }

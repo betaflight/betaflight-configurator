@@ -42,11 +42,11 @@
         "message": "Tem de carregar de novo a página para ter as últimas alterações. Ao carregá-la de novo irá perder quaisquer alterações não gravadas e irá abortar qualquer operação em curso.<br><br>Quer carregá-la agora? Pode também descartar esta mensagem e carregar a página mais tarde.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "A aplicação está pronta para ser usada offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Pode instalá-la como aplicação standalone no seu dispositivo, se quiser. Procure a opção no menu ou endereço do seu browser.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -383,6 +383,18 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Falha<\/span> ao abrir porta serial"
+    },
+    "connectionFailedTitle": {
+        "message": "Ligação falhou"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">Falha<\/span> a ligar à porta selecionada. Verifique que o dispositivo está acessível e que as definições de ligação estão corretas, depois tente de novo."
+    },
+    "connectionLostTitle": {
+        "message": "Ligação perdida"
+    },
+    "connectionLostUnresponsive": {
+        "message": "A controladora de voo <span class=\"message-negative\">parou de responder<\/span> e a ligação foi fechada. Reconecte a placa e tente novamente; se o problema persistir, desligue e volte a ligar a controladora de voo."
     },
     "serialPortClosedOk": {
         "message": "Porta serial fechada com <span class=\"message-positive\">sucesso<\/span>"
@@ -1070,6 +1082,10 @@
         "message": "Manter Posição está ativo",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "O switch do modo piloto automático está ativo",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Um dos outros indicadores de desarme está ativo quando arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1418,8 +1434,123 @@
     "configurationGyroAlignment": {
         "message": "Alinhamento do Gyro"
     },
-    "configurationGyroAlignmentHelp": {
-        "message": "O alinhamento do gyro é a orientação do sensor gyro na placa da controladora de voo. O pré-definido está normalmente correto, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação gyro diferente, pode precisar de ajustar esta configuração."
+    "boardAlignmentWizard-Launch": {
+        "message": "Auto-detetar alinhamento da placa"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Assistente de Alinhamento da Placa"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Este assistente deteta como a sua controladora de voo está montada ao guiá-lo através de quatro movimentos simples. Coloque o drone numa superfície plana com a câmera virada para si (virado para o monitor), e siga as instruções."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Iniciar"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Passo"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Posicione o drone com a câmera virada para o lado oposto de si (virada para o monitor)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Incline o nariz em cerca de 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Incline o lado direito em cerca de 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Rode o drone cerca de 45° no sentido horário (como visto de cima)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Retorne o drone a uma posição nivelada."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Mantenha quieto..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Estabelecendo"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continue a inclinar"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Retorne ao nível"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Eixo detetado — mantenha estável"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotação"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "A computar o alinhamento..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Alinhamento detetado"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "O seu alinhamento da placa parece correto — não são necessárias alterações."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Atual"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detetado"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Voltar"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Aplicar"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancelar"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Tente novamente"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Capturar agora"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "A confiança da deteção é reduzida — por favor, verifique o resultado contra a atitude ao vivo antes de aplicar."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "É necessário um acelerómetro para executar este assistente."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Por favor calibre o acelerómetro antes de executar este assistente."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Algumas amostras não foram recolhidas. Por favor tente novamente."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "O acelerómetro não está a ler a gravidade. Certifique-se de que a FC está conectada e sem movimento."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o nariz ainda mais."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o lado direito ainda mais."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Plano"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Capturado!"
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroActiveIMU": {
         "message": "IMU ativo"
@@ -1741,6 +1872,9 @@
     },
     "configurationSpiRX": {
         "message": "Fornecedor do receptor SPI Bus"
+    },
+    "configurationSaved": {
+        "message": "Configuração guardada"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -2885,6 +3019,9 @@
     "servosChangeDirection": {
         "message": "Mude a direção no TX para que fique igual ao movimento do servo"
     },
+    "servosForwardChannel": {
+        "message": "Encaminhar canal {{channel}} para o servo {{servo}}"
+    },
     "servosName": {
         "message": "Nome"
     },
@@ -3373,6 +3510,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Executar"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "Pré-visualização do trecho"
     },
     "cliPanelTitle": {
         "message": "Interface da Linha de Comandos"
@@ -5234,6 +5374,21 @@
     "powerAmperageCalibratedScale": {
         "message": "Escala de Amperagem Calibrada:"
     },
+    "powerBatteryProfile": {
+        "message": "Perfil da Bateria"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Perfil da Bateria $1"
+    },
+    "powerReceivedBatteryProfile": {
+        "message": "Perfil de Bateria aplicado na controladora de voo: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "ex.: LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Nome do Perfil"
+    },
     "powerBatteryHead": {
         "message": "Bateria"
     },
@@ -5263,6 +5418,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
+    },
+    "osdToggleElementVisibility": {
+        "message": "Alternar visibilidade de {{element}} para o perfil {{profile}}"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>AVISO:<\/b><\/span> Nenhum chip OSD detetado. Algumas controladoras de voo não ligarão corretamente o chip OSD, a menos que estejam ligadas a energia da bateria. Conecte a bateria antes de conectar o USB (HÉLICES REMOVIDAS!)."
@@ -6665,6 +6823,29 @@
         "message": "Avisa se a CARGA de CPU do controlador de voo é muito alta",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Mostra um aviso o quando manter de posição falhar (ex. no modo GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Manter posição falhou",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Missão de piloto automático abortada",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Missão de piloto automático abortada",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
     },
@@ -7699,5 +7880,923 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Réguas",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Perfil do Utilizador"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "Insira endereço de email"
+    },
+    "userEmailRequired": {
+        "message": "Endereço de email é obrigatório"
+    },
+    "profileLoginMessage": {
+        "message": "Faça login para ver o seu perfil."
+    },
+    "tabBackups": {
+        "message": "Cópias de Segurança"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Chave de acesso apagada com sucesso"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Falha a apagar a chave de acesso"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token apagado com sucesso"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Falha a apagar token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Falha ao carregar o perfil de utilizador"
+    },
+    "userTokenLoadFailed": {
+        "message": "Falha ao carregar tokens do utilizador"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Falha a carregar as chaves de acesso do utilizador"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Perfil atualizado com sucesso"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Falha a atualizar o perfil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Falha a carregar as cópias de segurança"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Falha no download das cópias de segurança"
+    },
+    "userBackupFileEmpty": {
+        "message": "O ficheiro de backup está vazio"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Cópia de segurança atualizada com sucesso"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Falha a atualizar a cópia de segurança"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Cópia de segurança eliminada com sucesso"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Falha a apagar a cópia de segurança"
+    },
+    "actionRestore": {
+        "message": "Restaurar"
+    },
+    "titleRestoreBackup": {
+        "message": "Restaurar backup"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Aplicar o backup \"{{name}}\" à controladora de voo conectada? A configuração atual será substituída."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "A restaurar backup..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Backup restaurado com sucesso"
+    },
+    "userBackupRestoreFailed": {
+        "message": "Falha ao restaurar backup"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>AVISO!<\/span><br\/>Backup aplicado com erros de CLI."
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Nenhumas chaves de acesso disponíveis"
+    },
+    "userTokenNoTokens": {
+        "message": "Nenhuns tokens disponíveis"
+    },
+    "profileBackupSuccess": {
+        "message": "Cópia de segurança efetuada com sucesso"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Cópia de segurança guardada com sucesso na API"
+    },
+    "profileBackupApiFail": {
+        "message": "Cópia de segurança falhou a guardar na API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Cópia de segurança não efetuada"
+    },
+    "labelLogin": {
+        "message": "Iniciar sessão"
+    },
+    "labelSignOut": {
+        "message": "Terminar sessão"
+    },
+    "labelAvatarUrl": {
+        "message": "URL do Avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Insira o URL da imagem para o seu avatar"
+    },
+    "labelCreatePasskey": {
+        "message": "Criar chave de acesso"
+    },
+    "labelUsePasskey": {
+        "message": "Usar Passkey"
+    },
+    "labelSignInWithPasskey": {
+        "message": "Iniciar sessão com chave de acesso"
+    },
+    "labelSendVerificationCode": {
+        "message": "Enviar Código de Verificação"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Iniciar sessão com código de e-mail"
+    },
+    "labelBackToPasskey": {
+        "message": "Voltar ao início de sessão com chave de acesso"
+    },
+    "labelBack": {
+        "message": "Retroceder"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "Não tem uma chave de acesso?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Configurar uma"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Utilize a sua chave de acesso para iniciar sessão"
+    },
+    "descriptionCodeRequest": {
+        "message": "Vamos enviar-lhe um código de verificação"
+    },
+    "descriptionCodeEntered": {
+        "message": "Digite o código que enviámos para $1"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Introduza o código de verificação"
+    },
+    "labelVerificationCode": {
+        "message": "Código de Verificação"
+    },
+    "labelCode": {
+        "message": "Código"
+    },
+    "userLoggingIn": {
+        "message": "A iniciar sessão ..."
+    },
+    "userSignedOut": {
+        "message": "Sessão Terminada"
+    },
+    "userSignOutFailed": {
+        "message": "Falha a terminar sessão."
+    },
+    "userLoginSuccess": {
+        "message": "Início de sessão concluído"
+    },
+    "userLoginFailed": {
+        "message": "Falha no início de sessão"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Falha a criar chave de acesso"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Chave de acesso criada com sucesso"
+    },
+    "userVerifyingCode": {
+        "message": "Verificando código..."
+    },
+    "userCreatingPasskey": {
+        "message": "A criar chave de acesso..."
+    },
+    "userCodeRequired": {
+        "message": "É necessário o código de verificação"
+    },
+    "userSendingCode": {
+        "message": "A enviar código de verificação..."
+    },
+    "userSendCodeFailed": {
+        "message": "Falha ao enviar código de verificação"
+    },
+    "dataWaitingForData": {
+        "message": "Aguardando dados..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Criado"
+    },
+    "labelLastUsed": {
+        "message": "Usado pela última vez"
+    },
+    "labelActions": {
+        "message": "Ações"
+    },
+    "labelDetails": {
+        "message": "Detalhes"
+    },
+    "labelExpiry": {
+        "message": "Expira"
+    },
+    "labelDescription": {
+        "message": "Descrição"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Download"
+    },
+    "actionBackup": {
+        "message": "Cópia de segurança"
+    },
+    "actionEdit": {
+        "message": "Editar"
+    },
+    "actionDelete": {
+        "message": "Apagar"
+    },
+    "actionSave": {
+        "message": "Gravar"
+    },
+    "titleEditProfile": {
+        "message": "Editar Perfil"
+    },
+    "titleLogin": {
+        "message": "Iniciar sessão"
+    },
+    "labelName": {
+        "message": "Nome"
+    },
+    "labelAddress": {
+        "message": "Endereço"
+    },
+    "labelCountry": {
+        "message": "País"
+    },
+    "confirmDelete": {
+        "message": "Tem a certeza que pretende eliminar este {{item}}?"
+    },
+    "itemBackup": {
+        "message": "cópia de segurança"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "chave de acesso"
+    },
+    "notLoggedIn": {
+        "message": "Sem sessão iniciada"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Não existem cópias de segurança disponíveis"
+    },
+    "backupRequiresConnection": {
+        "message": "Conecte uma controladora de voo para habilitar esta ação",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "Editar cópia de segurança"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU desconhecida"
+    },
+    "sectionUserTokens": {
+        "message": "Tokens do Utilizador"
+    },
+    "sectionUserPasskeys": {
+        "message": "Chaves de acesso do Utilizador"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Alinhar à posição",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Escolha Posição",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Pré-Voo"
+    },
+    "preflightTitle": {
+        "message": "Verificação de ambiente pré-voo"
+    },
+    "preflightLocation": {
+        "message": "Localização de Voo"
+    },
+    "preflightUseMyLocation": {
+        "message": "Usar a Minha Localização"
+    },
+    "preflightDetecting": {
+        "message": "A detetar..."
+    },
+    "preflightOr": {
+        "message": "ou insira coordenadas:"
+    },
+    "preflightLatitude": {
+        "message": "Latitude"
+    },
+    "preflightLongitude": {
+        "message": "Longitude"
+    },
+    "preflightApply": {
+        "message": "Aplicar"
+    },
+    "preflightLaunchStatus": {
+        "message": "Estado de Lançamento"
+    },
+    "preflightStatusGo": {
+        "message": "IR"
+    },
+    "preflightStatusCaution": {
+        "message": "CUIDADO"
+    },
+    "preflightStatusWarning": {
+        "message": "AVISO"
+    },
+    "preflightStatusNoGo": {
+        "message": "NO-GO"
+    },
+    "preflightStatusNoData": {
+        "message": "Sem Dados"
+    },
+    "preflightCheckWind": {
+        "message": "Vento"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibilidade"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitação"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Desconhecido"
+    },
+    "preflightWmoClearSky": {
+        "message": "Céu limpo"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Maioritariamente Limpo"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Parcialmente nublado"
+    },
+    "preflightWmoOvercast": {
+        "message": "Nublado"
+    },
+    "preflightWmoFog": {
+        "message": "Nevoeiro"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Geada"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Chuviscos fracos"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Chuviscos Moderados"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Chuviscos Densos"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Granizo Leve"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Granizo denso"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Chuva fraca"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Chuva moderada"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Chuva intensa"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Chuva gelada fraca"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Chuva densa gelada"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Neve leve"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Neve moderada"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Nevão"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Grãos de neve"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Aguaceiros leves"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Aguaceiros moderados"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Aguaceiros violentos"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Aguaceiros de neve ligeiros"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Aguaceiros de neve fortes"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Tempestade"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Tempestade com granizo leve"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Trovoada com granizo Intenso"
+    },
+    "preflightKpLow": {
+        "message": "Baixo"
+    },
+    "preflightKpModerate": {
+        "message": "Moderado"
+    },
+    "preflightKpElevated": {
+        "message": "Elevada"
+    },
+    "preflightKpStorm": {
+        "message": "Tempestade"
+    },
+    "preflightWindCalm": {
+        "message": "Calmo"
+    },
+    "preflightWindLight": {
+        "message": "Leve"
+    },
+    "preflightWindModerate": {
+        "message": "Moderado"
+    },
+    "preflightWindStrong": {
+        "message": "Forte"
+    },
+    "preflightWindDangerous": {
+        "message": "Perigoso"
+    },
+    "preflightVisExcellent": {
+        "message": "Excelente"
+    },
+    "preflightVisGood": {
+        "message": "Boa"
+    },
+    "preflightVisReduced": {
+        "message": "Reduzida"
+    },
+    "preflightVisPoor": {
+        "message": "Fraca"
+    },
+    "preflightPrecipNone": {
+        "message": "Nenhuma"
+    },
+    "preflightPrecipLight": {
+        "message": "Leve"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderada"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Forte"
+    },
+    "preflightDewNoRisk": {
+        "message": "Sem risco"
+    },
+    "preflightDewLowRisk": {
+        "message": "Risco baixo"
+    },
+    "preflightDewFogLikely": {
+        "message": "Nevoeiro\/condensação provável"
+    },
+    "preflightDewFogExpected": {
+        "message": "Nevoeiro\/condensação esperada"
+    },
+    "preflightUvLow": {
+        "message": "Baixa"
+    },
+    "preflightUvModerate": {
+        "message": "Moderada"
+    },
+    "preflightUvHigh": {
+        "message": "Alta"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Muito Alta"
+    },
+    "preflightBatteryRisk": {
+        "message": "Risco da bateria"
+    },
+    "preflightBatteryOk": {
+        "message": "Intervalo normal"
+    },
+    "preflightBatteryCool": {
+        "message": "Redução de desempenho, aqueça baterias"
+    },
+    "preflightBatteryCold": {
+        "message": "Capacidade reduzida severamente"
+    },
+    "preflightBatteryHot": {
+        "message": "Risco de inchaço, mantenha na sombra"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Não voe, calor extremo"
+    },
+    "preflightCheckBattery": {
+        "message": "Bateria"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Alt Densidade"
+    },
+    "preflightFeelsLike": {
+        "message": "Sensação"
+    },
+    "preflightFogRisk": {
+        "message": "Risco de Nevoeiro"
+    },
+    "preflightFogUnlikely": {
+        "message": "Improvável"
+    },
+    "preflightFogLow": {
+        "message": "Risco baixo"
+    },
+    "preflightFogModerate": {
+        "message": "Risco moderado"
+    },
+    "preflightFogHigh": {
+        "message": "Risco elevado"
+    },
+    "preflightElevation": {
+        "message": "Elevação"
+    },
+    "preflightDensityAlt": {
+        "message": "Altitude de Densidade"
+    },
+    "preflightDaNormal": {
+        "message": "Desempenho normal"
+    },
+    "preflightDaReduced": {
+        "message": "Sustentação ligeiramente reduzida"
+    },
+    "preflightDaLow": {
+        "message": "Redução significativa de desempenho"
+    },
+    "preflightDaPoor": {
+        "message": "Redução significativa de sustentação"
+    },
+    "preflightCivilTwilight": {
+        "message": "Janela do Crepúsculo Civil"
+    },
+    "preflightRefresh": {
+        "message": "Atualizar"
+    },
+    "preflightCurrentWeather": {
+        "message": "Tempo atual"
+    },
+    "preflightWind": {
+        "message": "Velocidade do vento"
+    },
+    "preflightGusts": {
+        "message": "Rajadas de vento"
+    },
+    "preflightVisibility": {
+        "message": "Visibilidade"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitação"
+    },
+    "preflightCloudCover": {
+        "message": "Nebulosidade"
+    },
+    "preflightHumidity": {
+        "message": "Humidade"
+    },
+    "preflightPressure": {
+        "message": "Pressão"
+    },
+    "preflightDewPoint": {
+        "message": "Ponto de Condensação"
+    },
+    "preflightFlightWindow": {
+        "message": "Janela de voo"
+    },
+    "preflightSunrise": {
+        "message": "Amanhecer"
+    },
+    "preflightSunset": {
+        "message": "Ocaso"
+    },
+    "preflightDaylight": {
+        "message": "Luz do dia"
+    },
+    "preflightUvIndex": {
+        "message": "Índice UV"
+    },
+    "preflightTempRange": {
+        "message": "Intervalo Temp"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Atualmente"
+    },
+    "preflightDaytime": {
+        "message": "Diurno"
+    },
+    "preflightNighttime": {
+        "message": "Noturno"
+    },
+    "preflightWindForecast": {
+        "message": "Previsão de vento em altitude"
+    },
+    "preflightWindForecastHelp": {
+        "message": "As velocidades do vento em diferentes altitudes são cruciais para voos FPV de longo alcance e de alta altitude. Altas altitudes normalmente têm ventos mais fortes."
+    },
+    "preflightTime": {
+        "message": "Hora"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Rajadas"
+    },
+    "preflightRainProb": {
+        "message": "Chuva %"
+    },
+    "preflightWindUnit": {
+        "message": "Velocidade do vento em m\/s. Altitudes acima do nível do solo (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Atividade Solar"
+    },
+    "preflightSolarHelp": {
+        "message": "Atividade solar alta (Kp > 5) causa interferência ionosférica, que pode degradar a precisão do GPS e afetar a confiabilidade do GPS."
+    },
+    "preflightGeoStorm": {
+        "message": "Tempestade geomagnética"
+    },
+    "preflightSolarRadiation": {
+        "message": "Radiação solar"
+    },
+    "preflightRadioBlackout": {
+        "message": "Blackout de Rádio"
+    },
+    "preflightLastMeasurement": {
+        "message": "Última medição"
+    },
+    "preflightLoadingSolar": {
+        "message": "Carregando dados solares..."
+    },
+    "preflightGNSS": {
+        "message": "Estado GNSS \/ GPS"
+    },
+    "preflightGNSSHelp": {
+        "message": "A qualidade de sinal por satélite GNSS é afetada por atividade solar. Valores altos de Kp podem degradar a precisão da posição do GPS e reduzir a confiabilidade do GPS."
+    },
+    "preflightGNSSNote": {
+        "message": "A precisão do GPS é afetada pelas condições solar\/geomagnéticas. Conecte o seu quad para dados de satélite ao vivo na aba do GPS."
+    },
+    "preflightKpEffect": {
+        "message": "Impacto Ionosférico"
+    },
+    "preflightGPSRescue": {
+        "message": "Estado de Resgate GPS"
+    },
+    "preflightMagDeclination": {
+        "message": "Declinação Magnética"
+    },
+    "preflightMagInclination": {
+        "message": "Inclinação magnética"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Ferramenta de Planeamento Satélite GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Espaço Aéreo e Zonas No-Fly"
+    },
+    "preflightAirspaceNote": {
+        "message": "Verifique sempre as restrições do espaço aéreo local e NOTAMs antes de voar. As regras variam de país e região."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Mapa de Segurança de Drone (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "Quadro Skyvector Airspace"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Mapa da localização"
+    },
+    "preflightNoData": {
+        "message": "Definir um local para carregar os dados do ambiente"
+    },
+    "preflightAttribution": {
+        "message": "Dados meteorológicos: Open-Meteo.com (CC BY 4.0) ct, Dados solares: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Locais gravados..."
+    },
+    "preflightLoadLocation": {
+        "message": "Carregar"
+    },
+    "preflightSaveLocation": {
+        "message": "Gravar"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Máximo de 5 locais salvos alcançados"
+    },
+    "preflightLocationLabel": {
+        "message": "Nome do local (máx. 20 caracteres)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Excluir local selecionado"
+    },
+    "preflightRenameLocation": {
+        "message": "Renomear localização selecionada"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Renomear"
+    },
+    "preflightCoordinates": {
+        "message": "Coordenadas"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Gravar localização"
+    },
+    "preflightConfirmSave": {
+        "message": "Gravar"
+    },
+    "preflightCancel": {
+        "message": "Cancelar"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Não foi possível detectar a localização. Insira as coordenadas manualmente."
+    },
+    "preflightIpConsentMessage": {
+        "message": "A localização do navegador falhou. A sua localização aproximada pode ser detetada usando o seu endereço IP via ipapi.co, um serviço de terceiros."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Permitir"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Não obrigado"
+    },
+    "preflightMapSatellite": {
+        "message": "Vista de Satélite"
+    },
+    "preflightMapHybrid": {
+        "message": "Satélite híbrido e vista de rua"
+    },
+    "preflightMapStreet": {
+        "message": "Vista de rua de mapa"
+    },
+    "preflightMapZoomIn": {
+        "message": "Aumentar zoom"
+    },
+    "preflightMapZoomOut": {
+        "message": "Reduzir zoom"
+    },
+    "preflightMapFullscreen": {
+        "message": "Ativar ecrã completo"
+    },
+    "preflightKpMinimal": {
+        "message": "Impacto mínimo no GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possível degradação de precisão do GPS"
+    },
+    "preflightKpSevere": {
+        "message": "Esperada significativa interferência GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Verifique primeiro a atividade solar"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Resgate GPS fiável"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Resgate GPS pode não ser fiável"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Resgate GPS NÃO recomendado"
+    },
+    "preflightForecast": {
+        "message": "Previsão de 5 dias"
+    },
+    "preflightForecastHelp": {
+        "message": "Visão geral do tempo diário para ajudar a planear sessões adiante"
+    },
+    "preflightForecastDay": {
+        "message": "Dia"
+    },
+    "preflightForecastWeather": {
+        "message": "Tempo"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM Provider"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Desativado"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "API FAA NOTAM (EUA, chave API é necessária)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (Espaço aéreo global, chave API necessária)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "Chave API FAA (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "Chave da API OpenAIP"
+    },
+    "preflightNotamRadius": {
+        "message": "Raio de pesquisa"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Configurações de dados do espaço aéreo"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Os dados do Airspace enviam as suas coordenadas para o provedor selecionado. Nenhum dado pessoal adicional é transmitido."
+    },
+    "preflightNotamLoading": {
+        "message": "A recolher dados do espaço aéreo..."
+    },
+    "preflightNotamEmpty": {
+        "message": "Nenhum aviso encontrado para este local e raio"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "Uma chave de API é necessária para o provedor selecionado. Digite a sua chave nas configurações acima."
+    },
+    "preflightNotamFetchError": {
+        "message": "Falha a recolher dados do espaço aéreo"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Ativo agora"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanente"
+    },
+    "preflightNotamExpired": {
+        "message": "Expirado"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Inferior"
+    },
+    "preflightNotamAltTo": {
+        "message": "Superior"
+    },
+    "preflightNotamShowMore": {
+        "message": "Mostrar mais"
+    },
+    "preflightNotamShowLess": {
+        "message": "Mostrar menos"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Última recolha"
     }
 }

@@ -72,6 +72,23 @@ describe("MSP promise semantics", () => {
             await rejection;
             expect(MSP.callbacks).toHaveLength(0);
         });
+
+        it("invokes onTimeout with the code once retries are exhausted", async () => {
+            const onTimeout = vi.fn();
+            MSP.onTimeout = onTimeout;
+            try {
+                const rejection = expect(MSP.promise(EEPROM_WRITE_CODE)).rejects.toBeInstanceOf(MspTimeoutError);
+
+                await vi.advanceTimersByTimeAsync(MSP.TIMEOUT * (MSP.MAX_RETRIES - 1));
+                expect(onTimeout).not.toHaveBeenCalled(); // still retrying, not yet exhausted
+
+                await vi.advanceTimersByTimeAsync(MSP.TIMEOUT);
+                await rejection;
+                expect(onTimeout).toHaveBeenCalledExactlyOnceWith(EEPROM_WRITE_CODE);
+            } finally {
+                MSP.onTimeout = null;
+            }
+        });
     });
 
     describe("disconnect_cleanup", () => {

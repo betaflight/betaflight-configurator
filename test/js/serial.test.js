@@ -51,4 +51,10 @@ describe("serial.selectProtocol — Tauri transport routing", () => {
         // isTauriIOS() is true, so serial is excluded; a serial path resolves to undefined.
         expect(serial.selectProtocol("/dev/ttyACM0")).toBeUndefined();
     });
+
+    it("routes a schemeless network host to the TCP slot when there is no serial transport (iOS)", () => {
+        // A bare ELRS/bridge IP has no serial slot to fall back to on iOS, so it must reach TCP.
+        expect(serial.selectProtocol("10.0.0.1").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("10.0.0.1:5761").constructor.name).toBe("TauriTcp");
+    });
 });

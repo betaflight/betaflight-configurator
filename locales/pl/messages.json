@@ -42,14 +42,6 @@
         "message": "Musisz odświeżyć stronę, aby zobaczyć najnowsze zmiany. Odświeżenie jej teraz odświeży stronę i stracisz wszelkie niezapisane zmiany, oraz zostanie przerwana każda operacja w toku.<br><br>Czy chcesz odświeżyć teraz? Możesz również odrzucić tę wiadomość i odświeżyć stronę ręcznie później.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "Aplikacja jest gotowa do użycia w trybie offline",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Jeśli chcesz, możesz zainstalować ją jako samodzielną aplikację na swoim urządzeniu. Wyszukaj tę opcję w pasku adresu lub menu przeglądarki.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Nie można wykonać tej operacji na twoim urządzeniu."
     },

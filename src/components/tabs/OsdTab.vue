@@ -526,10 +526,11 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useOsdPreview } from "@/composables/useOsdPreview";
+import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -1061,10 +1062,6 @@ function onDragLeaveCell(event) {
     event.currentTarget.removeAttribute("style");
 }
 
-function isStringArrayPreview(preview) {
-    return Array.isArray(preview) && typeof preview[0] === "string";
-}
-
 function applyDragOffsetFromStartCell(position, event, displaySize, startIdx) {
     const x = Number.parseInt(event.dataTransfer.getData("x"), 10);
     const y = Number.parseInt(event.dataTransfer.getData("y"), 10);
@@ -1075,74 +1072,6 @@ function applyDragOffsetFromStartCell(position, event, displaySize, startIdx) {
     const draggedCellIdx = x + y * displaySize.x;
     const offsetIdx = position - draggedCellIdx;
     return startIdx + offsetIdx;
-}
-
-function clampStringPreviewPosition(displayItem, position, displaySize, cursorY) {
-    const elementWidth = Array.from(displayItem.preview || "").length;
-    const maxX = Math.max(0, displaySize.x - elementWidth);
-    const maxY = Math.max(0, displaySize.y - 1);
-    const row = clamp(cursorY, 0, maxY);
-
-    const rawX = position - row * displaySize.x;
-    const x = clamp(rawX, 0, maxX);
-
-    return row * displaySize.x + x;
-}
-
-function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
-    const selectedPositionX = position % displaySize.x;
-    let selectedPositionY = Math.trunc(position / displaySize.x);
-
-    if (position < 0) {
-        return null;
-    }
-    if (selectedPositionX > cursorX) {
-        position += displaySize.x - selectedPositionX;
-        selectedPositionY++;
-    } else if (selectedPositionX + limits.maxX > displaySize.x) {
-        position -= selectedPositionX + limits.maxX - displaySize.x;
-    }
-    if (selectedPositionY < 0) {
-        position += Math.abs(selectedPositionY) * displaySize.x;
-    } else if (selectedPositionY + limits.maxY > displaySize.y) {
-        position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
-    }
-
-    return position;
-}
-
-function clampObjectArrayPreviewPosition(position, displaySize, limits) {
-    const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
-    const selectedPositionY = Math.floor(position / displaySize.x);
-
-    if (selectedPositionX + limits.minX < 0) {
-        position += Math.abs(selectedPositionX + limits.minX);
-    } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
-        position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
-    }
-    if (selectedPositionY + limits.minY < 0) {
-        position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
-    } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
-        position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
-    }
-
-    if (position < 0) {
-        // The anchor of an element whose cells all sit below it (positive minY) may
-        // still land above row 0 after clamping, but positions pack into unsigned
-        // x/y for MSP (see stores/osd.js pack.position): settle on row 0, keeping
-        // the column instead of jumping to the top-left corner.
-        position = ((position % displaySize.x) + displaySize.x) % displaySize.x;
-    }
-
-    return position;
-}
-
-function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
-    const limits = searchLimitsElement(displayItem.preview);
-    if (isStringArrayPreview(displayItem.preview)) {
-        return clampStringArrayPreviewPosition(position, displaySize, cursorX, limits);
-    }
-    return clampObjectArrayPreviewPosition(position, displaySize, limits);
 }
 
 function onDropCell(event) {
@@ -1352,31 +1281,32 @@ function updatePreview() {
 
 // Load OSD configuration from FC
 async function loadConfig() {
-    try {
-        // Fetch OSD config via Store
-        await osdStore.fetchOsdConfig();
+    await runTabLoad(
+        async () => {
+            // Fetch OSD config via Store
+            await osdStore.fetchOsdConfig();
 
-        // Set initial profile from store state
-        previewProfile.value = osdStore.osdProfiles.selected || 0;
-        activeProfile.value = osdStore.osdProfiles.selected || 0;
+            // Set initial profile from store state
+            previewProfile.value = osdStore.osdProfiles.selected || 0;
+            activeProfile.value = osdStore.osdProfiles.selected || 0;
 
-        // Sync font state from memory
-        if (FONT.data?.loaded_font_file) {
-            const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
-            if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
-                selectedFont.value = loadedIndex;
-                selectedFontPreset.value = loadedIndex;
-            } else if (loadedIndex === -1 && selectedFont.value !== -1) {
-                selectedFont.value = -1;
-                selectedFontPreset.value = -1;
+            // Sync font state from memory
+            if (FONT.data?.loaded_font_file) {
+                const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
+                if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
+                    selectedFont.value = loadedIndex;
+                    selectedFontPreset.value = loadedIndex;
+                } else if (loadedIndex === -1 && selectedFont.value !== -1) {
+                    selectedFont.value = -1;
+                    selectedFontPreset.value = -1;
+                }
             }
-        }
 
-        updatePreview();
-        hasLoadedConfig.value = true;
-    } catch (error) {
-        console.error("Failed to load OSD configuration:", error);
-    }
+            updatePreview();
+            hasLoadedConfig.value = true;
+        },
+        (error) => console.error("Failed to load OSD configuration:", error),
+    );
 }
 
 async function refreshConfig() {

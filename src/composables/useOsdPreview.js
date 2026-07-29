@@ -221,3 +221,111 @@ export function useOsdPreview() {
         searchLimitsElement,
     };
 }
+
+/**
+ * Check if the element preview is an array of strings.
+ * @param {any} preview - The preview property of the element.
+ * @returns {boolean} True if the preview is an array of strings.
+ */
+export function isStringArrayPreview(preview) {
+    return Array.isArray(preview) && typeof preview[0] === "string";
+}
+
+/**
+ * Clamp the position of a string OSD element (1D string) to screen bounds.
+ * @param {object} displayItem - The display item.
+ * @param {number} position - The proposed grid index.
+ * @param {object} displaySize - The screen size {x, y, total}.
+ * @param {number} cursorY - The row the user cursor is pointing to.
+ * @returns {number} The clamped position grid index.
+ */
+export function clampStringPreviewPosition(displayItem, position, displaySize, cursorY) {
+    const elementWidth = Array.from(displayItem.preview || "").length;
+    const maxX = Math.max(0, displaySize.x - elementWidth);
+    const maxY = Math.max(0, displaySize.y - 1);
+    const row = Math.min(Math.max(cursorY, 0), maxY);
+
+    const rawX = position - row * displaySize.x;
+    const x = Math.min(Math.max(rawX, 0), maxX);
+
+    return row * displaySize.x + x;
+}
+
+/**
+ * Clamp the position of a string-array OSD element to screen bounds.
+ * @param {number} position - The proposed grid index.
+ * @param {object} displaySize - The screen size {x, y, total}.
+ * @param {number} cursorX - The column the user cursor is pointing to.
+ * @param {object} limits - The layout limits {minX, maxX, minY, maxY}.
+ * @returns {number|null} The clamped position grid index or null if invalid.
+ */
+export function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
+    const selectedPositionX = position % displaySize.x;
+    let selectedPositionY = Math.trunc(position / displaySize.x);
+
+    if (position < 0) {
+        return null;
+    }
+    if (selectedPositionX > cursorX) {
+        position += displaySize.x - selectedPositionX;
+        selectedPositionY++;
+    } else if (selectedPositionX + limits.maxX > displaySize.x) {
+        position -= selectedPositionX + limits.maxX - displaySize.x;
+    }
+    if (selectedPositionY < 0) {
+        position += Math.abs(selectedPositionY) * displaySize.x;
+    } else if (selectedPositionY + limits.maxY > displaySize.y) {
+        position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
+    }
+
+    return position;
+}
+
+/**
+ * Clamp the position of an object-array OSD element to screen bounds.
+ * @param {number} position - The proposed grid index.
+ * @param {object} displaySize - The screen size {x, y, total}.
+ * @param {object} limits - The layout limits {minX, maxX, minY, maxY}.
+ * @returns {number} The clamped position grid index.
+ */
+export function clampObjectArrayPreviewPosition(position, displaySize, limits) {
+    const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
+    const selectedPositionY = Math.floor(position / displaySize.x);
+
+    if (selectedPositionX + limits.minX < 0) {
+        position += Math.abs(selectedPositionX + limits.minX);
+    } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
+        position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
+    }
+    if (selectedPositionY + limits.minY < 0) {
+        position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
+    } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
+        position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
+    }
+
+    if (position < 0) {
+        // The anchor of an element whose cells all sit below it (positive minY) may
+        // still land above row 0 after clamping, but positions pack into unsigned
+        // x/y for MSP (see stores/osd.js pack.position): settle on row 0, keeping
+        // the column instead of jumping to the top-left corner.
+        position = ((position % displaySize.x) + displaySize.x) % displaySize.x;
+    }
+
+    return position;
+}
+
+/**
+ * Clamp the position of any array OSD element (object array or string array) to screen bounds.
+ * @param {object} displayItem - The display item.
+ * @param {number} position - The proposed grid index.
+ * @param {object} displaySize - The screen size {x, y, total}.
+ * @param {number} cursorX - The column the user cursor is pointing to.
+ * @returns {number|null} The clamped position grid index or null if invalid.
+ */
+export function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
+    const limits = searchLimitsElement(displayItem.preview);
+    if (isStringArrayPreview(displayItem.preview)) {
+        return clampStringArrayPreviewPosition(position, displaySize, cursorX, limits);
+    }
+    return clampObjectArrayPreviewPosition(position, displaySize, limits);
+}

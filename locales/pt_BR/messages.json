@@ -39,14 +39,6 @@
         "message": "Você precisa atualizar a página para ter acesso às atualizações recentes. Fazendo isso agora, a página será recarregada, com perda das informações não salvas e interrompendo operações em progresso. <br><br>Você quer atualizar a página agora? Você também pode rejeitar essa mensagem e atualizar manualmente em outra oportunidade.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "O aplicativo está pronto para ser usado offline",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Você pode instalá-lo como um aplicativo autônomo no seu dispositivo, se quiser. Pesquise a opção na barra de endereços do seu navegador.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Seu hardware não suporta esta operação."
     },

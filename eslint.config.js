@@ -1,10 +1,9 @@
-import { defineConfig } from "eslint-define-config";
 import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 
-export default defineConfig([
+export default [
     {
         // Vendored blackbox-log-viewer source and assets — keep upstream formatting, not linted
         // against configurator rules to avoid churn and drift on re-vendor.
@@ -60,4 +59,4 @@ export default defineConfig([
         },
         processor: "vue/vue",
     },
-]);
+];

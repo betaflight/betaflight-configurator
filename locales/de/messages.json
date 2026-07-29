@@ -45,14 +45,6 @@
         "message": "Sie müssen die Seite aktualisieren, um die neuesten Änderungen zu erhalten. Wenn Sie sie jetzt aktualisieren, wird die Seite neu geladen und Sie verlieren alle nicht gespeicherten Änderungen und brechen alle laufenden Vorgänge ab.<br><br>Möchten Sie sie jetzt aktualisieren? Sie können diese Nachricht auch schließen und die Seite später manuell aktualisieren.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "Die Anwendung ist bereit für die Offline-Nutzung",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Sie können es als eigenständige Anwendung auf Ihrem Gerät installieren, wenn Sie möchten. Suchen Sie in der Adressleiste oder im Menü Ihres Browsers nach dieser Option.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Diese Funktion wird von deinem System nicht unterstützt."
     },

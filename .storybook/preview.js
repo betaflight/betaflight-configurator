@@ -1,4 +1,4 @@
-import { setup } from "@storybook/vue3";
+import { setup } from "@storybook/vue3-vite";
 import i18next from "i18next";
 import HttpBackend from "i18next-http-backend";
 import I18NextVue from "i18next-vue";
@@ -56,7 +56,6 @@ export const decorators = [
 ];
 
 export const parameters = {
-    actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
         matchers: {
             color: /(background|color)$/i,

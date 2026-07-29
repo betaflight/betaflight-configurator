@@ -21,6 +21,7 @@ const lineFeedCode = 10;
 const carriageReturnCode = 13;
 const enterKeyCode = 13;
 const tabKeyCode = 9;
+const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
 
 function removePromptHash(promptText) {
     return promptText.replace(/^# /, "");
@@ -103,7 +104,7 @@ async function submitSupportData(
     await executeCommands(commands.join("\n"));
     const delay = setInterval(async () => {
         const time = Date.now();
-        if (state.lastArrival < time - 250) {
+        if (state.lastArrival < time - SERIAL_IDLE_MS) {
             clearInterval(delay);
             trackPollInterval?.(null);
             const text = getOutputHistory();
@@ -153,8 +154,10 @@ export function useCli() {
     let scrollNearBottomPx = 40; // fallback; updated dynamically via ResizeObserver
     let cliResizeObserver = null;
 
-    const MAX_OUTPUT_NODES = 4000; // ~4 nodes/line → ≈1000 rendered lines max
-    const PRUNE_TO_NODES = 2500;
+    /** @type {number} */
+    const MAX_OUTPUT_NODES = 32000; // ~4 nodes/line → ≈8000 rendered lines max
+    /** @type {number} */
+    const PRUNE_TO_NODES = 24000; // ≈6000 rendered lines
 
     let outputBuffer = "";
     let outputFlushRaf = null;
@@ -254,7 +257,7 @@ export function useCli() {
             console.log(`[CLI] paste: ${outputArray.length} lines`);
             if (pastePollInterval) clearInterval(pastePollInterval);
             pastePollInterval = setInterval(() => {
-                if (state.lastArrival > startMs && Date.now() - state.lastArrival > 250) {
+                if (state.lastArrival > startMs && Date.now() - state.lastArrival > SERIAL_IDLE_MS) {
                     clearInterval(pastePollInterval);
                     pastePollInterval = null;
                     console.log(`[CLI] paste done: ${((performance.now() - t0) / 1000).toFixed(2)}s`);
@@ -526,7 +529,6 @@ export function useCli() {
             outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // start building autoComplete
                 CliAutoComplete.builderStart();
             }
         }
@@ -648,7 +650,11 @@ export function useCli() {
         }
 
         // Initialize CLI autocomplete cache builder
-        CliAutoComplete.initialize(sendLine, writeToOutput);
+        CliAutoComplete.initialize(
+            sendLine,
+            writeToOutput,
+            () => !pastePollInterval && Date.now() - state.lastArrival > SERIAL_IDLE_MS,
+        );
 
         // Connect the autocomplete composable to the textarea's v-model
         autocomplete.connect(
@@ -672,6 +678,10 @@ export function useCli() {
         );
     };
 
+    /**
+     * Tear down the CLI session.
+     * @returns {boolean} true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
+     */
     const cleanup = () => {
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
@@ -713,7 +723,10 @@ export function useCli() {
             copyResetTimeout = null;
         }
 
-        if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
+        // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
+        // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
+        const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
+        if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
                 reinitializeConnection();
             });
@@ -723,6 +736,8 @@ export function useCli() {
         CONFIGURATOR.cliValid = false;
 
         CliAutoComplete.cleanup();
+
+        return rebooting;
     };
 
     const adaptPhones = () => {

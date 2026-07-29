@@ -356,8 +356,10 @@ export class UsbDfuProtocol extends EventTarget {
                 return;
             }
 
-            // Keep this for new MCU debugging
-            // console.log('Descriptors: ' + descriptors);
+            // Log the raw memory-layout descriptor strings the device reported.
+            // These come from the on-chip bootloader (ST ROM for STM32C5/H5), so this is
+            // the fastest way to diagnose a new MCU whose layout string we don't yet handle.
+            console.log(`${this.logHead} DFU memory descriptors:`, descriptors);
             const parseDescriptor = (str) => {
                 // F303: "@Internal Flash  /0x08000000/128*0002Kg"
                 // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
@@ -397,6 +399,13 @@ export class UsbDfuProtocol extends EventTarget {
                 }
 
                 if (!tmp1[0].startsWith("@")) {
+                    return null;
+                }
+
+                // Need at least "@type", start address and a sector list. A truncated
+                // string such as "@Truncated /0x1FFF0000" would otherwise dereference
+                // tmp1[2] (undefined) below and throw.
+                if (tmp1.length < 3 || typeof tmp1[2] !== "string") {
                     return null;
                 }
 
@@ -453,10 +462,27 @@ export class UsbDfuProtocol extends EventTarget {
                 };
                 return memory;
             };
-            const chipInfo = descriptors.map(parseDescriptor).reduce((o, v) => {
-                o[v.type.toLowerCase().replace(" ", "_")] = v;
+            // Parse each descriptor defensively: a single unrecognized memory-layout
+            // string (common on brand-new silicon such as the STM32C5 ROM bootloader)
+            // must not throw and abort the whole flash. Skip the ones we can't parse
+            // and keep the regions we understand.
+            const chipInfo = descriptors.reduce((o, str) => {
+                let memory = null;
+                try {
+                    memory = parseDescriptor(str);
+                } catch (error) {
+                    // Belt-and-suspenders: never let a parser exception on one malformed
+                    // string abort chip detection for the whole device.
+                    console.warn(`${this.logHead} Error parsing memory descriptor "${str}":`, error);
+                }
+                if (!memory) {
+                    console.warn(`${this.logHead} Skipping unparseable memory descriptor: "${str}"`);
+                    return o;
+                }
+                o[memory.type.toLowerCase().replace(" ", "_")] = memory;
                 return o;
             }, {});
+            console.log(`${this.logHead} Detected memory regions:`, Object.keys(chipInfo));
             callback(chipInfo, resultCode);
         });
     }
@@ -517,24 +543,59 @@ export class UsbDfuProtocol extends EventTarget {
         }
     }
 
-    // routine calling DFU_CLRSTATUS until device is in dfuIDLE state
+    // Routine that brings the device back to dfuIDLE before the next operation.
+    //
+    // Per the DFU spec, the request needed depends on the current state:
+    //   - dfuERROR                      -> DFU_CLRSTATUS
+    //   - dfuDNLOAD_IDLE / dfuUPLOAD_IDLE -> DFU_ABORT
+    //   - busy/sync/manifest states      -> just poll GETSTATUS until it settles
+    // The old code always sent DFU_CLRSTATUS. Older ST/AT32/GD32 bootloaders tolerate a
+    // CLRSTATUS issued outside dfuERROR, but the STM32C5 ROM correctly STALLs it, which
+    // aborted the flash right at the start of the verify phase (device was in dfuDNLOAD_IDLE
+    // after writing). Sending the spec-correct request fixes C5 and stays valid elsewhere.
+    /**
+     * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
+     * @returns {void}
+     */
     clearStatus(callback) {
+        // Bound the retries so an unexpected/never-idling bootloader state surfaces as an
+        // error instead of looping forever (a failed GETSTATUS returns an empty buffer, which
+        // otherwise spins tightly since data[4] is undefined and the reported delay is 0).
+        const maxAttempts = 100;
+        let attempts = 0;
+
         const check_status = () => {
             this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                const state = data[4];
                 let delay = 0;
+                if (data.length) {
+                    delay = data[1] | (data[2] << 8) | (data[3] << 16);
+                }
 
-                if (data[4] === this.state.dfuIDLE) {
+                if (state === this.state.dfuIDLE) {
                     callback(data);
+                } else if (++attempts >= maxAttempts) {
+                    console.log(
+                        `${this.logHead} clearStatus: device did not reach dfuIDLE after ${maxAttempts} attempts (state: ${state})`,
+                    );
+                    this.flashingMessage(
+                        i18n.getMessage("stm32ProgrammingFailed"),
+                        this.options?.flashMessageTypes?.INVALID,
+                    );
+                    this.cleanup();
+                } else if (state === this.state.dfuERROR) {
+                    setTimeout(
+                        () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status),
+                        delay,
+                    );
+                } else if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuUPLOAD_IDLE) {
+                    setTimeout(() => this.controlTransfer("out", this.request.ABORT, 0, 0, 0, 0, check_status), delay);
                 } else {
-                    if (data.length) {
-                        delay = data[1] | (data[2] << 8) | (data[3] << 16);
-                    }
-                    setTimeout(clear_status, delay);
+                    // Busy/sync/manifest state (or an empty/failed status read): wait and re-poll.
+                    setTimeout(check_status, delay);
                 }
             });
         };
-
-        const clear_status = () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status);
 
         check_status();
     }
@@ -702,7 +763,10 @@ export class UsbDfuProtocol extends EventTarget {
                                 this.leave();
                             } else {
                                 this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
-                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                    // Never let a missing/zero wTransferSize into the write loop
+                                    // (it would stall or divide the payload into empty blocks).
+                                    const reportedSize = resultCode ? 0 : descriptor?.wTransferSize;
+                                    this.transferSize = reportedSize > 0 ? reportedSize : 2048;
                                     console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
                                     this.clearStatus(() => {
                                         this.upload_procedure(nextAction);
@@ -715,8 +779,15 @@ export class UsbDfuProtocol extends EventTarget {
                 break;
             case 1: {
                 if (typeof this.chipInfo.option_bytes === "undefined") {
-                    console.log(`${this.logHead} Failed to detect option bytes`);
-                    this.cleanup();
+                    // Some bootloaders (e.g. the STM32C5 ROM) don't expose an "@Option Bytes"
+                    // DFU alternate setting, so we can't run the read-protection pre-check.
+                    // Skip straight to erase instead of aborting: a non-read-protected chip
+                    // flashes fine, and a protected one surfaces errVENDOR during erase (handled).
+                    // Falling through here previously dereferenced the missing option_bytes and
+                    // threw inside an async callback, hanging the flash silently.
+                    console.log(`${this.logHead} No option bytes region; skipping read-protection check`);
+                    this.upload_procedure(2);
+                    break;
                 }
 
                 const unprotect = () => {

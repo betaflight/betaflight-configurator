@@ -58,6 +58,7 @@ jobs:
         with:
           ref: ${{ inputs.commit_ref }}
           persist-credentials: false  # Don't persist GitHub token
+          allow-unsafe-pr-checkout: true  # checkout@v5 fork-checkout gate; job is contents:read, no secrets
 
       - name: Cache node_modules
         uses: actions/cache@v4

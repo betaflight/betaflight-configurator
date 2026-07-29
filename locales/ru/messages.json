@@ -42,14 +42,6 @@
         "message": "Вам нужно обновить страницу, чтобы получить последние изменения. Обновив страницу, вы потеряете все несохраненные изменения и прервёте текущие операции.<br><br> Желаете обновить его сейчас? Вы также можете отменить это сообщение и обновить страницу вручную позже.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "Приложение готово к использованию в автономном режиме",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Если хотите, вы можете установить это приложение отдельно на ваше устройство. Найдите эту опцию адресной строке или меню браузера.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Операция не поддерживается устройством."
     },

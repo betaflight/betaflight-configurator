@@ -42,14 +42,6 @@
         "message": "Necesitas refrescar la página para obtener los últimos cambios. Refrescarla ahora recargará la página y perderás cualquier cambio no guardado y abortará cualquier operación en progreso.<br><br>¿Quieres refrescar la página ahora? Tambien puedes cerrar este mensaje y refrescar la página manualmente después.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "La aplicación está lista para ser usada sin conexión",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Puedes instalarla como una aplicación independiente en tu dispositivo si así lo deseas. Busca la opción en la barra de direcciones o en el menú de tu navegador.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Esta operación no es compatible con su hardware."
     },

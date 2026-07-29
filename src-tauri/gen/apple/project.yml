@@ -10,7 +10,7 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: Betaflight App
+      PRODUCT_NAME: Betaflight
       PRODUCT_BUNDLE_IDENTIFIER: com.betaflight.app
       DEVELOPMENT_TEAM: 88U8UVP252
 targetTemplates:
@@ -54,6 +54,9 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         CFBundleShortVersionString: 2026.6.0
         CFBundleVersion: "2026.6.0"
+        NSLocalNetworkUsageDescription: Betaflight connects to your flight controller bridge over the local network.
+        NSBonjourServices:
+          - _betaflight._tcp
     entitlements:
       path: betaflight-app_iOS/betaflight-app_iOS.entitlements
     scheme:
@@ -74,6 +77,7 @@ targets:
       - framework: libapp.a
         embed: false
       - sdk: CoreGraphics.framework
+      - sdk: Network.framework
       - sdk: Metal.framework
       - sdk: MetalKit.framework
       - sdk: QuartzCore.framework

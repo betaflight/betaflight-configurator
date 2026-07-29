@@ -42,11 +42,11 @@
         "message": "Heu d'actualitzar la pàgina per obtenir els darrers canvis. En actualitzar-lo ara, es tornarà a carregar la pàgina i perdràs els canvis no desats i avortarà qualsevol operació en curs.<br><br>Vols actualitzar-la ara? També podeu ignorar aquest missatge i actualitzar la pàgina manualment més tard.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "L'aplicació està preparada per utilitzar-se fora de línia",
+    "pwaOnOfflineReadyTitle": {
+        "message": "L'aplicació està llesta per utilitzar-se fora de línia",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Podeu instal·lar-lo com a aplicació autònoma al vostre dispositiu si voleu. Cerqueu l'opció a la barra d'adreces o al menú del vostre navegador.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -391,6 +391,18 @@
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Ha fallat<\/span> al obrir el port sèrie"
+    },
+    "connectionFailedTitle": {
+        "message": "Connexió fallida"
+    },
+    "connectionFailed": {
+        "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
+    "connectionLostTitle": {
+        "message": "S'ha perdut la connexió"
+    },
+    "connectionLostUnresponsive": {
+        "message": "El controlador de vol <span class=\"message-negative\">ha deixat de respondre<\/span> i la connexió s'ha tancat. Torneu a connectar la placa i torneu-ho a intentar; si el problema persisteix, reinicieu el controlador de vol."
     },
     "serialPortClosedOk": {
         "message": "Port sèrie <span class=\"message-positive\">correctament<\/span> tancat"
@@ -1421,7 +1433,100 @@
         "message": "Graus de Pitch"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "Graus de Yaw"
+        "message": "Yaw°"
+    },
+    "configurationMagAlignment": {
+        "message": "Alineació del magnetòmetre"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "Detecció automàtica de l'alineació de la placa"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Assistent d'alineació de la placa"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Aquest assistent detecta com està muntat el controlador de vol guiant-vos a través de quatre moviments senzills. Col·loqueu el dron sobre una superfície plana amb la càmera apuntant cap a la pantalla (lluny de tú) i, a continuació, segueix les instruccions."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Comença"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Pas"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "Inclina el nas cap amunt uns 45°."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Inclina el nas cap abaix uns 45°."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Torna a posar el dron en una posició anivellada."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Manteniu-lo quiet..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Assenta-ho"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continua inclinant-ho"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Torna-ho a nivell"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Eix detectat - Mantenir fix"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotació"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Processant alineació..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Alineació detectada"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "L'alineació de la placa sembla correcta; no cal fer cap canvi."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Actual"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Detectat"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Enrere"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Aplica"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Canceŀlar"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Torna-ho a provar"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Captura ara"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "La confiança de detecció es redueix; verifiqueu el resultat amb l'actitud en directe abans d'aplicar-lo."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Cal un acceleròmetre per executar aquest assistent."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Si us plau, calibra l'acceleròmetre abans d'executar aquest assistent."
     },
     "configurationGyroAlignment": {
         "message": "Alineació del giroscopi"
@@ -7707,5 +7812,923 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Perfil de l'usuari"
+    },
+    "labelEmail": {
+        "message": "Correu electrònic"
+    },
+    "placeholderEmailAddress": {
+        "message": "Introdueix la teva adreça de correu electrònic"
+    },
+    "userEmailRequired": {
+        "message": "L'adreça de correu electrònic és obligatòria"
+    },
+    "profileLoginMessage": {
+        "message": "Cal que inicieu la sessió per veure el vostre perfil."
+    },
+    "tabBackups": {
+        "message": "Còpies de seguretat"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "La clau d'accés s'ha suprimit correctament"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "No s'ha pogut suprimir la clau d'accés"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "La clau d'accés s'ha suprimit correctament"
+    },
+    "userTokenDeleteFailed": {
+        "message": "No s'ha pogut suprimir la clau d'accés"
+    },
+    "userProfileLoadFailed": {
+        "message": "No s'ha pogut carregar el perfil d'usuari"
+    },
+    "userTokenLoadFailed": {
+        "message": "No s'han pogut carregar les claus d'usuari"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "No s'ha pogut carregar les claus d'usuari"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Perfil actualitzat amb èxit"
+    },
+    "userProfileUpdateFailed": {
+        "message": "No s'ha pogut actualitzar el perfil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "No s'han pogut carregar les còpies de seguretat"
+    },
+    "userBackupDownloadFailed": {
+        "message": "No s'ha pogut descarregar la còpia de seguretat"
+    },
+    "userBackupFileEmpty": {
+        "message": "L'arxiu de back up és buit"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Perfil actualitzat amb èxit"
+    },
+    "userBackupUpdateFailed": {
+        "message": "No s'ha pogut actualitzar la còpia de seguretat"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "S'ha eliminat la còpia de seguretat amb èxit"
+    },
+    "userBackupDeleteFailed": {
+        "message": "No s'ha pogut suprimir la còpia de seguretat"
+    },
+    "actionRestore": {
+        "message": "Restaurar"
+    },
+    "titleRestoreBackup": {
+        "message": "Restaura còpia de seguretat"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "Vols aplicar la còpia de seguretat \"{{name}}\" al controlador de vol connectat? La configuració actual se sobreescriurà."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "Restaurant còpia de seguretat..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "Còpia de seguretat restaurada correctament"
+    },
+    "userBackupRestoreFailed": {
+        "message": "No s'ha pogut restaurar la còpia de seguretat"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>AVÍS!<\/span><br\/>S'ha aplicat una còpia de seguretat amb errors del CLI."
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "No hi ha contrasenyes disponibles"
+    },
+    "userTokenNoTokens": {
+        "message": "No hi ha contrasenyes disponibles"
+    },
+    "profileBackupSuccess": {
+        "message": "Còpia de seguretat realitzada"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Còpia de seguretat desada correctament a l'API"
+    },
+    "profileBackupApiFail": {
+        "message": "No s'ha pogut desar la còpia de seguretat a l'API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Còpia de seguretat fallida"
+    },
+    "labelLogin": {
+        "message": "Iniciar Sessió"
+    },
+    "labelSignOut": {
+        "message": "Tanca la sessió"
+    },
+    "labelAvatarUrl": {
+        "message": "URL de l'avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Introdueix l'URL de la imatge del teu avatar"
+    },
+    "labelCreatePasskey": {
+        "message": "Crea la clau d'accés"
+    },
+    "labelUsePasskey": {
+        "message": "Utilitza la clau d'accés"
+    },
+    "labelSignInWithPasskey": {
+        "message": "Inicia sessió amb clau d'accés"
+    },
+    "labelSendVerificationCode": {
+        "message": "Envia codi de verificació"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "Inicia la sessió amb el codi de correu electrònic"
+    },
+    "labelBackToPasskey": {
+        "message": "Acceptar l'inici de sessió amb clau d'accés"
+    },
+    "labelBack": {
+        "message": "Enrere"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "No tens cap clau d'accés?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "Configura'n un"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "Utilitza la teva contrasenya per iniciar la sessió"
+    },
+    "descriptionCodeRequest": {
+        "message": "T'enviarem un codi de verificació per correu electrònic"
+    },
+    "descriptionCodeEntered": {
+        "message": "Introduïu el codi que hem enviat a $1"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Introduïu el codi de verificació"
+    },
+    "labelVerificationCode": {
+        "message": "Codi de verificació"
+    },
+    "labelCode": {
+        "message": "Codi"
+    },
+    "userLoggingIn": {
+        "message": "S'està iniciant la sessió..."
+    },
+    "userSignedOut": {
+        "message": "Sessio tancada"
+    },
+    "userSignOutFailed": {
+        "message": "Error en tancar la sessió"
+    },
+    "userLoginSuccess": {
+        "message": "S'ha iniciat la sessió correctament"
+    },
+    "userLoginFailed": {
+        "message": "S'ha produït un error a l'accedir"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "No s'ha pogut crear la clau d'accés"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Clau d'accés creada correctament"
+    },
+    "userVerifyingCode": {
+        "message": "Verificant codi..."
+    },
+    "userCreatingPasskey": {
+        "message": "S'està creant la clau de pas..."
+    },
+    "userCodeRequired": {
+        "message": "Cal un codi de verificació"
+    },
+    "userSendingCode": {
+        "message": "Enviant el codi de verificació..."
+    },
+    "userSendCodeFailed": {
+        "message": "No s'ha pogut enviar el codi de verificació"
+    },
+    "dataWaitingForData": {
+        "message": "Esperant dades..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Creat"
+    },
+    "labelLastUsed": {
+        "message": "Usada per darrera vegada"
+    },
+    "labelActions": {
+        "message": "Accions"
+    },
+    "labelDetails": {
+        "message": "Detalls"
+    },
+    "labelExpiry": {
+        "message": "Caducitat"
+    },
+    "labelDescription": {
+        "message": "Descripció"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Descarrega"
+    },
+    "actionBackup": {
+        "message": "Còpia de Seguretat"
+    },
+    "actionEdit": {
+        "message": "Edita"
+    },
+    "actionDelete": {
+        "message": "Esborra"
+    },
+    "actionSave": {
+        "message": "Desa"
+    },
+    "titleEditProfile": {
+        "message": "Edita perfil"
+    },
+    "titleLogin": {
+        "message": "Iniciar Sessió"
+    },
+    "labelName": {
+        "message": "Nom"
+    },
+    "labelAddress": {
+        "message": "Adreça"
+    },
+    "labelCountry": {
+        "message": "País"
+    },
+    "confirmDelete": {
+        "message": "Està segur que vols esborrar aquest {{item}}?"
+    },
+    "itemBackup": {
+        "message": "Còpia de Seguretat"
+    },
+    "itemToken": {
+        "message": "clau"
+    },
+    "itemPasskey": {
+        "message": "clau d'accés"
+    },
+    "notLoggedIn": {
+        "message": "No heu iniciat sessió"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "No hi ha cap còpia de seguretat disponible"
+    },
+    "backupRequiresConnection": {
+        "message": "Connecta una controladora de vol per habilitar aquesta acció",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "Edita la còpia de seguretat"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU desconegut"
+    },
+    "sectionUserTokens": {
+        "message": "Tokens d'usuari"
+    },
+    "sectionUserPasskeys": {
+        "message": "Claus de pas d'usuari"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Alinear a la posició",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Tria la posició",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Prevol"
+    },
+    "preflightTitle": {
+        "message": "Comprovació de l'entorn previ al vol"
+    },
+    "preflightLocation": {
+        "message": "Ubicació del vol"
+    },
+    "preflightUseMyLocation": {
+        "message": "Utilitza la meva ubicació"
+    },
+    "preflightDetecting": {
+        "message": "Detectant..."
+    },
+    "preflightOr": {
+        "message": "o entra ubicació:"
+    },
+    "preflightLatitude": {
+        "message": "Latitud"
+    },
+    "preflightLongitude": {
+        "message": "Longitud"
+    },
+    "preflightApply": {
+        "message": "Aplica"
+    },
+    "preflightLaunchStatus": {
+        "message": "Estat del llançament"
+    },
+    "preflightStatusGo": {
+        "message": "ANAR"
+    },
+    "preflightStatusCaution": {
+        "message": "PRECAUCIÓ"
+    },
+    "preflightStatusWarning": {
+        "message": "ADVERTÈNCIA"
+    },
+    "preflightStatusNoGo": {
+        "message": "STOP"
+    },
+    "preflightStatusNoData": {
+        "message": "No hi ha dades"
+    },
+    "preflightCheckWind": {
+        "message": "Vent"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibilitat"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitació"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Desconegut"
+    },
+    "preflightWmoClearSky": {
+        "message": "Cel clar"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Majoritàriament clar"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Parcialment ennuvolat"
+    },
+    "preflightWmoOvercast": {
+        "message": "Cobert"
+    },
+    "preflightWmoFog": {
+        "message": "Boira"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Deixant boira tintada"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Plugim lleuger"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Plugim moderat"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Plugim dens"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Plugim gelat lleuger"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Plugim gelat dens"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Pluja lleugera"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Pluja moderada"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Pluja forta"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Pluja gebradora suau"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Pluja gebradora forta"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Nevada lleu"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Nevada moderada"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Nevada intensa"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Flocs de neu"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Ruixats de pluja lleugera"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Xàfecs moderats"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Xàfecs violents"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Ruixats de neu lleugers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Ruixats de neu intensos"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Trons"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Tempesta amb calamarsa lleugera"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Tempesta amb forta calamarsa"
+    },
+    "preflightKpLow": {
+        "message": "Baix"
+    },
+    "preflightKpModerate": {
+        "message": "Moderat"
+    },
+    "preflightKpElevated": {
+        "message": "Elevat"
+    },
+    "preflightKpStorm": {
+        "message": "Tempesta"
+    },
+    "preflightWindCalm": {
+        "message": "Tranquil"
+    },
+    "preflightWindLight": {
+        "message": "Clar"
+    },
+    "preflightWindModerate": {
+        "message": "Moderat"
+    },
+    "preflightWindStrong": {
+        "message": "Fort"
+    },
+    "preflightWindDangerous": {
+        "message": "Perillós"
+    },
+    "preflightVisExcellent": {
+        "message": "Excel·lent"
+    },
+    "preflightVisGood": {
+        "message": "Bo"
+    },
+    "preflightVisReduced": {
+        "message": "Reduït"
+    },
+    "preflightVisPoor": {
+        "message": "Pobre"
+    },
+    "preflightPrecipNone": {
+        "message": "Cap"
+    },
+    "preflightPrecipLight": {
+        "message": "Clar"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderat"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Intensa"
+    },
+    "preflightDewNoRisk": {
+        "message": "Sense risc"
+    },
+    "preflightDewLowRisk": {
+        "message": "Risc baix"
+    },
+    "preflightDewFogLikely": {
+        "message": "Probable boira\/condensació"
+    },
+    "preflightDewFogExpected": {
+        "message": "S'espera entelament de la lent\/boira"
+    },
+    "preflightUvLow": {
+        "message": "Baix"
+    },
+    "preflightUvModerate": {
+        "message": "Moderat"
+    },
+    "preflightUvHigh": {
+        "message": "Alt"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Molt alt"
+    },
+    "preflightBatteryRisk": {
+        "message": "Risc per la bateria"
+    },
+    "preflightBatteryOk": {
+        "message": "Rang normal"
+    },
+    "preflightBatteryCool": {
+        "message": "Rendiment reduït, bateries calentes"
+    },
+    "preflightBatteryCold": {
+        "message": "Capacitat molt reduïda"
+    },
+    "preflightBatteryHot": {
+        "message": "Risc d'inflor, mantenir a l'ombra"
+    },
+    "preflightBatteryExtreme": {
+        "message": "No volar, calor extrema"
+    },
+    "preflightCheckBattery": {
+        "message": "Bateria"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Densitat alta"
+    },
+    "preflightFeelsLike": {
+        "message": "Sensació"
+    },
+    "preflightFogRisk": {
+        "message": "Risc de boira"
+    },
+    "preflightFogUnlikely": {
+        "message": "Poc probable"
+    },
+    "preflightFogLow": {
+        "message": "Biax risc"
+    },
+    "preflightFogModerate": {
+        "message": "Risc Moderat"
+    },
+    "preflightFogHigh": {
+        "message": "Alt risc"
+    },
+    "preflightElevation": {
+        "message": "Elevació"
+    },
+    "preflightDensityAlt": {
+        "message": "Altitud de densitat"
+    },
+    "preflightDaNormal": {
+        "message": "Rendiment normal"
+    },
+    "preflightDaReduced": {
+        "message": "Elevació lleugerament reduïda"
+    },
+    "preflightDaLow": {
+        "message": "Rendiment notablement reduït"
+    },
+    "preflightDaPoor": {
+        "message": "Reducció significativa de l'elevació"
+    },
+    "preflightCivilTwilight": {
+        "message": "Finestra civil crepuscular"
+    },
+    "preflightRefresh": {
+        "message": "Actualitza"
+    },
+    "preflightCurrentWeather": {
+        "message": "Temps actual"
+    },
+    "preflightWind": {
+        "message": "Velocitat del vent"
+    },
+    "preflightGusts": {
+        "message": "Ràfegues de vent"
+    },
+    "preflightVisibility": {
+        "message": "Visibilitat"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitació"
+    },
+    "preflightCloudCover": {
+        "message": "Nuvolositat"
+    },
+    "preflightHumidity": {
+        "message": "Humitat"
+    },
+    "preflightPressure": {
+        "message": "Pressió"
+    },
+    "preflightDewPoint": {
+        "message": "Punt de rosada"
+    },
+    "preflightFlightWindow": {
+        "message": "Finestra de vol"
+    },
+    "preflightSunrise": {
+        "message": "Sortida del sol"
+    },
+    "preflightSunset": {
+        "message": "Posta de sol"
+    },
+    "preflightDaylight": {
+        "message": "Llum del dia"
+    },
+    "preflightUvIndex": {
+        "message": "Índex UV"
+    },
+    "preflightTempRange": {
+        "message": "Rang de temperatura"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Actual"
+    },
+    "preflightDaytime": {
+        "message": "Diürn"
+    },
+    "preflightNighttime": {
+        "message": "Nocturn"
+    },
+    "preflightWindForecast": {
+        "message": "Previsió de vent en altitud"
+    },
+    "preflightWindForecastHelp": {
+        "message": "La velocitat del vent a diferents altituds és crítica per als vols FPV de llarg abast i gran altitud. Les altituds més elevades solen tenir vents més forts."
+    },
+    "preflightTime": {
+        "message": "Hora"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Ràfegues"
+    },
+    "preflightRainProb": {
+        "message": "Pluja %"
+    },
+    "preflightWindUnit": {
+        "message": "Velocitats del vent en m\/s. Altituds sobre el nivell del terra (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Activitat solar"
+    },
+    "preflightSolarHelp": {
+        "message": "Una activitat solar elevada (Kp > 5) provoca interferències ionosfèriques, que poden degradar la precisió del GPS i afectar la fiabilitat del rescat per GPS."
+    },
+    "preflightGeoStorm": {
+        "message": "Tempesta geomagnètica"
+    },
+    "preflightSolarRadiation": {
+        "message": "Radiació solar"
+    },
+    "preflightRadioBlackout": {
+        "message": "Apagada de ràdio"
+    },
+    "preflightLastMeasurement": {
+        "message": "Darrera mesura"
+    },
+    "preflightLoadingSolar": {
+        "message": "Carregant dades solars..."
+    },
+    "preflightGNSS": {
+        "message": "Estat del GNSS \/ GPS"
+    },
+    "preflightGNSSHelp": {
+        "message": "La qualitat del senyal dels satèl·lits GNSS es veu afectada per l'activitat solar. Els valors alts de Kp poden degradar la precisió de la posició GPS i reduir la fiabilitat del rescat per GPS."
+    },
+    "preflightGNSSNote": {
+        "message": "La precisió del GPS es veu afectada per les condicions solars\/geomagnètiques. Connecta el teu quad per obtenir dades de satèl·lit en directe a la pestanya GPS."
+    },
+    "preflightKpEffect": {
+        "message": "Impacte ionosfèric"
+    },
+    "preflightGPSRescue": {
+        "message": "Estat del rescat per GPS"
+    },
+    "preflightMagDeclination": {
+        "message": "Declinació Magnètica"
+    },
+    "preflightMagInclination": {
+        "message": "Inclinació Magnètica"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Eina de planificació de satèl·lits GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Espai aeri i zones d'exclusió aèria"
+    },
+    "preflightAirspaceNote": {
+        "message": "Consulteu sempre les restriccions de l'espai aeri local i els NOTAM abans de volar. Les normes varien segons el país i la regió."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Mapa de seguretat de drons (Altitud Àngel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "Carta de l'espai aeri SkyVector"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Mapa d'ubicació"
+    },
+    "preflightNoData": {
+        "message": "Defineix una ubicació per carregar les dades de l'entorn"
+    },
+    "preflightAttribution": {
+        "message": "Dades meteorològiques: Open-Meteo.com (CC BY 4.0) | Dades solars: Centre de Predicció Meteorològica Espacial de la NOAA"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Ubicacions desades..."
+    },
+    "preflightLoadLocation": {
+        "message": "Carrega"
+    },
+    "preflightSaveLocation": {
+        "message": "Desa"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "S'ha arribat al màxim de 5 ubicacions desades"
+    },
+    "preflightLocationLabel": {
+        "message": "Nom del lloc (20 caràcters màxim)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Suprimeix la ubicació seleccionada"
+    },
+    "preflightRenameLocation": {
+        "message": "Canvia el nom de la ubicació seleccionada"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Reanomenar"
+    },
+    "preflightCoordinates": {
+        "message": "Coordenades"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Desa la ubicació"
+    },
+    "preflightConfirmSave": {
+        "message": "Desa"
+    },
+    "preflightCancel": {
+        "message": "Canceŀlar"
+    },
+    "preflightGeolocationFailed": {
+        "message": "No s'ha pogut detectar la ubicació. Si us plau, introduïu les coordenades manualment."
+    },
+    "preflightIpConsentMessage": {
+        "message": "La ubicació del navegador ha fallat. La vostra ubicació aproximada es pot detectar mitjançant la vostra adreça IP a través d'ipapi.co, un servei de tercers."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Permet"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No gràcies"
+    },
+    "preflightMapSatellite": {
+        "message": "Vista de satèl·lit"
+    },
+    "preflightMapHybrid": {
+        "message": "Vista híbrida de satèl·lit i de carrer"
+    },
+    "preflightMapStreet": {
+        "message": "Vista del mapa de carrers"
+    },
+    "preflightMapZoomIn": {
+        "message": "Apropa"
+    },
+    "preflightMapZoomOut": {
+        "message": "Allunya"
+    },
+    "preflightMapFullscreen": {
+        "message": "Commuta pantalla completa"
+    },
+    "preflightKpMinimal": {
+        "message": "Impacte mínim en el GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible degradació de la precisió del GPS"
+    },
+    "preflightKpSevere": {
+        "message": "S'espera una interferència significativa del GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Comproveu primer l'activitat solar"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Rescat GPS fiable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Rescat GPS no fiable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Rescat GPS no recomanat"
+    },
+    "preflightForecast": {
+        "message": "Previsió a cinc dies"
+    },
+    "preflightForecastHelp": {
+        "message": "Resum meteorològic diari per ajudar a planificar les sessions de vol amb antelació"
+    },
+    "preflightForecastDay": {
+        "message": "Dia"
+    },
+    "preflightForecastWeather": {
+        "message": "Temps"
+    },
+    "preflightNotamProvider": {
+        "message": "Proveïdor de NOTAM"
+    },
+    "preflightNotamProviderNone": {
+        "message": "Desactivat"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "API NOTAM de la FAA (EEUU, cal una clau API)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (espai aeri global, cal una clau API)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "Clau API de la FAA (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "Clau de l'API d'OpenAIP"
+    },
+    "preflightNotamRadius": {
+        "message": "Cerca Radius"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "Configuració de dades de l'espai aeri"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "Les dades de l'espai aeri envien les vostres coordenades al proveïdor seleccionat. No es transmeten dades personals addicionals."
+    },
+    "preflightNotamLoading": {
+        "message": "S'estan obtenint dades de l'espai aeri..."
+    },
+    "preflightNotamEmpty": {
+        "message": "No s'han trobat avisos per a aquesta ubicació i radius"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "Cal una clau API per al proveïdor seleccionat. Introduïu la vostra clau a la configuració anterior."
+    },
+    "preflightNotamFetchError": {
+        "message": "No s'han pogut obtenir les dades de l'espai aeri"
+    },
+    "preflightNotamActiveNow": {
+        "message": "Actiu ara"
+    },
+    "preflightNotamPermanent": {
+        "message": "Permanent"
+    },
+    "preflightNotamExpired": {
+        "message": "Caducat"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "Inferior"
+    },
+    "preflightNotamAltTo": {
+        "message": "Superior"
+    },
+    "preflightNotamShowMore": {
+        "message": "Mostra'n més"
+    },
+    "preflightNotamShowLess": {
+        "message": "Mostra menys"
+    },
+    "preflightNotamLastFetched": {
+        "message": "Última recuperació"
     }
 }

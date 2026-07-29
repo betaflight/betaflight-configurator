@@ -97,6 +97,20 @@ export default {
                 root: "min-w-12 w-28",
                 base: "appearance-none",
             },
+            variants: {
+                orientation: {
+                    vertical: {
+                        // Nuxt UI scales vertical spinners to 80%, leaving ~19x13px hit
+                        // targets whose click zones overlap mid-field. Instead, split the
+                        // field height between the two buttons (no overlap) and widen them —
+                        // width is unconstrained. Icons are sized to the button height.
+                        increment:
+                            "top-0 end-0 pe-1 h-1/2 scale-100 [&>button]:h-full [&>button]:py-0 [&>button]:px-1.5 [&>button>*]:size-3",
+                        decrement:
+                            "bottom-0 end-0 pe-1 h-1/2 scale-100 [&>button]:h-full [&>button]:py-0 [&>button]:px-1.5 [&>button>*]:size-3",
+                    },
+                },
+            },
             defaultVariants: {
                 size: "sm",
             },

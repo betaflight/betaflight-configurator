@@ -116,6 +116,7 @@ class Serial extends EventTarget {
     /**
      * Selects the appropriate protocol based on port path
      * @param {string|function|null} portPath - Port path or callback function for virtual mode
+     * @returns {EventTarget|undefined} The matching protocol instance, or undefined when none applies.
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
@@ -141,7 +142,39 @@ class Serial extends EventTarget {
         if (s.startsWith("bluetooth")) {
             return this._protocols.find((p) => p.name === "bluetooth")?.instance;
         }
-        return this._protocols.find((p) => p.name === "serial")?.instance;
+        const serialInstance = this._protocols.find((p) => p.name === "serial")?.instance;
+        // No native serial transport (iOS): a schemeless manual entry that looks like a network
+        // host (an IP, a dotted hostname, or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
+        // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
+        // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
+        if (!serialInstance && /^[a-z0-9.-]+(?::\d+)?$/i.test(s) && (s.includes(".") || s.includes(":"))) {
+            return this._protocols.find((p) => p.name === "tcp")?.instance;
+        }
+        return serialInstance;
+    }
+
+    /**
+     * Classifies a manual target as a local-network address (RFC1918 / IPv4 & IPv6 link-local /
+     * .local) — the range an ELRS Wi-Fi module sits in, and the range iOS Local Network gates.
+     * @param {string} target - a manual connection target (URL or bare host[:port]).
+     * @returns {boolean} true when it resolves to a local-network address.
+     */
+    isLocalNetworkAddress(target) {
+        try {
+            const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
+            // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
+            const host = new URL(withScheme).hostname.toLowerCase().replace(/^\[|\]$/g, "");
+            return (
+                host.startsWith("10.") ||
+                host.startsWith("192.168.") ||
+                /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+                host.startsWith("169.254.") ||
+                /^fe[89ab][0-9a-f]:/.test(host) ||
+                host.endsWith(".local")
+            );
+        } catch {
+            return false;
+        }
     }
 
     /**

@@ -42,14 +42,6 @@
         "message": "你需要刷新此页面才能获得最新的更改。现在刷新将重新加载此页面，同时，你将丢失所有未保存的更改，并将中止任何正在进行的操作。<br><br>你想立即刷新吗？你也可以忽略此消息并稍后手动刷新页面。",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "当前可以离线使用应用程序",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "你可以根据需要将其作为独立应用程序安装到设备上。在浏览器地址栏或菜单中能够找到该选项。",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "你的硬件不支持此操作。"
     },
@@ -1062,6 +1054,10 @@
         "message": "位置保持已激活",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "自动导航模式开关已激活",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解锁时有一个阻止解锁的标志处于活跃状态",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1398,7 +1394,16 @@
         "message": "俯仰 度"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "偏航 度"
+        "message": "偏航°"
+    },
+    "configurationMagAlignment": {
+        "message": "磁力计朝向"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "可输入任意旋转角度以允许用侧立、反转、偏转等方式安装飞控板。如果使用了外部传感器，使用「传感器朝向」（陀螺仪、加速度计、磁力计）来设定不同于飞控板朝向的传感器位置。 "
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "飞控方向设置向导"
     },
     "configurationGyroAlignment": {
         "message": "陀螺仪校准"
@@ -1692,6 +1697,25 @@
     "configurationGPSHomeOnce": {
         "message": "设置单次返航点",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHomeOnceHelp": {
+        "message": "启用后，当接通电池后第一次解锁的地点将被视为返航点。如果未开启，返航点将随每次解锁而更新。",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationSerialRX": {
+        "message": "串行接收机类型"
+    },
+    "someRXTypesDisabled": {
+        "message": "当前使用的固件配置不支持某些接收机类型。"
+    },
+    "serialRXNotSupported": {
+        "message": "所选的接收机类型不受当前固件配置支持。请选择其他提供程序或更新固件，编译新固件时，要在配置中选择正确的遥控协议。"
+    },
+    "configurationSpiRX": {
+        "message": "SPI 总线接收机类型"
+    },
+    "configurationSaved": {
+        "message": "配置已保存"
     },
     "configurationButtonSave": {
         "message": "保存并重启"
@@ -4375,6 +4399,21 @@
     "powerAmperageCalibratedScale": {
         "message": "校准电流缩放:"
     },
+    "powerBatteryProfile": {
+        "message": "电池配置"
+    },
+    "powerBatteryProfileOption": {
+        "message": "电池配置 $1"
+    },
+    "powerReceivedBatteryProfile": {
+        "message": "飞控设置了电池配置：<strong class=\"message-positive\">$1<\/strong>"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "例如：Lipo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "配置文件名称"
+    },
     "powerBatteryHead": {
         "message": "电池"
     },
@@ -5429,6 +5468,44 @@
     "osdWarningOverCap": {
         "message": "当已消耗的毫安数超过配置的容量极限时发出警告"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "当 RSNR 低于报警阈值发出警告"
+    },
+    "osdWarningTextLoad": {
+        "message": "负载",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "警告飞控的 CPU 负载过高",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdTextElementPosHoldFailed": {
+        "message": "位置保持失败",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "保持位置失败时显示警告(例如在 GPS 模式下）"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "位置保持失败",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "位置保持失败",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "自动导航任务已取消",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "未知 $1"
     },
@@ -6375,5 +6452,961 @@
     "notificationsDenied": {
         "message": "通知已被阻止。请在你的浏览器设置中启用通知。否则，你将无法收到有关耗时操作的通知。如果你使用的是 Chrome 浏览器，可以点击地址栏中的锁图标并选择“网站设置”来启用通知。",
         "description": "Message when Notifications has no or denied permissions"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Dataflash 擦除已完成",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "已下载 Dataflash 日志",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "飞控已成功编程",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "飞控编程失败",
+        "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "声呐",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "自定义串行文本",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "显示从串口收到的自定义文本"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "配置文件: 电池配置文件名称",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "显示当前激活的电池配置文件名称或索引"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "标尺",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "用户信息"
+    },
+    "labelEmail": {
+        "message": "电子邮件"
+    },
+    "placeholderEmailAddress": {
+        "message": "输入电子邮件地址"
+    },
+    "userEmailRequired": {
+        "message": "需要提供电子邮件地址"
+    },
+    "profileLoginMessage": {
+        "message": "登录以查看个人资料。"
+    },
+    "tabBackups": {
+        "message": "备份"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "成功删除密码"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "密码删除失败"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "成功删除令牌"
+    },
+    "userTokenDeleteFailed": {
+        "message": "删除令牌失败"
+    },
+    "userProfileLoadFailed": {
+        "message": "加载用户资料失败"
+    },
+    "userTokenLoadFailed": {
+        "message": "加载用户令牌失败"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "加载用户密码失败"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "成功更新个人资料"
+    },
+    "userProfileUpdateFailed": {
+        "message": "个人资料更新失败"
+    },
+    "userBackupsLoadFailed": {
+        "message": "加载备份失败"
+    },
+    "userBackupDownloadFailed": {
+        "message": "下载备份失败"
+    },
+    "userBackupFileEmpty": {
+        "message": "备份文件为空"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "备份更新成功"
+    },
+    "userBackupUpdateFailed": {
+        "message": "更新备份失败"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "备份已成功删除"
+    },
+    "userBackupDeleteFailed": {
+        "message": "删除备份失败"
+    },
+    "actionRestore": {
+        "message": "恢复"
+    },
+    "titleRestoreBackup": {
+        "message": "恢复备份"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "要对已连接的飞控应用备份 \"{{name}}\" 吗？当前的设置会被覆盖。"
+    },
+    "userBackupRestoreInProgress": {
+        "message": "正在恢复备份……"
+    },
+    "userBackupRestoreSuccess": {
+        "message": "备份恢复成功"
+    },
+    "userBackupRestoreFailed": {
+        "message": "备份恢复失败"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>警告！<\/span><br\/>备份已在存在命令行错误的情况下应用。"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "没有可用的密码"
+    },
+    "userTokenNoTokens": {
+        "message": "没有可用的令牌"
+    },
+    "profileBackupSuccess": {
+        "message": "备份成功"
+    },
+    "profileBackupApiSuccess": {
+        "message": "备份成功保存到 API"
+    },
+    "profileBackupApiFail": {
+        "message": "备份保存到 API 失败"
+    },
+    "profileBackupEmptyResult": {
+        "message": "备份失败"
+    },
+    "labelLogin": {
+        "message": "登录"
+    },
+    "labelSignOut": {
+        "message": "登出"
+    },
+    "labelAvatarUrl": {
+        "message": "头像 URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "输入您头像的图片 URL"
+    },
+    "labelCreatePasskey": {
+        "message": "创建密码"
+    },
+    "labelUsePasskey": {
+        "message": "使用密码"
+    },
+    "labelSignInWithPasskey": {
+        "message": "使用密码登录"
+    },
+    "labelSendVerificationCode": {
+        "message": "发送验证码"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "使用电子邮件代码替代登录"
+    },
+    "labelBackToPasskey": {
+        "message": "回到密钥登录"
+    },
+    "labelBack": {
+        "message": "返回"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "没有密码？"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "设置一个"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "使用您的密码登录"
+    },
+    "descriptionCodeRequest": {
+        "message": "我们将通过电子邮件发送验证码给您"
+    },
+    "descriptionCodeEntered": {
+        "message": "请输入我们发送到 $1 的验证码"
+    },
+    "titleEnterVerificationCode": {
+        "message": "请输入验证码"
+    },
+    "labelVerificationCode": {
+        "message": "验证码"
+    },
+    "labelCode": {
+        "message": "代码"
+    },
+    "userLoggingIn": {
+        "message": "正在登录……"
+    },
+    "userSignedOut": {
+        "message": "已登出"
+    },
+    "userSignOutFailed": {
+        "message": "退出登录失败"
+    },
+    "userLoginSuccess": {
+        "message": "登陆成功"
+    },
+    "userLoginFailed": {
+        "message": "登录失败"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "创建密码失败"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "密码创建成功"
+    },
+    "userVerifyingCode": {
+        "message": "验证中……"
+    },
+    "userCreatingPasskey": {
+        "message": "正在创建密码……"
+    },
+    "userCodeRequired": {
+        "message": "需要验证码"
+    },
+    "userSendingCode": {
+        "message": "正在发送验证码……"
+    },
+    "userSendCodeFailed": {
+        "message": "发送验证码失败"
+    },
+    "dataWaitingForData": {
+        "message": "等待数据中……"
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "已创建"
+    },
+    "labelLastUsed": {
+        "message": "最后使用"
+    },
+    "labelActions": {
+        "message": "操作"
+    },
+    "labelDetails": {
+        "message": "详情"
+    },
+    "labelExpiry": {
+        "message": "到期"
+    },
+    "labelDescription": {
+        "message": "说明"
+    },
+    "labelDate": {
+        "message": "日期"
+    },
+    "actionDownload": {
+        "message": "下载"
+    },
+    "actionBackup": {
+        "message": "备份"
+    },
+    "actionEdit": {
+        "message": "编辑"
+    },
+    "actionDelete": {
+        "message": "删除"
+    },
+    "actionSave": {
+        "message": "保存"
+    },
+    "titleEditProfile": {
+        "message": "编辑个人资料"
+    },
+    "titleLogin": {
+        "message": "登录"
+    },
+    "labelName": {
+        "message": "名字"
+    },
+    "labelAddress": {
+        "message": "地址"
+    },
+    "labelCountry": {
+        "message": "国家"
+    },
+    "confirmDelete": {
+        "message": "确定要删除此 {{item}} 吗？"
+    },
+    "itemBackup": {
+        "message": "备份"
+    },
+    "itemToken": {
+        "message": "令牌"
+    },
+    "itemPasskey": {
+        "message": "密码"
+    },
+    "notLoggedIn": {
+        "message": "未登录"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "无可用备份"
+    },
+    "backupRequiresConnection": {
+        "message": "连接飞控以启用此操作",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "编辑备份"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU 未知"
+    },
+    "sectionUserTokens": {
+        "message": "用户令牌"
+    },
+    "sectionUserPasskeys": {
+        "message": "用户密码"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "对齐位置",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "选择位置",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "飞行前检查"
+    },
+    "preflightTitle": {
+        "message": "飞行前环境检查"
+    },
+    "preflightLocation": {
+        "message": "飞行位置"
+    },
+    "preflightUseMyLocation": {
+        "message": "使用我的位置"
+    },
+    "preflightDetecting": {
+        "message": "检测中……"
+    },
+    "preflightOr": {
+        "message": "或输入坐标："
+    },
+    "preflightLatitude": {
+        "message": "纬度"
+    },
+    "preflightLongitude": {
+        "message": "经度"
+    },
+    "preflightApply": {
+        "message": "应用"
+    },
+    "preflightLaunchStatus": {
+        "message": "起飞状态"
+    },
+    "preflightStatusGo": {
+        "message": "可以起飞"
+    },
+    "preflightStatusCaution": {
+        "message": "！注意！"
+    },
+    "preflightStatusWarning": {
+        "message": "警告"
+    },
+    "preflightStatusNoGo": {
+        "message": "不可起飞"
+    },
+    "preflightStatusNoData": {
+        "message": "无数据"
+    },
+    "preflightCheckWind": {
+        "message": "风"
+    },
+    "preflightCheckVisibility": {
+        "message": "能见度"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "降水"
+    },
+    "preflightCheckSolar": {
+        "message": "阳光"
+    },
+    "preflightLevelUnknown": {
+        "message": "未知"
+    },
+    "preflightWmoClearSky": {
+        "message": "晴朗无云"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "大部晴朗"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "局部多云"
+    },
+    "preflightWmoOvercast": {
+        "message": "阴天"
+    },
+    "preflightWmoFog": {
+        "message": "雾"
+    },
+    "preflightWmoRimeFog": {
+        "message": "雾霾"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "小细雨"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "中度细雨"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "大细雨"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "小冻细雨"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "大冻细雨"
+    },
+    "preflightWmoSlightRain": {
+        "message": "小雨"
+    },
+    "preflightWmoModerateRain": {
+        "message": "中雨"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "大雨"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "小冻雨"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "大冻雨"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "小雪"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "中雪"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "大雪"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "冰雹"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "小阵雨"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "中阵雨"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "大阵雨"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "小阵雪"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "大阵雪"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "雷暴"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "雷暴伴小冰雹"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "雷暴伴大冰雹"
+    },
+    "preflightKpLow": {
+        "message": "低"
+    },
+    "preflightKpModerate": {
+        "message": "中等"
+    },
+    "preflightKpElevated": {
+        "message": "已提高"
+    },
+    "preflightKpStorm": {
+        "message": "风暴"
+    },
+    "preflightWindCalm": {
+        "message": "平静"
+    },
+    "preflightWindLight": {
+        "message": "微"
+    },
+    "preflightWindModerate": {
+        "message": "中"
+    },
+    "preflightWindStrong": {
+        "message": "强"
+    },
+    "preflightWindDangerous": {
+        "message": "危险"
+    },
+    "preflightVisExcellent": {
+        "message": "极佳"
+    },
+    "preflightVisGood": {
+        "message": "好"
+    },
+    "preflightVisReduced": {
+        "message": "减少"
+    },
+    "preflightVisPoor": {
+        "message": "差"
+    },
+    "preflightPrecipNone": {
+        "message": "无"
+    },
+    "preflightPrecipLight": {
+        "message": "轻"
+    },
+    "preflightPrecipModerate": {
+        "message": "中"
+    },
+    "preflightPrecipHeavy": {
+        "message": "大"
+    },
+    "preflightDewNoRisk": {
+        "message": "无风险"
+    },
+    "preflightDewLowRisk": {
+        "message": "低风险"
+    },
+    "preflightDewFogLikely": {
+        "message": "有雾\/水汽可能凝结"
+    },
+    "preflightDewFogExpected": {
+        "message": "有雾\/镜头可能起雾"
+    },
+    "preflightUvLow": {
+        "message": "低"
+    },
+    "preflightUvModerate": {
+        "message": "中"
+    },
+    "preflightUvHigh": {
+        "message": "高"
+    },
+    "preflightUvVeryHigh": {
+        "message": "非常高"
+    },
+    "preflightBatteryRisk": {
+        "message": "电池危险"
+    },
+    "preflightBatteryOk": {
+        "message": "正常范围"
+    },
+    "preflightBatteryCool": {
+        "message": "性能降低，请加热电池"
+    },
+    "preflightBatteryCold": {
+        "message": "容量严重减少"
+    },
+    "preflightBatteryHot": {
+        "message": "有鼓包风险，请置于阴凉处"
+    },
+    "preflightBatteryExtreme": {
+        "message": "请勿飞行，严重高温"
+    },
+    "preflightCheckBattery": {
+        "message": "电池"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightFeelsLike": {
+        "message": "感觉可能"
+    },
+    "preflightFogRisk": {
+        "message": "雾风险"
+    },
+    "preflightFogUnlikely": {
+        "message": "不太可能"
+    },
+    "preflightFogLow": {
+        "message": "低风险"
+    },
+    "preflightFogModerate": {
+        "message": "中风险"
+    },
+    "preflightFogHigh": {
+        "message": "高风险"
+    },
+    "preflightElevation": {
+        "message": "海拔"
+    },
+    "preflightDensityAlt": {
+        "message": "密度高度"
+    },
+    "preflightDaNormal": {
+        "message": "正常性能"
+    },
+    "preflightDaReduced": {
+        "message": "轻微升力减小"
+    },
+    "preflightDaLow": {
+        "message": "显著性能减少"
+    },
+    "preflightDaPoor": {
+        "message": "显著升力减少"
+    },
+    "preflightCivilTwilight": {
+        "message": "民用曙暮光窗口"
+    },
+    "preflightRefresh": {
+        "message": "刷新"
+    },
+    "preflightCurrentWeather": {
+        "message": "当前天气"
+    },
+    "preflightWind": {
+        "message": "风速"
+    },
+    "preflightGusts": {
+        "message": "阵风"
+    },
+    "preflightVisibility": {
+        "message": "能见度"
+    },
+    "preflightPrecipitation": {
+        "message": "降水"
+    },
+    "preflightCloudCover": {
+        "message": "云层覆盖"
+    },
+    "preflightHumidity": {
+        "message": "湿度"
+    },
+    "preflightPressure": {
+        "message": "气压"
+    },
+    "preflightDewPoint": {
+        "message": "露点"
+    },
+    "preflightFlightWindow": {
+        "message": "飞行窗口"
+    },
+    "preflightSunrise": {
+        "message": "日出"
+    },
+    "preflightSunset": {
+        "message": "日落"
+    },
+    "preflightDaylight": {
+        "message": "白天"
+    },
+    "preflightUvIndex": {
+        "message": "紫外线指数"
+    },
+    "preflightTempRange": {
+        "message": "温度范围"
+    },
+    "preflightCurrentlyDay": {
+        "message": "当前"
+    },
+    "preflightDaytime": {
+        "message": "白日时长"
+    },
+    "preflightNighttime": {
+        "message": "夜间"
+    },
+    "preflightWindForecast": {
+        "message": "高海拔有风预报"
+    },
+    "preflightWindForecastHelp": {
+        "message": "不同高度的风速对于远距离飞行和高空 FPV 飞行非常关键，更高的高度通常风力更强。"
+    },
+    "preflightTime": {
+        "message": "时间"
+    },
+    "preflightWind10m": {
+        "message": "10 米"
+    },
+    "preflightWind80m": {
+        "message": "80 米"
+    },
+    "preflightWind120m": {
+        "message": "120 米"
+    },
+    "preflightGustsShort": {
+        "message": "阵风"
+    },
+    "preflightRainProb": {
+        "message": "降雨 %"
+    },
+    "preflightWindUnit": {
+        "message": "风速以 米\/秒 为单位。高度为相对于地面的高度（真高）。"
+    },
+    "preflightSolarActivity": {
+        "message": "太阳活动"
+    },
+    "preflightSolarHelp": {
+        "message": "强太阳活动（Kp > 5）导致电离层干扰，可能降低 GPS 的精确度并影响 GPS 救援的可靠性。"
+    },
+    "preflightGeoStorm": {
+        "message": "地磁风暴"
+    },
+    "preflightSolarRadiation": {
+        "message": "太阳辐射"
+    },
+    "preflightRadioBlackout": {
+        "message": "遥控瘫痪"
+    },
+    "preflightLastMeasurement": {
+        "message": "上次测量"
+    },
+    "preflightLoadingSolar": {
+        "message": "正在加载太阳数据……"
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS 状态"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS 卫星信号质量受到太阳活动的影响。 较高的 Kp 值会降低 GPS 位置精确度，降低 GPS 救援的可靠性。"
+    },
+    "preflightGNSSNote": {
+        "message": "GPS 的精确度受到太阳\/地磁条件的影响。在 GPS 选项卡上连接您飞机的实时卫星数据。"
+    },
+    "preflightKpEffect": {
+        "message": "电离层影响"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS 救援状态"
+    },
+    "preflightMagDeclination": {
+        "message": "lian磁偏角"
+    },
+    "preflightMagInclination": {
+        "message": "磁灵敏度"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS 卫星规划工具"
+    },
+    "preflightAirspace": {
+        "message": "空域和禁飞区"
+    },
+    "preflightAirspaceNote": {
+        "message": "总是在飞行前检查当地空域限制和航行通告。规则因国家和地区而异。"
+    },
+    "preflightDroneSafetyMap": {
+        "message": "无人机安全地图（高度角）"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector 空域表"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA 航行通告（美国）"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL 航行通告（欧洲）"
+    },
+    "preflightMap": {
+        "message": "位置地图"
+    },
+    "preflightNoData": {
+        "message": "设置一个位置以加载环境数据"
+    },
+    "preflightAttribution": {
+        "message": "天气数据: Open-Meteo.com (CC BY 4.0) | 太阳数据: NOAA 空间天气预测中心"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "已保存地点……"
+    },
+    "preflightLoadLocation": {
+        "message": "加载"
+    },
+    "preflightSaveLocation": {
+        "message": "保存"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "已达到 5 个已保存位置的上限"
+    },
+    "preflightLocationLabel": {
+        "message": "位置名称（最大 20 个字符）"
+    },
+    "preflightDeleteLocation": {
+        "message": "删除所选位置"
+    },
+    "preflightRenameLocation": {
+        "message": "重命名所选位置"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "重命名"
+    },
+    "preflightCoordinates": {
+        "message": "坐标"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "保存位置"
+    },
+    "preflightConfirmSave": {
+        "message": "保存"
+    },
+    "preflightCancel": {
+        "message": "取消"
+    },
+    "preflightGeolocationFailed": {
+        "message": "无法检测位置。请手动输入坐标。"
+    },
+    "preflightIpConsentMessage": {
+        "message": "浏览器定位失败。您的大致位置可以通过 ipapi.co 第三方服务通过您的 IP 地址检测到。"
+    },
+    "preflightIpConsentAllow": {
+        "message": "允许"
+    },
+    "preflightIpConsentDeny": {
+        "message": "拒绝"
+    },
+    "preflightMapSatellite": {
+        "message": "卫星视图"
+    },
+    "preflightMapHybrid": {
+        "message": "混合卫星和街道视图"
+    },
+    "preflightMapStreet": {
+        "message": "街道视图"
+    },
+    "preflightMapZoomIn": {
+        "message": "放大"
+    },
+    "preflightMapZoomOut": {
+        "message": "缩小"
+    },
+    "preflightMapFullscreen": {
+        "message": "切换全屏"
+    },
+    "preflightKpMinimal": {
+        "message": "对GPS的最小影响"
+    },
+    "preflightKpDegraded": {
+        "message": "GPS 精度可能降低"
+    },
+    "preflightKpSevere": {
+        "message": "预计将发生严重 GPS 干扰"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "请先检查太阳活动"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS 救援可靠"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS 救援可能不可靠"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "不推荐使用 GPS 救援"
+    },
+    "preflightForecast": {
+        "message": "5 日天气预报"
+    },
+    "preflightForecastHelp": {
+        "message": "每日天气概览以帮助规划飞行计划"
+    },
+    "preflightForecastDay": {
+        "message": "日"
+    },
+    "preflightForecastWeather": {
+        "message": "天气"
+    },
+    "preflightNotamProvider": {
+        "message": "航行通告提供者"
+    },
+    "preflightNotamProviderNone": {
+        "message": "禁用"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA 航行通告 API （美国，需要 API 密钥）"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP（全球空域，需要 API 密钥）"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API 密钥 (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API 密钥"
+    },
+    "preflightNotamRadius": {
+        "message": "搜索半径"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "海里"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "公里"
+    },
+    "preflightNotamSettings": {
+        "message": "空域数据设置"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "空域数据将您的坐标发送给选定的提供者。不会发送额外的个人数据。"
+    },
+    "preflightNotamLoading": {
+        "message": "正在获取空域数据……"
+    },
+    "preflightNotamEmpty": {
+        "message": "没有找到对于此位置和半径的通知"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "所选提供者需要一个 API 密钥。请在上面的设置中输入您的密钥。"
+    },
+    "preflightNotamFetchError": {
+        "message": "获取空域数据失败"
+    },
+    "preflightNotamActiveNow": {
+        "message": "激活中"
+    },
+    "preflightNotamPermanent": {
+        "message": "永久"
+    },
+    "preflightNotamExpired": {
+        "message": "已过期"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "临时飞行管制"
+    },
+    "preflightNotamTypeSua": {
+        "message": "香港小型无人机系统"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "雪情航行通告"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "火山航行通告"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "航行通告"
+    },
+    "preflightNotamAltFrom": {
+        "message": "下限"
+    },
+    "preflightNotamAltTo": {
+        "message": "上限"
+    },
+    "preflightNotamShowMore": {
+        "message": "显示更多"
+    },
+    "preflightNotamShowLess": {
+        "message": "隐藏内容"
+    },
+    "preflightNotamLastFetched": {
+        "message": "上次获取时间"
     }
 }
