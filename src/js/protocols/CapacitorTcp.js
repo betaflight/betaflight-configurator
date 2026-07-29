@@ -82,14 +82,17 @@ class CapacitorTcp extends EventTarget {
     async connect(path, _options) {
         try {
             const url = new URL(path);
-            const host = url.hostname;
+            // Removes the brackets around an IPv6 host. The native plugin connects to a
+            // bare address.
+            const host = url.hostname.replace(/^\[|\]$/g, "");
             const port = Number.parseInt(url.port, 10) || 5761;
 
             console.log(`${this.logHead} Connecting to ${url}`);
 
             const result = await this.plugin.connect({ ip: host, port });
             if (result?.success) {
-                this.address = `${host}:${port}`;
+                // An IPv6 host gets its brackets again, so that host:port stays unambiguous.
+                this.address = `${host.includes(":") ? `[${host}]` : host}:${port}`;
                 this.connected = true;
             } else {
                 throw new Error("Connect failed");

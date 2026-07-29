@@ -44,9 +44,15 @@ describe("serial.selectProtocol — Tauri transport routing", () => {
         expect(serial.selectProtocol("ws://elrs_rx.local:81/serial").constructor.name).toBe("Websocket");
     });
 
+    it("routes a bracketed IPv6 host to the WebSocket protocol", () => {
+        expect(serial.selectProtocol("ws://[fe80::1]").constructor.name).toBe("Websocket");
+        expect(serial.selectProtocol("ws://[fe80::1]:81/serial").constructor.name).toBe("Websocket");
+    });
+
     it("routes raw tcp:// to the Rust-backed TauriTcp protocol", () => {
         expect(serial.selectProtocol("tcp://192.168.0.10:5761").constructor.name).toBe("TauriTcp");
         expect(serial.selectProtocol("tcp://elrs_rx.local:5761").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("tcp://[fe80::1]:5761").constructor.name).toBe("TauriTcp");
     });
 
     it("routes a bare 'manual' selection to the TCP slot", () => {
@@ -63,5 +69,7 @@ describe("serial.selectProtocol — Tauri transport routing", () => {
         expect(serial.selectProtocol("10.0.0.1").constructor.name).toBe("TauriTcp");
         expect(serial.selectProtocol("10.0.0.1:5761").constructor.name).toBe("TauriTcp");
         expect(serial.selectProtocol("elrs_rx.local:5761").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("[fe80::1]").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("[fe80::1]:5761").constructor.name).toBe("TauriTcp");
     });
 });

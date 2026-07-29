@@ -51,7 +51,9 @@ class TauriTcp extends EventTarget {
     _parseAddress(path) {
         const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(path) ? path : `tcp://${path}`;
         const url = new URL(withScheme);
-        return { host: url.hostname, port: Number.parseInt(url.port, 10) || 5761 };
+        // Removes the brackets around an IPv6 host. The Rust side gives the host to
+        // to_socket_addrs(), which accepts a bare address only.
+        return { host: url.hostname.replace(/^\[|\]$/g, ""), port: Number.parseInt(url.port, 10) || 5761 };
     }
 
     createPort(url) {
@@ -102,7 +104,8 @@ class TauriTcp extends EventTarget {
             await invoke("tcp_connect", { ip: host, port });
 
             // Keep the canonical tcp:// URL so path-based protocol detection still matches.
-            this.address = `tcp://${host}:${port}`;
+            // An IPv6 host gets its brackets again, because a URL needs them.
+            this.address = `tcp://${host.includes(":") ? `[${host}]` : host}:${port}`;
             this.connected = true;
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
             return true;

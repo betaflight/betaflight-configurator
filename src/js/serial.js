@@ -9,9 +9,10 @@ import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
 
-// A host name or an IP address, with an optional port. The pattern permits the underscore.
-// mDNS host names can contain an underscore, for example elrs_rx.local.
-const HOST = "[a-z0-9._-]+(?::\\d+)?";
+// A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
+// The pattern permits the underscore. mDNS host names can contain an underscore, for example
+// elrs_rx.local. An IPv6 address must have brackets, as in a URL, for example [fe80::1]:5761.
+const HOST = "(?:\\[[0-9a-f:.]+\\]|[a-z0-9._-]+)(?::\\d+)?";
 /**
  * Makes a regular expression for "<scheme>://host[:port][/path]".
  * @param {string} scheme - one scheme, or an alternation of schemes, for example "wss?".
@@ -164,7 +165,7 @@ class Serial extends EventTarget {
         }
         const serialInstance = this._instance("serial");
         // No native serial transport (iOS): a schemeless manual entry that looks like a network
-        // host (an IP, a dotted hostname, or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
+        // host (an IP, a dotted hostname, [IPv6], or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
         // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
         // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
         if (!serialInstance && BARE_HOST.test(s) && (s.includes(".") || s.includes(":"))) {
