@@ -8,6 +8,7 @@ import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
+import TauriBle from "./protocols/TauriBle.js";
 import { unbracketHost } from "./utils/host.js";
 
 // A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
@@ -52,7 +53,9 @@ class Serial extends EventTarget {
             // is desktop + Android only — iOS has no USB serial.
             this._protocols = [
                 ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
-                { name: "bluetooth", instance: new WebBluetooth() },
+                // iOS WKWebView has no Web Bluetooth, so use the native btleplug transport there;
+                // desktop Tauri keeps the webview's Web Bluetooth.
+                { name: "bluetooth", instance: isTauriIOS() ? new TauriBle() : new WebBluetooth() },
                 { name: "tcp", instance: new TauriTcp() },
                 { name: "websocket", instance: new Websocket() },
             ];
