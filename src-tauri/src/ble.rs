@@ -134,7 +134,12 @@ pub async fn ble_connect(
         .ok_or_else(|| "device not found — rescan and try again".to_string())?;
 
     peripheral.connect().await.map_err(|e| e.to_string())?;
-    peripheral.discover_services().await.map_err(|e| e.to_string())?;
+    // From here the peripheral is connected, so every early return must disconnect it
+    // first or it leaks a live link the state never tracks.
+    if let Err(e) = peripheral.discover_services().await {
+        let _ = peripheral.disconnect().await;
+        return Err(e.to_string());
+    }
 
     let characteristics = peripheral.characteristics();
     let mut matched: Option<(String, Characteristic, Characteristic)> = None;
@@ -162,19 +167,28 @@ pub async fn ble_connect(
         }
     };
 
-    peripheral.subscribe(&read_char).await.map_err(|e| e.to_string())?;
+    if let Err(e) = peripheral.subscribe(&read_char).await {
+        let _ = peripheral.disconnect().await;
+        return Err(e.to_string());
+    }
 
     // Install only if nothing superseded us while connecting; check and install under
     // the same lock so a concurrent disconnect can't race the store.
-    {
+    let previous = {
         let mut guard = state.peripheral.lock().unwrap();
         if epoch.load(Ordering::SeqCst) != my_epoch {
             drop(guard);
             let _ = peripheral.disconnect().await;
             return Err("connection attempt superseded".to_string());
         }
-        *guard = Some(peripheral.clone());
+        let previous = guard.replace(peripheral.clone());
         *state.write_char.lock().unwrap() = Some(write_char);
+        previous
+    };
+    // Drop any peripheral we replaced (a reconnect without an intervening disconnect)
+    // after releasing the lock, so its link doesn't linger.
+    if let Some(previous) = previous {
+        let _ = previous.disconnect().await;
     }
 
     spawn_notifications(app, epoch, my_epoch, peripheral, read_char.uuid);

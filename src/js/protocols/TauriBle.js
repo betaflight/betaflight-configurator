@@ -211,6 +211,8 @@ class TauriBle extends EventTarget {
                 console.error(`${this.logHead} Failed to send data: ${e}`);
                 cb?.({ error: e, bytesSent: 0 });
             }
+        } else {
+            cb?.({ error: "BLE peripheral is not connected", bytesSent: 0 });
         }
 
         return { bytesSent: actualBytesSent };
