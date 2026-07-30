@@ -1749,11 +1749,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Place the drone flat with the camera facing away from you (toward the screen)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Tilt the nose up by about 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Tilt the nose down by about 45°, so the camera points toward the ground."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Tilt the right side down by about 45°."
+        "message": "Tilt the right side down by about 45°, lowering the right arms and raising the left."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Rotate the drone about 45° clockwise (as seen from above)."
@@ -1825,10 +1825,13 @@
         "message": "The accelerometer is not reading gravity. Make sure the FC is connected and not in motion."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Pitch gesture was not detected. Please retry and tilt the nose up further."
+        "message": "Pitch gesture was not detected. Please retry and tilt the nose down further."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll gesture was not detected. Please retry and tilt the right side down further."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "One of the tilt gestures went the wrong way. Check the pitch and roll directions and try again."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Flat"
