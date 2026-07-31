@@ -1446,6 +1446,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: OSD.drawNavMapPreview,
         },
+        POS_HOLD_READY: {
+            name: "POS_HOLD_READY",
+            text: "osdTextElementPosHoldReady",
+            desc: "osdDescElementPosHoldReady",
+            defaultPosition: -1,
+            draw_order: 670,
+            positionable: true,
+            preview: "POSH RDY",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1472,6 +1481,11 @@ OSD.constants = OSD_CONSTANTS;
 OSD.chooseFields = function () {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
+    // DISPLAY_FIELDS order must exactly mirror firmware's osd_items_e enum order:
+    // decode() maps wire position N to DISPLAY_FIELDS[N] positionally. New entries
+    // must be inserted at the same relative position firmware adds them, not
+    // simply appended — appending after a later-in-enum element (e.g. after
+    // POS_HOLD_READY) would misalign positions on any build where both compile in.
     OSD.constants.DISPLAY_FIELDS = [
         F.RSSI_VALUE,
         F.MAIN_BATT_VOLTAGE,
@@ -1593,6 +1607,9 @@ OSD.chooseFields = function () {
             F.WP_NEXT_NUMBER,
             F.WP_ETA,
             F.NAV_MAP,
+            // OSD_POS_HOLD_READY: firmware side still unmerged (betaflight PR #15465),
+            // sits after OSD_NAV_MAP in that PR's osd_items_e ordering.
+            F.POS_HOLD_READY,
         ]);
     }
     // Choose statistic fields

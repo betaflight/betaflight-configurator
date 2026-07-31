@@ -8983,6 +8983,13 @@
     "osdDescElementNavMap": {
         "message": "Minimap showing home, the flight plan, and the flown trail"
     },
+    "osdTextElementPosHoldReady": {
+        "message": "Pos Hold ready",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Shows whether Position Hold's entry conditions are currently met, before the mode switch is engaged"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
