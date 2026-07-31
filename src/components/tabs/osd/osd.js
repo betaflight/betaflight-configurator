@@ -286,8 +286,8 @@ OSD.drawCameraFramePreview = function () {
     return cameraFrame;
 };
 
-// firmware's NAV_MAP grid is a fixed NAV_MAP_COLS x NAV_MAP_ROWS (14x8, osd_nav_map.c) —
-// preview is a bordered box matching that footprint, not the live minimap content.
+// Firmware's NAV_MAP grid is a fixed 14x8 (osd_nav_map.c). This preview
+// draws a bordered box at that size, not the live minimap content.
 OSD.drawNavMapPreview = function () {
     const NAV_MAP_COLS = 14;
     const NAV_MAP_ROWS = 8;
@@ -1481,11 +1481,9 @@ OSD.constants = OSD_CONSTANTS;
 OSD.chooseFields = function () {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
-    // DISPLAY_FIELDS order must exactly mirror firmware's osd_items_e enum order:
-    // decode() maps wire position N to DISPLAY_FIELDS[N] positionally. New entries
-    // must be inserted at the same relative position firmware adds them, not
-    // simply appended — appending after a later-in-enum element (e.g. after
-    // POS_HOLD_READY) would misalign positions on any build where both compile in.
+    // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
+    // decode() maps wire position N to DISPLAY_FIELDS[N] positionally.
+    // Insert new entries at their matching firmware position, not the end.
     OSD.constants.DISPLAY_FIELDS = [
         F.RSSI_VALUE,
         F.MAIN_BATT_VOLTAGE,
@@ -1595,22 +1593,40 @@ OSD.chooseFields = function () {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
-            // Flight-plan waypoint elements and nav map, in firmware osd_items_e order
-            // (only compiled into firmware when USE_GPS && ENABLE_FLIGHT_PLAN / USE_OSD_NAV_MAP;
-            // harmless to list unconditionally here — see the DISPLAY_FIELDS ordering note above)
-            F.WP_NUMBER,
-            F.WP_CURRENT_LAT,
-            F.WP_CURRENT_LON,
-            F.WP_CURRENT_ALT,
-            F.WP_DISTANCE,
-            F.WP_DIRECTION,
-            F.WP_NEXT_NUMBER,
-            F.WP_ETA,
-            F.NAV_MAP,
-            // OSD_POS_HOLD_READY: firmware side still unmerged (betaflight PR #15465),
-            // sits after OSD_NAV_MAP in that PR's osd_items_e ordering.
-            F.POS_HOLD_READY,
         ]);
+
+        // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
+        // when their compile flags are present. Unconditional listing would
+        // misalign every later DISPLAY_FIELDS position on builds lacking them.
+        // Gate on reported build options instead.
+        const buildOptions = FC.CONFIG.buildOptions ?? [];
+        const hasFlightPlanWaypoints = buildOptions.includes("USE_GPS") && buildOptions.includes("USE_FLIGHT_PLAN");
+        const hasNavMap =
+            hasFlightPlanWaypoints &&
+            !buildOptions.includes("USE_WING") &&
+            (buildOptions.includes("USE_OSD_SD") || buildOptions.includes("USE_OSD_HD"));
+        const hasPositionHold = buildOptions.includes("USE_POSITION_HOLD");
+
+        if (hasFlightPlanWaypoints) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.WP_NUMBER,
+                F.WP_CURRENT_LAT,
+                F.WP_CURRENT_LON,
+                F.WP_CURRENT_ALT,
+                F.WP_DISTANCE,
+                F.WP_DIRECTION,
+                F.WP_NEXT_NUMBER,
+                F.WP_ETA,
+            ]);
+        }
+
+        if (hasNavMap) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
+
+        if (hasPositionHold) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
+        }
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
