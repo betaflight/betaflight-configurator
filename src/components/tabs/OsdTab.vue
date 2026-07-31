@@ -447,7 +447,7 @@
                             <UButton @click="loadCustomFontFile()" size="sm">
                                 {{ $t("osdSetupOpenFont") }}
                             </UButton>
-                            <span class="text-sm opacity-60">(.mcm)</span>
+                            <span class="text-sm opacity-60"></span>
                         </div>
 
                         <!-- Logo customization -->
