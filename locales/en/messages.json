@@ -8984,7 +8984,7 @@
         "message": "Minimap showing home, the flight plan, and the flown trail"
     },
     "osdTextElementPosHoldReady": {
-        "message": "Pos Hold ready",
+        "message": "Position Hold Ready",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPosHoldReady": {
