@@ -286,8 +286,8 @@ OSD.drawCameraFramePreview = function () {
     return cameraFrame;
 };
 
-// firmware's NAV_MAP grid is a fixed NAV_MAP_COLS x NAV_MAP_ROWS (14x8, osd_nav_map.c) —
-// preview is a bordered box matching that footprint, not the live minimap content.
+// Firmware's NAV_MAP grid is a fixed 14x8 (osd_nav_map.c). This preview
+// draws a bordered box at that size, not the live minimap content.
 OSD.drawNavMapPreview = function () {
     const NAV_MAP_COLS = 14;
     const NAV_MAP_ROWS = 8;
@@ -1581,19 +1581,34 @@ OSD.chooseFields = function () {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
-            // Flight-plan waypoint elements and nav map, in firmware osd_items_e order
-            // (only compiled into firmware when USE_GPS && ENABLE_FLIGHT_PLAN / USE_OSD_NAV_MAP;
-            // harmless to list unconditionally here — see the DISPLAY_FIELDS ordering note above)
-            F.WP_NUMBER,
-            F.WP_CURRENT_LAT,
-            F.WP_CURRENT_LON,
-            F.WP_CURRENT_ALT,
-            F.WP_DISTANCE,
-            F.WP_DIRECTION,
-            F.WP_NEXT_NUMBER,
-            F.WP_ETA,
-            F.NAV_MAP,
         ]);
+
+        // Waypoint/nav-map enum entries only exist in firmware when their compile
+        // flags are present. Unconditional listing would misalign every later
+        // DISPLAY_FIELDS position on builds lacking them. Gate on reported build options.
+        const buildOptions = FC.CONFIG.buildOptions ?? [];
+        const hasFlightPlanWaypoints = buildOptions.includes("USE_GPS") && buildOptions.includes("USE_FLIGHT_PLAN");
+        const hasNavMap =
+            hasFlightPlanWaypoints &&
+            !buildOptions.includes("USE_WING") &&
+            (buildOptions.includes("USE_OSD_SD") || buildOptions.includes("USE_OSD_HD"));
+
+        if (hasFlightPlanWaypoints) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.WP_NUMBER,
+                F.WP_CURRENT_LAT,
+                F.WP_CURRENT_LON,
+                F.WP_CURRENT_ALT,
+                F.WP_DISTANCE,
+                F.WP_DIRECTION,
+                F.WP_NEXT_NUMBER,
+                F.WP_ETA,
+            ]);
+        }
+
+        if (hasNavMap) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
