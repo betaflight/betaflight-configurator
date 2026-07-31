@@ -224,6 +224,9 @@ export function checkBluetoothSupport() {
     let result = false;
     if (isAndroid()) {
         result = true;
+    } else if (isTauriIOS()) {
+        // Native btleplug transport — WKWebView has no navigator.bluetooth.
+        result = true;
     } else if (navigator.bluetooth) {
         result = true;
     } else if (isIOS()) {
