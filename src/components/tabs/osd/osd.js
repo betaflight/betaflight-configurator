@@ -288,6 +288,9 @@ OSD.drawCameraFramePreview = function () {
 
 // Firmware's NAV_MAP grid is a fixed 14x8 (osd_nav_map.c). This preview
 // draws a bordered box at that size, not the live minimap content.
+/**
+ * @returns {Array<{x: number, y: number, sym: number}>} Border cells for the NAV_MAP preview grid.
+ */
 OSD.drawNavMapPreview = function () {
     const NAV_MAP_COLS = 14;
     const NAV_MAP_ROWS = 8;
