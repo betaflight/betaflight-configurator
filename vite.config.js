@@ -11,7 +11,27 @@ import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import nuxtUiViteOptions from "./nuxt-ui.vite.js";
 
-const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
+function getCommitHash() {
+    const revision =
+        process.env.GIT_COMMIT ||
+        process.env.COMMIT_SHA ||
+        process.env.VERCEL_GIT_COMMIT_SHA ||
+        process.env.CF_PAGES_COMMIT_SHA ||
+        process.env.GITHUB_SHA ||
+        "";
+
+    if (revision) {
+        return revision.slice(0, 7);
+    }
+
+    try {
+        return child.execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    } catch (_error) {
+        return "unknown";
+    }
+}
+
+const commitHash = getCommitHash();
 
 const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
 
