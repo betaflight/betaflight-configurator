@@ -84,6 +84,13 @@
                 <UTooltip :text="$t('versionLabelFirmware')">
                     <span>{{ displayedFirmwareTarget }} {{ displayedFirmwareVersion }}</span>
                 </UTooltip>
+                <template v-if="displayedDeviceIdentifier">
+                    <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                    <UIcon name="i-lucide-fingerprint" class="size-4" />
+                    <UTooltip :text="$t('statusbar_stm32_serial')">
+                        <span class="serial-number">SN {{ displayedDeviceIdentifier }}</span>
+                    </UTooltip>
+                </template>
                 <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
             <template v-if="isConnectedToVirtual">
@@ -194,6 +201,10 @@ export default defineComponent({
             type: String,
             default: "",
         },
+        deviceIdentifier: {
+            type: [String, Number],
+            default: "",
+        },
     },
     setup(props) {
         const currentTime = ref(Date.now());
@@ -282,6 +293,14 @@ export default defineComponent({
             return stripVersionDisplay(props.firmwareVersion);
         });
 
+        const displayedDeviceIdentifier = computed(() => {
+            const identifier = `${props.deviceIdentifier ?? ""}`.trim();
+            if (!identifier || identifier === "0") {
+                return "";
+            }
+            return identifier.toUpperCase();
+        });
+
         return {
             expertMode,
             isVirtualMode,
@@ -289,6 +308,7 @@ export default defineComponent({
             displayedFirmwareTarget,
             displayedConfiguratorVersion,
             displayedFirmwareVersion,
+            displayedDeviceIdentifier,
             formattedConnectionTime,
             analog,
             batteryConfig,
@@ -346,6 +366,10 @@ export default defineComponent({
 }
 
 .value {
+    font-variant-numeric: tabular-nums;
+}
+
+.serial-number {
     font-variant-numeric: tabular-nums;
 }
 

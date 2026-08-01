@@ -907,6 +907,9 @@
     "versionLabelConfigurator": {
         "message": "App Version"
     },
+    "statusbar_stm32_serial": {
+        "message": "STM32 serial number"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
     },

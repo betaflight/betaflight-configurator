@@ -48,6 +48,7 @@
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
                 :firmware-version="FC.CONFIG.flightControllerVersion"
                 :firmware-target="FC.CONFIG.hardwareName"
+                :device-identifier="FC.CONFIG.deviceIdentifier"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
