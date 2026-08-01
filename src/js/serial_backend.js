@@ -23,6 +23,7 @@ import CryptoES from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
+import { isTauriIOS } from "./utils/checkCompatibility.js";
 import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
@@ -37,6 +38,15 @@ const logHead = "[SERIAL-BACKEND]";
 let mspHelper;
 let connectionTimestamp = null;
 let liveDataRefreshTimerId = false;
+// Re-entrancy guard for the live-data poller. update_live_status is async and awaits a
+// sequential MSP chain; the setInterval that drives it fires on a fixed cadence regardless
+// of whether the previous cycle finished. On a slow-responding FC (e.g. STM32H5/C5) a cycle
+// can outlast the interval, so without this guard each tick would stack another full request
+// chain onto MSP.callbacks — the queue grows unbounded and the per-entry retries flood the
+// FC's serial buffer until it hangs. Skip a tick while the previous cycle is still in flight.
+// Set when MSP.onTimeout initiates teardown, so onClosed() raises the notice after the close
+// settles rather than having it clobbered by onClosed's own dialog dismissal.
+let connectionTimeoutPending = false;
 // Handle for the BLE/manual reboot flush-timeout / reconnect-retry chain (rebootReconnect).
 // Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
 // retry would resurrect a connection the user just cancelled.
@@ -407,6 +417,10 @@ function beginConnect(selectedDevice) {
     // and the Connect button would spin forever. If the attempt neither opens nor becomes valid
     // within the window, recover the UI and tell the user. The disconnect-during-connect path in
     // onClosed normally handles this sooner; this covers protocols that signal nothing at all.
+    // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake — a slow AP plus
+    // the iOS Local Network permission prompt on the first connection — so give them a wider
+    // window than the enumerated-serial default before the safety net calls the attempt failed.
+    const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
     GUI.timeout_add(
         "connectAttempt",
         function () {
@@ -414,7 +428,7 @@ function beginConnect(selectedDevice) {
                 abortConnection("connectionFailed");
             }
         },
-        10000,
+        connectAttemptTimeout,
     );
 
     // Set up event listeners for non-virtual connections
@@ -687,6 +701,10 @@ function resetConnection() {
     getConnectionState().endFlashing();
 
     MSP.clearListeners();
+    MSP.onTimeout = null;
+    // Clear the FC-liveness timestamp so the next connection can't inherit stale traffic state
+    // from this one and mis-classify a fresh link as still-alive in handleConnectionTimeout.
+    MSP.last_received_timestamp = null;
 
     if (DeviceHandler.devicePicker.selectedDevice !== "virtual") {
         serial.removeEventListener("receive", read_serial_adapter);
@@ -721,8 +739,28 @@ function abortConnection(messageKey) {
         DeviceHandler.devicePicker.autoConnect;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
-    // the handshake (e.g. invalid API version) did not "fail to open".
-    const message = i18n.getMessage(messageKey ?? (GUI.connected_to ? "connectionFailed" : "serialPortOpenFail"));
+    // the handshake (e.g. invalid API version) did not "fail to open". A manual/TCP/WebSocket
+    // target (e.g. an ELRS Wi-Fi bridge) never opens a "serial port" either, so report a
+    // network-appropriate failure rather than the misleading serial one.
+    const connectingTo = GUI.connecting_to || "";
+    const isManualTarget =
+        DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
+    const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
+    let message = i18n.getMessage(effectiveKey);
+
+    // iOS gates connections to local-network addresses (where an ELRS module lives) behind a
+    // per-app Local Network permission; when it is denied the socket fails immediately with no
+    // route to host and no prompt. Point the user at the setting, since that is the usual cause.
+    // The watchdog and connect-phase disconnect paths both report "connectionFailed" explicitly,
+    // so key off the resolved message rather than the absence of a messageKey.
+    if (
+        effectiveKey === "connectionFailed" &&
+        isManualTarget &&
+        isTauriIOS() &&
+        serial.isLocalNetworkAddress(connectingTo)
+    ) {
+        message += ` ${i18n.getMessage("connectionFailedLocalNetworkIOS")}`;
+    }
 
     // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
     // FAILED edge before teardown. notifyClosed (via resetConnection's close path)
@@ -745,12 +783,12 @@ function abortConnection(messageKey) {
 
 // Surface a connection failure to the user with a dismissible dialog, not just a log line
 // that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
-function showConnectionFailedDialog(text) {
+function showConnectionFailedDialog(text, title = i18n.getMessage("connectionFailedTitle")) {
     const dialogStore = useDialogStore();
     dialogStore.open(
         "InformationDialog",
         {
-            title: i18n.getMessage("connectionFailedTitle"),
+            title,
             text,
             confirmText: i18n.getMessage("close"),
         },
@@ -819,6 +857,7 @@ function onOpen(openInfo) {
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
+        MSP.onTimeout = handleConnectionTimeout;
 
         console.log(`${logHead} Requesting configuration data`);
 
@@ -1231,6 +1270,17 @@ function onClosed(result) {
     // intentional and unexpected closes. A reboot's link drop is left alone
     // (notifyClosed ignores REBOOTING/RECONNECTING); its conclude settles it.
     getConnectionState().notifyClosed();
+
+    // Raise the dead-link notice now that teardown has settled: the dialog dismissal above
+    // (and finishClose's own) would otherwise clobber a dialog opened by the watchdog before
+    // this event fired.
+    if (connectionTimeoutPending) {
+        connectionTimeoutPending = false;
+        showConnectionFailedDialog(
+            i18n.getMessage("connectionLostUnresponsive"),
+            i18n.getMessage("connectionLostTitle"),
+        );
+    }
 }
 
 export function read_serial(info) {
@@ -1259,6 +1309,54 @@ async function requestLiveData(code, name) {
         console.error(`Failed to request ${name}:`, error);
         return true;
     }
+}
+
+/**
+ * Idle window, in milliseconds, of complete FC silence before the link is treated as dead.
+ *
+ * A single MSP request exhausting its retries spans only `MSP.MAX_RETRIES × MSP.TIMEOUT`
+ * (~3 s) of silence — a threshold a high-latency transport (WiFi/TCP bridge, BLE) can cross
+ * on a transient spike while the link is otherwise healthy. This window is set above one
+ * request's retry span so a lone slow request never triggers teardown, yet short enough that
+ * a genuinely hung FC is dropped promptly.
+ *
+ * @constant {number}
+ */
+const DEAD_LINK_TIMEOUT = 5000;
+
+/**
+ * `MSP.onTimeout` hook — runs when an errorAware request exhausts `MSP.MAX_RETRIES`.
+ *
+ * A single exhausted request does not imply the FC is gone, so teardown is gated on the link's
+ * measured liveness rather than one request's failure. `MSP.last_received_timestamp` advances on
+ * every inbound byte, so any traffic within {@link DEAD_LINK_TIMEOUT} means the FC is responsive
+ * but slow — the link is kept open for the poller to retry. Only uninterrupted silence for the
+ * full window is classified as a dead link.
+ *
+ * A hung FC keeps the transport physically open, so no `disconnect` event fires on its own. When
+ * the link is dead this mirrors the reboot teardown path: it flags the disconnect as intentional
+ * (so {@link onClosed} skips unexpected-disconnect handling) and closes without the
+ * `setArmingEnabled` round-trip, which would itself hang against the dead FC. Re-entrancy is
+ * bounded by the `isConnected()` guard — teardown clears `MSP.onTimeout` and the connection-valid
+ * flag before a subsequent timeout can re-enter.
+ *
+ * @returns {void}
+ */
+function handleConnectionTimeout() {
+    if (!isConnected()) {
+        return;
+    }
+
+    const lastReceived = MSP.last_received_timestamp;
+    if (lastReceived !== null && Date.now() - lastReceived < DEAD_LINK_TIMEOUT) {
+        // Inbound traffic within the window: the FC is responding, just slowly — keep the link.
+        return;
+    }
+
+    connectionTimeoutPending = true;
+    prepareDisconnect();
+    getConnectionState().concludeReboot(false);
+    finishClose(toggleStatus);
 }
 
 export async function update_sensor_status() {

@@ -12,20 +12,19 @@ import { i18n } from "./localization";
 import { pinia } from "./pinia_instance";
 import { useDialogStore } from "../stores/dialog";
 import { registerSW } from "virtual:pwa-register";
-import { isAndroid, isEmbeddedDeployment } from "./utils/checkCompatibility.js";
+import { isPwaContext } from "./utils/checkCompatibility.js";
 
 function isLocalDevServer() {
     return ["127.0.0.1", "localhost", "::1"].includes(globalThis.location?.hostname) &&
         ["8080", "8443"].includes(globalThis.location?.port);
 }
 
-// Skip PWA/service-worker on embedded deployments (WebSocket-only host, plain HTTP)
-// and Android native builds where they are unnecessary
+// Skip PWA/service-worker on local dev and native/embedded deployments where it is unnecessary.
 if (isLocalDevServer()) {
     navigator.serviceWorker?.getRegistrations?.().then((registrations) => {
         registrations.forEach((registration) => registration.unregister());
     });
-} else if (!isAndroid() && !isEmbeddedDeployment()) {
+} else if (isPwaContext()) {
     const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
         onNeedRefresh() {
@@ -52,8 +51,8 @@ if (isLocalDevServer()) {
             dialogStore.open(
                 "InformationDialog",
                 {
-                    title: i18n.getMessage("pwaOnOffilenReadyTitle"),
-                    text: i18n.getMessage("pwaOnOffilenReadyText"),
+                    title: i18n.getMessage("pwaOnOfflineReadyTitle"),
+                    text: i18n.getMessage("pwaOnOfflineReadyText"),
                     confirmText: i18n.getMessage("OK"),
                 },
                 { confirm: () => dialogStore.close() },

@@ -56,6 +56,7 @@ const MSP = {
 
     callbacks: [],
     parked: new Map(), // errorAware requests parked behind an in-flight same-code request
+    onTimeout: null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
     packet_error: 0,
     unsupported: 0,
 
@@ -574,22 +575,29 @@ const MSP = {
     _arm_timer(obj) {
         obj.timer = setTimeout(() => this._on_timeout(obj), this.TIMEOUT);
     },
+    /**
+     * Retry/timeout handler for a single queued MSP request.
+     *
+     * While retries remain it re-sends the request buffer and re-arms the timer. On exhaustion it
+     * clears the timer and, for errorAware requests, removes the queue entry, settles its awaiter
+     * with an {@link MspTimeoutError}, and releases any same-code requests parked behind it. Legacy
+     * (non-errorAware) requests are left queued so a late response can still resolve them.
+     *
+     * After an errorAware exhaustion it notifies {@link MSP.onTimeout}. The dead-versus-slow-link
+     * decision is deliberately made by that hook from the FC's actual traffic (see
+     * `handleConnectionTimeout` in serial_backend), not from this per-request failure — so a lone
+     * timeout on a high-latency transport does not tear down a healthy connection.
+     *
+     * @param {object} obj - the queued request entry (`code`, `requestBuffer`, `attempts`, `errorAware`, `callback`, `timer`, …).
+     * @returns {void}
+     */
     _on_timeout(obj) {
         if (obj.attempts < this.MAX_RETRIES) {
             obj.attempts++;
             console.warn(
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
-            serial.send(obj.requestBuffer, (_sendInfo) => {
-                obj.stop = performance.now();
-                const executionTime = Math.round(obj.stop - obj.start);
-                // We should probably give up connection if the request takes too long ?
-                if (executionTime > 5000) {
-                    console.warn(
-                        `MSP: data request took too long: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
-                    );
-                }
-            });
+            serial.send(obj.requestBuffer);
             this._arm_timer(obj);
             return;
         }
@@ -598,7 +606,7 @@ const MSP = {
         obj.timer = null;
 
         if (!obj.errorAware) {
-            // legacy: give up retrying but leave the entry queued so a late response still fires it
+            // Legacy path: stop retrying but keep the entry queued so a late response still resolves it.
             return;
         }
 
@@ -612,6 +620,10 @@ const MSP = {
             console.error("MSP callback threw on timeout:", callbackError);
         }
         this._release_parked(obj.code);
+
+        // Notify the liveness hook after a full errorAware exhaustion. It — not this per-request
+        // failure — classifies the link as dead or merely slow (see handleConnectionTimeout).
+        this.onTimeout?.(obj.code);
     },
     _park(code, entry) {
         let queue = this.parked.get(code);

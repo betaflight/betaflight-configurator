@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
@@ -847,5 +847,76 @@ describe("shouldConcludeRebootDialog", () => {
             // own conclusion via portAvailable, so this stays false until the port is back.
             expect(shouldConcludeRebootDialog({ ...base, portAvailable: false, rebootWindowOpen: false })).toBe(false);
         });
+    });
+});
+
+describe("serial_backend MSP unresponsive-FC teardown", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+    });
+
+    afterEach(() => {
+        // These cases drive MSP.last_received_timestamp directly; clear the singleton so a
+        // later test can't inherit stale traffic state.
+        MSP.last_received_timestamp = null;
+    });
+
+    it("registers MSP.onTimeout on connect and clears it on teardown", () => {
+        establishConnection();
+        expect(typeof MSP.onTimeout).toBe("function");
+
+        serialHandlers.disconnect({ detail: true }); // teardown -> resetConnection
+        expect(MSP.onTimeout).toBeNull();
+    });
+
+    it("drops the link and shows a dialog when the FC has gone fully silent", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+        dialogStore.open.mockClear();
+
+        // last_received_timestamp older than DEAD_LINK_TIMEOUT (5 s): no inbound bytes for the
+        // whole window, so the link classifies as dead.
+        MSP.last_received_timestamp = Date.now() - 10_000;
+
+        // MSP.onTimeout hook — fired after an errorAware request exhausts MAX_RETRIES.
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        // Teardown runs via finishClose -> serial.disconnect, with no MSP round-trip to the dead FC.
+        expect(serial.disconnect).toHaveBeenCalledTimes(1);
+
+        // The protocol "disconnect" event drives onClosed, which raises the notice only after
+        // the close settles (so it is not clobbered by onClosed's dialog dismissal).
+        serialHandlers.disconnect({ detail: true });
+        expect(dialogStore.open).toHaveBeenCalledWith(
+            "InformationDialog",
+            expect.objectContaining({ title: "connectionLostTitle", text: "connectionLostUnresponsive" }),
+            expect.anything(),
+        );
+    });
+
+    it("keeps the link up when the FC is still sending data (slow, not dead)", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(true);
+        serial.disconnect.mockClear();
+
+        // last_received_timestamp inside DEAD_LINK_TIMEOUT: inbound traffic just arrived, so the
+        // exhausted request is a latency spike, not a dead link.
+        MSP.last_received_timestamp = Date.now();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
+    });
+
+    it("ignores the timeout hook when not connected", () => {
+        establishConnection();
+        getConnectionState().setLinkOpen(false);
+        serial.disconnect.mockClear();
+
+        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+
+        expect(serial.disconnect).not.toHaveBeenCalled();
     });
 });

@@ -41,9 +41,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/betaflight/betaflight-configurator"
+    "url": "github.com/timmyfpv/GIGFPV-Configurator"
   },
-  "author": "The Betaflight open source project.",
+  "author": "GIGFPV.",
   "license": "GPL-3.0",
   "engines": {
     "node": "24.x"

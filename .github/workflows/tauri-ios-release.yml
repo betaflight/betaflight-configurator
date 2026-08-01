@@ -20,11 +20,22 @@ name: Tauri iOS release
 
 on:
   workflow_dispatch:
+  release:
+    types: [published]
+
+concurrency:
+  group: ios-testflight
+  cancel-in-progress: false
 
 jobs:
   ios:
     name: Build & publish iOS bundle
     runs-on: macos-26
+    # Manual dispatch always runs; a published release only builds for the
+    # project's date-based tags (e.g. 2026.6.0, 2026.6.0-RC3).
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.release.tag_name, '20')
     permissions:
       contents: read
     env:
@@ -33,6 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
           persist-credentials: false
 
       - name: Select Xcode 26 (iOS 26 SDK)
@@ -71,6 +83,22 @@ jobs:
           printf '%s' "$APPLE_API_KEY_P8" > "$KEY_PATH"
           echo "APPLE_API_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
 
+      # Release builds take CFBundleShortVersionString from the tag; strip a
+      # leading v and any -RCn suffix so it is a valid Apple version string.
+      - name: Derive marketing version from release tag
+        if: github.event_name == 'release'
+        env:
+          RAW_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VER="${RAW_TAG#v}"
+          if [[ "$VER" =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-RC[0-9]+)?$ ]]; then
+            VER="${BASH_REMATCH[1]}"
+          else
+            echo "Tag '$RAW_TAG' -> '$VER' is not a MAJOR.MINOR.PATCH(-RCn) version" >&2
+            exit 1
+          fi
+          echo "MARKETING_VERSION=$VER" >> "$GITHUB_ENV"
+
       - name: Build signed IPA
         env:
           IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
@@ -79,8 +107,11 @@ jobs:
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
         run: |
-          npx tauri ios build --export-method app-store-connect \
-            -c "{\"bundle\":{\"iOS\":{\"bundleVersion\":\"${{ github.run_number }}\"}}}"
+          conf='{"bundle":{"iOS":{"bundleVersion":"${{ github.run_number }}"}}}'
+          if [ -n "${MARKETING_VERSION:-}" ]; then
+            conf='{"version":"'"$MARKETING_VERSION"'","bundle":{"iOS":{"bundleVersion":"${{ github.run_number }}"}}}'
+          fi
+          npx tauri ios build --export-method app-store-connect -c "$conf"
 
       - name: Locate IPA
         id: ipa
@@ -106,7 +137,7 @@ jobs:
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: betaflight-app-ipa
+          name: gigfpv-station-ipa
           path: ${{ steps.ipa.outputs.path }}
           if-no-files-found: error
           retention-days: 30

@@ -21,7 +21,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Betaflight connects to your flight controller bridge over the local network.</string>
+	<string>GIGFPV Station connects to your flight controller bridge over the local network.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_betaflight._tcp</string>
+	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>GIGFPV Station connects to your flight controller over Bluetooth Low Energy.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

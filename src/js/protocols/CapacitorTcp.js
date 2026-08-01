@@ -1,5 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes.js";
+import { bracketHost, unbracketHost } from "../utils/host.js";
 
 const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
 
@@ -82,14 +83,16 @@ class CapacitorTcp extends EventTarget {
     async connect(path, _options) {
         try {
             const url = new URL(path);
-            const host = url.hostname;
+            // The native plugin connects to a bare address.
+            const host = unbracketHost(url.hostname);
             const port = Number.parseInt(url.port, 10) || 5761;
 
             console.log(`${this.logHead} Connecting to ${url}`);
 
             const result = await this.plugin.connect({ ip: host, port });
             if (result?.success) {
-                this.address = `${host}:${port}`;
+                // An IPv6 host gets its brackets again, so that host:port stays unambiguous.
+                this.address = `${bracketHost(host)}:${port}`;
                 this.connected = true;
             } else {
                 throw new Error("Connect failed");

@@ -1,6 +1,6 @@
 name: betaflight-app
 options:
-  bundleIdPrefix: com.betaflight.app
+  bundleIdPrefix: com.gigfpv.station
   deploymentTarget:
     iOS: 13.0
 fileGroups: [../../src]
@@ -10,8 +10,8 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: Betaflight App
-      PRODUCT_BUNDLE_IDENTIFIER: com.betaflight.app
+      PRODUCT_NAME: GIGFPV Station
+      PRODUCT_BUNDLE_IDENTIFIER: com.gigfpv.station
       DEVELOPMENT_TEAM: 88U8UVP252
 targetTemplates:
   app:
@@ -54,6 +54,10 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         CFBundleShortVersionString: 2026.6.0
         CFBundleVersion: "2026.6.0"
+        NSLocalNetworkUsageDescription: GIGFPV Station connects to your flight controller bridge over the local network.
+        NSBonjourServices:
+          - _betaflight._tcp
+        NSBluetoothAlwaysUsageDescription: GIGFPV Station connects to your flight controller over Bluetooth Low Energy.
     entitlements:
       path: betaflight-app_iOS/betaflight-app_iOS.entitlements
     scheme:
@@ -73,7 +77,9 @@ targets:
     dependencies:
       - framework: libapp.a
         embed: false
+      - sdk: CoreBluetooth.framework
       - sdk: CoreGraphics.framework
+      - sdk: Network.framework
       - sdk: Metal.framework
       - sdk: MetalKit.framework
       - sdk: QuartzCore.framework

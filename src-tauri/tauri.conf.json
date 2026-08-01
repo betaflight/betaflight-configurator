@@ -1,8 +1,8 @@
 {
     "$schema": "https://schema.tauri.app/config/2",
-    "productName": "Betaflight App",
+    "productName": "GIGFPV Station",
     "version": "2026.6.0",
-    "identifier": "com.betaflight.app",
+    "identifier": "com.gigfpv.station",
     "build": {
         "beforeDevCommand": "npm run dev",
         "beforeBuildCommand": "npm run tauri:prebuild",
@@ -18,7 +18,7 @@
         },
         "windows": [
             {
-                "title": "Betaflight App",
+                "title": "GIGFPV Station",
                 "width": 1024,
                 "height": 550,
                 "minWidth": 1024,
@@ -42,9 +42,9 @@
             "icons/icon.ico"
         ],
         "category": "Utility",
-        "copyright": "The Betaflight open source project.",
-        "shortDescription": "Configuration and management application for Betaflight flight controllers.",
-        "longDescription": "Crossplatform configuration and management application for the Betaflight flight control firmware.",
+        "copyright": "GIGFPV.",
+        "shortDescription": "Unified FPV configuration and firmware management application.",
+        "longDescription": "Unified configuration and firmware management for GIGFPV flight controllers, GIGLRS receivers, and AM32 ESCs.",
         "iOS": {
             "minimumSystemVersion": "13.0"
         }

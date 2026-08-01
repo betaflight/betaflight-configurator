@@ -79,7 +79,7 @@ class Websocket extends EventTarget {
         // disconnect() against — and close — the newer socket.
         let ws;
         try {
-            ws = new WebSocket(this.address, ["binary", "wsSerial"]);
+            ws = new WebSocket(this.address, ["binary"]);
         } catch (e) {
             // Invalid URL/scheme, e.g. a raw tcp:// manual override, which a browser
             // cannot open (raw TCP needs the desktop app's native transport).

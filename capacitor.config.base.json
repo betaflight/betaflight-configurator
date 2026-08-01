@@ -1,5 +1,5 @@
 {
-  "appId": "betaflight.app",
-  "appName": "Betaflight App",
+  "appId": "com.gigfpv.station",
+  "appName": "GIGFPV Station",
   "webDir": "dist"
 }
