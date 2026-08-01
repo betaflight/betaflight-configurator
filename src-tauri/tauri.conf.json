@@ -7,7 +7,7 @@
         "beforeDevCommand": "npm run dev",
         "beforeBuildCommand": "npm run tauri:prebuild",
         "devUrl": "http://localhost:8080",
-        "frontendDist": "../src/dist"
+        "frontendDist": "../dist"
     },
     "app": {
         "security": {
