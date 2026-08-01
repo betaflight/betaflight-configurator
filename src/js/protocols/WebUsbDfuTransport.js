@@ -137,6 +137,11 @@ class WebUsbDfuTransport extends EventTarget {
     }
 
     async releaseInterface(interfaceNumber) {
+        // Cleanup after a failed open() runs the same teardown path, so there may be
+        // no device to release. Nothing was claimed in that case.
+        if (!this.usbDevice) {
+            return;
+        }
         await this.usbDevice.releaseInterface(interfaceNumber);
         console.log(`${this.logHead} Released interface: ${interfaceNumber}`);
     }

@@ -22,6 +22,7 @@ import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
 
 // Error constant used when an already-authorized DFU device isn't found
@@ -231,6 +232,12 @@ export class UsbDfuProtocol extends EventTarget {
             .catch((error) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
+                // A SecurityError from open() means the OS refused access to the device node.
+                // On Linux that is a missing udev rule for the bootloader's vendor ID, which the
+                // bare "failed to open" message gives no clue about.
+                if (error?.name === "SecurityError" && getOS() === "Linux") {
+                    gui_log(i18n.getMessage("usbDeviceUdevNotice"));
+                }
                 this.cleanup();
             });
     }
