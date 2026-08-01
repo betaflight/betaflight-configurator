@@ -291,23 +291,37 @@ function handleDeactivateSource(sourceId) {
     store.setSourceActive(sourceId, false);
 }
 
-async function ensureCliPresetActionSupported() {
+function getCliPresetActionUnsupportedDialog() {
     if (connectionStore.virtualMode) {
-        await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsVirtualModeCliUnsupported"), {
-            confirmText: i18n.getMessage("close"),
-        });
-        return false;
+        return {
+            title: i18n.getMessage("warningTitle"),
+            message: i18n.getMessage("presetsVirtualModeCliUnsupported"),
+        };
     }
 
     if (!isMspCliSupported()) {
-        await dialog.showInfo(
-            i18n.getMessage("warningTitle"),
-            i18n.getMessage("mspCliFirmwareTooOld", {
+        return {
+            title: i18n.getMessage("warningTitle"),
+            message: i18n.getMessage("mspCliFirmwareTooOld", {
                 required: MIN_FC_VERSION_FOR_MSP_CLI,
                 current: FC.CONFIG?.flightControllerVersion || "?",
             }),
-            { confirmText: i18n.getMessage("close") },
-        );
+        };
+    }
+
+    return null;
+}
+
+async function showCliPresetActionUnsupported(dialogData) {
+    await dialog.showInfo(dialogData.title, dialogData.message, {
+        confirmText: i18n.getMessage("close"),
+    });
+}
+
+async function ensureCliPresetActionSupported() {
+    const unsupportedDialog = getCliPresetActionUnsupportedDialog();
+    if (unsupportedDialog) {
+        await showCliPresetActionUnsupported(unsupportedDialog);
         return false;
     }
 
@@ -319,7 +333,32 @@ function isPickerAbortError(error) {
 }
 
 async function saveConfigBackup() {
-    if (!(await ensureCliPresetActionSupported())) {
+    const unsupportedDialog = getCliPresetActionUnsupportedDialog();
+    if (unsupportedDialog) {
+        await showCliPresetActionUnsupported(unsupportedDialog);
+        return;
+    }
+
+    let file;
+    try {
+        const filename = generateFilename("cli_backup", "txt");
+        file = await FileSystem.pickSaveFile(
+            filename,
+            i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
+            ".txt",
+        );
+
+        if (!file) {
+            return;
+        }
+    } catch (error) {
+        if (isPickerAbortError(error)) {
+            return;
+        }
+
+        await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("dumpAllNotSavedWarning"), {
+            confirmText: i18n.getMessage("close"),
+        });
         return;
     }
 
@@ -327,21 +366,9 @@ async function saveConfigBackup() {
 
     try {
         const cliStrings = await cliSession.readDumpAll();
-        const filename = generateFilename("cli_backup", "txt");
         const hasDefaultsPrefix = cliStrings.some((line) => line.trim().toLowerCase() === "defaults nosave");
         const lines = hasDefaultsPrefix ? cliStrings : ["defaults nosave", "", ...cliStrings];
         const text = lines.join("\n");
-        const file = await FileSystem.pickSaveFile(
-            filename,
-            i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
-            ".txt",
-        );
-
-        if (!file) {
-            waitingDialog.close();
-            return;
-        }
-
         await FileSystem.writeFile(file, text);
         waitingDialog.close();
     } catch (error) {
@@ -358,7 +385,9 @@ async function saveConfigBackup() {
 }
 
 async function loadConfigBackup() {
-    if (!(await ensureCliPresetActionSupported())) {
+    const unsupportedDialog = getCliPresetActionUnsupportedDialog();
+    if (unsupportedDialog) {
+        await showCliPresetActionUnsupported(unsupportedDialog);
         return;
     }
 
