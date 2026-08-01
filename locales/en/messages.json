@@ -786,7 +786,7 @@
         "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documentation.<br />Alternatively download and use an old version of the app if you are not ready to upgrade."
     },
     "firmwareTypeNotSupported": {
-        "message": "Non - Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
+        "message": "Non-GIGFLIGHT firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
         "message": "The current version of the app may not support the firmware version on this device. You can use older releases such as <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0</a> for firmware down to 4.1 or <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1</a> for even older firmware versions.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use CLI for backup before flashing, the procedure is in the <a href=\"https://betaflight.com/docs/wiki/getting-started/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>. But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
@@ -973,7 +973,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "GIGFPV Station retains Betaflight Configurator compatibility and adds integrated workflows for ExpressLRS and AM32. Use the GIGFLIGHT Flasher for flight controller firmware, GIGLRS Flasher for receivers, and AM32 Flasher for ESC firmware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "GIGFPV Station is designed for GIGFLIGHT firmware and adds integrated workflows for ExpressLRS and AM32. Use the GIGFLIGHT Flasher for flight controller firmware, GIGLRS Flasher for receivers, and AM32 Flasher for ESC firmware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"

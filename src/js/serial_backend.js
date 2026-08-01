@@ -875,7 +875,7 @@ function onOpen(openInfo) {
 
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    if (FC.CONFIG.flightControllerIdentifier === "BTFL") {
+                    if (FC.CONFIG.flightControllerIdentifier === "GIGF") {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
                             gui_log(
                                 i18n.getMessage("fcInfoReceived", [

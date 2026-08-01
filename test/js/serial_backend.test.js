@@ -148,7 +148,7 @@ vi.mock("../../src/js/fc", () => ({
         CONFIG: {
             apiVersion: "1.47.0",
             flightControllerVersion: "",
-            flightControllerIdentifier: "BTFL",
+            flightControllerIdentifier: "GIGF",
             boardType: 0,
             buildOptions: [],
             buildKey: "",
