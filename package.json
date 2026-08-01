@@ -8,7 +8,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/mirror-root-dist.mjs",
     "preview": "vite preview",
     "review": "vite build && vite preview",
     "pretest": "npm run lint",
