@@ -155,6 +155,18 @@ describe("usePresetsStore", () => {
         expect(store.showSourcesDialog).toBe(false);
     });
 
+    it("filters reboot commands from picked presets so the Presets tab owns the final save", () => {
+        const store = usePresetsStore();
+
+        store.appendPickedPreset(
+            { title: "Backup" },
+            ["defaults nosave", "set foo = on", "save", "exit", "reboot", "set bar = on"],
+            undefined,
+        );
+
+        expect(store.getPickedPresetsCli()).toEqual(["defaults nosave", "set foo = on", "set bar = on"]);
+    });
+
     it("gracefully marks a blank-branch GitHub source as failed instead of crashing reload", async () => {
         const store = usePresetsStore();
 

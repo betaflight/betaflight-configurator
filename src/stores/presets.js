@@ -597,7 +597,10 @@ export const usePresetsStore = defineStore("presets", () => {
     function getPickedPresetsCli() {
         return pickedPresetList.value
             .flatMap((pickedPreset) => pickedPreset.presetCli)
-            .filter((command) => command.trim() !== "");
+            .filter((command) => {
+                const normalized = command.trim().toLowerCase();
+                return normalized !== "" && normalized !== "save" && normalized !== "exit" && normalized !== "reboot";
+            });
     }
 
     function markPickedPresetsAsFavorites() {
