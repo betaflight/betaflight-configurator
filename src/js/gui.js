@@ -296,7 +296,7 @@ class GuiControl {
         const docButton = document.querySelector("div#content #button-documentation");
         if (docButton) {
             docButton.innerHTML = i18n.getMessage("betaflightSupportButton");
-            docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
+            docButton.setAttribute("href", "https://github.com/timmyfpv/GIGFPV-Configurator");
         }
 
         if (callback) {

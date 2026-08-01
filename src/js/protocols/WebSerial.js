@@ -141,7 +141,7 @@ class WebSerial extends EventTarget {
             : `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
         return {
             path: this.#getStablePortId(port),
-            displayName: `Betaflight ${displayName}`,
+            displayName: `GIGFLIGHT ${displayName}`,
             vendorId: portInfo.usbVendorId,
             productId: portInfo.usbProductId,
             port: port,

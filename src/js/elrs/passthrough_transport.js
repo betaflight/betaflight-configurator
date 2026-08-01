@@ -56,7 +56,7 @@ export class ElrsPassthroughTransport {
     }
 
     getInfo() {
-        return "Betaflight RX serial passthrough";
+        return "GIGFLIGHT RX serial passthrough";
     }
 
     getPid() {

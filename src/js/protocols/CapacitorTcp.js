@@ -25,7 +25,7 @@ class CapacitorTcp extends EventTarget {
         this.connect = this.connect.bind(this);
 
         if (!this.plugin) {
-            console.warn(`${this.logHead} Native BetaflightTcp plugin is not available`);
+            console.warn(`${this.logHead} Native TCP plugin is not available`);
             return;
         }
 
@@ -59,7 +59,7 @@ class CapacitorTcp extends EventTarget {
         this.address = url;
         return {
             path: url,
-            displayName: `Betaflight TCP`,
+            displayName: `GIGFLIGHT TCP`,
             vendorId: 0,
             productId: 0,
             port: 0,
@@ -69,7 +69,7 @@ class CapacitorTcp extends EventTarget {
     getConnectedDevice() {
         return {
             path: this.address,
-            displayName: `Betaflight TCP`,
+            displayName: `GIGFLIGHT TCP`,
             vendorId: 0,
             productId: 0,
             port: 0,

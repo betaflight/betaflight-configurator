@@ -39,7 +39,7 @@ class TauriTcp extends EventTarget {
     }
 
     _portInfo(path) {
-        return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
+        return { path, displayName: "GIGFLIGHT TCP", vendorId: 0, productId: 0, port: 0 };
     }
 
     // Accept "tcp://host:port", "host:port" or a bare "host". The manual-entry box

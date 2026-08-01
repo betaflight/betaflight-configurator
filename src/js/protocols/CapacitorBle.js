@@ -10,7 +10,7 @@ class CapacitorBle extends EventTarget {
         super();
 
         if (!plugin) {
-            console.warn(`${logHead} Native BetaflightBle plugin is not available`);
+            console.warn(`${logHead} Native BLE plugin is not available`);
             return;
         }
 

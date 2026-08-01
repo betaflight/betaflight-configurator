@@ -335,7 +335,7 @@ class Passthrough {
             }
         }
         if (!index) {
-            throw new Error("RX Serial not found. Check Betaflight/GIGFLIGHT UART configuration.");
+            throw new Error("RX Serial not found. Check GIGFLIGHT UART configuration.");
         }
 
         await this.transport.write_string(`serialpassthrough ${index} ${this.transport.baudrate}\r\n`);

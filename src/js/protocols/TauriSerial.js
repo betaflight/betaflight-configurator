@@ -219,7 +219,7 @@ class TauriSerial extends EventTarget {
     getDisplayName(path, vendorId, productId) {
         if (vendorId && productId) {
             const vendorName = vendorIdNames[vendorId] || `VID:${vendorId} PID:${productId}`;
-            return `Betaflight ${vendorName}`;
+            return `GIGFLIGHT ${vendorName}`;
         }
         return path;
     }

@@ -789,7 +789,7 @@
         "message": "Non-GIGFLIGHT firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
-        "message": "The current version of the app may not support the firmware version on this device. You can use older releases such as <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0</a> for firmware down to 4.1 or <a href=\"https://github.com/betaflight/betaflight-configurator/releases/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1</a> for even older firmware versions.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use CLI for backup before flashing, the procedure is in the <a href=\"https://betaflight.com/docs/wiki/getting-started/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>. But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
+        "message": "The current version of the app may not support the firmware version on this device.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, upgrade to a newer GIGFLIGHT firmware version. Use CLI for backup before flashing. Keep in mind that backups from older firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
     },
     "resetToCustomDefaultsDialog": {
         "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
@@ -830,7 +830,7 @@
         "message": "Using cached builds information for $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Support data submitted *** <br>ID: $1<br><br><br># copy ID and provide to the betaflight team."
+        "message": "<br>*** Support data submitted *** <br>ID: $1<br><br><br># copy ID and provide to the GIGFPV team."
     },
     "buildKey": {
         "message": "Build Key: <strong>$1</strong>"
@@ -839,7 +839,7 @@
         "message": "Confirm Data Submission"
     },
     "supportWarningDialogText": {
-        "message": "Please confirm data submission to the Betaflight team.<br><br>This process will run some commands and submit the output to the build server.<br><br>You will then be provided a unique identifier for your data submission.<br><br>Please ensure you provide this unique identifier to the Betaflight team when using Discord or opening an issues on Github."
+        "message": "Please confirm data submission to the GIGFPV team.<br><br>This process will run some commands and submit the output to the build server.<br><br>You will then be provided a unique identifier for your data submission.<br><br>Please ensure you provide this unique identifier to the GIGFPV team when using Discord or opening an issue on GitHub."
     },
     "supportWarningDialogInputPlaceHolder": {
         "message": "Describe the problem"
@@ -863,7 +863,7 @@
         "message": "You <span class=\"message-negative\">can't</span> do this right now, please wait for current operation to finish ..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "You need to <strong>upgrade</strong> your firmware to the latest version of Betaflight before you can use the $1 tab."
+        "message": "You need to <strong>upgrade</strong> your firmware to the latest version of GIGFLIGHT before you can use the $1 tab."
     },
     "firmwareVersion": {
         "message": "Firmware Version: <strong>$1</strong>"
@@ -967,7 +967,7 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Welcome to <strong>GIGFPV Station</strong>, one integrated workspace for Betaflight-compatible flight controllers, ExpressLRS links, and AM32 ESCs."
+        "message": "Welcome to <strong>GIGFPV Station</strong>, one integrated workspace for GIGFLIGHT flight controllers, GIGLRS links, and AM32 ESCs."
     },
     "defaultHardwareHead": {
         "message": "Hardware"
@@ -979,13 +979,13 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Our <a href=\"https://blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer</a> is available as an online app.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware, this app, and the blackbox viewer can be downloaded from GitHub."
+        "message": "GIGFPV-maintained firmware and configurator source code is available on GitHub.<br /><br />Use the integrated flashers for GIGFLIGHT, GIGLRS, and AM32 workflows."
     },
     "defaultContributingHead": {
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "GIGFPV Station is built on open-source FPV projects. Contributions that improve the shared configuration experience, documentation, protocol support, and testing are welcome. Betaflight, ExpressLRS, and AM32 continue to own and maintain their respective firmware ecosystems."
+        "message": "GIGFPV Station is built on open-source FPV projects. Contributions that improve the shared configuration experience, documentation, protocol support, and testing are welcome."
     },
     "defaultFacebookText": {
         "message": "The FPV community shares setup advice, target support, and flight experience across many platforms."
@@ -1012,13 +1012,13 @@
         "message": "Open Source Donations"
     },
     "defaultDonateText": {
-        "message": "<p><strong>GIGFPV Station</strong> is an open-source integration built on the work of the Betaflight, ExpressLRS, and AM32 communities.</p><p>Please support the upstream projects and hardware makers that keep the FPV ecosystem moving.</p>"
+        "message": "<p><strong>GIGFPV Station</strong> is an open-source integration for GIGFPV hardware.</p><p>Please support the hardware makers and open-source projects that keep the FPV ecosystem moving.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Use verified firmware releases, and never flash a target you have not identified.</p>"
     },
     "patreonLink": {
-        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
+        "message": "<a href=\"https://github.com/timmyfpv\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>",
         "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
@@ -1031,13 +1031,13 @@
         "message": "Documentation / Manual"
     },
     "defaultDocumentation": {
-        "message": "Betaflight documentation is available in release notes and wiki.<br /><br />"
+        "message": "GIGFPV firmware and configurator release information is available on GitHub.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "The Betaflight wiki is a great resource for information, it can be found <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>."
+        "message": "GIGFLIGHT firmware source and releases can be found <a href=\"https://github.com/timmyfpv/GIGFLIGHT\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>."
     },
     "defaultDocumentation2": {
-        "message": "The release notes for the firmware can be read at GitHub releases page, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>."
+        "message": "GIGFPV Station source and releases can be found <a href=\"https://github.com/timmyfpv/GIGFPV-Configurator\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>."
     },
     "defaultSupportHead": {
         "message": "Support"
@@ -1055,16 +1055,16 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
+        "message": "<a href=\"https://github.com/timmyfpv/GIGFLIGHT\" target=\"_blank\" rel=\"noopener noreferrer\">GIGFLIGHT GitHub</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 Videos</a>"
+        "message": "<a href=\"https://www.expresslrs.org/\" target=\"_blank\" rel=\"noopener noreferrer\">ExpressLRS Documentation</a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+        "message": "<a href=\"https://github.com/am32-firmware\" target=\"_blank\" rel=\"noopener noreferrer\">AM32 GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs on Discord</a>"
+        "message": "<a href=\"https://github.com/timmyfpv/GIGFPV-Configurator\" target=\"_blank\" rel=\"noopener noreferrer\">GIGFPV Station GitHub</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
@@ -2003,7 +2003,7 @@
         "message": "Beacon Tone"
     },
     "configurationDshotBeaconHelp": {
-        "message": "The Dshot beacon uses the ESCs and motors to produce sound. This means that the Dshot beacon cannot be used when the motors are spinning. In Betaflight 3.4 and newer, when arming is attempted while the Dshot beacon is active, there is a 2 second delay after the last Dshot beacon tone before the aircraft is armed. This is to prevent the Dshot beacon functionality from interfering with the Dshot commands sent when arming.<br/><strong>Warning:</strong> Since the Dshot beacon is running current through your motors when active, this can result in excessive heat production and damage to your motors and / or ESCs if the beacon strength is set too high. Use BLHeli Configurator or the BLHeli Suite to adjust and test the beacon strength."
+        "message": "The Dshot beacon uses the ESCs and motors to produce sound. This means that the Dshot beacon cannot be used when the motors are spinning. When arming is attempted while the Dshot beacon is active, there is a short delay after the last Dshot beacon tone before the aircraft is armed. This is to prevent the Dshot beacon functionality from interfering with the Dshot commands sent when arming.<br/><strong>Warning:</strong> Since the Dshot beacon is running current through your motors when active, this can result in excessive heat production and damage to your motors and / or ESCs if the beacon strength is set too high. Use BLHeli Configurator or the BLHeli Suite to adjust and test the beacon strength."
     },
     "configurationBeeper": {
         "message": "Beeper Configuration"
@@ -2149,7 +2149,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "When enabled, the GPS module will also track the Galileo satellite system, usually resulting in more locked satellites. On Betaflight 4.2.x or earlier, it also disables the QZSS augmentation system.",
+        "message": "When enabled, the GPS module will also track the Galileo satellite system, usually resulting in more locked satellites.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -2885,7 +2885,7 @@
         "message": "Preview"
     },
     "receiverMspWarningText": {
-        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your aircraft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
+        "message": "These sticks allow the flight controller to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your aircraft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Enable controls"
@@ -2948,7 +2948,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/wiki/guides/current/Modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
+        "message": "AirMode allows for maintaining aircraft stability at low throttle.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
@@ -3957,7 +3957,7 @@
         "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabMotorTesting.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://betaflight.com/docs/wiki/guides/current/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": "Update the firmware.<br /> Make sure you are using the latest firmware: Betaflight 4.3 or newer."
+        "message": "Update the firmware.<br /> Make sure you are using the latest GIGFLIGHT firmware."
     },
     "escDshotDirectionDialog-WizardActionHint": {
         "message": "Click on motor numbers individually to change spin direction"
@@ -4267,8 +4267,8 @@
         "message": "Target:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Get more information about the target on the Betaflight Wiki",
-        "description": "Link to Betaflight support for target"
+        "message": "Get more information about the target",
+        "description": "Link to support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -4346,7 +4346,7 @@
         "message": "Select or detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "GIGFPV Station supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
+        "message": "GIGFPV Station supports flashing GIGFLIGHT targets with the respective board-specific configurations in one step.<br><br>The same firmware .hex file can be used for boards using the same MCU when the correct target configuration is applied.<br><br>If you encounter problems using the firmware, please open an <a href=\"https://github.com/timmyfpv/GIGFLIGHT/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Select firmware version for your board."
@@ -4467,16 +4467,16 @@
         "message": "Message:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-GIGFLIGHT</strong> hardware with this flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside the GIGFLIGHT flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
+        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-GIGFLIGHT</strong> hardware with this flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside the GIGFLIGHT flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, and upgrade drivers.</li></ul>"
     },
     "firmwareFlasherWarningShort": {
-        "message": "Do not flash non-Betaflight hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
+        "message": "Do not flash non-GIGFLIGHT hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Recovery / Lost communication"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/getting-started/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required.</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherRecoveryShort": {
         "message": "If you have lost communication: power off, enable No Reboot Sequence and Full Chip Erase, jumper the BOOT pins, then power on. Install drivers if needed."
@@ -4607,8 +4607,8 @@
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "App has detected the board: <strong>{{boardName}}</strong> but no official Betaflight target was found",
-        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
+        "message": "App has detected the board: <strong>{{boardName}}</strong> but no GIGFLIGHT target was found",
+        "description": "Board verification has succeeded, but the target is not available as a GIGFLIGHT target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "The App <span class=\"message-negative\">failed</span> to verify the board. If this persists, try switching tabs and retry, reconnect the USB, or connect first if you might have forgotten to apply custom defaults.",
@@ -5034,7 +5034,7 @@
         "message": "RC Expo Power"
     },
     "pidTuningRcExpoPowerHelp": {
-        "message": "The exponent that is used when calculating RC Expo. In Betaflight versions prior to 3.0, value is fixed at 3."
+        "message": "The exponent that is used when calculating RC Expo."
     },
     "pidTuningLevel": {
         "message": "Angle/Horizon"
@@ -5306,7 +5306,7 @@
         "message": "Gyro Lowpass 2"
     },
     "pidTuningGyroLowpass2Help": {
-        "message": "The second of two Gyro lowpass filters.<br /><br />This filter runs in the gyro loop, filtering the signal before it enters the PID loop. It is always in static (fixed cutoff) mode.<br /><br />If the PID loop frequency is less than the gyro loop frequency, eg a 4k PID loop with an 8k gyro loop, this filter should be retained to prevent aliasing issues due to 8k->4k downsampling.<br /><br />A single gyro lowpass 2 configuration, set to somewhere 500 and 1000Hz, works well for Betaflight 4.3 or higher, for clean builds with RPM filtering active and at least default D filtering.",
+        "message": "The second of two Gyro lowpass filters.<br /><br />This filter runs in the gyro loop, filtering the signal before it enters the PID loop. It is always in static (fixed cutoff) mode.<br /><br />If the PID loop frequency is less than the gyro loop frequency, eg a 4k PID loop with an 8k gyro loop, this filter should be retained to prevent aliasing issues due to 8k->4k downsampling.<br /><br />A single gyro lowpass 2 configuration, set to somewhere 500 and 1000Hz, works well for current GIGFLIGHT firmware with RPM filtering active and at least default D filtering.",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
@@ -5580,7 +5580,7 @@
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
     },
     "failsafeFeaturesHelpOld": {
-        "message": "Failsafe configuration has changed considerably. Use Betaflight <strong>v1.12.0+</strong> to enable the improved configuration panel."
+        "message": "Failsafe configuration has changed considerably. Use current GIGFLIGHT firmware to enable the improved configuration panel."
     },
     "failsafePaneTitleOld": {
         "message": "Receiver failsafe"
@@ -5776,7 +5776,7 @@
         "message": "Save"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "Firmware upgrade <span class=\"message-negative\">required</span>. Battery/Amperage/Voltage configurations using API &lt; 1.33.0 (Betaflight release &lt;= 3.17) is not supported."
+        "message": "Firmware upgrade <span class=\"message-negative\">required</span>. Battery/Amperage/Voltage configurations using API &lt; 1.33.0 are not supported."
     },
     "powerBatteryVoltageMeterSource": {
         "message": "Voltage Meter Source"
@@ -6149,8 +6149,8 @@
         "description": "Font Large Extra"
     },
     "osdSetupFontTypeBetaflight": {
-        "message": "Betaflight",
-        "description": "Font Betaflight"
+        "message": "GIGFLIGHT",
+        "description": "Font GIGFLIGHT"
     },
     "osdSetupFontTypeDigital": {
         "message": "Digital",
@@ -7284,10 +7284,10 @@
         "message": "Unknown statistic (details to be added in a future release)"
     },
     "osdDescribeFontVersion1": {
-        "message": "Font version: 1 (Betaflight 4.0 or older)"
+        "message": "Font version: 1"
     },
     "osdDescribeFontVersion2": {
-        "message": "Font version: 2 (Betaflight 4.1 or newer)"
+        "message": "Font version: 2"
     },
     "osdDescribeFontVersionCUSTOM": {
         "message": "Font version: user provided"
@@ -7732,7 +7732,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult the Betaflight wiki of VTX Tables to grab some samples. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br /><br />You must configure <b>only</b> the power levels that are legal at your country.",
+        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult your VTX documentation for sample tables. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br /><br />You must configure <b>only</b> the power levels that are legal at your country.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -7772,7 +7772,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "This table represents all the frequencies that can be used for your VTX. You can have several bands and for each band you must configure:<br><b>- $t(vtxTableBandTitleName.message):</b> Name that you want to assign to this band, like BOSCAM_A, FATSHARK or RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Short letter that references the band.<br><b>- $t(vtxTableBandTitleFactory.message):</b> This indicates if it is a factory band. If enabled Betaflight sends to the VTX a band and channel number. The VTX will then use its built-in frequency table and the frequencies configured here are only to show the value in the OSD and other places. If it is not enabled, then Betaflight will send to the VTX the real frequency configured here.<br><b>- Frequencies:</b> Frequencies for this band.<br /><br />Remember that not all frequencies are legal at your country. You must put a value of <b>zero</b> to each frequency index that you are not allowed to use to disable it.",
+        "message": "This table represents all the frequencies that can be used for your VTX. You can have several bands and for each band you must configure:<br><b>- $t(vtxTableBandTitleName.message):</b> Name that you want to assign to this band, like BOSCAM_A, FATSHARK or RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Short letter that references the band.<br><b>- $t(vtxTableBandTitleFactory.message):</b> This indicates if it is a factory band. If enabled GIGFLIGHT sends to the VTX a band and channel number. The VTX will then use its built-in frequency table and the frequencies configured here are only to show the value in the OSD and other places. If it is not enabled, then GIGFLIGHT will send to the VTX the real frequency configured here.<br><b>- Frequencies:</b> Frequencies for this band.<br /><br />Remember that not all frequencies are legal at your country. You must put a value of <b>zero</b> to each frequency index that you are not allowed to use to disable it.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -7816,7 +7816,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "The '$t(vtxButtonSaveLua.message)' button will allow you to save a <i>mcuid</i>.lua file containing the VTX table configuration that can be used with the <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Version 1.6.0 and above can use the file as is, but for older versions of the scripts it should be renamed to match the modelname on the TX.",
+        "message": "The '$t(vtxButtonSaveLua.message)' button will allow you to save a <i>mcuid</i>.lua file containing the VTX table configuration that can be used with compatible TX Lua scripts.<br><br>Version 1.6.0 and above can use the file as is, but for older versions of the scripts it should be renamed to match the modelname on the TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -8264,7 +8264,7 @@
         "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly preferred for Racing.<br /><br /><b>Derivative from Measurement</b> provides smoother stick response which is more useful for freestyling"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>Legacy vs Betaflight (float):</b> PID scaling and PID logic is exactly the same. Not necessarily retune needed. Legacy is old betaflight evolved rewrite, which is basic PID controller based on integer math. Betaflight PID controller uses floating point math and has many new features specifically designed for multirotor applications <br> <b>Float vs Integer:</b> PID scaling and PID logic is exactly the same. No retune needed. F1 boards have no onboard FPU and floating point math increases CPU load and integer math will improve performance, but float math might gain slightly more precision."
+        "message": "<b>Legacy vs float:</b> PID scaling and PID logic is exactly the same. Not necessarily retune needed. Legacy is the older integer-math PID controller. The float PID controller uses floating point math and has many features designed for multirotor applications.<br> <b>Float vs Integer:</b> PID scaling and PID logic is exactly the same. No retune needed. F1 boards have no onboard FPU and floating point math increases CPU load and integer math will improve performance, but float math might gain slightly more precision."
     },
     "pidTuningFilterTip": {
         "message": "<b>Gyro Soft Filter:</b> Lowpass filter for gyro. Use lower value for more filtering.<br><b>D Term Filter:</b> Lowpass filter for Dterm. Can affect D tuning. Use lower value for more filtering. <br><b>Yaw Filter:</b> Filters yaw output. It can help on setups with noisy yaw axis."
@@ -8449,7 +8449,7 @@
         "message": "File name"
     },
     "dialogFileNameDescription": {
-        "message": "The file will be saved in the 'Android/data/betaflight-app/{{folder}}' folder in your internal storage."
+        "message": "The file will be saved in the app data folder in your internal storage."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "This file already exists!"
@@ -8671,7 +8671,7 @@
         "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "mspCliFirmwareTooOld": {
-        "message": "This action requires Betaflight firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
+        "message": "This action requires GIGFLIGHT firmware {{required}} or newer (currently connected to {{current}}). Please update your flight controller firmware before continuing.",
         "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
     },
     "firmwareFlasherRestoreBackup": {

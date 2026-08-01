@@ -31,7 +31,7 @@ class Websocket extends EventTarget {
         this.address = url;
         return {
             path: url,
-            displayName: `Betaflight SITL`,
+            displayName: `GIGFLIGHT SITL`,
             vendorId: 0,
             productId: 0,
             port: 0,
@@ -41,7 +41,7 @@ class Websocket extends EventTarget {
     getConnectedDevice() {
         return {
             path: this.address,
-            displayName: `Betaflight SITL`,
+            displayName: `GIGFLIGHT SITL`,
             vendorId: 0,
             productId: 0,
             port: 0,

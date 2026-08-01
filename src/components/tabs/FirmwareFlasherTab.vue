@@ -211,7 +211,7 @@ export default defineComponent({
             targetMCUText: "",
             configFilenameText: "",
             manufacturerSpanText: "",
-            targetSupportUrl: "https://betaflight.com/docs/wiki/boards/archive/Missing",
+            targetSupportUrl: "https://github.com/timmyfpv/GIGFLIGHT",
             progressLabelText: "",
             progressLabelClass: "", // "valid", "invalid", "actionRequired"
             firmwareLoadedName: "",
@@ -462,8 +462,8 @@ export default defineComponent({
         };
 
         const getSupportUrlForTarget = (targetName) => {
-            const baseBoardUrl = "https://betaflight.com/docs/wiki/boards/current";
-            const fallbackUrl = "https://betaflight.com/docs/wiki/boards/archive/Missing";
+            const baseBoardUrl = "https://github.com/timmyfpv/gigflight-config/tree/main/configs";
+            const fallbackUrl = "https://github.com/timmyfpv/GIGFLIGHT";
 
             if (!targetName || targetName === "0") {
                 return fallbackUrl;

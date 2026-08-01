@@ -72,14 +72,14 @@ export default class Am32FourWaySession extends EventTarget {
             return this.expectedCount;
         }
         if (!serial.connected) {
-            throw new Error("Connect to a GIGFLIGHT/Betaflight flight controller first.");
+            throw new Error("Connect to a GIGFLIGHT flight controller first.");
         }
 
-        this.log("Requesting Betaflight 4-way ESC passthrough...");
+        this.log("Requesting GIGFLIGHT 4-way ESC passthrough...");
         const response = await MSP.promise(MSPCodes.MSP_SET_PASSTHROUGH);
         const count = response?.data?.getUint8?.(0) ?? 0;
         if (!count) {
-            throw new Error("Betaflight opened 4-way passthrough but reported zero ESCs.");
+            throw new Error("GIGFLIGHT opened 4-way passthrough but reported zero ESCs.");
         }
 
         MSP.callbacks_cleanup();

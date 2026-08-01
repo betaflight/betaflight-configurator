@@ -1,7 +1,7 @@
 <template>
     <UiBox title="GIGLRS firmware flash" type="neutral">
         <p>
-            Flash one GIGLRS receiver through Betaflight/GIGFLIGHT RX serial passthrough. The target list comes from
+            Flash one GIGLRS receiver through GIGFLIGHT RX serial passthrough. The target list comes from
             <code>giglrs-targets</code>; online firmware comes from <code>giglrs</code> GitHub releases.
         </p>
 
@@ -350,7 +350,7 @@ async function buildFirmwareFilesFromBytes(name, bytes) {
         firmwareLayout.value = layout;
         if (isEsp32Platform(selectedTarget.value.platform)) {
             files = files.slice(-1);
-            addLog("Using official ELRS Betaflight passthrough mode: flashing application image only.");
+            addLog("Using official ELRS GIGFLIGHT passthrough mode: flashing application image only.");
         }
         if (archiveFileCount === 1) {
             addLog("Archive contained only firmware.bin; flashing application image only.");
@@ -466,7 +466,7 @@ async function ensureNativeWebSerialPort() {
     const serialProtocol = serial.selectProtocol(DeviceHandler.devicePicker.selectedDevice);
     const nativePort = serialProtocol?.getNativePort?.(DeviceHandler.devicePicker.selectedDevice);
     if (!nativePort) {
-        throw new Error("GIGLRS Betaflight passthrough flashing currently requires a browser Web Serial port.");
+        throw new Error("GIGLRS GIGFLIGHT passthrough flashing currently requires a browser Web Serial port.");
     }
 
     if (serial.connected) {
@@ -542,7 +542,7 @@ async function flashReceiver() {
         const configuredFirmware = await prepareFirmware();
         addLog(`GIGLRS flasher build: ${GIGLRS_FLASHER_BUILD}.`);
         addLog(`Flashing baud: ${baudrate}; receiver UART baud setting: ${settings.receiverBaud}.`);
-        addLog("Full chip erase: disabled for ESP32 Betaflight passthrough.");
+        addLog("Full chip erase: disabled for ESP32 GIGFLIGHT passthrough.");
         addLog(`Configured firmware for ${selectedTarget.value.productName} (${configuredFirmware.length} flash file${configuredFirmware.length === 1 ? "" : "s"}).`);
         configuredFirmware.forEach((file) => {
             addLog(`Flash file: ${basename(file.name)} @ 0x${file.address.toString(16)} (${file.data.byteLength} bytes).`);

@@ -90,7 +90,7 @@ export default class ConfigInserter {
     insertConfig(firmware, config) {
         console.time(CONFIG_LABEL);
 
-        const input = `# Betaflight\n${config}\0`;
+        const input = `# GIGFLIGHT\n${config}\0`;
         const customDefaultsArea = getCustomDefaultsArea(firmware);
 
         if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {

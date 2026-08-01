@@ -975,7 +975,7 @@ class STM32Protocol {
 
                             // Show notification
                             if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
+                                NotificationManager.showNotification("GIGFPV Station", {
                                     body: i18n.getMessage("programmingSuccessfulNotification"),
                                     icon: "/images/pwa/favicon.ico",
                                 });
@@ -993,7 +993,7 @@ class STM32Protocol {
 
                             // Show notification
                             if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
+                                NotificationManager.showNotification("GIGFPV Station", {
                                     body: i18n.getMessage("programmingFailedNotification"),
                                     icon: "/images/pwa/favicon.ico",
                                 });

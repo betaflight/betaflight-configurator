@@ -14,7 +14,7 @@ class CapacitorSerial extends EventTarget {
         super();
 
         if (!BetaflightSerial) {
-            console.error(`${logHead} Native BetaflightSerial plugin is not available`);
+            console.error(`${logHead} Native serial plugin is not available`);
             return;
         }
 
@@ -117,13 +117,13 @@ class CapacitorSerial extends EventTarget {
     getDisplayName(device) {
         // Try to get a friendly name from manufacturer/product
         if (device.product) {
-            return `Betaflight ${device.product}`;
+            return `GIGFLIGHT ${device.product}`;
         }
         if (device.manufacturer) {
-            return `Betaflight ${device.manufacturer}`;
+            return `GIGFLIGHT ${device.manufacturer}`;
         }
         // Fallback to VID:PID
-        return `Betaflight VID:${device.vendorId} PID:${device.productId}`;
+        return `GIGFLIGHT VID:${device.vendorId} PID:${device.productId}`;
     }
 
     async loadDevices() {

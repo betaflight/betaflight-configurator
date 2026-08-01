@@ -11,7 +11,7 @@ const BetaflightFile = Capacitor?.Plugins?.BetaflightFile;
 class CapacitorFile {
     constructor() {
         if (!BetaflightFile) {
-            console.error(`${logHead} Native BetaflightFile plugin is not available`);
+            console.error(`${logHead} Native file plugin is not available`);
         }
     }
 

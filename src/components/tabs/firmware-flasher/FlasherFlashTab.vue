@@ -152,7 +152,7 @@
             <UiBox :title="$t('warningTitle')" type="error" highlight class="note-text-format">
                 <p>{{ $t("firmwareFlasherWarningShort") }}</p>
                 <a
-                    href="https://betaflight.com/docs/wiki/app/firmware-flasher-tab#basic-flashing-procedure"
+                    href="https://github.com/timmyfpv/GIGFLIGHT"
                     target="_blank"
                     rel="noopener noreferrer"
                     >{{ $t("firmwareFlasherReadMore") }}</a
@@ -161,7 +161,7 @@
             <UiBox :title="$t('firmwareFlasherRecoveryHead')" highlight class="note-text-format">
                 <p>{{ $t("firmwareFlasherRecoveryShort") }}</p>
                 <a
-                    href="https://betaflight.com/docs/wiki/app/firmware-flasher-tab#troubleshooting"
+                    href="https://github.com/timmyfpv/GIGFPV-Configurator"
                     target="_blank"
                     rel="noopener noreferrer"
                     >{{ $t("firmwareFlasherReadMore") }}</a

@@ -2,7 +2,7 @@
   "name": "gigfpv-station",
   "productName": "GIGFPV Station",
   "displayName": "GIGFPV Station - Unified FPV configuration application",
-  "description": "Unified configuration and firmware management for Betaflight-compatible flight controllers, ExpressLRS, and AM32.",
+  "description": "Unified configuration and firmware management for GIGFLIGHT flight controllers, GIGLRS receivers, and AM32 ESCs.",
   "version": "2026.6.0-alpha",
   "type": "module",
   "main": "index.html",

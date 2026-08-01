@@ -330,7 +330,7 @@ const { t } = useTranslation();
 
 // USelect item arrays
 const ratesTypeItems = [
-    { value: 0, label: "Betaflight" },
+    { value: 0, label: "GIGFLIGHT" },
     { value: 1, label: "Raceflight" },
     { value: 2, label: "KISS" },
     { value: 3, label: "Actual" },

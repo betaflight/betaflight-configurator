@@ -18,7 +18,7 @@ class CapacitorDfu extends EventTarget {
         super();
 
         if (!BetaflightDfu) {
-            console.error(`${logHead} Native BetaflightDfu plugin is not available`);
+            console.error(`${logHead} Native DFU plugin is not available`);
             return;
         }
 
@@ -58,7 +58,7 @@ class CapacitorDfu extends EventTarget {
         const serialNumber = device.serialNumber || device.deviceId;
         return {
             path: `usb_${serialNumber}`,
-            displayName: `Betaflight ${device.productName || "DFU Device"}`,
+            displayName: `GIGFLIGHT ${device.productName || "DFU Device"}`,
             vendorId: device.vendorId,
             productId: device.productId,
             manufacturerName: device.manufacturerName,

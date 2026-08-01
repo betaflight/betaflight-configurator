@@ -50,7 +50,7 @@ class WebUsbDfuTransport extends EventTarget {
         const identifier = device.serialNumber ?? `${device.vendorId}_${device.productId}`;
         return {
             path: `usb_${identifier}`,
-            displayName: `Betaflight ${device.productName}`,
+            displayName: `GIGFLIGHT ${device.productName}`,
             vendorId: device.vendorId,
             productId: device.productId,
             manufacturerName: device.manufacturerName,
