@@ -1,16 +1,16 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// WebSerial stable device identity.
+// WebSerial device identity.
 //
-// The browser reuses the same SerialPort object across an MCU-reboot USB
-// re-enumeration, so a stable id keyed off that object's identity is the
-// correct, reconnect-safe device path. These tests prove:
-//   (a) the same SerialPort object yields the same path across repeated
-//       createPort/loadDevices calls (stability),
-//   (b) two different SerialPort objects get distinct paths,
-//   (c) removing device A does not match/disconnect device B,
-//   (d) selectProtocol still routes the new "serial_N" id to WebSerial.
+// A path is the id of one SerialPort object. The id stays the same while the browser gives
+// back the same object. The id changes if the device disconnects and connects again, because
+// Chrome makes a new object. These tests show:
+//   (a) the same SerialPort object gives the same path for each
+//       createPort/loadDevices call (stability),
+//   (b) two different SerialPort objects get different paths,
+//   (c) the removal of device A does not disconnect device B,
+//   (d) selectProtocol sends the new "serial_N" id to WebSerial.
 //
 // `./devices` is mocked so WebSerial loads without its real import graph.
 // ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ describe("WebSerial stable device identity", () => {
         await ws.loadDevices();
         const pathAfterFirst = ws.ports[0].path;
 
-        // Simulate a re-enumeration: the browser hands back the SAME object.
+        // The browser gives back the same object.
         await ws.loadDevices();
         const pathAfterSecond = ws.ports[0].path;
 

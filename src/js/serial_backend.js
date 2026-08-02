@@ -202,8 +202,8 @@ export function initializeSerialBackend() {
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
-            // The device re-enumerated with the same stable id, so the selection
-            // is already aimed at it — just connect.
+            // selectActivePort points the selection at the device that sent this event.
+            // Connect to it.
             connectDisconnect();
         }
     });
@@ -1432,11 +1432,10 @@ export function reinitializeConnection(suppressDialog = false) {
 
     const currentPort = DeviceHandler.devicePicker.selectedDevice;
 
-    // requestReboot() above put the connection state into REBOOTING, so
-    // selectActivePort() reports isReconnecting and keeps the current selection
-    // instead of hijacking it with the expert-mode virtual/manual fallback while
-    // the FC is briefly off the port list. The device re-enumerates with the same
-    // stable id, so reconnect simply re-uses currentPort — no token needed.
+    // requestReboot() above sets the connection state to REBOOTING. selectActivePort() then
+    // reports isReconnecting and keeps the current selection. It does not change the selection
+    // to the expert-mode virtual or manual device while the FC is off the port list.
+    // The reconnect uses currentPort again. A token is not necessary.
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
@@ -1567,9 +1566,11 @@ function rebootReconnect() {
                 // traffic can't collide with the new connection's request chain.
                 MSP.disconnect_cleanup();
 
-                // selectActivePort keeps the current selection while reconnecting
-                // (isReconnecting), so it still aims at the originally-connected
-                // device — which re-enumerates with the same stable id. Just connect.
+                // selectActivePort keeps the current selection during a reconnect
+                // (isReconnecting). The selection stays on the device that was connected.
+                // If that device comes back with a new id, the addedDevice event changes the
+                // selection to the new id. An attempt before one of these two events fails.
+                // The loop then tries again.
                 connectDisconnect();
             }
         }, REBOOT_RECONNECT_RETRY_MS);

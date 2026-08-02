@@ -271,10 +271,10 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         return selectedDevice;
     }
 
-    // suggestedDevice is an addedDevice payload captured before updateDeviceList() re-read the
-    // transport, so it can already be stale: on Linux a CDC-ACM node is removed and re-added
-    // while udev/ModemManager probe it, and the port that fired `connect` is gone by the time we
-    // look. Selecting a path the transport no longer lists makes auto-connect fail the lookup.
+    // The code reads suggestedDevice from an addedDevice event. updateDeviceList() reads the
+    // transport again after that. The device can be absent at this point. On Linux, udev and
+    // ModemManager remove a CDC-ACM node and add it again while they examine it. Auto-connect
+    // fails if the selection holds a path that the transport does not list.
     if (!selectedDevice && suggestedDevice && this.isKnownDevicePath(suggestedDevice.path)) {
         selectedDevice = suggestedDevice.path;
     }
@@ -326,9 +326,9 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         selectedDevice = "manual";
     }
 
-    // While reconnecting, keep the previously-selected device rather than dropping
-    // to "noselection": it re-enumerates with the same stable id, so the existing
-    // selection is still the right target. Never virtual/manual.
+    // During a reconnect, keep the device from the last selection. Do not change it to
+    // "noselection". The device is absent for a short time only. If it comes back with a new
+    // id, the addedDevice event selects it again. Do not use virtual or manual here.
     if (!selectedDevice && reconnectInProgress) {
         selectedDevice = this.devicePicker.selectedDevice;
     }

@@ -202,10 +202,10 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
     });
 });
 
-// Regression: on Linux the FC surfaces as two ports in quick succession (udev/ModemManager
-// re-enumerate the CDC-ACM node) and only the second survives the refresh. Carrying the first
-// one's addedDevice payload into the selection aimed auto-connect at a dead path —
-// "[WEBSERIAL] Device not found: serial_5".
+// Regression. On Linux the FC gives two ports quickly, because udev and ModemManager remove
+// the CDC-ACM node and add it again. Only the second port stays in the list after the refresh.
+// The addedDevice event of the first port put a dead path in the selection. Auto-connect then
+// used that path and failed with "[WEBSERIAL] Device not found: serial_5".
 describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () => {
     beforeEach(() => {
         resetPortHandler();
@@ -214,7 +214,7 @@ describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () =
     it("ignores a suggested device that is no longer in the refreshed lists", () => {
         const ghost = { path: "serial_5", displayName: "Betaflight STM Electronics" };
         const real = { path: "serial_6", displayName: "Betaflight STM Electronics" };
-        // The refresh already dropped the ghost; only the surviving port is listed.
+        // The refresh removed the first port. The list holds the second port only.
         DeviceHandler.currentSerialPorts = [real];
 
         const selected = DeviceHandler.selectActivePort(ghost);
@@ -233,8 +233,8 @@ describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () =
         expect(DeviceHandler.devicePicker.selectedDevice).toBe("serial_6");
     });
 
-    // The suggestion is the only way a device outside the AT32/CP210/SPR/STM filter can be
-    // auto-selected, so validating it must not collapse into "must match the filter".
+    // Only the suggestion can select a device that the AT32/CP210/SPR/STM filter does not
+    // match. The check on the suggestion must not apply that filter too.
     it("honours a present suggestion whose displayName does not match the device filter", () => {
         const odd = { path: "serial_7", displayName: "Betaflight VID:1234 PID:5678" };
         DeviceHandler.currentSerialPorts = [odd];

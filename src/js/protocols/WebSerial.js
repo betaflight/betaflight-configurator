@@ -35,11 +35,11 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
  * WebSerial protocol implementation for the Serial base class
  */
 class WebSerial extends EventTarget {
-    // Stable id per physical SerialPort object. The browser reuses the same
-    // SerialPort instance across an MCU-reboot USB re-enumeration, so keying the
-    // id off object identity yields an id that survives device-list rebuilds —
-    // unlike a bare counter that would reset every time loadDevices() runs.
-    // WeakMap so entries are collected once the browser drops the SerialPort.
+    // Each SerialPort object has its own id. The id stays the same when the code builds the
+    // device list again. A counter alone would give a different number each time.
+    // But the id changes if the device disconnects and then connects again, because Chrome
+    // makes a new SerialPort object for it. Do not keep a path. Read the path from the
+    // current list. The WeakMap lets the browser release the entry with the SerialPort.
     #portIds = new WeakMap();
     #nextPortId = 0;
 
@@ -119,11 +119,9 @@ class WebSerial extends EventTarget {
     }
 
     /**
-     * Return the stable id for a SerialPort object, minting one on first sighting
-     * and reusing it for the same object thereafter. The same reused SerialPort
-     * across a re-enumeration therefore always maps to the same path.
+     * Get the id of a SerialPort object. Make a new id if the object is new.
      * @param {SerialPort} port
-     * @returns {string} stable id, e.g. "serial_0"
+     * @returns {string} the id, for example "serial_0"
      */
     #getStablePortId(port) {
         let id = this.#portIds.get(port);
