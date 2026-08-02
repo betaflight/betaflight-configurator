@@ -388,10 +388,14 @@ export function disconnect() {
     beginDisconnect();
 }
 
-// GUI.connecting_to is set while an attempt is in flight. A second open() on the same
-// SerialPort gives an InvalidStateError, and its failure dialog hides that the first attempt was
-// good. The reboot loop and the auto-select listener each make this test before they call
-// connectDisconnect(). Make it here, for all callers.
+/**
+ * GUI.connecting_to is set while an attempt is in flight. A second open() on the same SerialPort
+ * gives an InvalidStateError, and its failure dialog hides that the first attempt was good. The
+ * reboot loop and the auto-select listener each make this test before they call
+ * connectDisconnect(). Make it here, for all callers.
+ * @param {string} selectedDevice - the selected device path
+ * @returns {boolean} true when a connect attempt can start now
+ */
 function canStartConnectionAction(selectedDevice) {
     return (
         !GUI.connect_lock && !GUI.connecting_to && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb")
