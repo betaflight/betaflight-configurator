@@ -1567,10 +1567,10 @@ function rebootReconnect() {
                 MSP.disconnect_cleanup();
 
                 // selectActivePort keeps the current selection during a reconnect
-                // (isReconnecting). The selection stays on the device that was connected.
-                // If that device comes back with a new id, the addedDevice event changes the
-                // selection to the new id. An attempt before one of these two events fails.
-                // The loop then tries again.
+                // (isReconnecting), but only while no other device in the lists matches the
+                // device filter. The attempt then fails until the device comes back, and the
+                // loop tries again. If another device does match, selectActivePort selects
+                // that device and this attempt connects to it.
                 connectDisconnect();
             }
         }, REBOOT_RECONNECT_RETRY_MS);
