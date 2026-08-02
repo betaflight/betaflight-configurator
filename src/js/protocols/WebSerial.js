@@ -91,6 +91,14 @@ class WebSerial extends EventTarget {
 
     handleRemovedDevice(device) {
         const removed = this.ports.find((port) => port.port === device);
+
+        // The list does not hold this port, because loadDevices() removed it before. There is
+        // no device to report. An event with no detail only makes the listeners refresh the
+        // list again for nothing.
+        if (!removed) {
+            return;
+        }
+
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }

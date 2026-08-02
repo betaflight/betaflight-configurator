@@ -29,6 +29,10 @@ function createDfuProtocol() {
 
 const dfuProtocol = createDfuProtocol();
 
+function samePaths(a, b) {
+    return a.length === b.length && a.every((device, index) => device.path === b[index].path);
+}
+
 const DeviceHandler = new (function () {
     this.logHead = "[DEVICEHANDLER]";
 
@@ -334,12 +338,17 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // Return the default port if no other port was selected
+    const previousDevice = this.devicePicker.selectedDevice;
     this.devicePicker.selectedDevice = selectedDevice || DEFAULT_PORT;
 
-    console.log(
-        `${this.logHead} Automatically selected device is '${this.devicePicker.selectedDevice}' - suggested:`,
-        suggestedDevice,
-    );
+    // One plug-in gives a burst of device events. Each event runs this function and gets the
+    // same result. Log the selection only when it changes.
+    if (this.devicePicker.selectedDevice !== previousDevice) {
+        console.log(
+            `${this.logHead} Automatically selected device is '${this.devicePicker.selectedDevice}' - suggested:`,
+            suggestedDevice,
+        );
+    }
 
     return selectedDevice;
 };
@@ -400,25 +409,36 @@ DeviceHandler.updateDeviceList = async function (deviceType) {
         const orderedPorts = this.sortPorts(ports);
 
         // Update the appropriate properties based on device type
+        let previousPorts;
+        let label;
+
         switch (deviceType) {
             case "bluetooth":
+                previousPorts = this.currentBluetoothPorts;
+                label = "bluetooth";
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
-                console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
                 break;
             case "usb":
+                previousPorts = this.currentUsbPorts;
+                label = "DFU";
                 this.dfuAvailable = orderedPorts.length > 0;
                 this.currentUsbPorts = [...orderedPorts];
-                console.log(`${this.logHead} Found DFU port(s)`, orderedPorts);
                 break;
             case "serial":
+                previousPorts = this.currentSerialPorts;
+                label = "serial";
                 this.portAvailable = orderedPorts.length > 0;
                 this.currentSerialPorts = [...orderedPorts];
-                console.log(`${this.logHead} Found serial port(s)`, orderedPorts);
                 break;
             default:
                 console.warn(`${this.logHead} Unknown device type for updating ports: ${deviceType}`);
                 return [];
+        }
+
+        // A burst of device events refreshes the same list many times. Log it only on a change.
+        if (!samePaths(orderedPorts, previousPorts)) {
+            console.log(`${this.logHead} Found ${label} port(s)`, orderedPorts);
         }
 
         return orderedPorts;

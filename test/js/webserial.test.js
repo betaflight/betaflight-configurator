@@ -137,6 +137,26 @@ describe("WebSerial stable device identity", () => {
         expect(ws.ports.map((p) => p.path)).toEqual([pathB]);
     });
 
+    // A plug-in gives a burst of connect events, and loadDevices() keeps only the port that
+    // getPorts() reports. The other ports send a disconnect event later. The list does not hold
+    // them, so an event for them carries no device. Such an event makes the listeners refresh
+    // the list and warn for nothing.
+    it("sends no removedDevice event for a port that is not in the list", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+
+        const listed = makeFakePort();
+        ws.ports = [ws.createPort(listed)];
+
+        const removed = [];
+        ws.addEventListener("removedDevice", (e) => removed.push(e.detail));
+
+        ws.handleRemovedDevice(makeFakePort());
+
+        expect(removed).toEqual([]);
+        expect(ws.ports).toHaveLength(1);
+    });
+
     it("connect() resolves the live SerialPort via the stable id and sets connectionId to it", async () => {
         const WebSerial = await loadWebSerial();
         const ws = new WebSerial();
