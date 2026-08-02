@@ -1554,11 +1554,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Place the drone flat with the camera facing away from you (toward the screen)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Tilt the nose up by about 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Tilt the nose down by about 45°, so the camera points toward the ground."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Tilt the right side down by about 45°."
+        "message": "Tilt the right side down by about 45°, lowering the right arms and raising the left."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Rotate the drone about 45° clockwise (as seen from above)."
@@ -1581,15 +1581,47 @@
     "configurationGyroAlignmentHelp": {
         "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
     },
-    "configurationGyroActiveIMU": {
-        "message": "Active IMU"
+    "boardAlignmentWizard-Back": {
+        "message": "Back"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Apply"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancel"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Try again"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Capture now"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Detection confidence is reduced — please verify the result against the live attitude before applying."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "An accelerometer is required to run this wizard."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Please calibrate the accelerometer before running this wizard."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Some samples were not collected. Please retry."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "The accelerometer is not reading gravity. Make sure the FC is connected and not in motion."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Pitch gesture was not detected. Please retry and tilt the nose down further."
     },
     "configurationGyroActiveIMUHelp": {
         "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
     },
-    "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)",
-        "description": "Don't translate!!!"
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "One of the tilt gestures went the wrong way. Check the pitch and roll directions and try again."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Flat"
     },
     "configurationGyroAlignmentPitch": {
         "message": "$t(configurationBoardAlignmentPitch.message)",
@@ -7895,6 +7927,83 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: Battery profile name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Shows the active battery profile name or index"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Shows the current/total waypoint number of the active flight plan"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Waypoint latitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Shows the latitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Waypoint longitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Shows the longitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Waypoint altitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Shows the altitude of the current waypoint"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Waypoint distance",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Shows the distance to the current waypoint"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Waypoint direction",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Shows a direction arrow pointing at the current waypoint"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Next waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Shows the next waypoint number in the active flight plan"
+    },
+    "osdTextElementWpEta": {
+        "message": "Waypoint ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Shows the estimated time of arrival at the current waypoint"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigation map",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimap showing home, the flight plan, and the flown trail"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",

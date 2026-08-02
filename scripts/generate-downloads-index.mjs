@@ -229,8 +229,10 @@ function renderNightlySection(nightly) {
     ];
     const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
     const hasAndroid = Boolean(nightly?.android);
+    const tauriMobile = [nightly?.tauriAndroid, nightly?.tauriIos].filter(Boolean);
+    const hasTauriMobile = tauriMobile.length > 0;
 
-    if (!nightly || (!hasDesktop && !hasAndroid)) {
+    if (!nightly || (!hasDesktop && !hasAndroid && !hasTauriMobile)) {
         return `
             <section>
                 <h2>Nightly build</h2>
@@ -244,6 +246,7 @@ function renderNightlySection(nightly) {
         .join("");
 
     const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
+    const tauriMobileBlock = hasTauriMobile ? `<h3>Mobile (Tauri)</h3>${fileList(tauriMobile)}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];
@@ -266,6 +269,7 @@ function renderNightlySection(nightly) {
                 ${meta}
                 ${platformBlocks}
                 ${androidBlock}
+                ${tauriMobileBlock}
             </section>`;
 }
 

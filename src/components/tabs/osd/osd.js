@@ -286,6 +286,30 @@ OSD.drawCameraFramePreview = function () {
     return cameraFrame;
 };
 
+// Firmware's NAV_MAP grid is a fixed 14x8 (osd_nav_map.c). This preview
+// draws a bordered box at that size, not the live minimap content.
+/**
+ * @returns {Array<{x: number, y: number, sym: number}>} Border cells for the NAV_MAP preview grid.
+ */
+OSD.drawNavMapPreview = function () {
+    const NAV_MAP_COLS = 14;
+    const NAV_MAP_ROWS = 8;
+
+    const navMap = [];
+
+    for (let x = 0; x < NAV_MAP_COLS; x++) {
+        const sym = x === 0 || x === NAV_MAP_COLS - 1 ? SYM.STICK_OVERLAY_CENTER : SYM.STICK_OVERLAY_HORIZONTAL;
+        navMap.push({ x, y: 0, sym }, { x, y: NAV_MAP_ROWS - 1, sym });
+    }
+
+    for (let y = 1; y < NAV_MAP_ROWS - 1; y++) {
+        const sym = SYM.STICK_OVERLAY_VERTICAL;
+        navMap.push({ x: 0, y, sym }, { x: NAV_MAP_COLS - 1, y, sym });
+    }
+
+    return navMap;
+};
+
 OSD.formatPidsPreview = function (axis) {
     const pidDefaults = FC.getPidDefaults();
     const p = pidDefaults[axis * 5].toString().padStart(3);
@@ -1338,6 +1362,93 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "BAT1",
         },
+        WP_NUMBER: {
+            name: "WP_NUMBER",
+            text: "osdTextElementWpNumber",
+            desc: "osdDescElementWpNumber",
+            defaultPosition: -1,
+            draw_order: 625,
+            positionable: true,
+            preview: "WP1/12",
+        },
+        WP_CURRENT_LAT: {
+            name: "WP_CURRENT_LAT",
+            text: "osdTextElementWpCurrentLat",
+            desc: "osdDescElementWpCurrentLat",
+            defaultPosition: -1,
+            draw_order: 630,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.GPS_LAT)}-00.0000000`,
+        },
+        WP_CURRENT_LON: {
+            name: "WP_CURRENT_LON",
+            text: "osdTextElementWpCurrentLon",
+            desc: "osdDescElementWpCurrentLon",
+            defaultPosition: -1,
+            draw_order: 635,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.GPS_LON)}-000.0000000`,
+        },
+        WP_CURRENT_ALT: {
+            name: "WP_CURRENT_ALT",
+            text: "osdTextElementWpCurrentAlt",
+            desc: "osdDescElementWpCurrentAlt",
+            defaultPosition: -1,
+            draw_order: 640,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ALTITUDE)}88${unit}`;
+            },
+        },
+        WP_DISTANCE: {
+            name: "WP_DISTANCE",
+            text: "osdTextElementWpDistance",
+            desc: "osdDescElementWpDistance",
+            defaultPosition: -1,
+            draw_order: 645,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `120${unit}`;
+            },
+        },
+        WP_DIRECTION: {
+            name: "WP_DIRECTION",
+            text: "osdTextElementWpDirection",
+            desc: "osdDescElementWpDirection",
+            defaultPosition: -1,
+            draw_order: 650,
+            positionable: true,
+            preview: FONT.symbol(SYM.ARROW_SOUTH + 2),
+        },
+        WP_NEXT_NUMBER: {
+            name: "WP_NEXT_NUMBER",
+            text: "osdTextElementWpNextNumber",
+            desc: "osdDescElementWpNextNumber",
+            defaultPosition: -1,
+            draw_order: 655,
+            positionable: true,
+            preview: "NEXT4",
+        },
+        WP_ETA: {
+            name: "WP_ETA",
+            text: "osdTextElementWpEta",
+            desc: "osdDescElementWpEta",
+            defaultPosition: -1,
+            draw_order: 660,
+            positionable: true,
+            preview: "05:30",
+        },
+        NAV_MAP: {
+            name: "NAV_MAP",
+            text: "osdTextElementNavMap",
+            desc: "osdDescElementNavMap",
+            defaultPosition: -1,
+            draw_order: 665,
+            positionable: true,
+            preview: OSD.drawNavMapPreview,
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1474,6 +1585,33 @@ OSD.chooseFields = function () {
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
         ]);
+
+        // Waypoint/nav-map enum entries only exist in firmware when their compile
+        // flags are present. Unconditional listing would misalign every later
+        // DISPLAY_FIELDS position on builds lacking them. Gate on reported build options.
+        const buildOptions = FC.CONFIG.buildOptions ?? [];
+        const hasFlightPlanWaypoints = buildOptions.includes("USE_GPS") && buildOptions.includes("USE_FLIGHT_PLAN");
+        const hasNavMap =
+            hasFlightPlanWaypoints &&
+            !buildOptions.includes("USE_WING") &&
+            (buildOptions.includes("USE_OSD_SD") || buildOptions.includes("USE_OSD_HD"));
+
+        if (hasFlightPlanWaypoints) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.WP_NUMBER,
+                F.WP_CURRENT_LAT,
+                F.WP_CURRENT_LON,
+                F.WP_CURRENT_ALT,
+                F.WP_DISTANCE,
+                F.WP_DIRECTION,
+                F.WP_NEXT_NUMBER,
+                F.WP_ETA,
+            ]);
+        }
+
+        if (hasNavMap) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
