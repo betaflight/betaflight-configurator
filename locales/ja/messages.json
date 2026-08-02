@@ -42,12 +42,12 @@
         "message": "最新の変更を取得するには、ページを更新する必要があります。今すぐ更新すると、ページが再読み込みされ、保存されていない変更が消失し、進行中の操作は中止されます。<br><br>今すぐ更新しますか？このメッセージを消去し、後で手動でページを更新することもできます。",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "アプリケーションはオフラインでも使用可能です",
+    "pwaOnOfflineReadyTitle": {
+        "message": "オフラインで使用できます",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
-        "message": "必要に応じてスタンドアロンのアプリケーションとしてインストールすることもできます。ブラウザのアドレスバー、またはメニューからオプションを検索してください。",
+    "pwaOnOfflineReadyText": {
+        "message": "お使いのデバイスに、単独で動作するアプリケーションとしてインストールできます。ブラウザのアドレスバーまたはメニューから、インストールの項目を探してください。",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
     "operationNotSupported": {
@@ -653,6 +653,12 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">接続失敗<\/span>：選択したポートに接続できませんでした。デバイスと接続設定を確認してから、もう一度お試しください。"
+    },
+    "connectionLostTitle": {
+        "message": "接続が切断されました"
+    },
+    "connectionLostUnresponsive": {
+        "message": "フライトコントローラが <span class=\"message-negative\">応答しなくなった<\/span> ため、接続を終了しました。FCボードを接続し直して、もう一度お試しください。問題が解消しない場合は、フライトコントローラの電源を入れ直してください。"
     },
     "serialPortClosedOk": {
         "message": "シリアルポートは<span class=\"message-positive\">正常<\/span>に切断しました"
@@ -1362,6 +1368,10 @@
         "message": "ポジションホールドが有効",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "オートパイロットモードスイッチが有効になっているためアームできません",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1718,6 +1728,120 @@
     "configurationBoardAlignmentHelp": {
         "message": "任意のFCボード回転角度は、ボードを横向き \/ 逆さま \/ または回転させた状態で取り付けを可能にします。外部センサーを使用する場合は、センサーの位置をFCボードの向きとは独立して定義するために、センサーアライメント (ジャイロ、加速度センサー、コンパス) を設定してください。 "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "FCボードのアライメントを自動検出"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "FCボード アライメントウィザード"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "このウィザードでは、4つの簡単な動作を行うことで、フライトコントローラの取り付け方向を検出します。カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置き、画面の指示に従ってください。"
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "スタート"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "ステップ"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置いてください。"
+    },
+    "boardAlignmentWizard-HintPitchUp": {
+        "message": "機首を約45°上に傾けてください。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "右側を約45°下に傾けてください。"
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "ドローンを約45°時計回りに回転させてください。(上から見た場合)"
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "ドローンを水平な姿勢に戻してください。"
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "動かさずにお待ちください..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "安定化中..."
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "傾けています"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "水平に戻してください"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "軸を検出しました — 動かさずにお待ちください"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "回転"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "アライメントを計算中..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "検出されたアライメント"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "ボードアライメントは正しく設定されています — 変更は不要です。"
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "現在の設定"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "検出結果"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "戻る"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "適用"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "キャンセル"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "再試行"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "今すぐ取得"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "検出の信頼度が低下しています。適用する前に、リアルタイムの姿勢表示と照らし合わせて結果を確認してください。"
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "このウィザードを実行するには、加速度センサーが必要です。"
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "このウィザードを実行する前に、加速度センサーをキャリブレーションしてください。"
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "一部のサンプルを取得できませんでした。再試行してください。"
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "加速度センサーが重力を検出していません。FCボードが接続され、動いていないことを確認してください。"
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "ピッチ操作を検出できませんでした。再試行し、機首をさらに上へ傾けてください。"
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "ロール操作を検出できませんでした。再試行し、右側をさらに下へ傾けてください。"
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "水平"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "ピッチ"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "ロール"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "ヨー"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "取得しました！"
+    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2026,6 +2150,9 @@
     },
     "configurationSpiRX": {
         "message": "SPIバス受信プロトコル"
+    },
+    "configurationSaved": {
+        "message": "設定を保存しました"
     },
     "configurationButtonSave": {
         "message": "保存して再起動"
@@ -3165,6 +3292,9 @@
     "servosChangeDirection": {
         "message": "一致する送信機のサーボ有効範囲の変更"
     },
+    "servosForwardChannel": {
+        "message": "チャンネル {{channel}} をサーボ {{servo}} に転送"
+    },
     "servosName": {
         "message": "サーボ"
     },
@@ -3889,6 +4019,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "実行"
+    },
+    "cliSnippetPreviewLabel": {
+        "message": "設定内容のプレビュー"
     },
     "cliPanelTitle": {
         "message": "コマンドラインインターフェイス"
@@ -5847,6 +5980,9 @@
     "powerBatteryProfileOption": {
         "message": "バッテリー プロファイル $1"
     },
+    "powerReceivedBatteryProfile": {
+        "message": "バッテリープロファイル：<strong class=\"message-positive\">$1<\/strong> に設定しました"
+    },
     "powerBatteryProfileNamePlaceholder": {
         "message": "例: LiPo, Li-Ion"
     },
@@ -5891,6 +6027,9 @@
     },
     "osdSetupTitle": {
         "message": "OSD設定"
+    },
+    "osdToggleElementVisibility": {
+        "message": "プロファイル {{profile}} の {{element}} の表示／非表示を切り替え"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>警告:<\/b><\/span> OSDチップセットは検出されませんでした。一部のフライトコントローラは、バッテリーを接続しないとOSDチップセットへ適切に電力を供給できません。USB接続する前にバッテリーを接続してください。 (プロペラは外してください!)"
@@ -7317,6 +7456,14 @@
     "osdWarningPosHoldFailed": {
         "message": "ポジションホールドに失敗しました",
         "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "オートパイロットミッションが中止されました",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "オートパイロットミッション中止",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
     "osdWarningTextUnknown": {
         "message": "不明 $1"
@@ -9020,6 +9167,10 @@
     },
     "backupNoBackupsAvailable": {
         "message": "利用可能なバックアップはありません"
+    },
+    "backupRequiresConnection": {
+        "message": "この操作を有効にするには、フライトコントローラを接続してください",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
     },
     "titleEditBackup": {
         "message": "バックアップの編集"

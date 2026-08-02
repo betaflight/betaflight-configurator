@@ -10,7 +10,7 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: Betaflight App
+      PRODUCT_NAME: Betaflight
       PRODUCT_BUNDLE_IDENTIFIER: com.betaflight.app
       DEVELOPMENT_TEAM: 88U8UVP252
 targetTemplates:
@@ -54,6 +54,10 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         CFBundleShortVersionString: 2026.6.0
         CFBundleVersion: "2026.6.0"
+        NSLocalNetworkUsageDescription: Betaflight connects to your flight controller bridge over the local network.
+        NSBonjourServices:
+          - _betaflight._tcp
+        NSBluetoothAlwaysUsageDescription: Betaflight connects to your flight controller over Bluetooth Low Energy.
     entitlements:
       path: betaflight-app_iOS/betaflight-app_iOS.entitlements
     scheme:
@@ -69,11 +73,14 @@ targets:
         LIBRARY_SEARCH_PATHS[arch=arm64]: $(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: true
         EXCLUDED_ARCHS[sdk=iphoneos*]: x86_64
+        EXCLUDED_ARCHS[sdk=iphonesimulator*]: x86_64
       groups: [app]
     dependencies:
       - framework: libapp.a
         embed: false
+      - sdk: CoreBluetooth.framework
       - sdk: CoreGraphics.framework
+      - sdk: Network.framework
       - sdk: Metal.framework
       - sdk: MetalKit.framework
       - sdk: QuartzCore.framework

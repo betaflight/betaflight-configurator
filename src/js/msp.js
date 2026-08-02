@@ -575,6 +575,22 @@ const MSP = {
     _arm_timer(obj) {
         obj.timer = setTimeout(() => this._on_timeout(obj), this.TIMEOUT);
     },
+    /**
+     * Retry/timeout handler for a single queued MSP request.
+     *
+     * While retries remain it re-sends the request buffer and re-arms the timer. On exhaustion it
+     * clears the timer and, for errorAware requests, removes the queue entry, settles its awaiter
+     * with an {@link MspTimeoutError}, and releases any same-code requests parked behind it. Legacy
+     * (non-errorAware) requests are left queued so a late response can still resolve them.
+     *
+     * After an errorAware exhaustion it notifies {@link MSP.onTimeout}. The dead-versus-slow-link
+     * decision is deliberately made by that hook from the FC's actual traffic (see
+     * `handleConnectionTimeout` in serial_backend), not from this per-request failure — so a lone
+     * timeout on a high-latency transport does not tear down a healthy connection.
+     *
+     * @param {object} obj - the queued request entry (`code`, `requestBuffer`, `attempts`, `errorAware`, `callback`, `timer`, …).
+     * @returns {void}
+     */
     _on_timeout(obj) {
         if (obj.attempts < this.MAX_RETRIES) {
             obj.attempts++;
@@ -590,7 +606,7 @@ const MSP = {
         obj.timer = null;
 
         if (!obj.errorAware) {
-            // legacy: give up retrying but leave the entry queued so a late response still fires it
+            // Legacy path: stop retrying but keep the entry queued so a late response still resolves it.
             return;
         }
 
@@ -605,7 +621,8 @@ const MSP = {
         }
         this._release_parked(obj.code);
 
-        // MAX_RETRIES sends produced no response: the link is unresponsive, not just slow.
+        // Notify the liveness hook after a full errorAware exhaustion. It — not this per-request
+        // failure — classifies the link as dead or merely slow (see handleConnectionTimeout).
         this.onTimeout?.(obj.code);
     },
     _park(code, entry) {

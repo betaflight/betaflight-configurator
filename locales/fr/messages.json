@@ -42,14 +42,6 @@
         "message": "Veuillez actualiser la page pour obtenir les dernières modifications. Toutes les modifications non enregistrées ainsi que toutes les opérations en cours seront perdues.<br><br>Voulez-vous actualiser maintenant ? Vous pouvez ne pas tenir compte de ce message et actualiser manuellement la page lorsque vous le souhaitez.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "L'application est prête à être utilisée hors ligne",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Si vous le souhaitez, vous pouvez l'installer en tant qu'application sur votre appareil. Recherchez l'option dans la barre d'adresse ou le menu de votre navigateur.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Cette opération n’est pas prise en charge par votre matériel."
     },

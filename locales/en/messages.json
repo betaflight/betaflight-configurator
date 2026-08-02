@@ -650,6 +650,9 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "On iOS, allow <strong>Local Network</strong> access for Betaflight under Settings &rarr; Privacy &amp; Security &rarr; Local Network, then try again."
+    },
     "connectionLostTitle": {
         "message": "Connection lost"
     },
@@ -1746,11 +1749,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Place the drone flat with the camera facing away from you (toward the screen)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Tilt the nose up by about 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Tilt the nose down by about 45°, so the camera points toward the ground."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Tilt the right side down by about 45°."
+        "message": "Tilt the right side down by about 45°, lowering the right arms and raising the left."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Rotate the drone about 45° clockwise (as seen from above)."
@@ -1822,10 +1825,13 @@
         "message": "The accelerometer is not reading gravity. Make sure the FC is connected and not in motion."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Pitch gesture was not detected. Please retry and tilt the nose up further."
+        "message": "Pitch gesture was not detected. Please retry and tilt the nose down further."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll gesture was not detected. Please retry and tilt the right side down further."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "One of the tilt gestures went the wrong way. Check the pitch and roll directions and try again."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Flat"
@@ -8913,6 +8919,69 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Shows the active battery profile name or index"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Shows the current/total waypoint number of the active flight plan"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Waypoint latitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Shows the latitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Waypoint longitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Shows the longitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Waypoint altitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Shows the altitude of the current waypoint"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Waypoint distance",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Shows the distance to the current waypoint"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Waypoint direction",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Shows a direction arrow pointing at the current waypoint"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Next waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Shows the next waypoint number in the active flight plan"
+    },
+    "osdTextElementWpEta": {
+        "message": "Waypoint ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Shows the estimated time of arrival at the current waypoint"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigation map",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimap showing home, the flight plan, and the flown trail"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
