@@ -233,6 +233,16 @@ DeviceHandler.sortPorts = function (ports) {
     });
 };
 
+DeviceHandler.isKnownDevicePath = function (path) {
+    if (!path) {
+        return false;
+    }
+
+    return [this.currentSerialPorts, this.currentBluetoothPorts, this.currentUsbPorts].some((devices) =>
+        devices.some((device) => device.path === path),
+    );
+};
+
 DeviceHandler.selectActivePort = function (suggestedDevice = false) {
     const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedDevice;
@@ -261,8 +271,11 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         return selectedDevice;
     }
 
-    // Return the suggested device (the new device that has been detected)
-    if (!selectedDevice && suggestedDevice) {
+    // suggestedDevice is an addedDevice payload captured before updateDeviceList() re-read the
+    // transport, so it can already be stale: on Linux a CDC-ACM node is removed and re-added
+    // while udev/ModemManager probe it, and the port that fired `connect` is gone by the time we
+    // look. Selecting a path the transport no longer lists makes auto-connect fail the lookup.
+    if (!selectedDevice && suggestedDevice && this.isKnownDevicePath(suggestedDevice.path)) {
         selectedDevice = suggestedDevice.path;
     }
 
