@@ -8920,6 +8920,69 @@
     "osdDescElementBatteryProfileName": {
         "message": "Shows the active battery profile name or index"
     },
+    "osdTextElementWpNumber": {
+        "message": "Waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Shows the current/total waypoint number of the active flight plan"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Waypoint latitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Shows the latitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Waypoint longitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Shows the longitude of the current waypoint"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Waypoint altitude",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Shows the altitude of the current waypoint"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Waypoint distance",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Shows the distance to the current waypoint"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Waypoint direction",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Shows a direction arrow pointing at the current waypoint"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Next waypoint number",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Shows the next waypoint number in the active flight plan"
+    },
+    "osdTextElementWpEta": {
+        "message": "Waypoint ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Shows the estimated time of arrival at the current waypoint"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigation map",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimap showing home, the flight plan, and the flown trail"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
