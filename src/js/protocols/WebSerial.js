@@ -42,6 +42,7 @@ class WebSerial extends EventTarget {
     // current list. The WeakMap lets the browser release the entry with the SerialPort.
     #portIds = new WeakMap();
     #nextPortId = 0;
+    #loadGeneration = 0;
 
     constructor() {
         super();
@@ -155,8 +156,17 @@ class WebSerial extends EventTarget {
     }
 
     async loadDevices() {
+        const generation = ++this.#loadGeneration;
+
         try {
             const ports = await navigator.serial.getPorts();
+
+            // A burst of device events starts several refreshes at once, and getPorts() gives
+            // no order guarantee. An older call that finishes last must not put its list back.
+            // getDevices() reads this.ports after the await, so it still returns the newest.
+            if (generation !== this.#loadGeneration) {
+                return;
+            }
             this.ports = ports.map((port) => this.createPort(port));
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);

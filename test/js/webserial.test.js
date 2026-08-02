@@ -157,6 +157,31 @@ describe("WebSerial stable device identity", () => {
         expect(ws.ports).toHaveLength(1);
     });
 
+    // A burst of device events starts several refreshes at once. getPorts() gives no order
+    // guarantee, so an older call can finish last and put a list back that no longer applies.
+    it("does not let a slow refresh replace a newer device list", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const older = makeFakePort();
+        const newer = makeFakePort();
+        let resolveSlow;
+        navigator.serial.getPorts
+            .mockImplementationOnce(() => new Promise((resolve) => (resolveSlow = resolve)))
+            .mockImplementationOnce(async () => [newer]);
+
+        const slow = ws.loadDevices();
+        await ws.loadDevices();
+
+        expect(ws.ports.map((device) => device.port)).toEqual([newer]);
+
+        resolveSlow([older]);
+        await slow;
+
+        expect(ws.ports.map((device) => device.port)).toEqual([newer]);
+    });
+
     it("connect() resolves the live SerialPort via the stable id and sets connectionId to it", async () => {
         const WebSerial = await loadWebSerial();
         const ws = new WebSerial();

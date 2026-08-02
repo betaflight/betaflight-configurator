@@ -29,6 +29,11 @@ function createDfuProtocol() {
 
 const dfuProtocol = createDfuProtocol();
 
+/**
+ * @param {Array<{path: string}>} a
+ * @param {Array<{path: string}>} b
+ * @returns {boolean} true when both lists hold the same paths in the same order
+ */
 function samePaths(a, b) {
     return a.length === b.length && a.every((device, index) => device.path === b[index].path);
 }
@@ -237,6 +242,10 @@ DeviceHandler.sortPorts = function (ports) {
     });
 };
 
+/**
+ * @param {string} path - a device path
+ * @returns {boolean} true when the serial, Bluetooth or USB list holds this path
+ */
 DeviceHandler.isKnownDevicePath = function (path) {
     if (!path) {
         return false;
