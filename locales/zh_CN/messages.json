@@ -1733,12 +1733,6 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "把无人机平放，摄像头远离您(朝着屏幕)。"
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "将机头抬起约45°。"
-    },
-    "boardAlignmentWizard-HintRollRight": {
-        "message": "将右侧向下倾斜大约45°。"
-    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "将无人机顺时针旋转大约45°（如上所示）。"
     },
@@ -1807,9 +1801,6 @@
     },
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "加速度计没有读取到重力。请确保飞控已连接且没有在移动。"
-    },
-    "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "未检测到俯仰动作。请重试并上抬机头更多。"
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "未检测到横滚动作。请重试并下倾右侧更多。"
