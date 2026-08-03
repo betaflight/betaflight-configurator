@@ -229,7 +229,7 @@ function renderNightlySection(nightly) {
     ];
     const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
     const hasAndroid = Boolean(nightly?.android);
-    const tauriMobile = [nightly?.tauriAndroid, nightly?.tauriIos].filter(Boolean);
+    const tauriMobile = [nightly?.tauriAndroid].filter(Boolean);
     const hasTauriMobile = tauriMobile.length > 0;
 
     if (!nightly || (!hasDesktop && !hasAndroid && !hasTauriMobile)) {

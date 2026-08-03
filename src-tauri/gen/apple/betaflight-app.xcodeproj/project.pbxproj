@@ -10,11 +10,14 @@
 		111A926A94D26339766BFB80 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A2F5AE1804D529EF3D3D80 /* WebKit.framework */; };
 		22DCEC8A3E48CFEA64282DBA /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACDB191FFBF939444116F108 /* MetalKit.framework */; };
 		3E89409A395AAD7FF572B15F /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA517ADBECEC2ABBE28749E /* Metal.framework */; };
+		451437A6B8C73F15C496EEEB /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD5FCEAC8B0501CDA7F470D5 /* CoreBluetooth.framework */; };
 		4C9EFFB8F58818287C963E26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1112DAEC8C754FBDD5D41AE8 /* LaunchScreen.storyboard */; };
+		8A88699AE6D9855A2236FBD8 /* LocalNetworkPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E4C00ED6DE0AC1532AA3B1 /* LocalNetworkPermission.swift */; };
 		A0ECF9C71A805F41E77C931B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A74EAED237155EE5FE5E4C /* Security.framework */; };
 		A70A44CC02DB1C2391722EED /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */; };
 		AA1BD22811FAA5F1656B4999 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1305924FE4D37A1298B01BD0 /* main.mm */; };
 		B9F489D8E19D06643D72ABAB /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AF2238F5A905AC5251170E35 /* assets */; };
+		CC78E5CE9D90489FB62429C7 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB9D200F68BB57563712709 /* Network.framework */; };
 		CE0ED26B9C2DC825D7F5C2E6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24CDA3E5579D9C2A620E362A /* QuartzCore.framework */; };
 		DDB15074333C04ECAF64623C /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5101E968C340F41184B8439 /* libapp.a */; };
 		E1796F9B01ABA8ECD4463BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4631D1B55262E473D2FC1CC1 /* Assets.xcassets */; };
@@ -33,13 +36,17 @@
 		63C3566AF9FCD2DB78F5DD12 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
 		65A2F5AE1804D529EF3D3D80 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		758B88D357C4F99DE33ED01E /* betaflight-app_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "betaflight-app_iOS.entitlements"; sourceTree = "<group>"; };
+		8B8C7140123ED056B05658E1 /* ble.rs */ = {isa = PBXFileReference; path = ble.rs; sourceTree = "<group>"; };
 		91CF75CE13064A6A941FB754 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
 		99A74EAED237155EE5FE5E4C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A5101E968C340F41184B8439 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		ACDB191FFBF939444116F108 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		AF2238F5A905AC5251170E35 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
 		AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B5E4C00ED6DE0AC1532AA3B1 /* LocalNetworkPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkPermission.swift; sourceTree = "<group>"; };
 		BBA517ADBECEC2ABBE28749E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		CEB9D200F68BB57563712709 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		DD5FCEAC8B0501CDA7F470D5 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		EA9EA971A45DE9EA3B37BD99 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,7 +56,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDB15074333C04ECAF64623C /* libapp.a in Frameworks */,
+				451437A6B8C73F15C496EEEB /* CoreBluetooth.framework in Frameworks */,
 				A70A44CC02DB1C2391722EED /* CoreGraphics.framework in Frameworks */,
+				CC78E5CE9D90489FB62429C7 /* Network.framework in Frameworks */,
 				3E89409A395AAD7FF572B15F /* Metal.framework in Frameworks */,
 				22DCEC8A3E48CFEA64282DBA /* MetalKit.framework in Frameworks */,
 				CE0ED26B9C2DC825D7F5C2E6 /* QuartzCore.framework in Frameworks */,
@@ -103,6 +112,7 @@
 		AA13C13476BACD179B2F0063 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				8B8C7140123ED056B05658E1 /* ble.rs */,
 				91CF75CE13064A6A941FB754 /* lib.rs */,
 				63C3566AF9FCD2DB78F5DD12 /* main.rs */,
 				473591AF8722B5DEB02A6BA1 /* tcp.rs */,
@@ -114,6 +124,7 @@
 		B8320FF9FD1A271E4234D877 /* betaflight-app */ = {
 			isa = PBXGroup;
 			children = (
+				B5E4C00ED6DE0AC1532AA3B1 /* LocalNetworkPermission.swift */,
 				1305924FE4D37A1298B01BD0 /* main.mm */,
 				A6B39C65A066CADF7951C43F /* bindings */,
 			);
@@ -140,10 +151,12 @@
 		F7D1105BD17722E4097FA4EE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DD5FCEAC8B0501CDA7F470D5 /* CoreBluetooth.framework */,
 				AF4BE953C6B4281EDFB0CEF2 /* CoreGraphics.framework */,
 				A5101E968C340F41184B8439 /* libapp.a */,
 				BBA517ADBECEC2ABBE28749E /* Metal.framework */,
 				ACDB191FFBF939444116F108 /* MetalKit.framework */,
+				CEB9D200F68BB57563712709 /* Network.framework */,
 				24CDA3E5579D9C2A620E362A /* QuartzCore.framework */,
 				99A74EAED237155EE5FE5E4C /* Security.framework */,
 				00E34BEDAAA96679919F0F26 /* UIKit.framework */,
@@ -250,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A88699AE6D9855A2236FBD8 /* LocalNetworkPermission.swift in Sources */,
 				AA1BD22811FAA5F1656B4999 /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,9 +338,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "betaflight-app_iOS/betaflight-app_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "88U8UVP252";
+				DEVELOPMENT_TEAM = 88U8UVP252;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\".\"",
@@ -339,7 +354,7 @@
 				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.betaflight.app;
-				PRODUCT_NAME = "Betaflight App";
+				PRODUCT_NAME = "Betaflight";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64  x86_64";
@@ -357,9 +372,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "betaflight-app_iOS/betaflight-app_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "88U8UVP252";
+				DEVELOPMENT_TEAM = 88U8UVP252;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\".\"",
@@ -372,7 +388,7 @@
 				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.betaflight.app;
-				PRODUCT_NAME = "Betaflight App";
+				PRODUCT_NAME = "Betaflight";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64  x86_64";

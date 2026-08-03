@@ -71,6 +71,14 @@ class WebBluetooth extends EventTarget {
 
     handleRemovedDevice(device) {
         const removed = this.devices.find((port) => port.port === device);
+
+        // The list does not hold this device. Both `disconnect` and `gattserverdisconnected`
+        // can report the same device, so the second event finds nothing. There is no device to
+        // report.
+        if (!removed) {
+            return;
+        }
+
         this.devices = this.devices.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
