@@ -281,6 +281,36 @@ function establishVirtualConnection() {
     expect(serial.connect).toHaveBeenCalled();
 }
 
+// Granting permission from the Connect button starts two connects: the addedDevice event that
+// requestPermissionDevice() raises reaches the auto-select listener, and ConnectButton then
+// connects again when the await returns. The second open() on the same SerialPort throws
+// InvalidStateError, and its "Connection failed" dialog hides that the first open worked.
+describe("serial_backend connectDisconnect — attempt already in flight", () => {
+    beforeEach(() => {
+        resetMocks();
+    });
+
+    it("does not start a second connect while one is in flight", () => {
+        connectDisconnect();
+
+        expect(serial.connect).toHaveBeenCalledTimes(1);
+        expect(GUI.connecting_to).toBe("/dev/ttyACM0");
+
+        connectDisconnect();
+
+        expect(serial.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it("connects again once the attempt has settled", () => {
+        connectDisconnect();
+        GUI.connecting_to = false;
+
+        connectDisconnect();
+
+        expect(serial.connect).toHaveBeenCalledTimes(2);
+    });
+});
+
 describe("serial_backend disconnect convergence", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
