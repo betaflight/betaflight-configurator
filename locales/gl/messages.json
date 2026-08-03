@@ -234,6 +234,9 @@
     "tabFailsafe": {
         "message": "Failsafe"
     },
+    "tabTransponder": {
+        "message": "Transpondedor de carreira"
+    },
     "tabOsd": {
         "message": "OSD"
     },
@@ -251,6 +254,9 @@
     },
     "tabLedStrip": {
         "message": "Tira de LEDS"
+    },
+    "tabRawSensorData": {
+        "message": "Sensores"
     },
     "tabCLI": {
         "message": "CLI"
@@ -424,6 +430,9 @@
     "buildServerUsingCached": {
         "message": "Usando información construida na caché para $1."
     },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Datos de apoio enviados *** <br>Id: $1<br><br><br># copie o ID para proporcionarllo ó equipo de betaflight."
+    },
     "buildKey": {
         "message": "Chave de compilación: <strong>$1<\/strong>"
     },
@@ -490,6 +499,9 @@
     "versionLabelTarget": {
         "message": "Placa"
     },
+    "versionLabelFirmware": {
+        "message": "Firmware"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "Aplicación actualizada á versión: $1"
     },
@@ -542,6 +554,12 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
     },
+    "defaultWelcomeHead": {
+        "message": "Hardware"
+    },
+    "defaultWelcomeText": {
+        "message": "A aplicación admite todo o hardware que pode executar Betaflight. Consulte a pestana de flash para ver a lista completa de hardware.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar scripts Betaflight TX Lua<\/a><br \/><br \/>O código fonte do firmware pódese descargar de <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Para hardware heredado que usa un chip USB a serie CP210x:<br \/>Os <b>Controladores CP210x<\/b> máis recentes pódense descargar de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>A última versíon <b>Zadig<\/b> do controlador USB para Windows pódese descargar dende <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/ a><br \/><b>ImpulseRC Driver Fixer<\/b> pódese descargar <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí< \/a>"
+    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -553,6 +571,9 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flasheador de Firmware"
+    },
+    "defaultDonateHead": {
+        "message": "Código aberto \/ Aviso de doazón"
     },
     "defaultDonateBottom": {
         "message": "<p> Se quere contribuír financeiramente de xeito continuado, ten que considerar converterse en patrón para nós en $t(patreonLink.message).<\/p>"
@@ -609,6 +630,12 @@
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
+    "initialSetupCalibrateAccelText": {
+        "message": "Coloque a placa ou o chasis nunha superficie <strong> nivelada<\/strong> , proceda coa calibración e asegúrese que a plataforma non se move durante este período"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "Calibrar Magnetómetro"
+    },
     "initialSetupCalibrateMagText": {
         "message": "Mova o multirotor <strong>360<\/strong> graos no eixo de rotacion, dispón de 30 segundos para esta tarefa"
     },
@@ -644,7 +671,7 @@
     },
     "initialSetupHeading": {
         "message": "Yaw:",
-        "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -1047,6 +1074,9 @@
     "featureTRANSPONDER": {
         "message": "Transpondedor de carreira"
     },
+    "featureTRANSPONDERTip": {
+        "message": "Configurar no menú de Race Transponder despois de activar."
+    },
     "featureAIRMODE": {
         "message": "Activar permanentemente Airmode"
     },
@@ -1092,6 +1122,9 @@
     "configurationTelemetryHelp": {
         "message": "Saída da telemetría dende o receptor"
     },
+    "configurationRSSI": {
+        "message": "RSSI (Calidade da sinal)"
+    },
     "configurationRSSIHelp": {
         "message": "RSSI e a medida da forza da sinal e é moy útil porque permite saber cando a aeronave está a sairse do alcance ou si está a sufrir interferencias de radiofrecuencia."
     },
@@ -1107,8 +1140,26 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O provedor SPI RX só funcionará se o hardware necesario está na placa ou se conecta a un bus SPI."
     },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>Nota:<\/strong> Non tódalas opcións son soportadas por tódalas controladoras. Se activa una opción específica, e se desactiva despois de pulsar 'Gardar e Reiniciar', significa que esta opción non está soportada na súa controladora."
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Graos de Roll"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Graos de Pitch"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Graos de Yaw"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "Aliñado do XIRO"
+    },
     "configurationSensorGyroToUse": {
         "message": "XIRO\/ACCEL"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "Peligro: Non funciona Xiro\/Acc"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Primeiro"
@@ -1125,8 +1176,14 @@
     "configurationSensorAlignmentGyro2": {
         "message": "Segundo XIRO"
     },
+    "configurationSensorAlignmentAcc": {
+        "message": "Aliñado do ACELERADOR"
+    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Por defecto"
+    },
+    "configurationAccelTrims": {
+        "message": "Trim do acelerómetro"
     },
     "configurationAccelTrimRoll": {
         "message": "Trim do acelerómetro de Roll"
@@ -1294,6 +1351,9 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:<\/strong> Asegúrese de que a súa FC poida funcionar a estas velocidades. Comprobe a estabilidade da CPU e do ciclo. Cambiar isto pode requirir a reordenación de PID. SUXERENCIA: desactivar o acelerómetro e outros sensores para obter máis rendemento."
     },
+    "configurationGPS": {
+        "message": "Configuración do GPS"
+    },
     "configurationGPSHelp": {
         "message": "Configurar o protocolo para o dispositivo GPS (lembre configurar o porto na pestana Porto), usar o baudio automático (ou configurar a velocidade na pestana Porto) e outra configuración",
         "description": "Help text GPS configuration"
@@ -1451,6 +1511,9 @@
     "pidTuningSubTabPid": {
         "message": "Configuración do perfil PID"
     },
+    "pidTuningSubTabRates": {
+        "message": "Configuración do perfil de taxa"
+    },
     "pidTuningSubTabFilter": {
         "message": "Opcións de filtros"
     },
@@ -1504,6 +1567,10 @@
     },
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity aumenta a I (e P na 4.3) durante un instante e pouco despois de cambios de aceleración rápidos, aumentando a estabilidade da actitude durante os aceleróns. <br><br>Os valores de ganancia máis altos poden mellorar a estabilidade en máquinas de autoridade ou aqueles con un centro de gravidade desprazado."
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "Amortiguación<br>Dinámica",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
@@ -1571,8 +1638,14 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Con este parámetro, D SetPoint o tamaño pode reducirse preto do centro dos sticks, o que resulta máis suave o final dos flips e rolls.<br> O valor representa un punto de deflexión do stick: 0 - Stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, o tamaño de Setpoint mantense constante no seu valor configurado. Cando o stick está situado a continuación deste punto, o tamaño do Setpoint é reducido proporcionalmente, alcanzando 0 na posición do centro do stick.<br>Valor de 1 dá o efecto máximo de suavizado, mentres que o valor de 0 mantén o tamaño do Setpoint fixado no seu valor configurado sobre todo o rango do stick."
     },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Este parámetro determina o efecto de aceleración do stick dentro do compoñente derivado.<br> Valor de 0 é igual ao antigo método de medida onde D só sigue ó Gyro, mentres que o valor de 1 equivale ao método de erro antigo con igual relación de seguimento de Gyro e Stick.<br> O valor máis baixo é igual a unha resposta máis lenta \/ máis suave, mentres que o valor superior proporciona máis resposta de aceleración de adherencia.<br>Nota paraa interpolación de RC recoméndase que se active con valores máis altos para evitar que os golpes do control fagan ruído."
+    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):<\/strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.<\/span>"
+    },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward axusta a capacidade de resposta do stick.<br \/><br \/> Estas opcións permítenlle axustala para ofrecer calquera cousa, dende respostas nítidas e inmediatas do stick para carreiras ou respostas suaves para fins cinematográficos ou HD."
@@ -1797,6 +1870,9 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo control deslizante de sintonía de PID<\/strong><br><br>Control deslizante modo Pidtuning pode ser:<br><br>&bull; OFF - sen controis deslizantes, meter valores manualmente<br>&bull; RP - Controis deslizantes so para Roll e Pitch, meter valores manualmente para Yaw<br>&bull; RPY - Controis deslizantes para tódolos valores de PID<br><br><span class=\"message-negative\"><b>AVISO:<\/b><\/span> Pasar de RP a RPY sobreescribirase a configuración de Yaw con configuracións do firmware."
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comprobe sempre que o seu Failsafe funcione correctamente.<\/a><\/strong><\/b> A configuración está na pestana Failsafe, que require o modo experto.<br> &#8226; <b>Empregue o último firmware de Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactive o filtro ADC<\/a><\/strong> no transmisor se emprega OpenTx ou EdgeTx.<br>Configuración básica: configure o Receptor correctamente. Escolla o \"Mapa de canles\" correcto para a súa radio. Comprobe que o Roll, Pitch e outros gráficos de barras se moven correctamente. Axuste o punto final da canle ou os valores do intervalo no transmisor entre ~1000 e ~2000 e configure o punto medio en 1500. Para obter máis información, lea o <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentación<\/a><\/strong>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -1921,7 +1997,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DESACTIVO)",
-        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Engadir Rango"
@@ -2232,6 +2308,69 @@
     "adjustmentsSave": {
         "message": "Gardar"
     },
+    "transponderNotSupported": {
+        "message": "O firmware do controlador de voo non admite a funcionalidade do transpondedor."
+    },
+    "transponderInformation": {
+        "message": "Os sistemas de transponders permiten aos organizadores de carreiras darlle o tempo das voltas. O transpondedor está instalado na súa aeronave e cando pasa a porta de sincronización, o receptor da pista rexistra o seu código e o seu tempo da volta. Ao colocar un transpondedor baseado en IR, debe asegurarse de que apunte cara a fóra desde a súa aeronave cara aos receptores do camiño e que o raio de luz non estea bloqueado polo seu fuselaxe, as súas correas de batería, os seus cables, hélices, etc."
+    },
+    "transponderConfigurationType": {
+        "message": "Tipo transponder"
+    },
+    "transponderType0": {
+        "message": "Ningún"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCitimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "Ilap configuración"
+    },
+    "transponderConfiguration2": {
+        "message": "aRCitimer configuración"
+    },
+    "transponderConfiguration3": {
+        "message": "ERLT configuración"
+    },
+    "transponderData1": {
+        "message": "Data"
+    },
+    "transponderData2": {
+        "message": "Transponder ID"
+    },
+    "transponderData3": {
+        "message": "Transponder ID"
+    },
+    "transponderDataHelp1": {
+        "message": "Só díxitos hexadecimais, 0-9, A-F"
+    },
+    "transponderHelp1": {
+        "message": "Configure o seu código de transpondedor aquí. Nota: Os sistemas de cronometraxe de carreira só recoñecerán códigos válidos. Os códigos de transpondedor válidos pódense obter de <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>."
+    },
+    "transponderHelp2": {
+        "message": "Para obter máis información, visite <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">sitio aRCiTimer<\/a>"
+    },
+    "transponderDataHelp3": {
+        "message": "Elexir ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "Para máis información, visite <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">sitio EasyRaceLapTimer<\/a>"
+    },
+    "transponderButtonSave": {
+        "message": "Gardar"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "Gardar e Reiniciar"
+    },
+    "transponderDataInvalid": {
+        "message": "Os datos do transpondedor <span class=\"message-negative\">non son válidos<\/span>"
+    },
     "servosFirmwareUpgradeRequired": {
         "message": "O servos necesitan como mínimo o firmware &gt;= 1.10.0. e soporte para esa placa."
     },
@@ -2275,6 +2414,16 @@
     "servosReverse": {
         "message": "Reverso"
     },
+    "gpsHead": {
+        "message": "GPS"
+    },
+    "gpsHeadHelp": {
+        "message": "Mostrar información diversa relacionada co GPS. Os títulos só se mostran cando o magnetómetro está en uso",
+        "description": "Help text for gpsHead"
+    },
+    "gpsMapHead": {
+        "message": "Localización GPS actual"
+    },
     "gpsMapMessage1": {
         "message": "Por favor comprove a súa conexión a internet"
     },
@@ -2314,6 +2463,9 @@
     "gpsPositionalDop": {
         "message": "DOP posicional:"
     },
+    "gpsSignalStrHead": {
+        "message": "Forza de sinal GPS"
+    },
     "gpsSignalStrHeadHelp": {
         "message": "Mostra a intensidade do sinal, a calidade e o estado de cada fonte GPS descuberta",
         "description": "Help text for gpsSignalStrHead"
@@ -2329,6 +2481,9 @@
     },
     "gpsSignalSatId": {
         "message": "Identificación satélite"
+    },
+    "gpsSignalStatus": {
+        "message": "Estado"
     },
     "gpsSignalQuality": {
         "message": "Calidade"
@@ -2573,6 +2728,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Esta función só funciona con DSHOT ESC.<br \/>Verifique que o ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e cámbieo na pestana $t(tabMotorTesting.message)."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "O número de motores é 0.<br \/>Verifique o mesturador actual na pestana $t(tabMotorTesting.message) ou configure un personalizado a través da CLI. Refírese a isto <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualice o firmware.<br \/> Asegúrese de que está a usar o firmware máis recente: Betaflight 4.3 ou máis recente."
     },
@@ -2759,6 +2917,9 @@
     "dataflashNotPresentNote": {
         "message": "A súa controladora non dispon duna memoria dataflash compatible."
     },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "Dataflash require un firmware &gt;= 1.8.0."
+    },
     "dataflashButtonSaveFile": {
         "message": "Gardar flash a arquivo..."
     },
@@ -2852,6 +3013,12 @@
     },
     "firmwareFlasherCloudBuildDetails": {
         "message": "Detalles da compilación na nube:"
+    },
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Amosar rexistro."
+    },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Estado:"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "pendente"
@@ -3009,6 +3176,12 @@
     "firmwareFlasherMessage": {
         "message": "Mensaxe:"
     },
+    "firmwareFlasherWarningText": {
+        "message": "Porfavor <span class=\"message-negative\"> non <\/span> intente instalar <strong> hardware non Betaflight <\/strong> con este instalador de firmware. <br \/> Vostede <span class=\"message-negative\"> non <\/span> <strong> desconecte <\/strong> a tarxeta ou <strong> apague <\/strong> o ordenador mentres instale. <br \/><br \/><strong> Nota: <\/strong> o cargador de arranque STM32 almacénase na ROM, non se pode estragar. <br \/><strong> Nota: <\/strong><span class=\"message-negative\"> Auto-Conectar <\/span> sempre está desactivado mentres estea no instalador de firmware. <br \/><strong> Nota: <\/strong> Asegúrese de ter unha copia de seguridade; algunhas actualizacións \/ descargas limparán a súa configuración. <br \/><strong> Nota: <\/strong> Se ten problemas na instalación <strong> primeiro tente desconectar todos os cables do seu FC, <\/strong> tente reiniciar e actualiza os controladores. <br \/><strong> Nota: <\/strong> Cando instale placas que teñan conectados directamente tomas USB (a maioría das placas máis novas) asegúrese de ler a sección instalar USB do manual de Betaflight e de ter instalado o software e controladores correctos"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong> Recuperación \/ comunicación perdida <\/strong>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
     },
@@ -3072,6 +3245,9 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Está a piques de flashear unha <strong>compilación de desenvolvemento do firmware<\/strong>. Estas compilacións son un traballo en curso, e pode ter calquera dos seguintes casos:<strong><ul><li>o firmware non funciona en absoluto;<\/li><li>o firmware non se pode voar;<\/li><li>Hai problemas de seguranza co firmware, por exemplo, fugas<\/li><li>o firmware pode facer que o controlador de voo non responda ou se dane<\/li><\/ul><\/strong>Se continúa con flashear este firmware, <strong>asume a total responsabilidade do risco de que ocorra calquera dos feitos anteriores<\/strong>. Ademais, recoñece que é necesario realizar <strong>probas de banco exhaustivas con accesorios desactivados<\/strong> antes de intentar facer voar este firmware."
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "Lin o anterior e <strong>asumo a total responsabilidade<strong> de instalar un firmware inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -3546,9 +3722,25 @@
         "message": "Máis filtrado",
         "description": "Filter tuning slider high header"
     },
+    "pidTuningGyroFilterSlider": {
+        "message": "Multiplicador de filtro Gyro:",
+        "description": "Gyro filter tuning slider label"
+    },
     "pidTuningGyroFilterSliderHelp": {
         "message": "Cambia os cortes do filtro de paso baixo do xiroscopio.<br \/><br \/>Mover o control deslizante cara á esquerda proporciona un filtrado do xiroscopio máis forte (frecuencia de corte máis baixa).<br \/><br \/>Mover o control deslizante cara á dereita proporciona menos filtrado do xiroscopio (maior frecuencia de corte).<br \/><br \/>Cando mova o control deslizante cara á dereita para mellorar o manexo do propwash, TEÑA CUIDADO de non ser demasiado radical. Permitirá máis ruído tanto en P como en D e pode que se quenten ou queimen os motores.<br \/><br \/>É posible que teña que mover o control deslizante cara á esquerda se ten problemas de resonancia do cadro, rodamentos defectuosos, aspas malas, motores quentes, etc.<br \/><br \/>O filtrado giroscopio aplícase antes, e añadindo o filtrado D.",
         "description": "Gyro filter tuning slider helpicon message"
+    },
+    "pidTuningGyroSliderEnabled": {
+        "message": "Empregar control deslizante do Gyro",
+        "description": "Disable or enable Gyro Filter Tuning Slider"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Multiplicador de filtro de prazo:",
+        "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermSliderEnabled": {
+        "message": "Empregar control deslizante D-Term",
+        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:<\/strong>>Os deslizadores están desactivados porque os valores cambiaron manualmente. Premendo no botón '$t(pidTuningSliderEnableButton.message)' volveu activalos. Isto restablecerá os valores e perderanse os cambios non gardados.",
@@ -3697,6 +3889,10 @@
     "pidTuningCutoffFrequency": {
         "message": "Frecuencia de corte [Hz]"
     },
+    "pidTuningNotchFilterHelp": {
+        "message": "Un filtro Notch é un filtro simétrico, estreito e de corte alto, con parámetros e centro e corte.<br \/><br \/>O valor central é a frecuencia do centro do filtro. O valor de corte é -3dB por baixo da frecuencia de corte.<br \/><br \/>Por exemplo, un Notch cun corte de 160 cun centro de 260 devolve un notch de -3dB de rango entre 160-360Hz e unha maior atenuación ao redor de 260Hz.",
+        "description": "Notch filter helpicon message"
+    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro dinámico de Notch"
     },
@@ -3715,6 +3911,9 @@
     "pidTuningDynamicNotchRange": {
         "message": "Rango de filtro dinámico Notch"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Factor Q"
+    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Frecuencia mínima [Hz]"
     },
@@ -3723,6 +3922,9 @@
     },
     "pidTuningDynamicNotchCount": {
         "message": "Número de Notch"
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "O factor Q axusta como de estreito ou amplo é o filtro notch dinámico. Un valor maior faino máis estreito e preciso e un valor máis baixo fai que sexa máis amplo. Ter un valor realmente baixo aumentará considerablemente o atraso do filtro."
     },
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Establece isto na menor frecuencia de ruído entrante que se debe controlar polo dynamic notch."
@@ -3740,6 +3942,14 @@
     "pidTuningRpmFilterHelp": {
         "message": "O filtrado RPM é un banco de filtros Noch do xiroscopio que utilizan os datos de telemetría RPM para eliminar o ruído do motor con precisión cirúrxica.<br \/><br \/><b><span class=\"message-positive\">IMPORTANTE<\/span>: O ESC debe soportar o protocolo bidireccional DShot e o valor de $t(configurationMotorPoles.message) na pestana $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.<\/b>",
         "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmHarmonics": {
+        "message": "Número de armónicos do filtro Gyro RPM",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHz": {
+        "message": "Frecuencia mínima do filtro RPM de Gyro [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
         "message": "Frecuencia mínima que empregará o filtro RPM.",
@@ -3798,8 +4008,14 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Aumente os valores PID para compensar cando Vbat diminúe. Isto dará características de voo máis constantes durante todo o voo. A cantidade de compensación que se aplica calcúlase a partir do $t(powerBatteryMaximum.message) definido na páxina $t(tabPower.message), así que asegúrese de que está axustado a algo apropiado."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Compensación da caída de tensión"
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linealización do empuxe"
     },
     "pidTuningThrustLinearizationHelp": {
         "message": "Mellora a autoridade co acelerador baixo e a capacidade de resposta. <br><br> Especialmente útil para whoops e ESC's a 48K. Non ten efecto ó aumentar o acelerador.<br><br>A cantidade de compensación pode variada entre 0 e 150%. Normalmente o 30-40% é suficiente."
@@ -3809,6 +4025,12 @@
     },
     "pidTuningItermRotation": {
         "message": "Rotación Término I"
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Smart Feedforward"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Reduce o efecto do termo F no PID. Cando tanto o termo P como o termo F están activos no mesmo momento, só usa o maior dos dous, evitando pasarse sen necesidade de levantar D, pero tamén reduce o efecto de reacción producido polo termo F cando se engade a P."
     },
     "pidTuningItermRelax": {
         "message": "Afloxar Termo I"
@@ -4464,11 +4686,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imaxen personalizada:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "O tamaño debe ser de $t(logoWidthPx)x$t(logoHeightPx) píxeles"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Debe conter píxeles verdes, brancos e negros"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pulse <b>$t(osdSetupUploadFont.message)<\/b> para conservar logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamaño da imaxe inválido: {{width}}×{{height}} (esperado $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "A imaxen conten un píxel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}}×{{posY}}"
@@ -4517,9 +4745,8 @@
         "message": "Valor RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor dBm RSSI",
-        "description": "One of the elements of the OSD"
+    "osdDescElementRssiValue": {
+        "message": "Valor instantáneo RSSI (parpadea por debaixo do limiar de alarma)"
     },
     "osdTextElementTimer": {
         "message": "Temporizador",
@@ -5016,6 +5243,9 @@
         "message": "Calidade de ligazón",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementLinkQuality": {
+        "message": "Indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes - empregar con precaución"
+    },
     "osdTextElementFlightDist": {
         "message": "Distancia de voo",
         "description": "One of the elements of the OSD"
@@ -5078,6 +5308,13 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "O nome do perfil OSD definido nas variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\""
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor dBm RSSI",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Valor en dBm do sinal RSSI se está dispoñible"
     },
     "osdTextElementRcChannels": {
         "message": "Canles RC",
@@ -5589,6 +5826,9 @@
     "osdSectionHelpAlarms": {
         "message": "Axusta os limiares empregados para os elementos do OSD con estado de alarma."
     },
+    "osdSectionHelpStats": {
+        "message": "Axusta os valores mostrados na pantalla de estadísticas post voo."
+    },
     "osdSectionHelpWarnings": {
         "message": "Activa ou desactiva avisos mostrados no elemento AVISOS."
     },
@@ -5600,6 +5840,10 @@
     },
     "osdButtonSaved": {
         "message": "Gardado"
+    },
+    "vtxHelp": {
+        "message": "Aquí pode configurar os valores para o seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e o VTX o admiten.<br>Para configurar o seu VTX, faga os seguintes pasos:<br>1. Vaia a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">esta<\/a> páxina;<br>2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en \"$t(vtxButtonLoadFile.message)\" a continuación, seleccione o ficheiro de configuración VTX e cárgueo;<br>4. Verifique que a configuración é correcta;<br>5. Faga clic en \"$t(vtxButtonSave.message)\" para almacenar a configuración de VTX no controlador de voo.<br>6. Opcionalmente, faga clic en '$t(vtxButtonSaveLua.message)' para gardar un ficheiro de configuración lua que poda usar cos scripts lua de betaflight (Ver máis <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atención:<\/span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
@@ -5903,6 +6147,9 @@
         "message": "Envía datos da ESC á FC mediante telemetría DShot. Obrigatorio por filtrado RPM e ralentí dinámico. <br> <br>Nota: Require un ESC compatible cun firmware apropiado, por exemplo JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroSyncDenom": {
+        "message": "Frecuencia do xiroscopo actualizada"
+    },
     "configurationPidProcessDenom": {
         "message": "Frecuencia do ciclo PID"
     },
@@ -5917,6 +6164,12 @@
     },
     "configurationAccHardware": {
         "message": "Acelerómetro"
+    },
+    "configurationBaroHardware": {
+        "message": "Barómetro (si está soportado)"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetómetro (si está soportado)"
     },
     "configurationSmallAngle": {
         "message": "Ángulo máximo de Armado [degrees]"
@@ -5984,6 +6237,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Medida"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivado dede erro <\/b> proporciona unha resposta máis directa e prefírese principalmente para Racing.<br \/><br \/><b>Derivado de medición <\/b> proporciona unha resposta máis suave o que é máis útil para o freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Tradicional vs Betaflight (planear):<\/b> A escala e a lóxica do PID son exactamente as mesmas. Non se necesita reaxustar. Tradicional é o antiguo betaflight evolucionado e reescrito, que é o controlador PID básico basado en matemáticas integradas. O controlador PID de Betaflight usa matemáticas en punto flotante e ten moitas novas funcionalidades especialmente diseñadas para aplicacións multirotor<br><b>Flotante vs Enteiro:<\/b> A escala e a lóxica do PID son exactamente as mesmas. No se necesita reaxustar. As placas F1 non teñen FPU integrada e o cálculo en punto flotante incrementa a carga de CPU e a matemática integral melloraría o rendimento, pero a matemática en punto flotante pode dar algo máis de precisión."
@@ -6081,6 +6337,9 @@
     "pidTuningRatesType": {
         "message": "Tipo de Rates"
     },
+    "pidTuningRatesTypeTip": {
+        "message": "Cambiando o tipo de rates, cambiará a curva de rates e a forma na que se poden configurar"
+    },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
     },
@@ -6173,6 +6432,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Actualizar dende Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Entre na pestana de información sobre o dispositivo na configuración e toque 10 veces no número de versión de compilación para habilitar \"Opcións de desenvolvedor\". Despois diso, busque e vaia as opcións de desenvolvedor e seleccione <b>{{app}}<\/b> como provedor de vista web."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Abrir axustes"
@@ -6287,11 +6549,11 @@
     },
     "presetsButtonSave": {
         "message": "Gardar e Reiniciar",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
+        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancelar",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Aplicando configuración...",
@@ -6300,6 +6562,10 @@
     "presetsPleaseWait": {
         "message": "Agarde por favor.",
         "description": "Second label in the progress dialog when applying presets"
+    },
+    "presetsCliErrorsWaring": {
+        "message": "<span class='message-negative'>AVISO!<\/span><br\/>A configuración foi aplicada con erros do CLI.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
     "presetsSaveAnyway": {
         "message": "Gardar igualmente",
@@ -6332,6 +6598,10 @@
     "presetsLoadingDumpAll": {
         "message": "Cargando a configuración actual dende o controlador de voo",
         "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "Produciuse un erro ao gardar a configuración actual",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Fontes predefinidas...",
@@ -6387,11 +6657,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Non se atopou ningunha configuración predeterminada para os parámetros de busca indicados",
-        "description": "Message that appears on presets tab if no presets were found"
+        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzou o límite máximo do número de presets mostrados",
-        "description": "Message that appears on presets tab if too many presets found"
+        "description": "Message that apprears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "¡ATENCIÓN! Revise a lista de opcións",
