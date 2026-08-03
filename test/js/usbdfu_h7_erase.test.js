@@ -216,7 +216,7 @@ describe("STM32H7 DFU flashing", () => {
         expect(last.msg).toBe("stm32ProgrammingSuccessful");
         // Including the wedging pages, where the flash used to abort.
         expect(transport.erasedPages).toEqual([0, 1, 2, 3]);
-        expect(transport.written.length).toBe(4096);
+        expect(transport.written).toHaveLength(4096);
         // Two CLRSTATUS per wedged page — the only way out of the wedge.
         expect(transport.clrStatusCount).toBeGreaterThanOrEqual(4);
     });
@@ -232,5 +232,80 @@ describe("STM32H7 DFU flashing", () => {
         expect(messages.at(-1).msg).toBe("stm32ProgrammingSuccessful");
         expect(transport.erasedPages).toEqual([0, 1, 2, 3]);
         expect(transport.clrStatusCount).toBe(0);
+    });
+});
+
+/**
+ * Minimal transport for driving clearStatus() directly: answers GETSTATUS with dfuDNBUSY
+ * for `busyReads` polls, or forever when `wedged` until the CLRSTATUS pair unsticks it.
+ */
+class MockStatusTransport extends EventTarget {
+    constructor({ busyReads = 0, wedged = false } = {}) {
+        super();
+        this.busyReads = busyReads;
+        this.wedged = wedged;
+        this.state = STATE.dfuIDLE;
+        this.clrStatusCount = 0;
+    }
+
+    controlTransferIn(setup, length) {
+        if (setup.request !== REQ.GETSTATUS) {
+            return Promise.resolve({ status: "ok", data: new Uint8Array(length) });
+        }
+        let state = this.state;
+        if (this.wedged) {
+            state = STATE.dfuDNBUSY;
+        } else if (this.busyReads > 0) {
+            this.busyReads--;
+            state = STATE.dfuDNBUSY;
+        }
+        return Promise.resolve({ status: "ok", data: new Uint8Array([0, 1, 0, 0, state, 0]) });
+    }
+
+    controlTransferOut(setup) {
+        if (setup.request === REQ.CLRSTATUS) {
+            this.clrStatusCount++;
+            if (this.wedged) {
+                this.wedged = false;
+                this.state = STATE.dfuERROR;
+            } else {
+                this.state = STATE.dfuIDLE;
+            }
+        }
+        return Promise.resolve({ status: "ok" });
+    }
+}
+
+/**
+ * @param {MockStatusTransport} transport
+ * @param {boolean} busyIsStuck - Passed straight through to clearStatus().
+ * @returns {Promise<number>} The state reported when clearStatus() invoked its callback.
+ */
+function clearStatusWithTimeout(transport, busyIsStuck, ms = 2000) {
+    const dfu = new UsbDfuProtocol(transport);
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("clearStatus never reached dfuIDLE")), ms);
+        dfu.clearStatus((data) => {
+            clearTimeout(timer);
+            resolve(data[4]);
+        }, busyIsStuck);
+    });
+}
+
+describe("UsbDfuProtocol.clearStatus", () => {
+    it("polls a device that stays dfuDNBUSY for several reads without sending CLRSTATUS", async () => {
+        // The default path must ride out a slow-but-honest erase/write rather than poke a
+        // bootloader that would STALL an out-of-state CLRSTATUS.
+        const transport = new MockStatusTransport({ busyReads: 5 });
+
+        await expect(clearStatusWithTimeout(transport, false)).resolves.toBe(STATE.dfuIDLE);
+        expect(transport.clrStatusCount).toBe(0);
+    });
+
+    it("sends the CLRSTATUS pair for a wedged device only when told the busy state is stuck", async () => {
+        const transport = new MockStatusTransport({ wedged: true });
+
+        await expect(clearStatusWithTimeout(transport, true)).resolves.toBe(STATE.dfuIDLE);
+        expect(transport.clrStatusCount).toBe(2);
     });
 });

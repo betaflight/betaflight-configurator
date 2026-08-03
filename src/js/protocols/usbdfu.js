@@ -564,11 +564,13 @@ export class UsbDfuProtocol extends EventTarget {
     // Exception: some H7 bootloaders (H743 Rev.V, e.g. KAKUTEH7) wedge in dfuDNBUSY after a
     // page erase and never settle, so polling alone hangs. STM32CubeProgrammer unsticks them
     // with an undocumented CLRSTATUS pair: the first answers errUNKNOWN/dfuERROR, the second
-    // OK/dfuIDLE. Devices that do leave dfuDNBUSY by themselves never reach that kick.
+    // OK/dfuIDLE. Only callers that have already waited out the reported poll timeout ask for
+    // that (busyIsStuck) — everyone else keeps polling, so a strict bootloader is never sent a
+    // CLRSTATUS it would STALL, and maxAttempts stays the backstop.
     /**
      * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
      * @param {boolean} [busyIsStuck=false] - Caller already waited out the device-reported poll
-     *   timeout, so a dfuDNBUSY read means wedged: kick immediately instead of polling again.
+     *   timeout, so a dfuDNBUSY read means wedged rather than working.
      * @returns {void}
      */
     clearStatus(callback, busyIsStuck = false) {
@@ -577,9 +579,6 @@ export class UsbDfuProtocol extends EventTarget {
         // otherwise spins tightly since data[4] is undefined and the reported delay is 0).
         const maxAttempts = 100;
         let attempts = 0;
-
-        const maxBusyPolls = busyIsStuck ? 0 : 3;
-        let busyPolls = 0;
 
         const check_status = () => {
             this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
@@ -600,15 +599,13 @@ export class UsbDfuProtocol extends EventTarget {
                         this.options?.flashMessageTypes?.INVALID,
                     );
                     this.cleanup();
-                } else if (state === this.state.dfuERROR) {
-                    setTimeout(
-                        () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status),
-                        delay,
-                    );
                 } else if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuUPLOAD_IDLE) {
                     setTimeout(() => this.controlTransfer("out", this.request.ABORT, 0, 0, 0, 0, check_status), delay);
-                } else if (state === this.state.dfuDNBUSY && ++busyPolls > maxBusyPolls) {
-                    // Wedged: this reports dfuERROR, which the branch above then clears to dfuIDLE.
+                } else if (
+                    state === this.state.dfuERROR ||
+                    // Wedged: the first CLRSTATUS reports dfuERROR, which this then clears to dfuIDLE.
+                    (busyIsStuck && state === this.state.dfuDNBUSY)
+                ) {
                     setTimeout(
                         () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status),
                         delay,
