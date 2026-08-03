@@ -35,13 +35,14 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
  * WebSerial protocol implementation for the Serial base class
  */
 class WebSerial extends EventTarget {
-    // Stable id per physical SerialPort object. The browser reuses the same
-    // SerialPort instance across an MCU-reboot USB re-enumeration, so keying the
-    // id off object identity yields an id that survives device-list rebuilds —
-    // unlike a bare counter that would reset every time loadDevices() runs.
-    // WeakMap so entries are collected once the browser drops the SerialPort.
+    // Each SerialPort object has its own id. The id stays the same when the code builds the
+    // device list again. A counter alone would give a different number each time.
+    // But the id changes if the device disconnects and then connects again, because Chrome
+    // makes a new SerialPort object for it. Do not keep a path. Read the path from the
+    // current list. The WeakMap lets the browser release the entry with the SerialPort.
     #portIds = new WeakMap();
     #nextPortId = 0;
+    #loadGeneration = 0;
 
     constructor() {
         super();
@@ -91,6 +92,14 @@ class WebSerial extends EventTarget {
 
     handleRemovedDevice(device) {
         const removed = this.ports.find((port) => port.port === device);
+
+        // The list does not hold this port, because loadDevices() removed it before. There is
+        // no device to report. An event with no detail only makes the listeners refresh the
+        // list again for nothing.
+        if (!removed) {
+            return;
+        }
+
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
@@ -119,11 +128,9 @@ class WebSerial extends EventTarget {
     }
 
     /**
-     * Return the stable id for a SerialPort object, minting one on first sighting
-     * and reusing it for the same object thereafter. The same reused SerialPort
-     * across a re-enumeration therefore always maps to the same path.
+     * Get the id of a SerialPort object. Make a new id if the object is new.
      * @param {SerialPort} port
-     * @returns {string} stable id, e.g. "serial_0"
+     * @returns {string} the id, for example "serial_0"
      */
     #getStablePortId(port) {
         let id = this.#portIds.get(port);
@@ -149,8 +156,17 @@ class WebSerial extends EventTarget {
     }
 
     async loadDevices() {
+        const generation = ++this.#loadGeneration;
+
         try {
             const ports = await navigator.serial.getPorts();
+
+            // A burst of device events starts several refreshes at once, and getPorts() gives
+            // no order guarantee. An older call that finishes last must not put its list back.
+            // getDevices() reads this.ports after the await, so it still returns the newest.
+            if (generation !== this.#loadGeneration) {
+                return;
+            }
             this.ports = ports.map((port) => this.createPort(port));
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);

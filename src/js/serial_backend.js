@@ -202,8 +202,8 @@ export function initializeSerialBackend() {
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
-            // The device re-enumerated with the same stable id, so the selection
-            // is already aimed at it — just connect.
+            // selectActivePort points the selection at the device that sent this event.
+            // Connect to it.
             connectDisconnect();
         }
     });
@@ -388,8 +388,18 @@ export function disconnect() {
     beginDisconnect();
 }
 
+/**
+ * GUI.connecting_to is set while an attempt is in flight. A second open() on the same SerialPort
+ * gives an InvalidStateError, and its failure dialog hides that the first attempt was good. The
+ * reboot loop and the auto-select listener each make this test before they call
+ * connectDisconnect(). Make it here, for all callers.
+ * @param {string} selectedDevice - the selected device path
+ * @returns {boolean} true when a connect attempt can start now
+ */
 function canStartConnectionAction(selectedDevice) {
-    return !GUI.connect_lock && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb");
+    return (
+        !GUI.connect_lock && !GUI.connecting_to && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb")
+    );
 }
 
 function beginConnect(selectedDevice) {
@@ -1432,11 +1442,10 @@ export function reinitializeConnection(suppressDialog = false) {
 
     const currentPort = DeviceHandler.devicePicker.selectedDevice;
 
-    // requestReboot() above put the connection state into REBOOTING, so
-    // selectActivePort() reports isReconnecting and keeps the current selection
-    // instead of hijacking it with the expert-mode virtual/manual fallback while
-    // the FC is briefly off the port list. The device re-enumerates with the same
-    // stable id, so reconnect simply re-uses currentPort — no token needed.
+    // requestReboot() above sets the connection state to REBOOTING. selectActivePort() then
+    // reports isReconnecting and keeps the current selection. It does not change the selection
+    // to the expert-mode virtual or manual device while the FC is off the port list.
+    // The reconnect uses currentPort again. A token is not necessary.
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
@@ -1567,9 +1576,9 @@ function rebootReconnect() {
                 // traffic can't collide with the new connection's request chain.
                 MSP.disconnect_cleanup();
 
-                // selectActivePort keeps the current selection while reconnecting
-                // (isReconnecting), so it still aims at the originally-connected
-                // device — which re-enumerates with the same stable id. Just connect.
+                // selectActivePort keeps the current selection during a reconnect
+                // (isReconnecting). The selection points at the device from before the reboot.
+                // The attempt fails while that device is absent. The loop then tries again.
                 connectDisconnect();
             }
         }, REBOOT_RECONNECT_RETRY_MS);
