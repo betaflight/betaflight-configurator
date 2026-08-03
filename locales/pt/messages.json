@@ -1762,12 +1762,6 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Posicione o drone com a câmera virada para o lado oposto de si (virada para o monitor)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Incline o nariz em cerca de 45°."
-    },
-    "boardAlignmentWizard-HintRollRight": {
-        "message": "Incline o lado direito em cerca de 45°."
-    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Rode o drone cerca de 45° no sentido horário (como visto de cima)."
     },
@@ -1836,9 +1830,6 @@
     },
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "O acelerómetro não está a ler a gravidade. Certifique-se de que a FC está conectada e sem movimento."
-    },
-    "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o nariz ainda mais."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o lado direito ainda mais."

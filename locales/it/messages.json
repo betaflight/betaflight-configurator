@@ -658,6 +658,9 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Fallita<\/span> la connessione alla porta selezionata. Controllare che il dispositivo sia raggiungibile e che le impostazioni di connessione siano corrette, quindi riprovare."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "Su iOS, consentire l'accesso <strong>Rete Locale<\/strong> per Betaflight in Impostazioni &rarr; Privacy &amp; Sicurezza &rarr; Rete Locale, quindi riprovare."
+    },
     "connectionLostTitle": {
         "message": "Connessione persa"
     },
@@ -1754,11 +1757,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Posiziona il drone su una superficie piana con la fotocamera rivolta lontano da te (verso lo schermo)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Inclinare il muso su di circa 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Inclinare il naso verso il basso di circa 45°, quindi la fotocamera punta verso il suolo."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Inclinare il lato destro verso il basso di circa 45°."
+        "message": "Inclinare il lato destro verso il basso di circa 45°, abbassando il braccio destro e alzando il sinistro."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Ruota il drone di circa 45° in senso orario (visto dall'alto)."
@@ -1830,10 +1833,13 @@
         "message": "L'accelerometro non sta leggendo la gravità. Assicurarsi che il FC sia collegato e non in movimento."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Il movimento di beccheggio non è stato rilevato. Riprova e inclina di più il muso verso l'alto."
+        "message": "Il movimento di beccheggio non è stato rilevato. Riprova e inclina di più il naso verso il basso."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Il movimento di rollio non è stato rilevato. Riprova e inclina di più il lato destro verso il basso."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Uno dei movimenti di inclinazione è andato nella direzione sbagliata. Controlla le direzioni di beccheggio e rollio e riprova."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Piatto"
@@ -8918,6 +8924,69 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Mostra il nome o l'indice del profilo attivo della batteria"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Numero Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra il numero di waypoint corrente\/totale del piano di volo attivo"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra la latitudine del waypoint corrente"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Longitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra la longitudine del waypoint corrente"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra l'altitudine del waypoint corrente"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distanza Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra la distanza del waypoint corrente"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direzione Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra una freccia di direzione che punta al waypoint corrente"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Numero Waypoint successivo",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra il prossimo numero waypoint nel piano di volo attivo"
+    },
+    "osdTextElementWpEta": {
+        "message": "Waypoint ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra l'ora di arrivo prevista del waypoint corrente"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mappa di navigazione",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimappa che mostra la posizione di partenza, il piano di volo e la traiettoria percorsa"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Righelli",
