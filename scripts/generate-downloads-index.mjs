@@ -351,7 +351,7 @@ function renderDownloadSection(latest) {
     }
 
     const assets = (latest.assets || [])
-        .filter((a) => !a.name.endsWith(".sha256"))
+        .filter((a) => !a.name.toLowerCase().endsWith(".sha256"))
         .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
 
     const buckets = new Map();
@@ -406,7 +406,7 @@ function renderReleaseHistorySection(releases) {
     const prereleaseCutoff = new Date();
     prereleaseCutoff.setMonth(prereleaseCutoff.getMonth() - PRERELEASE_VISIBILITY_MONTHS);
     const recent = releases
-        .map((r) => ({ release: r, assets: (r.assets || []).filter((a) => !a.name.endsWith(".sha256")) }))
+        .map((r) => ({ release: r, assets: (r.assets || []).filter((a) => !a.name.toLowerCase().endsWith(".sha256")) }))
         .filter(({ release, assets }) => {
             if (!release.published_at) {
                 return false;

@@ -91,7 +91,7 @@ jobs:
           key: ${{ matrix.label }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build Tauri bundle
         shell: bash
