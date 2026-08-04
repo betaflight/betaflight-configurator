@@ -108,6 +108,24 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      # The Tauri config version drives desktop bundle names and the app's
+      # self-reported version, but the release bump only touches package.json.
+      # Sync it here so bundles carry the release version, not a stale one.
+      # Inlined (not a repo script) so it also works when building an old tag.
+      - name: Sync bundle version to package.json
+        shell: bash
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = version;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").replace(/^version = ".*"$/m, `version = "${version}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", cargo);
+            console.log("Synced bundle version to", version);
+          '
+
       - name: Build Tauri bundle
         shell: bash
         run: |
@@ -196,6 +214,20 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
+
+      # Keep the APK's internal version in step with package.json (see desktop job).
+      - name: Sync bundle version to package.json
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = version;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").replace(/^version = ".*"$/m, `version = "${version}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", cargo);
+            console.log("Synced bundle version to", version);
+          '
 
       # Sign with the same RELEASE_KEYSTORE the nightly Tauri APK uses, via the
       # keystore.properties the Tauri Gradle project reads.
