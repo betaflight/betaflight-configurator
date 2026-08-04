@@ -273,11 +273,79 @@ function renderNightlySection(nightly) {
             </section>`;
 }
 
-function renderLatestStableSection(latest) {
+// Map a release asset filename to a download platform bucket. Returns null for
+// anything that isn't a recognised installer (e.g. checksums, source archives),
+// which then only shows up under the "All files" list.
+function classifyAsset(name) {
+    const n = name.toLowerCase();
+    if (n.endsWith(".apk")) {
+        return "android";
+    }
+    if (n.endsWith(".exe") || n.endsWith(".msi")) {
+        return "windows";
+    }
+    if (n.endsWith(".dmg") || n.endsWith(".app.tar.gz")) {
+        if (/aarch64|arm64/.test(n)) {
+            return "macos-arm64";
+        }
+        if (/x64|x86_64|intel/.test(n)) {
+            return "macos-x64";
+        }
+        return "macos";
+    }
+    if (n.endsWith(".appimage") || n.endsWith(".deb") || n.endsWith(".rpm")) {
+        return "linux";
+    }
+    return null;
+}
+
+// Card order and labels. A generic "macOS" bucket only appears when a dmg
+// carries no arch token; the arch-specific buckets are preferred.
+const DOWNLOAD_PLATFORMS = [
+    { key: "windows", title: "Windows" },
+    { key: "macos-arm64", title: "macOS (Apple Silicon)" },
+    { key: "macos-x64", title: "macOS (Intel)" },
+    { key: "macos", title: "macOS" },
+    { key: "linux", title: "Linux" },
+    { key: "android", title: "Android" },
+];
+
+// Within a platform, surface the most broadly-installable format first: an
+// AppImage runs on any Linux, an .exe installer over an .msi.
+function downloadPriority(filename) {
+    const n = filename.toLowerCase();
+    const order = [".appimage", ".exe", ".dmg", ".apk", ".deb", ".rpm", ".msi"];
+    const idx = order.findIndex((ext) => n.endsWith(ext));
+    return idx === -1 ? order.length : idx;
+}
+
+function platformCard(title, entries) {
+    const sorted = [...entries].sort((a, b) => downloadPriority(a.filename) - downloadPriority(b.filename));
+    const [primary, ...rest] = sorted;
+    const primarySize = formatBytes(primary.size);
+    const primaryMeta = [primary.filename, primarySize]
+        .filter(Boolean)
+        .map((s) => escapeHtml(s))
+        .join(" &middot; ");
+    const primaryBtn = `<a class="download-btn" href="${escapeHtml(primary.url)}">Download<span class="dl-meta">${primaryMeta}</span></a>`;
+    const extras = rest.length
+        ? `<div class="download-extra">${rest
+              .map((e) => `<a href="${escapeHtml(e.url)}">${escapeHtml(e.filename)}</a>`)
+              .join("")}</div>`
+        : "";
+    return `
+                <div class="download-card">
+                    <h3>${escapeHtml(title)}</h3>
+                    ${primaryBtn}
+                    ${extras}
+                </div>`;
+}
+
+function renderDownloadSection(latest) {
     if (!latest) {
         return `
             <section>
-                <h2>Latest stable release</h2>
+                <h2>Download the app</h2>
                 <p class="empty">No stable releases found.</p>
             </section>`;
     }
@@ -286,13 +354,37 @@ function renderLatestStableSection(latest) {
         .filter((a) => !a.name.endsWith(".sha256"))
         .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
 
+    const buckets = new Map();
+    for (const asset of assets) {
+        const key = classifyAsset(asset.filename);
+        if (!key) {
+            continue;
+        }
+        if (!buckets.has(key)) {
+            buckets.set(key, []);
+        }
+        buckets.get(key).push(asset);
+    }
+
+    const cards = DOWNLOAD_PLATFORMS.filter((p) => buckets.has(p.key))
+        .map((p) => platformCard(p.title, buckets.get(p.key)))
+        .join("");
+
     const meta = `Released ${escapeHtml(formatDate(latest.published_at))} &middot; tag <a href="${escapeHtml(latest.html_url)}">${escapeHtml(latest.tag_name)}</a>`;
+
+    const grid = cards ? `<div class="download-grid">${cards}</div>` : "";
+    const allFiles = `
+                <details class="all-files">
+                    <summary>All files</summary>
+                    ${fileList(assets)}
+                </details>`;
 
     return `
             <section>
-                <h2>Latest stable release</h2>
+                <h2>Download the app</h2>
                 <p class="meta">${meta}</p>
-                ${fileList(assets)}
+                ${grid}
+                ${allFiles}
             </section>`;
 }
 
@@ -405,17 +497,15 @@ try {
     const sections = [
         renderReleaseWebAppSection(topRelease, hero),
         renderWebAppSection(masterUrl, releaseUrl),
+        renderDownloadSection(latestStable),
         renderNightlySection(manifest.nightly),
-        renderLatestStableSection(latestStable),
         renderReleaseHistorySection(publicReleases),
     ].join("\n");
 
     const templatePath = join(__dirname, "templates", "downloads-index.html");
     const template = readFileSync(templatePath, "utf8");
     const generatedAt = manifest.generatedAt || new Date().toISOString();
-    const html = template
-        .replace("<!--SECTIONS-->", sections)
-        .replace("<!--GENERATED_AT-->", escapeHtml(generatedAt));
+    const html = template.replace("<!--SECTIONS-->", sections).replace("<!--GENERATED_AT-->", escapeHtml(generatedAt));
 
     writeFileSync(join(outputDir, "index.html"), html);
 

@@ -4,7 +4,10 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Betaflight downloads</title>
-        <meta name="description" content="Download Betaflight Configurator nightly builds, stable releases, and the web app." />
+        <meta
+            name="description"
+            content="Download Betaflight Configurator nightly builds, stable releases, and the web app."
+        />
         <link rel="icon" type="image/png" href="favicon.png" />
         <style>
             :root {
@@ -203,6 +206,66 @@
                 font-size: 1.15rem;
                 font-weight: 600;
             }
+
+            .download-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 0.75rem;
+                margin: 0.5rem 0 1rem;
+            }
+            .download-card {
+                background: var(--surface-200);
+                border: 1px solid var(--surface-400);
+                border-radius: 8px;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.6rem;
+            }
+            .download-card h3 {
+                margin: 0;
+                font-size: 1rem;
+            }
+            .download-btn {
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+                background: var(--primary-500);
+                color: var(--surface-100);
+                font-weight: 600;
+                text-align: center;
+                padding: 0.55rem 0.75rem;
+                border-radius: 6px;
+            }
+            .download-btn:hover {
+                background: var(--primary-700);
+                color: var(--text);
+                text-decoration: none;
+            }
+            .download-btn .dl-meta {
+                font-weight: 400;
+                font-size: 0.75rem;
+                opacity: 0.85;
+                word-break: break-all;
+            }
+            .download-extra {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                font-size: 0.8rem;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            }
+            details.all-files {
+                border: none;
+            }
+            details.all-files summary {
+                color: var(--text-dim);
+                font-weight: 400;
+                font-size: 0.9rem;
+            }
+            details.all-files ul.file-list {
+                margin: 0.5rem 0 0.25rem 1rem;
+            }
         </style>
     </head>
     <body>
@@ -216,7 +279,8 @@
             <!--SECTIONS-->
         </main>
         <footer>
-            Generated <!--GENERATED_AT-->. Source:
+            Generated
+            <!--GENERATED_AT-->. Source:
             <a href="https://github.com/betaflight/betaflight-configurator">betaflight/betaflight-configurator</a>.
         </footer>
     </body>
