@@ -18,6 +18,21 @@ on:
         description: 'Release tag to build and attach assets to'
         required: true
         type: string
+    # Only the Android signing secrets are passed through; the desktop builds
+    # need none, and the attach job uses the auto-provided GITHUB_TOKEN.
+    secrets:
+      RELEASE_KEYSTORE:
+        description: 'Base64-encoded Android signing keystore'
+        required: true
+      RELEASE_KEYSTORE_PASSWORD:
+        description: 'Keystore password'
+        required: true
+      RELEASE_KEY_ALIAS:
+        description: 'Signing key alias'
+        required: true
+      RELEASE_KEY_ALIAS_PASSWORD:
+        description: 'Signing key alias password'
+        required: true
   workflow_dispatch:
     inputs:
       tag:

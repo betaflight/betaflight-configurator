@@ -52,7 +52,11 @@ jobs:
     uses: ./.github/workflows/tauri-release-assets.yml
     with:
       tag: ${{ github.event.release.tag_name }}
-    secrets: inherit
+    secrets:
+      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   prepare_environment:
     name: Prepare Environment Name
