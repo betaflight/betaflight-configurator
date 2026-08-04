@@ -1405,6 +1405,26 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
 };
 
 /**
+ * Compute min-max values for field during all time.
+ *
+ * @param flightLog The reference to the FlightLog object
+ * @param fieldName Name of the field
+ */
+GraphConfig.getMinMaxForFieldDuringAllTimeInterval = function (flightLog, fieldName) {
+    const mm = flightLog.getMinMaxForFieldDuringAllTime(fieldName);
+    if (mm === undefined) {
+        return {
+            min: -500,
+            max: 500,
+        };
+    }
+
+    mm.min = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min);
+    mm.max = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max);
+    return mm;
+};
+
+/**
  * Compute min-max values for field during current windows time interval.
  *
  * @param flightLog The reference to the FlightLog object
