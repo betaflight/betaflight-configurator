@@ -319,28 +319,6 @@ function downloadPriority(filename) {
     return idx === -1 ? order.length : idx;
 }
 
-function platformCard(title, entries) {
-    const sorted = [...entries].sort((a, b) => downloadPriority(a.filename) - downloadPriority(b.filename));
-    const [primary, ...rest] = sorted;
-    const primarySize = formatBytes(primary.size);
-    const primaryMeta = [primary.filename, primarySize]
-        .filter(Boolean)
-        .map((s) => escapeHtml(s))
-        .join(" &middot; ");
-    const primaryBtn = `<a class="download-btn" href="${escapeHtml(primary.url)}">Download<span class="dl-meta">${primaryMeta}</span></a>`;
-    const extras = rest.length
-        ? `<div class="download-extra">${rest
-              .map((e) => `<a href="${escapeHtml(e.url)}">${escapeHtml(e.filename)}</a>`)
-              .join("")}</div>`
-        : "";
-    return `
-                <div class="download-card">
-                    <h3>${escapeHtml(title)}</h3>
-                    ${primaryBtn}
-                    ${extras}
-                </div>`;
-}
-
 function renderDownloadSection(latest) {
     if (!latest) {
         return `
@@ -366,25 +344,22 @@ function renderDownloadSection(latest) {
         buckets.get(key).push(asset);
     }
 
-    const cards = DOWNLOAD_PLATFORMS.filter((p) => buckets.has(p.key))
-        .map((p) => platformCard(p.title, buckets.get(p.key)))
+    const blocks = DOWNLOAD_PLATFORMS.filter((p) => buckets.has(p.key))
+        .map((p) => {
+            const entries = [...buckets.get(p.key)].sort(
+                (a, b) => downloadPriority(a.filename) - downloadPriority(b.filename),
+            );
+            return `<h3>${escapeHtml(p.title)}</h3>${fileList(entries)}`;
+        })
         .join("");
 
     const meta = `Released ${escapeHtml(formatDate(latest.published_at))} &middot; tag <a href="${escapeHtml(latest.html_url)}">${escapeHtml(latest.tag_name)}</a>`;
-
-    const grid = cards ? `<div class="download-grid">${cards}</div>` : "";
-    const allFiles = `
-                <details class="all-files">
-                    <summary>All files</summary>
-                    ${fileList(assets)}
-                </details>`;
 
     return `
             <section>
                 <h2>Download the app</h2>
                 <p class="meta">${meta}</p>
-                ${grid}
-                ${allFiles}
+                ${blocks || fileList(assets)}
             </section>`;
 }
 
