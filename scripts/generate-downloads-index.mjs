@@ -319,6 +319,36 @@ function downloadPriority(filename) {
     return idx === -1 ? order.length : idx;
 }
 
+// Normalise a GitHub release asset to the {filename, url, size} shape the
+// renderers use, dropping checksum files.
+function assetEntries(release) {
+    return (release.assets || [])
+        .filter((a) => !a.name.toLowerCase().endsWith(".sha256"))
+        .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
+}
+
+// Group asset entries into ordered platform sections. Unclassified assets fall
+// under a trailing "Other" section so nothing is hidden.
+function groupAssetsByPlatform(entries) {
+    const buckets = new Map();
+    for (const entry of entries) {
+        const key = classifyAsset(entry.filename) || "other";
+        if (!buckets.has(key)) {
+            buckets.set(key, []);
+        }
+        buckets.get(key).push(entry);
+    }
+    const sections = [];
+    for (const platform of [...DOWNLOAD_PLATFORMS, { key: "other", title: "Other" }]) {
+        const group = buckets.get(platform.key);
+        if (group) {
+            group.sort((a, b) => downloadPriority(a.filename) - downloadPriority(b.filename));
+            sections.push({ title: platform.title, entries: group });
+        }
+    }
+    return sections;
+}
+
 function renderDownloadSection(latest) {
     if (!latest) {
         return `
@@ -328,29 +358,9 @@ function renderDownloadSection(latest) {
             </section>`;
     }
 
-    const assets = (latest.assets || [])
-        .filter((a) => !a.name.toLowerCase().endsWith(".sha256"))
-        .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
-
-    const buckets = new Map();
-    for (const asset of assets) {
-        const key = classifyAsset(asset.filename);
-        if (!key) {
-            continue;
-        }
-        if (!buckets.has(key)) {
-            buckets.set(key, []);
-        }
-        buckets.get(key).push(asset);
-    }
-
-    const blocks = DOWNLOAD_PLATFORMS.filter((p) => buckets.has(p.key))
-        .map((p) => {
-            const entries = [...buckets.get(p.key)].sort(
-                (a, b) => downloadPriority(a.filename) - downloadPriority(b.filename),
-            );
-            return `<h3>${escapeHtml(p.title)}</h3>${fileList(entries)}`;
-        })
+    const entries = assetEntries(latest);
+    const blocks = groupAssetsByPlatform(entries)
+        .map((group) => `<h3>${escapeHtml(group.title)}</h3>${fileList(group.entries)}`)
         .join("");
 
     const meta = `Released ${escapeHtml(formatDate(latest.published_at))} &middot; tag <a href="${escapeHtml(latest.html_url)}">${escapeHtml(latest.tag_name)}</a>`;
@@ -359,7 +369,7 @@ function renderDownloadSection(latest) {
             <section>
                 <h2>Download the app</h2>
                 <p class="meta">${meta}</p>
-                ${blocks || fileList(assets)}
+                ${blocks || fileList(entries)}
             </section>`;
 }
 
@@ -413,12 +423,17 @@ function renderReleaseHistorySection(releases) {
     }
 
     const items = recent
-        .map(({ release, assets }) => {
-            const assetItems = assets
-                .map(
-                    (asset) =>
-                        `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="size">${formatBytes(asset.size)}</span></li>`,
-                )
+        .map(({ release }) => {
+            const grouped = groupAssetsByPlatform(assetEntries(release))
+                .map((group) => {
+                    const files = group.entries
+                        .map(
+                            (e) =>
+                                `<li><a href="${escapeHtml(e.url)}">${escapeHtml(e.filename)}</a> <span class="size">${formatBytes(e.size)}</span></li>`,
+                        )
+                        .join("");
+                    return `<h4>${escapeHtml(group.title)}</h4><ul>${files}</ul>`;
+                })
                 .join("");
             const tag = escapeHtml(release.tag_name);
             const meta = [formatDate(release.published_at), release.prerelease ? "pre-release" : null]
@@ -431,7 +446,7 @@ function renderReleaseHistorySection(releases) {
                         <a href="${escapeHtml(release.html_url)}">${tag}</a>
                         <span class="release-meta">${meta}</span>
                     </summary>
-                    <ul>${assetItems}</ul>
+                    ${grouped}
                 </details>`;
         })
         .join("");
