@@ -1,15 +1,24 @@
 name: Tauri PR build
 
 # Compile-checks the Tauri iOS and Android apps on every PR, without any signing
-# or store upload. iOS runs an unsigned simulator build (which still compiles and
-# links the Rust static lib, including the native BLE/TCP transports, against the
-# real iOS SDKs); Android produces a debug-keystore APK, mirroring the Capacitor
-# debug APK. Neither job receives release/signing secrets — they run untrusted PR
-# code with a read-only token, like the Capacitor debug build.
+# or store upload. iOS runs a full unsigned device build (Rust static lib + Swift
+# sources + linking against the real iOS SDK); Android produces a debug-keystore
+# APK, mirroring the Capacitor debug APK. Neither job receives release/signing
+# secrets — they run untrusted PR code with a read-only token, like the Capacitor
+# debug build.
+#
+# Also callable from other workflows (the nightly calls it with ios-only: true so
+# master keeps the full iOS compile check without shipping an IPA).
 
 on:
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ios-only:
+        description: Run only the iOS compile check
+        type: boolean
+        default: false
 
 concurrency:
   group: tauri-pr-build-${{ github.event.pull_request.number || github.ref }}
@@ -54,20 +63,15 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - name: Build frontend
-        run: npm run build
-
-      # A full unsigned iOS app build isn't cleanly supported (tauri ios build
-      # requires signing, and driving xcodebuild directly skips the dev-server
-      # setup its Rust xcode-script expects). Compiling the crate for the iOS
-      # target is the meaningful gate anyway: it type-checks the native transports
-      # (BLE via btleplug/CoreBluetooth, TCP) against the real iOS SDK, which can
-      # only be done on a macOS runner with Xcode.
-      - name: Cargo check (iOS target)
-        run: cargo check --manifest-path src-tauri/Cargo.toml --target aarch64-apple-ios
+      # Full device build (frontend, Rust static lib with the native BLE/TCP
+      # transports, Swift sources, linking against the real iOS SDK) — only the
+      # signing and IPA export are skipped, so no Apple secrets are needed.
+      - name: Full unsigned device build
+        run: npx --no tauri ios build --no-sign --archive-only
 
   android:
     name: Android (debug APK)
+    if: ${{ !inputs.ios-only }}
     runs-on: ubuntu-latest
     permissions:
       contents: read

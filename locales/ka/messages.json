@@ -1725,12 +1725,6 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "მოათავსეთ დრონი ბრტყელ ზედაპირზე ისე, რომ კამერა თქვენგან საპირისპირო მხარეს (ეკრანისკენ) იყოს მიმართული."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "აწიეთ ცხვირი ზემოთ 45°-ით."
-    },
-    "boardAlignmentWizard-HintRollRight": {
-        "message": "დახარეთ მარჯვენა მხარე ქვემოთ დაახლოებით 45°-ით."
-    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "მობრუნეთ დრონი 45°-ით მარჯვნივ (ზემოდან ხედით)."
     },
@@ -1799,9 +1793,6 @@
     },
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "აკსელერომეტრი ვერ აღიქვამს გრავიტაციას. დარწმუნდით, რომ ფრენის კონტროლერი მიერთებულია და არ მოძრაობს."
-    },
-    "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Pitch მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და აწიეთ ცხვირი უფრო მაღლა."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll მოძრაობა ვერ ამოიცნო. სცადეთ თავიდან და დახარეთ მარჯვენა მხარე უფრო მეტად."

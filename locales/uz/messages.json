@@ -654,6 +654,9 @@
     "connectionFailed": {
         "message": "Tanlangan portga ulanib <span class=\"message-negative\">bo‘lmadi<\/span>. Qurilma mavjudligini va ulanish sozlamalari to‘g‘riligini tekshiring, so‘ng qayta urinib ko‘ring."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "iOS qurilmangizda Sozlamalar &rarr; Maxfiylik &amp; xavfsizlik &rarr; Mahalliy tarmoq bo‘limiga o‘ting va Betaflight uchun <strong>Mahalliy tarmoq<\/strong> ruxsatini yoqing, so‘ng yana urinib ko‘ring."
+    },
     "connectionLostTitle": {
         "message": "Aloqa uzildi"
     },
@@ -1738,11 +1741,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Dronni kamerani o‘zingizdan nariga (ekranga) qaratib, tekis joylashtiring."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Uchki qismini tepaga 45°ga buring."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Uchki qismini taxminan 45° pastga eging, shunda kamera yer tomonga qaraydi."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "o‘ng tomonini pastga 45° eging."
+        "message": "O‘ng tomonini taxminan 45° pastga eging, bunda o‘ng qo‘llar pastga, chap qo‘llar esa yuqoriga ko‘tariladi."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Dronni 45° soat strelkasi bo‘yicha aylantiring (yuqoridagi kabi)."
@@ -1814,10 +1817,13 @@
         "message": "Akselerometr gravitatsiya tortishish kuchini ko‘rsatmayapti. FC ulanganligiga va harakatlanmayotganligiga ishonch hosil qiling."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Pitch harakati aniqlanmadi. Iltimos, qayta urinib ko‘ring va uchki qismini yuqoriga ko‘taring."
+        "message": "Pitch harakati aniqlanmadi. Iltimos, qayta urinib ko‘ring va uchki qismini yanada pastroqqa eging."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll harakati aniqlanmadi. Qayta urinib ko‘ring va o‘ng tomonni pastga eging."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Egish harakatlaridan biri noto‘g‘ri yo‘nalishda bajarildi. Pitch va roll yo‘nalishlarini tekshirib, qaytadan urinib ko‘ring."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Tekis"
