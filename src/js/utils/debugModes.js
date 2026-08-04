@@ -1465,6 +1465,15 @@ const DEBUG_DECODE = {
     },
     VELOCITY: () => "",
     DFILTER: () => "",
+    PSAS: {
+        "debug[0]": (v) => `${(v / 10).toFixed(1)} %`,
+        "debug[1]": (v) => `${(v / 10).toFixed(1)} %`,
+        "debug[2]": (v) => `${(v / 100).toFixed(2)}`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[5]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[6]": (v) => `${(v / 100).toFixed(2)}`,
+    },
 };
 // Gyro-family modes share one whole-mode formatter.
 for (const m of [
@@ -1665,6 +1674,15 @@ const DEBUG_CONVERT = {
     },
     FEEDFORWARD_LIMIT: {
         "debug[6]": cScale(1000),
+    },
+    PSAS: {
+        "debug[0]": cScale10,
+        "debug[1]": cScale10,
+        "debug[2]": cScale100,
+        "debug[3]": cScale10,
+        "debug[4]": cScale10,
+        "debug[5]": cScale10,
+        "debug[6]": cScale100,
     },
 };
 for (const m of [
