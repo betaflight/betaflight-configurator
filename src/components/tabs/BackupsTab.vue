@@ -26,9 +26,14 @@
                                 <template #created-cell="{ row }">
                                     {{ formatDate(row.original.created) }}
                                 </template>
+                                <template #name-cell="{ row }">
+                                    <span class="block w-[160px] truncate" :title="row.original.name || ''">
+                                        {{ row.original.name || "" }}
+                                    </span>
+                                </template>
                                 <template #description-cell="{ row }">
                                     <span
-                                        class="text-dimmed block max-w-[240px] truncate"
+                                        class="text-dimmed block w-[240px] truncate"
                                         :title="row.original.description || ''"
                                     >
                                         {{ row.original.description || "" }}
