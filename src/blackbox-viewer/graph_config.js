@@ -1481,24 +1481,6 @@ GraphConfig.getMinMaxForFieldDuringMarkedInterval = function (flightLog, logGrap
 };
 
 /**
- * Compute min-max values for field during all time.
- * @param fieldName Name of the field
- */
-GraphConfig.getMinMaxForFieldDuringAllTime = function (flightLog, fieldName) {
-    const mm = flightLog.getMinMaxForFieldDuringAllTime(fieldName);
-    if (mm.min === Number.MAX_VALUE || mm.max === -Number.MAX_VALUE) {
-        return {
-            min: -500,
-            max: 500,
-        };
-    }
-
-    mm.min = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min);
-    mm.max = FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max);
-    return mm;
-};
-
-/**
  * Get an array of suggested graph configurations will be usable for the fields available in the given flightlog.
  *
  * Supply an array of strings `graphNames` to only fetch the graph with the given names.
