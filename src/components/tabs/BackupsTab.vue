@@ -27,10 +27,15 @@
                                     {{ formatDate(row.original.created) }}
                                 </template>
                                 <template #description-cell="{ row }">
-                                    <span class="text-dimmed">{{ row.original.description || "" }}</span>
+                                    <span
+                                        class="text-dimmed block max-w-[240px] truncate"
+                                        :title="row.original.description || ''"
+                                    >
+                                        {{ row.original.description || "" }}
+                                    </span>
                                 </template>
                                 <template #actions-cell="{ row }">
-                                    <div class="flex gap-2">
+                                    <div class="flex gap-2 whitespace-nowrap shrink-0">
                                         <UButton
                                             size="xs"
                                             variant="soft"
