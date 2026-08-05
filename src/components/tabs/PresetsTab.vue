@@ -33,7 +33,7 @@
 
             <div v-else-if="store.hasLoadError" class="p-5">
                 <h3 v-html="$t('presetsLoadError')"></h3>
-                <UButton :label="$t('presetsReload')" class="mt-2" @click="reloadPresets" />
+                <UButton :label="$t('presetsReload')" class="mt-2" size="xs" @click="reloadPresets" />
             </div>
 
             <div v-else>
@@ -106,11 +106,17 @@
                 <UButton
                     :label="$t('presetsButtonCancel')"
                     :disabled="!store.canApply"
+                    size="xs"
                     @click="store.clearPickedPresets()"
                     color="error"
                     variant="soft"
                 />
-                <UButton :label="$t('presetsButtonSave')" :disabled="!store.canApply" @click="applyPickedPresets()" />
+                <UButton
+                    :label="$t('presetsButtonSave')"
+                    :disabled="!store.canApply"
+                    size="xs"
+                    @click="applyPickedPresets()"
+                />
             </div>
         </div>
 
@@ -194,9 +200,10 @@
                     <UButton
                         :label="$t('presetsButtonCancel')"
                         variant="outline"
+                        size="xs"
                         @click="closeCliErrorsWithoutSaving"
                     />
-                    <UButton :label="$t('presetsSaveAnyway')" @click="saveAnywayAfterCliErrors" />
+                    <UButton :label="$t('presetsSaveAnyway')" size="xs" @click="saveAnywayAfterCliErrors" />
                 </div>
             </template>
         </UModal>

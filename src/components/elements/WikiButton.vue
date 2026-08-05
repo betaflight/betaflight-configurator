@@ -1,15 +1,13 @@
 <template>
-    <div class="cf_doc_version_bt">
-        <a
-            id="button-documentation"
-            :href="url"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="$t('betaflightSupportButton')"
-        >
-            {{ $t("betaflightSupportButton") }}
-        </a>
-    </div>
+    <a
+        id="button-documentation"
+        :href="url"
+        target="_blank"
+        rel="noopener noreferrer"
+        :aria-label="$t('betaflightSupportButton')"
+    >
+        {{ $t("betaflightSupportButton") }}
+    </a>
 </template>
 
 <script>

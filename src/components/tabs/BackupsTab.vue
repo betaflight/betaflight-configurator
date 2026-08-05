@@ -9,12 +9,12 @@
 
             <template v-else>
                 <!-- Message from API (e.g. membership info) -->
-                <UiBox v-if="backupMessage" type="neutral">
+                <UiBox v-if="backupMessage" type="neutral" collapsible>
                     <p>{{ backupMessage }}</p>
                 </UiBox>
 
                 <!-- Backup list per craft -->
-                <UiBox :title="$t('tabBackups')">
+                <UiBox :title="$t('tabBackups')" type="neutral" collapsible>
                     <div v-if="backups.length === 0" class="text-dimmed text-sm py-4">
                         {{ $t("backupNoBackupsAvailable") }}
                     </div>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <template #footer>
-                    <UButton @click="saveBackupChanges" size="sm">
+                    <UButton @click="saveBackupChanges" size="xs">
                         {{ $t("actionSave") }}
                     </UButton>
                 </template>
@@ -156,7 +156,7 @@
             <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
                 <span>
                     <UButton
-                        size="sm"
+                        size="xs"
                         icon="i-lucide-save"
                         :disabled="!isConnected"
                         :class="{ 'pointer-events-none': !isConnected }"

@@ -2,9 +2,9 @@
     <BaseTab tab-name="led-strip" @mounted="onTabMounted">
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
-            <WikiButton doc-url="led-strip" />
+            <WikiButton docUrl="led-strip" />
 
-            <UiBox highlight class="mb-3">
+            <UiBox type="neutral" collapsible class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
             </UiBox>
 
@@ -39,7 +39,7 @@
                     <div class="clear-buttons-container">
                         <!-- Clear Buttons -->
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             :disabled="!hasSelection"
@@ -47,7 +47,7 @@
                             @click="clearSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             :label="$t('ledStripClearAllButton')"
@@ -63,7 +63,7 @@
                     <USelect
                         id="ledStripFunctionSelect"
                         :class="['functionSelect', 'min-w-48', selectedFunction]"
-                        size="sm"
+                        size="xs"
                         :items="functionItems"
                         v-model="selectedFunction"
                         @update:model-value="onFunctionChange"
@@ -77,7 +77,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="throttleHue"
-                            size="sm"
                             v-model="modifiers.throttleHue"
                             @update:model-value="onModifierChange('t')"
                             :label="$t('ledStripThrottleHue')"
@@ -85,7 +84,7 @@
                         <USelect
                             id="auxSelectThrottle"
                             class="auxSelect"
-                            size="sm"
+                            size="xs"
                             :items="auxChannelItems"
                             v-model="auxChannelValue"
                             :aria-label="$t('ledStripThrottleHueChannel')"
@@ -95,7 +94,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="larsonScanner"
-                            size="sm"
                             v-model="modifiers.larsonScanner"
                             @update:model-value="onModifierChange('o')"
                             :label="$t('ledStripLarsonOverlay')"
@@ -105,7 +103,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="blink"
-                            size="sm"
                             v-model="modifiers.blink"
                             @update:model-value="onModifierChange('b')"
                             :label="$t('ledStripBlinkAlwaysOverlay')"
@@ -115,7 +112,6 @@
                     <div class="modifier-row rainbowOverlay" v-show="showRainbow">
                         <USwitch
                             id="rainbow"
-                            size="sm"
                             v-model="modifiers.rainbow"
                             @update:model-value="onModifierChange('y')"
                             :label="$t('ledStripRainbowOverlay')"
@@ -143,7 +139,6 @@
                     <div class="modifier-row warningOverlay" v-show="showWarning">
                         <USwitch
                             id="warnings"
-                            size="sm"
                             v-model="overlayStates.warnings"
                             @update:model-value="onOverlayChange('w')"
                             :label="$t('ledStripWarningsOverlay')"
@@ -152,7 +147,6 @@
                     <div class="modifier-row indicatorOverlay">
                         <USwitch
                             id="indicator"
-                            size="sm"
                             v-model="overlayStates.indicator"
                             @update:model-value="onOverlayChange('i')"
                             :label="$t('ledStripIndecatorOverlay')"
@@ -161,7 +155,6 @@
                     <div class="modifier-row vtxOverlay" v-show="showVtx">
                         <USwitch
                             id="vtx"
-                            size="sm"
                             v-model="overlayStates.vtx"
                             @update:model-value="onOverlayChange('v')"
                             :label="$t('ledStripVtxOverlay')"
@@ -176,7 +169,7 @@
                     <USelect
                         id="ledStripModeColorsModeSelect"
                         class="modeSelect gps min-w-48"
-                        size="sm"
+                        size="xs"
                         :items="modeColorsModeItems"
                         v-model="modeColorsMode"
                     />
@@ -197,7 +190,7 @@
                     <UButton
                         v-for="dir in directions"
                         :key="dir"
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
                         :class="'dir-' + dir"
@@ -294,7 +287,7 @@
                 <div class="wiring-container">
                     <UButton
                         block
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="wireMode ? 'solid' : 'soft'"
                         :label="$t('ledStripWiringMode')"
@@ -302,7 +295,7 @@
                     />
                     <div class="wiringControls">
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             class="w50"
@@ -310,7 +303,7 @@
                             @click="clearWiresSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             class="w50"

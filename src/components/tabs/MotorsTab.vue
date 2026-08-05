@@ -2,20 +2,18 @@
     <BaseTab tab-name="motors">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabMotorTesting')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="motors" />
-            </div>
+            <WikiButton docUrl="motors" />
 
             <div class="grid-row grid-box col2 max-[1055px]:!grid-cols-1">
                 <div class="col-span-1">
                     <div class="flex flex-col gap-4">
                         <!-- MIXER -->
-                        <UiBox :title="$t('configurationMixer')">
+                        <UiBox :title="$t('configurationMixer')" type="neutral" collapsible>
                             <USelect v-model="fcStore.mixerConfig.mixer" :items="sortedMixerListItems" />
                             <SettingRow
                                 :label="$t('configurationReverseMotorSwitch')"
                                 :help="$t('configurationReverseMotorSwitchHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <USwitch v-model="reverseMotorDir" size="sm" />
                             </SettingRow>
@@ -28,25 +26,27 @@
                                     v-if="isMotorReorderingAvailable"
                                     :label="$t('motorOutputReorderDialogOpen')"
                                     :disabled="buttonStates.toolsDisabled"
+                                    size="xs"
                                     @click="openMotorOutputReorderDialog()"
                                 />
                                 <UButton
                                     v-if="digitalProtocolConfigured"
                                     :label="$t('escDshotDirectionDialog-Open')"
                                     :disabled="buttonStates.toolsDisabled"
+                                    size="xs"
                                     @click="openEscDshotDirectionDialog()"
                                 />
                             </div>
                         </UiBox>
                         <!-- ESC FEATURES -->
-                        <UiBox :title="$t('configurationEscFeatures')">
+                        <UiBox :title="$t('configurationEscFeatures')" type="neutral" collapsible>
                             <div v-if="!protocolConfigured" class="text-sm text-orange-500">
                                 <p v-html="$t('configurationEscProtocolDisabled')"></p>
                             </div>
                             <SettingRow
                                 :label="$t('configurationEscProtocol')"
                                 :help="$t('configurationEscProtocolHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <USelect
                                     v-model="selectedEscProtocol"
@@ -55,13 +55,13 @@
                                     @update:model-value="onProtocolChange"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" full-width>
+                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" fullWidth>
                                 <USwitch v-model="useUnsyncedPwm" size="sm" />
                             </SettingRow>
                             <SettingRow
                                 v-if="showAnalogSettings && useUnsyncedPwm"
                                 :label="$t('configurationUnsyncedPWMFreq')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.pidAdvancedConfig.motor_pwm_rate"
@@ -74,7 +74,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="protocolConfigured" full-width>
+                            <SettingRow v-if="protocolConfigured" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
@@ -86,7 +86,7 @@
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" full-width>
+                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
@@ -101,7 +101,7 @@
                                 v-if="digitalProtocolConfigured"
                                 :label="$t('configurationDshotBidir')"
                                 :help="$t('configurationDshotBidirHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <USwitch v-model="useDshotTelemetry" size="sm" />
                             </SettingRow>
@@ -109,7 +109,7 @@
                                 v-if="protocolConfigured && rpmFeaturesVisible"
                                 :label="$t('configurationMotorPolesLong')"
                                 :help="$t('configurationMotorPolesHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.motor_poles"
@@ -125,7 +125,7 @@
                                 v-if="showMotorIdle"
                                 :label="$t('configurationMotorIdle')"
                                 :help="$t('configurationMotorIdleHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.pidAdvancedConfig.motorIdle"
@@ -141,7 +141,7 @@
                                 v-if="showIdleMinRpm"
                                 :label="$t('pidTuningIdleMinRpm')"
                                 :help="$t('configurationMotorIdleRpmHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.advancedTuning.idleMinRpm"
@@ -158,7 +158,7 @@
                                 v-if="showAnalogSettings"
                                 :label="$t('configurationThrottleMinimumCommand')"
                                 :help="$t('configurationThrottleMinimumCommandHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.mincommand"
@@ -175,7 +175,7 @@
                                 v-if="showMinThrottle"
                                 :label="$t('configurationThrottleMinimum')"
                                 :help="$t('configurationThrottleMinimumHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.minthrottle"
@@ -188,11 +188,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow
-                                v-if="showAnalogSettings"
-                                :label="$t('configurationThrottleMaximum')"
-                                full-width
-                            >
+                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationThrottleMaximum')" fullWidth>
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.maxthrottle"
                                     :min="0"
@@ -206,8 +202,8 @@
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
-                        <UiBox :title="$t('configuration3d')">
-                            <SettingRow :help="$t('feature3DTip')" full-width>
+                        <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
+                            <SettingRow :help="$t('feature3DTip')" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
@@ -218,7 +214,7 @@
                                 </template>
                             </SettingRow>
                             <template v-if="isFeatureEnabled('3D')">
-                                <SettingRow :label="$t('configuration3dDeadbandLow')" full-width>
+                                <SettingRow :label="$t('configuration3dDeadbandLow')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.deadband3d_low"
                                         :min="1250"
@@ -230,7 +226,7 @@
                                         class="w-16"
                                     />
                                 </SettingRow>
-                                <SettingRow :label="$t('configuration3dDeadbandHigh')" full-width>
+                                <SettingRow :label="$t('configuration3dDeadbandHigh')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.deadband3d_high"
                                         :min="1400"
@@ -242,7 +238,7 @@
                                         class="w-16"
                                     />
                                 </SettingRow>
-                                <SettingRow :label="$t('configuration3dNeutral')" full-width>
+                                <SettingRow :label="$t('configuration3dNeutral')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.neutral"
                                         :min="1400"
@@ -455,7 +451,7 @@
 
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
-                            <SettingRow :label="$t('motorsEnableControl')" full-width>
+                            <SettingRow :label="$t('motorsEnableControl')" fullWidth>
                                 <USwitch v-model="motorsTestingEnabled" size="sm" />
                             </SettingRow>
                         </div>
@@ -476,7 +472,7 @@
                 </template>
                 <template #footer>
                     <div class="flex justify-end gap-2 w-full">
-                        <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
+                        <UButton :label="$t('motorsDialogSettingsChangedOk')" size="xs" @click="closeWarningDialog" />
                     </div>
                 </template>
             </UModal>
@@ -497,9 +493,14 @@
                         <UButton
                             :label="$t('presetsWarningDialogNoButton')"
                             variant="outline"
+                            size="xs"
                             @click="closeDynFiltersDialog"
                         />
-                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
+                        <UButton
+                            :label="$t('presetsWarningDialogYesButton')"
+                            size="xs"
+                            @click="applyDynFiltersChange"
+                        />
                     </div>
                 </template>
             </UModal>
@@ -513,12 +514,14 @@
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
                     color="error"
+                    size="xs"
                 />
                 <UButton
                     :label="$t('configurationButtonSave')"
                     :disabled="buttonStates.saveDisabled"
                     :loading="isSaving"
                     @click="handleSave(true)"
+                    size="xs"
                 />
             </div>
         </div>

@@ -152,6 +152,7 @@
                 :label="$t('adjustmentsSave')"
                 :disabled="!hasChanges"
                 :loading="isSaving"
+                size="xs"
                 @click="saveAdjustments"
             />
         </div>

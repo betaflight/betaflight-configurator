@@ -28,24 +28,29 @@
 
                 <div class="grid-box col1">
                     <div class="require-blackbox-supported grid-box col1">
-                        <UiBox :title="$t('blackboxConfiguration')" v-show="blackboxConfigSupported">
+                        <UiBox
+                            :title="$t('blackboxConfiguration')"
+                            v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
+                        >
                             <SettingRow :label="$t('onboardLoggingBlackbox')">
                                 <USelect
                                     v-model="blackboxDevice"
                                     :items="blackboxDeviceOptions"
-                                    size="sm"
+                                    size="xs"
                                     class="min-w-40"
                                 />
                             </SettingRow>
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
-                                <USelect v-model="blackboxRate" :items="loggingRates" size="sm" class="min-w-40" />
+                                <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
                             <SettingRow :label="$t('onboardLoggingDebugMode')">
                                 <USelectMenu
                                     v-model="debugMode"
                                     value-key="value"
                                     :items="debugModes"
-                                    size="sm"
+                                    size="xs"
                                     leading-icon="i-lucide-bug"
                                     :search-input="{
                                         placeholder: $t('search'),
@@ -61,12 +66,14 @@
                             v-if="showDebugFields"
                             :title="$t('onboardLoggingDebugFields')"
                             v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
                         >
                             <div class="blackboxDebugFieldsTable">
                                 <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
                                     <USwitch
                                         :model-value="debugFieldsEnabled[index]"
-                                        size="sm"
+                                        size="xs"
                                         @update:model-value="updateDebugField(index, $event)"
                                     />
                                     <span>{{ field }}</span>
@@ -74,11 +81,11 @@
                             </div>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingSerialLogger')">
+                        <UiBox :title="$t('onboardLoggingSerialLogger')" type="neutral" collapsible>
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingFlashLogger')">
+                        <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>
                             <div class="require-dataflash-supported">
                                 <p>{{ $t("dataflashNote") }}</p>
 
@@ -229,7 +236,12 @@
                             <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingOnboardSDCard')" class="require-sdcard-supported">
+                        <UiBox
+                            :title="$t('onboardLoggingOnboardSDCard')"
+                            class="require-sdcard-supported"
+                            type="neutral"
+                            collapsible
+                        >
                             <div class="sdcard">
                                 <div class="sdcard-icon"></div>
                                 <div class="sdcard-status" v-html="sdcardStatusText"></div>
@@ -261,7 +273,7 @@
                         </UiBox>
                     </div>
 
-                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported">
+                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported" type="neutral" collapsible>
                         <div class="require-msc-supported">
                             <div>
                                 <a

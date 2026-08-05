@@ -8,7 +8,12 @@
                 <!-- Left Column: Configuration + Signal Strength -->
                 <div class="lg:col-span-2 flex flex-col gap-4">
                     <!-- GPS Configuration -->
-                    <UiBox :title="$t('configurationGPS')" :help="$t('configurationGPSHelp')">
+                    <UiBox
+                        :title="$t('configurationGPS')"
+                        type="neutral"
+                        collapsible
+                        :help="$t('configurationGPSHelp')"
+                    >
                         <SettingRow
                             v-for="feature in gpsFeatures"
                             :key="feature.bit"
@@ -59,9 +64,9 @@
                     <!-- GPS Signal Strength -->
                     <UiBox
                         :title="$t('gpsSignalStrHead')"
+                        type="neutral"
+                        collapsible
                         :help="$t('gpsSignalStrHeadHelp')"
-                        :type="hasGpsSensor ? 'default' : 'warning'"
-                        :highlight="!hasGpsSensor"
                     >
                         <div v-if="!hasGpsSensor" class="text-center p-2 text-sm" v-html="$t('gpsSignalLost')"></div>
                         <div v-if="hasGpsSensor" class="text-xs">
@@ -108,7 +113,7 @@
                 <!-- Right Column: GPS Info + Map -->
                 <div class="lg:col-span-3 flex flex-col gap-4">
                     <!-- GPS Info -->
-                    <UiBox :title="$t('gpsHead')" :help="$t('gpsHeadHelp')">
+                    <UiBox :title="$t('gpsHead')" type="neutral" collapsible :help="$t('gpsHeadHelp')">
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gps3dFix')"></span>
                             <span
@@ -168,13 +173,13 @@
                     </UiBox>
 
                     <!-- GPS Map -->
-                    <UiBox :title="$t('gpsMapHead')">
+                    <UiBox :title="$t('gpsMapHead')" type="neutral" collapsible>
                         <div
                             v-show="showConnect"
                             class="flex flex-col items-center justify-center h-[433px] gap-2 text-center"
                         >
                             <div>{{ $t("gpsMapMessage1") }}</div>
-                            <UButton variant="subtle" @click="checkConnectivity">
+                            <UButton variant="subtle" size="xs" @click="checkConnectivity">
                                 {{ $t("gpsMapRetry") }}
                             </UButton>
                         </div>
@@ -249,6 +254,7 @@
             </div> -->
             <UButton
                 :label="$t('configurationButtonSave')"
+                size="xs"
                 :disabled="!dirty"
                 :loading="isSaving"
                 @click="saveConfig"

@@ -2,17 +2,21 @@
     <BaseTab tab-name="ports">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabPorts')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="ports" />
-            </div>
+            <WikiButton docUrl="ports" />
 
             <div class="require-support">
-                <UiBox type="warning" highlight class="mb-4">
+                <UiBox type="neutral" collapsible highlight class="mb-4">
+                    <template #title>
+                        <span class="font-semibold">{{ $t("tabPorts") }}</span>
+                    </template>
                     <p v-html="$t('portsHelp')"></p>
                     <p v-html="$t('portsMSPHelp')"></p>
                 </UiBox>
 
-                <UiBox v-if="vtxTableNotConfigured" type="warning" highlight class="mb-4">
+                <UiBox v-if="vtxTableNotConfigured" type="neutral" collapsible highlight class="mb-4">
+                    <template #title>
+                        <span class="font-semibold">{{ $t("portsVtxTableNotSet") }}</span>
+                    </template>
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
@@ -99,17 +103,23 @@
 
                 <!-- Mobile: card per port -->
                 <div v-else class="flex flex-col gap-3">
-                    <UiBox v-for="port in ports" :key="port.identifier" :title="getPortName(port.identifier)">
+                    <UiBox
+                        v-for="port in ports"
+                        :key="port.identifier"
+                        type="neutral"
+                        collapsible
+                        :title="getPortName(port.identifier)"
+                    >
                         <!-- MSP -->
                         <div class="flex items-center gap-2">
-                            <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="sm" />
+                            <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="xs" />
                             <span class="text-xs flex-1">MSP</span>
                             <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
                         </div>
 
                         <!-- Serial RX -->
                         <div class="flex items-center gap-2">
-                            <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="sm" />
+                            <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="xs" />
                             <span class="text-xs flex-1" v-html="$t('portsSerialRx')"></span>
                             <HelpIcon :text="$t('portsSerialRxHelp')" />
                         </div>
