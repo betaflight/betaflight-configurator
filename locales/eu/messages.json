@@ -3191,8 +3191,9 @@
         "message": "RSSI balioa",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Berehalako RSSI balioa (alarmaren atalasearen azpitik agertzen da)"
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm balioa",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Tenporizadorea",
@@ -3530,9 +3531,6 @@
         "message": "Loturaren kalitatea",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Markoaren galera oinarritutako 'lotura kalitatearen' adierazle alternatiboa. Kontuz erabili"
-    },
     "osdTextElementFlightDist": {
         "message": "Hegaldiaren distantzia",
         "description": "One of the elements of the OSD"
@@ -3585,13 +3583,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "OSD profilaren izena \"osd_profile_1_name\", \"osd_profile_2_name\" eta \"osd_profile_3_name\" CLI aldagaietan konfiguratuta dago"
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "RSSI dBm balioa",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "RSSI seinalearen dBm-ko balioa erabilgarri badago"
     },
     "osdTextElementRcChannels": {
         "message": "RC kanalak",

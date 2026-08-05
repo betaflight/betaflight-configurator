@@ -1,4 +1,4 @@
-import { reactive, nextTick } from "vue";
+import { reactive, nextTick, onScopeDispose } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection.js";
 import GUI from "../js/gui";
@@ -48,6 +48,8 @@ export function useBoardSelection(params) {
         /** Bound to USelectMenu search; used with ignore-filter to omit empty category headers */
         boardSelectSearchTerm: "",
     });
+
+    let detectBoardTimeout = null;
 
     /**
      * Get board options formatted for Nuxt UI SelectMenu with labeled group separations.
@@ -237,8 +239,14 @@ export function useBoardSelection(params) {
 
         state.detectingBoard = true;
 
+        if (detectBoardTimeout !== null) {
+            clearTimeout(detectBoardTimeout);
+            detectBoardTimeout = null;
+        }
+
         if (GUI.connect_lock) {
-            setTimeout(() => {
+            detectBoardTimeout = setTimeout(() => {
+                detectBoardTimeout = null;
                 state.detectingBoard = false;
             }, 2000);
             return;
@@ -263,7 +271,8 @@ export function useBoardSelection(params) {
             return false;
         });
 
-        setTimeout(() => {
+        detectBoardTimeout = setTimeout(() => {
+            detectBoardTimeout = null;
             state.detectingBoard = false;
         }, 2000);
     };
@@ -278,6 +287,13 @@ export function useBoardSelection(params) {
         state.cloudBuildOptions = [];
         state.boardSelectSearchTerm = "";
     };
+
+    onScopeDispose(() => {
+        if (detectBoardTimeout !== null) {
+            clearTimeout(detectBoardTimeout);
+            detectBoardTimeout = null;
+        }
+    });
 
     return {
         // State

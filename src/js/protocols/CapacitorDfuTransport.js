@@ -54,7 +54,7 @@ class CapacitorDfuTransport extends EventTarget {
             try {
                 const devices = await this.adapter.getDevices();
                 if (devices.length > 0) {
-                    // Dispatch addedDevice so the PortHandler event chain fires.
+                    // Dispatch addedDevice so the DeviceHandler event chain fires.
                     // The native USB_DEVICE_ATTACHED broadcast may have been
                     // consumed before Android granted permission, so the normal
                     // deviceAttached → addedDevice path can be missed.
@@ -124,7 +124,7 @@ class CapacitorDfuTransport extends EventTarget {
         }
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.currentPortPath;
     }
 

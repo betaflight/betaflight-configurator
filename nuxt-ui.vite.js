@@ -45,6 +45,17 @@ export default {
                 text: "whitespace-normal",
             },
         },
+        modal: {
+            slots: {
+                // Slot overrides replace the base class string (not merged), so Nuxt UI's base
+                // classes are restated with the z-index appended. The bg-elevated/75 dimming is
+                // unaffected: it comes from the overlay variant, composed on top at runtime.
+                // z-3000/z-3001 keeps modals above all app dialogs (z-1000–2001) and the
+                // ConnectButton dropdown (z-2100), with the content above its own overlay.
+                overlay: "fixed inset-0 z-3000",
+                content: "bg-default divide-y divide-default flex flex-col focus:outline-none z-3001",
+            },
+        },
         switch: {
             slots: {
                 base: "cursor-pointer",
@@ -85,6 +96,20 @@ export default {
             slots: {
                 root: "min-w-12 w-28",
                 base: "appearance-none",
+            },
+            variants: {
+                orientation: {
+                    vertical: {
+                        // Nuxt UI scales vertical spinners to 80%, leaving ~19x13px hit
+                        // targets whose click zones overlap mid-field. Instead, split the
+                        // field height between the two buttons (no overlap) and widen them —
+                        // width is unconstrained. Icons are sized to the button height.
+                        increment:
+                            "top-0 end-0 pe-1 h-1/2 scale-100 [&>button]:h-full [&>button]:py-0 [&>button]:px-1.5 [&>button>*]:size-3",
+                        decrement:
+                            "bottom-0 end-0 pe-1 h-1/2 scale-100 [&>button]:h-full [&>button]:py-0 [&>button]:px-1.5 [&>button>*]:size-3",
+                    },
+                },
             },
             defaultVariants: {
                 size: "sm",

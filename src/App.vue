@@ -62,7 +62,7 @@
 <script setup>
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { useMediaQuery } from "@vueuse/core";
-import ConnectButton from "./components/port-picker/ConnectButton.vue";
+import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import FCModule from "./js/fc.js";
@@ -173,6 +173,11 @@ const logoTooltip = computed(() => {
 });
 
 provide("sidebarExpanded", isSidebarExpanded);
+provide("closeMobileSidebar", () => {
+    if (isCompactBreakpoint.value) {
+        isRevealed.value = false;
+    }
+});
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;

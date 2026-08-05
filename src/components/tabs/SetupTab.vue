@@ -18,10 +18,10 @@
                                 <dd class="roll">{{ state.attitude.roll }}</dd>
                             </dl>
                         </div>
-                        <div class="instruments-right">
-                            <span id="attitude"></span>
-                            <span id="heading"></span>
-                        </div>
+                    </div>
+                    <div class="instruments-right">
+                        <span id="attitude"></span>
+                        <span id="heading"></span>
                     </div>
                     <UButton
                         class="reset-zaxis"
@@ -245,35 +245,37 @@
             </div>
         </div>
 
-        <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
-            <h3>{{ $t("dialogConfirmResetTitle") }}</h3>
-            <div class="content">
-                <div style="margin-top: 10px" v-html="$t('dialogConfirmResetNote')"></div>
-            </div>
-            <div class="buttons">
-                <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
-                <UButton
-                    :label="$t('dialogConfirmResetClose')"
-                    color="neutral"
-                    variant="outline"
-                    @click="cancelConfirmReset"
-                />
-            </div>
-        </dialog>
+        <UModal v-model:open="confirmResetOpen" :title="$t('dialogConfirmResetTitle')">
+            <template #body>
+                <div v-html="$t('dialogConfirmResetNote')"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('dialogConfirmResetClose')"
+                        color="neutral"
+                        variant="outline"
+                        @click="cancelConfirmReset"
+                    />
+                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                </div>
+            </template>
+        </UModal>
 
-        <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
-            <h3>{{ state.buildInfoDialogTitle }}</h3>
-            <div class="contentBuildInfo">
-                <div class="dialogBuildInfoGrid-container" style="margin-top: 10px">
+        <UModal v-model:open="buildInfoOpen" :title="state.buildInfoDialogTitle" :ui="{ content: 'w-fit max-w-2xl' }">
+            <template #body>
+                <div class="dialogBuildInfoGrid-container">
                     <div v-for="option in state.sortedBuildOptions" :key="option" class="dialogBuildInfoGrid-item">
                         {{ option }}
                     </div>
                 </div>
-            </div>
-            <div class="dialogButtons">
-                <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
-            </div>
-        </dialog>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
+                </div>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -297,7 +299,7 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
@@ -384,6 +386,10 @@ const prepareDisarmFlags = function () {
         addArrayElementsAfter(elements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
     }
 
+    if (semver.gte(cfg.apiVersion, API_VERSION_1_48)) {
+        addArrayElementsAfter(elements, "POSHOLD", ["AUTOPILOT"]);
+    }
+
     // Build arming flags state instead of manipulating DOM
     const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
         const isLastBit = i === cfg.armingDisableCount - 1;
@@ -455,8 +461,8 @@ const updateExpertMode = (enabled) => {
 
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
-const dialogConfirmReset = ref(null);
-const dialogBuildInfo = ref(null);
+const confirmResetOpen = ref(false);
+const buildInfoOpen = ref(false);
 
 function resetZaxis() {
     yaw_fix.value = fcStore.sensorData.kinematics[2] * -1;
@@ -472,21 +478,15 @@ function onRebootBootloader() {
 }
 
 function showConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.showModal();
-    }
+    confirmResetOpen.value = true;
 }
 
 function cancelConfirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
 }
 
 function confirmReset() {
-    if (dialogConfirmReset.value) {
-        dialogConfirmReset.value.close();
-    }
+    confirmResetOpen.value = false;
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(t("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
@@ -497,9 +497,7 @@ function confirmReset() {
 }
 
 function closeBuildInfo() {
-    if (dialogBuildInfo.value) {
-        dialogBuildInfo.value.close();
-    }
+    buildInfoOpen.value = false;
 }
 
 const canvasWrapper = ref(null);
@@ -792,9 +790,7 @@ function openBuildOptionsDialog() {
     );
     state.buildInfoDialogTitle = t("initialSetupInfoBuildOptionList");
 
-    if (dialogBuildInfo.value && !dialogBuildInfo.value.hasAttribute("open")) {
-        dialogBuildInfo.value.showModal();
-    }
+    buildInfoOpen.value = true;
 }
 </script>
 
@@ -842,6 +838,11 @@ function openBuildOptionsDialog() {
     @media all and (max-width: 575px) {
         .setup-info-grid {
             grid-template-columns: 1fr;
+        }
+        .instruments-right {
+            position: static;
+            justify-content: center;
+            padding: 0.5rem 0 0.75rem;
         }
     }
     .system_info {

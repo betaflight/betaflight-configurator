@@ -98,6 +98,117 @@ function fileList(entries) {
     return `<ul class="file-list">${entries.map(fileListItem).join("")}</ul>`;
 }
 
+// The per-release web app lives at https://<major>-<minor>.app.betaflight.com
+// (CalVer, e.g. 2026.6.0-RC1 -> https://2026-6.app.betaflight.com). That scheme
+// begins with 2026.6; older releases have no such subdomain.
+const RELEASE_WEBAPP_MIN = { major: 2026, minor: 6 };
+
+// Parse a CalVer/SemVer tag ("2026.6.0", "2026.6.0-RC1", "v2026.6.0") into its
+// numeric parts plus an optional pre-release string.
+function parseVersion(tag) {
+    // Start-anchored with a bounded pre-release class to keep matching linear.
+    const match = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?/.exec(tag || "");
+    if (!match) {
+        return null;
+    }
+    return { major: Number(match[1]), minor: Number(match[2]), patch: Number(match[3]), pre: match[4] || null };
+}
+
+// SemVer pre-release comparison, natural within each dot identifier so RC10 > RC2.
+function comparePre(a, b) {
+    const chunks = (s) => s.match(/\d+|\D+/g) || [];
+    const ca = chunks(a);
+    const cb = chunks(b);
+    for (let i = 0; i < Math.max(ca.length, cb.length); i++) {
+        const x = ca[i];
+        const y = cb[i];
+        if (x === undefined) {
+            return -1;
+        }
+        if (y === undefined) {
+            return 1;
+        }
+        const xn = /^\d+$/.test(x);
+        const yn = /^\d+$/.test(y);
+        if (xn && yn) {
+            const d = Number(x) - Number(y);
+            if (d !== 0) {
+                return d;
+            }
+        } else if (x !== y) {
+            return x < y ? -1 : 1;
+        }
+    }
+    return 0;
+}
+
+// Returns >0 when a is the higher version. A final release outranks a
+// pre-release of the same major.minor.patch (SemVer precedence).
+function compareVersions(a, b) {
+    for (const key of ["major", "minor", "patch"]) {
+        if (a[key] !== b[key]) {
+            return a[key] - b[key];
+        }
+    }
+    if (!a.pre && b.pre) {
+        return 1;
+    }
+    if (a.pre && !b.pre) {
+        return -1;
+    }
+    if (!a.pre && !b.pre) {
+        return 0;
+    }
+    return comparePre(a.pre, b.pre);
+}
+
+// Highest-versioned release (CalVer/SemVer), regardless of publish order.
+function highestRelease(releases) {
+    let best = null;
+    for (const release of releases) {
+        const version = parseVersion(release.tag_name);
+        if (!version) {
+            continue;
+        }
+        if (!best || compareVersions(version, best.version) > 0) {
+            best = { release, version };
+        }
+    }
+    return best;
+}
+
+// Which web app the hero should point at. A final release is what
+// app.betaflight.com already serves, so link there; a pre-release (e.g. an RC)
+// gets its own versioned subdomain. Pre-releases predating the versioned scheme
+// have no subdomain, so no hero.
+function heroWebApp(top, releaseUrl) {
+    if (!top) {
+        return null;
+    }
+    if (!top.release.prerelease) {
+        return { url: releaseUrl };
+    }
+    const { major, minor } = top.version;
+    if (major * 1000 + minor < RELEASE_WEBAPP_MIN.major * 1000 + RELEASE_WEBAPP_MIN.minor) {
+        return null;
+    }
+    return { url: `https://${major}-${minor}.app.betaflight.com` };
+}
+
+function renderReleaseWebAppSection(top, hero) {
+    if (!top || !hero) {
+        return "";
+    }
+    const tag = escapeHtml(top.release.tag_name);
+    const host = escapeHtml(hero.url.replace(/^https:\/\//, ""));
+    return `
+            <section class="release-hero">
+                <h2>Betaflight App &mdash; ${tag}</h2>
+                <p><a class="hero-link" href="${escapeHtml(hero.url)}">Open the web app for this release &rarr;</a></p>
+                <p class="meta">Runs in your browser at ${host}</p>
+            </section>`;
+}
+
 function renderWebAppSection(masterUrl, releaseUrl) {
     return `
             <section>
@@ -118,8 +229,10 @@ function renderNightlySection(nightly) {
     ];
     const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
     const hasAndroid = Boolean(nightly?.android);
+    const tauriMobile = [nightly?.tauriAndroid].filter(Boolean);
+    const hasTauriMobile = tauriMobile.length > 0;
 
-    if (!nightly || (!hasDesktop && !hasAndroid)) {
+    if (!nightly || (!hasDesktop && !hasAndroid && !hasTauriMobile)) {
         return `
             <section>
                 <h2>Nightly build</h2>
@@ -133,6 +246,7 @@ function renderNightlySection(nightly) {
         .join("");
 
     const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
+    const tauriMobileBlock = hasTauriMobile ? `<h3>Mobile (Tauri)</h3>${fileList(tauriMobile)}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];
@@ -155,29 +269,107 @@ function renderNightlySection(nightly) {
                 ${meta}
                 ${platformBlocks}
                 ${androidBlock}
+                ${tauriMobileBlock}
             </section>`;
 }
 
-function renderLatestStableSection(latest) {
+// Map a release asset filename to a download platform bucket. Returns null for
+// anything that isn't a recognised installer (e.g. checksums, source archives),
+// which then only shows up under the "All files" list.
+function classifyAsset(name) {
+    const n = name.toLowerCase();
+    if (n.endsWith(".apk")) {
+        return "android";
+    }
+    if (n.endsWith(".exe") || n.endsWith(".msi")) {
+        return "windows";
+    }
+    if (n.endsWith(".dmg") || n.endsWith(".app.tar.gz")) {
+        if (/aarch64|arm64/.test(n)) {
+            return "macos-arm64";
+        }
+        if (/x64|x86_64|intel/.test(n)) {
+            return "macos-x64";
+        }
+        return "macos";
+    }
+    if (n.endsWith(".appimage") || n.endsWith(".deb") || n.endsWith(".rpm")) {
+        return "linux";
+    }
+    return null;
+}
+
+// Card order and labels. A generic "macOS" bucket only appears when a dmg
+// carries no arch token; the arch-specific buckets are preferred.
+const DOWNLOAD_PLATFORMS = [
+    { key: "windows", title: "Windows" },
+    { key: "macos-arm64", title: "macOS (Apple Silicon)" },
+    { key: "macos-x64", title: "macOS (Intel)" },
+    { key: "macos", title: "macOS" },
+    { key: "linux", title: "Linux" },
+    { key: "android", title: "Android" },
+];
+
+// Within a platform, surface the most broadly-installable format first: an
+// AppImage runs on any Linux, an .exe installer over an .msi.
+function downloadPriority(filename) {
+    const n = filename.toLowerCase();
+    const order = [".appimage", ".exe", ".dmg", ".apk", ".deb", ".rpm", ".msi"];
+    const idx = order.findIndex((ext) => n.endsWith(ext));
+    return idx === -1 ? order.length : idx;
+}
+
+// Normalise a GitHub release asset to the {filename, url, size} shape the
+// renderers use, dropping checksum files.
+function assetEntries(release) {
+    return (release.assets || [])
+        .filter((a) => !a.name.toLowerCase().endsWith(".sha256"))
+        .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
+}
+
+// Group asset entries into ordered platform sections. Unclassified assets fall
+// under a trailing "Other" section so nothing is hidden.
+function groupAssetsByPlatform(entries) {
+    const buckets = new Map();
+    for (const entry of entries) {
+        const key = classifyAsset(entry.filename) || "other";
+        if (!buckets.has(key)) {
+            buckets.set(key, []);
+        }
+        buckets.get(key).push(entry);
+    }
+    const sections = [];
+    for (const platform of [...DOWNLOAD_PLATFORMS, { key: "other", title: "Other" }]) {
+        const group = buckets.get(platform.key);
+        if (group) {
+            group.sort((a, b) => downloadPriority(a.filename) - downloadPriority(b.filename));
+            sections.push({ title: platform.title, entries: group });
+        }
+    }
+    return sections;
+}
+
+function renderDownloadSection(latest) {
     if (!latest) {
         return `
             <section>
-                <h2>Latest stable release</h2>
+                <h2>Download the app</h2>
                 <p class="empty">No stable releases found.</p>
             </section>`;
     }
 
-    const assets = (latest.assets || [])
-        .filter((a) => !a.name.endsWith(".sha256"))
-        .map((a) => ({ filename: a.name, url: a.browser_download_url, size: a.size }));
+    const entries = assetEntries(latest);
+    const blocks = groupAssetsByPlatform(entries)
+        .map((group) => `<h3>${escapeHtml(group.title)}</h3>${fileList(group.entries)}`)
+        .join("");
 
     const meta = `Released ${escapeHtml(formatDate(latest.published_at))} &middot; tag <a href="${escapeHtml(latest.html_url)}">${escapeHtml(latest.tag_name)}</a>`;
 
     return `
             <section>
-                <h2>Latest stable release</h2>
+                <h2>Download the app</h2>
                 <p class="meta">${meta}</p>
-                ${fileList(assets)}
+                ${blocks || fileList(entries)}
             </section>`;
 }
 
@@ -199,7 +391,7 @@ function renderReleaseHistorySection(releases) {
     const prereleaseCutoff = new Date();
     prereleaseCutoff.setMonth(prereleaseCutoff.getMonth() - PRERELEASE_VISIBILITY_MONTHS);
     const recent = releases
-        .map((r) => ({ release: r, assets: (r.assets || []).filter((a) => !a.name.endsWith(".sha256")) }))
+        .map((r) => ({ release: r, assets: (r.assets || []).filter((a) => !a.name.toLowerCase().endsWith(".sha256")) }))
         .filter(({ release, assets }) => {
             if (!release.published_at) {
                 return false;
@@ -231,12 +423,17 @@ function renderReleaseHistorySection(releases) {
     }
 
     const items = recent
-        .map(({ release, assets }) => {
-            const assetItems = assets
-                .map(
-                    (asset) =>
-                        `<li><a href="${escapeHtml(asset.browser_download_url)}">${escapeHtml(asset.name)}</a> <span class="size">${formatBytes(asset.size)}</span></li>`,
-                )
+        .map(({ release }) => {
+            const grouped = groupAssetsByPlatform(assetEntries(release))
+                .map((group) => {
+                    const files = group.entries
+                        .map(
+                            (e) =>
+                                `<li><a href="${escapeHtml(e.url)}">${escapeHtml(e.filename)}</a> <span class="size">${formatBytes(e.size)}</span></li>`,
+                        )
+                        .join("");
+                    return `<h4>${escapeHtml(group.title)}</h4><ul>${files}</ul>`;
+                })
                 .join("");
             const tag = escapeHtml(release.tag_name);
             const meta = [formatDate(release.published_at), release.prerelease ? "pre-release" : null]
@@ -249,7 +446,7 @@ function renderReleaseHistorySection(releases) {
                         <a href="${escapeHtml(release.html_url)}">${tag}</a>
                         <span class="release-meta">${meta}</span>
                     </summary>
-                    <ul>${assetItems}</ul>
+                    ${grouped}
                 </details>`;
         })
         .join("");
@@ -282,19 +479,23 @@ try {
     const masterUrl = args["master-url"] || "https://master.betaflight-app.pages.dev";
     const releaseUrl = args["release-url"] || "https://app.betaflight.com";
 
+    // Feature the highest-versioned release at the top: final releases link to
+    // app.betaflight.com, pre-releases to their own versioned subdomain.
+    const topRelease = highestRelease(publicReleases);
+    const hero = heroWebApp(topRelease, releaseUrl);
+
     const sections = [
+        renderReleaseWebAppSection(topRelease, hero),
         renderWebAppSection(masterUrl, releaseUrl),
+        renderDownloadSection(latestStable),
         renderNightlySection(manifest.nightly),
-        renderLatestStableSection(latestStable),
         renderReleaseHistorySection(publicReleases),
     ].join("\n");
 
     const templatePath = join(__dirname, "templates", "downloads-index.html");
     const template = readFileSync(templatePath, "utf8");
     const generatedAt = manifest.generatedAt || new Date().toISOString();
-    const html = template
-        .replace("<!--SECTIONS-->", sections)
-        .replace("<!--GENERATED_AT-->", escapeHtml(generatedAt));
+    const html = template.replace("<!--SECTIONS-->", sections).replace("<!--GENERATED_AT-->", escapeHtml(generatedAt));
 
     writeFileSync(join(outputDir, "index.html"), html);
 

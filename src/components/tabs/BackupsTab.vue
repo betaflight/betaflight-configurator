@@ -3,10 +3,9 @@
         <div class="content_wrapper grid-box col1">
             <div class="tab_title">{{ $t("tabBackups") }}</div>
             <!-- Loading State -->
-            <div v-if="isLoading" class="flex items-center justify-center py-16">
-                <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin text-[var(--color-primary-500)]" />
+            <TabLoadingState v-if="isLoading">
                 <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
-            </div>
+            </TabLoadingState>
 
             <template v-else>
                 <!-- Message from API (e.g. membership info) -->
@@ -40,17 +39,21 @@
                                         >
                                             {{ $t("actionDownload") }}
                                         </UButton>
-                                        <UButton
-                                            v-if="isConnected"
-                                            size="xs"
-                                            variant="soft"
-                                            color="success"
-                                            icon="i-lucide-upload"
-                                            :disabled="isRestoreBusy"
-                                            @click="restoreBackup(row.original)"
-                                        >
-                                            {{ $t("actionRestore") }}
-                                        </UButton>
+                                        <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                                            <span>
+                                                <UButton
+                                                    size="xs"
+                                                    variant="soft"
+                                                    color="success"
+                                                    icon="i-lucide-upload"
+                                                    :disabled="!isConnected || isRestoreBusy"
+                                                    :class="{ 'pointer-events-none': !isConnected }"
+                                                    @click="restoreBackup(row.original)"
+                                                >
+                                                    {{ $t("actionRestore") }}
+                                                </UButton>
+                                            </span>
+                                        </UTooltip>
                                         <UButton
                                             size="xs"
                                             variant="soft"
@@ -100,63 +103,87 @@
             </Dialog>
 
             <!-- Restore progress dialog -->
-            <dialog ref="restoreProgressDialogRef" class="w-[320px] h-fit p-6" @cancel.prevent>
-                <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
-                <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
-                <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
-            </dialog>
+            <UModal :open="restoreProgressOpen" :close="false" :dismissible="false" :ui="{ content: 'w-[320px]' }">
+                <template #body>
+                    <div class="text-lg mb-2" v-html="$t('userBackupRestoreInProgress')"></div>
+                    <div class="text-sm text-dimmed" v-html="$t('presetsPleaseWait')"></div>
+                    <UProgress :model-value="restoreProgress" :max="100" class="mt-3" />
+                </template>
+            </UModal>
 
             <!-- Restore errors dialog -->
-            <dialog
-                ref="restoreErrorsDialogRef"
-                class="w-[600px] max-w-[calc(100vw-2rem)] h-fit p-6"
-                @close="handleRestoreErrorsClose"
-                @cancel.prevent
+            <UModal
+                :open="restoreErrorsOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ content: 'w-[600px] max-w-[calc(100vw-2rem)]' }"
             >
-                <div class="text-lg mb-2" v-html="$t('userBackupRestoreErrors')"></div>
-                <div class="backups_cli_background">
-                    <div class="backups_cli_window">
-                        <template v-for="(failure, idx) in restoreErrors" :key="idx">
-                            <div>{{ failure.command }}</div>
-                            <div
-                                v-for="(line, lineIdx) in failure.response"
-                                :key="lineIdx"
-                                :class="{ error_message: line.startsWith('###ERROR') }"
-                            >
-                                {{ line }}
-                            </div>
-                        </template>
+                <template #title>
+                    <span v-html="$t('userBackupRestoreErrors')"></span>
+                </template>
+                <template #body>
+                    <div class="backups_cli_background">
+                        <div class="backups_cli_window">
+                            <template v-for="(failure, idx) in restoreErrors" :key="idx">
+                                <div>{{ failure.command }}</div>
+                                <div
+                                    v-for="(line, lineIdx) in failure.response"
+                                    :key="lineIdx"
+                                    :class="{ error_message: line.startsWith('###ERROR') }"
+                                >
+                                    {{ line }}
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2 justify-end mt-3">
-                    <UButton :label="$t('presetsButtonCancel')" variant="outline" @click="closeRestoreErrors(false)" />
-                    <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
-                </div>
-            </dialog>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton
+                            :label="$t('presetsButtonCancel')"
+                            variant="outline"
+                            @click="closeRestoreErrors(false)"
+                        />
+                        <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
+                    </div>
+                </template>
+            </UModal>
         </div>
 
         <!-- Bottom toolbar -->
-        <div v-if="isConnected" class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
             <div class="flex-1"></div>
-            <UButton @click="createBackup" size="sm" icon="i-lucide-save">
-                {{ $t("actionBackup") }}
-            </UButton>
+            <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                <span>
+                    <UButton
+                        size="sm"
+                        icon="i-lucide-save"
+                        :disabled="!isConnected"
+                        :class="{ 'pointer-events-none': !isConnected }"
+                        @click="createBackup"
+                    >
+                        {{ $t("actionBackup") }}
+                    </UButton>
+                </span>
+            </UTooltip>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import Dialog from "../elements/Dialog.vue";
+import TabLoadingState from "../elements/TabLoadingState.vue";
 import loginManager from "@/js/LoginManager";
 import { gui_log } from "@/js/gui_log";
 import { useConnectionStore } from "@/stores/connection";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
     cancelScheduledReconnect,
+    isConnectionClosedError,
     isMspCliSupported,
     saveAndReconnect,
     scheduleReconnect,
@@ -180,8 +207,6 @@ const restoreProgressOpen = ref(false);
 const restoreErrors = ref([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
-const restoreProgressDialogRef = ref(null);
-const restoreErrorsDialogRef = ref(null);
 let userApi = null;
 let unsubscribeLogin = null;
 let unsubscribeLogout = null;
@@ -371,7 +396,12 @@ async function restoreBackup(backup) {
 
     const fileLines = text.split(/\r?\n/);
     const hasDefaultsPrefix = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
-    const commands = hasDefaultsPrefix ? fileLines : ["defaults nosave", "", ...fileLines];
+    // A `diff all` / `dump` backup ends with a `save`, which reboots the FC. Replaying it
+    // inside the batch reboots the FC mid-batch and the `save` response times out, surfacing
+    // as a spurious "CLI errors" warning on every restore. Drop it and let saveAndReconnect()
+    // persist and reconnect after the batch (it already tolerates the reboot timeout).
+    const withoutSave = fileLines.filter((line) => line.trim().toLowerCase() !== "save");
+    const commands = hasDefaultsPrefix ? withoutSave : ["defaults nosave", "", ...withoutSave];
 
     restoreProgress.value = 0;
     restoreProgressOpen.value = true;
@@ -402,6 +432,7 @@ async function restoreBackup(backup) {
 function closeRestoreErrors(saveAnyway) {
     restoreSavePressed.value = saveAnyway;
     restoreErrorsOpen.value = false;
+    handleRestoreErrorsClose();
 }
 
 async function handleRestoreErrorsClose() {
@@ -416,35 +447,14 @@ async function handleRestoreErrorsClose() {
     try {
         await cliSession.send("exit");
     } catch (error) {
-        console.error("Failed to send exit:", error);
+        // `exit` reboots the FC; the port closing before it replies is expected, not a failure.
+        if (!isConnectionClosedError(error)) {
+            console.error("Failed to send exit:", error);
+        }
     } finally {
         scheduleReconnect();
     }
 }
-
-watch(restoreProgressOpen, async (isOpen) => {
-    await nextTick();
-    if (!restoreProgressDialogRef.value) {
-        return;
-    }
-    if (isOpen && !restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.showModal();
-    } else if (!isOpen && restoreProgressDialogRef.value.open) {
-        restoreProgressDialogRef.value.close();
-    }
-});
-
-watch(restoreErrorsOpen, async (isOpen) => {
-    await nextTick();
-    if (!restoreErrorsDialogRef.value) {
-        return;
-    }
-    if (isOpen && !restoreErrorsDialogRef.value.open) {
-        restoreErrorsDialogRef.value.showModal();
-    } else if (!isOpen && restoreErrorsDialogRef.value.open) {
-        restoreErrorsDialogRef.value.close();
-    }
-});
 
 async function deleteBackup(backupId) {
     const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));

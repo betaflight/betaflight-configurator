@@ -173,30 +173,6 @@ class CapacitorFile {
             throw error;
         }
     }
-
-    // -----------------------------------------------------------
-    // Hex string helpers (same as CapacitorSerial)
-    // -----------------------------------------------------------
-
-    hexStringToUint8Array(hexString) {
-        if (!hexString || hexString.length === 0) {
-            return new Uint8Array(0);
-        }
-        if (hexString.length & 1) {
-            throw new Error(`Hex string has odd length: ${hexString.length}`);
-        }
-        const bytes = new Uint8Array(hexString.length / 2);
-        for (let i = 0; i < hexString.length; i += 2) {
-            bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
-        }
-        return bytes;
-    }
-
-    uint8ArrayToHexString(uint8Array) {
-        return Array.from(uint8Array)
-            .map((byte) => byte.toString(16).padStart(2, "0"))
-            .join("");
-    }
 }
 
 export default new CapacitorFile();

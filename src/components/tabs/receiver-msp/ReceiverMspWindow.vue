@@ -30,6 +30,7 @@
                     :min="CHANNEL_MIN_VALUE"
                     :max="CHANNEL_MAX_VALUE"
                     v-model.number="stickValues[`Aux${i}`]"
+                    :aria-label="t(`controlAxisAux${i}`)"
                     class="slider"
                 />
                 <span class="tooltip">{{ stickValues[`Aux${i}`] }}</span>
@@ -49,6 +50,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from "vue";
+import { clamp } from "@/js/utils/common";
 
 // i18n from parent window
 const i18n = globalThis.opener?.i18n;
@@ -97,7 +99,7 @@ function channelValueToStickPortion(channel) {
 }
 
 function stickPortionToChannelValue(portion) {
-    return Math.round(Math.min(Math.max(portion, 0), 1) * (CHANNEL_MAX_VALUE - CHANNEL_MIN_VALUE) + CHANNEL_MIN_VALUE);
+    return Math.round(clamp(portion, 0, 1) * (CHANNEL_MAX_VALUE - CHANNEL_MIN_VALUE) + CHANNEL_MIN_VALUE);
 }
 
 function startGimbalDrag(gimbalIndex, event) {

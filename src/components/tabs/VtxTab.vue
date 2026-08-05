@@ -368,8 +368,9 @@
                 </UDropdownMenu>
             </UFieldGroup>
             <UButton
-                :label="saveButtonOverride || $t('vtxButtonSave')"
+                :label="$t('vtxButtonSave')"
                 :disabled="saveButtonDisabled"
+                :loading="isSaving"
                 @click="handleSave"
             />
         </div>
@@ -387,6 +388,7 @@ import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
 import { useTranslation } from "i18next-vue";
 
 export default defineComponent({
@@ -413,7 +415,6 @@ export default defineComponent({
             powerLevelList,
             deviceReady,
             vtxTypeString,
-            saveButtonText,
             saveButtonDisabled,
             vtxSupported,
             vtxTableNotConfigured,
@@ -437,8 +438,7 @@ export default defineComponent({
         } = useVtx();
 
         const { addInterval } = useInterval();
-
-        const saveButtonOverride = computed(() => saveButtonText.value || "");
+        const { isSaving, runSave } = useSaving();
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },
@@ -504,9 +504,18 @@ export default defineComponent({
             GUI.content_ready();
         });
 
-        const handleSave = () => {
-            saveVtx();
-        };
+        const handleSave = () =>
+            runSave(
+                async () => {
+                    await saveVtx();
+                    await loadVtxConfig();
+                },
+                {
+                    onError: (error) => {
+                        console.error("Error saving VTX configuration:", error);
+                    },
+                },
+            );
 
         // --- VTX Table count setters (with change tracking) ---
 
@@ -647,7 +656,7 @@ export default defineComponent({
             deviceReady,
             vtxTypeString,
             saveButtonDisabled,
-            saveButtonOverride,
+            isSaving,
 
             // Computed
             vtxSupported,

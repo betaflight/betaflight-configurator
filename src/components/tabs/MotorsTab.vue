@@ -314,7 +314,7 @@
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
                                         <span
-                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
+                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
                                                 'bg-[#e24761]': axis === 'x',
                                                 'bg-[#49c747]': axis === 'y',
@@ -326,7 +326,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623]"
+                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
@@ -465,28 +465,44 @@
             </div>
 
             <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged" class="w-[400px] h-fit">
-                <div class="p-4">
-                    <div class="mb-4" v-html="warningMessage"></div>
-                    <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
-                </div>
-            </dialog>
+            <UModal
+                v-model:open="settingsChangedOpen"
+                :close="false"
+                :dismissible="false"
+                :ui="{ content: 'w-[400px]' }"
+            >
+                <template #body>
+                    <div v-html="warningMessage"></div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
+                    </div>
+                </template>
+            </UModal>
 
             <!-- Dynamic Notch Filters Dialog -->
-            <dialog id="dialog-dyn-filters" ref="dialogDynFilters" class="w-[400px] h-fit">
-                <div class="p-4">
-                    <div class="font-semibold mb-2" v-html="$t('dialogDynFiltersChangeTitle')"></div>
-                    <div class="mb-4" v-html="$t('dialogDynFiltersChangeNote')"></div>
-                    <div class="flex gap-2">
-                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
+            <UModal
+                v-model:open="dialogDynFiltersOpen"
+                :title="$t('dialogDynFiltersChangeTitle')"
+                :close="false"
+                :dismissible="false"
+                :ui="{ content: 'w-[400px]' }"
+            >
+                <template #body>
+                    <div v-html="$t('dialogDynFiltersChangeNote')"></div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
                         <UButton
                             :label="$t('presetsWarningDialogNoButton')"
                             variant="outline"
                             @click="closeDynFiltersDialog"
                         />
+                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
                     </div>
-                </div>
-            </dialog>
+                </template>
+            </UModal>
         </div>
 
         <!-- Fixed Bottom Toolbar -->
@@ -501,7 +517,8 @@
                 <UButton
                     :label="$t('configurationButtonSave')"
                     :disabled="buttonStates.saveDisabled"
-                    @click="saveAndReboot(true)"
+                    :loading="isSaving"
+                    @click="handleSave(true)"
                 />
             </div>
         </div>
@@ -531,6 +548,8 @@ import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
 import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguration";
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
+import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -541,32 +560,36 @@ const dialog = useDialog();
 const motorsState = useMotorsState();
 const { configHasChanged, resetChanges } = motorsState;
 
+// Shared save discipline: runSave owns isSaving and swallows benign MspCancelledError.
+const { isSaving, runSave } = useSaving();
+const { saveToEeprom, saveAndReboot } = useReboot();
+
 // Warning dialog
-const dialogSettingsChanged = ref(null);
+const settingsChangedOpen = ref(false);
 const warningMessage = ref("");
 
 const showWarningDialog = (message) => {
     warningMessage.value = message;
-    dialogSettingsChanged.value?.showModal();
+    settingsChangedOpen.value = true;
 };
 
 const closeWarningDialog = () => {
-    dialogSettingsChanged.value?.close();
+    settingsChangedOpen.value = false;
 };
 
 // Dynamic notch filter dialog
-const dialogDynFilters = ref(null);
+const dialogDynFiltersOpen = ref(false);
 const previousDshotBidir = ref(false);
 const dshotBidirInitialized = ref(false);
 const previousFilterDynQ = ref(null);
 const previousFilterDynCount = ref(null);
 
 const showDynFiltersDialog = () => {
-    dialogDynFilters.value?.showModal();
+    dialogDynFiltersOpen.value = true;
 };
 
 const closeDynFiltersDialog = () => {
-    dialogDynFilters.value?.close();
+    dialogDynFiltersOpen.value = false;
 };
 
 const applyDynFiltersChange = () => {
@@ -1337,54 +1360,59 @@ const openEscDshotDirectionDialog = () => {
 };
 
 // Action Toolbar Buttons
-const saveAndReboot = async (reboot = true) => {
+const handleSave = (reboot = true) => {
     // Don't save if no changes
     if (!configHasChanged.value) {
         return;
     }
 
-    try {
-        // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
-        // This prevents motors from spinning after reboot due to DShot beacon commands
-        if (motorsTestingEnabled.value) {
-            motorsTestingEnabled.value = false;
-            // Give a small delay for motor testing disable to complete
-            await new Promise((resolve) => setTimeout(resolve, 50));
-        }
+    return runSave(
+        async () => {
+            // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
+            // This prevents motors from spinning after reboot due to DShot beacon commands
+            if (motorsTestingEnabled.value) {
+                motorsTestingEnabled.value = false;
+                // Give a small delay for motor testing disable to complete
+                await new Promise((resolve) => setTimeout(resolve, 50));
+            }
 
-        // Explicitly stop all motors to ensure no spinning after reboot
-        stopAllMotors(minSliderValue.value);
-        // Give time for motor stop command to be processed
-        await new Promise((resolve) => setTimeout(resolve, 100));
+            // Explicitly stop all motors to ensure no spinning after reboot
+            stopAllMotors(minSliderValue.value);
+            // Give time for motor stop command to be processed
+            await new Promise((resolve) => setTimeout(resolve, 100));
 
-        // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
-        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
-        // Send all motor configuration changes in sequence
-        await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+            // Send all motor configuration changes in sequence
+            await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
-        // Send analytics if there were changes tracked
-        if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-            tracking.sendSaveAndChangeEvents(
-                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                motorsState.analyticsChanges.value,
-                "motors",
-            );
-        }
+            // Persist to EEPROM, rebooting when requested.
+            if (reboot) {
+                await saveAndReboot();
+            } else {
+                await saveToEeprom();
+            }
 
-        // Reset state (clears changes and updates defaults)
-        resetChanges();
+            // Only after a successful persist: record analytics and refresh the dirty baseline.
+            if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
+                tracking.sendSaveAndChangeEvents(
+                    tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+                    motorsState.analyticsChanges.value,
+                    "motors",
+                );
+            }
 
-        // Save to EEPROM and optionally reboot
-        mspHelper.writeConfiguration(reboot);
-    } catch (error) {
-        console.error("[Motors] Save failed:", error);
-    }
+            // Reset state (clears changes and updates defaults)
+            resetChanges();
+        },
+        { onError: (error) => console.error("[Motors] Save failed:", error) },
+    );
 };
 
 const stopMotors = () => {

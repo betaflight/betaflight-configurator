@@ -6,8 +6,11 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
+import { useReboot } from "../useReboot";
 
 export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
+    const { saveAndReboot } = useReboot();
+
     const getEnabledFeaturesFromPorts = (portsList) => {
         const flags = {
             rxSerial: false,
@@ -98,9 +101,7 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         updateFeatures();
 
         const saveEeprom = () => {
-            mspHelper.writeConfiguration(true, () => {
-                gui_log(i18n.getMessage("portsEepromSave"));
-            });
+            saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
         };
 
         mspHelper.sendSerialConfig(() => {

@@ -83,14 +83,16 @@ describe("PresetDetailsDialog", () => {
 
         await nextTick();
 
-        const htmlBlock = wrapper.container.querySelector('[data-testid="preset-html-description"]');
+        // UModal teleports its body/footer to document.body, so query the document
+        // rather than the mount container.
+        const htmlBlock = document.querySelector('[data-testid="preset-html-description"]');
         expect(htmlBlock.innerHTML).toContain("<h1");
         expect(htmlBlock.querySelector("a").getAttribute("target")).toBe("_blank");
-        const discussionBtn = wrapper.container.querySelector('[data-testid="preset-discussion-link"]');
+        const discussionBtn = document.querySelector('[data-testid="preset-discussion-link"]');
         expect(discussionBtn).toBeTruthy();
         expect(discussionBtn.hasAttribute("href")).toBe(false);
 
-        const checkbox = wrapper.container.querySelector('input[type="checkbox"]');
+        const checkbox = document.querySelector('input[type="checkbox"]');
         checkbox.checked = false;
         checkbox.dispatchEvent(new Event("change"));
 

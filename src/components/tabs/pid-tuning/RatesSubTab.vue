@@ -19,7 +19,9 @@
 
             <!-- Rate Setup Table -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[4rem_repeat(3,4rem)_4rem] gap-x-1 gap-y-1 items-center min-w-0">
+                <div
+                    class="grid grid-cols-[4rem_repeat(3,4rem)_4rem] gap-x-1 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center">{{ rcRateLabel }}</div>
@@ -313,6 +315,7 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
+import { degToRad } from "@/js/utils/common";
 import semver from "semver";
 import { API_VERSION_1_47 } from "@/js/data_storage";
 import betaflightLogo from "@/images/rate_logos/betaflight.svg";
@@ -358,7 +361,6 @@ let lastTimestamp = 0;
 let keepRendering = true;
 
 // API Version helpers
-const hasProfileNames = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45));
 const hasThrottleHover = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47));
 
 // Rates Type
@@ -949,6 +951,10 @@ function updateRatesLabels() {
 
     const maxRate = Math.max(maxAngularVels.roll, maxAngularVels.pitch, maxAngularVels.yaw);
 
+    // Round up to the nearest 200 like the curve layer does, so the stick-position
+    // dots use the same vertical scale as the curve they sit on.
+    const maxRateRounded = rateCurve.setMaxAngularVel(maxRate);
+
     // Calculate scaling exactly like master
     const curveHeight = canvas.height;
     const curveWidth = canvas.width;
@@ -1039,6 +1045,12 @@ function updateRatesLabels() {
     // Add current RC stick values on the left side (like master)
     // Calculate stick values first, then add to balloons array AFTER sorting
     if (FC.RC && FC.RC.channels && FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
+        // Draw the stick-position dots in the unscaled coordinate space so they line up
+        // with the rate curve (drawn without the horizontal textScale) instead of being
+        // squeezed toward the left edge. maxRateRounded matches the curve's vertical scale.
+        ctx.save();
+        ctx.scale(1 / textScale, 1);
+
         // Calculate current stick angular velocities
         const currentRollRate = rateCurve.drawStickPosition(
             FC.RC.channels[0],
@@ -1048,7 +1060,7 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.deadband,
             rates.roll_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#FF8080",
         );
@@ -1061,7 +1073,7 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.deadband,
             rates.pitch_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#80FF80",
         );
@@ -1074,10 +1086,12 @@ function updateRatesLabels() {
             rates.superexpo,
             rates.yawDeadband,
             rates.yaw_rate_limit,
-            maxRate,
+            maxRateRounded,
             ctx,
             "#8080FF",
         );
+
+        ctx.restore();
 
         // Sort right-side balloons first (like master)
         balloons.sort((a, b) => b.value - a.value);
@@ -1607,7 +1621,6 @@ function renderModel(timestamp) {
     // Only rotate when we have valid RC channel data
     if (channels?.[0] && channels?.[1] && channels?.[2]) {
         const rates = getCurrentRatesSnapshot();
-        const degToRad = (deg) => deg * (Math.PI / 180);
 
         const roll =
             (delta / 1000) *

@@ -247,7 +247,12 @@
             <!-- <div class="btn save_btn">
                 <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
             </div> -->
-            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveConfig"
+            />
         </div>
     </BaseTab>
 </template>
@@ -268,12 +273,13 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
-import { bit_check, bit_clear, bit_set } from "../../js/bit";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -293,6 +299,9 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
+
+        const { isSaving, runSave } = useSaving();
+        const { saveAndReboot } = useReboot();
 
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
@@ -359,7 +368,7 @@ export default defineComponent({
 
         const serializeGpsTabState = () =>
             JSON.stringify({
-                featureMask: fcStore.features?.features?._featureMask ?? 0,
+                gpsFeatureEnabled: fcStore.features?.features?.isEnabled?.("GPS") ?? false,
                 provider: gpsConfig.provider,
                 auto_baud: gpsConfig.auto_baud,
                 auto_config: gpsConfig.auto_config,
@@ -425,25 +434,23 @@ export default defineComponent({
         const showLoadMap = computed(() => isOnline.value && showMap.value);
 
         const gpsFeatures = computed(() => {
-            if (!fcStore.features?.features?._features) {
+            if (!fcStore.features?.features?.getFeatures?.()) {
                 return [];
             }
-            return fcStore.features.features._features.filter((feature) => feature.group === "gps");
+            return fcStore.features.features.getFeatures().filter((feature) => feature.group === "gps");
         });
 
         const isFeatureEnabled = (feature) => {
-            if (!fcStore.features?.features) return false;
-            return bit_check(fcStore.features.features._featureMask, feature.bit);
+            return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!fcStore.features?.features) return;
-            if (checked) {
-                fcStore.features.features._featureMask = bit_set(fcStore.features.features._featureMask, feature.bit);
-            } else {
-                fcStore.features.features._featureMask = bit_clear(fcStore.features.features._featureMask, feature.bit);
+            const featuresHelper = fcStore.features?.features;
+            if (!featuresHelper) {
+                return;
             }
-            updateTabList(fcStore.features.features);
+            featuresHelper.updateData({ name: feature.name, checked });
+            updateTabList(featuresHelper);
         };
 
         const setLayer = (layerKey) => {
@@ -743,15 +750,24 @@ export default defineComponent({
             }
         };
 
-        const saveConfig = async () => {
-            Object.assign(fcStore.gpsConfig, gpsConfig);
+        const saveConfig = () =>
+            runSave(
+                async () => {
+                    Object.assign(fcStore.gpsConfig, gpsConfig);
 
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_FEATURE_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                    );
+                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
-            mspHelper.writeConfiguration(true);
-            gpsTabBaseline.value = serializeGpsTabState();
-        };
+                    await saveAndReboot();
+
+                    // Only after a successful persist: refresh the dirty baseline.
+                    gpsTabBaseline.value = serializeGpsTabState();
+                },
+                { onError: (e) => console.error("Failed to save GPS configuration", e) },
+            );
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;
@@ -843,6 +859,7 @@ export default defineComponent({
             toggleFullscreen,
             checkConnectivity,
             saveConfig,
+            isSaving,
             dirty,
             onGpsProtocolChange,
             loadingBarsUrl,

@@ -8,7 +8,9 @@ const MAX_BATTERY_PROFILES = 3;
 const INITIAL_CONFIG = {
     apiVersion: "0.0.0",
     flightControllerIdentifier: "",
-    flightControllerVersion: "",
+    // Valid semver default so consumers (e.g. CLI autocomplete) that call semver.*
+    // on it before MSP_FC_VERSION arrives don't throw "Invalid Version".
+    flightControllerVersion: "0.0.0",
     version: 0,
     buildInfo: "",
     buildKey: "",

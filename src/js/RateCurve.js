@@ -107,14 +107,21 @@ const RateCurve = function (useLegacyCurve) {
             context.fillStyle = stickColor || "#000000";
 
             context.translate(context.canvas.width / 2, context.canvas.height / 2);
+
+            // The canvas is drawn at a fixed square resolution but displayed at a
+            // non-square aspect ratio, which would stretch a plain circle horizontally.
+            // Compress the horizontal radius by the display aspect ratio so the
+            // indicator renders as a round dot.
+            const radius = context.canvas.height / DEFAULT_SIZE;
+            const { clientWidth, clientHeight } = context.canvas;
+            const aspect = clientWidth && clientHeight ? clientHeight / clientWidth : 1;
+
             context.beginPath();
-            context.arc(
-                rcData - 1500,
-                -rateScaling * currentValue,
-                context.canvas.height / DEFAULT_SIZE,
-                0,
-                2 * Math.PI,
-            );
+            if (context.ellipse) {
+                context.ellipse(rcData - 1500, -rateScaling * currentValue, radius * aspect, radius, 0, 0, 2 * Math.PI);
+            } else {
+                context.arc(rcData - 1500, -rateScaling * currentValue, radius, 0, 2 * Math.PI);
+            }
             context.fill();
             context.restore();
         }

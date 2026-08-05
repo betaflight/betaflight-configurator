@@ -16,10 +16,9 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <div v-if="!tabReady || isLoading" class="flex items-center justify-center py-16">
-                    <UIcon name="i-lucide-loader-circle" class="size-8 animate-spin text-muted" />
+                <TabLoadingState v-if="!tabReady || isLoading" size="size-8" color-class="text-muted">
                     <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
-                </div>
+                </TabLoadingState>
 
                 <!-- Desktop: grid table -->
                 <div v-else-if="isDesktop" class="mt-4">
@@ -183,6 +182,7 @@ import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import TabLoadingState from "@/components/elements/TabLoadingState.vue";
 import { useTranslation } from "i18next-vue";
 import { usePortsRules } from "../../composables/ports/usePortsRules";
 import { usePortsState } from "../../composables/ports/usePortsState";

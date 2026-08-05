@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import semver from "semver";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
 import "../../../src/js/injected_methods";
@@ -47,6 +48,45 @@ describe("MspHelper", () => {
 
             expect(FC.CONFIG.mspProtocolVersion).toEqual(mspProtocolVersion);
             expect(FC.CONFIG.apiVersion).toEqual(`${apiVersionMajor}.${apiVersionMinor}.0`);
+        });
+        it("keeps a valid default apiVersion when MSP_API_VERSION payload is empty (MSP corruption)", () => {
+            // An empty/truncated payload makes readU8() return null, which would
+            // otherwise build the unparseable "null.null.0" and make every downstream
+            // semver comparison throw "Invalid Version".
+            mspHelper.process_data({
+                code: MSPCodes.MSP_API_VERSION,
+                dataView: new DataView(new Uint8Array([]).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.CONFIG.apiVersion).not.toContain("null");
+            expect(FC.CONFIG.apiVersion).toEqual("0.0.0"); // unchanged default
+            expect(semver.valid(FC.CONFIG.apiVersion)).not.toBeNull();
+        });
+        it("keeps a valid default apiVersion when MSP_API_VERSION payload is truncated (MSP corruption)", () => {
+            // Only the protocol-version byte present, major/minor missing -> "X.null.null".
+            mspHelper.process_data({
+                code: MSPCodes.MSP_API_VERSION,
+                dataView: new DataView(new Uint8Array([42]).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.CONFIG.apiVersion).not.toContain("null");
+            expect(FC.CONFIG.apiVersion).toEqual("0.0.0");
+            expect(semver.valid(FC.CONFIG.apiVersion)).not.toBeNull();
+        });
+        it("does not let a corrupt MSP_API_VERSION throw in a downstream semver comparison", () => {
+            mspHelper.process_data({
+                code: MSPCodes.MSP_API_VERSION,
+                dataView: new DataView(new Uint8Array([]).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            // Mirrors the guard in serial_backend.js after the MSP_API_VERSION callback.
+            expect(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)).not.toThrow();
         });
         it("handles MSP_PIDNAMES correctly", () => {
             let pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];

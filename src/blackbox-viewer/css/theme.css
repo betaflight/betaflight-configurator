@@ -1,0 +1,41 @@
+/**
+ * Theme bridge for the embedded blackbox viewer.
+ *
+ * The viewer's own UI/canvas code references a handful of variable names (--surface-0,
+ * --text-primary, --border-color, --graph-*, ...). Rather than define its own palette, we
+ * alias those names onto the host configurator's theme variables (--surface-*, --text,
+ * --primary-*) so the viewer inherits the app's exact colours and dark mode automatically.
+ *
+ * Variables the configurator already provides (--primary-*, --surface-*, --error-*, --text)
+ * are intentionally NOT redefined here — they cascade in from the host.
+ */
+
+.blackbox-viewer-root {
+    /* Surfaces / text — alias viewer names onto the app theme */
+    --surface-0: var(--surface-50);
+    --text-primary: var(--text);
+    --text-secondary: var(--surface-800);
+    --text-inverse: var(--surface-50);
+
+    /* UI chrome */
+    --border-color: var(--surface-300);
+    --button-text: #000;
+    --input-bg: var(--surface-50);
+    --input-border: var(--surface-300);
+    --input-border-focus: var(--primary-500);
+
+    /* Graph/canvas colours read by theme_colors.js (the plot stays a dark surface) */
+    --graph-background: #2a2a2a;
+    --graph-grid: rgba(255, 255, 255, 0.15);
+    --graph-text: rgba(255, 255, 255, 0.9);
+    --graph-text-secondary: rgba(255, 255, 255, 0.65);
+    --graph-axis: rgba(255, 255, 255, 0.5);
+}
+
+.blackbox-viewer-root.dark {
+    --graph-background: #1a1a1a;
+    --graph-grid: rgba(255, 255, 255, 0.2);
+    --graph-text: rgba(255, 255, 255, 0.95);
+    --graph-text-secondary: rgba(255, 255, 255, 0.75);
+    --graph-axis: rgba(255, 255, 255, 0.6);
+}

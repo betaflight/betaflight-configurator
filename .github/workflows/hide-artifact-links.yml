@@ -4,6 +4,9 @@ on:
   pull_request_target:
     types: [synchronize, reopened]
 
+permissions:
+  pull-requests: write
+
 jobs:
   hide-artifacts-link-comments:
     name: Hide artifact links

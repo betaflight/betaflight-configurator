@@ -19,21 +19,30 @@ import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
+import { MspCancelledError } from "./msp/mspErrors.js";
+
+window.addEventListener("unhandledrejection", (event) => {
+    if (event.reason instanceof MspCancelledError) {
+        event.preventDefault();
+    }
+});
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
     Capacitor.isLoggingEnabled = false;
 }
 
-import("./msp/debug/msp_debug_tools.js")
-    .then(() => {
-        console.log("🔧 MSP Debug Tools loaded for development environment");
-        console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
-        console.log("• Use MSPTestRunner.help() for all commands");
-    })
-    .catch((err) => {
-        console.warn("Failed to load MSP debug tools:", err);
-    });
+if (import.meta.env.DEV) {
+    import("./msp/debug/msp_debug_tools.js")
+        .then(() => {
+            console.log("🔧 MSP Debug Tools loaded for development environment");
+            console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
+            console.log("• Use MSPTestRunner.help() for all commands");
+        })
+        .catch((err) => {
+            console.warn("Failed to load MSP debug tools:", err);
+        });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     appReady();

@@ -267,7 +267,7 @@
                 @click="openCalibrationManager"
                 variant="soft"
             />
-            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" @click="handleSave" />
+            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" :loading="isSaving" @click="handleSave" />
         </div>
 
         <!-- Calibration Manager Dialog -->
@@ -377,6 +377,7 @@ import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
 import { useInterval } from "../../composables/useInterval";
+import { useSaving } from "../../composables/useSaving";
 
 export default defineComponent({
     name: "PowerTab",
@@ -482,9 +483,20 @@ export default defineComponent({
 
         // Interval cleanup handled automatically by useInterval on unmount
 
-        const handleSave = () => {
-            saveConfig(() => loadData());
-        };
+        const { isSaving, runSave } = useSaving();
+
+        const handleSave = () =>
+            runSave(
+                async () => {
+                    await saveConfig();
+                    await loadData();
+                },
+                {
+                    onError: (error) => {
+                        console.error("Error saving power configuration:", error);
+                    },
+                },
+            );
 
         const openCalibrationManager = () => {
             sourceschanged.value = false;
@@ -550,6 +562,7 @@ export default defineComponent({
             openCalibrationManager,
             calibrationVisibility,
             handleSave,
+            isSaving,
             vbatcalibrationValue,
             amperagecalibrationValue,
             vbatscalechanged,

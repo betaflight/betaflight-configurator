@@ -6,16 +6,7 @@
             <SponsorTile ref="sponsorTile" sponsor-type="flash" />
 
             <!-- Sub-tab navigation -->
-            <div class="subtab-nav">
-                <UTabs
-                    :items="subtabItems"
-                    :model-value="activeFlasherStep"
-                    :content="false"
-                    color="primary"
-                    variant="link"
-                    @update:model-value="activeFlasherStep = $event"
-                />
-            </div>
+            <SubtabNav :items="subtabItems" v-model="activeFlasherStep" />
 
             <!-- Tab content -->
             <div class="flasher-tab-area">
@@ -48,6 +39,7 @@
                     :on-erase-chip-change="handleEraseChipChange"
                     :on-flash-manual-baud-change="handleFlashManualBaudChange"
                     :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
+                    :on-restore-backup="handleRestoreBackup"
                 />
             </div>
         </div>
@@ -89,65 +81,44 @@
             </UFieldGroup>
         </div>
 
-        <dialog
-            ref="unstableFirmwareDialog"
-            id="dialogUnstableFirmwareAcknowledgement"
-            @close="handleUnstableFirmwareDialogClose"
-        >
-            <h3>{{ $t("warningTitle") }}</h3>
-            <div class="content">
+        <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
+            <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
                         :aria-label="$t('unstableFirmwareAcknowledgement')"
                     />
                     <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
                 </div>
-            </div>
-            <div class="dialog_toolbar">
-                <div class="btn">
-                    <a
-                        :class="['regular-button', { disabled: !state.dialogUnstableFirmwareAcknowledgementCheckbox }]"
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-flashbtn"
-                        @click.prevent="handleUnstableFirmwareFlash"
-                        >{{ $t("unstableFirmwareAcknowledgementFlash") }}</a
-                    >
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton :label="$t('cancel')" variant="outline" @click="handleUnstableFirmwareCancel" />
+                    <UButton
+                        :label="$t('unstableFirmwareAcknowledgementFlash')"
+                        :disabled="!state.dialogUnstableFirmwareAcknowledgementCheckbox"
+                        @click="handleUnstableFirmwareFlash"
+                    />
                 </div>
-                <div class="btn">
-                    <a
-                        href="#"
-                        id="dialogUnstableFirmwareAcknowledgement-cancelbtn"
-                        class="regular-button"
-                        @click.prevent="handleUnstableFirmwareCancel"
-                        >{{ $t("cancel") }}</a
-                    >
-                </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
 
-        <dialog ref="verifyBoardDialog" id="dialog-verify-board" @close="handleVerifyBoardDialogClose">
-            <div id="dialog-verify-board-content-wrapper">
-                <div ref="verifyBoardContent" id="dialog-verify-board-content"></div>
-                <div class="btn dialog-buttons">
-                    <a
-                        href="#"
-                        id="dialog-verify-board-abort-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardAbort"
-                        >{{ $t("firmwareFlasherButtonAbort") }}</a
-                    >
-                    <a
-                        href="#"
-                        id="dialog-verify-board-continue-confirmbtn"
-                        class="regular-button"
-                        @click.prevent="handleVerifyBoardContinue"
-                        >{{ $t("firmwareFlasherButtonContinue") }}</a
-                    >
+        <UModal v-model:open="verifyBoardOpen" :close="false" :dismissible="false">
+            <template #body>
+                <div v-html="verifyBoardContentHtml"></div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end gap-2 w-full">
+                    <UButton
+                        :label="$t('firmwareFlasherButtonAbort')"
+                        variant="outline"
+                        @click="handleVerifyBoardAbort"
+                    />
+                    <UButton :label="$t('firmwareFlasherButtonContinue')" @click="handleVerifyBoardContinue" />
                 </div>
-            </div>
-        </dialog>
+            </template>
+        </UModal>
     </BaseTab>
 </template>
 
@@ -165,11 +136,12 @@ import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
 import BuildApi from "../../js/BuildApi";
 import { tracking } from "../../js/Analytics";
-import PortHandler from "../../js/port_handler";
+import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
 import FileSystem from "../../js/FileSystem";
-import AutoBackup from "../../js/utils/AutoBackup.js";
+import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup.js";
+import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
@@ -177,6 +149,7 @@ import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
+import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
@@ -190,6 +163,7 @@ export default defineComponent({
         SponsorTile,
         FlasherBoardBuildTab,
         FlasherFlashTab,
+        SubtabNav,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -275,19 +249,22 @@ export default defineComponent({
             flashingInProgress: false,
             lastFlashResultText: "",
             lastFlashResultClass: "",
+            // Restore-backup lifecycle (post-flash)
+            restoreInProgress: false,
+            restoreCompleted: false,
         });
 
         // Sponsor component ref
         const sponsorTile = ref(null);
 
         // Verify board dialog refs
-        const verifyBoardDialog = ref(null);
-        const verifyBoardContent = ref(null);
+        const verifyBoardOpen = ref(false);
+        const verifyBoardContentHtml = ref("");
         const verifyBoardOnAcceptCallback = ref(null);
         const verifyBoardOnAbortCallback = ref(null);
 
         // Unstable firmware dialog refs
-        const unstableFirmwareDialog = ref(null);
+        const unstableFirmwareOpen = ref(false);
         const unstableFirmwareAcknowledgementCallback = ref(null);
 
         let dfuMonitorInterval = null;
@@ -340,9 +317,9 @@ export default defineComponent({
         };
 
         const updateDfuExitButtonState = () => {
-            const selectedPort = PortHandler.portPicker?.selectedPort || "";
-            const hasDfuPortSelected = typeof selectedPort === "string" && selectedPort.startsWith("usb");
-            enableDfuExitButton(PortHandler.dfuAvailable || hasDfuPortSelected);
+            const selectedDevice = DeviceHandler.devicePicker?.selectedDevice || "";
+            const hasDfuPortSelected = typeof selectedDevice === "string" && selectedDevice.startsWith("usb");
+            enableDfuExitButton(DeviceHandler.dfuAvailable || hasDfuPortSelected);
         };
 
         const flashingMessage = (message, type) => {
@@ -405,12 +382,16 @@ export default defineComponent({
             state.flashProgressValue = 0;
             state.flashingInProgress = false;
             GUI.flashingInProgress = false;
-            enableFlashButton(!!firmwareFlashing.getParsedHex() || !!firmwareFlashing.getUf2Binary());
+            enableFlashButton(
+                !!firmwareFlashing.getParsedHex() ||
+                    !!firmwareFlashing.getUf2Binary() ||
+                    !!firmwareFlashing.getEspBinary(),
+            );
             updateDfuExitButtonState();
             enableLoadRemoteFileButton(true);
             enableLoadFileButton(true);
 
-            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary()) {
+            if (firmwareFlashing.getParsedHex() || firmwareFlashing.getUf2Binary() || firmwareFlashing.getEspBinary()) {
                 if (state.preFlashingMessage && state.preFlashingMessageType) {
                     flashingMessage(state.preFlashingMessage, state.preFlashingMessageType);
                 }
@@ -461,6 +442,10 @@ export default defineComponent({
             state.localFirmwareLoaded = false;
             state.filename = null;
             clearLoadedFirmwareInfo();
+            // NOTE: Do not reset the backup here. After a serial flash the board
+            // reboots and the device-removed event calls clearBufferedFirmware(),
+            // which would wipe the backup needed by the post-flash restore button.
+            // The backup is reset when a new flash begins (handleFlashFirmware).
         };
 
         const showLoadedFirmware = (filename, bytes) => {
@@ -1001,8 +986,8 @@ export default defineComponent({
                 logHead,
             });
 
-            EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
-            EventBus.$on("port-handler:device-removed", onDeviceRemoved);
+            EventBus.$on("device-handler:auto-select-usb-device", detectedUsbDevice);
+            EventBus.$on("device-handler:device-removed", onDeviceRemoved);
 
             // Store references for proper cleanup in onBeforeUnmount
             eventListenerRefs = { detectedUsbDevice, onDeviceRemoved };
@@ -1062,8 +1047,8 @@ export default defineComponent({
                 return;
             }
 
-            EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
-            EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+            EventBus.$off("device-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+            EventBus.$off("device-handler:device-removed", eventListenerRefs.onDeviceRemoved);
             eventListenerRefs = null;
         };
 
@@ -1103,7 +1088,7 @@ export default defineComponent({
                 $t("stm32DfuPermissionRequired"),
                 async () => {
                     try {
-                        const device = await PortHandler.dfuProtocol.requestPermission();
+                        const device = await DeviceHandler.dfuProtocol.requestPermission();
                         if (!device) {
                             onCancel();
                         }
@@ -1170,7 +1155,7 @@ export default defineComponent({
             const callBackWhenPortAvailable = function () {
                 const startTime = Date.now();
                 const interval = setInterval(() => {
-                    if (PortHandler.portAvailable) {
+                    if (DeviceHandler.portAvailable) {
                         clearInterval(interval);
                         callback();
                     } else if (Date.now() - startTime > 5000) {
@@ -1209,20 +1194,8 @@ export default defineComponent({
         };
 
         const showAcknowledgementDialog = async (acknowledgementCallback) => {
-            await nextTick();
-
-            if (!unstableFirmwareDialog.value) {
-                console.error("Dialog element not found");
-                return;
-            }
-
             unstableFirmwareAcknowledgementCallback.value = acknowledgementCallback;
-            unstableFirmwareDialog.value.showModal();
-        };
-
-        const handleUnstableFirmwareDialogClose = () => {
-            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = true;
         };
 
         const initiateFlashing = async () => {
@@ -1286,6 +1259,15 @@ export default defineComponent({
             const response = await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
             if (response) {
                 state.targetDetail.file = response.file;
+            }
+        };
+
+        const commitPendingCustomDefines = () => {
+            const input = document.querySelector("#customDefinesInfo input");
+            const tags = input?.value?.trim().split(/\s+/).filter(Boolean) ?? [];
+
+            if (tags.length > 0) {
+                state.customDefinesTags = [...new Set([...state.customDefinesTags, ...tags])];
             }
         };
 
@@ -1489,8 +1471,8 @@ export default defineComponent({
         };
 
         // DFU permission request — moved here from the global ConnectButton dropdown
-        const showDfuButton = PortHandler.showUsbOption;
-        const handleRequestDfuPermission = () => PortHandler.requestDevicePermission("usb");
+        const showDfuButton = DeviceHandler.showUsbOption;
+        const handleRequestDfuPermission = () => DeviceHandler.requestDevicePermission("usb");
 
         // Click event handlers for buttons
         const handleExitDfu = async () => {
@@ -1510,9 +1492,14 @@ export default defineComponent({
                 return;
             }
 
+            // Reset any previous backup cache before starting a new flash
+            resetLastBackupData();
+
             state.progressLabelText = "";
             state.lastFlashResultText = "";
             state.lastFlashResultClass = "";
+            state.restoreInProgress = false;
+            state.restoreCompleted = false;
             state.flashingInProgress = true;
             GUI.flashingInProgress = true;
             activeFlasherStep.value = "flash";
@@ -1523,8 +1510,8 @@ export default defineComponent({
                 firmwareType: state.firmware_type,
                 filename: state.filename,
                 flashOnConnect: state.flashOnConnect,
-                portAvailable: PortHandler.portAvailable,
-                dfuAvailable: PortHandler.dfuAvailable,
+                portAvailable: DeviceHandler.portAvailable,
+                dfuAvailable: DeviceHandler.dfuAvailable,
                 preservePreFlashingState,
                 enableFlashButton,
                 enableDfuExitButton,
@@ -1577,6 +1564,7 @@ export default defineComponent({
             }
 
             if (state.targetDetail) {
+                commitPendingCustomDefines();
                 activeFlasherStep.value = "flash";
                 await nextTick();
                 flashingMessage($t("firmwareFlasherButtonDownloading"), FLASH_MESSAGE_TYPES.NEUTRAL);
@@ -1648,7 +1636,11 @@ export default defineComponent({
             state.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [".hex", ".uf2"]);
+                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [
+                    ".hex",
+                    ".uf2",
+                    ".bin",
+                ]);
 
                 if (!file) {
                     enableLoadRemoteFileButton(true);
@@ -1658,7 +1650,7 @@ export default defineComponent({
 
                 const extension = getExtension(file.name);
 
-                if (extension === "uf2") {
+                if (extension === "uf2" || extension === "bin") {
                     const data = await FileSystem.readFileAsBlob(file);
                     await processFirmwareFile(file, extension, data);
                 } else if (extension === "hex") {
@@ -1680,12 +1672,14 @@ export default defineComponent({
                 return;
             }
 
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareOpen.value = false;
 
-            if (unstableFirmwareAcknowledgementCallback.value) {
-                unstableFirmwareAcknowledgementCallback.value();
+            const acknowledgementCallback = unstableFirmwareAcknowledgementCallback.value;
+            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
+            unstableFirmwareAcknowledgementCallback.value = null;
+
+            if (acknowledgementCallback) {
+                acknowledgementCallback();
             }
 
             await startFlashing().catch((error) => {
@@ -1695,48 +1689,108 @@ export default defineComponent({
 
         const handleUnstableFirmwareCancel = () => {
             state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            if (unstableFirmwareDialog.value) {
-                unstableFirmwareDialog.value.close();
-            }
+            unstableFirmwareAcknowledgementCallback.value = null;
+            unstableFirmwareOpen.value = false;
         };
 
         const handleVerifyBoardAbort = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAbortCallback.value) {
-                verifyBoardOnAbortCallback.value();
+            verifyBoardOpen.value = false;
+            const onAbort = verifyBoardOnAbortCallback.value;
+            verifyBoardOnAcceptCallback.value = null;
+            verifyBoardOnAbortCallback.value = null;
+            if (onAbort) {
+                onAbort();
             }
         };
 
         const handleVerifyBoardContinue = () => {
-            if (verifyBoardDialog.value) {
-                verifyBoardDialog.value.close();
-            }
-
-            if (verifyBoardOnAcceptCallback.value) {
-                verifyBoardOnAcceptCallback.value();
+            verifyBoardOpen.value = false;
+            const onAccept = verifyBoardOnAcceptCallback.value;
+            verifyBoardOnAcceptCallback.value = null;
+            verifyBoardOnAbortCallback.value = null;
+            if (onAccept) {
+                onAccept();
             }
         };
 
-        const handleVerifyBoardDialogClose = () => {
-            verifyBoardOnAcceptCallback.value = null;
-            verifyBoardOnAbortCallback.value = null;
+        // Handle restore backup functionality
+        const handleRestoreBackup = async () => {
+            // Check if there's a backup available
+            const backupData = getLastBackupData();
+            if (!backupData) {
+                dialog.openInfo(
+                    $t("warningTitle"),
+                    $t("firmwareFlasherNoBackupAvailable"),
+                    () => {}, // Empty callback to satisfy onConfirm requirement
+                );
+                return;
+            }
+
+            // Check if firmware version supports MSP CLI (4.5.4+)
+            // Note: We check the API version directly in AutoRestore.execute() for more accuracy
+            // This check is for user experience to show an info dialog before the operation
+            // But we still let the operation proceed since it will be verified in AutoRestore
+
+            // Confirmation dialog
+            dialog.openYesNo(
+                $t("firmwareFlasherRestoreBackupTitle"),
+                $t("firmwareFlasherRestoreBackupConfirm"),
+                async () => {
+                    // Parse backup content into CLI lines
+                    const fileLines = backupData.split(/\r?\n/).map((line) => line.trim());
+
+                    // Prepend "defaults nosave" if not present
+                    const hasDefaultsNoSave = fileLines.some((line) => line.trim().toLowerCase() === "defaults nosave");
+                    const cliLines = hasDefaultsNoSave ? fileLines : ["defaults nosave", ...fileLines];
+
+                    // Set connect lock to prevent tab switching interference
+                    GUI.connect_lock = true;
+                    state.restoreInProgress = true;
+
+                    // Open wait dialog
+                    dialog.openWait($t("firmwareFlasherRestoreBackupTitle"), null);
+
+                    // Execute restore
+                    AutoRestore.execute(cliLines, (result) => {
+                        dialog.close();
+                        GUI.connect_lock = false;
+                        state.restoreInProgress = false;
+
+                        if (result.success) {
+                            // Hide the restore button — restore already applied and saved.
+                            state.restoreCompleted = true;
+                            if (result.skipped > 0) {
+                                gui_log($t("firmwareFlasherRestoreBackupSuccessSkipped", { count: result.skipped }));
+                            } else {
+                                gui_log($t("firmwareFlasherRestoreBackupSuccess"));
+                            }
+                        } else {
+                            const errorMsg = result.errors || "Unknown error";
+                            gui_log($t("firmwareFlasherRestoreBackupFailed", { 1: errorMsg }));
+                            dialog.openInfo(
+                                $t("warningTitle"),
+                                $t("firmwareFlasherRestoreBackupFailed", { 1: errorMsg }),
+                                () => {}, // onConfirm — openInfo's 3rd arg must be a callback, not options
+                            );
+                        }
+                    });
+                },
+                () => {
+                    // No-op for "No" click
+                },
+            );
         };
 
         const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
-            if (verifyBoardContent.value) {
-                verifyBoardContent.value.innerHTML = $t("firmwareFlasherVerifyBoard", {
-                    selected_board: selected,
-                    verified_board: verified,
-                });
-            }
+            verifyBoardContentHtml.value = $t("firmwareFlasherVerifyBoard", {
+                selected_board: selected,
+                verified_board: verified,
+            });
 
-            if (verifyBoardDialog.value && !verifyBoardDialog.value.hasAttribute("open")) {
+            if (!verifyBoardOpen.value) {
                 verifyBoardOnAcceptCallback.value = onAccept;
                 verifyBoardOnAbortCallback.value = onAbort;
-                verifyBoardDialog.value.showModal();
+                verifyBoardOpen.value = true;
             }
         };
 
@@ -1815,9 +1869,9 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             // Template refs
             sponsorTile,
-            verifyBoardDialog,
-            verifyBoardContent,
-            unstableFirmwareDialog,
+            verifyBoardOpen,
+            verifyBoardContentHtml,
+            unstableFirmwareOpen,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
@@ -1855,10 +1909,9 @@ export default defineComponent({
             showDfuButton,
             handleUnstableFirmwareFlash,
             handleUnstableFirmwareCancel,
-            handleUnstableFirmwareDialogClose,
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
-            handleVerifyBoardDialogClose,
+            handleRestoreBackup,
             saveFirmware,
         };
     },
@@ -1868,10 +1921,6 @@ export default defineComponent({
 <style scoped lang="less">
 .tab-firmware_flasher {
     min-height: 100%;
-
-    .subtab-nav {
-        margin-bottom: 6px;
-    }
 
     .flasher-tab-area {
         min-height: 200px;

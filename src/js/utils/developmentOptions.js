@@ -1,5 +1,5 @@
 import { set as setConfig } from "../ConfigStorage.js";
-import PortHandler from "../port_handler.js";
+import DeviceHandler from "../device_handler.js";
 
 /**
  * Default values for development options (disabled state)
@@ -22,7 +22,7 @@ export const ENABLED_DEVELOPMENT_OPTIONS = {
 };
 
 /**
- * Apply development options to config and PortHandler
+ * Apply development options to config and DeviceHandler
  * @param {Object} options - Development options to apply
  * @param {boolean} [options.showVirtualMode]
  * @param {boolean} [options.showManualMode]
@@ -33,15 +33,15 @@ export function applyDevelopmentOptions(options) {
     // Save to config storage
     setConfig(options);
 
-    // Update PortHandler reactive properties using setter methods
+    // Update DeviceHandler reactive properties using setter methods
     if (options.showVirtualMode !== undefined) {
-        PortHandler.setShowVirtualMode(options.showVirtualMode);
+        DeviceHandler.setShowVirtualMode(options.showVirtualMode);
     }
     if (options.showManualMode !== undefined) {
-        PortHandler.setShowManualMode(options.showManualMode);
+        DeviceHandler.setShowManualMode(options.showManualMode);
     }
     if (options.showAllSerialDevices !== undefined) {
-        PortHandler.setShowAllSerialDevices(options.showAllSerialDevices);
+        DeviceHandler.setShowAllSerialDevices(options.showAllSerialDevices);
     }
 }
 

@@ -17,20 +17,23 @@
                         />
                         <HelpIcon :text="$t('pidTuningSliderModeHelp')" />
                     </div>
-                    <div class="flex justify-between flex-1 text-xs text-dimmed">
-                        <span>{{ $t("pidTuningSliderLow") }}</span>
-                        <span>{{ $t("pidTuningSliderDefault") }}</span>
-                        <span>{{ $t("pidTuningSliderHigh") }}</span>
+                    <div class="flex justify-between flex-1 text-[10px] sm:text-xs text-dimmed">
+                        <span class="whitespace-nowrap">{{ $t("pidTuningSliderLow") }}</span>
+                        <span class="max-sm:hidden whitespace-nowrap">{{ $t("pidTuningSliderDefault") }}</span>
+                        <span class="whitespace-nowrap">{{ $t("pidTuningSliderHigh") }}</span>
                     </div>
                     <HelpIcon :text="$t('pidTuningPidSlidersHelp')" />
                 </div>
 
                 <!-- Basic Sliders -->
                 <div
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderDGainDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDGainSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningDGainSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
                     <USlider
                         v-model="sliderDGain"
@@ -45,10 +48,13 @@
                 </div>
 
                 <div
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderPIGainDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPIGainSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningPIGainSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
                     <USlider
                         v-model="sliderPIGain"
@@ -63,10 +69,13 @@
                 </div>
 
                 <div
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderFFGainDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningResponseSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningResponseSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
                     <USlider
                         v-model="sliderFeedforwardGain"
@@ -86,10 +95,13 @@
                 <!-- Advanced Sliders -->
                 <div
                     v-show="showDMaxSlider"
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': dMaxSliderDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningDMaxGainSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningDMaxGainSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
                     <USlider
                         v-model="sliderDMaxGain"
@@ -105,10 +117,13 @@
 
                 <div
                     v-show="showIGainSlider"
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': iGainSliderDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningIGainSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningIGainSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
                     <USlider
                         v-model="sliderIGain"
@@ -124,11 +139,11 @@
 
                 <div
                     v-show="showRPRatioSlider"
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': rpRatioSliderDisabled }"
                 >
                     <div
-                        class="min-w-32 text-right text-xs shrink-0"
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
                         v-html="$t('pidTuningRollPitchRatioSlider')"
                     ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
@@ -146,10 +161,13 @@
 
                 <div
                     v-show="showPitchPISlider"
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': pitchPISliderDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningPitchPIGainSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningPitchPIGainSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
                     <USlider
                         v-model="sliderPitchPIGain"
@@ -165,10 +183,13 @@
 
                 <div
                     v-show="showMasterSlider"
-                    class="flex items-center gap-3 py-1"
+                    class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': masterSliderDisabled }"
                 >
-                    <div class="min-w-32 text-right text-xs shrink-0" v-html="$t('pidTuningMasterSlider')"></div>
+                    <div
+                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        v-html="$t('pidTuningMasterSlider')"
+                    ></div>
                     <span class="min-w-10 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
                     <USlider
                         v-model="sliderMasterMultiplier"
@@ -200,7 +221,9 @@
 
             <!-- PID Table -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[3rem_repeat(5,minmax(4rem,auto))] gap-x-3 gap-y-1 items-center min-w-0">
+                <div
+                    class="grid grid-cols-[3rem_repeat(5,minmax(4rem,1fr))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
                     <!-- Header -->
                     <div></div>
                     <div class="flex items-center justify-center gap-0.5 text-xs">
@@ -393,7 +416,9 @@
 
             <!-- BARO, MAG, GPS Optional PIDs -->
             <UiBox v-if="showAllLocal && hasBaroMagGpsPids" type="neutral">
-                <div class="grid grid-cols-[3rem_repeat(3,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
+                <div
+                    class="grid grid-cols-[3rem_repeat(3,minmax(4rem,1fr))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center" v-html="$t('pidTuningProportional')"></div>
@@ -565,7 +590,9 @@
 
             <!-- Angle/Horizon Section -->
             <UiBox type="neutral">
-                <div class="grid grid-cols-[4rem_repeat(2,4rem)] gap-x-2 gap-y-1 items-center min-w-0">
+                <div
+                    class="grid grid-cols-[4rem_repeat(2,minmax(4rem,1fr))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
                     <!-- Header -->
                     <div></div>
                     <div class="text-xs text-center">{{ $t("pidTuningStrength") }}</div>

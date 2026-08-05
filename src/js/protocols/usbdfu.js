@@ -22,6 +22,7 @@ import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
 
 // Error constant used when an already-authorized DFU device isn't found
@@ -109,10 +110,10 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    // Backward-compatible getter: port_handler.js checks WEBUSBDFU.usbDevice
+    // Backward-compatible getter: device_handler.js checks WEBUSBDFU.usbDevice
     // to determine if a DFU device is currently connected.
     get usbDevice() {
-        return this.transport.getConnectedPort() ? true : null;
+        return this.transport.getConnectedDevice() ? true : null;
     }
 
     getDevices() {
@@ -144,8 +145,8 @@ export class UsbDfuProtocol extends EventTarget {
         throw new DFUAuthRequiredError();
     }
 
-    getConnectedPort() {
-        return this.transport.getConnectedPort();
+    getConnectedDevice() {
+        return this.transport.getConnectedDevice();
     }
 
     async connect(devicePath, hex, options, callback) {
@@ -231,6 +232,12 @@ export class UsbDfuProtocol extends EventTarget {
             .catch((error) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
+                // A SecurityError from open() means the OS refused access to the device node.
+                // On Linux that is a missing udev rule for the bootloader's vendor ID, which the
+                // bare "failed to open" message gives no clue about.
+                if (error?.name === "SecurityError" && getOS() === "Linux") {
+                    gui_log(i18n.getMessage("usbDeviceUdevNotice"));
+                }
                 this.cleanup();
             });
     }
@@ -356,8 +363,10 @@ export class UsbDfuProtocol extends EventTarget {
                 return;
             }
 
-            // Keep this for new MCU debugging
-            // console.log('Descriptors: ' + descriptors);
+            // Log the raw memory-layout descriptor strings the device reported.
+            // These come from the on-chip bootloader (ST ROM for STM32C5/H5), so this is
+            // the fastest way to diagnose a new MCU whose layout string we don't yet handle.
+            console.log(`${this.logHead} DFU memory descriptors:`, descriptors);
             const parseDescriptor = (str) => {
                 // F303: "@Internal Flash  /0x08000000/128*0002Kg"
                 // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
@@ -401,6 +410,13 @@ export class UsbDfuProtocol extends EventTarget {
                 }
 
                 if (!tmp1[0].startsWith("@")) {
+                    return null;
+                }
+
+                // Need at least "@type", start address and a sector list. A truncated
+                // string such as "@Truncated /0x1FFF0000" would otherwise dereference
+                // tmp1[2] (undefined) below and throw.
+                if (tmp1.length < 3 || typeof tmp1[2] !== "string") {
                     return null;
                 }
 
@@ -457,10 +473,27 @@ export class UsbDfuProtocol extends EventTarget {
                 };
                 return memory;
             };
-            const chipInfo = descriptors.map(parseDescriptor).reduce((o, v) => {
-                o[v.type.toLowerCase().replace(" ", "_")] = v;
+            // Parse each descriptor defensively: a single unrecognized memory-layout
+            // string (common on brand-new silicon such as the STM32C5 ROM bootloader)
+            // must not throw and abort the whole flash. Skip the ones we can't parse
+            // and keep the regions we understand.
+            const chipInfo = descriptors.reduce((o, str) => {
+                let memory = null;
+                try {
+                    memory = parseDescriptor(str);
+                } catch (error) {
+                    // Belt-and-suspenders: never let a parser exception on one malformed
+                    // string abort chip detection for the whole device.
+                    console.warn(`${this.logHead} Error parsing memory descriptor "${str}":`, error);
+                }
+                if (!memory) {
+                    console.warn(`${this.logHead} Skipping unparseable memory descriptor: "${str}"`);
+                    return o;
+                }
+                o[memory.type.toLowerCase().replace(" ", "_")] = memory;
                 return o;
             }, {});
+            console.log(`${this.logHead} Detected memory regions:`, Object.keys(chipInfo));
             callback(chipInfo, resultCode);
         });
     }
@@ -521,24 +554,72 @@ export class UsbDfuProtocol extends EventTarget {
         }
     }
 
-    // routine calling DFU_CLRSTATUS until device is in dfuIDLE state
-    clearStatus(callback) {
+    // Routine that brings the device back to dfuIDLE before the next operation.
+    //
+    // Per the DFU spec, the request needed depends on the current state:
+    //   - dfuERROR                      -> DFU_CLRSTATUS
+    //   - dfuDNLOAD_IDLE / dfuUPLOAD_IDLE -> DFU_ABORT
+    //   - busy/sync/manifest states      -> just poll GETSTATUS until it settles
+    // The old code always sent DFU_CLRSTATUS. Older ST/AT32/GD32 bootloaders tolerate a
+    // CLRSTATUS issued outside dfuERROR, but the STM32C5 ROM correctly STALLs it, which
+    // aborted the flash right at the start of the verify phase (device was in dfuDNLOAD_IDLE
+    // after writing). Sending the spec-correct request fixes C5 and stays valid elsewhere.
+    //
+    // Exception: some H7 bootloaders (H743 Rev.V, e.g. KAKUTEH7) wedge in dfuDNBUSY after a
+    // page erase and never settle, so polling alone hangs. STM32CubeProgrammer unsticks them
+    // with an undocumented CLRSTATUS pair: the first answers errUNKNOWN/dfuERROR, the second
+    // OK/dfuIDLE. Only callers that have already waited out the reported poll timeout ask for
+    // that (busyIsStuck) — everyone else keeps polling, so a strict bootloader is never sent a
+    // CLRSTATUS it would STALL, and maxAttempts stays the backstop.
+    /**
+     * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
+     * @param {boolean} [busyIsStuck=false] - Caller already waited out the device-reported poll
+     *   timeout, so a dfuDNBUSY read means wedged rather than working.
+     * @returns {void}
+     */
+    clearStatus(callback, busyIsStuck = false) {
+        // Bound the retries so an unexpected/never-idling bootloader state surfaces as an
+        // error instead of looping forever (a failed GETSTATUS returns an empty buffer, which
+        // otherwise spins tightly since data[4] is undefined and the reported delay is 0).
+        const maxAttempts = 100;
+        let attempts = 0;
+
         const check_status = () => {
             this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                const state = data[4];
                 let delay = 0;
+                if (data.length) {
+                    delay = data[1] | (data[2] << 8) | (data[3] << 16);
+                }
 
-                if (data[4] === this.state.dfuIDLE) {
+                if (state === this.state.dfuIDLE) {
                     callback(data);
+                } else if (++attempts >= maxAttempts) {
+                    console.log(
+                        `${this.logHead} clearStatus: device did not reach dfuIDLE after ${maxAttempts} attempts (state: ${state})`,
+                    );
+                    this.flashingMessage(
+                        i18n.getMessage("stm32ProgrammingFailed"),
+                        this.options?.flashMessageTypes?.INVALID,
+                    );
+                    this.cleanup();
+                } else if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuUPLOAD_IDLE) {
+                    setTimeout(() => this.controlTransfer("out", this.request.ABORT, 0, 0, 0, 0, check_status), delay);
+                } else if (
+                    state === this.state.dfuERROR ||
+                    // Wedged: the first CLRSTATUS reports dfuERROR, which this then clears to dfuIDLE.
+                    (busyIsStuck && state === this.state.dfuDNBUSY)
+                ) {
+                    setTimeout(
+                        () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status),
+                        delay,
+                    );
                 } else {
-                    if (data.length) {
-                        delay = data[1] | (data[2] << 8) | (data[3] << 16);
-                    }
-                    setTimeout(clear_status, delay);
+                    // Busy/sync/manifest state (or an empty/failed status read): wait and re-poll.
+                    setTimeout(check_status, delay);
                 }
             });
         };
-
-        const clear_status = () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status);
 
         check_status();
     }
@@ -706,7 +787,10 @@ export class UsbDfuProtocol extends EventTarget {
                                 this.leave();
                             } else {
                                 this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
-                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize || 2048;
+                                    // Never let a missing/zero wTransferSize into the write loop
+                                    // (it would stall or divide the payload into empty blocks).
+                                    const reportedSize = resultCode ? 0 : descriptor?.wTransferSize;
+                                    this.transferSize = reportedSize > 0 ? reportedSize : 2048;
                                     console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
                                     this.clearStatus(() => {
                                         this.upload_procedure(nextAction);
@@ -719,16 +803,15 @@ export class UsbDfuProtocol extends EventTarget {
                 break;
             case 1: {
                 if (typeof this.chipInfo.option_bytes === "undefined") {
-                    console.log(`${this.logHead} Failed to detect option bytes`);
-
-                    // For GD32H7xx(could not read option bytes info): Skip read protection check if option_bytes descriptor doesn't exist
-                    if (this.connectedDevice?.productName === "GD32-USB_DFU") {
-                        console.log(`${this.logHead} GD32H7 DFU Bootloader detected, skipping read protection check`);
-                        this.upload_procedure(2);
-                        break;
-                    }
-
-                    this.cleanup();
+                    // Some bootloaders (e.g. the STM32C5 ROM) don't expose an "@Option Bytes"
+                    // DFU alternate setting, so we can't run the read-protection pre-check.
+                    // Skip straight to erase instead of aborting: a non-read-protected chip
+                    // flashes fine, and a protected one surfaces errVENDOR during erase (handled).
+                    // Falling through here previously dereferenced the missing option_bytes and
+                    // threw inside an async callback, hanging the flash silently.
+                    console.log(`${this.logHead} No option bytes region; skipping read-protection check`);
+                    this.upload_procedure(2);
+                    break;
                 }
 
                 const unprotect = () => {
@@ -967,14 +1050,9 @@ export class UsbDfuProtocol extends EventTarget {
                                 setTimeout(() => {
                                     this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                                         if (data[4] === this.state.dfuDNBUSY) {
-                                            //
-                                            // H743 Rev.V (probably other H7 Rev.Vs also) remains in dfuDNBUSY state after the specified delay time.
-                                            // STM32CubeProgrammer deals with behavior with an undocumented procedure as follows.
-                                            //     1. Issue DFU_CLRSTATUS, which ends up with (14,10) = (errUNKNOWN, dfuERROR)
-                                            //     2. Issue another DFU_CLRSTATUS which delivers (0,2) = (OK, dfuIDLE)
-                                            //     3. Treat the current erase successfully finished.
-                                            // Here, we call clarStatus to get to the dfuIDLE state.
-                                            //
+                                            // H743 Rev.V (probably other H7 Rev.Vs also) stays in
+                                            // dfuDNBUSY past the reported delay. clearStatus()
+                                            // unsticks it; the erase itself already completed.
                                             console.log(
                                                 `${this.logHead} erase_page: dfuDNBUSY after timeout, clearing`,
                                             );
@@ -1002,7 +1080,7 @@ export class UsbDfuProtocol extends EventTarget {
                                                         }
                                                     },
                                                 );
-                                            });
+                                            }, true);
                                         } else if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                             erase_page_next();
                                         } else {

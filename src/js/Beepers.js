@@ -58,20 +58,24 @@ class Beepers {
         self._beeperDisabledMask = beeperDisabledMask;
     }
     isEnabled(beeperName) {
-        const self = this;
+        const beeper = this._beepers.find((b) => b.name === beeperName);
 
-        for (let i = 0; i < self._beepers.length; i++) {
-            if (self._beepers[i].name === beeperName && bit_check(self._beeperOfMask, self._beepers[i].bit)) {
-                return true;
+        return beeper ? !bit_check(this._beeperDisabledMask, beeper.bit) : false;
+    }
+    setEnabled(beeperName, enabled) {
+        const beeper = this._beepers.find((b) => b.name === beeperName);
+
+        if (beeper) {
+            if (enabled) {
+                this._beeperDisabledMask = bit_clear(this._beeperDisabledMask, beeper.bit);
+            } else {
+                this._beeperDisabledMask = bit_set(this._beeperDisabledMask, beeper.bit);
             }
         }
-        return false;
     }
     generateElements(template, destination) {
-        const self = this;
-
-        for (let i = 0; i < self._beepers.length; i++) {
-            if (self._beepers[i].visible) {
+        for (let i = 0; i < this._beepers.length; i++) {
+            if (this._beepers[i].visible) {
                 const element = template.cloneNode(true);
                 destination.appendChild(element);
 
@@ -81,17 +85,17 @@ class Beepers {
 
                 if (inputElement) {
                     inputElement.id = `beeper-${i}`;
-                    inputElement.name = self._beepers[i].name;
-                    inputElement.title = self._beepers[i].name;
-                    inputElement.checked = !bit_check(self._beeperDisabledMask, self._beepers[i].bit);
-                    inputElement.dataset.bit = self._beepers[i].bit;
+                    inputElement.name = this._beepers[i].name;
+                    inputElement.title = this._beepers[i].name;
+                    inputElement.checked = !bit_check(this._beeperDisabledMask, this._beepers[i].bit);
+                    inputElement.dataset.bit = this._beepers[i].bit;
                 }
 
                 if (labelElement) {
-                    labelElement.textContent = self._beepers[i].name;
+                    labelElement.textContent = this._beepers[i].name;
                 }
                 if (spanElement) {
-                    spanElement.setAttribute("i18n", `beeper${self._beepers[i].name}`);
+                    spanElement.setAttribute("i18n", `beeper${this._beepers[i].name}`);
                 }
 
                 element.style.display = "";

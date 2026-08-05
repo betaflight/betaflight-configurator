@@ -9,6 +9,7 @@
  */
 
 import { ComplexFFT } from "./fft.js";
+import { clamp } from "../utils/common.js";
 
 // ---------------------------------------------------------------------------
 // Windowing
@@ -379,6 +380,13 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
         dScale *= 0.95;
     }
 
+    // D-term filter: derive a cutoff hint from where the measurement stops
+    // being coherent. NOTE: chirp coherence is NOT a gyro-noise measurement —
+    // a clean sweep says nothing about the broadband gyro/motor noise that
+    // D-term filtering exists to suppress. On a clean log findNoiseFloor()
+    // falls back to the top frequency, which would drive the cutoff up and
+    // *reduce* filtering — feeding D-term noise into the motors and risking
+    // instability/flyaway on arm. So this may only ever tighten filtering.
     const defaultFilterHz = 150;
     let filterScale = noiseFloorHz / defaultFilterHz;
 
@@ -388,7 +396,8 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
         iScale: clamp(iScale, 0.5, 2),
         dScale: clamp(dScale, 0.5, 2),
         ffScale: clamp(ffScale, 0.5, 2),
-        filterScale: clamp(filterScale, 0.5, 2),
+        // Safety: cap at 1.0 — never recommend *less* D-term filtering (see note above).
+        filterScale: clamp(filterScale, 0.5, 1),
     };
 }
 
@@ -645,10 +654,6 @@ export function computeSpectrogram(signal, sampleRate, windowSize = 256, overlap
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
 
 function nextPow2(n) {
     let p = 1;

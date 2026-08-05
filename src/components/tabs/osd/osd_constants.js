@@ -272,6 +272,11 @@ export const OSD_CONSTANTS = {
             text: "osdWarningTextPosHoldFailed",
             desc: "osdWarningPosHoldFailed",
         },
+        AUTOPILOT_ABORT: {
+            name: "AUTOPILOT_ABORT",
+            text: "osdWarningTextAutopilotAbort",
+            desc: "osdWarningAutopilotAbort",
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "osdSetupFontTypeDefault" },

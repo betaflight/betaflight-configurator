@@ -5,10 +5,21 @@ export function millitime() {
 }
 
 const DEGREE_TO_RADIAN_RATIO = Math.PI / 180;
+const RADIAN_TO_DEGREE_RATIO = 180 / Math.PI;
 
 export function degToRad(degrees) {
     return degrees * DEGREE_TO_RADIAN_RATIO;
 }
+
+export function radToDeg(radians) {
+    return radians * RADIAN_TO_DEGREE_RATIO;
+}
+
+export function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+export const METERS_TO_FEET = 3.28084;
 
 export function bytesToSize(bytes) {
     let outputBytes;

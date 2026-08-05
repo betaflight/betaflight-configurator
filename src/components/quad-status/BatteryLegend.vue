@@ -5,8 +5,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
-
-const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
+import { NO_BATTERY_VOLTAGE_MAXIMUM, estimateCellCount } from "../../js/utils/battery";
 
 const props = defineProps({
     voltage: { type: Number, default: 0 },
@@ -15,10 +14,7 @@ const props = defineProps({
 });
 
 const reading = computed(() => {
-    let nbCells = Math.floor(props.voltage / props.vbatmaxcellvoltage) + 1;
-    if (props.voltage === 0) {
-        nbCells = 1;
-    }
+    const nbCells = estimateCellCount(props.voltage, props.vbatmaxcellvoltage);
     const cellsText = props.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
     return `${props.voltage.toFixed(2)}V (${cellsText})`;
 });

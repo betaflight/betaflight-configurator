@@ -35,6 +35,15 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
  * WebSerial protocol implementation for the Serial base class
  */
 class WebSerial extends EventTarget {
+    // Each SerialPort object has its own id. The id stays the same when the code builds the
+    // device list again. A counter alone would give a different number each time.
+    // But the id changes if the device disconnects and then connects again, because Chrome
+    // makes a new SerialPort object for it. Do not keep a path. Read the path from the
+    // current list. The WeakMap lets the browser release the entry with the SerialPort.
+    #portIds = new WeakMap();
+    #nextPortId = 0;
+    #loadGeneration = 0;
+
     constructor() {
         super();
 
@@ -83,6 +92,14 @@ class WebSerial extends EventTarget {
 
     handleRemovedDevice(device) {
         const removed = this.ports.find((port) => port.port === device);
+
+        // The list does not hold this port, because loadDevices() removed it before. There is
+        // no device to report. An event with no detail only makes the listeners refresh the
+        // list again for nothing.
+        if (!removed) {
+            return;
+        }
+
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
@@ -96,8 +113,32 @@ class WebSerial extends EventTarget {
         this.disconnect();
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return this.port;
+    }
+
+    /**
+     * Return the raw W3C SerialPort for a given path, so callers that need direct
+     * port access (e.g. esptool-js for ESP32 flashing) can own open/close and signals.
+     * @param {string} path - port path (e.g. "serial")
+     * @returns {SerialPort|undefined}
+     */
+    getNativePort(path) {
+        return this.ports.find((device) => device.path === path)?.port;
+    }
+
+    /**
+     * Get the id of a SerialPort object. Make a new id if the object is new.
+     * @param {SerialPort} port
+     * @returns {string} the id, for example "serial_0"
+     */
+    #getStablePortId(port) {
+        let id = this.#portIds.get(port);
+        if (id === undefined) {
+            id = `serial_${this.#nextPortId++}`;
+            this.#portIds.set(port, id);
+        }
+        return id;
     }
 
     createPort(port) {
@@ -106,7 +147,7 @@ class WebSerial extends EventTarget {
             ? vendorIdNames[portInfo.usbVendorId]
             : `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
         return {
-            path: "serial",
+            path: this.#getStablePortId(port),
             displayName: `Betaflight ${displayName}`,
             vendorId: portInfo.usbVendorId,
             productId: portInfo.usbProductId,
@@ -115,8 +156,17 @@ class WebSerial extends EventTarget {
     }
 
     async loadDevices() {
+        const generation = ++this.#loadGeneration;
+
         try {
             const ports = await navigator.serial.getPorts();
+
+            // A burst of device events starts several refreshes at once, and getPorts() gives
+            // no order guarantee. An older call that finishes last must not put its list back.
+            // getDevices() reads this.ports after the await, so it still returns the newest.
+            if (generation !== this.#loadGeneration) {
+                return;
+            }
             this.ports = ports.map((port) => this.createPort(port));
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);

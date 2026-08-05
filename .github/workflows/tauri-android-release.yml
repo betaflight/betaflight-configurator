@@ -1,0 +1,129 @@
+name: Tauri Android release
+
+# Builds the signed Tauri Android App Bundle and uploads it to Google Play.
+# Runs alongside the Capacitor APK build — it does not touch it.
+#
+# versionCode = <version floor, e.g. 2026006000> + github.run_number, so every
+# run outranks the previous upload. versionName = <version>.<run_number>.
+#
+# Required repository secrets (distinct from the Capacitor RELEASE_* secrets):
+#   ANDROID_UPLOAD_KEYSTORE           base64 of the upload keystore (betaflight-upload.jks)
+#   ANDROID_UPLOAD_KEYSTORE_PASSWORD  keystore (store) password
+#   ANDROID_UPLOAD_KEY_ALIAS          key alias (upload)
+#   ANDROID_UPLOAD_KEY_PASSWORD       key password
+#   PLAY_SERVICE_ACCOUNT_JSON         Google Play Developer API service-account JSON (plain text)
+
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Play track to publish to'
+        required: true
+        type: choice
+        default: internal
+        options: [internal, alpha, beta, production]
+      status:
+        description: 'Release status on the track'
+        required: true
+        type: choice
+        default: completed
+        options: [completed, draft, inProgress]
+
+env:
+  NDK_VERSION: 27.2.12479018
+
+jobs:
+  android:
+    name: Build & publish Android bundle
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;${NDK_VERSION}"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure signing
+        env:
+          ANDROID_UPLOAD_KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+          ANDROID_UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+          ANDROID_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
+          ANDROID_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+        run: |
+          : "${ANDROID_UPLOAD_KEYSTORE:?Set the ANDROID_UPLOAD_KEYSTORE secret (base64 keystore)}"
+          : "${ANDROID_UPLOAD_KEYSTORE_PASSWORD:?Set the ANDROID_UPLOAD_KEYSTORE_PASSWORD secret}"
+          : "${ANDROID_UPLOAD_KEY_ALIAS:?Set the ANDROID_UPLOAD_KEY_ALIAS secret}"
+          : "${ANDROID_UPLOAD_KEY_PASSWORD:?Set the ANDROID_UPLOAD_KEY_PASSWORD secret}"
+          KS="$RUNNER_TEMP/betaflight-upload.jks"
+          echo "$ANDROID_UPLOAD_KEYSTORE" | base64 --decode > "$KS"
+          # Write each property explicitly — a heredoc here would fold the YAML
+          # block indentation into the values and corrupt the keystore path.
+          {
+            printf 'storeFile=%s\n' "$KS"
+            printf 'storePassword=%s\n' "$ANDROID_UPLOAD_KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_UPLOAD_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$ANDROID_UPLOAD_KEY_PASSWORD"
+          } > src-tauri/gen/android/keystore.properties
+
+      - name: Build signed AAB
+        env:
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
+        run: npx tauri android build --aab
+
+      - name: Locate AAB
+        id: aab
+        run: |
+          AAB=$(ls src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab | head -1)
+          echo "path=$AAB" >> "$GITHUB_OUTPUT"
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-app-aab
+          path: ${{ steps.aab.outputs.path }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish to Google Play
+        uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb # v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.betaflight.app
+          releaseFiles: ${{ steps.aab.outputs.path }}
+          track: ${{ inputs.track }}
+          status: ${{ inputs.status }}
+          whatsNewDirectory: distribution/play/whatsnew

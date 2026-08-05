@@ -40,7 +40,7 @@
             </div>
 
             <!-- Login Dialog -->
-            <UModal v-model:open="loginDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
+            <UModal v-model:open="loginDialogOpen" :ui="{ content: 'max-w-sm' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -166,7 +166,7 @@
             </UModal>
 
             <!-- Verification Code Dialog -->
-            <UModal v-model:open="verificationDialogOpen" :ui="{ overlay: 'z-3000', content: 'max-w-sm z-3001' }">
+            <UModal v-model:open="verificationDialogOpen" :ui="{ content: 'max-w-sm' }">
                 <template #header="{ close }">
                     <div class="flex items-start justify-between gap-2 w-full">
                         <div class="dialog-header-stack">
@@ -207,7 +207,6 @@
                 :close="false"
                 :dismissible="false"
                 title=""
-                :ui="{ overlay: 'z-3000', content: 'z-3001' }"
             >
                 <template #body>
                     <div class="waiting-container">
@@ -269,7 +268,7 @@ export default defineComponent({
                     .map((item) => ({
                         label: i18n.getMessage(item.i18n),
                         icon: item.icon,
-                        onSelect: () => switchTab(item.key),
+                        onSelect: () => switchTab(item.key, { mode: item.mode }),
                     })),
                 trailingItems,
             );

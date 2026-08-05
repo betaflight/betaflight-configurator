@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onScopeDispose, ref } from "vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
@@ -123,6 +123,7 @@ const waypointToDelete = ref(null);
 // Drag and drop state
 const draggedUid = ref(null);
 const dragOverUid = ref(null);
+let dragStartTimeout = null;
 
 const handleAddWaypoint = () => {
     openAddWaypoint();
@@ -164,12 +165,23 @@ const handleDragStart = (event, uid) => {
     const el = event.currentTarget;
 
     // Add a slight delay to allow the drag to start before styling changes
-    setTimeout(() => {
+    if (dragStartTimeout !== null) {
+        clearTimeout(dragStartTimeout);
+    }
+    dragStartTimeout = setTimeout(() => {
+        dragStartTimeout = null;
         if (el) {
             el.classList.add("dragging");
         }
     }, 0);
 };
+
+onScopeDispose(() => {
+    if (dragStartTimeout !== null) {
+        clearTimeout(dragStartTimeout);
+        dragStartTimeout = null;
+    }
+});
 
 const handleDragOver = (event, uid) => {
     event.preventDefault();

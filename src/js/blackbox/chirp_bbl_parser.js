@@ -14,7 +14,7 @@
 
 import { ArrayDataStream } from "./datastream.js";
 import "./decoders.js"; // side-effect: extends ArrayDataStream prototype
-import { API_VERSION_1_47 } from "../data_storage.js";
+import CONFIGURATOR from "../data_storage.js";
 import { getDebugModeIndex } from "../utils/debugModes.js";
 
 // ---------------------------------------------------------------------------
@@ -810,10 +810,19 @@ function skipToNextFrame(stream) {
  * CHIRP's current index via the shared debug-modes table (kept in sync
  * with firmware/debug.h via src/js/utils/debugModes.js).
  *
- * Prefer the API version embedded in the log header — it always matches the
- * firmware that produced this file. Fall back to the caller-supplied version
- * (e.g. from a connected FC) only when the header doesn't carry one, and
- * finally to the minimum supported version.
+ * Resolving CHIRP's index needs the firmware's API version. Prefer the API
+ * version recorded in the log, then the caller-supplied version (e.g. from a
+ * connected FC). Blackbox logs, however, do not record an API version — they
+ * only carry a "Firmware revision" string — so for offline log analysis both
+ * are usually absent. In that case fall back to the Configurator's
+ * max-supported API version: the API version is fixed per firmware release and
+ * the Configurator's max-supported API is release-aligned with firmware, so it
+ * is the correct assumption for a log that doesn't advertise its version.
+ *
+ * The previous fallback (the oldest chirp-capable API, 1.47) mis-computed
+ * CHIRP's index for current firmware: CHIRP is 97 at API 1.47 but 96 at API
+ * 1.48+, which rejected every valid chirp log from 2026.6+ firmware with
+ * "Log debug_mode is 96, expected 97".
  */
 function validateDebugModeIsChirp(sysConfig, apiVersion) {
     const logApiVersion = sysConfig.firmwareApiVersion;
@@ -825,7 +834,7 @@ function validateDebugModeIsChirp(sysConfig, apiVersion) {
     } else if (hasApiVersion) {
         effectiveApiVersion = apiVersion;
     } else {
-        effectiveApiVersion = API_VERSION_1_47;
+        effectiveApiVersion = CONFIGURATOR.API_VERSION_MAX_SUPPORTED;
     }
     const debugChirpIndex = getDebugModeIndex("CHIRP", effectiveApiVersion);
     if (debugChirpIndex < 0) {
@@ -1087,9 +1096,20 @@ function collectIfActive(state, ctx) {
     if (!state.chirpActive) {
         return;
     }
+    // Firmware only ever writes -1/0/1/2 to debug[1] (the chirp axis: -1 while
+    // inactive, 0/1/2 for roll/pitch/yaw). Any other value is a decode
+    // artifact produced when the parser re-syncs after a corrupt frame — the
+    // delta chain is briefly stale, so debug[1] can decode out of range. Drop
+    // the frame entirely so a transient glitch can't spawn a bogus
+    // out-of-range segment (rejected downstream as "unsupported DEBUG_CHIRP
+    // axis encoding") or pollute a valid segment with a garbage sample.
+    const axis = state.previous[ctx.debugIdx[1]];
+    if (axis < -1 || axis > 2) {
+        return;
+    }
     collectSample(state.previous, ctx.sampleIndices, ctx.sampleBuffers, ctx.hiResScale);
     updateSegments(state.previous, ctx.debugIdx, ctx.segments, ctx.rawSetpoint[0].length - 1, state.currentAxis);
-    state.currentAxis = state.previous[ctx.debugIdx[1]];
+    state.currentAxis = axis;
 }
 
 function handleSFrame(state, ctx) {

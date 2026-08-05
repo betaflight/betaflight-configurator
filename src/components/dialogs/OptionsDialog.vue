@@ -1,9 +1,5 @@
 <template>
-    <UModal
-        v-model:open="open"
-        :title="$t('tabOptions')"
-        :ui="{ overlay: 'z-3000', content: 'max-w-4xl h-full z-3001' }"
-    >
+    <UModal v-model:open="open" :title="$t('tabOptions')" :ui="{ content: 'max-w-4xl h-full' }">
         <template #body>
             <div class="flex flex-col gap-4">
                 <UiBox>
@@ -22,7 +18,7 @@
                     <SettingRow :label="$t('cliAutoComplete')">
                         <USwitch v-model="settings.cliAutoComplete" size="sm" />
                     </SettingRow>
-                    <SettingRow :label="$t('showManualMode')">
+                    <SettingRow v-if="settings.expertMode" :label="$t('showManualMode')">
                         <USwitch v-model="settings.showManualMode" size="sm" />
                     </SettingRow>
                     <SettingRow v-if="settings.expertMode" :label="$t('showVirtualMode')">
@@ -33,19 +29,6 @@
                     </SettingRow>
                     <SettingRow :label="$t('showNotifications')">
                         <USwitch v-model="settings.showNotifications" size="sm" />
-                    </SettingRow>
-                    <SettingRow :label="$t('firmwareBackupOnFlash')">
-                        <USelect
-                            :items="[
-                                { label: $t('firmwareBackupDisabled'), value: 0 },
-                                { label: $t('firmwareBackupEnabled'), value: 1 },
-                                { label: $t('firmwareBackupAsk'), value: 2 },
-                            ]"
-                            size="sm"
-                            v-model="settings.backupOnFlash"
-                            class="min-w-40"
-                            :ui="{ content: 'z-3002' }"
-                        />
                     </SettingRow>
                 </UiBox>
 
@@ -168,7 +151,7 @@ import { useDialog } from "@/composables/useDialog";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { applyUiScale, sanitizeUiScale, DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE } from "../../js/UiScale";
 import { i18n } from "../../js/localization";
-import PortHandler from "../../js/port_handler";
+import DeviceHandler from "../../js/device_handler";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "../../js/DarkTheme";
 import { checkSetupAnalytics } from "../../js/Analytics";
@@ -278,7 +261,7 @@ watch(
     () => settings.showManualMode,
     (value) => {
         setConfig({ showManualMode: value });
-        PortHandler.setShowManualMode(value);
+        DeviceHandler.setShowManualMode(value);
     },
 );
 
@@ -286,7 +269,7 @@ watch(
     () => settings.showVirtualMode,
     (value) => {
         setConfig({ showVirtualMode: value });
-        PortHandler.setShowVirtualMode(value);
+        DeviceHandler.setShowVirtualMode(value);
     },
 );
 
@@ -351,7 +334,7 @@ watch(
     () => settings.showAllSerialDevices,
     (value) => {
         setConfig({ showAllSerialDevices: value });
-        PortHandler.setShowAllSerialDevices(value);
+        DeviceHandler.setShowAllSerialDevices(value);
     },
 );
 

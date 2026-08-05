@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, onScopeDispose } from "vue";
 
 /**
  * A composable for handling cloud build requests and polling.
@@ -368,6 +368,8 @@ export function useCloudBuild(params) {
     const cleanup = () => {
         stopPolling();
     };
+
+    onScopeDispose(cleanup);
 
     return {
         // State

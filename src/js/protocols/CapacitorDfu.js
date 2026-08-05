@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes.js";
 
 const logHead = "[CAPACITOR DFU]";
 const BetaflightDfu = Capacitor?.Plugins?.BetaflightDfu;
@@ -140,7 +141,7 @@ class CapacitorDfu extends EventTarget {
 
         if (result.status === "ok" && result.data) {
             // Convert hex string to Uint8Array
-            const data = this.hexStringToUint8Array(result.data);
+            const data = hexStringToUint8Array(result.data);
             return { status: "ok", data };
         }
 
@@ -148,7 +149,7 @@ class CapacitorDfu extends EventTarget {
     }
 
     async controlTransferOut(request, value, index, data, timeout) {
-        const hexData = data ? this.uint8ArrayToHexString(new Uint8Array(data)) : "";
+        const hexData = data ? uint8ArrayToHexString(new Uint8Array(data)) : "";
         return BetaflightDfu.controlTransferOut({
             request,
             value,
@@ -188,25 +189,6 @@ class CapacitorDfu extends EventTarget {
             return result.descriptor;
         }
         return null;
-    }
-
-    // ===== Hex conversion helpers =====
-
-    hexStringToUint8Array(hexString) {
-        if (!hexString || hexString.length === 0) {
-            return new Uint8Array(0);
-        }
-        const bytes = new Uint8Array(hexString.length / 2);
-        for (let i = 0; i < hexString.length; i += 2) {
-            bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
-        }
-        return bytes;
-    }
-
-    uint8ArrayToHexString(uint8Array) {
-        return Array.from(uint8Array)
-            .map((byte) => byte.toString(16).padStart(2, "0"))
-            .join("");
     }
 }
 

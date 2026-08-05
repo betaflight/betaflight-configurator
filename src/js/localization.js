@@ -16,6 +16,7 @@ const languagesAvailables = [
     "gl",
     "it",
     "ja",
+    "ka",
     "ko",
     "nl",
     "pt",
@@ -23,6 +24,7 @@ const languagesAvailables = [
     "pl",
     "ru",
     "uk",
+    "uz",
     "zh_CN",
     "zh_TW",
 ];

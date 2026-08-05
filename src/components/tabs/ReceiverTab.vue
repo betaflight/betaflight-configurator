@@ -15,6 +15,16 @@
                             <canvas ref="modelCanvas"></canvas>
                         </div>
                     </UiBox>
+                    <!-- Failsafe / RX-loss warning -->
+                    <UiBox
+                        v-if="failsafeActive"
+                        highlight
+                        type="warning"
+                        role="alert"
+                        :title="$t('receiverFailsafeActiveTitle')"
+                    >
+                        <p>{{ $t("receiverFailsafeActiveWarning") }}</p>
+                    </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
                         <ul v-for="(channel, index) in channelBars" :key="index">
@@ -25,7 +35,7 @@
                                     :max="100"
                                     :ui="{
                                         base: 'w-full bg-elevated',
-                                        indicator: 'duration-50',
+                                        indicator: failsafeActive ? 'duration-50 !bg-warning' : 'duration-50',
                                     }"
                                     :disabled="rc.active_channels === 0"
                                     size="xl"
@@ -503,8 +513,9 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
-import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -516,7 +527,7 @@ import GUI from "@/js/gui";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
-import { bit_check, bit_set, bit_clear } from "@/js/bit";
+import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
@@ -534,8 +545,7 @@ import SettingColumn from "../elements/SettingColumn.vue";
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
-const navigationStore = useNavigationStore();
-const { reboot } = useReboot();
+const { saveAndReboot, saveToEeprom } = useReboot();
 const { addInterval, removeInterval } = useInterval();
 
 // Template refs
@@ -545,7 +555,7 @@ const rxPlot = ref(null);
 
 // Local state
 const needReboot = ref(false);
-const isSaving = ref(false);
+const { isSaving, runSave } = useSaving();
 const refreshRate = ref(50);
 const channelMapString = ref("");
 const elrsBindingPhrase = ref("");
@@ -611,6 +621,11 @@ const features = computed(() => fcStore.features);
 
 const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 
+// Failsafe / RX-loss indicator — detection lives in the fc store (reads the raw
+// armingDisableFlags bitmask). True when the FC is in failsafe or has lost the
+// RX link, so the banner/tint warn that channel values are failsafe output.
+const failsafeActive = computed(() => fcStore.failsafeActive);
+
 // Dirty state tracking
 const savedSnapshot = ref("");
 
@@ -634,7 +649,8 @@ function takeSnapshot() {
         deadband: rcDeadbandConfig.value?.deadband,
         yawDeadband: rcDeadbandConfig.value?.yaw_deadband,
         deadband3dThrottle: rcDeadbandConfig.value?.deadband3d_throttle,
-        featureMask: features.value?.features?._featureMask,
+        telemetryEnabled: features.value?.features?.isEnabled?.("TELEMETRY") ?? false,
+        rssiAdcEnabled: features.value?.features?.isEnabled?.("RSSI_ADC") ?? false,
         elrsBindingPhrase: elrsBindingPhrase.value,
         setpointManualMode: setpointManualMode.value,
         throttleManualMode: throttleManualMode.value,
@@ -674,9 +690,9 @@ function decodeHtmlEntities(text) {
 // RX Mode options (generated from features)
 const rxModeOptions = computed(() => {
     const options = [{ value: -1, label: decodeHtmlEntities(t("featureNone")) }];
-    if (features.value?.features?._features) {
+    if (features.value?.features?.getFeatures?.()) {
         // Features with mode === "select" are RX mode options
-        for (const feature of features.value.features._features) {
+        for (const feature of features.value.features.getFeatures()) {
             if (feature.mode === "select" && feature.group === "rxMode") {
                 options.push({
                     value: feature.bit,
@@ -920,19 +936,23 @@ function toggleRssiAdc(checked) {
 
 function onRxModeChange() {
     // Update feature mask based on selected RX mode
-    if (features.value?.features?._features) {
+    const featuresHelper = features.value?.features;
+    if (featuresHelper?.getFeatures?.()) {
         const selectedBit = selectedRxMode.value;
         // Clear all RX mode bits first, then set the selected one
-        for (const feature of features.value.features._features) {
+        for (const feature of featuresHelper.getFeatures()) {
             if (feature.mode === "select" && feature.group === "rxMode") {
-                features.value.features._featureMask = bit_clear(features.value.features._featureMask, feature.bit);
+                featuresHelper.disable(feature.name);
             }
         }
         // Set the selected RX mode bit (if not "None" which is -1)
         if (selectedBit !== -1) {
-            features.value.features._featureMask = bit_set(features.value.features._featureMask, selectedBit);
+            const selectedFeature = featuresHelper.findFeatureByBit(selectedBit);
+            if (selectedFeature) {
+                featuresHelper.enable(selectedFeature.name);
+            }
         }
-        updateTabList(features.value.features);
+        updateTabList(featuresHelper);
         needReboot.value = true;
     }
 }
@@ -977,128 +997,122 @@ async function refreshTab() {
     gui_log(t("receiverDataRefreshed"));
 }
 
+// Find the rx mode bit for the currently enabled "select"/"rxMode" feature, or -1 if none is.
+function findSelectedRxMode(featuresApi) {
+    for (const feature of featuresApi.getFeatures()) {
+        if (feature.mode === "select" && feature.group === "rxMode" && featuresApi.isEnabled(feature.name)) {
+            return feature.bit;
+        }
+    }
+    return -1;
+}
+
+// Look up a stored ELRS binding phrase for the FC's current UID, if any.
+function findElrsBindingPhrase(elrsUid) {
+    if (!elrsUid) {
+        return null;
+    }
+    return lookupElrsBindingPhrase(elrsUid.join(","));
+}
+
 // Load configuration
 async function loadConfig() {
-    try {
-        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC);
-        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC_TUNING);
-        await MSP.promise(MSPCodes.MSP_RX_MAP);
-        await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+    await runTabLoad(
+        async () => {
+            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC_TUNING);
+            await MSP.promise(MSPCodes.MSP_RX_MAP);
+            await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
+            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
-        // Update local state from FC
-        updateChannelMapFromRcMap();
+            // Update local state from FC
+            updateChannelMapFromRcMap();
 
-        // Initialize selectedRxMode from feature mask
-        if (features.value?.features?._features) {
-            const featureMask = features.value.features._featureMask;
-            let foundRxMode = -1;
-            for (const feature of features.value.features._features) {
-                if (feature.mode === "select" && feature.group === "rxMode") {
-                    if (bit_check(featureMask, feature.bit)) {
-                        foundRxMode = feature.bit;
-                        break;
-                    }
-                }
+            // Initialize selectedRxMode from feature mask
+            if (features.value?.features?.getFeatures?.()) {
+                selectedRxMode.value = findSelectedRxMode(features.value.features);
             }
-            selectedRxMode.value = foundRxMode;
-        }
 
-        // Load ELRS binding phrase if applicable
-        if (elrsBindingPhraseEnabled.value && rxConfig.value?.elrsUid) {
-            const uidString = rxConfig.value.elrsUid.join(",");
-            const storedPhrase = lookupElrsBindingPhrase(uidString);
+            // Load ELRS binding phrase if applicable
+            const storedPhrase = elrsBindingPhraseEnabled.value ? findElrsBindingPhrase(rxConfig.value?.elrsUid) : null;
             if (storedPhrase) {
                 elrsBindingPhrase.value = storedPhrase;
             }
-        }
 
-        // Set RC smoothing modes based on cutoff values
-        setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
-        if (showThrottleSmoothingOptions.value) {
-            throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
-        } else {
-            feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
-        }
+            // Set RC smoothing modes based on cutoff values
+            setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
+            if (showThrottleSmoothingOptions.value) {
+                throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
+            } else {
+                feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
+            }
 
-        // Load saved refresh rate
-        const savedRate = getConfig("rx_refresh_rate");
-        if (savedRate?.rx_refresh_rate) {
-            refreshRate.value = savedRate.rx_refresh_rate;
-        }
+            // Load saved refresh rate
+            const savedRate = getConfig("rx_refresh_rate");
+            if (savedRate?.rx_refresh_rate) {
+                refreshRate.value = savedRate.rx_refresh_rate;
+            }
 
-        needReboot.value = false;
-        savedSnapshot.value = takeSnapshot();
-    } catch (e) {
-        console.error("Failed to load Receiver configuration", e);
-    }
+            needReboot.value = false;
+            savedSnapshot.value = takeSnapshot();
+        },
+        (e) => console.error("Failed to load Receiver configuration", e),
+    );
 }
 
 // Save configuration
-async function saveConfig(withReboot = false) {
-    if (isSaving.value) return;
-    isSaving.value = true;
+const saveConfig = (withReboot = false) =>
+    runSave(
+        async () => {
+            // Update RC_MAP from channel map string
+            validateChannelMap();
 
-    try {
-        // Update RC_MAP from channel map string
-        validateChannelMap();
-
-        // Handle ELRS binding phrase
-        if (elrsBindingPhraseEnabled.value) {
-            const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
-            if (elrsUidChars.length === 6) {
-                fcStore.rxConfig.elrsUid = elrsUidChars;
-                saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
-            } else {
-                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
+            // Handle ELRS binding phrase
+            if (elrsBindingPhraseEnabled.value) {
+                const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
+                if (elrsUidChars.length === 6) {
+                    fcStore.rxConfig.elrsUid = elrsUidChars;
+                    saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
+                } else {
+                    fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
+                }
             }
-        }
 
-        // Set cutoffs to 0 for auto mode
-        if (setpointManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
-        }
-        if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
-        }
-        if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
-        }
+            // Set cutoffs to 0 for auto mode
+            if (setpointManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
+            }
+            if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
+            }
+            if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
+                fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
+            }
 
-        // Save sequence
-        await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
-        await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
-        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+            // Save sequence
+            await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
+            await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
+            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
-        if (withReboot) {
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(true, () => {
-                    navigationStore.cleanup(() => {
-                        reboot();
-                        resolve();
-                    });
-                });
-            });
-        } else {
-            await new Promise((resolve) => {
-                mspHelper.writeConfiguration(false, resolve);
-            });
-            gui_log(t("receiverConfigSaved") || "Configuration saved");
-            savedSnapshot.value = takeSnapshot();
-        }
+            if (withReboot) {
+                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+                await saveAndReboot();
+            } else {
+                await saveToEeprom();
+                gui_log(t("receiverConfigSaved") || "Configuration saved");
+                savedSnapshot.value = takeSnapshot();
+            }
 
-        needReboot.value = false;
-    } catch (e) {
-        console.error("Failed to save configuration", e);
-    } finally {
-        isSaving.value = false;
-    }
-}
+            needReboot.value = false;
+        },
+        {
+            onError: (e) => console.error("Failed to save configuration", e),
+        },
+    );
 
 // Model preview
 function initModelPreview() {

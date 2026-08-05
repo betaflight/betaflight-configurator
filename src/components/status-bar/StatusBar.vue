@@ -86,6 +86,12 @@
                 </UTooltip>
                 <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
+            <template v-if="isConnectedToVirtual">
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <UIcon name="i-lucide-cpu" class="size-4" />
+                <span>{{ $t("virtualMode") }}</span>
+                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            </template>
 
             <UIcon name="i-lucide-monitor" class="size-4" />
             <UTooltip :text="$t('versionLabelConfigurator')">
@@ -98,6 +104,7 @@
 <script>
 import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import PortUtilization from "./PortUtilization.vue";
+import { useConnectionStore } from "../../stores/connection";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
 import BatteryLegend from "../quad-status/BatteryLegend.vue";
 import BottomStatusIcons from "../quad-status/BottomStatusIcons.vue";
@@ -192,6 +199,9 @@ export default defineComponent({
         const currentTime = ref(Date.now());
         const expertMode = ref(isExpertModeEnabled());
         let interval = null;
+        const connectionStore = useConnectionStore();
+        const isVirtualMode = computed(() => connectionStore.virtualMode);
+        const isConnectedToVirtual = computed(() => connectionStore.connectedTo === "virtual");
 
         const onExpertModeChange = (enabled) => {
             expertMode.value = enabled;
@@ -274,6 +284,8 @@ export default defineComponent({
 
         return {
             expertMode,
+            isVirtualMode,
+            isConnectedToVirtual,
             displayedFirmwareTarget,
             displayedConfiguratorVersion,
             displayedFirmwareVersion,

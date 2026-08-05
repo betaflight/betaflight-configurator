@@ -2,11 +2,28 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
+import TauriTcp from "./protocols/TauriTcp.js";
+import TauriBle from "./protocols/TauriBle.js";
+import { unbracketHost } from "./utils/host.js";
+
+// A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
+// The pattern permits the underscore. mDNS host names can contain an underscore, for example
+// elrs_rx.local. An IPv6 address must have brackets, as in a URL, for example [fe80::1]:5761.
+const HOST = String.raw`(?:\[[0-9a-f:.]+\]|[a-z0-9._-]+)(?::\d+)?`;
+/**
+ * Makes a regular expression for "<scheme>://host[:port][/path]".
+ * @param {string} scheme - one scheme, or an alternation of schemes, for example "wss?".
+ * @returns {RegExp} the case-insensitive pattern for that scheme.
+ */
+const urlPattern = (scheme) => new RegExp(`^(?:${scheme})://${HOST}(?:/.*)?$`, "i");
+const WEBSOCKET_URL = urlPattern("wss?");
+const TCP_URL = urlPattern("tcp");
+const BARE_HOST = new RegExp(`^${HOST}$`, "i");
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -29,12 +46,18 @@ class Serial extends EventTarget {
                 { name: "tcp", instance: new CapacitorTcp() },
             ];
         } else if (isTauri()) {
-            // Desktop Tauri shell: native serial via tauri-plugin-serialplugin,
-            // bluetooth/tcp fall back to the web APIs (the webview exposes them).
+            // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
+            // on 5761 works), and WebSocket (ws://, wss://) via the WebSocket API the webview
+            // exposes — these are distinct transports, so they get distinct slots. Bluetooth
+            // via the web API the webview exposes. Native serial (tauri-plugin-serialplugin)
+            // is desktop + Android only — iOS has no USB serial.
             this._protocols = [
-                { name: "serial", instance: new TauriSerial() },
-                { name: "bluetooth", instance: new WebBluetooth() },
-                { name: "tcp", instance: new Websocket() },
+                ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
+                // iOS WKWebView has no Web Bluetooth, so use the native btleplug transport there;
+                // desktop Tauri keeps the webview's Web Bluetooth.
+                { name: "bluetooth", instance: isTauriIOS() ? new TauriBle() : new WebBluetooth() },
+                { name: "tcp", instance: new TauriTcp() },
+                { name: "websocket", instance: new Websocket() },
             ];
         } else {
             this._protocols = [
@@ -55,44 +78,73 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
+        // Device-enumeration events come from EVERY transport — device_handler builds
+        // the combined device list from all of them.
+        const deviceEvents = ["addedDevice", "removedDevice"];
+        // Connection-lifecycle events must come ONLY from the active transport. A
+        // transport we are no longer connected through can still emit a late event
+        // (e.g. a BLE link's gattserverdisconnected firing after the user switched
+        // to a serial FC); forwarding it would run onClosed/read_serial against the
+        // wrong connection and corrupt the live one.
+        const lifecycleEvents = new Set(["connect", "disconnect", "receive"]);
 
         for (const { name, instance } of this._protocols) {
-            if (typeof instance?.addEventListener === "function") {
-                for (const eventType of events) {
-                    instance.addEventListener(eventType, (event) => {
-                        let newDetail;
-                        if (event.type === "receive") {
-                            // For 'receive' events, we need to handle the data differently
-                            newDetail = {
-                                data: event.detail,
-                                protocolType: name,
-                            };
-                        } else {
-                            // For other events, we can use the detail directly
-                            newDetail = {
-                                ...event.detail,
-                                protocolType: name,
-                            };
-                        }
+            if (typeof instance?.addEventListener !== "function") {
+                continue;
+            }
 
-                        // Dispatch the event with the new detail
-                        this.dispatchEvent(
-                            new CustomEvent(event.type, {
-                                detail: newDetail,
-                                bubbles: event.bubbles,
-                                cancelable: event.cancelable,
-                            }),
-                        );
-                    });
-                }
+            for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
+                instance.addEventListener(eventType, (event) => {
+                    // Drop lifecycle events arriving from a non-active transport.
+                    if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
+                        return;
+                    }
+
+                    this.dispatchEvent(
+                        new CustomEvent(event.type, {
+                            detail: this._tagDetail(event, name),
+                            bubbles: event.bubbles,
+                            cancelable: event.cancelable,
+                        }),
+                    );
+                });
             }
         }
     }
 
     /**
+     * Tag a forwarded event's detail with its originating protocol.
+     * @param {Event} event - the source protocol event
+     * @param {string} protocolType - the originating protocol name
+     */
+    _tagDetail(event, protocolType) {
+        // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
+        if (event.type === "receive") {
+            return { data: event.detail, protocolType };
+        }
+        // A PRIMITIVE detail (notably connect/disconnect dispatching `false` on a
+        // failed open) is forwarded as-is — spreading `false` would turn it into a
+        // truthy { protocolType }, so onOpen() would treat a failed open as success.
+        if (event.detail !== null && typeof event.detail === "object") {
+            return { ...event.detail, protocolType };
+        }
+        return event.detail;
+    }
+
+    /**
+     * Finds a registered protocol instance by slot name.
+     * @param {string|undefined} name - the slot name ("serial", "tcp", "websocket", ...).
+     * @returns {EventTarget|undefined} The instance, or undefined when the platform does not
+     *   register that slot.
+     */
+    _instance(name) {
+        return this._protocols.find((p) => p.name === name)?.instance;
+    }
+
+    /**
      * Selects the appropriate protocol based on port path
      * @param {string|function|null} portPath - Port path or callback function for virtual mode
+     * @returns {EventTarget|undefined} The matching protocol instance, or undefined when none applies.
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
@@ -100,15 +152,54 @@ class Serial extends EventTarget {
         const s = typeof portPath === "string" ? portPath : "";
         // Default to serial for typical serial device identifiers.
         if (isFn || s === "virtual") {
-            return this._protocols.find((p) => p.name === "virtual")?.instance;
+            return this._instance("virtual");
         }
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
-            return this._protocols.find((p) => p.name === "tcp")?.instance;
+        // WebSocket endpoints (ws://, wss://) use the HTTP upgrade handshake. Thus they need the
+        // WebSocket protocol, and not raw TCP. Tauri has two different slots: "websocket" and the
+        // Rust "tcp" slot. If a platform registers only one slot, use "tcp". The web shell uses
+        // WebSocket for its "tcp" slot.
+        if (WEBSOCKET_URL.test(s)) {
+            return this._instance("websocket") ?? this._instance("tcp");
+        }
+        if (s === "manual" || TCP_URL.test(s)) {
+            return this._instance("tcp");
         }
         if (s.startsWith("bluetooth")) {
-            return this._protocols.find((p) => p.name === "bluetooth")?.instance;
+            return this._instance("bluetooth");
         }
-        return this._protocols.find((p) => p.name === "serial")?.instance;
+        const serialInstance = this._instance("serial");
+        // No native serial transport (iOS): a schemeless manual entry that looks like a network
+        // host (an IP, a dotted hostname, [IPv6], or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
+        // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
+        // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
+        if (!serialInstance && BARE_HOST.test(s) && (s.includes(".") || s.includes(":"))) {
+            return this._instance("tcp");
+        }
+        return serialInstance;
+    }
+
+    /**
+     * Classifies a manual target as a local-network address (RFC1918 / IPv4 & IPv6 link-local /
+     * .local) — the range an ELRS Wi-Fi module sits in, and the range iOS Local Network gates.
+     * @param {string} target - a manual connection target (URL or bare host[:port]).
+     * @returns {boolean} true when it resolves to a local-network address.
+     */
+    isLocalNetworkAddress(target) {
+        try {
+            const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
+            // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
+            const host = unbracketHost(new URL(withScheme).hostname.toLowerCase());
+            return (
+                host.startsWith("10.") ||
+                host.startsWith("192.168.") ||
+                /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+                host.startsWith("169.254.") ||
+                /^fe[89ab][0-9a-f]:/.test(host) ||
+                host.endsWith(".local")
+            );
+        } catch {
+            return false;
+        }
     }
 
     /**
@@ -171,7 +262,7 @@ class Serial extends EventTarget {
     async getDevices(protocolType = null) {
         try {
             // Get the appropriate protocol
-            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
+            const targetProtocol = this._instance(protocolType?.toLowerCase());
 
             if (!targetProtocol) {
                 console.warn(`${this.logHead} No valid protocol for getting devices`);
@@ -200,7 +291,7 @@ class Serial extends EventTarget {
     async requestPermissionDevice(showAllDevices = false, protocolType) {
         let result = false;
         try {
-            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
+            const targetProtocol = this._instance(protocolType?.toLowerCase());
             result = await targetProtocol?.requestPermissionDevice(showAllDevices);
         } catch (error) {
             console.error(`${this.logHead} Error requesting device permission:`, error);
@@ -217,10 +308,10 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Get the currently connected port
+     * Get the currently connected device
      */
-    getConnectedPort() {
-        return this._protocol?.getConnectedPort() || null;
+    getConnectedDevice() {
+        return this._protocol?.getConnectedDevice() || null;
     }
 
     /**

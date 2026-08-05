@@ -5,6 +5,10 @@ on:
   schedule:
   - cron: "30 4 * * *"
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   stale:
     name: 'Check and close stale issues'

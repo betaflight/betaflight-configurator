@@ -278,6 +278,11 @@ FONT.upload = function ($progress) {
         .then(function () {
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);
             gui_log(i18n.getMessage("osdSetupUploadingFontEnd", { length: FONT.data.characters.length }));
+        })
+        .catch((error) => {
+            console.error("Font upload failed:", error);
+            gui_log(i18n.getMessage("osdSetupUploadingFontFailed"));
+            throw error;
         });
 };
 

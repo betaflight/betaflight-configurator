@@ -1,10 +1,10 @@
-import { onUnmounted } from "vue";
+import { onScopeDispose } from "vue";
 import GUI from "../js/gui";
 
 /**
  * A composable for managing named timeouts via GUI's timeout registry.
  * All timeouts added through this composable are automatically removed
- * when the component is unmounted.
+ * when the owning effect scope is disposed (component unmount or scope stop).
  *
  * Usage:
  *   const { addTimeout, removeTimeout } = useTimeout();
@@ -33,7 +33,7 @@ export function useTimeout() {
         localTimeouts.length = 0;
     }
 
-    onUnmounted(() => {
+    onScopeDispose(() => {
         removeAllTimeouts();
     });
 

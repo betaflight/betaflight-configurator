@@ -1,27 +1,8 @@
 import { Capacitor } from "@capacitor/core";
+import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes.js";
+import { bracketHost, unbracketHost } from "../utils/host.js";
 
 const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
-
-function base64ToUint8Array(b64) {
-    const binary = atob(b64);
-    const len = binary.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        // The atob() function returns a binary string where each character represents a single byte (0–255).
-        // codePointAt() is designed for Unicode code points and can return values greater than 255, which will overflow Uint8Array slots and corrupt received data.
-        // Use charCodeAt(i) to safely extract byte values.
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-}
-
-function uint8ArrayToBase64(bytes) {
-    let binary = "";
-    for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-}
 
 class CapacitorTcp extends EventTarget {
     constructor() {
@@ -85,7 +66,7 @@ class CapacitorTcp extends EventTarget {
         };
     }
 
-    getConnectedPort() {
+    getConnectedDevice() {
         return {
             path: this.address,
             displayName: `Betaflight TCP`,
@@ -102,14 +83,16 @@ class CapacitorTcp extends EventTarget {
     async connect(path, _options) {
         try {
             const url = new URL(path);
-            const host = url.hostname;
+            // The native plugin connects to a bare address.
+            const host = unbracketHost(url.hostname);
             const port = Number.parseInt(url.port, 10) || 5761;
 
             console.log(`${this.logHead} Connecting to ${url}`);
 
             const result = await this.plugin.connect({ ip: host, port });
             if (result?.success) {
-                this.address = `${host}:${port}`;
+                // An IPv6 host gets its brackets again, so that host:port stays unambiguous.
+                this.address = `${bracketHost(host)}:${port}`;
                 this.connected = true;
             } else {
                 throw new Error("Connect failed");

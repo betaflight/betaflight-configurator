@@ -101,11 +101,14 @@ export function useSensorGraph() {
         }
     }
 
-    function initGraph(selector, sampleCount, heightRef, dataRef) {
+    function initGraph(selector, sampleCount, heightRef, dataRef, dynamic = false) {
         const helpers = {
             selector,
             data: dataRef,
             scaleYMax: heightRef,
+            // When dynamic, the Y-axis follows the data range instead of the
+            // fixed symmetric [-scaleYMax, scaleYMax] domain.
+            dynamic,
         };
         updateGraphHelperSize(helpers);
         const element = d3.select(helpers.selector);
@@ -150,7 +153,17 @@ export function useSensorGraph() {
 
         // Update scales with current dimensions
         helpers.scaleX.domain([sampleNumber - 299, sampleNumber]).range([0, helpers.width]);
-        helpers.scaleY.domain([-helpers.scaleYMax.value, helpers.scaleYMax.value]).range([helpers.height, 0]);
+        if (helpers.dynamic) {
+            // Follow the data range (matches 2025.12-maintenance debug graphs).
+            const limits = [];
+            for (const series of helpers.data) {
+                limits.push(series.min, series.max);
+            }
+            const [min, max] = d3.extent(limits);
+            helpers.scaleY.domain([min ?? -1, max ?? 1]).range([helpers.height, 0]);
+        } else {
+            helpers.scaleY.domain([-helpers.scaleYMax.value, helpers.scaleYMax.value]).range([helpers.height, 0]);
+        }
 
         const element = d3.select(helpers.selector);
 
@@ -204,7 +217,8 @@ export function useSensorGraph() {
 
         debugHelpers = [];
         for (let i = 0; i < debugColumns; i++) {
-            debugHelpers.push(initGraph(`#debug${i}`, 1, ref(500), debug_data.value[i]));
+            // Default to dynamic (Auto) scaling, restoring the legacy behaviour.
+            debugHelpers.push(initGraph(`#debug${i}`, 1, ref(500), debug_data.value[i], true));
         }
     }
 
@@ -217,6 +231,19 @@ export function useSensorGraph() {
         }
         if (magHelpers) {
             magHelpers.scaleYMax.value = scales.mag;
+        }
+    }
+
+    function setDebugScales(debugScales) {
+        for (let i = 0; i < debugHelpers.length; i++) {
+            const helper = debugHelpers[i];
+            const scale = debugScales?.[i] ?? 0;
+            if (scale > 0) {
+                helper.dynamic = false;
+                helper.scaleYMax.value = scale;
+            } else {
+                helper.dynamic = true;
+            }
         }
     }
 
@@ -298,6 +325,7 @@ export function useSensorGraph() {
         debug_data,
         initializeGraphs,
         updateScales,
+        setDebugScales,
         updateGraphs,
         addGyroSample,
         addAccelSample,

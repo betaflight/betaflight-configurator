@@ -8,6 +8,7 @@ import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
 import { serial } from "../js/serial";
+import { reinitializeConnection } from "../js/serial_backend";
 import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
 import { get as getConfig } from "../js/ConfigStorage";
@@ -20,6 +21,7 @@ const lineFeedCode = 10;
 const carriageReturnCode = 13;
 const enterKeyCode = 13;
 const tabKeyCode = 9;
+const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
 
 function removePromptHash(promptText) {
     return promptText.replace(/^# /, "");
@@ -80,7 +82,15 @@ function onCopyFailed(ex) {
     console.warn(ex);
 }
 
-async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, getOutputHistory) {
+async function submitSupportData(
+    data,
+    state,
+    clearHistory,
+    executeCommands,
+    writeToOutput,
+    getOutputHistory,
+    trackPollInterval,
+) {
     clearHistory();
     const api = new BuildApi();
 
@@ -94,8 +104,9 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
     await executeCommands(commands.join("\n"));
     const delay = setInterval(async () => {
         const time = Date.now();
-        if (state.lastArrival < time - 250) {
+        if (state.lastArrival < time - SERIAL_IDLE_MS) {
             clearInterval(delay);
+            trackPollInterval?.(null);
             const text = getOutputHistory();
             let key = await api.submitSupportData(text);
             if (!key) {
@@ -106,6 +117,7 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
             writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
         }
     }, 250);
+    trackPollInterval?.(delay);
 }
 
 export function useCli() {
@@ -133,8 +145,8 @@ export function useCli() {
     const windowWrapperRef = ref(null);
     const cliWindowRef = ref(null);
     const commandInputRef = ref(null);
-    const snippetPreviewDialogRef = ref(null);
-    const supportWarningDialogRef = ref(null);
+    const snippetPreviewOpen = ref(false);
+    const supportWarningOpen = ref(false);
 
     // Support dialog callback
     let supportDialogCallback = null;
@@ -142,8 +154,10 @@ export function useCli() {
     let scrollNearBottomPx = 40; // fallback; updated dynamically via ResizeObserver
     let cliResizeObserver = null;
 
-    const MAX_OUTPUT_NODES = 4000; // ~4 nodes/line → ≈1000 rendered lines max
-    const PRUNE_TO_NODES = 2500;
+    /** @type {number} */
+    const MAX_OUTPUT_NODES = 32000; // ~4 nodes/line → ≈8000 rendered lines max
+    /** @type {number} */
+    const PRUNE_TO_NODES = 24000; // ≈6000 rendered lines
 
     let outputBuffer = "";
     let outputFlushRaf = null;
@@ -153,6 +167,7 @@ export function useCli() {
     let flushing = false; // true during DOM mutations; prevents spurious scrollPinned flips
     let scrollRaf = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
     let pastePollInterval = null;
+    let supportPollInterval = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -242,7 +257,7 @@ export function useCli() {
             console.log(`[CLI] paste: ${outputArray.length} lines`);
             if (pastePollInterval) clearInterval(pastePollInterval);
             pastePollInterval = setInterval(() => {
-                if (state.lastArrival > startMs && Date.now() - state.lastArrival > 250) {
+                if (state.lastArrival > startMs && Date.now() - state.lastArrival > SERIAL_IDLE_MS) {
                     clearInterval(pastePollInterval);
                     pastePollInterval = null;
                     console.log(`[CLI] paste done: ${((performance.now() - t0) / 1000).toFixed(2)}s`);
@@ -284,16 +299,12 @@ export function useCli() {
         const executeSnippet = () => {
             const commands = state.snippetPreview;
             executeCommands(commands);
-            if (snippetPreviewDialogRef.value) {
-                snippetPreviewDialogRef.value.close();
-            }
+            snippetPreviewOpen.value = false;
         };
 
         const previewCommands = (result, _fileName) => {
             state.snippetPreview = result;
-            if (snippetPreviewDialogRef.value) {
-                snippetPreviewDialogRef.value.showModal();
-            }
+            snippetPreviewOpen.value = true;
         };
 
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
@@ -343,21 +354,27 @@ export function useCli() {
 
     const submitSupportRequest = async () => {
         showSupportWarningDialog((data) =>
-            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput, () => outputHistory),
+            submitSupportData(
+                data,
+                state,
+                clearHistory,
+                executeCommands,
+                writeToOutput,
+                () => outputHistory,
+                (id) => {
+                    supportPollInterval = id;
+                },
+            ),
         );
     };
 
     const showSupportWarningDialog = (onAccept) => {
         supportDialogCallback = onAccept;
-        if (supportWarningDialogRef.value && !supportWarningDialogRef.value.hasAttribute("open")) {
-            supportWarningDialogRef.value.showModal();
-        }
+        supportWarningOpen.value = true;
     };
 
     const handleSupportDialogSubmit = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         if (supportDialogCallback) {
             supportDialogCallback(state.supportDialogInput);
             supportDialogCallback = null;
@@ -366,9 +383,7 @@ export function useCli() {
     };
 
     const handleSupportDialogCancel = () => {
-        if (supportWarningDialogRef.value) {
-            supportWarningDialogRef.value.close();
-        }
+        supportWarningOpen.value = false;
         supportDialogCallback = null;
         state.supportDialogInput = "";
     };
@@ -500,7 +515,7 @@ export function useCli() {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
-            GUI.reinitializeConnection();
+            reinitializeConnection();
         }
     };
 
@@ -514,7 +529,6 @@ export function useCli() {
             outputHistory = lastLine;
 
             if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // start building autoComplete
                 CliAutoComplete.builderStart();
             }
         }
@@ -636,7 +650,11 @@ export function useCli() {
         }
 
         // Initialize CLI autocomplete cache builder
-        CliAutoComplete.initialize(sendLine, writeToOutput);
+        CliAutoComplete.initialize(
+            sendLine,
+            writeToOutput,
+            () => !pastePollInterval && Date.now() - state.lastArrival > SERIAL_IDLE_MS,
+        );
 
         // Connect the autocomplete composable to the textarea's v-model
         autocomplete.connect(
@@ -660,6 +678,10 @@ export function useCli() {
         );
     };
 
+    /**
+     * Tear down the CLI session.
+     * @returns {boolean} true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
+     */
     const cleanup = () => {
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
@@ -667,6 +689,11 @@ export function useCli() {
         if (pastePollInterval) {
             clearInterval(pastePollInterval);
             pastePollInterval = null;
+        }
+
+        if (supportPollInterval) {
+            clearInterval(supportPollInterval);
+            supportPollInterval = null;
         }
 
         if (outputFlushRaf) {
@@ -696,9 +723,12 @@ export function useCli() {
             copyResetTimeout = null;
         }
 
-        if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
+        // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
+        // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
+        const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
+        if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
-                GUI.reinitializeConnection();
+                reinitializeConnection();
             });
         }
 
@@ -706,6 +736,8 @@ export function useCli() {
         CONFIGURATOR.cliValid = false;
 
         CliAutoComplete.cleanup();
+
+        return rebooting;
     };
 
     const adaptPhones = () => {
@@ -724,8 +756,8 @@ export function useCli() {
         windowWrapperRef,
         cliWindowRef,
         commandInputRef,
-        snippetPreviewDialogRef,
-        supportWarningDialogRef,
+        snippetPreviewOpen,
+        supportWarningOpen,
         initialize,
         cleanup,
         clearHistory,

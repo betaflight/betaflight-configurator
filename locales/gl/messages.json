@@ -1797,9 +1797,6 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo control deslizante de sintonía de PID<\/strong><br><br>Control deslizante modo Pidtuning pode ser:<br><br>&bull; OFF - sen controis deslizantes, meter valores manualmente<br>&bull; RP - Controis deslizantes so para Roll e Pitch, meter valores manualmente para Yaw<br>&bull; RPY - Controis deslizantes para tódolos valores de PID<br><br><span class=\"message-negative\"><b>AVISO:<\/b><\/span> Pasar de RP a RPY sobreescribirase a configuración de Yaw con configuracións do firmware."
     },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comprobe sempre que o seu Failsafe funcione correctamente.<\/a><\/strong><\/b> A configuración está na pestana Failsafe, que require o modo experto.<br> &#8226; <b>Empregue o último firmware de Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactive o filtro ADC<\/a><\/strong> no transmisor se emprega OpenTx ou EdgeTx.<br>Configuración básica: configure o Receptor correctamente. Escolla o \"Mapa de canles\" correcto para a súa radio. Comprobe que o Roll, Pitch e outros gráficos de barras se moven correctamente. Axuste o punto final da canle ou os valores do intervalo no transmisor entre ~1000 e ~2000 e configure o punto medio en 1500. Para obter máis información, lea o <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentación<\/a><\/strong>."
-    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -2575,9 +2572,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Esta función só funciona con DSHOT ESC.<br \/>Verifique que o ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e cámbieo na pestana $t(tabMotorTesting.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "O número de motores é 0.<br \/>Verifique o mesturador actual na pestana $t(tabMotorTesting.message) ou configure un personalizado a través da CLI. Refírese a isto <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki<\/a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualice o firmware.<br \/> Asegúrese de que está a usar o firmware máis recente: Betaflight 4.3 ou máis recente."
@@ -4523,8 +4517,9 @@
         "message": "Valor RSSI",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRssiValue": {
-        "message": "Valor instantáneo RSSI (parpadea por debaixo do limiar de alarma)"
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor dBm RSSI",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementTimer": {
         "message": "Temporizador",
@@ -5021,9 +5016,6 @@
         "message": "Calidade de ligazón",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes - empregar con precaución"
-    },
     "osdTextElementFlightDist": {
         "message": "Distancia de voo",
         "description": "One of the elements of the OSD"
@@ -5086,13 +5078,6 @@
     },
     "osdDescElementOsdProfileName": {
         "message": "O nome do perfil OSD definido nas variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "Valor dBm RSSI",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": "Valor en dBm do sinal RSSI se está dispoñible"
     },
     "osdTextElementRcChannels": {
         "message": "Canles RC",
@@ -5615,10 +5600,6 @@
     },
     "osdButtonSaved": {
         "message": "Gardado"
-    },
-    "vtxHelp": {
-        "message": "Aquí pode configurar os valores para o seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e o VTX o admiten.<br>Para configurar o seu VTX, faga os seguintes pasos:<br>1. Vaia a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">esta<\/a> páxina;<br>2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en \"$t(vtxButtonLoadFile.message)\" a continuación, seleccione o ficheiro de configuración VTX e cárgueo;<br>4. Verifique que a configuración é correcta;<br>5. Faga clic en \"$t(vtxButtonSave.message)\" para almacenar a configuración de VTX no controlador de voo.<br>6. Opcionalmente, faga clic en '$t(vtxButtonSaveLua.message)' para gardar un ficheiro de configuración lua que poda usar cos scripts lua de betaflight (Ver máis <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atención:<\/span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
