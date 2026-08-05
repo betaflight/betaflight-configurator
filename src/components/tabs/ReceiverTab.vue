@@ -24,8 +24,8 @@
                     <!-- Failsafe / RX-loss warning -->
                     <UiBox
                         v-if="failsafeActive"
-                        type="neutral"
-                        collapsible
+                        highlight
+                        type="warning"
                         role="alert"
                         :title="$t('receiverFailsafeActiveTitle')"
                     >

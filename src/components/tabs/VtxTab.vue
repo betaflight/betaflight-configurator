@@ -15,15 +15,15 @@
                 <div v-html="$t('vtxMessageNotSupported')"></div>
             </UiBox>
 
-            <!-- Table not configured -->
-            <UiBox highlight v-show="vtxTableNotConfigured">
-                <div v-html="$t('vtxMessageTableNotConfigured')"></div>
-            </UiBox>
-
-            <!-- Factory bands not supported -->
-            <UiBox highlight v-show="factoryBandsNotSupported">
-                <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
-            </UiBox>
+            <!-- Table not configured / factory bands warnings -->
+            <div v-if="vtxTableNotConfigured || factoryBandsNotSupported" class="flex flex-col gap-2">
+                <UiBox v-show="vtxTableNotConfigured" highlight>
+                    <div v-html="$t('vtxMessageTableNotConfigured')"></div>
+                </UiBox>
+                <UiBox v-show="factoryBandsNotSupported" highlight>
+                    <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
+                </UiBox>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
