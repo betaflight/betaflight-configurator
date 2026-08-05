@@ -52,7 +52,6 @@
                                             :label="badge.label"
                                             color="neutral"
                                             variant="subtle"
-                                            size="sm"
                                         />
                                     </span>
                                 </div>
@@ -358,7 +357,7 @@
                                     <USwitch
                                         v-model="gpsRescueAllowArmingWithoutFix"
                                         :disabled="isGpsSettingsDisabled"
-                                        size="sm"
+                                        size="xs"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('failsafeGpsRescueItemSanityChecks')">

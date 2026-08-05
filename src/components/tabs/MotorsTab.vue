@@ -15,7 +15,7 @@
                                 :help="$t('configurationReverseMotorSwitchHelp')"
                                 fullWidth
                             >
-                                <USwitch v-model="reverseMotorDir" size="sm" />
+                                <USwitch v-model="reverseMotorDir" size="xs" />
                             </SettingRow>
                             <div
                                 class="flex justify-center p-2.5 [&_svg]:w-[150px] [&_svg]:h-[150px] [&_svg]:ml-[15px]"
@@ -56,7 +56,7 @@
                                 />
                             </SettingRow>
                             <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" fullWidth>
-                                <USwitch v-model="useUnsyncedPwm" size="sm" />
+                                <USwitch v-model="useUnsyncedPwm" size="xs" />
                             </SettingRow>
                             <SettingRow
                                 v-if="showAnalogSettings && useUnsyncedPwm"
@@ -79,7 +79,7 @@
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
                                     :disabled="isFeatureEnabled('AIRMODE')"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span class="font-semibold">MOTOR_STOP</span>
@@ -90,7 +90,7 @@
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span class="font-semibold">ESC_SENSOR</span>
@@ -103,7 +103,7 @@
                                 :help="$t('configurationDshotBidirHelp')"
                                 fullWidth
                             >
-                                <USwitch v-model="useDshotTelemetry" size="sm" />
+                                <USwitch v-model="useDshotTelemetry" size="xs" />
                             </SettingRow>
                             <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
@@ -207,7 +207,7 @@
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span v-html="$t('feature3D')"></span>
@@ -452,7 +452,7 @@
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" fullWidth>
-                                <USwitch v-model="motorsTestingEnabled" size="sm" />
+                                <USwitch v-model="motorsTestingEnabled" size="xs" />
                             </SettingRow>
                         </div>
                     </div>

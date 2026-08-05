@@ -184,51 +184,41 @@
                                     </li>
                                 </ul>
 
-                                <div class="dataflash-buttons">
-                                    <a
-                                        class="regular-button erase-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="askToEraseFlash"
-                                    >
-                                        {{ $t("dataflashButtonErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        {{ $t("dataflashButtonSaveFile") }}
-                                    </a>
-                                    <a
+                                <div class="dataflash-buttons flex gap-2">
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonErase')"
+                                        @click="askToEraseFlash"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveAndErase')"
+                                        @click="flashSaveBegin(true)"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveFile')"
+                                        @click="flashSaveBegin(false)"
+                                    />
+                                    <UButton
                                         v-if="isExpertMode"
-                                        class="regular-button require-msc-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveAndErase')"
+                                        @click="flashSaveBegin(true)"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveFile')"
                                     >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        <span class="inline-flex items-center gap-1">
-                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                        <template #trailing>
                                             <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
-                                        </span>
-                                    </a>
+                                        </template>
+                                    </UButton>
                                     <p v-html="$t('dataflashSavetoFileNote')"></p>
                                 </div>
                             </div>
@@ -275,16 +265,12 @@
 
                     <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported" type="neutral" collapsible>
                         <div class="require-msc-supported">
-                            <div>
-                                <a
-                                    class="require-msc-ready regular-button onboardLoggingRebootMsc"
-                                    :class="{ disabled: !mscReady }"
-                                    href="#"
-                                    @click.prevent="rebootToMsc"
-                                >
-                                    {{ $t("onboardLoggingRebootMscText") }}
-                                </a>
-                            </div>
+                            <UButton
+                                size="xs"
+                                :disabled="!mscReady"
+                                :label="$t('onboardLoggingRebootMscText')"
+                                @click="rebootToMsc"
+                            />
                         </div>
                         <p v-html="$t('onboardLoggingMscNote')"></p>
                         <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>

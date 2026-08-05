@@ -14,7 +14,7 @@
                             :model-value="selectedProperties.includes(prop.code)"
                             :disabled="isLogging || isBusy"
                             :label="prop.label"
-                            size="sm"
+                            size="xs"
                             class="w-44"
                             @update:model-value="toggleProperty(prop.code, $event)"
                         />
@@ -29,7 +29,7 @@
                     :items="speedItems"
                     :disabled="isLogging || isBusy"
                     class="w-28"
-                    size="sm"
+                    size="xs"
                 />
             </SettingRow>
 

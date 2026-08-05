@@ -514,7 +514,7 @@
                 variant="soft"
                 size="xs"
             />
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
                 <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
                     {{ $t("receiverButtonSave") }}
                 </UButton>

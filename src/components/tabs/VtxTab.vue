@@ -32,7 +32,7 @@
                         <div class="flex flex-col gap-2">
                             <!-- Frequency/Channel toggle -->
                             <SettingRow :label="$t('vtxFrequencyChannel')" :help="$t('vtxFrequencyChannelHelp')">
-                                <USwitch v-model="frequencyMode" size="sm" />
+                                <USwitch v-model="frequencyMode" size="xs" />
                             </SettingRow>
 
                             <!-- Band select -->
@@ -70,7 +70,7 @@
 
                             <!-- Pit mode -->
                             <SettingRow :label="$t('vtxPitMode')" :help="$t('vtxPitModeHelp')">
-                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="sm" />
+                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="xs" />
                             </SettingRow>
 
                             <!-- Pit mode frequency -->

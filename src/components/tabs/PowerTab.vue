@@ -23,7 +23,7 @@
                         v-model="batteryProfileName"
                         maxlength="8"
                         :placeholder="$t('powerBatteryProfileNamePlaceholder')"
-                        size="sm"
+                        size="xs"
                     />
                 </SettingRow>
             </UiBox>
@@ -38,7 +38,7 @@
                                 :items="batteryMeterTypeItems"
                                 v-model="batteryConfig.voltageMeterSource"
                                 @update:model-value="onVoltageMeterSourceChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>
@@ -47,7 +47,7 @@
                                 :items="currentMeterTypeItems"
                                 v-model="batteryConfig.currentMeterSource"
                                 @update:model-value="onCurrentMeterSourceChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>

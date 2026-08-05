@@ -84,11 +84,11 @@
                 <div class="flex flex-col gap-3">
                     <div>
                         <label class="text-sm font-semibold block mb-1">{{ $t("labelName") }}</label>
-                        <UInput v-model="editForm.name" size="sm" class="w-full" />
+                        <UInput v-model="editForm.name" size="xs" class="w-full" />
                     </div>
                     <div>
                         <label class="text-sm font-semibold block mb-1">{{ $t("labelDescription") }}</label>
-                        <UTextarea v-model="editForm.description" size="sm" class="w-full" :rows="4" />
+                        <UTextarea v-model="editForm.description" size="xs" class="w-full" :rows="4" />
                     </div>
                     <div class="text-sm">
                         <span class="font-semibold">{{ $t("labelCreated") }}</span>

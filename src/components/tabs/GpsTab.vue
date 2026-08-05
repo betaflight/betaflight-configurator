@@ -31,7 +31,7 @@
                                 :items="gpsProtocolItems"
                                 v-model="gpsConfig.provider"
                                 @update:model-value="onGpsProtocolChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>
@@ -57,7 +57,7 @@
                         </SettingRow>
 
                         <SettingRow v-if="showUbloxSbas" :label="$t('configurationGPSubxSbas')">
-                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="sm" class="min-w-40" />
+                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="xs" class="min-w-40" />
                         </SettingRow>
                     </UiBox>
 
