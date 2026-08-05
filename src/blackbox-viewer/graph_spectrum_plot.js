@@ -1275,6 +1275,7 @@ GraphSpectrumPlot._drawLowpassDynFilter = function (
         const scaleX = WIDTH / maximalFrequency;
         const NUMBER_OF_POINTS = this._isFullScreen ? 30 : 10;
 
+        /** `@type` {Array<{x: number, y: number}>} */
         const points = [];
         for (let i = 0; i < NUMBER_OF_POINTS; i++) {
             const throttle = i / (NUMBER_OF_POINTS - 1);
