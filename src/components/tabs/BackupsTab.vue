@@ -22,68 +22,70 @@
                     <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                         <div class="mb-4">
                             <div class="text-sm font-bold text-[var(--color-primary-500)] mb-1">{{ craft }}</div>
-                            <UTable :data="groupBackups" :columns="columns" class="text-sm">
-                                <template #created-cell="{ row }">
-                                    {{ formatDate(row.original.created) }}
-                                </template>
-                                <template #name-cell="{ row }">
-                                    <span class="block w-[160px] truncate" :title="row.original.name || ''">
-                                        {{ row.original.name || "" }}
-                                    </span>
-                                </template>
-                                <template #description-cell="{ row }">
-                                    <span
-                                        class="text-dimmed block w-[240px] truncate"
-                                        :title="row.original.description || ''"
-                                    >
-                                        {{ row.original.description || "" }}
-                                    </span>
-                                </template>
-                                <template #actions-cell="{ row }">
-                                    <div class="flex gap-2 whitespace-nowrap shrink-0">
-                                        <UButton
-                                            size="xs"
-                                            variant="soft"
-                                            icon="i-lucide-download"
-                                            @click="downloadBackup(row.original)"
+                            <div class="overflow-x-auto">
+                                <UTable :data="groupBackups" :columns="columns" class="text-sm">
+                                    <template #created-cell="{ row }">
+                                        {{ formatDate(row.original.created) }}
+                                    </template>
+                                    <template #name-cell="{ row }">
+                                        <span class="block w-[160px] truncate" :title="row.original.name || ''">
+                                            {{ row.original.name || "" }}
+                                        </span>
+                                    </template>
+                                    <template #description-cell="{ row }">
+                                        <span
+                                            class="text-dimmed block w-[240px] truncate"
+                                            :title="row.original.description || ''"
                                         >
-                                            {{ $t("actionDownload") }}
-                                        </UButton>
-                                        <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
-                                            <span>
-                                                <UButton
-                                                    size="xs"
-                                                    variant="soft"
-                                                    color="success"
-                                                    icon="i-lucide-upload"
-                                                    :disabled="!isConnected || isRestoreBusy"
-                                                    :class="{ 'pointer-events-none': !isConnected }"
-                                                    @click="restoreBackup(row.original)"
-                                                >
-                                                    {{ $t("actionRestore") }}
-                                                </UButton>
-                                            </span>
-                                        </UTooltip>
-                                        <UButton
-                                            size="xs"
-                                            variant="soft"
-                                            icon="i-lucide-pencil"
-                                            @click="startEdit(row.original)"
-                                        >
-                                            {{ $t("actionEdit") }}
-                                        </UButton>
-                                        <UButton
-                                            size="xs"
-                                            variant="soft"
-                                            color="error"
-                                            icon="i-lucide-trash-2"
-                                            @click="deleteBackup(row.original.id)"
-                                        >
-                                            {{ $t("actionDelete") }}
-                                        </UButton>
-                                    </div>
-                                </template>
-                            </UTable>
+                                            {{ row.original.description || "" }}
+                                        </span>
+                                    </template>
+                                    <template #actions-cell="{ row }">
+                                        <div class="flex gap-2 whitespace-nowrap shrink-0">
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                icon="i-lucide-download"
+                                                @click="downloadBackup(row.original)"
+                                            >
+                                                {{ $t("actionDownload") }}
+                                            </UButton>
+                                            <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                                                <span>
+                                                    <UButton
+                                                        size="xs"
+                                                        variant="soft"
+                                                        color="success"
+                                                        icon="i-lucide-upload"
+                                                        :disabled="!isConnected || isRestoreBusy"
+                                                        :class="{ 'pointer-events-none': !isConnected }"
+                                                        @click="restoreBackup(row.original)"
+                                                    >
+                                                        {{ $t("actionRestore") }}
+                                                    </UButton>
+                                                </span>
+                                            </UTooltip>
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                icon="i-lucide-pencil"
+                                                @click="startEdit(row.original)"
+                                            >
+                                                {{ $t("actionEdit") }}
+                                            </UButton>
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                color="error"
+                                                icon="i-lucide-trash-2"
+                                                @click="deleteBackup(row.original.id)"
+                                            >
+                                                {{ $t("actionDelete") }}
+                                            </UButton>
+                                        </div>
+                                    </template>
+                                </UTable>
+                            </div>
                         </div>
                     </template>
                 </UiBox>
