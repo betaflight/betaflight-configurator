@@ -202,6 +202,59 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
     });
 });
 
+// Regression. On Linux the FC gives two ports quickly, because udev and ModemManager remove
+// the CDC-ACM node and add it again. Only the second port stays in the list after the refresh.
+// The addedDevice event of the first port put a dead path in the selection. Auto-connect then
+// used that path and failed with "[WEBSERIAL] Device not found: serial_5".
+describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    it("ignores a suggested device that is no longer in the refreshed lists", () => {
+        const ghost = { path: "serial_5", displayName: "Betaflight STM Electronics" };
+        const real = { path: "serial_6", displayName: "Betaflight STM Electronics" };
+        // The refresh removed the first port. The list holds the second port only.
+        DeviceHandler.currentSerialPorts = [real];
+
+        const selected = DeviceHandler.selectActivePort(ghost);
+
+        expect(selected).not.toBe("serial_5");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("serial_6");
+    });
+
+    it("still honours a suggested device that is present in the refreshed lists", () => {
+        const real = { path: "serial_6", displayName: "Betaflight STM Electronics" };
+        DeviceHandler.currentSerialPorts = [real];
+
+        const selected = DeviceHandler.selectActivePort(real);
+
+        expect(selected).toBe("serial_6");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("serial_6");
+    });
+
+    // Only the suggestion can select a device that the AT32/CP210/SPR/STM filter does not
+    // match. The check on the suggestion must not apply that filter too.
+    it("honours a present suggestion whose displayName does not match the device filter", () => {
+        const odd = { path: "serial_7", displayName: "Betaflight VID:1234 PID:5678" };
+        DeviceHandler.currentSerialPorts = [odd];
+
+        const selected = DeviceHandler.selectActivePort(odd);
+
+        expect(selected).toBe("serial_7");
+    });
+
+    it("falls through to 'noselection' when the only suggestion is a ghost", () => {
+        DeviceHandler.currentSerialPorts = [];
+        isExpertModeEnabled.mockReturnValue(false);
+
+        const selected = DeviceHandler.selectActivePort({ path: "serial_5", displayName: "Betaflight STM" });
+
+        expect(selected).toBeUndefined();
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+});
+
 describe("DeviceHandler show* setters", () => {
     beforeEach(() => {
         resetPortHandler();

@@ -1746,12 +1746,6 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置いてください。"
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "機首を約45°上に傾けてください。"
-    },
-    "boardAlignmentWizard-HintRollRight": {
-        "message": "右側を約45°下に傾けてください。"
-    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "ドローンを約45°時計回りに回転させてください。(上から見た場合)"
     },
@@ -1820,9 +1814,6 @@
     },
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "加速度センサーが重力を検出していません。FCボードが接続され、動いていないことを確認してください。"
-    },
-    "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "ピッチ操作を検出できませんでした。再試行し、機首をさらに上へ傾けてください。"
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "ロール操作を検出できませんでした。再試行し、右側をさらに下へ傾けてください。"
