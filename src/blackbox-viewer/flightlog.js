@@ -1383,11 +1383,11 @@ export function FlightLog(logData) {
     };
 
     /**
-     * Function to compute of min and max curve values during time interval.
-     * @param field_name String: Curve fields name.
-     * @param start_time Integer: The interval start time .
-     * @end_time start_time Integer: The interval end time .
-     * @returns {min: MinValue, max: MaxValue} if success, or undefined if error
+     * Function to compute min and max curve values during time interval.
+     * @param {string} field_name - Curve field name.
+     * @param {number} start_time - The interval start time.
+     * @param {number} end_time - The interval end time.
+     * @returns {{min: number, max: number} | undefined} - Min and max values if success, or undefined if error
      */
     this.getMinMaxForFieldDuringTimeInterval = function (field_name, start_time, end_time) {
         const chunks = this.getSmoothedChunksInTimeRange(start_time, end_time);
