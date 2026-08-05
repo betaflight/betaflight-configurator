@@ -42,6 +42,14 @@
         "message": "Вам потрібно оновити сторінку для отримання останніх змін. Оновлення зараз перезавантажить сторінку, і ви втратите будь-які незбережені зміни, та скасує будь-яку операцію, яка триває.<br><br>Бажаєте оновити її зараз? Також ви можете відхилити це повідомлення і власноруч оновити сторінку пізніше.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnOfflineReadyTitle": {
+        "message": "Застосунок готовий до використання без мережі",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOfflineReadyText": {
+        "message": "Ви можете встановити це як автономний застосунок на вашому пристрої, якщо бажаєте. Шукайте таку функцію в адресному рядку браузера або в меню.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Операція не підтримується пристроєм."
     },
@@ -645,6 +653,15 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Не вдалося<\/span> під'єднатися до вибраного порту. Переконайтеся, що пристрій доступний, а параметри підключення налаштовано правильно, після чого повторіть спробу."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "На iOS дозвольте застосунку Betaflight доступ до <strong>локальної мережі<\/strong>: Параметри &rarr; Приватність і безпека &rarr; Локальна мережа, потім повторіть спробу."
+    },
+    "connectionLostTitle": {
+        "message": "З'єднання втрачено"
+    },
+    "connectionLostUnresponsive": {
+        "message": "Польотний контролер <span class=\"message-negative\">перестав відповідати<\/span> й з'єднання було закрите. Перепідключіть плату і спробуйте знову; якщо проблема лишилась, вимкніть та увімкніть польотний контролер."
     },
     "serialPortClosedOk": {
         "message": "Послідовний порт <span class=\"message-positive\">успішно<\/span> закрито"
@@ -1714,6 +1731,9 @@
     "configurationBoardAlignmentHelp": {
         "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Автовизначення орієнтації плати"
+    },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Майстер орієнтації плати"
     },
@@ -1729,11 +1749,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Розмістіть дрон рівно, камерою від вас (до екрана)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Підніміть ніс приблизно на 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Нахиліть ніс донизу приблизно на 45°, щоб камера була направлена донизу."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Нахиліть правий бік униз приблизно на 45°."
+        "message": "Нахиліть праву сторону донизу приблизно на 45°, опускаючи праві промені та піднявши ліві."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Прокрутіть дрон приблизно на 45° за годинниковою стрілкою (як видно зверху)."
@@ -1805,10 +1825,13 @@
         "message": "Акселерометр не зчитує гравітацію. Переконайтеся, що польотний контролер під'єднано та він нерухомий."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та нахиліть ніс вище."
+        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та опустіть ніс більше."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Рух за віссю крену не виявлено. Повторіть спробу та нахиліть правий бік нижче."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Один із нахилів виконано в неправильному напрямку. Перевірте напрямки тангажу та крену і повторіть спробу."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Горизонтально"

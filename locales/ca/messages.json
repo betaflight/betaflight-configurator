@@ -674,6 +674,9 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "A iOS, permeteu l'accés a la <strong>Xarxa local<\/strong> per a Betaflight a Configuració &rarr; Privacitat &amp; Seguretat &rarr; Xarxa local i, a continuació, torneu-ho a provar."
+    },
     "connectionLostTitle": {
         "message": "S'ha perdut la connexió"
     },
@@ -1770,11 +1773,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Inclina el nas cap amunt uns 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Inclineu el morro cap avall uns 45°, de manera que la càmera apunti cap a terra."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Inclina el nas cap abaix uns 45°."
+        "message": "Inclineu el costat dret cap avall uns 45°, baixant els braços drets i aixecant l'esquerre."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
@@ -1846,10 +1849,13 @@
         "message": "L'acceleròmetre no llegeix la gravetat. Assegureu-vos que la controladora estigui connectada i no estigui en moviment."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap amunt encara més."
+        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap a baix encara més."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "No s'ha detectat el gest de Roll. Torna-ho a intentar i inclina el costat dret cap abaix encara més."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Un dels gestos d'inclinació ha anat en la direcció equivocada. Comprova les direccions de inclinació i balanceig i torna-ho a provar."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Pla"
@@ -8934,6 +8940,69 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Mostra el perfil actiu de la bataria o index"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Número de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra el número de punt de referència actual\/total del pla de vol actiu"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra la latitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Longitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra la longitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra l'altitud del punt de referència actual"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distància de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra la distància del punt de referència actual"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direcció del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra una fletxa de direcció que apunta al punt de referència actual"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Número del següent punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra el número de punt de referència següent del pla de vol actiu"
+    },
+    "osdTextElementWpEta": {
+        "message": "Hora estimada d'arribada al punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra l'hora estimada d'arribada al punt de referència actual"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mapa de navegació",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimapa que mostra la destinació, el pla de vol i la trajectòria volada"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",

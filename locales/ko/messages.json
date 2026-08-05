@@ -1741,12 +1741,6 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "드론을 평평한 곳에 놓고 카메라가 사용자 반대 방향(화면 쪽)을 향하도록 하세요."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "기수를 약 45° 위로 기울이세요."
-    },
-    "boardAlignmentWizard-HintRollRight": {
-        "message": "오른쪽을 약 45도 기울이세요."
-    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "드론을 시계 방향으로 약 45° 회전시키세요 (위에서 내려다 봤을 때)."
     },
@@ -1815,9 +1809,6 @@
     },
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "가속도계가 중력을 측정하지 않습니다. FC가 연결되어 있고 움직이지 않는지 확인합니다."
-    },
-    "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "피치 제스처가 감지되지 않았습니다. 다시 시도하고 기수를 더 위로 기울여 주세요."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "롤 제스처가 감지되지 않았습니다. 다시 시도한 후 오른쪽을 아래로 더 기울여 주세요."

@@ -9,10 +9,11 @@
  * imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
  * import it without a cycle or an active-pinia requirement.
  *
- * There is no transition table and no reconnect token: a reconnect simply
- * re-uses the previously-selected port (the device re-enumerates with the same
- * stable id), and selectActivePort() consults isReconnecting to avoid hijacking
- * the selection with the expert-mode virtual/manual fallback mid-reboot.
+ * There is no transition table and no reconnect token. A reconnect uses the port from the last
+ * selection. selectActivePort() reads isReconnecting and keeps that selection. It does not
+ * change the selection to the expert-mode virtual or manual device during a reboot.
+ * If the device comes back with a new id, the addedDevice event selects it again. The retry
+ * loop then uses the new selection.
  */
 import { ref } from "vue";
 
