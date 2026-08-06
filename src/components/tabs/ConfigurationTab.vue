@@ -1,198 +1,222 @@
 <template>
-    <div class="tab-configuration">
-        <div class="content_wrapper">
-            <div class="tab_title">{{ $t("tabConfiguration") }}</div>
-            <WikiButton docUrl="configuration" />
-            <UiBox highlight class="mb-3">
-                <p v-html="$t('configurationFeaturesHelp')"></p>
-            </UiBox>
+    <BaseTab tab-name="configuration">
+        <div class="tab-configuration">
+            <div class="content_wrapper">
+                <div class="tab_title">{{ $t("tabConfiguration") }}</div>
+                <WikiButton docUrl="configuration" />
+                <UiBox highlight class="mb-3">
+                    <p v-html="$t('configurationFeaturesHelp')"></p>
+                </UiBox>
 
-            <div class="grid-row grid-box col2">
-                <div class="col-span-1">
-                    <!-- SYSTEM CONFIGURATION -->
-                    <UiBox :title="$t('configurationSystem')">
-                        <UiBox highlight>
-                            <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <!-- SYSTEM CONFIGURATION -->
+                        <UiBox :title="$t('configurationSystem')" type="neutral" collapsible>
+                            <UiBox highlight>
+                                <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
+                            </UiBox>
+                            <SettingRow :label="$t('configurationGyroFrequency')">
+                                <UInput readonly disabled :value="gyroFrequencyDisplay" class="min-w-40" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationPidProcessDenom')"
+                                :help="$t('configurationPidProcessDenomHelp')"
+                            >
+                                <USelect
+                                    :items="pidDenomOptions"
+                                    v-model="pidAdvancedConfig.pid_process_denom"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                         </UiBox>
-                        <SettingRow :label="$t('configurationGyroFrequency')">
-                            <UInput readonly disabled :value="gyroFrequencyDisplay" class="min-w-40" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationPidProcessDenom')"
-                            :help="$t('configurationPidProcessDenomHelp')"
-                        >
-                            <USelect
-                                :items="pidDenomOptions"
-                                v-model="pidAdvancedConfig.pid_process_denom"
-                                class="min-w-40"
-                            />
-                        </SettingRow>
-                    </UiBox>
 
-                    <!-- PERSONALIZATION -->
-                    <UiBox :title="$t('configurationPersonalization')">
-                        <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
-                            <UInput v-model="craftName" maxlength="16" class="min-w-40" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationPilotName')"
-                            :help="$t('configurationPilotNameHelp')"
-                            v-if="showPilotName"
-                        >
-                            <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
-                        </SettingRow>
-                    </UiBox>
+                        <!-- PERSONALIZATION -->
+                        <UiBox :title="$t('configurationPersonalization')" type="neutral" collapsible>
+                            <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
+                                <UInput v-model="craftName" maxlength="16" class="min-w-40" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationPilotName')"
+                                :help="$t('configurationPilotNameHelp')"
+                                v-if="showPilotName"
+                            >
+                                <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- CAMERA -->
-                    <UiBox :title="$t('configurationCamera')" v-if="accHardwareEnabled">
-                        <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
-                            <UInputNumber
-                                v-model="fpvCamAngleDegrees"
-                                :step="1"
-                                :min="0"
-                                :max="90"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                    </UiBox>
+                        <!-- CAMERA -->
+                        <UiBox :title="$t('configurationCamera')" type="neutral" collapsible v-if="accHardwareEnabled">
+                            <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
+                                <UInputNumber
+                                    v-model="fpvCamAngleDegrees"
+                                    :step="1"
+                                    :min="0"
+                                    :max="90"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- ARMING -->
-                    <UiBox
-                        :title="$t('configurationArming')"
-                        :help="$t('configurationArmingHelp')"
-                        v-if="accHardwareEnabled"
-                    >
-                        <SettingRow :label="$t('configurationSmallAngle')" :help="$t('configurationSmallAngleHelp')">
-                            <UInputNumber
-                                v-model="armingConfig.small_angle"
-                                :step="1"
-                                :min="0"
-                                :max="180"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationGyroCalOnFirstArm')"
-                            :help="$t('configurationGyroCalOnFirstArmHelp')"
-                            v-if="showGyroCalOnFirstArm"
+                        <!-- ARMING -->
+                        <UiBox
+                            :title="$t('configurationArming')"
+                            :help="$t('configurationArmingHelp')"
+                            type="neutral"
+                            collapsible
+                            v-if="accHardwareEnabled"
                         >
-                            <USwitch v-model="armingConfig.gyro_cal_on_first_arm_bool" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationAutoDisarmDelay')"
-                            :help="$t('configurationAutoDisarmDelayHelp')"
-                            v-if="showAutoDisarmDelay"
-                        >
-                            <UInputNumber
-                                v-model="armingConfig.auto_disarm_delay"
-                                :step="1"
-                                :min="0"
-                                :max="60"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                    </UiBox>
+                            <SettingRow
+                                :label="$t('configurationSmallAngle')"
+                                :help="$t('configurationSmallAngleHelp')"
+                            >
+                                <UInputNumber
+                                    v-model="armingConfig.small_angle"
+                                    :step="1"
+                                    :min="0"
+                                    :max="180"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationGyroCalOnFirstArm')"
+                                :help="$t('configurationGyroCalOnFirstArmHelp')"
+                                v-if="showGyroCalOnFirstArm"
+                            >
+                                <USwitch v-model="armingConfig.gyro_cal_on_first_arm_bool" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationAutoDisarmDelay')"
+                                :help="$t('configurationAutoDisarmDelayHelp')"
+                                v-if="showAutoDisarmDelay"
+                            >
+                                <UInputNumber
+                                    v-model="armingConfig.auto_disarm_delay"
+                                    :step="1"
+                                    :min="0"
+                                    :max="60"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- FEATURES -->
-                    <UiBox :title="$t('configurationFeatures')">
-                        <SettingRow
-                            v-for="feature in featuresList"
-                            :key="feature.bit"
-                            fullWidth
-                            :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
-                        >
-                            <USwitch
-                                :model-value="isFeatureEnabled(feature)"
-                                @update:model-value="(checked) => toggleFeature(feature, checked)"
-                            />
-                            <template #label>
-                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('feature' + feature.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
+                        <!-- FEATURES -->
+                        <UiBox :title="$t('configurationFeatures')" type="neutral" collapsible>
+                            <SettingRow
+                                v-for="feature in featuresList"
+                                :key="feature.bit"
+                                fullWidth
+                                :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
+                            >
+                                <USwitch
+                                    :model-value="isFeatureEnabled(feature)"
+                                    @update:model-value="(checked) => toggleFeature(feature, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('feature' + feature.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- DSHOT BEACON -->
-                    <UiBox :title="$t('configurationDshotBeeper')" :help="$t('configurationDshotBeaconHelp')">
-                        <SettingRow
-                            :label="$t('configurationDshotBeaconTone')"
-                            :help="$t('configurationUseDshotBeeper')"
+                        <!-- DSHOT BEACON -->
+                        <UiBox
+                            :title="$t('configurationDshotBeeper')"
+                            :help="$t('configurationDshotBeaconHelp')"
+                            type="neutral"
+                            collapsible
                         >
-                            <USelect
-                                v-model="dshotBeaconTone"
-                                class="min-w-24"
-                                :items="[
-                                    { label: $t('portsTelemetryDisabled'), value: 0 },
-                                    ...[1, 2, 3, 4, 5].map((i) => ({ label: String(i), value: i })),
-                                ]"
-                            />
-                        </SettingRow>
-                        <div class="flex gap-2">
-                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllDshot" size="xs" />
-                            <UButton :label="$t('configurationBeeperDisableAll')" @click="disableAllDshot" size="xs" />
-                        </div>
-                        <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
-                            <USwitch
-                                :model-value="isDshotConditionEnabled(cond)"
-                                @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
-                            />
-                            <template #label>
-                                <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('beeper' + cond.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
-                </div>
+                            <SettingRow
+                                :label="$t('configurationDshotBeaconTone')"
+                                :help="$t('configurationUseDshotBeeper')"
+                            >
+                                <USelect
+                                    v-model="dshotBeaconTone"
+                                    class="min-w-24"
+                                    :items="[
+                                        { label: $t('portsTelemetryDisabled'), value: 0 },
+                                        ...[1, 2, 3, 4, 5].map((i) => ({ label: String(i), value: i })),
+                                    ]"
+                                />
+                            </SettingRow>
+                            <div class="flex gap-2">
+                                <UButton
+                                    :label="$t('configurationBeeperEnableAll')"
+                                    @click="enableAllDshot"
+                                    size="xs"
+                                />
+                                <UButton
+                                    :label="$t('configurationBeeperDisableAll')"
+                                    @click="disableAllDshot"
+                                    size="xs"
+                                />
+                            </div>
+                            <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
+                                <USwitch
+                                    :model-value="isDshotConditionEnabled(cond)"
+                                    @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('beeper' + cond.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
+                    </div>
 
-                <div class="col-span-1">
-                    <!-- BEEPER CONFIGURATION -->
-                    <UiBox :title="$t('configurationBeeper')">
-                        <div class="flex gap-2">
-                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllBeepers" size="xs" />
-                            <UButton
-                                :label="$t('configurationBeeperDisableAll')"
-                                @click="disableAllBeepers"
-                                size="xs"
-                            />
-                        </div>
-                        <SettingRow
-                            v-for="beeper in beepersList"
-                            :key="beeper.bit"
-                            v-show="beeper.visible !== false"
-                            fullWidth
-                        >
-                            <USwitch
-                                :model-value="isBeeperEnabled(beeper)"
-                                @update:model-value="(checked) => toggleBeeper(beeper, checked)"
-                            />
-                            <template #label>
-                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('beeper' + beeper.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
+                    <div class="col-span-1">
+                        <!-- BEEPER CONFIGURATION -->
+                        <UiBox :title="$t('configurationBeeper')" type="neutral" collapsible>
+                            <div class="flex gap-2">
+                                <UButton
+                                    :label="$t('configurationBeeperEnableAll')"
+                                    @click="enableAllBeepers"
+                                    size="xs"
+                                />
+                                <UButton
+                                    :label="$t('configurationBeeperDisableAll')"
+                                    @click="disableAllBeepers"
+                                    size="xs"
+                                />
+                            </div>
+                            <SettingRow
+                                v-for="beeper in beepersList"
+                                :key="beeper.bit"
+                                v-show="beeper.visible !== false"
+                                fullWidth
+                            >
+                                <USwitch
+                                    :model-value="isBeeperEnabled(beeper)"
+                                    @update:model-value="(checked) => toggleBeeper(beeper, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('beeper' + beeper.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
+                    </div>
                 </div>
             </div>
+            <div class="content_toolbar toolbar_fixed_bottom">
+                <UButton :label="$t('configurationButtonSave')" size="xs" :loading="isSaving" @click="saveConfig" />
+            </div>
         </div>
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" :loading="isSaving" @click="saveConfig" />
-        </div>
-    </div>
+    </BaseTab>
 </template>
 
 <script>
@@ -211,6 +235,7 @@ import { i18n } from "../../js/localization";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../../js/data_storage";
 import { updateTabList } from "../../js/utils/updateTabList";
+import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -218,6 +243,7 @@ import SettingRow from "../elements/SettingRow.vue";
 export default defineComponent({
     name: "ConfigurationTab",
     components: {
+        BaseTab,
         WikiButton,
         UiBox,
         SettingRow,

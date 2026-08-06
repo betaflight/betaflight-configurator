@@ -1275,7 +1275,7 @@ GraphSpectrumPlot._drawLowpassDynFilter = function (
         const scaleX = WIDTH / maximalFrequency;
         const NUMBER_OF_POINTS = this._isFullScreen ? 30 : 10;
 
-        let startPlot = false;
+        /** `@type` {Array<{x: number, y: number}>} */
         const points = [];
         for (let i = 0; i < NUMBER_OF_POINTS; i++) {
             const throttle = i / (NUMBER_OF_POINTS - 1);
@@ -1286,21 +1286,10 @@ GraphSpectrumPlot._drawLowpassDynFilter = function (
             const frequency = (frequency2 - frequency1) * curve + frequency1;
 
             const x = scaleX * frequency;
-
-            if (x >= x1) {
-                if (startPlot === false) {
-                    // Interpolate a more or less correct y in the x1 position
-                    points.push({
-                        x: x1,
-                        y: y + (HEIGHT - y) * (1 - x1 / x),
-                    });
-                }
-                startPlot = true;
-                points.push({
-                    x,
-                    y,
-                });
-            }
+            points.push({
+                x,
+                y,
+            });
         }
 
         this._drawCurve(canvasCtx, points);

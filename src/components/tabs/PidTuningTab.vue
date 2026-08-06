@@ -108,8 +108,15 @@
                     :disabled="!hasChanges"
                     @click="refresh"
                     variant="soft"
+                    size="xs"
                 />
-                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" :loading="isSaving" @click="save" />
+                <UButton
+                    :label="$t('pidTuningButtonSave')"
+                    :disabled="!hasChanges"
+                    :loading="isSaving"
+                    @click="save"
+                    size="xs"
+                />
             </div>
         </div>
     </BaseTab>

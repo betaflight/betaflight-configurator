@@ -76,7 +76,7 @@
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- LEFT COLUMN: Non-Profile Filter Settings -->
-            <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral" collapsible>
                 <!-- Gyro Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</span>
@@ -399,7 +399,7 @@
             </UiBox>
 
             <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
-            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral" collapsible>
                 <!-- D-Term Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
