@@ -1468,9 +1468,13 @@ function rebootReconnect() {
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
             const autoConnect = DeviceHandler.devicePicker.autoConnect;
             // Auto-Connect off: nothing will reconnect, so the wait ends as soon as there is
-            // nothing left to wait for — the port back for serial, immediately for a driven
-            // target (its link is already down).
-            const waitedOut = !autoConnect && (driven || DeviceHandler.portAvailable);
+            // nothing left to wait for — the selection listed again for serial, immediately for
+            // a driven target (its link is already down). Not DeviceHandler.portAvailable: that
+            // is true for ANY serial port, so a machine with others would end the wait while the
+            // rebooting device was still gone. device_handler re-points the selection when the
+            // device returns under a new id, so this follows it.
+            const waitedOut =
+                !autoConnect && (driven || DeviceHandler.isKnownDevicePath(DeviceHandler.devicePicker.selectedDevice));
 
             if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();

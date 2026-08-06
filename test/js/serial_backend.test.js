@@ -112,6 +112,7 @@ vi.mock("../../src/js/device_handler", () => ({
         initialize: vi.fn(),
         devicePickerDisabled: false,
         portAvailable: false,
+        isKnownDevicePath: vi.fn(() => false),
         devicePicker: {
             selectedDevice: "/dev/ttyACM0",
             portOverride: "/dev/ttyACM0",
@@ -870,12 +871,15 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // Auto-Connect off: nothing reconnects, so the wait ends as soon as there is nothing left
     // to wait for. For serial that is the port coming back — the user can reconnect to a device
     // that is actually there. (Was shouldConcludeRebootDialog's serial branch.)
-    it("with Auto-Connect off, ends the window when the serial port comes back", () => {
+    it("with Auto-Connect off, ends the window when the SELECTED device is listed again", () => {
+        // Not "a serial port exists": a machine with other ports would end the wait while the
+        // rebooting device was still gone.
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = false;
-            DeviceHandler.portAvailable = false;
+            DeviceHandler.portAvailable = true; // other ports are present throughout
+            DeviceHandler.isKnownDevicePath.mockReturnValue(false);
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
@@ -884,14 +888,15 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             serial.connect.mockClear(); // establishConnection's own open
 
             vi.advanceTimersByTime(1500 + 3000); // flush plus several ticks
-            expect(getConnectionState().isRebootWindowOpen).toBe(true); // port still gone: keep waiting
+            expect(getConnectionState().isRebootWindowOpen).toBe(true); // ours is gone: keep waiting
 
-            DeviceHandler.portAvailable = true; // re-enumerated
+            DeviceHandler.isKnownDevicePath.mockReturnValue(true); // re-enumerated
             vi.advanceTimersByTime(1000);
             expect(getConnectionState().isRebootWindowOpen).toBe(false);
             expect(serial.connect).not.toHaveBeenCalled(); // nothing auto-reconnects
         } finally {
             DeviceHandler.portAvailable = false;
+            DeviceHandler.isKnownDevicePath.mockReturnValue(false);
             vi.useRealTimers();
         }
     });
