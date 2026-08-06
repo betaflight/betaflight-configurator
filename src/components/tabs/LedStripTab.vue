@@ -4,7 +4,7 @@
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
             <WikiButton docUrl="led-strip" />
 
-            <UiBox type="neutral" collapsible class="mb-3">
+            <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
             </UiBox>
 
@@ -243,6 +243,7 @@
                             <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
                     </div>
+                    <!-- Color palette buttons (16 colored swatches) -->
                     <button
                         v-for="i in 16"
                         :key="`color-${i - 1}`"
@@ -286,7 +287,6 @@
                 <div class="section" v-html="$t('ledStripWiring')"></div>
                 <div class="wiring-container">
                     <UButton
-                        block
                         size="xs"
                         color="primary"
                         :variant="wireMode ? 'solid' : 'soft'"
@@ -320,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="saveButtonText" :loading="isSaving" @click="save" />
+            <UButton size="xs" :label="saveButtonText" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -942,9 +942,7 @@ function getModeColorButtonClass(mode, direction) {
 
 function getModeColorButtonStyle(mode, direction) {
     const colorIndex = getModeColor(mode, direction);
-    return {
-        backgroundColor: getColorStyle(colorIndex),
-    };
+    return { backgroundColor: getColorStyle(colorIndex) };
 }
 
 function getModeColorButtonLabel(direction) {
@@ -1166,58 +1164,47 @@ watch(auxChannelValue, (newVal) => {
     color: var(--error-500);
 }
 
-/* Buttons */
-button {
+/* Swatch buttons (mode colors, special colors, colour palette).
+ * These stay plain <button> elements because their background is driven by the
+ * LED colour data, but they follow the same radius/typography as UButton so the
+ * tab matches the rest of the UI.  The selectors are deliberately scoped to the
+ * swatch containers — a bare `button` rule would also hit every UButton on the
+ * tab and undo its Nuxt UI styling. */
+.mode_colors > button,
+.colors > button {
     text-align: center;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1;
     border: 1px solid var(--primary-600);
     background-color: var(--primary-500);
-    border-radius: 3px;
-    padding: 7px 6px;
-    margin: 3px 0;
+    border-radius: var(--ui-radius);
+    padding: 7px 10px;
+    margin: 3px 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     color: black;
 }
 
-/* Buttons within controls - add left/right padding */
-.controls button {
-    padding: 7px 10px;
-    margin: 3px 4px;
-}
-
-button:hover:not(:disabled) {
+.mode_colors > button:hover:not(:disabled),
+.colors > button:hover:not(:disabled) {
     background-color: var(--primary-600);
     border-color: var(--primary-700);
 }
 
-button:active:not(:disabled) {
+.mode_colors > button:active:not(:disabled),
+.colors > button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-/* Disabled button styles */
-button:disabled,
-button.disabled {
+/* Disabled swatch buttons */
+.mode_colors > button:disabled,
+.colors > button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--surface-300);
     border-color: var(--surface-500);
     color: white;
-}
-
-button:disabled:hover,
-button.disabled:hover {
-    background-color: var(--surface-300);
-    border-color: var(--surface-500);
-}
-
-button:disabled:active,
-button.disabled:active {
-    transform: none;
-}
-
-.save_btn {
-    min-width: 96px;
 }
 
 .w50 {
@@ -1363,6 +1350,105 @@ button.disabled:active {
     color: var(--text);
 }
 
+.colors {
+    height: 130px;
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 4px;
+    width: 49%;
+    vertical-align: middle;
+}
+
+/* Colors button defaults */
+.colors > button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+.colors button:hover {
+    border-style: solid;
+}
+
+.colors button.btnOn {
+    border: 2px solid var(--text);
+}
+
+/* Default color backgrounds */
+.color-0 {
+    background: black;
+}
+
+.color-1 {
+    background: white;
+    color: black !important;
+}
+
+.color-2 {
+    background: red;
+}
+
+.color-3 {
+    background: orange;
+}
+
+.color-4 {
+    background: yellow;
+    color: black !important;
+}
+
+.color-5 {
+    background: greenyellow;
+    color: black !important;
+}
+
+.color-6 {
+    background: limegreen;
+}
+
+.color-7 {
+    background: palegreen;
+    color: black !important;
+}
+
+.color-8 {
+    background: cyan;
+    color: black !important;
+}
+
+.color-9 {
+    background: lightcyan;
+    color: black !important;
+}
+
+.color-10 {
+    background: dodgerblue;
+}
+
+.color-11 {
+    background: darkviolet;
+}
+
+.color-12 {
+    background: magenta;
+}
+
+.color-13 {
+    background: deeppink;
+}
+
+.color-14 {
+    background: black;
+}
+
+.color-15 {
+    background: black;
+}
+
 /* Color Define Sliders */
 .colorDefineSliders {
     display: none;
@@ -1457,111 +1543,8 @@ button.disabled:active {
     grid-row: 3;
 }
 
-/* Colors */
-.colors {
-    height: 130px;
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 4px;
-    width: 49%;
-    vertical-align: middle;
-}
-
-.colors > button {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    color: white;
-}
-
-.colors button:hover {
-    border-style: solid;
-}
-
-.colors button.btnOn {
-    border: 2px solid var(--text);
-}
-
-/* Default color backgrounds */
-.color-0 {
-    background: black;
-}
-
-.color-1 {
-    background: white;
-    color: black !important;
-}
-
-.color-2 {
-    background: red;
-}
-
-.color-3 {
-    background: orange;
-}
-
-.color-4 {
-    background: yellow;
-    color: black !important;
-}
-
-.color-5 {
-    background: greenyellow;
-    color: black !important;
-}
-
-.color-6 {
-    background: limegreen;
-}
-
-.color-7 {
-    background: palegreen;
-    color: black !important;
-}
-
-.color-8 {
-    background: cyan;
-    color: black !important;
-}
-
-.color-9 {
-    background: lightcyan;
-    color: black !important;
-}
-
-.color-10 {
-    background: dodgerblue;
-}
-
-.color-11 {
-    background: darkviolet;
-}
-
-.color-12 {
-    background: magenta;
-}
-
-.color-13 {
-    background: deeppink;
-}
-
-.color-14 {
-    background: black;
-}
-
-.color-15 {
-    background: black;
-}
-
-/* Mode Colors */
+/* Mode / Special Color Buttons */
 .mode_colors button.btnOn {
-    border: 2px solid var(--text);
-}
-
-/* Special Colors */
-.special_colors button.btnOn {
     border: 2px solid var(--text);
 }
 

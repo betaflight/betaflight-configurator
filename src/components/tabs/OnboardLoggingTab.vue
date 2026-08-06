@@ -184,7 +184,7 @@
                                     </li>
                                 </ul>
 
-                                <div class="dataflash-buttons flex gap-2">
+                                <div class="dataflash-buttons flex flex-wrap items-center gap-2">
                                     <UButton
                                         size="xs"
                                         :disabled="dataflashUsedSize === 0"
@@ -202,25 +202,13 @@
                                         :disabled="dataflashUsedSize === 0"
                                         :label="$t('dataflashButtonSaveFile')"
                                         @click="flashSaveBegin(false)"
-                                    />
-                                    <UButton
-                                        v-if="isExpertMode"
-                                        size="xs"
-                                        :disabled="dataflashUsedSize === 0"
-                                        :label="$t('dataflashButtonSaveAndErase')"
-                                        @click="flashSaveBegin(true)"
-                                    />
-                                    <UButton
-                                        size="xs"
-                                        :disabled="dataflashUsedSize === 0"
-                                        :label="$t('dataflashButtonSaveFile')"
                                     >
                                         <template #trailing>
                                             <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
                                         </template>
                                     </UButton>
-                                    <p v-html="$t('dataflashSavetoFileNote')"></p>
                                 </div>
+                                <p class="mt-2" v-html="$t('dataflashSavetoFileNote')"></p>
                             </div>
 
                             <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
@@ -281,7 +269,13 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
+            <UButton
+                :label="$t('blackboxButtonSave')"
+                size="xs"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveSettings"
+            />
         </div>
     </BaseTab>
 </template>
@@ -1225,9 +1219,6 @@ export default defineComponent({
         display: none;
         border-radius: 5px;
     }
-}
-.dataflash-buttons {
-    display: inline-block;
 }
 .dataflash-confirm-erase.erasing {
     .dataflash-erase-progress {

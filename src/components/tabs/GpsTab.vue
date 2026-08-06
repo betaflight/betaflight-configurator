@@ -64,7 +64,8 @@
                     <!-- GPS Signal Strength -->
                     <UiBox
                         :title="$t('gpsSignalStrHead')"
-                        type="neutral"
+                        :type="hasGpsSensor ? 'neutral' : 'warning'"
+                        :highlight="!hasGpsSensor"
                         collapsible
                         :help="$t('gpsSignalStrHeadHelp')"
                     >
@@ -173,7 +174,7 @@
                     </UiBox>
 
                     <!-- GPS Map -->
-                    <UiBox :title="$t('gpsMapHead')" type="neutral" collapsible>
+                    <UiBox :title="$t('gpsMapHead')" type="neutral" collapsible @toggle="onUiBoxToggle">
                         <div
                             v-show="showConnect"
                             class="flex flex-col items-center justify-center h-[433px] gap-2 text-center"
@@ -434,6 +435,9 @@ export default defineComponent({
         const mapLink = computed(() => {
             return `https://maps.google.com/?q=${gpsInfo.latitude},${gpsInfo.longitude}`;
         });
+
+        // Track UiBox open state to trigger OpenLayers updateSize on reopen.
+        const uiBoxOpen = ref(false);
 
         const showConnect = computed(() => !isOnline.value);
         const showWaiting = computed(() => isOnline.value && !showMap.value);
@@ -714,6 +718,51 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
+        // ResizeObserver for reopening after UiBox collapse — OpenLayers needs updateSize()
+        // when its container was hidden during initialization or became visible later.
+        let resizeObserver = null;
+
+        const setupResizeObserver = () => {
+            if (!mapContainerRef.value || !mapInstance.value?.map) {
+                return;
+            }
+
+            resizeObserver = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const { width, height } = entry.contentRect;
+                    if ((width > 0 || height > 0) && mapInstance.value?.map) {
+                        mapInstance.value.map.updateSize();
+                        break;
+                    }
+                }
+            });
+
+            resizeObserver.observe(mapContainerRef.value);
+        };
+
+        // Handle UiBox toggle — call updateSize when reopened so OpenLayers
+        // recalculates dimensions after the container goes from display:none to visible.
+        const onUiBoxToggle = (isOpen) => {
+            uiBoxOpen.value = isOpen;
+            if (isOpen && mapInstance.value?.map) {
+                // v-show changes visibility, but OpenLayers can't measure correct
+                // dimensions until after the browser has painted.  Use requestAnimationFrame
+                // *after* nextTick so both Vue's DOM flush and one paint cycle are done.
+                nextTick(() => {
+                    requestAnimationFrame(() => {
+                        mapInstance.value.map.updateSize();
+                    });
+                });
+            }
+        };
+
+        const maybeSetupResizeObserver = async () => {
+            await nextTick();
+            if (mapContainerRef.value && mapInstance.value?.map) {
+                setupResizeObserver();
+            }
+        };
+
         const { addInterval, removeAllIntervals } = useInterval();
 
         const checkConnectivity = () => {
@@ -779,7 +828,10 @@ export default defineComponent({
             if (mapInstance.value || !mapRef.value) return;
             mapInstance.value = initMap({ target: mapRef.value, defaultLayer: activeLayer.value });
             setLayer(activeLayer.value);
-            nextTick(() => mapInstance.value?.map?.updateSize());
+            nextTick(() => {
+                mapInstance.value?.map?.updateSize();
+                maybeSetupResizeObserver();
+            });
         };
 
         const onGpsProtocolChange = () => {
@@ -805,6 +857,10 @@ export default defineComponent({
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
             document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
             document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+            if (resizeObserver && mapContainerRef.value) {
+                resizeObserver.unobserve(mapContainerRef.value);
+                resizeObserver.disconnect();
+            }
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }
@@ -827,6 +883,7 @@ export default defineComponent({
                             mapObj.renderSync();
                         }
                     }
+                    maybeSetupResizeObserver();
                 });
             }
         });
@@ -853,6 +910,8 @@ export default defineComponent({
             showUbloxSbas,
             showPositionalDop,
             mapLink,
+            uiBoxOpen,
+            onUiBoxToggle,
             showConnect,
             showWaiting,
             showLoadMap,

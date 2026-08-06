@@ -5,18 +5,12 @@
             <WikiButton docUrl="ports" />
 
             <div class="require-support">
-                <UiBox type="neutral" collapsible highlight class="mb-4">
-                    <template #title>
-                        <span class="font-semibold">{{ $t("tabPorts") }}</span>
-                    </template>
+                <UiBox type="warning" highlight class="mb-4">
                     <p v-html="$t('portsHelp')"></p>
                     <p v-html="$t('portsMSPHelp')"></p>
                 </UiBox>
 
-                <UiBox v-if="vtxTableNotConfigured" type="neutral" collapsible highlight class="mb-4">
-                    <template #title>
-                        <span class="font-semibold">{{ $t("portsVtxTableNotSet") }}</span>
-                    </template>
+                <UiBox v-if="vtxTableNotConfigured" type="warning" highlight class="mb-4">
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
@@ -179,7 +173,7 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
+                <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="saveConfig" />
             </div>
         </div>
     </BaseTab>

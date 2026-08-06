@@ -261,11 +261,14 @@
                         <!-- SENSOR GRAPH SECTION -->
                         <UiBox>
                             <div class="graph-grid">
+                                <!-- The `x` groups are positioned on the plot baseline by
+                                     applyGraphTransforms — their offset depends on the measured
+                                     height, so it must not be hardcoded here. -->
                                 <svg ref="graphSvg" id="graph" class="w-full h-full">
-                                    <g class="grid x" transform="translate(40, 120)"></g>
+                                    <g class="grid x"></g>
                                     <g class="grid y" transform="translate(40, 10)"></g>
-                                    <g class="data" transform="translate(41, 10)"></g>
-                                    <g class="axis x" transform="translate(40, 120)"></g>
+                                    <g class="data" transform="translate(40, 10)"></g>
+                                    <g class="axis x"></g>
                                     <g class="axis y" transform="translate(40, 10)"></g>
                                 </svg>
                                 <div
@@ -281,7 +284,7 @@
                                         <USelect
                                             v-model="sensorType"
                                             :items="sensorTypeItems"
-                                            class="min-w-24"
+                                            class="ml-auto min-w-24"
                                             size="xs"
                                         />
                                     </div>
@@ -310,7 +313,7 @@
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
                                         <span
-                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
                                                 'bg-[#e24761]': axis === 'x',
                                                 'bg-[#49c747]': axis === 'y',
@@ -322,7 +325,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
@@ -340,7 +343,12 @@
                             </div>
                         </UiBox>
 
-                        <div class="motors">
+                        <!-- While motor testing is armed the page must not scroll under the
+                             pointer: a wheel notch in the gaps between the sliders would
+                             otherwise move the whole layout while the motors can spin.  The
+                             listener sits on the container so it also catches the grid
+                             gutters and the bar graph, not just the slider cells. -->
+                        <div class="motors" @wheel="onMotorTestWheel">
                             <ul :class="`grid-box col${numberOfValidOutputs + 1} h-5`">
                                 <li
                                     v-for="i in numberOfValidOutputs"
@@ -383,7 +391,7 @@
                             </ul>
                         </div>
 
-                        <div class="m-0 p-0 border-0 list-none outline-none">
+                        <div class="m-0 p-0 border-0 list-none outline-none" @wheel="onMotorTestWheel">
                             <ul :class="`grid-box col${numberOfValidOutputs + 1} mb-2`">
                                 <li
                                     v-for="i in numberOfValidOutputs"
@@ -407,7 +415,7 @@
                                         v-for="i in numberOfValidOutputs"
                                         :key="i"
                                         class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                        @wheel="onSliderWheel(i - 1, $event)"
                                     >
                                         <USlider
                                             orientation="vertical"
@@ -420,10 +428,7 @@
                                             @update:model-value="onMotorValueUpdate(i - 1, $event)"
                                         />
                                     </li>
-                                    <li
-                                        class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(-1, $event)"
-                                    >
+                                    <li class="flex items-end justify-center" @wheel="onSliderWheel(-1, $event)">
                                         <USlider
                                             orientation="vertical"
                                             :min="minSliderValue"
@@ -933,7 +938,11 @@ watch(sensorType, (val) => {
 });
 
 // Graph State
-const margin = { top: 20, right: 30, bottom: 10, left: 20 };
+// `bottom` is the gutter that holds the x-axis tick labels, `top` the gap above the
+// plot.  The axis groups are positioned from these values in applyGraphTransforms —
+// never hardcode them in the SVG template, or the horizontal scale drifts off the
+// bottom of the plot as soon as the SVG is a different height than assumed.
+const margin = { top: 10, right: 10, bottom: 20, left: 40 };
 let graphHelpers = null;
 let graphData = [];
 let samples = 0;
@@ -969,6 +978,20 @@ function initDataArray(length) {
         data[i].max = 1;
     }
     return data;
+}
+
+// Place the axis, grid and data groups for the measured plot area: the y groups at
+// the top-left corner of the plot, the x groups on its baseline so the horizontal
+// scale always sits directly below the vertical one.
+function applyGraphTransforms(svg, helpers) {
+    const topLeft = `translate(${margin.left}, ${margin.top})`;
+    const baseline = `translate(${margin.left}, ${margin.top + helpers.height})`;
+
+    svg.select(".y.grid").attr("transform", topLeft);
+    svg.select(".y.axis").attr("transform", topLeft);
+    svg.select("g.data").attr("transform", topLeft);
+    svg.select(".x.grid").attr("transform", baseline);
+    svg.select(".x.axis").attr("transform", baseline);
 }
 
 function updateGraphHelperSize(helpers) {
@@ -1035,6 +1058,7 @@ function drawGraph(helpers, data, sampleNumber) {
     const svg = d3.select(graphSvg.value);
 
     updateGraphHelperSize(helpers); // Ensure size is current
+    applyGraphTransforms(svg, helpers);
 
     helpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
     if (helpers.dynamicHeightDomain) {
@@ -1541,10 +1565,21 @@ const onMasterValueUpdate = (val) => {
     onMasterSliderChange();
 };
 
+// Swallow wheel events over the motor test controls while testing is armed, so the
+// page cannot scroll out from under the pointer while the motors can spin.  When
+// testing is off the sliders are inert and normal page scrolling is left alone.
+const onMotorTestWheel = (event) => {
+    if (motorsTestingEnabled.value) {
+        event.preventDefault();
+    }
+};
+
 const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) {
         return;
     }
+
+    event.preventDefault();
 
     // index -1 for master
     const step = 25;
