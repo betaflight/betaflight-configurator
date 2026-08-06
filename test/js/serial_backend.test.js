@@ -789,7 +789,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and does NOT self-drive disconnect/connect", () => {
+    it("sends MSP_SET_REBOOT, forces connectionValid false, and drops a link still open at the flush", () => {
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
@@ -807,18 +807,17 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
             expect(typeof ts).toBe("number");
-            // The reboot forces the connection invalid so the dialog/loop wait for a real reconnect.
+            // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
+            expect(serial.disconnect).not.toHaveBeenCalled(); // nothing before the flush
 
-            // Serial drops its own link when the FC re-enumerates, so the cycle never forces a
-            // disconnect the way the driven path does — and with the link still up it makes no
-            // connect attempt either.
-            vi.advanceTimersByTime(20000);
-            expect(serial.disconnect).not.toHaveBeenCalled();
-            expect(serial.connect).not.toHaveBeenCalled();
-
-            serialHandlers.disconnect({ detail: true }); // teardown (cable-drop never fired)
+            // A serial link normally dies with the FC's re-enumeration before the flush, so this
+            // is usually a no-op. Here it is still open — the FC ignored the command, or the OS
+            // has not noticed yet — and a link to a rebooting FC is stale whatever the transport.
+            vi.advanceTimersByTime(1500);
+            expect(serial.disconnect).toHaveBeenCalledTimes(1);
         } finally {
+            vi.advanceTimersByTime(30000); // drain the window
             vi.useRealTimers();
         }
     });

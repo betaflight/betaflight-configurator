@@ -1412,6 +1412,17 @@ export function scheduleRebootReconnect() {
     rebootReconnect();
 }
 
+/**
+ * Abandon a reconnect cycle in progress (a tab leaving, a flow cancelling its own reboot).
+ * Stops the timers and settles the window; harmless when no reboot is running.
+ */
+export function cancelRebootReconnect() {
+    stopRebootReconnect();
+    if (getConnectionState().isRebootWindowOpen) {
+        getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
+    }
+}
+
 // Drive the disconnect/reconnect cycle for a BLE/manual reboot. The link bounces (or survives)
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
@@ -1423,14 +1434,16 @@ function rebootReconnect() {
     rebootReconnectTimerId = setTimeout(() => {
         const driven = isDrivenRebootTarget(DeviceHandler.devicePicker.selectedDevice);
 
-        // A driven link survives the reboot — only the MCU restarts, so no disconnect event
-        // ever fires and the app would hold a stale connection. Drop it here. A BLE target
-        // about to auto-reconnect keeps its GATT session (softResetForReboot) instead:
-        // dropping it produces deaf sessions on Linux/BlueZ. Serial re-enumerates and drops
-        // itself, so leave that link alone.
-        if (driven && isConnected()) {
+        // A link still open once the reboot command has flushed is stale: the FC is restarting
+        // and nothing useful can travel over it. Drop it, whatever the transport — serial
+        // usually dropped itself on re-enumeration and this is a no-op, a driven link never
+        // gets a disconnect event and would otherwise linger. The one exception is a BLE
+        // target about to auto-reconnect: keep its GATT session (softResetForReboot), because
+        // dropping and re-establishing it produces deaf sessions on Linux/BlueZ.
+        if (isConnected()) {
             const target = DeviceHandler.devicePicker.selectedDevice;
-            const keepBleLink = target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
+            const keepBleLink =
+                typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
             if (keepBleLink) {
                 softResetForReboot();
             } else {
