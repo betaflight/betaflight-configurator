@@ -96,12 +96,14 @@
                                     class="border border-default rounded-lg p-3 flex flex-col gap-2"
                                 >
                                     <div class="flex items-baseline justify-between gap-2">
-                                        <span class="font-semibold truncate">{{ backup.name || "" }}</span>
+                                        <span class="min-w-0 flex-1 font-semibold break-words">{{
+                                            backup.name || ""
+                                        }}</span>
                                         <span class="text-dimmed text-xs whitespace-nowrap">{{
                                             formatDate(backup.created)
                                         }}</span>
                                     </div>
-                                    <p v-if="backup.description" class="text-dimmed text-sm line-clamp-2">
+                                    <p v-if="backup.description" class="text-dimmed text-sm break-words">
                                         {{ backup.description }}
                                     </p>
                                     <div class="flex flex-wrap gap-2">
