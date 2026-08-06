@@ -1183,6 +1183,14 @@ watch(auxChannelValue, (newVal) => {
     margin: 3px 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+/* Label contrast is chosen against the swatch background, not the theme: these
+ * buttons carry an inline background-color taken from the LED colour data (and
+ * --primary-500 until it loads), which does not follow light/dark mode.  var(--text)
+ * would turn the label white over a yellow or cyan swatch.  The palette swatches
+ * below pick their own literal per colour for the same reason. */
+.mode_colors > button {
     color: black;
 }
 
