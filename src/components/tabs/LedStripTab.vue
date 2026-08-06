@@ -1467,7 +1467,7 @@ watch(auxChannelValue, (newVal) => {
     border: 2px solid var(--surface-600);
     border-radius: 6px;
     width: 167px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-popup);
 }
 
 .colorDefineSliderContainer {

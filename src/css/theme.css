@@ -95,6 +95,9 @@ html {
     --primary-action-border: var(--success-600);
     --primary-action-hover: var(--success-400);
 
+    /* Elevation for floating panels (popovers, detached pickers). */
+    --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.3);
+
     --ui-radius: 0.35rem;
 }
 
@@ -120,6 +123,10 @@ html {
 
     /* Lighter shade so warning foregrounds keep 3:1 against dark surfaces. */
     --warning-700: #ff8533;
+
+    /* --surface-50 is nearly black in dark mode, where a 0.3 alpha shadow all but
+       disappears and floating panels lose their separation from the page. */
+    --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.6);
 
     --text: hsl(0, 0%, 95%);
 }
