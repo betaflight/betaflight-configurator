@@ -893,8 +893,9 @@ const psasSpeedCurvesPilotEnabled = computed({
 
 const psasSpeedCurvesModeList = computed(() => [
     { value: 0, label: t("psasSpeedCurvesModeTpa") },
-    { value: 1, label: t("psasSpeedCurvesModeAirspeed") },
-    { value: 2, label: t("psasSpeedCurvesModeGps") },
+    { value: 1, label: t("psasSpeedCurvesModeTpaEstAirspeed") },
+    { value: 2, label: t("psasSpeedCurvesModeGpsSpeed") },
+    { value: 3, label: t("psasSpeedCurvesModePitotAirspeed") },
 ]);
 
 const psasSpeedCurvesVref = computed({

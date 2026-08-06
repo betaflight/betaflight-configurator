@@ -2613,11 +2613,14 @@
     "psasSpeedCurvesModeTpa": {
         "message": "Use TPA curve (Acro mode)"
     },
-    "psasSpeedCurvesModeAirspeed": {
-        "message": "PSAS curve with airspeed estimate"
+    "psasSpeedCurvesModeTpaEstAirspeed": {
+        "message": "PSAS curve with TPA airspeed estimate"
     },
-    "psasSpeedCurvesModeGps": {
+    "psasSpeedCurvesModeGpsSpeed": {
         "message": "PSAS curve with GPS speed"
+    },
+    "psasSpeedCurvesModePitotAirspeed": {
+        "message": "PSAS curve with pitot airspeed"
     },
     "psasSpeedCurvesChartDetails": {
         "message": "Speed curves chart"
