@@ -285,6 +285,7 @@ import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
+import { useMapViewport } from "../../composables/useMapViewport";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
@@ -313,8 +314,13 @@ export default defineComponent({
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
+        const {
+            isFullscreen,
+            toggleFullscreen,
+            observeContainer,
+            teardown: teardownMapViewport,
+        } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
         const activeLayer = ref("satellite");
-        const isFullscreen = ref(false);
         const isOnline = ref(false);
         const isWaiting = ref(true);
         const showMap = ref(false);
@@ -477,36 +483,6 @@ export default defineComponent({
         const zoomOut = () => {
             if (!mapInstance.value?.mapView) return;
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
-        };
-
-        const toggleFullscreen = () => {
-            const container = mapContainerRef.value;
-            if (!container) return;
-
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) {
-                    container.msRequestFullscreen();
-                }
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        };
-
-        const handleFullscreenChange = () => {
-            isFullscreen.value = !!(
-                document.fullscreenElement ||
-                document.webkitFullscreenElement ||
-                document.msFullscreenElement
-            );
-            requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
         };
 
         const getPositionalDopQuality = (positionalDop) => {
@@ -715,34 +691,6 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
-        // The map lives inside a collapsible UiBox and a v-show'd container, so it can be
-        // laid out while it has no box at all.  OpenLayers caches its viewport size and
-        // will not notice when the container becomes visible again, leaving a blank or
-        // clipped map — watch the container instead of any single trigger, which also
-        // covers window resizes and layout changes.
-        let resizeObserver = null;
-
-        const observeMapContainer = () => {
-            if (resizeObserver || !mapContainerRef.value) {
-                return;
-            }
-
-            resizeObserver = new ResizeObserver((entries) => {
-                const mapObj = mapInstance.value?.map;
-                if (!mapObj) {
-                    return;
-                }
-                for (const { contentRect } of entries) {
-                    if (contentRect.width > 0 && contentRect.height > 0) {
-                        mapObj.updateSize();
-                        break;
-                    }
-                }
-            });
-
-            resizeObserver.observe(mapContainerRef.value);
-        };
-
         const { addInterval, removeAllIntervals } = useInterval();
 
         const checkConnectivity = () => {
@@ -820,25 +768,16 @@ export default defineComponent({
 
         onMounted(() => {
             nextTick(() => {
-                observeMapContainer();
+                observeContainer();
                 initializeMap();
                 mapInstance.value?.map?.updateSize();
             });
             loadGpsConfig();
-            document.addEventListener("fullscreenchange", handleFullscreenChange);
-            document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.addEventListener("MSFullscreenChange", handleFullscreenChange);
         });
 
         const teardown = () => {
             removeAllIntervals();
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
-            if (resizeObserver) {
-                resizeObserver.disconnect();
-                resizeObserver = null;
-            }
+            teardownMapViewport();
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }
@@ -861,7 +800,7 @@ export default defineComponent({
                             mapObj.renderSync();
                         }
                     }
-                    observeMapContainer();
+                    observeContainer();
                 });
             }
         });

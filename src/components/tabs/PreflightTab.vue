@@ -853,6 +853,7 @@ import UiBox from "../elements/UiBox.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
+import { useMapViewport } from "@/composables/useMapViewport";
 import { getNotamStatus } from "@/js/notam/index.js";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
@@ -990,8 +991,13 @@ export default defineComponent({
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
+        const {
+            isFullscreen,
+            toggleFullscreen,
+            observeContainer,
+            teardown: teardownMapViewport,
+        } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
         const activeLayer = ref("street");
-        const isFullscreen = ref(false);
         const detectingLocation = ref(false);
         const locationError = ref(null);
         const manualLat = ref("");
@@ -1415,37 +1421,6 @@ export default defineComponent({
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
         }
 
-        function toggleFullscreen() {
-            const container = mapContainerRef.value;
-            if (!container) {
-                return;
-            }
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) {
-                    container.msRequestFullscreen();
-                }
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-
-        function handleFullscreenChange() {
-            isFullscreen.value = !!(
-                document.fullscreenElement ||
-                document.webkitFullscreenElement ||
-                document.msFullscreenElement
-            );
-            requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
-        }
-
         function getWindStatusClass(speed, gusts) {
             return preflight.getWindStatus(speed, gusts).cssClass;
         }
@@ -1615,10 +1590,8 @@ export default defineComponent({
 
         onMounted(() => {
             GUI.content_ready();
-            document.addEventListener("fullscreenchange", handleFullscreenChange);
-            document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.addEventListener("MSFullscreenChange", handleFullscreenChange);
             nextTick(() => {
+                observeContainer();
                 if (preflight.location.latitude !== null) {
                     initializeMap();
                     updateMapPosition();
@@ -1627,9 +1600,7 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+            teardownMapViewport();
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }

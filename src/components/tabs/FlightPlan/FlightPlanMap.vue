@@ -26,6 +26,7 @@ import { Vector as SourceVector } from "ol/source";
 import { Style, Stroke, Circle, Fill, Text } from "ol/style";
 import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
+import { useMapViewport } from "@/composables/useMapViewport";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -37,6 +38,10 @@ const sortedWaypoints = positionalWaypoints;
 const mapRef = ref(null);
 const mapContainerRef = ref(null);
 const mapInstance = ref(null);
+const { observeContainer, teardown: teardownMapViewport } = useMapViewport(
+    mapContainerRef,
+    () => mapInstance.value?.map,
+);
 const waypointLayer = ref(null);
 const pathLayer = ref(null);
 const draggingWaypointUid = ref(null);
@@ -89,7 +94,7 @@ onMounted(async () => {
 
     // Attach before the map exists: geolocation makes initialization async, and the
     // observer only needs the container.
-    observeMapContainer();
+    observeContainer();
 
     // Final fallback coordinates (Sydney Harbour Bridge, Australia)
     const finalFallbackLat = -33.8523;
@@ -300,33 +305,6 @@ const setupMapLayers = () => {
     isLoading.value = false;
 };
 
-// The map lives inside a collapsible UiBox, so it can be laid out while it has no
-// box at all.  OpenLayers caches its viewport size and will not notice when the
-// container becomes visible again, leaving a blank or clipped map — watch the
-// container instead of any single trigger, which also covers window resizes.
-let resizeObserver = null;
-
-const observeMapContainer = () => {
-    if (resizeObserver || !mapContainerRef.value) {
-        return;
-    }
-
-    resizeObserver = new ResizeObserver((entries) => {
-        const mapObj = mapInstance.value?.map;
-        if (!mapObj) {
-            return;
-        }
-        for (const { contentRect } of entries) {
-            if (contentRect.width > 0 && contentRect.height > 0) {
-                mapObj.updateSize();
-                break;
-            }
-        }
-    });
-
-    resizeObserver.observe(mapContainerRef.value);
-};
-
 // Update path lines during drag in real-time
 const updatePathDuringDrag = (draggingUid, newCoordinates) => {
     if (!pathLayer.value) {
@@ -516,10 +494,7 @@ watch(
 // Cleanup on unmount
 onUnmounted(() => {
     console.log("Cleaning up map");
-    if (resizeObserver) {
-        resizeObserver.disconnect();
-        resizeObserver = null;
-    }
+    teardownMapViewport();
     if (mapInstance.value?.destroy) {
         mapInstance.value.destroy();
     }
