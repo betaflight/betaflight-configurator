@@ -47,7 +47,7 @@ import {
 import { PrefStorage } from "./pref_storage.js";
 import { DarkTheme } from "./dark_theme.js";
 import { ThemeColors } from "./theme_colors.js";
-import pinia from "./pinia_instance.js";
+import { pinia } from "@/js/pinia_instance.js";
 import { useLogStore } from "./stores/log.js";
 import { useGraphStore } from "./stores/graph.js";
 import { usePlaybackStore, GRAPH_STATE_PAUSED } from "./stores/playback.js";
@@ -541,6 +541,9 @@ export function bootstrapViewer() {
         }
 
         const onDocumentWheel = function (e) {
+            if (!appStore.viewerActive) {
+                return;
+            }
             if (e.target.classList.contains("no-wheel")) {
                 e.preventDefault();
                 return;
