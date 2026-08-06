@@ -104,27 +104,13 @@ export function isDrivenRebootTarget(port) {
 }
 
 /**
- * Decide whether the reboot progress dialog's poller should stop waiting (settle the reboot
- * window, show "ready", close). Extracted as a pure predicate so the branch matrix is
- * unit-testable without driving the dialog's intervals.
- *
- * - Always conclude once the FC has answered (connectionValid) or the window elapsed (timeout).
- * - With Auto-Connect ON, keep waiting — the retry loop owns the reconnect.
- * - With Auto-Connect OFF nothing will auto-reconnect, so conclude as soon as there's nothing
- *   left to wait for:
- *     - serial re-enumerates after the reboot, so wait for the port to reappear (portAvailable).
- *     - driven targets (BLE, manual/TCP) never re-enumerate — portAvailable would never flip, so
- *       the dialog used to hang until timeout. rebootReconnect() drops the stale link and then
- *       closes the reboot window at the flush (~1.5s), so wait for the window to close rather
- *       than concluding immediately: that keeps us from showing "ready" while the flush is still
- *       pending (which would tear down a manual reconnect).
- * @param {object} state
- * @param {boolean} state.connectionValid - the rebooted FC has answered
- * @param {boolean} state.timeoutReached - the reboot window has elapsed
- * @param {boolean} state.autoConnect - Auto-Connect is enabled
- * @param {boolean} state.portAvailable - a serial port is present (re-enumerated)
- * @param {string} state.selectedDevice - the selected device path
- * @param {boolean} state.rebootWindowOpen - the connection-state reboot window is still open
+ * Should the reboot dialog's poller stop waiting (settle the window, show "ready", close)?
+ * A pure predicate so the branch matrix is testable without driving the dialog's intervals.
+ * Each branch has its own concluder: Auto-Connect on -> the retry loop; off + driven target ->
+ * rebootReconnect()'s flush closes the window; off + serial -> nothing else runs, so the port
+ * coming back is the only signal.
+ * @param {{connectionValid: boolean, timeoutReached: boolean, autoConnect: boolean,
+ *          portAvailable: boolean, selectedDevice: string, rebootWindowOpen: boolean}} state
  * @returns {boolean}
  */
 export function shouldConcludeRebootDialog({
@@ -141,10 +127,7 @@ export function shouldConcludeRebootDialog({
     if (autoConnect) {
         return false;
     }
-    if (isDrivenRebootTarget(selectedDevice)) {
-        return !rebootWindowOpen;
-    }
-    return Boolean(portAvailable);
+    return isDrivenRebootTarget(selectedDevice) ? !rebootWindowOpen : Boolean(portAvailable);
 }
 
 /**
