@@ -21,13 +21,52 @@
             <USelect
                 v-model="state.selectedBuildType"
                 :items="state.buildTypeOptions"
-                class="min-w-80"
+                class="w-80 min-w-0 max-w-full"
                 @update:model-value="onBuildTypeChange"
             />
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" full-width>
+        <SettingRow
+            :label="$t('firmwareFlasherManufacturerFilter')"
+            :help="$t('firmwareFlasherManufacturerFilterDescription')"
+            full-width
+        >
+            <USelectMenu
+                v-model="boardSelection.state.selectedManufacturer"
+                :items="boardSelection.getManufacturerItems()"
+                value-key="value"
+                :placeholder="$t('firmwareFlasherSearchManufacturer')"
+                class="w-80 min-w-0 max-w-full"
+                :virtualize="{
+                    estimateSize: 28,
+                }"
+                :search-input="{
+                    placeholder: $t('firmwareFlasherSearchManufacturer'),
+                    icon: 'i-lucide-search',
+                }"
+                @update:model-value="onManufacturerChange"
+            />
+        </SettingRow>
+        <SettingRow
+            :label="$t('firmwareFlasherMcuFilter')"
+            :help="$t('firmwareFlasherMcuFilterDescription')"
+            full-width
+        >
+            <USelect
+                v-model="boardSelection.state.selectedMcu"
+                :items="boardSelection.getMcuItems()"
+                value-key="value"
+                :placeholder="$t('firmwareFlasherOptionLabelSelectMcu')"
+                class="w-80 min-w-0 max-w-full"
+                @update:model-value="onMcuChange"
+            />
+        </SettingRow>
+        <SettingRow
+            :label="$t('firmwareFlasherBoardFilter')"
+            :help="$t('firmwareFlasherOnlineSelectBoardHint')"
+            full-width
+        >
             <div class="flex items-center gap-2">
-                <UFieldGroup class="min-w-80">
+                <UFieldGroup class="w-80 min-w-0 max-w-full">
                     <USelectMenu
                         v-model="boardSelection.state.selectedBoard"
                         v-model:search-term="boardSelection.state.boardSelectSearchTerm"
@@ -58,7 +97,7 @@
                 v-model="boardSelection.state.selectedFirmwareVersion"
                 value-key="release"
                 :items="boardSelection.state.firmwareVersionOptions"
-                class="min-w-80"
+                class="w-80 min-w-0 max-w-full"
                 :disabled="
                     !boardSelection.state.firmwareVersionOptions ||
                     boardSelection.state.firmwareVersionOptions.length === 0
@@ -252,6 +291,8 @@ defineProps({
     state: { type: Object, required: true },
     boardSelection: { type: Object, required: true },
     onBuildTypeChange: { type: Function, required: true },
+    onManufacturerChange: { type: Function, required: true },
+    onMcuChange: { type: Function, required: true },
     onBoardChange: { type: Function, required: true },
     onDetectBoard: { type: Function, required: true },
     onFirmwareVersionChange: { type: Function, required: true },

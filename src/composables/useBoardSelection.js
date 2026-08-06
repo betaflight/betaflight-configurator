@@ -4,6 +4,41 @@ import { ispConnected } from "../js/utils/connection.js";
 import GUI from "../js/gui";
 import AutoDetect from "../js/utils/AutoDetect.js";
 
+const NO_FILTER_VALUE = "__no_filter__";
+
+/**
+ * MCU variants that should appear as one filter option.
+ *
+ * @type {Array<{ label: string, value: string, members: string[] }>}
+ */
+const MCU_FILTER_GROUPS = [
+    {
+        label: "AT32F435",
+        value: "AT32F435",
+        members: ["AT32F435G", "AT32F435M"],
+    },
+    {
+        label: "RP2350",
+        value: "RP2350",
+        members: ["RP2350A", "RP2350B"],
+    },
+];
+
+const mcuFilterGroupByMember = new Map(
+    MCU_FILTER_GROUPS.flatMap((group) => group.members.map((member) => [member, group])),
+);
+
+/**
+ * Resolve a raw Build API MCU name to its displayed filter option.
+ *
+ * @param {string} mcu Raw MCU name from a target descriptor
+ * @returns {{ label: string, value: string }}
+ */
+const getMcuFilterOption = (mcu) => {
+    const group = mcuFilterGroupByMember.get(mcu);
+    return group ? { label: group.label, value: group.value } : { label: mcu, value: mcu };
+};
+
 /**
  * A composable for handling board and firmware version selection.
  * Manages board/target lists, firmware version options, and related UI interactions.
@@ -40,6 +75,9 @@ export function useBoardSelection(params) {
     const state = reactive({
         targets: null,
         boardOptions: [],
+        manufacturerOptions: [],
+        selectedManufacturer: undefined,
+        selectedMcu: undefined,
         selectedBoard: undefined,
         firmwareVersionOptions: [],
         selectedFirmwareVersion: undefined,
@@ -50,6 +88,41 @@ export function useBoardSelection(params) {
     });
 
     let detectBoardTimeout = null;
+
+    /**
+     * Get manufacturers that have at least one target in the current build type.
+     */
+    const getManufacturerItems = () => [
+        { label: $t("firmwareFlasherFilterAllManufacturers"), value: NO_FILTER_VALUE },
+        ...state.manufacturerOptions,
+    ];
+
+    /**
+     * Get all MCUs, narrowed to the selected manufacturer when one is active.
+     */
+    const getMcuItems = () => {
+        const uniqueMcuItems = new Map();
+        state.boardOptions
+            .filter((board) => !state.selectedManufacturer || board.manufacturer === state.selectedManufacturer)
+            .forEach((board) => {
+                const option = getMcuFilterOption(board.mcu);
+                uniqueMcuItems.set(option.value, option);
+            });
+
+        const sitlItem = uniqueMcuItems.get("SITL");
+        uniqueMcuItems.delete("SITL");
+        const hardwareMcuItems = [...uniqueMcuItems.values()].sort((a, b) => a.label.localeCompare(b.label));
+        const specialMcuItems = [
+            { label: $t("firmwareFlasherFilterAllMcus"), value: NO_FILTER_VALUE },
+            ...(sitlItem ? [sitlItem] : []),
+        ];
+
+        return [
+            ...specialMcuItems,
+            ...(hardwareMcuItems.length > 0 ? [{ type: "separator" }] : []),
+            ...hardwareMcuItems,
+        ];
+    };
 
     /**
      * Get board options formatted for Nuxt UI SelectMenu with labeled group separations.
@@ -63,6 +136,12 @@ export function useBoardSelection(params) {
         const q = (state.boardSelectSearchTerm || "").trim().toLowerCase();
 
         state.boardOptions.forEach((board) => {
+            if (state.selectedManufacturer && board.manufacturer !== state.selectedManufacturer) {
+                return;
+            }
+            if (state.selectedMcu && getMcuFilterOption(board.mcu).value !== state.selectedMcu) {
+                return;
+            }
             if (q && !board.target.toLowerCase().includes(q)) {
                 return;
             }
@@ -104,10 +183,11 @@ export function useBoardSelection(params) {
     /**
      * Populate the target/board list from API response
      */
-    const populateTargetList = async (targets) => {
+    const populateTargetList = async (targets, manufacturers = []) => {
         if (!targets || !ispConnected()) {
             updateTargetQualification(null);
             state.boardOptions = [];
+            state.manufacturerOptions = [];
             state.firmwareVersionOptions = [];
             return;
         }
@@ -154,9 +234,23 @@ export function useBoardSelection(params) {
         state.boardOptions = boardOptionsArray;
         state.targets = targets;
 
+        const manufacturerNames = new Map(manufacturers.map((manufacturer) => [manufacturer.id, manufacturer.name]));
+        state.manufacturerOptions = [...new Set(boardOptionsArray.map((board) => board.manufacturer))]
+            .map((manufacturerId) => {
+                const manufacturerName = manufacturerNames.get(manufacturerId);
+                return {
+                    label: manufacturerName ? `${manufacturerName} (${manufacturerId})` : manufacturerId,
+                    value: manufacturerId,
+                };
+            })
+            .sort((a, b) => a.label.localeCompare(b.label));
+
         const result = getConfig("selected_board");
-        if (result.selected_board && state.boardOptions.some((b) => b.target === result.selected_board)) {
-            state.selectedBoard = result.selected_board;
+        const restoredBoard = state.boardOptions.find((board) => board.target === result.selected_board);
+        if (restoredBoard) {
+            state.selectedManufacturer = restoredBoard.manufacturer;
+            state.selectedMcu = getMcuFilterOption(restoredBoard.mcu).value;
+            state.selectedBoard = restoredBoard.target;
         }
     };
 
@@ -170,17 +264,40 @@ export function useBoardSelection(params) {
         const selectedBoardTarget = state.selectedBoard;
 
         state.boardOptions = [];
+        state.manufacturerOptions = [];
         state.firmwareVersionOptions = [];
 
         if (GUI.connect_lock) {
             state.selectedBoard = undefined;
         } else {
             try {
-                const targets = await buildApi.loadTargets();
-                await populateTargetList(targets);
+                const targetRequest = buildApi.loadTargets();
+                const manufacturerRequest = buildApi.loadManufacturers?.() ?? Promise.resolve([]);
+                const [targetResult, manufacturerResult] = await Promise.allSettled([
+                    targetRequest,
+                    manufacturerRequest,
+                ]);
 
-                if (selectedBoardTarget && state.boardOptions.some((b) => b.target === selectedBoardTarget)) {
-                    state.selectedBoard = selectedBoardTarget;
+                if (targetResult.status === "rejected") {
+                    throw targetResult.reason;
+                }
+
+                if (manufacturerResult.status === "rejected") {
+                    console.error(`${logHead} Failed to load manufacturers:`, manufacturerResult.reason);
+                }
+
+                await populateTargetList(
+                    targetResult.value,
+                    manufacturerResult.status === "fulfilled" && Array.isArray(manufacturerResult.value)
+                        ? manufacturerResult.value
+                        : [],
+                );
+
+                const selectedBoard = state.boardOptions.find((board) => board.target === selectedBoardTarget);
+                if (selectedBoard) {
+                    state.selectedManufacturer = selectedBoard.manufacturer;
+                    state.selectedMcu = getMcuFilterOption(selectedBoard.mcu).value;
+                    state.selectedBoard = selectedBoard.target;
                 }
             } catch (error) {
                 console.error(`${logHead} Failed to load targets:`, error);
@@ -188,16 +305,43 @@ export function useBoardSelection(params) {
         }
 
         // Re-filter firmware versions based on new build type if a board is selected
-        if (selectedBoardTarget) {
+        if (state.selectedBoard) {
             try {
-                const targetReleases = await buildApi.loadTargetReleases(selectedBoardTarget);
-                await populateReleases({ target: selectedBoardTarget, releases: targetReleases.releases });
+                const targetReleases = await buildApi.loadTargetReleases(state.selectedBoard);
+                await populateReleases({ target: state.selectedBoard, releases: targetReleases.releases });
             } catch (error) {
                 console.error(`${logHead} Failed to load target releases on build type change:`, error);
             }
         }
 
         setConfig({ selected_build_type: build_type });
+    };
+
+    /**
+     * Reset downstream choices when the manufacturer filter changes.
+     */
+    const onManufacturerChange = async () => {
+        if (state.selectedManufacturer === NO_FILTER_VALUE) {
+            state.selectedManufacturer = undefined;
+        }
+        if (!getMcuItems().some((mcu) => mcu.value === state.selectedMcu)) {
+            state.selectedMcu = undefined;
+        }
+        state.selectedBoard = undefined;
+        state.boardSelectSearchTerm = "";
+        return await onBoardChange();
+    };
+
+    /**
+     * Reset the board choice when the MCU filter changes.
+     */
+    const onMcuChange = async () => {
+        if (state.selectedMcu === NO_FILTER_VALUE) {
+            state.selectedMcu = undefined;
+        }
+        state.selectedBoard = undefined;
+        state.boardSelectSearchTerm = "";
+        return await onBoardChange();
     };
 
     /**
@@ -262,6 +406,8 @@ export function useBoardSelection(params) {
             if (found) {
                 state.selectedBoard = null;
                 await nextTick();
+                state.selectedManufacturer = found.manufacturer;
+                state.selectedMcu = getMcuFilterOption(found.mcu).value;
                 state.selectedBoard = found.target;
                 state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
                 await nextTick();
@@ -283,6 +429,9 @@ export function useBoardSelection(params) {
     const resetBoardSelection = () => {
         state.selectedBoard = undefined;
         state.boardOptions = [];
+        state.manufacturerOptions = [];
+        state.selectedManufacturer = undefined;
+        state.selectedMcu = undefined;
         state.firmwareVersionOptions = [];
         state.cloudBuildOptions = [];
         state.boardSelectSearchTerm = "";
@@ -300,9 +449,13 @@ export function useBoardSelection(params) {
         state,
 
         // Methods
+        getManufacturerItems,
+        getMcuItems,
         getSelectMenuItems,
         populateTargetList,
         onBuildTypeChange,
+        onManufacturerChange,
+        onMcuChange,
         onBoardChange,
         handleDetectBoard,
         resetBoardSelection,

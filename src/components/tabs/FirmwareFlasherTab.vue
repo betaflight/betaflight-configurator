@@ -15,6 +15,8 @@
                     :state="state"
                     :board-selection="boardSelection"
                     :on-build-type-change="onBuildTypeChange"
+                    :on-manufacturer-change="onManufacturerChange"
+                    :on-mcu-change="onMcuChange"
                     :on-board-change="onBoardChange"
                     :on-detect-board="handleDetectBoard"
                     :on-firmware-version-change="onFirmwareVersionChange"
@@ -1334,6 +1336,20 @@ export default defineComponent({
             }
         };
 
+        const onManufacturerChange = async () => {
+            const result = await boardSelection.onManufacturerChange();
+            if (result) {
+                state.targetSupportUrl = result.targetSupportUrl;
+            }
+        };
+
+        const onMcuChange = async () => {
+            const result = await boardSelection.onMcuChange();
+            if (result) {
+                state.targetSupportUrl = result.targetSupportUrl;
+            }
+        };
+
         const handleDetectBoard = async () => {
             await boardSelection.handleDetectBoard();
         };
@@ -1884,6 +1900,8 @@ export default defineComponent({
             startFlashing,
             cleanup,
             onBuildTypeChange,
+            onManufacturerChange,
+            onMcuChange,
             onBoardChange,
             onFirmwareVersionChange,
             onRadioProtocolChange,
@@ -1924,6 +1942,7 @@ export default defineComponent({
 
     .flasher-tab-area {
         min-height: 200px;
+        padding-top: 0.25rem;
     }
 
     .content_wrapper .flashing-wait {
