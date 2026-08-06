@@ -255,6 +255,64 @@ describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () =
     });
 });
 
+// A rebooting device usually comes back under a NEW path — the browser mints a fresh
+// SerialPort object — so "is it back?" cannot be a path comparison, and it must not degrade
+// into "is anything back?" either.
+describe("DeviceHandler reboot-target identity", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    const fc = { path: "serial_6", displayName: "Betaflight STM Electronics", vendorId: 1155, productId: 22336 };
+    const other = { path: "serial_2", displayName: "Betaflight CP210", vendorId: 4292, productId: 60000 };
+
+    it("describes a listed device, and nothing for one that is not listed", () => {
+        DeviceHandler.currentSerialPorts = [fc];
+
+        expect(DeviceHandler.describeDevice("serial_6")).toEqual({
+            path: "serial_6",
+            vendorId: 1155,
+            productId: 22336,
+        });
+        expect(DeviceHandler.describeDevice("serial_99")).toBeNull();
+    });
+
+    it("finds the device again under a new path, by make", () => {
+        const target = { path: "serial_6", vendorId: 1155, productId: 22336 };
+        DeviceHandler.currentSerialPorts = [other, { ...fc, path: "serial_13" }];
+
+        expect(DeviceHandler.findDescribedDevice(target)?.path).toBe("serial_13");
+    });
+
+    it("does not mistake another device for it", () => {
+        const target = { path: "serial_6", vendorId: 1155, productId: 22336 };
+        DeviceHandler.currentSerialPorts = [other];
+
+        expect(DeviceHandler.findDescribedDevice(target)).toBeUndefined();
+        expect(DeviceHandler.findDescribedDevice(null)).toBeUndefined();
+    });
+
+    it("selectActivePort prefers the rebooted device over another that just appeared", () => {
+        // The burst case: our FC comes back as serial_13 while an unrelated device is added
+        // too. Without the preference the selection follows whichever event arrived last.
+        DeviceHandler.currentSerialPorts = [other, { ...fc, path: "serial_13" }];
+        getConnectionState().requestReboot(10000, { path: "serial_6", vendorId: 1155, productId: 22336 });
+
+        const selected = DeviceHandler.selectActivePort(other);
+
+        expect(selected).toBe("serial_13");
+    });
+
+    it("is a preference, not a lock: an unrecognised return still gets selected", () => {
+        // A board that comes back as something else (different USB descriptor) must not be
+        // locked out — the normal rules still apply when the target is not found.
+        DeviceHandler.currentSerialPorts = [other];
+        getConnectionState().requestReboot(10000, { path: "serial_6", vendorId: 1155, productId: 22336 });
+
+        expect(DeviceHandler.selectActivePort(other)).toBe("serial_2");
+    });
+});
+
 describe("DeviceHandler show* setters", () => {
     beforeEach(() => {
         resetPortHandler();

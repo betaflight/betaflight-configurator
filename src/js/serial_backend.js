@@ -1366,8 +1366,12 @@ export function reinitializeConnection() {
     }
 
     // Open the reboot window in the connection state: the single owner of the reboot
-    // lifecycle's start time, duration and phase.
-    getConnectionState().requestReboot(rebootConnectWindowMs());
+    // lifecycle's start time, duration, phase — and which device it is waiting for, captured
+    // now while that device is still listed.
+    getConnectionState().requestReboot(
+        rebootConnectWindowMs(),
+        DeviceHandler.describeDevice(DeviceHandler.devicePicker.selectedDevice),
+    );
 
     // requestReboot() above sets the connection state to REBOOTING. selectActivePort() then
     // reports isReconnecting and keeps the current selection. It does not change the selection
@@ -1404,7 +1408,10 @@ export function reinitializeConnection() {
  * -> retry cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
  */
 export function scheduleRebootReconnect() {
-    getConnectionState().requestReboot(rebootConnectWindowMs());
+    getConnectionState().requestReboot(
+        rebootConnectWindowMs(),
+        DeviceHandler.describeDevice(DeviceHandler.devicePicker.selectedDevice),
+    );
     rebootReconnect();
 }
 
@@ -1477,13 +1484,15 @@ function rebootReconnect() {
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
             const autoConnect = DeviceHandler.devicePicker.autoConnect;
             // Auto-Connect off: nothing will reconnect, so the wait ends as soon as there is
-            // nothing left to wait for — the selection listed again for serial, immediately for
-            // a driven target (its link is already down). Not DeviceHandler.portAvailable: that
-            // is true for ANY serial port, so a machine with others would end the wait while the
-            // rebooting device was still gone. device_handler re-points the selection when the
-            // device returns under a new id, so this follows it.
-            const waitedOut =
-                !autoConnect && (driven || DeviceHandler.isKnownDevicePath(DeviceHandler.devicePicker.selectedDevice));
+            // nothing left to wait for — our device listed again for serial, immediately for a
+            // driven target (its link is already down). The question is about THIS device, not
+            // about port count: a machine with other serial ports must not end the wait while
+            // the rebooting one is still away.
+            const target = state.rebootTarget;
+            const ourDeviceBack = target
+                ? Boolean(DeviceHandler.findDescribedDevice(target))
+                : DeviceHandler.isKnownDevicePath(DeviceHandler.devicePicker.selectedDevice);
+            const waitedOut = !autoConnect && (driven || ourDeviceBack);
 
             if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();

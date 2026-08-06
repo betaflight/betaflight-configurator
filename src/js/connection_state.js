@@ -117,9 +117,11 @@ export class ConnectionState {
      * refreshed — a second save inside the window restarts the clock, matching the
      * retry loop's own restart.
      * @param {number} [windowMs=10000] - how long the reconnect may take
+     * @param {?object} [target=null] - which device is coming back (device_handler's
+     *   describeDevice output). Held opaquely: this module knows the window, not devices.
      */
-    requestReboot(windowMs = 10000) {
-        this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs };
+    requestReboot(windowMs = 10000, target = null) {
+        this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs, target };
         if (this.isReconnecting) {
             return;
         }
@@ -134,6 +136,11 @@ export class ConnectionState {
     /** Duration of the open reboot window (0 if none) — snapshotted at requestReboot. */
     get rebootWindowMs() {
         return this._rebootWindow.value?.durationMs ?? 0;
+    }
+
+    /** The device the open window is waiting for (null if none, or if it was not identified). */
+    get rebootTarget() {
+        return this._rebootWindow.value?.target ?? null;
     }
 
     /** Start timestamp of the open reboot window (0 if none). */

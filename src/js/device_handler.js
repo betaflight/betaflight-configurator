@@ -243,6 +243,38 @@ DeviceHandler.sortPorts = function (ports) {
 };
 
 /**
+ * Describe a listed device well enough to recognise it after a reboot. A re-enumerating
+ * device usually comes back under a NEW path (the browser mints a fresh SerialPort object),
+ * so the USB ids travel with it.
+ * @param {string} path - a device path
+ * @returns {?{path: string, vendorId: *, productId: *}} null when the path is not listed
+ */
+DeviceHandler.describeDevice = function (path) {
+    const device = [...this.currentSerialPorts, ...this.currentBluetoothPorts].find((port) => port.path === path);
+
+    return device ? { path: device.path, vendorId: device.vendorId, productId: device.productId } : null;
+};
+
+/**
+ * The listed device matching a descriptor: the same path if it came back as itself, otherwise
+ * the same make. Undefined while it is away.
+ * @param {?{path: string, vendorId: *, productId: *}} target - from describeDevice()
+ * @returns {object|undefined} the device wrapper
+ */
+DeviceHandler.findDescribedDevice = function (target) {
+    if (!target) {
+        return undefined;
+    }
+
+    const devices = [...this.currentSerialPorts, ...this.currentBluetoothPorts];
+
+    return (
+        devices.find((device) => device.path === target.path) ??
+        devices.find((device) => device.vendorId === target.vendorId && device.productId === target.productId)
+    );
+};
+
+/**
  * @param {string} path - a device path
  * @returns {boolean} true when the serial, Bluetooth or USB list holds this path
  */
@@ -282,6 +314,15 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         console.log(`${this.logHead} Using connected device: ${selectedDevice.path}`);
         selectedDevice = selectedDevice.path;
         return selectedDevice;
+    }
+
+    // Mid-reboot, prefer the device that was rebooted. A plug-in raises a burst of events and
+    // another device can be added while the FC is away; without this the selection follows
+    // whichever event arrived last, and the reconnect aims at a device nobody asked for.
+    // A preference, not a restriction: if the rebooted device is not back, the rules below
+    // still apply, so a board that returns as something else is not locked out.
+    if (!selectedDevice) {
+        selectedDevice = this.findDescribedDevice(getConnectionState().rebootTarget)?.path;
     }
 
     // The code reads suggestedDevice from an addedDevice event. updateDeviceList() reads the
