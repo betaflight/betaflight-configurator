@@ -158,7 +158,13 @@
                     >{{ $t("firmwareFlasherReadMore") }}</a
                 >
             </UiBox>
-            <UiBox :title="$t('firmwareFlasherRecoveryHead')" highlight class="note-text-format">
+            <UiBox
+                :title="$t('firmwareFlasherRecoveryHead')"
+                type="neutral"
+                highlight
+                collapsible
+                class="note-text-format"
+            >
                 <p>{{ $t("firmwareFlasherRecoveryShort") }}</p>
                 <a
                     href="https://betaflight.com/docs/wiki/app/firmware-flasher-tab#troubleshooting"
@@ -174,26 +180,27 @@
             v-if="state.expertOptionsVisible"
             :title="$t('firmwareFlasherAdvancedTitle')"
             type="neutral"
+            collapsible
             class="mt-2"
         >
             <SettingRow
                 :label="$t('firmwareFlasherNoReboot')"
                 :help="$t('firmwareFlasherNoRebootDescription')"
-                full-width
+                fullWidth
             >
                 <USwitch v-model="state.noRebootSequence" @change="onNoRebootChange" />
             </SettingRow>
             <SettingRow
                 :label="$t('firmwareFlasherFullChipErase')"
                 :help="$t('firmwareFlasherFullChipEraseDescription')"
-                full-width
+                fullWidth
             >
                 <USwitch v-model="state.eraseChip" @change="onEraseChipChange" />
             </SettingRow>
             <SettingRow
                 :label="$t('firmwareFlasherManualBaud')"
                 :help="$t('firmwareFlasherManualBaudDescription')"
-                full-width
+                fullWidth
             >
                 <USwitch v-model="state.flashManualBaud" @change="onFlashManualBaudChange" />
                 <USelect
@@ -206,6 +213,7 @@
                         { value: 115200, label: '115200' },
                         { value: 57600, label: '57600' },
                     ]"
+                    size="xs"
                     class="min-w-24"
                     @update:model-value="onFlashManualBaudRateChange"
                 />
@@ -217,7 +225,7 @@
                         { label: $t('firmwareBackupEnabled'), value: 1 },
                         { label: $t('firmwareBackupAsk'), value: 2 },
                     ]"
-                    size="sm"
+                    size="xs"
                     v-model="backupOnFlash"
                     class="min-w-40"
                     :ui="{ content: 'z-3002' }"
