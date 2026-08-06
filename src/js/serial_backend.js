@@ -1411,12 +1411,10 @@ export function reinitializeConnection(suppressDialog = false) {
         return rebootTimestamp;
     }
 
-    const currentPort = DeviceHandler.devicePicker.selectedDevice;
-
     // requestReboot() above sets the connection state to REBOOTING. selectActivePort() then
     // reports isReconnecting and keeps the current selection. It does not change the selection
-    // to the expert-mode virtual or manual device while the FC is off the port list.
-    // The reconnect uses currentPort again. A token is not necessary.
+    // to the expert-mode virtual or manual device while the FC is off the port list, and it
+    // re-points the selection when the device returns under a new id.
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
@@ -1426,37 +1424,18 @@ export function reinitializeConnection(suppressDialog = false) {
     // false now so the reboot dialog and retry loop wait for a real reconnect.
     CONFIGURATOR.connectionValid = false;
 
-    if (isDrivenRebootTarget(currentPort)) {
-        // BLE/manual links usually survive the FC reboot — the radio stays connected while
-        // only the MCU restarts — so no disconnect event fires and the configurator would be
-        // left holding a stale connection. Drive it ourselves: show the reboot dialog, drop
-        // the stale link once the command has flushed, then reconnect when Auto-Connect is on.
-        // The dialog polls connectionValid and closes on reconnect or timeout (same as serial).
-        if (!suppressDialog && !["cli", "presets"].includes(GUI.active_tab)) {
-            showRebootDialog();
-        }
-        rebootReconnect();
-        return rebootTimestamp;
-    }
-
-    // Show reboot progress modal except for cli and presets tab
+    // One reconnect cycle for every hardware target. It owns the window: it waits for the FC
+    // to answer, retries while Auto-Connect is on, and concludes on success or timeout —
+    // including for serial, which previously had no owner at all and relied on a device event
+    // reaching the auto-select listener.
     if (["cli", "presets"].includes(GUI.active_tab)) {
         console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
-        gui_log(i18n.getMessage("deviceReady"));
-
-        // No reconnect loop runs here (auto-connect handles it); settle the connection state
-        // read-model now. Authoritative readiness wiring lands later.
-        getConnectionState().concludeReboot(false);
-        return rebootTimestamp;
-    }
-    // Show reboot progress modal. The dialog's check-timer concludes the reboot window;
-    // when it's suppressed, nothing else would, so conclude here to avoid a leaked window.
-    if (!suppressDialog) {
+    } else if (!suppressDialog) {
         showRebootDialog();
-    } else {
-        getConnectionState().concludeReboot(false);
     }
+
+    rebootReconnect();
 
     return rebootTimestamp;
 }
@@ -1482,14 +1461,16 @@ function rebootReconnect() {
     stopRebootReconnect();
 
     rebootReconnectTimerId = setTimeout(() => {
-        // If the link survived the reboot, reset the now-stale connection so the UI returns
-        // to the landing tab. For a BLE target about to auto-reconnect, keep the GATT session
-        // open (softResetForReboot) so the retry rides it, avoiding the deaf-session reconnect
-        // on Linux/BlueZ. Otherwise drop the transport for real.
-        if (isConnected()) {
+        const driven = isDrivenRebootTarget(DeviceHandler.devicePicker.selectedDevice);
+
+        // A driven link survives the reboot — only the MCU restarts, so no disconnect event
+        // ever fires and the app would hold a stale connection. Drop it here. A BLE target
+        // about to auto-reconnect keeps its GATT session (softResetForReboot) instead:
+        // dropping it produces deaf sessions on Linux/BlueZ. Serial re-enumerates and drops
+        // itself, so leave that link alone.
+        if (driven && isConnected()) {
             const target = DeviceHandler.devicePicker.selectedDevice;
-            const keepBleLink =
-                typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
+            const keepBleLink = target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
             if (keepBleLink) {
                 softResetForReboot();
             } else {
@@ -1497,13 +1478,13 @@ function rebootReconnect() {
             }
         }
 
-        // Honor Auto-Connect — read it live (not snapshotted at reboot start) so toggling it off
-        // during the reboot window takes effect. When off, stay on the landing tab and let the
-        // user reconnect manually (the reboot dialog closes via its no-reconnect check).
-        if (!DeviceHandler.devicePicker.autoConnect) {
+        // Auto-Connect is read live (not snapshotted at reboot start) so toggling it off
+        // mid-window takes effect. With it off a driven target has nothing left to wait for —
+        // the link is down and nothing will reconnect it — so end the window now. Serial waits
+        // for its port to re-enumerate (below) so the user can reconnect to a device that is
+        // actually back.
+        if (driven && !DeviceHandler.devicePicker.autoConnect) {
             rebootReconnectTimerId = false;
-            // No automatic reconnect will run, so end the reconnect-in-progress window
-            // (concludeReboot settles to IDLE) and let normal selection resume.
             getConnectionState().concludeReboot(false);
             return;
         }
@@ -1511,11 +1492,13 @@ function rebootReconnect() {
         // Entering the retry phase: REBOOTING -> RECONNECTING in the connection state read-model.
         getConnectionState().reconnectStarted();
 
-        // Retry connecting until the rebooted FC answers (connectionValid), the reboot window
-        // closes, or Auto-Connect is turned off mid-window. Early attempts may connect to a
-        // still-booting FC and get dropped; the device stays listed (we never remove it on
-        // disconnect), so a later attempt succeeds once the FC is stable. connectDisconnect here
-        // takes the connect branch (isConnected is false).
+        // Wait for the rebooted FC. With Auto-Connect on, retry the connection: early attempts
+        // may reach a still-booting FC and get dropped; the device stays listed (we never remove
+        // it on disconnect), so a later attempt succeeds once it is stable. connectDisconnect
+        // takes the connect branch (isConnected is false). With Auto-Connect on, a serial device
+        // that re-enumerates is normally connected by the addedDevice listener before a tick
+        // comes round — this loop is the backstop for when that event does not arrive, and the
+        // owner that ends the window either way.
         rebootReconnectTimerId = setInterval(() => {
             // Stop when the window has run out OR another owner already concluded it:
             // the reboot dialog's check timer and this loop share one window, and
@@ -1523,16 +1506,22 @@ function rebootReconnect() {
             // not-expired, so a live loop must treat "no longer open" as a stop too.
             const state = getConnectionState();
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
-            if (CONFIGURATOR.connectionValid || timedOut || !DeviceHandler.devicePicker.autoConnect) {
+            const autoConnect = DeviceHandler.devicePicker.autoConnect;
+            // Auto-Connect off: nothing will reconnect, so the wait ends as soon as there is
+            // nothing left to wait for — the port back for serial, immediately for a driven
+            // target (its link is already down).
+            const waitedOut = !autoConnect && (driven || DeviceHandler.portAvailable);
+
+            if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();
-                // The reboot window has closed (reconnected, timed out, or auto-connect off):
-                // concludeReboot settles to IDLE so normal selection resumes. A kept BLE
+                // The reboot window has closed (reconnected, timed out, or nothing left to wait
+                // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
                 // link that never made it back to connected is dropped for real here.
                 getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
                 releaseKeptRebootLink();
                 return;
             }
-            if (!isConnected() && !GUI.connecting_to) {
+            if (autoConnect && !isConnected() && !GUI.connecting_to) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
                 // attempts serial_backend's disconnect listener is detached

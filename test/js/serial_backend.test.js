@@ -810,13 +810,83 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             // The reboot forces the connection invalid so the dialog/loop wait for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
 
-            // Unlike the BLE/manual path, serial relies on the real protocol "disconnect" event
-            // from the cable dropping — it does NOT self-schedule a disconnect or reconnect loop.
+            // Serial drops its own link when the FC re-enumerates, so the cycle never forces a
+            // disconnect the way the driven path does — and with the link still up it makes no
+            // connect attempt either.
             vi.advanceTimersByTime(20000);
             expect(serial.disconnect).not.toHaveBeenCalled();
             expect(serial.connect).not.toHaveBeenCalled();
 
             serialHandlers.disconnect({ detail: true }); // teardown (cable-drop never fired)
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    // Serial used to have no owner: the reconnect depended on an addedDevice event reaching the
+    // auto-select listener. That listener is still the fast path, but the cycle now backstops it
+    // and ends the window either way.
+    it("reconnects a serial target from the cycle when no device event arrives", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection(true);
+            serialHandlers.disconnect({ detail: true }); // the FC's re-enumeration drops the link
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(1500 + 1000); // flush, then the first retry tick
+            expect(serial.connect).toHaveBeenCalled();
+        } finally {
+            vi.advanceTimersByTime(30000); // drain the window
+            vi.useRealTimers();
+        }
+    });
+
+    it("a user disconnect during the reboot cancels the cycle and closes the window", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection(true);
+            disconnect(); // user hits Disconnect mid-reboot
+            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.(); // complete the close
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(30000);
+
+            expect(serial.connect).not.toHaveBeenCalled();
+            expect(getConnectionState().isRebootWindowOpen).toBe(false);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    // The window is shared: the dialog's timer can conclude it first. A closed window reads as
+    // NOT expired, so a loop testing expiry alone would spin forever.
+    it("stops when another owner concludes the window", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection(true);
+            serialHandlers.disconnect({ detail: true });
+            vi.advanceTimersByTime(1500); // into the retry phase
+
+            getConnectionState().concludeReboot(false); // another owner settles it
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(30000);
+            expect(serial.connect).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();
         }
