@@ -41,8 +41,15 @@ const status = computed(() => {
     );
 });
 
-function stopTicker() {
+let lingerTimer = null;
+
+// The dialog store holds one activeDialog. A user disconnect closes this dialog through
+// serial_backend, unmounting the component — a linger timer left running would then close
+// whatever dialog took the slot in the meantime.
+function stopTimers() {
     clearInterval(ticker);
+    clearTimeout(lingerTimer);
+    lingerTimer = null;
 }
 
 watch(
@@ -51,13 +58,16 @@ watch(
         if (stillRebooting) {
             return;
         }
-        stopTicker();
-        setTimeout(() => dialogStore.close(), RESULT_LINGER_MS);
+        clearInterval(ticker);
+        lingerTimer = setTimeout(() => {
+            lingerTimer = null;
+            dialogStore.close();
+        }, RESULT_LINGER_MS);
     },
     { immediate: true },
 );
 
-onBeforeUnmount(stopTicker);
+onBeforeUnmount(stopTimers);
 
 defineExpose({
     show: () => (open.value = true),

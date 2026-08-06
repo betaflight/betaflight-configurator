@@ -284,6 +284,16 @@ describe("DeviceHandler reboot-target identity", () => {
         expect(DeviceHandler.findDescribedDevice(target)?.path).toBe("serial_13");
     });
 
+    it("does not match on absent USB ids — a port without them is not 'the same make'", () => {
+        // SerialPortInfo has usbVendorId/usbProductId for USB ports only. Two platform-native
+        // ports (built-in COM, Bluetooth SPP) both carry undefined, and undefined === undefined
+        // would pair them up.
+        const target = { path: "serial_6", vendorId: undefined, productId: undefined };
+        DeviceHandler.currentSerialPorts = [{ path: "serial_1", displayName: "COM3" }];
+
+        expect(DeviceHandler.findDescribedDevice(target)).toBeUndefined();
+    });
+
     it("does not mistake another device for it", () => {
         const target = { path: "serial_6", vendorId: 1155, productId: 22336 };
         DeviceHandler.currentSerialPorts = [other];

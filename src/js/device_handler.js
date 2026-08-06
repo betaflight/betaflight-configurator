@@ -258,6 +258,10 @@ DeviceHandler.describeDevice = function (path) {
 /**
  * The listed device matching a descriptor: the same path if it came back as itself, otherwise
  * the same make. Undefined while it is away.
+ *
+ * The make comparison needs both ids: SerialPortInfo carries usbVendorId/usbProductId for USB
+ * ports only, so a platform-native port (a built-in COM port, a Bluetooth SPP one) has neither
+ * and `undefined === undefined` would match it to any other port without ids.
  * @param {?{path: string, vendorId: *, productId: *}} target - from describeDevice()
  * @returns {object|undefined} the device wrapper
  */
@@ -267,11 +271,13 @@ DeviceHandler.findDescribedDevice = function (target) {
     }
 
     const devices = [...this.currentSerialPorts, ...this.currentBluetoothPorts];
+    const byPath = devices.find((device) => device.path === target.path);
 
-    return (
-        devices.find((device) => device.path === target.path) ??
-        devices.find((device) => device.vendorId === target.vendorId && device.productId === target.productId)
-    );
+    if (byPath || target.vendorId === undefined || target.productId === undefined) {
+        return byPath;
+    }
+
+    return devices.find((device) => device.vendorId === target.vendorId && device.productId === target.productId);
 };
 
 /**
