@@ -36,7 +36,12 @@
 
             <!-- Info panels in responsive multi-column grid -->
             <div class="setup-info-grid">
-                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupInfoHead')"
+                    :help="$t('initialSetupInfoHeadHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             {
@@ -102,7 +107,12 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupGPSHead')"
+                    :help="$t('initialSetupGPSHeadHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
@@ -124,7 +134,12 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupInfoBuild')"
+                    :help="$t('initialSetupInfoFirmwareHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             {
@@ -206,6 +221,7 @@
                             :label="$t('initialSetupButtonReset')"
                             color="error"
                             class="w-full justify-center"
+                            size="xs"
                             @click="showConfirmReset"
                         >
                             <template #trailing>
@@ -216,6 +232,7 @@
                             :label="$t('initialSetupButtonRebootBootloader')"
                             color="primary"
                             class="w-full justify-center"
+                            size="xs"
                             @click="onRebootBootloader"
                         >
                             <template #trailing>
@@ -230,6 +247,7 @@
                     :title="$t('initialSetupSonarHead')"
                     :help="$t('initialSetupSonarHeadHelp')"
                     type="neutral"
+                    collapsible
                 >
                     <InfoGrid
                         :items="[
@@ -255,9 +273,10 @@
                         :label="$t('dialogConfirmResetClose')"
                         color="neutral"
                         variant="outline"
+                        size="xs"
                         @click="cancelConfirmReset"
                     />
-                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" size="xs" @click="confirmReset" />
                 </div>
             </template>
         </UModal>
@@ -272,7 +291,7 @@
             </template>
             <template #footer>
                 <div class="flex justify-end gap-2 w-full">
-                    <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
+                    <UButton :label="$t('close')" color="neutral" variant="outline" size="xs" @click="closeBuildInfo" />
                 </div>
             </template>
         </UModal>

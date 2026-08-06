@@ -43,7 +43,7 @@
                             <span class="row-index">#{{ originalIndex + 1 }}</span>
                             <USwitch
                                 v-model="adjustment.enabled"
-                                size="sm"
+                                size="xs"
                                 @update:model-value="onEnableChange(adjustment)"
                             />
                         </div>
@@ -152,6 +152,7 @@
                 :label="$t('adjustmentsSave')"
                 :disabled="!hasChanges"
                 :loading="isSaving"
+                size="xs"
                 @click="saveAdjustments"
             />
         </div>

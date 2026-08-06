@@ -2,7 +2,11 @@ import { ref } from "vue";
 import * as d3 from "d3";
 
 export function useSensorGraph() {
-    const margin = { top: 20, right: 10, bottom: 10, left: 40 };
+    // `bottom` is the gutter that holds the x-axis tick labels, `top` the gap above
+    // the plot.  The axis groups are positioned from these values at draw time
+    // (see applyGraphTransforms) — never hardcode them in the SVG template, or the
+    // horizontal scale drifts off the bottom of the plot when the SVG is resized.
+    const margin = { top: 10, right: 10, bottom: 20, left: 40 };
 
     // Data arrays
     const gyro_data = ref([]);
@@ -63,18 +67,42 @@ export function useSensorGraph() {
         return sampleNumber + 1;
     }
 
+    // Returns true when the measured plot area changed, so callers can skip the
+    // expensive scale/clip-path rebuild while the SVG keeps its size.
     function measureGraphSize(helpers) {
         const node = d3.select(helpers.selector).node();
         if (!node) {
-            return;
+            return false;
         }
         const rect = node.getBoundingClientRect();
-        helpers.width = Math.max(0, rect.width - margin.left - margin.right);
-        helpers.height = Math.max(0, rect.height - margin.top - margin.bottom);
+        const width = Math.max(0, rect.width - margin.left - margin.right);
+        const height = Math.max(0, rect.height - margin.top - margin.bottom);
+        if (width === helpers.width && height === helpers.height) {
+            return false;
+        }
+        helpers.width = width;
+        helpers.height = height;
+        return true;
+    }
+
+    // Place the axis, grid and data groups for the measured plot area: the y groups
+    // at the top-left corner of the plot, the x groups on its baseline so the
+    // horizontal scale always sits directly below the vertical one.
+    function applyGraphTransforms(helpers) {
+        const element = d3.select(helpers.selector);
+        const topLeft = `translate(${margin.left}, ${margin.top})`;
+        const baseline = `translate(${margin.left}, ${margin.top + helpers.height})`;
+
+        element.select(".grid.y").attr("transform", topLeft);
+        element.select(".axis.y").attr("transform", topLeft);
+        element.select(".data").attr("transform", topLeft);
+        element.select(".grid.x").attr("transform", baseline);
+        element.select(".axis.x").attr("transform", baseline);
     }
 
     function updateGraphHelperSize(helpers) {
         measureGraphSize(helpers);
+        applyGraphTransforms(helpers);
 
         // Always initialize scales to prevent undefined errors
         helpers.scaleX = d3.scaleLinear().domain([0, 300]).range([0, helpers.width]);
@@ -143,8 +171,10 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
-        // Re-measure if dimensions are not yet available (e.g. SVG was hidden via v-show)
-        if (!helpers.width || !helpers.height) {
+        // Re-measure every frame: the SVG may have been hidden via v-show when the
+        // graph was created, and it stretches with the window.  updateGraphHelperSize
+        // only rebuilds the scales and clip path when the size actually changed.
+        if (measureGraphSize(helpers) || !helpers.width || !helpers.height) {
             updateGraphHelperSize(helpers);
             if (!helpers.width || !helpers.height) {
                 return false;
