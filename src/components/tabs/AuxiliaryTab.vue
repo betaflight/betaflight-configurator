@@ -8,7 +8,7 @@
                 <UiBox highlight>
                     <p v-html="$t('auxiliaryHelp')"></p>
                 </UiBox>
-                <SettingRow :label="$t('auxiliaryToggleUnused')">
+                <SettingRow :label="$t('auxiliaryToggleUnused')" fullWidth>
                     <USwitch v-model="hideUnused" />
                 </SettingRow>
 
@@ -148,7 +148,13 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveModes" />
+            <UButton
+                :label="$t('auxiliaryButtonSave')"
+                size="xs"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveModes"
+            />
         </div>
     </BaseTab>
 </template>

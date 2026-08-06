@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('autotuneGainTitle')">
+    <UiBox :title="$t('autotuneGainTitle')" type="neutral" collapsible>
         <div v-if="visibleAxisList.length" class="overflow-x-auto mb-3">
             <table class="autotune-table w-full">
                 <!-- Axis group headers -->
@@ -71,7 +71,7 @@
                     </option>
                 </select>
             </label>
-            <UButton @click="onApply" size="sm" :disabled="!isConnected || !selectedAxisKey || applying">
+            <UButton @click="onApply" size="xs" :disabled="!isConnected || !selectedAxisKey || applying">
                 {{ $t("autotuneApplyGains") }}
             </UButton>
             <span v-if="!isConnected" class="text-sm text-dimmed" v-html="$t('autotuneConnectRequired')"></span>

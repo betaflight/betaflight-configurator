@@ -11,7 +11,7 @@
             <!-- Not Logged In State -->
             <div v-else-if="!isLoggedIn" class="grid-box col3">
                 <div class="options col-span-1"></div>
-                <UiBox class="options col-span-1" :title="$t('notLoggedIn')">
+                <UiBox class="options col-span-1" :title="$t('notLoggedIn')" type="neutral" collapsible>
                     <p>{{ $t("profileLoginMessage") }}</p>
                     <div class="button-container" style="text-align: center">
                         <button type="button" class="regular-button" @click="showLoginDialog">
@@ -101,7 +101,7 @@
                 </UModal>
 
                 <!-- Token Section -->
-                <UiBox class="options col-span-3" :title="$t('sectionUserTokens')">
+                <UiBox class="options col-span-3" :title="$t('sectionUserTokens')" type="neutral" collapsible>
                     <UTable :data="tokens" :columns="tokenColumns" :empty="$t('userTokenNoTokens')" class="text-sm">
                         <template #created-cell="{ row }">
                             {{ formatDate(row.original.created) }}
@@ -129,7 +129,7 @@
                 </UiBox>
 
                 <!-- Passkeys Section -->
-                <UiBox class="options col-span-3" :title="$t('sectionUserPasskeys')">
+                <UiBox class="options col-span-3" :title="$t('sectionUserPasskeys')" type="neutral" collapsible>
                     <UTable
                         :data="passkeys"
                         :columns="passkeyColumns"

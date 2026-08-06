@@ -1,14 +1,17 @@
 <template>
-    <div class="cf_doc_version_bt">
-        <a
+    <div class="wiki-btn-wrapper">
+        <UButton
             id="button-documentation"
             :href="url"
             target="_blank"
             rel="noopener noreferrer"
             :aria-label="$t('betaflightSupportButton')"
+            color="primary"
+            variant="solid"
+            class="wiki-btn uppercase font-bold tracking-wide whitespace-nowrap"
         >
             {{ $t("betaflightSupportButton") }}
-        </a>
+        </UButton>
     </div>
 </template>
 
@@ -19,7 +22,6 @@ import { documentationLinks } from "@/config/documentationLinks";
 export default defineComponent({
     name: "WikiButton",
     props: {
-        // Accept either a full URL or a key to look up in documentationLinks
         docUrl: {
             type: String,
             required: true,
@@ -27,8 +29,6 @@ export default defineComponent({
     },
     setup(props) {
         const url = computed(() => {
-            // If it's a full URL (http/https), use it directly
-            // Otherwise, treat it as a key to look up in documentationLinks
             if (props.docUrl.startsWith("https")) {
                 return props.docUrl;
             }
@@ -39,3 +39,18 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.wiki-btn-wrapper {
+    float: right;
+    margin-top: -45px;
+}
+
+.wiki-btn {
+    padding: 1px 9px;
+    font-size: 10px;
+    line-height: 17px;
+    letter-spacing: 0.03em;
+    transition: all ease 0.2s;
+}
+</style>
