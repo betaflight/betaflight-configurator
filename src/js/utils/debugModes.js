@@ -148,6 +148,7 @@ export function getDebugModes(apiVersion) {
         // it must occupy its index so AUTOPILOT_STOP decodes correctly.
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
+        addArrayElement(result, "PITOT");
         addArrayElement(result, "PSAS");
     }
 
