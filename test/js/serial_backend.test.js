@@ -225,6 +225,8 @@ import DeviceHandler from "../../src/js/device_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
+import FC from "../../src/js/fc";
+import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
@@ -458,56 +460,125 @@ describe("serial_backend disconnect convergence", () => {
     });
 });
 
+// The failure dialog is decided by who started the attempt, not by which lifecycle phase we
+// are in. The app tells the user about failures the user asked for and stays quiet about
+// attempts it made on its own — those are exactly the ones something retries. A reboot
+// reconnect is one instance of that rule, not a special case.
 describe("serial_backend connect-failure dialog", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         resetMocks();
     });
 
-    it("shows the connection-failed dialog when a user-initiated connect fails to open", () => {
-        // IDLE -> connectDisconnect -> beginConnect (CONNECTING). A failed open is a genuine
-        // user-facing failure, so the dialog must appear.
+    function infoDialogCount() {
+        return dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog").length;
+    }
+
+    it("shows the dialog when a user-initiated connect fails to open", () => {
+        // IDLE -> connectDisconnect -> beginConnect (CONNECTING). The user asked for this
+        // attempt, so its failure is theirs to see.
         connectDisconnect();
         expect(serial.connect).toHaveBeenCalled();
 
         serialHandlers.connect({ detail: false }); // open failed -> onOpen(false) -> abortConnection
 
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(1);
+        expect(infoDialogCount()).toBe(1);
     });
 
-    it("stays silent when a reboot reconnect's open fails with auto-connect on (device still re-enumerating)", () => {
-        // The preset/CLI save-and-reboot reconnect window: scheduleReconnect() put the phase
-        // in RECONNECTING. A premature connect attempt (fired before the rebooting device is
-        // back) fails to open — but auto-connect recovers on re-enumeration, so this must NOT
-        // pop a "Failed to open serial port" dialog. (The reported spurious-dialog bug.)
+    it("still shows the dialog for a user-initiated failure while Auto-Connect is ON", () => {
+        // Auto-Connect does not make a user's own Connect click silent: a port held by another
+        // application fails every time and no device event follows to retry it.
         DeviceHandler.devicePicker.autoConnect = true;
-        getConnectionState().reconnectStarted(); // RECONNECTING
-        dialogStore.open.mockClear();
-
-        connectDisconnect(); // beginConnect preserves RECONNECTING
-        expect(serial.connect).toHaveBeenCalled();
-
-        serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
-
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(0);
-        // The attempt is still torn down so auto-connect can re-fire (connecting_to cleared).
-        expect(GUI.connecting_to).toBe(false);
-    });
-
-    it("still shows the dialog on a reboot reconnect failure when auto-connect is OFF (nothing retries)", () => {
-        // Without auto-connect there is no auto-recovery, so a failed reconnect open is a real
-        // dead end the user must be told about — suppression must NOT apply.
-        DeviceHandler.devicePicker.autoConnect = false;
-        getConnectionState().reconnectStarted(); // RECONNECTING
-        dialogStore.open.mockClear();
 
         connectDisconnect();
         serialHandlers.connect({ detail: false });
 
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(1);
+        expect(infoDialogCount()).toBe(1);
+    });
+
+    it("stays silent when an app-initiated open fails, and recovers on the next device event", () => {
+        // A plug-in raises a burst of device events; the port can vanish between the list
+        // refresh and the open, so the auto-select listener's attempt fails. Another event
+        // follows and connects, so the failure must not reach the user. (Issue #5368.)
+        DeviceHandler.devicePicker.autoConnect = true;
+
+        connectDisconnect({ automatic: true });
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // port vanished -> abortConnection
+
+        expect(infoDialogCount()).toBe(0);
+        // Torn down, so the next event can attempt again and the UI is not left mid-connect.
+        expect(GUI.connecting_to).toBe(false);
+        expect(DeviceHandler.devicePickerDisabled).toBe(false);
+
+        // The next device event connects, on the port that came back.
+        serial.connect.mockClear();
+        connectDisconnect({ automatic: true });
+        expect(serial.connect).toHaveBeenCalled();
+        serialHandlers.connect({ detail: true });
+        expect(GUI.connected_to).toBe("/dev/ttyACM0");
+        expect(infoDialogCount()).toBe(0);
+    });
+
+    it("reports an app-initiated failure AFTER the link opened (handshake rejected)", () => {
+        // onOpen set connected_to, so the link was up and the failure is the handshake
+        // (unsupported/garbage API version) — terminal, not enumeration flakiness. Nothing
+        // retries it into working, so the user must be told however the attempt started.
+        DeviceHandler.devicePicker.autoConnect = true;
+
+        connectDisconnect({ automatic: true });
+        serialHandlers.connect({ detail: true }); // opened -> HANDSHAKING, connected_to set
+        dialogStore.open.mockClear();
+
+        FC.CONFIG.apiVersion = "0.0.0";
+        MSP.send_message.mock.calls.at(-1)?.[3]?.(); // MSP_API_VERSION callback -> abortConnection
+
+        expect(infoDialogCount()).toBe(1);
+    });
+
+    it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {
+        // The preset/CLI save-and-reboot reconnect window: the retry loop drives the attempt,
+        // so a premature open against a still-rebooting device is expected and silent — the
+        // same rule as the burst above, no reboot-specific branch.
+        DeviceHandler.devicePicker.autoConnect = true;
+        getConnectionState().reconnectStarted(); // RECONNECTING
+        dialogStore.open.mockClear();
+
+        connectDisconnect({ automatic: true }); // beginConnect preserves RECONNECTING
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
+
+        expect(infoDialogCount()).toBe(0);
+        expect(GUI.connecting_to).toBe(false);
+    });
+
+    it("makes no automatic attempt at all with Auto-Connect OFF", () => {
+        // Why abortConnection() no longer tests autoConnect: with it off nothing connects on
+        // the app's own initiative, so every failure that can happen is a user's to see. An
+        // automatic caller added later without that gate would break that reasoning, so pin
+        // it on the real listener registered by initializeSerialBackend.
+        initializeSerialBackend();
+        const autoSelect = EventBus.$on.mock.calls.find(
+            (c) => c[0] === "device-handler:auto-select-serial-device",
+        )?.[1];
+        expect(autoSelect).toBeTypeOf("function");
+
+        DeviceHandler.devicePicker.autoConnect = false;
+        serial.connect.mockClear();
+        autoSelect();
+        expect(serial.connect).not.toHaveBeenCalled();
+
+        // With it on, the same listener connects — and its failure stays silent, which is
+        // what makes the attempt automatic rather than merely unattended.
+        DeviceHandler.devicePicker.autoConnect = true;
+        dialogStore.open.mockClear();
+        autoSelect();
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false });
+        expect(infoDialogCount()).toBe(0);
     });
 });
 

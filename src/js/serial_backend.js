@@ -203,8 +203,10 @@ export function initializeSerialBackend() {
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
             // selectActivePort points the selection at the device that sent this event.
-            // Connect to it.
-            connectDisconnect();
+            // Connect to it. The app started this, not the user: a plug-in can raise a burst
+            // of device events and the port can vanish again between the list refresh and the
+            // open, so a failure here is retried by the next event rather than reported.
+            connectDisconnect({ automatic: true });
         }
     });
 
@@ -402,7 +404,7 @@ function canStartConnectionAction(selectedDevice) {
     );
 }
 
-function beginConnect(selectedDevice) {
+function beginConnect(selectedDevice, automatic) {
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
@@ -449,14 +451,9 @@ function beginConnect(selectedDevice) {
         serial.removeEventListener("disconnect", disconnectHandler);
         serial.addEventListener("disconnect", disconnectHandler);
 
-        // A connect attempt begins. IDLE -> CONNECTING. During a reboot-driven reconnect
-        // the phase is REBOOTING/RECONNECTING — keep it, so a transient failed open (the
-        // rebooting device is still re-enumerating) is recognised as reconnect flakiness
-        // rather than a user-facing connect failure. Readiness (onOpen -> HANDSHAKING,
-        // finishOpen/connectCli -> CONNECTED/CLI) advances it on success.
-        if (!getConnectionState().isRebootReconnecting) {
-            getConnectionState().setPhase(ConnPhase.CONNECTING);
-        }
+        // The attempt begins: phase and who started it, in the connection state. Virtual
+        // connections skip this — they cannot fail to open, so nothing reads either.
+        getConnectionState().attemptStarted(automatic);
     }
 
     serial.connect(
@@ -482,7 +479,13 @@ function registerCliHotkey() {
     };
 }
 
-export function connectDisconnect() {
+/**
+ * Toggle the connection. Callers that connect on the app's own initiative — a device
+ * event, the reboot retry loop — pass `automatic: true`, so a failure that the app will
+ * retry by itself is not reported as if the user had asked for it. See abortConnection().
+ * @param {{automatic?: boolean}} [options] - automatic: the app started this, not the user
+ */
+export function connectDisconnect({ automatic = false } = {}) {
     if (GUI.connect_lock) {
         return;
     }
@@ -506,7 +509,7 @@ export function connectDisconnect() {
         if (!canStartConnectionAction(selectedDevice)) {
             return;
         }
-        beginConnect(selectedDevice);
+        beginConnect(selectedDevice, automatic);
     }
 
     registerCliHotkey();
@@ -737,15 +740,12 @@ function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
-    // A failed open/handshake during a reboot reconnect is expected flakiness, so suppress
-    // the failure dialog — but only with auto-connect on, else nothing retries and the
-    // failure is real. Check the open window as well as the phase (later retries have left
-    // the reconnect phase), and gate it on !rebootWindowExpired so a leaked window can't
-    // suppress real failures forever. Captured before setPhase(FAILED) below.
-    const state = getConnectionState();
-    const duringRebootReconnect =
-        (state.isRebootReconnecting || (state.isRebootWindowOpen && !state.rebootWindowExpired)) &&
-        DeviceHandler.devicePicker.autoConnect;
+    // Report failures the user asked for; stay quiet about attempts the app made on its own,
+    // which are the ones something retries. See ConnectionState.failureIsUserFacing. Read
+    // before setPhase(FAILED) below, which ends the attempt this describes.
+    // Auto-Connect is not tested here: with it off there are no automatic attempts at all —
+    // the auto-select listener requires it and the reboot retry loop stops on it.
+    const reportFailure = getConnectionState().failureIsUserFacing;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
     // the handshake (e.g. invalid API version) did not "fail to open". A manual/TCP/WebSocket
@@ -782,8 +782,10 @@ function abortConnection(messageKey) {
     // FAILED is not a reconnecting phase, so selectActivePort() resumes its normal
     // fallback rather than staying aimed at a dead target.
 
+    // The log panel keeps every failure — it is the trail a user pastes into a bug report.
+    // Only the dialog is withheld.
     gui_log(message);
-    if (!duringRebootReconnect) {
+    if (reportFailure) {
         showConnectionFailedDialog(message);
     }
 
@@ -1431,7 +1433,7 @@ export function reinitializeConnection(suppressDialog = false) {
         connectDisconnect();
         if (DeviceHandler.devicePicker.autoConnect) {
             setTimeout(function () {
-                connectDisconnect();
+                connectDisconnect({ automatic: true });
             }, 500);
             getConnectionState().concludeReboot(true);
             return rebootTimestamp;
@@ -1578,8 +1580,9 @@ function rebootReconnect() {
 
                 // selectActivePort keeps the current selection during a reconnect
                 // (isReconnecting). The selection points at the device from before the reboot.
-                // The attempt fails while that device is absent. The loop then tries again.
-                connectDisconnect();
+                // The attempt fails while that device is absent. The loop then tries again,
+                // so the failure is not reported (automatic).
+                connectDisconnect({ automatic: true });
             }
         }, REBOOT_RECONNECT_RETRY_MS);
     }, REBOOT_FLUSH_DELAY_MS);

@@ -46,6 +46,39 @@ describe("phase + readiness", () => {
     });
 });
 
+describe("attempt origin / failure reporting", () => {
+    it("attemptStarted enters CONNECTING, but keeps a reboot reconnect's own phase", () => {
+        const c = make();
+        c.attemptStarted();
+        expect(c.state).toBe(State.CONNECTING);
+
+        c.requestReboot();
+        c.reconnectStarted();
+        c.attemptStarted(true); // the retry loop's attempt
+        expect(c.state).toBe(State.RECONNECTING);
+    });
+
+    it("reports a user-initiated failure, stays quiet about the app's own", () => {
+        const c = make();
+
+        c.attemptStarted(); // the user pressed Connect
+        expect(c.failureIsUserFacing).toBe(true);
+
+        c.attemptStarted(true); // a device event / the retry loop
+        expect(c.failureIsUserFacing).toBe(false);
+    });
+
+    it("reports an automatic attempt's failure once the link had opened", () => {
+        // A handshake rejected after the port opened (unsupported firmware, garbage API
+        // version) is terminal — no retry turns it into a working connection.
+        const c = make();
+        c.attemptStarted(true);
+        c.setLinkOpen(true);
+
+        expect(c.failureIsUserFacing).toBe(true);
+    });
+});
+
 describe("reboot / reconnect window", () => {
     it("requestReboot enters REBOOTING and does not re-enter once reconnecting", () => {
         const c = make();
