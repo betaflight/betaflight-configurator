@@ -410,6 +410,9 @@
     "rebootFlightControllerReady": {
         "message": "Flight Controller is ready"
     },
+    "rebootFlightControllerFailed": {
+        "message": "Flight Controller did <span class=\"message-negative\">not</span> reconnect"
+    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
     },

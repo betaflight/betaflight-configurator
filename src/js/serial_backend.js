@@ -51,10 +51,6 @@ let connectionTimeoutPending = false;
 // Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
 // retry would resurrect a connection the user just cancelled.
 let rebootReconnectTimerId = false;
-// Handles for the reboot progress modal's intervals, tracked so closeRebootDialog() can dismiss
-// the modal (and stop its timers) when a user disconnect cancels the reboot.
-let rebootDialogProgressTimerId = false;
-let rebootDialogCheckTimerId = false;
 
 // The transport-open flag formerly stored here as `isConnected` now lives in
 // the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen.
@@ -101,33 +97,6 @@ let rebootHandshakeSawTraffic = false;
  */
 export function isDrivenRebootTarget(port) {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
-}
-
-/**
- * Should the reboot dialog's poller stop waiting (settle the window, show "ready", close)?
- * A pure predicate so the branch matrix is testable without driving the dialog's intervals.
- * Each branch has its own concluder: Auto-Connect on -> the retry loop; off + driven target ->
- * rebootReconnect()'s flush closes the window; off + serial -> nothing else runs, so the port
- * coming back is the only signal.
- * @param {{connectionValid: boolean, timeoutReached: boolean, autoConnect: boolean,
- *          portAvailable: boolean, selectedDevice: string, rebootWindowOpen: boolean}} state
- * @returns {boolean}
- */
-export function shouldConcludeRebootDialog({
-    connectionValid,
-    timeoutReached,
-    autoConnect,
-    portAvailable,
-    selectedDevice,
-    rebootWindowOpen,
-}) {
-    if (connectionValid || timeoutReached) {
-        return true;
-    }
-    if (autoConnect) {
-        return false;
-    }
-    return isDrivenRebootTarget(selectedDevice) ? !rebootWindowOpen : Boolean(portAvailable);
 }
 
 /**
@@ -242,18 +211,9 @@ function stopRebootReconnect() {
     }
 }
 
-// Dismiss the reboot progress modal and stop its timers. Called when a user disconnect cancels
-// the reboot (otherwise the modal would linger until its own 10s timeout), and at the start of
-// showRebootDialog() to clear any stale modal/intervals from a prior reboot.
+// Dismiss the reboot progress modal. Called when a user disconnect cancels the reboot — the
+// dialog closes itself on a concluded window, but a cancel must not wait for its linger.
 function closeRebootDialog() {
-    if (rebootDialogProgressTimerId !== false) {
-        clearInterval(rebootDialogProgressTimerId);
-        rebootDialogProgressTimerId = false;
-    }
-    if (rebootDialogCheckTimerId !== false) {
-        clearInterval(rebootDialogCheckTimerId);
-        rebootDialogCheckTimerId = false;
-    }
     const dialogStore = useDialogStore();
     if (dialogStore.activeDialog?.type === "RebootDialog") {
         dialogStore.close();
@@ -1227,8 +1187,8 @@ function onClosed(result) {
 
     // USB/cable disconnect invokes this path (not finishClose). Clear any Pinia modal
     // (e.g. InformationDialog from showVersionMismatchAndCli) so it does not linger — but
-    // NOT the reboot progress dialog: a reboot's own port-drop lands here, and the reboot
-    // flow (showRebootDialog's check-timer / closeRebootDialog) owns dismissing it.
+    // NOT the reboot progress dialog: a reboot's own port-drop lands here, and the dialog
+    // dismisses itself once the reconnect cycle concludes the window.
     const dialogStore = useDialogStore();
     if (dialogStore.activeDialog?.type !== "RebootDialog") {
         dialogStore.close();
@@ -1548,75 +1508,8 @@ function rebootReconnect() {
 function showRebootDialog() {
     gui_log(i18n.getMessage("deviceRebooting"));
 
-    // Clear any leftover modal/intervals from a prior reboot before starting a new one.
-    closeRebootDialog();
-
-    // Show the reboot progress modal (the shared Vue RebootDialog via the dialog store —
-    // the CLI and Vue-tab reboot paths now share this single implementation).
-    const dialogStore = useDialogStore();
-    dialogStore.open("RebootDialog", {
-        status: i18n.getMessage("rebootFlightController"),
-        progress: 0,
-    });
-
-    // Snapshot the window opened by requestReboot(): the dialog tracks the same start
-    // and duration as the retry loop, and stays consistent even after concludeReboot
-    // clears the live window.
-    const windowStartedAt = getConnectionState().rebootWindowStartedAt;
-    const windowMs = getConnectionState().rebootWindowMs;
-
-    // Update progress during reboot
-    let progress = 0;
-    // Calculate increment to reach 100% when the timeout elapses (runs every 100ms)
-    const progressIncrement = 100 / (windowMs / 100);
-
-    rebootDialogProgressTimerId = setInterval(() => {
-        progress += progressIncrement;
-        if (progress <= 100) {
-            dialogStore.updateProps({ progress });
-        }
-    }, 100);
-
-    // Check for successful connection every 100ms with a timeout
-    rebootDialogCheckTimerId = setInterval(() => {
-        const connectionCheckTimeoutReached = Date.now() - windowStartedAt > windowMs;
-
-        if (
-            shouldConcludeRebootDialog({
-                connectionValid: CONFIGURATOR.connectionValid,
-                timeoutReached: connectionCheckTimeoutReached,
-                autoConnect: DeviceHandler.devicePicker.autoConnect,
-                portAvailable: DeviceHandler.portAvailable,
-                selectedDevice: DeviceHandler.devicePicker.selectedDevice,
-                rebootWindowOpen: getConnectionState().isRebootWindowOpen,
-            })
-        ) {
-            clearInterval(rebootDialogCheckTimerId);
-            clearInterval(rebootDialogProgressTimerId);
-            rebootDialogCheckTimerId = false;
-            rebootDialogProgressTimerId = false;
-
-            // The reboot window has closed (reconnected / timed out / not auto-reconnecting):
-            // concludeReboot settles to IDLE so normal port selection resumes.
-            getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
-
-            dialogStore.updateProps({
-                progress: 100,
-                status: i18n.getMessage("rebootFlightControllerReady"),
-            });
-
-            // Close the dialog after showing "ready" message briefly
-            setTimeout(() => {
-                if (dialogStore.activeDialog?.type === "RebootDialog") {
-                    dialogStore.close();
-                }
-            }, 1000);
-
-            if (connectionCheckTimeoutReached) {
-                console.log(`${logHead} Reboot timeout reached`);
-            } else {
-                gui_log(i18n.getMessage("deviceReady"));
-            }
-        }
-    }, 100);
+    // The dialog is a view of the reboot window: it renders progress from the window the
+    // reconnect cycle opened, reports what that cycle concluded, and closes itself. It does
+    // not decide when the reboot is over — that owner is rebootReconnect().
+    useDialogStore().open("RebootDialog");
 }
