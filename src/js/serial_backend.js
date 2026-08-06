@@ -57,8 +57,8 @@ let rebootDialogProgressTimerId = false;
 let rebootDialogCheckTimerId = false;
 
 // The transport-open flag formerly stored here as `isConnected` now lives in
-// the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen/
-// toggleLinkOpen. Kept as a local read-through helper so the call sites stay terse.
+// the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen.
+// Kept as a local read-through helper so the call sites stay terse.
 const isConnected = () => getConnectionState().linkOpen;
 
 // The intentional-disconnect flag — telling an intentional disconnect apart
@@ -163,18 +163,13 @@ function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
 }
 
-const toggleStatus = function () {
-    // Transport-open flag now lives in the connection state (was module-private isConnected).
-    getConnectionState().toggleLinkOpen();
-};
-
 function connectHandler(event) {
     onOpen(event.detail);
-    // Only flip the connected flag when the port actually opened. A failed open
-    // (event.detail falsy) runs abortConnection inside onOpen; toggling here too would
-    // leave isConnected out of sync with the real state and break reconnect retries.
+    // Only mark the link open when the port actually opened. A failed open (event.detail
+    // falsy) runs abortConnection inside onOpen; setting the flag here too would leave it
+    // out of sync with the real state and break reconnect retries.
     if (event.detail) {
-        toggleStatus();
+        getConnectionState().setLinkOpen(true);
     }
 }
 
@@ -321,7 +316,7 @@ function beginDisconnect() {
     getConnectionState().concludeReboot(false);
 
     mspHelper?.setArmingEnabled(true, false, function () {
-        finishClose(toggleStatus);
+        finishClose();
     });
 }
 
@@ -331,7 +326,7 @@ function beginDisconnect() {
 function disconnectForReboot() {
     console.log(`${logHead} Dropping stale link for reboot (flush timeout)`);
     prepareDisconnect();
-    finishClose(toggleStatus);
+    finishClose();
 }
 
 // App-level connection teardown WITHOUT dropping the transport: everything onClosed's
@@ -585,7 +580,7 @@ function teardownConnectionUi() {
     switchTab(target, { mode: "disconnected" });
 }
 
-function finishClose(finishedCallback) {
+function finishClose() {
     const wasConnected = CONFIGURATOR.connectionValid;
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -617,7 +612,9 @@ function finishClose(finishedCallback) {
 
     teardownConnectionUi();
 
-    finishedCallback();
+    // The link is down. finishUnexpectedDisconnect() clears the same flag for the other
+    // teardown path, before its UI teardown — it has a late removedDevice to outrun.
+    getConnectionState().setLinkOpen(false);
 }
 
 // Complete the teardown for an UNEXPECTED disconnect (cable unplug / FC reboot / BLE drop).
@@ -630,9 +627,9 @@ function finishUnexpectedDisconnect() {
     GUI.timeout_remove("connecting");
     GUI.timeout_remove("connectAttempt");
 
-    // Mirror the toggleStatus that finishClose runs via finishedCallback for intentional
-    // disconnects. Reset before the UI teardown so a late removedDevice cannot re-enter
-    // connectDisconnect() against a still-"connected" state.
+    // Mirror the flag reset finishClose() makes for intentional disconnects. Reset before
+    // the UI teardown so a late removedDevice cannot re-enter connectDisconnect() against a
+    // still-"connected" state.
     getConnectionState().setLinkOpen(false);
 
     teardownConnectionUi();
@@ -657,7 +654,7 @@ function dropStalledRebootConnection() {
     }
 
     getConnectionState().markIntentionalDisconnect();
-    finishClose(toggleStatus);
+    finishClose();
 }
 
 function setConnectionTimeout() {
@@ -1367,7 +1364,7 @@ function handleConnectionTimeout() {
     connectionTimeoutPending = true;
     prepareDisconnect();
     getConnectionState().concludeReboot(false);
-    finishClose(toggleStatus);
+    finishClose();
 }
 
 export async function update_sensor_status() {

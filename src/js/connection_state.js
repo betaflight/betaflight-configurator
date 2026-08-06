@@ -236,11 +236,6 @@ export class ConnectionState {
         this._linkOpen.value = Boolean(open);
     }
 
-    toggleLinkOpen() {
-        this._linkOpen.value = !this._linkOpen.value;
-        return this._linkOpen.value;
-    }
-
     /** Hard shutdown for page unload (pagehide): collapse to IDLE, ungated. */
     shutdown() {
         this._linkOpen.value = false;

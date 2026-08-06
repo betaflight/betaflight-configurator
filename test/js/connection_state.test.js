@@ -169,13 +169,13 @@ describe("operational flags", () => {
         expect(c.consumeIntentionalDisconnect()).toBe(false);
     });
 
-    it("linkOpen set / toggle", () => {
+    it("linkOpen set", () => {
         const c = make();
         expect(c.linkOpen).toBe(false);
         c.setLinkOpen(true);
         expect(c.linkOpen).toBe(true);
-        expect(c.toggleLinkOpen()).toBe(false);
-        expect(c.toggleLinkOpen()).toBe(true);
+        c.setLinkOpen(false);
+        expect(c.linkOpen).toBe(false);
     });
 });
 
