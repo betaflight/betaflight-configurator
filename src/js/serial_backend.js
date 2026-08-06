@@ -90,12 +90,13 @@ let rebootLinkKept = false;
 let rebootHandshakeSawTraffic = false;
 
 /**
- * Whether a target's transport never re-enumerates after an FC reboot (BLE, manual/TCP),
- * so its reconnect must be DRIVEN by the retry loop rather than left to auto-connect.
+ * Whether a target's transport never re-enumerates after an FC reboot (BLE, manual/TCP).
+ * Such a link survives the reboot and gets no disconnect event, and with Auto-Connect off
+ * there is nothing for the reconnect cycle to wait for.
  * @param {string} port - the selected port path
  * @returns {boolean}
  */
-export function isDrivenRebootTarget(port) {
+function isDrivenRebootTarget(port) {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
 }
 
@@ -1352,24 +1353,21 @@ function startLiveDataRefreshTimer() {
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
-export function reinitializeConnection(suppressDialog = false) {
-    // Open the reboot window in the connection state (single owner of the reboot
-    // lifecycle: start time, duration, phase). Virtual toggles settle immediately below.
-    getConnectionState().requestReboot(rebootConnectWindowMs());
-    const rebootTimestamp = getConnectionState().rebootWindowStartedAt;
-
+export function reinitializeConnection() {
+    // Virtual has no FC to reboot: toggle the fake link, and toggle it back with Auto-Connect
+    // on. No reboot window — nothing is going away that we have to wait for, and the phase
+    // follows the toggle instead of being declared CONNECTED before the reconnect runs.
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (DeviceHandler.devicePicker.autoConnect) {
-            setTimeout(function () {
-                connectDisconnect({ automatic: true });
-            }, 500);
-            getConnectionState().concludeReboot(true);
-            return rebootTimestamp;
+            setTimeout(() => connectDisconnect({ automatic: true }), 500);
         }
-        getConnectionState().concludeReboot(false);
-        return rebootTimestamp;
+        return;
     }
+
+    // Open the reboot window in the connection state: the single owner of the reboot
+    // lifecycle's start time, duration and phase.
+    getConnectionState().requestReboot(rebootConnectWindowMs());
 
     // requestReboot() above sets the connection state to REBOOTING. selectActivePort() then
     // reports isReconnecting and keeps the current selection. It does not change the selection
@@ -1391,13 +1389,11 @@ export function reinitializeConnection(suppressDialog = false) {
     if (["cli", "presets"].includes(GUI.active_tab)) {
         console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
-    } else if (!suppressDialog) {
+    } else {
         showRebootDialog();
     }
 
     rebootReconnect();
-
-    return rebootTimestamp;
 }
 
 /**

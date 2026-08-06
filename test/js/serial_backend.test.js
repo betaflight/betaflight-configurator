@@ -803,10 +803,9 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             serial.disconnect.mockClear();
             serial.connect.mockClear();
 
-            const ts = reinitializeConnection(true); // suppressDialog: skip DOM modal
+            reinitializeConnection();
 
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
-            expect(typeof ts).toBe("number");
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
             expect(serial.disconnect).not.toHaveBeenCalled(); // nothing before the flush
@@ -833,7 +832,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
-            reinitializeConnection(true);
+            reinitializeConnection();
             serialHandlers.disconnect({ detail: true }); // the FC's re-enumeration drops the link
             serial.connect.mockClear();
 
@@ -853,7 +852,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
-            reinitializeConnection(true);
+            reinitializeConnection();
             disconnect(); // user hits Disconnect mid-reboot
             mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.(); // complete the close
             serial.connect.mockClear();
@@ -882,7 +881,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
-            reinitializeConnection(true);
+            reinitializeConnection();
             serialHandlers.disconnect({ detail: true });
             serial.connect.mockClear(); // establishConnection's own open
 
@@ -910,7 +909,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
-            reinitializeConnection(true);
+            reinitializeConnection();
             serialHandlers.disconnect({ detail: true });
             vi.advanceTimersByTime(1500); // into the retry phase
 
