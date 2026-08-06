@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('flightPlanMap')" type="neutral" collapsible class="flight-plan-map" @toggle="onUiBoxToggle">
+    <UiBox :title="$t('flightPlanMap')" type="neutral" collapsible class="flight-plan-map">
         <div ref="mapContainerRef" class="map-container">
             <div ref="mapRef" class="map"></div>
             <div v-if="isLoading" class="map-loading">
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { initMap } from "@/js/utils/map";
 import { fromLonLat, toLonLat } from "ol/proj";
@@ -86,6 +86,10 @@ onMounted(async () => {
         console.error("Map ref not available");
         return;
     }
+
+    // Attach before the map exists: geolocation makes initialization async, and the
+    // observer only needs the container.
+    observeMapContainer();
 
     // Final fallback coordinates (Sydney Harbour Bridge, Australia)
     const finalFallbackLat = -33.8523;
@@ -292,11 +296,35 @@ const setupMapLayers = () => {
     // Initial map update
     updateMapFeatures();
 
-    // Observe container size changes (reopen from collapsed, window resize, etc.)
-    maybeSetupResizeObserver();
-
     // Map is now ready
     isLoading.value = false;
+};
+
+// The map lives inside a collapsible UiBox, so it can be laid out while it has no
+// box at all.  OpenLayers caches its viewport size and will not notice when the
+// container becomes visible again, leaving a blank or clipped map — watch the
+// container instead of any single trigger, which also covers window resizes.
+let resizeObserver = null;
+
+const observeMapContainer = () => {
+    if (resizeObserver || !mapContainerRef.value) {
+        return;
+    }
+
+    resizeObserver = new ResizeObserver((entries) => {
+        const mapObj = mapInstance.value?.map;
+        if (!mapObj) {
+            return;
+        }
+        for (const { contentRect } of entries) {
+            if (contentRect.width > 0 && contentRect.height > 0) {
+                mapObj.updateSize();
+                break;
+            }
+        }
+    });
+
+    resizeObserver.observe(mapContainerRef.value);
 };
 
 // Update path lines during drag in real-time
@@ -485,60 +513,12 @@ watch(
     },
 );
 
-// ResizeObserver for reopening after collapse — OpenLayers needs updateSize()
-// when its container was hidden during initialization or became visible later.
-let resizeObserver = null;
-
-const setupResizeObserver = () => {
-    if (!mapContainerRef.value || !mapInstance.value?.map) {
-        return;
-    }
-
-    resizeObserver = new ResizeObserver((entries) => {
-        // Only trigger when container actually grew (reopened from collapsed)
-        for (const entry of entries) {
-            const { width, height } = entry.contentRect;
-            if ((width > 0 || height > 0) && mapInstance.value?.map) {
-                mapInstance.value.map.updateSize();
-                console.log("Map resized after container visibility change");
-                break;
-            }
-        }
-    });
-
-    resizeObserver.observe(mapContainerRef.value);
-};
-
-// Setup ResizeObserver after map is initialized
-const maybeSetupResizeObserver = async () => {
-    await nextTick();
-    if (mapContainerRef.value && mapInstance.value?.map) {
-        setupResizeObserver();
-    }
-};
-
-// Handle UiBox toggle — call updateSize when reopened so OpenLayers
-// recalculates dimensions after the container goes from display:none to visible.
-const onUiBoxToggle = (isOpen) => {
-    if (isOpen && mapInstance.value?.map) {
-        // v-show changes visibility, but OpenLayers can't measure correct
-        // dimensions until after the browser has painted.  Use requestAnimationFrame
-        // *after* nextTick so both Vue's DOM flush and one paint cycle are done.
-        nextTick(() => {
-            requestAnimationFrame(() => {
-                mapInstance.value.map.updateSize();
-                console.log("Map resized after UiBox reopen");
-            });
-        });
-    }
-};
-
 // Cleanup on unmount
 onUnmounted(() => {
     console.log("Cleaning up map");
-    if (resizeObserver && mapContainerRef.value) {
-        resizeObserver.unobserve(mapContainerRef.value);
+    if (resizeObserver) {
         resizeObserver.disconnect();
+        resizeObserver = null;
     }
     if (mapInstance.value?.destroy) {
         mapInstance.value.destroy();

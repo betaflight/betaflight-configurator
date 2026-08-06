@@ -80,12 +80,9 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["toggle"]);
-
 const isOpen = ref(props.defaultOpen);
 function toggle() {
     isOpen.value = !isOpen.value;
-    emit("toggle", isOpen.value);
 }
 
 const typeClass = computed(() => {
