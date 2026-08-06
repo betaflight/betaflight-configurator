@@ -53,9 +53,8 @@ describe("attempt origin / failure reporting", () => {
         expect(c.state).toBe(State.CONNECTING);
     });
 
-    // Both halves of isRebootReconnecting: a reboot owns its phase, and an attempt made
-    // inside that window must not overwrite it with CONNECTING. Each case needs its own
-    // instance — requestReboot() is a no-op once the phase is already in flight.
+    // Both halves of isRebootReconnecting. Each case needs its own instance —
+    // requestReboot() is a no-op once a phase is in flight.
     it.each([
         ["REBOOTING", (c) => c.requestReboot(), State.REBOOTING],
         [
@@ -87,8 +86,7 @@ describe("attempt origin / failure reporting", () => {
     });
 
     it("reports an automatic attempt's failure once the link had opened", () => {
-        // A handshake rejected after the port opened (unsupported firmware, garbage API
-        // version) is terminal — no retry turns it into a working connection.
+        // Terminal: no retry turns a rejected handshake into a working connection.
         const c = make();
         c.attemptStarted(true);
         c.setLinkOpen(true);

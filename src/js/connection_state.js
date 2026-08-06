@@ -65,8 +65,7 @@ export class ConnectionState {
         // may take — the retry loop and the reboot dialog read the same snapshot, taken
         // once per reboot.
         this._rebootWindow = ref(null);
-        // The attempt in flight was started by the app, not the user. Written only by
-        // attemptStarted(), which every real connect attempt calls.
+        // The attempt in flight was started by the app, not the user.
         this._automaticAttempt = ref(false);
         this.logHead = "[CONNECTION]";
     }
@@ -89,11 +88,7 @@ export class ConnectionState {
     }
 
     /**
-     * A connect attempt begins. `automatic` records that the app started it — a device event
-     * or the reboot retry loop — rather than the user. IDLE -> CONNECTING, except during a
-     * reboot-driven reconnect, whose phase already describes the attempt: keeping it is what
-     * lets the retry loop recognise its own premature attempts. Readiness (onOpen ->
-     * HANDSHAKING, finishOpen/connectCli -> CONNECTED/CLI) advances it on success.
+     * A connect attempt begins. A reboot reconnect keeps its own phase.
      * @param {boolean} [automatic=false] - the app started this attempt, not the user
      */
     attemptStarted(automatic = false) {
@@ -104,14 +99,9 @@ export class ConnectionState {
     }
 
     /**
-     * Is a failed attempt one the user should be told about? Yes when they asked for it, and
-     * yes when the link had already opened — a handshake that fails after the port opens
-     * (unsupported firmware, garbage API version) is terminal, not flakiness.
-     *
-     * No when the app started the attempt and the link never opened. A device can vanish
-     * between the list refresh and the open — a plug-in raises a burst of events and the port
-     * re-enumerates through it — and the next event or retry connects, so a dialog would
-     * report a failure that is already being recovered from.
+     * Should a failed attempt reach the user? Yes if they asked for it, or if the link had
+     * opened — a handshake rejected after the open is terminal. An app-initiated attempt
+     * that never opened is retried by the next device event, so it stays quiet.
      */
     get failureIsUserFacing() {
         return !this._automaticAttempt.value || this._linkOpen.value;

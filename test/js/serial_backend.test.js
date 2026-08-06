@@ -460,9 +460,7 @@ describe("serial_backend disconnect convergence", () => {
     });
 });
 
-// The failure dialog is decided by who started the attempt, not by which lifecycle phase we
-// are in. The app tells the user about failures the user asked for and stays quiet about
-// attempts it made on its own — those are exactly the ones something retries. A reboot
+// The failure dialog follows who started the attempt, not the lifecycle phase. A reboot
 // reconnect is one instance of that rule, not a special case.
 describe("serial_backend connect-failure dialog", () => {
     beforeEach(() => {
@@ -475,8 +473,6 @@ describe("serial_backend connect-failure dialog", () => {
     }
 
     it("shows the dialog when a user-initiated connect fails to open", () => {
-        // IDLE -> connectDisconnect -> beginConnect (CONNECTING). The user asked for this
-        // attempt, so its failure is theirs to see.
         connectDisconnect();
         expect(serial.connect).toHaveBeenCalled();
 
@@ -486,8 +482,7 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("still shows the dialog for a user-initiated failure while Auto-Connect is ON", () => {
-        // Auto-Connect does not make a user's own Connect click silent: a port held by another
-        // application fails every time and no device event follows to retry it.
+        // A port held by another application fails every time; no device event retries it.
         DeviceHandler.devicePicker.autoConnect = true;
 
         connectDisconnect();
@@ -497,9 +492,7 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("stays silent when an app-initiated open fails, and recovers on the next device event", () => {
-        // A plug-in raises a burst of device events; the port can vanish between the list
-        // refresh and the open, so the auto-select listener's attempt fails. Another event
-        // follows and connects, so the failure must not reach the user. (Issue #5368.)
+        // The port vanished between the list refresh and the open (issue #5368).
         DeviceHandler.devicePicker.autoConnect = true;
 
         connectDisconnect({ automatic: true });
@@ -508,11 +501,10 @@ describe("serial_backend connect-failure dialog", () => {
         serialHandlers.connect({ detail: false }); // port vanished -> abortConnection
 
         expect(infoDialogCount()).toBe(0);
-        // Torn down, so the next event can attempt again and the UI is not left mid-connect.
+        // Torn down, so the next event can attempt again and the UI is not stuck mid-connect.
         expect(GUI.connecting_to).toBe(false);
         expect(DeviceHandler.devicePickerDisabled).toBe(false);
 
-        // The next device event connects, on the port that came back.
         serial.connect.mockClear();
         connectDisconnect({ automatic: true });
         expect(serial.connect).toHaveBeenCalled();
@@ -522,17 +514,14 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("reports an app-initiated failure AFTER the link opened (handshake rejected)", () => {
-        // The link was up and the failure is the handshake (unsupported/garbage API version)
-        // — terminal, not enumeration flakiness. Nothing retries it into working, so the user
-        // must be told however the attempt started.
+        // A handshake rejected after the open is terminal, whoever started the attempt.
         DeviceHandler.devicePicker.autoConnect = true;
 
         connectDisconnect({ automatic: true });
         serialHandlers.connect({ detail: true }); // opened -> linkOpen, HANDSHAKING
         dialogStore.open.mockClear();
 
-        // FC.CONFIG is module state on the mock and resetMocks() does not restore it, so put
-        // the supported version back before the next test inherits an unsupported FC.
+        // FC.CONFIG is module state on the mock; resetMocks() does not restore it.
         const apiVersion = FC.CONFIG.apiVersion;
         try {
             FC.CONFIG.apiVersion = "0.0.0";
@@ -545,9 +534,8 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("reports a handshake rejected synchronously, inside onOpen", () => {
-        // MSP.send_message runs its callback synchronously when the link has dropped again by
-        // the time onOpen starts the handshake. abortConnection then runs before connectHandler
-        // returns, so the link-open flag has to be set before onOpen, not after it.
+        // MSP.send_message calls back synchronously when the link dropped again, so
+        // abortConnection runs before connectHandler returns.
         DeviceHandler.devicePicker.autoConnect = true;
         const apiVersion = FC.CONFIG.apiVersion;
 
@@ -555,7 +543,6 @@ describe("serial_backend connect-failure dialog", () => {
             connectDisconnect({ automatic: true });
             dialogStore.open.mockClear();
 
-            // FC.resetState() leaves apiVersion "0.0.0"; the synchronous callback sees that.
             MSP.send_message.mockImplementationOnce((_code, _data, _sent, callback) => {
                 FC.CONFIG.apiVersion = "0.0.0";
                 callback?.();
@@ -570,9 +557,7 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {
-        // The preset/CLI save-and-reboot reconnect window: the retry loop drives the attempt,
-        // so a premature open against a still-rebooting device is expected and silent — the
-        // same rule as the burst above, no reboot-specific branch.
+        // The retry loop drives the attempt, so a premature open is expected and silent.
         DeviceHandler.devicePicker.autoConnect = true;
         getConnectionState().reconnectStarted(); // RECONNECTING
         dialogStore.open.mockClear();
@@ -588,9 +573,7 @@ describe("serial_backend connect-failure dialog", () => {
 
     it("makes no automatic attempt at all with Auto-Connect OFF", () => {
         // Why abortConnection() no longer tests autoConnect: with it off nothing connects on
-        // the app's own initiative, so every failure that can happen is a user's to see. An
-        // automatic caller added later without that gate would break that reasoning, so pin
-        // it on the real listener registered by initializeSerialBackend.
+        // the app's own initiative, so every failure left is a user's to see.
         initializeSerialBackend();
         const autoSelect = EventBus.$on.mock.calls.find(
             (c) => c[0] === "device-handler:auto-select-serial-device",
@@ -602,8 +585,7 @@ describe("serial_backend connect-failure dialog", () => {
         autoSelect();
         expect(serial.connect).not.toHaveBeenCalled();
 
-        // With it on, the same listener connects — and its failure stays silent, which is
-        // what makes the attempt automatic rather than merely unattended.
+        // With it on the same listener connects, and its failure stays silent.
         DeviceHandler.devicePicker.autoConnect = true;
         dialogStore.open.mockClear();
         autoSelect();

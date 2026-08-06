@@ -164,15 +164,8 @@ function isCliOnlyMode() {
 }
 
 function connectHandler(event) {
-    // Only mark the link open when the port actually opened. A failed open (event.detail
-    // falsy) runs abortConnection inside onOpen; setting the flag there too would leave it
-    // out of sync with the real state and break reconnect retries.
-    //
-    // Before onOpen, not after: onOpen starts the MSP handshake, and MSP.send_message runs
-    // its callback synchronously when the link has already dropped again (msp.js — no
-    // serial.connected). That callback sees the apiVersion FC.resetState() just reset to
-    // "0.0.0" and calls abortConnection(), which asks failureIsUserFacing whether the link
-    // had opened. Setting the flag afterwards would answer "no" and hide the failure.
+    // Before onOpen: its MSP handshake can abort synchronously, and abortConnection reads
+    // this flag to decide whether the failure reaches the user.
     if (event.detail) {
         getConnectionState().setLinkOpen(true);
     }
@@ -204,9 +197,7 @@ export function initializeSerialBackend() {
             (connectionTimestamp === null || connectionTimestamp > 0)
         ) {
             // selectActivePort points the selection at the device that sent this event.
-            // Connect to it. The app started this, not the user: a plug-in can raise a burst
-            // of device events and the port can vanish again between the list refresh and the
-            // open, so a failure here is retried by the next event rather than reported.
+            // Connect to it. Automatic: the next event retries a failure here.
             connectDisconnect({ automatic: true });
         }
     });
@@ -406,9 +397,8 @@ function canStartConnectionAction(selectedDevice) {
 }
 
 /**
- * Start a connect attempt on the selected device.
  * @param {string} selectedDevice - the selected device path, or "virtual"/"manual"
- * @param {boolean} automatic - the app started this attempt (device event, reboot retry)
+ * @param {boolean} automatic - the app started this attempt, not the user
  */
 function beginConnect(selectedDevice, automatic) {
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
@@ -457,8 +447,6 @@ function beginConnect(selectedDevice, automatic) {
         serial.removeEventListener("disconnect", disconnectHandler);
         serial.addEventListener("disconnect", disconnectHandler);
 
-        // The attempt begins: phase and who started it, in the connection state. Virtual
-        // connections skip this — they cannot fail to open, so nothing reads either.
         getConnectionState().attemptStarted(automatic);
     }
 
@@ -486,9 +474,7 @@ function registerCliHotkey() {
 }
 
 /**
- * Toggle the connection. Callers that connect on the app's own initiative — a device
- * event, the reboot retry loop — pass `automatic: true`, so a failure that the app will
- * retry by itself is not reported as if the user had asked for it. See abortConnection().
+ * Toggle the connection.
  * @param {{automatic?: boolean}} [options] - automatic: the app started this, not the user
  */
 export function connectDisconnect({ automatic = false } = {}) {
@@ -623,8 +609,6 @@ function finishClose() {
 
     teardownConnectionUi();
 
-    // The link is down. finishUnexpectedDisconnect() clears the same flag for the other
-    // teardown path, before its UI teardown — it has a late removedDevice to outrun.
     getConnectionState().setLinkOpen(false);
 }
 
@@ -638,9 +622,8 @@ function finishUnexpectedDisconnect() {
     GUI.timeout_remove("connecting");
     GUI.timeout_remove("connectAttempt");
 
-    // Mirror the flag reset finishClose() makes for intentional disconnects. Reset before
-    // the UI teardown so a late removedDevice cannot re-enter connectDisconnect() against a
-    // still-"connected" state.
+    // Before the UI teardown, so a late removedDevice cannot re-enter connectDisconnect()
+    // against a still-"connected" state.
     getConnectionState().setLinkOpen(false);
 
     teardownConnectionUi();
@@ -748,11 +731,7 @@ function abortConnection(messageKey) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
-    // Report failures the user asked for; stay quiet about attempts the app made on its own,
-    // which are the ones something retries. See ConnectionState.failureIsUserFacing. Read
-    // before setPhase(FAILED) below, which ends the attempt this describes.
-    // Auto-Connect is not tested here: with it off there are no automatic attempts at all —
-    // the auto-select listener requires it and the reboot retry loop stops on it.
+    // Read before setPhase(FAILED) below, which ends the attempt it describes.
     const reportFailure = getConnectionState().failureIsUserFacing;
 
     // Default message reflects how far the attempt got: a port that already opened but failed
@@ -790,8 +769,7 @@ function abortConnection(messageKey) {
     // FAILED is not a reconnecting phase, so selectActivePort() resumes its normal
     // fallback rather than staying aimed at a dead target.
 
-    // The log panel keeps every failure — it is the trail a user pastes into a bug report.
-    // Only the dialog is withheld.
+    // The log panel keeps every failure; only the dialog is withheld.
     gui_log(message);
     if (reportFailure) {
         showConnectionFailedDialog(message);
@@ -1588,8 +1566,7 @@ function rebootReconnect() {
 
                 // selectActivePort keeps the current selection during a reconnect
                 // (isReconnecting). The selection points at the device from before the reboot.
-                // The attempt fails while that device is absent. The loop then tries again,
-                // so the failure is not reported (automatic).
+                // The attempt fails while that device is absent. The loop then tries again.
                 connectDisconnect({ automatic: true });
             }
         }, REBOOT_RECONNECT_RETRY_MS);
