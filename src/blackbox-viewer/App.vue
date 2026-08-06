@@ -337,17 +337,19 @@ function onGotoBookmark(index) {
 
 // Drag-and-drop file loading (window-level)
 function onDragOver(e) {
+    // Always swallow the browser default so a stray file drop never navigates away, even while
+    // the viewer is kept alive behind another tab; only the copy affordance is viewer-specific.
+    e.preventDefault();
     if (!appStore.viewerActive) {
         return;
     }
-    e.preventDefault();
     e.dataTransfer.dropEffect = "copy";
 }
 function onDrop(e) {
+    e.preventDefault();
     if (!appStore.viewerActive) {
         return;
     }
-    e.preventDefault();
     const item = e.dataTransfer.items?.[0];
     const entry = item?.webkitGetAsEntry?.();
     if (entry?.isFile) {
