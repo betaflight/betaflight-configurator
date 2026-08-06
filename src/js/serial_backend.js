@@ -144,6 +144,9 @@ export function initializeSerialBackend() {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
+            // The listener must also stay off the CLI tab: a live CLI session is not an MSP
+            // connection and taking the port would end it. The reconnect cycle has its own,
+            // wider rule — it runs when a reboot has already ended that session.
             !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
             DeviceHandler.devicePicker.autoConnect &&
             !isCliOnlyMode() &&
@@ -200,6 +203,26 @@ async function sendConfigTracking() {
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
         buildKey: FC.CONFIG.buildKey,
     });
+}
+
+/**
+ * The flasher talks to the board itself (DFU or raw serial), so nothing may take the port
+ * while it is open. The CLI tab is deliberately NOT here: the reconnect cycle only runs
+ * because a reboot ended the CLI session, and refusing to reconnect there would strand the
+ * user on a dead CLI tab.
+ * @returns {boolean} true while the flasher is active
+ */
+function flasherOwnsPort() {
+    return GUI.active_tab === "firmware_flasher";
+}
+
+/**
+ * May the reconnect cycle connect right now? Read on every tick: Auto-Connect can be switched
+ * off mid-window, and the user can walk into the flasher while the FC is still rebooting.
+ * @returns {boolean}
+ */
+function rebootReconnectAllowed() {
+    return DeviceHandler.devicePicker.autoConnect && !flasherOwnsPort();
 }
 
 function stopRebootReconnect() {
@@ -1437,13 +1460,15 @@ function rebootReconnect() {
     rebootReconnectTimerId = setTimeout(() => {
         const driven = isDrivenRebootTarget(DeviceHandler.devicePicker.selectedDevice);
 
-        // A link still open once the reboot command has flushed is stale: the FC is restarting
-        // and nothing useful can travel over it. Drop it, whatever the transport — serial
-        // usually dropped itself on re-enumeration and this is a no-op, a driven link never
-        // gets a disconnect event and would otherwise linger. The one exception is a BLE
-        // target about to auto-reconnect: keep its GATT session (softResetForReboot), because
-        // dropping and re-establishing it produces deaf sessions on Linux/BlueZ.
-        if (isConnected()) {
+        // Only a driven link is dropped here. It survives the reboot — just the MCU restarts —
+        // and gets no disconnect event, so without this the app holds a dead connection. A
+        // serial link that is still open means the FC did not reboot after all (or the OS has
+        // not noticed yet): dropping it would tear down a working connection and bounce the
+        // user off the tab they just opened, which is what leaving the CLI tab does. Leave it
+        // to the transport. The exception is a BLE target about to auto-reconnect: keep its
+        // GATT session (softResetForReboot), because re-establishing it produces deaf sessions
+        // on Linux/BlueZ.
+        if (driven && isConnected()) {
             const target = DeviceHandler.devicePicker.selectedDevice;
             const keepBleLink =
                 typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
@@ -1459,7 +1484,7 @@ function rebootReconnect() {
         // the link is down and nothing will reconnect it — so end the window now. Serial waits
         // for its port to re-enumerate (below) so the user can reconnect to a device that is
         // actually back.
-        if (driven && !DeviceHandler.devicePicker.autoConnect) {
+        if (driven && !rebootReconnectAllowed()) {
             rebootReconnectTimerId = false;
             getConnectionState().concludeReboot(false);
             return;
@@ -1482,7 +1507,9 @@ function rebootReconnect() {
             // not-expired, so a live loop must treat "no longer open" as a stop too.
             const state = getConnectionState();
             const timedOut = state.rebootWindowExpired || !state.isRebootWindowOpen;
-            const autoConnect = DeviceHandler.devicePicker.autoConnect;
+            // Read live: Auto-Connect can be switched off mid-window, and the user can walk
+            // into a tab that owns the port while the FC is still rebooting.
+            const mayConnect = rebootReconnectAllowed();
             // Auto-Connect off: nothing will reconnect, so the wait ends as soon as there is
             // nothing left to wait for — our device listed again for serial, immediately for a
             // driven target (its link is already down). The question is about THIS device, not
@@ -1492,7 +1519,10 @@ function rebootReconnect() {
             const ourDeviceBack = target
                 ? Boolean(DeviceHandler.findDescribedDevice(target))
                 : DeviceHandler.isKnownDevicePath(DeviceHandler.devicePicker.selectedDevice);
-            const waitedOut = !autoConnect && (driven || ourDeviceBack);
+            // A tab that owns the port ends the window at once rather than waiting for the
+            // device: holding it open keeps selectActivePort pinned to the serial selection,
+            // which is exactly what stops the flasher from picking up the board.
+            const waitedOut = !mayConnect && (driven || flasherOwnsPort() || ourDeviceBack);
 
             if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();
@@ -1503,7 +1533,7 @@ function rebootReconnect() {
                 releaseKeptRebootLink();
                 return;
             }
-            if (autoConnect && !isConnected() && !GUI.connecting_to) {
+            if (mayConnect && !isConnected() && !GUI.connecting_to) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
                 // attempts serial_backend's disconnect listener is detached

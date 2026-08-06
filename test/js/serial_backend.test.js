@@ -792,7 +792,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and drops a link still open at the flush", () => {
+    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
@@ -811,13 +811,13 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
-            expect(serial.disconnect).not.toHaveBeenCalled(); // nothing before the flush
 
-            // A serial link normally dies with the FC's re-enumeration before the flush, so this
-            // is usually a no-op. Here it is still open — the FC ignored the command, or the OS
-            // has not noticed yet — and a link to a rebooting FC is stale whatever the transport.
+            // A serial link that is still open after the flush means the FC did not reboot, or
+            // the OS has not noticed yet. Dropping it would tear down a working connection and
+            // throw the user off the tab they just opened — the CLI-tab exit path does exactly
+            // this. The transport owns that link; only driven targets are dropped here.
             vi.advanceTimersByTime(1500);
-            expect(serial.disconnect).toHaveBeenCalledTimes(1);
+            expect(serial.disconnect).not.toHaveBeenCalled();
         } finally {
             vi.advanceTimersByTime(30000); // drain the window
             vi.useRealTimers();
