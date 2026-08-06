@@ -398,8 +398,11 @@
                 </div>
             </UiBox>
 
-            <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
-            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
+            <!-- RIGHT COLUMN: Profile-dependent Filter Settings (classic PID D-term stage - inert on ADRC profiles) -->
+            <UiBox v-if="isAdrcActive" type="neutral">
+                <p class="text-xs text-dimmed" v-html="$t('pidTuningAdrcActiveNote')"></p>
+            </UiBox>
+            <UiBox v-else :title="$t('pidTuningFilterSettings')" type="neutral">
                 <!-- D-Term Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
@@ -593,7 +596,7 @@ import {
     calculateNewDTermFilters,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_48, API_VERSION_1_49 } from "@/js/data_storage";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -608,6 +611,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["change"]);
+
+// pid_type (Control Law): D-term-stage filters (dterm_lowpass1/2, dterm_notch, yaw P-term
+// lowpass) are part of the classic PID computation and are silently discarded on an ADRC
+// profile - see PidSubTab.vue's isAdrcActive for the same check. Gyro-sampling-stage filters
+// above (gyro lowpass1/2, gyro notch, RPM filter, dynamic notch) run upstream of the PID loop
+// and stay fully live regardless of pid_type, so they are never gated here.
+const isAdrcActive = computed(
+    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && (FC.ADVANCED_TUNING?.pidType ?? 0) === 1,
+);
 
 // USelect item arrays
 const lowpassModeItems = computed(() => [

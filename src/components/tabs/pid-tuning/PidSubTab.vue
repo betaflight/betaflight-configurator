@@ -1,9 +1,25 @@
 <template>
     <div class="p-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <!-- Control Law (pid_type) Selector -->
+        <UiBox v-if="pidTypeSupported" type="neutral" class="xl:col-span-2">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-sm font-semibold whitespace-nowrap">{{ $t("pidTuningControlLaw") }}</span>
+                <USelect v-model="pidType" :items="pidTypeItems" size="xs" class="w-32" />
+                <HelpIcon :text="$t('pidTuningControlLawHelp')" />
+            </div>
+            <p v-if="isAdrcActive" class="text-xs text-dimmed mt-2" v-html="$t('pidTuningAdrcActiveNote')"></p>
+        </UiBox>
+
+        <!-- ADRC settings load error (fields are read/written live via CLI settings-by-name,
+             not a dedicated MSP struct - see useNamedSetting.js) -->
+        <UiBox v-if="isAdrcActive && adrcLoadError" type="error" highlight class="xl:col-span-2">
+            <p>{{ $t("pidTuningAdrcLoadError", { error: adrcLoadError }) }}</p>
+        </UiBox>
+
         <!-- LEFT COLUMN: PID Table and Sliders -->
         <div class="flex flex-col gap-4">
-            <!-- Tuning Sliders Section -->
-            <UiBox :title="$t('pidTuningSliders')" type="neutral">
+            <!-- Tuning Sliders Section (classic PID only - inert on ADRC profiles) -->
+            <UiBox v-if="!isAdrcActive" :title="$t('pidTuningSliders')" type="neutral">
                 <!-- Slider Header: Mode select + range labels -->
                 <div class="flex items-center gap-3 mb-2">
                     <div class="flex items-center gap-2 min-w-44 shrink-0">
@@ -219,8 +235,124 @@
                 </UiBox>
             </UiBox>
 
-            <!-- PID Table -->
-            <UiBox type="neutral">
+            <!-- Core Gains (wc/wo/b0) slider system - mirrors the classic Tuning Sliders box -->
+            <UiBox v-if="isAdrcActive" :title="$t('pidTuningAdrcGroupGains')" type="neutral">
+                <div class="flex items-center gap-2 mb-2">
+                    <HelpIcon :text="$t('pidTuningAdrcGroupGainsHelp')" />
+                </div>
+                <div class="flex items-center gap-2 min-w-44 shrink-0">
+                    <span class="text-xs whitespace-nowrap">{{ $t("pidTuningSliderPidsMode") }}</span>
+                    <USelect
+                        v-model="adrcSliderMode"
+                        :items="adrcSliderModeItems"
+                        size="xs"
+                        class="w-24"
+                        @update:model-value="onAdrcSliderModeChange"
+                    />
+                    <HelpIcon :text="$t('pidTuningAdrcSliderModeHelp')" />
+                </div>
+
+                <div
+                    class="flex items-center gap-2 sm:gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': adrcSliderMode === 0 }"
+                >
+                    <div class="min-w-40 sm:min-w-44 text-right text-xs shrink-0">
+                        {{ $t("pidTuningAdrcWcSlider") }}
+                    </div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ adrcSliderWcGain.toFixed(2) }}</span>
+                    <USlider
+                        v-model="adrcSliderWcGain"
+                        :min="0.5"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="adrcSliderMode === 0"
+                        class="flex-1"
+                        @update:model-value="onAdrcGainSliderChange('wc')"
+                    />
+                    <HelpIcon :text="$t('pidTuningAdrcWcSliderHelp')" />
+                </div>
+                <div
+                    class="flex items-center gap-2 sm:gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': adrcSliderMode === 0 }"
+                >
+                    <div class="min-w-40 sm:min-w-44 text-right text-xs shrink-0">
+                        {{ $t("pidTuningAdrcWoSlider") }}
+                    </div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ adrcSliderWoGain.toFixed(2) }}</span>
+                    <USlider
+                        v-model="adrcSliderWoGain"
+                        :min="0.5"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="adrcSliderMode === 0"
+                        class="flex-1"
+                        @update:model-value="onAdrcGainSliderChange('wo')"
+                    />
+                    <HelpIcon :text="$t('pidTuningAdrcWoSliderHelp')" />
+                </div>
+                <div
+                    class="flex items-center gap-2 sm:gap-3 py-1"
+                    :class="{ 'opacity-50 pointer-events-none': adrcSliderMode === 0 }"
+                >
+                    <div class="min-w-40 sm:min-w-44 text-right text-xs shrink-0">
+                        {{ $t("pidTuningAdrcB0Slider") }}
+                    </div>
+                    <span class="min-w-10 text-center text-sm font-semibold">{{ adrcSliderB0Gain.toFixed(2) }}</span>
+                    <USlider
+                        v-model="adrcSliderB0Gain"
+                        :min="0.5"
+                        :max="2.0"
+                        :step="0.05"
+                        :disabled="adrcSliderMode === 0"
+                        class="flex-1"
+                        @update:model-value="onAdrcGainSliderChange('b0')"
+                    />
+                    <HelpIcon :text="$t('pidTuningAdrcB0SliderHelp')" />
+                </div>
+            </UiBox>
+
+            <!-- Per-axis expert table - mirrors the classic PID Table box -->
+            <UiBox v-if="isAdrcActive" :title="$t('pidTuningAdrcPerAxisExpert')" type="neutral">
+                <div
+                    class="grid grid-cols-[3rem_repeat(3,minmax(4rem,1fr))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
+                    <div></div>
+                    <div
+                        v-for="col in adrcGainColumns"
+                        :key="col.key"
+                        class="flex items-center justify-center gap-0.5 text-xs"
+                    >
+                        <span>{{ col.key }}</span>
+                        <HelpIcon :text="$t(col.helpKey)" />
+                    </div>
+
+                    <template v-for="row in adrcAxisRows" :key="row.axis">
+                        <div
+                            class="font-bold text-white text-center py-0.5 px-1 rounded text-xs"
+                            :style="{ backgroundColor: row.color }"
+                        >
+                            {{ row.label }}
+                        </div>
+                        <UInputNumber
+                            v-for="col in adrcGainColumns"
+                            :key="col.key"
+                            v-model="adrcFields[`adrc_${col.key}_${row.axis}`].value"
+                            :min="adrcFields[`adrc_${col.key}_${row.axis}`].min"
+                            :max="adrcFields[`adrc_${col.key}_${row.axis}`].max"
+                            :step="1"
+                            :disabled="row.disabled || !adrcLoaded"
+                            size="xs"
+                            orientation="vertical"
+                            :format-options="{ useGrouping: false }"
+                            class="w-full"
+                            @update:model-value="commitAdrcField(`adrc_${col.key}_${row.axis}`)"
+                        />
+                    </template>
+                </div>
+            </UiBox>
+
+            <!-- PID Table (classic P/I/D/D Max/F - inert on ADRC profiles) -->
+            <UiBox v-if="!isAdrcActive" type="neutral">
                 <div
                     class="grid grid-cols-[3rem_repeat(5,minmax(4rem,1fr))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
                 >
@@ -654,11 +786,15 @@
 
         <!-- RIGHT COLUMN: PID Controller Settings -->
         <div class="flex flex-col gap-4">
-            <!-- PID Settings -->
-            <UiBox :title="$t('pidTuningPidSettings')" type="neutral">
-                <!-- Feedforward Group -->
+            <!-- Feedforward Group: NOT classic-only. feedforward_averaging/smooth_factor/
+                 jitter_factor/boost/max_rate_limit/transition all shape the shared
+                 getFeedforward() signal computed in fc/rc.c, which also drives angle-mode
+                 leveling feedforward (pid.c's angleFeedforward) - a stage that runs upstream
+                 of pid_type and is not overwritten by ADRC. Only the per-axis "F" gain itself
+                 (in the P/I/D/F table above) is the classic-only rate-loop consumer of this
+                 signal, so this group stays visible/editable regardless of pid_type. -->
+            <UiBox :title="$t('pidTuningFeedforwardGroup')" type="neutral">
                 <div class="flex flex-col gap-2">
-                    <span class="text-sm font-semibold" v-html="$t('pidTuningFeedforwardGroup')"></span>
                     <div class="flex flex-wrap items-end gap-3 pl-4">
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-1">
@@ -756,6 +892,11 @@
                         </div>
                     </div>
                 </div>
+            </UiBox>
+
+            <!-- TPA, I-term relax/rotation, anti-gravity, D Max: classic rate-loop only,
+                 computed unconditionally in firmware but discarded on ADRC profiles -->
+            <UiBox v-if="!isAdrcActive" :title="$t('pidTuningPidSettings')" type="neutral">
                 <!-- TPA Settings -->
                 <div class="flex flex-col gap-2">
                     <span class="text-sm font-semibold" v-html="$t('pidTuningTpaGroup')"></span>
@@ -924,6 +1065,41 @@
                 </div>
             </UiBox>
 
+            <!-- ADRC Settings: pre-ESO filter/throttle scaling, disturbance decay, liftoff gate -
+                 mirrors the classic PID Settings box grouping multiple sub-sections together -->
+            <UiBox v-if="isAdrcActive" :title="$t('pidTuningAdrcSettings')" type="neutral">
+                <div
+                    v-for="group in adrcOtherFieldGroups"
+                    :key="group.titleKey"
+                    class="flex flex-col gap-2 mt-2 first:mt-0"
+                >
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm font-semibold">{{ $t(group.titleKey) }}</span>
+                        <HelpIcon :text="$t(group.titleHelpKey)" />
+                    </div>
+                    <div class="flex flex-wrap items-end gap-3 pl-4">
+                        <div v-for="field in group.fields" :key="field.name" class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-dimmed">{{ $t(field.labelKey) }}</span>
+                                <HelpIcon :text="$t(field.helpKey)" />
+                            </div>
+                            <UInputNumber
+                                v-model="adrcFields[field.name].value"
+                                :min="adrcFields[field.name].min"
+                                :max="adrcFields[field.name].max"
+                                :step="1"
+                                :disabled="!adrcLoaded || adrcFields[field.name].saving"
+                                size="xs"
+                                orientation="vertical"
+                                :format-options="{ useGrouping: false }"
+                                class="w-20"
+                                @update:model-value="commitAdrcField(field.name)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </UiBox>
+
             <!-- Motor Settings -->
             <UiBox :title="$t('pidTuningMotorSettings')" type="neutral">
                 <SettingRow :label="$t('pidTuningThrottleBoost')" :help="$t('pidTuningThrottleBoostHelp')">
@@ -1071,9 +1247,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
+import { getSetting, setSetting, getSettingInfo } from "@/composables/useNamedSetting";
 import {
     NON_EXPERT_SLIDER_MIN,
     NON_EXPERT_SLIDER_MAX,
@@ -1081,7 +1258,7 @@ import {
     readPidSliderPositions,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "@/js/data_storage";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -1313,6 +1490,228 @@ const pidNavRD = createPidComputed("NavR", 2);
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
+
+// pid_type (Control Law) support - introduced in API 1.49
+const pidTypeSupported = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49));
+
+const pidType = computed({
+    get: () => FC.ADVANCED_TUNING?.pidType ?? 0,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.pidType = val;
+        }
+    },
+});
+
+// PID_TYPE_ADRC === 1 (see adrc.h pidType_e); classic-only controls (P/I/D/F table, tuning
+// sliders, D Max, TPA, feedforward, I-term relax/rotation/anti-gravity) compute unconditionally
+// in firmware regardless of pid_type but are silently discarded on an ADRC profile, so they're
+// hidden here rather than left inert with no indication to the user.
+const isAdrcActive = computed(() => pidTypeSupported.value && pidType.value === 1);
+
+const pidTypeItems = computed(() => [
+    { value: 0, label: t("pidTuningControlLawClassic") },
+    { value: 1, label: t("pidTuningControlLawAdrc") },
+]);
+
+// ADRC tunables - none of these have a dedicated MSP field, so they are read/written live
+// via the generic MSP2_CLI_SETTING(_INFO) mechanism instead (see useNamedSetting.js).
+const adrcFieldGroups = [
+    {
+        titleKey: "pidTuningAdrcGroupGains",
+        titleHelpKey: "pidTuningAdrcGroupGainsHelp",
+        fields: [
+            { name: "adrc_wc_roll", labelKey: "pidTuningAdrcWcRoll", helpKey: "pidTuningAdrcWcHelp" },
+            { name: "adrc_wc_pitch", labelKey: "pidTuningAdrcWcPitch", helpKey: "pidTuningAdrcWcHelp" },
+            { name: "adrc_wc_yaw", labelKey: "pidTuningAdrcWcYaw", helpKey: "pidTuningAdrcWcHelp" },
+            { name: "adrc_wo_roll", labelKey: "pidTuningAdrcWoRoll", helpKey: "pidTuningAdrcWoHelp" },
+            { name: "adrc_wo_pitch", labelKey: "pidTuningAdrcWoPitch", helpKey: "pidTuningAdrcWoHelp" },
+            { name: "adrc_wo_yaw", labelKey: "pidTuningAdrcWoYaw", helpKey: "pidTuningAdrcWoHelp" },
+            { name: "adrc_b0_roll", labelKey: "pidTuningAdrcB0Roll", helpKey: "pidTuningAdrcB0Help" },
+            { name: "adrc_b0_pitch", labelKey: "pidTuningAdrcB0Pitch", helpKey: "pidTuningAdrcB0Help" },
+            { name: "adrc_b0_yaw", labelKey: "pidTuningAdrcB0Yaw", helpKey: "pidTuningAdrcB0Help" },
+        ],
+    },
+    {
+        titleKey: "pidTuningAdrcGroupFilterThrottle",
+        titleHelpKey: "pidTuningAdrcGroupFilterThrottleHelp",
+        fields: [
+            { name: "adrc_gyro_lpf_hz", labelKey: "pidTuningAdrcGyroLpfHz", helpKey: "pidTuningAdrcGyroLpfHzHelp" },
+            {
+                name: "adrc_hover_throttle",
+                labelKey: "pidTuningAdrcHoverThrottle",
+                helpKey: "pidTuningAdrcHoverThrottleHelp",
+            },
+            { name: "adrc_b0_scale_max", labelKey: "pidTuningAdrcB0ScaleMax", helpKey: "pidTuningAdrcB0ScaleMaxHelp" },
+            { name: "adrc_td_hz", labelKey: "pidTuningAdrcTdHz", helpKey: "pidTuningAdrcTdHzHelp" },
+        ],
+    },
+    {
+        titleKey: "pidTuningAdrcGroupDecay",
+        titleHelpKey: "pidTuningAdrcGroupDecayHelp",
+        fields: [
+            { name: "adrc_sigma_decay", labelKey: "pidTuningAdrcSigmaDecay", helpKey: "pidTuningAdrcSigmaDecayHelp" },
+            {
+                name: "adrc_gated_z3_decay",
+                labelKey: "pidTuningAdrcGatedZ3Decay",
+                helpKey: "pidTuningAdrcGatedZ3DecayHelp",
+            },
+        ],
+    },
+    {
+        titleKey: "pidTuningAdrcGroupLiftoff",
+        titleHelpKey: "pidTuningAdrcGroupLiftoffHelp",
+        fields: [
+            {
+                name: "adrc_liftoff_throttle",
+                labelKey: "pidTuningAdrcLiftoffThrottle",
+                helpKey: "pidTuningAdrcLiftoffThrottleHelp",
+            },
+            {
+                name: "adrc_liftoff_gyro_dps",
+                labelKey: "pidTuningAdrcLiftoffGyroDps",
+                helpKey: "pidTuningAdrcLiftoffGyroDpsHelp",
+            },
+            {
+                name: "adrc_liftoff_hold_ms",
+                labelKey: "pidTuningAdrcLiftoffHoldMs",
+                helpKey: "pidTuningAdrcLiftoffHoldMsHelp",
+            },
+        ],
+    },
+];
+
+const adrcFieldNames = adrcFieldGroups.flatMap((group) => group.fields.map((field) => field.name));
+
+// Core Gains (wc/wo/b0) get a dedicated slider+table renderer instead of the generic flat-field
+// loop below - everything else still uses the generic loop.
+const adrcOtherFieldGroups = adrcFieldGroups.filter((group) => group.titleKey !== "pidTuningAdrcGroupGains");
+const adrcGainColumns = [
+    { key: "wc", helpKey: "pidTuningAdrcWcHeaderHelp" },
+    { key: "wo", helpKey: "pidTuningAdrcWoHeaderHelp" },
+    { key: "b0", helpKey: "pidTuningAdrcB0HeaderHelp" },
+];
+
+const adrcFields = reactive(
+    Object.fromEntries(adrcFieldNames.map((name) => [name, { value: 0, min: 0, max: 65535, saving: false }])),
+);
+const adrcLoaded = ref(false);
+const adrcLoading = ref(false);
+const adrcLoadError = ref("");
+
+async function loadAdrcFields() {
+    adrcLoading.value = true;
+    adrcLoadError.value = "";
+    await Promise.all(
+        adrcFieldNames.map(async (name) => {
+            try {
+                const [info, rawValue] = await Promise.all([getSettingInfo(name), getSetting(name)]);
+                adrcFields[name].min = info.min ?? 0;
+                adrcFields[name].max = info.max ?? 65535;
+                adrcFields[name].value = Number(rawValue);
+            } catch (e) {
+                adrcLoadError.value = e.message;
+            }
+        }),
+    );
+    adrcLoading.value = false;
+    adrcLoaded.value = true;
+}
+
+async function commitAdrcField(name) {
+    const field = adrcFields[name];
+    if (!field) {
+        return;
+    }
+    field.saving = true;
+    try {
+        // setSetting() resolves with the firmware-echoed value, which may be clamped/rounded
+        // differently than what was requested (e.g. a step constraint not exposed via
+        // info.min/max) - sync it back so the UI never drifts from what's actually stored.
+        const confirmed = await setSetting(name, Math.round(field.value));
+        field.value = Number(confirmed);
+    } catch (e) {
+        adrcLoadError.value = e.message;
+    } finally {
+        field.saving = false;
+    }
+}
+
+// Core Gains slider system (wc/wo/b0): mirrors the classic PID slider pattern - a mode
+// selector (Off/RP/RPY) plus one gain slider per parameter that scales the currently-loaded
+// roll/pitch(/yaw) values together, with the per-axis table below available for direct edits
+// when the slider mode is Off (or for yaw alone in RP mode). Purely a Configurator-side
+// convenience - ADRC has no firmware-side simplified-tuning equivalent to call into, so the
+// gain is applied client-side against a snapshot taken when the sliders are engaged, matching
+// the classic sliders' "disabled raw table while active" UX without inventing firmware math.
+const adrcSliderMode = ref(0); // 0 = Off, 1 = RP, 2 = RPY
+const adrcSliderModeItems = computed(() => [
+    { value: 0, label: t("pidTuningOptionOff") },
+    { value: 1, label: t("pidTuningOptionRP") },
+    { value: 2, label: t("pidTuningOptionRPY") },
+]);
+const adrcRollPitchDisabled = computed(() => adrcSliderMode.value > 0);
+const adrcYawDisabled = computed(() => adrcSliderMode.value === 2);
+
+const adrcSliderWcGain = ref(1);
+const adrcSliderWoGain = ref(1);
+const adrcSliderB0Gain = ref(1);
+const adrcGainSliderRefs = { wc: adrcSliderWcGain, wo: adrcSliderWoGain, b0: adrcSliderB0Gain };
+
+const adrcSliderBase = reactive({
+    wc: { roll: 0, pitch: 0, yaw: 0 },
+    wo: { roll: 0, pitch: 0, yaw: 0 },
+    b0: { roll: 0, pitch: 0, yaw: 0 },
+});
+
+function captureAdrcSliderBase() {
+    for (const prefix of ["wc", "wo", "b0"]) {
+        for (const axis of ["roll", "pitch", "yaw"]) {
+            adrcSliderBase[prefix][axis] = adrcFields[`adrc_${prefix}_${axis}`]?.value ?? 0;
+        }
+    }
+}
+
+function onAdrcSliderModeChange() {
+    if (adrcSliderMode.value > 0) {
+        captureAdrcSliderBase();
+    }
+    adrcSliderWcGain.value = 1;
+    adrcSliderWoGain.value = 1;
+    adrcSliderB0Gain.value = 1;
+}
+
+async function onAdrcGainSliderChange(prefix) {
+    const gain = adrcGainSliderRefs[prefix].value;
+    const axes = adrcSliderMode.value === 2 ? ["roll", "pitch", "yaw"] : ["roll", "pitch"];
+    await Promise.all(
+        axes.map((axis) => {
+            const name = `adrc_${prefix}_${axis}`;
+            const field = adrcFields[name];
+            if (!field) {
+                return undefined;
+            }
+            field.value = Math.min(field.max, Math.max(field.min, Math.round(adrcSliderBase[prefix][axis] * gain)));
+            return commitAdrcField(name);
+        }),
+    );
+}
+
+const adrcAxisRows = computed(() => [
+    { axis: "roll", label: "ROLL", color: "#e24761", disabled: adrcRollPitchDisabled.value },
+    { axis: "pitch", label: "PITCH", color: "#49c747", disabled: adrcRollPitchDisabled.value },
+    { axis: "yaw", label: "YAW", color: "#477ac7", disabled: adrcYawDisabled.value },
+]);
+
+watch(
+    isAdrcActive,
+    (active) => {
+        if (active && !adrcLoaded.value && !adrcLoading.value) {
+            loadAdrcFields();
+        }
+    },
+    { immediate: true },
+);
 
 // Dynamic Idle visibility and state
 const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
@@ -1704,6 +2103,16 @@ watch(
 function forceUpdateSliders() {
     isUserInteracting.value = false; // Allow watcher to work
     initializeSliders();
+
+    // adrc_* fields are per-profile CLI settings with no dedicated MSP field to react to -
+    // the isAdrcActive watcher above only reloads them on a CLASSIC<->ADRC transition, which
+    // misses switching between two profiles that are both already ADRC. forceUpdateSliders()
+    // runs after every profile/rate-profile switch and on initial mount (see PidTuningTab.vue's
+    // loadData()), so force a reload here too rather than trusting stale cached values.
+    adrcLoaded.value = false;
+    if (isAdrcActive.value && !adrcLoading.value) {
+        loadAdrcFields();
+    }
 }
 
 defineExpose({

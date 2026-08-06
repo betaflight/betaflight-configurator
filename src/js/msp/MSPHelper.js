@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1293,6 +1299,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
                     FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
 
+                    // Introduced in 1.49
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.ADVANCED_TUNING.pidType = data.readU8();
+                    }
+
                     FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                     break;
                 case MSPCodes.MSP_SENSOR_CONFIG:
@@ -2323,6 +2334,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.ADVANCED_TUNING.tpaMode);
             buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
             buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.ADVANCED_TUNING.pidType);
+            }
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
