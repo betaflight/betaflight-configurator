@@ -8,41 +8,33 @@ import {
 } from "../../src/js/connection_state.js";
 
 // ---------------------------------------------------------------------------
-// Connection-status holder: current phase + linkOpen / intentionalDisconnect
-// flags. No transition table and no reconnect token — phase is set explicitly,
-// and a reconnect just re-uses the previously-selected port. State lives in Vue
-// refs, so the getters are both synchronously readable and reactively trackable.
+// Connection-status holder: current phase + linkOpen / intentionalDisconnect /
+// attempt-origin flags. No transition table and no reconnect token — phase is set
+// explicitly, and a reconnect just re-uses the previously-selected port.
 // ---------------------------------------------------------------------------
 
 const make = () => new ConnectionState();
 
 describe("phase + readiness", () => {
-    it("starts IDLE / not-ready", () => {
+    it("starts IDLE", () => {
         const c = make();
         expect(c.state).toBe(State.IDLE);
-        expect(c.isReady).toBe(false);
     });
 
-    it("setPhase moves the phase and CONNECTED/CLI are ready", () => {
+    it("setPhase moves the phase", () => {
         const c = make();
         c.setPhase(State.CONNECTING);
         expect(c.state).toBe(State.CONNECTING);
-        expect(c.isReady).toBe(false);
         c.setPhase(State.CONNECTED);
-        expect(c.isReady).toBe(true);
-        c.setPhase(State.CLI);
-        expect(c.isReady).toBe(true);
+        expect(c.state).toBe(State.CONNECTED);
     });
 
     it("is reactive: a computed over a getter tracks setPhase with no manual bridge", () => {
         const c = make();
         const phase = computed(() => c.state);
-        const ready = computed(() => c.isReady);
         expect(phase.value).toBe(State.IDLE);
-        expect(ready.value).toBe(false);
         c.setPhase(State.CONNECTED);
         expect(phase.value).toBe(State.CONNECTED);
-        expect(ready.value).toBe(true);
     });
 });
 
@@ -53,7 +45,7 @@ describe("attempt origin / failure reporting", () => {
         expect(c.state).toBe(State.CONNECTING);
     });
 
-    // Both halves of isRebootReconnecting. Each case needs its own instance —
+    // Both reboot-owned phases. Each case needs its own instance —
     // requestReboot() is a no-op once a phase is in flight.
     it.each([
         ["REBOOTING", (c) => c.requestReboot(), State.REBOOTING],
@@ -115,10 +107,13 @@ describe("reboot / reconnect window", () => {
             c.setPhase(phase);
             expect(c.isReconnecting).toBe(true);
         }
-        c.setPhase(State.CONNECTED);
-        expect(c.isReconnecting).toBe(false);
-        c.setPhase(State.IDLE);
-        expect(c.isReconnecting).toBe(false);
+        // The settled and failed phases exist to be outside that set: a failed open never
+        // reaches notifyClosed (the transport reports connect:false, not a disconnect), so
+        // FAILED is what lets selectActivePort stop aiming at the dead port.
+        for (const phase of [State.CONNECTED, State.CLI, State.FAILED, State.IDLE]) {
+            c.setPhase(phase);
+            expect(c.isReconnecting).toBe(false);
+        }
     });
 
     it("concludeReboot settles to CONNECTED on success / IDLE on failure", () => {

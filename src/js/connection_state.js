@@ -1,12 +1,12 @@
 /**
  * connection_state.js — connection-status holder.
  *
- * Tracks the current lifecycle PHASE plus two operational flags serial_backend
- * reads (linkOpen, intentionalDisconnect). State lives in Vue `ref`s so both
- * plain callers (read the getters synchronously) and Vue consumers (a `computed`
- * that reads a getter automatically tracks the underlying ref) stay in sync with
- * no hand-rolled observer — same approach as data_storage.js. Leaf module: it
- * imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
+ * Tracks the current lifecycle PHASE plus the operational flags serial_backend reads
+ * (linkOpen, intentionalDisconnect, the attempt's origin). Read by the serial, reboot and
+ * flashing paths — serial_backend, device_handler, useMspCliSession, useFirmwareFlashing,
+ * webstm32; the UI reads CONFIGURATOR.connectionValid, not this. State lives in Vue
+ * `ref`s, so a `computed` over a getter would track it if a consumer ever needs that. Leaf
+ * module: it imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
  * import it without a cycle or an active-pinia requirement.
  *
  * There is no transition table and no reconnect token. A reconnect uses the port from the last
@@ -30,9 +30,6 @@ export const State = Object.freeze({
     FAILED: "FAILED",
 });
 
-/** Phases that count as "ready" (a usable connection from the user's view). */
-const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
-
 /**
  * Phases during which a connect/reconnect attempt is in flight. selectActivePort()
  * suppresses the expert-mode virtual/manual fallback throughout this whole window —
@@ -52,6 +49,11 @@ const RECONNECTING_STATES = Object.freeze(
  */
 const REBOOT_OWNED_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
 
+/** @param {string} phase @returns {boolean} the reboot owns this phase */
+function rebootOwns(phase) {
+    return REBOOT_OWNED_STATES.has(phase);
+}
+
 export class ConnectionState {
     constructor() {
         this._state = ref(State.IDLE);
@@ -67,15 +69,10 @@ export class ConnectionState {
         this._rebootWindow = ref(null);
         // The attempt in flight was started by the app, not the user.
         this._automaticAttempt = ref(false);
-        this.logHead = "[CONNECTION]";
     }
 
     get state() {
         return this._state.value;
-    }
-
-    get isReady() {
-        return READY_STATES.has(this._state.value);
     }
 
     get isFlashing() {
@@ -93,7 +90,7 @@ export class ConnectionState {
      */
     attemptStarted(automatic = false) {
         this._automaticAttempt.value = automatic;
-        if (!this.isRebootReconnecting) {
+        if (!rebootOwns(this._state.value)) {
             this.setPhase(State.CONNECTING);
         }
     }
@@ -105,14 +102,6 @@ export class ConnectionState {
      */
     get failureIsUserFacing() {
         return !this._automaticAttempt.value || this._linkOpen.value;
-    }
-
-    /**
-     * A reboot-driven reconnect is in progress (REBOOTING/RECONNECTING), as opposed to a
-     * fresh connect (CONNECTING/HANDSHAKING).
-     */
-    get isRebootReconnecting() {
-        return REBOOT_OWNED_STATES.has(this._state.value);
     }
 
     /** Set the lifecycle phase. */
@@ -176,7 +165,7 @@ export class ConnectionState {
      * phase — including an unexpected drop mid-CONNECTING/HANDSHAKING — settles to IDLE.
      */
     notifyClosed() {
-        if (this._state.value === State.IDLE || REBOOT_OWNED_STATES.has(this._state.value)) {
+        if (this._state.value === State.IDLE || rebootOwns(this._state.value)) {
             return;
         }
         this.setPhase(State.IDLE);
