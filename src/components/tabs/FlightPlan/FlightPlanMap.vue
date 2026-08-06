@@ -1,6 +1,6 @@
 <template>
-    <UiBox :title="$t('flightPlanMap')" class="flight-plan-map">
-        <div class="map-container">
+    <UiBox :title="$t('flightPlanMap')" type="neutral" collapsible class="flight-plan-map">
+        <div ref="mapContainerRef" class="map-container">
             <div ref="mapRef" class="map"></div>
             <div v-if="isLoading" class="map-loading">
                 <div class="loading-message">
@@ -26,6 +26,7 @@ import { Vector as SourceVector } from "ol/source";
 import { Style, Stroke, Circle, Fill, Text } from "ol/style";
 import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
+import { useMapViewport } from "@/composables/useMapViewport";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -35,7 +36,12 @@ const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, add
 const sortedWaypoints = positionalWaypoints;
 
 const mapRef = ref(null);
+const mapContainerRef = ref(null);
 const mapInstance = ref(null);
+const { observeContainer, teardown: teardownMapViewport } = useMapViewport(
+    mapContainerRef,
+    () => mapInstance.value?.map,
+);
 const waypointLayer = ref(null);
 const pathLayer = ref(null);
 const draggingWaypointUid = ref(null);
@@ -85,6 +91,10 @@ onMounted(async () => {
         console.error("Map ref not available");
         return;
     }
+
+    // Attach before the map exists: geolocation makes initialization async, and the
+    // observer only needs the container.
+    observeContainer();
 
     // Final fallback coordinates (Sydney Harbour Bridge, Australia)
     const finalFallbackLat = -33.8523;
@@ -484,6 +494,7 @@ watch(
 // Cleanup on unmount
 onUnmounted(() => {
     console.log("Cleaning up map");
+    teardownMapViewport();
     if (mapInstance.value?.destroy) {
         mapInstance.value.destroy();
     }

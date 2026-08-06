@@ -8,13 +8,13 @@
             </div>
 
             <!-- Battery Profile Selector -->
-            <UiBox v-if="hasBatteryProfiles" :title="$t('powerBatteryProfile')">
+            <UiBox v-if="hasBatteryProfiles" :title="$t('powerBatteryProfile')" type="neutral" collapsible>
                 <SettingRow :label="$t('powerBatteryProfile')">
                     <USelect
                         :items="batteryProfileItems"
                         :model-value="activeBatteryProfile"
                         @update:model-value="onBatteryProfileChange"
-                        size="sm"
+                        size="xs"
                         class="min-w-40"
                     />
                 </SettingRow>
@@ -23,7 +23,7 @@
                         v-model="batteryProfileName"
                         maxlength="8"
                         :placeholder="$t('powerBatteryProfileNamePlaceholder')"
-                        size="sm"
+                        size="xs"
                     />
                 </SettingRow>
             </UiBox>
@@ -32,13 +32,13 @@
                 <!-- Left Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Battery Configuration -->
-                    <UiBox :title="$t('powerBatteryHead')">
+                    <UiBox :title="$t('powerBatteryHead')" type="neutral" collapsible>
                         <SettingRow :label="$t('powerBatteryVoltageMeterSource')">
                             <USelect
                                 :items="batteryMeterTypeItems"
                                 v-model="batteryConfig.voltageMeterSource"
                                 @update:model-value="onVoltageMeterSourceChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>
@@ -47,7 +47,7 @@
                                 :items="currentMeterTypeItems"
                                 v-model="batteryConfig.currentMeterSource"
                                 @update:model-value="onCurrentMeterSourceChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>
@@ -107,7 +107,7 @@
                     </UiBox>
 
                     <!-- Voltage Configuration -->
-                    <UiBox v-show="showVoltageConfiguration" :title="$t('powerVoltageHead')">
+                    <UiBox v-show="showVoltageConfiguration" :title="$t('powerVoltageHead')" type="neutral" collapsible>
                         <UiBox highlight class="mb-3">
                             <div v-html="$t('powerVoltageWarning')"></div>
                         </UiBox>
@@ -170,7 +170,7 @@
                 <!-- Right Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Battery State -->
-                    <UiBox :title="$t('powerStateHead')">
+                    <UiBox :title="$t('powerStateHead')" type="neutral" collapsible>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('powerBatteryConnected')"></span>
                             <span>
@@ -204,7 +204,12 @@
                     </UiBox>
 
                     <!-- Amperage Configuration -->
-                    <UiBox v-show="showAmperageConfiguration" :title="$t('powerAmperageHead')">
+                    <UiBox
+                        v-show="showAmperageConfiguration"
+                        :title="$t('powerAmperageHead')"
+                        type="neutral"
+                        collapsible
+                    >
                         <UiBox highlight class="mb-3">
                             <div v-html="$t('powerAmperageWarning')"></div>
                         </UiBox>
@@ -266,8 +271,15 @@
                 v-if="showCalibration"
                 @click="openCalibrationManager"
                 variant="soft"
+                size="xs"
             />
-            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" :loading="isSaving" @click="handleSave" />
+            <UButton
+                :label="$t('powerButtonSave')"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="handleSave"
+                size="xs"
+            />
         </div>
 
         <!-- Calibration Manager Dialog -->

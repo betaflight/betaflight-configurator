@@ -10,7 +10,13 @@
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
+                    <UiBox
+                        :title="$t('receiverModelPreview')"
+                        type="neutral"
+                        collapsible
+                        :padding="false"
+                        class="bg-muted"
+                    >
                         <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>
@@ -55,7 +61,7 @@
                 <div class="col-span-3">
                     <!-- Receiver Mode -->
                     <div class="receiver">
-                        <UiBox :title="$t('configurationReceiver')">
+                        <UiBox :title="$t('configurationReceiver')" type="neutral" collapsible>
                             <SettingRow :label="$t('configurationReceiverMode')">
                                 <USelect
                                     :items="rxModeOptions"
@@ -144,6 +150,8 @@
                         <UiBox
                             :title="$t('configurationTelemetry')"
                             :help="$t('configurationTelemetryHelp')"
+                            type="neutral"
+                            collapsible
                             class="col-span-2"
                         >
                             <SettingRow :label="$t('featureTELEMETRY')">
@@ -155,7 +163,13 @@
                         </UiBox>
 
                         <!-- RSSI -->
-                        <UiBox :title="$t('configurationRSSI')" :help="$t('configurationRSSIHelp')" class="col-span-3">
+                        <UiBox
+                            :title="$t('configurationRSSI')"
+                            :help="$t('configurationRSSIHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-3"
+                        >
                             <div class="flex justify-between gap-2 flex-wrap">
                                 <SettingRow :label="$t('featureRSSI_ADC')">
                                     <USwitch
@@ -180,7 +194,7 @@
                         </UiBox>
 
                         <!-- Channel Map -->
-                        <UiBox :title="$t('receiverChannelMap')" class="col-span-1">
+                        <UiBox :title="$t('receiverChannelMap')" type="neutral" collapsible class="col-span-1">
                             <SettingRow>
                                 <UFieldGroup>
                                     <UInput
@@ -204,7 +218,7 @@
                         </UiBox>
 
                         <!-- Stick settings -->
-                        <UiBox :title="$t('receiverStickRange')" class="col-span-6">
+                        <UiBox :title="$t('receiverStickRange')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverStickMin')"
@@ -258,7 +272,7 @@
                         </UiBox>
 
                         <!-- Deadband settings -->
-                        <UiBox :title="$t('receiverDeadband')" class="col-span-6">
+                        <UiBox :title="$t('receiverDeadband')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverDeadband')"
@@ -310,7 +324,7 @@
                     </div>
 
                     <!-- RC Smoothing -->
-                    <UiBox :title="$t('receiverRcSmoothing')" class="col-span-6">
+                    <UiBox :title="$t('receiverRcSmoothing')" type="neutral" collapsible class="col-span-6">
                         <SettingRow :label="$t('receiverRcSmoothing')">
                             <USwitch
                                 :model-value="rxConfig.rcSmoothing === 1"
@@ -491,10 +505,17 @@
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
+                size="xs"
             />
-            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+            <UButton
+                :label="$t('receiverButtonBind')"
+                @click="sendBind"
+                v-if="showBindButton"
+                variant="soft"
+                size="xs"
+            />
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
                     {{ $t("receiverButtonSave") }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">

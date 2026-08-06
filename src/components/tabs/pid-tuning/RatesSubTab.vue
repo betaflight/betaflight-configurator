@@ -199,7 +199,7 @@
             </UiBox>
 
             <!-- Rate Curve -->
-            <UiBox :title="$t('pidTuningRatesCurve')" :help="$t('pidTuningRatesTip')" type="neutral">
+            <UiBox :title="$t('pidTuningRatesCurve')" :help="$t('pidTuningRatesTip')" type="neutral" collapsible>
                 <div
                     class="relative bg-white dark:bg-neutral-900 border border-default p-1"
                     style="height: 362px; min-width: 200px"
@@ -286,14 +286,14 @@
             </UiBox>
 
             <!-- Throttle Curve Preview -->
-            <UiBox :title="$t('pidTuningThrottleCurvePreview')" type="neutral">
+            <UiBox :title="$t('pidTuningThrottleCurvePreview')" type="neutral" collapsible>
                 <div class="bg-white dark:bg-neutral-900 border border-default p-1" style="height: 164px">
                     <canvas ref="throttleCurveCanvas" class="w-full h-full block"></canvas>
                 </div>
             </UiBox>
 
             <!-- Rates 3D Preview -->
-            <UiBox :title="$t('pidTuningRatesModelPreview')" type="neutral">
+            <UiBox :title="$t('pidTuningRatesModelPreview')" type="neutral" collapsible>
                 <div class="bg-white dark:bg-neutral-900 border border-default p-1 w-full" ref="ratesPreviewContainer">
                     <canvas ref="ratesPreviewCanvas" class="block"></canvas>
                 </div>

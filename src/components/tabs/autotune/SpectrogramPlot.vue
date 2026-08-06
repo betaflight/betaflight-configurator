@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('autotuneSpectrogramTitle')">
+    <UiBox :title="$t('autotuneSpectrogramTitle')" type="neutral" collapsible>
         <div ref="container" class="w-full flex flex-col gap-3">
             <div v-for="axis in visibleAxes" :key="axis.key">
                 <span class="text-xs font-bold" :style="{ color: axis.color }">

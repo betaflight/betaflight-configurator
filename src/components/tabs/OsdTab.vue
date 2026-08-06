@@ -34,7 +34,12 @@
                 <div class="grid-row grid-box col4">
                     <!-- Elements Column -->
                     <div class="col-span-1">
-                        <UiBox :title="$t('osdSetupElementsTitle')" :help="$t('osdSectionHelpElements')">
+                        <UiBox
+                            :title="$t('osdSetupElementsTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('osdSectionHelpElements')"
+                        >
                             <template #title>
                                 <HelpIcon :text="$t('osdSetupProfilesTitle')" />
                                 <span
@@ -49,7 +54,7 @@
                                 v-model="elementSearchQuery"
                                 :placeholder="$t('search') + '...'"
                                 icon="i-lucide-search"
-                                size="sm"
+                                size="xs"
                                 class="mb-2"
                             />
                             <!-- Element list -->
@@ -228,7 +233,7 @@
                     <!-- Settings Column -->
                     <div class="col-span-1">
                         <!-- Active Profile Selector -->
-                        <UiBox :title="$t('osdSetupSelectedProfileTitle')">
+                        <UiBox :title="$t('osdSetupSelectedProfileTitle')" type="neutral" collapsible>
                             <SettingRow :label="$t('osdSetupSelectedProfileTitle')">
                                 <USelect v-model="activeProfile" :items="profileOptions" size="xs" />
                             </SettingRow>
@@ -241,6 +246,8 @@
                         <UiBox
                             v-if="osdStore.state.haveMax7456Configured || osdStore.state.isMspDevice"
                             :title="$t('osdSetupVideoFormatTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpVideoMode')"
                         >
                             <SettingRow :label="$t('osdSetupVideoFormatTitle')">
@@ -262,6 +269,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature"
                             :title="$t('osdSetupUnitsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpUnits')"
                         >
                             <SettingRow :label="$t('osdSetupUnitsTitle')">
@@ -283,6 +292,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && osdStore.timers.length > 0"
                             :title="$t('osdSetupTimersTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpTimers')"
                         >
                             <div
@@ -337,6 +348,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && alarmEntries.length > 0"
                             :title="$t('osdSetupAlarmsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpAlarms')"
                         >
                             <div
@@ -363,6 +376,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && sortedWarnings.length > 0"
                             :title="$t('osdSetupWarningsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpWarnings')"
                         >
                             <div
@@ -378,7 +393,7 @@
                                             onWarningChange();
                                         }
                                     "
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <span class="text-xs" :title="warning.desc ? $t(warning.desc) : undefined">{{
                                     $t(warning.text, warning.textParams)
@@ -390,6 +405,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && sortedStatItems.length > 0"
                             :title="$t('osdSetupStatsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpStats')"
                         >
                             <div
@@ -405,7 +422,7 @@
                                             onStatChange(stat);
                                         }
                                     "
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <span class="text-xs" :title="stat.desc ? $t(stat.desc) : undefined">{{
                                     $t(stat.text, stat.textParams)
@@ -440,11 +457,11 @@
                                 v-model="selectedFontPreset"
                                 :items="fontPresetSelectItems"
                                 :portal="false"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                             <span>{{ $t("osdSetupFontPresetsSelectorOr") }}</span>
-                            <UButton @click="loadCustomFontFile()" size="sm">
+                            <UButton @click="loadCustomFontFile()" size="xs">
                                 {{ $t("osdSetupOpenFont") }}
                             </UButton>
                             <span class="text-sm opacity-60"></span>
@@ -475,7 +492,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <UButton @click="replaceLogoImage()" size="sm">
+                            <UButton @click="replaceLogoImage()" size="xs">
                                 <span v-html="$t('osdSetupCustomLogoOpenImageButton')"></span>
                             </UButton>
                         </div>
@@ -487,7 +504,7 @@
                             </div>
                         </div>
 
-                        <UButton @click="flashFont()" color="success" size="sm">
+                        <UButton @click="flashFont()" color="success" size="xs">
                             {{ $t("osdSetupUploadFont") }}
                         </UButton>
                     </template>
@@ -502,11 +519,12 @@
                     :disabled="!osdStore.state.isMax7456FontDeviceDetected"
                     @click="openFontManager()"
                     variant="soft"
+                    size="xs"
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
-                <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving">
+                <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -514,6 +532,7 @@
                             :disabled="!osdStore.dirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                             square
+                            size="xs"
                         />
                     </UDropdownMenu>
                 </UFieldGroup>
