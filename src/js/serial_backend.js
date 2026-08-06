@@ -164,13 +164,19 @@ function isCliOnlyMode() {
 }
 
 function connectHandler(event) {
-    onOpen(event.detail);
     // Only mark the link open when the port actually opened. A failed open (event.detail
-    // falsy) runs abortConnection inside onOpen; setting the flag here too would leave it
+    // falsy) runs abortConnection inside onOpen; setting the flag there too would leave it
     // out of sync with the real state and break reconnect retries.
+    //
+    // Before onOpen, not after: onOpen starts the MSP handshake, and MSP.send_message runs
+    // its callback synchronously when the link has already dropped again (msp.js — no
+    // serial.connected). That callback sees the apiVersion FC.resetState() just reset to
+    // "0.0.0" and calls abortConnection(), which asks failureIsUserFacing whether the link
+    // had opened. Setting the flag afterwards would answer "no" and hide the failure.
     if (event.detail) {
         getConnectionState().setLinkOpen(true);
     }
+    onOpen(event.detail);
 }
 
 function disconnectHandler(event) {
@@ -399,6 +405,11 @@ function canStartConnectionAction(selectedDevice) {
     );
 }
 
+/**
+ * Start a connect attempt on the selected device.
+ * @param {string} selectedDevice - the selected device path, or "virtual"/"manual"
+ * @param {boolean} automatic - the app started this attempt (device event, reboot retry)
+ */
 function beginConnect(selectedDevice, automatic) {
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)

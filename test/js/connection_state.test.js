@@ -47,15 +47,33 @@ describe("phase + readiness", () => {
 });
 
 describe("attempt origin / failure reporting", () => {
-    it("attemptStarted enters CONNECTING, but keeps a reboot reconnect's own phase", () => {
+    it("attemptStarted enters CONNECTING", () => {
         const c = make();
         c.attemptStarted();
         expect(c.state).toBe(State.CONNECTING);
+    });
 
-        c.requestReboot();
-        c.reconnectStarted();
-        c.attemptStarted(true); // the retry loop's attempt
-        expect(c.state).toBe(State.RECONNECTING);
+    // Both halves of isRebootReconnecting: a reboot owns its phase, and an attempt made
+    // inside that window must not overwrite it with CONNECTING. Each case needs its own
+    // instance — requestReboot() is a no-op once the phase is already in flight.
+    it.each([
+        ["REBOOTING", (c) => c.requestReboot(), State.REBOOTING],
+        [
+            "RECONNECTING",
+            (c) => {
+                c.requestReboot();
+                c.reconnectStarted();
+            },
+            State.RECONNECTING,
+        ],
+    ])("attemptStarted keeps a reboot reconnect's own phase (%s)", (_label, enterPhase, expected) => {
+        const c = make();
+        c.setPhase(State.CONNECTED);
+        enterPhase(c);
+
+        c.attemptStarted(true);
+
+        expect(c.state).toBe(expected);
     });
 
     it("reports a user-initiated failure, stays quiet about the app's own", () => {

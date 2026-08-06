@@ -522,19 +522,51 @@ describe("serial_backend connect-failure dialog", () => {
     });
 
     it("reports an app-initiated failure AFTER the link opened (handshake rejected)", () => {
-        // onOpen set connected_to, so the link was up and the failure is the handshake
-        // (unsupported/garbage API version) — terminal, not enumeration flakiness. Nothing
-        // retries it into working, so the user must be told however the attempt started.
+        // The link was up and the failure is the handshake (unsupported/garbage API version)
+        // — terminal, not enumeration flakiness. Nothing retries it into working, so the user
+        // must be told however the attempt started.
         DeviceHandler.devicePicker.autoConnect = true;
 
         connectDisconnect({ automatic: true });
-        serialHandlers.connect({ detail: true }); // opened -> HANDSHAKING, connected_to set
+        serialHandlers.connect({ detail: true }); // opened -> linkOpen, HANDSHAKING
         dialogStore.open.mockClear();
 
-        FC.CONFIG.apiVersion = "0.0.0";
-        MSP.send_message.mock.calls.at(-1)?.[3]?.(); // MSP_API_VERSION callback -> abortConnection
+        // FC.CONFIG is module state on the mock and resetMocks() does not restore it, so put
+        // the supported version back before the next test inherits an unsupported FC.
+        const apiVersion = FC.CONFIG.apiVersion;
+        try {
+            FC.CONFIG.apiVersion = "0.0.0";
+            MSP.send_message.mock.calls.at(-1)?.[3]?.(); // MSP_API_VERSION callback -> abortConnection
+        } finally {
+            FC.CONFIG.apiVersion = apiVersion;
+        }
 
         expect(infoDialogCount()).toBe(1);
+    });
+
+    it("reports a handshake rejected synchronously, inside onOpen", () => {
+        // MSP.send_message runs its callback synchronously when the link has dropped again by
+        // the time onOpen starts the handshake. abortConnection then runs before connectHandler
+        // returns, so the link-open flag has to be set before onOpen, not after it.
+        DeviceHandler.devicePicker.autoConnect = true;
+        const apiVersion = FC.CONFIG.apiVersion;
+
+        try {
+            connectDisconnect({ automatic: true });
+            dialogStore.open.mockClear();
+
+            // FC.resetState() leaves apiVersion "0.0.0"; the synchronous callback sees that.
+            MSP.send_message.mockImplementationOnce((_code, _data, _sent, callback) => {
+                FC.CONFIG.apiVersion = "0.0.0";
+                callback?.();
+            });
+
+            serialHandlers.connect({ detail: true });
+
+            expect(infoDialogCount()).toBe(1);
+        } finally {
+            FC.CONFIG.apiVersion = apiVersion;
+        }
     });
 
     it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {
