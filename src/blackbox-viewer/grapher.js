@@ -68,7 +68,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         craft3D = null,
         craft2D = null,
         analyser = null /* define a new spectrum analyser */,
-        watermarkLogo /* Watermark feature */;
+        watermarkLogo; /* Watermark feature */
     this.onSeek = null;
 
     this.getAnalyser = function () {
@@ -1188,8 +1188,6 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
 
     graphConfig.addListener(this.refreshGraphConfig);
     this.refreshGraphConfig();
-
-    document.documentElement.classList.toggle("has-grid-override", options["graphGridOverride"]);
 
     this.resize(canvas.width, canvas.height);
 }
