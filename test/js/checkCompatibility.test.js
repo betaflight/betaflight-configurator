@@ -21,11 +21,14 @@ function restoreNavigator() {
     stubbed.clear();
 }
 
-function setUserAgent(userAgent, { maxTouchPoints = 0, platform } = {}) {
+function setUserAgent(userAgent, { maxTouchPoints = 0, platform, legacyPlatform } = {}) {
     stubNavigator("userAgent", userAgent);
     stubNavigator("maxTouchPoints", maxTouchPoints);
     // getOS() prefers userAgentData.platform when present, so pin it too.
     stubNavigator("userAgentData", platform ? { platform } : undefined);
+    if (legacyPlatform !== undefined) {
+        stubNavigator("platform", legacyPlatform);
+    }
 }
 
 async function loadCompatibility() {
@@ -47,6 +50,20 @@ beforeEach(() => {
 afterEach(() => {
     restoreNavigator();
     delete globalThis[TAURI];
+});
+
+describe("getOS", () => {
+    // userAgentData is Chromium-only. WKWebView exposes navigator.platform alone, which is
+    // the shape the Tauri macOS and iOS shells actually present.
+    it("identifies a webview that exposes only the legacy platform", async () => {
+        setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+        const { getOS } = await loadCompatibility();
+        expect(getOS()).toBe("MacOS");
+
+        restoreNavigator();
+        setUserAgent(UA.iphone, { legacyPlatform: "iPhone" });
+        expect(getOS()).toBe("iOS");
+    });
 });
 
 describe("isTauriAndroid", () => {
@@ -96,6 +113,8 @@ describe("checkBluetoothSupport", () => {
             [UA.android, {}],
             [UA.iphone, {}],
             [UA.mac, { platform: "macOS" }],
+            // The real WKWebView shell: no userAgentData at all.
+            [UA.mac, { legacyPlatform: "MacIntel" }],
         ]) {
             globalThis[TAURI] = {};
             setUserAgent(ua, extra);

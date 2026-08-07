@@ -10,7 +10,9 @@ import { Capacitor } from "@capacitor/core";
 export function getOS() {
     let os = "unknown";
     const userAgent = globalThis.navigator.userAgent;
-    const platform = globalThis.navigator?.userAgentData?.platform;
+    // userAgentData is Chromium-only: WKWebView (Tauri macOS/iOS) and Safari never
+    // expose it, so fall back to the legacy navigator.platform ("MacIntel", "iPhone").
+    const platform = globalThis.navigator?.userAgentData?.platform ?? globalThis.navigator?.platform;
     const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
