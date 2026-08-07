@@ -847,11 +847,11 @@ function setMinMaxSelectedZoom(zoom) {
     }
 }
 
-function setMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
+function setFieldsMinMaxToFullRange(setCheckedOnly, getMinMaxFunction) {
     if (currentState.value.graph?.fields && props.flightLog) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
             if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = props.flightLog.getMinMaxForFieldDuringAllTime(field.name);
+                const mm = getMinMaxFunction(props.flightLog, props.grapher, field.name);
                 if (mm?.min !== undefined && mm?.max !== undefined) {
                     setMin(field, mm.min);
                     setMax(field, mm.max);
@@ -862,53 +862,42 @@ function setMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
     }
 }
 
-function getMinMaxForFieldDuringWindowTimeInterval(setCheckedOnly) {
-    if (currentState.value.graph?.fields && props.flightLog && props.grapher) {
-        for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = GraphConfig.getMinMaxForFieldDuringWindowTimeInterval(
-                    props.flightLog,
-                    props.grapher,
-                    field.name,
-                );
-                if (mm?.min !== undefined && mm?.max !== undefined) {
-                    setMin(field, mm.min);
-                    setMax(field, mm.max);
-                }
-            }
-        }
-        emitUpdate();
-    }
+function setFieldsMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringAllTimeInterval);
 }
 
-function getMinMaxForFieldDuringMarkedInterval(setCheckedOnly) {
-    if (currentState.value.graph?.fields && props.flightLog && props.grapher) {
-        for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = GraphConfig.getMinMaxForFieldDuringMarkedInterval(
-                    props.flightLog,
-                    props.grapher,
-                    field.name,
-                );
-                if (mm?.min !== undefined && mm?.max !== undefined) {
-                    setMin(field, mm.min);
-                    setMax(field, mm.max);
-                }
-            }
-        }
-        emitUpdate();
-    }
+function setFieldsMinMaxToFullRangeDuringWindowTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
 }
 
-function setMinMaxSelectedToFullRangeDuringAllTime() {
+function setFieldsMinMaxToFullRangeDuringMarkedTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringMarkedInterval);
+}
+
+function setSelectedFieldMinMaxToFullRange(getMinMaxFunction) {
     if (currentState.value.field?.name && props.flightLog) {
-        const mm = props.flightLog.getMinMaxForFieldDuringAllTime(currentState.value.field?.name);
+        const fieldName = currentState.value.field.name;
+        const mm = getMinMaxFunction(props.flightLog, props.grapher, fieldName);
         if (mm?.min !== undefined && mm?.max !== undefined) {
             setMin(currentState.value.field, mm.min);
             setMax(currentState.value.field, mm.max);
             emitUpdate();
         }
     }
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringAllTime() {
+    setSelectedFieldMinMaxToFullRange((flightLog, grapher, fieldName) =>
+        GraphConfig.getMinMaxForFieldDuringAllTimeInterval(flightLog, fieldName),
+    );
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringWindowTime() {
+    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringMarkedTime() {
+    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringMarkedInterval);
 }
 
 const zoom = 1.1;
@@ -924,7 +913,7 @@ const simpleMenuItems = computed(() => [
         {
             label: "Full range",
             onSelect() {
-                setMinMaxToFullRangeDuringAllTime();
+                setFieldsMinMaxToFullRangeDuringAllTime();
             },
         },
         {
@@ -972,7 +961,7 @@ const simpleMenuItems = computed(() => [
                     {
                         label: "Full range",
                         onSelect() {
-                            setMinMaxSelectedToFullRangeDuringAllTime();
+                            setSelectedFieldMinMaxToFullRangeDuringAllTime();
                         },
                     },
                     {
@@ -1077,21 +1066,21 @@ const extendedMenuItems = computed(() => [
                     {
                         label: "At the all time",
                         onSelect(e) {
-                            setMinMaxToFullRangeDuringAllTime(true);
+                            setFieldsMinMaxToFullRangeDuringAllTime(true);
                             e.preventDefault();
                         },
                     },
                     {
                         label: "At the window time",
                         onSelect(e) {
-                            getMinMaxForFieldDuringWindowTimeInterval(true);
+                            setFieldsMinMaxToFullRangeDuringWindowTime(true);
                             e.preventDefault();
                         },
                     },
                     {
                         label: "At the markers time",
                         onSelect(e) {
-                            getMinMaxForFieldDuringMarkedInterval(true);
+                            setFieldsMinMaxToFullRangeDuringMarkedTime(true);
                             e.preventDefault();
                         },
                     },
@@ -1206,21 +1195,21 @@ const extendedMenuItems = computed(() => [
                                 {
                                     label: "At the all time",
                                     onSelect(e) {
-                                        setMinMaxSelectedToFullRangeDuringAllTime();
+                                        setSelectedFieldMinMaxToFullRangeDuringAllTime();
                                         e.preventDefault();
                                     },
                                 },
                                 {
                                     label: "At the window time",
-                                    disabled: true,
                                     onSelect(e) {
+                                        setSelectedFieldMinMaxToFullRangeDuringWindowTime();
                                         e.preventDefault();
                                     },
                                 },
                                 {
                                     label: "At the markers time",
-                                    disabled: true,
                                     onSelect(e) {
+                                        setSelectedFieldMinMaxToFullRangeDuringMarkedTime();
                                         e.preventDefault();
                                     },
                                 },
