@@ -30,12 +30,14 @@
                     <div class="clear-both"></div>
                 </div>
                 <div id="content" @scroll.passive="onContentScroll">
-                    <component
-                        :is="activeTabComponent"
-                        v-if="activeTabComponent"
-                        :key="vueTabState.activeTabKey"
-                        ref="activeTabInstance"
-                    />
+                    <keep-alive :include="keptAliveTabs">
+                        <component
+                            :is="activeTabComponent"
+                            v-if="activeTabComponent"
+                            :key="activeTabKey"
+                            ref="activeTabInstance"
+                        />
+                    </keep-alive>
                 </div>
             </div>
             <status-bar
@@ -183,6 +185,16 @@ const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
     return tabName ? (VueTabComponents[tabName] ?? null) : null;
 });
+
+// Tabs that keep their state (and heavy resources) alive across switches rather than being torn
+// down. Matched by component name.
+const keptAliveTabs = ["BlackboxViewerTab"];
+
+// The mounter bumps activeTabKey on every switch to force a fresh instance. Kept-alive tabs need
+// a stable key instead, or keep-alive caches by an ever-changing key and never restores.
+const activeTabKey = computed(() =>
+    vueTabState.activeTabName === "blackbox_viewer" ? "blackbox_viewer" : vueTabState.activeTabKey,
+);
 
 provide("betaflightModel", currentVm());
 provide("gui", GUI);

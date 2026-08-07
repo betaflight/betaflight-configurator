@@ -1,0 +1,11 @@
+{
+    "$schema": "../gen/schemas/android-schema.json",
+    "identifier": "android",
+    "description": "Android capability: core APIs and USB serial access.",
+    "platforms": ["android"],
+    "windows": ["*"],
+    "permissions": [
+        "core:default",
+        "serialplugin:default"
+    ]
+}
