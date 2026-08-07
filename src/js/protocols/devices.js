@@ -35,11 +35,13 @@ const defaultBluetoothDevices = [
         writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
         readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
     },
+    // A board exposing more than one SpeedyBee service is matched in this order,
+    // which is the preference the Android native implementation applies.
     {
-        name: "SpeedyBee V1",
-        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
+        name: "SpeedyBee FF00",
+        serviceUuid: "000000ff-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000ff01-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000ff02-0000-1000-8000-00805f9b34fb",
     },
     {
         name: "SpeedyBee V2",
@@ -48,10 +50,10 @@ const defaultBluetoothDevices = [
         readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
     },
     {
-        name: "SpeedyBee FF00",
-        serviceUuid: "000000ff-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ff01-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ff02-0000-1000-8000-00805f9b34fb",
+        name: "SpeedyBee V1",
+        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
     },
     {
         name: "DroneBridge",

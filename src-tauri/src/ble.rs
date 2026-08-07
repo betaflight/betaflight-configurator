@@ -16,6 +16,7 @@ use std::sync::{Arc, Mutex};
 
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Emitter, State};
+use tokio::sync::Mutex as TokioMutex;
 use uuid::Uuid;
 
 use tauri_plugin_blec::models::{BleDevice, CharProps, ScanFilter, Service, WriteType};
@@ -66,6 +67,11 @@ struct WriteTarget {
 pub struct BleState {
     write_target: Mutex<Option<WriteTarget>>,
     generation: Arc<AtomicU64>,
+    /// The plugin exposes one process-wide connection, so a connect and a disconnect
+    /// that overlap act on the same link: a losing connect's cleanup would otherwise
+    /// tear down the winner. Held across each whole transition, not just the state
+    /// writes. Not taken by `ble_send`, which must not block behind a scan.
+    transition: TokioMutex<()>,
 }
 
 /// blec substitutes an identifier for the advertised name when a peripheral has
@@ -189,6 +195,10 @@ pub async fn ble_connect(
     id: String,
     devices: Vec<BleDeviceDescriptor>,
 ) -> Result<BleConnectResult, String> {
+    // Serialise the whole attempt against other transitions, so a cleanup here can
+    // never tear down a link that a concurrent connect established.
+    let _transition = state.transition.lock().await;
+
     // Reserve this attempt's generation before any await, so an attempt superseded
     // by a later connect or disconnect can no longer emit.
     let generation = state.generation.clone();
@@ -271,6 +281,8 @@ pub async fn ble_send(state: State<'_, BleState>, data: Vec<u8>) -> Result<(), S
 
 #[tauri::command]
 pub async fn ble_disconnect(state: State<'_, BleState>) -> Result<(), String> {
+    let _transition = state.transition.lock().await;
+
     // Bump first so the disconnect callback doesn't emit a spurious ble-disconnected
     // after an intentional teardown.
     state.generation.fetch_add(1, Ordering::SeqCst);
