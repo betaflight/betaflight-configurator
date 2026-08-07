@@ -30,6 +30,15 @@ function isBrokenPipeError(error) {
 }
 
 /**
+ * Detects a lost race for the port lock against the plugin's RX hub thread.
+ * The plugin returns this before touching the port, so no bytes reached the
+ * device and the chunk is safe to resend.
+ */
+function isLockTimeoutError(error) {
+    return /lock timeout/i.test(extractErrorMessage(error));
+}
+
+/**
  * Parse a vendor/product ID from the plugin response (may arrive as number or
  * string depending on OS backend).
  */
@@ -261,19 +270,6 @@ class TauriSerial extends EventTarget {
                 return await this._abortOpen(path);
             }
 
-            try {
-                await invoke("plugin:serialplugin|set_timeout", {
-                    path,
-                    timeout: 100,
-                });
-            } catch (e) {
-                console.debug(`${logHead} Could not set timeout:`, e);
-            }
-
-            if (this.openCanceled) {
-                return await this._abortOpen(path);
-            }
-
             const activePort = this.ports.find((p) => p.path === path);
             this.connected = true;
             this.connectionId = path;
@@ -425,10 +421,16 @@ class TauriSerial extends EventTarget {
             this.transmitting = true;
 
             const writeChunk = async (chunk) => {
-                await invoke("plugin:serialplugin|write_binary", {
-                    path: this.connectionId,
-                    value: Array.from(chunk),
-                });
+                const value = Array.from(chunk);
+                try {
+                    await invoke("plugin:serialplugin|write_binary", { path: this.connectionId, value });
+                } catch (error) {
+                    if (!isLockTimeoutError(error)) {
+                        throw error;
+                    }
+                    console.warn(`${logHead} Write lock timeout, resending chunk`);
+                    await invoke("plugin:serialplugin|write_binary", { path: this.connectionId, value });
+                }
             };
 
             if (this.isNeedBatchWrite) {
