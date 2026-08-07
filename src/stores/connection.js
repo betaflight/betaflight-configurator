@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import CONFIGURATOR from "../js/data_storage";
 import DeviceHandler from "../js/device_handler";
-import { getConnectionState } from "../js/connection_state";
 import { getLockManager } from "../js/lock_manager";
 
 export const useConnectionStore = defineStore("connection", () => {
@@ -43,14 +42,6 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
 
-    // Thin reactive read-model of the connection status holder. Its phase lives in
-    // Vue refs, so a computed that reads the getters tracks them directly — no
-    // subscribe/snapshot bridge — giving Vue components one canonical source for
-    // lifecycle phase / readiness instead of the legacy CONFIGURATOR/GUI globals.
-    const connection = getConnectionState();
-    const connectionPhase = computed(() => connection.state);
-    const connectionReady = computed(() => connection.isReady);
-
     // Live data refresh control
     const liveDataPaused = ref(false);
 
@@ -79,9 +70,6 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedDevice,
-        // Connection-state read-model (read-only)
-        connectionPhase,
-        connectionReady,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,
