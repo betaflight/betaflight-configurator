@@ -2,7 +2,7 @@
     <BaseTab tab-name="led-strip" @mounted="onTabMounted">
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
-            <WikiButton doc-url="led-strip" />
+            <WikiButton docUrl="led-strip" />
 
             <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
@@ -39,7 +39,7 @@
                     <div class="clear-buttons-container">
                         <!-- Clear Buttons -->
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             :disabled="!hasSelection"
@@ -47,7 +47,7 @@
                             @click="clearSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             :label="$t('ledStripClearAllButton')"
@@ -63,7 +63,7 @@
                     <USelect
                         id="ledStripFunctionSelect"
                         :class="['functionSelect', 'min-w-48', selectedFunction]"
-                        size="sm"
+                        size="xs"
                         :items="functionItems"
                         v-model="selectedFunction"
                         @update:model-value="onFunctionChange"
@@ -77,7 +77,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="throttleHue"
-                            size="sm"
                             v-model="modifiers.throttleHue"
                             @update:model-value="onModifierChange('t')"
                             :label="$t('ledStripThrottleHue')"
@@ -85,7 +84,7 @@
                         <USelect
                             id="auxSelectThrottle"
                             class="auxSelect"
-                            size="sm"
+                            size="xs"
                             :items="auxChannelItems"
                             v-model="auxChannelValue"
                             :aria-label="$t('ledStripThrottleHueChannel')"
@@ -95,7 +94,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="larsonScanner"
-                            size="sm"
                             v-model="modifiers.larsonScanner"
                             @update:model-value="onModifierChange('o')"
                             :label="$t('ledStripLarsonOverlay')"
@@ -105,7 +103,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="blink"
-                            size="sm"
                             v-model="modifiers.blink"
                             @update:model-value="onModifierChange('b')"
                             :label="$t('ledStripBlinkAlwaysOverlay')"
@@ -115,7 +112,6 @@
                     <div class="modifier-row rainbowOverlay" v-show="showRainbow">
                         <USwitch
                             id="rainbow"
-                            size="sm"
                             v-model="modifiers.rainbow"
                             @update:model-value="onModifierChange('y')"
                             :label="$t('ledStripRainbowOverlay')"
@@ -143,7 +139,6 @@
                     <div class="modifier-row warningOverlay" v-show="showWarning">
                         <USwitch
                             id="warnings"
-                            size="sm"
                             v-model="overlayStates.warnings"
                             @update:model-value="onOverlayChange('w')"
                             :label="$t('ledStripWarningsOverlay')"
@@ -152,7 +147,6 @@
                     <div class="modifier-row indicatorOverlay">
                         <USwitch
                             id="indicator"
-                            size="sm"
                             v-model="overlayStates.indicator"
                             @update:model-value="onOverlayChange('i')"
                             :label="$t('ledStripIndecatorOverlay')"
@@ -161,7 +155,6 @@
                     <div class="modifier-row vtxOverlay" v-show="showVtx">
                         <USwitch
                             id="vtx"
-                            size="sm"
                             v-model="overlayStates.vtx"
                             @update:model-value="onOverlayChange('v')"
                             :label="$t('ledStripVtxOverlay')"
@@ -176,7 +169,7 @@
                     <USelect
                         id="ledStripModeColorsModeSelect"
                         class="modeSelect gps min-w-48"
-                        size="sm"
+                        size="xs"
                         :items="modeColorsModeItems"
                         v-model="modeColorsMode"
                     />
@@ -197,7 +190,7 @@
                     <UButton
                         v-for="dir in directions"
                         :key="dir"
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
                         :class="'dir-' + dir"
@@ -250,6 +243,7 @@
                             <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
                     </div>
+                    <!-- Color palette buttons (16 colored swatches) -->
                     <button
                         v-for="i in 16"
                         :key="`color-${i - 1}`"
@@ -293,8 +287,7 @@
                 <div class="section" v-html="$t('ledStripWiring')"></div>
                 <div class="wiring-container">
                     <UButton
-                        block
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="wireMode ? 'solid' : 'soft'"
                         :label="$t('ledStripWiringMode')"
@@ -302,7 +295,7 @@
                     />
                     <div class="wiringControls">
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             class="w50"
@@ -310,7 +303,7 @@
                             @click="clearWiresSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             class="w50"
@@ -327,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="saveButtonText" :loading="isSaving" @click="save" />
+            <UButton size="xs" :label="saveButtonText" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -949,9 +942,7 @@ function getModeColorButtonClass(mode, direction) {
 
 function getModeColorButtonStyle(mode, direction) {
     const colorIndex = getModeColor(mode, direction);
-    return {
-        backgroundColor: getColorStyle(colorIndex),
-    };
+    return { backgroundColor: getColorStyle(colorIndex) };
 }
 
 function getModeColorButtonLabel(direction) {
@@ -1173,58 +1164,55 @@ watch(auxChannelValue, (newVal) => {
     color: var(--error-500);
 }
 
-/* Buttons */
-button {
+/* Swatch buttons (mode colors, special colors, colour palette).
+ * These stay plain <button> elements because their background is driven by the
+ * LED colour data, but they follow the same radius/typography as UButton so the
+ * tab matches the rest of the UI.  The selectors are deliberately scoped to the
+ * swatch containers — a bare `button` rule would also hit every UButton on the
+ * tab and undo its Nuxt UI styling. */
+.mode_colors > button,
+.colors > button {
     text-align: center;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1;
     border: 1px solid var(--primary-600);
     background-color: var(--primary-500);
-    border-radius: 3px;
-    padding: 7px 6px;
-    margin: 3px 0;
+    border-radius: var(--ui-radius);
+    padding: 7px 10px;
+    margin: 3px 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+/* Label contrast is chosen against the swatch background, not the theme: these
+ * buttons carry an inline background-color taken from the LED colour data (and
+ * --primary-500 until it loads), which does not follow light/dark mode.  var(--text)
+ * would turn the label white over a yellow or cyan swatch.  The palette swatches
+ * below pick their own literal per colour for the same reason. */
+.mode_colors > button {
     color: black;
 }
 
-/* Buttons within controls - add left/right padding */
-.controls button {
-    padding: 7px 10px;
-    margin: 3px 4px;
-}
-
-button:hover:not(:disabled) {
+.mode_colors > button:hover:not(:disabled),
+.colors > button:hover:not(:disabled) {
     background-color: var(--primary-600);
     border-color: var(--primary-700);
 }
 
-button:active:not(:disabled) {
+.mode_colors > button:active:not(:disabled),
+.colors > button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-/* Disabled button styles */
-button:disabled,
-button.disabled {
+/* Disabled swatch buttons */
+.mode_colors > button:disabled,
+.colors > button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--surface-300);
     border-color: var(--surface-500);
     color: white;
-}
-
-button:disabled:hover,
-button.disabled:hover {
-    background-color: var(--surface-300);
-    border-color: var(--surface-500);
-}
-
-button:disabled:active,
-button.disabled:active {
-    transform: none;
-}
-
-.save_btn {
-    min-width: 96px;
 }
 
 .w50 {
@@ -1370,6 +1358,105 @@ button.disabled:active {
     color: var(--text);
 }
 
+.colors {
+    height: 130px;
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 4px;
+    width: 49%;
+    vertical-align: middle;
+}
+
+/* Colors button defaults */
+.colors > button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+.colors button:hover {
+    border-style: solid;
+}
+
+.colors button.btnOn {
+    border: 2px solid var(--text);
+}
+
+/* Default color backgrounds */
+.color-0 {
+    background: black;
+}
+
+.color-1 {
+    background: white;
+    color: black !important;
+}
+
+.color-2 {
+    background: red;
+}
+
+.color-3 {
+    background: orange;
+}
+
+.color-4 {
+    background: yellow;
+    color: black !important;
+}
+
+.color-5 {
+    background: greenyellow;
+    color: black !important;
+}
+
+.color-6 {
+    background: limegreen;
+}
+
+.color-7 {
+    background: palegreen;
+    color: black !important;
+}
+
+.color-8 {
+    background: cyan;
+    color: black !important;
+}
+
+.color-9 {
+    background: lightcyan;
+    color: black !important;
+}
+
+.color-10 {
+    background: dodgerblue;
+}
+
+.color-11 {
+    background: darkviolet;
+}
+
+.color-12 {
+    background: magenta;
+}
+
+.color-13 {
+    background: deeppink;
+}
+
+.color-14 {
+    background: black;
+}
+
+.color-15 {
+    background: black;
+}
+
 /* Color Define Sliders */
 .colorDefineSliders {
     display: none;
@@ -1380,7 +1467,7 @@ button.disabled:active {
     border: 2px solid var(--surface-600);
     border-radius: 6px;
     width: 167px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-popup);
 }
 
 .colorDefineSliderContainer {
@@ -1464,111 +1551,8 @@ button.disabled:active {
     grid-row: 3;
 }
 
-/* Colors */
-.colors {
-    height: 130px;
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 4px;
-    width: 49%;
-    vertical-align: middle;
-}
-
-.colors > button {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    color: white;
-}
-
-.colors button:hover {
-    border-style: solid;
-}
-
-.colors button.btnOn {
-    border: 2px solid var(--text);
-}
-
-/* Default color backgrounds */
-.color-0 {
-    background: black;
-}
-
-.color-1 {
-    background: white;
-    color: black !important;
-}
-
-.color-2 {
-    background: red;
-}
-
-.color-3 {
-    background: orange;
-}
-
-.color-4 {
-    background: yellow;
-    color: black !important;
-}
-
-.color-5 {
-    background: greenyellow;
-    color: black !important;
-}
-
-.color-6 {
-    background: limegreen;
-}
-
-.color-7 {
-    background: palegreen;
-    color: black !important;
-}
-
-.color-8 {
-    background: cyan;
-    color: black !important;
-}
-
-.color-9 {
-    background: lightcyan;
-    color: black !important;
-}
-
-.color-10 {
-    background: dodgerblue;
-}
-
-.color-11 {
-    background: darkviolet;
-}
-
-.color-12 {
-    background: magenta;
-}
-
-.color-13 {
-    background: deeppink;
-}
-
-.color-14 {
-    background: black;
-}
-
-.color-15 {
-    background: black;
-}
-
-/* Mode Colors */
+/* Mode / Special Color Buttons */
 .mode_colors button.btnOn {
-    border: 2px solid var(--text);
-}
-
-/* Special Colors */
-.special_colors button.btnOn {
     border: 2px solid var(--text);
 }
 

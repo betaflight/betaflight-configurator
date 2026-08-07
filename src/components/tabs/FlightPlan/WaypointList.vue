@@ -1,15 +1,15 @@
 <template>
-    <UiBox :title="$t('flightPlanWaypointList')" class="waypoint-list">
+    <UiBox :title="$t('flightPlanWaypointList')" type="neutral" collapsible class="waypoint-list">
         <div class="flex justify-end">
             <UButton
                 icon="i-lucide-plus"
-                size="sm"
+                size="xs"
                 :aria-label="$t('flightPlanAddWaypoint')"
                 @click="handleAddWaypoint"
             />
         </div>
 
-        <UiBox highlight class="mb-3" v-if="!waypoints.length">
+        <UiBox type="neutral" highlight class="mb-3" v-if="!waypoints.length">
             <p v-html="$t('flightPlanNoWaypoints')"></p>
         </UiBox>
         <div v-else class="waypoints">

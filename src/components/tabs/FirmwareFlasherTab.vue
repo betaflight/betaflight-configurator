@@ -45,7 +45,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
                     :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
@@ -63,7 +63,7 @@
                     />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
                 <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
                     $t("firmwareFlasherButtonLoadOnline")
                 }}</UButton>
