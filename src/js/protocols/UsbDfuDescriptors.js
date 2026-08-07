@@ -266,7 +266,7 @@ class UsbDfuDescriptors extends EventTarget {
     }
 
     /**
-     * True if `buf` at `offset` is a complete (9-byte) DFU functional descriptor with a
+     * True if `buf` at `offset` holds a complete DFU functional descriptor with a
      * usable, non-zero wTransferSize. Rejects HID descriptors (same 0x21 type) that are
      * shorter or that decode to a zero transfer size.
      * @param {Uint8Array} buf
@@ -278,7 +278,8 @@ class UsbDfuDescriptors extends EventTarget {
         if (buf[offset + 1] !== DFU) {
             return false;
         }
-        // DFU functional descriptor is exactly 9 bytes.
+        // The fields we read occupy the first 9 bytes. A device may declare a longer
+        // descriptor, so require at least that much rather than exactly that much.
         if (buf[offset] < 9 || offset + 9 > buf.length) {
             return false;
         }
