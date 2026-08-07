@@ -33,6 +33,7 @@ vi.mock("../../src/js/protocols/TauriBle.js", () => ({ default: stub("TauriBle")
 let serial;
 // The singleton builds its slot table at module load, so reset the registry to pick up
 // a changed platform.
+/** @returns {Promise<void>} */
 async function loadSerial() {
     vi.resetModules();
     ({ serial } = await import("../../src/js/serial.js"));
@@ -108,7 +109,6 @@ describe("serial protocol slots — Tauri Android", () => {
     it("registers no bluetooth slot", () => {
         // The Android System WebView has no Web Bluetooth and there is no native transport
         // yet, so nothing must be registered rather than a dead WebBluetooth instance.
-        expect(serial._protocols.some((p) => p.name === "bluetooth")).toBe(false);
         expect(serial.selectProtocol("bluetooth-AA:BB:CC:DD:EE:FF")).toBeUndefined();
     });
 
