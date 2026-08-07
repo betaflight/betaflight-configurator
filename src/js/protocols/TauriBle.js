@@ -5,12 +5,12 @@ import { gui_log } from "../gui_log";
 import { bluetoothDevices } from "./devices";
 
 /**
- * Native BLE transport for the Tauri iOS shell.
+ * Native BLE transport for the Tauri shells whose webview has no Web Bluetooth:
+ * iOS and macOS (WKWebView) and Android (System WebView).
  *
- * WKWebView exposes no Web Bluetooth, so this drives the Rust `ble_*` commands
- * (btleplug/CoreBluetooth) and receives notification bytes via the `ble-data` /
- * `ble-disconnected` events. Presents the same EventTarget interface as
- * `WebBluetooth`, so serial.js and serial_backend treat it identically.
+ * Drives the Rust `ble_*` commands and receives notification bytes via the
+ * `ble-data` / `ble-disconnected` events. Presents the same EventTarget interface
+ * as `WebBluetooth`, so serial.js and serial_backend treat it identically.
  */
 class TauriBle extends EventTarget {
     constructor() {
@@ -47,7 +47,8 @@ class TauriBle extends EventTarget {
 
     // Mirrors WebBluetooth/CapacitorBle: a stable `bluetooth_`-prefixed path keeps
     // serial.js selectProtocol routing to the BLE slot, and the id (a CoreBluetooth
-    // UUID on iOS) is stable across scans so a pinned path re-resolves to the same device.
+    // UUID on Apple, a MAC address on Android) is stable across scans so a pinned
+    // path re-resolves to the same device.
     createPort(device) {
         return {
             path: `bluetooth_${device.id}`,
@@ -89,8 +90,9 @@ class TauriBle extends EventTarget {
         return false;
     }
 
-    // A BLE scan doubles as the permission gate: the first CoreBluetooth use raises the
-    // iOS Bluetooth prompt. The picker renders whatever this returns.
+    // A BLE scan doubles as the permission gate: it raises the iOS Bluetooth prompt on
+    // first CoreBluetooth use, and the runtime scan/connect permission request on
+    // Android. The picker renders whatever this returns.
     async getDevices() {
         try {
             const found = await invoke("ble_scan");

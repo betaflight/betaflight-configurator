@@ -48,6 +48,12 @@ const defaultBluetoothDevices = [
         readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
     },
     {
+        name: "SpeedyBee FF00",
+        serviceUuid: "000000ff-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000ff01-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000ff02-0000-1000-8000-00805f9b34fb",
+    },
+    {
         name: "DroneBridge",
         serviceUuid: "0000db32-0000-1000-8000-00805f9b34fb",
         writeCharacteristic: "0000db33-0000-1000-8000-00805f9b34fb",

@@ -111,6 +111,14 @@ export function isTauriAndroid() {
 }
 
 /**
+ * @returns {boolean} Whether running inside a Tauri shell on macOS.
+ */
+export function isTauriMacOS() {
+    // isTauriIOS() claims an iPad in desktop mode, which also reports "Macintosh".
+    return isTauri() && !isTauriIOS() && getOS() === "MacOS";
+}
+
+/**
  * True only when running as a genuine web/PWA build, i.e. not inside a natively
  * packaged shell (Capacitor Android/iOS, Tauri desktop/iOS) and not an embedded
  * deployment identified by the WebSocket transport metadata. Use this to gate
@@ -231,8 +239,9 @@ export function checkBluetoothSupport() {
     let result = false;
     if (isAndroid()) {
         result = true;
-    } else if (isTauriIOS()) {
-        // Native btleplug transport — WKWebView has no navigator.bluetooth.
+    } else if (isTauriIOS() || isTauriMacOS() || isTauriAndroid()) {
+        // Native BLE transport — neither WKWebView nor the Android System WebView
+        // exposes navigator.bluetooth.
         result = true;
     } else if (navigator.bluetooth) {
         result = true;
