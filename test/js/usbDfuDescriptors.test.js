@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import { describe, expect, it, afterEach, beforeEach, vi } from "vitest";
 import UsbDfuDescriptors from "../../src/js/protocols/UsbDfuDescriptors.js";
 
 // The descriptor layer is pure parsing over control transfers, so it can be driven
@@ -98,6 +98,10 @@ beforeEach(() => {
     vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
+afterEach(() => {
+    vi.restoreAllMocks();
+});
+
 describe("getLangId", () => {
     it("reads the first supported LANGID and caches it", async () => {
         const transport = new ScriptedTransport();
@@ -139,6 +143,25 @@ describe("getConfigDescriptor", () => {
 
         await transport.getConfigDescriptor();
         expect(transport.calls.filter((c) => c.value === CONFIG)).toHaveLength(2);
+    });
+
+    it("rejects a header too short to hold the length", async () => {
+        // An "ok" transfer can still come back short; reading past the end would yield
+        // a zero length and cache an empty blob as if it were the configuration.
+        const transport = new ScriptedTransport({ config: [9, 2] });
+        await expect(transport.getConfigDescriptor()).rejects.toThrow(/2-byte header/);
+    });
+
+    it("rejects an implausible total length", async () => {
+        const transport = new ScriptedTransport({ config: [9, 2, 4, 0, 1, 1, 0, 0x80, 50] });
+        await expect(transport.getConfigDescriptor()).rejects.toThrow(/implausible length of 4/);
+    });
+
+    it("rejects a body shorter than the advertised length", async () => {
+        // Claims 64 bytes but only ever returns the 18 it has.
+        const short = [9, 2, 64, 0, 1, 1, 0, 0x80, 50, ...interfaceDescriptor()];
+        const transport = new ScriptedTransport({ config: short });
+        await expect(transport.getConfigDescriptor()).rejects.toThrow(/returned 18 of 64 bytes/);
     });
 });
 

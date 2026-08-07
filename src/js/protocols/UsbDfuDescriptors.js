@@ -142,8 +142,17 @@ class UsbDfuDescriptors extends EventTarget {
         if (header.status !== "ok") {
             throw new Error(`USB getConfigDescriptor failed: ${header.status}`);
         }
+        // A transfer can succeed and still return fewer bytes than asked for. Without
+        // this the length below reads past the end, comes out as 0, and an empty blob
+        // gets cached as if it were the whole configuration.
+        if (header.data.length < 4) {
+            throw new Error(`USB getConfigDescriptor returned a ${header.data.length}-byte header`);
+        }
 
         const totalLength = (header.data[3] << 8) | header.data[2];
+        if (totalLength < 9) {
+            throw new Error(`USB getConfigDescriptor reported an implausible length of ${totalLength}`);
+        }
 
         // Now fetch the entire configuration descriptor blob
         const result = await this._withTimeout(
@@ -153,6 +162,9 @@ class UsbDfuDescriptors extends EventTarget {
         );
         if (result.status !== "ok") {
             throw new Error(`USB getConfigDescriptor failed: ${result.status}`);
+        }
+        if (result.data.length < totalLength) {
+            throw new Error(`USB getConfigDescriptor returned ${result.data.length} of ${totalLength} bytes`);
         }
 
         this._configDescriptor = result.data;

@@ -180,26 +180,30 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
     // ===== Control Transfers =====
 
     /**
-     * Perform a USB control transfer IN (device -> host).
-     * @returns {Promise<{status: string, data: Uint8Array}>}
-     */
-    async controlTransferIn(setup, length) {
-        const result = await this.usbDevice.controlTransferIn(setup, length);
-        if (result.status === "ok") {
-            return {
-                status: "ok",
-                data: new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength),
-            };
-        }
-        throw new Error(`USB controlTransferIn failed: ${result.status}`);
-    }
-
-    /**
-     * The descriptor layer reads through this; WebUSB already normalises for us.
+     * Perform a USB control transfer IN (device -> host), reporting the transfer status
+     * rather than throwing, so the descriptor layer can decide what a stall means for a
+     * given request (an unsupported LANGID read is recoverable; a truncated
+     * configuration descriptor is not).
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async _rawControlTransferIn(setup, length) {
-        return this.controlTransferIn(setup, length);
+        const result = await this.usbDevice.controlTransferIn(setup, length);
+        const data = result.data
+            ? new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength)
+            : new Uint8Array(0);
+        return { status: result.status, data };
+    }
+
+    /**
+     * Perform a USB control transfer IN (device -> host), throwing on a failed transfer.
+     * @returns {Promise<{status: string, data: Uint8Array}>}
+     */
+    async controlTransferIn(setup, length) {
+        const result = await this._rawControlTransferIn(setup, length);
+        if (result.status === "ok") {
+            return result;
+        }
+        throw new Error(`USB controlTransferIn failed: ${result.status}`);
     }
 
     /**
