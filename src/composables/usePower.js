@@ -269,6 +269,11 @@ export function usePower() {
             // Update reactive state
             updateStateFromFC();
         } catch (error) {
+            // Switching away mid-load clears the MSP queue and cancels the chain. Expected —
+            // the tab is being torn down — so don't report it, same as the live poller below.
+            if (isMspCancelled(error)) {
+                return;
+            }
             console.error("Error loading power data:", error);
         } finally {
             isLoading.value = false;
