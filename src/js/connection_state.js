@@ -1,12 +1,12 @@
 /**
  * connection_state.js — connection-status holder.
  *
- * Tracks the current lifecycle PHASE plus two operational flags serial_backend
- * reads (linkOpen, intentionalDisconnect). State lives in Vue `ref`s so both
- * plain callers (read the getters synchronously) and Vue consumers (a `computed`
- * that reads a getter automatically tracks the underlying ref) stay in sync with
- * no hand-rolled observer — same approach as data_storage.js. Leaf module: it
- * imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
+ * Tracks the current lifecycle PHASE plus the operational flags serial_backend reads
+ * (linkOpen, intentionalDisconnect, the attempt's origin). Read by the serial, reboot and
+ * flashing paths — serial_backend, device_handler, useMspCliSession, useFirmwareFlashing,
+ * webstm32; the UI reads CONFIGURATOR.connectionValid, not this. State lives in Vue
+ * `ref`s, so a `computed` over a getter would track it if a consumer ever needs that. Leaf
+ * module: it imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
  * import it without a cycle or an active-pinia requirement.
  *
  * There is no transition table and no reconnect token. A reconnect uses the port from the last
@@ -30,9 +30,6 @@ export const State = Object.freeze({
     FAILED: "FAILED",
 });
 
-/** Phases that count as "ready" (a usable connection from the user's view). */
-const READY_STATES = Object.freeze(new Set([State.CONNECTED, State.CLI]));
-
 /**
  * Phases during which a connect/reconnect attempt is in flight. selectActivePort()
  * suppresses the expert-mode virtual/manual fallback throughout this whole window —
@@ -52,6 +49,11 @@ const RECONNECTING_STATES = Object.freeze(
  */
 const REBOOT_OWNED_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
 
+/** @param {string} phase @returns {boolean} the reboot owns this phase */
+function rebootOwns(phase) {
+    return REBOOT_OWNED_STATES.has(phase);
+}
+
 export class ConnectionState {
     constructor() {
         this._state = ref(State.IDLE);
@@ -62,18 +64,15 @@ export class ConnectionState {
         this._linkOpen = ref(false);
         // The reboot reconnect window: { startedAt, durationMs } while a reboot is in
         // progress, null otherwise. Single source of truth for how long the reconnect
-        // may take — the retry loop, the reboot dialog and abortConnection's dialog
-        // suppression all read the same snapshot, taken once per reboot.
+        // may take — the retry loop and the reboot dialog read the same snapshot, taken
+        // once per reboot.
         this._rebootWindow = ref(null);
-        this.logHead = "[CONNECTION]";
+        // The attempt in flight was started by the app, not the user.
+        this._automaticAttempt = ref(false);
     }
 
     get state() {
         return this._state.value;
-    }
-
-    get isReady() {
-        return READY_STATES.has(this._state.value);
     }
 
     get isFlashing() {
@@ -86,13 +85,23 @@ export class ConnectionState {
     }
 
     /**
-     * A reboot-driven reconnect is in progress (REBOOTING/RECONNECTING), as opposed to a
-     * fresh user-initiated connect (CONNECTING/HANDSHAKING). A failed open in this window is
-     * expected flakiness — the device is briefly gone while it re-enumerates — so callers
-     * suppress the user-facing "connection failed" dialog and let auto-connect recover.
+     * A connect attempt begins. A reboot reconnect keeps its own phase.
+     * @param {boolean} [automatic=false] - the app started this attempt, not the user
      */
-    get isRebootReconnecting() {
-        return REBOOT_OWNED_STATES.has(this._state.value);
+    attemptStarted(automatic = false) {
+        this._automaticAttempt.value = automatic;
+        if (!rebootOwns(this._state.value)) {
+            this.setPhase(State.CONNECTING);
+        }
+    }
+
+    /**
+     * Should a failed attempt reach the user? Yes if they asked for it, or if the link had
+     * opened — a handshake rejected after the open is terminal. An app-initiated attempt
+     * that never opened is retried by the next device event, so it stays quiet.
+     */
+    get failureIsUserFacing() {
+        return !this._automaticAttempt.value || this._linkOpen.value;
     }
 
     /** Set the lifecycle phase. */
@@ -108,9 +117,11 @@ export class ConnectionState {
      * refreshed — a second save inside the window restarts the clock, matching the
      * retry loop's own restart.
      * @param {number} [windowMs=10000] - how long the reconnect may take
+     * @param {?object} [target=null] - which device is coming back (device_handler's
+     *   describeDevice output). Held opaquely: this module knows the window, not devices.
      */
-    requestReboot(windowMs = 10000) {
-        this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs };
+    requestReboot(windowMs = 10000, target = null) {
+        this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs, target };
         if (this.isReconnecting) {
             return;
         }
@@ -125,6 +136,11 @@ export class ConnectionState {
     /** Duration of the open reboot window (0 if none) — snapshotted at requestReboot. */
     get rebootWindowMs() {
         return this._rebootWindow.value?.durationMs ?? 0;
+    }
+
+    /** The device the open window is waiting for (null if none, or if it was not identified). */
+    get rebootTarget() {
+        return this._rebootWindow.value?.target ?? null;
     }
 
     /** Start timestamp of the open reboot window (0 if none). */
@@ -156,7 +172,7 @@ export class ConnectionState {
      * phase — including an unexpected drop mid-CONNECTING/HANDSHAKING — settles to IDLE.
      */
     notifyClosed() {
-        if (this._state.value === State.IDLE || REBOOT_OWNED_STATES.has(this._state.value)) {
+        if (this._state.value === State.IDLE || rebootOwns(this._state.value)) {
             return;
         }
         this.setPhase(State.IDLE);
@@ -204,11 +220,6 @@ export class ConnectionState {
 
     setLinkOpen(open) {
         this._linkOpen.value = Boolean(open);
-    }
-
-    toggleLinkOpen() {
-        this._linkOpen.value = !this._linkOpen.value;
-        return this._linkOpen.value;
     }
 
     /** Hard shutdown for page unload (pagehide): collapse to IDLE, ungated. */
