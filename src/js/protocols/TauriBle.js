@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { bluetoothDevices } from "./devices";
+import { androidScanNeedsLocation } from "../utils/checkCompatibility";
 
 /**
  * Native BLE transport for the Tauri shells whose webview has no Web Bluetooth:
@@ -93,8 +94,23 @@ class TauriBle extends EventTarget {
     // A BLE scan doubles as the permission gate: it raises the iOS Bluetooth prompt on
     // first CoreBluetooth use, and the runtime scan/connect permission request on
     // Android. The picker renders whatever this returns.
+    // The Rust side asks for the Bluetooth permissions, but the plugin only requests
+    // location when told to scan for iBeacons, and its Rust wrapper never passes that
+    // through. Older Android needs location regardless, so ask the plugin directly.
+    async _requestScanLocationPermission() {
+        try {
+            await invoke("plugin:blec|check_permissions", { askIfDenied: true, allowIbeacons: true });
+        } catch (e) {
+            // Fall through and scan anyway: the permission may already be granted.
+            console.error(`${this.logHead} Location permission request failed: ${e}`);
+        }
+    }
+
     async getDevices() {
         try {
+            if (androidScanNeedsLocation()) {
+                await this._requestScanLocationPermission();
+            }
             const found = await invoke("ble_scan");
             this.devices = found.map((device) => this.createPort(device));
         } catch (e) {

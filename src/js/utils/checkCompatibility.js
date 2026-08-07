@@ -113,6 +113,33 @@ export function isTauriAndroid() {
 }
 
 /**
+ * The major Android release, read from the user agent ("… Android 14; Pixel 8 …").
+ *
+ * @returns {number|null} The major version, or null when it can't be determined.
+ */
+export function getAndroidVersion() {
+    const match = /Android\s+(\d+)/.exec(globalThis.navigator?.userAgent ?? "");
+    return match ? Number(match[1]) : null;
+}
+
+/**
+ * Android returns no BLE scan results unless location is granted, until Android 12
+ * (API 31) where the scan permission is declared neverForLocation and stands alone.
+ * Asking only where it is required keeps the prompt away from everyone else.
+ *
+ * @returns {boolean} Whether a BLE scan here needs location permission first.
+ */
+export function androidScanNeedsLocation() {
+    if (!isTauriAndroid()) {
+        return false;
+    }
+    const version = getAndroidVersion();
+    // An unrecognised agent is treated as old: a redundant prompt beats a scan that
+    // silently finds nothing.
+    return version === null || version < 12;
+}
+
+/**
  * @returns {boolean} Whether running inside a Tauri shell on macOS.
  */
 export function isTauriMacOS() {

@@ -87,15 +87,13 @@ fn is_nameless(device: &BleDevice) -> bool {
 /// last message is the full result. The receiver must stay alive for the whole
 /// window: the scan task panics if it can no longer send.
 async fn scan_devices() -> Result<Vec<BleDevice>, String> {
-    // blec never asks for the Android runtime permissions on its own, and its
-    // scan hard-rejects without them. A no-op on every other platform.
+    // blec never asks for the Android runtime permissions on its own, and its scan
+    // hard-rejects without them. A no-op on every other platform.
     //
-    // Below API 31 this only grants BLUETOOTH/BLUETOOTH_ADMIN, which are install-time
-    // permissions, so the scan runs but Android returns no results until location is
-    // also granted. blec requests location only for iBeacon scanning, which asking for
-    // would put a location prompt in front of every user on API 31+, where the
-    // neverForLocation scan permission makes it unnecessary. Left as-is pending an
-    // upstream fix: BLE discovery does not work on Android 8-11.
+    // This covers the Bluetooth permissions only. Below API 31 Android also withholds
+    // scan results until location is granted, and this wrapper cannot ask for it — it
+    // does not forward the flag the plugin gates that on. TauriBle requests it directly
+    // on the versions that need it, before calling this.
     tauri_plugin_blec::check_permissions(true).map_err(|e| e.to_string())?;
 
     let handler = get_handler().map_err(|e| e.to_string())?;

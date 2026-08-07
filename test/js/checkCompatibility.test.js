@@ -84,6 +84,47 @@ describe("isTauriAndroid", () => {
     });
 });
 
+describe("androidScanNeedsLocation", () => {
+    const androidUA = (version) =>
+        `Mozilla/5.0 (Linux; Android ${version}; Pixel 8) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36`;
+
+    it("is true below Android 12, where a scan finds nothing without location", async () => {
+        globalThis[TAURI] = {};
+        for (const version of [8, 9, 10, 11]) {
+            setUserAgent(androidUA(version));
+            const { androidScanNeedsLocation } = await loadCompatibility();
+            expect(androidScanNeedsLocation()).toBe(true);
+            restoreNavigator();
+        }
+    });
+
+    it("is false from Android 12, where the scan permission stands alone", async () => {
+        globalThis[TAURI] = {};
+        for (const version of [12, 14, 16]) {
+            setUserAgent(androidUA(version));
+            const { androidScanNeedsLocation } = await loadCompatibility();
+            expect(androidScanNeedsLocation()).toBe(false);
+            restoreNavigator();
+        }
+    });
+
+    it("assumes location is needed when the version can't be read", async () => {
+        globalThis[TAURI] = {};
+        // A redundant prompt beats a scan that silently returns nothing.
+        setUserAgent("Mozilla/5.0 (Linux; Android; Pixel) AppleWebKit/537.36 Mobile");
+        const { androidScanNeedsLocation, getAndroidVersion } = await loadCompatibility();
+        expect(getAndroidVersion()).toBeNull();
+        expect(androidScanNeedsLocation()).toBe(true);
+    });
+
+    it("is false off Android entirely", async () => {
+        globalThis[TAURI] = {};
+        setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+        const { androidScanNeedsLocation } = await loadCompatibility();
+        expect(androidScanNeedsLocation()).toBe(false);
+    });
+});
+
 describe("isTauriMacOS", () => {
     it("is true for a Tauri shell on macOS", async () => {
         globalThis[TAURI] = {};
