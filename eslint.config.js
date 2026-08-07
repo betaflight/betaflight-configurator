@@ -7,7 +7,7 @@ export default [
     {
         // Vendored blackbox-log-viewer source and assets — keep upstream formatting, not linted
         // against configurator rules to avoid churn and drift on re-vendor.
-        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**", "src/js/three.min.js"],
+        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**"],
     },
     {
         files: ["**/*.js", "**/*.vue"],
