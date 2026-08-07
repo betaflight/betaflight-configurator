@@ -108,7 +108,7 @@ class TauriBle extends EventTarget {
 
     async getDevices() {
         try {
-            if (androidScanNeedsLocation()) {
+            if (await androidScanNeedsLocation()) {
                 await this._requestScanLocationPermission();
             }
             const found = await invoke("ble_scan");

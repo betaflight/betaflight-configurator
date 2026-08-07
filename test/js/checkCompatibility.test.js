@@ -88,12 +88,21 @@ describe("androidScanNeedsLocation", () => {
     const androidUA = (version) =>
         `Mozilla/5.0 (Linux; Android ${version}; Pixel 8) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36`;
 
+    /** Stubs the client hints an Android WebView answers with. */
+    function setClientHints(platformVersion) {
+        stubNavigator("userAgentData", {
+            platform: "Android",
+            getHighEntropyValues: async () => ({ platformVersion }),
+        });
+    }
+
     it("is true below Android 12, where a scan finds nothing without location", async () => {
         globalThis[TAURI] = {};
         for (const version of [8, 9, 10, 11]) {
             setUserAgent(androidUA(version));
+            setClientHints(`${version}.0.0`);
             const { androidScanNeedsLocation } = await loadCompatibility();
-            expect(androidScanNeedsLocation()).toBe(true);
+            expect(await androidScanNeedsLocation()).toBe(true);
             restoreNavigator();
         }
     });
@@ -102,26 +111,46 @@ describe("androidScanNeedsLocation", () => {
         globalThis[TAURI] = {};
         for (const version of [12, 14, 16]) {
             setUserAgent(androidUA(version));
+            setClientHints(`${version}.0.0`);
             const { androidScanNeedsLocation } = await loadCompatibility();
-            expect(androidScanNeedsLocation()).toBe(false);
+            expect(await androidScanNeedsLocation()).toBe(false);
             restoreNavigator();
         }
     });
 
-    it("assumes location is needed when the version can't be read", async () => {
+    it("trusts client hints over a user agent frozen at Android 10", async () => {
+        // Chrome's user-agent reduction reports "Android 10; K" on every modern release,
+        // so the agent alone would drag a current device onto the legacy path.
+        globalThis[TAURI] = {};
+        setUserAgent("Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 Chrome/131 Mobile Safari/537.36");
+        setClientHints("15.0.0");
+
+        const { androidScanNeedsLocation, getAndroidVersion } = await loadCompatibility();
+        expect(getAndroidVersion()).toBe(10);
+        expect(await androidScanNeedsLocation()).toBe(false);
+    });
+
+    it("falls back to the agent when client hints are unavailable", async () => {
+        globalThis[TAURI] = {};
+        setUserAgent(androidUA(13));
+        const { androidScanNeedsLocation } = await loadCompatibility();
+        expect(await androidScanNeedsLocation()).toBe(false);
+    });
+
+    it("assumes location is needed when the release can't be determined", async () => {
         globalThis[TAURI] = {};
         // A redundant prompt beats a scan that silently returns nothing.
         setUserAgent("Mozilla/5.0 (Linux; Android; Pixel) AppleWebKit/537.36 Mobile");
         const { androidScanNeedsLocation, getAndroidVersion } = await loadCompatibility();
         expect(getAndroidVersion()).toBeNull();
-        expect(androidScanNeedsLocation()).toBe(true);
+        expect(await androidScanNeedsLocation()).toBe(true);
     });
 
     it("is false off Android entirely", async () => {
         globalThis[TAURI] = {};
         setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
         const { androidScanNeedsLocation } = await loadCompatibility();
-        expect(androidScanNeedsLocation()).toBe(false);
+        expect(await androidScanNeedsLocation()).toBe(false);
     });
 });
 

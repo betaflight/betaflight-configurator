@@ -113,7 +113,10 @@ export function isTauriAndroid() {
 }
 
 /**
- * The major Android release, read from the user agent ("… Android 14; Pixel 8 …").
+ * The major Android release as it appears in the user agent.
+ *
+ * Unreliable on its own: Chrome's user-agent reduction pins this at "Android 10" on
+ * every modern release, so treat it only as a fallback for `getAndroidRelease()`.
  *
  * @returns {number|null} The major version, or null when it can't be determined.
  */
@@ -123,20 +126,41 @@ export function getAndroidVersion() {
 }
 
 /**
- * Android returns no BLE scan results unless location is granted, until Android 12
- * (API 31) where the scan permission is declared neverForLocation and stands alone.
- * Asking only where it is required keeps the prompt away from everyone else.
+ * The real major Android release, preferring client hints over the frozen user agent.
  *
- * @returns {boolean} Whether a BLE scan here needs location permission first.
+ * @returns {Promise<number|null>} The major version, or null when it can't be determined.
  */
-export function androidScanNeedsLocation() {
+export async function getAndroidRelease() {
+    const uaData = globalThis.navigator?.userAgentData;
+    if (uaData?.getHighEntropyValues) {
+        try {
+            const { platformVersion } = await uaData.getHighEntropyValues(["platformVersion"]);
+            const major = Number.parseInt(platformVersion, 10);
+            if (Number.isFinite(major)) {
+                return major;
+            }
+        } catch (error) {
+            console.warn("Could not read the platform version from client hints:", error);
+        }
+    }
+    return getAndroidVersion();
+}
+
+/**
+ * Android returns no BLE scan results unless location is granted, until Android 12
+ * where the scan permission is declared neverForLocation and stands alone. Asking
+ * only where it is required keeps the prompt away from everyone else.
+ *
+ * @returns {Promise<boolean>} Whether a BLE scan here needs location permission first.
+ */
+export async function androidScanNeedsLocation() {
     if (!isTauriAndroid()) {
         return false;
     }
-    const version = getAndroidVersion();
-    // An unrecognised agent is treated as old: a redundant prompt beats a scan that
+    const release = await getAndroidRelease();
+    // An indeterminate release is treated as old: a redundant prompt beats a scan that
     // silently finds nothing.
-    return version === null || version < 12;
+    return release === null || release < 12;
 }
 
 /**
