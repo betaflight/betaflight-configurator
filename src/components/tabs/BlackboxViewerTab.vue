@@ -39,22 +39,35 @@
 
             <div id="vue-statusbar" class="vue-statusbar"></div>
 
-            <!-- Mount point for the viewer's Vue app -->
-            <div id="vue-app"></div>
+            <!-- Viewer UI. Gated until the scaffold above is in the document, so its Teleports
+                 resolve their targets (the #vue-* divs) instead of racing the same mount pass. -->
+            <BlackboxViewerApp v-if="viewerReady" />
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { nextTick, onMounted, onBeforeUnmount, ref } from "vue";
+import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
-import { initBlackboxViewer, destroyBlackboxViewer, setBlackboxViewerDark } from "../../blackbox-viewer/vue_init.js";
+import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
+import { bootstrapViewer } from "../../blackbox-viewer/main.js";
+import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init.js";
 import { useDataflashPull } from "../../composables/useDataflashPull";
 
+// Named so <keep-alive :include> in App.vue can target this tab (and only this tab) for caching.
+defineOptions({ name: "BlackboxViewerTab" });
+
 const rootRef = ref(null);
+const viewerReady = ref(false);
 let themeObserver = null;
+let teardownViewer = null;
 const dataflash = useDataflashPull();
+
+// The viewer renders as a child of this tab, on the host's Vue app and pinia. Hand it the
+// root element (for its scoped state classes) and the FC dataflash pull via provide/inject.
+provide("bbvRoot", rootRef);
+provide("bbvDataflash", dataflash);
 
 // The configurator drives dark mode by toggling `.dark` on <html>; mirror it into the viewer.
 function hostIsDark() {
@@ -62,9 +75,13 @@ function hostIsDark() {
 }
 
 onMounted(async () => {
-    // Scaffold DOM is in place; mount the viewer into it.
+    // Scaffold divs are now in the document; render the viewer so its Teleports find them.
     await nextTick();
-    initBlackboxViewer(rootRef.value, { dataflash });
+    viewerReady.value = true;
+    // Let the viewer mount, then run the legacy imperative bootstrap (canvas wiring, store
+    // callbacks, listeners) and keep its teardown handle.
+    await nextTick();
+    teardownViewer = bootstrapViewer();
     setBlackboxViewerDark(hostIsDark());
 
     // Keep the viewer theme in sync if the host theme changes while the tab is open.
@@ -74,10 +91,19 @@ onMounted(async () => {
     GUI.content_ready();
 });
 
+// Kept alive across tab switches: pause/resume instead of unmounting so the loaded log survives.
+onActivated(() => setViewerActive(true));
+onDeactivated(() => setViewerActive(false));
+
 onBeforeUnmount(() => {
     themeObserver?.disconnect();
     themeObserver = null;
-    destroyBlackboxViewer();
+    try {
+        teardownViewer?.();
+    } catch (e) {
+        console.error("blackbox-viewer: teardown failed", e);
+    }
+    teardownViewer = null;
 });
 </script>
 
