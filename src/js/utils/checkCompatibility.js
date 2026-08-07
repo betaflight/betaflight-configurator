@@ -84,7 +84,7 @@ export function isEmbeddedDeployment() {
 }
 
 /**
- * @returns {boolean} Whether running inside a Tauri shell (desktop or iOS).
+ * @returns {boolean} Whether running inside a Tauri shell (desktop, Android or iOS).
  */
 export function isTauri() {
     return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
@@ -101,6 +101,13 @@ export function isTauriIOS() {
     // iPad in desktop mode reports "Macintosh" but still exposes touch points.
     const ua = navigator.userAgent ?? "";
     return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
+/**
+ * @returns {boolean} Whether running inside a Tauri shell on Android.
+ */
+export function isTauriAndroid() {
+    return isTauri() && getOS() === "Android";
 }
 
 /**
