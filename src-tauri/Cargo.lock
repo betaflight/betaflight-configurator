@@ -127,6 +127,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-plugin-dfu",
  "tauri-plugin-serialplugin",
  "tauri-plugin-shell",
  "tauri-plugin-window-state",
@@ -4033,6 +4034,19 @@ dependencies = [
  "tauri-utils",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-plugin-dfu"
+version = "0.1.0"
+dependencies = [
+ "jni 0.21.1",
+ "libc",
+ "nusb",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
 ]
 
 [[package]]
