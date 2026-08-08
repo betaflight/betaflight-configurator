@@ -90,7 +90,7 @@
                                 class="w-16"
                             />
                         </SettingRow>
-                        <SettingRow :label="$t('powerBatteryCapacity')">
+                        <SettingRow :label="$t('powerBatteryCapacity')" :help="$t('powerBatteryCapacityHelp')">
                             <UInputNumber
                                 id="capacity"
                                 name="capacity"

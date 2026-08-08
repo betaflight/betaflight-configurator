@@ -3,7 +3,8 @@ import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
 import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
-import { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
+import VirtualFC from "../../../src/js/VirtualFC";
 
 function processMessage(mspHelper, code, buffer) {
     mspHelper.process_data({
@@ -43,6 +44,25 @@ describe("Battery Profiles", () => {
 
     beforeEach(() => {
         FC.resetState();
+        CONFIGURATOR.virtualApiVersion = "0.0.1";
+    });
+
+    describe("VirtualFC", () => {
+        it("reports battery profile support for API >= 1.48", () => {
+            CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+            VirtualFC.setVirtualConfig();
+
+            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(3);
+            expect(FC.CONFIG.batteryProfile).toEqual(0);
+        });
+
+        it("keeps legacy virtual firmware without battery profiles below API 1.48", () => {
+            CONFIGURATOR.virtualApiVersion = API_VERSION_1_47;
+            VirtualFC.setVirtualConfig();
+
+            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
+            expect(FC.CONFIG.batteryProfile).toEqual(0);
+        });
     });
 
     describe("process_data", () => {

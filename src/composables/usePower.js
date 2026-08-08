@@ -3,7 +3,7 @@ import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
-import { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
@@ -194,6 +194,14 @@ export function usePower() {
             connectionStore.pauseLiveData();
             GUI.interval_pause("power_data_pull_slow");
 
+            if (CONFIGURATOR.virtualMode) {
+                FC.CONFIG.batteryProfile = profileIndex;
+                activeBatteryProfile.value = profileIndex;
+                await loadBatteryProfileName();
+                updateStateFromFC();
+                return;
+            }
+
             const BATTERYPROFILE_MASK = 0x40;
             await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
@@ -204,6 +212,13 @@ export function usePower() {
         } catch (error) {
             // Best-effort: resync UI with actual FC state in case the
             // profile switch partially succeeded on the FC side
+            if (CONFIGURATOR.virtualMode) {
+                FC.CONFIG.batteryProfile = previousProfile;
+                activeBatteryProfile.value = previousProfile;
+                batteryProfileName.value = previousProfileName;
+                throw error;
+            }
+
             try {
                 await MSP.promise(MSPCodes.MSP_STATUS_EX);
                 activeBatteryProfile.value = FC.CONFIG.batteryProfile;
@@ -227,9 +242,9 @@ export function usePower() {
     // (serial_backend.js) refreshes FC.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
     // an adjustment switch on the TX can change the active profile out from under the UI.
     // Reload when that happens — but never during our own change (isLoading), an in-flight
-    // load, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
+    // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
     const syncBatteryProfileFromFc = async () => {
-        if (!hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
+        if (CONFIGURATOR.virtualMode || !hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
             return;
         }
 
