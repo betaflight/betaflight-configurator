@@ -247,7 +247,8 @@ export function checkBluetoothSupport() {
  */
 export function checkUsbSupport() {
     let result = false;
-    if (isAndroid()) {
+    if (isAndroid() || isTauriAndroid()) {
+        // Native USB DFU in both Android shells; the system webview has no WebUSB.
         result = true;
     } else if (navigator.usb) {
         result = true;

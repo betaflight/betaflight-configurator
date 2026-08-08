@@ -19,6 +19,10 @@ tauri = { version = "2.11", features = [] }
 tauri-plugin-shell = "2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+# USB DFU flashing; only functional (and only registered) on Android, but kept
+# an unconditional direct dependency so every target compiles the crate and the
+# Tauri CLI can discover its Android library path.
+tauri-plugin-dfu = { path = "plugins/dfu" }
 
 # USB serial is desktop + Android only. iOS has no USB serial API, and
 # tauri-plugin-serialplugin's iOS build path doesn't compile, so exclude it there.

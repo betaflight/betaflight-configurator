@@ -51,6 +51,11 @@ vi.mock("../../src/js/protocols/CapacitorDfuTransport", () => ({
     default: class {},
 }));
 
+vi.mock("../../src/js/protocols/TauriDfuTransport", () => ({
+    __esModule: true,
+    default: class {},
+}));
+
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({
     __esModule: true,
     isExpertModeEnabled,
@@ -73,6 +78,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
     isAndroid: () => false,
+    isTauriAndroid: () => false,
 }));
 
 import DeviceHandler from "../../src/js/device_handler";
