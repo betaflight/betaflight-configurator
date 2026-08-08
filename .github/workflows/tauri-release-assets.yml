@@ -258,7 +258,7 @@ jobs:
         run: |
           mkdir -p staging
           VERSION=$(jq -r '.version' package.json)
-          APK_NAME="betaflight-app-${VERSION}.apk"
+          APK_NAME="betaflight-${VERSION}-tauri.apk"
           APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | grep -i universal | head -1)
           if [ -z "$APK" ]; then
             APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | head -1)
