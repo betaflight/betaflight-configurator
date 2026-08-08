@@ -167,6 +167,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
+import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { runTabLoad } from "../../composables/useTabLoad";
@@ -178,17 +179,22 @@ import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
 import { getTextWidth } from "../../js/utils/common";
-import { CHANNEL_MIN, CHANNEL_MAX, clampChannel, channelPercent } from "../../js/utils/rcChannel";
+import { CHANNEL_MIN, CHANNEL_MAX, channelPercent } from "../../js/utils/rcChannel";
+import {
+    CHANNEL_STEP,
+    MIN_RANGE_GAP,
+    DEFAULT_RANGE,
+    normalizeRangeValues,
+    entriesFromModeRanges,
+    buildModeRangePayload,
+    serializeModes,
+} from "../../js/utils/modeRanges";
 import inflection from "inflection";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 import ChannelRangePips from "../elements/ChannelRangePips.vue";
-
-const CHANNEL_STEP = 25;
-const MIN_RANGE_GAP = 25;
-const DEFAULT_RANGE = { start: 1300, end: 1700 };
 
 function getModeStateColors(state) {
     switch (state) {
@@ -232,7 +238,6 @@ export default defineComponent({
 
         // Reactive State
         const modes = reactive([]);
-        const modesDirtyBaseline = ref("");
         const hideUnused = ref(false);
         const auxChannelCount = ref(0);
         const requiredModeRangeCount = ref(0);
@@ -302,102 +307,7 @@ export default defineComponent({
             return percent === undefined ? null : percent;
         };
 
-        const snapChannel = (value) => {
-            const numericValue = Number(value);
-            if (Number.isNaN(numericValue)) {
-                return DEFAULT_RANGE.start;
-            }
-            return clampChannel(Math.round(numericValue / CHANNEL_STEP) * CHANNEL_STEP);
-        };
-
-        const normalizeRangeValues = (values) => {
-            const [rawStart = DEFAULT_RANGE.start, rawEnd = DEFAULT_RANGE.end] = Array.isArray(values) ? values : [];
-            let start = snapChannel(rawStart);
-            let end = snapChannel(rawEnd);
-
-            if (start > end) {
-                [start, end] = [end, start];
-            }
-
-            if (end - start < MIN_RANGE_GAP) {
-                if (start <= CHANNEL_MIN) {
-                    end = Math.min(CHANNEL_MAX, start + MIN_RANGE_GAP);
-                } else {
-                    start = Math.max(CHANNEL_MIN, end - MIN_RANGE_GAP);
-                }
-            }
-
-            return [start, end];
-        };
-
-        const serializeModesForDirtyCheck = () =>
-            JSON.stringify(
-                modes.map((mode) => ({
-                    id: mode.id,
-                    entries: mode.entries.map((entry) => {
-                        if (entry.kind === "range") {
-                            const [start, end] = normalizeRangeValues(entry.sliderRange);
-                            return {
-                                kind: "range",
-                                auxChannelIndex: entry.auxChannelIndex,
-                                modeLogic: entry.modeLogic,
-                                start,
-                                end,
-                            };
-                        }
-                        return { kind: "link", modeLogic: entry.modeLogic, linkedTo: entry.linkedTo };
-                    }),
-                })),
-            );
-
-        const serializeModesPayloadForDirtyCheck = (modeRanges, modeRangesExtra) => {
-            const byModeId = new Map(
-                modes.map((mode) => [
-                    mode.id,
-                    {
-                        id: mode.id,
-                        entries: [],
-                    },
-                ]),
-            );
-
-            modeRanges.forEach((range, index) => {
-                const target = byModeId.get(range.id);
-                if (!target || range.id === 0) {
-                    return;
-                }
-
-                const extra = modeRangesExtra[index];
-                const modeLogic = extra?.modeLogic ?? 0;
-                const linkedTo = extra?.linkedTo ?? 0;
-
-                if (linkedTo > 0) {
-                    target.entries.push({
-                        kind: "link",
-                        modeLogic,
-                        linkedTo,
-                    });
-                    return;
-                }
-
-                target.entries.push({
-                    kind: "range",
-                    auxChannelIndex: range.auxChannelIndex,
-                    modeLogic,
-                    start: range.range.start,
-                    end: range.range.end,
-                });
-            });
-
-            return JSON.stringify(Array.from(byModeId.values()));
-        };
-
-        const dirty = computed(() => {
-            if (!modesDirtyBaseline.value) {
-                return false;
-            }
-            return modesDirtyBaseline.value !== serializeModesForDirtyCheck();
-        });
+        const { dirty, markClean, takeSnapshot } = useDirtyState(() => serializeModes(modes));
 
         const addRange = (mode, auxChannelIndex = -1, modeLogic = 0, range = DEFAULT_RANGE) => {
             const sliderRange = normalizeRangeValues([range.start, range.end]);
@@ -480,27 +390,12 @@ export default defineComponent({
                 });
             }
 
-            const pairedRanges = fcStore.modeRanges.map((range, idx) => ({
-                range,
-                extra: fcStore.modeRangesExtra[idx],
-            }));
-
-            for (const { range, extra } of pairedRanges) {
-                const target = modeMap.get(range.id);
+            for (const { modeId, entry } of entriesFromModeRanges(fcStore.modeRanges, fcStore.modeRangesExtra)) {
+                const target = modeMap.get(modeId);
                 if (!target) {
                     continue;
                 }
-                const modeLogic = extra?.modeLogic ?? 0;
-                const linkedTo = extra?.linkedTo ?? 0;
-
-                if (range.id === 0 || linkedTo === 0) {
-                    if (range.range.start >= range.range.end) {
-                        continue;
-                    }
-                    addRange(target, range.auxChannelIndex, modeLogic, range.range);
-                } else {
-                    addLink(target, modeLogic, linkedTo);
-                }
+                target.entries.push({ uid: ++entryUid, ...entry });
             }
 
             fcStore.auxConfigIds.forEach((modeId) => {
@@ -511,7 +406,7 @@ export default defineComponent({
             });
 
             updateInfoWidth();
-            modesDirtyBaseline.value = serializeModesForDirtyCheck();
+            markClean();
         };
 
         const autoSelectChannel = (rcChannels, activeChannels, rssiChannel) => {
@@ -583,65 +478,24 @@ export default defineComponent({
         const { isSaving, runSave } = useSaving();
         const { saveToEeprom } = useReboot();
 
-        // Build the MSP mode-range payload from the current UI model. Extracted from the save
-        // callback so runSave's body stays flat (avoids deep forEach-in-forEach-in-runSave nesting).
-        const buildModeRangePayload = () => {
-            const nextModeRanges = [];
-            const nextModeRangesExtra = [];
-
-            modes.forEach((mode) => {
-                mode.entries.forEach((entry) => {
-                    if (entry.kind === "range") {
-                        const [start, end] = normalizeRangeValues(entry.sliderRange);
-                        if (start >= end) {
-                            return;
-                        }
-                        nextModeRanges.push({
-                            id: mode.id,
-                            auxChannelIndex: entry.auxChannelIndex,
-                            range: { start, end },
-                        });
-                        nextModeRangesExtra.push({ id: mode.id, modeLogic: entry.modeLogic, linkedTo: 0 });
-                    } else if (entry.kind === "link") {
-                        if (!entry.linkedTo) {
-                            return;
-                        }
-                        nextModeRanges.push({
-                            id: mode.id,
-                            auxChannelIndex: 0,
-                            range: { start: CHANNEL_MIN, end: CHANNEL_MIN },
-                        });
-                        nextModeRangesExtra.push({
-                            id: mode.id,
-                            modeLogic: entry.modeLogic,
-                            linkedTo: entry.linkedTo,
-                        });
-                    }
-                });
-            });
-
-            const required = requiredModeRangeCount.value || 0;
-            while (nextModeRanges.length < required) {
-                nextModeRanges.push({ id: 0, auxChannelIndex: 0, range: { start: CHANNEL_MIN, end: CHANNEL_MIN } });
-                nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
-            }
-
-            return { nextModeRanges, nextModeRangesExtra };
-        };
-
         const saveModes = () =>
             runSave(
                 async () => {
-                    const { nextModeRanges, nextModeRangesExtra } = buildModeRangePayload();
+                    const { modeRanges, modeRangesExtra } = buildModeRangePayload(
+                        modes,
+                        requiredModeRangeCount.value || 0,
+                    );
 
-                    fcStore.modeRanges = nextModeRanges;
-                    fcStore.modeRangesExtra = nextModeRangesExtra;
+                    const savedSnapshot = takeSnapshot();
+
+                    fcStore.modeRanges = modeRanges;
+                    fcStore.modeRangesExtra = modeRangesExtra;
 
                     await mspHelper.sendModeRanges();
                     await saveToEeprom();
 
                     // Only after a successful persist: refresh the dirty baseline.
-                    modesDirtyBaseline.value = serializeModesPayloadForDirtyCheck(nextModeRanges, nextModeRangesExtra);
+                    markClean(savedSnapshot);
                 },
                 { onError: (error) => console.error("Failed to save auxiliary modes", error) },
             );
