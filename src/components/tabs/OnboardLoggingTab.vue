@@ -919,7 +919,7 @@ export default defineComponent({
                 }
             }
 
-            // `tracking` is null until setupAnalytics() has run, so it still needs a guard —
+            // `tracking` is null until createAnalytics(settings) has run, so it still needs a guard —
             // but on the imported binding rather than the window global it used to rely on.
             if (tracking) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
