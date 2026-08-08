@@ -377,6 +377,7 @@ export default defineComponent({
             home_point_once: 0,
         });
 
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeGpsTabState = () =>
             JSON.stringify({
                 gpsFeatureEnabled: fcStore.features?.features?.isEnabled?.("GPS") ?? false,
@@ -388,7 +389,7 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
             });
 
-        const { dirty, markClean } = useDirtyState(serializeGpsTabState);
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -729,6 +730,9 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
+                    // Pin what is about to be written, so an edit made mid-save stays dirty.
+                    const savedSnapshot = takeSnapshot();
+
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
                     await MSP.promise(
@@ -739,8 +743,8 @@ export default defineComponent({
 
                     await saveAndReboot();
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    markClean();
+                    // Only once the persist has succeeded: adopt the state that was written.
+                    markClean(savedSnapshot);
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },
             );

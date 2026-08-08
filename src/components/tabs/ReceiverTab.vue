@@ -649,6 +649,7 @@ const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 const failsafeActive = computed(() => fcStore.failsafeActive);
 
 // Dirty state tracking
+/** @returns {string} serialized receiver state for dirty comparison */
 function serializeReceiverState() {
     return JSON.stringify({
         channelMap: channelMapString.value,
@@ -678,7 +679,7 @@ function serializeReceiverState() {
     });
 }
 
-const { dirty, markClean } = useDirtyState(serializeReceiverState);
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
 const saveMenuItems = computed(() => [
     [
@@ -1085,6 +1086,9 @@ async function loadConfig() {
 const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
+            // Pin what is about to be written, so an edit made mid-save stays dirty.
+            const savedSnapshot = takeSnapshot();
+
             // Update RC_MAP from channel map string
             validateChannelMap();
 
@@ -1122,8 +1126,11 @@ const saveConfig = (withReboot = false) =>
             } else {
                 await saveToEeprom();
                 gui_log(t("receiverConfigSaved") || "Configuration saved");
-                markClean();
             }
+
+            // Only once the persist has succeeded: adopt the state that was written. Both
+            // branches persist, so the baseline is refreshed for either.
+            markClean(savedSnapshot);
 
             needReboot.value = false;
         },

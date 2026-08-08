@@ -542,6 +542,7 @@ export default defineComponent({
             );
         });
 
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeOnboardLoggingState = () =>
             JSON.stringify({
                 blackboxDevice: blackboxDevice.value,
@@ -550,7 +551,7 @@ export default defineComponent({
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
             });
 
-        const { dirty, markClean } = useDirtyState(serializeOnboardLoggingState);
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
 
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
@@ -564,6 +565,9 @@ export default defineComponent({
 
             return runSave(
                 async () => {
+                    // Pin what is about to be written, so an edit made mid-save stays dirty.
+                    const savedSnapshot = takeSnapshot();
+
                     fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
                     fcStore.blackbox.blackboxPDenom = blackboxRate.value;
                     fcStore.blackbox.blackboxDevice = blackboxDevice.value;
@@ -590,8 +594,8 @@ export default defineComponent({
 
                     await saveAndReboot();
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    markClean();
+                    // Only once the persist has succeeded: adopt the state that was written.
+                    markClean(savedSnapshot);
                 },
                 { onError: (e) => console.error("Failed to save onboard logging settings", e) },
             );

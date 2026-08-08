@@ -2257,6 +2257,7 @@ const snapshotSensorAlignment = () => ({
     mag_align_yaw: sensorAlignment.mag_align_yaw,
 });
 
+/** @returns {string} serialized tab state for dirty comparison */
 const serializeState = () =>
     JSON.stringify({
         sensorConfig: { ...sensorConfig },
@@ -2266,7 +2267,7 @@ const serializeState = () =>
         magDeclination: magDeclination.value,
     });
 
-const { dirty, markClean } = useDirtyState(serializeState);
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
 
 // --- Load helpers ---
 
@@ -2447,6 +2448,9 @@ const loadConfig = async () => {
 const saveConfig = () =>
     runSave(
         async () => {
+            // Pin what is about to be written, so an edit made mid-save stays dirty.
+            const savedSnapshot = takeSnapshot();
+
             // Push sensor hardware to store
             fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
             fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
@@ -2512,10 +2516,11 @@ const saveConfig = () =>
 
             gui_log(i18n.getMessage("sensorConfigSaved"));
 
-            markClean();
-
             // Save to EEPROM and reboot
             await saveAndReboot();
+
+            // Only once the persist has succeeded: adopt the state that was written.
+            markClean(savedSnapshot);
         },
         {
             onError: (e) => {

@@ -437,6 +437,7 @@ const rainbowFreq = ref(1);
 // (but equivalent) form. Colours and mode colours have no grid representation, so they come
 // from FC directly. The brightness/rainbow sliders are pushed to the FC as they move but only
 // reach EEPROM on Save, so they are unsaved work too and belong in the snapshot.
+/** @returns {string} serialized tab state for dirty comparison */
 const serializeLedState = () =>
     JSON.stringify({
         grid: gridLeds.map((led) => ({

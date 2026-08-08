@@ -69,9 +69,10 @@ export function usePower() {
         })),
     });
 
+    /** @returns {string} serialized tab state for dirty comparison */
     const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
 
-    const { dirty, markClean } = useDirtyState(serializePowerConfig);
+    const { dirty, markClean, takeSnapshot } = useDirtyState(serializePowerConfig);
 
     // Calibration state
     const sourceschanged = ref(false);
@@ -499,6 +500,9 @@ export function usePower() {
     const saveConfig = async () => {
         const { saveToEeprom } = useReboot();
 
+        // Pin what is about to be written, so an edit made mid-save stays dirty.
+        const savedSnapshot = takeSnapshot();
+
         // Update FC data from reactive state
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
@@ -539,7 +543,7 @@ export function usePower() {
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-        markClean();
+        markClean(savedSnapshot);
     };
 
     return {

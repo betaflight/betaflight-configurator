@@ -111,6 +111,7 @@ export const useOsdStore = defineStore("osd", () => {
     const selectedPreviewProfile = ref(0);
 
     // Dirty state tracking
+    /** @returns {string} serialized OSD state for dirty comparison */
     function serializeOsdState() {
         return JSON.stringify({
             videoSystem: videoSystem.value,
@@ -139,7 +140,7 @@ export const useOsdStore = defineStore("osd", () => {
         });
     }
 
-    const { dirty, markClean: captureSnapshot } = useDirtyState(serializeOsdState);
+    const { dirty, markClean: captureSnapshot, takeSnapshot } = useDirtyState(serializeOsdState);
 
     // Getters
     const numberOfProfiles = computed(() => osdProfiles.value.number || 1);
@@ -379,6 +380,9 @@ export const useOsdStore = defineStore("osd", () => {
     };
 
     const saveAllConfig = async () => {
+        // Pin what is about to be written, so an edit made mid-save stays dirty.
+        const savedSnapshot = takeSnapshot();
+
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
         for (const item of displayItems.value) {
@@ -397,7 +401,7 @@ export const useOsdStore = defineStore("osd", () => {
         }
 
         await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-        captureSnapshot();
+        captureSnapshot(savedSnapshot);
     };
 
     return {

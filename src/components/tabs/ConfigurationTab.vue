@@ -391,6 +391,7 @@ export default defineComponent({
         // Dirty tracking. Features, beepers and the DShot beacon conditions are edited straight
         // on the shared FC helpers rather than on local copies, so their masks have to be part of
         // the snapshot — peekMask()/getDisabledMask() read them without side effects.
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeConfigForDirtyCheck = () =>
             JSON.stringify({
                 pidProcessDenom: pidAdvancedConfig.pid_process_denom,
@@ -406,7 +407,7 @@ export default defineComponent({
                 dshotBeaconTone: dshotBeaconTone.value,
             });
 
-        const { dirty, markClean } = useDirtyState(serializeConfigForDirtyCheck);
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
 
         // Loading Logic
         const loadConfig = async () => {
@@ -526,6 +527,9 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
+                    // Pin what is about to be written, so an edit made mid-save stays dirty.
+                    const savedSnapshot = takeSnapshot();
+
                     fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
                     fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
@@ -583,11 +587,11 @@ export default defineComponent({
 
                     gui_log(i18n.getMessage("configurationSaved"));
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    markClean();
-
                     // Save to EEPROM and Reboot
                     await saveAndReboot();
+
+                    // Only once the persist has succeeded: adopt the state that was written.
+                    markClean(savedSnapshot);
                 },
                 {
                     onError: (e) => {
