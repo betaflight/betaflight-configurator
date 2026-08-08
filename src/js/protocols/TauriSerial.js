@@ -33,6 +33,8 @@ function isBrokenPipeError(error) {
  * Detects a lost race for the port lock against the plugin's RX hub thread.
  * The plugin returns this before touching the port, so no bytes reached the
  * device and the chunk is safe to resend.
+ * @param {unknown} error - Rejection value from the plugin (string, Error or object).
+ * @returns {boolean} Whether the write failed on the port lock without transmitting.
  */
 function isLockTimeoutError(error) {
     return /lock timeout/i.test(extractErrorMessage(error));
@@ -422,14 +424,24 @@ class TauriSerial extends EventTarget {
 
             const writeChunk = async (chunk) => {
                 const value = Array.from(chunk);
+                const path = this.connectionId;
+                const session = this.connectionInfo;
                 try {
-                    await invoke("plugin:serialplugin|write_binary", { path: this.connectionId, value });
+                    await invoke("plugin:serialplugin|write_binary", { path, value });
                 } catch (error) {
                     if (!isLockTimeoutError(error)) {
                         throw error;
                     }
+                    // A disconnect (even one followed by a reconnect to the
+                    // same path) while the plugin held the write means this
+                    // chunk belongs to a dead session; resending would inject
+                    // it into the new one. connect() builds a fresh
+                    // connectionInfo per session, so identity is the check.
+                    if (this.connectionInfo !== session) {
+                        throw error;
+                    }
                     console.warn(`${logHead} Write lock timeout, resending chunk`);
-                    await invoke("plugin:serialplugin|write_binary", { path: this.connectionId, value });
+                    await invoke("plugin:serialplugin|write_binary", { path, value });
                 }
             };
 

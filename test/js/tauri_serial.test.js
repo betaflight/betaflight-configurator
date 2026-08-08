@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
 // TauriSerial write path under tauri-plugin-serialplugin 3.x.
@@ -50,9 +50,9 @@ function mockWrites(...outcomes) {
 /** A TauriSerial already past connect(), with no read or monitor loop running. */
 function connectedSerial() {
     const serial = new TauriSerial();
-    serial.stopDeviceMonitoring();
     serial.connected = true;
     serial.connectionId = PORT;
+    serial.connectionInfo = { connectionId: PORT, bitrate: 115200 };
     return serial;
 }
 
@@ -61,8 +61,15 @@ const writeCalls = () => invoke.mock.calls.filter(([cmd]) => cmd === "plugin:ser
 describe("TauriSerial write lock timeout", () => {
     beforeEach(() => {
         invoke.mockReset();
+        // _bootstrap() would start the 1 s device monitor asynchronously,
+        // leaking an interval into later tests; stub it out at the source.
+        vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "warn").mockImplementation(() => {});
         vi.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it("resends the chunk once and reports the full length", async () => {
@@ -126,12 +133,35 @@ describe("TauriSerial write lock timeout", () => {
         expect(writeCalls()).toHaveLength(3);
         expect(writeCalls()[1][1].value).toEqual(writeCalls()[2][1].value);
     });
+
+    it("does not resend into a new session after a disconnect and reconnect", async () => {
+        const serial = connectedSerial();
+        invoke.mockImplementation((cmd) => {
+            if (cmd !== "plugin:serialplugin|write_binary") {
+                return Promise.resolve(cmd === "plugin:serialplugin|available_ports" ? {} : undefined);
+            }
+            // While the plugin held the write, the user disconnected and
+            // reconnected to the same path: a fresh session, same connectionId.
+            serial.connectionInfo = { connectionId: PORT, bitrate: 115200 };
+            return Promise.reject(LOCK_TIMEOUT);
+        });
+
+        const result = await serial.send(new Uint8Array([1, 2, 3]));
+
+        expect(result).toEqual({ bytesSent: 0 });
+        expect(writeCalls()).toHaveLength(1);
+    });
 });
 
 describe("TauriSerial connect", () => {
     beforeEach(() => {
         invoke.mockReset();
+        vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "log").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it("does not call the inert set_timeout command", async () => {
@@ -140,6 +170,9 @@ describe("TauriSerial connect", () => {
         invoke.mockImplementation((cmd) => {
             if (cmd === "plugin:serialplugin|read_binary") {
                 return Promise.resolve([]);
+            }
+            if (cmd === "plugin:serialplugin|available_ports") {
+                return Promise.resolve({});
             }
             return Promise.resolve(undefined);
         });
