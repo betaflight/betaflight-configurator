@@ -320,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton size="xs" :label="saveButtonText" :loading="isSaving" @click="save" />
+            <UButton size="xs" :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -333,6 +333,7 @@ import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
@@ -428,6 +429,30 @@ const isColorSlidersOpen = ref(false);
 const brightness = ref(50);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
+
+// Dirty tracking. The grid is the editable source of truth — FC.LED_STRIP is rebuilt from it
+// after every edit — so the snapshot reads gridLeds rather than FC.LED_STRIP. Reading the
+// rebuilt strip instead would report a change for an edit that altered nothing, because
+// initializeGrid drops placeholder LEDs that buildLedStripFromGrid writes back in a different
+// (but equivalent) form. Colours and mode colours have no grid representation, so they come
+// from FC directly. The brightness/rainbow sliders are pushed to the FC as they move but only
+// reach EEPROM on Save, so they are unsaved work too and belong in the snapshot.
+const serializeLedState = () =>
+    JSON.stringify({
+        grid: gridLeds.map((led) => ({
+            wireNumber: led.wireNumber,
+            functions: [...led.functions],
+            directions: [...led.directions],
+            colorIndex: led.colorIndex,
+        })),
+        colors: (ledColors.value || []).map(({ h, s, v }) => ({ h, s, v })),
+        modeColors: (FC.LED_MODE_COLORS || []).map(({ mode, direction, color }) => ({ mode, direction, color })),
+        brightness: brightness.value,
+        rainbowDelta: rainbowDelta.value,
+        rainbowFreq: rainbowFreq.value,
+    });
+
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeLedState);
 
 // Computed properties
 const wiresRemaining = computed(() => {
@@ -549,6 +574,7 @@ const onTabMounted = async () => {
                 await loadData();
                 initializeGrid();
                 loadConfigValues();
+                markClean();
             },
             (error) => console.error("Failed to load LED strip data:", error),
         );
@@ -995,9 +1021,13 @@ watch(isColorSlidersOpen, (newValue) => {
 function save() {
     runSave(
         async () => {
+            // Pin what is about to be written, so an edit made mid-save stays dirty.
+            const savedSnapshot = takeSnapshot();
+
             await saveConfig();
 
             // Post-save UI runs only after the persist resolves.
+            markClean(savedSnapshot);
             flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
             gui_log(i18n.getMessage("eeprom_saved_ok"));
         },
