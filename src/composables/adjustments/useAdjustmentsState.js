@@ -19,13 +19,10 @@ export function useAdjustmentsState() {
         );
     }
 
-    // `hasChanges` is this tab's name for the shared dirty flag. Because it is a computed
-    // over the same serialization, the deep watcher the old manually-maintained ref needed is
-    // no longer necessary — it re-evaluates whenever a slot it read actually changes.
+    // A computed, so the deep watcher the old manually-maintained ref needed is gone.
     const { dirty: hasChanges, markClean } = useDirtyState(serializeAdjustments);
 
-    /** Adopt the current slots as the clean baseline. Wrapped so a caller passing an event
-     *  object (e.g. used directly as a click handler) cannot be mistaken for a snapshot. */
+    // Wrapped so an event object from a click handler cannot be mistaken for a snapshot.
     const storeOriginals = () => markClean();
 
     const activeCount = computed(() => adjustments.filter((a) => a.enabled).length);

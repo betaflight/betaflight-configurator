@@ -101,9 +101,7 @@ Features.prototype.getMask = function () {
 };
 
 /**
- * Side-effect free counterpart to getMask(): reads the mask without flushing the pending
- * analytics changes. Use this for dirty checks and other observers that must not consume
- * the change events a real save is supposed to report.
+ * Side-effect free counterpart to getMask(), which flushes pending analytics changes.
  * @returns {number} the current feature bitmask
  */
 Features.prototype.peekMask = function () {

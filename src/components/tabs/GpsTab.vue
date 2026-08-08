@@ -730,7 +730,6 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
-                    // Pin what is about to be written, so an edit made mid-save stays dirty.
                     const savedSnapshot = takeSnapshot();
 
                     Object.assign(fcStore.gpsConfig, gpsConfig);
@@ -743,7 +742,6 @@ export default defineComponent({
 
                     await saveAndReboot();
 
-                    // Only once the persist has succeeded: adopt the state that was written.
                     markClean(savedSnapshot);
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },

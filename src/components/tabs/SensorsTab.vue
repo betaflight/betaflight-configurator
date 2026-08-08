@@ -2348,10 +2348,9 @@ function setupMagSection() {
         .catch(() => {});
 }
 
-// Geomagnetic suggestion, deliberately run *after* the dirty baseline is captured: an
-// auto-set declination is a proposal the user still has to save, so it has to leave the
-// tab dirty. Folding it into setupMagSection() made the cached-reference path land inside
-// the baseline, which greyed out Save on the very change the note asked the user to save.
+// Runs *after* the baseline is captured: an auto-set declination is a proposal the user still
+// has to save. Inside setupMagSection() the cached path landed inside the baseline, greying out
+// Save on the very change the note asked for.
 function suggestGeoDeclination() {
     if (!hasMagSensor.value || !isApi146.value) {
         return;
@@ -2448,7 +2447,6 @@ const loadConfig = async () => {
 const saveConfig = () =>
     runSave(
         async () => {
-            // Pin what is about to be written, so an edit made mid-save stays dirty.
             const savedSnapshot = takeSnapshot();
 
             // Push sensor hardware to store
@@ -2519,7 +2517,6 @@ const saveConfig = () =>
             // Save to EEPROM and reboot
             await saveAndReboot();
 
-            // Only once the persist has succeeded: adopt the state that was written.
             markClean(savedSnapshot);
         },
         {

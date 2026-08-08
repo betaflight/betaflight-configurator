@@ -388,9 +388,8 @@ export default defineComponent({
         const gyroFrequencyDisplay = ref("");
         const pidDenomOptions = ref([]);
 
-        // Dirty tracking. Features, beepers and the DShot beacon conditions are edited straight
-        // on the shared FC helpers rather than on local copies, so their masks have to be part of
-        // the snapshot — peekMask()/getDisabledMask() read them without side effects.
+        // Features, beepers and DShot conditions are edited on the shared FC helpers rather than
+        // local copies, so their masks belong in the snapshot; both readers are side-effect free.
         /** @returns {string} serialized tab state for dirty comparison */
         const serializeConfigForDirtyCheck = () =>
             JSON.stringify({
@@ -527,7 +526,6 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
-                    // Pin what is about to be written, so an edit made mid-save stays dirty.
                     const savedSnapshot = takeSnapshot();
 
                     fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
@@ -590,7 +588,6 @@ export default defineComponent({
                     // Save to EEPROM and Reboot
                     await saveAndReboot();
 
-                    // Only once the persist has succeeded: adopt the state that was written.
                     markClean(savedSnapshot);
                 },
                 {

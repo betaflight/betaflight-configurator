@@ -486,8 +486,6 @@ export default defineComponent({
                         requiredModeRangeCount.value || 0,
                     );
 
-                    // Snapshot the model the payload was just projected from, so an edit made
-                    // mid-save still leaves the tab dirty — that edit is not in what we persist.
                     const savedSnapshot = takeSnapshot();
 
                     fcStore.modeRanges = modeRanges;

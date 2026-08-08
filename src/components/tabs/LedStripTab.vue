@@ -430,13 +430,10 @@ const brightness = ref(50);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
 
-// Dirty tracking. The grid is the editable source of truth — FC.LED_STRIP is rebuilt from it
-// after every edit — so the snapshot reads gridLeds rather than FC.LED_STRIP. Reading the
-// rebuilt strip instead would report a change for an edit that altered nothing, because
-// initializeGrid drops placeholder LEDs that buildLedStripFromGrid writes back in a different
-// (but equivalent) form. Colours and mode colours have no grid representation, so they come
-// from FC directly. The brightness/rainbow sliders are pushed to the FC as they move but only
-// reach EEPROM on Save, so they are unsaved work too and belong in the snapshot.
+// Snapshot the grid, not FC.LED_STRIP: the strip is rebuilt from the grid on every edit, and
+// initializeGrid drops placeholder LEDs that the rebuild writes back differently, so a
+// strip-based snapshot would flag an edit that changed nothing. The brightness/rainbow sliders
+// go to the FC live but only reach EEPROM on Save, so they are unsaved work too.
 /** @returns {string} serialized tab state for dirty comparison */
 const serializeLedState = () =>
     JSON.stringify({
@@ -1022,7 +1019,6 @@ watch(isColorSlidersOpen, (newValue) => {
 function save() {
     runSave(
         async () => {
-            // Pin what is about to be written, so an edit made mid-save stays dirty.
             const savedSnapshot = takeSnapshot();
 
             await saveConfig();

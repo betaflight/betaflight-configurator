@@ -500,7 +500,6 @@ export function usePower() {
     const saveConfig = async () => {
         const { saveToEeprom } = useReboot();
 
-        // Pin what is about to be written, so an edit made mid-save stays dirty.
         const savedSnapshot = takeSnapshot();
 
         // Update FC data from reactive state

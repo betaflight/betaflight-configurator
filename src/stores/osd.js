@@ -359,28 +359,7 @@ export const useOsdStore = defineStore("osd", () => {
         return buffer;
     }
 
-    // New Actions
-    const saveDisplayItem = async (item) => {
-        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
-    };
-
-    const saveOtherConfig = async () => {
-        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
-    };
-
-    const saveTimerConfig = async (timer) => {
-        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
-    };
-
-    const saveStatisticItem = async (stat) => {
-        return MSP.promise(
-            MSPCodes.MSP_SET_OSD_CONFIG,
-            encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
-        );
-    };
-
     const saveAllConfig = async () => {
-        // Pin what is about to be written, so an edit made mid-save stays dirty.
         const savedSnapshot = takeSnapshot();
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
@@ -432,10 +411,6 @@ export const useOsdStore = defineStore("osd", () => {
         updateDisplayItemVisibility,
         syncToLegacy,
         fetchOsdConfig,
-        saveDisplayItem,
-        saveOtherConfig,
-        saveTimerConfig,
-        saveStatisticItem,
         saveAllConfig,
     };
 });

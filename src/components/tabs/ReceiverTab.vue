@@ -1086,7 +1086,6 @@ async function loadConfig() {
 const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
-            // Pin what is about to be written, so an edit made mid-save stays dirty.
             const savedSnapshot = takeSnapshot();
 
             // Update RC_MAP from channel map string
@@ -1128,8 +1127,6 @@ const saveConfig = (withReboot = false) =>
                 gui_log(t("receiverConfigSaved") || "Configuration saved");
             }
 
-            // Only once the persist has succeeded: adopt the state that was written. Both
-            // branches persist, so the baseline is refreshed for either.
             markClean(savedSnapshot);
 
             needReboot.value = false;
