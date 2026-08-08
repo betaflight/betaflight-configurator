@@ -47,6 +47,13 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup size="xs" orientation="horizontal" class="flex!">
                 <UButton
+                    v-if="!state.dfuExitButtonDisabled"
+                    icon="i-lucide-usb"
+                    @click="handleExitDfu"
+                >
+                    {{ $t("firmwareFlasherExitDfu") }}
+                </UButton>
+                <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
                     :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
                     :loading="state.flashingInProgress"
