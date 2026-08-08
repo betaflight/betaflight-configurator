@@ -2,7 +2,7 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriAndroid, isTauriIOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
@@ -54,8 +54,12 @@ class Serial extends EventTarget {
             this._protocols = [
                 ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
                 // iOS WKWebView has no Web Bluetooth, so use the native btleplug transport there;
-                // desktop Tauri keeps the webview's Web Bluetooth.
-                { name: "bluetooth", instance: isTauriIOS() ? new TauriBle() : new WebBluetooth() },
+                // desktop Tauri keeps the webview's Web Bluetooth. The Android System WebView has
+                // no Web Bluetooth either and has no native transport yet, so it registers no
+                // bluetooth slot rather than a dead one.
+                ...(isTauriAndroid()
+                    ? []
+                    : [{ name: "bluetooth", instance: isTauriIOS() ? new TauriBle() : new WebBluetooth() }]),
                 { name: "tcp", instance: new TauriTcp() },
                 { name: "websocket", instance: new Websocket() },
             ];
