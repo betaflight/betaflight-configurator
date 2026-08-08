@@ -56,7 +56,16 @@ class DfuFdBridge(private val context: Context) {
                     device?.deviceName?.let { permissionFutures[it]?.complete(granted) }
                 }
                 UsbManager.ACTION_USB_DEVICE_DETACHED -> {
-                    deviceFromIntent(intent)?.deviceName?.let { closeDeviceFd(it) }
+                    // Close on the IO thread so a detach arriving while
+                    // openDeviceFd is mid-flight cannot run before the
+                    // connection is cached and leave a stale entry behind.
+                    deviceFromIntent(intent)?.deviceName?.let { deviceName ->
+                        try {
+                            ioExecutor.execute { closeDeviceFd(deviceName) }
+                        } catch (_: java.util.concurrent.RejectedExecutionException) {
+                            closeDeviceFd(deviceName)
+                        }
+                    }
                 }
             }
         }
@@ -86,6 +95,7 @@ class DfuFdBridge(private val context: Context) {
                     try {
                         context.unregisterReceiver(usbReceiver)
                     } catch (_: IllegalArgumentException) {
+                        // Receiver already unregistered.
                     }
                     ioExecutor.shutdown()
                 }
@@ -95,6 +105,7 @@ class DfuFdBridge(private val context: Context) {
             try {
                 context.unregisterReceiver(usbReceiver)
             } catch (_: IllegalArgumentException) {
+                // Receiver already unregistered.
             }
         }
     }

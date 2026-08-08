@@ -26,12 +26,13 @@ class DfuPlugin(private val activity: Activity) : Plugin(activity) {
                 app.unregisterActivityLifecycleCallbacks(this)
                 destroyCb = null
             }
-            override fun onActivityCreated(a: Activity, s: Bundle?) {}
-            override fun onActivityStarted(a: Activity) {}
-            override fun onActivityResumed(a: Activity) {}
-            override fun onActivityPaused(a: Activity) {}
-            override fun onActivityStopped(a: Activity) {}
-            override fun onActivitySaveInstanceState(a: Activity, s: Bundle) {}
+            // Only destruction matters here; the interface requires the rest.
+            override fun onActivityCreated(a: Activity, s: Bundle?) { /* unused */ }
+            override fun onActivityStarted(a: Activity) { /* unused */ }
+            override fun onActivityResumed(a: Activity) { /* unused */ }
+            override fun onActivityPaused(a: Activity) { /* unused */ }
+            override fun onActivityStopped(a: Activity) { /* unused */ }
+            override fun onActivitySaveInstanceState(a: Activity, s: Bundle) { /* unused */ }
         }
         app.registerActivityLifecycleCallbacks(destroyCb!!)
     }

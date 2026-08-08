@@ -199,7 +199,14 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async controlTransferIn(setup, length) {
-        const result = await this._rawControlTransferIn(setup, length);
+        // Bound the DFU class requests the same way descriptor reads are
+        // bounded (and the Tauri transport's native 5 s default), so a wedged
+        // bootloader fails the flash instead of hanging it.
+        const result = await this._withTimeout(
+            this._rawControlTransferIn(setup, length),
+            5000,
+            `controlTransferIn(${setup.request})`,
+        );
         if (result.status === "ok") {
             return result;
         }
@@ -212,7 +219,11 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
      */
     async controlTransferOut(setup, data) {
         const arrayBuf = data ? new Uint8Array(data) : new Uint8Array(0);
-        const result = await this.usbDevice.controlTransferOut(setup, arrayBuf);
+        const result = await this._withTimeout(
+            this.usbDevice.controlTransferOut(setup, arrayBuf),
+            5000,
+            `controlTransferOut(${setup.request})`,
+        );
         if (result.status === "ok") {
             return { status: "ok" };
         }

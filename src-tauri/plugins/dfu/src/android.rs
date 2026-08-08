@@ -184,28 +184,40 @@ pub async fn request_permission(device_name: String) -> Result<bool> {
     blocking(move || call_request_permission(&device_name)).await
 }
 
+fn open_nusb_device(fd: i32) -> Result<Device> {
+    if fd < 0 {
+        return Err(Error::new(format!("openDeviceFd returned bad fd {fd}")));
+    }
+    // Kotlin's UsbDeviceConnection still owns fd; dup so nusb's OwnedFd
+    // closing on drop cannot pull the connection out from under Kotlin.
+    let dup_fd = unsafe { libc::dup(fd) };
+    if dup_fd < 0 {
+        return Err(Error::new(format!(
+            "dup failed: {}",
+            std::io::Error::last_os_error()
+        )));
+    }
+    let owned = unsafe { OwnedFd::from_raw_fd(dup_fd) };
+    Device::from_fd(owned)
+        .wait()
+        .map_err(|e| Error::new(format!("nusb open from fd failed: {e}")))
+}
+
 pub async fn open_device(device_name: String) -> Result<()> {
     blocking(move || {
         if let Some(open) = lock().take() {
             close_locked(open);
         }
         let fd = call_open_device_fd(&device_name)?;
-        if fd < 0 {
-            return Err(Error::new(format!("openDeviceFd failed for {device_name}")));
-        }
-        // Kotlin's UsbDeviceConnection still owns fd; dup so nusb's OwnedFd
-        // closing on drop cannot pull the connection out from under Kotlin.
-        let dup_fd = unsafe { libc::dup(fd) };
-        if dup_fd < 0 {
-            return Err(Error::new(format!(
-                "dup failed: {}",
-                std::io::Error::last_os_error()
-            )));
-        }
-        let owned = unsafe { OwnedFd::from_raw_fd(dup_fd) };
-        let device = Device::from_fd(owned)
-            .wait()
-            .map_err(|e| Error::new(format!("nusb open from fd failed: {e}")))?;
+        let device = match open_nusb_device(fd) {
+            Ok(device) => device,
+            Err(e) => {
+                // openDeviceFd succeeded, so Kotlin cached a connection that
+                // nothing else will ever close now that the open failed.
+                let _ = call_close_device_fd(&device_name);
+                return Err(e);
+            }
+        };
         *lock() = Some(OpenDevice {
             device_name,
             device,
