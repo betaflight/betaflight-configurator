@@ -109,7 +109,7 @@
     "inquirer": "^12.4.2",
     "less": "^4.2.2",
     "lint-staged": "^15.4.3",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.26",
     "prettier": "^3.5.2",
     "rollup": "^4.59.0",
     "run-script-os": "^1.1.6",
