@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
 // ---------------------------------------------------------------------------
 // serial.send() callback contract.
@@ -69,6 +69,10 @@ describe("serial.send callback contract", () => {
         vi.spyOn(console, "error").mockImplementation(() => {});
     });
 
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
     it("invokes the callback exactly once on a successful send", async () => {
         serial._protocol = fakeProtocol({ bytesSent: 12 });
         const callback = vi.fn();
@@ -109,9 +113,9 @@ describe("serial.send callback contract", () => {
     });
 
     it("invokes the callback exactly once in virtual mode, which has no send method", async () => {
-        // VirtualSerial defines no send(), so `?.` does not guard it and the call
-        // throws a TypeError the facade swallows. The facade is then the only
-        // thing that can fire the callback at all.
+        // VirtualSerial defines no send(); the guarded call yields undefined and
+        // the facade reports zero bytes quietly. Virtual mode sends constantly,
+        // so this path must not log an error per send.
         serial._protocol = fakeProtocol({ hasSend: false });
         const callback = vi.fn();
 
@@ -119,6 +123,7 @@ describe("serial.send callback contract", () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(result).toEqual({ bytesSent: 0 });
+        expect(console.error).not.toHaveBeenCalled();
     });
 });
 
@@ -129,6 +134,10 @@ describe("WebBluetooth.send return value", () => {
     beforeEach(() => {
         vi.resetModules();
         vi.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it("returns the byte count written, not undefined", async () => {
@@ -149,5 +158,15 @@ describe("WebBluetooth.send return value", () => {
         ble.writeCharacteristic = null;
 
         expect(await ble.send(new Uint8Array(5))).toEqual({ bytesSent: 0 });
+    });
+
+    it("returns zero bytes without writing when the GATT server is disconnected", async () => {
+        const { default: WebBluetooth } = await vi.importActual("../../src/js/protocols/WebBluetooth.js");
+        const ble = new WebBluetooth();
+        ble.writeCharacteristic = { writeValue: vi.fn() };
+        ble.device = { gatt: { connected: false } };
+
+        expect(await ble.send(new Uint8Array(5))).toEqual({ bytesSent: 0 });
+        expect(ble.writeCharacteristic.writeValue).not.toHaveBeenCalled();
     });
 });
