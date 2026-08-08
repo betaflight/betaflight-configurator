@@ -1,9 +1,8 @@
-import { reactive, ref, computed, watch } from "vue";
+import { reactive, ref, computed } from "vue";
+import { useDirtyState } from "../useDirtyState";
 
 export function useAdjustmentsState() {
     const adjustments = reactive([]);
-    const originalSnapshot = ref(null);
-    const hasChanges = ref(false);
     const showAllSlots = ref(false);
 
     function serializeAdjustments() {
@@ -20,18 +19,14 @@ export function useAdjustmentsState() {
         );
     }
 
-    function storeOriginals() {
-        originalSnapshot.value = serializeAdjustments();
-        hasChanges.value = false;
-    }
+    // `hasChanges` is this tab's name for the shared dirty flag. Because it is a computed
+    // over the same serialization, the deep watcher the old manually-maintained ref needed is
+    // no longer necessary — it re-evaluates whenever a slot it read actually changes.
+    const { dirty: hasChanges, markClean } = useDirtyState(serializeAdjustments);
 
-    function checkForChanges() {
-        if (!originalSnapshot.value) {
-            hasChanges.value = false;
-            return;
-        }
-        hasChanges.value = serializeAdjustments() !== originalSnapshot.value;
-    }
+    /** Adopt the current slots as the clean baseline. Wrapped so a caller passing an event
+     *  object (e.g. used directly as a click handler) cannot be mistaken for a snapshot. */
+    const storeOriginals = () => markClean();
 
     const activeCount = computed(() => adjustments.filter((a) => a.enabled).length);
 
@@ -51,8 +46,6 @@ export function useAdjustmentsState() {
         }
         return result;
     });
-
-    watch(adjustments, checkForChanges, { deep: true });
 
     return { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments };
 }

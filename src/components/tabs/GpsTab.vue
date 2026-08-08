@@ -286,6 +286,7 @@ import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
 import { useMapViewport } from "../../composables/useMapViewport";
+import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
@@ -376,9 +377,6 @@ export default defineComponent({
             home_point_once: 0,
         });
 
-        /** Baseline after MSP load or successful save; same pattern as Power/Auxiliary tabs */
-        const gpsTabBaseline = ref("");
-
         const serializeGpsTabState = () =>
             JSON.stringify({
                 gpsFeatureEnabled: fcStore.features?.features?.isEnabled?.("GPS") ?? false,
@@ -390,12 +388,7 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
             });
 
-        const dirty = computed(() => {
-            if (!gpsTabBaseline.value) {
-                return false;
-            }
-            return gpsTabBaseline.value !== serializeGpsTabState();
-        });
+        const { dirty, markClean } = useDirtyState(serializeGpsTabState);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -717,7 +710,7 @@ export default defineComponent({
 
                 await updateGpsProtocols();
 
-                gpsTabBaseline.value = serializeGpsTabState();
+                markClean();
 
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
@@ -747,7 +740,7 @@ export default defineComponent({
                     await saveAndReboot();
 
                     // Only after a successful persist: refresh the dirty baseline.
-                    gpsTabBaseline.value = serializeGpsTabState();
+                    markClean();
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },
             );

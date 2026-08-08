@@ -11,6 +11,7 @@ import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
 export function usePower() {
@@ -49,9 +50,6 @@ export function usePower() {
     const voltageConfigs = reactive([]);
     const currentConfigs = reactive([]);
 
-    /** Serialized baseline after last FC sync; used for save-button dirty detection */
-    const powerConfigBaseline = ref("");
-
     const buildPowerConfigSnapshot = () => ({
         voltageMeterSource: batteryConfig.voltageMeterSource,
         currentMeterSource: batteryConfig.currentMeterSource,
@@ -73,12 +71,7 @@ export function usePower() {
 
     const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
 
-    const dirty = computed(() => {
-        if (!powerConfigBaseline.value) {
-            return false;
-        }
-        return powerConfigBaseline.value !== serializePowerConfig();
-    });
+    const { dirty, markClean } = useDirtyState(serializePowerConfig);
 
     // Calibration state
     const sourceschanged = ref(false);
@@ -332,7 +325,7 @@ export function usePower() {
             currentConfigs.push({ ...config });
         });
 
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean();
     };
 
     // Update live data (polling)
@@ -546,7 +539,7 @@ export function usePower() {
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean();
     };
 
     return {

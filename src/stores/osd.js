@@ -9,6 +9,7 @@ import semver from "semver";
 import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 import { bit_set } from "../js/bit";
+import { useDirtyState } from "../composables/useDirtyState";
 
 function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     if (isVirtualMode && virtualMode) {
@@ -110,9 +111,7 @@ export const useOsdStore = defineStore("osd", () => {
     const selectedPreviewProfile = ref(0);
 
     // Dirty state tracking
-    const savedSnapshot = ref("");
-
-    function takeSnapshot() {
+    function serializeOsdState() {
         return JSON.stringify({
             videoSystem: videoSystem.value,
             unitMode: unitMode.value,
@@ -140,13 +139,7 @@ export const useOsdStore = defineStore("osd", () => {
         });
     }
 
-    function captureSnapshot() {
-        savedSnapshot.value = takeSnapshot();
-    }
-
-    const dirty = computed(() => {
-        return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
-    });
+    const { dirty, markClean: captureSnapshot } = useDirtyState(serializeOsdState);
 
     // Getters
     const numberOfProfiles = computed(() => osdProfiles.value.number || 1);
