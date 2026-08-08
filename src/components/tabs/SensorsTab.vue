@@ -817,6 +817,7 @@ import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
@@ -2235,8 +2236,6 @@ function disposeModel() {
 
 // --- Dirty Tracking ---
 
-const baseline = ref("");
-
 const snapshotSensorAlignment = () => ({
     gyro_to_use: sensorAlignment.gyro_to_use,
     gyro_1_align: sensorAlignment.gyro_1_align,
@@ -2267,12 +2266,7 @@ const serializeState = () =>
         magDeclination: magDeclination.value,
     });
 
-const dirty = computed(() => {
-    if (!baseline.value) {
-        return false;
-    }
-    return baseline.value !== serializeState();
-});
+const { dirty, markClean } = useDirtyState(serializeState);
 
 // --- Load helpers ---
 
@@ -2342,15 +2336,6 @@ function setupMagSection() {
 
     if (isApi146.value) {
         magDeclination.value = fcStore.compassConfig.mag_declination;
-
-        const cached = getGeoReference();
-        if (cached) {
-            magInclination.value = roundOneDp(cached.inclination);
-            magFieldStrength.value = cached.fieldStrength;
-            applyDetectedDeclination(roundOneDp(cached.declination));
-        } else {
-            tryAutoGeoReference().catch(() => {});
-        }
     }
 
     cal.refreshFirmwareOffsets()
@@ -2360,6 +2345,25 @@ function setupMagSection() {
             }
         })
         .catch(() => {});
+}
+
+// Geomagnetic suggestion, deliberately run *after* the dirty baseline is captured: an
+// auto-set declination is a proposal the user still has to save, so it has to leave the
+// tab dirty. Folding it into setupMagSection() made the cached-reference path land inside
+// the baseline, which greyed out Save on the very change the note asked the user to save.
+function suggestGeoDeclination() {
+    if (!hasMagSensor.value || !isApi146.value) {
+        return;
+    }
+
+    const cached = getGeoReference();
+    if (cached) {
+        magInclination.value = roundOneDp(cached.inclination);
+        magFieldStrength.value = cached.fieldStrength;
+        applyDetectedDeclination(roundOneDp(cached.declination));
+    } else {
+        tryAutoGeoReference().catch(() => {});
+    }
 }
 
 function setupPeripherals() {
@@ -2414,7 +2418,9 @@ const loadConfig = async () => {
             setupMagSection();
             setupPeripherals();
 
-            baseline.value = serializeState();
+            markClean();
+
+            suggestGeoDeclination();
 
             await nextTick();
 
@@ -2506,7 +2512,7 @@ const saveConfig = () =>
 
             gui_log(i18n.getMessage("sensorConfigSaved"));
 
-            baseline.value = serializeState();
+            markClean();
 
             // Save to EEPROM and reboot
             await saveAndReboot();

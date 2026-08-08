@@ -100,6 +100,13 @@ Features.prototype.getMask = function () {
     return self._featureMask;
 };
 
+// Side-effect free counterpart to getMask(): reads the mask without flushing the
+// pending analytics changes. Use this for dirty checks and other observers that
+// must not consume the change events a real save is supposed to report.
+Features.prototype.peekMask = function () {
+    return this._featureMask;
+};
+
 Features.prototype.setMask = function (featureMask) {
     const self = this;
 
