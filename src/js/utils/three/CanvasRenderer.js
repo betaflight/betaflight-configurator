@@ -542,8 +542,9 @@ class CanvasRenderer {
                     if (colorStyle1 === colorStyle2) {
                         setStrokeStyle(colorStyle1);
                     } else {
+                        let grad;
                         try {
-                            let grad = _context.createLinearGradient(
+                            grad = _context.createLinearGradient(
                                 v1.positionScreen.x,
                                 v1.positionScreen.y,
                                 v2.positionScreen.x,
