@@ -235,8 +235,11 @@ export function usePower() {
 
         syncingFromFc = true;
         try {
-            await loadData();
-            gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+            // Only announce the profile the FC actually sent. The load resolves either way,
+            // so without this a cancelled or failed read still logged a successful sync.
+            if (await loadData()) {
+                gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+            }
         } finally {
             syncingFromFc = false;
         }
@@ -252,6 +255,10 @@ export function usePower() {
     );
 
     // Load data from flight controller
+    /**
+     * Read the power configuration from the FC into reactive state.
+     * @returns {Promise<boolean>} true when the data actually arrived
+     */
     const loadData = async () => {
         isLoading.value = true;
         try {
@@ -268,8 +275,14 @@ export function usePower() {
 
             // Update reactive state
             updateStateFromFC();
+            return true;
         } catch (error) {
-            console.error("Error loading power data:", error);
+            // Switching away mid-load clears the MSP queue and cancels the chain. Expected —
+            // the tab is being torn down — so don't report it, same as the live poller below.
+            if (!isMspCancelled(error)) {
+                console.error("Error loading power data:", error);
+            }
+            return false;
         } finally {
             isLoading.value = false;
         }
