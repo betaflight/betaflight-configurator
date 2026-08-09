@@ -589,7 +589,7 @@ const selectedRxMode = ref(0);
 let model = null;
 let rateCurve = null;
 let currentRates = null;
-let clock = null;
+let timer = null;
 let keepRendering = true;
 let animationFrameId = null;
 
@@ -1150,17 +1150,19 @@ function handleModelResize() {
     }
 }
 
-function renderModel() {
+function renderModel(timestamp) {
     if (!keepRendering) return;
     animationFrameId = requestAnimationFrame(renderModel);
 
-    if (!clock) {
-        clock = new THREE.Clock();
+    if (!timer) {
+        timer = new THREE.Timer();
+        timer.connect(document);
     }
+    timer.update(timestamp);
 
     const channels = rc.value?.channels;
     if (channels?.[0] && channels?.[1] && channels?.[2] && model && rateCurve && currentRates) {
-        const delta = clock.getDelta();
+        const delta = timer.getDelta();
 
         const roll =
             delta *
@@ -1317,6 +1319,8 @@ onUnmounted(() => {
     if (model?.dispose) {
         model.dispose();
     }
+    timer?.dispose();
+    timer = null;
 });
 </script>
 
