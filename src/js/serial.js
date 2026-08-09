@@ -244,12 +244,17 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Send data through the serial connection
+     * Send data through the serial connection.
+     *
+     * The callback is invoked here and only here. Protocols must not be handed
+     * it, or every transport that fires it internally would deliver it twice.
      */
     async send(data, callback) {
         let result;
         try {
-            result = (await this._protocol?.send(data, callback)) ?? { bytesSent: 0 };
+            // Guard the method too: virtual mode has no send(), and that is a
+            // normal path, not an error to log.
+            result = (await this._protocol?.send?.(data)) ?? { bytesSent: 0 };
         } catch (error) {
             result = { bytesSent: 0 };
             console.error(`${this.logHead} Error sending data:`, error);
