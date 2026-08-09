@@ -64,6 +64,23 @@ describe("getOS", () => {
         setUserAgent(UA.iphone, { legacyPlatform: "iPhone" });
         expect(getOS()).toBe("iOS");
     });
+
+    it("identifies ChromeOS from userAgentData and from the legacy shape", async () => {
+        const crosUA = "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 Chrome/120 Safari/537.36";
+        const { getOS } = await loadCompatibility();
+
+        for (const shape of [
+            { platform: "Chrome OS" },
+            { platform: "Chromium OS" },
+            // No userAgentData: the legacy platform reports plain Linux and only
+            // the user agent's CrOS token identifies ChromeOS.
+            { legacyPlatform: "Linux x86_64" },
+        ]) {
+            setUserAgent(crosUA, shape);
+            expect(getOS()).toBe("ChromeOS");
+            restoreNavigator();
+        }
+    });
 });
 
 describe("isTauriAndroid", () => {
