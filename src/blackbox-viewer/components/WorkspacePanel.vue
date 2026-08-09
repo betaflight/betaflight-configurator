@@ -2,7 +2,7 @@
     <div class="toolbar-panel log-workspace-panel">
         <h4>Workspace</h4>
 
-        <UDropdownMenu :items="workspaceItems" class="w-full">
+        <UDropdownMenu v-model:open="menuOpen" :items="workspaceItems" class="w-full">
             <UButton
                 variant="outline"
                 color="neutral"
@@ -36,12 +36,26 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useWorkspaceStore } from "../stores/workspace.js";
 
 const emit = defineEmits(["switch-workspace", "save-workspace", "apply-default"]);
 
 const workspaceStore = useWorkspaceStore();
+
+const menuOpen = ref(false);
+
+// Shift+W raises showDefaultMenu (keyboard_handler.js). Open the menu — which is where
+// the default workspace presets live — and lower the flag again so a later press re-opens.
+watch(
+    () => workspaceStore.showDefaultMenu,
+    (show) => {
+        if (show) {
+            menuOpen.value = true;
+            workspaceStore.showDefaultMenu = false;
+        }
+    },
+);
 
 const activeEntry = computed(() => {
     const configs = workspaceStore.workspaceGraphConfigs;
