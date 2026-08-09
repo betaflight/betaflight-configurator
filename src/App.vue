@@ -239,7 +239,9 @@ watch(
     display: none;
 }
 
-/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down. */
+/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down.
+   The bar grows by the safe-area inset and pads its contents down by the same amount, so the
+   controls sit below the Android/iOS status bar with the content box unchanged. */
 .mobile-topbar {
     display: none;
     position: fixed;
@@ -247,8 +249,8 @@ watch(
     left: 0;
     right: 0;
     z-index: 2001;
-    height: 3rem;
-    padding: 0.25rem 0.5rem;
+    height: calc(3rem + env(safe-area-inset-top, 0px));
+    padding: calc(0.25rem + env(safe-area-inset-top, 0px)) 0.5rem 0.25rem;
     align-items: center;
     gap: 0.5rem;
     background-color: var(--surface-100);
@@ -280,9 +282,9 @@ watch(
     .mobile-topbar {
         display: flex;
     }
-    /* Leave room at the top of the content area for the top bar. */
+    /* Leave room at the top of the content area for the top bar (including safe area). */
     #content {
-        padding-top: 3rem;
+        padding-top: calc(3rem + env(safe-area-inset-top, 0px));
     }
 }
 </style>
