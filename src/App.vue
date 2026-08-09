@@ -249,6 +249,9 @@ watch(
     left: 0;
     right: 0;
     z-index: 2001;
+    /* Explicit, not inherited from the Tailwind reset: the height below is an outer height, and
+       #content's matching padding-top depends on it staying one. */
+    box-sizing: border-box;
     height: calc(3rem + env(safe-area-inset-top, 0px));
     padding: calc(0.25rem + env(safe-area-inset-top, 0px)) 0.5rem 0.25rem;
     align-items: center;

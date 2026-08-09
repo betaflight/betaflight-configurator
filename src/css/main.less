@@ -1463,7 +1463,9 @@ each(range(12), {
         width: calc(100% - 2em - 2px) !important;
         max-width: unset;
         height: auto !important;
-        bottom: 0;
+        /* height is auto with both edges pinned, so the box stretches between them: keep the
+           bottom edge above the navigation bar / home indicator or the actions land under it */
+        bottom: env(safe-area-inset-bottom, 0px);
         top: calc(56px + env(safe-area-inset-top, 0px));
         border-radius: unset;
         border: none;
