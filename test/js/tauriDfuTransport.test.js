@@ -182,6 +182,14 @@ describe("TauriDfuTransport enumeration", () => {
 
         expect(port.path).toBe("usb_STM32SERIAL");
     });
+
+    it("waitForDfuDevice returns null when no new device appears before the timeout", async () => {
+        const transport = makeTransport();
+        handlers["plugin:dfu|list_devices"] = async () => [stmDfu()];
+
+        vi.useRealTimers();
+        expect(await transport.waitForDfuDevice(50, 10)).toBeNull();
+    });
 });
 
 describe("TauriDfuTransport control transfers", () => {

@@ -272,6 +272,8 @@ class TauriDfuTransport extends UsbDfuDescriptors {
      * Perform a USB control transfer IN (device -> host), reporting the
      * transfer status ("ok"/"stall") rather than throwing, so the descriptor
      * layer can decide what a stall means for a given request.
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {number} length - Maximum bytes to read.
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async _rawControlTransferIn(setup, length) {
@@ -288,6 +290,8 @@ class TauriDfuTransport extends UsbDfuDescriptors {
 
     /**
      * Perform a USB control transfer IN (device -> host), throwing on a failed transfer.
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {number} length - Maximum bytes to read.
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async controlTransferIn(setup, length) {
@@ -300,6 +304,8 @@ class TauriDfuTransport extends UsbDfuDescriptors {
 
     /**
      * Perform a USB control transfer OUT (host -> device).
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {ArrayBuffer|Uint8Array} [data] - Payload to send; an empty transfer when omitted.
      * @returns {Promise<{status: string}>}
      */
     async controlTransferOut(setup, data) {
