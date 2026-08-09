@@ -297,7 +297,7 @@ jobs:
         run: |
           mkdir -p staging
           SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          APK_NAME="betaflight-app-${VERSION}-${SHA_SHORT}.apk"
+          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}-capacitor.apk"
           cp android/app/build/outputs/apk/release/app-release.apk "staging/${APK_NAME}"
           echo "APK_NAME=${APK_NAME}" >> "$GITHUB_ENV"
 
@@ -320,7 +320,7 @@ jobs:
           mkdir -p manifest-fragments
           BASE="${PUBLIC_BASE%/}"
           SIZE=$(stat -c %s "staging/${APK_NAME}")
-          jq -n --arg label "Android APK" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
+          jq -n --arg label "Android (Capacitor)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
             '{label: $label, url: $url, size: $size}' > manifest-fragments/android.json
 
       - name: Upload manifest fragment
@@ -409,7 +409,7 @@ jobs:
         run: |
           mkdir -p staging
           SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          APK_NAME="betaflight-app-tauri-${VERSION}-${SHA_SHORT}.apk"
+          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}-tauri.apk"
           APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | grep -i universal | head -1)
           if [ -z "$APK" ]; then
             APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | head -1)
@@ -440,7 +440,7 @@ jobs:
           mkdir -p manifest-fragments
           BASE="${PUBLIC_BASE%/}"
           SIZE=$(stat -c %s "staging/${APK_NAME}")
-          jq -n --arg label "Android APK (Tauri)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
+          jq -n --arg label "Android (Tauri)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
             '{label: $label, url: $url, size: $size}' > manifest-fragments/tauri-android.json
 
       - name: Upload manifest fragment
