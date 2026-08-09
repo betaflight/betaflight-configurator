@@ -6,6 +6,7 @@
     "windows": ["*"],
     "permissions": [
         "core:default",
-        "serialplugin:default"
+        "serialplugin:default",
+        "blec:allow-check-permissions"
     ]
 }
