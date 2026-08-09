@@ -19,6 +19,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     // Callbacks registered by main.js
     const switchWorkspace = shallowRef(null);
     const saveWorkspace = shallowRef(null);
+    const renameWorkspace = shallowRef(null);
     const applyDefaultWorkspace = shallowRef(null);
     const gotoBookmark = shallowRef(null);
 
@@ -42,6 +43,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         showDefaultMenu,
         switchWorkspace,
         saveWorkspace,
+        renameWorkspace,
         applyDefaultWorkspace,
         gotoBookmark,
         getTitle,
