@@ -42,6 +42,14 @@
         "message": "您需要刷新页面才能获得最新的更改。现在刷新将重新加载页面，您将丢失所有未保存的更改，并将中止任何正在进行的操作。<br><br>您想立即刷新吗？您也可以忽略此消息并稍后手动刷新页面。",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnOfflineReadyTitle": {
+        "message": "应用程序已准备好离线使用",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOfflineReadyText": {
+        "message": "您可以根据需要将其作为独立应用程序安装到设备上。在浏览器地址栏或菜单中能够找到该选项。",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "您的硬件不支持此操作。"
     },
@@ -311,6 +319,9 @@
     "rebootFlightControllerReady": {
         "message": "飞控准备就绪"
     },
+    "rebootFlightControllerFailed": {
+        "message": "飞控未重新连接"
+    },
     "deviceRebooting": {
         "message": "设备 - <span class=\"message-negative\">重启中<\/span>"
     },
@@ -424,7 +435,7 @@
         "message": "导入黑匣子日志"
     },
     "autotuneImportDescription": {
-        "message": "导入一段带有 debug_mode = CHIRP 选项的黑匣子日志以分析频率响应并计算 PID 建议值。"
+        "message": "导入一段带有黑盒调试模式「CHIRP」选项的黑匣子日志以分析频率响应并计算 PID 建议值。"
     },
     "autotuneSelectingFile": {
         "message": "正在选择文件……"
@@ -472,7 +483,7 @@
         "message": "在此文件中找不到有效的黑匣子日志。"
     },
     "autotuneNoChirpData": {
-        "message": "未找到啁啾数据。请确保用 debug_mode = CHIRP 录制日志，并激活啁啾模式。"
+        "message": "未找到啁啾数据。请确保用黑盒调试模式「CHIRP」录制日志，并激活啁啾模式。"
     },
     "autotuneSampleCount": {
         "message": "{{count}} 样本"
@@ -649,6 +660,15 @@
     },
     "connectionFailed": {
         "message": "连接到选定端口<span class=\"message-negative\">失败d<\/span>。确保设备可被连接并且连接设置正确，然后重试。"
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "在 iOS 上，打开设置下的 &rarr; 隐私 &amp; 安全 &rarr; 本地网络开关以允许 Betaflight 访问 <strong>本地网络<\/strong>，然后重试。"
+    },
+    "connectionLostTitle": {
+        "message": "连接丢失"
+    },
+    "connectionLostUnresponsive": {
+        "message": "飞控 <span class=\"message-negative\">停止响应<\/span> 并关闭了连接。 重新连接飞控并重试；如果问题持续存在，请重新为飞控上电。"
     },
     "serialPortClosedOk": {
         "message": "关闭串口 <span class=\"message-positive\">成功<\/span>"
@@ -1718,6 +1738,9 @@
     "configurationBoardAlignmentHelp": {
         "message": "可输入任意旋转角度以允许用侧立、反转、偏转等方式安装飞控板。如果使用了外部传感器，使用「传感器朝向」（陀螺仪、加速度计、磁力计）来设定不同于飞控板朝向的传感器位置。 "
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "自动检测飞控方向"
+    },
     "boardAlignmentWizard-DialogTitle": {
         "message": "飞控方向设置向导"
     },
@@ -1732,6 +1755,12 @@
     },
     "boardAlignmentWizard-HintFlat": {
         "message": "把无人机平放，摄像头远离您(朝着屏幕)。"
+    },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "将机头向下倾斜约45°，使相机指向地面。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "将右舷向下倾斜约45°，下压右侧机臂并抬升左侧。"
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "将无人机顺时针旋转大约45°（如上所示）。"
@@ -1802,8 +1831,14 @@
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "加速度计没有读取到重力。请确保飞控已连接且没有在移动。"
     },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "未检测到俯仰动作。请重试并下压机头更多。"
+    },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "未检测到横滚动作。请重试并下倾右侧更多。"
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "一个倾斜动作方向错误。请检查俯仰和横滚方向，然后重试。"
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "水平"
@@ -8856,6 +8891,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "显示当前激活的电池配置文件名称或索引"
+    },
+    "osdTextElementWpNumber": {
+        "message": "航点编号",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "显示活动飞行计划的当前\/总航点数"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "航点纬度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "显示当前航点的纬度"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "航点经度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "显示当前航点的经度"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "航点高度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "显示当前航点的高度"
+    },
+    "osdTextElementWpDistance": {
+        "message": "航点距离",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "显示到当前航点的距离"
+    },
+    "osdTextElementWpDirection": {
+        "message": "航点方向",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "显示指向当前航点的方向箭头"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "下一个航点编号",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "显示当前飞行计划中的下一个航点编号"
+    },
+    "osdTextElementWpEta": {
+        "message": "航点预计到达时间",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "显示到达当前航点的预计时间"
+    },
+    "osdTextElementNavMap": {
+        "message": "导航地图",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "显示家、飞行计划和飞行轨迹的小地图"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "位置保持模式已就绪",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "在切换模式前显示当前状态是否符合位置保持模式的开启条件"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "标尺",
