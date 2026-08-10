@@ -33,11 +33,6 @@ pub async fn close_device() -> Result<()> {
 }
 
 #[tauri::command]
-pub async fn reset_device() -> Result<()> {
-    android::reset_device().await
-}
-
-#[tauri::command]
 pub async fn control_transfer_in(
     request_type: String,
     recipient: String,

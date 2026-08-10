@@ -338,12 +338,4 @@ describe("TauriDfuTransport lifecycle", () => {
         await transport.getConfigDescriptor();
         expect(reads).toBe(4); // cache was dropped on close
     });
-
-    it("reset swallows a native failure so flashing can fall back to a manual replug", async () => {
-        const transport = await makeOpenTransport();
-        handlers["plugin:dfu|reset_device"] = async () => {
-            throw new Error("USBDEVFS_RESET denied");
-        };
-        await expect(transport.reset()).resolves.toBeUndefined();
-    });
 });

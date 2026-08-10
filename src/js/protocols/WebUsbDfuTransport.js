@@ -14,7 +14,7 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
         this.usbDevice = null;
 
         if (!navigator?.usb) {
-            console.error(`${this.logHead} WebUSB API not supported`);
+            console.log(`${this.logHead} WebUSB API not supported`);
             return;
         }
 

@@ -44,9 +44,6 @@ mod android {
     pub async fn close_device() -> Result<()> {
         unsupported()
     }
-    pub async fn reset_device() -> Result<()> {
-        unsupported()
-    }
     #[allow(clippy::too_many_arguments)]
     pub async fn control_transfer_in(
         _request_type: String,
@@ -85,7 +82,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             commands::claim_interface,
             commands::release_interface,
             commands::close_device,
-            commands::reset_device,
             commands::control_transfer_in,
             commands::control_transfer_out,
         ])

@@ -391,22 +391,10 @@
           "markdownDescription": "Denies the request_permission command without any pre-configured scope."
         },
         {
-          "description": "Enables the reset_device command without any pre-configured scope.",
-          "type": "string",
-          "const": "allow-reset-device",
-          "markdownDescription": "Enables the reset_device command without any pre-configured scope."
-        },
-        {
-          "description": "Denies the reset_device command without any pre-configured scope.",
-          "type": "string",
-          "const": "deny-reset-device",
-          "markdownDescription": "Denies the reset_device command without any pre-configured scope."
-        },
-        {
-          "description": "Default permissions for the DFU plugin: enumerate DFU-capable USB devices,\nrequest USB permission, open/close a device, claim/release its interface,\nreset it, and perform control transfers.\n\n#### This default permission set includes:\n\n- `allow-list-devices`\n- `allow-request-permission`\n- `allow-open-device`\n- `allow-claim-interface`\n- `allow-release-interface`\n- `allow-close-device`\n- `allow-reset-device`\n- `allow-control-transfer-in`\n- `allow-control-transfer-out`",
+          "description": "Default permissions for the DFU plugin: enumerate DFU-capable USB devices,\nrequest USB permission, open/close a device, claim/release its interface,\nand perform control transfers.\n\n#### This default permission set includes:\n\n- `allow-list-devices`\n- `allow-request-permission`\n- `allow-open-device`\n- `allow-claim-interface`\n- `allow-release-interface`\n- `allow-close-device`\n- `allow-control-transfer-in`\n- `allow-control-transfer-out`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the DFU plugin: enumerate DFU-capable USB devices,\nrequest USB permission, open/close a device, claim/release its interface,\nreset it, and perform control transfers.\n\n#### This default permission set includes:\n\n- `allow-list-devices`\n- `allow-request-permission`\n- `allow-open-device`\n- `allow-claim-interface`\n- `allow-release-interface`\n- `allow-close-device`\n- `allow-reset-device`\n- `allow-control-transfer-in`\n- `allow-control-transfer-out`"
+          "markdownDescription": "Default permissions for the DFU plugin: enumerate DFU-capable USB devices,\nrequest USB permission, open/close a device, claim/release its interface,\nand perform control transfers.\n\n#### This default permission set includes:\n\n- `allow-list-devices`\n- `allow-request-permission`\n- `allow-open-device`\n- `allow-claim-interface`\n- `allow-release-interface`\n- `allow-close-device`\n- `allow-control-transfer-in`\n- `allow-control-transfer-out`"
         }
       ]
     }

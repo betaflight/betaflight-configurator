@@ -4,7 +4,7 @@
 description = """
 Default permissions for the DFU plugin: enumerate DFU-capable USB devices,
 request USB permission, open/close a device, claim/release its interface,
-reset it, and perform control transfers.
+and perform control transfers.
 """
 permissions = [
     "allow-list-devices",
@@ -13,7 +13,6 @@ permissions = [
     "allow-claim-interface",
     "allow-release-interface",
     "allow-close-device",
-    "allow-reset-device",
     "allow-control-transfer-in",
     "allow-control-transfer-out",
 ]

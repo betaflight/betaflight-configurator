@@ -5,7 +5,6 @@ const COMMANDS: &[&str] = &[
     "claim_interface",
     "release_interface",
     "close_device",
-    "reset_device",
     "control_transfer_in",
     "control_transfer_out",
 ];

@@ -247,21 +247,6 @@ class TauriDfuTransport extends UsbDfuDescriptors {
         }
     }
 
-    async reset() {
-        if (!this.currentDeviceName) {
-            return;
-        }
-        try {
-            await this._invoke("reset_device");
-            console.log(`${this.logHead} Reset device`);
-        } catch (error) {
-            // USBDEVFS_RESET is not guaranteed under Android's SELinux policy
-            // across OEMs; a failed reset just means the user replugs the
-            // board, so it must not abort the flash teardown.
-            console.warn(`${this.logHead} Error resetting device:`, error);
-        }
-    }
-
     getConnectedDevice() {
         return this.currentPortPath;
     }

@@ -272,17 +272,6 @@ pub async fn close_device() -> Result<()> {
     .await
 }
 
-pub async fn reset_device() -> Result<()> {
-    blocking(|| {
-        let device = current_device()?;
-        device
-            .reset()
-            .wait()
-            .map_err(|e| Error::new(format!("USB reset failed: {e}")))
-    })
-    .await
-}
-
 fn parse_control_type(request_type: &str) -> Result<ControlType> {
     match request_type {
         "standard" => Ok(ControlType::Standard),

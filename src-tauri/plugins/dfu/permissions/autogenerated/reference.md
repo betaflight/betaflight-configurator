@@ -2,7 +2,7 @@
 
 Default permissions for the DFU plugin: enumerate DFU-capable USB devices,
 request USB permission, open/close a device, claim/release its interface,
-reset it, and perform control transfers.
+and perform control transfers.
 
 #### This default permission set includes the following:
 
@@ -12,7 +12,6 @@ reset it, and perform control transfers.
 - `allow-claim-interface`
 - `allow-release-interface`
 - `allow-close-device`
-- `allow-reset-device`
 - `allow-control-transfer-in`
 - `allow-control-transfer-out`
 
@@ -229,32 +228,6 @@ Enables the request_permission command without any pre-configured scope.
 <td>
 
 Denies the request_permission command without any pre-configured scope.
-
-</td>
-</tr>
-
-<tr>
-<td>
-
-`dfu:allow-reset-device`
-
-</td>
-<td>
-
-Enables the reset_device command without any pre-configured scope.
-
-</td>
-</tr>
-
-<tr>
-<td>
-
-`dfu:deny-reset-device`
-
-</td>
-<td>
-
-Denies the reset_device command without any pre-configured scope.
 
 </td>
 </tr>
