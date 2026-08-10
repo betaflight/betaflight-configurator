@@ -218,6 +218,15 @@ describe("TauriSerial port enumeration", () => {
 
         expect(ports).toEqual([]);
     });
+
+    it("drops a port whose IDs are only partly numeric", async () => {
+        // parseInt stops at the first invalid character, so a lenient parse would
+        // read "1155unknown" as 1155 and promote an unrecognised device into the
+        // known-device list.
+        const ports = await listPorts({ "/dev/ttyS0": { ...STM32_VCP, vid: "1155unknown", pid: "22336" } });
+
+        expect(ports).toEqual([]);
+    });
 });
 
 describe("TauriSerial connect", () => {

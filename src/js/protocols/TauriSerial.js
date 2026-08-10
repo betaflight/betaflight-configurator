@@ -108,15 +108,22 @@ function isLockTimeoutError(error) {
  * @returns {number|undefined} The numeric ID, or undefined when absent/unparseable.
  */
 function parseId(value) {
-    if (value === undefined || value === null) {
-        return undefined;
-    }
     if (typeof value === "number") {
         return value;
     }
-    const text = String(value).trim();
-    const parsed = Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
-    return Number.isNaN(parsed) ? undefined : parsed;
+    // Anything that is not a string cannot be an ID from either backend, and
+    // stringifying it would only produce "[object Object]" to fail on below.
+    if (typeof value !== "string") {
+        return undefined;
+    }
+    const text = value.trim();
+    // Match the whole string, because parseInt stops at the first invalid
+    // character: "1155unknown" would otherwise read as 1155 and promote an
+    // unrecognised device into the known-device list.
+    if (!/^(?:0x[0-9a-f]+|[0-9]+)$/i.test(text)) {
+        return undefined;
+    }
+    return Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
 }
 
 /**
