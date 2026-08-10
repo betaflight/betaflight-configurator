@@ -5,6 +5,49 @@ import GUI from "../gui";
 const logHead = "[TAURI SERIAL]";
 
 /**
+ * Bytes to request per `read_binary` poll.
+ *
+ * This is a correctness bound, not a tuning knob. The plugin's RX hub reads the
+ * port into a 1024-byte buffer and hands the whole chunk to the pending read
+ * slot, which keeps only what fits in the requested size and DROPS the rest —
+ * the remainder is not pushed back onto its idle buffer. Asking for less than a
+ * hub chunk therefore silently loses the tail of every burst above that size,
+ * which corrupts any MSP response longer than the request (MSP_BOXNAMES fails
+ * its CRC first) and then desynchronises the stream.
+ *
+ * Staying well above the 1024-byte chunk keeps a poll that arrives mid-burst
+ * from ever being the shorter side, and staying under the hub's 64 KiB idle cap
+ * keeps the "idle already full" fast path reachable while a CLI dump streams.
+ */
+const READ_CHUNK_SIZE = 16384;
+
+/**
+ * Timeout handed to `read_binary`, in milliseconds.
+ *
+ * Zero, so the call returns whatever the RX hub has already buffered instead of
+ * waiting for more. Any non-zero value is a wait held *inside* the plugin, and
+ * on Android that wait is not free: wry bridges the webview to Rust through a
+ * synchronous JavascriptInterface, so a command blocks the webview's JavaScript
+ * thread for its whole duration. Polling with a 10 ms wait sixty times a second
+ * parked that thread for most of every second, starving rendering and input.
+ *
+ * The loop paces itself with its own sleep instead, which yields to the event
+ * loop rather than blocking it.
+ */
+const READ_TIMEOUT_MS = 0;
+
+/**
+ * Pause between read polls, in milliseconds.
+ *
+ * With a non-blocking read the loop sets its own pace, and on Android every poll
+ * is a round trip across the synchronous webview bridge, so the pace is a real
+ * cost rather than a free spin. 20 ms keeps receive latency far inside the MSP
+ * status cadence while asking roughly a third as many round trips per second as
+ * the 5 ms spin this replaced.
+ */
+const READ_POLL_INTERVAL_MS = 20;
+
+/**
  * Extract a best-effort message string from an error value of unknown shape
  * (string | Error | plugin-returned object). Flattened from a nested ternary
  * so the sequence is easier to follow.
@@ -30,6 +73,22 @@ function isBrokenPipeError(error) {
 }
 
 /**
+ * Detects the plugin having dropped the port from its registry, which it does
+ * as soon as the device leaves the bus.
+ *
+ * A flight controller re-enumerates on every reboot — "Save and Reboot", exiting
+ * the bootloader — and on Android the port path is the USB device node, so the
+ * old path is gone for good rather than reappearing. Treating this as fatal
+ * stops the read loop and the MSP queue from hammering a dead path for the
+ * second or so it takes the hotplug poll to notice.
+ * @param {unknown} error - Rejection value from the plugin (string, Error or object).
+ * @returns {boolean} Whether the port no longer exists.
+ */
+function isPortGoneError(error) {
+    return /not found|is not open|disconnected|detached/i.test(extractErrorMessage(error));
+}
+
+/**
  * Detects a lost race for the port lock against the plugin's RX hub thread.
  * The plugin returns this before touching the port, so no bytes reached the
  * device and the chunk is safe to resend.
@@ -41,14 +100,30 @@ function isLockTimeoutError(error) {
 }
 
 /**
- * Parse a vendor/product ID from the plugin response (may arrive as number or
- * string depending on OS backend).
+ * Parse a vendor/product ID from the plugin response. The shape depends on the
+ * backend: the desktop serialport enumerator stringifies the numbers as decimal
+ * ("1155"), while the Android USB bridge formats them as hex ("0x0483"). Ports
+ * with no USB descriptor report the literal "Unknown".
+ * @param {unknown} value - Raw `vid`/`pid` field from `available_ports`.
+ * @returns {number|undefined} The numeric ID, or undefined when absent/unparseable.
  */
 function parseId(value) {
-    if (value === undefined || value === null) {
+    if (typeof value === "number") {
+        return value;
+    }
+    // Anything that is not a string cannot be an ID from either backend, and
+    // stringifying it would only produce "[object Object]" to fail on below.
+    if (typeof value !== "string") {
         return undefined;
     }
-    return typeof value === "number" ? value : Number.parseInt(value, 10);
+    const text = value.trim();
+    // Match the whole string, because parseInt stops at the first invalid
+    // character: "1155unknown" would otherwise read as 1155 and promote an
+    // unrecognised device into the known-device list.
+    if (!/^(?:0x[\da-f]+|\d+)$/i.test(text)) {
+        return undefined;
+    }
+    return Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
 }
 
 /**
@@ -111,8 +186,9 @@ class TauriSerial extends EventTarget {
     }
 
     handleFatalSerialError() {
-        // On fatal errors (broken pipe, etc.) just disconnect cleanly.
-        // The monitor loop will surface the removal as a removedDevice event.
+        // On fatal errors (broken pipe, port gone) just disconnect cleanly. The
+        // monitor loop resumes once we are disconnected and surfaces the removal
+        // as a removedDevice event, which is what the reconnect cycle waits for.
         if (this.connected) {
             this.disconnect();
         }
@@ -129,6 +205,17 @@ class TauriSerial extends EventTarget {
         // emit duplicate/missed hotplug events.
         this.deviceMonitorInterval = setInterval(async () => {
             if (this.deviceCheckInFlight) {
+                return;
+            }
+            // Enumeration is for finding a device to connect to, so it has no job
+            // while one is open — and on Android it is actively harmful there.
+            // `available_ports` crosses into Kotlin and queries the USB service on
+            // a single-threaded executor with an unbounded wait, over the same
+            // synchronous bridge the reads and writes use. Running it once a second
+            // underneath a live MSP session is what wedged that bridge and froze
+            // the app. Loss of the device is noticed by the read/write path
+            // instead, which is both safe and an order of magnitude quicker.
+            if (this.connected || this.openRequested) {
                 return;
             }
             this.deviceCheckInFlight = true;
@@ -227,6 +314,40 @@ class TauriSerial extends EventTarget {
         }
     }
 
+    /**
+     * Whether the transport still enumerates `path`, asked fresh rather than read
+     * from the cached list.
+     *
+     * Opening a path that has gone away is not a harmless failure on Android. The
+     * plugin's Kotlin bridge throws `device not found` for a vanished USB node,
+     * and its JNI wrapper leaks that exception: `with_env` only clears a pending
+     * exception after the call succeeds, so a throw returns early and leaves the
+     * exception set on the thread. Every later call over that bridge is then
+     * undefined — in practice the webview's JavaScript thread blocks inside
+     * `postMessage` and never comes back, which reads as the whole app freezing.
+     *
+     * This matters most straight after "Save and Reboot": the flight controller
+     * re-enumerates under a new device node, so the remembered path is dead while
+     * the reconnect cycle is retrying against it.
+     *
+     * Checked against the raw port map, not the known-device list, so this only
+     * ever answers "does this path exist".
+     * @param {string} path - Port path about to be opened.
+     * @returns {Promise<boolean>} Whether the transport still lists it.
+     * @private
+     */
+    async _portExists(path) {
+        try {
+            const portsMap = await invoke("plugin:serialplugin|available_ports");
+            return Object.hasOwn(portsMap ?? {}, path);
+        } catch (error) {
+            // An enumeration failure is not evidence the port is gone; let the
+            // open proceed and report the real error.
+            console.warn(`${logHead} Could not verify port ${path}:`, error);
+            return true;
+        }
+    }
+
     getDisplayName(path, vendorId, productId) {
         if (vendorId && productId) {
             const vendorName = vendorIdNames[vendorId] || `VID:${vendorId} PID:${productId}`;
@@ -243,6 +364,15 @@ class TauriSerial extends EventTarget {
 
         this.openRequested = true;
         this.openCanceled = false;
+
+        // Never hand the plugin a path it no longer enumerates — see _portExists.
+        if (!(await this._portExists(path))) {
+            console.log(`${logHead} Port ${path} is no longer present, not opening`);
+            this.openRequested = false;
+            this.openCanceled = false;
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return false;
+        }
 
         try {
             const openOptions = { path, baudRate };
@@ -358,8 +488,8 @@ class TauriSerial extends EventTarget {
         if (msg.includes("no data received")) {
             return "continue";
         }
-        if (isBrokenPipeError(error)) {
-            console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
+        if (isBrokenPipeError(error) || isPortGoneError(error)) {
+            console.error(`${logHead} Fatal poll error on ${this.connectionId}:`, error);
             return "fatal";
         }
         console.warn(`${logHead} Poll error:`, error);
@@ -372,8 +502,8 @@ class TauriSerial extends EventTarget {
                 try {
                     const result = await invoke("plugin:serialplugin|read_binary", {
                         path: this.connectionId,
-                        size: 256,
-                        timeout: 10,
+                        size: READ_CHUNK_SIZE,
+                        timeout: READ_TIMEOUT_MS,
                     });
 
                     if (result && result.length > 0) {
@@ -381,12 +511,12 @@ class TauriSerial extends EventTarget {
                         this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
                     }
 
-                    await new Promise((resolve) => setTimeout(resolve, 5));
+                    await new Promise((resolve) => setTimeout(resolve, READ_POLL_INTERVAL_MS));
                 } catch (error) {
                     if (this._classifyReadError(error) === "fatal") {
                         throw error;
                     }
-                    await new Promise((resolve) => setTimeout(resolve, 5));
+                    await new Promise((resolve) => setTimeout(resolve, READ_POLL_INTERVAL_MS));
                 }
             }
         } catch (error) {
@@ -464,7 +594,7 @@ class TauriSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error sending data:`, error);
             this.transmitting = false;
-            if (isBrokenPipeError(error)) {
+            if (isBrokenPipeError(error) || isPortGoneError(error)) {
                 this.handleFatalSerialError(error);
             }
             const res = { bytesSent: 0 };
