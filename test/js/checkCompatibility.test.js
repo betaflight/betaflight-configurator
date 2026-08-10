@@ -66,6 +66,9 @@ describe("getOS", () => {
     });
 
     it("identifies ChromeOS from userAgentData and from the legacy shape", async () => {
+        // A CrOS-free agent for the userAgentData cases, so they pass only on
+        // the platform value and not through the user-agent token.
+        const chromeUA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36";
         const crosUA = "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 Chrome/120 Safari/537.36";
         const { getOS } = await loadCompatibility();
 
@@ -76,7 +79,7 @@ describe("getOS", () => {
             // the user agent's CrOS token identifies ChromeOS.
             { legacyPlatform: "Linux x86_64" },
         ]) {
-            setUserAgent(crosUA, shape);
+            setUserAgent(shape.legacyPlatform ? crosUA : chromeUA, shape);
             expect(getOS()).toBe("ChromeOS");
             restoreNavigator();
         }
