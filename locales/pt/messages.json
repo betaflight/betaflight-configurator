@@ -327,6 +327,9 @@
     "rebootFlightControllerReady": {
         "message": "Controladora de voo está pronta"
     },
+    "rebootFlightControllerFailed": {
+        "message": "Controladora de voo não reconectou"
+    },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Reiniciando<\/span>"
     },
@@ -665,6 +668,9 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Falha<\/span> a ligar à porta selecionada. Verifique que o dispositivo está acessível e que as definições de ligação estão corretas, depois tente de novo."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "No iOS, permita acesso <strong>Rede Local<\/strong> ao Betaflight nas Definições &rarr; Privacidade &amp; Segurança &rarr; Rede Local, e depois tente novamente."
     },
     "connectionLostTitle": {
         "message": "Ligação perdida"
@@ -1762,6 +1768,12 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Posicione o drone com a câmera virada para o lado oposto de si (virada para o monitor)."
     },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Incline o nariz para baixo em cerca de 45°, para que a câmera aponte para o chão."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Incline o lado direito em cerca de 45°, baixando os braços direitos e levantando os esquerdos."
+    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Rode o drone cerca de 45° no sentido horário (como visto de cima)."
     },
@@ -1831,8 +1843,14 @@
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "O acelerómetro não está a ler a gravidade. Certifique-se de que a FC está conectada e sem movimento."
     },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o nariz para baixo ainda mais."
+    },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Gesto de pitch não foi detetado. Por favor tente novamente e incline o lado direito ainda mais."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Um dos gestos de inclinação foi no sentido errado. Verifique as direções de pitch e roll e tente novamente."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Plano"
@@ -8917,6 +8935,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Mostra o nome ou índice do perfil de bateria ativo"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Número do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra o número do ponto de passagem atual\/total do plano de voo ativo"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitude do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra a latitude do ponto de passagem atual"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Latitude do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra a latitude do ponto de passagem atual"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitude do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra a altitude do Ponto de Passagem atual"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distância do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra a distância para o Ponto de Passagem atual"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direção do Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra uma seta de direção apontando para o Ponto de Passagem atual"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Próximo número de Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra o número do próximo Ponto de Passagem no plano de voo ativo"
+    },
+    "osdTextElementWpEta": {
+        "message": "ETA ao Ponto de Passagem",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra o tempo estimado de chegada ao Ponto de Passagem atual"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mapa de navegação",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimapa mostrando casa, o plano de voo e a trilha de fluxo"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Manter Posição Pronto",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra se as condições de entrada do Manter Posição estão atualmente preenchidas, antes que o interruptor de modo seja acionado"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Réguas",

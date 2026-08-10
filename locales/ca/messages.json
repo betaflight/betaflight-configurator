@@ -335,6 +335,9 @@
     "rebootFlightControllerReady": {
         "message": "La controladora de vol està llesta"
     },
+    "rebootFlightControllerFailed": {
+        "message": "El controlador de vol no s'ha reconnectat"
+    },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant<\/span>"
     },
@@ -9003,6 +9006,13 @@
     },
     "osdDescElementNavMap": {
         "message": "Minimapa que mostra la destinació, el pla de vol i la trajectòria volada"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Manteniment de la posició a punt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra si les condicions d'entrada de Position Hold es compleixen actualment, abans que s'activi el selector de mode"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",
