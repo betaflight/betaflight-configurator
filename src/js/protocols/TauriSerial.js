@@ -120,7 +120,7 @@ function parseId(value) {
     // Match the whole string, because parseInt stops at the first invalid
     // character: "1155unknown" would otherwise read as 1155 and promote an
     // unrecognised device into the known-device list.
-    if (!/^(?:0x[0-9a-f]+|[0-9]+)$/i.test(text)) {
+    if (!/^(?:0x[\da-f]+|\d+)$/i.test(text)) {
         return undefined;
     }
     return Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
