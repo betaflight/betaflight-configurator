@@ -21,8 +21,9 @@ if [[ "${1:-}" == "console" ]]; then
     exec adb "${DEVICE_ARGS[@]}" logcat -s Tauri/Console
 fi
 
-PID="$(adb "${DEVICE_ARGS[@]}" shell pidof "$PACKAGE" | tr -d '\r')"
-if [[ -z "$PID" ]]; then
+# pidof exits non-zero when nothing matches, which under `set -e` would abort
+# here and swallow the message below, so take its status as part of the test.
+if ! PID="$(adb "${DEVICE_ARGS[@]}" shell pidof "$PACKAGE" | tr -d '\r')" || [[ -z "$PID" ]]; then
     echo "$PACKAGE is not running — start it first." >&2
     exit 1
 fi
