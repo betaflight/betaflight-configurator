@@ -239,14 +239,14 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
         resonantPeakDb,
         resonantFreqHz,
         maxAchievablePhaseMarginDeg,
-        // True open-loop crossover and the phase margin there. Both are NaN when
+        // True open-loop crossover and the phase margin there. Both are Number.NaN when
         // no crossing exists inside the coherent band.
-        openLoopCrossoverHz: crossover ? crossover.frequencyHz : NaN,
-        phaseMarginDeg: crossover ? crossover.phaseMarginDeg : NaN,
+        openLoopCrossoverHz: crossover ? crossover.frequencyHz : Number.NaN,
+        phaseMarginDeg: crossover ? crossover.phaseMarginDeg : Number.NaN,
         // Highest crossover placeable at the target margin, and the loop-gain
         // change needed to get there.
-        targetCrossoverHz: target ? target.frequencyHz : NaN,
-        gainToTarget: target ? target.gainScale : NaN,
+        targetCrossoverHz: target ? target.frequencyHz : Number.NaN,
+        gainToTarget: target ? target.gainScale : Number.NaN,
         lowFreqErrorDb,
         noiseFloorHz,
         meanCoherence,
@@ -281,8 +281,8 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
 export function openLoopResponse(tf) {
     const { frequencies, hReal, hImag } = tf;
     const n = frequencies.length;
-    const magnitude = new Float64Array(n).fill(NaN);
-    const phase = new Float64Array(n).fill(NaN);
+    const magnitude = new Float64Array(n).fill(Number.NaN);
+    const phase = new Float64Array(n).fill(Number.NaN);
 
     let startIndex = 0;
     for (let k = 1; k < n; k++) {
@@ -386,7 +386,7 @@ function findMaxAchievablePhaseMargin(tf, openLoop) {
             peakPhase = openLoop.phase[k];
         }
     }
-    return Number.isFinite(peakPhase) ? 180 + peakPhase : NaN;
+    return Number.isFinite(peakPhase) ? 180 + peakPhase : Number.NaN;
 }
 
 // Effective loop delay from the slope of open-loop phase against frequency:
@@ -414,11 +414,11 @@ function estimateLoopDelayMs(tf, openLoop, fLoHz = 20, fHiHz = 140) {
         sumXY += f * openLoop.phase[k];
     }
     if (n < 5) {
-        return NaN;
+        return Number.NaN;
     }
     const denominator = n * sumXX - sumX * sumX;
     if (Math.abs(denominator) < 1e-12) {
-        return NaN;
+        return Number.NaN;
     }
     const slope = (n * sumXY - sumX * sumY) / denominator;
     return (-slope / 360) * 1000;
@@ -439,7 +439,7 @@ function findBandwidth(frequencies, magnitude, coherence) {
             return frequencies[k - 1] + frac * (frequencies[k] - frequencies[k - 1]);
         }
     }
-    return NaN;
+    return Number.NaN;
 }
 
 // 2. Resonant peak: max magnitude overshoot (indicates underdamping)

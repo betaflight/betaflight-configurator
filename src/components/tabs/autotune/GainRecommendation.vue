@@ -62,25 +62,11 @@
         <div class="flex flex-wrap items-center gap-4">
             <label class="flex items-center gap-2 text-sm">
                 <span class="text-dimmed">{{ $t("autotuneTargetMargin") }}</span>
-                <select
-                    v-model.number="targetPhaseMargin"
-                    class="bg-transparent border border-[var(--surface-300)] rounded px-2 py-1"
-                >
-                    <option v-for="opt in MARGIN_OPTIONS" :key="opt.value" :value="opt.value">
-                        {{ $t(opt.labelKey) }} ({{ opt.value }}°)
-                    </option>
-                </select>
+                <USelect v-model="targetPhaseMargin" :items="marginOptions" size="xs" class="min-w-40" />
             </label>
             <label v-if="visibleAxisList.length > 1" class="flex items-center gap-2 text-sm">
                 <span class="text-dimmed">{{ $t("autotuneApplyFromAxis") }}</span>
-                <select
-                    v-model="selectedAxisKey"
-                    class="bg-transparent border border-[var(--surface-300)] rounded px-2 py-1"
-                >
-                    <option v-for="axis in visibleAxisList" :key="axis.key" :value="axis.key">
-                        {{ $t(axis.labelKey) }}
-                    </option>
-                </select>
+                <USelect v-model="selectedAxisKey" :items="axisOptions" size="xs" class="min-w-28" />
             </label>
             <UButton @click="onApply" size="xs" :disabled="!isConnected || !selectedAxisKey || applying">
                 {{ $t("autotuneApplyGains") }}
@@ -92,15 +78,7 @@
 
         <!-- The craft's own phase peak caps how much margin is reachable, so a
              target above it leaves the gain held rather than guessed. -->
-        <p v-if="unreachableAxes.length" class="text-sm text-dimmed">
-            {{
-                $t("autotuneTargetUnreachable", [
-                    unreachableAxes.join(", "),
-                    targetPhaseMargin,
-                    formatDeg(maxReachableMargin),
-                ])
-            }}
-        </p>
+        <p v-if="unreachableAxes.length" class="text-sm text-dimmed">{{ unreachableMessage }}</p>
     </UiBox>
 </template>
 
@@ -130,34 +108,62 @@ const MARGIN_OPTIONS = [
     { value: PHASE_MARGIN_PRESETS.CONSERVATIVE, labelKey: "autotuneMarginConservative" },
 ];
 
-// Changing the target only re-derives gains from the stored transfer
-// functions, so there is no need to re-import the log.
+const marginOptions = computed(() =>
+    MARGIN_OPTIONS.map((opt) => ({
+        label: `${i18n.getMessage(opt.labelKey)} (${opt.value}°)`,
+        value: opt.value,
+    })),
+);
+
+const axisOptions = computed(() =>
+    visibleAxisList.value.map((axis) => ({ label: i18n.getMessage(axis.labelKey), value: axis.key })),
+);
+
 const targetPhaseMargin = computed({
     get: () => store.targetPhaseMarginDeg,
     set: (v) => {
         store.targetPhaseMarginDeg = v;
-        recomputeGains(v);
-        applied.value = false;
-        applyError.value = "";
     },
 });
 
-// Axes whose phase never reaches the requested margin, so their gain is held.
-const unreachableAxes = computed(() =>
-    visibleAxisList.value
-        .filter((axis) => {
-            const g = store.analysisResult?.axes?.[axis.key]?.gains;
-            return g && !Number.isFinite(g.targetCrossover);
-        })
-        .map((axis) => i18n.getMessage(axis.labelKey)),
+// Changing the target only re-derives gains from the stored transfer functions,
+// so there is no need to re-import the log. Watching the store rather than
+// acting in the setter also covers writes from elsewhere, such as reset().
+watch(
+    () => store.targetPhaseMarginDeg,
+    (target) => {
+        recomputeGains(target);
+        applied.value = false;
+        applyError.value = "";
+    },
 );
 
+// Axes whose phase never reaches the requested margin, so their gain is held.
+const unreachableAxisDefs = computed(() =>
+    visibleAxisList.value.filter((axis) => {
+        const g = store.analysisResult?.axes?.[axis.key]?.gains;
+        return g && !Number.isFinite(g.targetCrossover);
+    }),
+);
+
+const unreachableAxes = computed(() => unreachableAxisDefs.value.map((axis) => i18n.getMessage(axis.labelKey)));
+
+// Scoped to the axes actually named in the message, so the limit reported is
+// theirs — a reachable axis with a lower ceiling must not be quoted here.
 const maxReachableMargin = computed(() => {
-    const values = visibleAxisList.value
+    const values = unreachableAxisDefs.value
         .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.maxPhaseMargin)
         .filter((v) => Number.isFinite(v));
-    return values.length ? Math.min(...values) : NaN;
+    return values.length ? Math.min(...values) : Number.NaN;
 });
+
+const unreachableMessage = computed(() =>
+    i18n.getMessage("autotuneTargetUnreachable", [
+        unreachableAxes.value.join(", "),
+        targetPhaseMargin.value,
+        formatDeg(maxReachableMargin.value),
+    ]),
+);
 
 const AXIS_DEFS = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },

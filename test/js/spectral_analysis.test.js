@@ -197,6 +197,28 @@ describe("achievable phase margin ceiling", () => {
     });
 });
 
+describe("coherence gate", () => {
+    it("rejects bins below the coherence threshold and holds the gain", () => {
+        // Same plant, but the measurement is noise. Nothing should be inferred
+        // from it: no crossover, no margin, and no gain change.
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3, coherence: 0.2 });
+        const { analysis, proposed } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+
+        expect(Number.isNaN(analysis.openLoopCrossoverHz)).toBe(true);
+        expect(Number.isNaN(analysis.phaseMarginDeg)).toBe(true);
+        expect(Number.isNaN(analysis.targetCrossoverHz)).toBe(true);
+        expect(analysis.piScale).toBe(1);
+        expect(proposed.slider_pi_gain).toBe(100);
+    });
+
+    it("accepts the same measurement once coherence is above the gate", () => {
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3, coherence: 0.9 });
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+        expect(Number.isFinite(analysis.openLoopCrossoverHz)).toBe(true);
+        expect(Number.isFinite(analysis.targetCrossoverHz)).toBe(true);
+    });
+});
+
 describe("recommendGains safety", () => {
     it("holds D rather than driving it to the clamp", () => {
         // The previous rule returned dScale 0.5 on 6 of 6 axis-flights across
