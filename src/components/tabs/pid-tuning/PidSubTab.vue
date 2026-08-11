@@ -1068,6 +1068,9 @@
             </UiBox>
         </div>
     </div>
+    <div v-if="isWingBuildGte49">
+        <UiBox :title="$t('pidTuningWingSettings')" type="neutral"> </UiBox>
+    </div>
 </template>
 
 <script setup>
@@ -1081,7 +1084,7 @@ import {
     readPidSliderPositions,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "@/js/data_storage";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -1701,4 +1704,8 @@ onUnmounted(() => {
         userInteractionTimeout = null;
     }
 });
+
+const isWingBuildGte49 = computed(
+    () => FC.CONFIG.buildOptions.includes("USE_WING") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49),
+);
 </script>

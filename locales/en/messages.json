@@ -9935,5 +9935,8 @@
     },
     "preflightNotamLastFetched": {
         "message": "Last fetched"
+    },
+    "pidTuningWingSettings": {
+        "message": "Wing Settings"
     }
 }
