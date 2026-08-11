@@ -48,17 +48,19 @@ describe("debugModes helper", () => {
             expect(modes.indexOf("OPTICALFLOW")).toBe(modes.indexOf("RANGEFINDER_QUALITY") + 1);
         });
 
-        it("appends AUTOPILOT_PID, POSITION_NAV, AUTOPILOT_STOP and drops AUTOPILOT_POSITION at API 1.48", () => {
+        it("appends AUTOPILOT_PID, POSITION_NAV, AUTOPILOT_STOP, PITOT, PSAS and drops AUTOPILOT_POSITION at API 1.48", () => {
             const modes = getDebugModes(API_VERSION_1_48);
             // AUTOPILOT_POSITION was removed from the firmware enum in 1.48.
             expect(modes).not.toContain("AUTOPILOT_POSITION");
             // Tail must match the firmware debug_mode_e enum order exactly:
-            // AUTOPILOT_PID(99), POSITION_NAV(100), AUTOPILOT_STOP(101).
+            // AUTOPILOT_PID(99), POSITION_NAV(100), AUTOPILOT_STOP(101), PITOT(102), PSAS(103).
             expect(getDebugModeIndex("AUTOPILOT_PID", API_VERSION_1_48)).toBe(99);
             expect(getDebugModeIndex("POSITION_NAV", API_VERSION_1_48)).toBe(100);
             expect(getDebugModeIndex("AUTOPILOT_STOP", API_VERSION_1_48)).toBe(101);
-            // AUTOPILOT_STOP is the last entry.
-            expect(modes.indexOf("AUTOPILOT_STOP")).toBe(modes.length - 1);
+            expect(getDebugModeIndex("PITOT", API_VERSION_1_48)).toBe(102);
+            expect(getDebugModeIndex("PSAS", API_VERSION_1_48)).toBe(103);
+            // PLANE_SAS is the last entry.
+            expect(modes.indexOf("PSAS")).toBe(modes.length - 1);
         });
 
         it("does not expose the 1.48 autopilot modes on 1.47 firmware", () => {
@@ -67,6 +69,8 @@ describe("debugModes helper", () => {
             expect(modes).not.toContain("AUTOPILOT_PID");
             expect(modes).not.toContain("POSITION_NAV");
             expect(modes).not.toContain("AUTOPILOT_STOP");
+            expect(modes).not.toContain("PITOT");
+            expect(modes).not.toContain("PSAS");
         });
 
         it("returns a fresh array each call (safe to mutate)", () => {

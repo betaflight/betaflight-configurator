@@ -25,6 +25,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     const originalTuningSliders = ref({});
     const originalPidProfileName = ref("");
     const originalRateProfileName = ref("");
+    const originalPsas = ref([]);
 
     // ---- actions ----
 
@@ -42,6 +43,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         originalTuningSliders.value = JSON.parse(JSON.stringify(FC.TUNING_SLIDERS));
         originalPidProfileName.value = pidProfileName;
         originalRateProfileName.value = rateProfileName;
+        originalPsas.value = JSON.parse(JSON.stringify(FC.PSAS_CONFIG));
         originalsReady.value = true;
         hasChanges.value = false;
     }
@@ -64,6 +66,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         const slidersChanged = JSON.stringify(FC.TUNING_SLIDERS) !== JSON.stringify(originalTuningSliders.value);
         const pidNameChanged = currentPidProfileName !== originalPidProfileName.value;
         const rateNameChanged = currentRateProfileName !== originalRateProfileName.value;
+        const psasChanged = JSON.stringify(FC.PSAS_CONFIG) !== JSON.stringify(originalPsas.value);
 
         hasChanges.value =
             pidsChanged ||
@@ -72,7 +75,8 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             filterChanged ||
             slidersChanged ||
             pidNameChanged ||
-            rateNameChanged;
+            rateNameChanged ||
+            psasChanged;
     }
 
     return {

@@ -1458,6 +1458,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "POSH RDY",
         },
+        PSAS_AOA_LIMITER: {
+            name: "PSAS AOA LIMITER",
+            text: "osdPsasAoALimiter",
+            desc: "osdDescPsasAoALimiter",
+            defaultPosition: -1,
+            draw_order: 625,
+            positionable: true,
+            preview: "AOA ON",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1625,6 +1634,10 @@ OSD.chooseFields = function () {
 
         if (hasNavMap) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
+
+        if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PSAS_AOA_LIMITER]);
         }
 
         if (hasPositionHold) {
