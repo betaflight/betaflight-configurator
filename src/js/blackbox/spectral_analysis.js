@@ -158,59 +158,278 @@ function buildTransferFunction(spectra, sampleRate, segmentSize, numBins, numSeg
 // Gain recommendation
 // ---------------------------------------------------------------------------
 
+// Below this frequency the closed-loop response sits at |T| ~ 1, so 1 - T
+// approaches zero and the recovered open loop is dominated by noise.
+const MIN_OPEN_LOOP_HZ = 2;
+
+// Margin work depends on phase accuracy, so it uses a stricter coherence gate
+// than the magnitude-only metrics.
+const CROSSOVER_COHERENCE_MIN = 0.5;
+
+const DEFAULT_DTERM_FILTER_HZ = 150;
+
+/**
+ * Selectable phase-margin targets.
+ *
+ * Lower margin means crossover is placed further up the phase curve: a sharper,
+ * faster craft with less room before oscillation. Higher margin backs off.
+ *
+ * The top of the range is bounded by the craft, not by preference. Open-loop
+ * phase peaks where the D term's lead is strongest and falls away either side,
+ * so the highest margin any craft can be tuned to is 180 + that peak — about
+ * 83-85 deg on the 5-inch logs this was developed against, and lower on a craft
+ * running less D. `maxAchievablePhaseMarginDeg` reports it. CONSERVATIVE is set
+ * below the values measured there so it stays reachable; when a target cannot
+ * be met the gain is held rather than guessed.
+ */
+export const PHASE_MARGIN_PRESETS = {
+    AGGRESSIVE: 50,
+    NORMAL: 60,
+    CONSERVATIVE: 72.5,
+};
+
 /**
  * Recommend simplified tuning slider adjustments based on the measured
  * closed-loop transfer function.
  *
- * Derives individual P, I, D, feedforward, and filter recommendations from
- * the frequency response characteristics:
- *   - P (pi_gain): controls bandwidth — scaled to reach target -3dB frequency
- *   - I (i_gain): controls low-frequency tracking — scaled from low-freq error
- *   - D (d_gain): controls damping — scaled to reach target phase margin
- *   - FF (feedforward_gain): tracks setpoint changes — scaled with P
- *   - D-term filter: set from noise floor frequency
+ * Gains are set by loop shaping against a phase-margin target rather than a
+ * fixed bandwidth in Hz. The achievable crossover frequency is a property of
+ * the airframe — prop inertia, motor response and filter phase lag all push it
+ * down — so a constant target in Hz cannot suit both a 65 mm whoop and a
+ * 10-inch. Targeting margin instead lets the frequency fall out of the
+ * measurement, which is self-calibrating across airframe sizes.
+ *
+ *   - P (pi_gain): loop gain scaled to place crossover where the open loop
+ *     still has `targetPhaseMarginDeg` of margin
+ *   - I (i_gain): scaled from low-frequency tracking error
+ *   - D (d_gain): held (see computeGainScales)
+ *   - FF (feedforward_gain): tracks P
+ *   - D-term filter: derived from the noise floor, tighten-only
  *
  * All outputs are slider multiplier values (1.0 = default, stored as ×100 integers).
  *
- * @param {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array }} tf
+ * @param {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array, hReal: Float64Array, hImag: Float64Array }} tf
  * @param {object} currentSliders - Current simplified tuning slider values as decimals (1.0 = 100)
- * @param {number} [targetBandwidthHz=45] - Desired -3dB bandwidth
- * @param {number} [targetPhaseMarginDeg=50] - Desired phase margin in degrees
+ * @param {number} [targetPhaseMarginDeg] - Desired open-loop phase margin in degrees
  * @returns {{ proposed: object, analysis: object }}
  */
-export function recommendGains(tf, currentSliders, targetBandwidthHz = 45, targetPhaseMarginDeg = 50) {
-    const metrics = extractMetrics(tf, targetBandwidthHz);
-    const scales = computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg);
+export function recommendGains(tf, currentSliders, targetPhaseMarginDeg = PHASE_MARGIN_PRESETS.NORMAL) {
+    const openLoop = openLoopResponse(tf);
+    const metrics = extractMetrics(tf, openLoop, targetPhaseMarginDeg);
+    const scales = computeGainScales(metrics);
     const proposed = buildProposedSliders(currentSliders, scales);
     const analysis = { ...metrics, ...scales };
     return { proposed, analysis };
 }
 
-function extractMetrics(tf, targetBandwidthHz) {
-    const { frequencies, magnitude, phase, coherence } = tf;
-    const bandwidthHz = findBandwidth(frequencies, magnitude, coherence, targetBandwidthHz);
+function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
+    const { frequencies, magnitude, coherence } = tf;
+    const bandwidthHz = findBandwidth(frequencies, magnitude, coherence);
     const { resonantPeakDb, resonantFreqHz } = findResonantPeak(frequencies, magnitude, coherence);
-    const gainCrossoverHz = findGainCrossover(frequencies, magnitude, coherence);
-    const phaseAtCrossover = interpolatePhase(frequencies, phase, gainCrossoverHz);
-    const phaseMarginDeg = 180 + phaseAtCrossover;
+    const crossover = findOpenLoopCrossover(tf, openLoop);
+    const target = findTargetCrossover(tf, openLoop, targetPhaseMarginDeg);
     const lowFreqErrorDb = computeLowFreqError(frequencies, magnitude, coherence);
     const noiseFloorHz = findNoiseFloor(frequencies, coherence);
     const meanCoherence = computeMeanCoherence(frequencies, coherence);
+    const loopDelayMs = estimateLoopDelayMs(tf, openLoop);
+    const maxAchievablePhaseMarginDeg = findMaxAchievablePhaseMargin(tf, openLoop);
 
     return {
         bandwidthHz,
         resonantPeakDb,
         resonantFreqHz,
-        gainCrossoverHz,
-        phaseMarginDeg,
+        maxAchievablePhaseMarginDeg,
+        // True open-loop crossover and the phase margin there. Both are NaN when
+        // no crossing exists inside the coherent band.
+        openLoopCrossoverHz: crossover ? crossover.frequencyHz : NaN,
+        phaseMarginDeg: crossover ? crossover.phaseMarginDeg : NaN,
+        // Highest crossover placeable at the target margin, and the loop-gain
+        // change needed to get there.
+        targetCrossoverHz: target ? target.frequencyHz : NaN,
+        gainToTarget: target ? target.gainScale : NaN,
         lowFreqErrorDb,
         noiseFloorHz,
         meanCoherence,
+        loopDelayMs,
+        targetPhaseMarginDeg,
     };
 }
 
-// 1. Bandwidth: frequency where closed-loop magnitude crosses -3dB
-function findBandwidth(frequencies, magnitude, coherence, targetBandwidthHz) {
+// ---------------------------------------------------------------------------
+// Open loop recovered from the measured closed loop
+// ---------------------------------------------------------------------------
+
+/**
+ * Recover the open-loop response L from the measured closed loop T:
+ *
+ *   L = T / (1 - T)
+ *
+ * With T = a + bi this is [(a - a² - b²) + i·b] / [(1-a)² + b²].
+ *
+ * Phase margin, gain crossover and loop delay are all open-loop properties.
+ * Reading them off the closed-loop response instead gives numbers that look
+ * plausible but are not the quantities they are named after: |T| crosses 0 dB
+ * only a few Hz up on a well-damped craft, where the closed-loop phase is
+ * still near zero, so `180 + phase` lands near 180° for anything stable.
+ *
+ * Phase is unwrapped upward from MIN_OPEN_LOOP_HZ. Starting from DC would seed
+ * the unwrap chain with the ill-conditioned bins where 1 - T approaches zero.
+ *
+ * @param {object} tf - transfer function from welchTransferFunction()
+ * @returns {{ magnitude: Float64Array, phase: Float64Array, startIndex: number }}
+ */
+export function openLoopResponse(tf) {
+    const { frequencies, hReal, hImag } = tf;
+    const n = frequencies.length;
+    const magnitude = new Float64Array(n).fill(NaN);
+    const phase = new Float64Array(n).fill(NaN);
+
+    let startIndex = 0;
+    for (let k = 1; k < n; k++) {
+        if (frequencies[k] >= MIN_OPEN_LOOP_HZ) {
+            startIndex = k;
+            break;
+        }
+    }
+
+    let offset = 0;
+    let previousRaw = null;
+    for (let k = startIndex; k < n; k++) {
+        const a = hReal[k];
+        const b = hImag[k];
+        const denominator = (1 - a) * (1 - a) + b * b;
+        if (!(denominator > 1e-12)) {
+            continue;
+        }
+        const real = (a - a * a - b * b) / denominator;
+        const imag = b / denominator;
+        magnitude[k] = Math.hypot(real, imag);
+
+        const raw = Math.atan2(imag, real) * (180 / Math.PI);
+        if (previousRaw !== null) {
+            const delta = raw - previousRaw;
+            if (delta > 180) {
+                offset -= 360;
+            } else if (delta < -180) {
+                offset += 360;
+            }
+        }
+        phase[k] = raw + offset;
+        previousRaw = raw;
+    }
+
+    return { magnitude, phase, startIndex };
+}
+
+// Present crossover: where |L| = 1, and the phase margin measured there.
+function findOpenLoopCrossover(tf, openLoop) {
+    const { frequencies, coherence } = tf;
+    for (let k = openLoop.startIndex + 1; k < frequencies.length; k++) {
+        if (Number.isNaN(openLoop.magnitude[k]) || Number.isNaN(openLoop.magnitude[k - 1])) {
+            continue;
+        }
+        if (coherence[k] < CROSSOVER_COHERENCE_MIN || coherence[k - 1] < CROSSOVER_COHERENCE_MIN) {
+            continue;
+        }
+        if (openLoop.magnitude[k] <= 1 && openLoop.magnitude[k - 1] > 1) {
+            const frac = (1 - openLoop.magnitude[k - 1]) / (openLoop.magnitude[k] - openLoop.magnitude[k - 1]);
+            return {
+                frequencyHz: frequencies[k - 1] + frac * (frequencies[k] - frequencies[k - 1]),
+                phaseMarginDeg: 180 + openLoop.phase[k - 1] + frac * (openLoop.phase[k] - openLoop.phase[k - 1]),
+            };
+        }
+    }
+    return null;
+}
+
+// Highest crossover placeable while retaining the target margin: the frequency
+// where open-loop phase falls to -(180 - targetPhaseMarginDeg). The loop-gain
+// change needed to put crossover there is 1/|L| at that frequency.
+function findTargetCrossover(tf, openLoop, targetPhaseMarginDeg) {
+    const { frequencies, coherence } = tf;
+    const wantedPhase = -(180 - targetPhaseMarginDeg);
+    for (let k = openLoop.startIndex + 1; k < frequencies.length; k++) {
+        if (Number.isNaN(openLoop.phase[k]) || Number.isNaN(openLoop.phase[k - 1])) {
+            continue;
+        }
+        if (coherence[k] < CROSSOVER_COHERENCE_MIN || coherence[k - 1] < CROSSOVER_COHERENCE_MIN) {
+            continue;
+        }
+        if (openLoop.phase[k] <= wantedPhase && openLoop.phase[k - 1] > wantedPhase) {
+            const frac = (wantedPhase - openLoop.phase[k - 1]) / (openLoop.phase[k] - openLoop.phase[k - 1]);
+            const magnitudeAt = openLoop.magnitude[k - 1] + frac * (openLoop.magnitude[k] - openLoop.magnitude[k - 1]);
+            if (!(magnitudeAt > 1e-9)) {
+                return null;
+            }
+            return {
+                frequencyHz: frequencies[k - 1] + frac * (frequencies[k] - frequencies[k - 1]),
+                gainScale: 1 / magnitudeAt,
+            };
+        }
+    }
+    return null;
+}
+
+// Ceiling on phase margin for this craft. Open-loop phase peaks where the D
+// term's lead is strongest and falls away either side, so no choice of loop
+// gain can place crossover at a margin higher than 180 + that peak. Targets
+// above it are unreachable, which is why the UI reports this rather than
+// silently holding the gain.
+function findMaxAchievablePhaseMargin(tf, openLoop) {
+    const { frequencies, coherence } = tf;
+    let peakPhase = -Infinity;
+    for (let k = openLoop.startIndex; k < frequencies.length; k++) {
+        if (Number.isNaN(openLoop.phase[k]) || coherence[k] < CROSSOVER_COHERENCE_MIN) {
+            continue;
+        }
+        if (openLoop.phase[k] > peakPhase) {
+            peakPhase = openLoop.phase[k];
+        }
+    }
+    return Number.isFinite(peakPhase) ? 180 + peakPhase : NaN;
+}
+
+// Effective loop delay from the slope of open-loop phase against frequency:
+// phase_deg ~ -360·tau·f, so tau = -slope/360. Reported for diagnosis — it is
+// the hard ceiling on crossover that no amount of gain can move.
+function estimateLoopDelayMs(tf, openLoop, fLoHz = 20, fHiHz = 140) {
+    const { frequencies, coherence } = tf;
+    let n = 0;
+    let sumX = 0;
+    let sumY = 0;
+    let sumXX = 0;
+    let sumXY = 0;
+    for (let k = openLoop.startIndex; k < frequencies.length; k++) {
+        const f = frequencies[k];
+        if (f < fLoHz || f > fHiHz) {
+            continue;
+        }
+        if (Number.isNaN(openLoop.phase[k]) || coherence[k] < CROSSOVER_COHERENCE_MIN) {
+            continue;
+        }
+        n++;
+        sumX += f;
+        sumY += openLoop.phase[k];
+        sumXX += f * f;
+        sumXY += f * openLoop.phase[k];
+    }
+    if (n < 5) {
+        return NaN;
+    }
+    const denominator = n * sumXX - sumX * sumX;
+    if (Math.abs(denominator) < 1e-12) {
+        return NaN;
+    }
+    const slope = (n * sumXY - sumX * sumY) / denominator;
+    return (-slope / 360) * 1000;
+}
+
+// 1. Bandwidth: frequency where closed-loop magnitude crosses -3dB.
+// Reported for information only. It is a poor control target: a loop with high
+// gain and heavy phase lag stays magnitude-flat well past the point where it
+// has any stability margin left, which is why yaw can measure a far higher
+// bandwidth than roll or pitch on the same craft while having less margin.
+function findBandwidth(frequencies, magnitude, coherence) {
     for (let k = 1; k < frequencies.length; k++) {
         if (coherence[k - 1] < 0.3 || coherence[k] < 0.3) {
             continue;
@@ -220,16 +439,7 @@ function findBandwidth(frequencies, magnitude, coherence, targetBandwidthHz) {
             return frequencies[k - 1] + frac * (frequencies[k] - frequencies[k - 1]);
         }
     }
-    let maxFreqAbove3dB = 0;
-    for (let k = 1; k < frequencies.length; k++) {
-        if (coherence[k] < 0.3) {
-            continue;
-        }
-        if (magnitude[k] > -3 && frequencies[k] > maxFreqAbove3dB) {
-            maxFreqAbove3dB = frequencies[k];
-        }
-    }
-    return maxFreqAbove3dB || targetBandwidthHz;
+    return NaN;
 }
 
 // 2. Resonant peak: max magnitude overshoot (indicates underdamping)
@@ -248,59 +458,7 @@ function findResonantPeak(frequencies, magnitude, coherence) {
     return { resonantPeakDb, resonantFreqHz };
 }
 
-// 3. Gain crossover: where magnitude crosses 0 dB
-function findGainCrossover(frequencies, magnitude, coherence) {
-    for (let k = 1; k < frequencies.length; k++) {
-        if (coherence[k - 1] < 0.3 || coherence[k] < 0.3) {
-            continue;
-        }
-        if (magnitude[k] <= 0 && magnitude[k - 1] > 0) {
-            const frac = (0 - magnitude[k - 1]) / (magnitude[k] - magnitude[k - 1]);
-            return frequencies[k - 1] + frac * (frequencies[k] - frequencies[k - 1]);
-        }
-    }
-    return 0;
-}
-
-// Whether the two frequency bins bracketing `targetHz` both have coherence
-// above `threshold`. Used to suppress predictions that fall outside the
-// trustworthy range of the measurement.
-function isFrequencyCoherent(frequencies, coherence, targetHz, threshold) {
-    if (!coherence || targetHz <= 0 || targetHz > frequencies[frequencies.length - 1]) {
-        return false;
-    }
-    for (let k = 1; k < frequencies.length; k++) {
-        if (frequencies[k] >= targetHz) {
-            return coherence[k - 1] >= threshold && coherence[k] >= threshold;
-        }
-    }
-    return false;
-}
-
-// 4. Phase at a chosen crossover frequency (wrap-aware linear interpolation).
-// Adjacent bins from atan2() can jump ±360° at the wrap (e.g. 179 → -179);
-// normalise the delta into (-180, 180] so the interpolation follows the
-// shortest angular path instead of crossing the wrap as a 358° slope.
-function interpolatePhase(frequencies, phase, crossoverHz) {
-    if (crossoverHz <= 0) {
-        return 0;
-    }
-    for (let k = 1; k < frequencies.length; k++) {
-        if (frequencies[k] >= crossoverHz) {
-            const frac = (crossoverHz - frequencies[k - 1]) / (frequencies[k] - frequencies[k - 1]);
-            let delta = phase[k] - phase[k - 1];
-            if (delta > 180) {
-                delta -= 360;
-            } else if (delta < -180) {
-                delta += 360;
-            }
-            return phase[k - 1] + frac * delta;
-        }
-    }
-    return 0;
-}
-
-// 5. Low-frequency gain error: average magnitude deviation from 0 dB in 2-10 Hz
+// 3. Low-frequency gain error: average magnitude deviation from 0 dB in 2-10 Hz
 function computeLowFreqError(frequencies, magnitude, coherence) {
     let sum = 0;
     let count = 0;
@@ -336,28 +494,32 @@ function computeMeanCoherence(frequencies, coherence) {
     return count > 0 ? sum / count : 0;
 }
 
-function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg) {
-    const { bandwidthHz, gainCrossoverHz, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
+function computeGainScales(metrics) {
+    const { gainToTarget, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
 
-    // P (via pi_gain): bandwidth roughly proportional to P gain
-    let piScale = bandwidthHz > 0 ? targetBandwidthHz / bandwidthHz : 1;
+    // P (via pi_gain): scale loop gain so crossover lands where the open loop
+    // still has the target phase margin. If the phase never falls that far
+    // inside the coherent band there is no measured basis for a gain change,
+    // so hold rather than guess.
+    let piScale = Number.isFinite(gainToTarget) ? gainToTarget : 1;
 
-    // D: predict post-P-change phase margin to couple P and D correctly.
-    // Changing P shifts the gain crossover; the phase at the new crossover
-    // determines the actual phase margin the system will have after the P
-    // adjustment, so D must compensate from *that* predicted margin rather
-    // than the currently measured one. Skip the prediction if the predicted
-    // crossover falls outside the coherent frequency range — phase samples
-    // there are noise, not signal, and would push D toward bogus values.
-    let dScale = 1;
-    const predictedCrossoverHz = gainCrossoverHz * piScale;
-    if (predictedCrossoverHz > 0 && isFrequencyCoherent(tf.frequencies, tf.coherence, predictedCrossoverHz, 0.3)) {
-        const predictedPhase = interpolatePhase(tf.frequencies, tf.phase, predictedCrossoverHz);
-        const predictedPhaseMargin = 180 + predictedPhase;
-        if (predictedPhaseMargin > 0 && predictedPhaseMargin < 180) {
-            dScale = 1 + (targetPhaseMarginDeg - predictedPhaseMargin) / 90;
-        }
-    }
+    // D: held.
+    //
+    // The previous rule derived D from a "phase margin" computed off the
+    // closed-loop response at the closed-loop 0 dB crossing. That crossing sits
+    // a few Hz up on a well-damped craft, where closed-loop phase is still near
+    // zero, so the figure landed near 180° on anything stable and drove dScale
+    // hard negative into its 0.5 clamp. Measured on two independent 5-inch
+    // chirp flights it halved the D slider on 6 of 6 axis-flights regardless of
+    // the craft.
+    //
+    // With crossover placed by phase margin, the margin target is met by the
+    // gain change alone, so D has nothing left to correct. D shapes the phase
+    // curve and therefore sets *where* the margin limit falls — reported as
+    // targetCrossoverHz — but choosing to trade damping for more bandwidth is a
+    // pilot preference, not something the measurement can settle. Re-enabling
+    // an automatic D recommendation needs a sound basis first.
+    const dScale = 1;
 
     // I: below 0 dB at low freq → increase, too high → decrease
     let iScale = 1;
@@ -373,11 +535,9 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
     // Safety: back off on resonance
     if (resonantPeakDb > 6) {
         piScale *= 0.75;
-        dScale *= 0.85;
         ffScale *= 0.8;
     } else if (resonantPeakDb > 3) {
         piScale *= 0.9;
-        dScale *= 0.95;
     }
 
     // D-term filter: derive a cutoff hint from where the measurement stops
@@ -387,14 +547,13 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
     // falls back to the top frequency, which would drive the cutoff up and
     // *reduce* filtering — feeding D-term noise into the motors and risking
     // instability/flyaway on arm. So this may only ever tighten filtering.
-    const defaultFilterHz = 150;
-    let filterScale = noiseFloorHz / defaultFilterHz;
+    const filterScale = noiseFloorHz / DEFAULT_DTERM_FILTER_HZ;
 
     // Clamp all to safe range (max 2x change per iteration)
     return {
         piScale: clamp(piScale, 0.5, 2),
         iScale: clamp(iScale, 0.5, 2),
-        dScale: clamp(dScale, 0.5, 2),
+        dScale,
         ffScale: clamp(ffScale, 0.5, 2),
         // Safety: cap at 1.0 — never recommend *less* D-term filtering (see note above).
         filterScale: clamp(filterScale, 0.5, 1),

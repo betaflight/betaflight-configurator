@@ -58,8 +58,19 @@
             </table>
         </div>
 
-        <!-- Axis selector + Apply Button -->
+        <!-- Tuning target + Axis selector + Apply Button -->
         <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 text-sm">
+                <span class="text-dimmed">{{ $t("autotuneTargetMargin") }}</span>
+                <select
+                    v-model.number="targetPhaseMargin"
+                    class="bg-transparent border border-[var(--surface-300)] rounded px-2 py-1"
+                >
+                    <option v-for="opt in MARGIN_OPTIONS" :key="opt.value" :value="opt.value">
+                        {{ $t(opt.labelKey) }} ({{ opt.value }}°)
+                    </option>
+                </select>
+            </label>
             <label v-if="visibleAxisList.length > 1" class="flex items-center gap-2 text-sm">
                 <span class="text-dimmed">{{ $t("autotuneApplyFromAxis") }}</span>
                 <select
@@ -78,6 +89,18 @@
             <span v-if="applied" class="text-sm text-green-500 font-bold" v-html="$t('autotuneApplied')"></span>
             <span v-if="applyError" class="text-sm text-red-500 font-bold">{{ applyError }}</span>
         </div>
+
+        <!-- The craft's own phase peak caps how much margin is reachable, so a
+             target above it leaves the gain held rather than guessed. -->
+        <p v-if="unreachableAxes.length" class="text-sm text-dimmed">
+            {{
+                $t("autotuneTargetUnreachable", [
+                    unreachableAxes.join(", "),
+                    targetPhaseMargin,
+                    formatDeg(maxReachableMargin),
+                ])
+            }}
+        </p>
     </UiBox>
 </template>
 
@@ -86,12 +109,13 @@ import { computed, ref, watch } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import { useConnectionStore } from "@/stores/connection";
 import { useAutotune } from "@/composables/useAutotune";
+import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
 import { i18n } from "@/js/localization";
 import UiBox from "../../elements/UiBox.vue";
 
 const store = useAutotuneStore();
 const connectionStore = useConnectionStore();
-const { applyGains } = useAutotune();
+const { applyGains, recomputeGains } = useAutotune();
 
 const applied = ref(false);
 const applying = ref(false);
@@ -99,6 +123,41 @@ const applyError = ref("");
 const selectedAxisKey = ref(null);
 
 const isConnected = computed(() => connectionStore.connectionValid);
+
+const MARGIN_OPTIONS = [
+    { value: PHASE_MARGIN_PRESETS.AGGRESSIVE, labelKey: "autotuneMarginAggressive" },
+    { value: PHASE_MARGIN_PRESETS.NORMAL, labelKey: "autotuneMarginNormal" },
+    { value: PHASE_MARGIN_PRESETS.CONSERVATIVE, labelKey: "autotuneMarginConservative" },
+];
+
+// Changing the target only re-derives gains from the stored transfer
+// functions, so there is no need to re-import the log.
+const targetPhaseMargin = computed({
+    get: () => store.targetPhaseMarginDeg,
+    set: (v) => {
+        store.targetPhaseMarginDeg = v;
+        recomputeGains(v);
+        applied.value = false;
+        applyError.value = "";
+    },
+});
+
+// Axes whose phase never reaches the requested margin, so their gain is held.
+const unreachableAxes = computed(() =>
+    visibleAxisList.value
+        .filter((axis) => {
+            const g = store.analysisResult?.axes?.[axis.key]?.gains;
+            return g && !Number.isFinite(g.targetCrossover);
+        })
+        .map((axis) => i18n.getMessage(axis.labelKey)),
+);
+
+const maxReachableMargin = computed(() => {
+    const values = visibleAxisList.value
+        .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.maxPhaseMargin)
+        .filter((v) => Number.isFinite(v));
+    return values.length ? Math.min(...values) : NaN;
+});
 
 const AXIS_DEFS = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
@@ -114,7 +173,11 @@ const PID_ROWS = [
 
 const ANALYSIS_FIELDS = [
     { key: "bandwidth", labelKey: "autotuneBandwidth", format: formatHz },
+    { key: "crossover", labelKey: "autotuneCrossover", format: formatHz },
     { key: "phaseMargin", labelKey: "autotunePhaseMargin", format: formatDeg },
+    { key: "targetCrossover", labelKey: "autotuneTargetCrossover", format: formatHz },
+    { key: "maxPhaseMargin", labelKey: "autotuneMaxPhaseMargin", format: formatDeg },
+    { key: "loopDelay", labelKey: "autotuneLoopDelay", format: formatMs },
     { key: "resonantPeak", labelKey: "autotuneResonantPeak", format: formatDb },
     { key: "sensitivityPeak", labelKey: "autotuneSensitivityPeak", format: formatDb },
     { key: "overshoot", labelKey: "autotuneOvershoot", format: formatPct },
@@ -261,20 +324,23 @@ function changeClass(pct) {
     return "text-dimmed";
 }
 
+// Metrics are NaN when the measurement gives no basis for them \u2014 for example a
+// craft whose open-loop phase never reaches the margin limit inside the
+// coherent band. Render those as "--" rather than "NaN".
 function formatHz(v) {
-    return v == null ? "--" : `${v.toFixed(1)} Hz`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} Hz` : "--";
 }
 function formatDeg(v) {
-    return v == null ? "--" : `${v.toFixed(1)}\u00B0`;
+    return Number.isFinite(v) ? `${v.toFixed(1)}\u00B0` : "--";
 }
 function formatDb(v) {
-    return v == null ? "--" : `${v.toFixed(1)} dB`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} dB` : "--";
 }
 function formatPct(v) {
-    return v == null ? "--" : `${v.toFixed(0)}%`;
+    return Number.isFinite(v) ? `${v.toFixed(0)}%` : "--";
 }
 function formatMs(v) {
-    return v == null ? "--" : `${v.toFixed(1)} ms`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} ms` : "--";
 }
 
 function formatChangePct(v) {
