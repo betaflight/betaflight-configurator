@@ -13,9 +13,9 @@ import { useDirtyState } from "@/composables/useDirtyState";
  *  - `hasEdits` covers the values, and is re-baselined by every load (including the reload that
  *    follows a profile switch, which pulls in a whole different set of values).
  *  - `profileDirty` covers what the FC itself holds in RAM only: the active PID / rate profile
- *    picked by MSP_SELECT_SETTING, and a MSP_SET_RESET_CURR_PID reset of the current profile.
- *    Both stay unsaved work until the tab writes EEPROM, so they have to survive the reload that
- *    each of them triggers.
+ *    picked by MSP_SELECT_SETTING, and profile data rewritten by MSP_SET_RESET_CURR_PID or
+ *    MSP_COPY_PROFILE. All of it stays unsaved work until the tab writes EEPROM, so it has to
+ *    survive the reload that a switch or a reset triggers.
  */
 export const usePidTuningStore = defineStore("pidTuning", () => {
     /** The editable set: the same five objects the tab writes back over MSP, plus the profile names. */
@@ -38,32 +38,33 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         () => `${FC.CONFIG.profile}:${FC.CONFIG.rateProfile}`,
     );
 
-    // A reset needs a flag rather than a baseline: switching back to the original profile really
-    // does undo a switch, but the pre-reset values are gone from the FC, so nothing is left to
-    // compare against and only an EEPROM write can settle it.
-    const profileReset = ref(false);
+    // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a
+    // baseline: switching back to the original profile really does undo a switch, but a reset or a
+    // copy leaves nothing to compare against — the overwritten values are gone from the FC, and a
+    // copy lands in a profile the tab is not even showing. Only an EEPROM write can settle those.
+    const profileUnsaved = ref(false);
 
-    const profileDirty = computed(() => profileChanged.value || profileReset.value);
+    const profileDirty = computed(() => profileChanged.value || profileUnsaved.value);
 
-    /** Unsaved work of any kind: edited values, or a profile switch / reset that is RAM-only. */
+    /** Unsaved work of any kind: edited values, or a RAM-only profile switch / reset / copy. */
     const hasChanges = computed(() => hasEdits.value || profileDirty.value);
 
-    /** Record that MSP_SET_RESET_CURR_PID rewrote the current profile in RAM. */
-    function markProfileReset() {
-        profileReset.value = true;
+    /** Record a RAM-only rewrite of profile data: a reset of the current profile, or a copy. */
+    function markProfileUnsaved() {
+        profileUnsaved.value = true;
     }
 
-    /** The FC-side profile state — the selection and any reset of it — is now what EEPROM holds. */
+    /** The FC-side profile state — the selection and any rewrite of it — is now what EEPROM holds. */
     function markProfileClean() {
         markProfileSelectionClean();
-        profileReset.value = false;
+        profileUnsaved.value = false;
     }
 
     return {
         hasChanges,
         hasEdits,
         markEditsClean,
-        markProfileReset,
+        markProfileUnsaved,
         markProfileClean,
     };
 });

@@ -378,6 +378,9 @@ async function copyProfile() {
 
                 try {
                     await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    // The copy landed in the destination profile in RAM only, and nothing on screen
+                    // reflects it — flag it so Save is the way out.
+                    pidTuningStore.markProfileUnsaved();
                     console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
                 } catch (error) {
                     console.error("[PidTuningTab] Failed to copy profile:", error);
@@ -422,6 +425,7 @@ async function copyRateProfile() {
 
                 try {
                     await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    pidTuningStore.markProfileUnsaved();
                     console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
                 } catch (error) {
                     console.error("[PidTuningTab] Failed to copy rate profile:", error);
@@ -440,7 +444,7 @@ async function resetProfile() {
         // The reset rewrote the profile in RAM only, and the reload below adopts those defaults as
         // the clean value baseline — so flag the reset itself as work that still needs an EEPROM
         // write, or it would read as saved the moment the reload lands.
-        pidTuningStore.markProfileReset();
+        pidTuningStore.markProfileUnsaved();
         await loadData();
         gui_log(t("pidTuningPidProfileReset"));
     } catch (error) {

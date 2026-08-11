@@ -73,7 +73,7 @@ describe("pidTuning store dirty tracking", () => {
 
         // MSP_SET_RESET_CURR_PID rewrites the profile in RAM, then the tab reloads the defaults
         // and adopts them as the clean value baseline.
-        store.markProfileReset();
+        store.markProfileUnsaved();
         FC.PIDS = [[45, 80, 40]];
         store.markEditsClean();
 
@@ -86,11 +86,23 @@ describe("pidTuning store dirty tracking", () => {
         store.markEditsClean();
         store.markProfileClean();
 
-        store.markProfileReset();
+        store.markProfileUnsaved();
         store.markEditsClean();
         // Refresh only re-reads the FC — it cannot put the pre-reset values back.
         store.markEditsClean();
 
+        expect(store.hasChanges).toBe(true);
+    });
+
+    it("flags a copy into another profile, which leaves the shown values untouched", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        // MSP_COPY_PROFILE writes the destination profile in RAM; nothing on screen changes.
+        store.markProfileUnsaved();
+
+        expect(store.hasEdits).toBe(false);
         expect(store.hasChanges).toBe(true);
     });
 
@@ -99,7 +111,7 @@ describe("pidTuning store dirty tracking", () => {
         store.markEditsClean();
         store.markProfileClean();
 
-        store.markProfileReset();
+        store.markProfileUnsaved();
         expect(store.hasChanges).toBe(true);
 
         store.markProfileClean();
