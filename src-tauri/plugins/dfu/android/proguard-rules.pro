@@ -1,0 +1,1 @@
+# See consumer-rules.pro.

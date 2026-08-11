@@ -1,0 +1,18 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = """
+Default permissions for the DFU plugin: enumerate DFU-capable USB devices,
+request USB permission, open/close a device, claim/release its interface,
+and perform control transfers.
+"""
+permissions = [
+    "allow-list-devices",
+    "allow-request-permission",
+    "allow-open-device",
+    "allow-claim-interface",
+    "allow-release-interface",
+    "allow-close-device",
+    "allow-control-transfer-in",
+    "allow-control-transfer-out",
+]

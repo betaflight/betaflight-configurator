@@ -315,8 +315,10 @@ export default defineComponent({
     bottom: 0;
     box-sizing: border-box;
     width: 100%;
-    height: 2.5rem;
-    padding: 0.25rem 1rem;
+    /* Grow by the bottom safe-area inset (Android navigation bar / iOS home indicator) and pad the
+       contents up by the same amount, so the row keeps a constant 2rem content box. */
+    height: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.25rem 1rem calc(0.25rem + env(safe-area-inset-bottom, 0px));
     background-color: var(--surface-300);
     line-height: 1.2;
     overflow-x: auto;
