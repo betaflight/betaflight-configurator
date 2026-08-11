@@ -1792,37 +1792,40 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     break;
 
-                case MSP_SET_WING:
+                case MSPCodes.MSP_WING:
                     for (let i = 0; i < 3; i++) {
-                        FC.WING_CONFIG.s_term[i] = data.readU8(src);
+                        FC.WING_CONFIG.s_term[i] = data.readU8();
                     }
                     for (let i = 0; i < 3; i++) {
-                        FC.WING_CONFIG.spa_center[i] = data.readU16(src);
+                        FC.WING_CONFIG.spa_center[i] = data.readU16();
                     }
                     for (let i = 0; i < 3; i++) {
-                        FC.WING_CONFIG.spa_width[i] = data.readU16(src);
+                        FC.WING_CONFIG.spa_width[i] = data.readU16();
                     }
                     for (let i = 0; i < 3; i++) {
-                        FC.WING_CONFIG.spa_mode[i] = data.readU8(src);
+                        FC.WING_CONFIG.spa_mode[i] = data.readU8();
                     }
 
-                    FC.WING_CONFIG.tpa_curve_type = data.readU8(src);
-                    FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8(src);
-                    FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16(src);
-                    FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16(src);
-                    FC.WING_CONFIG.tpa_curve_expo = data.readU8(src);
-                    FC.WING_CONFIG.tpa_speed_type = data.readU8(src);
-                    FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16(src);
-                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.readU16(src);
-                    FC.WING_CONFIG.yaw_type = data.readU8(src);
-                    FC.WING_CONFIG.angle_pitch_offset = data.readU16(src);
+                    FC.WING_CONFIG.tpa_curve_type = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_expo = data.readU8();
+                    FC.WING_CONFIG.tpa_speed_type = data.readU8();
+                    FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.readU16();
+                    FC.WING_CONFIG.yaw_type = data.readU8();
+                    FC.WING_CONFIG.angle_pitch_offset = data.readU16();
 
+                    break;
+
+                case MSPCodes.MSP_SET_WING:
                     break;
 
                 default:
