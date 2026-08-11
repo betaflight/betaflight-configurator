@@ -1708,4 +1708,144 @@ onUnmounted(() => {
 const isWingBuildGte49 = computed(
     () => FC.CONFIG.buildOptions.includes("USE_WING") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49),
 );
+
+const s_term_roll = computed({
+    get: () => FC.WING_CONFIG.s_term[0],
+    set: (val) => FC.WING_CONFIG.s_term[0],
+});
+
+const s_term_pitch = computed({
+    get: () => FC.WING_CONFIG.s_term[1],
+    set: (val) => FC.WING_CONFIG.s_term[1],
+});
+
+const s_term_yaw = computed({
+    get: () => FC.WING_CONFIG.s_term[2],
+    set: (val) => FC.WING_CONFIG.s_term[2],
+});
+
+const spa_center_roll = computed({
+    get: () => FC.WING_CONFIG.spa_center[0],
+    set: (val) => FC.WING_CONFIG.spa_center[0],
+});
+
+const spa_center_pitch = computed({
+    get: () => FC.WING_CONFIG.spa_center[1],
+    set: (val) => FC.WING_CONFIG.spa_center[1],
+});
+
+const spa_center_yaw = computed({
+    get: () => FC.WING_CONFIG.spa_center[2],
+    set: (val) => FC.WING_CONFIG.spa_center[2],
+});
+
+const spa_width_roll = computed({
+    get: () => FC.WING_CONFIG.spa_width[0],
+    set: (val) => FC.WING_CONFIG.spa_width[0],
+});
+
+const spa_width_pitch = computed({
+    get: () => FC.WING_CONFIG.spa_width[1],
+    set: (val) => FC.WING_CONFIG.spa_width[1],
+});
+
+const spa_width_yaw = computed({
+    get: () => FC.WING_CONFIG.spa_width[2],
+    set: (val) => FC.WING_CONFIG.spa_width[2],
+});
+
+const spa_mode_roll = computed({
+    get: () => FC.WING_CONFIG.spa_mode[0],
+    set: (val) => FC.WING_CONFIG.spa_mode[0],
+});
+
+const spa_mode_pitch = computed({
+    get: () => FC.WING_CONFIG.spa_mode[1],
+    set: (val) => FC.WING_CONFIG.spa_mode[1],
+});
+
+const spa_mode_yaw = computed({
+    get: () => FC.WING_CONFIG.spa_mode[2],
+    set: (val) => FC.WING_CONFIG.spa_mode[2],
+});
+
+const tpa_curve_type = computed({
+    get: () => FC.WING_CONFIG.tpa_curve_type,
+    set: (val) => FC.WING_CONFIG.tpa_curve_type,
+});
+
+const tpa_curve_stall_throttle = computed({
+    get: () => FC.WING_CONFIG.tpa_curve_stall_throttle,
+    set: (val) => FC.WING_CONFIG.tpa_curve_stall_throttle,
+});
+
+const tpa_curve_pid_thr0 = computed({
+    get: () => FC.WING_CONFIG.tpa_curve_pid_thr0,
+    set: (val) => FC.WING_CONFIG.tpa_curve_pid_thr0,
+});
+
+const tpa_curve_pid_thr100 = computed({
+    get: () => FC.WING_CONFIG.tpa_curve_pid_thr100,
+    set: (val) => FC.WING_CONFIG.tpa_curve_pid_thr100,
+});
+
+const tpa_curve_expo = computed({
+    get: () => FC.WING_CONFIG.tpa_curve_expo,
+    set: (val) => FC.WING_CONFIG.tpa_curve_expo,
+});
+
+const tpa_speed_type = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_type,
+    set: (val) => FC.WING_CONFIG.tpa_speed_type,
+});
+
+const tpa_speed_basic_delay = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_basic_delay,
+    set: (val) => FC.WING_CONFIG.tpa_speed_basic_delay,
+});
+
+const tpa_speed_basic_gravity = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_basic_gravity,
+    set: (val) => FC.WING_CONFIG.tpa_speed_basic_gravity,
+});
+
+const tpa_speed_adv_prop_pitch = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_adv_prop_pitch,
+    set: (val) => FC.WING_CONFIG.tpa_speed_adv_prop_pitch,
+});
+
+const tpa_speed_adv_mass = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_adv_mass,
+    set: (val) => FC.WING_CONFIG.tpa_speed_adv_mass,
+});
+
+const tpa_speed_adv_drag_k = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_adv_drag_k,
+    set: (val) => FC.WING_CONFIG.tpa_speed_adv_drag_k,
+});
+
+const tpa_speed_adv_thrust = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_adv_thrust,
+    set: (val) => FC.WING_CONFIG.tpa_speed_adv_thrust,
+});
+
+const tpa_speed_max_voltage = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_max_voltage,
+    set: (val) => FC.WING_CONFIG.tpa_speed_max_voltage,
+});
+
+const tpa_speed_pitch_offset = computed({
+    get: () => FC.WING_CONFIG.tpa_speed_pitch_offset,
+    set: (val) => FC.WING_CONFIG.tpa_speed_pitch_offset,
+});
+
+const yaw_type = computed({
+    get: () => FC.WING_CONFIG.yaw_type,
+    set: (val) => FC.WING_CONFIG.yaw_type,
+});
+
+const angle_pitch_offset = computed({
+    get: () => FC.WING_CONFIG.angle_pitch_offset,
+    set: (val) => FC.WING_CONFIG.angle_pitch_offset,
+});
 </script>
