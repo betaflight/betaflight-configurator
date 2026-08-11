@@ -12,8 +12,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // getConnectionState().isReconnecting being false — see the tests below.
 // ---------------------------------------------------------------------------
 
-const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
+const { serial, dfuProtocol, isExpertModeEnabled, TauriDfuTransportMock } = vi.hoisted(() => {
     return {
+        TauriDfuTransportMock: class {},
         serial: {
             connected: false,
             connectionId: null,
@@ -43,12 +44,30 @@ vi.mock("../../src/js/serial.js", () => ({
 vi.mock("../../src/js/protocols/usbdfu", () => ({
     __esModule: true,
     default: dfuProtocol,
-    UsbDfuProtocol: class {},
+    // Captures the transport it wraps so the createDfuProtocol() routing tests can
+    // assert which transport was chosen; the listener API is what DeviceHandler's
+    // constructor touches.
+    UsbDfuProtocol: class {
+        constructor(transport) {
+            this.transport = transport;
+            this.usbDevice = null;
+            this.getConnectedDevice = vi.fn(() => null);
+            this.getDevices = vi.fn(async () => []);
+            this.requestPermission = vi.fn();
+            this.addEventListener = vi.fn();
+            this.removeEventListener = vi.fn();
+        }
+    },
 }));
 
 vi.mock("../../src/js/protocols/CapacitorDfuTransport", () => ({
     __esModule: true,
     default: class {},
+}));
+
+vi.mock("../../src/js/protocols/TauriDfuTransport", () => ({
+    __esModule: true,
+    default: TauriDfuTransportMock,
 }));
 
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({
@@ -73,6 +92,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
     isAndroid: () => false,
+    isTauriAndroid: () => false,
 }));
 
 import DeviceHandler from "../../src/js/device_handler";
@@ -340,5 +360,32 @@ describe("DeviceHandler show* setters", () => {
         expect(spy).toHaveBeenCalledTimes(1);
 
         spy.mockRestore();
+    });
+});
+
+describe("createDfuProtocol routing", () => {
+    // dfuProtocol is chosen at module scope, so exercising the Tauri Android branch
+    // needs a fresh module graph with isTauriAndroid flipped before the re-import.
+    it("wraps the Tauri transport on Tauri Android", async () => {
+        vi.resetModules();
+        vi.doMock("../../src/js/utils/checkCompatibility.js", () => ({
+            __esModule: true,
+            checkCompatibility: vi.fn(),
+            checkBluetoothSupport: () => true,
+            checkSerialSupport: () => true,
+            checkUsbSupport: () => true,
+            isAndroid: () => false,
+            isTauriAndroid: () => true,
+        }));
+
+        try {
+            const { default: handler } = await import("../../src/js/device_handler");
+
+            expect(handler.dfuProtocol).not.toBe(dfuProtocol);
+            expect(handler.dfuProtocol.transport).toBeInstanceOf(TauriDfuTransportMock);
+        } finally {
+            vi.doUnmock("../../src/js/utils/checkCompatibility.js");
+            vi.resetModules();
+        }
     });
 });

@@ -1,11 +1,13 @@
 {
     "$schema": "../gen/schemas/android-schema.json",
     "identifier": "android",
-    "description": "Android capability: core APIs and USB serial access.",
+    "description": "Android capability: core APIs, USB serial, BLE and USB DFU access.",
     "platforms": ["android"],
     "windows": ["*"],
     "permissions": [
         "core:default",
-        "serialplugin:default"
+        "serialplugin:default",
+        "blec:allow-check-permissions",
+        "dfu:default"
     ]
 }

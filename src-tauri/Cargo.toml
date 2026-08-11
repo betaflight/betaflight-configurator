@@ -19,6 +19,10 @@ tauri = { version = "2.11", features = [] }
 tauri-plugin-shell = "2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+# USB DFU flashing; only functional (and only registered) on Android, but kept
+# an unconditional direct dependency so every target compiles the crate and the
+# Tauri CLI can discover its Android library path.
+tauri-plugin-dfu = { path = "plugins/dfu" }
 
 # USB serial is desktop + Android only. iOS has no USB serial API, and
 # tauri-plugin-serialplugin's iOS build path doesn't compile, so exclude it there.
@@ -30,13 +34,19 @@ tauri-plugin-serialplugin = "3.0"
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-window-state = "2"
 
-# Native BLE via btleplug's CoreBluetooth backend (shared by macOS and iOS). Scoped to Apple
-# targets so Linux (libdbus) and Windows (WinRT) desktop builds/CI are untouched by the spike.
-[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
-btleplug = "0.11"
-futures = "0.3"
+# Native BLE for the platforms whose webview has no Web Bluetooth. blec uses a Kotlin
+# backend on Android and btleplug elsewhere; raw btleplug can't serve Android because its
+# droidplug JNI half needs gradle wiring Tauri regenerates, and R8 strips it on release.
+#
+# Not compiled on Linux/Windows: btleplug pulls dbus there, which would add libdbus-1-dev to
+# desktop builds and CI for a path the frontend doesn't use (they keep Web Bluetooth).
+#
+# Pinned to a commit rather than 0.12.0: that release drops every device from an Android scan
+# when the per-device is_bonded() IPC fails. Revisit once a fixed version is published.
+[target.'cfg(any(target_os = "ios", target_os = "macos", target_os = "android"))'.dependencies]
+tauri-plugin-blec = { git = "https://github.com/MnlPhlp/tauri-plugin-blec", rev = "fbade6ca37941b53d26c0cfebe39ccbf37ff8bc2" }
 uuid = "1"
-tokio = { version = "1", features = ["time"] }
+tokio = { version = "1", features = ["sync", "time"] }
 
 [features]
 default = ["custom-protocol"]
