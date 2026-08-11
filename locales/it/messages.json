@@ -319,6 +319,9 @@
     "rebootFlightControllerReady": {
         "message": "Il controllore di volo è pronto"
     },
+    "rebootFlightControllerFailed": {
+        "message": "Il Controllore di Volo non si è riconnesso"
+    },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Riavvio in corso<\/span>"
     },
@@ -8987,6 +8990,13 @@
     },
     "osdDescElementNavMap": {
         "message": "Minimappa che mostra la posizione di partenza, il piano di volo e la traiettoria percorsa"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Mantieni Posizione Attiva",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra se le condizioni di mantenimento della posizione sono attualmente soddisfatte, prima che l'interruttore di modalità sia attivato"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Righelli",

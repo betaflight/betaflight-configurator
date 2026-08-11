@@ -331,6 +331,9 @@
     "rebootFlightControllerReady": {
         "message": "FC er klar"
     },
+    "rebootFlightControllerFailed": {
+        "message": "FC blev ikke tilsluttet automatisk"
+    },
     "deviceRebooting": {
         "message": "Enhed - <span class=\"message-negative\">Genstarter<\/span>"
     },
@@ -1769,6 +1772,12 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Placer fartøj fladt med kameraet vendt væk fra dig (mod skærmen)."
     },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Vip næsen ned med omkring 45°, så kameraet peger mod jorden."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Vip højre side ned med omkring 45°, ved at sænke højre arme og hæve venstre."
+    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Drej dronen omkring 45° med uret (som set fra oven)."
     },
@@ -1838,8 +1847,14 @@
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "Accelerometeret kan ikke bestemme tyngdekraften. Sørg for, at FC er tilsluttet og ikke er i bevægelse."
     },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere ned."
+    },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "En af vippe bevægelserne var den forkerte vej. Tjek højde og vippe retninger og prøv igen."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Fladt"
@@ -8925,6 +8940,20 @@
     "osdDescElementBatteryProfileName": {
         "message": "Viser profilnavn eller -indeks for aktiv batteri"
     },
+    "osdTextElementWpNumber": {
+        "message": "Vejpunkt nummer",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Viser det næste vejpunkt nummer\/antal vejpunkter i den aktive flyveplan"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Vejpunkt breddegrad",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Viser breddegraden for det aktuelle vejpunkt"
+    },
     "osdTextElementWpCurrentLon": {
         "message": "Vejpunkt længdegrad",
         "description": "One of the elements of the OSD"
@@ -8973,6 +9002,13 @@
     },
     "osdDescElementNavMap": {
         "message": "Minikort som viser hjem, flyveplanen og det fulgte rute"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Tilstand hvor position fastholdes",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Viser om Position fasthold forudsætninger er opfyldt, før tilstanden slåes til"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Lineal",
