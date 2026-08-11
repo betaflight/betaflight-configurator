@@ -1792,6 +1792,39 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     break;
 
+                case MSP_SET_WING:
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.s_term[i] = data.readU8(src);
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_center[i] = data.readU16(src);
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_width[i] = data.readU16(src);
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_mode[i] = data.readU8(src);
+                    }
+
+                    FC.WING_CONFIG.tpa_curve_type = data.readU8(src);
+                    FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8(src);
+                    FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16(src);
+                    FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16(src);
+                    FC.WING_CONFIG.tpa_curve_expo = data.readU8(src);
+                    FC.WING_CONFIG.tpa_speed_type = data.readU8(src);
+                    FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16(src);
+                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.readU16(src);
+                    FC.WING_CONFIG.yaw_type = data.readU8(src);
+                    FC.WING_CONFIG.angle_pitch_offset = data.readU16(src);
+
+                    break;
+
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
@@ -2513,6 +2546,39 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM:
             MspHelper.writeDtermFilterSliderSettings(buffer);
+
+            break;
+
+        case MSPCodes.MSP_SET_WING:
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(Math.round(FC.WING_CONFIG.s_term[i]));
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(Math.round(FC.WING_CONFIG.spa_center[i]));
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(Math.round(FC.WING_CONFIG.spa_width[i]));
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(Math.round(FC.WING_CONFIG.spa_mode[i]));
+            }
+            buffer
+                .push8(Math.round(FC.WING_CONFIG.tpa_curve_type))
+                .push8(Math.round(FC.WING_CONFIG.tpa_curve_stall_throttle))
+                .push16(Math.round(FC.WING_CONFIG.tpa_curve_pid_thr0))
+                .push16(Math.round(FC.WING_CONFIG.tpa_curve_pid_thr100))
+                .push8(Math.round(FC.WING_CONFIG.tpa_curve_expo))
+                .push8(Math.round(FC.WING_CONFIG.tpa_speed_type))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_basic_delay))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_basic_gravity))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_prop_pitch))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_mass))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_drag_k))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_thrust))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_max_voltage))
+                .push16(Math.round(FC.WING_CONFIG.tpa_speed_pitch_offset))
+                .push8(Math.round(FC.WING_CONFIG.yaw_type))
+                .push16(Math.round(FC.WING_CONFIG.angle_pitch_offset));
 
             break;
 
