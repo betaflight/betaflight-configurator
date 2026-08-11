@@ -197,4 +197,18 @@ describe("pidTuning store dirty tracking", () => {
 
         expect(store.hasEdits).toBe(true);
     });
+
+    it("flags a renamed rate profile, which is keyed by the rate-profile index", () => {
+        FC.CONFIG.rateProfileNames = ["one", "two", "three", "four"];
+        // Not the same index as FC.CONFIG.profile — reading the wrong one would still pass a test
+        // that left them equal.
+        FC.CONFIG.rateProfile = 2;
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = "renamed";
+
+        expect(store.hasEdits).toBe(true);
+    });
 });
