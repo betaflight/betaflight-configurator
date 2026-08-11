@@ -11,7 +11,7 @@
         "message": "Yoniq"
     },
     "off": {
-        "message": "o‘chiq"
+        "message": "O‘chiq"
     },
     "auto": {
         "message": "Avto"
@@ -314,6 +314,9 @@
     },
     "rebootFlightControllerReady": {
         "message": "Parvoz kontrolleri tayyor"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "Parvoz kontrolleri qayta ulana olmadi"
     },
     "deviceRebooting": {
         "message": "Qurilma - <span class=\"message-negative\">Qayta yuklanmoqda<\/span>"
@@ -1109,7 +1112,7 @@
         "message": "Mikser turi"
     },
     "initialSetupThrottleHead": {
-        "message": "Gaz sozlamalari"
+        "message": "Throttle sozlamalari"
     },
     "initialSetupMinimum": {
         "message": "Minimum:"
@@ -1280,7 +1283,7 @@
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "Gaz kanali juda yuqori",
+        "message": "Throttle kanali juda yuqori",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
@@ -1917,13 +1920,13 @@
         "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
-        "message": "Minimal gaz (Ishga tushirilganda eng past ESC qiymati)"
+        "message": "Minimal throttle (Ishga tushirilganda eng past ESC qiymati)"
     },
     "configurationThrottleMinimumHelp": {
         "message": "Bu uchar qurilma ishga tushirilganda va gaz dastasi minimal holatda bo‘lganda ESC'larga yuboriladigan 'bo‘sh yurish' qiymati. Ko‘proq bo‘sh yurish tezligiga ega bo‘lish uchun qiymatni oshiring. Shuningdek, desinklar bo‘lsa ham qiymatni oshiring!"
     },
     "configurationThrottleMaximum": {
-        "message": "Maksimal gaz (Ishga tushirilganda eng yuqori ESC qiymati)"
+        "message": "Maksimal throttle (Ishga tushirilganda eng yuqori ESC qiymati)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimal buyruq (Disarm qilinganda ESC qiymati)"
@@ -2037,7 +2040,7 @@
         "message": "3D neytral"
     },
     "configuration3dDeadbandThrottle": {
-        "message": "3D o‘lik zona - gaz"
+        "message": "3D o‘lik zona - throttle"
     },
     "configurationSystem": {
         "message": "Tizim konfiguratsiyasi"
@@ -2376,7 +2379,7 @@
         "message": "Setpoint chegara turi"
     },
     "receiverThrottleTypeSelect": {
-        "message": "Gaz chegara turi"
+        "message": "Throttle chegara turi"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolyatsiya"
@@ -2409,7 +2412,7 @@
         "message": "Setpoint chegara chastotasi"
     },
     "receiverRcSmoothingThrottleCutoffHz": {
-        "message": "Gaz chegara chastotasi"
+        "message": "Throttle chegara chastotasi"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward chegara chastotasi"
@@ -2573,13 +2576,13 @@
         "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
-        "message": "Gaz egri chizig‘i ko‘rinishi"
+        "message": "Throttle egri chizig‘i ko‘rinishi"
     },
     "pidTuningThrottleLimitType": {
-        "message": "Gaz chegarasi"
+        "message": "Throttle chegarasi"
     },
     "pidTuningThrottleLimitPercent": {
-        "message": "Gaz chegarasi %"
+        "message": "Throttle chegarasi %"
     },
     "pidTuningThrottleLimitTypeOff": {
         "message": "o‘CHIQ"
@@ -2606,7 +2609,7 @@
         "message": "Tezliklar ko‘rinishi"
     },
     "throttle": {
-        "message": "Gaz"
+        "message": "Throttle"
     },
     "pidTuningButtonSave": {
         "message": "Saqlash"
@@ -2683,7 +2686,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>PID sozlash slayder rejimi<\/strong><br><br>Pidtuning slayder rejimi quyidagicha bo‘lishi mumkin:<br><br>&bull; OFF - slayderlar yo‘q, qiymatlarni qo‘lda kiriting<br>&bull; RP - slayderlar faqat Roll va Pitch'ni boshqaradi, Yaw qiymatlarini qo‘lda kiriting<br>&bull; RPY - slayderlar barcha PID qiymatlarini boshqaradi<br><br><span class=\"message-negative\"><b>Ogohlantirish:<\/b><\/span>RP'dan RPY rejimiga o‘tish Yaw sozlamalarini proshivka sozlamalari bilan qayta yozadi."
+        "message": "<strong>PID sozlash slayder rejimi<\/strong><br><br>Pidtuning slayder rejimi quyidagicha bo‘lishi mumkin:<br><br>&bull; O‘chiq - slayderlar yo‘q, qiymatlarni qo‘lda kiriting<br>&bull; RP - slayderlar faqat Roll va Pitch'ni boshqaradi, Yaw qiymatlarini qo‘lda kiriting<br>&bull; RPY - slayderlar barcha PID qiymatlarini boshqaradi<br><br><span class=\"message-negative\"><b>Ogohlantirish:<\/b><\/span>RP'dan RPY rejimiga o‘tish Yaw sozlamalarini proshivka sozlamalari bilan qayta yozadi."
     },
     "receiverHelpModelId": {
         "message": "Agar quyidagi Model Match'ni 255'dan boshqa songa o‘rnatsangiz, OpenTX\/EdgeTX model sozlash sahifasida qabul qilgich raqamini belgilashingiz va ushbu model uchun ELRS LUA skriptida Model Match'ni yoqishingiz mumkin. Model match 0 dan 63 gacha (ikkalasi ham kiradi).<br \/>Ko‘proq ma'lumot uchun ELRS hujjatlariga qarang."
@@ -2701,10 +2704,10 @@
         "message": "Parvoz kontrolleri failsafe holatida. Quyida ko‘rsatilgan kanal qiymatlari failsafe chiqishi bo‘lib, qabul qilgichingizdan kelayotgan jonli qiymatlar emas. Qabul qilgich aloqangiz va failsafe sozlamalaringizni tekshiring."
     },
     "receiverThrottleMid": {
-        "message": "Gaz o‘rtasi (MID)"
+        "message": "Throttle o‘rtasi (MID)"
     },
     "receiverThrottleExpo": {
-        "message": "Gaz EXPO"
+        "message": "Throttle EXPO"
     },
     "receiverThrottleHover": {
         "message": "Muallaq turish nuqtasi"
@@ -3143,7 +3146,7 @@
         "message": "RC Expo‘ni moslashtirish"
     },
     "adjustmentsFunction3": {
-        "message": "Gaz Expo‘ni moslashtirish"
+        "message": "Throttle Expo‘ni moslashtirish"
     },
     "adjustmentsFunction4": {
         "message": "Pitch va Roll tezligini moslashtirish"
@@ -4807,11 +4810,11 @@
         "message": "Doimo miltillash"
     },
     "ledStripThrottleHue": {
-        "message": "Gaz rangi (hue)",
+        "message": "Throttle rangi (hue)",
         "description": "Label of throttle hue modifier switch on LED Strip tab"
     },
     "ledStripThrottleHueChannel": {
-        "message": "Gaz rangi kanali",
+        "message": "Throttle rangi kanali",
         "description": "Accessible label for the aux-channel select next to the throttle hue switch"
     },
     "ledStripRainbowOverlay": {
@@ -5152,7 +5155,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "I'ni oshiradi yoki kamaytiradi. Yuqoriroq I spiral burilishlarda, orbitalarda yoki 0% gaz buyruqlarida kuzatuvni yaxshilashi mumkin. Juda ko‘p I, ayniqsa yetarli P bo‘lmaganda, fliplar\/rollardan keyin yoki gazni 0%'ga tushirganda tebranishlar yoki qaytishlarga sabab bo‘lishi mumkin.<br \/><br \/>Odatda siz uchar qurilmani spiral burilishlarda, orbitalarda va h.k.da kuzatuvda ushlab turish uchun 'Drift - Tebranish' slayderini imkon qadar yuqori qilishni xohlaysiz... lekin gazni 0%'ga tushirganda tebranishlar ko‘rina boshlaydigan darajada yuqori emas.<br \/><br \/><strong>Eslatma:<\/strong><br \/>Agar biror vaqtda oson ko‘rinadigan qaytishni sezsangiz, \"I-term Relax\" yoqilganligiga ishonch hosil qiling va iterm_relax_cutoff qiymatini pasaytirib ko‘ring.",
+        "message": "I'ni oshiradi yoki kamaytiradi. Yuqoriroq I spiral burilishlarda, orbitalarda yoki 0% gaz buyruqlarida kuzatuvni yaxshilashi mumkin. Juda ko‘p I, ayniqsa yetarli P bo‘lmaganda, fliplar\/rollardan keyin yoki gazni 0%'ga tushirganda tebranishlar yoki qaytishlarga sabab bo‘lishi mumkin.<br \/><br \/>Odatda siz uchar qurilmani spiral burilishlarda, orbitalarda va h.k.da kuzatuvda ushlab turish uchun 'Drift - Tebranish' slayderini imkon qadar yuqori qilishni xohlaysiz... lekin throttle 0%'ga tushirganda tebranishlar ko‘rina boshlaydigan darajada yuqori emas.<br \/><br \/><strong>Eslatma:<\/strong><br \/>Agar biror vaqtda oson ko‘rinadigan qaytishni sezsangiz, \"I-term Relax\" yoqilganligiga ishonch hosil qiling va iterm_relax_cutoff qiymatini pasaytirib ko‘ring.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -5454,7 +5457,7 @@
         "message": "Bu funksiya $t(pidTuningItermRotation.message)ning ba'zi tub muammolarini hal qiladi va bir kun uni almashtirishi mumkin. U uchar qurilma koordinatalarida mutlaq giro xatosini to‘playdi va setpoint'ga mutanosib tuzatishni aralashtiradi.<br><br>AirMode yoqilgan bo‘lishi va $t(pidTuningItermRelax.message) ($t(pidTuningOptionRP.message) uchun) yoqilgan bo‘lishi kerak. $t(pidTuningIntegratedYaw.message) bilan birlashtirilganda, $t(pidTuningItermRelax.message)ni $t(pidTuningOptionRPY.message) uchun yoqilgan qilib o‘rnatishingiz mumkin."
     },
     "pidTuningThrottleBoost": {
-        "message": "Gaz kuchaytirish"
+        "message": "Throttle kuchaytirish"
     },
     "pidTuningThrottleBoostHelp": {
         "message": "Tezroq gaz kirishlari bilan gazni vaqtinchalik kuchaytiradi, tezroq gaz javobini ta'minlaydi."
@@ -5538,13 +5541,13 @@
         "message": "Signal yo‘qolgandan keyin 1-bosqich failsafe'dagi vaqt davrini o‘rnating. Agar kechikish vaqti signal qaytmasdan tugasa, 2-bosqich failsafe boshlanadi"
     },
     "failsafeThrottleLowItem": {
-        "message": "Failsafe Gaz past kechikishi [soniya]"
+        "message": "Failsafe Throttle past kechikishi [soniya]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Gaz shu vaqt davomida past bo‘lsa, tanlangan failsafe tartibini bajarish o‘rniga uchar qurilmani shunchaki disarm qiling"
+        "message": "Throttle shu vaqt davomida past bo‘lsa, tanlangan failsafe tartibini bajarish o‘rniga uchar qurilmani shunchaki disarm qiling"
     },
     "failsafeThrottleItem": {
-        "message": "Qo‘nish paytida ishlatiladigan gaz qiymati"
+        "message": "Qo‘nish paytida ishlatiladigan throttle qiymati"
     },
     "failsafeOffDelayItem": {
         "message": "Failsafe davomida Motorlarni o‘chirish kechikishi [soniya]"
@@ -5595,7 +5598,7 @@
         "message": "Maksimal pitch burchagi"
     },
     "failsafeGpsRescueAngleHelp": {
-        "message": "Yuqoriroq maksimal burchaklar tajovuzkorroq qaytishlarga va yuqoriroq oldinga tezliklarga olib keladi. Og‘irroq, yuqori qarshilikli yoki past quvvatli uchar qurilmalar uchun, yoki kuchliroq shamolda foydalanish uchun foydali bo‘lishi mumkin. OGOHLANTIRISH: Agar maks burchak oshirilsa, odatda Rescue gazini oshirish kerak! Aks holda uchar qurilma balandlikni yo‘qotib qulashi mumkin!"
+        "message": "Yuqoriroq maksimal burchaklar keskinroq qaytishlarga va yuqoriroq oldinga tezliklarga olib keladi. Og‘irroq, yuqori qarshilikli yoki past quvvatli uchar qurilmalar uchun, yoki kuchliroq shamolda foydalanish uchun foydali bo‘lishi mumkin. OGOHLANTIRISH: Agar maksimal burchak oshirilsa, odatda Rescue Throttleni oshirish kerak! Aks holda uchuvchi moslama balandlikni yo‘qotib qulashi mumkin!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Pastga tushish masofasi (metr)"
@@ -8840,6 +8843,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Faol batareya profili nomini yoki indeksini ko‘rsatadi"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Yo‘l nuqtasi raqami",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Hozirgi parvoz rejasining joriy\/umumiy yo'nalish nuqtasi raqamini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Yo'nalish nuqtasi kengligi (Lat.)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Joriy yo'nalish nuqtasining koordinata kengligini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Yo'nalish nuqtasi uzunligi (Lon.)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Joriy yo'nalish nuqtasining koordinata uzunligini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Yo'nalish nuqtasining balandligi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Joriy yo'nalish nuqtasining balandligini ko'rsatadi"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Yo'nalish nuqtasi masofasi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Joriy yo'nalish nuqtasigacha bo'lgan masofani ko'rsatadi"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Yo'nalish nuqtasi yo'nalishi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Joriy yo'nalish nuqtasiga ishora qiluvchi yo'nalish strelkasini ko'rsatadi"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Keyingi yo'nalish raqami",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Faol parvoz rejasida keyingi yo'nalish nuqtasi raqamini ko'rsatadi"
+    },
+    "osdTextElementWpEta": {
+        "message": "Yo'nalish nuqtasiga yetib borish vaqti",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Joriy yo'nalish nuqtasiga taxminiy yetib kelish vaqtini ko'rsatadi"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigatsiya xaritasi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Uyni, parvoz rejasini va uchish yo'lini ko'rsatuvchi mini-xarita"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Pozitsiyani ushlab turishga tayyor",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Rejim tugmasi ishga tushirilgunga qadar Pozitsiyani ushlab turishning kirish shartlari bajarilganligini ko'rsatadi"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Chizg‘ichlar",

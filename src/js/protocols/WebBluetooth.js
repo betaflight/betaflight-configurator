@@ -467,7 +467,7 @@ class WebBluetooth extends EventTarget {
                 });
             }
             console.error(`${this.logHead} No write characteristic available or characteristic is invalid`);
-            return;
+            return { bytesSent: 0 };
         }
         if (!this.device?.gatt?.connected) {
             if (cb) {
@@ -477,11 +477,13 @@ class WebBluetooth extends EventTarget {
                 });
             }
             console.error(`${this.logHead} GATT Server is disconnected. Cannot perform GATT operations.`);
-            return;
+            return { bytesSent: 0 };
         }
 
         // There is no writable stream in the bluetooth API
         const dataBuffer = new Uint8Array(data);
+
+        let bytesSent = 0;
 
         // Serialize writes to prevent concurrent access
         this.writeQueue = this.writeQueue
@@ -489,6 +491,7 @@ class WebBluetooth extends EventTarget {
                 try {
                     await this.writeCharacteristic.writeValue(dataBuffer);
                     this.bytesSent += data.byteLength;
+                    bytesSent = data.byteLength;
 
                     if (cb) {
                         cb({
@@ -512,6 +515,7 @@ class WebBluetooth extends EventTarget {
             });
 
         await this.writeQueue;
+        return { bytesSent };
     }
 }
 

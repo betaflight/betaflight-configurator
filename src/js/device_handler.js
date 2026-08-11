@@ -4,6 +4,7 @@ import { serial } from "./serial.js";
 import { getConnectionState } from "./connection_state.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
+import TauriDfuTransport from "./protocols/TauriDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
 import { reactive } from "vue";
 import {
@@ -12,15 +13,19 @@ import {
     checkSerialSupport,
     checkUsbSupport,
     isAndroid,
+    isTauriAndroid,
 } from "./utils/checkCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
 
 // Create the platform-appropriate DFU protocol instance.
-// On Android, use the Capacitor DFU transport with the native plugin.
-// On desktop, use the default WEBUSBDFU singleton (WebUSB transport).
+// On Android, use the native transport for the shell we run in (Tauri or
+// Capacitor). On desktop, use the default WEBUSBDFU singleton (WebUSB).
 function createDfuProtocol() {
+    if (isTauriAndroid()) {
+        return new UsbDfuProtocol(new TauriDfuTransport());
+    }
     if (isAndroid()) {
         return new UsbDfuProtocol(new CapacitorDfuTransport());
     }
