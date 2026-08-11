@@ -66,6 +66,47 @@ describe("pidTuning store dirty tracking", () => {
         expect(store.hasChanges).toBe(true);
     });
 
+    it("keeps a profile reset dirty through the reload it triggers", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        // MSP_SET_RESET_CURR_PID rewrites the profile in RAM, then the tab reloads the defaults
+        // and adopts them as the clean value baseline.
+        store.markProfileReset();
+        FC.PIDS = [[45, 80, 40]];
+        store.markEditsClean();
+
+        expect(store.hasEdits).toBe(false);
+        expect(store.hasChanges).toBe(true);
+    });
+
+    it("keeps a profile reset dirty across a refresh", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        store.markProfileReset();
+        store.markEditsClean();
+        // Refresh only re-reads the FC — it cannot put the pre-reset values back.
+        store.markEditsClean();
+
+        expect(store.hasChanges).toBe(true);
+    });
+
+    it("clears a profile reset once it is persisted", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        store.markProfileReset();
+        expect(store.hasChanges).toBe(true);
+
+        store.markProfileClean();
+
+        expect(store.hasChanges).toBe(false);
+    });
+
     it("clears once the EEPROM write baselines both", () => {
         const store = usePidTuningStore();
         store.markEditsClean();

@@ -437,6 +437,10 @@ async function copyRateProfile() {
 async function resetProfile() {
     try {
         await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
+        // The reset rewrote the profile in RAM only, and the reload below adopts those defaults as
+        // the clean value baseline — so flag the reset itself as work that still needs an EEPROM
+        // write, or it would read as saved the moment the reload lands.
+        pidTuningStore.markProfileReset();
         await loadData();
         gui_log(t("pidTuningPidProfileReset"));
     } catch (error) {
