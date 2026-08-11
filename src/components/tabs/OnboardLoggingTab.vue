@@ -303,6 +303,7 @@ import FileSystem from "../../js/FileSystem";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
+import { tracking } from "../../js/Analytics";
 import { sensorTypes } from "../../js/sensor_types";
 import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
@@ -913,7 +914,9 @@ export default defineComponent({
                 }
             }
 
-            if (typeof tracking !== "undefined") {
+            // `tracking` is null until createAnalytics(settings) has run, so it still needs a guard —
+            // but on the imported binding rather than the window global it used to rely on.
+            if (tracking) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
                     logSize: fcStore.dataflash?.usedSize || 0,
                     logStatus: loggingStatus,
