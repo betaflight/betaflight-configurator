@@ -324,8 +324,6 @@ import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
-const emit = defineEmits(["change"]);
-
 const { t } = useTranslation();
 
 // USelect item arrays
@@ -387,7 +385,6 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
-                    emit("change");
                 },
                 cancel: () => {
                     dialog.close();
@@ -1691,11 +1688,6 @@ watch(
         }
     },
     { immediate: true },
-);
-
-watch(
-    () => JSON.stringify(FC.RC_TUNING),
-    () => emit("change"),
 );
 
 onMounted(() => {

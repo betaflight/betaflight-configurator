@@ -1,83 +1,49 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed } from "vue";
 import FC from "@/js/fc";
+import { useDirtyState } from "@/composables/useDirtyState";
 
 /**
  * Pinia store for PID Tuning tab change tracking.
  *
- * FC is already a Vue reactive() object (see fc.js), but watching deeply nested
- * properties across five large objects (PIDS, ADVANCED_TUNING, RC_TUNING,
- * FILTER_CONFIG, TUNING_SLIDERS) with a single deep watcher is fragile and
- * expensive.  Instead this store keeps plain-object snapshots taken at load time
- * and exposes an explicit `checkForChanges()` that the parent tab calls in
- * response to DOM input/change events and child "change" emits.
+ * Everything the tab can edit ends up in FC — a Vue reactive() object (see fc.js) — so both
+ * baselines below are taken with the shared `useDirtyState` helper and compare against live FC
+ * state. The tab needs two of them because they are cleared at different moments:
+ *
+ *  - `hasEdits` covers the values, and is re-baselined by every load (including the reload that
+ *    follows a profile switch, which pulls in a whole different set of values).
+ *  - `profileChanged` covers the active PID / rate profile, which MSP_SELECT_SETTING switches in
+ *    RAM only. That switch stays unsaved work until the tab writes EEPROM, so its baseline must
+ *    survive the reload that a switch triggers.
  */
 export const usePidTuningStore = defineStore("pidTuning", () => {
-    // ---- reactive state ----
-    const hasChanges = ref(false);
-    const originalsReady = ref(false);
+    /** The editable set: the same five objects the tab writes back over MSP, plus the profile names. */
+    const serializeEdits = () =>
+        JSON.stringify({
+            pids: FC.PIDS,
+            advancedTuning: FC.ADVANCED_TUNING,
+            rcTuning: FC.RC_TUNING,
+            filterConfig: FC.FILTER_CONFIG,
+            tuningSliders: FC.TUNING_SLIDERS,
+            // Read the names off FC rather than taking them as arguments: the tab mirrors its
+            // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
+            pidProfileName: FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] ?? "",
+            rateProfileName: FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] ?? "",
+        });
 
-    // Original value snapshots (deep-cloned plain objects)
-    const originalPids = ref([]);
-    const originalAdvancedTuning = ref({});
-    const originalRcTuning = ref({});
-    const originalFilterConfig = ref({});
-    const originalTuningSliders = ref({});
-    const originalPidProfileName = ref("");
-    const originalRateProfileName = ref("");
+    const { dirty: hasEdits, markClean: markEditsClean } = useDirtyState(serializeEdits);
 
-    // ---- actions ----
+    const { dirty: profileChanged, markClean: markProfileClean } = useDirtyState(
+        () => `${FC.CONFIG.profile}:${FC.CONFIG.rateProfile}`,
+    );
 
-    /**
-     * Snapshot the current FC data so we can detect future changes.
-     * Call after every MSP load / profile switch.
-     */
-    function storeOriginals(pidProfileName = "", rateProfileName = "") {
-        // Use JSON-based cloning instead of structuredClone because FC is a Vue reactive() proxy
-        // which structuredClone cannot handle (throws DataCloneError)
-        originalPids.value = JSON.parse(JSON.stringify(FC.PIDS));
-        originalAdvancedTuning.value = JSON.parse(JSON.stringify(FC.ADVANCED_TUNING));
-        originalRcTuning.value = JSON.parse(JSON.stringify(FC.RC_TUNING));
-        originalFilterConfig.value = JSON.parse(JSON.stringify(FC.FILTER_CONFIG));
-        originalTuningSliders.value = JSON.parse(JSON.stringify(FC.TUNING_SLIDERS));
-        originalPidProfileName.value = pidProfileName;
-        originalRateProfileName.value = rateProfileName;
-        originalsReady.value = true;
-        hasChanges.value = false;
-    }
-
-    /**
-     * Compare current FC data against the stored originals and update
-     * `hasChanges`.  Accepts the current (lifted) profile-name strings
-     * so the comparison covers those edits too.
-     */
-    function checkForChanges(currentPidProfileName = "", currentRateProfileName = "") {
-        if (!originalsReady.value) {
-            hasChanges.value = false;
-            return;
-        }
-
-        const pidsChanged = JSON.stringify(FC.PIDS) !== JSON.stringify(originalPids.value);
-        const advancedChanged = JSON.stringify(FC.ADVANCED_TUNING) !== JSON.stringify(originalAdvancedTuning.value);
-        const rcTuningChanged = JSON.stringify(FC.RC_TUNING) !== JSON.stringify(originalRcTuning.value);
-        const filterChanged = JSON.stringify(FC.FILTER_CONFIG) !== JSON.stringify(originalFilterConfig.value);
-        const slidersChanged = JSON.stringify(FC.TUNING_SLIDERS) !== JSON.stringify(originalTuningSliders.value);
-        const pidNameChanged = currentPidProfileName !== originalPidProfileName.value;
-        const rateNameChanged = currentRateProfileName !== originalRateProfileName.value;
-
-        hasChanges.value =
-            pidsChanged ||
-            advancedChanged ||
-            rcTuningChanged ||
-            filterChanged ||
-            slidersChanged ||
-            pidNameChanged ||
-            rateNameChanged;
-    }
+    /** Unsaved work of any kind: edited values, or a profile switch that has not been persisted. */
+    const hasChanges = computed(() => hasEdits.value || profileChanged.value);
 
     return {
         hasChanges,
-        storeOriginals,
-        checkForChanges,
+        hasEdits,
+        markEditsClean,
+        markProfileClean,
     };
 });

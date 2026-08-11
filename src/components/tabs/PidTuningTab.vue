@@ -12,7 +12,7 @@
                             v-model="currentProfile"
                             :items="profileItems"
                             class="min-w-20"
-                            :disabled="hasChanges"
+                            :disabled="hasEdits"
                             @update:model-value="onProfileChange"
                         />
                     </SettingRow>
@@ -25,7 +25,7 @@
                             v-model="currentRateProfile"
                             :items="rateProfileItems"
                             class="min-w-20"
-                            :disabled="hasChanges"
+                            :disabled="hasEdits"
                             @update:model-value="onRateProfileChange"
                         />
                     </SettingRow>
@@ -83,20 +83,18 @@
 
             <!-- Tab Content -->
             <div class="tabarea">
-                <form name="pid-tuning" id="pid-tuning" @input="onFormChanged" @change="onFormChanged">
+                <form name="pid-tuning" id="pid-tuning">
                     <PidSubTab
                         ref="pidSubTab"
                         v-if="activeSubtab === 'pid'"
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
-                        @change="onFormChanged"
                     />
-                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" @change="onFormChanged" />
+                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" />
                     <FilterSubTab
                         ref="filterSubTab"
                         v-if="activeSubtab === 'filter'"
                         :expert-mode="expertModeEnabled"
-                        @change="onFormChanged"
                     />
                 </form>
             </div>
@@ -231,6 +229,9 @@ const localRateProfileName = computed({
 
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);
+// Value edits only: a pending profile switch is unsaved work, but it must not lock the profile
+// selectors — otherwise a switch could only be undone by saving it first.
+const hasEdits = computed(() => pidTuningStore.hasEdits);
 
 // MSP Data Loading
 async function loadData() {
@@ -298,8 +299,9 @@ async function loadData() {
                     filterSubTab.value.forceUpdateSliders();
                 }
 
-                // Store original values for revert
-                storeOriginalValues();
+                // The loaded values are the clean baseline. The profile baseline is deliberately
+                // left alone: a switch made here is unsaved until it reaches EEPROM.
+                pidTuningStore.markEditsClean();
 
                 GUI.content_ready();
                 return true;
@@ -320,10 +322,6 @@ function initializeUI() {
     currentRateProfile.value = FC.CONFIG.rateProfile;
     // Get expert mode from global checkbox (in header) and sync to global state
     navigationStore.expertMode = isExpertModeEnabled();
-}
-
-function storeOriginalValues() {
-    pidTuningStore.storeOriginals(pidProfileName.value, rateProfileName.value);
 }
 
 // Profile Management
@@ -519,8 +517,10 @@ function save() {
                 filterSubTab.value.forceUpdateSliders();
             }
 
-            // Update original values
-            storeOriginalValues();
+            // Update the baselines. The EEPROM write persisted the active profile selection as
+            // well, so that becomes clean too.
+            pidTuningStore.markEditsClean();
+            pidTuningStore.markProfileClean();
         },
         { onError: (e) => console.error("[PidTuning] Save failed:", e) },
     );
@@ -536,24 +536,14 @@ async function refresh() {
     }
 }
 
-// Notify the store to re-check for changes.
-// Called by form @input/@change (covers all user-driven edits) and by child
-// @change emits (covers programmatic FC mutations such as slider calculations).
-function onFormChanged() {
-    if (!isMounted.value) {
-        return;
-    }
-    pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
-}
-
-// Watch profile name changes: sync to FC.CONFIG and re-check for changes
+// Mirror the lifted profile-name inputs into FC.CONFIG — that is what the save crunches, and
+// what the store compares against its baseline.
 watch(
     () => pidProfileName.value,
     (newValue) => {
         if (FC.CONFIG.pidProfileNames) {
             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
         }
-        onFormChanged();
     },
 );
 
@@ -563,7 +553,6 @@ watch(
         if (FC.CONFIG.rateProfileNames) {
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
         }
-        onFormChanged();
     },
 );
 
@@ -574,9 +563,11 @@ watch(
 // reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
 // checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
 async function syncProfileFromFc(kind) {
-    // Skip while loading, while our own change is applying, or when the form is dirty
+    // Skip while loading, while our own change is applying, or when values have been edited
     // (an in-progress edit takes precedence over a switch flip, matching legacy behaviour).
-    if (!isMounted.value || isLoading.value || syncingFromFc || pidTuningStore.hasChanges) {
+    // A pending profile switch must not block this, or the selector would stay stuck on the
+    // old profile after a TX flip.
+    if (!isMounted.value || isLoading.value || syncingFromFc || pidTuningStore.hasEdits) {
         return;
     }
 
@@ -584,12 +575,16 @@ async function syncProfileFromFc(kind) {
     try {
         currentProfile.value = FC.CONFIG.profile;
         currentRateProfile.value = FC.CONFIG.rateProfile;
-        await loadData();
-        gui_log(
-            i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
-                (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
-            ]),
-        );
+        // Only announce (and adopt) the profile once the reload actually succeeded. The FC picked
+        // this profile itself, so the tab is mirroring it rather than holding a pending switch.
+        if (await loadData()) {
+            pidTuningStore.markProfileClean();
+            gui_log(
+                i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
+                    (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
+                ]),
+            );
+        }
     } finally {
         syncingFromFc = false;
     }
@@ -626,7 +621,11 @@ defineExpose({ cleanup });
 
 // Lifecycle
 onMounted(async () => {
-    await loadData();
+    // Baseline the profile selection on the profile the FC is running when the tab opens, so only
+    // a switch made from here counts as unsaved. A failed load leaves it untracked.
+    if (await loadData()) {
+        pidTuningStore.markProfileClean();
+    }
 });
 </script>
 
