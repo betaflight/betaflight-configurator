@@ -134,6 +134,59 @@ describe("pidTuning store dirty tracking", () => {
         expect(store.hasChanges).toBe(false);
     });
 
+    it("keeps a pending reset when the FC switches profile by itself", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        store.markProfileUnsaved();
+        // A TX adjustment moved the FC to another profile; the tab reloads and adopts it. That
+        // says nothing about whether the earlier reset reached EEPROM.
+        FC.CONFIG.profile = 1;
+        store.markEditsClean();
+        store.markProfileSelectionClean();
+
+        expect(store.hasChanges).toBe(true);
+    });
+
+    it("keeps an edit made while the save was in flight dirty", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        FC.PIDS[0][0] = 50;
+        // The save crunches its payload, then writes — pin what it is about to send.
+        const pending = store.takeEditsSnapshot();
+        FC.PIDS[0][1] = 60; // typed while the MSP writes were in flight
+        store.markEditsClean(pending);
+
+        expect(store.hasEdits).toBe(true);
+    });
+
+    it("ignores the FC's slider validity verdict, which a save re-reads", () => {
+        FC.TUNING_SLIDERS.slider_pids_valid = 1;
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        // MSP_VALIDATE_SIMPLIFIED_TUNING after the write: hand-edited PIDs no longer match what
+        // the sliders would produce. Not an edit, and not a reason to keep Save lit.
+        FC.TUNING_SLIDERS.slider_pids_valid = 0;
+
+        expect(store.hasEdits).toBe(false);
+        expect(store.hasChanges).toBe(false);
+    });
+
+    it("still flags a slider position change", () => {
+        const store = usePidTuningStore();
+        store.markEditsClean();
+        store.markProfileClean();
+
+        FC.TUNING_SLIDERS.slider_pids_mode = 2;
+
+        expect(store.hasEdits).toBe(true);
+    });
+
     it("flags a renamed PID profile", () => {
         FC.CONFIG.pidProfileNames = ["one", "two", "three"];
         const store = usePidTuningStore();

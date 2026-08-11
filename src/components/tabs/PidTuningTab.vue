@@ -479,6 +479,11 @@ function save() {
                 FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
             }
 
+            // Pin what this save is about to write. The form stays live while the MSP writes are
+            // in flight, and an edit made in that window is not covered by them — baselining on
+            // the post-save state would silently swallow it.
+            const pending = pidTuningStore.takeEditsSnapshot();
+
             // Save PIDs
             await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
 
@@ -525,9 +530,9 @@ function save() {
                 filterSubTab.value.forceUpdateSliders();
             }
 
-            // Update the baselines. The EEPROM write persisted the active profile selection as
-            // well, so that becomes clean too.
-            pidTuningStore.markEditsClean();
+            // Update the baselines against what was actually written. The EEPROM write persisted
+            // the active profile selection, and any reset or copy, along with it.
+            pidTuningStore.markEditsClean(pending);
             pidTuningStore.markProfileClean();
         },
         { onError: (e) => console.error("[PidTuning] Save failed:", e) },
@@ -584,9 +589,10 @@ async function syncProfileFromFc(kind) {
         currentProfile.value = FC.CONFIG.profile;
         currentRateProfile.value = FC.CONFIG.rateProfile;
         // Only announce (and adopt) the profile once the reload actually succeeded. The FC picked
-        // this profile itself, so the tab is mirroring it rather than holding a pending switch.
+        // this profile itself, so the tab is mirroring it rather than holding a pending switch —
+        // but a pending reset or copy is untouched by that, and stays unsaved.
         if (await loadData()) {
-            pidTuningStore.markProfileClean();
+            pidTuningStore.markProfileSelectionClean();
             gui_log(
                 i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
                     (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,

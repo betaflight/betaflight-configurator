@@ -18,6 +18,21 @@ import { useDirtyState } from "@/composables/useDirtyState";
  *    survive the reload that a switch or a reset triggers.
  */
 export const usePidTuningStore = defineStore("pidTuning", () => {
+    /**
+     * The slider positions, without the FC's `slider_*_valid` verdict on whether the stored values
+     * still match what the sliders would produce. Nothing in the UI writes those flags — only
+     * MSP_VALIDATE_SIMPLIFIED_TUNING does, which the tab re-runs after every save. Editing PIDs by
+     * hand with the sliders off legitimately flips one, so leaving them in would report a save that
+     * went through perfectly as still dirty.
+     */
+    const sliderPositions = () => {
+        const positions = { ...FC.TUNING_SLIDERS };
+        delete positions.slider_pids_valid;
+        delete positions.slider_gyro_valid;
+        delete positions.slider_dterm_valid;
+        return positions;
+    };
+
     /** The editable set: the same five objects the tab writes back over MSP, plus the profile names. */
     const serializeEdits = () =>
         JSON.stringify({
@@ -25,14 +40,18 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             advancedTuning: FC.ADVANCED_TUNING,
             rcTuning: FC.RC_TUNING,
             filterConfig: FC.FILTER_CONFIG,
-            tuningSliders: FC.TUNING_SLIDERS,
+            tuningSliders: sliderPositions(),
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
             pidProfileName: FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] ?? "",
             rateProfileName: FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] ?? "",
         });
 
-    const { dirty: hasEdits, markClean: markEditsClean } = useDirtyState(serializeEdits);
+    const {
+        dirty: hasEdits,
+        markClean: markEditsClean,
+        takeSnapshot: takeEditsSnapshot,
+    } = useDirtyState(serializeEdits);
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
         () => `${FC.CONFIG.profile}:${FC.CONFIG.rateProfile}`,
@@ -63,8 +82,12 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     return {
         hasChanges,
         hasEdits,
+        takeEditsSnapshot,
         markEditsClean,
         markProfileUnsaved,
+        // Adopt a profile the FC picked for itself without claiming a pending reset or copy was
+        // written: an external switch says nothing about whether EEPROM holds those.
+        markProfileSelectionClean,
         markProfileClean,
     };
 });
