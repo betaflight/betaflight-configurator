@@ -12,6 +12,7 @@
                     @open-keys="onOpenKeys"
                     @export-csv="onExportCsv"
                     @export-gpx="onExportGpx"
+                    @export-workspaces="onExportWorkspaces"
                 />
             </Teleport>
             <Teleport to="#vue-statusbar">
@@ -199,6 +200,10 @@ function onExportCsv() {
 
 function onExportGpx() {
     appStore.exportGpx?.();
+}
+
+function onExportWorkspaces() {
+    appStore.exportWorkspaces?.();
 }
 
 function onViewConfig() {

@@ -26,6 +26,15 @@
                     size="xs"
                     @click="$emit('export-gpx')"
                 />
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    label="Export Workspaces"
+                    icon="i-lucide-file-json"
+                    size="xs"
+                    title="Export your workspace configurations to file"
+                    @click="$emit('export-workspaces')"
+                />
                 <USeparator orientation="vertical" class="h-4" />
             </template>
             <UButton
@@ -53,7 +62,7 @@ import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import LogFileInput from "./LogFileInput.vue";
 
-defineEmits(["files-selected", "export-csv", "export-gpx", "open-settings", "open-keys"]);
+defineEmits(["files-selected", "export-csv", "export-gpx", "export-workspaces", "open-settings", "open-keys"]);
 
 const logStore = useLogStore();
 const appStore = useAppStore();
