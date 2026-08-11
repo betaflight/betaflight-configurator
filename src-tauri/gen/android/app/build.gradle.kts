@@ -27,7 +27,8 @@ android {
     defaultConfig {
         manifestPlaceholders["usesCleartextTraffic"] = "false"
         applicationId = "com.betaflight.app"
-        minSdk = 24
+        // 26 is the floor imposed by the BLE plugin's Android library.
+        minSdk = 26
         targetSdk = 36
         // versionCode = <calendar year>000000 + CI build number (github.run_number) so it tracks the
         // year and every upload outranks the last. The 2026006000 floor grandfathers the first build
