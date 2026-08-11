@@ -1099,8 +1099,6 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["change"]);
-
 // USelect item arrays
 const pidsModeItems = computed(() => [
     { value: 0, label: t("pidTuningOptionOff") },
@@ -1655,9 +1653,6 @@ async function onSliderChange(activeSliderKey) {
     // Ask the FC to calculate PIDs from current slider positions
     await calculateNewPids(collectSliderValues());
 
-    // Notify parent that FC data was mutated programmatically
-    emit("change");
-
     // Clear previous timeout and set new one to prevent race conditions
     if (userInteractionTimeout !== null) {
         clearTimeout(userInteractionTimeout);
@@ -1682,22 +1677,6 @@ watch(
         }
     },
     { deep: true },
-);
-
-// Watch for changes to mark tab dirty state in parent component
-watch(
-    () => JSON.stringify(FC.PIDS),
-    () => emit("change"),
-);
-
-watch(
-    () => JSON.stringify(FC.ADVANCED_TUNING),
-    () => emit("change"),
-);
-
-watch(
-    () => JSON.stringify(FC.RC_TUNING),
-    () => emit("change"),
 );
 
 // Expose method to parent component to force slider update after save

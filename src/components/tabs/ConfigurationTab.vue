@@ -190,7 +190,7 @@
             </div>
         </div>
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" :loading="isSaving" @click="saveConfig" />
+            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveConfig" />
         </div>
     </div>
 </template>
@@ -200,6 +200,7 @@ import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "v
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import GUI from "../../js/gui";
@@ -355,6 +356,26 @@ export default defineComponent({
         const gyroFrequencyDisplay = ref("");
         const pidDenomOptions = ref([]);
 
+        // Features, beepers and DShot conditions are edited on the shared FC helpers rather than
+        // local copies, so their masks belong in the snapshot; both readers are side-effect free.
+        /** @returns {string} serialized tab state for dirty comparison */
+        const serializeConfigForDirtyCheck = () =>
+            JSON.stringify({
+                pidProcessDenom: pidAdvancedConfig.pid_process_denom,
+                fpvCamAngleDegrees: fpvCamAngleDegrees.value,
+                craftName: craftName.value,
+                pilotName: pilotName.value,
+                smallAngle: armingConfig.small_angle,
+                gyroCalOnFirstArm: armingConfig.gyro_cal_on_first_arm_bool,
+                autoDisarmDelay: armingConfig.auto_disarm_delay,
+                featureMask: fcStore.features?.features?.peekMask?.() ?? 0,
+                beeperDisabledMask: fcStore.beepers?.beepers?.getDisabledMask?.() ?? 0,
+                dshotBeaconConditionsMask: fcStore.beepers?.dshotBeaconConditions?.getDisabledMask?.() ?? 0,
+                dshotBeaconTone: dshotBeaconTone.value,
+            });
+
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
+
         // Loading Logic
         const loadConfig = async () => {
             await runTabLoad(
@@ -438,6 +459,8 @@ export default defineComponent({
             if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
             }
+
+            markClean();
         };
 
         const updateGyroDenom = (gyroFrequency) => {
@@ -474,6 +497,8 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
+                    const savedSnapshot = takeSnapshot();
+
                     fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
                     fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
@@ -536,6 +561,8 @@ export default defineComponent({
 
                     // Save to EEPROM and Reboot
                     await saveAndReboot();
+
+                    markClean(savedSnapshot);
                 },
                 {
                     onError: (e) => {
@@ -576,6 +603,7 @@ export default defineComponent({
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,
             isSaving,
+            dirty,
             saveConfig,
         };
     },

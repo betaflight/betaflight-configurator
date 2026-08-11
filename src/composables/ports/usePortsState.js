@@ -4,12 +4,14 @@ import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
+import { useDirtyState } from "../useDirtyState";
 
 export function usePortsState(getRules) {
     const ports = reactive([]);
     const analyticsChanges = reactive({});
-    const savedSnapshot = ref("");
     const isLoading = ref(true);
+
+    const { dirty, markClean } = useDirtyState(() => JSON.stringify(ports));
 
     const portIdentifierToNameMapping = {
         0: "UART1",
@@ -76,16 +78,12 @@ export function usePortsState(getRules) {
         FC.SERIAL_CONFIG.ports.forEach((p) => {
             ports.push(transformPortData(p));
         });
-        savedSnapshot.value = JSON.stringify(ports);
+        markClean();
         isLoading.value = false;
         nextTick(() => {
             GUI.content_ready();
         });
     };
-
-    const dirty = computed(() => {
-        return savedSnapshot.value !== "" && JSON.stringify(ports) !== savedSnapshot.value;
-    });
 
     const loadConfig = () => {
         MSP.promise(MSPCodes.MSP_VTX_CONFIG)

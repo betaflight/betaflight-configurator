@@ -11,6 +11,7 @@ import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
 export function usePower() {
@@ -49,9 +50,6 @@ export function usePower() {
     const voltageConfigs = reactive([]);
     const currentConfigs = reactive([]);
 
-    /** Serialized baseline after last FC sync; used for save-button dirty detection */
-    const powerConfigBaseline = ref("");
-
     const buildPowerConfigSnapshot = () => ({
         voltageMeterSource: batteryConfig.voltageMeterSource,
         currentMeterSource: batteryConfig.currentMeterSource,
@@ -71,14 +69,10 @@ export function usePower() {
         })),
     });
 
+    /** @returns {string} serialized tab state for dirty comparison */
     const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
 
-    const dirty = computed(() => {
-        if (!powerConfigBaseline.value) {
-            return false;
-        }
-        return powerConfigBaseline.value !== serializePowerConfig();
-    });
+    const { dirty, markClean, takeSnapshot } = useDirtyState(serializePowerConfig);
 
     // Calibration state
     const sourceschanged = ref(false);
@@ -332,7 +326,7 @@ export function usePower() {
             currentConfigs.push({ ...config });
         });
 
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean();
     };
 
     // Update live data (polling)
@@ -506,6 +500,8 @@ export function usePower() {
     const saveConfig = async () => {
         const { saveToEeprom } = useReboot();
 
+        const savedSnapshot = takeSnapshot();
+
         // Update FC data from reactive state
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
@@ -546,7 +542,7 @@ export function usePower() {
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean(savedSnapshot);
     };
 
     return {

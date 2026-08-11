@@ -324,8 +324,6 @@ import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
-const emit = defineEmits(["change"]);
-
 const { t } = useTranslation();
 
 // USelect item arrays
@@ -391,7 +389,6 @@ const ratesType = computed({
                     // A type change coming from MSP (profile switch, reconnect) must keep the
                     // values the FC just sent us.
                     setDefaultsForRatesType(value);
-                    emit("change");
                 },
                 cancel: () => {
                     dialog.close();
@@ -1714,11 +1711,6 @@ watch(
         }
     },
     { immediate: true },
-);
-
-watch(
-    () => JSON.stringify(FC.RC_TUNING),
-    () => emit("change"),
 );
 
 onMounted(() => {

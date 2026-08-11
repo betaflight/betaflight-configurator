@@ -10,6 +10,7 @@ import { VtxDeviceTypes } from "../js/utils/VtxDeviceStatus/VtxDeviceStatus";
 import { generateFilename } from "../js/utils/generate_filename";
 import { gui_log } from "../js/gui_log";
 import FileSystem from "../js/FileSystem";
+import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
 const MAX_POWERLEVEL_VALUES = 8;
@@ -144,7 +145,6 @@ export function useVtx() {
     const vtxTypeString = ref("");
 
     // Dirty tracking
-    const configSnapshot = ref("");
 
     // Computed properties
     const vtxSupported = computed(
@@ -271,16 +271,7 @@ export function useVtx() {
         });
     }
 
-    function takeSnapshot() {
-        configSnapshot.value = serializeState();
-    }
-
-    const configDirty = computed(() => {
-        if (!configSnapshot.value) {
-            return false;
-        }
-        return serializeState() !== configSnapshot.value;
-    });
+    const { dirty: configDirty, markClean: captureBaseline } = useDirtyState(serializeState);
 
     const saveButtonDisabled = computed(() => !configDirty.value);
 
@@ -356,7 +347,7 @@ export function useVtx() {
         await loadVtxTableBands();
         await loadVtxTablePowerLevels();
         populateStateFromFC();
-        takeSnapshot();
+        captureBaseline();
         updating.value = false;
     }
 
