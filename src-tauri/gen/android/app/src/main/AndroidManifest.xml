@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- The BLE plugin merges in the Bluetooth permissions, but declares BLE as required, which
+         would hide the app from non-BLE devices that can still use USB serial. -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false"
+        tools:replace="android:required" />
 
     <!-- USB host required: serial to the flight controller is the only transport on Android -->
     <uses-feature android:name="android.hardware.usb.host" android:required="true" />

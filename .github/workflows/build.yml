@@ -100,6 +100,8 @@ jobs:
       # signed with the Android debug keystore, which is enough for test installs.
       - name: Build debug APK
         if: ${{ inputs.build_apk && inputs.debug_build }}
+        env:
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           pushd android >/dev/null
           ./gradlew clean
@@ -113,6 +115,7 @@ jobs:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
           : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"

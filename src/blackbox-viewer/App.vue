@@ -11,6 +11,7 @@
                 @open-keys="onOpenKeys"
                 @export-csv="onExportCsv"
                 @export-gpx="onExportGpx"
+                @export-workspaces="onExportWorkspaces"
             />
         </Teleport>
         <Teleport to="#vue-statusbar">
@@ -207,6 +208,10 @@ function onExportGpx() {
     appStore.exportGpx?.();
 }
 
+function onExportWorkspaces() {
+    appStore.exportWorkspaces?.();
+}
+
 function onViewConfig() {
     appStore.headerDialogOpen = false;
     graphStore.hasTableOverlay = false;
@@ -355,11 +360,17 @@ function onDrop(e) {
     if (!appStore.viewerActive) {
         return;
     }
-    const item = e.dataTransfer.items?.[0];
-    const entry = item?.webkitGetAsEntry?.();
-    if (entry?.isFile) {
-        appStore.loadFiles?.([e.dataTransfer.files[0]]);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) {
+        return;
     }
+    // Skip directory drops where the webview can tell us; not every webview implements
+    // webkitGetAsEntry, so a null entry must not block loading the file.
+    const entry = e.dataTransfer.items?.[0]?.webkitGetAsEntry?.();
+    if (entry && !entry.isFile) {
+        return;
+    }
+    appStore.loadFiles?.([file]);
 }
 onMounted(() => {
     document.addEventListener("dragover", onDragOver);
