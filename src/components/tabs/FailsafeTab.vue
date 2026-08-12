@@ -151,8 +151,8 @@
                                 <SettingRow :label="$t('failsafeOffDelayItem')" :help="$t('failsafeOffDelayHelp')">
                                     <UInputNumber
                                         v-model="failsafeOffDelay"
-                                        :min="0"
-                                        :max="250"
+                                        :min="limits.offDelay.min"
+                                        :max="limits.offDelay.max"
                                         :step="0.1"
                                         size="xs"
                                         orientation="vertical"
@@ -179,8 +179,8 @@
                                 >
                                     <UInputNumber
                                         v-model="gpsRescue.returnAltitudeM"
-                                        :min="20"
-                                        :max="100"
+                                        :min="limits.returnAltitude.min"
+                                        :max="limits.returnAltitude.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -190,13 +190,14 @@
                                     />
                                 </SettingRow>
                                 <SettingRow
+                                    v-if="showInitialClimb"
                                     :label="$t('failsafeGpsRescueInitialClimb')"
                                     :help="$t('failsafeGpsRescueInitialClimbHelp')"
                                 >
                                     <UInputNumber
                                         v-model="gpsRescue.initialClimbM"
-                                        :min="0"
-                                        :max="100"
+                                        :min="limits.initialClimb.min"
+                                        :max="limits.initialClimb.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -208,8 +209,8 @@
                                 <SettingRow :label="$t('failsafeGpsRescueItemAscendRate')">
                                     <UInputNumber
                                         v-model="gpsRescueAscendRate"
-                                        :min="1"
-                                        :max="25"
+                                        :min="limits.ascendRate.min"
+                                        :max="limits.ascendRate.max"
                                         :step="0.1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -221,8 +222,8 @@
                                 <SettingRow :label="$t('failsafeGpsRescueItemGroundSpeed')">
                                     <UInputNumber
                                         v-model="gpsRescueGroundSpeed"
-                                        :min="3"
-                                        :max="30"
+                                        :min="limits.groundSpeed.min"
+                                        :max="limits.groundSpeed.max"
                                         :step="0.1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -237,8 +238,8 @@
                                 >
                                     <UInputNumber
                                         v-model="gpsRescue.angle"
-                                        :min="0"
-                                        :max="200"
+                                        :min="limits.angle.min"
+                                        :max="limits.angle.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -250,8 +251,8 @@
                                 <SettingRow :label="$t('failsafeGpsRescueItemDescentDistance')">
                                     <UInputNumber
                                         v-model="gpsRescue.descentDistanceM"
-                                        :min="30"
-                                        :max="500"
+                                        :min="limits.descentDistance.min"
+                                        :max="limits.descentDistance.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -266,8 +267,8 @@
                                 >
                                     <UInputNumber
                                         v-model="gpsRescueDescendRate"
-                                        :min="1"
-                                        :max="5"
+                                        :min="limits.descendRate.min"
+                                        :max="limits.descendRate.max"
                                         :step="0.1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -279,8 +280,8 @@
                                 <SettingRow :label="$t('failsafeGpsRescueItemThrottleMin')">
                                     <UInputNumber
                                         v-model="gpsRescue.throttleMin"
-                                        :min="1000"
-                                        :max="2000"
+                                        :min="limits.throttleMin.min"
+                                        :max="limits.throttleMin.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -295,8 +296,8 @@
                                 >
                                     <UInputNumber
                                         v-model="gpsRescue.throttleMax"
-                                        :min="1000"
-                                        :max="2000"
+                                        :min="limits.throttleMax.min"
+                                        :max="limits.throttleMax.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -311,8 +312,8 @@
                                 >
                                     <UInputNumber
                                         v-model="gpsRescue.throttleHover"
-                                        :min="1000"
-                                        :max="2000"
+                                        :min="limits.throttleHover.min"
+                                        :max="limits.throttleHover.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -321,14 +322,11 @@
                                         class="w-20"
                                     />
                                 </SettingRow>
-                                <SettingRow
-                                    :label="$t('failsafeGpsRescueItemMinDth')"
-                                    :help="$t('failsafeGpsRescueItemMinDthHelp')"
-                                >
+                                <SettingRow :label="$t('failsafeGpsRescueItemMinDth')" :help="minStartDistHelp">
                                     <UInputNumber
                                         v-model="gpsRescue.minStartDistM"
-                                        :min="50"
-                                        :max="1000"
+                                        :min="limits.minStartDist.min"
+                                        :max="limits.minStartDist.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -340,8 +338,8 @@
                                 <SettingRow :label="$t('failsafeGpsRescueItemMinSats')">
                                     <UInputNumber
                                         v-model="gpsRescue.minSats"
-                                        :min="5"
-                                        :max="50"
+                                        :min="limits.minSats.min"
+                                        :max="limits.minSats.max"
                                         :step="1"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
@@ -403,7 +401,8 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import adjustBoxNameIfPeripheralWithModeID from "@/js/peripherals";
 import semver from "semver";
-import { API_VERSION_1_41 } from "@/js/data_storage";
+import { API_VERSION_1_41, API_VERSION_1_46 } from "@/js/data_storage";
+import { getFailsafeLimits } from "@/js/failsafe_limits";
 import GUI from "@/js/gui";
 
 // Procedure illustration images (same pattern as GpsTab's loadingBarsUrl)
@@ -617,6 +616,21 @@ const showGpsRescue = computed(() => {
 const isGpsSettingsDisabled = computed(() => {
     return failsafeConfig.value.failsafe_procedure !== 2 && !hasGpsRescueAsMode.value;
 });
+
+// --- API version dependent input limits ---
+
+// The firmware CLI limits changed between releases, so the inputs have to follow
+// the API version of the connected board. Without this the inputs clamp perfectly
+// valid values, e.g. minimum start distance to 50m when the firmware allows 5-30m.
+const limits = computed(() => getFailsafeLimits(fcStore.config.apiVersion));
+
+// Initial climb was introduced in 1.46, and the minimum start distance changed
+// meaning in the same release, so it needs the updated explanation.
+const isApiVersion1_46 = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
+const showInitialClimb = isApiVersion1_46;
+const minStartDistHelp = computed(() =>
+    isApiVersion1_46.value ? t("failsafeGpsRescueItemMinStartDistHelp") : t("failsafeGpsRescueItemMinDthHelp"),
+);
 
 // --- Value conversions (stored as x10 or x100) ---
 
