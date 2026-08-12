@@ -245,6 +245,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.PIDS = val),
     });
 
+    const wingConfig = computed({
+        get: () => FC.WING_CONFIG,
+        set: (val) => (FC.WING_CONFIG = val),
+    });
+
     const pidNames = computed({
         get: () => FC.PID_NAMES,
         set: (val) => (FC.PID_NAMES = val),
