@@ -1069,7 +1069,138 @@
         </div>
     </div>
     <div v-if="isWingBuildGte49">
-        <UiBox :title="$t('pidTuningWingSettings')" type="neutral"> </UiBox>
+        <UiBox :title="$t('pidTuningWingSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningWingSterm')" type="neutral">
+                <div
+                    class="grid grid-cols-[repeat(3,minmax(4rem,4rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
+                >
+                    <!-- Header -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                        ROLL
+                    </div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
+                        PITCH
+                    </div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">
+                        YAW
+                    </div>
+                    <UInputNumber
+                        v-model="wingConfig.s_term[0]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="wingConfig.s_term[1]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="wingConfig.s_term[2]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                </div>
+            </UiBox>
+            <!-- SPA Table -->
+            <UiBox :title="$t('pidTuningWingSPA')" type="neutral">
+                <div
+                    class="grid grid-cols-[3rem_repeat(3,minmax(4rem,6rem))] gap-x-2 gap-y-1 items-center min-w-0 overflow-x-auto pb-1"
+                >
+                    <!-- Header -->
+                    <div></div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningWingSpaMode')"></span>
+                        <HelpIcon :text="$t('pidTuningWingSpaModeHelp')" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningWingSpaCenter')"></span>
+                        <HelpIcon :text="$t('pidTuningWingSpaCenterHelp')" />
+                    </div>
+                    <div class="flex items-center justify-center gap-0.5 text-xs">
+                        <span v-html="$t('pidTuningWingSpaWidth')"></span>
+                        <HelpIcon :text="$t('pidTuningWingSpaWidthHelp')" />
+                    </div>
+
+                    <!-- ROLL -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <USelect v-model="wingConfig.spa_mode[0]" :items="wingSpaModesItems" size="xs" class="w-24" />
+                    <UInputNumber
+                        v-model="wingConfig.spa_center[0]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="wingConfig.spa_width[0]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+
+                    <!-- PITCH -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <USelect v-model="wingConfig.spa_mode[1]" :items="wingSpaModesItems" size="xs" class="w-24" />
+                    <UInputNumber
+                        v-model="wingConfig.spa_center[1]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="wingConfig.spa_width[1]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+
+                    <!-- YAW -->
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <USelect v-model="wingConfig.spa_mode[2]" :items="wingSpaModesItems" size="xs" class="w-24" />
+                    <UInputNumber
+                        v-model="wingConfig.spa_center[2]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                    <UInputNumber
+                        v-model="wingConfig.spa_width[2]"
+                        :step="1"
+                        :min="0"
+                        :max="250"
+                        size="xs"
+                        orientation="vertical"
+                        class="w-full"
+                    />
+                </div>
+            </UiBox>
+        </UiBox>
     </div>
 </template>
 
@@ -1705,147 +1836,19 @@ onUnmounted(() => {
     }
 });
 
+// Wing settings
 const isWingBuildGte49 = computed(
     () => FC.CONFIG.buildOptions.includes("USE_WING") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49),
 );
 
-const s_term_roll = computed({
-    get: () => FC.WING_CONFIG.s_term[0],
-    set: (val) => FC.WING_CONFIG.s_term[0],
-});
+// Wing config - reactive reference
+const wingConfig = computed(() => FC.WING_CONFIG);
 
-const s_term_pitch = computed({
-    get: () => FC.WING_CONFIG.s_term[1],
-    set: (val) => FC.WING_CONFIG.s_term[1],
-});
-
-const s_term_yaw = computed({
-    get: () => FC.WING_CONFIG.s_term[2],
-    set: (val) => FC.WING_CONFIG.s_term[2],
-});
-
-const spa_center_roll = computed({
-    get: () => FC.WING_CONFIG.spa_center[0],
-    set: (val) => FC.WING_CONFIG.spa_center[0],
-});
-
-const spa_center_pitch = computed({
-    get: () => FC.WING_CONFIG.spa_center[1],
-    set: (val) => FC.WING_CONFIG.spa_center[1],
-});
-
-const spa_center_yaw = computed({
-    get: () => FC.WING_CONFIG.spa_center[2],
-    set: (val) => FC.WING_CONFIG.spa_center[2],
-});
-
-const spa_width_roll = computed({
-    get: () => FC.WING_CONFIG.spa_width[0],
-    set: (val) => FC.WING_CONFIG.spa_width[0],
-});
-
-const spa_width_pitch = computed({
-    get: () => FC.WING_CONFIG.spa_width[1],
-    set: (val) => FC.WING_CONFIG.spa_width[1],
-});
-
-const spa_width_yaw = computed({
-    get: () => FC.WING_CONFIG.spa_width[2],
-    set: (val) => FC.WING_CONFIG.spa_width[2],
-});
-
-const spa_mode_roll = computed({
-    get: () => FC.WING_CONFIG.spa_mode[0],
-    set: (val) => FC.WING_CONFIG.spa_mode[0],
-});
-
-const spa_mode_pitch = computed({
-    get: () => FC.WING_CONFIG.spa_mode[1],
-    set: (val) => FC.WING_CONFIG.spa_mode[1],
-});
-
-const spa_mode_yaw = computed({
-    get: () => FC.WING_CONFIG.spa_mode[2],
-    set: (val) => FC.WING_CONFIG.spa_mode[2],
-});
-
-const tpa_curve_type = computed({
-    get: () => FC.WING_CONFIG.tpa_curve_type,
-    set: (val) => FC.WING_CONFIG.tpa_curve_type,
-});
-
-const tpa_curve_stall_throttle = computed({
-    get: () => FC.WING_CONFIG.tpa_curve_stall_throttle,
-    set: (val) => FC.WING_CONFIG.tpa_curve_stall_throttle,
-});
-
-const tpa_curve_pid_thr0 = computed({
-    get: () => FC.WING_CONFIG.tpa_curve_pid_thr0,
-    set: (val) => FC.WING_CONFIG.tpa_curve_pid_thr0,
-});
-
-const tpa_curve_pid_thr100 = computed({
-    get: () => FC.WING_CONFIG.tpa_curve_pid_thr100,
-    set: (val) => FC.WING_CONFIG.tpa_curve_pid_thr100,
-});
-
-const tpa_curve_expo = computed({
-    get: () => FC.WING_CONFIG.tpa_curve_expo,
-    set: (val) => FC.WING_CONFIG.tpa_curve_expo,
-});
-
-const tpa_speed_type = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_type,
-    set: (val) => FC.WING_CONFIG.tpa_speed_type,
-});
-
-const tpa_speed_basic_delay = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_basic_delay,
-    set: (val) => FC.WING_CONFIG.tpa_speed_basic_delay,
-});
-
-const tpa_speed_basic_gravity = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_basic_gravity,
-    set: (val) => FC.WING_CONFIG.tpa_speed_basic_gravity,
-});
-
-const tpa_speed_adv_prop_pitch = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_adv_prop_pitch,
-    set: (val) => FC.WING_CONFIG.tpa_speed_adv_prop_pitch,
-});
-
-const tpa_speed_adv_mass = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_adv_mass,
-    set: (val) => FC.WING_CONFIG.tpa_speed_adv_mass,
-});
-
-const tpa_speed_adv_drag_k = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_adv_drag_k,
-    set: (val) => FC.WING_CONFIG.tpa_speed_adv_drag_k,
-});
-
-const tpa_speed_adv_thrust = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_adv_thrust,
-    set: (val) => FC.WING_CONFIG.tpa_speed_adv_thrust,
-});
-
-const tpa_speed_max_voltage = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_max_voltage,
-    set: (val) => FC.WING_CONFIG.tpa_speed_max_voltage,
-});
-
-const tpa_speed_pitch_offset = computed({
-    get: () => FC.WING_CONFIG.tpa_speed_pitch_offset,
-    set: (val) => FC.WING_CONFIG.tpa_speed_pitch_offset,
-});
-
-const yaw_type = computed({
-    get: () => FC.WING_CONFIG.yaw_type,
-    set: (val) => FC.WING_CONFIG.yaw_type,
-});
-
-const angle_pitch_offset = computed({
-    get: () => FC.WING_CONFIG.angle_pitch_offset,
-    set: (val) => FC.WING_CONFIG.angle_pitch_offset,
-});
+const wingSpaModesItems = computed(() => [
+    { value: 0, label: t("pidTuningWingSpaModeOff") },
+    { value: 1, label: t("pidTuningWingSpaModeIFreeze") },
+    { value: 2, label: t("pidTuningWingSpaModeI") },
+    { value: 3, label: t("pidTuningWingSpaModePID") },
+    { value: 4, label: t("pidTuningWingSpaModePDIFreeze") },
+]);
 </script>

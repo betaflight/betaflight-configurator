@@ -9938,5 +9938,44 @@
     },
     "pidTuningWingSettings": {
         "message": "Wing Settings"
+    },
+    "pidTuningWingSterm": {
+        "message": "S term"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Mode"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "SPA mode for each axis"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Center"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "RPY setpoint at which PIDs are reduced to 50% (setpoint PID attenuation)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Width"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Width of smooth transition around spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "OFF"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I FREEZE"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I FREEZE"
     }
 }
