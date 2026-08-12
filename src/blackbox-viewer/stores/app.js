@@ -6,6 +6,11 @@ export const useAppStore = defineStore("app", () => {
     const viewVideo = ref(true);
     const darkThemeEnabled = ref(false);
 
+    // True while the viewer is the visible tab. Embedded, the host tab flips this on
+    // activate/deactivate so the viewer's document-level handlers (keyboard, wheel, drag) go
+    // dormant behind other tabs. Defaults true so the standalone viewer is unaffected.
+    const viewerActive = ref(true);
+
     // Filename of loaded log (pushed from legacy code)
     const logFilename = ref("");
 
@@ -48,6 +53,7 @@ export const useAppStore = defineStore("app", () => {
         legendHidden,
         viewVideo,
         darkThemeEnabled,
+        viewerActive,
         logFilename,
         statusVersion,
         statusCells,

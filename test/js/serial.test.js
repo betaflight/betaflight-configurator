@@ -2,10 +2,15 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 
 // Force the Tauri shell so the protocol list registers both the Rust-backed raw-TCP
 // slot and the WebSocket slot — the case the ws/wss vs tcp routing fix is about.
+// Mutable so a second block can pin the Tauri Android slot table.
+const platform = vi.hoisted(() => ({ isTauriIOS: true, isTauriAndroid: false, isTauriMacOS: false }));
+
 vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isAndroid: () => false,
     isTauri: () => true,
-    isTauriIOS: () => true,
+    isTauriIOS: () => platform.isTauriIOS,
+    isTauriAndroid: () => platform.isTauriAndroid,
+    isTauriMacOS: () => platform.isTauriMacOS,
 }));
 
 // Replace each protocol with a tiny EventTarget stub so construction is side-effect free
@@ -24,13 +29,30 @@ vi.mock("../../src/js/protocols/CapacitorBle.js", () => ({ default: stub("Capaci
 vi.mock("../../src/js/protocols/CapacitorTcp.js", () => ({ default: stub("CapacitorTcp") }));
 vi.mock("../../src/js/protocols/TauriSerial.js", () => ({ default: stub("TauriSerial") }));
 vi.mock("../../src/js/protocols/TauriTcp.js", () => ({ default: stub("TauriTcp") }));
+vi.mock("../../src/js/protocols/TauriBle.js", () => ({ default: stub("TauriBle") }));
 
 let serial;
-beforeEach(async () => {
-    ({ serial } = await import("../../src/js/serial.js"));
-});
+
+/**
+ * Rebuilds the serial singleton on the given Tauri platform. It builds its slot table at
+ * module load, so the registry has to be reset for a changed platform to take effect.
+ * @param {{ios?: boolean, android?: boolean, macos?: boolean}} on - the platform to report;
+ *   everything omitted is false, which is desktop Linux/Windows.
+ * @returns {void}
+ */
+function usePlatform(on = {}) {
+    beforeEach(async () => {
+        platform.isTauriIOS = on.ios ?? false;
+        platform.isTauriAndroid = on.android ?? false;
+        platform.isTauriMacOS = on.macos ?? false;
+        vi.resetModules();
+        ({ serial } = await import("../../src/js/serial.js"));
+    });
+}
 
 describe("serial.selectProtocol — Tauri transport routing", () => {
+    usePlatform({ ios: true });
+
     it("routes wss:// to the WebSocket protocol, not raw TCP", () => {
         expect(serial.selectProtocol("wss://example.com:5761").constructor.name).toBe("Websocket");
     });
@@ -71,5 +93,48 @@ describe("serial.selectProtocol — Tauri transport routing", () => {
         expect(serial.selectProtocol("elrs_rx.local:5761").constructor.name).toBe("TauriTcp");
         expect(serial.selectProtocol("[fe80::1]").constructor.name).toBe("TauriTcp");
         expect(serial.selectProtocol("[fe80::1]:5761").constructor.name).toBe("TauriTcp");
+    });
+});
+
+describe("serial protocol slots — Tauri Android", () => {
+    usePlatform({ android: true });
+
+    it("uses the native serial transport", () => {
+        expect(serial.selectProtocol("/dev/bus/usb/001/002").constructor.name).toBe("TauriSerial");
+    });
+
+    it("keeps the Rust-backed TCP and WebSocket slots distinct", () => {
+        expect(serial.selectProtocol("tcp://192.168.0.10:5761").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("manual").constructor.name).toBe("TauriTcp");
+        expect(serial.selectProtocol("wss://example.com:5761").constructor.name).toBe("Websocket");
+    });
+
+    it("uses the native BLE transport", () => {
+        // The Android System WebView has no navigator.bluetooth, so WebBluetooth would be inert.
+        expect(serial.selectProtocol("bluetooth_AA:BB:CC:DD:EE:FF").constructor.name).toBe("TauriBle");
+    });
+
+    it("still registers the virtual transport", () => {
+        expect(serial.selectProtocol("virtual").constructor.name).toBe("VirtualSerial");
+    });
+});
+
+describe("serial protocol slots — Tauri macOS", () => {
+    usePlatform({ macos: true });
+
+    it("uses the native BLE transport, since WKWebView has no Web Bluetooth", () => {
+        expect(serial.selectProtocol("bluetooth_1B2C3D4E").constructor.name).toBe("TauriBle");
+    });
+
+    it("keeps the native serial transport", () => {
+        expect(serial.selectProtocol("/dev/cu.usbmodem1").constructor.name).toBe("TauriSerial");
+    });
+});
+
+describe("serial protocol slots — Tauri desktop (Linux/Windows)", () => {
+    usePlatform();
+
+    it("keeps the webview's Web Bluetooth", () => {
+        expect(serial.selectProtocol("bluetooth_AA:BB:CC:DD:EE:FF").constructor.name).toBe("WebBluetooth");
     });
 });

@@ -11,6 +11,7 @@ import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
 export function usePower() {
@@ -49,9 +50,6 @@ export function usePower() {
     const voltageConfigs = reactive([]);
     const currentConfigs = reactive([]);
 
-    /** Serialized baseline after last FC sync; used for save-button dirty detection */
-    const powerConfigBaseline = ref("");
-
     const buildPowerConfigSnapshot = () => ({
         voltageMeterSource: batteryConfig.voltageMeterSource,
         currentMeterSource: batteryConfig.currentMeterSource,
@@ -71,14 +69,10 @@ export function usePower() {
         })),
     });
 
+    /** @returns {string} serialized tab state for dirty comparison */
     const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
 
-    const dirty = computed(() => {
-        if (!powerConfigBaseline.value) {
-            return false;
-        }
-        return powerConfigBaseline.value !== serializePowerConfig();
-    });
+    const { dirty, markClean, takeSnapshot } = useDirtyState(serializePowerConfig);
 
     // Calibration state
     const sourceschanged = ref(false);
@@ -235,8 +229,11 @@ export function usePower() {
 
         syncingFromFc = true;
         try {
-            await loadData();
-            gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+            // Only announce the profile the FC actually sent. The load resolves either way,
+            // so without this a cancelled or failed read still logged a successful sync.
+            if (await loadData()) {
+                gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+            }
         } finally {
             syncingFromFc = false;
         }
@@ -252,6 +249,10 @@ export function usePower() {
     );
 
     // Load data from flight controller
+    /**
+     * Read the power configuration from the FC into reactive state.
+     * @returns {Promise<boolean>} true when the data actually arrived
+     */
     const loadData = async () => {
         isLoading.value = true;
         try {
@@ -268,8 +269,14 @@ export function usePower() {
 
             // Update reactive state
             updateStateFromFC();
+            return true;
         } catch (error) {
-            console.error("Error loading power data:", error);
+            // Switching away mid-load clears the MSP queue and cancels the chain. Expected —
+            // the tab is being torn down — so don't report it, same as the live poller below.
+            if (!isMspCancelled(error)) {
+                console.error("Error loading power data:", error);
+            }
+            return false;
         } finally {
             isLoading.value = false;
         }
@@ -319,7 +326,7 @@ export function usePower() {
             currentConfigs.push({ ...config });
         });
 
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean();
     };
 
     // Update live data (polling)
@@ -493,6 +500,8 @@ export function usePower() {
     const saveConfig = async () => {
         const { saveToEeprom } = useReboot();
 
+        const savedSnapshot = takeSnapshot();
+
         // Update FC data from reactive state
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
@@ -533,7 +542,7 @@ export function usePower() {
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }
-        powerConfigBaseline.value = serializePowerConfig();
+        markClean(savedSnapshot);
     };
 
     return {

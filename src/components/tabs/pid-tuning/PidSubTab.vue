@@ -3,7 +3,7 @@
         <!-- LEFT COLUMN: PID Table and Sliders -->
         <div class="flex flex-col gap-4">
             <!-- Tuning Sliders Section -->
-            <UiBox :title="$t('pidTuningSliders')" type="neutral">
+            <UiBox :title="$t('pidTuningSliders')" type="neutral" collapsible>
                 <!-- Slider Header: Mode select + range labels -->
                 <div class="flex items-center gap-3 mb-2">
                     <div class="flex items-center gap-2 min-w-44 shrink-0">
@@ -655,7 +655,7 @@
         <!-- RIGHT COLUMN: PID Controller Settings -->
         <div class="flex flex-col gap-4">
             <!-- PID Settings -->
-            <UiBox :title="$t('pidTuningPidSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningPidSettings')" type="neutral" collapsible>
                 <!-- Feedforward Group -->
                 <div class="flex flex-col gap-2">
                     <span class="text-sm font-semibold" v-html="$t('pidTuningFeedforwardGroup')"></span>
@@ -925,7 +925,7 @@
             </UiBox>
 
             <!-- Motor Settings -->
-            <UiBox :title="$t('pidTuningMotorSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningMotorSettings')" type="neutral" collapsible>
                 <SettingRow :label="$t('pidTuningThrottleBoost')" :help="$t('pidTuningThrottleBoostHelp')">
                     <UInputNumber
                         v-model="advancedTuning.throttleBoost"
@@ -1014,7 +1014,7 @@
             </UiBox>
 
             <!-- Misc Settings -->
-            <UiBox :title="$t('pidTuningMiscSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningMiscSettings')" type="neutral" collapsible>
                 <SettingRow :label="$t('pidTuningCellCount')" :help="$t('pidTuningCellCountHelp')">
                     <USelect
                         v-model="advancedTuning.autoProfileCellCount"
@@ -1098,8 +1098,6 @@ const props = defineProps({
         default: false,
     },
 });
-
-const emit = defineEmits(["change"]);
 
 // USelect item arrays
 const pidsModeItems = computed(() => [
@@ -1655,9 +1653,6 @@ async function onSliderChange(activeSliderKey) {
     // Ask the FC to calculate PIDs from current slider positions
     await calculateNewPids(collectSliderValues());
 
-    // Notify parent that FC data was mutated programmatically
-    emit("change");
-
     // Clear previous timeout and set new one to prevent race conditions
     if (userInteractionTimeout !== null) {
         clearTimeout(userInteractionTimeout);
@@ -1682,22 +1677,6 @@ watch(
         }
     },
     { deep: true },
-);
-
-// Watch for changes to mark tab dirty state in parent component
-watch(
-    () => JSON.stringify(FC.PIDS),
-    () => emit("change"),
-);
-
-watch(
-    () => JSON.stringify(FC.ADVANCED_TUNING),
-    () => emit("change"),
-);
-
-watch(
-    () => JSON.stringify(FC.RC_TUNING),
-    () => emit("change"),
 );
 
 // Expose method to parent component to force slider update after save

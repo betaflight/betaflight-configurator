@@ -2,9 +2,7 @@
     <BaseTab tab-name="failsafe">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabFailsafe')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="Failsafe" />
-            </div>
+            <WikiButton docUrl="Failsafe" />
 
             <UiBox type="warning" highlight class="mb-4">
                 <p class="text-sm" v-html="$t('failsafeFeaturesHelpNew')"></p>
@@ -14,7 +12,7 @@
                 <!-- Left Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Pulse Range Settings -->
-                    <UiBox :title="$t('failsafePulsrangeTitle')" :help="$t('failsafePulsrangeHelp')">
+                    <UiBox :title="$t('failsafePulsrangeTitle')" type="neutral" collapsible>
                         <SettingRow :label="$t('failsafeRxMinUsecItem')">
                             <UInputNumber
                                 v-model="rxConfig.rx_min_usec"
@@ -42,10 +40,7 @@
                     </UiBox>
 
                     <!-- Channel Fallback Settings -->
-                    <UiBox
-                        :title="$t('failsafeChannelFallbackSettingsTitle')"
-                        :help="$t('failsafeChannelFallbackSettingsHelp')"
-                    >
+                    <UiBox :title="$t('failsafeChannelFallbackSettingsTitle')" type="neutral" collapsible>
                         <div class="grid grid-cols-[minmax(10rem,1fr)_7rem_5rem] gap-x-3 gap-y-1.5 items-center">
                             <template v-for="(channel, index) in activeChannels" :key="index">
                                 <div>
@@ -57,7 +52,6 @@
                                             :label="badge.label"
                                             color="neutral"
                                             variant="subtle"
-                                            size="sm"
                                         />
                                     </span>
                                 </div>
@@ -86,7 +80,7 @@
                 <!-- Right Column -->
                 <div class="flex flex-col gap-4">
                     <!-- Failsafe Switch -->
-                    <UiBox :title="$t('failsafeSwitchTitle')">
+                    <UiBox :title="$t('failsafeSwitchTitle')" type="neutral" collapsible>
                         <SettingRow :label="$t('failsafeSwitchModeItem')" :help="$t('failsafeSwitchModeHelp')">
                             <USelect
                                 v-model="failsafeConfig.failsafe_switch_mode"
@@ -97,7 +91,7 @@
                     </UiBox>
 
                     <!-- Stage 2 Settings -->
-                    <UiBox :title="$t('failsafeStageTwoSettingsTitle')">
+                    <UiBox :title="$t('failsafeStageTwoSettingsTitle')" type="neutral" collapsible>
                         <SettingRow :label="$t('failsafeDelayItem')" :help="$t('failsafeDelayHelp')">
                             <UInputNumber
                                 v-model="failsafeDelay"
@@ -363,7 +357,7 @@
                                     <USwitch
                                         v-model="gpsRescueAllowArmingWithoutFix"
                                         :disabled="isGpsSettingsDisabled"
-                                        size="sm"
+                                        size="xs"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('failsafeGpsRescueItemSanityChecks')">
@@ -383,7 +377,12 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" :disabled="!configHasChanged" @click="saveConfig" />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="!configHasChanged"
+                size="xs"
+                @click="saveConfig"
+            />
         </div>
     </BaseTab>
 </template>

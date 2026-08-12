@@ -1,7 +1,7 @@
 <template>
     <Dialog v-model="showEditorDialog" :title="editMode ? $t('flightPlanEditWaypoint') : $t('flightPlanAddWaypoint')">
         <form ref="formElement" class="editor-form flex flex-col gap-3" @submit.prevent="handleSave">
-            <SettingRow :label="$t('flightPlanType')" full-width>
+            <SettingRow :label="$t('flightPlanType')" fullWidth>
                 <!-- content z must clear the Dialog overlay/content (z-3000/3001) or the
                      teleported option list renders behind the modal and can't be clicked. -->
                 <USelect
@@ -13,7 +13,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showPosition" :label="$t('flightPlanLatitude')" full-width>
+            <SettingRow v-if="showPosition" :label="$t('flightPlanLatitude')" fullWidth>
                 <UInputNumber
                     v-model="form.latitude"
                     :step="0.000001"
@@ -25,7 +25,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showPosition" :label="$t('flightPlanLongitude')" full-width>
+            <SettingRow v-if="showPosition" :label="$t('flightPlanLongitude')" fullWidth>
                 <UInputNumber
                     v-model="form.longitude"
                     :step="0.000001"
@@ -37,7 +37,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showAltitude" :label="$t('flightPlanAltitude')" full-width>
+            <SettingRow v-if="showAltitude" :label="$t('flightPlanAltitude')" fullWidth>
                 <UInputNumber
                     v-model="form.altitude"
                     :step="1"
@@ -49,7 +49,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showSpeed" :label="$t('flightPlanSpeed')" full-width>
+            <SettingRow v-if="showSpeed" :label="$t('flightPlanSpeed')" fullWidth>
                 <UInputNumber
                     v-model="form.speed"
                     :step="0.1"
@@ -61,7 +61,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showYawRate" :label="$t('flightPlanYawRate')" full-width>
+            <SettingRow v-if="showYawRate" :label="$t('flightPlanYawRate')" fullWidth>
                 <UInputNumber
                     v-model="form.speed"
                     :step="1"
@@ -73,7 +73,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="showDuration" :label="durationLabel" full-width>
+            <SettingRow v-if="showDuration" :label="durationLabel" fullWidth>
                 <UInputNumber
                     v-model="form.duration"
                     :step="0.1"
@@ -84,7 +84,7 @@
                 />
             </SettingRow>
 
-            <SettingRow v-if="form.type === 'hold'" :label="$t('flightPlanPattern')" full-width>
+            <SettingRow v-if="form.type === 'hold'" :label="$t('flightPlanPattern')" fullWidth>
                 <USelect
                     v-model="form.pattern"
                     :items="patternItems"

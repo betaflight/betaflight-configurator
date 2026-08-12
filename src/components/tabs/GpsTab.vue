@@ -8,7 +8,12 @@
                 <!-- Left Column: Configuration + Signal Strength -->
                 <div class="lg:col-span-2 flex flex-col gap-4">
                     <!-- GPS Configuration -->
-                    <UiBox :title="$t('configurationGPS')" :help="$t('configurationGPSHelp')">
+                    <UiBox
+                        :title="$t('configurationGPS')"
+                        type="neutral"
+                        collapsible
+                        :help="$t('configurationGPSHelp')"
+                    >
                         <SettingRow
                             v-for="feature in gpsFeatures"
                             :key="feature.bit"
@@ -26,7 +31,7 @@
                                 :items="gpsProtocolItems"
                                 v-model="gpsConfig.provider"
                                 @update:model-value="onGpsProtocolChange"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                         </SettingRow>
@@ -52,16 +57,17 @@
                         </SettingRow>
 
                         <SettingRow v-if="showUbloxSbas" :label="$t('configurationGPSubxSbas')">
-                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="sm" class="min-w-40" />
+                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="xs" class="min-w-40" />
                         </SettingRow>
                     </UiBox>
 
                     <!-- GPS Signal Strength -->
                     <UiBox
                         :title="$t('gpsSignalStrHead')"
-                        :help="$t('gpsSignalStrHeadHelp')"
-                        :type="hasGpsSensor ? 'default' : 'warning'"
+                        :type="hasGpsSensor ? 'neutral' : 'warning'"
                         :highlight="!hasGpsSensor"
+                        collapsible
+                        :help="$t('gpsSignalStrHeadHelp')"
                     >
                         <div v-if="!hasGpsSensor" class="text-center p-2 text-sm" v-html="$t('gpsSignalLost')"></div>
                         <div v-if="hasGpsSensor" class="text-xs">
@@ -108,7 +114,7 @@
                 <!-- Right Column: GPS Info + Map -->
                 <div class="lg:col-span-3 flex flex-col gap-4">
                     <!-- GPS Info -->
-                    <UiBox :title="$t('gpsHead')" :help="$t('gpsHeadHelp')">
+                    <UiBox :title="$t('gpsHead')" type="neutral" collapsible :help="$t('gpsHeadHelp')">
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gps3dFix')"></span>
                             <span
@@ -168,13 +174,13 @@
                     </UiBox>
 
                     <!-- GPS Map -->
-                    <UiBox :title="$t('gpsMapHead')">
+                    <UiBox :title="$t('gpsMapHead')" type="neutral" collapsible>
                         <div
                             v-show="showConnect"
                             class="flex flex-col items-center justify-center h-[433px] gap-2 text-center"
                         >
                             <div>{{ $t("gpsMapMessage1") }}</div>
-                            <UButton variant="subtle" @click="checkConnectivity">
+                            <UButton variant="subtle" size="xs" @click="checkConnectivity">
                                 {{ $t("gpsMapRetry") }}
                             </UButton>
                         </div>
@@ -249,6 +255,7 @@
             </div> -->
             <UButton
                 :label="$t('configurationButtonSave')"
+                size="xs"
                 :disabled="!dirty"
                 :loading="isSaving"
                 @click="saveConfig"
@@ -278,6 +285,8 @@ import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
+import { useMapViewport } from "../../composables/useMapViewport";
+import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
@@ -306,8 +315,13 @@ export default defineComponent({
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
+        const {
+            isFullscreen,
+            toggleFullscreen,
+            observeContainer,
+            teardown: teardownMapViewport,
+        } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
         const activeLayer = ref("satellite");
-        const isFullscreen = ref(false);
         const isOnline = ref(false);
         const isWaiting = ref(true);
         const showMap = ref(false);
@@ -363,9 +377,7 @@ export default defineComponent({
             home_point_once: 0,
         });
 
-        /** Baseline after MSP load or successful save; same pattern as Power/Auxiliary tabs */
-        const gpsTabBaseline = ref("");
-
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeGpsTabState = () =>
             JSON.stringify({
                 gpsFeatureEnabled: fcStore.features?.features?.isEnabled?.("GPS") ?? false,
@@ -377,12 +389,7 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
             });
 
-        const dirty = computed(() => {
-            if (!gpsTabBaseline.value) {
-                return false;
-            }
-            return gpsTabBaseline.value !== serializeGpsTabState();
-        });
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -470,36 +477,6 @@ export default defineComponent({
         const zoomOut = () => {
             if (!mapInstance.value?.mapView) return;
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
-        };
-
-        const toggleFullscreen = () => {
-            const container = mapContainerRef.value;
-            if (!container) return;
-
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) {
-                    container.msRequestFullscreen();
-                }
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        };
-
-        const handleFullscreenChange = () => {
-            isFullscreen.value = !!(
-                document.fullscreenElement ||
-                document.webkitFullscreenElement ||
-                document.msFullscreenElement
-            );
-            requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
         };
 
         const getPositionalDopQuality = (positionalDop) => {
@@ -734,7 +711,7 @@ export default defineComponent({
 
                 await updateGpsProtocols();
 
-                gpsTabBaseline.value = serializeGpsTabState();
+                markClean();
 
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
@@ -753,6 +730,8 @@ export default defineComponent({
         const saveConfig = () =>
             runSave(
                 async () => {
+                    const savedSnapshot = takeSnapshot();
+
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
                     await MSP.promise(
@@ -763,8 +742,7 @@ export default defineComponent({
 
                     await saveAndReboot();
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    gpsTabBaseline.value = serializeGpsTabState();
+                    markClean(savedSnapshot);
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },
             );
@@ -785,20 +763,16 @@ export default defineComponent({
 
         onMounted(() => {
             nextTick(() => {
+                observeContainer();
                 initializeMap();
                 mapInstance.value?.map?.updateSize();
             });
             loadGpsConfig();
-            document.addEventListener("fullscreenchange", handleFullscreenChange);
-            document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.addEventListener("MSFullscreenChange", handleFullscreenChange);
         });
 
         const teardown = () => {
             removeAllIntervals();
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+            teardownMapViewport();
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }
@@ -821,6 +795,7 @@ export default defineComponent({
                             mapObj.renderSync();
                         }
                     }
+                    observeContainer();
                 });
             }
         });

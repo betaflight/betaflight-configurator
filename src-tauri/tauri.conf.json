@@ -13,7 +13,8 @@
         "security": {
             "csp": null,
             "capabilities": [
-                "default"
+                "default",
+                "android"
             ]
         },
         "windows": [
@@ -24,7 +25,8 @@
                 "minWidth": 1024,
                 "minHeight": 550,
                 "resizable": true,
-                "fullscreen": false
+                "fullscreen": false,
+                "dragDropEnabled": false
             }
         ]
     },

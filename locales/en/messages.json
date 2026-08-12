@@ -410,6 +410,9 @@
     "rebootFlightControllerReady": {
         "message": "Flight Controller is ready"
     },
+    "rebootFlightControllerFailed": {
+        "message": "Flight Controller did not reconnect"
+    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
     },
@@ -8982,6 +8985,13 @@
     },
     "osdDescElementNavMap": {
         "message": "Minimap showing home, the flight plan, and the flown trail"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Position Hold Ready",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Shows whether Position Hold's entry conditions are currently met, before the mode switch is engaged"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",

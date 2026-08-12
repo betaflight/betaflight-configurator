@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-control-transfer-in"
+description = "Enables the control_transfer_in command without any pre-configured scope."
+commands.allow = ["control_transfer_in"]
+
+[[permission]]
+identifier = "deny-control-transfer-in"
+description = "Denies the control_transfer_in command without any pre-configured scope."
+commands.deny = ["control_transfer_in"]

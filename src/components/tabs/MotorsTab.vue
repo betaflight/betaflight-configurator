@@ -2,22 +2,20 @@
     <BaseTab tab-name="motors">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabMotorTesting')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="motors" />
-            </div>
+            <WikiButton docUrl="motors" />
 
             <div class="grid-row grid-box col2 max-[1055px]:!grid-cols-1">
                 <div class="col-span-1">
                     <div class="flex flex-col gap-4">
                         <!-- MIXER -->
-                        <UiBox :title="$t('configurationMixer')">
+                        <UiBox :title="$t('configurationMixer')" type="neutral" collapsible>
                             <USelect v-model="fcStore.mixerConfig.mixer" :items="sortedMixerListItems" />
                             <SettingRow
                                 :label="$t('configurationReverseMotorSwitch')"
                                 :help="$t('configurationReverseMotorSwitchHelp')"
-                                full-width
+                                fullWidth
                             >
-                                <USwitch v-model="reverseMotorDir" size="sm" />
+                                <USwitch v-model="reverseMotorDir" size="xs" />
                             </SettingRow>
                             <div
                                 class="flex justify-center p-2.5 [&_svg]:w-[150px] [&_svg]:h-[150px] [&_svg]:ml-[15px]"
@@ -28,25 +26,27 @@
                                     v-if="isMotorReorderingAvailable"
                                     :label="$t('motorOutputReorderDialogOpen')"
                                     :disabled="buttonStates.toolsDisabled"
+                                    size="xs"
                                     @click="openMotorOutputReorderDialog()"
                                 />
                                 <UButton
                                     v-if="digitalProtocolConfigured"
                                     :label="$t('escDshotDirectionDialog-Open')"
                                     :disabled="buttonStates.toolsDisabled"
+                                    size="xs"
                                     @click="openEscDshotDirectionDialog()"
                                 />
                             </div>
                         </UiBox>
                         <!-- ESC FEATURES -->
-                        <UiBox :title="$t('configurationEscFeatures')">
+                        <UiBox :title="$t('configurationEscFeatures')" type="neutral" collapsible>
                             <div v-if="!protocolConfigured" class="text-sm text-orange-500">
                                 <p v-html="$t('configurationEscProtocolDisabled')"></p>
                             </div>
                             <SettingRow
                                 :label="$t('configurationEscProtocol')"
                                 :help="$t('configurationEscProtocolHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <USelect
                                     v-model="selectedEscProtocol"
@@ -55,13 +55,13 @@
                                     @update:model-value="onProtocolChange"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" full-width>
-                                <USwitch v-model="useUnsyncedPwm" size="sm" />
+                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationunsyndePwm')" fullWidth>
+                                <USwitch v-model="useUnsyncedPwm" size="xs" />
                             </SettingRow>
                             <SettingRow
                                 v-if="showAnalogSettings && useUnsyncedPwm"
                                 :label="$t('configurationUnsyncedPWMFreq')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.pidAdvancedConfig.motor_pwm_rate"
@@ -74,23 +74,23 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="protocolConfigured" full-width>
+                            <SettingRow v-if="protocolConfigured" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
                                     :disabled="isFeatureEnabled('AIRMODE')"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span class="font-semibold">MOTOR_STOP</span>
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" full-width>
+                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span class="font-semibold">ESC_SENSOR</span>
@@ -101,15 +101,15 @@
                                 v-if="digitalProtocolConfigured"
                                 :label="$t('configurationDshotBidir')"
                                 :help="$t('configurationDshotBidirHelp')"
-                                full-width
+                                fullWidth
                             >
-                                <USwitch v-model="useDshotTelemetry" size="sm" />
+                                <USwitch v-model="useDshotTelemetry" size="xs" />
                             </SettingRow>
                             <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
                                 :label="$t('configurationMotorPolesLong')"
                                 :help="$t('configurationMotorPolesHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.motor_poles"
@@ -125,7 +125,7 @@
                                 v-if="showMotorIdle"
                                 :label="$t('configurationMotorIdle')"
                                 :help="$t('configurationMotorIdleHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.pidAdvancedConfig.motorIdle"
@@ -141,7 +141,7 @@
                                 v-if="showIdleMinRpm"
                                 :label="$t('pidTuningIdleMinRpm')"
                                 :help="$t('configurationMotorIdleRpmHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.advancedTuning.idleMinRpm"
@@ -158,7 +158,7 @@
                                 v-if="showAnalogSettings"
                                 :label="$t('configurationThrottleMinimumCommand')"
                                 :help="$t('configurationThrottleMinimumCommandHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.mincommand"
@@ -175,7 +175,7 @@
                                 v-if="showMinThrottle"
                                 :label="$t('configurationThrottleMinimum')"
                                 :help="$t('configurationThrottleMinimumHelp')"
-                                full-width
+                                fullWidth
                             >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.minthrottle"
@@ -188,11 +188,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow
-                                v-if="showAnalogSettings"
-                                :label="$t('configurationThrottleMaximum')"
-                                full-width
-                            >
+                            <SettingRow v-if="showAnalogSettings" :label="$t('configurationThrottleMaximum')" fullWidth>
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.maxthrottle"
                                     :min="0"
@@ -206,19 +202,19 @@
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
-                        <UiBox :title="$t('configuration3d')">
-                            <SettingRow :help="$t('feature3DTip')" full-width>
+                        <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
+                            <SettingRow :help="$t('feature3DTip')" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <template #label>
                                     <span v-html="$t('feature3D')"></span>
                                 </template>
                             </SettingRow>
                             <template v-if="isFeatureEnabled('3D')">
-                                <SettingRow :label="$t('configuration3dDeadbandLow')" full-width>
+                                <SettingRow :label="$t('configuration3dDeadbandLow')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.deadband3d_low"
                                         :min="1250"
@@ -230,7 +226,7 @@
                                         class="w-16"
                                     />
                                 </SettingRow>
-                                <SettingRow :label="$t('configuration3dDeadbandHigh')" full-width>
+                                <SettingRow :label="$t('configuration3dDeadbandHigh')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.deadband3d_high"
                                         :min="1400"
@@ -242,7 +238,7 @@
                                         class="w-16"
                                     />
                                 </SettingRow>
-                                <SettingRow :label="$t('configuration3dNeutral')" full-width>
+                                <SettingRow :label="$t('configuration3dNeutral')" fullWidth>
                                     <UInputNumber
                                         v-model="fcStore.motor3dConfig.neutral"
                                         :min="1400"
@@ -265,11 +261,14 @@
                         <!-- SENSOR GRAPH SECTION -->
                         <UiBox>
                             <div class="graph-grid">
+                                <!-- The `x` groups are positioned on the plot baseline by
+                                     applyGraphTransforms — their offset depends on the measured
+                                     height, so it must not be hardcoded here. -->
                                 <svg ref="graphSvg" id="graph" class="w-full h-full">
-                                    <g class="grid x" transform="translate(40, 120)"></g>
+                                    <g class="grid x"></g>
                                     <g class="grid y" transform="translate(40, 10)"></g>
-                                    <g class="data" transform="translate(41, 10)"></g>
-                                    <g class="axis x" transform="translate(40, 120)"></g>
+                                    <g class="data" transform="translate(40, 10)"></g>
+                                    <g class="axis x"></g>
                                     <g class="axis y" transform="translate(40, 10)"></g>
                                 </svg>
                                 <div
@@ -285,7 +284,7 @@
                                         <USelect
                                             v-model="sensorType"
                                             :items="sensorTypeItems"
-                                            class="min-w-24"
+                                            class="ml-auto min-w-24"
                                             size="xs"
                                         />
                                     </div>
@@ -314,7 +313,7 @@
                                     >
                                         <span>{{ axis.toUpperCase() }}:</span>
                                         <span
-                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
                                                 'bg-[#e24761]': axis === 'x',
                                                 'bg-[#49c747]': axis === 'y',
@@ -326,7 +325,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="w-32 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
@@ -344,7 +343,12 @@
                             </div>
                         </UiBox>
 
-                        <div class="motors">
+                        <!-- While motor testing is armed the page must not scroll under the
+                             pointer: a wheel notch in the gaps between the sliders would
+                             otherwise move the whole layout while the motors can spin.  The
+                             listener sits on the container so it also catches the grid
+                             gutters and the bar graph, not just the slider cells. -->
+                        <div class="motors" @wheel="onMotorTestWheel">
                             <ul :class="`grid-box col${numberOfValidOutputs + 1} h-5`">
                                 <li
                                     v-for="i in numberOfValidOutputs"
@@ -387,7 +391,7 @@
                             </ul>
                         </div>
 
-                        <div class="m-0 p-0 border-0 list-none outline-none">
+                        <div class="m-0 p-0 border-0 list-none outline-none" @wheel="onMotorTestWheel">
                             <ul :class="`grid-box col${numberOfValidOutputs + 1} mb-2`">
                                 <li
                                     v-for="i in numberOfValidOutputs"
@@ -411,7 +415,7 @@
                                         v-for="i in numberOfValidOutputs"
                                         :key="i"
                                         class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                        @wheel="onSliderWheel(i - 1, $event)"
                                     >
                                         <USlider
                                             orientation="vertical"
@@ -424,10 +428,7 @@
                                             @update:model-value="onMotorValueUpdate(i - 1, $event)"
                                         />
                                     </li>
-                                    <li
-                                        class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(-1, $event)"
-                                    >
+                                    <li class="flex items-end justify-center" @wheel="onSliderWheel(-1, $event)">
                                         <USlider
                                             orientation="vertical"
                                             :min="minSliderValue"
@@ -455,8 +456,8 @@
 
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
-                            <SettingRow :label="$t('motorsEnableControl')" full-width>
-                                <USwitch v-model="motorsTestingEnabled" size="sm" />
+                            <SettingRow :label="$t('motorsEnableControl')" fullWidth>
+                                <USwitch v-model="motorsTestingEnabled" size="xs" />
                             </SettingRow>
                         </div>
                     </div>
@@ -476,7 +477,7 @@
                 </template>
                 <template #footer>
                     <div class="flex justify-end gap-2 w-full">
-                        <UButton :label="$t('motorsDialogSettingsChangedOk')" @click="closeWarningDialog" />
+                        <UButton :label="$t('motorsDialogSettingsChangedOk')" size="xs" @click="closeWarningDialog" />
                     </div>
                 </template>
             </UModal>
@@ -497,9 +498,14 @@
                         <UButton
                             :label="$t('presetsWarningDialogNoButton')"
                             variant="outline"
+                            size="xs"
                             @click="closeDynFiltersDialog"
                         />
-                        <UButton :label="$t('presetsWarningDialogYesButton')" @click="applyDynFiltersChange" />
+                        <UButton
+                            :label="$t('presetsWarningDialogYesButton')"
+                            size="xs"
+                            @click="applyDynFiltersChange"
+                        />
                     </div>
                 </template>
             </UModal>
@@ -513,12 +519,14 @@
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
                     color="error"
+                    size="xs"
                 />
                 <UButton
                     :label="$t('configurationButtonSave')"
                     :disabled="buttonStates.saveDisabled"
                     :loading="isSaving"
                     @click="handleSave(true)"
+                    size="xs"
                 />
             </div>
         </div>
@@ -930,7 +938,11 @@ watch(sensorType, (val) => {
 });
 
 // Graph State
-const margin = { top: 20, right: 30, bottom: 10, left: 20 };
+// `bottom` is the gutter that holds the x-axis tick labels, `top` the gap above the
+// plot.  The axis groups are positioned from these values in applyGraphTransforms —
+// never hardcode them in the SVG template, or the horizontal scale drifts off the
+// bottom of the plot as soon as the SVG is a different height than assumed.
+const margin = { top: 10, right: 10, bottom: 20, left: 40 };
 let graphHelpers = null;
 let graphData = [];
 let samples = 0;
@@ -966,6 +978,20 @@ function initDataArray(length) {
         data[i].max = 1;
     }
     return data;
+}
+
+// Place the axis, grid and data groups for the measured plot area: the y groups at
+// the top-left corner of the plot, the x groups on its baseline so the horizontal
+// scale always sits directly below the vertical one.
+function applyGraphTransforms(svg, helpers) {
+    const topLeft = `translate(${margin.left}, ${margin.top})`;
+    const baseline = `translate(${margin.left}, ${margin.top + helpers.height})`;
+
+    svg.select(".y.grid").attr("transform", topLeft);
+    svg.select(".y.axis").attr("transform", topLeft);
+    svg.select("g.data").attr("transform", topLeft);
+    svg.select(".x.grid").attr("transform", baseline);
+    svg.select(".x.axis").attr("transform", baseline);
 }
 
 function updateGraphHelperSize(helpers) {
@@ -1032,6 +1058,7 @@ function drawGraph(helpers, data, sampleNumber) {
     const svg = d3.select(graphSvg.value);
 
     updateGraphHelperSize(helpers); // Ensure size is current
+    applyGraphTransforms(svg, helpers);
 
     helpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
     if (helpers.dynamicHeightDomain) {
@@ -1235,6 +1262,13 @@ const mixerPreviewSvg = ref("");
 
 const updateMixerPreview = async () => {
     const imgSrc = getMixerImageSrc(fcStore.mixerConfig.mixer, fcStore.mixerConfig.reverseMotorDir);
+
+    // No mixer yet: the watcher below runs immediately, and with "Reopen last tab on connect"
+    // this tab mounts before MSP_MIXER_CONFIG arrives. It re-runs when the real id lands.
+    if (!imgSrc) {
+        return;
+    }
+
     try {
         const response = await fetch(imgSrc);
         const text = await response.text();
@@ -1538,10 +1572,21 @@ const onMasterValueUpdate = (val) => {
     onMasterSliderChange();
 };
 
+// Swallow wheel events over the motor test controls while testing is armed, so the
+// page cannot scroll out from under the pointer while the motors can spin.  When
+// testing is off the sliders are inert and normal page scrolling is left alone.
+const onMotorTestWheel = (event) => {
+    if (motorsTestingEnabled.value) {
+        event.preventDefault();
+    }
+};
+
 const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) {
         return;
     }
+
+    event.preventDefault();
 
     // index -1 for master
     const step = 25;

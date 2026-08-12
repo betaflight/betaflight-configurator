@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('autotuneBodePlotTitle')">
+    <UiBox :title="$t('autotuneBodePlotTitle')" type="neutral" collapsible>
         <!-- Axis checkboxes — centred -->
         <div class="flex justify-center gap-5">
             <label

@@ -3,38 +3,36 @@
         <div class="content_wrapper">
             <!-- Title -->
             <div class="tab_title" v-html="$t('tabVtx')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="vtx" />
-            </div>
+            <WikiButton docUrl="vtx" />
 
             <!-- Help note -->
-            <UiBox highlight class="mb-3" v-show="vtxSupported">
+            <UiBox highlight v-show="vtxSupported">
                 <p v-html="$t('vtxHelp')"></p>
             </UiBox>
 
             <!-- Not supported -->
-            <UiBox highlight class="mb-3" v-show="!vtxSupported">
+            <UiBox highlight v-show="!vtxSupported">
                 <div v-html="$t('vtxMessageNotSupported')"></div>
             </UiBox>
 
-            <!-- Table not configured -->
-            <UiBox highlight class="mb-3" v-show="vtxTableNotConfigured">
-                <div v-html="$t('vtxMessageTableNotConfigured')"></div>
-            </UiBox>
-
-            <!-- Factory bands not supported -->
-            <UiBox highlight class="mb-3" v-show="factoryBandsNotSupported">
-                <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
-            </UiBox>
+            <!-- Table not configured / factory bands warnings -->
+            <div v-if="vtxTableNotConfigured || factoryBandsNotSupported" class="flex flex-col gap-2">
+                <UiBox v-show="vtxTableNotConfigured" highlight>
+                    <div v-html="$t('vtxMessageTableNotConfigured')"></div>
+                </UiBox>
+                <UiBox v-show="factoryBandsNotSupported" highlight>
+                    <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
+                </UiBox>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
                 <div class="lg:col-span-3" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxSelectedMode')">
+                    <UiBox :title="$t('vtxSelectedMode')" type="neutral" collapsible class="mt-4">
                         <div class="flex flex-col gap-2">
                             <!-- Frequency/Channel toggle -->
                             <SettingRow :label="$t('vtxFrequencyChannel')" :help="$t('vtxFrequencyChannelHelp')">
-                                <USwitch v-model="frequencyMode" size="sm" />
+                                <USwitch v-model="frequencyMode" size="xs" />
                             </SettingRow>
 
                             <!-- Band select -->
@@ -72,7 +70,7 @@
 
                             <!-- Pit mode -->
                             <SettingRow :label="$t('vtxPitMode')" :help="$t('vtxPitModeHelp')">
-                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="sm" />
+                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="xs" />
                             </SettingRow>
 
                             <!-- Pit mode frequency -->
@@ -103,7 +101,7 @@
 
                 <!-- VTX Info Panel -->
                 <div class="lg:col-span-1" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxActualState')">
+                    <UiBox :title="$t('vtxActualState')" type="neutral" collapsible class="mt-4">
                         <div class="flex flex-col text-xs">
                             <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
                                 <span v-html="$t('vtxDeviceReady')"></span>
@@ -147,7 +145,7 @@
 
                 <!-- VTX Table -->
                 <div class="lg:col-span-4 overflow-x-auto">
-                    <UiBox :title="$t('vtxTable')" class="min-w-[750px]">
+                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="mt-4 min-w-[750px]">
                         <div class="flex flex-col gap-4">
                             <!-- Bands and channels count -->
                             <div class="flex flex-wrap items-end gap-4">
@@ -348,20 +346,20 @@
             </div>
 
             <!-- Save pending warning -->
-            <UiBox highlight class="mb-3" v-show="savePending">
+            <UiBox highlight v-show="savePending">
                 <div v-html="$t('vtxMessageVerifyTable')"></div>
             </UiBox>
         </div>
 
         <!-- Toolbar -->
-        <div class="content_toolbar xs-compressed toolbar_fixed_bottom">
-            <UFieldGroup size="sm" orientation="horizontal">
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <UFieldGroup size="xs" orientation="horizontal">
                 <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="sm" orientation="horizontal">
+            <UFieldGroup size="xs" orientation="horizontal">
                 <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />

@@ -1449,6 +1449,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: OSD.drawNavMapPreview,
         },
+        POS_HOLD_READY: {
+            name: "POS_HOLD_READY",
+            text: "osdTextElementPosHoldReady",
+            desc: "osdDescElementPosHoldReady",
+            defaultPosition: -1,
+            draw_order: 670,
+            positionable: true,
+            preview: "POSH RDY",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1475,6 +1484,9 @@ OSD.constants = OSD_CONSTANTS;
 OSD.chooseFields = function () {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
+    // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
+    // decode() maps wire position N to DISPLAY_FIELDS[N] positionally.
+    // Insert new entries at their matching firmware position, not the end.
     OSD.constants.DISPLAY_FIELDS = [
         F.RSSI_VALUE,
         F.MAIN_BATT_VOLTAGE,
@@ -1586,15 +1598,17 @@ OSD.chooseFields = function () {
             F.BATTERY_PROFILE_NAME,
         ]);
 
-        // Waypoint/nav-map enum entries only exist in firmware when their compile
-        // flags are present. Unconditional listing would misalign every later
-        // DISPLAY_FIELDS position on builds lacking them. Gate on reported build options.
+        // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
+        // when their compile flags are present. Unconditional listing would
+        // misalign every later DISPLAY_FIELDS position on builds lacking them.
+        // Gate on reported build options instead.
         const buildOptions = FC.CONFIG.buildOptions ?? [];
         const hasFlightPlanWaypoints = buildOptions.includes("USE_GPS") && buildOptions.includes("USE_FLIGHT_PLAN");
         const hasNavMap =
             hasFlightPlanWaypoints &&
             !buildOptions.includes("USE_WING") &&
             (buildOptions.includes("USE_OSD_SD") || buildOptions.includes("USE_OSD_HD"));
+        const hasPositionHold = buildOptions.includes("USE_POSITION_HOLD");
 
         if (hasFlightPlanWaypoints) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
@@ -1611,6 +1625,10 @@ OSD.chooseFields = function () {
 
         if (hasNavMap) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
+
+        if (hasPositionHold) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
         }
     }
     // Choose statistic fields

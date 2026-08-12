@@ -4,7 +4,7 @@
             <div class="tab_title">{{ $t("tabHelp") }}</div>
             <div class="grid-row grid-box col5">
                 <div class="col-span-3">
-                    <UiBox :title="$t('defaultDocumentationHead')" class="sm:h-full">
+                    <UiBox :title="$t('defaultDocumentationHead')" type="neutral" collapsible class="sm:h-full">
                         <p v-html="$t('defaultDocumentation')"></p>
                         <ul>
                             <li>
@@ -17,7 +17,7 @@
                     </UiBox>
                 </div>
                 <div class="col-span-2">
-                    <UiBox :title="$t('defaultSupportHead')" class="sm:h-full">
+                    <UiBox :title="$t('defaultSupportHead')" type="neutral" collapsible class="sm:h-full">
                         <p v-html="$t('defaultSupport')"></p>
                         <ul>
                             <li>

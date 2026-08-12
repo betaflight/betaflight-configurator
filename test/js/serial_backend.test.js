@@ -112,6 +112,10 @@ vi.mock("../../src/js/device_handler", () => ({
         initialize: vi.fn(),
         devicePickerDisabled: false,
         portAvailable: false,
+        isKnownDevicePath: vi.fn(() => false),
+        // The reboot window captures which device it waits for; the cycle asks whether it is back.
+        describeDevice: vi.fn((path) => ({ path, vendorId: 1155, productId: 22336 })),
+        findDescribedDevice: vi.fn(() => undefined),
         devicePicker: {
             selectedDevice: "/dev/ttyACM0",
             portOverride: "/dev/ttyACM0",
@@ -219,12 +223,13 @@ import {
     disconnect,
     initializeSerialBackend,
     reinitializeConnection,
-    shouldConcludeRebootDialog,
 } from "../../src/js/serial_backend";
 import DeviceHandler from "../../src/js/device_handler";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
+import FC from "../../src/js/fc";
+import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
@@ -458,56 +463,139 @@ describe("serial_backend disconnect convergence", () => {
     });
 });
 
+// The failure dialog follows who started the attempt, not the lifecycle phase. A reboot
+// reconnect is one instance of that rule, not a special case.
 describe("serial_backend connect-failure dialog", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         resetMocks();
     });
 
-    it("shows the connection-failed dialog when a user-initiated connect fails to open", () => {
-        // IDLE -> connectDisconnect -> beginConnect (CONNECTING). A failed open is a genuine
-        // user-facing failure, so the dialog must appear.
+    function infoDialogCount() {
+        return dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog").length;
+    }
+
+    it("shows the dialog when a user-initiated connect fails to open", () => {
         connectDisconnect();
         expect(serial.connect).toHaveBeenCalled();
 
         serialHandlers.connect({ detail: false }); // open failed -> onOpen(false) -> abortConnection
 
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(1);
+        expect(infoDialogCount()).toBe(1);
     });
 
-    it("stays silent when a reboot reconnect's open fails with auto-connect on (device still re-enumerating)", () => {
-        // The preset/CLI save-and-reboot reconnect window: scheduleReconnect() put the phase
-        // in RECONNECTING. A premature connect attempt (fired before the rebooting device is
-        // back) fails to open — but auto-connect recovers on re-enumeration, so this must NOT
-        // pop a "Failed to open serial port" dialog. (The reported spurious-dialog bug.)
+    it("still shows the dialog for a user-initiated failure while Auto-Connect is ON", () => {
+        // A port held by another application fails every time; no device event retries it.
         DeviceHandler.devicePicker.autoConnect = true;
-        getConnectionState().reconnectStarted(); // RECONNECTING
-        dialogStore.open.mockClear();
-
-        connectDisconnect(); // beginConnect preserves RECONNECTING
-        expect(serial.connect).toHaveBeenCalled();
-
-        serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
-
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(0);
-        // The attempt is still torn down so auto-connect can re-fire (connecting_to cleared).
-        expect(GUI.connecting_to).toBe(false);
-    });
-
-    it("still shows the dialog on a reboot reconnect failure when auto-connect is OFF (nothing retries)", () => {
-        // Without auto-connect there is no auto-recovery, so a failed reconnect open is a real
-        // dead end the user must be told about — suppression must NOT apply.
-        DeviceHandler.devicePicker.autoConnect = false;
-        getConnectionState().reconnectStarted(); // RECONNECTING
-        dialogStore.open.mockClear();
 
         connectDisconnect();
         serialHandlers.connect({ detail: false });
 
-        const infoDialogs = dialogStore.open.mock.calls.filter((c) => c[0] === "InformationDialog");
-        expect(infoDialogs).toHaveLength(1);
+        expect(infoDialogCount()).toBe(1);
+    });
+
+    it("stays silent when an app-initiated open fails, and recovers on the next device event", () => {
+        // The port vanished between the list refresh and the open (issue #5368).
+        DeviceHandler.devicePicker.autoConnect = true;
+
+        connectDisconnect({ automatic: true });
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // port vanished -> abortConnection
+
+        expect(infoDialogCount()).toBe(0);
+        // Torn down, so the next event can attempt again and the UI is not stuck mid-connect.
+        expect(GUI.connecting_to).toBe(false);
+        expect(DeviceHandler.devicePickerDisabled).toBe(false);
+
+        serial.connect.mockClear();
+        connectDisconnect({ automatic: true });
+        expect(serial.connect).toHaveBeenCalled();
+        serialHandlers.connect({ detail: true });
+        expect(GUI.connected_to).toBe("/dev/ttyACM0");
+        expect(infoDialogCount()).toBe(0);
+    });
+
+    it("reports an app-initiated failure AFTER the link opened (handshake rejected)", () => {
+        // A handshake rejected after the open is terminal, whoever started the attempt.
+        DeviceHandler.devicePicker.autoConnect = true;
+
+        connectDisconnect({ automatic: true });
+        serialHandlers.connect({ detail: true }); // opened -> linkOpen, HANDSHAKING
+        dialogStore.open.mockClear();
+
+        // FC.CONFIG is module state on the mock; resetMocks() does not restore it.
+        const apiVersion = FC.CONFIG.apiVersion;
+        try {
+            FC.CONFIG.apiVersion = "0.0.0";
+            MSP.send_message.mock.calls.at(-1)?.[3]?.(); // MSP_API_VERSION callback -> abortConnection
+        } finally {
+            FC.CONFIG.apiVersion = apiVersion;
+        }
+
+        expect(infoDialogCount()).toBe(1);
+    });
+
+    it("reports a handshake rejected synchronously, inside onOpen", () => {
+        // MSP.send_message calls back synchronously when the link dropped again, so
+        // abortConnection runs before connectHandler returns.
+        DeviceHandler.devicePicker.autoConnect = true;
+        const apiVersion = FC.CONFIG.apiVersion;
+
+        try {
+            connectDisconnect({ automatic: true });
+            dialogStore.open.mockClear();
+
+            MSP.send_message.mockImplementationOnce((_code, _data, _sent, callback) => {
+                FC.CONFIG.apiVersion = "0.0.0";
+                callback?.();
+            });
+
+            serialHandlers.connect({ detail: true });
+
+            expect(infoDialogCount()).toBe(1);
+        } finally {
+            FC.CONFIG.apiVersion = apiVersion;
+        }
+    });
+
+    it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {
+        // The retry loop drives the attempt, so a premature open is expected and silent.
+        DeviceHandler.devicePicker.autoConnect = true;
+        getConnectionState().reconnectStarted(); // RECONNECTING
+        dialogStore.open.mockClear();
+
+        connectDisconnect({ automatic: true }); // beginConnect preserves RECONNECTING
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
+
+        expect(infoDialogCount()).toBe(0);
+        expect(GUI.connecting_to).toBe(false);
+    });
+
+    it("makes no automatic attempt at all with Auto-Connect OFF", () => {
+        // Why abortConnection() no longer tests autoConnect: with it off nothing connects on
+        // the app's own initiative, so every failure left is a user's to see.
+        initializeSerialBackend();
+        const autoSelect = EventBus.$on.mock.calls.find(
+            (c) => c[0] === "device-handler:auto-select-serial-device",
+        )?.[1];
+        expect(autoSelect).toBeTypeOf("function");
+
+        DeviceHandler.devicePicker.autoConnect = false;
+        serial.connect.mockClear();
+        autoSelect();
+        expect(serial.connect).not.toHaveBeenCalled();
+
+        // With it on the same listener connects, and its failure stays silent.
+        DeviceHandler.devicePicker.autoConnect = true;
+        dialogStore.open.mockClear();
+        autoSelect();
+        expect(serial.connect).toHaveBeenCalled();
+
+        serialHandlers.connect({ detail: false });
+        expect(infoDialogCount()).toBe(0);
     });
 });
 
@@ -704,7 +792,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and does NOT self-drive disconnect/connect", () => {
+    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
@@ -718,20 +806,121 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             serial.disconnect.mockClear();
             serial.connect.mockClear();
 
-            const ts = reinitializeConnection(true); // suppressDialog: skip DOM modal
+            reinitializeConnection();
 
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
-            expect(typeof ts).toBe("number");
-            // The reboot forces the connection invalid so the dialog/loop wait for a real reconnect.
+            // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
 
-            // Unlike the BLE/manual path, serial relies on the real protocol "disconnect" event
-            // from the cable dropping — it does NOT self-schedule a disconnect or reconnect loop.
-            vi.advanceTimersByTime(20000);
+            // A serial link that is still open after the flush means the FC did not reboot, or
+            // the OS has not noticed yet. Dropping it would tear down a working connection and
+            // throw the user off the tab they just opened — the CLI-tab exit path does exactly
+            // this. The transport owns that link; only driven targets are dropped here.
+            vi.advanceTimersByTime(1500);
             expect(serial.disconnect).not.toHaveBeenCalled();
-            expect(serial.connect).not.toHaveBeenCalled();
+        } finally {
+            vi.advanceTimersByTime(30000); // drain the window
+            vi.useRealTimers();
+        }
+    });
 
-            serialHandlers.disconnect({ detail: true }); // teardown (cable-drop never fired)
+    // Serial used to have no owner: the reconnect depended on an addedDevice event reaching the
+    // auto-select listener. That listener is still the fast path, but the cycle now backstops it
+    // and ends the window either way.
+    it("reconnects a serial target from the cycle when no device event arrives", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection();
+            serialHandlers.disconnect({ detail: true }); // the FC's re-enumeration drops the link
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(1500 + 1000); // flush, then the first retry tick
+            expect(serial.connect).toHaveBeenCalled();
+        } finally {
+            vi.advanceTimersByTime(30000); // drain the window
+            vi.useRealTimers();
+        }
+    });
+
+    it("a user disconnect during the reboot cancels the cycle and closes the window", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection();
+            disconnect(); // user hits Disconnect mid-reboot
+            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.(); // complete the close
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(30000);
+
+            expect(serial.connect).not.toHaveBeenCalled();
+            expect(getConnectionState().isRebootWindowOpen).toBe(false);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    // Auto-Connect off: nothing reconnects, so the wait ends as soon as there is nothing left
+    // to wait for. For serial that is the port coming back — the user can reconnect to a device
+    // that is actually there. (Was shouldConcludeRebootDialog's serial branch.)
+    it("with Auto-Connect off, ends the window when OUR device is back — not any port", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = false;
+            DeviceHandler.portAvailable = true; // other serial ports are present throughout
+            DeviceHandler.isKnownDevicePath.mockReturnValue(true); // and one shares our path shape
+            DeviceHandler.findDescribedDevice.mockReturnValue(undefined); // but ours is away
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection();
+            serialHandlers.disconnect({ detail: true });
+            serial.connect.mockClear(); // establishConnection's own open
+
+            vi.advanceTimersByTime(1500 + 3000); // flush plus several ticks
+            expect(getConnectionState().isRebootWindowOpen).toBe(true); // ours is gone: keep waiting
+
+            DeviceHandler.findDescribedDevice.mockReturnValue({ path: "serial_9" }); // back, new id
+            vi.advanceTimersByTime(1000);
+            expect(getConnectionState().isRebootWindowOpen).toBe(false);
+            expect(serial.connect).not.toHaveBeenCalled(); // nothing auto-reconnects
+        } finally {
+            DeviceHandler.portAvailable = false;
+            DeviceHandler.isKnownDevicePath.mockReturnValue(false);
+            DeviceHandler.findDescribedDevice.mockReturnValue(undefined);
+            vi.useRealTimers();
+        }
+    });
+
+    // The window is shared: another owner can conclude it first. A closed window reads as
+    // NOT expired, so a loop testing expiry alone would spin forever.
+    it("stops when another owner concludes the window", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            reinitializeConnection();
+            serialHandlers.disconnect({ detail: true });
+            vi.advanceTimersByTime(1500); // into the retry phase
+
+            getConnectionState().concludeReboot(false); // another owner settles it
+            serial.connect.mockClear();
+
+            vi.advanceTimersByTime(30000);
+            expect(serial.connect).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();
         }
@@ -797,86 +986,6 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
         } finally {
             vi.useRealTimers();
         }
-    });
-});
-
-describe("shouldConcludeRebootDialog", () => {
-    // Baseline: mid-reboot, nothing yet signals completion.
-    const base = {
-        connectionValid: false,
-        timeoutReached: false,
-        autoConnect: false,
-        portAvailable: false,
-        selectedDevice: "/dev/ttyACM0",
-        rebootWindowOpen: true,
-    };
-
-    it("concludes as soon as the FC answers, regardless of everything else", () => {
-        expect(shouldConcludeRebootDialog({ ...base, connectionValid: true })).toBe(true);
-        // Even with Auto-Connect on and the window still open.
-        expect(
-            shouldConcludeRebootDialog({
-                ...base,
-                connectionValid: true,
-                autoConnect: true,
-                selectedDevice: "bluetooth_1",
-            }),
-        ).toBe(true);
-    });
-
-    it("concludes when the reboot window has timed out", () => {
-        expect(shouldConcludeRebootDialog({ ...base, timeoutReached: true })).toBe(true);
-        expect(shouldConcludeRebootDialog({ ...base, timeoutReached: true, autoConnect: true })).toBe(true);
-    });
-
-    it("keeps waiting while Auto-Connect is on (the retry loop owns the reconnect)", () => {
-        // Serial, port already back — still wait, auto-connect will reconnect.
-        expect(shouldConcludeRebootDialog({ ...base, autoConnect: true, portAvailable: true })).toBe(false);
-        // BLE, window closed — still wait, auto-connect will reconnect.
-        expect(
-            shouldConcludeRebootDialog({
-                ...base,
-                autoConnect: true,
-                selectedDevice: "bluetooth_1",
-                rebootWindowOpen: false,
-            }),
-        ).toBe(false);
-    });
-
-    describe("Auto-Connect off", () => {
-        it("serial: waits for the port to re-enumerate, then concludes", () => {
-            expect(shouldConcludeRebootDialog({ ...base, portAvailable: false })).toBe(false);
-            expect(shouldConcludeRebootDialog({ ...base, portAvailable: true })).toBe(true);
-        });
-
-        it("BLE: waits for the reboot window to close (flush drops the stale link first)", () => {
-            // portAvailable never flips for BLE — must not gate on it.
-            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth_1", rebootWindowOpen: true })).toBe(
-                false,
-            );
-            expect(
-                shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth_1", rebootWindowOpen: false }),
-            ).toBe(true);
-            // Android BLE path id.
-            expect(
-                shouldConcludeRebootDialog({ ...base, selectedDevice: "bluetooth-AA:BB", rebootWindowOpen: false }),
-            ).toBe(true);
-        });
-
-        it("manual/TCP: waits for the reboot window to close", () => {
-            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "manual", rebootWindowOpen: true })).toBe(
-                false,
-            );
-            expect(shouldConcludeRebootDialog({ ...base, selectedDevice: "manual", rebootWindowOpen: false })).toBe(
-                true,
-            );
-        });
-
-        it("serial ignores the reboot-window flag (only re-enumeration concludes it)", () => {
-            // A closed window must NOT conclude a serial reboot on its own — serial owns its
-            // own conclusion via portAvailable, so this stays false until the port is back.
-            expect(shouldConcludeRebootDialog({ ...base, portAvailable: false, rebootWindowOpen: false })).toBe(false);
-        });
     });
 });
 
