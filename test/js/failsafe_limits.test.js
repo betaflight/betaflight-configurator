@@ -33,14 +33,17 @@ describe("getFailsafeLimits", () => {
     });
 
     describe("failsafe off delay (failsafe_off_delay / failsafe_landing_time)", () => {
-        it("allows up to 20s before API 1.47", () => {
-            expect(getFailsafeLimits("1.46.0").offDelay).toEqual({ min: 0, max: 20 });
+        // failsafe_off_delay is 0-200 in tenths of a second, so 0-20s in the UI.
+        it("allows up to 20s in tenths of a second before API 1.47", () => {
+            expect(getFailsafeLimits("1.46.0").offDelay).toEqual({ min: 0, max: 20, step: 0.1, scale: 10 });
         });
 
-        // The firmware stores tenths of a second in a uint8, so the 250 limit of
-        // failsafe_landing_time is 25s in the UI, not 250s.
-        it("allows up to 25s from API 1.47", () => {
-            expect(getFailsafeLimits("1.47.0").offDelay).toEqual({ min: 0, max: 25 });
+        // 254da8f46 renamed it to failsafe_landing_time and changed the unit to whole
+        // seconds: 0-250 seconds, default 60. Dividing by 10 here would show 6.0s and
+        // lock the user out of most of the range.
+        it("allows up to 250s in whole seconds from API 1.47", () => {
+            expect(getFailsafeLimits("1.47.0").offDelay).toEqual({ min: 0, max: 250, step: 1, scale: 1 });
+            expect(getFailsafeLimits("1.48.0").offDelay).toEqual({ min: 0, max: 250, step: 1, scale: 1 });
         });
     });
 
@@ -77,16 +80,21 @@ describe("getFailsafeLimits", () => {
             expect(getFailsafeLimits("1.45.0").ascendRate).toEqual({ min: 0.5, max: 25 });
             expect(getFailsafeLimits("1.44.0").descendRate).toEqual({ min: 1, max: 5 });
             expect(getFailsafeLimits("1.45.0").descendRate).toEqual({ min: 0.25, max: 5 });
-            expect(getFailsafeLimits("1.44.0").groundSpeed).toEqual({ min: 3, max: 30 });
+            expect(getFailsafeLimits("1.44.0").groundSpeed).toEqual({ min: 0.3, max: 30 });
             expect(getFailsafeLimits("1.45.0").groundSpeed).toEqual({ min: 0, max: 30 });
         });
     });
 
-    describe("throttle limits, moved to the autopilot settings in 1.48", () => {
+    // MSP_GPS_RESCUE still carries these, but from 1.47 msp.c reads and writes them
+    // through autopilotConfig, which has its own narrower ranges.
+    describe("throttle limits, backed by the autopilot settings from 1.47", () => {
         it("follows the firmware range per API version", () => {
-            expect(getFailsafeLimits("1.47.0").throttleMin).toEqual({ min: 1000, max: 2000 });
-            expect(getFailsafeLimits("1.47.0").throttleMax).toEqual({ min: 1000, max: 2000 });
-            expect(getFailsafeLimits("1.47.0").throttleHover).toEqual({ min: 1000, max: 2000 });
+            expect(getFailsafeLimits("1.46.0").throttleMin).toEqual({ min: 1000, max: 2000 });
+            expect(getFailsafeLimits("1.46.0").throttleMax).toEqual({ min: 1000, max: 2000 });
+            expect(getFailsafeLimits("1.46.0").throttleHover).toEqual({ min: 1000, max: 2000 });
+            expect(getFailsafeLimits("1.47.0").throttleMin).toEqual({ min: 1050, max: 1400 });
+            expect(getFailsafeLimits("1.47.0").throttleMax).toEqual({ min: 1400, max: 2000 });
+            expect(getFailsafeLimits("1.47.0").throttleHover).toEqual({ min: 1100, max: 1700 });
             expect(getFailsafeLimits("1.48.0").throttleMin).toEqual({ min: 1050, max: 1400 });
             expect(getFailsafeLimits("1.48.0").throttleMax).toEqual({ min: 1400, max: 2000 });
             expect(getFailsafeLimits("1.48.0").throttleHover).toEqual({ min: 0, max: 1700 });
@@ -96,6 +104,7 @@ describe("getFailsafeLimits", () => {
     describe("unknown API version", () => {
         it("falls back to the baseline limits instead of throwing", () => {
             expect(getFailsafeLimits(undefined).minStartDist).toEqual({ min: 50, max: 1000 });
+            expect(getFailsafeLimits("not-a-version").minStartDist).toEqual({ min: 50, max: 1000 });
             expect(getFailsafeLimits("0.0.0").minStartDist).toEqual({ min: 50, max: 1000 });
         });
     });

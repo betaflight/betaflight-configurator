@@ -153,7 +153,7 @@
                                         v-model="failsafeOffDelay"
                                         :min="limits.offDelay.min"
                                         :max="limits.offDelay.max"
-                                        :step="0.1"
+                                        :step="limits.offDelay.step"
                                         size="xs"
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
@@ -269,7 +269,7 @@
                                         v-model="gpsRescueDescendRate"
                                         :min="limits.descendRate.min"
                                         :max="limits.descendRate.max"
-                                        :step="0.1"
+                                        :step="0.05"
                                         :disabled="isGpsSettingsDisabled"
                                         size="xs"
                                         orientation="vertical"
@@ -644,9 +644,11 @@ const failsafeThrottleLowDelay = computed({
     set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(Number(val) * 10)),
 });
 
+// Tenths of a second up to 1.46. From 1.47 the setting is failsafe_landing_time
+// and the firmware stores whole seconds, so it needs no conversion.
 const failsafeOffDelay = computed({
-    get: () => failsafeConfig.value.failsafe_off_delay / 10,
-    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * 10)),
+    get: () => failsafeConfig.value.failsafe_off_delay / limits.value.offDelay.scale,
+    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * limits.value.offDelay.scale)),
 });
 
 const gpsRescueGroundSpeed = computed({
