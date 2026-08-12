@@ -2554,34 +2554,34 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
         case MSPCodes.MSP_SET_WING:
             for (let i = 0; i < 3; i++) {
-                buffer.push8(Math.round(FC.WING_CONFIG.s_term[i]));
+                buffer.push8(FC.WING_CONFIG.s_term[i]);
             }
             for (let i = 0; i < 3; i++) {
-                buffer.push16(Math.round(FC.WING_CONFIG.spa_center[i]));
+                buffer.push16(FC.WING_CONFIG.spa_center[i]);
             }
             for (let i = 0; i < 3; i++) {
-                buffer.push16(Math.round(FC.WING_CONFIG.spa_width[i]));
+                buffer.push16(FC.WING_CONFIG.spa_width[i]);
             }
             for (let i = 0; i < 3; i++) {
-                buffer.push8(Math.round(FC.WING_CONFIG.spa_mode[i]));
+                buffer.push8(FC.WING_CONFIG.spa_mode[i]);
             }
             buffer
-                .push8(Math.round(FC.WING_CONFIG.tpa_curve_type))
-                .push8(Math.round(FC.WING_CONFIG.tpa_curve_stall_throttle))
-                .push16(Math.round(FC.WING_CONFIG.tpa_curve_pid_thr0))
-                .push16(Math.round(FC.WING_CONFIG.tpa_curve_pid_thr100))
-                .push8(Math.round(FC.WING_CONFIG.tpa_curve_expo))
-                .push8(Math.round(FC.WING_CONFIG.tpa_speed_type))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_basic_delay))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_basic_gravity))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_prop_pitch))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_mass))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_drag_k))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_adv_thrust))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_max_voltage))
-                .push16(Math.round(FC.WING_CONFIG.tpa_speed_pitch_offset))
-                .push8(Math.round(FC.WING_CONFIG.yaw_type))
-                .push16(Math.round(FC.WING_CONFIG.angle_pitch_offset));
+                .push8(FC.WING_CONFIG.tpa_curve_type)
+                .push8(FC.WING_CONFIG.tpa_curve_stall_throttle)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr0)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr100)
+                .push8(FC.WING_CONFIG.tpa_curve_expo)
+                .push8(FC.WING_CONFIG.tpa_speed_type)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_delay)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_gravity)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_prop_pitch)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_mass)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_drag_k)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_thrust)
+                .push16(FC.WING_CONFIG.tpa_speed_max_voltage)
+                .push16(FC.WING_CONFIG.tpa_speed_pitch_offset)
+                .push8(FC.WING_CONFIG.yaw_type)
+                .push16(FC.WING_CONFIG.angle_pitch_offset);
 
             break;
 
