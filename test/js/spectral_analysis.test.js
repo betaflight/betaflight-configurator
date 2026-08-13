@@ -12,7 +12,24 @@ import { openLoopResponse, recommendGains, PHASE_MARGIN_PRESETS } from "../../sr
  * loop, and both crossover and phase margin are available in closed form, so
  * the recovered values can be checked against exact answers.
  */
-function makeSyntheticTf({ crossoverHz, delayMs, maxHz = 500, binHz = 0.5, coherence = 1 }) {
+/**
+ * Optionally adds a lightly damped second-order mode at `resonanceHz`, which
+ * puts a close approach to -1 above crossover. A plain integrator-plus-delay
+ * cannot exercise the sensitivity bound: its Nyquist curve is closest to -1 at
+ * crossover, so holding phase margin there is enough and Ms never binds. Real
+ * craft are not like that — the D term's lead lifts the phase around 10 Hz and
+ * the loop then rolls off steeply, so the peak sensitivity sits well above
+ * crossover.
+ */
+function makeSyntheticTf({
+    crossoverHz,
+    delayMs,
+    maxHz = 500,
+    binHz = 0.5,
+    coherence = 1,
+    resonanceHz = 0,
+    resonanceZeta = 0.1,
+}) {
     const K = 2 * Math.PI * crossoverHz; // |L| = 1 exactly at crossoverHz
     const tau = delayMs / 1000;
     const numBins = Math.floor(maxHz / binHz) + 1;
@@ -41,8 +58,23 @@ function makeSyntheticTf({ crossoverHz, delayMs, maxHz = 500, binHz = 0.5, coher
         const w = 2 * Math.PI * f;
         const lMag = K / w;
         const lPhase = -Math.PI / 2 - w * tau;
-        const lRe = lMag * Math.cos(lPhase);
-        const lIm = lMag * Math.sin(lPhase);
+        let lRe = lMag * Math.cos(lPhase);
+        let lIm = lMag * Math.sin(lPhase);
+
+        if (resonanceHz > 0) {
+            // Multiply by wn^2 / (wn^2 - w^2 + j·2ζ·wn·w)
+            const wn = 2 * Math.PI * resonanceHz;
+            const dRe = wn * wn - w * w;
+            const dIm = 2 * resonanceZeta * wn * w;
+            const dMagSq = dRe * dRe + dIm * dIm;
+            const nRe = wn * wn;
+            const rRe = (nRe * dRe) / dMagSq;
+            const rIm = (-nRe * dIm) / dMagSq;
+            const re = lRe * rRe - lIm * rIm;
+            const im = lRe * rIm + lIm * rRe;
+            lRe = re;
+            lIm = im;
+        }
 
         // T = L / (1 + L)
         const denRe = 1 + lRe;
@@ -216,6 +248,84 @@ describe("coherence gate", () => {
         const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
         expect(Number.isFinite(analysis.openLoopCrossoverHz)).toBe(true);
         expect(Number.isFinite(analysis.targetCrossoverHz)).toBe(true);
+    });
+});
+
+describe("peak sensitivity bound", () => {
+    const FRAGILE = { crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.2 };
+
+    it("never proposes a gain above what the sensitivity bound allows", () => {
+        for (const target of Object.values(PHASE_MARGIN_PRESETS)) {
+            const { analysis } = recommendGains(makeSyntheticTf(FRAGILE), SLIDERS, target);
+            expect(analysis.piScale).toBeLessThanOrEqual(analysis.sensitivityLimitedGain + 1e-6);
+        }
+    });
+
+    it("keeps predicted peak sensitivity inside the bound", () => {
+        const { analysis } = recommendGains(makeSyntheticTf(FRAGILE), SLIDERS, PHASE_MARGIN_PRESETS.AGGRESSIVE);
+        // 2.0 linear is ~6.02 dB
+        expect(analysis.predictedSensitivityPeakDb).toBeLessThanOrEqual(6.1);
+    });
+
+    it("holds the gain below the margin target when robustness binds", () => {
+        const tf = makeSyntheticTf(FRAGILE);
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.AGGRESSIVE);
+        expect(analysis.sensitivityBinds).toBe(true);
+        expect(analysis.piScale).toBeLessThan(analysis.gainToTarget);
+    });
+
+    it("leaves the margin target in charge when robustness is not the limit", () => {
+        // No resonance: closest approach to -1 is at crossover, so holding phase
+        // margin there is sufficient and Ms never binds.
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3 });
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+        expect(analysis.sensitivityBinds).toBe(false);
+        expect(analysis.piScale).toBeCloseTo(analysis.gainToTarget, 2);
+    });
+});
+
+describe("D recommendation", () => {
+    it("raises D only when the sensitivity bound is what stopped the gain", () => {
+        const fragile = recommendGains(
+            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.2 }),
+            SLIDERS,
+            PHASE_MARGIN_PRESETS.AGGRESSIVE,
+        ).analysis;
+        expect(fragile.sensitivityBinds).toBe(true);
+        expect(fragile.dScale).toBeGreaterThan(1);
+
+        const clean = recommendGains(
+            makeSyntheticTf({ crossoverHz: 20, delayMs: 3 }),
+            SLIDERS,
+            PHASE_MARGIN_PRESETS.NORMAL,
+        ).analysis;
+        expect(clean.sensitivityBinds).toBe(false);
+        expect(clean.dScale).toBe(1);
+    });
+
+    it("never reduces D", () => {
+        // A chirp cannot see the broadband noise that D amplifies, so there is no
+        // evidence on which to ask for less of it.
+        for (const cfg of [
+            { crossoverHz: 20, delayMs: 3 },
+            { crossoverHz: 20, delayMs: 8 },
+            { crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.2 },
+            { crossoverHz: 40, delayMs: 2, resonanceHz: 120, resonanceZeta: 0.05 },
+        ]) {
+            for (const target of Object.values(PHASE_MARGIN_PRESETS)) {
+                const { analysis } = recommendGains(makeSyntheticTf(cfg), SLIDERS, target);
+                expect(analysis.dScale).toBeGreaterThanOrEqual(1);
+            }
+        }
+    });
+
+    it("caps a single pass's D increase", () => {
+        const { analysis } = recommendGains(
+            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.05 }),
+            SLIDERS,
+            PHASE_MARGIN_PRESETS.AGGRESSIVE,
+        );
+        expect(analysis.dScale).toBeLessThanOrEqual(1.25);
     });
 });
 

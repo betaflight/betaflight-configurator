@@ -545,6 +545,7 @@
     "autotunePhaseMargin": { "message": "Phase Margin" },
     "autotuneTargetCrossover": { "message": "Crossover Limit" },
     "autotuneMaxPhaseMargin": { "message": "Max Phase Margin" },
+    "autotunePredictedSensitivity": { "message": "Predicted Peak Sens." },
     "autotuneLoopDelay": { "message": "Loop Delay" },
     "autotuneTargetMargin": { "message": "Tuning target" },
     "autotuneMarginAggressive": { "message": "Aggressive" },

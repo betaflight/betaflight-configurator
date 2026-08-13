@@ -207,6 +207,7 @@ function buildGains(rec, sensitivity, stepResponse) {
         loopDelay: rec.analysis.loopDelayMs,
         resonantPeak: rec.analysis.resonantPeakDb,
         sensitivityPeak: sensitivity.peakDb,
+        predictedSensitivityPeak: rec.analysis.predictedSensitivityPeakDb,
         overshoot: stepResponse.overshootPct,
         riseTime: stepResponse.riseTimeMs,
         settlingTime: stepResponse.settlingTimeMs,

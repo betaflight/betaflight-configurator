@@ -186,6 +186,7 @@ const ANALYSIS_FIELDS = [
     { key: "loopDelay", labelKey: "autotuneLoopDelay", format: formatMs },
     { key: "resonantPeak", labelKey: "autotuneResonantPeak", format: formatDb },
     { key: "sensitivityPeak", labelKey: "autotuneSensitivityPeak", format: formatDb },
+    { key: "predictedSensitivityPeak", labelKey: "autotunePredictedSensitivity", format: formatDb },
     { key: "overshoot", labelKey: "autotuneOvershoot", format: formatPct },
     { key: "riseTime", labelKey: "autotuneRiseTime", format: formatMs },
     { key: "settlingTime", labelKey: "autotuneSettlingTime", format: formatMs },
