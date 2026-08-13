@@ -681,7 +681,8 @@ dialog {
         display: flex;
         flex-wrap: wrap;
         position: fixed;
-        bottom: 2.5rem;
+        /* Sit directly on top of #status-bar, which grows by the bottom safe-area inset */
+        bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
         right: 0;
     }
 }
@@ -1444,7 +1445,8 @@ each(range(12), {
     }
     .tab_container.reveal {
         left: 0;
-        padding-top: 3.5rem;
+        /* Clear the mobile top bar plus the status bar / display cutout above it */
+        padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
     }
     #content {
         width: 100% !important;
@@ -1458,8 +1460,10 @@ each(range(12), {
         width: calc(100% - 2em - 2px) !important;
         max-width: unset;
         height: auto !important;
-        bottom: 0;
-        top: 56px;
+        /* height is auto with both edges pinned, so the box stretches between them: keep the
+           bottom edge above the navigation bar / home indicator or the actions land under it */
+        bottom: env(safe-area-inset-bottom, 0px);
+        top: calc(56px + env(safe-area-inset-top, 0px));
         border-radius: unset;
         border: none;
         overflow: auto;

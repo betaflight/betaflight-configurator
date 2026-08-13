@@ -11,6 +11,7 @@
                 @open-keys="onOpenKeys"
                 @export-csv="onExportCsv"
                 @export-gpx="onExportGpx"
+                @export-workspaces="onExportWorkspaces"
             />
         </Teleport>
         <Teleport to="#vue-statusbar">
@@ -70,6 +71,7 @@
             <WorkspacePanel
                 @switch-workspace="onSwitchWorkspace"
                 @save-workspace="onSaveWorkspace"
+                @rename-workspace="onRenameWorkspace"
                 @apply-default="onApplyDefaultWorkspace"
             />
         </Teleport>
@@ -206,6 +208,10 @@ function onExportGpx() {
     appStore.exportGpx?.();
 }
 
+function onExportWorkspaces() {
+    appStore.exportWorkspaces?.();
+}
+
 function onViewConfig() {
     appStore.headerDialogOpen = false;
     graphStore.hasTableOverlay = false;
@@ -325,6 +331,10 @@ function onSwitchWorkspace(id) {
 
 function onSaveWorkspace(id, title) {
     workspaceStore.saveWorkspace?.(id, title);
+}
+
+function onRenameWorkspace(id, title) {
+    workspaceStore.renameWorkspace?.(id, title);
 }
 
 function onApplyDefaultWorkspace(index) {

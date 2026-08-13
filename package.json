@@ -105,6 +105,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-unused-imports": "^4.1.4",
     "eslint-plugin-vue": "^9.32.0",
+    "globals": "^17.9.0",
     "husky": "^9.1.7",
     "inquirer": "^12.4.2",
     "less": "^4.2.2",

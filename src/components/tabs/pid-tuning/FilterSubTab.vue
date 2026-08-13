@@ -607,8 +607,6 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["change"]);
-
 // USelect item arrays
 const lowpassModeItems = computed(() => [
     { value: 0, label: t("pidTuningLowpassStatic") },
@@ -1190,11 +1188,9 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 
     // Compute new gyro filter cutoffs (via FC on a real connection, or
     // client-side in virtual mode).
-    calculateNewGyroFilters(newValue)
-        .then(() => emit("change"))
-        .catch((error) => {
-            console.error("Failed to calculate simplified gyro filters:", error);
-        });
+    calculateNewGyroFilters(newValue).catch((error) => {
+        console.error("Failed to calculate simplified gyro filters:", error);
+    });
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
@@ -1222,20 +1218,10 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
 
     // Compute new D-term filter cutoffs (via FC on a real connection, or
     // client-side in virtual mode).
-    calculateNewDTermFilters(newValue)
-        .then(() => emit("change"))
-        .catch((error) => {
-            console.error("Failed to calculate simplified dterm filters:", error);
-        });
+    calculateNewDTermFilters(newValue).catch((error) => {
+        console.error("Failed to calculate simplified dterm filters:", error);
+    });
 });
-
-watch(
-    () => JSON.stringify(FC.FILTER_CONFIG),
-    () => emit("change"),
-);
-
-watch(gyroSliderMode, () => emit("change"));
-watch(dtermSliderMode, () => emit("change"));
 
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
