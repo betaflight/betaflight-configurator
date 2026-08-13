@@ -240,7 +240,7 @@ import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { updateTabList } from "../../js/utils/updateTabList";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
@@ -483,9 +483,12 @@ export default defineComponent({
             // Arming Config
             armingConfig.small_angle = fcStore.armingConfig.small_angle;
 
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = fcStore.armingConfig.gyro_cal_on_first_arm === 1;
+            }
+
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
             }
 
@@ -544,8 +547,11 @@ export default defineComponent({
                     }
 
                     fcStore.armingConfig.small_angle = armingConfig.small_angle;
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                         fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                    }
+
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                         fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
                     }
 
