@@ -1295,7 +1295,7 @@
                     </SettingRow>
                     <SettingRow
                         :label="$t('pidTuningWingTpaAdvSpeedCurveExpo')"
-                        :help="$t('pidTuningWingTpaAdvSpeedCurveExpo')"
+                        :help="$t('pidTuningWingTpaAdvSpeedCurveExpoHelp')"
                     >
                         <UInputNumber
                             v-model="wingConfig.tpa_curve_expo"
