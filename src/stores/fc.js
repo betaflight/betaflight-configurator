@@ -384,6 +384,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcMap,
         rcTuning,
         pids,
+        wingConfig,
         pidNames,
         tuningSliders,
         defaultTuningSliders,
