@@ -580,6 +580,8 @@ const FC = {
             dMaxYaw: 0,
             dMaxGain: 0,
             dMaxAdvance: 0,
+            useIntegratedYaw: 0,
+            integratedYawRelax: 0,
             motorOutputLimit: 0,
             autoProfileCellCount: 0,
             idleMinRpm: 0,

@@ -94,6 +94,8 @@ const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
     dMaxYaw: 0,
     dMaxGain: 37,
     dMaxAdvance: 20,
+    useIntegratedYaw: 0,
+    integratedYawRelax: 200,
     motorOutputLimit: 100,
     autoProfileCellCount: -1,
     idleMinRpm: 0,
