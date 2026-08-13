@@ -401,9 +401,6 @@
     "configuratorUpdateHelp": {
         "message": "When internet is available, the app should automatically ask for available updates."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Go to Release Website"
-    },
     "rebootFlightController": {
         "message": "Rebooting flight controller, reconnect when ready"
     },
