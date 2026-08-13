@@ -2809,9 +2809,6 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Hoek Limiet"
     },
-    "pidTuningIntegratedYaw": {
-        "message": "Geïntegreerde Yaw"
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe configuratie is aanzienlijk gewijzigd. Gebruik Betaflight <strong>v1.12.0+<\/strong> om het verbeterde configuratiescherm in te schakelen."
     },

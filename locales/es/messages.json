@@ -5370,12 +5370,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓN<\/span>: si activas esta funcionalidad, debes ajustar el PID del YAW en consecuencia. Más información <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Yaw Integrado integra valores P, I y D del yaw, permitiendo que P, I y D de yaw se ajusten del mismo modo que se hace con el pitch y el roll.<br><br>Se necesita muy poca I, porque la P integrada actúa como I, y la D integrada actúa como P.<br><br>NOTA: Yaw integrado requiere el uso de Control Absoluto, ya que no se necesita I con Yaw Integrado."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "La configuración del Modo de Seguridad ha cambiado considerablemente. Usa Betaflight<strong>v1.12.0+<\/strong> para activar el panel de configuración mejorado."
     },

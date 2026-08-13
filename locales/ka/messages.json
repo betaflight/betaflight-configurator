@@ -5484,12 +5484,6 @@
     "pidTuningIntegratedYaw": {
         "message": "ინტეგრირებული Yaw"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CAUTION<\/span>: თუ ჩართავთ ამ ფუნქციას, შესაბამისად უნდა დაარეგულიროთ YAW PID. მეტი ინფორმაცია <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">აქ<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "ინტეგრირებული Yaw აერთიანებს yaw P, I და D მნიშვნელობებს, რაც საშუალებას აძლევს yaw P, I და D დააკონფიგურიროთ ცოტათი ისე, როგორც თქვენ აწყობთ pitch-ს და roll-ს."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe კონფიგურაცია მნიშვნელოვნად შეიცვალა. გამოიყენეთ Betaflight <strong>v1.12.0+<\/strong> გაუმჯობესებული კონფიგურაციის პანელის გასააქტიურებლად."
     },

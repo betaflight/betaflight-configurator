@@ -5009,12 +5009,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Интегрированный Yaw"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ПРЕДУПРЕЖДЕНИЕ<\/span>: Если вы включите эту функцию, вы должны соответственно настроить YAW PID. Более подробная информация <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Интегрированный Yaw объединяет значения P, I и D по рысканью, позволяя настраивать P, I и D по рысканью так, как вы бы настраивать Pitch и Roll.<br><br>Нужно очень небольшоем изменение I, потому что интегрированный P действует также как I, и интегрированный D действует как P.<br><br>ПРИМЕЧАНИЕ: Интегрированный Yaw требует использования Абсолютного контроля, поскольку в случае интегрированного крена не требуется компенсирующее воздействие I."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe конфигурация изменилась существенно. Используете Betaflight <strong>v1.12.0 +<\/strong> для включения улучшенной конфигурационной панели."
     },

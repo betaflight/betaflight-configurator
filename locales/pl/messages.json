@@ -4795,12 +4795,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Zintegrowane odchylenie Yaw"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">UWAGA<\/span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować YAW PID. Więcej informacji <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Zintegrowany odchylacz integruje wartości P, I i D odchyłu, umożliwiając dostrojenie wartości P, I i D odchyłu w sposób podobny do tego, w jaki dostrajasz nachylenie i przechył.<br><br>Wymagana jest bardzo mała ilość I, ponieważ zintegrowane P działa jak I, a zintegrowane D działa jak P.<br><br>UWAGA: Zintegrowany odchylacz wymaga użycia sterowania absolutnego, ponieważ w przypadku Zintegrowanego odchyłu nie jest potrzebne I."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Konfiguracja failsafe nie powiodła się. Użyj Betaflight <strong>v1.12.0+<\/strong>, aby włączyć ulepszony panel konfiguracyjny."
     },

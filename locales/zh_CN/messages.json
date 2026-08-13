@@ -5528,12 +5528,6 @@
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">注意<\/span>：如果启用此功能，您必须相应地调整偏航 PID。更多信息请见 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">此处<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "整合式偏航将对 Yaw 轴的 P, I, D 值进行积分，以允许您像调整 Pitch 和 Roll 轴的 PID 一样调整 Yaw 轴 PID。<br><br>几乎不需要 I，因为积分后的 P 行为与 I 类似，积分后的 D 行为与 P 类似。<br><br>注意：因为整合式偏航中并不包含 I，故其需要启用绝对控制。"
-    },
     "failsafeFeaturesHelpOld": {
         "message": "失控保护功能被大量重做。请使用Betaflight <strong>v1.12.0+<\/strong> 来启用增强的失控保护设置页。"
     },

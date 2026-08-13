@@ -2644,9 +2644,6 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Akro Trainerren Angle Muga"
     },
-    "pidTuningIntegratedYaw": {
-        "message": "Yaw Integratua"
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Segurtasun moduaren konfigurazioa asko aldatu da. Erabili Betaflight <strong>v1.12.0+<\/strong> konfigurazio panela hobetzeko."
     },

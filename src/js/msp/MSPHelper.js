@@ -1268,8 +1268,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
                     FC.ADVANCED_TUNING.dMaxGain = data.readU8();
                     FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
-                    FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
-                    FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
+                    data.readU8(); // was useIntegratedYaw, byte kept for wire-format compatibility
+                    data.readU8(); // was integratedYawRelax, byte kept for wire-format compatibility
 
                     // Introduced in 1.42
                     FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
@@ -2297,8 +2297,8 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.dMaxYaw)
                 .push8(FC.ADVANCED_TUNING.dMaxGain)
                 .push8(FC.ADVANCED_TUNING.dMaxAdvance)
-                .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
-                .push8(FC.ADVANCED_TUNING.integratedYawRelax);
+                .push8(0) // was useIntegratedYaw, byte kept for wire-format compatibility
+                .push8(0); // was integratedYawRelax, byte kept for wire-format compatibility
 
             // Introduced in 1.42
             buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);

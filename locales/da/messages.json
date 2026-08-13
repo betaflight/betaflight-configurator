@@ -5572,12 +5572,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Integreret sideror"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ADVARSEL<\/span>: Hvis du aktiverer denne funktion, skal du justere PID sideror tilsvarende. Mere info <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Fejlsikring konfiguration er ændret betydeligt. Brug Betaflight <strong>v1.12.0+<\/strong> for at aktivere det forbedrede konfigurationspanel."
     },

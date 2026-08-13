@@ -2581,9 +2581,6 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "訓練模式角度限制"
     },
-    "pidTuningIntegratedYaw": {
-        "message": "整合式偏航"
-    },
     "failsafeFeaturesHelpOld": {
         "message": "失控保護功能被大量重做。請使用Betaflight <strong>v1.12.0+<\/strong> 來啟用增強的失控保護設置頁。"
     },

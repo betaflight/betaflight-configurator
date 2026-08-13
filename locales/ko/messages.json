@@ -5526,12 +5526,6 @@
     "pidTuningIntegratedYaw": {
         "message": "통합 요(Yaw)"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">주의<\/span>: 이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 확인하세요."
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "페일세이프 환경설정이 상당히 변경되었습니다. 개선 된 환경설정 패널을 사용하려면 베타플라이트 <strong>v1.12.0+<\/strong>을 사용하십시오."
     },

@@ -1039,17 +1039,6 @@
                     />
                 </SettingRow>
 
-                <div class="flex flex-col gap-1">
-                    <SettingRow :label="$t('pidTuningIntegratedYaw')" :help="$t('pidTuningIntegratedYawHelp')">
-                        <USwitch v-model="integratedYawEnabled" size="sm" />
-                    </SettingRow>
-                    <span
-                        v-if="integratedYawEnabled"
-                        class="text-xs text-warning pl-4"
-                        v-html="$t('pidTuningIntegratedYawCaution')"
-                    ></span>
-                </div>
-
                 <SettingRow
                     v-if="isPreApi148"
                     :label="$t('pidTuningAbsoluteControlGain')"
@@ -1429,11 +1418,6 @@ const vbatSagEnabled = computed({
 const thrustLinearEnabled = computed({
     get: () => FC.ADVANCED_TUNING.thrustLinearization !== 0,
     set: (val) => (FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0),
-});
-
-const integratedYawEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.useIntegratedYaw !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0),
 });
 
 // PID table input disabled states — matches original updatePidSlidersDisplay()
