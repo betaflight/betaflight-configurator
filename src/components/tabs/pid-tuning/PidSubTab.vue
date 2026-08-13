@@ -1317,7 +1317,7 @@
                     <!-- Header -->
                     <div></div>
                     <div class="flex items-center justify-center gap-0.5 text-xs">
-                        <span v-html="$t('pidTuningWingSpaMode')"></span>
+                        <span>{{ $t("pidTuningWingSpaMode") }}</span>
                         <HelpIcon :text="$t('pidTuningWingSpaModeHelp')" />
                     </div>
                     <div class="flex items-center justify-center gap-0.5 text-xs">
