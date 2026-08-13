@@ -153,7 +153,7 @@
                                         v-model="failsafeOffDelay"
                                         :min="limits.offDelay.min"
                                         :max="limits.offDelay.max"
-                                        :step="limits.offDelay.step"
+                                        :step="offDelayStep"
                                         size="xs"
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
@@ -401,8 +401,13 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import adjustBoxNameIfPeripheralWithModeID from "@/js/peripherals";
 import semver from "semver";
-import { API_VERSION_1_41, API_VERSION_1_46 } from "@/js/data_storage";
-import { getFailsafeLimits } from "@/js/failsafe_limits";
+import {
+    API_VERSION_1_41,
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+} from "@/js/data_storage";
 import GUI from "@/js/gui";
 
 // Procedure illustration images (same pattern as GpsTab's loadingBarsUrl)
@@ -619,14 +624,90 @@ const isGpsSettingsDisabled = computed(() => {
 
 // --- API version dependent input limits ---
 
-// The firmware CLI limits changed between releases, so the inputs have to follow
-// the API version of the connected board. Without this the inputs clamp perfectly
+const isApiVersion1_46 = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
+const isApiVersion1_47 = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
+
+// The firmware CLI limits changed with nearly every release, so the inputs have to
+// follow the API version of the connected board. Without this they clamp perfectly
 // valid values, e.g. minimum start distance to 50m when the firmware allows 5-30m.
-const limits = computed(() => getFailsafeLimits(fcStore.config.apiVersion));
+//
+// Values come from src/main/cli/settings.c of the matching firmware release, in the
+// units shown in the UI: the rates are entered in m/s while the firmware stores cm/s.
+// The baseline is API 1.44 (4.3), the oldest version the configurator connects to.
+const limits = computed(() => {
+    const gte = (version) => semver.gte(fcStore.config.apiVersion, version);
+
+    const l = {
+        offDelay: { min: 0, max: 20 }, // failsafe_off_delay, tenths of a second
+        returnAltitude: { min: 20, max: 100 }, // gps_rescue_initial_alt
+        initialClimb: { min: 0, max: 100 }, // only sent over MSP from 1.46
+        ascendRate: { min: 1, max: 25 },
+        groundSpeed: { min: 0.3, max: 30 }, // 30-3000 cm/s, so 0.3 m/s and not 3
+        angle: { min: 0, max: 200 }, // gps_rescue_angle
+        descentDistance: { min: 30, max: 500 },
+        descendRate: { min: 1, max: 5 },
+        throttleMin: { min: 1000, max: 2000 },
+        throttleMax: { min: 1000, max: 2000 },
+        throttleHover: { min: 1000, max: 2000 },
+        minStartDist: { min: 50, max: 1000 }, // gps_rescue_min_dth
+        minSats: { min: 5, max: 50 }, // unchanged across all versions
+    };
+
+    // 4.4. min_dth becomes min_start_dist, initial_alt becomes return_alt and
+    // angle becomes max_rescue_angle. 4.4 released with an angle maximum of 60 and
+    // later 1.45 dev builds widened it to 80; take the wider bound so a value stored
+    // by such a build is not clamped, MSP_SET_GPS_RESCUE does not range check it.
+    if (gte(API_VERSION_1_45)) {
+        Object.assign(l, {
+            returnAltitude: { min: 2, max: 255 },
+            groundSpeed: { min: 0, max: 30 },
+            ascendRate: { min: 0.5, max: 25 },
+            descendRate: { min: 0.25, max: 5 },
+            angle: { min: 0, max: 80 },
+            descentDistance: { min: 5, max: 500 },
+            minStartDist: { min: 20, max: 1000 },
+        });
+    }
+
+    // 4.5. Minimum start distance changed meaning: instead of blocking a rescue that
+    // starts close to home, the aircraft now flies out to this distance first, hence
+    // the much smaller range.
+    if (gte(API_VERSION_1_46)) {
+        Object.assign(l, {
+            returnAltitude: { min: 5, max: 1000 },
+            angle: { min: 30, max: 60 },
+            descentDistance: { min: 10, max: 500 },
+            minStartDist: { min: 10, max: 30 },
+        });
+    }
+
+    // 4.6. failsafe_off_delay becomes failsafe_landing_time and switches from tenths
+    // of a second to whole seconds. The throttles are still carried by MSP_GPS_RESCUE
+    // but are read from and written to the autopilot settings, which are narrower.
+    if (gte(API_VERSION_1_47)) {
+        Object.assign(l, {
+            offDelay: { min: 0, max: 250 },
+            throttleMin: { min: 1050, max: 1400 },
+            throttleMax: { min: 1400, max: 2000 },
+            throttleHover: { min: 1100, max: 1700 },
+        });
+    }
+
+    // 2026.x. Rescue angle moves to autopilot_max_angle.
+    if (gte(API_VERSION_1_48)) {
+        Object.assign(l, {
+            angle: { min: 10, max: 70 },
+            descentDistance: { min: 5, max: 500 },
+            throttleHover: { min: 0, max: 1700 },
+            minStartDist: { min: 5, max: 30 },
+        });
+    }
+
+    return l;
+});
 
 // Initial climb was introduced in 1.46, and the minimum start distance changed
 // meaning in the same release, so it needs the updated explanation.
-const isApiVersion1_46 = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
 const showInitialClimb = isApiVersion1_46;
 const minStartDistHelp = computed(() =>
     isApiVersion1_46.value ? t("failsafeGpsRescueItemMinStartDistHelp") : t("failsafeGpsRescueItemMinDthHelp"),
@@ -644,11 +725,14 @@ const failsafeThrottleLowDelay = computed({
     set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(Number(val) * 10)),
 });
 
-// Tenths of a second up to 1.46. From 1.47 the setting is failsafe_landing_time
-// and the firmware stores whole seconds, so it needs no conversion.
+// Tenths of a second up to 1.46. From 1.47 the setting is failsafe_landing_time and
+// the firmware stores whole seconds, so it needs no conversion and steps by 1.
+const offDelayScale = computed(() => (isApiVersion1_47.value ? 1 : 10));
+const offDelayStep = computed(() => (isApiVersion1_47.value ? 1 : 0.1));
+
 const failsafeOffDelay = computed({
-    get: () => failsafeConfig.value.failsafe_off_delay / limits.value.offDelay.scale,
-    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * limits.value.offDelay.scale)),
+    get: () => failsafeConfig.value.failsafe_off_delay / offDelayScale.value,
+    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * offDelayScale.value)),
 });
 
 const gpsRescueGroundSpeed = computed({
