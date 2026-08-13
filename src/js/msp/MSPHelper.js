@@ -1819,7 +1819,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16();
                     FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16();
                     FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16();
-                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.read16();
                     FC.WING_CONFIG.yaw_type = data.readU8();
                     FC.WING_CONFIG.angle_pitch_offset = data.readU16();
 
