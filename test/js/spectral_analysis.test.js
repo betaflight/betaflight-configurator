@@ -285,27 +285,12 @@ describe("peak sensitivity bound", () => {
 });
 
 describe("D recommendation", () => {
-    it("raises D only when the sensitivity bound is what stopped the gain", () => {
-        const fragile = recommendGains(
-            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.2 }),
-            SLIDERS,
-            PHASE_MARGIN_PRESETS.AGGRESSIVE,
-        ).analysis;
-        expect(fragile.sensitivityBinds).toBe(true);
-        expect(fragile.dScale).toBeGreaterThan(1);
-
-        const clean = recommendGains(
-            makeSyntheticTf({ crossoverHz: 20, delayMs: 3 }),
-            SLIDERS,
-            PHASE_MARGIN_PRESETS.NORMAL,
-        ).analysis;
-        expect(clean.sensitivityBinds).toBe(false);
-        expect(clean.dScale).toBe(1);
-    });
-
-    it("never reduces D", () => {
-        // A chirp cannot see the broadband noise that D amplifies, so there is no
-        // evidence on which to ask for less of it.
+    it("holds D, including when robustness is what limited the gain", () => {
+        // D is the other lever in principle, but it only adds lead below its own
+        // filter cutoff, its real limit is noise a chirp cannot see, and
+        // slider_d_gain is one value across axes while this analysis is per-axis
+        // (yaw conventionally runs no D at all). The gain reduction carries the
+        // correction instead.
         for (const cfg of [
             { crossoverHz: 20, delayMs: 3 },
             { crossoverHz: 20, delayMs: 8 },
@@ -313,19 +298,23 @@ describe("D recommendation", () => {
             { crossoverHz: 40, delayMs: 2, resonanceHz: 120, resonanceZeta: 0.05 },
         ]) {
             for (const target of Object.values(PHASE_MARGIN_PRESETS)) {
-                const { analysis } = recommendGains(makeSyntheticTf(cfg), SLIDERS, target);
-                expect(analysis.dScale).toBeGreaterThanOrEqual(1);
+                const { analysis, proposed } = recommendGains(makeSyntheticTf(cfg), SLIDERS, target);
+                expect(analysis.dScale).toBe(1);
+                expect(proposed.slider_d_gain).toBe(100);
             }
         }
     });
 
-    it("caps a single pass's D increase", () => {
-        const { analysis } = recommendGains(
-            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.05 }),
+    it("still reports which constraint limited the gain", () => {
+        const fragile = recommendGains(
+            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, resonanceHz: 70, resonanceZeta: 0.2 }),
             SLIDERS,
             PHASE_MARGIN_PRESETS.AGGRESSIVE,
-        );
-        expect(analysis.dScale).toBeLessThanOrEqual(1.25);
+        ).analysis;
+        expect(fragile.sensitivityBinds).toBe(true);
+
+        const clean = recommendGains(makeSyntheticTf({ crossoverHz: 20, delayMs: 3 }), SLIDERS).analysis;
+        expect(clean.sensitivityBinds).toBe(false);
     });
 });
 

@@ -183,19 +183,6 @@ const GAIN_SCALE_MAX = 2;
  */
 const MAX_SENSITIVITY_PEAK = 2.0;
 
-// Cap on a single pass's D increase. The trigger and direction are measured;
-// this magnitude is a deliberately small step with iteration doing the rest.
-//
-// D is not driven to the largest value the loop would tolerate, because the
-// binding constraint on D is not one a chirp can see. More D buys phase lead,
-// which raises the achievable crossover and pulls the Nyquist curve away from
-// -1; what stops it is the broadband gyro and motor noise it amplifies into the
-// motors, and a swept sine says nothing about that. So D is raised while the
-// robustness bound is what holds the gain back, a step at a time, and stops as
-// soon as it no longer is. Beyond that point more D buys nothing measurable here
-// and costs heat.
-const MAX_DTERM_STEP = 1.25;
-
 // Fractional shortfall in allowed gain below which the difference is treated as
 // scan resolution rather than a real robustness limit.
 const SENSITIVITY_BIND_TOLERANCE = 0.02;
@@ -629,10 +616,32 @@ function computeGainScales(metrics, tf, openLoop) {
     // noise that D amplifies, so the same argument that caps the D-term filter
     // recommendation at tighten-only applies to the gain itself: this can ask for
     // more damping on evidence, but has no evidence on which to ask for less.
+    // Reported so it is visible which of the two conditions limited the gain.
     // Judged with a tolerance comfortably above the gain scan's step, so grid
-    // resolution alone cannot register as robustness binding and nudge D.
+    // resolution alone does not register as robustness binding.
     const sensitivityBinds = gainForRobustness < gainForMargin * (1 - SENSITIVITY_BIND_TOLERANCE);
-    const dScale = sensitivityBinds ? clamp(gainForMargin / gainForRobustness, 1, MAX_DTERM_STEP) : 1;
+
+    // D: held.
+    //
+    // When robustness is what holds the gain back, more D is in principle the
+    // other lever — it adds phase lead, pulling the curve away from -1. Three
+    // things stop that being a recommendation this can make:
+    //
+    // 1. D only contributes lead below its own filter cutoff. Above it the
+    //    differentiator is rolled off and more D adds gain with no lead, moving
+    //    the curve toward -1 at the one frequency that matters. Whether that
+    //    applies is a per-craft question, and getting it backwards makes things
+    //    worse rather than merely failing to help.
+    // 2. What ultimately caps D is the broadband gyro and motor noise it
+    //    amplifies, which a swept sine cannot see. Same reason the D-term filter
+    //    recommendation is capped at tighten-only.
+    // 3. slider_d_gain is one value across all axes while this analysis is
+    //    per-axis, and yaw conventionally runs no D at all, so a per-axis D
+    //    conclusion does not map onto what actually gets written.
+    //
+    // So the gain reduction carries the robustness correction on its own, which
+    // is a lever whose effect is computed exactly rather than estimated.
+    const dScale = 1;
 
     // I: below 0 dB at low freq → increase, too high → decrease
     let iScale = 1;
