@@ -12,7 +12,11 @@
             />
         </SettingRow>
 
-        <SettingRow v-if="!hasGroup || activeFunction" :label="label || $t('serialPortAssign')" :help="help">
+        <SettingRow
+            v-if="portOnly || !hasGroup || activeFunction"
+            :label="label || $t('serialPortAssign')"
+            :help="help"
+        >
             <USelect
                 :model-value="selectedValue"
                 :items="portItems"
@@ -36,7 +40,7 @@
 
         <!-- MSP on the chosen port, matching the Ports tab's Configuration column. -->
         <SettingRow
-            v-if="showMsp && (!hasGroup || activeFunction)"
+            v-if="showMsp && (portOnly || !hasGroup || activeFunction)"
             :label="$t('portsFunction_MSP')"
             :help="$t('portsMSPHelp')"
         >
@@ -152,6 +156,15 @@ const props = defineProps({
         default: true,
     },
     /**
+     * Pick a UART and enable MSP on it, assigning no serial function at all. For devices that have
+     * no function bit of their own - an MT-family rangefinder speaks MSP, so the UART it is wired
+     * to just needs MSP switched on.
+     */
+    portOnly: {
+        type: Boolean,
+        default: false,
+    },
+    /**
      * Which per-port baudrate belongs to this function, or null when it has none.
      * @values gps_baudrate, telemetry_baudrate, blackbox_baudrate, msp_baudrate, null
      */
@@ -173,6 +186,7 @@ const props = defineProps({
 const {
     loaded,
     hasGroup,
+    portOnly,
     hiddenAssignments,
     functionItems,
     activeFunction,

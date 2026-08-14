@@ -720,6 +720,107 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
+    // Port-only: pick a UART and turn MSP on, assigning no serial function. An MT-family
+    // rangefinder speaks MSP (MSP2_SENSOR_RANGEFINDER_LIDARMT), so it has no function bit of its
+    // own - all it needs is MSP on the UART it is wired to.
+    describe("port-only mode", () => {
+        const portRow = () => row({ portOnly: true });
+
+        it("offers every port except USB VCP, and no unassigned option", () => {
+            const items = portRow().portItems.value;
+
+            expect(items.map((i) => i.value)).toEqual([0, 1, 2]);
+            expect(items.map((i) => i.value)).not.toContain(NO_PORT);
+            expect(items.map((i) => i.value)).not.toContain(20);
+        });
+
+        it("annotates each port with what it already carries", () => {
+            store.assign("GPS", 1);
+            const items = portRow().portItems.value;
+
+            expect(items.find((i) => i.value === 1).label).toContain("portsFunction_GPS");
+            expect(items.find((i) => i.value === 2).label).toEqual("UART3");
+        });
+
+        it("preselects the UART already carrying MSP", () => {
+            store.assign("MSP", 1);
+
+            expect(portRow().selectedValue.value).toEqual(1);
+        });
+
+        it("does not preselect USB VCP, which always has MSP", () => {
+            expect(portRow().selectedValue.value).toEqual(NO_PORT);
+        });
+
+        it("treats picking a port as navigation, not a change", () => {
+            const r = portRow();
+
+            r.selectPort(1);
+
+            expect(r.hasPendingChange.value).toBe(false);
+            expect(store.dirty).toBe(false);
+        });
+
+        it("assigns no serial function on apply", () => {
+            const r = portRow();
+            r.selectPort(1);
+
+            r.apply();
+
+            expect(store.portById(1).sensor).toEqual("");
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(store.portById(1).telemetry).toEqual("");
+        });
+
+        it("enables MSP on the chosen port, deferred until apply", () => {
+            const r = portRow();
+            r.selectPort(2);
+
+            r.setMsp(true);
+            expect(r.hasPendingChange.value).toBe(true);
+            expect(store.portById(2).msp).toBe(false);
+
+            r.apply();
+            expect(store.portById(2).msp).toBe(true);
+        });
+
+        it("turns MSP back off", () => {
+            store.assign("MSP", 1);
+            const r = portRow();
+
+            expect(r.msp.value).toBe(true);
+            r.setMsp(false);
+            r.apply();
+
+            expect(store.portById(1).msp).toBe(false);
+        });
+
+        it("carries the MSP baudrate for the chosen port", () => {
+            const r = portRow();
+            r.selectPort(1);
+
+            r.setMspBaudrate("9600");
+            expect(store.portById(1).msp_baudrate).toEqual("115200");
+
+            r.apply();
+            expect(store.portById(1).msp_baudrate).toEqual("9600");
+        });
+
+        it("keeps the MSP switch unusable until a port is chosen", () => {
+            expect(portRow().mspDisabled.value).toBe(true);
+        });
+
+        it("warns about nothing, since it displaces nothing", () => {
+            store.assign("GPS", 1);
+            const r = portRow();
+
+            r.selectPort(1);
+            r.setMsp(true);
+
+            expect(r.evictions.value).toEqual([]);
+        });
+    });
+
     describe("baudrate", () => {
         it("is absent for a function with no baudrate", () => {
             const { hasBaudField, baudItems } = row({ serialFunction: "ESC_SENSOR" });

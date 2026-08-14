@@ -95,8 +95,7 @@
                         <SerialFunctionRow
                             v-if="showRangefinder && rangefinderTransport === 'msp'"
                             ref="mspRangefinderRow"
-                            serial-function="MSP"
-                            :show-msp="false"
+                            port-only
                             :label="$t('sensorConfigRangefinderPort')"
                             :help="$t('sensorConfigRangefinderMspHelp')"
                         />

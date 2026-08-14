@@ -61,6 +61,46 @@ export function useSerialFunctionRow(props) {
         return functionRules.value.find((r) => r.name === name)?.displayName || name;
     }
 
+    /**
+     * Port-only mode: pick a UART and enable MSP on it, without assigning any serial function.
+     *
+     * Some devices have no function bit of their own - an MT-family rangefinder speaks MSP, so all
+     * it needs is MSP on whichever UART it is wired to. Choosing a port here is navigation, not a
+     * change; the MSP switch is the only thing that edits anything.
+     */
+    const portOnly = computed(() => Boolean(props.portOnly));
+
+    /** In port-only mode, the non-VCP port already carrying MSP - the likely home of the device. */
+    const mspPortId = computed(
+        () => store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && p.msp)?.identifier ?? NO_PORT,
+    );
+
+    /** What a port carries, for annotating a general port list. */
+    function portFunctionsSummary(port) {
+        const names = [
+            port.msp && "MSP",
+            port.rxSerial && "RX_SERIAL",
+            port.telemetry,
+            port.sensor,
+            port.peripheral,
+        ].filter(Boolean);
+        return names.map(displayName).join(", ");
+    }
+
+    const portOnlyOptions = computed(() =>
+        store.ports
+            .filter((p) => p.identifier !== USB_VCP_IDENTIFIER)
+            .map((p) => ({
+                portId: p.identifier,
+                portName: store.portName(p.identifier),
+                selected: p.identifier === mspPortId.value,
+                occupiedBy: "",
+                evicts: [],
+                disabled: false,
+                disabledReason: null,
+            })),
+    );
+
     // ------------------------------------------------------------ which function
 
     /**
@@ -141,13 +181,17 @@ export function useSerialFunctionRow(props) {
     // belongs, and firmware refuses a config where it stops carrying MSP. The Ports tab still shows
     // it, because that view is the complete picture; this one is a choice, and VCP is not a real
     // choice. It stays listed only if firmware already put this function there.
-    const options = computed(() =>
-        activeFunction.value
-            ? store
-                .availableFor(activeFunction.value)
-                .filter((option) => option.portId !== USB_VCP_IDENTIFIER || option.selected)
-            : [],
-    );
+    const options = computed(() => {
+        if (portOnly.value) {
+            return portOnlyOptions.value;
+        }
+        if (!activeFunction.value) {
+            return [];
+        }
+        return store
+            .availableFor(activeFunction.value)
+            .filter((option) => option.portId !== USB_VCP_IDENTIFIER || option.selected);
+    });
 
     /** Where the active function sits on the FC right now, ignoring the pending edit. */
     const savedPortId = computed(() => options.value.find((o) => o.selected)?.portId ?? NO_PORT);
@@ -172,16 +216,34 @@ export function useSerialFunctionRow(props) {
         selectedValue.value === NO_PORT ? undefined : options.value.find((o) => o.portId === selectedValue.value),
     );
 
-    const portItems = computed(() => [
-        { value: NO_PORT, label: t("serialPortNone") },
-        ...options.value.map((option) => ({
-            value: option.portId,
-            label: option.occupiedBy
-                ? t("serialPortOccupiedBy", { port: option.portName, serialFunction: displayName(option.occupiedBy) })
-                : option.portName,
-            disabled: option.disabled,
-        })),
-    ]);
+    const portItems = computed(() => {
+        if (portOnly.value) {
+            // No "not assigned" entry: there is no assignment to remove, only a port to look at.
+            return options.value.map((option) => {
+                const carries = portFunctionsSummary(store.portById(option.portId) ?? {});
+                return {
+                    value: option.portId,
+                    label: carries
+                        ? t("serialPortOccupiedBy", { port: option.portName, serialFunction: carries })
+                        : option.portName,
+                };
+            });
+        }
+
+        return [
+            { value: NO_PORT, label: t("serialPortNone") },
+            ...options.value.map((option) => ({
+                value: option.portId,
+                label: option.occupiedBy
+                    ? t("serialPortOccupiedBy", {
+                        port: option.portName,
+                        serialFunction: displayName(option.occupiedBy),
+                    })
+                    : option.portName,
+                disabled: option.disabled,
+            })),
+        ];
+    });
 
     const hasBaudField = computed(() => BAUD_RATE_FIELDS.includes(props.baudField));
 
@@ -237,7 +299,9 @@ export function useSerialFunctionRow(props) {
         return displaced;
     });
 
-    const portChanged = computed(() => draftPortId.value !== undefined && draftPortId.value !== savedPortId.value);
+    const portChanged = computed(
+        () => !portOnly.value && draftPortId.value !== undefined && draftPortId.value !== savedPortId.value,
+    );
     const functionChanged = computed(
         () => draftFunction.value !== undefined && draftFunction.value !== savedFunction.value,
     );
@@ -304,11 +368,11 @@ export function useSerialFunctionRow(props) {
         const portId = selectedValue.value;
 
         // A protocol swap frees the one it replaces, whichever port that was on.
-        if (functionChanged.value && savedFunction.value) {
+        if (!portOnly.value && functionChanged.value && savedFunction.value) {
             store.clear(savedFunction.value);
         }
 
-        if (hasPendingPortOrFunction.value && fn) {
+        if (!portOnly.value && hasPendingPortOrFunction.value && fn) {
             if (portId === NO_PORT) {
                 store.clear(fn);
             } else {
@@ -335,6 +399,7 @@ export function useSerialFunctionRow(props) {
     return {
         loaded,
         hasGroup,
+        portOnly,
         hiddenAssignments,
         functionItems,
         activeFunction,
