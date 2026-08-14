@@ -52,14 +52,29 @@ describe("usePortsRules", () => {
     });
 
     describe("bits 19 and 20", () => {
-        it("are never offered on any supported API version", () => {
-            for (const apiVersion of ["1.46.0", "1.47.0", "1.48.0", "1.49.0"]) {
-                const { functionRules } = rulesAt(apiVersion);
-                const names = functionRules.map((r) => r.name);
+        it("are not offered while their meaning is ambiguous", () => {
+            // 2026.6.1 puts LIDAR_NL on 19; master from c18421eb puts OSD_CUSTOM_TEXT there.
+            // Both report 1.48, so neither can be named until the firmware bump separates them.
+            for (const apiVersion of ["1.46.0", "1.47.0", "1.48.0"]) {
+                const names = rulesAt(apiVersion).functionRules.map((r) => r.name);
 
                 expect(names).not.toContain("LIDAR_NL");
                 expect(names).not.toContain("OSD_CUSTOM_TEXT");
             }
+        });
+
+        it("offers OSD_CUSTOM_TEXT from 1.49, where bit 19 is settled", () => {
+            const { functionRules } = rulesAt("1.49.0");
+            const rule = functionRules.find((r) => r.name === "OSD_CUSTOM_TEXT");
+
+            expect(rule).toBeDefined();
+            expect(rule.groups).toEqual(["peripherals"]);
+        });
+
+        it("never offers LIDAR_NL, which 1.49 folded into the bit 15 rangefinder", () => {
+            const names = rulesAt("1.49.0").functionRules.map((r) => r.name);
+
+            expect(names).not.toContain("LIDAR_NL");
         });
     });
 
@@ -85,7 +100,7 @@ describe("usePortsRules", () => {
         });
 
         it("has a label for every function rule offered on the newest supported API", () => {
-            const { functionRules } = rulesAt("1.48.0");
+            const { functionRules } = rulesAt("1.49.0");
             for (const rule of functionRules) {
                 expect(messages[`portsFunction_${rule.name}`], `missing portsFunction_${rule.name}`).toBeDefined();
             }

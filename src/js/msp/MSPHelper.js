@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -42,6 +48,59 @@ function reportI2cErrors(count) {
     }
 }
 
+// Serial function bits, mirroring 'serialPortFunction_e' in 'src/main/io/serial.h'.
+//
+// The layout is not stable across the firmware range this app supports, so it is derived from the
+// API version rather than hard-coded. Bits up to 18 have never moved; bits 19 and 20 have.
+const SERIAL_PORT_FUNCTIONS_STABLE = {
+    MSP: 0,
+    GPS: 1,
+    TELEMETRY_FRSKY: 2,
+    TELEMETRY_HOTT: 3,
+    TELEMETRY_LTM: 4,
+    TELEMETRY_SMARTPORT: 5,
+    RX_SERIAL: 6,
+    BLACKBOX: 7,
+    TELEMETRY_MAVLINK: 9,
+    ESC_SENSOR: 10,
+    TBS_SMARTAUDIO: 11,
+    TELEMETRY_IBUS: 12,
+    IRC_TRAMP: 13,
+    RUNCAM_DEVICE_CONTROL: 14, // support communitate with RunCam Device
+    LIDAR_TF: 15, // FUNCTION_LIDAR from 2026.12: the unified serial rangefinder bit, driver from rangefinder_hardware
+    FRSKY_OSD: 16,
+    VTX_MSP: 17,
+    GIMBAL: 18, // added in 2025.12 (API 1.47) and unmoved since
+};
+
+/**
+ * The serial function bits this app is willing to name on the connected firmware.
+ *
+ * Bits 19 and 20 are named only from API 1.49. Below that they are deliberately left out, and
+ * round-tripped verbatim instead: 2026.6.1 puts LIDAR_NL on 19 and OSD_CUSTOM_TEXT on 20, while
+ * master from c18421eb (2026-08-04) puts OSD_CUSTOM_TEXT on 19 - and both answer API 1.48, because
+ * that commit shipped two days after the release without bumping API_VERSION_MINOR. Every dev and
+ * cloud build flashed in that window reports 1.48 with the newer layout, so no gate can tell them
+ * apart and naming either bit there would write a meaning the board does not share. Writing bit 19
+ * to a 2026.6.1 board would silently reassign the user's Nooploop rangefinder.
+ *
+ * From 1.49 the layout is unambiguous: bit 19 is OSD_CUSTOM_TEXT, bit 20 is free, and LIDAR_NL no
+ * longer exists - the serial rangefinder is bit 15 with the driver chosen by rangefinder_hardware.
+ *
+ * Bits left unnamed are not lost; see serialPortUnknownFunctionMask.
+ *
+ * @param {string} [apiVersion] semver string, e.g. FC.CONFIG.apiVersion
+ */
+export function serialPortFunctionsFor(apiVersion) {
+    const functions = { ...SERIAL_PORT_FUNCTIONS_STABLE };
+
+    if (apiVersion && semver.valid(apiVersion) && semver.gte(apiVersion, API_VERSION_1_49)) {
+        functions.OSD_CUSTOM_TEXT = 19;
+    }
+
+    return functions;
+}
+
 function MspHelper() {
     const self = this;
 
@@ -64,38 +123,6 @@ function MspHelper() {
         "2000000",
         "2470000",
     ];
-    // needs to be identical to 'serialPortFunction_e' in 'src/main/io/serial.h' in betaflight
-    //
-    // This list is deliberately INCOMPLETE and must stay that way for bits 19 and 20:
-    // 2026.6.1 (API 1.48) has LIDAR_NL on 19 and OSD_CUSTOM_TEXT on 20, while master
-    // (also API 1.48) has OSD_CUSTOM_TEXT on 19. The API version cannot tell them apart,
-    // so naming either one would let the configurator write a bit that means something
-    // else on the connected FC - writing bit 19 to a 2026.6.1 board would silently
-    // reassign the user's Nooploop rangefinder.
-    //
-    // Bits absent from this list are not lost: they are round-tripped verbatim by
-    // serialPortUnknownFunctionMask() / serialPortFunctionsToMask() below.
-    self.SERIAL_PORT_FUNCTIONS = {
-        MSP: 0,
-        GPS: 1,
-        TELEMETRY_FRSKY: 2,
-        TELEMETRY_HOTT: 3,
-        TELEMETRY_LTM: 4,
-        TELEMETRY_SMARTPORT: 5,
-        RX_SERIAL: 6,
-        BLACKBOX: 7,
-        TELEMETRY_MAVLINK: 9,
-        ESC_SENSOR: 10,
-        TBS_SMARTAUDIO: 11,
-        TELEMETRY_IBUS: 12,
-        IRC_TRAMP: 13,
-        RUNCAM_DEVICE_CONTROL: 14, // support communitate with RunCam Device
-        LIDAR_TF: 15, // FUNCTION_LIDAR on master: the unified serial rangefinder bit, driver picked by rangefinder_hardware
-        FRSKY_OSD: 16,
-        VTX_MSP: 17,
-        GIMBAL: 18, // added in 2025.12 (API 1.47) and unmoved since
-    };
-
     self.REBOOT_TYPES = {
         FIRMWARE: 0,
         BOOTLOADER: 1,
@@ -2805,6 +2832,16 @@ MspHelper.prototype.sendLedStripConfigValues = function (onCompleteCallback) {
     buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
     MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
+
+/**
+ * The bit layout for the connected firmware. A getter rather than a field because the API version
+ * is not known when the helper is constructed.
+ */
+Object.defineProperty(MspHelper.prototype, "SERIAL_PORT_FUNCTIONS", {
+    get() {
+        return serialPortFunctionsFor(FC.CONFIG?.apiVersion);
+    },
+});
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function (functionMask) {
     const self = this;

@@ -40,8 +40,13 @@ const STABLE_BITS = {
 };
 
 // Bits whose meaning differs between two shipping firmwares that both report API 1.48.
-// They must never be named, because naming a bit is what makes the app write it.
+// They must not be named below 1.49, because naming a bit is what makes the app write it.
 const AMBIGUOUS_BITS = [19, 20];
+
+/** Point the helper at a firmware version; the bit layout is derived from it. */
+function atApiVersion(version) {
+    FC.CONFIG.apiVersion = version;
+}
 
 function serialConfigV2Buffer(ports) {
     const buffer = [];
@@ -107,17 +112,47 @@ describe("serial port function bits", () => {
     });
 
     describe("SERIAL_PORT_FUNCTIONS layout", () => {
-        it("names only bits whose meaning is identical on every supported firmware", () => {
-            expect(mspHelper.SERIAL_PORT_FUNCTIONS).toEqual(STABLE_BITS);
+        it("names only the stable bits on firmware up to API 1.48", () => {
+            for (const version of ["1.46.0", "1.47.0", "1.48.0"]) {
+                atApiVersion(version);
+                expect(mspHelper.SERIAL_PORT_FUNCTIONS, version).toEqual(STABLE_BITS);
+            }
         });
 
         it("never names a bit that two supported firmwares define differently", () => {
             // 2026.6.1: 19 = LIDAR_NL, 20 = OSD_CUSTOM_TEXT.
-            // master:   19 = OSD_CUSTOM_TEXT, 20 free. Both report API 1.48.
+            // master before the bump: 19 = OSD_CUSTOM_TEXT, 20 free. Both report API 1.48, so a
+            // dev build flashed in that window is indistinguishable from the release.
+            atApiVersion("1.48.0");
             const named = Object.values(mspHelper.SERIAL_PORT_FUNCTIONS);
             for (const bit of AMBIGUOUS_BITS) {
                 expect(named).not.toContain(bit);
             }
+        });
+
+        it("names OSD_CUSTOM_TEXT on bit 19 from API 1.49, where the layout is settled", () => {
+            atApiVersion("1.49.0");
+
+            expect(mspHelper.SERIAL_PORT_FUNCTIONS).toEqual({ ...STABLE_BITS, OSD_CUSTOM_TEXT: 19 });
+        });
+
+        it("never names LIDAR_NL, which 1.49 folded into the bit 15 rangefinder", () => {
+            for (const version of ["1.46.0", "1.48.0", "1.49.0"]) {
+                atApiVersion(version);
+                expect(mspHelper.SERIAL_PORT_FUNCTIONS.LIDAR_NL).toBeUndefined();
+            }
+        });
+
+        it("never names bit 20, which is free from 1.49 and ambiguous below it", () => {
+            for (const version of ["1.46.0", "1.48.0", "1.49.0"]) {
+                atApiVersion(version);
+                expect(Object.values(mspHelper.SERIAL_PORT_FUNCTIONS)).not.toContain(20);
+            }
+        });
+
+        it("falls back to the stable layout when no board has answered yet", () => {
+            FC.CONFIG.apiVersion = "0.0.0";
+            expect(mspHelper.SERIAL_PORT_FUNCTIONS).toEqual(STABLE_BITS);
         });
 
         it("assigns each bit to exactly one function", () => {
@@ -126,6 +161,7 @@ describe("serial port function bits", () => {
         });
 
         it("reports every named bit in the known mask", () => {
+            atApiVersion("1.48.0");
             const known = mspHelper.serialPortKnownFunctionMask();
             for (const bit of Object.values(mspHelper.SERIAL_PORT_FUNCTIONS)) {
                 expect(known & (1 << bit)).not.toEqual(0);
@@ -217,6 +253,22 @@ describe("serial port function bits", () => {
             FC.SERIAL_CONFIG.ports[0].functions = ["MSP", "TELEMETRY_MAVLINK"];
 
             expect(writtenMasks()).toEqual([(1 << 0) | (1 << 9), 1 << 19]);
+        });
+
+        it("writes bit 19 by name on API 1.49 instead of preserving it blindly", () => {
+            FC.CONFIG.apiVersion = "1.49.0";
+            readSerialConfig([{ identifier: 4, functionMask: 1 << 19 }]);
+
+            expect(FC.SERIAL_CONFIG.ports[0].functions).toEqual(["OSD_CUSTOM_TEXT"]);
+            expect(writtenMasks()).toEqual([1 << 19]);
+        });
+
+        it("still preserves bit 19 untouched on API 1.48, where it is ambiguous", () => {
+            FC.CONFIG.apiVersion = "1.48.0";
+            readSerialConfig([{ identifier: 4, functionMask: 1 << 19 }]);
+
+            expect(FC.SERIAL_CONFIG.ports[0].functions).toEqual([]);
+            expect(writtenMasks()).toEqual([1 << 19]);
         });
 
         it("round-trips GIMBAL, which is named rather than reserved", () => {

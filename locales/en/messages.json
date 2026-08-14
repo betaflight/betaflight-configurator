@@ -2352,6 +2352,9 @@
     "portsFunction_GIMBAL": {
         "message": "Gimbal"
     },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD custom text"
+    },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
     },
