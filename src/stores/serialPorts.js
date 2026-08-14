@@ -117,6 +117,28 @@ function enabledFeaturesFromPorts(portsList) {
     return flags;
 }
 
+/** Sync the feature bits to the port array, which is what makes assigning a port turn one on. */
+function updateFeatures() {
+    const { rxSerial, telemetry, blackbox, esc, gps } = enabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);
+    const featureConfig = FC.FEATURE_CONFIG.features;
+
+    rxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
+
+    if (telemetry) {
+        featureConfig.enable("TELEMETRY");
+    }
+    // TELEMETRY is deliberately never disabled here - a protocol can be carried by the RX link
+    // rather than a UART, so an empty telemetry column does not mean "no telemetry".
+
+    blackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
+    esc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
+
+    // GNSS: enable when a port is configured, never disable - Virtual GPS needs no UART.
+    if (gps) {
+        featureConfig.enable("GPS");
+    }
+}
+
 /**
  * The single source of truth for serial port assignment.
  *
@@ -451,27 +473,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
     }
 
     // ---------------------------------------------------------------- saving
-
-    function updateFeatures() {
-        const { rxSerial, telemetry, blackbox, esc, gps } = enabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);
-        const featureConfig = FC.FEATURE_CONFIG.features;
-
-        rxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
-
-        if (telemetry) {
-            featureConfig.enable("TELEMETRY");
-        }
-        // TELEMETRY is deliberately never disabled here - a protocol can be carried by the RX
-        // link rather than a UART, so an empty telemetry column does not mean "no telemetry".
-
-        blackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
-        esc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
-
-        // GNSS: enable when a port is configured, never disable - Virtual GPS needs no UART.
-        if (gps) {
-            featureConfig.enable("GPS");
-        }
-    }
 
     /** Rebuild FC.SERIAL_CONFIG.ports from the store. Always the complete array (see save). */
     function toFcPorts() {
