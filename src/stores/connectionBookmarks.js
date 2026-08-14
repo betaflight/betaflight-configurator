@@ -24,10 +24,9 @@ function sitlBookmark() {
     };
 }
 
-const clean = (value) =>
-    String(value ?? "")
-        .trim()
-        .slice(0, MAX_LENGTH);
+// Non-strings are dropped rather than stringified: a stored `{"url": {}}` would otherwise
+// become the bookmark "[object Object]" and be offered in the connect menu.
+const clean = (value) => (typeof value === "string" ? value.trim().slice(0, MAX_LENGTH) : "");
 
 // Manual targets are network addresses far more often than serial paths, so they compare
 // case-insensitively: "TCP://Quad.local" and "tcp://quad.local" are one bookmark.

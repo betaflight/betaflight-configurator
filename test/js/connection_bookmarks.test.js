@@ -103,7 +103,16 @@ describe("the seeded SITL target", () => {
 
 describe("reading back what was stored", () => {
     it("drops entries with no address, repeats of one address, and junk", () => {
-        seed([{ name: "Bad", url: "  " }, { url: "tcp://ok:5761" }, { url: "TCP://OK:5761" }, null, 42]);
+        seed([
+            { name: "Bad", url: "  " },
+            { url: "tcp://ok:5761" },
+            { url: "TCP://OK:5761" },
+            // A non-string address must not be stringified into "[object Object]".
+            { url: {} },
+            { url: ["tcp://sneaky:5761"] },
+            null,
+            42,
+        ]);
 
         expect(useConnectionBookmarksStore().bookmarks).toEqual([{ name: "tcp://ok:5761", url: "tcp://ok:5761" }]);
     });
