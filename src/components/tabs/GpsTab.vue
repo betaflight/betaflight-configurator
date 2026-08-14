@@ -4,6 +4,8 @@
             <div class="tab_title" v-html="$t('tabGPS')"></div>
             <WikiButton docUrl="gps" />
 
+            <SerialPortsPendingBanner />
+
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <!-- Left Column: Configuration + Signal Strength -->
                 <div class="lg:col-span-2 flex flex-col gap-4">
@@ -35,6 +37,12 @@
                                 class="min-w-40"
                             />
                         </SettingRow>
+
+                        <SerialFunctionRow
+                            serial-function="GPS"
+                            baud-field="gps_baudrate"
+                            :label="$t('serialPortAssign')"
+                        />
 
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
                             <USwitch v-model="autoBaudChecked" />
@@ -292,6 +300,9 @@ import { useReboot } from "../../composables/useReboot";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import SerialPortsPendingBanner from "../ports/SerialPortsPendingBanner.vue";
+import { useSerialPortsStore } from "@/stores/serialPorts";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
@@ -302,12 +313,15 @@ export default defineComponent({
         WikiButton,
         UiBox,
         SettingRow,
+        SerialFunctionRow,
+        SerialPortsPendingBanner,
     },
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
+        const serialPortsStore = useSerialPortsStore();
 
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
@@ -734,6 +748,14 @@ export default defineComponent({
 
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
+                    // A pending port assignment rides along on this save so the two together cost
+                    // one reboot, not two. It writes the serial config and the feature bits it
+                    // implies; the feature write below then repeats that same mask harmlessly,
+                    // and one saveAndReboot at the end persists the lot.
+                    if (serialPortsStore.dirty) {
+                        await serialPortsStore.writeConfig();
+                    }
+
                     await MSP.promise(
                         MSPCodes.MSP_SET_FEATURE_CONFIG,
                         mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
@@ -768,6 +790,9 @@ export default defineComponent({
                 mapInstance.value?.map?.updateSize();
             });
             loadGpsConfig();
+            // The store is shared across tabs: this refetches when it is clean and skips when it
+            // holds unsaved edits made on another tab.
+            serialPortsStore.loadConfig();
         });
 
         const teardown = () => {

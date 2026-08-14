@@ -2930,20 +2930,13 @@ MspHelper.prototype.loadSerialConfig = function (callback) {
 };
 
 /**
- * Firmware rejects a serial config it cannot apply (betaflight#15131) with an MSP error reply.
- * The reply reaches the callback as `response.unsupported`, so the callback is handed the whole
- * response and the caller is expected to abort the save chain rather than write EEPROM and reboot
- * on top of an unchanged serial config.
+ * True when an MSP reply says the FC refused the request. Firmware rejects a serial config it
+ * cannot apply (betaflight#15131) with an MSP error reply, which arrives as `unsupported` on the
+ * response rather than as a rejected promise - so a caller that does not check this goes on to
+ * write EEPROM and reboot on top of an unchanged config, and reports success.
  *
- * `response` is undefined when disconnected or in virtual mode, which is not a rejection.
- */
-MspHelper.prototype.sendSerialConfig = function (callback) {
-    const mspCode = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
-    MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
-};
-
-/**
- * True when an MSP reply says the FC refused the request.
+ * A missing response is not a rejection: MSP resolves with nothing when disconnected or in
+ * virtual mode.
  */
 export function isMspRejected(response) {
     return Boolean(response?.unsupported || response?.crcError);

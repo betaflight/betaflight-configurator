@@ -2,21 +2,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 const mspPromise = vi.fn(() => Promise.resolve());
-const sendMessage = vi.fn();
-const sendSerialConfig = vi.fn();
 const saveAndReboot = vi.fn(() => Promise.resolve());
 const guiLog = vi.fn();
 
 vi.mock("../../src/js/msp", () => ({
     default: {
         promise: (...args) => mspPromise(...args),
-        send_message: (...args) => sendMessage(...args),
     },
 }));
 
 vi.mock("../../src/js/msp/MSPHelper", () => ({
     mspHelper: {
-        sendSerialConfig: (...args) => sendSerialConfig(...args),
         crunch: () => [],
         // Bits 19 and 20 are the ones no supported firmware agrees on, so they stand in for
         // "unnamed" here; everything below 19 is a bit this build can name.
@@ -42,6 +38,7 @@ const { useSerialPortsStore } = await import("../../src/stores/serialPorts");
 const FC = (await import("../../src/js/fc")).default;
 const CONFIGURATOR = (await import("../../src/js/data_storage")).default;
 const Features = (await import("../../src/js/Features")).default;
+const MSPCodes = (await import("../../src/js/msp/MSPCodes")).default;
 
 /** An FC-shaped port, as MSPHelper leaves it in FC.SERIAL_CONFIG.ports. */
 function fcPort(identifier, functions = [], extra = {}) {
@@ -80,7 +77,7 @@ describe("useSerialPortsStore", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         vi.clearAllMocks();
-        mspPromise.mockImplementation(() => Promise.resolve());
+        mspPromise.mockImplementation(() => Promise.resolve({}));
         FC.resetState();
         FC.CONFIG.apiVersion = "1.48.0";
         FC.CONFIG.buildOptions = [];
@@ -401,18 +398,23 @@ describe("useSerialPortsStore", () => {
         });
     });
 
-    describe("save", () => {
-        function respondWith(response) {
-            expect(sendSerialConfig).toHaveBeenCalledTimes(1);
-            sendSerialConfig.mock.calls[0][0](response);
+    describe("writeConfig / save", () => {
+        const SET_SERIAL = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
+        const SET_FEATURES = MSPCodes.MSP_SET_FEATURE_CONFIG;
+
+        /** Which MSP codes were written, in order. */
+        const writtenCodes = () => mspPromise.mock.calls.map((c) => c[0]);
+
+        /** Make the serial write come back as a firmware rejection. */
+        function rejectSerialWrite() {
+            mspPromise.mockImplementation((code) => Promise.resolve(code === SET_SERIAL ? { unsupported: 1 } : {}));
         }
 
         it("writes the complete port array, never a partial one", async () => {
             const store = await freshStore();
             store.assign("GPS", 1);
 
-            store.save();
-            respondWith({});
+            await store.save();
 
             expect(FC.SERIAL_CONFIG.ports.map((p) => p.identifier)).toEqual([20, 0, 1, 2]);
             expect(FC.SERIAL_CONFIG.ports.find((p) => p.identifier === 1).functions).toEqual(["GPS"]);
@@ -422,8 +424,7 @@ describe("useSerialPortsStore", () => {
             const original = [fcPort(20, ["MSP"]), fcPort(0, ["RX_SERIAL"]), fcPort(1, ["GPS"])];
             const store = await freshStore(original);
 
-            store.save();
-            respondWith({});
+            await store.save();
 
             expect(FC.SERIAL_CONFIG.ports.map((p) => p.functions)).toEqual([["MSP"], ["RX_SERIAL"], ["GPS"]]);
         });
@@ -431,8 +432,7 @@ describe("useSerialPortsStore", () => {
         it("carries the raw function mask through so unnamed bits can be restored", async () => {
             const store = await freshStore([fcPort(1, ["GPS"], { functionMask: (1 << 1) | (1 << 19) })]);
 
-            store.save();
-            respondWith({});
+            await store.save();
 
             expect(FC.SERIAL_CONFIG.ports[0].functionMask).toEqual((1 << 1) | (1 << 19));
         });
@@ -441,20 +441,29 @@ describe("useSerialPortsStore", () => {
             FC.CONFIG.apiVersion = "1.46.0";
             const store = await freshStore([fcPort(4, ["GIMBAL"])]);
 
-            store.save();
-            respondWith({});
+            await store.save();
 
             expect(FC.SERIAL_CONFIG.ports[0].functions).toContain("GIMBAL");
+        });
+
+        it("sends exactly one serial write, carrying every port", async () => {
+            const store = await freshStore();
+            store.assign("GPS", 1);
+
+            await store.save();
+
+            expect(writtenCodes().filter((c) => c === SET_SERIAL)).toHaveLength(1);
         });
 
         it("aborts before the feature write, EEPROM save and reboot when the FC rejects it", async () => {
             const store = await freshStore();
             store.assign("GPS", 1);
+            rejectSerialWrite();
 
-            store.save();
-            respondWith({ unsupported: 1 });
+            const ok = await store.save();
 
-            expect(sendMessage).not.toHaveBeenCalled();
+            expect(ok).toBe(false);
+            expect(writtenCodes()).not.toContain(SET_FEATURES);
             expect(saveAndReboot).not.toHaveBeenCalled();
             expect(guiLog).toHaveBeenCalledWith("portsSaveRejected");
             expect(store.dirty).toBe(true); // still unsaved, and the user is told
@@ -464,19 +473,18 @@ describe("useSerialPortsStore", () => {
             const store = await freshStore();
             store.assign("GPS", 1);
 
-            store.save();
-            respondWith({});
+            const ok = await store.save();
 
-            expect(sendMessage).toHaveBeenCalledTimes(1);
+            expect(ok).toBe(true);
+            expect(writtenCodes()).toContain(SET_FEATURES);
+            expect(saveAndReboot).toHaveBeenCalledTimes(1);
         });
 
         it("marks the store clean once the write is accepted", async () => {
             const store = await freshStore();
             store.assign("GPS", 1);
 
-            store.save();
-            respondWith({});
-            sendMessage.mock.calls[0][3](); // feature write acknowledged
+            await store.save();
 
             expect(store.dirty).toBe(false);
         });
@@ -485,10 +493,14 @@ describe("useSerialPortsStore", () => {
             const store = await freshStore();
             store.assign("GPS", 1);
 
-            store.save();
-            respondWith({});
-            store.assign("ESC_SENSOR", 2); // user edits before the ack lands
-            sendMessage.mock.calls[0][3]();
+            let releaseWrite;
+            mspPromise.mockImplementation(() => new Promise((resolve) => (releaseWrite = resolve)));
+            const pending = store.save();
+
+            store.assign("ESC_SENSOR", 2); // user edits before the write lands
+            mspPromise.mockImplementation(() => Promise.resolve({}));
+            releaseWrite({});
+            await pending;
 
             expect(store.dirty).toBe(true);
         });
@@ -499,13 +511,53 @@ describe("useSerialPortsStore", () => {
             store.assign("ESC_SENSOR", 1);
             store.assign("GPS", 2);
 
-            store.save();
-            respondWith({});
+            await store.save();
 
             const features = FC.FEATURE_CONFIG.features;
             expect(features.isEnabled("RX_SERIAL")).toBe(true);
             expect(features.isEnabled("ESC_SENSOR")).toBe(true);
             expect(features.isEnabled("GPS")).toBe(true);
+        });
+
+        describe("writeConfig", () => {
+            it("does not reboot, so a host tab can spend one reboot on everything", async () => {
+                const store = await freshStore();
+                store.assign("GPS", 1);
+
+                await store.writeConfig();
+
+                expect(saveAndReboot).not.toHaveBeenCalled();
+                expect(store.dirty).toBe(false);
+            });
+
+            it("throws on rejection so the host tab abandons its own save", async () => {
+                const store = await freshStore();
+                store.assign("GPS", 1);
+                rejectSerialWrite();
+
+                await expect(store.writeConfig()).rejects.toThrow(/rejected/i);
+                expect(store.dirty).toBe(true);
+            });
+        });
+
+        describe("one reboot for edits made across tabs", () => {
+            it("applies assignments made before and after a tab switch in a single save", async () => {
+                const store = await freshStore();
+
+                // On the GPS tab.
+                store.assign("GPS", 1);
+                // Tab switch: the component unmounts, the store does not.
+                const onAnotherTab = useSerialPortsStore();
+                onAnotherTab.assign("TBS_SMARTAUDIO", 2);
+
+                await onAnotherTab.save();
+
+                const saved = FC.SERIAL_CONFIG.ports;
+                expect(saved.find((p) => p.identifier === 1).functions).toEqual(["GPS"]);
+                expect(saved.find((p) => p.identifier === 2).functions).toEqual(["TBS_SMARTAUDIO"]);
+                expect(saveAndReboot).toHaveBeenCalledTimes(1);
+                expect(writtenCodes().filter((c) => c === SET_SERIAL)).toHaveLength(1);
+            });
         });
     });
 

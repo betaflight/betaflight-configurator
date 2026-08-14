@@ -14,6 +14,8 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
+                <SerialPortsPendingBanner />
+
                 <UiBox v-if="loadFailed" type="error" highlight class="mb-4">
                     <p v-html="$t('portsLoadFailed')"></p>
                 </UiBox>
@@ -194,6 +196,7 @@ import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import TabLoadingState from "@/components/elements/TabLoadingState.vue";
+import SerialPortsPendingBanner from "../ports/SerialPortsPendingBanner.vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";

@@ -516,15 +516,19 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
     }
 
     /**
-     * Write every port, save EEPROM and reboot. There is no partial write at the protocol level:
-     * MSP2_COMMON_SET_SERIAL_CONFIG carries the whole array, and updateFeatures derives feature
-     * bits from it - so a store holding anything less than the complete array would not "save
-     * only its part", it would clear other subsystems.
+     * Push the port array and the feature bits it implies to the FC, without saving EEPROM or
+     * rebooting. Split out from save() so a tab with settings of its own can write those in the
+     * same breath and spend a single reboot on the lot - five per-tab saves would be five reboots,
+     * which would defeat the point of putting the controls on the feature tabs in the first place.
      *
-     * One writer, so a session that edits several functions across several tabs costs one reboot.
+     * There is no partial write at the protocol level: MSP2_COMMON_SET_SERIAL_CONFIG carries the
+     * whole array and updateFeatures derives feature bits from it, so a store holding anything
+     * less than the complete array would not "save only its part", it would clear other
+     * subsystems.
+     *
+     * @throws if the FC rejects the serial config, so the caller can abandon the save chain
      */
-    function save() {
-        const { saveAndReboot } = useReboot();
+    async function writeConfig() {
         const snapshot = takeSnapshot();
 
         tracking.sendSaveAndChangeEvents(
@@ -537,28 +541,43 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
         FC.SERIAL_CONFIG.ports = toFcPorts();
         updateFeatures();
 
-        const saveEeprom = () => {
-            markClean(snapshot);
-            saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSaved")));
-        };
+        const code = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
+        const response = await MSP.promise(code, mspHelper.crunch(code));
 
-        mspHelper.sendSerialConfig((response) => {
-            // Firmware refuses a serial config it cannot apply (betaflight#15131). Writing the
-            // feature bits, saving EEPROM and rebooting on top of that would report success over
-            // an unchanged serial config, so stop here and tell the user.
-            if (isMspRejected(response)) {
-                console.error("Flight controller rejected the serial port configuration");
-                gui_log(i18n.getMessage("portsSaveRejected"));
-                return;
-            }
+        // Firmware refuses a serial config it cannot apply (betaflight#15131). Writing the feature
+        // bits, saving EEPROM and rebooting on top of that would report success over an unchanged
+        // serial config, so stop here and tell the user.
+        if (isMspRejected(response)) {
+            gui_log(i18n.getMessage("portsSaveRejected"));
+            throw new Error("Flight controller rejected the serial port configuration");
+        }
 
-            MSP.send_message(
-                MSPCodes.MSP_SET_FEATURE_CONFIG,
-                mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                false,
-                saveEeprom,
-            );
-        });
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+        // The FC now holds this config in RAM, so the store matches it. Persisting and rebooting
+        // is the caller's business.
+        markClean(snapshot);
+    }
+
+    /**
+     * Write, persist and reboot. The standalone entry point, for the Ports tab and the pending
+     * changes banner; a tab that has its own settings to write should call writeConfig() and then
+     * reboot once itself.
+     *
+     * @returns {Promise<boolean>} whether the configuration was written
+     */
+    async function save() {
+        const { saveAndReboot } = useReboot();
+        try {
+            await writeConfig();
+        } catch (error) {
+            console.error("Failed to save serial port configuration:", error);
+            return false;
+        }
+
+        await saveAndReboot();
+        gui_log(i18n.getMessage("portsEepromSaved"));
+        return true;
     }
 
     // ---------------------------------------------------------------- lifecycle
@@ -604,6 +623,7 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
         isAtPortLimit,
         assign,
         clear,
+        writeConfig,
         save,
         $reset,
     };

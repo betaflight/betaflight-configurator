@@ -2242,6 +2242,32 @@
     "portsTelemetryDisabled": {
         "message": "Disabled"
     },
+    "serialPortAssign": {
+        "message": "Serial port"
+    },
+    "serialPortNone": {
+        "message": "Not assigned"
+    },
+    "serialPortBaudrate": {
+        "message": "Baudrate"
+    },
+    "serialPortOccupiedBy": {
+        "message": "{{port}} — currently: {{serialFunction}}",
+        "description": "A port option in a serial port selector, annotated with the function already assigned to that port."
+    },
+    "serialPortWillEvict": {
+        "message": "Saving will remove <strong>{{serialFunction}}</strong> from {{port}}.",
+        "description": "Shown when assigning a function displaced another one, which happened on a screen the user may not be looking at."
+    },
+    "serialPortPendingChanges": {
+        "message": "Serial port changes pending"
+    },
+    "serialPortRebootRequired": {
+        "message": "Saving serial port changes reboots the flight controller."
+    },
+    "serialPortSaveAndReboot": {
+        "message": "Save &amp; Reboot"
+    },
     "serialPortReserved": {
         "message": "Other (reserved)"
     },
