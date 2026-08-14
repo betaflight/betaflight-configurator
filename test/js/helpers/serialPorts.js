@@ -83,21 +83,31 @@ let env;
  */
 export async function loadPortsEnv() {
     if (!env) {
-        const [rowModule, storeModule, rulesModule, fcModule, featuresModule, mspCodesModule, configuratorModule] =
-            await Promise.all([
-                import("../../../src/composables/ports/useSerialFunctionRow"),
-                import("../../../src/stores/serialPorts"),
-                import("../../../src/composables/ports/usePortsRules"),
-                import("../../../src/js/fc"),
-                import("../../../src/js/Features"),
-                import("../../../src/js/msp/MSPCodes"),
-                import("../../../src/js/data_storage"),
-            ]);
+        const [
+            rowModule,
+            hostModule,
+            storeModule,
+            rulesModule,
+            fcModule,
+            featuresModule,
+            mspCodesModule,
+            configuratorModule,
+        ] = await Promise.all([
+            import("../../../src/composables/ports/useSerialFunctionRow"),
+            import("../../../src/composables/ports/useSerialRowHost"),
+            import("../../../src/stores/serialPorts"),
+            import("../../../src/composables/ports/usePortsRules"),
+            import("../../../src/js/fc"),
+            import("../../../src/js/Features"),
+            import("../../../src/js/msp/MSPCodes"),
+            import("../../../src/js/data_storage"),
+        ]);
 
         env = {
             useSerialFunctionRow: rowModule.useSerialFunctionRow,
             NO_PORT: rowModule.NO_PORT,
             NO_FUNCTION: rowModule.NO_FUNCTION,
+            useSerialRowHost: hostModule.useSerialRowHost,
             useSerialPortsStore: storeModule.useSerialPortsStore,
             usePortsRules: rulesModule.usePortsRules,
             FC: fcModule.default,

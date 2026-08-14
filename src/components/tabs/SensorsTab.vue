@@ -835,7 +835,7 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import { sensorTransportsFor } from "@/composables/ports/sensorTransport";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
@@ -882,7 +882,9 @@ import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 
 const fcStore = useFlightControllerStore();
-const serialPortsStore = useSerialPortsStore();
+// One row for both sensors: they share a wire, so they share a port selector.
+const sensorPortRow = ref(null);
+const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([sensorPortRow]);
 const { saveAndReboot } = useReboot();
 
 const { isSaving, runSave } = useSaving();
@@ -2314,14 +2316,9 @@ const serializeState = () =>
 
 const { dirty: sensorSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeState);
 
-// The serial row holds its edit locally until this tab's save applies it, so ask the row rather
-// than the store. ORed rather than folded into serializeState because apply() clears the row's
-// pending state partway through a save, which would leave a snapshot-based baseline permanently
-// out of step.
-// One row: the sensors share a wire, so they share a port selector.
-const sensorPortRow = ref(null);
-
-const dirty = computed(() => sensorSettingsDirty.value || Boolean(sensorPortRow.value?.hasPendingChange));
+// The serial row holds its edit locally until this tab's save applies it - see useSerialRowHost
+// for why the row is asked rather than the store.
+const dirty = computed(() => sensorSettingsDirty.value || serialRowsPending.value);
 
 // --- Load helpers ---
 
@@ -2473,9 +2470,8 @@ const loadConfig = async () => {
             setupPeripherals();
 
             // Read the ports here rather than from onMounted so it finishes before the 33 ms
-            // attitude poll below starts competing for the link. The store is shared across tabs:
-            // this refetches when it is clean and skips when it holds unsaved edits made elsewhere.
-            await serialPortsStore.loadConfig();
+            // attitude poll below starts competing for the link.
+            await loadSerialPorts();
 
             markClean();
 
@@ -2509,17 +2505,11 @@ const saveConfig = () =>
             const savedSnapshot = takeSnapshot();
 
             // A pending rangefinder port rides along on this save, so the port and the hardware
-            // type it pairs with cost one reboot rather than two. This is where the row's edit
-            // first reaches shared state. It goes before the sensor writes deliberately: a
-            // firmware rejection throws here, and aborting before anything else is written beats
-            // leaving the sensor config saved against a serial config that was refused.
-            // Gate on THIS row's pending edit, captured before apply(). store.dirty also goes
-            // true for an unsaved Ports-tab edit, which this tab must not adopt.
-            const serialPending = Boolean(sensorPortRow.value?.hasPendingChange);
-            sensorPortRow.value?.apply();
-            if (serialPending) {
-                await serialPortsStore.writeConfig();
-            }
+            // type it pairs with cost one reboot rather than two. It goes before the sensor writes
+            // deliberately: a firmware rejection throws here, and aborting before anything else is
+            // written beats leaving the sensor config saved against a serial config that was
+            // refused.
+            await saveSerialRows();
 
             // Push sensor hardware to store
             fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;

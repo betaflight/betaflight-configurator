@@ -363,41 +363,31 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
             return { assigned: false, evicted: [], blockedBy: "maxPorts" };
         }
 
+        const field = slotFieldFor(serialFunction);
+        const isBooleanFunction = serialFunction === "MSP" || serialFunction === "RX_SERIAL";
+        if (!isBooleanFunction && !field) {
+            return { assigned: false, evicted: [], blockedBy: "unknownFunction" };
+        }
+
+        // The exclusion rules live in evictionsFor() and nowhere else. What a save would displace
+        // and what this assignment removes are the same question, so deriving them separately is
+        // two copies of the matrix that have to be kept in step by hand - and the preview silently
+        // stops matching the assignment the moment they drift.
         const evicted = evictionsFor(serialFunction, portId);
+        for (const eviction of evicted) {
+            clear(eviction.serialFunction, eviction.portId);
+        }
 
         if (serialFunction === "MSP") {
             target.msp = true;
         } else if (serialFunction === "RX_SERIAL") {
-            for (const other of portsUsing("RX_SERIAL")) {
-                other.rxSerial = false;
-            }
             target.rxSerial = true;
         } else {
-            const field = slotFieldFor(serialFunction);
-            if (!field) {
-                return { assigned: false, evicted: [], blockedBy: "unknownFunction" };
-            }
-
-            if (rule?.maxPorts === 1) {
-                for (const other of portsUsing(serialFunction)) {
-                    other[field] = "";
-                }
-            }
             target[field] = serialFunction;
-
-            if (field === "telemetry") {
-                target.peripheral = "";
-                if (!isMspSharable(rule)) {
-                    target.msp = false;
-                }
-            } else if (field === "peripheral") {
-                target.telemetry = "";
-                // MSP-based peripherals (VTX_MSP) need MSP on the same port.
-                if (serialFunction.includes("MSP")) {
-                    target.msp = true;
-                } else if (!isMspSharable(rule)) {
-                    target.msp = false;
-                }
+            // MSP-based peripherals (VTX_MSP) need MSP on the same port. Everything else either
+            // shares MSP or has just had it evicted above.
+            if (field === "peripheral" && serialFunction.includes("MSP")) {
+                target.msp = true;
             }
         }
 

@@ -304,7 +304,7 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -387,7 +387,6 @@ export default defineComponent({
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
-        const serialPortsStore = useSerialPortsStore();
         const debugStore = useDebugStore();
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
@@ -576,12 +575,11 @@ export default defineComponent({
 
         const { dirty: loggingSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
 
-        // The serial row holds its edit locally until this tab's save applies it, so ask the row
-        // rather than the store. ORed rather than folded into the serializer because the row clears
-        // its pending state partway through a save, which would leave a snapshot-based baseline
-        // permanently out of step.
+        // The serial row holds its edit locally until this tab's save applies it - see
+        // useSerialRowHost for why the row is asked rather than the store.
         const serialRow = ref(null);
-        const dirty = computed(() => loggingSettingsDirty.value || Boolean(serialRow.value?.hasPendingChange));
+        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
+        const dirty = computed(() => loggingSettingsDirty.value || serialRowsPending.value);
 
         // A UART only carries blackbox when logs are streamed out of it. Gated on
         // blackboxConfigSupported as well, because the enclosing box is v-show, so its children stay
@@ -605,15 +603,8 @@ export default defineComponent({
                     const savedSnapshot = takeSnapshot();
 
                     // A pending port assignment rides along on this save so the two together cost
-                    // one reboot, not two - this tab's save always reboots anyway. It is also the
-                    // point where the row's edit first reaches shared state.
-                    // Gate on THIS row's pending edit, captured before apply(). store.dirty also
-                    // goes true for an unsaved Ports-tab edit, which this tab must not adopt.
-                    const serialPending = Boolean(serialRow.value?.hasPendingChange);
-                    serialRow.value?.apply();
-                    if (serialPending) {
-                        await serialPortsStore.writeConfig();
-                    }
+                    // one reboot, not two - this tab's save always reboots anyway.
+                    await saveSerialRows();
 
                     fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
                     fcStore.blackbox.blackboxPDenom = blackboxRate.value;
@@ -1021,9 +1012,7 @@ export default defineComponent({
 
         onMounted(() => {
             loadData();
-            // The store is shared across tabs: this refetches when it is clean and skips when it
-            // holds unsaved edits made on another tab.
-            serialPortsStore.loadConfig();
+            loadSerialPorts();
         });
 
         onUnmounted(() => {

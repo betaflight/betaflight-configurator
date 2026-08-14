@@ -300,7 +300,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
@@ -318,7 +318,6 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
-        const serialPortsStore = useSerialPortsStore();
 
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
@@ -402,12 +401,11 @@ export default defineComponent({
 
         const { dirty: gpsSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
 
-        // The serial row holds its edit locally until this tab's save applies it, so ask the row
-        // rather than the store. ORed rather than folded into the serializer because the row clears
-        // its pending state partway through a save, which would leave a snapshot-based baseline
-        // permanently out of step.
+        // The serial row holds its edit locally until this tab's save applies it - see
+        // useSerialRowHost for why the row is asked rather than the store.
         const serialRow = ref(null);
-        const dirty = computed(() => gpsSettingsDirty.value || Boolean(serialRow.value?.hasPendingChange));
+        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
+        const dirty = computed(() => gpsSettingsDirty.value || serialRowsPending.value);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -753,17 +751,9 @@ export default defineComponent({
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
                     // A pending port assignment rides along on this save so the two together cost
-                    // one reboot, not two. This is where the row's edit first reaches shared state:
-                    // apply it, then write the serial config and the feature bits it implies. The
-                    // feature write below repeats that same mask harmlessly, and one saveAndReboot
-                    // at the end persists the lot.
-                    // Gate on THIS row's pending edit, captured before apply(). store.dirty also
-                    // goes true for an unsaved Ports-tab edit, which this tab must not adopt.
-                    const serialPending = Boolean(serialRow.value?.hasPendingChange);
-                    serialRow.value?.apply();
-                    if (serialPending) {
-                        await serialPortsStore.writeConfig();
-                    }
+                    // one reboot, not two. The feature write below repeats the same mask
+                    // harmlessly, and one saveAndReboot at the end persists the lot.
+                    await saveSerialRows();
 
                     await MSP.promise(
                         MSPCodes.MSP_SET_FEATURE_CONFIG,
@@ -799,9 +789,7 @@ export default defineComponent({
                 mapInstance.value?.map?.updateSize();
             });
             loadGpsConfig();
-            // The store is shared across tabs: this refetches when it is clean and skips when it
-            // holds unsaved edits made on another tab.
-            serialPortsStore.loadConfig();
+            loadSerialPorts();
         });
 
         const teardown = () => {

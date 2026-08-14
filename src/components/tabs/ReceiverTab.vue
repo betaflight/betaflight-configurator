@@ -593,7 +593,7 @@ import * as THREE from "three";
 import * as d3 from "d3";
 import UiBox from "../elements/UiBox.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -794,9 +794,12 @@ const isRssiAdcEnabled = computed(() => features.value?.features?.isEnabled?.("R
 
 const showSerialRxBox = computed(() => isRxSerialEnabled());
 
-const serialPortsStore = useSerialPortsStore();
 const serialRxRow = ref(null);
 const telemetryRow = ref(null);
+const { serialPortsStore, serialRowsPending, applySerialRows, resetSerialRows, loadSerialPorts } = useSerialRowHost([
+    serialRxRow,
+    telemetryRow,
+]);
 
 // The RX_SERIAL feature bit is what showSerialRxBox reads, and updateFeatures() derives that bit
 // from port assignment on save. Gating the port selector on it would be circular - no port until
@@ -807,9 +810,6 @@ const rxSerialFeatureBit = computed(
 );
 const showSerialRxPortBox = computed(() => selectedRxMode.value === rxSerialFeatureBit.value);
 
-const serialRowsPending = computed(
-    () => Boolean(serialRxRow.value?.hasPendingChange) || Boolean(telemetryRow.value?.hasPendingChange),
-);
 const showSpiRxBox = computed(() => isRxSpiEnabled());
 const showSticksButton = computed(() => isRxMspEnabled());
 
@@ -1067,10 +1067,9 @@ function openSticksWindow() {
 
 async function refreshTab() {
     // Refresh means "show me what the FC has", so pending row edits go too.
-    serialRxRow.value?.reset();
-    telemetryRow.value?.reset();
+    resetSerialRows();
     await loadConfig();
-    await serialPortsStore.loadConfig({ force: true });
+    await loadSerialPorts({ force: true });
     gui_log(t("receiverDataRefreshed"));
 }
 
@@ -1145,13 +1144,10 @@ const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
             const savedSnapshot = takeSnapshot();
-            // A serial change always reboots, so it decides the save path for the whole tab.
-            const serialPending = serialRowsPending.value;
+            // A serial change always reboots, so it decides the save path for the whole tab. This
+            // is also where the rows' edits first reach shared state.
+            const serialPending = applySerialRows();
             const withRebootNow = withReboot || serialPending;
-
-            // This is where the rows' edits first reach shared state.
-            serialRxRow.value?.apply();
-            telemetryRow.value?.apply();
 
             // Update RC_MAP from channel map string
             validateChannelMap();
@@ -1360,8 +1356,7 @@ onMounted(async () => {
     keepRendering = true;
 
     await loadConfig();
-    // The store is shared across tabs: this refetches when clean and skips when it holds edits.
-    await serialPortsStore.loadConfig();
+    await loadSerialPorts();
     await nextTick();
 
     // Initialize model preview

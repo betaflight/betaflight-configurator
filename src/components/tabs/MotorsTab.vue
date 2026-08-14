@@ -554,7 +554,7 @@ import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
@@ -577,8 +577,12 @@ import { useReboot } from "@/composables/useReboot";
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
-const serialPortsStore = useSerialPortsStore();
 const dialog = useDialog();
+
+const escSensorRow = ref(null);
+// The row holds its edit locally until save, so it is ORed into the tab's dirty state rather than
+// tracked through configChanges - see useSerialRowHost.
+const { serialPortsStore, serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([escSensorRow]);
 
 // Initialize motors state management
 const motorsState = useMotorsState();
@@ -786,12 +790,7 @@ const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTesting
 // Initialize data polling
 useMotorDataPolling(motorsTestingEnabled);
 
-const escSensorRow = ref(null);
-// The row holds its edit locally until save, so it is ORed into the tab's dirty state rather than
-// tracked through configChanges: apply() clears the pending flag partway through the save, and a
-// snapshot baseline taken from it would never match again.
-const serialRowPending = computed(() => Boolean(escSensorRow.value?.hasPendingChange));
-const hasUnsavedChanges = computed(() => configHasChanged.value || serialRowPending.value);
+const hasUnsavedChanges = computed(() => configHasChanged.value || serialRowsPending.value);
 
 // Button states (central controller like original setContentButtons)
 // toolsDisabled stays on configHasChanged: a pending port change is no reason to lock the motor
@@ -847,9 +846,7 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
 
-    // The store is shared across tabs: this refetches when it is clean and skips when it holds
-    // unsaved edits made on another tab. It resolves even on failure, setting loadFailed.
-    await serialPortsStore.loadConfig();
+    await loadSerialPorts();
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
@@ -1440,8 +1437,7 @@ const handleSave = (reboot = true) => {
     return runSave(
         async () => {
             // A serial change always reboots, so it decides the save path for the whole tab.
-            const serialPending = serialRowPending.value;
-            const withReboot = reboot || serialPending;
+            const withReboot = reboot || serialRowsPending.value;
 
             // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
             // This prevents motors from spinning after reboot due to DShot beacon commands
@@ -1456,16 +1452,10 @@ const handleSave = (reboot = true) => {
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            // This is where the row's edit first reaches shared state. writeConfig() also derives
-            // the ESC_SENSOR feature bit from the port array and sends its own feature write, so it
-            // has to run before the feature write below - which then harmlessly repeats the mask.
-            // serialPending was captured above, before apply(). Gate on it rather than on
-            // store.dirty, which also goes true for an unsaved Ports-tab edit this tab must not
-            // adopt.
-            escSensorRow.value?.apply();
-            if (serialPending) {
-                await serialPortsStore.writeConfig();
-            }
+            // writeConfig() derives the ESC_SENSOR feature bit from the port array and sends its
+            // own feature write, so it has to run before the feature write below - which then
+            // harmlessly repeats the mask.
+            await saveSerialRows();
 
             // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));

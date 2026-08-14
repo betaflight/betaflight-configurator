@@ -410,7 +410,7 @@ import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
-import { useSerialPortsStore } from "@/stores/serialPorts";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import { useTranslation } from "i18next-vue";
 
 /**
@@ -435,9 +435,9 @@ export default defineComponent({
     },
     setup() {
         const { t } = useTranslation();
-        const serialPortsStore = useSerialPortsStore();
         const { saveAndReboot } = useReboot();
         const serialRow = ref(null);
+        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
 
         const {
             MAX_POWERLEVEL_VALUES,
@@ -476,10 +476,9 @@ export default defineComponent({
         const { addInterval } = useInterval();
         const { isSaving, runSave } = useSaving();
 
-        // The row's pending edit enables Save on its own. It is ORed in here rather than folded
-        // into useVtx's snapshot serializer, because apply() clears the pending state partway
-        // through the save and a snapshot baseline would then never match again.
-        const saveButtonDisabled = computed(() => vtxSettingsClean.value && !serialRow.value?.hasPendingChange);
+        // The row's pending edit enables Save on its own - see useSerialRowHost for why it is
+        // ORed in here rather than folded into useVtx's snapshot serializer.
+        const saveButtonDisabled = computed(() => vtxSettingsClean.value && !serialRowsPending.value);
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },
@@ -539,10 +538,9 @@ export default defineComponent({
         ]);
 
         onMounted(async () => {
-            // The store is shared across tabs: this refetches when it is clean and skips when it
-            // holds unsaved edits made on another tab. Un-awaited so the port list fills in while
-            // the serialised VTX table reads below are still running.
-            serialPortsStore.loadConfig();
+            // Un-awaited so the port list fills in while the serialised VTX table reads below are
+            // still running.
+            loadSerialPorts();
             await loadVtxConfig();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
@@ -557,18 +555,11 @@ export default defineComponent({
                     // the local table is empty and that would wipe it.
                     const vtxDirty = !vtxSettingsClean.value;
 
-                    // This is where the row's edit first reaches shared state. Gate on THIS row's
-                    // pending edit, captured before apply(): store.dirty also goes true for an
-                    // unsaved Ports-tab edit, which this tab must not adopt and reboot for.
-                    const serialChanged = Boolean(serialRow.value?.hasPendingChange);
-                    serialRow.value?.apply();
-
                     if (vtxDirty) {
                         await saveVtx();
                     }
 
-                    if (serialChanged) {
-                        await serialPortsStore.writeConfig();
+                    if (await saveSerialRows()) {
                         // A serial change only takes effect after a restart, and saveVtx()'s own
                         // persist is EEPROM-only. The board is going away and coming back, so
                         // refetching over the link being torn down is pointless.
