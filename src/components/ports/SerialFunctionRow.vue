@@ -18,8 +18,9 @@
             :help="help"
         >
             <USelect
-                :model-value="selectedValue"
+                :model-value="portSelectValue"
                 :items="portItems"
+                :placeholder="$t('serialPortChoose')"
                 :disabled="!loaded"
                 size="xs"
                 class="min-w-56"
@@ -238,7 +239,7 @@ const {
     selectedFunction,
     selectFunction,
     portItems,
-    selectedValue,
+    portSelectValue,
     assignedPort,
     hasBaudField,
     baudItems,

@@ -268,6 +268,19 @@ export function useSerialFunctionRow(props) {
         ];
     });
 
+    /**
+     * What the port select binds to.
+     *
+     * Port-only mode offers no "not assigned" entry - there is no assignment to remove, only a port
+     * to look at - so when nothing is detected there is no item matching the NO_PORT sentinel, and
+     * a select handed a value it has no item for renders the raw value: the user saw a port called
+     * "_NONE_". Undefined instead, which is what shows the placeholder. Every other shape carries a
+     * real NO_PORT item, so this passes the selection straight through for them.
+     */
+    const portSelectValue = computed(() =>
+        portItems.value.some((item) => item.value === selectedValue.value) ? selectedValue.value : undefined,
+    );
+
     const hasBaudField = computed(() => BAUD_RATE_FIELDS.has(props.baudField));
 
     const baudItems = computed(() =>
@@ -548,6 +561,7 @@ export function useSerialFunctionRow(props) {
         selectFunction,
         portItems,
         selectedValue,
+        portSelectValue,
         assignedPort,
         hasBaudField,
         baudItems,

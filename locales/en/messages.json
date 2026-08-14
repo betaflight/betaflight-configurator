@@ -2276,6 +2276,10 @@
     "serialPortAssign": {
         "message": "Serial port"
     },
+    "serialPortChoose": {
+        "message": "Select a port",
+        "description": "Placeholder on the serial port picker before a port has been chosen, where the row offers no \"not assigned\" entry to show instead."
+    },
     "serialPortNone": {
         "message": "Not assigned"
     },

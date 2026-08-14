@@ -439,6 +439,25 @@ describe("useSerialFunctionRow", () => {
             }
         });
 
+        // A select handed a value it has no item for renders that value raw, so the port-only row -
+        // which offers no "not assigned" entry - showed a port called "_NONE_" once it stopped
+        // preselecting from an unrelated MSP port.
+        it("never binds the port select to a value it has no item for", () => {
+            const rows = [
+                makeRow({ serialFunction: "GPS", baudField: "gps_baudrate" }),
+                makeRow({ group: "telemetry" }),
+                makeRow({ portOnly: true }),
+                makeRow({ portOnly: true, toggleFunction: "LIDAR_TF" }),
+            ];
+
+            for (const row of rows) {
+                const bound = row.portSelectValue.value;
+                if (bound !== undefined) {
+                    expect(values(row.portItems.value), JSON.stringify(bound)).toContain(bound);
+                }
+            }
+        });
+
         it("offers the no-protocol option under a non-empty sentinel", () => {
             const { functionItems } = makeRow({ group: "telemetry" });
 
@@ -579,6 +598,18 @@ describe("useSerialFunctionRow", () => {
             store.assign("MSP", 1);
 
             expect(portRow().mspSatisfied.value).toBe(false);
+        });
+
+        // There is no "not assigned" item here to show for the sentinel, so the select must be
+        // given nothing and fall back to its placeholder rather than rendering "_NONE_".
+        it("binds nothing to the select until a port is chosen", () => {
+            const r = portRow();
+
+            expect(r.selectedValue.value).toEqual(NO_PORT);
+            expect(r.portSelectValue.value).toBeUndefined();
+
+            r.selectPort(1);
+            expect(r.portSelectValue.value).toEqual(1);
         });
 
         it("treats picking a port as navigation, not a change", () => {
