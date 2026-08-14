@@ -30,7 +30,7 @@ vi.mock("i18next-vue", () => ({
     }),
 }));
 
-const { useSerialFunctionRow, NO_PORT } = await import("../../src/composables/ports/useSerialFunctionRow");
+const { useSerialFunctionRow, NO_PORT, NO_FUNCTION } = await import("../../src/composables/ports/useSerialFunctionRow");
 const { useSerialPortsStore } = await import("../../src/stores/serialPorts");
 const FC = (await import("../../src/js/fc")).default;
 
@@ -372,7 +372,7 @@ describe("useSerialFunctionRow", () => {
         it("offers every protocol in the group plus a disabled option", () => {
             const { functionItems } = telemetryRow();
 
-            expect(functionItems.value[0].value).toEqual("");
+            expect(functionItems.value[0].value).toEqual(NO_FUNCTION);
             expect(functionItems.value.map((i) => i.value)).toContain("TELEMETRY_MAVLINK");
             expect(functionItems.value.map((i) => i.value)).toContain("TELEMETRY_SMARTPORT");
         });
@@ -447,7 +447,7 @@ describe("useSerialFunctionRow", () => {
             store.assign("TELEMETRY_MAVLINK", 1);
             const r = telemetryRow();
 
-            r.selectFunction("");
+            r.selectFunction(NO_FUNCTION);
             r.apply();
 
             expect(store.portById(1).telemetry).toEqual("");
@@ -504,6 +504,58 @@ describe("useSerialFunctionRow", () => {
 
             expect(r.hasGroup.value).toBe(false);
             expect(r.activeFunction.value).toEqual("GPS");
+        });
+    });
+
+    // Reka UI reserves the empty string for clearing a select and showing its placeholder, and
+    // throws "A <SelectItem /> must have a value prop that is not an empty string" if an item
+    // carries it. Every list this row feeds to a USelect has to respect that.
+    describe("select item values", () => {
+        it("never offers an item with an empty value", () => {
+            const rows = [
+                row({ serialFunction: "GPS", baudField: "gps_baudrate" }),
+                row({ group: "telemetry", baudField: "telemetry_baudrate" }),
+            ];
+
+            for (const r of rows) {
+                for (const list of [r.portItems, r.baudItems, r.mspBaudItems, r.functionItems]) {
+                    for (const item of list.value) {
+                        expect(item.value, JSON.stringify(item)).not.toEqual("");
+                    }
+                }
+            }
+        });
+
+        it("offers the no-protocol option under a non-empty sentinel", () => {
+            const { functionItems } = row({ group: "telemetry" });
+
+            expect(functionItems.value[0].value).toEqual(NO_FUNCTION);
+            expect(NO_FUNCTION).not.toEqual("");
+        });
+
+        it("shows the sentinel as the selection when no protocol is assigned", () => {
+            const r = row({ group: "telemetry" });
+
+            expect(r.activeFunction.value).toEqual("");
+            expect(r.selectedFunction.value).toEqual(NO_FUNCTION);
+        });
+
+        it("shows the protocol name as the selection when one is assigned", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = row({ group: "telemetry" });
+
+            expect(r.selectedFunction.value).toEqual("TELEMETRY_MAVLINK");
+        });
+
+        it("reads the sentinel back as no protocol", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = row({ group: "telemetry" });
+
+            r.selectFunction(NO_FUNCTION);
+
+            expect(r.activeFunction.value).toEqual("");
+            r.apply();
+            expect(store.portById(1).telemetry).toEqual("");
         });
     });
 

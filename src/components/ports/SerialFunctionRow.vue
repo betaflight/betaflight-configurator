@@ -3,7 +3,7 @@
         <!-- Protocol picker, when this row edits a whole group rather than one function. -->
         <SettingRow v-if="hasGroup" :label="protocolLabel || $t('portsTelemetryOut')">
             <USelect
-                :model-value="activeFunction"
+                :model-value="selectedFunction"
                 :items="functionItems"
                 :disabled="!loaded"
                 size="xs"
@@ -127,6 +127,7 @@ const {
     hasGroup,
     functionItems,
     activeFunction,
+    selectedFunction,
     selectFunction,
     portItems,
     selectedValue,

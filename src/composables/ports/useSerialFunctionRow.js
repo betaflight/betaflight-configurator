@@ -7,6 +7,12 @@ import { useSerialPortsStore } from "../../stores/serialPorts";
 /** Sentinel for "no port", since a port identifier of 0 is a real port (UART1). */
 export const NO_PORT = "_NONE_";
 
+/**
+ * Sentinel for "no function". Not the empty string: Reka UI reserves that for clearing a select
+ * and showing its placeholder, and throws if an item carries it as a value.
+ */
+export const NO_FUNCTION = "_NO_FUNCTION_";
+
 const BAUD_RATE_FIELDS = ["msp_baudrate", "gps_baudrate", "telemetry_baudrate", "blackbox_baudrate"];
 
 /** The USB VCP port - the app's own link, and not somewhere a feature's UART ever goes. */
@@ -71,8 +77,11 @@ export function useSerialFunctionRow(props) {
     /** Which function this row is editing once saved. Empty means "none of them". */
     const activeFunction = computed(() => draftFunction.value ?? savedFunction.value);
 
+    /** The same thing as a select value, where "none" has to be a non-empty sentinel. */
+    const selectedFunction = computed(() => activeFunction.value || NO_FUNCTION);
+
     const functionItems = computed(() => [
-        { value: "", label: t("portsTelemetryDisabled") },
+        { value: NO_FUNCTION, label: t("portsTelemetryDisabled") },
         ...groupRules.value.map((r) => ({
             value: r.name,
             label: r.displayName,
@@ -179,7 +188,7 @@ export function useSerialFunctionRow(props) {
     });
 
     function selectFunction(value) {
-        draftFunction.value = value;
+        draftFunction.value = value === NO_FUNCTION ? "" : value;
         // The new protocol has its own port, baudrate and MSP setting.
         draftPortId.value = undefined;
         draftBaudrate.value = undefined;
@@ -259,6 +268,7 @@ export function useSerialFunctionRow(props) {
         hasGroup,
         functionItems,
         activeFunction,
+        selectedFunction,
         selectFunction,
         portItems,
         selectedValue,
