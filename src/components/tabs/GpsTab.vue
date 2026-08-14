@@ -403,7 +403,14 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
+        const { dirty: gpsSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
+
+        // A pending port assignment is unsaved work on this tab too: it is made here, it is applied
+        // by this tab's Save, and without it the Save button stays disabled while the change sits
+        // in the store waiting to surprise the user on the Ports tab. It is ORed rather than folded
+        // into the serializer because the store clears its own dirty flag mid-save, which would
+        // leave a snapshot-based baseline permanently out of step.
+        const dirty = computed(() => gpsSettingsDirty.value || serialPortsStore.dirty);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));

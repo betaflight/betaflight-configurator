@@ -2252,7 +2252,7 @@
         "message": "Baudrate"
     },
     "serialPortOccupiedBy": {
-        "message": "{{port}} — currently: {{serialFunction}}",
+        "message": "{{port}} ({{serialFunction}})",
         "description": "A port option in a serial port selector, annotated with the function already assigned to that port."
     },
     "serialPortWillEvict": {

@@ -55,10 +55,6 @@ const PORT_NAMES = {
     79: "PIOUART9",
 };
 
-// The USB VCP port. Firmware refuses any config where it does not carry MSP, so its MSP
-// assignment is not the user's to change.
-const USB_VCP_IDENTIFIER = 20;
-
 // A port holds one function per group, not one per function (see usePortsRules): the group a
 // function belongs to determines which single field on the port it occupies. MSP and RX_SERIAL
 // are booleans rather than slots.
@@ -295,8 +291,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
                 disabledReason = "unsupported";
             } else if (!selected && atLimit) {
                 disabledReason = "maxPorts";
-            } else if (!selected && serialFunction === "MSP" && port.identifier === USB_VCP_IDENTIFIER) {
-                disabledReason = "required";
             }
 
             return {
@@ -415,9 +409,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
 
         for (const port of targets) {
             if (serialFunction === "MSP") {
-                if (port.identifier === USB_VCP_IDENTIFIER) {
-                    continue; // firmware refuses a config where USB VCP has no MSP
-                }
                 port.msp = false;
             } else if (serialFunction === "RX_SERIAL") {
                 port.rxSerial = false;

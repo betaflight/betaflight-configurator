@@ -7,9 +7,6 @@ import { useSerialPortsStore } from "../../stores/serialPorts";
 /** Sentinel for "no port", since a port identifier of 0 is a real port (UART1). */
 export const NO_PORT = "_NONE_";
 
-/** The USB VCP port, which must always keep MSP. */
-const USB_VCP_IDENTIFIER = 20;
-
 const BAUD_RATE_FIELDS = ["msp_baudrate", "gps_baudrate", "telemetry_baudrate", "blackbox_baudrate"];
 
 /**
@@ -93,15 +90,15 @@ export function useSerialFunctionRow(props) {
     // assignment that mutual exclusion turned off on the user's behalf.
     const msp = computed(() => Boolean(currentPort.value?.msp));
 
-    // USB VCP is the port the app talks over; firmware refuses a config where it does not carry
-    // MSP, so it is the one place this must not be switchable.
-    const mspDisabled = computed(() => !currentPort.value || currentPort.value.identifier === USB_VCP_IDENTIFIER);
+    // Only gated on there being a port to apply it to. USB VCP included: it is the app's own link,
+    // but taking MSP off it is a decision the user is allowed to make and see the result of.
+    const mspDisabled = computed(() => !currentPort.value);
 
     const mspBaudItems = computed(() => rules.mspBaudRates.map((rate) => ({ value: rate, label: rate })));
     const mspBaudrate = computed(() => currentPort.value?.msp_baudrate ?? "");
 
     function setMsp(value) {
-        if (currentPort.value && !mspDisabled.value) {
+        if (currentPort.value) {
             currentPort.value.msp = value;
         }
     }

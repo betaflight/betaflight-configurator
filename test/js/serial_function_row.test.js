@@ -242,15 +242,15 @@ describe("useSerialFunctionRow", () => {
             expect(() => r.setMsp(true)).not.toThrow();
         });
 
-        it("cannot be switched off for USB VCP, which firmware requires to keep MSP", () => {
+        it("can be switched off for USB VCP too", () => {
             const r = row({ serialFunction: "BLACKBOX" });
             r.selectPort(20);
 
-            expect(r.mspDisabled.value).toBe(true);
+            expect(r.mspDisabled.value).toBe(false);
 
             r.setMsp(false);
 
-            expect(store.portById(20).msp).toBe(true);
+            expect(store.portById(20).msp).toBe(false);
         });
 
         it("exposes the MSP baudrate of the chosen port and writes it back", () => {

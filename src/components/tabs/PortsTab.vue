@@ -281,10 +281,6 @@ function isSerialRxDisabled(port) {
 }
 
 function isMspDisabled(port) {
-    // USB VCP must always keep MSP - firmware refuses a config where it does not (serial.c).
-    if (port.identifier === 20) {
-        return true;
-    }
     const mspRule = functionRules.value.find((r) => r.name === "MSP");
     return !port.msp && isFunctionAtLimit(mspRule, port);
 }

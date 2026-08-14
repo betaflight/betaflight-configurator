@@ -345,13 +345,16 @@ describe("useSerialPortsStore", () => {
             expect(store.portById(1).msp).toBe(false);
         });
 
-        it("refuses to take MSP off USB VCP, which firmware requires", async () => {
+        it("takes MSP off USB VCP when asked", async () => {
+            // Firmware refuses a config where USB VCP carries no MSP, so this write will be
+            // rejected - but the store does not second-guess the user, it lets them make the
+            // change and see the rejection.
             const store = await freshStore();
 
             const result = store.clear("MSP", 20);
 
-            expect(store.portById(20).msp).toBe(true);
-            expect(result.evicted).toEqual([]);
+            expect(store.portById(20).msp).toBe(false);
+            expect(result.evicted).toEqual([{ portId: 20, portName: "USB VCP", serialFunction: "MSP" }]);
         });
     });
 
