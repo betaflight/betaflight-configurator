@@ -140,6 +140,34 @@
         "message": "Enter the serial path or URL to connect to.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Saved connections",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Name:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Name for this connection",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Save",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Update",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Remove saved connection",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkLimitReached": {
+        "message": "The list of saved connections is full. Remove one to save another.",
+        "description": "Shown in the connect dialog when no more manual connections can be saved."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },

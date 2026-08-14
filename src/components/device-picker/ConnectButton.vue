@@ -56,6 +56,7 @@
 <script>
 import { defineComponent, computed, ref } from "vue";
 import { useConnectionStore } from "../../stores/connection";
+import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
 import DeviceHandler from "../../js/device_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
@@ -68,15 +69,21 @@ function selectAndConnect(path) {
     connectDisconnect();
 }
 
+// A manual target (a serial path, or a tcp://ws:// address such as an ELRS Wi-Fi
+// module) connects through the "manual" pseudo-device, which reads portOverride.
+function connectManual(portOverride) {
+    DeviceHandler.devicePicker.portOverride = portOverride;
+    setConfig({ portOverride });
+    selectAndConnect("manual");
+}
+
 function onDialogConfirm({ mode, version, portOverride }) {
     if (mode === "virtual") {
         DeviceHandler.devicePicker.virtualMspVersion = version;
         setConfig({ virtualMspVersion: version });
         selectAndConnect("virtual");
     } else {
-        DeviceHandler.devicePicker.portOverride = portOverride;
-        setConfig({ portOverride });
-        selectAndConnect("manual");
+        connectManual(portOverride);
     }
 }
 
@@ -90,6 +97,7 @@ export default defineComponent({
     components: { ConnectOptionsDialog },
     setup() {
         const connectionStore = useConnectionStore();
+        const bookmarksStore = useConnectionBookmarksStore();
 
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
@@ -131,6 +139,11 @@ export default defineComponent({
             }
             if (selectedDevice.value === "virtual") {
                 return i18n.getMessage("connectVirtual");
+            }
+            // "manual" is never in the device lists, so name it by its bookmark or address.
+            if (selectedDevice.value === "manual") {
+                const url = DeviceHandler.devicePicker.portOverride;
+                return bookmarksStore.findItemByUrl(url)?.name || url || i18n.getMessage("connect");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
@@ -182,6 +195,15 @@ export default defineComponent({
                 });
             }
             if (expertMode && DeviceHandler.showManualMode) {
+                // Saved manual targets (and the built-in SITL one) connect in one click;
+                // the dialog is where they are managed.
+                for (const bookmark of bookmarksStore.items) {
+                    devices.push({
+                        label: bookmark.name,
+                        icon: bookmark.builtin ? "i-lucide-flask-conical" : "i-lucide-bookmark",
+                        onSelect: () => connectManual(bookmark.url),
+                    });
+                }
                 devices.push({
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
