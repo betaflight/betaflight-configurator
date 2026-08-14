@@ -537,14 +537,48 @@ describe("useSerialFunctionRow", () => {
             expect(items.find((i) => i.value === 2).label).toEqual("UART3");
         });
 
-        it("preselects the UART already carrying MSP", () => {
+        // Reported from a board running BLE on UART5: the row used to preselect the first non-VCP
+        // port carrying MSP, which announced the sensor was on UART5 because that is where the BLE
+        // link is. Picking a port is navigation rather than an edit, and MSP was already on there,
+        // so the row then had nothing to save and the tab's Save button never lit up.
+        it("does not preselect a port just because something else enabled MSP on it", () => {
             store.assign("MSP", 1);
 
-            expect(portRow().selectedValue.value).toEqual(1);
+            expect(portRow().selectedValue.value).toEqual(NO_PORT);
         });
 
         it("does not preselect USB VCP, which always has MSP", () => {
             expect(portRow().selectedValue.value).toEqual(NO_PORT);
+        });
+
+        it("says so when the chosen port already has what the sensor needs", () => {
+            store.assign("MSP", 1); // BLE, or a second MSP link
+            const r = portRow();
+
+            r.selectPort(1);
+
+            // Nothing to save is the truth here - but it has to be said, or the control reads as
+            // broken. MSP on the module's UART is the whole requirement for an MT sensor.
+            expect(r.hasPendingChange.value).toBe(false);
+            expect(r.mspSatisfied.value).toBe(true);
+        });
+
+        it("stays quiet on a port that still needs MSP turned on", () => {
+            const r = portRow();
+
+            r.selectPort(1);
+
+            expect(r.mspSatisfied.value).toBe(false);
+
+            r.setMsp(true);
+            expect(r.hasPendingChange.value).toBe(true);
+            expect(r.mspSatisfied.value).toBe(false); // there is something to save now
+        });
+
+        it("stays quiet until a port is chosen", () => {
+            store.assign("MSP", 1);
+
+            expect(portRow().mspSatisfied.value).toBe(false);
         });
 
         it("treats picking a port as navigation, not a change", () => {
@@ -584,6 +618,7 @@ describe("useSerialFunctionRow", () => {
         it("turns MSP back off", () => {
             store.assign("MSP", 1);
             const row = portRow();
+            row.selectPort(1);
 
             expect(row.msp.value).toBe(true);
             row.setMsp(false);

@@ -2294,6 +2294,10 @@
         "message": "Saving will remove <strong>{{serialFunction}}</strong> from {{port}}.",
         "description": "Shown when assigning a function displaced another one, which happened on a screen the user may not be looking at."
     },
+    "serialPortMspSatisfied": {
+        "message": "MSP is already enabled on this port, which is all this sensor needs - there is nothing to save here.",
+        "description": "Shown on a port-only sensor row when the chosen UART already has MSP, so the row has nothing to contribute to the tab's save."
+    },
     "serialPortMspLimit": {
         "message": "MSP is already on the maximum of three ports, so it could not be enabled here. Turn it off on another port and save again.",
         "description": "Shown when a save could not honour the MSP switch because firmware's MAX_MSP_PORT_COUNT of 3, USB VCP included, is already reached."

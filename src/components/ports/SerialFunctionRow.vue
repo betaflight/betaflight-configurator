@@ -89,6 +89,17 @@
         </UAlert>
 
         <!--
+            All an MT-family sensor needs is MSP on its UART. When the board already has it - for
+            BLE, or a second MSP link - there is nothing for this row to save, and an inert Save
+            button with no explanation reads as a broken control.
+        -->
+        <UAlert v-if="mspSatisfied" color="neutral" variant="subtle" icon="i-lucide-info">
+            <template #description>
+                <span v-html="$t('serialPortMspSatisfied')"></span>
+            </template>
+        </UAlert>
+
+        <!--
             The cap bites when two rows on one tab each queue an MSP enable into a single free
             slot: the first save consumes it and the second cannot be honoured. Say so, rather
             than letting the switch quietly spring back.
@@ -239,6 +250,7 @@ const {
     msp,
     mspDisabled,
     mspBlocked,
+    mspSatisfied,
     mspBaudItems,
     mspBaudrate,
     setMsp,

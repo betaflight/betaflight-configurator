@@ -75,17 +75,27 @@ export function useSerialFunctionRow(props) {
     const portOnly = computed(() => Boolean(props.portOnly));
 
     /**
-     * In port-only mode, the port the device is most likely on: the one already carrying its
-     * function if it has one, otherwise the non-VCP port already carrying MSP.
+     * In port-only mode, the port the device is on - when that can actually be known.
+     *
+     * A function bit is evidence: firmware has FUNCTION_LIDAR on that port because that is where
+     * the module is wired. MSP on a port is not evidence of anything. MSP is enabled for BLE, for
+     * a second MSP link, for VTX_MSP - so preselecting the first non-VCP port carrying it told a
+     * user whose board runs BLE on UART5 that their sensor was on UART5, and because picking a
+     * port is navigation rather than an edit, and MSP was already on there, the row then had
+     * nothing to save and its Save button never lit up.
+     *
+     * An MT module has no function bit at all, so for it there is nothing to detect and nothing is
+     * preselected - the user says which UART it is wired to. See mspSatisfied for what the row
+     * tells them once they have.
      */
-    const mspPortId = computed(() => {
-        const withFunction =
-            props.toggleFunction &&
-            store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && store.portUses(p, props.toggleFunction));
-        if (withFunction) {
-            return withFunction.identifier;
+    const detectedPortId = computed(() => {
+        if (!props.toggleFunction) {
+            return NO_PORT;
         }
-        return store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && p.msp)?.identifier ?? NO_PORT;
+        const withFunction = store.ports.find(
+            (p) => p.identifier !== USB_VCP_IDENTIFIER && store.portUses(p, props.toggleFunction),
+        );
+        return withFunction?.identifier ?? NO_PORT;
     });
 
     /** What a port carries, for annotating a general port list. */
@@ -106,7 +116,7 @@ export function useSerialFunctionRow(props) {
             .map((p) => ({
                 portId: p.identifier,
                 portName: store.portName(p.identifier),
-                selected: p.identifier === mspPortId.value,
+                selected: p.identifier === detectedPortId.value,
                 occupiedBy: "",
                 evicts: [],
                 disabled: false,
@@ -369,6 +379,24 @@ export function useSerialFunctionRow(props) {
         );
     });
 
+    /**
+     * A port-only device whose UART already has what it needs, with nothing left to save.
+     *
+     * All an MT module needs is MSP on the UART it is wired to. When that is already true - very
+     * often it is, because the board runs BLE or a second MSP link - this row genuinely has nothing
+     * to contribute to the tab's save. Without saying so, the user picks their port, the MSP switch
+     * is already on, Save stays grey, and the control reads as broken. Only for the no-function
+     * case: where there is a function switch, that switch's own state tells the story.
+     */
+    const mspSatisfied = computed(
+        () =>
+            portOnly.value &&
+            !hasFunctionToggle.value &&
+            selectedValue.value !== NO_PORT &&
+            msp.value &&
+            !hasPendingChange.value,
+    );
+
     function selectFunction(value) {
         draftFunction.value = value === NO_FUNCTION ? "" : value;
         // The new protocol has its own port, baudrate and MSP setting.
@@ -531,6 +559,7 @@ export function useSerialFunctionRow(props) {
         msp,
         mspDisabled,
         mspBlocked,
+        mspSatisfied,
         mspBaudItems,
         mspBaudrate,
         setMsp,

@@ -4,7 +4,7 @@ import {
     rangefinderTransportFor,
     sensorTransportsFor,
 } from "../../src/composables/ports/sensorTransport";
-import { fcPort, labels, loadFcPorts, loadPortsEnv, makeRow, resetPortsEnv } from "./helpers/serialPorts";
+import { fcPort, labels, loadFcPorts, loadPortsEnv, makeRow, resetPortsEnv, values } from "./helpers/serialPorts";
 import { describeSerialRowContract } from "./helpers/serialRowContract";
 
 // SerialFunctionRow renders through Nuxt UI's USelect/USwitch, which the Nuxt UI vite plugin
@@ -115,6 +115,64 @@ describe("SensorsTab serial rangefinder row", () => {
 
             expect(store.ports.every((p) => p.peripheral !== "LIDAR_TF")).toBe(true);
         });
+    });
+});
+
+// Reported from a real board: BLE runs on UART5 with MSP enabled, and the sensor is an MT module,
+// which has no function bit at all. The row announced UART5 as the sensor's port purely because MSP
+// was on there, and since picking a port is navigation rather than an edit and MSP was already on,
+// selecting UART5 left the tab clean and the Save button grey.
+describe("SensorsTab MT sensor row on a board with MSP already in use", () => {
+    let store;
+
+    // identifier 4 is UART5; MSP is on it for the BLE link, nothing to do with the sensor.
+    const withBleOnUart5 = () =>
+        resetPortsEnv({
+            fcPorts: [fcPort(20, ["MSP"]), fcPort(0), fcPort(2), fcPort(4, ["MSP"])],
+        });
+
+    /** What SensorsTab renders for an MT module: a port, MSP, and no function bit. */
+    const mtSensorRow = () => makeRow({ portOnly: true, toggleFunction: "" });
+
+    beforeEach(async () => {
+        store = await withBleOnUart5();
+    });
+
+    it("does not claim the sensor is on the BLE port", () => {
+        const row = mtSensorRow();
+
+        expect(values(row.portItems.value)).toContain(4); // UART5 is offered...
+        expect(row.selectedValue.value).toEqual(NO_PORT); // ...but nothing is preselected
+    });
+
+    it("shows which ports already carry MSP, so the user can tell them apart", () => {
+        const uart5 = mtSensorRow().portItems.value.find((i) => i.value === 4);
+
+        expect(uart5.label).toContain("portsFunction_MSP");
+    });
+
+    it("explains itself when the user picks the port that already has MSP", () => {
+        const row = mtSensorRow();
+
+        row.selectPort(4);
+
+        expect(row.msp.value).toBe(true);
+        expect(row.hasPendingChange.value).toBe(false); // genuinely nothing to write...
+        expect(row.mspSatisfied.value).toBe(true); // ...and the row says so
+    });
+
+    it("still has real work to do on a UART that needs MSP switching on", () => {
+        const row = mtSensorRow();
+
+        row.selectPort(2);
+        row.setMsp(true);
+
+        expect(row.hasPendingChange.value).toBe(true);
+
+        row.apply();
+        expect(store.portById(2).msp).toBe(true);
+        expect(store.portById(4).msp).toBe(true); // the BLE port is left alone
+        expect(store.portById(2).peripheral).toEqual(""); // no function bit for an MT module
     });
 });
 
