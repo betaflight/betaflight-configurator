@@ -348,35 +348,75 @@ describe("SensorsTab serial rangefinder row", () => {
     });
 });
 
-// The rangefinder's transport is decided by the selected hardware, not by the function bit.
-// rangefinder_lidarmt.c handles the MT family and delivers MSP2_SENSOR_RANGEFINDER_LIDARMT frames,
-// so those need an MSP port; rangefinder_lidartf.c / _nooploop.c / _upt1.c open FUNCTION_LIDAR.
-// HCSR04 is pin-driven. This mirrors SensorsTab's rangefinderTransport computed - if firmware adds
-// a hardware type, both need updating together.
-describe("rangefinder transport by hardware type", () => {
-    const MSP_RANGEFINDERS = /^MTF/;
-    const transportFor = (name) => {
+// Transport is decided by the selected hardware, not by which sensor is enabled, and both sensors
+// are asked. rangefinder_lidarmt.c handles the MT family and delivers MSP2_SENSOR_RANGEFINDER_LIDARMT
+// / MSP2_SENSOR_OPTICALFLOW_MT frames, so those need only MSP on their UART - no rangefinder
+// function bit. rangefinder_lidartf.c / _nooploop.c / _upt1.c open FUNCTION_LIDAR. HCSR04 is
+// pin-driven. Mirrors SensorsTab's sensorTransports; firmware adding a type needs both updated.
+describe("sensor port transport", () => {
+    const rangefinderTransportFor = (name) => {
         if (!name || name === "NONE" || name === "HCSR04") {
             return "none";
         }
-        return MSP_RANGEFINDERS.test(name) ? "msp" : "serial";
+        return /^MTF/.test(name) ? "msp" : "serial";
     };
+    const opticalFlowTransportFor = (name) => {
+        if (!name || name === "NONE") {
+            return "none";
+        }
+        return name === "MT" ? "msp" : "serial";
+    };
+    const transports = (rangefinder, opticalFlow) =>
+        new Set(
+            [rangefinderTransportFor(rangefinder), opticalFlowTransportFor(opticalFlow)].filter((t) => t !== "none"),
+        );
 
-    it("routes the MT family over MSP", () => {
+    it("routes the MT rangefinder family over MSP", () => {
         for (const name of ["MTF01", "MTF02", "MTF01P", "MTF02P"]) {
-            expect(transportFor(name), name).toEqual("msp");
+            expect(rangefinderTransportFor(name), name).toEqual("msp");
         }
     });
 
     it("routes TF, Nooploop and UPT1 over the serial rangefinder function", () => {
         for (const name of ["TFMINI", "TF02", "TFNOVA", "NOOPLOOP_F2", "NOOPLOOP_F2MINI", "UPT1"]) {
-            expect(transportFor(name), name).toEqual("serial");
+            expect(rangefinderTransportFor(name), name).toEqual("serial");
         }
     });
 
     it("needs no port for a pin-driven or absent rangefinder", () => {
         for (const name of ["NONE", "HCSR04", ""]) {
-            expect(transportFor(name), name || "(empty)").toEqual("none");
+            expect(rangefinderTransportFor(name), name || "(empty)").toEqual("none");
         }
+    });
+
+    it("routes MT optical flow over MSP and UPT1 over the serial function", () => {
+        expect(opticalFlowTransportFor("MT")).toEqual("msp");
+        expect(opticalFlowTransportFor("UPT1")).toEqual("serial");
+        expect(opticalFlowTransportFor("NONE")).toEqual("none");
+    });
+
+    // The reported case: an MT module providing both sensors wants MSP on its UART, nothing else.
+    it("asks only for MSP when an MT module provides both sensors", () => {
+        expect([...transports("MTF01", "MT")]).toEqual(["msp"]);
+    });
+
+    it("asks for MSP for an MT optical flow sensor with no rangefinder at all", () => {
+        expect([...transports("NONE", "MT")]).toEqual(["msp"]);
+    });
+
+    it("asks for the serial function for a UPT1 module providing both", () => {
+        expect([...transports("UPT1", "UPT1")]).toEqual(["serial"]);
+    });
+
+    it("asks for a serial port for a TF rangefinder with no optical flow", () => {
+        expect([...transports("TFNOVA", "NONE")]).toEqual(["serial"]);
+    });
+
+    it("asks for nothing when neither sensor is set", () => {
+        expect([...transports("NONE", "NONE")]).toEqual([]);
+    });
+
+    it("asks for both when the two sensors somehow use different transports", () => {
+        expect([...transports("MTF01", "UPT1")].sort()).toEqual(["msp", "serial"]);
     });
 });

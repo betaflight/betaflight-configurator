@@ -500,18 +500,6 @@
     "sensorConfigAccelerometer": {
         "message": "Accelerometer"
     },
-    "sensorConfigRangefinderPort": {
-        "message": "Serial rangefinder port"
-    },
-    "sensorConfigRangefinderPortHelp": {
-        "message": "The UART your serial rangefinder is wired to. Which driver runs on it is decided by the rangefinder type above, not by the port."
-    },
-    "sensorConfigRangefinderPortSharedHelp": {
-        "message": "The UART your rangefinder is wired to. This module carries its optical flow sensor on the same wire, so this one port serves both."
-    },
-    "sensorConfigRangefinderMspHelp": {
-        "message": "This rangefinder reports over MSP rather than its own serial function, so the UART it is wired to needs MSP enabled. Optical flow on the same module shares this port."
-    },
     "sensorConfigAccCalibrateHelp": {
         "message": "Place the craft on a level surface before calibrating"
     },
@@ -1727,6 +1715,21 @@
     },
     "configurationMagDeclinationHelp": {
         "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
+    },
+    "sensorConfigSensorPort": {
+        "message": "Serial port"
+    },
+    "sensorConfigSensorPortMspHelp": {
+        "message": "This sensor reports over MSP rather than a serial function of its own, so the UART it is wired to needs MSP enabled here \u2014 nothing else."
+    },
+    "sensorConfigSensorPortMspSharedHelp": {
+        "message": "This module carries both sensors on one wire and reports over MSP, so the UART it is wired to needs MSP enabled here \u2014 nothing else."
+    },
+    "sensorConfigSensorPortSerialHelp": {
+        "message": "The UART this sensor is wired to."
+    },
+    "sensorConfigSensorPortSerialSharedHelp": {
+        "message": "The UART this module is wired to. It carries both sensors, so this one port serves them both."
     },
     "configurationRangefinder": {
         "message": "Rangefinder",

@@ -73,32 +73,6 @@
                                 size="xs"
                             />
                         </SettingRow>
-                        <!--
-                            The port belongs next to the hardware selector because the hardware is
-                            what decides which function the port needs: the MT family speaks MSP,
-                            everything else opens the serial rangefinder function. Both rows are
-                            kept mounted while the transport matches, so switching the hardware type
-                            off does not drop a pending draft or leave a stale port unclearable.
-                        -->
-                        <SerialFunctionRow
-                            v-if="showRangefinder && rangefinderTransport === 'serial'"
-                            ref="serialRangefinderRow"
-                            serial-function="LIDAR_TF"
-                            :show-msp="false"
-                            :label="$t('sensorConfigRangefinderPort')"
-                            :help="
-                                opticalFlowSharesRangefinderPort
-                                    ? $t('sensorConfigRangefinderPortSharedHelp')
-                                    : $t('sensorConfigRangefinderPortHelp')
-                            "
-                        />
-                        <SerialFunctionRow
-                            v-if="showRangefinder && rangefinderTransport === 'msp'"
-                            ref="mspRangefinderRow"
-                            port-only
-                            :label="$t('sensorConfigRangefinderPort')"
-                            :help="$t('sensorConfigRangefinderMspHelp')"
-                        />
                         <SettingRow v-if="showOpticalFlow" :label="$t('configurationOpticalflow')" fullWidth>
                             <USwitch v-model="opticalFlowHardwareEnabled" />
                             <USelect
@@ -113,6 +87,37 @@
                                 size="xs"
                             />
                         </SettingRow>
+
+                        <!--
+                            The port sits below both selectors because it serves both: an MT module
+                            carries the rangefinder and the optical flow sensor on one wire, and so
+                            does UPT1. Which row appears is decided by the transport the chosen
+                            hardware uses, not by which sensor is on - an MT optical flow sensor
+                            with no rangefinder still needs its MSP port.
+                        -->
+                        <SerialFunctionRow
+                            v-if="needsMspPort"
+                            ref="mspSensorRow"
+                            port-only
+                            :label="$t('sensorConfigSensorPort')"
+                            :help="
+                                sensorsShareOnePort
+                                    ? $t('sensorConfigSensorPortMspSharedHelp')
+                                    : $t('sensorConfigSensorPortMspHelp')
+                            "
+                        />
+                        <SerialFunctionRow
+                            v-if="needsSerialPort"
+                            ref="serialSensorRow"
+                            serial-function="LIDAR_TF"
+                            :show-msp="false"
+                            :label="$t('sensorConfigSensorPort')"
+                            :help="
+                                sensorsShareOnePort
+                                    ? $t('sensorConfigSensorPortSerialSharedHelp')
+                                    : $t('sensorConfigSensorPortSerialHelp')
+                            "
+                        />
                         <!-- Board Alignment -->
                         <SettingRow :label="$t('configurationBoardAlignment')" fullWidth>
                             <HelpIcon :text="$t('configurationBoardAlignmentHelp')" />
@@ -980,32 +985,49 @@ const showRangefinder = ref(false);
 const showOpticalFlow = ref(false);
 
 /**
- * How the selected rangefinder actually talks to the FC, which is not one answer.
+ * How the selected rangefinder and optical flow hardware actually talk to the FC, which is not one
+ * answer and is not the same question as which sensor is enabled.
  *
- * The MT family (MTF01/02, and their P variants) are handled by rangefinder_lidarmt.c and arrive as
- * MSP frames - MSP2_SENSOR_RANGEFINDER_LIDARMT - so what they need is an MSP port, not the serial
- * rangefinder function. TF, Nooploop and UPT1 open FUNCTION_LIDAR directly. HCSR04 is pin-driven
- * and needs no UART at all.
+ * The MT family (MTF01/02 and their P variants, and optical flow "MT") is handled by
+ * rangefinder_lidarmt.c and arrives as MSP frames - MSP2_SENSOR_RANGEFINDER_LIDARMT and
+ * MSP2_SENSOR_OPTICALFLOW_MT - so all those need is MSP enabled on the UART they are wired to.
+ * There is no rangefinder function bit involved. TF, Nooploop and UPT1 open FUNCTION_LIDAR
+ * directly. HCSR04 is pin-driven and needs no UART.
  *
- * These modules carry an optical flow sensor on the same wire (MSP2_SENSOR_OPTICALFLOW_MT for the
- * MT family, and UPT1 reports both from one driver), so one port serves both and there is
- * deliberately no separate optical flow port control.
+ * Both sensors are asked, because they are usually the same physical module on one wire and either
+ * one alone is a valid setup - an MT optical flow sensor with no rangefinder still needs its MSP
+ * port. Whichever transports are in play get a row; one module means one row serving both sensors.
  */
-const MSP_RANGEFINDERS = /^MTF/;
-
-const rangefinderTransport = computed(() => {
-    const name = sonarTypesList.value[sensorConfig.sonar_hardware] ?? "";
+function rangefinderTransportFor(name) {
     if (!name || name === "NONE" || name === "HCSR04") {
         return "none";
     }
-    return MSP_RANGEFINDERS.test(name) ? "msp" : "serial";
+    return /^MTF/.test(name) ? "msp" : "serial";
+}
+
+function opticalFlowTransportFor(name) {
+    if (!name || name === "NONE") {
+        return "none";
+    }
+    return name === "MT" ? "msp" : "serial";
+}
+
+const sensorTransports = computed(() => {
+    const rangefinder = rangefinderTransportFor(sonarTypesList.value[sensorConfig.sonar_hardware] ?? "");
+    const opticalFlow = opticalFlowTransportFor(opticalFlowTypesList.value[sensorConfig.opticalflow_hardware] ?? "");
+    return new Set([rangefinder, opticalFlow].filter((t) => t !== "none"));
 });
 
-/** True when the chosen optical flow hardware rides the same wire as the rangefinder. */
-const opticalFlowSharesRangefinderPort = computed(
-    () => sensorConfig.opticalflow_hardware !== 0 && rangefinderTransport.value !== "none",
-);
+const needsMspPort = computed(() => sensorTransports.value.has("msp"));
+const needsSerialPort = computed(() => sensorTransports.value.has("serial"));
 
+/** True when both sensors are set and share one transport, i.e. one module on one wire. */
+const sensorsShareOnePort = computed(
+    () =>
+        sensorConfig.sonar_hardware !== 0 &&
+        sensorConfig.opticalflow_hardware !== 0 &&
+        sensorTransports.value.size === 1,
+);
 // --- Board Alignment ---
 
 const boardAlignment = reactive({
@@ -2329,12 +2351,12 @@ const { dirty: sensorSettingsDirty, markClean, takeSnapshot } = useDirtyState(se
 // than the store. ORed rather than folded into serializeState because apply() clears the row's
 // pending state partway through a save, which would leave a snapshot-based baseline permanently
 // out of step.
-// Two rows, only ever one mounted: which one depends on the selected hardware's transport.
-const serialRangefinderRow = ref(null);
-const mspRangefinderRow = ref(null);
-const activeRangefinderRow = computed(() => serialRangefinderRow.value ?? mspRangefinderRow.value);
+// One row per transport in play. Normally exactly one is mounted: a single module on a single wire.
+const serialSensorRow = ref(null);
+const mspSensorRow = ref(null);
+const sensorPortRows = computed(() => [mspSensorRow.value, serialSensorRow.value].filter(Boolean));
 
-const dirty = computed(() => sensorSettingsDirty.value || Boolean(activeRangefinderRow.value?.hasPendingChange));
+const dirty = computed(() => sensorSettingsDirty.value || sensorPortRows.value.some((row) => row.hasPendingChange));
 
 // --- Load helpers ---
 
@@ -2528,8 +2550,8 @@ const saveConfig = () =>
             // leaving the sensor config saved against a serial config that was refused.
             // Gate on THIS row's pending edit, captured before apply(). store.dirty also goes
             // true for an unsaved Ports-tab edit, which this tab must not adopt.
-            const serialPending = Boolean(activeRangefinderRow.value?.hasPendingChange);
-            activeRangefinderRow.value?.apply();
+            const serialPending = sensorPortRows.value.some((row) => row.hasPendingChange);
+            sensorPortRows.value.forEach((row) => row.apply());
             if (serialPending) {
                 await serialPortsStore.writeConfig();
             }
