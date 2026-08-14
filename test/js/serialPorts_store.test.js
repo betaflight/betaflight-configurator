@@ -499,6 +499,8 @@ describe("useSerialPortsStore", () => {
             let releaseWrite;
             mspPromise.mockImplementation(() => new Promise((resolve) => (releaseWrite = resolve)));
             const pending = store.save();
+            // writeConfig imports MSPHelper dynamically, so the write is not in flight this tick.
+            await vi.waitFor(() => expect(releaseWrite).toBeTypeOf("function"));
 
             store.assign("ESC_SENSOR", 2); // user edits before the write lands
             mspPromise.mockImplementation(() => Promise.resolve({}));

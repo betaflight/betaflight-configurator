@@ -4,13 +4,19 @@ import CONFIGURATOR from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
-import { mspHelper, isMspRejected } from "../js/msp/MSPHelper";
+import { isMspRejected } from "../js/msp/mspErrors";
+import { serialPortUnknownFunctionMask } from "../js/msp/serialPortFunctions";
 import { gui_log } from "../js/gui_log";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
 import { useDirtyState } from "../composables/useDirtyState";
 import { usePortsRules } from "../composables/ports/usePortsRules";
-import { useReboot } from "../composables/useReboot";
+
+// MSPHelper and useReboot both reach serial_backend, which reaches the tab registry, which reaches
+// every tab - including the ones rendering SerialFunctionRow, which imports this store. Statically
+// that closes an import cycle, and a partial HMR re-evaluation can enter it before the export
+// bindings exist. Both are imported dynamically at their (already async) call sites instead; the
+// pure bit-layout helpers live in a leaf module so the render path needs no dynamic import at all.
 
 const PORT_NAMES = {
     0: "UART1",
@@ -172,7 +178,10 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
      * name, or a named function with no slot on this API version.
      */
     function hasReservedFunctions(port) {
-        return port.reservedFunctions?.length > 0 || mspHelper.serialPortUnknownFunctionMask(port.functionMask) !== 0;
+        return (
+            port.reservedFunctions?.length > 0 ||
+            serialPortUnknownFunctionMask(port.functionMask, FC.CONFIG?.apiVersion) !== 0
+        );
     }
 
     /**
@@ -532,6 +541,8 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
         FC.SERIAL_CONFIG.ports = toFcPorts();
         updateFeatures();
 
+        const { mspHelper } = await import("../js/msp/MSPHelper");
+
         const code = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
         const response = await MSP.promise(code, mspHelper.crunch(code));
 
@@ -558,6 +569,7 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
      * @returns {Promise<boolean>} whether the configuration was written
      */
     async function save() {
+        const { useReboot } = await import("../composables/useReboot");
         const { saveAndReboot } = useReboot();
         try {
             await writeConfig();

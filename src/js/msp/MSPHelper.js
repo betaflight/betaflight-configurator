@@ -7,14 +7,15 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { MspCrcError } from "./mspErrors";
+import { MspCrcError, isMspRejected } from "./mspErrors";
 import {
-    API_VERSION_1_45,
-    API_VERSION_1_46,
-    API_VERSION_1_47,
-    API_VERSION_1_48,
-    API_VERSION_1_49,
-} from "../data_storage";
+    serialPortFunctionsFor,
+    serialPortFunctionMaskToFunctions,
+    serialPortFunctionsToMask,
+    serialPortKnownFunctionMask,
+    serialPortUnknownFunctionMask,
+} from "./serialPortFunctions";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -46,59 +47,6 @@ function reportI2cErrors(count) {
         );
         lastI2cErrorCount = count;
     }
-}
-
-// Serial function bits, mirroring 'serialPortFunction_e' in 'src/main/io/serial.h'.
-//
-// The layout is not stable across the firmware range this app supports, so it is derived from the
-// API version rather than hard-coded. Bits up to 18 have never moved; bits 19 and 20 have.
-const SERIAL_PORT_FUNCTIONS_STABLE = {
-    MSP: 0,
-    GPS: 1,
-    TELEMETRY_FRSKY: 2,
-    TELEMETRY_HOTT: 3,
-    TELEMETRY_LTM: 4,
-    TELEMETRY_SMARTPORT: 5,
-    RX_SERIAL: 6,
-    BLACKBOX: 7,
-    TELEMETRY_MAVLINK: 9,
-    ESC_SENSOR: 10,
-    TBS_SMARTAUDIO: 11,
-    TELEMETRY_IBUS: 12,
-    IRC_TRAMP: 13,
-    RUNCAM_DEVICE_CONTROL: 14, // support communitate with RunCam Device
-    LIDAR_TF: 15, // FUNCTION_LIDAR from 2026.12: the unified serial rangefinder bit, driver from rangefinder_hardware
-    FRSKY_OSD: 16,
-    VTX_MSP: 17,
-    GIMBAL: 18, // added in 2025.12 (API 1.47) and unmoved since
-};
-
-/**
- * The serial function bits this app is willing to name on the connected firmware.
- *
- * Bits 19 and 20 are named only from API 1.49. Below that they are deliberately left out, and
- * round-tripped verbatim instead: 2026.6.1 puts LIDAR_NL on 19 and OSD_CUSTOM_TEXT on 20, while
- * master from c18421eb (2026-08-04) puts OSD_CUSTOM_TEXT on 19 - and both answer API 1.48, because
- * that commit shipped two days after the release without bumping API_VERSION_MINOR. Every dev and
- * cloud build flashed in that window reports 1.48 with the newer layout, so no gate can tell them
- * apart and naming either bit there would write a meaning the board does not share. Writing bit 19
- * to a 2026.6.1 board would silently reassign the user's Nooploop rangefinder.
- *
- * From 1.49 the layout is unambiguous: bit 19 is OSD_CUSTOM_TEXT, bit 20 is free, and LIDAR_NL no
- * longer exists - the serial rangefinder is bit 15 with the driver chosen by rangefinder_hardware.
- *
- * Bits left unnamed are not lost; see serialPortUnknownFunctionMask.
- *
- * @param {string} [apiVersion] semver string, e.g. FC.CONFIG.apiVersion
- */
-export function serialPortFunctionsFor(apiVersion) {
-    const functions = { ...SERIAL_PORT_FUNCTIONS_STABLE };
-
-    if (apiVersion && semver.valid(apiVersion) && semver.gte(apiVersion, API_VERSION_1_49)) {
-        functions.OSD_CUSTOM_TEXT = 19;
-    }
-
-    return functions;
 }
 
 function MspHelper() {
@@ -2844,59 +2792,19 @@ Object.defineProperty(MspHelper.prototype, "SERIAL_PORT_FUNCTIONS", {
 });
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function (functionMask) {
-    const self = this;
-    const functions = [];
-
-    const keys = Object.keys(self.SERIAL_PORT_FUNCTIONS);
-    for (const key of keys) {
-        const bit = self.SERIAL_PORT_FUNCTIONS[key];
-        if (bit_check(functionMask, bit)) {
-            functions.push(key);
-        }
-    }
-    return functions;
+    return serialPortFunctionMaskToFunctions(functionMask, FC.CONFIG?.apiVersion);
 };
 
-/**
- * Every bit this configurator build knows how to name, as a mask.
- */
 MspHelper.prototype.serialPortKnownFunctionMask = function () {
-    let mask = 0;
-    for (const bit of Object.values(this.SERIAL_PORT_FUNCTIONS)) {
-        mask = bit_set(mask, bit);
-    }
-    return mask >>> 0;
+    return serialPortKnownFunctionMask(FC.CONFIG?.apiVersion);
 };
 
-/**
- * The bits of `functionMask` this build cannot name. Firmware adds serial functions faster
- * than the configurator learns their names, and two shipping firmwares currently disagree on
- * what bits 19 and 20 mean while both reporting API 1.48 - so unnamed bits are round-tripped
- * untouched rather than decoded. Without this, opening the Ports tab and saving anything drops
- * a user's gimbal, Nooploop rangefinder or OSD custom text assignment.
- */
 MspHelper.prototype.serialPortUnknownFunctionMask = function (functionMask) {
-    return ((functionMask || 0) & ~this.serialPortKnownFunctionMask()) >>> 0;
+    return serialPortUnknownFunctionMask(functionMask, FC.CONFIG?.apiVersion);
 };
 
-/**
- * @param {string[]} functions - named functions to encode
- * @param {number} [reservedMask=0] - bits to carry through verbatim, from
- *        {@link MspHelper.prototype.serialPortUnknownFunctionMask}
- */
 MspHelper.prototype.serialPortFunctionsToMask = function (functions, reservedMask = 0) {
-    const self = this;
-    let mask = 0;
-
-    for (let index = 0; index < functions.length; index++) {
-        const key = functions[index];
-        const bitIndex = self.SERIAL_PORT_FUNCTIONS[key];
-        if (bitIndex >= 0) {
-            mask = bit_set(mask, bitIndex);
-        }
-    }
-
-    return (mask | reservedMask) >>> 0;
+    return serialPortFunctionsToMask(functions, reservedMask, FC.CONFIG?.apiVersion);
 };
 
 MspHelper.prototype.sendRxFailConfig = function (onCompleteCallback) {
@@ -2966,19 +2874,6 @@ MspHelper.prototype.loadSerialConfig = function (callback) {
     MSP.send_message(mspCode, false, false, callback);
 };
 
-/**
- * True when an MSP reply says the FC refused the request. Firmware rejects a serial config it
- * cannot apply (betaflight#15131) with an MSP error reply, which arrives as `unsupported` on the
- * response rather than as a rejected promise - so a caller that does not check this goes on to
- * write EEPROM and reboot on top of an unchanged config, and reports success.
- *
- * A missing response is not a rejection: MSP resolves with nothing when disconnected or in
- * virtual mode.
- */
-export function isMspRejected(response) {
-    return Boolean(response?.unsupported || response?.crcError);
-}
-
 MspHelper.prototype.writeConfiguration = function (reboot, callback) {
     // We need some protection when testing motors on motors tab
     if (!FC.CONFIG.armingDisabled) {
@@ -3006,5 +2901,5 @@ let mspHelper;
 // to modules and every usage of this can create own
 // instance or re-use existing where needed.
 window.mspHelper = mspHelper = new MspHelper();
-export { mspHelper };
+export { mspHelper, isMspRejected };
 export default MspHelper;
