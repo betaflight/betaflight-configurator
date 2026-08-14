@@ -25,6 +25,27 @@
                 </UiBox>
             </div>
 
+            <!--
+                Deliberately outside the vtxSupported gate. With no UART carrying a VTX protocol the
+                FC reports VTXDEV_UNSUPPORTED, which hides every panel below, so gating the only port
+                selector on it would leave the user nowhere to assign one - the same circularity the
+                serial RX box on the Receiver tab had to break (C5).
+            -->
+            <UiBox
+                :title="$t('vtxSerialPortTitle')"
+                type="neutral"
+                collapsible
+                :help="$t('vtxSerialPortHelp')"
+                class="mt-4"
+            >
+                <SerialFunctionRow
+                    ref="serialRow"
+                    group="peripherals"
+                    :functions="vtxSerialFunctions"
+                    :protocol-label="$t('vtxSerialPortProtocol')"
+                />
+            </UiBox>
+
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
                 <div class="lg:col-span-3" v-show="vtxSupported">
@@ -376,18 +397,31 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, computed } from "vue";
+import { defineComponent, onMounted, computed, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
+import { useReboot } from "../../composables/useReboot";
+import { useSerialPortsStore } from "@/stores/serialPorts";
 import { useTranslation } from "i18next-vue";
+
+/**
+ * A subset of the peripherals group. Blackbox, the serial rangefinder, FrSky OSD and the gimbal
+ * share the same per-port slot but belong to other tabs, so they must not be offered here even
+ * though assigning one of these will displace them (which the row previews).
+ *
+ * VTX_MSP is listed unconditionally: below API 1.45 no such rule exists, so the row simply does
+ * not offer it. No API gate is needed in the tab.
+ */
+const VTX_SERIAL_FUNCTIONS = ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP", "RUNCAM_DEVICE_CONTROL"];
 
 export default defineComponent({
     name: "VtxTab",
@@ -397,9 +431,13 @@ export default defineComponent({
         UiBox,
         HelpIcon,
         SettingRow,
+        SerialFunctionRow,
     },
     setup() {
         const { t } = useTranslation();
+        const serialPortsStore = useSerialPortsStore();
+        const { saveAndReboot } = useReboot();
+        const serialRow = ref(null);
 
         const {
             MAX_POWERLEVEL_VALUES,
@@ -413,7 +451,7 @@ export default defineComponent({
             powerLevelList,
             deviceReady,
             vtxTypeString,
-            saveButtonDisabled,
+            saveButtonDisabled: vtxSettingsClean,
             vtxSupported,
             vtxTableNotConfigured,
             factoryBandsNotSupported,
@@ -437,6 +475,11 @@ export default defineComponent({
 
         const { addInterval } = useInterval();
         const { isSaving, runSave } = useSaving();
+
+        // The row's pending edit enables Save on its own. It is ORed in here rather than folded
+        // into useVtx's snapshot serializer, because apply() clears the pending state partway
+        // through the save and a snapshot baseline would then never match again.
+        const saveButtonDisabled = computed(() => vtxSettingsClean.value && !serialRow.value?.hasPendingChange);
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },
@@ -496,6 +539,10 @@ export default defineComponent({
         ]);
 
         onMounted(async () => {
+            // The store is shared across tabs: this refetches when it is clean and skips when it
+            // holds unsaved edits made on another tab. Un-awaited so the port list fills in while
+            // the serialised VTX table reads below are still running.
+            serialPortsStore.loadConfig();
             await loadVtxConfig();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
@@ -505,7 +552,30 @@ export default defineComponent({
         const handleSave = () =>
             runSave(
                 async () => {
-                    await saveVtx();
+                    // syncStateToFC() sets vtx_table_clear and rewrites every band and power level,
+                    // so this must not run just because a port changed - on a board reporting no VTX
+                    // the local table is empty and that would wipe it.
+                    const vtxDirty = !vtxSettingsClean.value;
+
+                    // This is where the row's edit first reaches shared state. Gate on THIS row's
+                    // pending edit, captured before apply(): store.dirty also goes true for an
+                    // unsaved Ports-tab edit, which this tab must not adopt and reboot for.
+                    const serialChanged = Boolean(serialRow.value?.hasPendingChange);
+                    serialRow.value?.apply();
+
+                    if (vtxDirty) {
+                        await saveVtx();
+                    }
+
+                    if (serialChanged) {
+                        await serialPortsStore.writeConfig();
+                        // A serial change only takes effect after a restart, and saveVtx()'s own
+                        // persist is EEPROM-only. The board is going away and coming back, so
+                        // refetching over the link being torn down is pointless.
+                        await saveAndReboot();
+                        return;
+                    }
+
                     await loadVtxConfig();
                 },
                 {
@@ -655,6 +725,11 @@ export default defineComponent({
             vtxTypeString,
             saveButtonDisabled,
             isSaving,
+
+            // Serial port row - the template ref has to be returned, or it silently stays null
+            // and apply() becomes a no-op with no error anywhere.
+            serialRow,
+            vtxSerialFunctions: VTX_SERIAL_FUNCTIONS,
 
             // Computed
             vtxSupported,

@@ -757,10 +757,11 @@ export default defineComponent({
                     // apply it, then write the serial config and the feature bits it implies. The
                     // feature write below repeats that same mask harmlessly, and one saveAndReboot
                     // at the end persists the lot.
-                    if (serialRow.value?.hasPendingChange) {
-                        serialRow.value.apply();
-                    }
-                    if (serialPortsStore.dirty) {
+                    // Gate on THIS row's pending edit, captured before apply(). store.dirty also
+                    // goes true for an unsaved Ports-tab edit, which this tab must not adopt.
+                    const serialPending = Boolean(serialRow.value?.hasPendingChange);
+                    serialRow.value?.apply();
+                    if (serialPending) {
                         await serialPortsStore.writeConfig();
                     }
 

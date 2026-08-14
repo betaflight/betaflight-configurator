@@ -42,6 +42,14 @@
                                     class="min-w-40"
                                 />
                             </SettingRow>
+                            <SerialFunctionRow
+                                v-if="showBlackboxSerialPort"
+                                ref="serialRow"
+                                serial-function="BLACKBOX"
+                                baud-field="blackbox_baudrate"
+                                :label="$t('serialPortAssign')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            />
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
                                 <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
@@ -289,6 +297,8 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import { useSerialPortsStore } from "@/stores/serialPorts";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -313,6 +323,10 @@ import { useReboot } from "../../composables/useReboot";
 import { runTabLoad } from "../../composables/useTabLoad";
 
 const BLOCK_SIZE = 4096;
+
+// Matches BLACKBOX_DEVICE_SERIAL in the firmware's blackboxDevice_e, and the value pushed for
+// blackboxLoggingSerial in blackboxDeviceOptions below.
+const BLACKBOX_DEVICE_SERIAL = 3;
 
 // Helper function for GCD calculation
 function gcd(a, b) {
@@ -362,10 +376,12 @@ export default defineComponent({
         UiBox,
         SettingRow,
         HelpIcon,
+        SerialFunctionRow,
     },
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
+        const serialPortsStore = useSerialPortsStore();
         const debugStore = useDebugStore();
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
@@ -552,7 +568,21 @@ export default defineComponent({
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+        const { dirty: loggingSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+
+        // The serial row holds its edit locally until this tab's save applies it, so ask the row
+        // rather than the store. ORed rather than folded into the serializer because the row clears
+        // its pending state partway through a save, which would leave a snapshot-based baseline
+        // permanently out of step.
+        const serialRow = ref(null);
+        const dirty = computed(() => loggingSettingsDirty.value || Boolean(serialRow.value?.hasPendingChange));
+
+        // A UART only carries blackbox when logs are streamed out of it. Gated on
+        // blackboxConfigSupported as well, because the enclosing box is v-show, so its children stay
+        // mounted on a board whose blackbox config saveSettings() refuses to write.
+        const showBlackboxSerialPort = computed(
+            () => blackboxConfigSupported.value && Number(blackboxDevice.value) === BLACKBOX_DEVICE_SERIAL,
+        );
 
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
@@ -567,6 +597,17 @@ export default defineComponent({
             return runSave(
                 async () => {
                     const savedSnapshot = takeSnapshot();
+
+                    // A pending port assignment rides along on this save so the two together cost
+                    // one reboot, not two - this tab's save always reboots anyway. It is also the
+                    // point where the row's edit first reaches shared state.
+                    // Gate on THIS row's pending edit, captured before apply(). store.dirty also
+                    // goes true for an unsaved Ports-tab edit, which this tab must not adopt.
+                    const serialPending = Boolean(serialRow.value?.hasPendingChange);
+                    serialRow.value?.apply();
+                    if (serialPending) {
+                        await serialPortsStore.writeConfig();
+                    }
 
                     fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
                     fcStore.blackbox.blackboxPDenom = blackboxRate.value;
@@ -974,6 +1015,9 @@ export default defineComponent({
 
         onMounted(() => {
             loadData();
+            // The store is shared across tabs: this refetches when it is clean and skips when it
+            // holds unsaved edits made on another tab.
+            serialPortsStore.loadConfig();
         });
 
         onUnmounted(() => {
@@ -985,6 +1029,8 @@ export default defineComponent({
 
         return {
             MSP,
+            serialRow,
+            showBlackboxSerialPort,
             eraseOpen,
             saveOpen,
             saveDone,

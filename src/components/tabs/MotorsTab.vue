@@ -97,6 +97,18 @@
                                     <span class="ml-2" v-html="$t('featureESC_SENSOR')"></span>
                                 </template>
                             </SettingRow>
+                            <!--
+                                Assigning the port is what turns ESC_SENSOR on: writeConfig()
+                                derives the feature bit from the port array, so the switch above
+                                follows this row after a save rather than the other way round.
+                            -->
+                            <SerialFunctionRow
+                                v-if="showEscSensorPort"
+                                ref="escSensorRow"
+                                serial-function="ESC_SENSOR"
+                                :label="$t('motorsEscSensorPort')"
+                                :help="$t('motorsEscSensorPortHelp')"
+                            />
                             <SettingRow
                                 v-if="digitalProtocolConfigured"
                                 :label="$t('configurationDshotBidir')"
@@ -539,7 +551,9 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useSerialPortsStore } from "@/stores/serialPorts";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
@@ -562,6 +576,7 @@ import { useReboot } from "@/composables/useReboot";
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
+const serialPortsStore = useSerialPortsStore();
 const dialog = useDialog();
 
 // Initialize motors state management
@@ -694,6 +709,14 @@ const analogProtocolConfigured = computed(() => {
     return protocolConfigured.value && !digitalProtocolConfigured.value;
 });
 
+// The ESC_SENSOR feature switch above is offered only for digital protocols, so match it - but
+// never hide a port firmware has already assigned, or switching to an analog protocol would strand
+// that assignment with no way to clear it from this tab.
+const escSensorPortAssigned = computed(() =>
+    serialPortsStore.ports.some((port) => serialPortsStore.portUses(port, "ESC_SENSOR")),
+);
+const showEscSensorPort = computed(() => digitalProtocolConfigured.value || escSensorPortAssigned.value);
+
 const rpmFeaturesVisible = computed(() => {
     return (
         (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) || isFeatureEnabled("ESC_SENSOR")
@@ -762,10 +785,19 @@ const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTesting
 // Initialize data polling
 useMotorDataPolling(motorsTestingEnabled);
 
+const escSensorRow = ref(null);
+// The row holds its edit locally until save, so it is ORed into the tab's dirty state rather than
+// tracked through configChanges: apply() clears the pending flag partway through the save, and a
+// snapshot baseline taken from it would never match again.
+const serialRowPending = computed(() => Boolean(escSensorRow.value?.hasPendingChange));
+const hasUnsavedChanges = computed(() => configHasChanged.value || serialRowPending.value);
+
 // Button states (central controller like original setContentButtons)
+// toolsDisabled stays on configHasChanged: a pending port change is no reason to lock the motor
+// reorder and DShot direction dialogs, which only care about motor config being in sync.
 const buttonStates = computed(() => ({
     toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
-    saveDisabled: !configHasChanged.value,
+    saveDisabled: !hasUnsavedChanges.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
 
@@ -813,6 +845,10 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
+
+    // The store is shared across tabs: this refetches when it is clean and skips when it holds
+    // unsaved edits made on another tab. It resolves even on failure, setting loadFailed.
+    await serialPortsStore.loadConfig();
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
@@ -1396,12 +1432,16 @@ const openEscDshotDirectionDialog = () => {
 // Action Toolbar Buttons
 const handleSave = (reboot = true) => {
     // Don't save if no changes
-    if (!configHasChanged.value) {
+    if (!hasUnsavedChanges.value) {
         return;
     }
 
     return runSave(
         async () => {
+            // A serial change always reboots, so it decides the save path for the whole tab.
+            const serialPending = serialRowPending.value;
+            const withReboot = reboot || serialPending;
+
             // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
             // This prevents motors from spinning after reboot due to DShot beacon commands
             if (motorsTestingEnabled.value) {
@@ -1415,6 +1455,17 @@ const handleSave = (reboot = true) => {
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
 
+            // This is where the row's edit first reaches shared state. writeConfig() also derives
+            // the ESC_SENSOR feature bit from the port array and sends its own feature write, so it
+            // has to run before the feature write below - which then harmlessly repeats the mask.
+            // serialPending was captured above, before apply(). Gate on it rather than on
+            // store.dirty, which also goes true for an unsaved Ports-tab edit this tab must not
+            // adopt.
+            escSensorRow.value?.apply();
+            if (serialPending) {
+                await serialPortsStore.writeConfig();
+            }
+
             // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
@@ -1427,7 +1478,7 @@ const handleSave = (reboot = true) => {
             await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
             // Persist to EEPROM, rebooting when requested.
-            if (reboot) {
+            if (withReboot) {
                 await saveAndReboot();
             } else {
                 await saveToEeprom();

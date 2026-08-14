@@ -29,12 +29,12 @@ const USB_VCP_IDENTIFIER = 20;
  * saved, and would need undoing if the user simply walked away. Held locally it goes away with the
  * tab, because it was never anywhere else.
  *
- * Two shapes. Given `serialFunction`, the row edits that one function's port. Given `group`
- * instead, it also offers a protocol picker over every rule in that group and edits whichever of
+ * Two shapes. Given `serialFunction`, the row edits that one function's port. Given `group` or
+ * `functions` instead, it also offers a protocol picker over those rules and edits whichever of
  * them is assigned - telemetry is one slot per port carrying one of six protocols, so choosing the
  * protocol and choosing the port are the same decision.
  *
- * @param {{serialFunction?: string, group?: string, baudField?: string|null}} props
+ * @param {{serialFunction?: string, group?: string, functions?: string[], baudField?: string|null}} props
  */
 export function useSerialFunctionRow(props) {
     const { t } = useTranslation();
@@ -63,16 +63,64 @@ export function useSerialFunctionRow(props) {
 
     // ------------------------------------------------------------ which function
 
-    const groupRules = computed(() => (props.group ? rules.getRules(props.group) : []));
+    /**
+     * The functions this row lets the user choose between. `functions` is an allow-list, for a tab
+     * that wants some of a group but not all of it - VtxTab offers its four VTX/camera protocols
+     * and must not offer blackbox or the rangefinder.
+     *
+     * It is derived from the allow-list alone rather than from `group` narrowed by it, because
+     * `group` is only ever used to produce this list: the slot a function occupies comes from that
+     * function's own rule, which the store reads when it assigns. So `functions` on its own is
+     * sufficient, and `group` alongside it is accepted purely as documentation at the call site -
+     * narrowing a group to names it contains produces the same list either way. Sorted by display
+     * name to match getRules(), so a picker reads the same however it was configured.
+     */
+    const groupRules = computed(() => {
+        if (props.functions?.length) {
+            return rules.functionRules
+                .filter((r) => props.functions.includes(r.name))
+                .sort((a, b) => a.displayName.localeCompare(b.displayName));
+        }
+        return props.group ? rules.getRules(props.group) : [];
+    });
+
+    /** Whether this row shows a function picker above the port picker. */
     const hasGroup = computed(() => groupRules.value.length > 0);
+
+    /** Every one of this row's functions the FC currently has on a port. Usually zero or one. */
+    const savedFunctions = computed(() => {
+        if (!hasGroup.value) {
+            const fn = props.serialFunction ?? "";
+            return fn && store.ports.some((p) => store.portUses(p, fn)) ? [fn] : [];
+        }
+        return groupRules.value.filter((r) => store.ports.some((p) => store.portUses(p, r.name))).map((r) => r.name);
+    });
 
     /** Which of the group's functions the FC currently has on a port, ignoring the pending edit. */
     const savedFunction = computed(() => {
         if (!hasGroup.value) {
             return props.serialFunction ?? "";
         }
-        return groupRules.value.find((r) => store.ports.some((p) => store.portUses(p, r.name)))?.name ?? "";
+        return savedFunctions.value[0] ?? "";
     });
+
+    /**
+     * Members of this row's function list that are assigned but not the one being shown.
+     *
+     * A picker can only represent one assignment, so if firmware has two - a SmartAudio VTX on one
+     * UART and a RunCam split camera on another, both legal - the second is invisible here. It must
+     * be named rather than left for the user to discover missing, and the Ports tab is where it can
+     * actually be edited.
+     */
+    const hiddenAssignments = computed(() =>
+        savedFunctions.value
+            .filter((fn) => fn !== savedFunction.value)
+            .map((fn) => ({
+                serialFunction: fn,
+                portId: store.ports.find((p) => store.portUses(p, fn))?.identifier,
+            }))
+            .map((entry) => ({ ...entry, portName: store.portName(entry.portId) })),
+    );
 
     /** Which function this row is editing once saved. Empty means "none of them". */
     const activeFunction = computed(() => draftFunction.value ?? savedFunction.value);
@@ -162,10 +210,31 @@ export function useSerialFunctionRow(props) {
     const evictions = computed(() => {
         const fn = activeFunction.value;
         const portId = selectedValue.value;
-        if (!fn || portId === NO_PORT || !hasPendingPortOrFunction.value) {
+        if (!hasPendingPortOrFunction.value) {
             return [];
         }
-        return store.evictionsFor(fn, portId).filter((e) => e.serialFunction !== fn);
+
+        const displaced = [];
+
+        // apply() frees the protocol this row is replacing, wherever it sits. That is a deletion the
+        // user has to be told about: without it, swapping protocol on a board carrying two of them
+        // silently removed the other one on save.
+        if (functionChanged.value && savedFunction.value && savedFunction.value !== fn) {
+            const port = store.ports.find((p) => store.portUses(p, savedFunction.value));
+            if (port) {
+                displaced.push({
+                    portId: port.identifier,
+                    portName: store.portName(port.identifier),
+                    serialFunction: savedFunction.value,
+                });
+            }
+        }
+
+        if (fn && portId !== NO_PORT) {
+            displaced.push(...store.evictionsFor(fn, portId).filter((e) => e.serialFunction !== fn));
+        }
+
+        return displaced;
     });
 
     const portChanged = computed(() => draftPortId.value !== undefined && draftPortId.value !== savedPortId.value);
@@ -266,6 +335,7 @@ export function useSerialFunctionRow(props) {
     return {
         loaded,
         hasGroup,
+        hiddenAssignments,
         functionItems,
         activeFunction,
         selectedFunction,

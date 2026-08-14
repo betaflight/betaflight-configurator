@@ -47,6 +47,30 @@
             />
         </SettingRow>
 
+        <!--
+            A picker shows one assignment. If firmware has more than one of this row's functions on
+            different ports, name the ones it cannot show rather than letting the user find them
+            missing later.
+        -->
+        <UAlert
+            v-for="hidden in hiddenAssignments"
+            :key="`hidden-${hidden.serialFunction}`"
+            color="neutral"
+            variant="subtle"
+            icon="i-lucide-info"
+        >
+            <template #description>
+                <span
+                    v-html="
+                        $t('serialPortAlsoAssigned', {
+                            serialFunction: displayName(hidden.serialFunction),
+                            port: hidden.portName,
+                        })
+                    "
+                ></span>
+            </template>
+        </UAlert>
+
         <UAlert
             v-for="eviction in evictions"
             :key="`${eviction.portId}-${eviction.serialFunction}`"
@@ -98,7 +122,18 @@ const props = defineProps({
         type: String,
         default: "",
     },
-    /** Label for the protocol picker, when `group` is set. */
+    /**
+     * An explicit list of functions to offer, for a tab that wants some of a group but not all of
+     * it - VtxTab offers its four VTX/camera protocols and must not offer blackbox or the serial
+     * rangefinder, which share the same peripherals slot. Behaves exactly like `group`, over just
+     * these names. It takes precedence over `group`, which may be passed alongside it to document
+     * the slot being edited.
+     */
+    functions: {
+        type: Array,
+        default: () => [],
+    },
+    /** Label for the protocol picker, when `group` or `functions` is set. */
     protocolLabel: {
         type: String,
         default: "",
@@ -125,6 +160,7 @@ const props = defineProps({
 const {
     loaded,
     hasGroup,
+    hiddenAssignments,
     functionItems,
     activeFunction,
     selectedFunction,

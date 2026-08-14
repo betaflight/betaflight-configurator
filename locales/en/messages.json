@@ -500,6 +500,12 @@
     "sensorConfigAccelerometer": {
         "message": "Accelerometer"
     },
+    "sensorConfigRangefinderPort": {
+        "message": "Serial rangefinder port"
+    },
+    "sensorConfigRangefinderPortHelp": {
+        "message": "The UART your serial rangefinder is wired to. Which driver runs on it is decided by the rangefinder type above, not by the port."
+    },
     "sensorConfigAccCalibrateHelp": {
         "message": "Place the craft on a level surface before calibrating"
     },
@@ -2270,6 +2276,10 @@
         "message": "{{port}} ({{serialFunction}})",
         "description": "A port option in a serial port selector, annotated with the function already assigned to that port."
     },
+    "serialPortAlsoAssigned": {
+        "message": "<strong>{{serialFunction}}</strong> is also assigned, on {{port}}. This control shows one at a time \u2014 change that one on the Ports tab.",
+        "description": "Shown when firmware has more than one of a picker's functions assigned, since the picker can only represent one."
+    },
     "serialPortWillEvict": {
         "message": "Saving will remove <strong>{{serialFunction}}</strong> from {{port}}.",
         "description": "Shown when assigning a function displaced another one, which happened on a screen the user may not be looking at."
@@ -3885,6 +3895,12 @@
     "motorsTelemetryHelp": {
         "message": "These numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (R, in RPM), the error rate (E) of the telemetry link and the temperature (T) of the ESCs.",
         "description": "Help text for the telemetry values in the motors tab."
+    },
+    "motorsEscSensorPort": {
+        "message": "ESC telemetry port"
+    },
+    "motorsEscSensorPortHelp": {
+        "message": "The UART wired to the ESC telemetry pad. Assigning a port is what enables ESC telemetry — there is nothing else to switch on. This is the same port slot GPS uses, so one port can carry one or the other, not both."
     },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
@@ -7617,6 +7633,15 @@
         "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
+    "vtxSerialPortTitle": {
+        "message": "VTX & Camera Control Port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "The UART your VTX control wire is connected to, or a RunCam camera's control wire. Without one the flight controller cannot read or change VTX settings and the panels below stay empty."
+    },
+    "vtxSerialPortProtocol": {
+        "message": "Protocol"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Attention:</span> Your VTX is not configured or not supported. So you can't modify the VTX values from here. This will only be possible if the flight controller is attached to the VTX using some protocol like Tramp or SmartAudio and is correctly configured in the $t(tabPorts.message) tab if needed.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -8372,6 +8397,9 @@
     },
     "onboardLoggingSerialLogger": {
         "message": "Outboard serial logging device"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "The UART your external logging device (such as an OpenLager) is wired to. Assigning a port is what enables blackbox serial logging — there is nothing else to switch on."
     },
     "onboardLoggingFlashLogger": {
         "message": "Onboard dataflash chip"

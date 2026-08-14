@@ -507,6 +507,109 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
+    // VtxTab wants four of the peripherals group and must not offer blackbox or the serial
+    // rangefinder, which sit in the same slot but belong to other tabs.
+    describe("a row over an allow-list of functions", () => {
+        const VTX_FUNCTIONS = ["IRC_TRAMP", "TBS_SMARTAUDIO", "VTX_MSP", "RUNCAM_DEVICE_CONTROL"];
+        const vtxRow = () => row({ functions: VTX_FUNCTIONS });
+
+        it("offers only the named functions", () => {
+            const { functionItems } = vtxRow();
+
+            expect(functionItems.value[0].value).toEqual(NO_FUNCTION);
+            expect(
+                functionItems.value
+                    .slice(1)
+                    .map((i) => i.value)
+                    .sort(),
+            ).toEqual([...VTX_FUNCTIONS].sort());
+        });
+
+        it("omits a function that is in the group but not on the list", () => {
+            const { functionItems } = vtxRow();
+
+            const offered = functionItems.value.map((i) => i.value);
+            expect(offered).not.toContain("BLACKBOX");
+            expect(offered).not.toContain("LIDAR_TF");
+            expect(offered).not.toContain("FRSKY_OSD");
+        });
+
+        it("behaves like a group row, with a protocol picker", () => {
+            const { hasGroup } = vtxRow();
+
+            expect(hasGroup.value).toBe(true);
+        });
+
+        it("narrows the group when both are given", () => {
+            const { functionItems } = row({ group: "peripherals", functions: ["IRC_TRAMP"] });
+
+            expect(functionItems.value.map((i) => i.value)).toEqual([NO_FUNCTION, "IRC_TRAMP"]);
+        });
+
+        it("assigns the chosen function once applied", () => {
+            const r = vtxRow();
+
+            r.selectFunction("TBS_SMARTAUDIO");
+            r.selectPort(1);
+
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(r.hasPendingChange.value).toBe(true);
+
+            r.apply();
+            expect(store.portById(1).peripheral).toEqual("TBS_SMARTAUDIO");
+        });
+
+        it("reports whichever of the named functions the FC has assigned", () => {
+            store.assign("IRC_TRAMP", 2);
+
+            expect(vtxRow().activeFunction.value).toEqual("IRC_TRAMP");
+        });
+
+        it("ignores an assignment of a function outside the list", () => {
+            store.assign("BLACKBOX", 2);
+
+            expect(vtxRow().activeFunction.value).toEqual("");
+        });
+
+        it("frees the function it replaces, wherever that was", () => {
+            store.assign("IRC_TRAMP", 1);
+            const r = vtxRow();
+
+            r.selectFunction("TBS_SMARTAUDIO");
+            r.selectPort(2);
+            r.apply();
+
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(store.portById(2).peripheral).toEqual("TBS_SMARTAUDIO");
+        });
+
+        it("previews evicting a function it does not itself offer", () => {
+            // The slot is shared with blackbox even though this row cannot select it (C1/C4).
+            store.assign("BLACKBOX", 1);
+            const r = vtxRow();
+
+            r.selectFunction("TBS_SMARTAUDIO");
+            r.selectPort(1);
+
+            expect(r.evictions.value).toEqual([{ portId: 1, portName: "UART2", serialFunction: "BLACKBOX" }]);
+            expect(store.portById(1).peripheral).toEqual("BLACKBOX"); // not yet displaced
+
+            r.apply();
+            expect(store.portById(1).peripheral).toEqual("TBS_SMARTAUDIO");
+        });
+
+        it("never offers an item with an empty value", () => {
+            const r = vtxRow();
+            r.selectFunction("VTX_MSP");
+
+            for (const list of [r.functionItems, r.portItems, r.mspBaudItems]) {
+                for (const item of list.value) {
+                    expect(item.value, JSON.stringify(item)).not.toEqual("");
+                }
+            }
+        });
+    });
+
     // Reka UI reserves the empty string for clearing a select and showing its placeholder, and
     // throws "A <SelectItem /> must have a value prop that is not an empty string" if an item
     // carries it. Every list this row feeds to a USelect has to respect that.
@@ -556,6 +659,64 @@ describe("useSerialFunctionRow", () => {
             expect(r.activeFunction.value).toEqual("");
             r.apply();
             expect(store.portById(1).telemetry).toEqual("");
+        });
+    });
+
+    // Regression: a picker can only show one assignment, but firmware can legally hold two of its
+    // functions on two ports - a SmartAudio VTX on one UART and a RunCam split camera on another.
+    // The row used to show one, silently clear the other on save, and warn about nothing.
+    describe("more than one of the row's functions assigned", () => {
+        const vtxRow = () => row({ functions: ["IRC_TRAMP", "TBS_SMARTAUDIO", "VTX_MSP", "RUNCAM_DEVICE_CONTROL"] });
+
+        beforeEach(async () => {
+            FC.SERIAL_CONFIG.ports = [
+                fcPort(20, ["MSP"]),
+                fcPort(2, ["TBS_SMARTAUDIO"]),
+                fcPort(4, ["RUNCAM_DEVICE_CONTROL"]),
+            ];
+            await store.loadConfig({ force: true });
+        });
+
+        it("names the assignment it cannot show", () => {
+            const r = vtxRow();
+            const shown = r.activeFunction.value;
+
+            expect(r.hiddenAssignments.value).toHaveLength(1);
+            expect(r.hiddenAssignments.value[0].serialFunction).not.toEqual(shown);
+            expect(r.hiddenAssignments.value[0].portName).toBeTruthy();
+        });
+
+        it("warns before deleting the protocol it replaces", () => {
+            const r = vtxRow();
+            const replaced = r.activeFunction.value;
+
+            r.selectFunction("IRC_TRAMP");
+
+            expect(r.evictions.value).toContainEqual(expect.objectContaining({ serialFunction: replaced }));
+        });
+
+        it("still deletes it on apply, but only after having said so", () => {
+            const r = vtxRow();
+            const replaced = r.activeFunction.value;
+            r.selectFunction("IRC_TRAMP");
+            const warned = r.evictions.value.map((e) => e.serialFunction);
+
+            r.apply();
+
+            const stillAssigned = store.ports.some((p) => store.portUses(p, replaced));
+            expect(stillAssigned).toBe(false);
+            expect(warned).toContain(replaced);
+        });
+
+        it("reports nothing hidden when only one is assigned", async () => {
+            FC.SERIAL_CONFIG.ports = [fcPort(20, ["MSP"]), fcPort(2, ["TBS_SMARTAUDIO"])];
+            await store.loadConfig({ force: true });
+
+            expect(vtxRow().hiddenAssignments.value).toEqual([]);
+        });
+
+        it("reports nothing hidden for a single-function row", () => {
+            expect(row({ serialFunction: "GPS" }).hiddenAssignments.value).toEqual([]);
         });
     });
 
