@@ -22,6 +22,19 @@
             />
         </SettingRow>
 
+        <!-- MSP on the chosen port, matching the Ports tab's Configuration column. -->
+        <SettingRow :label="$t('portsFunction_MSP')" :help="$t('portsMSPHelp')">
+            <USwitch :model-value="msp" :disabled="mspDisabled" size="xs" @update:model-value="setMsp" />
+            <USelect
+                :model-value="mspBaudrate"
+                :items="mspBaudItems"
+                :disabled="!assignedPort"
+                size="xs"
+                class="min-w-28"
+                @update:model-value="setMspBaudrate"
+            />
+        </SettingRow>
+
         <UAlert
             v-for="eviction in evictions"
             :key="`${eviction.portId}-${eviction.serialFunction}`"
@@ -94,5 +107,11 @@ const {
     displayName,
     selectPort,
     setBaudrate,
+    msp,
+    mspDisabled,
+    mspBaudItems,
+    mspBaudrate,
+    setMsp,
+    setMspBaudrate,
 } = useSerialFunctionRow(props);
 </script>

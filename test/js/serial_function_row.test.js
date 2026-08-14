@@ -193,6 +193,87 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
+    describe("MSP on the chosen port", () => {
+        it("reflects the chosen port's MSP setting", () => {
+            store.assign("MSP", 1);
+            const r = row({ serialFunction: "GPS" });
+
+            r.selectPort(1);
+
+            expect(r.msp.value).toBe(true);
+        });
+
+        it("enables MSP on the chosen port", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(1);
+            expect(r.msp.value).toBe(false);
+
+            r.setMsp(true);
+
+            expect(store.portById(1).msp).toBe(true);
+            expect(r.msp.value).toBe(true);
+        });
+
+        it("disables MSP on the chosen port", () => {
+            store.assign("MSP", 1);
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(1);
+
+            r.setMsp(false);
+
+            expect(store.portById(1).msp).toBe(false);
+        });
+
+        it("follows the selection from one port to another", () => {
+            store.assign("MSP", 1);
+            const r = row({ serialFunction: "GPS" });
+
+            r.selectPort(1);
+            expect(r.msp.value).toBe(true);
+
+            r.selectPort(2);
+            expect(r.msp.value).toBe(false);
+        });
+
+        it("is unavailable until a port is chosen", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            expect(r.mspDisabled.value).toBe(true);
+            expect(() => r.setMsp(true)).not.toThrow();
+        });
+
+        it("cannot be switched off for USB VCP, which firmware requires to keep MSP", () => {
+            const r = row({ serialFunction: "BLACKBOX" });
+            r.selectPort(20);
+
+            expect(r.mspDisabled.value).toBe(true);
+
+            r.setMsp(false);
+
+            expect(store.portById(20).msp).toBe(true);
+        });
+
+        it("exposes the MSP baudrate of the chosen port and writes it back", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(1);
+
+            expect(r.mspBaudrate.value).toEqual("115200");
+            expect(labels(r.mspBaudItems.value)).toContain("115200");
+
+            r.setMspBaudrate("9600");
+
+            expect(store.portById(1).msp_baudrate).toEqual("9600");
+        });
+
+        it("marks the store dirty, so the change reaches the save", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(1);
+            r.setMsp(true);
+
+            expect(store.dirty).toBe(true);
+        });
+    });
+
     describe("baudrate", () => {
         it("is absent for a function with no baudrate", () => {
             const { hasBaudField, baudItems } = row({ serialFunction: "ESC_SENSOR" });
