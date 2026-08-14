@@ -59,19 +59,39 @@ export function usePortsState(getRules) {
     const getPortName = (id) => portIdentifierToNameMapping[id] || `UART (${id})`;
 
     const transformPortData = (fcPort) => {
+        const msp = fcPort.functions.includes("MSP");
+        const rxSerial = fcPort.functions.includes("RX_SERIAL");
+        const telemetry = fcPort.functions.find((f) => getRules("telemetry").some((r) => r.name === f)) || "";
+        const sensor = fcPort.functions.find((f) => getRules("sensors").some((r) => r.name === f)) || "";
+        const peripheral = fcPort.functions.find((f) => getRules("peripherals").some((r) => r.name === f)) || "";
+
+        // A port has one slot per group (see functionRules), so a decoded function that no slot
+        // claimed - a second peripheral, or a named function with no rule on this API version -
+        // would be dropped on save. Park it here and re-emit it verbatim instead.
+        const claimed = [msp && "MSP", rxSerial && "RX_SERIAL", telemetry, sensor, peripheral].filter(Boolean);
+        const reservedFunctions = fcPort.functions.filter((f) => !claimed.includes(f));
+
         return {
             identifier: fcPort.identifier,
+            // Raw mask as received. MSPHelper ORs the bits it cannot name back in on write.
+            functionMask: fcPort.functionMask || 0,
+            reservedFunctions,
             msp_baudrate: fcPort.msp_baudrate,
             telemetry_baudrate: fcPort.telemetry_baudrate,
             gps_baudrate: fcPort.gps_baudrate === "AUTO" ? "AUTO" : fcPort.gps_baudrate || "AUTO",
             blackbox_baudrate: fcPort.blackbox_baudrate === "AUTO" ? "AUTO" : fcPort.blackbox_baudrate || "AUTO",
-            msp: fcPort.functions.includes("MSP"),
-            rxSerial: fcPort.functions.includes("RX_SERIAL"),
-            telemetry: fcPort.functions.find((f) => getRules("telemetry").some((r) => r.name === f)) || "",
-            sensor: fcPort.functions.find((f) => getRules("sensors").some((r) => r.name === f)) || "",
-            peripheral: fcPort.functions.find((f) => getRules("peripherals").some((r) => r.name === f)) || "",
+            msp,
+            rxSerial,
+            telemetry,
+            sensor,
+            peripheral,
         };
     };
+
+    // True when the port carries something the configurator preserves but will not edit:
+    // either a bit it cannot name, or a named function with no slot on this API version.
+    const hasReservedFunctions = (port) =>
+        port.reservedFunctions?.length > 0 || mspHelper.serialPortUnknownFunctionMask(port.functionMask) !== 0;
 
     const handleSerialConfigLoaded = () => {
         ports.length = 0;
@@ -116,6 +136,7 @@ export function usePortsState(getRules) {
         ports,
         analyticsChanges,
         getPortName,
+        hasReservedFunctions,
         vtxTableNotConfigured,
         dirty,
         isLoading,

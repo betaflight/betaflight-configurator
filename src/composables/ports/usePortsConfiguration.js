@@ -2,7 +2,7 @@ import { toRaw } from "vue";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
+import { mspHelper, isMspRejected } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
@@ -87,9 +87,13 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
             if (p.peripheral) {
                 functions.push(p.peripheral);
             }
+            // Named functions this API version has no slot for; the unnamed bits ride along in
+            // functionMask and are restored by mspHelper.serialPortFunctionsToMask.
+            functions.push(...(p.reservedFunctions ?? []));
 
             return {
                 identifier: p.identifier,
+                functionMask: p.functionMask ?? 0,
                 msp_baudrate: p.msp_baudrate,
                 telemetry_baudrate: p.telemetry_baudrate,
                 gps_baudrate: p.gps_baudrate === "AUTO" ? "57600" : p.gps_baudrate,
@@ -101,10 +105,19 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         updateFeatures();
 
         const saveEeprom = () => {
-            saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
+            saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSaved")));
         };
 
-        mspHelper.sendSerialConfig(() => {
+        mspHelper.sendSerialConfig((response) => {
+            // Firmware refuses a serial config it cannot apply (betaflight#15131). Writing the
+            // feature bits, saving EEPROM and rebooting on top of that would report success over
+            // an unchanged serial config, so stop here and tell the user.
+            if (isMspRejected(response)) {
+                console.error("Flight controller rejected the serial port configuration");
+                gui_log(i18n.getMessage("portsSaveRejected"));
+                return;
+            }
+
             MSP.send_message(
                 MSPCodes.MSP_SET_FEATURE_CONFIG,
                 mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),

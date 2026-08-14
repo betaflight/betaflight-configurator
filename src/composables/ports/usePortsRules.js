@@ -5,7 +5,9 @@ import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 
 export function usePortsRules() {
     const functionRules = [
-        { name: "MSP", groups: ["configuration", "msp"], maxPorts: 2 },
+        // MAX_MSP_PORT_COUNT in the firmware (msp_serial.h) is 3, and master rejects a config
+        // asking for more (serial.c canApplyFunctionMask). USB VCP counts towards the total.
+        { name: "MSP", groups: ["configuration", "msp"], maxPorts: 3 },
         { name: "GPS", groups: ["sensors"], maxPorts: 1, dependsOn: "USE_GPS" },
         {
             name: "TELEMETRY_FRSKY",
@@ -59,6 +61,14 @@ export function usePortsRules() {
 
     if (FC.CONFIG && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         functionRules.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
+    }
+
+    // Bit 18, introduced in 2025.12 (API 1.47) and unmoved since, so the API version is a
+    // sound gate here - unlike bits 19/20, which two shipping firmwares define differently
+    // while both reporting API 1.48. No `dependsOn`: USE_GIMBAL is not in the configurator's
+    // build-option key map (fc.js), so a dependsOn would disable it on every cloud build.
+    if (FC.CONFIG && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        functionRules.push({ name: "GIMBAL", groups: ["peripherals"], maxPorts: 1 });
     }
 
     for (const rule of functionRules) {

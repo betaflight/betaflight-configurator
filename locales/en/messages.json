@@ -2242,6 +2242,15 @@
     "portsTelemetryDisabled": {
         "message": "Disabled"
     },
+    "serialPortReserved": {
+        "message": "Other (reserved)"
+    },
+    "serialPortReservedHelp": {
+        "message": "This port has a function assigned that this version of the app does not recognise. It is kept unchanged when you save, but cannot be edited here. Update the app if the function was added in a newer firmware release."
+    },
+    "portsSaveRejected": {
+        "message": "The flight controller <span class=\"message-negative\">rejected</span> this serial port configuration. Nothing was saved. Check for two functions sharing a port that cannot be shared, or for more MSP ports than the firmware supports."
+    },
     "portsFunction_MSP": {
         "message": "MSP"
     },
@@ -2309,7 +2318,10 @@
         "message": "Rateprofile $1"
     },
     "portsFunction_LIDAR_TF": {
-        "message": "Benewake LIDAR"
+        "message": "Serial rangefinder"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."

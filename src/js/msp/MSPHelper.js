@@ -65,6 +65,16 @@ function MspHelper() {
         "2470000",
     ];
     // needs to be identical to 'serialPortFunction_e' in 'src/main/io/serial.h' in betaflight
+    //
+    // This list is deliberately INCOMPLETE and must stay that way for bits 19 and 20:
+    // 2026.6.1 (API 1.48) has LIDAR_NL on 19 and OSD_CUSTOM_TEXT on 20, while master
+    // (also API 1.48) has OSD_CUSTOM_TEXT on 19. The API version cannot tell them apart,
+    // so naming either one would let the configurator write a bit that means something
+    // else on the connected FC - writing bit 19 to a 2026.6.1 board would silently
+    // reassign the user's Nooploop rangefinder.
+    //
+    // Bits absent from this list are not lost: they are round-tripped verbatim by
+    // serialPortUnknownFunctionMask() / serialPortFunctionsToMask() below.
     self.SERIAL_PORT_FUNCTIONS = {
         MSP: 0,
         GPS: 1,
@@ -80,9 +90,10 @@ function MspHelper() {
         TELEMETRY_IBUS: 12,
         IRC_TRAMP: 13,
         RUNCAM_DEVICE_CONTROL: 14, // support communitate with RunCam Device
-        LIDAR_TF: 15,
+        LIDAR_TF: 15, // FUNCTION_LIDAR on master: the unified serial rangefinder bit, driver picked by rangefinder_hardware
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18, // added in 2025.12 (API 1.47) and unmoved since
     };
 
     self.REBOOT_TYPES = {
@@ -987,9 +998,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     const serialPortCount = data.byteLength / bytesPerPort;
                     for (let i = 0; i < serialPortCount; i++) {
+                        const identifier = data.readU8();
+                        const functionMask = data.readU16();
                         const serialPort = {
-                            identifier: data.readU8(),
-                            functions: self.serialPortFunctionMaskToFunctions(data.readU16()),
+                            identifier,
+                            // retained so bits this build cannot name survive the next write
+                            functionMask,
+                            functions: self.serialPortFunctionMaskToFunctions(functionMask),
                             msp_baudrate: self.BAUD_RATES[data.readU8()],
                             gps_baudrate: self.BAUD_RATES[data.readU8()],
                             telemetry_baudrate: self.BAUD_RATES[data.readU8()],
@@ -1006,9 +1021,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     const portConfigSize = data.remaining() / count;
                     for (let ii = 0; ii < count; ii++) {
                         const start = data.remaining();
+                        const identifier = data.readU8();
+                        const functionMask = data.readU32();
                         const serialPort = {
-                            identifier: data.readU8(),
-                            functions: self.serialPortFunctionMaskToFunctions(data.readU32()),
+                            identifier,
+                            // retained so bits this build cannot name survive the next write
+                            functionMask,
+                            functions: self.serialPortFunctionMaskToFunctions(functionMask),
                             msp_baudrate: self.BAUD_RATES[data.readU8()],
                             gps_baudrate: self.BAUD_RATES[data.readU8()],
                             telemetry_baudrate: self.BAUD_RATES[data.readU8()],
@@ -2117,7 +2136,10 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
                 buffer.push8(serialPort.identifier);
 
-                const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                // & 0xffff: this legacy command only ever carried 16 bits, so a reserved bit
+                // above 15 cannot be represented here and must not corrupt the low half.
+                const reservedMask = self.serialPortUnknownFunctionMask(serialPort.functionMask) & 0xffff;
+                const functionMask = self.serialPortFunctionsToMask(serialPort.functions, reservedMask);
                 buffer
                     .push16(functionMask)
                     .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -2135,7 +2157,10 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
                 buffer.push8(serialPort.identifier);
 
-                const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                const functionMask = self.serialPortFunctionsToMask(
+                    serialPort.functions,
+                    self.serialPortUnknownFunctionMask(serialPort.functionMask),
+                );
                 buffer
                     .push32(functionMask)
                     .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -2795,7 +2820,34 @@ MspHelper.prototype.serialPortFunctionMaskToFunctions = function (functionMask) 
     return functions;
 };
 
-MspHelper.prototype.serialPortFunctionsToMask = function (functions) {
+/**
+ * Every bit this configurator build knows how to name, as a mask.
+ */
+MspHelper.prototype.serialPortKnownFunctionMask = function () {
+    let mask = 0;
+    for (const bit of Object.values(this.SERIAL_PORT_FUNCTIONS)) {
+        mask = bit_set(mask, bit);
+    }
+    return mask >>> 0;
+};
+
+/**
+ * The bits of `functionMask` this build cannot name. Firmware adds serial functions faster
+ * than the configurator learns their names, and two shipping firmwares currently disagree on
+ * what bits 19 and 20 mean while both reporting API 1.48 - so unnamed bits are round-tripped
+ * untouched rather than decoded. Without this, opening the Ports tab and saving anything drops
+ * a user's gimbal, Nooploop rangefinder or OSD custom text assignment.
+ */
+MspHelper.prototype.serialPortUnknownFunctionMask = function (functionMask) {
+    return ((functionMask || 0) & ~this.serialPortKnownFunctionMask()) >>> 0;
+};
+
+/**
+ * @param {string[]} functions - named functions to encode
+ * @param {number} [reservedMask=0] - bits to carry through verbatim, from
+ *        {@link MspHelper.prototype.serialPortUnknownFunctionMask}
+ */
+MspHelper.prototype.serialPortFunctionsToMask = function (functions, reservedMask = 0) {
     const self = this;
     let mask = 0;
 
@@ -2807,7 +2859,7 @@ MspHelper.prototype.serialPortFunctionsToMask = function (functions) {
         }
     }
 
-    return mask;
+    return (mask | reservedMask) >>> 0;
 };
 
 MspHelper.prototype.sendRxFailConfig = function (onCompleteCallback) {
@@ -2877,10 +2929,25 @@ MspHelper.prototype.loadSerialConfig = function (callback) {
     MSP.send_message(mspCode, false, false, callback);
 };
 
+/**
+ * Firmware rejects a serial config it cannot apply (betaflight#15131) with an MSP error reply.
+ * The reply reaches the callback as `response.unsupported`, so the callback is handed the whole
+ * response and the caller is expected to abort the save chain rather than write EEPROM and reboot
+ * on top of an unchanged serial config.
+ *
+ * `response` is undefined when disconnected or in virtual mode, which is not a rejection.
+ */
 MspHelper.prototype.sendSerialConfig = function (callback) {
     const mspCode = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
+
+/**
+ * True when an MSP reply says the FC refused the request.
+ */
+export function isMspRejected(response) {
+    return Boolean(response?.unsupported || response?.crcError);
+}
 
 MspHelper.prototype.writeConfiguration = function (reboot, callback) {
     // We need some protection when testing motors on motors tab

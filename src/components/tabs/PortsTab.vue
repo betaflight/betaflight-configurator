@@ -35,13 +35,21 @@
                         <!-- Rows -->
                         <template v-for="(port, index) in ports" :key="port.identifier">
                             <!-- Identifier -->
-                            <div class="flex items-center pl-3 font-semibold p-1.5">
+                            <div class="flex items-center gap-1.5 pl-3 font-semibold p-1.5">
                                 {{ getPortName(port.identifier) }}
+                                <UBadge
+                                    v-if="hasReservedFunctions(port)"
+                                    :label="$t('serialPortReserved')"
+                                    color="neutral"
+                                    variant="subtle"
+                                    size="sm"
+                                />
+                                <HelpIcon v-if="hasReservedFunctions(port)" :text="$t('serialPortReservedHelp')" />
                             </div>
 
                             <!-- Configuration (MSP) -->
                             <div class="flex items-center gap-2 p-1.5">
-                                <USwitch v-model="port.msp" :disabled="port.identifier === 20" />
+                                <USwitch v-model="port.msp" :disabled="isMspDisabled(port)" />
                                 <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
                             </div>
 
@@ -54,7 +62,7 @@
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
                                     :model-value="portFieldGet(port, 'telemetry')"
-                                    :items="telemetryItems"
+                                    :items="groupItems('telemetry', port)"
                                     size="xs"
                                     class="min-w-22"
                                     @update:model-value="
@@ -69,7 +77,7 @@
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
                                     :model-value="portFieldGet(port, 'sensor')"
-                                    :items="sensorItems"
+                                    :items="groupItems('sensors', port)"
                                     size="xs"
                                     class="min-w-22"
                                     @update:model-value="portFieldSet(port, 'sensor', $event)"
@@ -81,7 +89,7 @@
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
                                     :model-value="portFieldGet(port, 'peripheral')"
-                                    :items="peripheralItems"
+                                    :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-48"
                                     @update:model-value="
@@ -104,9 +112,15 @@
                         collapsible
                         :title="getPortName(port.identifier)"
                     >
+                        <!-- Preserved but uneditable functions -->
+                        <div v-if="hasReservedFunctions(port)" class="flex items-center gap-1.5">
+                            <UBadge :label="$t('serialPortReserved')" color="neutral" variant="subtle" size="sm" />
+                            <HelpIcon :text="$t('serialPortReservedHelp')" />
+                        </div>
+
                         <!-- MSP -->
                         <div class="flex items-center gap-2">
-                            <USwitch v-model="port.msp" :disabled="port.identifier === 20" size="xs" />
+                            <USwitch v-model="port.msp" :disabled="isMspDisabled(port)" size="xs" />
                             <span class="text-xs flex-1">MSP</span>
                             <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
                         </div>
@@ -124,7 +138,7 @@
                             <div class="flex items-center gap-2">
                                 <USelect
                                     :model-value="portFieldGet(port, 'telemetry')"
-                                    :items="telemetryItems"
+                                    :items="groupItems('telemetry', port)"
                                     size="xs"
                                     @update:model-value="
                                         portFieldSet(port, 'telemetry', $event);
@@ -141,7 +155,7 @@
                             <div class="flex items-center gap-2">
                                 <USelect
                                     :model-value="portFieldGet(port, 'sensor')"
-                                    :items="sensorItems"
+                                    :items="groupItems('sensors', port)"
                                     size="xs"
                                     @update:model-value="portFieldSet(port, 'sensor', $event)"
                                 />
@@ -155,7 +169,7 @@
                             <div class="flex items-center gap-2">
                                 <USelect
                                     :model-value="portFieldGet(port, 'peripheral')"
-                                    :items="peripheralItems"
+                                    :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-44"
                                     @update:model-value="
@@ -199,7 +213,8 @@ const isDesktop = useMediaQuery("(min-width: 1010px)");
 const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } =
     usePortsRules();
 
-const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty, isLoading } = usePortsState(getRules);
+const { ports, analyticsChanges, getPortName, hasReservedFunctions, vtxTableNotConfigured, dirty, isLoading } =
+    usePortsState(getRules);
 
 const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
     ports,
@@ -225,23 +240,53 @@ const blackboxBaudItems = blackboxBaudRates.map((r) => ({ value: r, label: r }))
 const NONE = "_NONE_";
 const disabledLabel = computed(() => t("portsTelemetryDisabled"));
 
-const telemetryItems = computed(() => [
-    { value: NONE, label: disabledLabel.value },
-    ...getRules("telemetry").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
-]);
+// Which slot on a port a function occupies, so a function can be counted across ports.
+const SLOT_FIELDS = ["telemetry", "sensor", "peripheral"];
 
-const sensorItems = computed(() => [
-    { value: NONE, label: disabledLabel.value },
-    ...getRules("sensors").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
-]);
+function portUsesFunction(port, name) {
+    if (name === "MSP") {
+        return port.msp;
+    }
+    if (name === "RX_SERIAL") {
+        return port.rxSerial;
+    }
+    return SLOT_FIELDS.some((field) => port[field] === name);
+}
 
-const peripheralItems = computed(() => [
-    { value: NONE, label: disabledLabel.value },
-    ...getRules("peripherals").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
-]);
+// `maxPorts` was dead data until now: nothing stopped the user assigning a function to more ports
+// than the firmware has slots for. Master rejects such a config outright, so cap it in the UI.
+function isFunctionAtLimit(rule, port) {
+    if (!rule.maxPorts) {
+        return false;
+    }
+    if (portUsesFunction(port, rule.name)) {
+        return false; // already this port's selection, must stay selectable
+    }
+    return ports.filter((p) => portUsesFunction(p, rule.name)).length >= rule.maxPorts;
+}
+
+function groupItems(group, port) {
+    return [
+        { value: NONE, label: disabledLabel.value },
+        ...getRules(group).map((r) => ({
+            value: r.name,
+            label: r.displayName,
+            disabled: Boolean(isRuleDisabled(r)) || isFunctionAtLimit(r, port),
+        })),
+    ];
+}
 
 function isSerialRxDisabled(port) {
     return !port.rxSerial && ports.some((p) => p !== port && p.rxSerial);
+}
+
+function isMspDisabled(port) {
+    // USB VCP must always keep MSP - firmware refuses a config where it does not (serial.c).
+    if (port.identifier === 20) {
+        return true;
+    }
+    const mspRule = functionRules.find((r) => r.name === "MSP");
+    return !port.msp && isFunctionAtLimit(mspRule, port);
 }
 
 function portFieldGet(port, field) {
