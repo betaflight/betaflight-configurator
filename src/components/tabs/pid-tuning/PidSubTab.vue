@@ -1307,6 +1307,29 @@
                             class="w-20"
                         />
                     </SettingRow>
+                    <details>
+                        <summary class="text-xs cursor-pointer text-dimmed hover:text-default select-none">
+                            {{ $t("pidTuningWingTpaAdvSpeedCurveDetails") }}
+                        </summary>
+                        <div
+                            class="relative bg-white dark:bg-neutral-900 border border-default p-1"
+                            style="height: 362px; min-width: 200px"
+                        >
+                            <HyperbolicChart
+                                :isAdvancedMode="wingConfig.tpa_speed_type == 1"
+                                :propPitch="wingConfig.tpa_speed_adv_prop_pitch / 100"
+                                :craftMass="wingConfig.tpa_speed_adv_mass / 1000"
+                                :dragCoef="wingConfig.tpa_speed_adv_drag_k / 10000"
+                                :motorThrust="wingConfig.tpa_speed_adv_thrust / 1000"
+                                :maxVoltage="wingConfig.tpa_speed_max_voltage / 100"
+                                :motorKv="motorKv"
+                                :curveExpo="wingConfig.tpa_curve_expo / 10"
+                                :stallThrottle="wingConfig.tpa_curve_stall_throttle / 100"
+                                :pidStallThrottle="wingConfig.tpa_curve_pid_thr0 / 100"
+                                :pidFullThrottle="wingConfig.tpa_curve_pid_thr100 / 100"
+                            />
+                        </div>
+                    </details>
                 </UiBox>
             </UiBox>
             <!-- SPA Table -->
@@ -1431,6 +1454,7 @@ import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
+import HyperbolicChart from "./HyperbolicChart.vue";
 
 const { t } = useTranslation();
 
@@ -2055,6 +2079,7 @@ const isWingBuildGte49 = computed(
 
 // Wing config - reactive reference
 const wingConfig = computed(() => FC.WING_CONFIG);
+const motorKv = computed(() => FC.MOTOR_CONFIG.motor_kv);
 
 const wingSpaModesItems = computed(() => [
     { value: 0, label: t("pidTuningWingSpaModeOff") },

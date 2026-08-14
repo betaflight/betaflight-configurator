@@ -10086,6 +10086,9 @@
     "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
         "message": "How fast PIDs do transition as speed grows"
     },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Hyperbolic curves chart"
+    },
     "pidTuningWingMiscSettings": {
         "message": "Miscellaneous settings"
     },
@@ -10105,6 +10108,6 @@
         "message": "Pitch offset"
     },
     "pidTuningWingMiscPitchOffsetHelp": {
-        "message": "Pitch offset for angle modes in decidegrees. Positive values tilting the wing down."
+        "message": "Pitch offset for angle modes in decidegrees. Positive values tilting the wing down"
     }
 }
