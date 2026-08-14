@@ -2248,6 +2248,9 @@
     "serialPortReservedHelp": {
         "message": "This port has a function assigned that this version of the app does not recognise. It is kept unchanged when you save, but cannot be edited here. Update the app if the function was added in a newer firmware release."
     },
+    "portsLoadFailed": {
+        "message": "Could not read the serial port configuration from the flight controller. Reconnect and try again."
+    },
     "portsSaveRejected": {
         "message": "The flight controller <span class=\"message-negative\">rejected</span> this serial port configuration. Nothing was saved. Check for two functions sharing a port that cannot be shared, or for more MSP ports than the firmware supports."
     },

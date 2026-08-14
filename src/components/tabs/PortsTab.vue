@@ -14,7 +14,11 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <TabLoadingState v-if="!tabReady || isLoading" size="size-8" color-class="text-muted">
+                <UiBox v-if="loadFailed" type="error" highlight class="mb-4">
+                    <p v-html="$t('portsLoadFailed')"></p>
+                </UiBox>
+
+                <TabLoadingState v-else-if="!tabReady || !loaded" size="size-8" color-class="text-muted">
                     <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
                 </TabLoadingState>
 
@@ -36,7 +40,7 @@
                         <template v-for="(port, index) in ports" :key="port.identifier">
                             <!-- Identifier -->
                             <div class="flex items-center gap-1.5 pl-3 font-semibold p-1.5">
-                                {{ getPortName(port.identifier) }}
+                                {{ portName(port.identifier) }}
                                 <UBadge
                                     v-if="hasReservedFunctions(port)"
                                     :label="$t('serialPortReserved')"
@@ -65,10 +69,7 @@
                                     :items="groupItems('telemetry', port)"
                                     size="xs"
                                     class="min-w-22"
-                                    @update:model-value="
-                                        portFieldSet(port, 'telemetry', $event);
-                                        onTelemetryChange(port);
-                                    "
+                                    @update:model-value="onSlotChange(port, 'telemetry', $event)"
                                 />
                                 <USelect v-model="port.telemetry_baudrate" :items="telemetryBaudItems" size="xs" />
                             </div>
@@ -80,7 +81,7 @@
                                     :items="groupItems('sensors', port)"
                                     size="xs"
                                     class="min-w-22"
-                                    @update:model-value="portFieldSet(port, 'sensor', $event)"
+                                    @update:model-value="onSlotChange(port, 'sensor', $event)"
                                 />
                                 <USelect v-model="port.gps_baudrate" :items="gpsBaudItems" size="xs" />
                             </div>
@@ -92,10 +93,7 @@
                                     :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-48"
-                                    @update:model-value="
-                                        portFieldSet(port, 'peripheral', $event);
-                                        onPeripheralChange(port);
-                                    "
+                                    @update:model-value="onSlotChange(port, 'peripheral', $event)"
                                 />
                                 <USelect v-model="port.blackbox_baudrate" :items="blackboxBaudItems" size="xs" />
                             </div>
@@ -110,7 +108,7 @@
                         :key="port.identifier"
                         type="neutral"
                         collapsible
-                        :title="getPortName(port.identifier)"
+                        :title="portName(port.identifier)"
                     >
                         <!-- Preserved but uneditable functions -->
                         <div v-if="hasReservedFunctions(port)" class="flex items-center gap-1.5">
@@ -140,10 +138,7 @@
                                     :model-value="portFieldGet(port, 'telemetry')"
                                     :items="groupItems('telemetry', port)"
                                     size="xs"
-                                    @update:model-value="
-                                        portFieldSet(port, 'telemetry', $event);
-                                        onTelemetryChange(port);
-                                    "
+                                    @update:model-value="onSlotChange(port, 'telemetry', $event)"
                                 />
                                 <USelect v-model="port.telemetry_baudrate" :items="telemetryBaudItems" size="xs" />
                             </div>
@@ -157,7 +152,7 @@
                                     :model-value="portFieldGet(port, 'sensor')"
                                     :items="groupItems('sensors', port)"
                                     size="xs"
-                                    @update:model-value="portFieldSet(port, 'sensor', $event)"
+                                    @update:model-value="onSlotChange(port, 'sensor', $event)"
                                 />
                                 <USelect v-model="port.gps_baudrate" :items="gpsBaudItems" size="xs" />
                             </div>
@@ -172,10 +167,7 @@
                                     :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-44"
-                                    @update:model-value="
-                                        portFieldSet(port, 'peripheral', $event);
-                                        onPeripheralChange(port);
-                                    "
+                                    @update:model-value="onSlotChange(port, 'peripheral', $event)"
                                 />
                                 <USelect v-model="port.blackbox_baudrate" :items="blackboxBaudItems" size="xs" />
                             </div>
@@ -187,14 +179,15 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="saveConfig" />
+                <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="save" />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useMediaQuery } from "@vueuse/core";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -202,34 +195,51 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import TabLoadingState from "@/components/elements/TabLoadingState.vue";
 import { useTranslation } from "i18next-vue";
+import GUI from "../../js/gui";
+import FC from "../../js/fc";
+import MSP from "../../js/msp";
+import MSPCodes from "../../js/msp/MSPCodes";
 import { usePortsRules } from "../../composables/ports/usePortsRules";
-import { usePortsState } from "../../composables/ports/usePortsState";
-import { usePortsConfiguration } from "../../composables/ports/usePortsConfiguration";
+import { useSerialPortsStore } from "../../stores/serialPorts";
 
 const { t } = useTranslation();
 
 const isDesktop = useMediaQuery("(min-width: 1010px)");
 
-const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } =
-    usePortsRules();
+// usePortsRules is stateless and pure, so the tab derives its own copy for the dropdown and
+// baudrate lists rather than routing them through the store.
+const { mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxBaudRates, getRules, isRuleDisabled } = usePortsRules();
 
-const { ports, analyticsChanges, getPortName, hasReservedFunctions, vtxTableNotConfigured, dirty, isLoading } =
-    usePortsState(getRules);
-
-const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
-    ports,
-    analyticsChanges,
-    functionRules,
-);
+const store = useSerialPortsStore();
+const { ports, loaded, loadFailed, dirty, functionRules } = storeToRefs(store);
+const { portName, portUses, hasReservedFunctions, assign, clear, save } = store;
 
 const tabReady = ref(false);
 
-onMounted(() => {
+// The VTX-table warning is the only reason this tab reads VTX config. It is fetched separately
+// from the serial config so a VTX read that fails cannot stop the ports from loading, which is
+// what used to happen when the two were chained.
+const vtxTableNotConfigured = computed(
+    () =>
+        FC.VTX_CONFIG?.vtx_table_available &&
+        (FC.VTX_CONFIG.vtx_table_bands === 0 ||
+            FC.VTX_CONFIG.vtx_table_channels === 0 ||
+            FC.VTX_CONFIG.vtx_table_powerlevels === 0),
+);
+
+onMounted(async () => {
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             tabReady.value = true;
         });
     });
+
+    MSP.promise(MSPCodes.MSP_VTX_CONFIG).catch((error) =>
+        console.error("Failed to load VTX config for the ports tab:", error),
+    );
+
+    await store.loadConfig();
+    nextTick(() => GUI.content_ready());
 });
 
 const mspBaudItems = mspBaudRates.map((r) => ({ value: r, label: r }));
@@ -240,29 +250,16 @@ const blackboxBaudItems = blackboxBaudRates.map((r) => ({ value: r, label: r }))
 const NONE = "_NONE_";
 const disabledLabel = computed(() => t("portsTelemetryDisabled"));
 
-// Which slot on a port a function occupies, so a function can be counted across ports.
-const SLOT_FIELDS = ["telemetry", "sensor", "peripheral"];
-
-function portUsesFunction(port, name) {
-    if (name === "MSP") {
-        return port.msp;
-    }
-    if (name === "RX_SERIAL") {
-        return port.rxSerial;
-    }
-    return SLOT_FIELDS.some((field) => port[field] === name);
-}
-
 // `maxPorts` was dead data until now: nothing stopped the user assigning a function to more ports
 // than the firmware has slots for. Master rejects such a config outright, so cap it in the UI.
 function isFunctionAtLimit(rule, port) {
     if (!rule.maxPorts) {
         return false;
     }
-    if (portUsesFunction(port, rule.name)) {
+    if (portUses(port, rule.name)) {
         return false; // already this port's selection, must stay selectable
     }
-    return ports.filter((p) => portUsesFunction(p, rule.name)).length >= rule.maxPorts;
+    return ports.value.filter((p) => portUses(p, rule.name)).length >= rule.maxPorts;
 }
 
 function groupItems(group, port) {
@@ -277,7 +274,7 @@ function groupItems(group, port) {
 }
 
 function isSerialRxDisabled(port) {
-    return !port.rxSerial && ports.some((p) => p !== port && p.rxSerial);
+    return !port.rxSerial && ports.value.some((p) => p !== port && p.rxSerial);
 }
 
 function isMspDisabled(port) {
@@ -285,14 +282,26 @@ function isMspDisabled(port) {
     if (port.identifier === 20) {
         return true;
     }
-    const mspRule = functionRules.find((r) => r.name === "MSP");
+    const mspRule = functionRules.value.find((r) => r.name === "MSP");
     return !port.msp && isFunctionAtLimit(mspRule, port);
 }
 
 function portFieldGet(port, field) {
     return port[field] || NONE;
 }
-function portFieldSet(port, field, value) {
-    port[field] = value === NONE ? "" : value;
+
+/**
+ * Route a slot dropdown through the store so the exclusion rules live in one place. The store
+ * reports what each change displaced; the full-matrix view shows the cleared cell directly, so
+ * the Ports tab does not need to surface it the way a contextual editor must.
+ */
+function onSlotChange(port, field, value) {
+    if (value === NONE) {
+        if (port[field]) {
+            clear(port[field], port.identifier);
+        }
+        return;
+    }
+    assign(value, port.identifier);
 }
 </script>
