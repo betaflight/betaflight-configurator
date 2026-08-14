@@ -64,8 +64,9 @@ import { useSerialFunctionRow } from "../../composables/ports/useSerialFunctionR
  * The reusable inline serial-port editor. Every feature tab renders this same component against
  * the same store, so there is no per-tab adapter layer and no per-tab save flow to keep in sync.
  *
- * There is no save button here: serial changes are applied by the pending-changes banner, or by
- * the host tab's own save, so that a session's edits cost one reboot between them.
+ * There is no save button here, and no write to shared state either: the edit is held locally and
+ * applied by the host tab's own save, so it costs the same single reboot as that tab's settings
+ * and leaves nothing behind if the user walks away.
  *
  * The prop is `serialFunction` rather than `function`, which is a reserved word and cannot be
  * destructured.
@@ -113,5 +114,12 @@ const {
     mspBaudrate,
     setMsp,
     setMspBaudrate,
+    hasPendingChange,
+    apply,
+    reset,
 } = useSerialFunctionRow(props);
+
+// The host tab owns the Save button, so it needs to know there is something to save and how to
+// apply it. Nothing reaches the shared store until it calls apply().
+defineExpose({ hasPendingChange, apply, reset });
 </script>

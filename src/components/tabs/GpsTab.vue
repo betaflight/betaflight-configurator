@@ -4,8 +4,6 @@
             <div class="tab_title" v-html="$t('tabGPS')"></div>
             <WikiButton docUrl="gps" />
 
-            <SerialPortsPendingBanner />
-
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <!-- Left Column: Configuration + Signal Strength -->
                 <div class="lg:col-span-2 flex flex-col gap-4">
@@ -39,6 +37,7 @@
                         </SettingRow>
 
                         <SerialFunctionRow
+                            ref="serialRow"
                             serial-function="GPS"
                             baud-field="gps_baudrate"
                             :label="$t('serialPortAssign')"
@@ -301,7 +300,6 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
-import SerialPortsPendingBanner from "../ports/SerialPortsPendingBanner.vue";
 import { useSerialPortsStore } from "@/stores/serialPorts";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
@@ -314,7 +312,6 @@ export default defineComponent({
         UiBox,
         SettingRow,
         SerialFunctionRow,
-        SerialPortsPendingBanner,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -405,12 +402,12 @@ export default defineComponent({
 
         const { dirty: gpsSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
 
-        // A pending port assignment is unsaved work on this tab too: it is made here, it is applied
-        // by this tab's Save, and without it the Save button stays disabled while the change sits
-        // in the store waiting to surprise the user on the Ports tab. It is ORed rather than folded
-        // into the serializer because the store clears its own dirty flag mid-save, which would
-        // leave a snapshot-based baseline permanently out of step.
-        const dirty = computed(() => gpsSettingsDirty.value || serialPortsStore.dirty);
+        // The serial row holds its edit locally until this tab's save applies it, so ask the row
+        // rather than the store. ORed rather than folded into the serializer because the row clears
+        // its pending state partway through a save, which would leave a snapshot-based baseline
+        // permanently out of step.
+        const serialRow = ref(null);
+        const dirty = computed(() => gpsSettingsDirty.value || Boolean(serialRow.value?.hasPendingChange));
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -756,9 +753,13 @@ export default defineComponent({
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
                     // A pending port assignment rides along on this save so the two together cost
-                    // one reboot, not two. It writes the serial config and the feature bits it
-                    // implies; the feature write below then repeats that same mask harmlessly,
-                    // and one saveAndReboot at the end persists the lot.
+                    // one reboot, not two. This is where the row's edit first reaches shared state:
+                    // apply it, then write the serial config and the feature bits it implies. The
+                    // feature write below repeats that same mask harmlessly, and one saveAndReboot
+                    // at the end persists the lot.
+                    if (serialRow.value?.hasPendingChange) {
+                        serialRow.value.apply();
+                    }
                     if (serialPortsStore.dirty) {
                         await serialPortsStore.writeConfig();
                     }
@@ -833,6 +834,7 @@ export default defineComponent({
         });
 
         return {
+            serialRow,
             mapRef,
             mapContainerRef,
             activeLayer,

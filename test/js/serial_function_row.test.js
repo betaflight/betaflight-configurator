@@ -68,10 +68,21 @@ describe("useSerialFunctionRow", () => {
     });
 
     describe("port options", () => {
-        it("offers every port plus an unassigned option", () => {
+        it("offers every real port plus an unassigned option, but never USB VCP", () => {
+            // USB VCP is the app's own link, not a place a feature's serial link goes.
             const { portItems } = row({ serialFunction: "GPS" });
 
-            expect(labels(portItems.value)).toEqual(["serialPortNone", "USB VCP", "UART1", "UART2", "UART3"]);
+            expect(labels(portItems.value)).toEqual(["serialPortNone", "UART1", "UART2", "UART3"]);
+        });
+
+        it("still lists USB VCP when firmware already put the function there", async () => {
+            FC.SERIAL_CONFIG.ports = [fcPort(20, ["MSP", "BLACKBOX"]), fcPort(0)];
+            await store.loadConfig({ force: true });
+
+            const { portItems, selectedValue } = row({ serialFunction: "BLACKBOX" });
+
+            expect(portItems.value.some((i) => i.value === 20)).toBe(true);
+            expect(selectedValue.value).toEqual(20);
         });
 
         it("annotates a port with the function already on it", () => {
@@ -116,34 +127,97 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
-    describe("assignment", () => {
-        it("assigns the function to the chosen port", () => {
-            const { selectPort } = row({ serialFunction: "GPS" });
+    // The point of the whole design: a control on a feature tab must not change shared state until
+    // the user saves, or an assignment made here turns up on the Ports tab having never been saved.
+    describe("edits are held locally until apply", () => {
+        it("leaves the shared store untouched when a port is picked", () => {
+            const r = row({ serialFunction: "GPS" });
 
-            selectPort(0);
+            r.selectPort(0);
+
+            expect(store.portById(0).sensor).toEqual("");
+            expect(store.dirty).toBe(false);
+        });
+
+        it("shows the pending choice as the selection", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            r.selectPort(0);
+
+            expect(r.selectedValue.value).toEqual(0);
+            expect(r.hasPendingChange.value).toBe(true);
+        });
+
+        it("assigns the function only once applied", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(0);
+
+            r.apply();
 
             expect(store.portById(0).sensor).toEqual("GPS");
             expect(store.dirty).toBe(true);
+            expect(r.hasPendingChange.value).toBe(false);
         });
 
-        it("clears the function when the unassigned option is chosen", () => {
+        it("clears the function only once applied", () => {
             store.assign("GPS", 0);
-            const { selectPort } = row({ serialFunction: "GPS" });
+            const r = row({ serialFunction: "GPS" });
 
-            selectPort(NO_PORT);
+            r.selectPort(NO_PORT);
+            expect(store.portById(0).sensor).toEqual("GPS");
 
+            r.apply();
             expect(store.portById(0).sensor).toEqual("");
+        });
+
+        it("drops the pending edit on reset, the way an unmount drops the component", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(0);
+
+            r.reset();
+
+            expect(r.hasPendingChange.value).toBe(false);
+            expect(r.selectedValue.value).toEqual(NO_PORT);
+            expect(store.portById(0).sensor).toEqual("");
+        });
+
+        it("reports no pending change when the saved port is re-picked", () => {
+            store.assign("GPS", 0);
+            const r = row({ serialFunction: "GPS" });
+
+            r.selectPort(0);
+
+            expect(r.hasPendingChange.value).toBe(false);
+        });
+
+        it("changes nothing when applied with nothing pending", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            r.apply();
+
+            expect(store.dirty).toBe(false);
+        });
+
+        it("follows the store for an untouched field", async () => {
+            const r = row({ serialFunction: "GPS" });
+            expect(r.selectedValue.value).toEqual(NO_PORT);
+
+            FC.SERIAL_CONFIG.ports = [fcPort(20, ["MSP"]), fcPort(0, ["GPS"])];
+            await store.loadConfig({ force: true });
+
+            expect(r.selectedValue.value).toEqual(0);
         });
     });
 
     describe("eviction warnings", () => {
-        it("warns about the function it displaced", () => {
+        it("previews what saving would displace, without displacing it", () => {
             store.assign("ESC_SENSOR", 1);
             const { selectPort, evictions } = row({ serialFunction: "GPS" });
 
             selectPort(1);
 
             expect(evictions.value).toEqual([{ portId: 1, portName: "UART2", serialFunction: "ESC_SENSOR" }]);
+            expect(store.portById(1).sensor).toEqual("ESC_SENSOR"); // still there until saved
         });
 
         it("does not warn about the function the user is moving", () => {
@@ -164,7 +238,7 @@ describe("useSerialFunctionRow", () => {
             expect(evictions.value).toEqual([]);
         });
 
-        it("does not warn when nothing was displaced", () => {
+        it("does not warn when nothing would be displaced", () => {
             const { selectPort, evictions } = row({ serialFunction: "GPS" });
 
             selectPort(0);
@@ -183,13 +257,13 @@ describe("useSerialFunctionRow", () => {
 
         it("replaces the previous warning rather than accumulating", () => {
             store.assign("ESC_SENSOR", 1);
-            const { selectPort, evictions } = row({ serialFunction: "GPS" });
+            const r = row({ serialFunction: "GPS" });
 
-            selectPort(1);
-            expect(evictions.value).toHaveLength(1);
+            r.selectPort(1);
+            expect(r.evictions.value).toHaveLength(1);
 
-            selectPort(2);
-            expect(evictions.value).toEqual([]);
+            r.selectPort(2);
+            expect(r.evictions.value).toEqual([]);
         });
     });
 
@@ -203,25 +277,42 @@ describe("useSerialFunctionRow", () => {
             expect(r.msp.value).toBe(true);
         });
 
-        it("enables MSP on the chosen port", () => {
+        it("holds an MSP change until applied", () => {
             const r = row({ serialFunction: "GPS" });
             r.selectPort(1);
-            expect(r.msp.value).toBe(false);
 
             r.setMsp(true);
 
-            expect(store.portById(1).msp).toBe(true);
             expect(r.msp.value).toBe(true);
+            expect(store.portById(1).msp).toBe(false);
+            expect(r.hasPendingChange.value).toBe(true);
+
+            r.apply();
+            expect(store.portById(1).msp).toBe(true);
         });
 
-        it("disables MSP on the chosen port", () => {
+        it("turns MSP off on the chosen port when applied", () => {
             store.assign("MSP", 1);
             const r = row({ serialFunction: "GPS" });
             r.selectPort(1);
 
             r.setMsp(false);
+            r.apply();
 
             expect(store.portById(1).msp).toBe(false);
+        });
+
+        it("can turn MSP off for a USB VCP the function already sits on", async () => {
+            FC.SERIAL_CONFIG.ports = [fcPort(20, ["MSP", "BLACKBOX"]), fcPort(0)];
+            await store.loadConfig({ force: true });
+            const r = row({ serialFunction: "BLACKBOX" });
+
+            expect(r.mspDisabled.value).toBe(false);
+
+            r.setMsp(false);
+            r.apply();
+
+            expect(store.portById(20).msp).toBe(false);
         });
 
         it("follows the selection from one port to another", () => {
@@ -235,42 +326,41 @@ describe("useSerialFunctionRow", () => {
             expect(r.msp.value).toBe(false);
         });
 
-        it("is unavailable until a port is chosen", () => {
-            const r = row({ serialFunction: "GPS" });
-
-            expect(r.mspDisabled.value).toBe(true);
-            expect(() => r.setMsp(true)).not.toThrow();
-        });
-
-        it("can be switched off for USB VCP too", () => {
-            const r = row({ serialFunction: "BLACKBOX" });
-            r.selectPort(20);
-
-            expect(r.mspDisabled.value).toBe(false);
-
-            r.setMsp(false);
-
-            expect(store.portById(20).msp).toBe(false);
-        });
-
-        it("exposes the MSP baudrate of the chosen port and writes it back", () => {
-            const r = row({ serialFunction: "GPS" });
-            r.selectPort(1);
-
-            expect(r.mspBaudrate.value).toEqual("115200");
-            expect(labels(r.mspBaudItems.value)).toContain("115200");
-
-            r.setMspBaudrate("9600");
-
-            expect(store.portById(1).msp_baudrate).toEqual("9600");
-        });
-
-        it("marks the store dirty, so the change reaches the save", () => {
+        it("discards a pending MSP edit when the port changes under it", () => {
             const r = row({ serialFunction: "GPS" });
             r.selectPort(1);
             r.setMsp(true);
 
-            expect(store.dirty).toBe(true);
+            r.selectPort(2);
+            r.apply();
+
+            expect(store.portById(1).msp).toBe(false);
+            expect(store.portById(2).msp).toBe(false);
+        });
+
+        it("is unavailable until a port is chosen", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            expect(r.mspDisabled.value).toBe(true);
+        });
+
+        it("holds an MSP baudrate change until applied", () => {
+            const r = row({ serialFunction: "GPS" });
+            r.selectPort(1);
+
+            r.setMspBaudrate("9600");
+
+            expect(r.mspBaudrate.value).toEqual("9600");
+            expect(store.portById(1).msp_baudrate).toEqual("115200");
+
+            r.apply();
+            expect(store.portById(1).msp_baudrate).toEqual("9600");
+        });
+
+        it("offers the MSP baudrate list", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            expect(labels(r.mspBaudItems.value)).toContain("115200");
         });
     });
 
@@ -282,28 +372,40 @@ describe("useSerialFunctionRow", () => {
             expect(baudItems.value).toEqual([]);
         });
 
-        it("reads the assigned port's value", () => {
-            store.assign("GPS", 0);
-            const { hasBaudField, baudrate } = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+        it("reads the chosen port's value", () => {
+            const r = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+            r.selectPort(0);
 
-            expect(hasBaudField.value).toBe(true);
-            expect(baudrate.value).toEqual("57600");
+            expect(r.hasBaudField.value).toBe(true);
+            expect(r.baudrate.value).toEqual("57600");
         });
 
-        it("writes back to the assigned port", () => {
-            store.assign("GPS", 0);
-            const { setBaudrate } = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+        it("holds a change until applied", () => {
+            const r = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+            r.selectPort(0);
 
-            setBaudrate("115200");
+            r.setBaudrate("115200");
 
+            expect(r.baudrate.value).toEqual("115200");
+            expect(store.portById(0).gps_baudrate).toEqual("57600");
+
+            r.apply();
             expect(store.portById(0).gps_baudrate).toEqual("115200");
         });
 
-        it("does nothing when the function is unassigned", () => {
-            const { baudrate, setBaudrate } = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+        it("counts as a pending change on its own", () => {
+            store.assign("GPS", 0);
+            const r = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
 
-            expect(baudrate.value).toEqual("");
-            expect(() => setBaudrate("115200")).not.toThrow();
+            r.setBaudrate("115200");
+
+            expect(r.hasPendingChange.value).toBe(true);
+        });
+
+        it("is empty while the function is unassigned", () => {
+            const r = row({ serialFunction: "GPS", baudField: "gps_baudrate" });
+
+            expect(r.baudrate.value).toEqual("");
         });
 
         it("offers the list matching the field", () => {
