@@ -40,6 +40,7 @@ vi.mock("../../src/stores/connection", () => ({
 
 import ConnectButton from "../../src/components/device-picker/ConnectButton.vue";
 import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
+import { get as getConfig } from "../../src/js/ConfigStorage.js";
 
 function mountLogic() {
     const scope = effectScope();
@@ -73,6 +74,9 @@ describe("connecting to a bookmark from the dropdown", () => {
         expect(connectDisconnect).toHaveBeenCalledTimes(1);
     });
 
+    // The saved setting is what a fresh start hands back to the manual connect path
+    // (device_handler seeds portOverride from it). That the connect path then opens
+    // that address is pinned in serial_backend.test.js.
     it("remembers the address, so a later connect without the dialog uses it", () => {
         const store = useConnectionBookmarksStore();
         store.save("tcp://192.168.4.1:5761", "Wi-Fi quad");
@@ -80,7 +84,7 @@ describe("connecting to a bookmark from the dropdown", () => {
         const api = mountLogic();
         bookmarkItem(api, "Wi-Fi quad").onSelect();
 
-        expect(JSON.parse(localStorage.getItem("portOverride")).portOverride).toBe("tcp://192.168.4.1:5761");
+        expect(getConfig("portOverride").portOverride).toBe("tcp://192.168.4.1:5761");
     });
 
     it("offers the built-in SITL target too", () => {

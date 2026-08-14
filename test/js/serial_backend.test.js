@@ -316,6 +316,28 @@ describe("serial_backend connectDisconnect — attempt already in flight", () =>
     });
 });
 
+// A bookmarked address (an ELRS Wi-Fi module, SITL) reaches the transport only through the
+// "manual" pseudo-device: the picker holds "manual" and the address lives in portOverride.
+// If the connect path stopped reading portOverride, every bookmark would open the last
+// enumerated serial port instead.
+describe("serial_backend connectDisconnect — manual target", () => {
+    beforeEach(() => {
+        resetMocks();
+        DeviceHandler.devicePicker.portOverride = "/dev/rfcomm0";
+    });
+
+    it("opens the remembered address rather than the picker's device path", () => {
+        DeviceHandler.devicePicker.selectedDevice = "manual";
+        DeviceHandler.devicePicker.portOverride = "tcp://192.168.4.1:5761";
+
+        connectDisconnect();
+
+        expect(serial.connect).toHaveBeenCalledTimes(1);
+        expect(serial.connect.mock.calls[0][0]).toBe("tcp://192.168.4.1:5761");
+        expect(GUI.connecting_to).toBe("tcp://192.168.4.1:5761");
+    });
+});
+
 describe("serial_backend disconnect convergence", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
