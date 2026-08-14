@@ -2,12 +2,16 @@ import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
+import globals from "globals";
 
 export default [
     {
         // Vendored blackbox-log-viewer source and assets — keep upstream formatting, not linted
         // against configurator rules to avoid churn and drift on re-vendor.
-        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**", "src/js/three.min.js"],
+        //
+        // Build output has to be ignored globally rather than per-config: a `dist/` left in the
+        // tree otherwise gets linted as source, and minified bundles produce thousands of errors.
+        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**", "dist/**", "src/dist/**"],
     },
     {
         files: ["**/*.js", "**/*.vue"],
@@ -15,6 +19,10 @@ export default [
             ecmaVersion: "latest",
             sourceType: "module",
             globals: {
+                ...globals.browser,
+                // Not a real Node environment: Vite statically replaces `process.env.*` at build
+                // time, and Analytics.js feature-detects `process` before touching it.
+                process: "readonly",
                 ol: "readonly",
                 ConfigStorage: "readonly",
                 // globals for vite
@@ -29,6 +37,9 @@ export default [
             "unused-imports": unusedImportsPlugin,
         },
         rules: {
+            // Catches a missing or mistyped import, which otherwise only surfaces as a
+            // ReferenceError when the code actually runs in the browser.
+            "no-undef": "error",
             "no-var": "error",
             "prefer-template": "error",
             "comma-dangle": ["error", "always-multiline"],

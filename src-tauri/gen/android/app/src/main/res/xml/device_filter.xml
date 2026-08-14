@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Overrides the serial plugin's generic filter so USB attach only fires for
+         Betaflight-compatible devices. Includes the DFU bootloader IDs, which the
+         plugin's own filter omits. -->
+
+    <!-- FT232R USB UART -->
+    <usb-device vendor-id="1027" product-id="24577" />
+
+    <!-- STM32 devices -->
+    <usb-device vendor-id="1155" product-id="12886" /> <!-- STM32 in HID mode -->
+    <usb-device vendor-id="1155" product-id="14158" /> <!-- STLink Virtual COM Port (NUCLEO boards) -->
+    <usb-device vendor-id="1155" product-id="22336" /> <!-- STM Electronics Virtual COM Port -->
+    <usb-device vendor-id="1155" product-id="57105" /> <!-- STM Device in DFU Mode -->
+
+    <!-- CP210x devices -->
+    <usb-device vendor-id="4292" product-id="60000" />
+    <usb-device vendor-id="4292" product-id="60001" />
+    <usb-device vendor-id="4292" product-id="60002" />
+
+    <!-- GD32 devices -->
+    <usb-device vendor-id="10473" product-id="394" /> <!-- GD32 VCP -->
+    <usb-device vendor-id="10473" product-id="393" /> <!-- GD32 DFU Bootloader -->
+
+    <!-- AT32 devices -->
+    <usb-device vendor-id="11836" product-id="22336" /> <!-- AT32 VCP -->
+    <usb-device vendor-id="11836" product-id="57105" /> <!-- AT32F435 DFU Bootloader -->
+
+    <!-- APM32 devices -->
+    <usb-device vendor-id="12619" product-id="22336" /> <!-- APM32 VCP -->
+    <usb-device vendor-id="12619" product-id="262" /> <!-- APM32 DFU Bootloader -->
+
+    <!-- Raspberry Pi Pico devices -->
+    <usb-device vendor-id="11914" product-id="9" /> <!-- Raspberry Pi Pico VCP -->
+    <usb-device vendor-id="11914" product-id="15" /> <!-- Raspberry Pi Pico in Bootloader mode -->
+
+    <!-- WCH (QinHeng Electronics) devices -->
+    <usb-device vendor-id="6790" product-id="29986" /> <!-- CH340 USB-to-Serial (variant) -->
+    <usb-device vendor-id="6790" product-id="29987" /> <!-- CH340 USB-to-Serial -->
+    <usb-device vendor-id="6790" product-id="21795" /> <!-- CH341 USB-to-Serial -->
+    <usb-device vendor-id="6790" product-id="30084" /> <!-- CH340S USB-to-Serial -->
+
+    <!-- X32 devices -->
+    <usb-device vendor-id="14743" product-id="22336" /> <!-- X32 VCP -->
+    <usb-device vendor-id="14743" product-id="57105" /> <!-- X32 DFU Bootloader -->
+</resources>

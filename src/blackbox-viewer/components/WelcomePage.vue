@@ -34,6 +34,8 @@
                     </UTooltip>
                 </div>
 
+                <p class="welcome-drop-hint">…or drag and drop a log file anywhere in this tab</p>
+
                 <div class="welcome-help">
                     <UIcon name="i-lucide-help-circle" class="welcome-help-icon" />
                     <ULink
@@ -140,6 +142,12 @@ async function onDownload() {
     gap: 0.75rem;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.welcome-drop-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
 .welcome-help {

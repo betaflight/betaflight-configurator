@@ -1,5 +1,5 @@
 import { throttle } from "throttle-debounce";
-import pinia from "./pinia_instance.js";
+import { pinia } from "@/js/pinia_instance.js";
 import { useLogStore } from "./stores/log.js";
 import { useGraphStore, GRAPH_MIN_ZOOM, GRAPH_MAX_ZOOM } from "./stores/graph.js";
 import {

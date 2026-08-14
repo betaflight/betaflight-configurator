@@ -1,4 +1,4 @@
-import pinia from "./pinia_instance.js";
+import { pinia } from "@/js/pinia_instance.js";
 import { useLogStore } from "./stores/log.js";
 import { useGraphStore } from "./stores/graph.js";
 import { useAppStore } from "./stores/app.js";

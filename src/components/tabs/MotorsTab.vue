@@ -1262,6 +1262,13 @@ const mixerPreviewSvg = ref("");
 
 const updateMixerPreview = async () => {
     const imgSrc = getMixerImageSrc(fcStore.mixerConfig.mixer, fcStore.mixerConfig.reverseMotorDir);
+
+    // No mixer yet: the watcher below runs immediately, and with "Reopen last tab on connect"
+    // this tab mounts before MSP_MIXER_CONFIG arrives. It re-runs when the real id lands.
+    if (!imgSrc) {
+        return;
+    }
+
     try {
         const response = await fetch(imgSrc);
         const text = await response.text();

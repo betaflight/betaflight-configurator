@@ -284,6 +284,10 @@ export function createKeydownHandler(ctx) {
     }
 
     return function (e) {
+        // Dormant behind other tabs (embedded): don't hijack keys the user means for the host.
+        if (!appStore.viewerActive) {
+            return;
+        }
         const shifted = e.altKey || e.shiftKey || e.ctrlKey || e.metaKey;
         if (e.key === "Enter" && e.target.type === "text" && !e.target.closest(".modal")) {
             e.target.blur();
