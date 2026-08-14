@@ -91,13 +91,13 @@ function portItems(devices, icon) {
 }
 
 /**
- * @param {Array<{name: string, url: string, builtin?: boolean}>} bookmarks - saved and built-in targets
+ * @param {Array<{name: string, url: string}>} bookmarks - the saved targets
  * @returns {Array<object>} dropdown items connecting to each saved address
  */
 function bookmarkItems(bookmarks) {
     return bookmarks.map((bookmark) => ({
         label: bookmark.name,
-        icon: bookmark.builtin ? "i-lucide-flask-conical" : "i-lucide-bookmark",
+        icon: "i-lucide-bookmark",
         onSelect: () => connectManual(bookmark.url),
     }));
 }
@@ -168,7 +168,7 @@ export default defineComponent({
             // "manual" is never in the device lists, so name it by its bookmark or address.
             if (selectedDevice.value === "manual") {
                 const url = DeviceHandler.devicePicker.portOverride;
-                return bookmarksStore.findItemByUrl(url)?.name || url || i18n.getMessage("connect");
+                return bookmarksStore.find(url)?.name || url || i18n.getMessage("connect");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
@@ -192,11 +192,10 @@ export default defineComponent({
             ];
         }
 
-        // Saved manual targets (and the built-in SITL one) connect in one click;
-        // the dialog below them is where they are managed.
+        // Saved targets connect in one click; the dialog below them is where they are managed.
         function buildManualItems() {
             return [
-                ...bookmarkItems(bookmarksStore.items),
+                ...bookmarkItems(bookmarksStore.bookmarks),
                 {
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",

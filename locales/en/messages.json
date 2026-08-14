@@ -164,10 +164,6 @@
         "message": "Remove saved connection",
         "description": "Button that deletes a saved manual connection in the connect dialog."
     },
-    "connectBookmarkLimitReached": {
-        "message": "The list of saved connections is full. Remove one to save another.",
-        "description": "Shown in the connect dialog when no more manual connections can be saved."
-    },
     "autoConnect": {
         "message": "Auto-Connect"
     },

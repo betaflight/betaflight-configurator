@@ -5,8 +5,8 @@ import { effectScope } from "vue";
 // ---------------------------------------------------------------------------
 // The connect dropdown is where a saved address turns into an actual connection:
 // the menu item has to route through the "manual" pseudo-device with portOverride
-// set, or the attempt goes to whatever was selected before. Its collaborators are
-// stubbed, and setup() is driven directly (the repo has no rendering harness).
+// set, or the attempt goes to whatever was selected before. That portOverride is
+// then what serial_backend opens — see serial_backend.test.js.
 // ---------------------------------------------------------------------------
 
 const { DeviceHandler, connectDisconnect, expertMode } = vi.hoisted(() => ({
@@ -42,14 +42,8 @@ import ConnectButton from "../../src/components/device-picker/ConnectButton.vue"
 import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
 import { get as getConfig } from "../../src/js/ConfigStorage.js";
 
-function mountLogic() {
-    const scope = effectScope();
-    return scope.run(() => ConnectButton.setup({}, { emit: vi.fn() }));
-}
-
-function bookmarkItem(api, label) {
-    return api.menuItems.value.find((item) => item.label === label);
-}
+const mountLogic = () => effectScope().run(() => ConnectButton.setup({}, { emit: vi.fn() }));
+const item = (api, label) => api.menuItems.value.find((entry) => entry.label === label);
 
 beforeEach(() => {
     localStorage.clear();
@@ -62,62 +56,37 @@ beforeEach(() => {
 });
 
 describe("connecting to a bookmark from the dropdown", () => {
-    it("points the manual target at the saved address and starts the connection", () => {
-        const store = useConnectionBookmarksStore();
-        store.save("tcp://192.168.4.1:5761", "Wi-Fi quad");
+    it("points the manual target at the saved address, remembers it, and connects", () => {
+        useConnectionBookmarksStore().save("tcp://192.168.4.1:5761", "Wi-Fi quad");
 
         const api = mountLogic();
-        bookmarkItem(api, "Wi-Fi quad").onSelect();
+        item(api, "Wi-Fi quad").onSelect();
 
-        expect(DeviceHandler.devicePicker.portOverride).toBe("tcp://192.168.4.1:5761");
         expect(DeviceHandler.devicePicker.selectedDevice).toBe("manual");
-        expect(connectDisconnect).toHaveBeenCalledTimes(1);
-    });
-
-    // The saved setting is what a fresh start hands back to the manual connect path
-    // (device_handler seeds portOverride from it). That the connect path then opens
-    // that address is pinned in serial_backend.test.js.
-    it("remembers the address, so a later connect without the dialog uses it", () => {
-        const store = useConnectionBookmarksStore();
-        store.save("tcp://192.168.4.1:5761", "Wi-Fi quad");
-
-        const api = mountLogic();
-        bookmarkItem(api, "Wi-Fi quad").onSelect();
-
+        expect(DeviceHandler.devicePicker.portOverride).toBe("tcp://192.168.4.1:5761");
+        // Persisted, so a restart still has the address to connect to.
         expect(getConfig("portOverride").portOverride).toBe("tcp://192.168.4.1:5761");
+        expect(connectDisconnect).toHaveBeenCalledTimes(1);
+        expect(api.mainLabel.value).toBe("Wi-Fi quad");
     });
 
-    it("offers the built-in SITL target too", () => {
+    it("offers the seeded SITL target too", () => {
         const api = mountLogic();
 
-        const sitl = bookmarkItem(api, "Betaflight SITL");
-        expect(sitl.icon).toBe("i-lucide-flask-conical");
-
-        sitl.onSelect();
+        item(api, "Betaflight SITL").onSelect();
 
         expect(DeviceHandler.devicePicker.portOverride).toBe("ws://127.0.0.1:6761");
         expect(connectDisconnect).toHaveBeenCalledTimes(1);
     });
 
-    it("labels the connect button with the bookmark behind a manual selection", () => {
-        const store = useConnectionBookmarksStore();
-        store.save("tcp://192.168.4.1:5761", "Wi-Fi quad");
-
-        const api = mountLogic();
-        bookmarkItem(api, "Wi-Fi quad").onSelect();
-
-        expect(api.mainLabel.value).toBe("Wi-Fi quad");
-    });
-
     it("keeps bookmarks out of the menu when manual mode is not available", () => {
-        const store = useConnectionBookmarksStore();
-        store.save("tcp://192.168.4.1:5761", "Wi-Fi quad");
+        useConnectionBookmarksStore().save("tcp://192.168.4.1:5761", "Wi-Fi quad");
 
         expertMode.enabled = false;
-        expect(bookmarkItem(mountLogic(), "Wi-Fi quad")).toBeUndefined();
+        expect(item(mountLogic(), "Wi-Fi quad")).toBeUndefined();
 
         expertMode.enabled = true;
         DeviceHandler.showManualMode = false;
-        expect(bookmarkItem(mountLogic(), "Wi-Fi quad")).toBeUndefined();
+        expect(item(mountLogic(), "Wi-Fi quad")).toBeUndefined();
     });
 });

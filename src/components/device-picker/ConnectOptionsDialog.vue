@@ -31,12 +31,12 @@
                         <!-- The name box and its save button sit on one row, so the label
                              points at the input by id rather than wrapping the row. -->
                         <label for="connect-bookmark-name">{{ $t("connectBookmarkName") }}</label>
-                        <div class="connect-options__save">
+                        <div class="flex items-center gap-2">
                             <UInput
                                 id="connect-bookmark-name"
                                 v-model="bookmarkName"
                                 size="sm"
-                                class="connect-options__save-input"
+                                class="min-w-0 grow"
                                 :placeholder="portOverride.trim() || $t('connectBookmarkNamePlaceholder')"
                                 :disabled="!canSaveBookmark"
                                 @keydown.enter.prevent="onSaveBookmark"
@@ -47,38 +47,26 @@
                                 size="sm"
                                 icon="i-lucide-bookmark-plus"
                                 :disabled="!canSaveBookmark"
-                                :title="saveBookmarkLabel"
                                 @click="onSaveBookmark"
                             >
                                 {{ saveBookmarkLabel }}
                             </UButton>
                         </div>
-                        <p v-if="bookmarksFull" class="connect-options__hint">
-                            {{ $t("connectBookmarkLimitReached") }}
-                        </p>
                     </div>
                     <div v-if="bookmarks.length" class="connect-options__field">
                         <span>{{ $t("connectBookmarks") }}</span>
-                        <ul class="connect-options__bookmarks">
-                            <li v-for="bookmark in bookmarks" :key="bookmark.id" class="connect-options__bookmark">
+                        <ul class="m-0 flex max-h-48 list-none flex-col gap-0.5 overflow-y-auto p-0">
+                            <li v-for="bookmark in bookmarks" :key="bookmark.url" class="flex items-center gap-1">
                                 <UButton
                                     color="neutral"
                                     variant="ghost"
                                     size="sm"
-                                    :icon="bookmark.builtin ? 'i-lucide-flask-conical' : 'i-lucide-bookmark'"
-                                    class="connect-options__bookmark-pick"
+                                    icon="i-lucide-bookmark"
+                                    class="min-w-0 grow justify-start truncate"
                                     :title="bookmark.url"
                                     @click="applyBookmark(bookmark)"
                                 >
-                                    <span class="connect-options__bookmark-text">
-                                        <span class="connect-options__bookmark-name">{{ bookmark.name }}</span>
-                                        <span
-                                            v-if="bookmark.name !== bookmark.url"
-                                            class="connect-options__bookmark-url"
-                                        >
-                                            {{ bookmark.url }}
-                                        </span>
-                                    </span>
+                                    {{ bookmark.name }}
                                 </UButton>
                                 <UButton
                                     color="error"
@@ -142,14 +130,11 @@ export default defineComponent({
         const bookmarkName = ref("");
 
         const bookmarksStore = useConnectionBookmarksStore();
-        const bookmarks = computed(() => bookmarksStore.items);
+        const bookmarks = computed(() => bookmarksStore.bookmarks);
 
-        // The saved bookmark for whatever address is in the field right now, so the save
-        // button can say "update". A built-in (SITL) match is not one: saving it makes a copy.
-        const matchingBookmark = computed(() => bookmarksStore.findByUrl(portOverride.value));
-        // Any entry for that address, built-ins included, so its name is offered back.
-        const matchingItem = computed(() => bookmarksStore.findItemByUrl(portOverride.value));
-        const bookmarksFull = computed(() => bookmarksStore.isFull && !matchingBookmark.value);
+        // The bookmark for whatever address is in the field right now: its name is offered
+        // back for editing, and the save button becomes an update.
+        const matching = computed(() => bookmarksStore.find(portOverride.value));
 
         watch(
             () => props.modelValue,
@@ -157,15 +142,15 @@ export default defineComponent({
                 if (isOpen) {
                     version.value = props.initialVersion;
                     portOverride.value = props.initialPortOverride;
-                    bookmarkName.value = matchingItem.value?.name ?? "";
+                    bookmarkName.value = matching.value?.name ?? "";
                 }
             },
         );
 
         // Typing a different address must not leave the previous bookmark's name behind,
         // or saving would relabel the wrong target.
-        watch(matchingItem, (entry) => {
-            bookmarkName.value = entry?.name ?? "";
+        watch(matching, (bookmark) => {
+            bookmarkName.value = bookmark?.name ?? "";
         });
 
         const title = computed(() =>
@@ -179,16 +164,13 @@ export default defineComponent({
             return Boolean(version.value);
         });
 
-        const canSaveBookmark = computed(() => portOverride.value.trim().length > 0 && !bookmarksFull.value);
+        const canSaveBookmark = computed(() => portOverride.value.trim().length > 0);
 
         const saveBookmarkLabel = computed(() =>
-            i18n.getMessage(matchingBookmark.value ? "connectBookmarkUpdate" : "connectBookmarkSave"),
+            i18n.getMessage(matching.value ? "connectBookmarkUpdate" : "connectBookmarkSave"),
         );
 
         function onSaveBookmark() {
-            if (!canSaveBookmark.value) {
-                return;
-            }
             bookmarksStore.save(portOverride.value, bookmarkName.value);
         }
 
@@ -197,7 +179,7 @@ export default defineComponent({
         }
 
         function removeBookmark(bookmark) {
-            bookmarksStore.remove(bookmark.id);
+            bookmarksStore.remove(bookmark.url);
         }
 
         function onCancel() {
@@ -222,7 +204,6 @@ export default defineComponent({
             portOverride,
             bookmarkName,
             bookmarks,
-            bookmarksFull,
             canSaveBookmark,
             saveBookmarkLabel,
             firmwareVersions: FIRMWARE_VERSIONS,
@@ -269,65 +250,5 @@ export default defineComponent({
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-}
-
-.connect-options__save {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.connect-options__save-input {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.connect-options__hint {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--text);
-    opacity: 0.7;
-}
-
-.connect-options__bookmarks {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    max-height: 12rem;
-    overflow-y: auto;
-}
-
-.connect-options__bookmark {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.connect-options__bookmark-pick {
-    flex: 1 1 auto;
-    min-width: 0;
-    justify-content: flex-start;
-    text-align: left;
-}
-
-.connect-options__bookmark-text {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.connect-options__bookmark-name,
-.connect-options__bookmark-url {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.connect-options__bookmark-url {
-    font-size: 0.75rem;
-    opacity: 0.7;
 }
 </style>
