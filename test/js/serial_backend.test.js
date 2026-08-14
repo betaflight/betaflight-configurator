@@ -849,10 +849,16 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             vi.advanceTimersByTime(1500 + 1000);
             expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
-            // Next tick: the link is now closed, so the normal reconnect branch opens it again
-            // (-> onOpen -> fresh handshake). The forced drop is one-shot.
+            // Next tick: the link is now closed, so the normal reconnect branch opens it again.
+            // The forced drop is one-shot.
             vi.advanceTimersByTime(1000);
             expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // The reconnect must start a FRESH handshake, not merely open the transport. Drive
+            // the mocked open event and assert onOpen issues MSP_API_VERSION as its first request.
+            MSP.send_message.mockClear();
+            serialHandlers.connect({ detail: true });
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_API_VERSION, false, false, expect.any(Function));
         } finally {
             vi.advanceTimersByTime(30000); // drain the window
             vi.useRealTimers();
@@ -887,6 +893,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             // The forced relink drives the reconnect itself, Auto-Connect notwithstanding.
             vi.advanceTimersByTime(1000);
             expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // And it runs a fresh handshake, not just a transport open: driving the mocked open
+            // event issues MSP_API_VERSION.
+            MSP.send_message.mockClear();
+            serialHandlers.connect({ detail: true });
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_API_VERSION, false, false, expect.any(Function));
         } finally {
             DeviceHandler.findDescribedDevice.mockReturnValue(undefined);
             vi.advanceTimersByTime(30000); // drain the window
