@@ -1081,7 +1081,7 @@ import {
     readPidSliderPositions,
 } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "@/js/data_storage";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
@@ -1154,9 +1154,9 @@ const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 // Absolute Control was removed from firmware in API 1.48
 const isPreApi148 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48));
-// Integrated Yaw was removed from firmware in 2026.12.0; no MSP API version bump accompanied
-// it, so this must be checked against flightControllerVersion rather than apiVersion.
-const isIntegratedYawSupported = computed(() => semver.lt(FC.CONFIG.flightControllerVersion, "2026.12.0"));
+// Firmware stops honoring these fields starting at API 1.49. Until that version ships,
+// apiVersion stays at 1.48 for all firmware, so this check harmlessly always passes.
+const isIntegratedYawSupported = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_49));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
 const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
 const dMaxLabel = computed(() => (isPreApi147.value ? "pidTuningDerivative" : "pidTuningDMax"));
