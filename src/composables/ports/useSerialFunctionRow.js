@@ -268,7 +268,13 @@ export function useSerialFunctionRow(props) {
 
     const baudrate = computed(() => draftBaudrate.value ?? targetPort.value?.[props.baudField] ?? "");
     const msp = computed(() => draftMsp.value ?? Boolean(targetPort.value?.msp));
-    const mspDisabled = computed(() => !assignedPort.value);
+
+    /**
+     * The MSP switch needs a chosen port, and a free MSP slot to turn on into: firmware's
+     * MAX_MSP_PORT_COUNT is 3 and it refuses a config asking for a fourth, USB VCP included.
+     * Turning MSP off is always allowed. Same guard the Ports tab puts on its own switch.
+     */
+    const mspDisabled = computed(() => !assignedPort.value || (!msp.value && store.isAtPortLimit("MSP")));
 
     /**
      * An optional serial function switch for the chosen port, alongside MSP.
@@ -449,7 +455,14 @@ export function useSerialFunctionRow(props) {
             port[props.baudField] = draftBaudrate.value;
         }
         if (draftMsp.value !== undefined) {
-            port.msp = draftMsp.value;
+            // Through the store rather than writing port.msp: assign() is where the three-port MSP
+            // cap is enforced, and a fourth MSP port makes firmware refuse the whole serial write,
+            // not just the one port. The switch is disabled at the limit, so this is the backstop.
+            if (draftMsp.value) {
+                store.assign("MSP", portId);
+            } else {
+                store.clear("MSP", portId);
+            }
         }
         if (draftMspBaudrate.value !== undefined) {
             port.msp_baudrate = draftMspBaudrate.value;

@@ -127,6 +127,60 @@ describe("useSerialFunctionRow", () => {
             expect(store.portById(1).msp_baudrate).toEqual("9600");
         });
 
+        // Reported on the PR: the switch used to write port.msp straight through, so it could
+        // hand firmware a fourth MSP port - and firmware refuses the whole serial write for it,
+        // taking every other port on the tab down with it. MAX_MSP_PORT_COUNT is 3, VCP included.
+        describe("the three-port MSP cap", () => {
+            const atTheLimit = () => {
+                // USB VCP holds one, so two UARTs fill it.
+                store.assign("MSP", 0);
+                store.assign("MSP", 1);
+            };
+
+            it("disables the switch on a port that would be the fourth", () => {
+                atTheLimit();
+                const row = makeRow({ serialFunction: "GPS" });
+
+                row.selectPort(2);
+
+                expect(row.mspDisabled.value).toBe(true);
+            });
+
+            it("leaves it usable while a slot is free", () => {
+                store.assign("MSP", 0);
+                const row = makeRow({ serialFunction: "GPS" });
+
+                row.selectPort(2);
+
+                expect(row.mspDisabled.value).toBe(false);
+            });
+
+            it("still lets a port already carrying MSP turn it off", () => {
+                atTheLimit();
+                const row = makeRow({ serialFunction: "GPS" });
+
+                row.selectPort(1);
+
+                expect(row.mspDisabled.value).toBe(false);
+
+                row.setMsp(false);
+                row.apply();
+                expect(store.portById(1).msp).toBe(false);
+            });
+
+            it("refuses to write a fourth even if the switch is driven anyway", () => {
+                atTheLimit();
+                const row = makeRow({ serialFunction: "GPS" });
+                row.selectPort(2);
+
+                row.setMsp(true);
+                row.apply();
+
+                expect(store.portById(2).msp).toBe(false);
+                expect(store.ports.filter((p) => p.msp)).toHaveLength(3);
+            });
+        });
+
         it("offers the MSP baudrate list", () => {
             expect(labels(makeRow({ serialFunction: "GPS" }).mspBaudItems.value)).toContain("115200");
         });
