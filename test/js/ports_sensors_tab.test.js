@@ -61,7 +61,7 @@ describe("SensorsTab serial rangefinder row", () => {
             // showRangefinder, which setupPeripherals only sets under isApi147 - so on 1.46 the
             // rangefinder hardware selector and this row are both hidden and the Ports tab is the
             // only way in. Asserted at the composable level so the name does not overclaim.
-            await resetPortsEnv({ apiVersion: "1.46.0" });
+            store = await resetPortsEnv({ apiVersion: "1.46.0" });
 
             expect(labels(rangefinderRow().portItems.value)).toContain("UART1");
         });
