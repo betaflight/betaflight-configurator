@@ -77,6 +77,31 @@ function connectManual(portOverride) {
     selectAndConnect("manual");
 }
 
+/**
+ * @param {Array<{displayName: string, path: string}>} devices - an enumerated device list
+ * @param {string} icon - the icon for that kind of device
+ * @returns {Array<object>} dropdown items connecting to each device
+ */
+function portItems(devices, icon) {
+    return devices.map((device) => ({
+        label: device.displayName,
+        icon,
+        onSelect: () => selectAndConnect(device.path),
+    }));
+}
+
+/**
+ * @param {Array<{name: string, url: string, builtin?: boolean}>} bookmarks - saved and built-in targets
+ * @returns {Array<object>} dropdown items connecting to each saved address
+ */
+function bookmarkItems(bookmarks) {
+    return bookmarks.map((bookmark) => ({
+        label: bookmark.name,
+        icon: bookmark.builtin ? "i-lucide-flask-conical" : "i-lucide-bookmark",
+        onSelect: () => connectManual(bookmark.url),
+    }));
+}
+
 function onDialogConfirm({ mode, version, portOverride }) {
     if (mode === "virtual") {
         DeviceHandler.devicePicker.virtualMspVersion = version;
@@ -157,60 +182,39 @@ export default defineComponent({
             dialogOpen.value = true;
         }
 
-        function buildDeviceItems() {
-            const expertMode = isExpertModeEnabled();
-            const devices = [];
-            if (DeviceHandler.showSerialOption) {
-                for (const d of serialPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-usb",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (DeviceHandler.showUsbOption) {
-                for (const d of usbPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-cpu",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (DeviceHandler.showBluetoothOption) {
-                for (const d of bluetoothPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-bluetooth",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (expertMode && DeviceHandler.showVirtualMode) {
-                devices.push({
+        function buildVirtualItems() {
+            return [
+                {
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
                     onSelect: () => openConnectDialog("virtual"),
-                });
-            }
-            if (expertMode && DeviceHandler.showManualMode) {
-                // Saved manual targets (and the built-in SITL one) connect in one click;
-                // the dialog is where they are managed.
-                for (const bookmark of bookmarksStore.items) {
-                    devices.push({
-                        label: bookmark.name,
-                        icon: bookmark.builtin ? "i-lucide-flask-conical" : "i-lucide-bookmark",
-                        onSelect: () => connectManual(bookmark.url),
-                    });
-                }
-                devices.push({
+                },
+            ];
+        }
+
+        // Saved manual targets (and the built-in SITL one) connect in one click;
+        // the dialog below them is where they are managed.
+        function buildManualItems() {
+            return [
+                ...bookmarkItems(bookmarksStore.items),
+                {
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
                     onSelect: () => openConnectDialog("manual"),
-                });
-            }
-            return devices;
+                },
+            ];
+        }
+
+        function buildDeviceItems() {
+            const expertMode = isExpertModeEnabled();
+
+            return [
+                ...portItems(DeviceHandler.showSerialOption ? serialPorts.value : [], "i-lucide-usb"),
+                ...portItems(DeviceHandler.showUsbOption ? usbPorts.value : [], "i-lucide-cpu"),
+                ...portItems(DeviceHandler.showBluetoothOption ? bluetoothPorts.value : [], "i-lucide-bluetooth"),
+                ...(expertMode && DeviceHandler.showVirtualMode ? buildVirtualItems() : []),
+                ...(expertMode && DeviceHandler.showManualMode ? buildManualItems() : []),
+            ];
         }
 
         function buildPermissionItems() {

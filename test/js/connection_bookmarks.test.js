@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 import { useConnectionBookmarksStore, __testing } from "../../src/stores/connectionBookmarks.js";
@@ -86,6 +86,40 @@ describe("saving a manual target", () => {
 
         expect(bookmark.url).toHaveLength(MAX_URL_LENGTH);
         expect(bookmark.name).toHaveLength(MAX_NAME_LENGTH);
+    });
+});
+
+// crypto.randomUUID needs a secure context, which the configurator does not get over plain
+// HTTP on a LAN address. There the store falls back to a counter that restarts at 1 on every
+// load, so these cover the ids it mints without it.
+describe("ids without crypto.randomUUID", () => {
+    let randomUUID;
+
+    beforeEach(() => {
+        randomUUID = crypto.randomUUID;
+        crypto.randomUUID = undefined;
+    });
+
+    afterEach(() => {
+        crypto.randomUUID = randomUUID;
+    });
+
+    it("does not reuse an id already held by a stored bookmark", () => {
+        seed([{ id: "bookmark-1", name: "From last session", url: "tcp://a:5761" }]);
+
+        const store = useConnectionBookmarksStore();
+        const saved = store.save("tcp://b:5761", "New one");
+
+        expect(saved.id).not.toBe("bookmark-1");
+        expect(new Set(store.items.map((entry) => entry.id)).size).toBe(store.items.length);
+    });
+
+    it("does not hand out a built-in id", () => {
+        const store = useConnectionBookmarksStore();
+
+        for (let i = 0; i < 5; i++) {
+            expect(store.save(`tcp://${i}.example:5761`).id).not.toBe("default-sitl");
+        }
     });
 });
 

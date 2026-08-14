@@ -28,9 +28,12 @@
                         />
                     </label>
                     <div class="connect-options__field">
-                        <span>{{ $t("connectBookmarkName") }}</span>
+                        <!-- The name box and its save button sit on one row, so the label
+                             points at the input by id rather than wrapping the row. -->
+                        <label for="connect-bookmark-name">{{ $t("connectBookmarkName") }}</label>
                         <div class="connect-options__save">
                             <UInput
+                                id="connect-bookmark-name"
                                 v-model="bookmarkName"
                                 size="sm"
                                 class="connect-options__save-input"
@@ -256,7 +259,8 @@ export default defineComponent({
     gap: 0.375rem;
 }
 
-.connect-options__field span {
+.connect-options__field > span,
+.connect-options__field > label {
     font-size: 0.875rem;
     color: var(--text);
 }

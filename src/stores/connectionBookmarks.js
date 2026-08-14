@@ -14,12 +14,33 @@ const MAX_URL_LENGTH = 253;
 
 let idCounter = 0;
 
+/**
+ * crypto.randomUUID() needs a secure context, which the configurator does not have when
+ * it is served over plain HTTP from a LAN address, so the counter fallback is a path real
+ * users take. It restarts at 1 on every load and therefore cannot be trusted to be unique
+ * on its own — always mint ids through createUniqueId().
+ * @returns {string} a candidate id
+ */
 function createId() {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
         return crypto.randomUUID();
     }
     idCounter += 1;
     return `bookmark-${idCounter}`;
+}
+
+/**
+ * @param {Set<string>} taken - ids already in use
+ * @returns {string} an id that is not in `taken`
+ */
+function createUniqueId(taken) {
+    let id = createId();
+
+    while (taken.has(id)) {
+        id = createId();
+    }
+
+    return id;
 }
 
 /**
@@ -69,10 +90,8 @@ function sanitize(stored) {
             continue;
         }
 
-        let id = typeof entry.id === "string" && entry.id ? entry.id : createId();
-        while (seenIds.has(id)) {
-            id = createId();
-        }
+        const stored = typeof entry.id === "string" && entry.id ? entry.id : null;
+        const id = stored && !seenIds.has(stored) ? stored : createUniqueId(seenIds);
 
         seenUrls.add(key);
         seenIds.add(id);
@@ -196,7 +215,14 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
             return null;
         }
 
-        const bookmark = { id: createId(), name: cleanName, url: cleanUrl };
+        // Not just a fresh id: the counter fallback restarts at 1 each load, so a stored
+        // "bookmark-1" would come back as a second one — colliding v-for keys, and a
+        // remove() that takes out whichever entry it finds first.
+        const taken = new Set([
+            ...bookmarks.value.map((entry) => entry.id),
+            ...defaultBookmarks().map((entry) => entry.id),
+        ]);
+        const bookmark = { id: createUniqueId(taken), name: cleanName, url: cleanUrl };
         bookmarks.value.push(bookmark);
         persist();
 
