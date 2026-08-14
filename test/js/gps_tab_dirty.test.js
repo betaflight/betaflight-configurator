@@ -1,42 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { computed, reactive } from "vue";
-import { createPinia, setActivePinia } from "pinia";
+import { fcPort, loadPortsEnv, mspPromise, resetPortsEnv, savedFunctions } from "./helpers/serialPorts";
 
-const mspPromise = vi.fn(() => Promise.resolve({}));
-
-vi.mock("../../src/js/msp", () => ({ default: { promise: (...args) => mspPromise(...args) } }));
-vi.mock("../../src/js/msp/MSPHelper", () => ({
-    mspHelper: { crunch: () => [], serialPortUnknownFunctionMask: () => 0 },
-    isMspRejected: (response) => Boolean(response?.unsupported || response?.crcError),
-}));
-vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot: vi.fn() }) }));
-vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
-vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
-vi.mock("../../src/js/Analytics", () => ({
-    tracking: { EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "fc" }, sendSaveAndChangeEvents: vi.fn() },
-}));
-// The row calls useTranslation, which needs the plugin registered on an app; the labels are not
-// what this file is about.
-vi.mock("i18next-vue", () => ({ useTranslation: () => ({ t: (key) => key }) }));
-
+const { useSerialFunctionRow, MSPCodes } = await loadPortsEnv();
 const { useDirtyState } = await import("../../src/composables/useDirtyState");
-const { useSerialFunctionRow } = await import("../../src/composables/ports/useSerialFunctionRow");
-const { useSerialPortsStore } = await import("../../src/stores/serialPorts");
-const FC = (await import("../../src/js/fc")).default;
-const Features = (await import("../../src/js/Features")).default;
-const MSPCodes = (await import("../../src/js/msp/MSPCodes")).default;
-
-function fcPort(identifier, functions = []) {
-    return {
-        identifier,
-        functionMask: 0,
-        functions,
-        msp_baudrate: "115200",
-        gps_baudrate: "57600",
-        telemetry_baudrate: "AUTO",
-        blackbox_baudrate: "115200",
-    };
-}
 
 /**
  * The shape GpsTab composes its Save button from: its own settings snapshot ORed with the serial
@@ -62,18 +29,8 @@ describe("a feature tab hosting a serial row", () => {
     let settings;
 
     beforeEach(async () => {
-        setActivePinia(createPinia());
-        vi.clearAllMocks();
-        mspPromise.mockImplementation(() => Promise.resolve({}));
-        FC.resetState();
-        FC.CONFIG.apiVersion = "1.48.0";
-        FC.CONFIG.buildOptions = [];
-        FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-
         settings = { provider: 0 };
-        store = useSerialPortsStore();
-        FC.SERIAL_CONFIG.ports = [fcPort(20, ["MSP"]), fcPort(0), fcPort(1)];
-        await store.loadConfig({ force: true });
+        store = await resetPortsEnv({ fcPorts: [fcPort(20, ["MSP"]), fcPort(0), fcPort(1)] });
     });
 
     const serialize = () => JSON.stringify(settings);
@@ -139,7 +96,7 @@ describe("a feature tab hosting a serial row", () => {
         markClean(snapshot);
 
         expect(dirty.value).toBe(false);
-        expect(FC.SERIAL_CONFIG.ports.find((p) => p.identifier === 1).functions).toEqual(["GPS"]);
+        expect(savedFunctions(1)).toEqual(["GPS"]);
     });
 
     it("leaves nothing behind when the tab goes away unsaved", () => {

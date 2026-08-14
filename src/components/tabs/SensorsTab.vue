@@ -836,6 +836,7 @@ import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useSerialPortsStore } from "@/stores/serialPorts";
+import { sensorTransportsFor } from "@/composables/ports/sensorTransport";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
@@ -973,39 +974,13 @@ const opticalFlowHardwareEnabled = computed({
 const showRangefinder = ref(false);
 const showOpticalFlow = ref(false);
 
-/**
- * How the selected rangefinder and optical flow hardware actually talk to the FC, which is not one
- * answer and is not the same question as which sensor is enabled.
- *
- * The MT family (MTF01/02 and their P variants, and optical flow "MT") is handled by
- * rangefinder_lidarmt.c and arrives as MSP frames - MSP2_SENSOR_RANGEFINDER_LIDARMT and
- * MSP2_SENSOR_OPTICALFLOW_MT - so all those need is MSP enabled on the UART they are wired to.
- * There is no rangefinder function bit involved. TF, Nooploop and UPT1 open FUNCTION_LIDAR
- * directly. HCSR04 is pin-driven and needs no UART.
- *
- * Both sensors are asked, because they are usually the same physical module on one wire and either
- * one alone is a valid setup - an MT optical flow sensor with no rangefinder still needs its MSP
- * port. Whichever transports are in play get a row; one module means one row serving both sensors.
- */
-function rangefinderTransportFor(name) {
-    if (!name || name === "NONE" || name === "HCSR04") {
-        return "none";
-    }
-    return /^MTF/.test(name) ? "msp" : "serial";
-}
-
-function opticalFlowTransportFor(name) {
-    if (!name || name === "NONE") {
-        return "none";
-    }
-    return name === "MT" ? "msp" : "serial";
-}
-
-const sensorTransports = computed(() => {
-    const rangefinder = rangefinderTransportFor(sonarTypesList.value[sensorConfig.sonar_hardware] ?? "");
-    const opticalFlow = opticalFlowTransportFor(opticalFlowTypesList.value[sensorConfig.opticalflow_hardware] ?? "");
-    return new Set([rangefinder, opticalFlow].filter((t) => t !== "none"));
-});
+/** How the selected sensor hardware talks to the FC - see sensorTransport.js for the rules. */
+const sensorTransports = computed(() =>
+    sensorTransportsFor(
+        sonarTypesList.value[sensorConfig.sonar_hardware] ?? "",
+        opticalFlowTypesList.value[sensorConfig.opticalflow_hardware] ?? "",
+    ),
+);
 
 /** Any selected sensor needs a UART at all. */
 const needsSensorPort = computed(() => sensorTransports.value.size > 0);

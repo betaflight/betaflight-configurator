@@ -1,88 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createPinia, setActivePinia } from "pinia";
+import {
+    defaultFcPorts,
+    fcPort,
+    guiLog,
+    loadFcPorts,
+    loadPortsEnv,
+    mspPromise,
+    resetPortsState,
+    saveAndReboot,
+} from "./helpers/serialPorts";
 
-const mspPromise = vi.fn(() => Promise.resolve());
-const saveAndReboot = vi.fn(() => Promise.resolve());
-const guiLog = vi.fn();
+const { useSerialPortsStore, FC, MSPCodes, CONFIGURATOR } = await loadPortsEnv();
 
-vi.mock("../../src/js/msp", () => ({
-    default: {
-        promise: (...args) => mspPromise(...args),
-    },
-}));
-
-vi.mock("../../src/js/msp/MSPHelper", () => ({
-    mspHelper: {
-        crunch: () => [],
-        // Bits 19 and 20 are the ones no supported firmware agrees on, so they stand in for
-        // "unnamed" here; everything below 19 is a bit this build can name.
-        serialPortUnknownFunctionMask: (mask) => (mask || 0) & ~((1 << 19) - 1),
-    },
-    isMspRejected: (response) => Boolean(response?.unsupported || response?.crcError),
-}));
-
-vi.mock("../../src/composables/useReboot", () => ({
-    useReboot: () => ({ saveAndReboot }),
-}));
-
-vi.mock("../../src/js/gui_log", () => ({ gui_log: (...args) => guiLog(...args) }));
-vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
-vi.mock("../../src/js/Analytics", () => ({
-    tracking: {
-        EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "fc" },
-        sendSaveAndChangeEvents: vi.fn(),
-    },
-}));
-
-const { useSerialPortsStore } = await import("../../src/stores/serialPorts");
-const FC = (await import("../../src/js/fc")).default;
-const CONFIGURATOR = (await import("../../src/js/data_storage")).default;
-const Features = (await import("../../src/js/Features")).default;
-const MSPCodes = (await import("../../src/js/msp/MSPCodes")).default;
-
-/** An FC-shaped port, as MSPHelper leaves it in FC.SERIAL_CONFIG.ports. */
-function fcPort(identifier, functions = [], extra = {}) {
-    return {
-        identifier,
-        functionMask: 0,
-        functions,
-        msp_baudrate: "115200",
-        gps_baudrate: "57600",
-        telemetry_baudrate: "AUTO",
-        blackbox_baudrate: "115200",
-        ...extra,
-    };
-}
-
-/** Seed the FC with a port array and load it into the store. */
-async function load(store, fcPorts) {
-    FC.SERIAL_CONFIG.ports = fcPorts;
-    await store.loadConfig({ force: true });
-}
-
-const DEFAULT_PORTS = [
-    fcPort(20, ["MSP"]), // USB VCP
-    fcPort(0),
-    fcPort(1),
-    fcPort(2),
-];
-
-async function freshStore(fcPorts = DEFAULT_PORTS) {
-    const store = useSerialPortsStore();
-    await load(store, fcPorts);
-    return store;
-}
+/** A store loaded with a port array of this file's choosing. */
+const freshStore = (fcPorts = defaultFcPorts()) => loadFcPorts(useSerialPortsStore(), fcPorts);
 
 describe("useSerialPortsStore", () => {
     beforeEach(() => {
-        setActivePinia(createPinia());
-        vi.clearAllMocks();
-        mspPromise.mockImplementation(() => Promise.resolve({}));
-        FC.resetState();
-        FC.CONFIG.apiVersion = "1.48.0";
-        FC.CONFIG.buildOptions = [];
-        FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-        CONFIGURATOR.connectionValid = true;
+        resetPortsState();
     });
 
     describe("loading", () => {
