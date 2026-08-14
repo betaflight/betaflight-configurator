@@ -8,6 +8,7 @@
 import { ref, onMounted, onUnmounted, watch, nextTick, computed } from "vue";
 
 const props = defineProps({
+    showGrid: { type: Boolean, default: true },
     isAdvancedMode: { type: Boolean, default: false },
     propPitch: { type: Number, default: 3.7 },
     craftMass: { type: Number, default: 1 },
@@ -297,7 +298,6 @@ watch(
         props.dragCoef,
         props.motorThrust,
         props.maxVoltage,
-        props.pitchOffset,
         props.motorKv,
         props.curveExpo,
         props.stallThrottle,
