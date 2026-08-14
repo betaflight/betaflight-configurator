@@ -7,7 +7,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { MspCrcError, isMspRejected } from "./mspErrors";
+import { MspCrcError } from "./mspErrors";
 import {
     serialPortFunctionsFor,
     serialPortFunctionMaskToFunctions,
@@ -2901,5 +2901,6 @@ let mspHelper;
 // to modules and every usage of this can create own
 // instance or re-use existing where needed.
 window.mspHelper = mspHelper = new MspHelper();
-export { mspHelper, isMspRejected };
+export { mspHelper };
+export { isMspRejected } from "./mspErrors";
 export default MspHelper;

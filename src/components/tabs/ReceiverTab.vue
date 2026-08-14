@@ -796,10 +796,8 @@ const showSerialRxBox = computed(() => isRxSerialEnabled());
 
 const serialRxRow = ref(null);
 const telemetryRow = ref(null);
-const { serialPortsStore, serialRowsPending, applySerialRows, resetSerialRows, loadSerialPorts } = useSerialRowHost([
-    serialRxRow,
-    telemetryRow,
-]);
+const { serialPortsStore, serialRowsPending, applySerialRows, writeSerialRows, resetSerialRows, loadSerialPorts } =
+    useSerialRowHost([serialRxRow, telemetryRow]);
 
 // The RX_SERIAL feature bit is what showSerialRxBox reads, and updateFeatures() derives that bit
 // from port assignment on save. Gating the port selector on it would be circular - no port until
@@ -808,7 +806,15 @@ const { serialPortsStore, serialRowsPending, applySerialRows, resetSerialRows, l
 const rxSerialFeatureBit = computed(
     () => features.value?.features?.getFeatures?.()?.find((f) => f.name === "RX_SERIAL")?.bit ?? 3,
 );
-const showSerialRxPortBox = computed(() => selectedRxMode.value === rxSerialFeatureBit.value);
+// Never hide a port firmware has already been given, the way MotorsTab keeps its ESC_SENSOR row:
+// updateFeatures() derives the RX_SERIAL bit from the port array, so an assignment left behind by a
+// mode change would silently turn serial RX back on with no way to clear it from this tab.
+const serialRxPortAssigned = computed(() =>
+    serialPortsStore.ports.some((port) => serialPortsStore.portUses(port, "RX_SERIAL")),
+);
+const showSerialRxPortBox = computed(
+    () => selectedRxMode.value === rxSerialFeatureBit.value || serialRxPortAssigned.value,
+);
 
 const showSpiRxBox = computed(() => isRxSpiEnabled());
 const showSticksButton = computed(() => isRxMspEnabled());
@@ -1144,9 +1150,11 @@ const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
             const savedSnapshot = takeSnapshot();
-            // A serial change always reboots, so it decides the save path for the whole tab. This
-            // is also where the rows' edits first reach shared state.
-            const serialPending = applySerialRows();
+            // A serial change always reboots, so it decides the save path for the whole tab. Read
+            // before applying, which clears the rows - and covers a write still owed from a save
+            // the FC rejected, which this Save is retrying.
+            const serialPending = serialRowsPending.value;
+            applySerialRows();
             const withRebootNow = withReboot || serialPending;
 
             // Update RC_MAP from channel map string
@@ -1183,9 +1191,7 @@ const saveConfig = (withReboot = false) =>
             // Writes the port array and the feature bits it implies - including RX_SERIAL, which
             // updateFeatures() derives from whether any port carries it. That is what makes picking
             // a port, rather than the receiver-mode dropdown, the thing that turns serial RX on.
-            if (serialPending) {
-                await serialPortsStore.writeConfig();
-            }
+            await writeSerialRows();
 
             if (withRebootNow) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));

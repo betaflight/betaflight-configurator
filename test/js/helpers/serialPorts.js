@@ -21,15 +21,11 @@ export const guiLog = vi.fn();
 
 vi.doMock("../../../src/js/msp", () => ({ default: { promise: (...args) => mspPromise(...args) } }));
 
-vi.doMock("../../../src/js/msp/MSPHelper", () => ({
-    mspHelper: {
-        crunch: () => [],
-        // Bits 19 and 20 are the ones no supported firmware agrees on, so they stand in for
-        // "unnamed" here; everything below 19 is a bit this build can name.
-        serialPortUnknownFunctionMask: (mask) => (mask || 0) & ~((1 << 19) - 1),
-    },
-    isMspRejected: (response) => Boolean(response?.unsupported || response?.crcError),
-}));
+// Only crunch() is stubbed. The store reads the serial bit layout through serialPortFunctions.js
+// and the rejection check through mspErrors.js, both imported directly - stubbing same-named
+// members on mspHelper would do nothing, and the real implementations are what these tests want
+// exercised anyway.
+vi.doMock("../../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: () => [] } }));
 
 vi.doMock("../../../src/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot }) }));
 vi.doMock("../../../src/js/gui_log", () => ({ gui_log: (...args) => guiLog(...args) }));

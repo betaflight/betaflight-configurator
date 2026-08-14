@@ -15,6 +15,12 @@ function host(...rows) {
 const gpsRow = () => makeRow({ serialFunction: "GPS", baudField: "gps_baudrate" });
 const blackboxRow = () => makeRow({ serialFunction: "BLACKBOX" });
 
+/** Make the serial write come back as a firmware rejection. */
+const rejectSerialWrite = () =>
+    mspPromise.mockImplementation((code) =>
+        Promise.resolve(code === MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG ? { unsupported: 1 } : {}),
+    );
+
 const serialWrites = () => mspPromise.mock.calls.filter((c) => c[0] === MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG).length;
 
 describe("useSerialRowHost", () => {
@@ -52,12 +58,23 @@ describe("useSerialRowHost", () => {
             expect(serialRowsPending.value).toBe(true);
         });
 
-        it("goes clean again once the save has applied the edit", () => {
+        // Applying moves the edit from the row into the store, which is not the same as saving it.
+        it("stays dirty between applying the edit and the write landing", () => {
             const row = gpsRow();
             const { serialRowsPending, applySerialRows } = host(row);
             row.selectPort(1);
 
             applySerialRows();
+
+            expect(serialRowsPending.value).toBe(true);
+        });
+
+        it("goes clean once the write lands", async () => {
+            const row = gpsRow();
+            const { serialRowsPending, saveSerialRows } = host(row);
+            row.selectPort(1);
+
+            await saveSerialRows();
 
             expect(serialRowsPending.value).toBe(false);
         });
@@ -140,12 +157,51 @@ describe("useSerialRowHost", () => {
             const row = gpsRow();
             const { saveSerialRows } = host(row);
             row.selectPort(1);
-            mspPromise.mockImplementation((code) =>
-                Promise.resolve(code === MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG ? { unsupported: 1 } : {}),
-            );
+            rejectSerialWrite();
 
             await expect(saveSerialRows()).rejects.toThrow(/rejected/i);
             expect(store.dirty).toBe(true);
+        });
+    });
+
+    // Reported on the PR: apply() has already emptied the row by the time the FC refuses the
+    // write, so a host that only asked its rows would show a clean tab with a disabled Save over
+    // an edit that never reached the board.
+    describe("a write the FC rejected", () => {
+        it("leaves the tab dirty, so Save stays reachable", async () => {
+            const row = gpsRow();
+            const { serialRowsPending, saveSerialRows } = host(row);
+            row.selectPort(1);
+            rejectSerialWrite();
+
+            await expect(saveSerialRows()).rejects.toThrow();
+
+            expect(row.hasPendingChange.value).toBe(false); // the row itself is empty...
+            expect(serialRowsPending.value).toBe(true); // ...but the tab still owes a write
+        });
+
+        it("is retried by the next Save, with no further edit needed", async () => {
+            const row = gpsRow();
+            const { serialRowsPending, saveSerialRows } = host(row);
+            row.selectPort(1);
+            rejectSerialWrite();
+            await expect(saveSerialRows()).rejects.toThrow();
+
+            mspPromise.mockImplementation(() => Promise.resolve({}));
+            expect(await saveSerialRows()).toBe(true);
+
+            expect(savedFunctions(1)).toContain("GPS");
+            expect(serialRowsPending.value).toBe(false);
+            expect(store.dirty).toBe(false);
+        });
+
+        it("does not make an untouched tab owe a write", async () => {
+            const { serialRowsPending, saveSerialRows } = host(gpsRow());
+            rejectSerialWrite();
+
+            expect(await saveSerialRows()).toBe(false);
+
+            expect(serialRowsPending.value).toBe(false);
         });
     });
 

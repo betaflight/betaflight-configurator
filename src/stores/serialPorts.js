@@ -70,6 +70,53 @@ const SLOT_FIELD_BY_GROUP = {
     peripherals: "peripheral",
 };
 
+// Firmware treats telemetry and peripherals as one slot per port: assigning either clears the
+// other. The sensors slot is not in contention with either, so it has no entry here.
+const EXCLUSIVE_SLOT = {
+    telemetry: "peripheral",
+    peripheral: "telemetry",
+};
+
+function portName(identifier) {
+    return PORT_NAMES[identifier] || `UART (${identifier})`;
+}
+
+/**
+ * True when a port carries something this build preserves but will not edit: a bit it cannot name,
+ * or a named function with no slot on this API version.
+ */
+function hasReservedFunctions(port) {
+    return (
+        port.reservedFunctions?.length > 0 ||
+        serialPortUnknownFunctionMask(port.functionMask, FC.CONFIG?.apiVersion) !== 0
+    );
+}
+
+/** Which features the port array implies, which is what makes assigning a port turn one on. */
+function enabledFeaturesFromPorts(portsList) {
+    const flags = { rxSerial: false, telemetry: false, blackbox: false, esc: false, gps: false };
+
+    for (const port of portsList) {
+        const func = port.functions;
+        if (func.includes("RX_SERIAL")) {
+            flags.rxSerial = true;
+        }
+        if (func.some((e) => e.startsWith("TELEMETRY"))) {
+            flags.telemetry = true;
+        }
+        if (func.includes("BLACKBOX")) {
+            flags.blackbox = true;
+        }
+        if (func.includes("ESC_SENSOR")) {
+            flags.esc = true;
+        }
+        if (func.includes("GPS")) {
+            flags.gps = true;
+        }
+    }
+    return flags;
+}
+
 /**
  * The single source of truth for serial port assignment.
  *
@@ -101,10 +148,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
 
     const findRule = (name) => functionRules.value.find((r) => r.name === name);
     const isMspSharable = (rule) => rule?.sharableWith?.includes("msp") === true;
-
-    function portName(identifier) {
-        return PORT_NAMES[identifier] || `UART (${identifier})`;
-    }
 
     function portById(identifier) {
         return ports.value.find((p) => p.identifier === identifier);
@@ -154,13 +197,13 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
         // One slot per group means a decoded function no slot claimed - a second peripheral, or a
         // named function with no rule on this API version - would be dropped on save. Park it and
         // re-emit it verbatim instead.
-        const claimed = [msp && "MSP", rxSerial && "RX_SERIAL", telemetry, sensor, peripheral].filter(Boolean);
+        const claimed = new Set([msp && "MSP", rxSerial && "RX_SERIAL", telemetry, sensor, peripheral].filter(Boolean));
 
         return {
             identifier: fcPort.identifier,
             // Raw mask as received; MSPHelper ORs the bits it cannot name back in on write.
             functionMask: fcPort.functionMask || 0,
-            reservedFunctions: fcPort.functions.filter((f) => !claimed.includes(f)),
+            reservedFunctions: fcPort.functions.filter((f) => !claimed.has(f)),
             msp_baudrate: fcPort.msp_baudrate,
             telemetry_baudrate: fcPort.telemetry_baudrate,
             gps_baudrate: fcPort.gps_baudrate === "AUTO" ? "AUTO" : fcPort.gps_baudrate || "AUTO",
@@ -171,17 +214,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
             sensor,
             peripheral,
         };
-    }
-
-    /**
-     * True when a port carries something this build preserves but will not edit: a bit it cannot
-     * name, or a named function with no slot on this API version.
-     */
-    function hasReservedFunctions(port) {
-        return (
-            port.reservedFunctions?.length > 0 ||
-            serialPortUnknownFunctionMask(port.functionMask, FC.CONFIG?.apiVersion) !== 0
-        );
     }
 
     /**
@@ -248,20 +280,15 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
             record(target, target[field]);
         }
 
-        // Telemetry and peripherals are mutually exclusive on one port, and a function that
-        // cannot share with MSP turns MSP off.
-        if (field === "telemetry") {
-            if (target.peripheral) {
-                record(target, target.peripheral);
+        // Telemetry and peripherals are mutually exclusive on one port, so taking it for either
+        // clears the other - and a function that cannot share the port with MSP turns MSP off. An
+        // MSP-based peripheral (VTX_MSP) is the exception: assign() turns MSP on for it instead.
+        const excluded = EXCLUSIVE_SLOT[field];
+        if (excluded) {
+            if (target[excluded]) {
+                record(target, target[excluded]);
             }
-            if (target.msp && !isMspSharable(rule)) {
-                record(target, "MSP");
-            }
-        } else if (field === "peripheral") {
-            if (target.telemetry) {
-                record(target, target.telemetry);
-            }
-            if (target.msp && !serialFunction.includes("MSP") && !isMspSharable(rule)) {
+            if (target.msp && !isMspSharable(rule) && !serialFunction.includes("MSP")) {
                 record(target, "MSP");
             }
         }
@@ -424,30 +451,6 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
     }
 
     // ---------------------------------------------------------------- saving
-
-    function enabledFeaturesFromPorts(portsList) {
-        const flags = { rxSerial: false, telemetry: false, blackbox: false, esc: false, gps: false };
-
-        for (const port of portsList) {
-            const func = port.functions;
-            if (func.includes("RX_SERIAL")) {
-                flags.rxSerial = true;
-            }
-            if (func.some((e) => e.startsWith("TELEMETRY"))) {
-                flags.telemetry = true;
-            }
-            if (func.includes("BLACKBOX")) {
-                flags.blackbox = true;
-            }
-            if (func.includes("ESC_SENSOR")) {
-                flags.esc = true;
-            }
-            if (func.includes("GPS")) {
-                flags.gps = true;
-            }
-        }
-        return flags;
-    }
 
     function updateFeatures() {
         const { rxSerial, telemetry, blackbox, esc, gps } = enabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);

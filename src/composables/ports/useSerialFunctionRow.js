@@ -13,7 +13,7 @@ export const NO_PORT = "_NONE_";
  */
 export const NO_FUNCTION = "_NO_FUNCTION_";
 
-const BAUD_RATE_FIELDS = ["msp_baudrate", "gps_baudrate", "telemetry_baudrate", "blackbox_baudrate"];
+const BAUD_RATE_FIELDS = new Set(["msp_baudrate", "gps_baudrate", "telemetry_baudrate", "blackbox_baudrate"]);
 
 /** The USB VCP port - the app's own link, and not somewhere a feature's UART ever goes. */
 const USB_VCP_IDENTIFIER = 20;
@@ -255,7 +255,7 @@ export function useSerialFunctionRow(props) {
         ];
     });
 
-    const hasBaudField = computed(() => BAUD_RATE_FIELDS.includes(props.baudField));
+    const hasBaudField = computed(() => BAUD_RATE_FIELDS.has(props.baudField));
 
     const baudItems = computed(() =>
         (baudRatesByField[props.baudField] ?? []).map((rate) => ({ value: rate, label: rate })),
@@ -405,48 +405,67 @@ export function useSerialFunctionRow(props) {
         draftFunctionToggle.value = undefined;
     }
 
+    /** Move the row's function onto the chosen port, or off the FC entirely. */
+    function applyFunctionAssignment(portId) {
+        if (portOnly.value) {
+            return;
+        }
+
+        // A protocol swap frees the one it replaces, whichever port that was on.
+        if (functionChanged.value && savedFunction.value) {
+            store.clear(savedFunction.value);
+        }
+
+        const fn = activeFunction.value;
+        if (!hasPendingPortOrFunction.value || !fn) {
+            return;
+        }
+        if (portId === NO_PORT) {
+            store.clear(fn);
+        } else {
+            store.assign(fn, portId);
+        }
+    }
+
+    /** The optional function switch, which is a real assignment on the chosen port. */
+    function applyFunctionToggle(portId) {
+        if (!hasFunctionToggle.value || draftFunctionToggle.value === undefined || portId === NO_PORT) {
+            return;
+        }
+        if (draftFunctionToggle.value) {
+            store.assign(props.toggleFunction, portId);
+        } else {
+            store.clear(props.toggleFunction, portId);
+        }
+    }
+
+    /** The chosen port's own settings, which belong to the port rather than to the function. */
+    function applyPortSettings(portId) {
+        const port = portId === NO_PORT ? undefined : store.portById(portId);
+        if (!port) {
+            return;
+        }
+        if (draftBaudrate.value !== undefined && props.baudField) {
+            port[props.baudField] = draftBaudrate.value;
+        }
+        if (draftMsp.value !== undefined) {
+            port.msp = draftMsp.value;
+        }
+        if (draftMspBaudrate.value !== undefined) {
+            port.msp_baudrate = draftMspBaudrate.value;
+        }
+    }
+
     /**
      * Push the pending edit into the shared store. The host tab's save calls this immediately
      * before writing; it is the only point at which this control changes anything.
      */
     function apply() {
-        const fn = activeFunction.value;
         const portId = selectedValue.value;
 
-        // A protocol swap frees the one it replaces, whichever port that was on.
-        if (!portOnly.value && functionChanged.value && savedFunction.value) {
-            store.clear(savedFunction.value);
-        }
-
-        if (!portOnly.value && hasPendingPortOrFunction.value && fn) {
-            if (portId === NO_PORT) {
-                store.clear(fn);
-            } else {
-                store.assign(fn, portId);
-            }
-        }
-
-        // The optional function switch, which is a real assignment on the chosen port.
-        if (hasFunctionToggle.value && draftFunctionToggle.value !== undefined && portId !== NO_PORT) {
-            if (draftFunctionToggle.value) {
-                store.assign(props.toggleFunction, portId);
-            } else {
-                store.clear(props.toggleFunction, portId);
-            }
-        }
-
-        const port = portId === NO_PORT ? undefined : store.portById(portId);
-        if (port) {
-            if (draftBaudrate.value !== undefined && props.baudField) {
-                port[props.baudField] = draftBaudrate.value;
-            }
-            if (draftMsp.value !== undefined) {
-                port.msp = draftMsp.value;
-            }
-            if (draftMspBaudrate.value !== undefined) {
-                port.msp_baudrate = draftMspBaudrate.value;
-            }
-        }
+        applyFunctionAssignment(portId);
+        applyFunctionToggle(portId);
+        applyPortSettings(portId);
 
         reset();
     }

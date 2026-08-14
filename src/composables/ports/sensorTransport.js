@@ -18,7 +18,7 @@ export function rangefinderTransportFor(name) {
     if (!name || name === "NONE" || name === "HCSR04") {
         return "none";
     }
-    return /^MTF/.test(name) ? "msp" : "serial";
+    return name.startsWith("MTF") ? "msp" : "serial";
 }
 
 /** @returns {"none"|"msp"|"serial"} */
