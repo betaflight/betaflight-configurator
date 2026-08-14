@@ -1465,7 +1465,6 @@ export function cancelRebootReconnect() {
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
 function rebootReconnect() {
-    console.log("rebootReconnect");
     // Cancel any prior reboot cycle (e.g. a second Save-and-Reboot within the window) so we
     // never run two overlapping retry loops.
     stopRebootReconnect();
