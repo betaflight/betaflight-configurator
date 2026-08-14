@@ -5480,6 +5480,12 @@
     "pidTuningIntegratedYaw": {
         "message": "Integratsiyalangan Yaw"
     },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">EHTIYOT Bo‘LING<\/span>: agar bu funksiyani yoqsangiz, YAW PID'ni mos ravishda moslashtirishingiz kerak. Ko‘proq ma'lumot <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">shu yerda<\/a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "Integratsiyalangan Yaw yaw P, I va D qiymatlarini integratsiya qiladi, bu esa yaw P, I va D'ni pitch va roll'ni sozlaganingizga biroz o‘xshab sozlash imkonini beradi.<br><br>Juda kam I talab qilinadi, chunki integratsiyalangan P I kabi harakat qiladi va integratsiyalangan D P kabi harakat qiladi.<br><br>ESLATMA: Integratsiyalangan Yaw Absolyut boshqaruvdan foydalanishni talab qiladi, chunki Integratsiyalangan Yaw bilan I kerak emas."
+    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe konfiguratsiyasi sezilarli darajada o‘zgardi. Yaxshilangan konfiguratsiya panelini yoqish uchun Betaflight <strong>v1.12.0+<\/strong>dan foydalaning."
     },

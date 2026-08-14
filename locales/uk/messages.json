@@ -5529,6 +5529,12 @@
     "pidTuningIntegratedYaw": {
         "message": "Інтегроване рискання"
     },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">УВАГА<\/span>: якщо увімкнете цю функцію, ви повинні скорегувати ПІД рискання відповідно. Докладніше <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "Інтегроване рискання, інтегрує значення P, I та D рискання, дозволяючи налаштовувати значення P, I та D для рискання, подібно до того, як налаштовують тангаж та крен.<br><br>Потрібен дуже малий I, оскільки інтегрований P діє подібно до I, а інтегрований D - до P.<br><br>ПРИМІТКА: для застосування інтегрованого рискання потрібно використовувати Absolute Control, оскільки при інтегрованому рисканні не потрібний I."
+    },
     "failsafeFeaturesHelpOld": {
         "message": "Конфігурація безаварійності (failsafe) зазнала значних змін. Використовуйте Betaflight <strong>v1.12.0+<\/strong>, щоб увімкнути вдосконалену панель налаштувань."
     },

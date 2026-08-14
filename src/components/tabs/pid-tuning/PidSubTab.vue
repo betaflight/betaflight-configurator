@@ -1039,6 +1039,17 @@
                     />
                 </SettingRow>
 
+                <div v-if="isIntegratedYawSupported" class="flex flex-col gap-1">
+                    <SettingRow :label="$t('pidTuningIntegratedYaw')" :help="$t('pidTuningIntegratedYawHelp')">
+                        <USwitch v-model="integratedYawEnabled" size="sm" />
+                    </SettingRow>
+                    <span
+                        v-if="integratedYawEnabled"
+                        class="text-xs text-warning pl-4"
+                        v-html="$t('pidTuningIntegratedYawCaution')"
+                    ></span>
+                </div>
+
                 <SettingRow
                     v-if="isPreApi148"
                     :label="$t('pidTuningAbsoluteControlGain')"
@@ -1143,6 +1154,9 @@ const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 // Absolute Control was removed from firmware in API 1.48
 const isPreApi148 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48));
+// Integrated Yaw was removed from firmware in 2026.12.0; no MSP API version bump accompanied
+// it, so this must be checked against flightControllerVersion rather than apiVersion.
+const isIntegratedYawSupported = computed(() => semver.lt(FC.CONFIG.flightControllerVersion, "2026.12.0"));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
 const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
 const dMaxLabel = computed(() => (isPreApi147.value ? "pidTuningDerivative" : "pidTuningDMax"));
@@ -1418,6 +1432,11 @@ const vbatSagEnabled = computed({
 const thrustLinearEnabled = computed({
     get: () => FC.ADVANCED_TUNING.thrustLinearization !== 0,
     set: (val) => (FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0),
+});
+
+const integratedYawEnabled = computed({
+    get: () => FC.ADVANCED_TUNING.useIntegratedYaw !== 0,
+    set: (val) => (FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0),
 });
 
 // PID table input disabled states — matches original updatePidSlidersDisplay()
