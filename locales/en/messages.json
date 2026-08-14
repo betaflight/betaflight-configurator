@@ -2242,6 +2242,21 @@
     "portsTelemetryDisabled": {
         "message": "Disabled"
     },
+    "receiverSerialPortTitle": {
+        "message": "Serial Receiver Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "The UART your receiver is wired to. Assigning a port is what enables serial RX \u2014 there is nothing else to switch on."
+    },
+    "receiverTelemetryPortTitle": {
+        "message": "Telemetry Output"
+    },
+    "receiverTelemetryPortHelp": {
+        "message": "Telemetry sent out over a UART. Not needed for receivers that carry telemetry back over the RX link itself, such as CRSF or GHST."
+    },
+    "receiverTelemetryProtocol": {
+        "message": "Protocol"
+    },
     "serialPortAssign": {
         "message": "Serial port"
     },

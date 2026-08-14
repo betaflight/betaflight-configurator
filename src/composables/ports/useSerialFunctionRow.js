@@ -23,7 +23,12 @@ const USB_VCP_IDENTIFIER = 20;
  * saved, and would need undoing if the user simply walked away. Held locally it goes away with the
  * tab, because it was never anywhere else.
  *
- * @param {{serialFunction: string, baudField?: string|null}} props
+ * Two shapes. Given `serialFunction`, the row edits that one function's port. Given `group`
+ * instead, it also offers a protocol picker over every rule in that group and edits whichever of
+ * them is assigned - telemetry is one slot per port carrying one of six protocols, so choosing the
+ * protocol and choosing the port are the same decision.
+ *
+ * @param {{serialFunction?: string, group?: string, baudField?: string|null}} props
  */
 export function useSerialFunctionRow(props) {
     const { t } = useTranslation();
@@ -44,26 +49,67 @@ export function useSerialFunctionRow(props) {
     const draftBaudrate = ref(undefined);
     const draftMsp = ref(undefined);
     const draftMspBaudrate = ref(undefined);
+    const draftFunction = ref(undefined);
 
     function displayName(name) {
         return functionRules.value.find((r) => r.name === name)?.displayName || name;
     }
+
+    // ------------------------------------------------------------ which function
+
+    const groupRules = computed(() => (props.group ? rules.getRules(props.group) : []));
+    const hasGroup = computed(() => groupRules.value.length > 0);
+
+    /** Which of the group's functions the FC currently has on a port, ignoring the pending edit. */
+    const savedFunction = computed(() => {
+        if (!hasGroup.value) {
+            return props.serialFunction ?? "";
+        }
+        return groupRules.value.find((r) => store.ports.some((p) => store.portUses(p, r.name)))?.name ?? "";
+    });
+
+    /** Which function this row is editing once saved. Empty means "none of them". */
+    const activeFunction = computed(() => draftFunction.value ?? savedFunction.value);
+
+    const functionItems = computed(() => [
+        { value: "", label: t("portsTelemetryDisabled") },
+        ...groupRules.value.map((r) => ({
+            value: r.name,
+            label: r.displayName,
+            disabled: Boolean(rules.isRuleDisabled(r)),
+        })),
+    ]);
 
     // USB VCP is not offered. It is the app's own connection, never a place a feature's serial link
     // belongs, and firmware refuses a config where it stops carrying MSP. The Ports tab still shows
     // it, because that view is the complete picture; this one is a choice, and VCP is not a real
     // choice. It stays listed only if firmware already put this function there.
     const options = computed(() =>
-        store
-            .availableFor(props.serialFunction)
-            .filter((option) => option.portId !== USB_VCP_IDENTIFIER || option.selected),
+        activeFunction.value
+            ? store
+                .availableFor(activeFunction.value)
+                .filter((option) => option.portId !== USB_VCP_IDENTIFIER || option.selected)
+            : [],
     );
 
-    /** Where the function sits on the FC right now, ignoring the pending edit. */
+    /** Where the active function sits on the FC right now, ignoring the pending edit. */
     const savedPortId = computed(() => options.value.find((o) => o.selected)?.portId ?? NO_PORT);
 
+    /**
+     * Where the function this row is replacing sits. Swapping telemetry protocol should keep the
+     * UART - the user picked that port for their wiring, not for the protocol.
+     */
+    const previousPortId = computed(() => {
+        if (!savedFunction.value || savedFunction.value === activeFunction.value) {
+            return NO_PORT;
+        }
+        return store.ports.find((p) => store.portUses(p, savedFunction.value))?.identifier ?? NO_PORT;
+    });
+
     /** Where the function will sit once saved. */
-    const selectedValue = computed(() => draftPortId.value ?? savedPortId.value);
+    const selectedValue = computed(
+        () => draftPortId.value ?? (savedPortId.value !== NO_PORT ? savedPortId.value : previousPortId.value),
+    );
 
     const assignedPort = computed(() =>
         selectedValue.value === NO_PORT ? undefined : options.value.find((o) => o.portId === selectedValue.value),
@@ -105,19 +151,23 @@ export function useSerialFunctionRow(props) {
      * is the change the user just asked for and can see in the selector.
      */
     const evictions = computed(() => {
-        if (draftPortId.value === undefined || draftPortId.value === NO_PORT) {
+        const fn = activeFunction.value;
+        const portId = selectedValue.value;
+        if (!fn || portId === NO_PORT || !hasPendingPortOrFunction.value) {
             return [];
         }
-        return store
-            .evictionsFor(props.serialFunction, draftPortId.value)
-            .filter((e) => e.serialFunction !== props.serialFunction);
+        return store.evictionsFor(fn, portId).filter((e) => e.serialFunction !== fn);
     });
 
     const portChanged = computed(() => draftPortId.value !== undefined && draftPortId.value !== savedPortId.value);
+    const functionChanged = computed(
+        () => draftFunction.value !== undefined && draftFunction.value !== savedFunction.value,
+    );
+    const hasPendingPortOrFunction = computed(() => portChanged.value || functionChanged.value);
 
     /** Whether there is anything here for a save to apply. */
     const hasPendingChange = computed(() => {
-        if (portChanged.value) {
+        if (hasPendingPortOrFunction.value) {
             return true;
         }
         const port = targetPort.value;
@@ -127,6 +177,15 @@ export function useSerialFunctionRow(props) {
             (draftMspBaudrate.value !== undefined && draftMspBaudrate.value !== port?.msp_baudrate)
         );
     });
+
+    function selectFunction(value) {
+        draftFunction.value = value;
+        // The new protocol has its own port, baudrate and MSP setting.
+        draftPortId.value = undefined;
+        draftBaudrate.value = undefined;
+        draftMsp.value = undefined;
+        draftMspBaudrate.value = undefined;
+    }
 
     function selectPort(value) {
         draftPortId.value = value;
@@ -155,6 +214,7 @@ export function useSerialFunctionRow(props) {
         draftBaudrate.value = undefined;
         draftMsp.value = undefined;
         draftMspBaudrate.value = undefined;
+        draftFunction.value = undefined;
     }
 
     /**
@@ -162,15 +222,23 @@ export function useSerialFunctionRow(props) {
      * before writing; it is the only point at which this control changes anything.
      */
     function apply() {
-        if (draftPortId.value !== undefined) {
-            if (draftPortId.value === NO_PORT) {
-                store.clear(props.serialFunction);
+        const fn = activeFunction.value;
+        const portId = selectedValue.value;
+
+        // A protocol swap frees the one it replaces, whichever port that was on.
+        if (functionChanged.value && savedFunction.value) {
+            store.clear(savedFunction.value);
+        }
+
+        if (hasPendingPortOrFunction.value && fn) {
+            if (portId === NO_PORT) {
+                store.clear(fn);
             } else {
-                store.assign(props.serialFunction, draftPortId.value);
+                store.assign(fn, portId);
             }
         }
 
-        const port = targetPort.value;
+        const port = portId === NO_PORT ? undefined : store.portById(portId);
         if (port) {
             if (draftBaudrate.value !== undefined && props.baudField) {
                 port[props.baudField] = draftBaudrate.value;
@@ -188,6 +256,10 @@ export function useSerialFunctionRow(props) {
 
     return {
         loaded,
+        hasGroup,
+        functionItems,
+        activeFunction,
+        selectFunction,
         portItems,
         selectedValue,
         assignedPort,

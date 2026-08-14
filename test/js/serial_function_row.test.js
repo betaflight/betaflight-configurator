@@ -364,6 +364,149 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
+    // Telemetry is one slot per port carrying one of six protocols, so the row offers the protocol
+    // and the port together.
+    describe("a row over a whole group", () => {
+        const telemetryRow = () => row({ group: "telemetry", baudField: "telemetry_baudrate" });
+
+        it("offers every protocol in the group plus a disabled option", () => {
+            const { functionItems } = telemetryRow();
+
+            expect(functionItems.value[0].value).toEqual("");
+            expect(functionItems.value.map((i) => i.value)).toContain("TELEMETRY_MAVLINK");
+            expect(functionItems.value.map((i) => i.value)).toContain("TELEMETRY_SMARTPORT");
+        });
+
+        it("reports whichever protocol the FC has assigned", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const { activeFunction } = telemetryRow();
+
+            expect(activeFunction.value).toEqual("TELEMETRY_MAVLINK");
+        });
+
+        it("reports none when no protocol is assigned", () => {
+            expect(telemetryRow().activeFunction.value).toEqual("");
+        });
+
+        it("offers no ports until a protocol is chosen", () => {
+            // The template hides the port row entirely in this state; the list is empty either way.
+            const r = telemetryRow();
+
+            expect(r.portItems.value.filter((i) => i.value !== NO_PORT)).toEqual([]);
+
+            r.selectFunction("TELEMETRY_MAVLINK");
+            expect(r.portItems.value.filter((i) => i.value !== NO_PORT).length).toBeGreaterThan(0);
+        });
+
+        it("keeps the port when only the protocol changes", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_SMARTPORT");
+
+            // The user picked that UART for their wiring, not for the protocol.
+            expect(r.selectedValue.value).toEqual(1);
+        });
+
+        it("holds the protocol choice until applied", () => {
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_MAVLINK");
+            r.selectPort(1);
+
+            expect(store.portById(1).telemetry).toEqual("");
+            expect(r.hasPendingChange.value).toBe(true);
+
+            r.apply();
+            expect(store.portById(1).telemetry).toEqual("TELEMETRY_MAVLINK");
+        });
+
+        it("frees the protocol it replaces, wherever that was", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_SMARTPORT");
+            r.selectPort(2);
+            r.apply();
+
+            expect(store.portById(1).telemetry).toEqual("");
+            expect(store.portById(2).telemetry).toEqual("TELEMETRY_SMARTPORT");
+        });
+
+        it("swaps protocol in place when the port is left alone", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_SMARTPORT");
+            r.apply();
+
+            expect(store.portById(1).telemetry).toEqual("TELEMETRY_SMARTPORT");
+        });
+
+        it("turns telemetry off when the disabled option is chosen", () => {
+            store.assign("TELEMETRY_MAVLINK", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("");
+            r.apply();
+
+            expect(store.portById(1).telemetry).toEqual("");
+        });
+
+        it("drops a pending port when the protocol changes under it", () => {
+            const r = telemetryRow();
+            r.selectFunction("TELEMETRY_MAVLINK");
+            r.selectPort(1);
+
+            r.selectFunction("TELEMETRY_SMARTPORT");
+
+            expect(r.selectedValue.value).toEqual(NO_PORT);
+        });
+
+        // C4: telemetry and peripherals are mutually exclusive on one port, and on a contextual
+        // editor the cleared value is on a screen the user is not looking at.
+        it("warns that taking a port would evict the peripheral on it", () => {
+            store.assign("BLACKBOX", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_MAVLINK");
+            r.selectPort(1);
+
+            expect(r.evictions.value).toEqual([{ portId: 1, portName: "UART2", serialFunction: "BLACKBOX" }]);
+            expect(store.portById(1).peripheral).toEqual("BLACKBOX"); // not yet displaced
+        });
+
+        it("actually evicts the peripheral once applied", () => {
+            store.assign("BLACKBOX", 1);
+            const r = telemetryRow();
+
+            r.selectFunction("TELEMETRY_MAVLINK");
+            r.selectPort(1);
+            r.apply();
+
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(store.portById(1).telemetry).toEqual("TELEMETRY_MAVLINK");
+        });
+
+        it("carries the telemetry baudrate for the chosen port", () => {
+            const r = telemetryRow();
+            r.selectFunction("TELEMETRY_MAVLINK");
+            r.selectPort(1);
+
+            r.setBaudrate("115200");
+            r.apply();
+
+            expect(store.portById(1).telemetry_baudrate).toEqual("115200");
+        });
+
+        it("is a plain single-function row when no group is given", () => {
+            const r = row({ serialFunction: "GPS" });
+
+            expect(r.hasGroup.value).toBe(false);
+            expect(r.activeFunction.value).toEqual("GPS");
+        });
+    });
+
     describe("baudrate", () => {
         it("is absent for a function with no baudrate", () => {
             const { hasBaudField, baudItems } = row({ serialFunction: "ESC_SENSOR" });

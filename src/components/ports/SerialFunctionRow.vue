@@ -1,6 +1,18 @@
 <template>
     <div class="flex flex-col gap-2">
-        <SettingRow :label="label || $t('serialPortAssign')" :help="help">
+        <!-- Protocol picker, when this row edits a whole group rather than one function. -->
+        <SettingRow v-if="hasGroup" :label="protocolLabel || $t('portsTelemetryOut')">
+            <USelect
+                :model-value="activeFunction"
+                :items="functionItems"
+                :disabled="!loaded"
+                size="xs"
+                class="min-w-56"
+                @update:model-value="selectFunction"
+            />
+        </SettingRow>
+
+        <SettingRow v-if="!hasGroup || activeFunction" :label="label || $t('serialPortAssign')" :help="help">
             <USelect
                 :model-value="selectedValue"
                 :items="portItems"
@@ -11,7 +23,7 @@
             />
         </SettingRow>
 
-        <SettingRow v-if="hasBaudField" :label="$t('serialPortBaudrate')">
+        <SettingRow v-if="hasBaudField && (!hasGroup || activeFunction)" :label="$t('serialPortBaudrate')">
             <USelect
                 :model-value="baudrate"
                 :items="baudItems"
@@ -23,7 +35,7 @@
         </SettingRow>
 
         <!-- MSP on the chosen port, matching the Ports tab's Configuration column. -->
-        <SettingRow :label="$t('portsFunction_MSP')" :help="$t('portsMSPHelp')">
+        <SettingRow v-if="!hasGroup || activeFunction" :label="$t('portsFunction_MSP')" :help="$t('portsMSPHelp')">
             <USwitch :model-value="msp" :disabled="mspDisabled" size="xs" @update:model-value="setMsp" />
             <USelect
                 :model-value="mspBaudrate"
@@ -72,10 +84,24 @@ import { useSerialFunctionRow } from "../../composables/ports/useSerialFunctionR
  * destructured.
  */
 const props = defineProps({
-    /** The serial function this row edits, e.g. "GPS". */
+    /** The serial function this row edits, e.g. "GPS". Omit when using `group`. */
     serialFunction: {
         type: String,
-        required: true,
+        default: "",
+    },
+    /**
+     * Edit a whole rule group instead of one function - the row then offers a protocol picker over
+     * the group and edits whichever member is assigned. Used for telemetry, where a port carries
+     * one of six protocols and picking the protocol and the port is one decision.
+     */
+    group: {
+        type: String,
+        default: "",
+    },
+    /** Label for the protocol picker, when `group` is set. */
+    protocolLabel: {
+        type: String,
+        default: "",
     },
     /**
      * Which per-port baudrate belongs to this function, or null when it has none.
@@ -98,6 +124,10 @@ const props = defineProps({
 
 const {
     loaded,
+    hasGroup,
+    functionItems,
+    activeFunction,
+    selectFunction,
     portItems,
     selectedValue,
     assignedPort,

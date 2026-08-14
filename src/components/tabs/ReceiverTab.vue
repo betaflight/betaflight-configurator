@@ -143,6 +143,37 @@
                                 </SettingRow>
                             </template>
                         </UiBox>
+
+                        <!--
+                            Serial Receiver Port. Driven by the selected receiver mode, NOT by the
+                            RX_SERIAL feature bit: that bit is derived from port assignment on save,
+                            so gating the only port selector on it would make serial RX
+                            unconfigurable from a clean state.
+                        -->
+                        <UiBox
+                            v-if="showSerialRxPortBox"
+                            :title="$t('receiverSerialPortTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('receiverSerialPortHelp')"
+                        >
+                            <SerialFunctionRow ref="serialRxRow" serial-function="RX_SERIAL" />
+                        </UiBox>
+
+                        <!-- Telemetry Output: one protocol on one port, with its baudrate. -->
+                        <UiBox
+                            :title="$t('receiverTelemetryPortTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('receiverTelemetryPortHelp')"
+                        >
+                            <SerialFunctionRow
+                                ref="telemetryRow"
+                                group="telemetry"
+                                baud-field="telemetry_baudrate"
+                                :protocol-label="$t('receiverTelemetryProtocol')"
+                            />
+                        </UiBox>
                     </div>
 
                     <div class="grid-box col6">
@@ -561,6 +592,8 @@ import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
 import UiBox from "../elements/UiBox.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import { useSerialPortsStore } from "@/stores/serialPorts";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -679,7 +712,11 @@ function serializeReceiverState() {
     });
 }
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
+const { dirty: receiverSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
+
+// The serial rows hold their edits locally until this tab's save applies them, so ask the rows
+// rather than the store.
+const dirty = computed(() => receiverSettingsDirty.value || serialRowsPending.value);
 
 const saveMenuItems = computed(() => [
     [
@@ -756,6 +793,23 @@ const isTelemetryEnabled = computed(() => features.value?.features?.isEnabled?.(
 const isRssiAdcEnabled = computed(() => features.value?.features?.isEnabled?.("RSSI_ADC") ?? false);
 
 const showSerialRxBox = computed(() => isRxSerialEnabled());
+
+const serialPortsStore = useSerialPortsStore();
+const serialRxRow = ref(null);
+const telemetryRow = ref(null);
+
+// The RX_SERIAL feature bit is what showSerialRxBox reads, and updateFeatures() derives that bit
+// from port assignment on save. Gating the port selector on it would be circular - no port until
+// the feature is on, no feature until a port is assigned - so this box follows the receiver mode
+// the user picked instead.
+const rxSerialFeatureBit = computed(
+    () => features.value?.features?.getFeatures?.()?.find((f) => f.name === "RX_SERIAL")?.bit ?? 3,
+);
+const showSerialRxPortBox = computed(() => selectedRxMode.value === rxSerialFeatureBit.value);
+
+const serialRowsPending = computed(
+    () => Boolean(serialRxRow.value?.hasPendingChange) || Boolean(telemetryRow.value?.hasPendingChange),
+);
 const showSpiRxBox = computed(() => isRxSpiEnabled());
 const showSticksButton = computed(() => isRxMspEnabled());
 
@@ -1012,7 +1066,11 @@ function openSticksWindow() {
 }
 
 async function refreshTab() {
+    // Refresh means "show me what the FC has", so pending row edits go too.
+    serialRxRow.value?.reset();
+    telemetryRow.value?.reset();
     await loadConfig();
+    await serialPortsStore.loadConfig({ force: true });
     gui_log(t("receiverDataRefreshed"));
 }
 
@@ -1087,6 +1145,13 @@ const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
             const savedSnapshot = takeSnapshot();
+            // A serial change always reboots, so it decides the save path for the whole tab.
+            const serialPending = serialRowsPending.value;
+            const withRebootNow = withReboot || serialPending;
+
+            // This is where the rows' edits first reach shared state.
+            serialRxRow.value?.apply();
+            telemetryRow.value?.apply();
 
             // Update RC_MAP from channel map string
             validateChannelMap();
@@ -1119,7 +1184,14 @@ const saveConfig = (withReboot = false) =>
             await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
-            if (withReboot) {
+            // Writes the port array and the feature bits it implies - including RX_SERIAL, which
+            // updateFeatures() derives from whether any port carries it. That is what makes picking
+            // a port, rather than the receiver-mode dropdown, the thing that turns serial RX on.
+            if (serialPending) {
+                await serialPortsStore.writeConfig();
+            }
+
+            if (withRebootNow) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
                 await saveAndReboot();
             } else {
@@ -1288,6 +1360,8 @@ onMounted(async () => {
     keepRendering = true;
 
     await loadConfig();
+    // The store is shared across tabs: this refetches when clean and skips when it holds edits.
+    await serialPortsStore.loadConfig();
     await nextTick();
 
     // Initialize model preview
