@@ -88,6 +88,17 @@
             </template>
         </UAlert>
 
+        <!--
+            The cap bites when two rows on one tab each queue an MSP enable into a single free
+            slot: the first save consumes it and the second cannot be honoured. Say so, rather
+            than letting the switch quietly spring back.
+        -->
+        <UAlert v-if="mspBlocked" color="warning" variant="subtle" icon="i-lucide-triangle-alert">
+            <template #description>
+                <span v-html="$t('serialPortMspLimit')"></span>
+            </template>
+        </UAlert>
+
         <UAlert
             v-for="eviction in evictions"
             :key="`${eviction.portId}-${eviction.serialFunction}`"
@@ -227,6 +238,7 @@ const {
     setBaudrate,
     msp,
     mspDisabled,
+    mspBlocked,
     mspBaudItems,
     mspBaudrate,
     setMsp,

@@ -534,10 +534,15 @@
         "message": "PID Tuning"
     },
     "tabAutotune": { "message": "Autotune" },
-    "tabBlackboxViewer": { "message": "Blackbox Viewer", "description": "Navigation sidebar label for the Blackbox log viewer tab" },
+    "tabBlackboxViewer": {
+        "message": "Blackbox Viewer",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
-    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
@@ -553,7 +558,9 @@
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
-    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
     "autotuneSampleCount": { "message": "{{count}} samples" },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
     "autotuneImportAnother": { "message": "Import Another" },
@@ -2286,6 +2293,10 @@
     "serialPortWillEvict": {
         "message": "Saving will remove <strong>{{serialFunction}}</strong> from {{port}}.",
         "description": "Shown when assigning a function displaced another one, which happened on a screen the user may not be looking at."
+    },
+    "serialPortMspLimit": {
+        "message": "MSP is already on the maximum of three ports, so it could not be enabled here. Turn it off on another port and save again.",
+        "description": "Shown when a save could not honour the MSP switch because firmware's MAX_MSP_PORT_COUNT of 3, USB VCP included, is already reached."
     },
     "serialPortPendingChanges": {
         "message": "Serial port changes pending"

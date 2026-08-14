@@ -58,6 +58,9 @@ export function useSerialFunctionRow(props) {
     const draftFunction = ref(undefined);
     const draftFunctionToggle = ref(undefined);
 
+    /** Set when a save could not honour the MSP switch, so the row can say so. */
+    const mspBlocked = ref(false);
+
     function displayName(name) {
         return functionRules.value.find((r) => r.name === name)?.displayName || name;
     }
@@ -383,6 +386,7 @@ export function useSerialFunctionRow(props) {
         draftMsp.value = undefined;
         draftMspBaudrate.value = undefined;
         draftFunctionToggle.value = undefined;
+        mspBlocked.value = false;
     }
 
     function setBaudrate(value) {
@@ -395,6 +399,7 @@ export function useSerialFunctionRow(props) {
 
     function setMsp(value) {
         draftMsp.value = value;
+        mspBlocked.value = false;
     }
 
     function setMspBaudrate(value) {
@@ -409,6 +414,7 @@ export function useSerialFunctionRow(props) {
         draftMspBaudrate.value = undefined;
         draftFunction.value = undefined;
         draftFunctionToggle.value = undefined;
+        mspBlocked.value = false;
     }
 
     /** Move the row's function onto the chosen port, or off the FC entirely. */
@@ -445,28 +451,34 @@ export function useSerialFunctionRow(props) {
         }
     }
 
-    /** The chosen port's own settings, which belong to the port rather than to the function. */
+    /**
+     * The chosen port's own settings, which belong to the port rather than to the function.
+     *
+     * @returns {boolean} whether the MSP switch could not be honoured
+     */
     function applyPortSettings(portId) {
         const port = portId === NO_PORT ? undefined : store.portById(portId);
         if (!port) {
-            return;
+            return false;
         }
         if (draftBaudrate.value !== undefined && props.baudField) {
             port[props.baudField] = draftBaudrate.value;
         }
-        if (draftMsp.value !== undefined) {
-            // Through the store rather than writing port.msp: assign() is where the three-port MSP
-            // cap is enforced, and a fourth MSP port makes firmware refuse the whole serial write,
-            // not just the one port. The switch is disabled at the limit, so this is the backstop.
-            if (draftMsp.value) {
-                store.assign("MSP", portId);
-            } else {
-                store.clear("MSP", portId);
-            }
-        }
         if (draftMspBaudrate.value !== undefined) {
             port.msp_baudrate = draftMspBaudrate.value;
         }
+        if (draftMsp.value === undefined) {
+            return false;
+        }
+        if (!draftMsp.value) {
+            store.clear("MSP", portId);
+            return false;
+        }
+        // Through the store rather than writing port.msp: assign() is where the three-port MSP cap
+        // is enforced, and a fourth MSP port makes firmware refuse the whole serial write, not
+        // just the one port. The switch is disabled at the limit, so this only bites when two rows
+        // on one tab each queue an MSP enable while a single slot is left - the first consumes it.
+        return store.assign("MSP", portId).assigned === false;
     }
 
     /**
@@ -478,9 +490,18 @@ export function useSerialFunctionRow(props) {
 
         applyFunctionAssignment(portId);
         applyFunctionToggle(portId);
-        applyPortSettings(portId);
+        const mspRefused = applyPortSettings(portId);
 
         reset();
+
+        // An MSP enable the cap refused is kept rather than dropped: the user asked for it, it did
+        // not happen, and silently reverting the switch on save would be the edit disappearing
+        // with no account of itself. Held, the row stays dirty and says why, the switch is still
+        // there to turn back off, and freeing a slot elsewhere makes the next save take it.
+        if (mspRefused) {
+            draftMsp.value = true;
+            mspBlocked.value = true;
+        }
     }
 
     return {
@@ -509,6 +530,7 @@ export function useSerialFunctionRow(props) {
         setBaudrate,
         msp,
         mspDisabled,
+        mspBlocked,
         mspBaudItems,
         mspBaudrate,
         setMsp,

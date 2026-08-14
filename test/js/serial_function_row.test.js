@@ -168,6 +168,85 @@ describe("useSerialFunctionRow", () => {
                 expect(store.portById(1).msp).toBe(false);
             });
 
+            // Reported on the PR: two rows on one tab (ReceiverTab hosts two, both with an MSP
+            // switch) can each queue an enable while one slot is left. Both switches were legal
+            // when flipped - the store still said two - and the first apply() takes the slot.
+            describe("two rows racing for the last slot", () => {
+                const twoRowsBothEnabling = () => {
+                    store.assign("MSP", 0); // VCP + UART1 = two of three, one left
+                    const first = makeRow({ serialFunction: "GPS" });
+                    const second = makeRow({ serialFunction: "BLACKBOX" });
+
+                    first.selectPort(1);
+                    second.selectPort(2);
+                    expect(first.mspDisabled.value).toBe(false); // legal when flipped...
+                    expect(second.mspDisabled.value).toBe(false); // ...for both
+
+                    first.setMsp(true);
+                    second.setMsp(true);
+                    return { first, second };
+                };
+
+                it("gives the slot to whichever applies first", () => {
+                    const { first, second } = twoRowsBothEnabling();
+
+                    first.apply();
+                    second.apply();
+
+                    expect(store.portById(1).msp).toBe(true);
+                    expect(store.portById(2).msp).toBe(false);
+                });
+
+                it("keeps the refused edit instead of dropping it, and says why", () => {
+                    const { first, second } = twoRowsBothEnabling();
+
+                    first.apply();
+                    second.apply();
+
+                    expect(second.mspBlocked.value).toBe(true);
+                    expect(second.msp.value).toBe(true); // the switch still shows what was asked
+                    expect(second.hasPendingChange.value).toBe(true); // so the tab stays dirty
+                });
+
+                it("takes it on the next save once a slot is freed", () => {
+                    const { first, second } = twoRowsBothEnabling();
+                    first.apply();
+                    second.apply();
+
+                    store.clear("MSP", 0); // the user frees one elsewhere
+                    second.apply();
+
+                    expect(store.portById(2).msp).toBe(true);
+                    expect(second.mspBlocked.value).toBe(false);
+                    expect(second.hasPendingChange.value).toBe(false);
+                });
+
+                it("lets the user take the refused edit back off", () => {
+                    const { first, second } = twoRowsBothEnabling();
+                    first.apply();
+                    second.apply();
+
+                    second.setMsp(false);
+
+                    expect(second.mspBlocked.value).toBe(false);
+
+                    second.apply();
+                    expect(second.hasPendingChange.value).toBe(false);
+                    expect(store.portById(2).msp).toBe(false);
+                });
+
+                it("drops the refused edit when the row is reset", () => {
+                    const { first, second } = twoRowsBothEnabling();
+                    first.apply();
+                    second.apply();
+
+                    second.reset();
+
+                    expect(second.mspBlocked.value).toBe(false);
+                    expect(second.hasPendingChange.value).toBe(false);
+                });
+            });
+
             it("refuses to write a fourth even if the switch is driven anyway", () => {
                 atTheLimit();
                 const row = makeRow({ serialFunction: "GPS" });
