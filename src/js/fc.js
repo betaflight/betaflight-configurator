@@ -420,6 +420,7 @@ const FC = {
             motor_poles: 0,
             use_dshot_telemetry: false,
             use_esc_sensor: false,
+            motor_kv: 0,
         };
 
         this.GPS_CONFIG = {

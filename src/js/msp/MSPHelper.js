@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -555,6 +561,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.MOTOR_CONFIG.motor_poles = data.readU8();
                     FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
+
+                    // Introduced in 1.49
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.MOTOR_CONFIG.motor_kv = data.readU16();
+                    }
                     break;
                 case MSPCodes.MSP_COMPASS_CONFIG:
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -2020,6 +2031,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             // Introduced in 1.42
             buffer.push8(FC.MOTOR_CONFIG.motor_poles);
             buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push16(FC.MOTOR_CONFIG.motor_kv);
+            }
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer
