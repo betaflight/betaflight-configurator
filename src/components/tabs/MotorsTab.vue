@@ -106,6 +106,7 @@
                                 v-if="showEscSensorPort"
                                 ref="escSensorRow"
                                 serial-function="ESC_SENSOR"
+                                :show-msp="false"
                                 :label="$t('motorsEscSensorPort')"
                                 :help="$t('motorsEscSensorPortHelp')"
                             />

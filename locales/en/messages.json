@@ -506,6 +506,12 @@
     "sensorConfigRangefinderPortHelp": {
         "message": "The UART your serial rangefinder is wired to. Which driver runs on it is decided by the rangefinder type above, not by the port."
     },
+    "sensorConfigRangefinderPortSharedHelp": {
+        "message": "The UART your rangefinder is wired to. This module carries its optical flow sensor on the same wire, so this one port serves both."
+    },
+    "sensorConfigRangefinderMspHelp": {
+        "message": "This rangefinder reports over MSP rather than its own serial function, so the UART it is wired to needs MSP enabled. Optical flow on the same module shares this port."
+    },
     "sensorConfigAccCalibrateHelp": {
         "message": "Place the craft on a level surface before calibrating"
     },

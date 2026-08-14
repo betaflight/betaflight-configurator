@@ -35,7 +35,11 @@
         </SettingRow>
 
         <!-- MSP on the chosen port, matching the Ports tab's Configuration column. -->
-        <SettingRow v-if="!hasGroup || activeFunction" :label="$t('portsFunction_MSP')" :help="$t('portsMSPHelp')">
+        <SettingRow
+            v-if="showMsp && (!hasGroup || activeFunction)"
+            :label="$t('portsFunction_MSP')"
+            :help="$t('portsMSPHelp')"
+        >
             <USwitch :model-value="msp" :disabled="mspDisabled" size="xs" @update:model-value="setMsp" />
             <USelect
                 :model-value="mspBaudrate"
@@ -137,6 +141,15 @@ const props = defineProps({
     protocolLabel: {
         type: String,
         default: "",
+    },
+    /**
+     * Show the MSP switch for the chosen port. Turn it off where MSP is noise: a function that
+     * cannot share a port with MSP anyway, or a row whose function IS MSP, where the port picker
+     * already is the MSP assignment.
+     */
+    showMsp: {
+        type: Boolean,
+        default: true,
     },
     /**
      * Which per-port baudrate belongs to this function, or null when it has none.

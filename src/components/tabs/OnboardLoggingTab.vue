@@ -42,14 +42,6 @@
                                     class="min-w-40"
                                 />
                             </SettingRow>
-                            <SerialFunctionRow
-                                v-if="showBlackboxSerialPort"
-                                ref="serialRow"
-                                serial-function="BLACKBOX"
-                                baud-field="blackbox_baudrate"
-                                :label="$t('serialPortAssign')"
-                                :help="$t('onboardLoggingSerialPortHelp')"
-                            />
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
                                 <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
@@ -91,6 +83,20 @@
 
                         <UiBox :title="$t('onboardLoggingSerialLogger')" type="neutral" collapsible>
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
+                            <!--
+                                The port lives here rather than beside the device selector: this box
+                                IS the outboard serial logger, so the UART it writes to belongs in
+                                it. Still gated on the device being set to serial, since that is
+                                what makes the assignment mean anything.
+                            -->
+                            <SerialFunctionRow
+                                v-if="showBlackboxSerialPort"
+                                ref="serialRow"
+                                serial-function="BLACKBOX"
+                                baud-field="blackbox_baudrate"
+                                :label="$t('serialPortAssign')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            />
                         </UiBox>
 
                         <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>

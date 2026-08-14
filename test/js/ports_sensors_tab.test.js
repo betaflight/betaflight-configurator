@@ -347,3 +347,36 @@ describe("SensorsTab serial rangefinder row", () => {
         }
     });
 });
+
+// The rangefinder's transport is decided by the selected hardware, not by the function bit.
+// rangefinder_lidarmt.c handles the MT family and delivers MSP2_SENSOR_RANGEFINDER_LIDARMT frames,
+// so those need an MSP port; rangefinder_lidartf.c / _nooploop.c / _upt1.c open FUNCTION_LIDAR.
+// HCSR04 is pin-driven. This mirrors SensorsTab's rangefinderTransport computed - if firmware adds
+// a hardware type, both need updating together.
+describe("rangefinder transport by hardware type", () => {
+    const MSP_RANGEFINDERS = /^MTF/;
+    const transportFor = (name) => {
+        if (!name || name === "NONE" || name === "HCSR04") {
+            return "none";
+        }
+        return MSP_RANGEFINDERS.test(name) ? "msp" : "serial";
+    };
+
+    it("routes the MT family over MSP", () => {
+        for (const name of ["MTF01", "MTF02", "MTF01P", "MTF02P"]) {
+            expect(transportFor(name), name).toEqual("msp");
+        }
+    });
+
+    it("routes TF, Nooploop and UPT1 over the serial rangefinder function", () => {
+        for (const name of ["TFMINI", "TF02", "TFNOVA", "NOOPLOOP_F2", "NOOPLOOP_F2MINI", "UPT1"]) {
+            expect(transportFor(name), name).toEqual("serial");
+        }
+    });
+
+    it("needs no port for a pin-driven or absent rangefinder", () => {
+        for (const name of ["NONE", "HCSR04", ""]) {
+            expect(transportFor(name), name || "(empty)").toEqual("none");
+        }
+    });
+});
