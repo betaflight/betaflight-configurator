@@ -821,6 +821,111 @@ describe("useSerialFunctionRow", () => {
         });
     });
 
+    // Port and function are separate decisions for a sensor: every module needs a UART, only some
+    // need a function bit on it. TF/Nooploop/UPT1 open FUNCTION_LIDAR; an MT module reports over MSP
+    // and wants no function at all.
+    describe("port-only with an optional function switch", () => {
+        const lidarRow = () => row({ portOnly: true, toggleFunction: "LIDAR_TF" });
+
+        it("offers the switch only when a function is named", () => {
+            expect(row({ portOnly: true }).hasFunctionToggle.value).toBe(false);
+            expect(lidarRow().hasFunctionToggle.value).toBe(true);
+        });
+
+        it("labels the switch with the function's display name", () => {
+            expect(lidarRow().functionToggleLabel.value).toEqual("portsFunction_LIDAR_TF");
+        });
+
+        it("is unusable until a port is chosen", () => {
+            expect(lidarRow().functionToggleDisabled.value).toBe(true);
+        });
+
+        it("reports the function already on the chosen port", () => {
+            store.assign("LIDAR_TF", 1);
+            const r = lidarRow();
+
+            expect(r.selectedValue.value).toEqual(1);
+            expect(r.functionEnabled.value).toBe(true);
+        });
+
+        it("holds the assignment until applied", () => {
+            const r = lidarRow();
+            r.selectPort(1);
+
+            r.setFunctionEnabled(true);
+            expect(r.hasPendingChange.value).toBe(true);
+            expect(store.portById(1).peripheral).toEqual("");
+
+            r.apply();
+            expect(store.portById(1).peripheral).toEqual("LIDAR_TF");
+        });
+
+        it("clears the function from that port when switched off", () => {
+            store.assign("LIDAR_TF", 1);
+            const r = lidarRow();
+
+            r.setFunctionEnabled(false);
+            r.apply();
+
+            expect(store.portById(1).peripheral).toEqual("");
+        });
+
+        it("previews what enabling it would displace", () => {
+            store.assign("BLACKBOX", 1);
+            const r = lidarRow();
+            r.selectPort(1);
+
+            r.setFunctionEnabled(true);
+
+            expect(r.evictions.value).toEqual([{ portId: 1, portName: "UART2", serialFunction: "BLACKBOX" }]);
+            expect(store.portById(1).peripheral).toEqual("BLACKBOX");
+        });
+
+        it("warns about nothing while the switch is off", () => {
+            store.assign("BLACKBOX", 1);
+            const r = lidarRow();
+            r.selectPort(1);
+
+            expect(r.evictions.value).toEqual([]);
+        });
+
+        it("still carries MSP independently of the function", () => {
+            const r = lidarRow();
+            r.selectPort(1);
+
+            r.setMsp(true);
+            r.setFunctionEnabled(true);
+            r.apply();
+
+            expect(store.portById(1).msp).toBe(true);
+            expect(store.portById(1).peripheral).toEqual("LIDAR_TF");
+        });
+
+        it("drops a pending function toggle when the port changes under it", () => {
+            const r = lidarRow();
+            r.selectPort(1);
+            r.setFunctionEnabled(true);
+
+            r.selectPort(2);
+            r.apply();
+
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(store.portById(2).peripheral).toEqual("");
+        });
+
+        it("assigns no function at all when none is named - the MT case", () => {
+            const r = row({ portOnly: true });
+            r.selectPort(1);
+            r.setMsp(true);
+
+            r.apply();
+
+            expect(store.portById(1).msp).toBe(true);
+            expect(store.portById(1).peripheral).toEqual("");
+            expect(store.portById(1).sensor).toEqual("");
+        });
+    });
+
     describe("baudrate", () => {
         it("is absent for a function with no baudrate", () => {
             const { hasBaudField, baudItems } = row({ serialFunction: "ESC_SENSOR" });

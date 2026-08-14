@@ -1719,17 +1719,11 @@
     "sensorConfigSensorPort": {
         "message": "Serial port"
     },
-    "sensorConfigSensorPortMspHelp": {
-        "message": "This sensor reports over MSP rather than a serial function of its own, so the UART it is wired to needs MSP enabled here \u2014 nothing else."
+    "sensorConfigSensorPortHelp": {
+        "message": "The UART this sensor is wired to. Switch on below whatever it needs on that port \u2014 some rangefinders need their own serial function, while modules that report over MSP need only MSP."
     },
-    "sensorConfigSensorPortMspSharedHelp": {
-        "message": "This module carries both sensors on one wire and reports over MSP, so the UART it is wired to needs MSP enabled here \u2014 nothing else."
-    },
-    "sensorConfigSensorPortSerialHelp": {
-        "message": "The UART this sensor is wired to."
-    },
-    "sensorConfigSensorPortSerialSharedHelp": {
-        "message": "The UART this module is wired to. It carries both sensors, so this one port serves them both."
+    "sensorConfigSensorPortSharedHelp": {
+        "message": "The UART this module is wired to. It carries both sensors, so one port serves them both. Switch on below whatever it needs on that port."
     },
     "configurationRangefinder": {
         "message": "Rangefinder",

@@ -89,33 +89,22 @@
                         </SettingRow>
 
                         <!--
-                            The port sits below both selectors because it serves both: an MT module
-                            carries the rangefinder and the optical flow sensor on one wire, and so
-                            does UPT1. Which row appears is decided by the transport the chosen
-                            hardware uses, not by which sensor is on - an MT optical flow sensor
-                            with no rangefinder still needs its MSP port.
+                            One port selector for both sensors: an MT module carries the rangefinder
+                            and the optical flow sensor on one wire, and so does UPT1. The function
+                            switch is separate and only offered for the hardware that needs it - TF,
+                            Nooploop and UPT1 open FUNCTION_LIDAR, while an MT module reports over
+                            MSP and wants no function bit at all.
                         -->
                         <SerialFunctionRow
-                            v-if="needsMspPort"
-                            ref="mspSensorRow"
+                            v-if="needsSensorPort"
+                            ref="sensorPortRow"
                             port-only
+                            :toggle-function="needsSerialFunction ? 'LIDAR_TF' : ''"
                             :label="$t('sensorConfigSensorPort')"
                             :help="
                                 sensorsShareOnePort
-                                    ? $t('sensorConfigSensorPortMspSharedHelp')
-                                    : $t('sensorConfigSensorPortMspHelp')
-                            "
-                        />
-                        <SerialFunctionRow
-                            v-if="needsSerialPort"
-                            ref="serialSensorRow"
-                            serial-function="LIDAR_TF"
-                            :show-msp="false"
-                            :label="$t('sensorConfigSensorPort')"
-                            :help="
-                                sensorsShareOnePort
-                                    ? $t('sensorConfigSensorPortSerialSharedHelp')
-                                    : $t('sensorConfigSensorPortSerialHelp')
+                                    ? $t('sensorConfigSensorPortSharedHelp')
+                                    : $t('sensorConfigSensorPortHelp')
                             "
                         />
                         <!-- Board Alignment -->
@@ -1018,8 +1007,11 @@ const sensorTransports = computed(() => {
     return new Set([rangefinder, opticalFlow].filter((t) => t !== "none"));
 });
 
-const needsMspPort = computed(() => sensorTransports.value.has("msp"));
-const needsSerialPort = computed(() => sensorTransports.value.has("serial"));
+/** Any selected sensor needs a UART at all. */
+const needsSensorPort = computed(() => sensorTransports.value.size > 0);
+
+/** ...and some of them additionally need FUNCTION_LIDAR set on that port. */
+const needsSerialFunction = computed(() => sensorTransports.value.has("serial"));
 
 /** True when both sensors are set and share one transport, i.e. one module on one wire. */
 const sensorsShareOnePort = computed(
@@ -2351,12 +2343,10 @@ const { dirty: sensorSettingsDirty, markClean, takeSnapshot } = useDirtyState(se
 // than the store. ORed rather than folded into serializeState because apply() clears the row's
 // pending state partway through a save, which would leave a snapshot-based baseline permanently
 // out of step.
-// One row per transport in play. Normally exactly one is mounted: a single module on a single wire.
-const serialSensorRow = ref(null);
-const mspSensorRow = ref(null);
-const sensorPortRows = computed(() => [mspSensorRow.value, serialSensorRow.value].filter(Boolean));
+// One row: the sensors share a wire, so they share a port selector.
+const sensorPortRow = ref(null);
 
-const dirty = computed(() => sensorSettingsDirty.value || sensorPortRows.value.some((row) => row.hasPendingChange));
+const dirty = computed(() => sensorSettingsDirty.value || Boolean(sensorPortRow.value?.hasPendingChange));
 
 // --- Load helpers ---
 
@@ -2550,8 +2540,8 @@ const saveConfig = () =>
             // leaving the sensor config saved against a serial config that was refused.
             // Gate on THIS row's pending edit, captured before apply(). store.dirty also goes
             // true for an unsaved Ports-tab edit, which this tab must not adopt.
-            const serialPending = sensorPortRows.value.some((row) => row.hasPendingChange);
-            sensorPortRows.value.forEach((row) => row.apply());
+            const serialPending = Boolean(sensorPortRow.value?.hasPendingChange);
+            sensorPortRow.value?.apply();
             if (serialPending) {
                 await serialPortsStore.writeConfig();
             }

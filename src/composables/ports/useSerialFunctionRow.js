@@ -56,6 +56,7 @@ export function useSerialFunctionRow(props) {
     const draftMsp = ref(undefined);
     const draftMspBaudrate = ref(undefined);
     const draftFunction = ref(undefined);
+    const draftFunctionToggle = ref(undefined);
 
     function displayName(name) {
         return functionRules.value.find((r) => r.name === name)?.displayName || name;
@@ -70,10 +71,19 @@ export function useSerialFunctionRow(props) {
      */
     const portOnly = computed(() => Boolean(props.portOnly));
 
-    /** In port-only mode, the non-VCP port already carrying MSP - the likely home of the device. */
-    const mspPortId = computed(
-        () => store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && p.msp)?.identifier ?? NO_PORT,
-    );
+    /**
+     * In port-only mode, the port the device is most likely on: the one already carrying its
+     * function if it has one, otherwise the non-VCP port already carrying MSP.
+     */
+    const mspPortId = computed(() => {
+        const withFunction =
+            props.toggleFunction &&
+            store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && store.portUses(p, props.toggleFunction));
+        if (withFunction) {
+            return withFunction.identifier;
+        }
+        return store.ports.find((p) => p.identifier !== USB_VCP_IDENTIFIER && p.msp)?.identifier ?? NO_PORT;
+    });
 
     /** What a port carries, for annotating a general port list. */
     function portFunctionsSummary(port) {
@@ -259,6 +269,23 @@ export function useSerialFunctionRow(props) {
     const baudrate = computed(() => draftBaudrate.value ?? targetPort.value?.[props.baudField] ?? "");
     const msp = computed(() => draftMsp.value ?? Boolean(targetPort.value?.msp));
     const mspDisabled = computed(() => !assignedPort.value);
+
+    /**
+     * An optional serial function switch for the chosen port, alongside MSP.
+     *
+     * Port selection and function assignment are separate decisions for a sensor: every module
+     * needs a UART, but only some need a function bit on it. A TF or Nooploop rangefinder opens
+     * FUNCTION_LIDAR; an MT module reports over MSP and wants no function at all. The host decides
+     * which by passing toggleFunction, or not.
+     */
+    const hasFunctionToggle = computed(() => portOnly.value && Boolean(props.toggleFunction));
+    const functionToggleLabel = computed(() => displayName(props.toggleFunction));
+    const functionToggleDisabled = computed(() => !assignedPort.value);
+    const functionEnabled = computed(
+        () =>
+            draftFunctionToggle.value ??
+            Boolean(targetPort.value && store.portUses(targetPort.value, props.toggleFunction)),
+    );
     const mspBaudItems = computed(() => rules.mspBaudRates.map((rate) => ({ value: rate, label: rate })));
     const mspBaudrate = computed(() => draftMspBaudrate.value ?? targetPort.value?.msp_baudrate ?? "");
 
@@ -272,6 +299,17 @@ export function useSerialFunctionRow(props) {
     const evictions = computed(() => {
         const fn = activeFunction.value;
         const portId = selectedValue.value;
+
+        // Switching the function on takes a slot on that port like any other assignment.
+        if (hasFunctionToggle.value) {
+            if (!draftFunctionToggle.value || portId === NO_PORT) {
+                return [];
+            }
+            return store
+                .evictionsFor(props.toggleFunction, portId)
+                .filter((e) => e.serialFunction !== props.toggleFunction);
+        }
+
         if (!hasPendingPortOrFunction.value) {
             return [];
         }
@@ -316,7 +354,9 @@ export function useSerialFunctionRow(props) {
         return (
             (draftBaudrate.value !== undefined && draftBaudrate.value !== port?.[props.baudField]) ||
             (draftMsp.value !== undefined && draftMsp.value !== Boolean(port?.msp)) ||
-            (draftMspBaudrate.value !== undefined && draftMspBaudrate.value !== port?.msp_baudrate)
+            (draftMspBaudrate.value !== undefined && draftMspBaudrate.value !== port?.msp_baudrate) ||
+            (draftFunctionToggle.value !== undefined &&
+                draftFunctionToggle.value !== Boolean(port && store.portUses(port, props.toggleFunction)))
         );
     });
 
@@ -336,10 +376,15 @@ export function useSerialFunctionRow(props) {
         draftBaudrate.value = undefined;
         draftMsp.value = undefined;
         draftMspBaudrate.value = undefined;
+        draftFunctionToggle.value = undefined;
     }
 
     function setBaudrate(value) {
         draftBaudrate.value = value;
+    }
+
+    function setFunctionEnabled(value) {
+        draftFunctionToggle.value = value;
     }
 
     function setMsp(value) {
@@ -357,6 +402,7 @@ export function useSerialFunctionRow(props) {
         draftMsp.value = undefined;
         draftMspBaudrate.value = undefined;
         draftFunction.value = undefined;
+        draftFunctionToggle.value = undefined;
     }
 
     /**
@@ -380,6 +426,15 @@ export function useSerialFunctionRow(props) {
             }
         }
 
+        // The optional function switch, which is a real assignment on the chosen port.
+        if (hasFunctionToggle.value && draftFunctionToggle.value !== undefined && portId !== NO_PORT) {
+            if (draftFunctionToggle.value) {
+                store.assign(props.toggleFunction, portId);
+            } else {
+                store.clear(props.toggleFunction, portId);
+            }
+        }
+
         const port = portId === NO_PORT ? undefined : store.portById(portId);
         if (port) {
             if (draftBaudrate.value !== undefined && props.baudField) {
@@ -400,6 +455,11 @@ export function useSerialFunctionRow(props) {
         loaded,
         hasGroup,
         portOnly,
+        hasFunctionToggle,
+        functionToggleLabel,
+        functionToggleDisabled,
+        functionEnabled,
+        setFunctionEnabled,
         hiddenAssignments,
         functionItems,
         activeFunction,

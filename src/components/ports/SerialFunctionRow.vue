@@ -39,6 +39,15 @@
         </SettingRow>
 
         <!-- MSP on the chosen port, matching the Ports tab's Configuration column. -->
+        <SettingRow v-if="hasFunctionToggle" :label="functionToggleLabel">
+            <USwitch
+                :model-value="functionEnabled"
+                :disabled="functionToggleDisabled"
+                size="xs"
+                @update:model-value="setFunctionEnabled"
+            />
+        </SettingRow>
+
         <SettingRow
             v-if="showMsp && (portOnly || !hasGroup || activeFunction)"
             :label="$t('portsFunction_MSP')"
@@ -165,6 +174,15 @@ const props = defineProps({
         default: false,
     },
     /**
+     * In port-only mode, additionally offer a switch for this serial function on the chosen port.
+     * Port and function are separate decisions for a sensor: every module needs a UART, only some
+     * need a function bit on it.
+     */
+    toggleFunction: {
+        type: String,
+        default: "",
+    },
+    /**
      * Which per-port baudrate belongs to this function, or null when it has none.
      * @values gps_baudrate, telemetry_baudrate, blackbox_baudrate, msp_baudrate, null
      */
@@ -187,6 +205,11 @@ const {
     loaded,
     hasGroup,
     portOnly,
+    hasFunctionToggle,
+    functionToggleLabel,
+    functionToggleDisabled,
+    functionEnabled,
+    setFunctionEnabled,
     hiddenAssignments,
     functionItems,
     activeFunction,
