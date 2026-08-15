@@ -9,6 +9,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick, computed } from "vue";
 
 const props = defineProps({
     showGrid: { type: Boolean, default: true },
+    curveActive: { type: Boolean, default: true },
     isAdvancedMode: { type: Boolean, default: false },
     propPitch: { type: Number, default: 3.7 },
     craftMass: { type: Number, default: 1 },
@@ -28,7 +29,8 @@ const canvasWidth = ref(0);
 const canvasHeight = ref(0);
 const dpr = window.devicePixelRatio || 1;
 let resizeObserver = null;
-let maxSpeed = 0;
+
+// Hyperbolic curve definition
 const curveColor = "#e24761";
 
 function getWingMaximalSpeed() {
@@ -54,10 +56,10 @@ function scaleRange(value, fromMin, fromMax, toMin, toMax) {
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
 }
 
-function generateCurve() {
+function generateHyperbolicCurve() {
     const steps = 100;
     const data = [];
-    maxSpeed = props.isAdvancedMode ? getWingMaximalSpeed() : 1;
+    const maxSpeed = props.isAdvancedMode ? getWingMaximalSpeed() : 1;
     for (let i = 0; i <= steps; i++) {
         const x = i / steps;
         let curveValue;
@@ -79,7 +81,8 @@ function generateCurve() {
     return data;
 }
 
-const mainData = computed(() => generateCurve());
+// Define curve and add it into chartCurves list in drawChart()
+const curveData = computed(() => generateHyperbolicCurve());
 
 function resizeCanvas() {
     const container = containerRef.value;
@@ -100,8 +103,10 @@ function resizeCanvas() {
     drawChart();
 }
 
+const pad = { top: 20, right: 20, bottom: 30, left: 40 };
+
 // Draw axises
-function drawAxes(ctx, pad, plotWidth, plotHeight) {
+function drawAxes(ctx, plotWidth, plotHeight) {
     ctx.strokeStyle = "#555";
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -109,10 +114,30 @@ function drawAxes(ctx, pad, plotWidth, plotHeight) {
     ctx.lineTo(pad.left, pad.top + plotHeight);
     ctx.lineTo(pad.left + plotWidth, pad.top + plotHeight);
     ctx.stroke();
+
+    // The axises labels
+    ctx.fillStyle = "#aaa";
+    ctx.font = "10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("Speed (m/s)", pad.left + plotWidth / 2, pad.top + plotHeight + 12);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("Gain", pad.left - 5, pad.top + 10);
+}
+
+function getStepAxisX(maxSpeed) {
+    let step = 5;
+    if (maxSpeed <= 1) {
+        step = 0.2;
+    } else if (maxSpeed <= 10) {
+        step = 2;
+    }
+    return step;
 }
 
 // Draw axises ticks and grid
-function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult, maxMult) {
+function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult) {
     const fontSize = 9;
     ctx.font = `${fontSize}px sans-serif`;
     ctx.fillStyle = "#888";
@@ -120,7 +145,7 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
     ctx.textBaseline = "top";
 
     // The axis X labels and ticks
-    const xStep = Math.ceil(maxSpeed / 5 / 5) * 5;
+    const xStep = getStepAxisX(maxSpeed);
     for (let v = 0; v <= maxSpeed; v += xStep) {
         if (v === 0) {
             continue;
@@ -129,7 +154,7 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
         if (x < pad.left || x > pad.left + plotWidth) {
             continue;
         }
-        ctx.fillText(v, x, pad.top + plotHeight + 4);
+        ctx.fillText(v.toFixed(xStep < 1 ? 1 : 0), x, pad.top + plotHeight + 4);
         // The small tick
         ctx.beginPath();
         ctx.moveTo(x, pad.top + plotHeight);
@@ -137,10 +162,22 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
         ctx.strokeStyle = "#555";
         ctx.lineWidth = 1;
         ctx.stroke();
+
+        // The vertical grid lines
+        if (props.showGrid) {
+            ctx.beginPath();
+            ctx.moveTo(x, pad.top);
+            ctx.lineTo(x, pad.top + plotHeight);
+            ctx.strokeStyle = "#333";
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([2, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
     }
 
     // The axis Y labels and ticks
-    const yStep = 1;
+    const yStep = 0.25;
     for (let m = Math.ceil(minMult / yStep) * yStep; m <= maxMult; m += yStep) {
         const y = yScale(m);
         if (y < pad.top || y > pad.top + plotHeight) {
@@ -148,7 +185,7 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
         }
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
-        ctx.fillText(m.toFixed(1), pad.left - 4, y);
+        ctx.fillText(m.toFixed(2), pad.left - 4, y);
         // The small tick
         ctx.beginPath();
         ctx.moveTo(pad.left, y);
@@ -169,29 +206,11 @@ function drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult,
             ctx.setLineDash([]);
         }
     }
-
-    // The vertical grid lines
-    if (props.showGrid) {
-        for (let v = xStep; v <= maxSpeed; v += xStep) {
-            const x = xScale(v);
-            if (x < pad.left || x > pad.left + plotWidth) {
-                continue;
-            }
-            ctx.beginPath();
-            ctx.moveTo(x, pad.top);
-            ctx.lineTo(x, pad.top + plotHeight);
-            ctx.strokeStyle = "#333";
-            ctx.lineWidth = 0.5;
-            ctx.setLineDash([2, 4]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-    }
 }
 
 // The curves drawing
-function drawCurves(ctx, curves, xScale, yScale) {
-    curves.forEach((curve) => {
+function drawCurves(ctx, chartCurves, xScale, yScale) {
+    chartCurves.forEach((curve) => {
         if (!curve.data) {
             return;
         }
@@ -226,17 +245,27 @@ function drawChart() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.scale(dpr, dpr);
 
-    const pad = { top: 20, right: 20, bottom: 30, left: 40 };
     const plotWidth = w - pad.left - pad.right;
     const plotHeight = h - pad.top - pad.bottom;
     if (plotWidth <= 0 || plotHeight <= 0) {
         return;
     }
 
+    // The list of charts curves
+    const chartCurves = [
+        {
+            data: curveData.value,
+            color: curveColor,
+            active: props.curveActive,
+        },
+    ];
+
     // Collect Y values
     const allData = [];
-    if (mainData.value) {
-        allData.push(...mainData.value);
+    for (const curve of chartCurves) {
+        if (curve.data) {
+            allData.push(...curve.data);
+        }
     }
 
     if (allData.length === 0) {
@@ -247,28 +276,22 @@ function drawChart() {
     const minMult = 0;
     const yRange = maxMult - minMult || 1;
 
+    const maxSpeed = Math.max(...allData.map((d) => d.speed));
+    if (maxSpeed <= 0) {
+        return;
+    }
+
     const xScale = (speed) => pad.left + (speed / maxSpeed) * plotWidth;
     const yScale = (mult) => pad.top + plotHeight - ((mult - minMult) / yRange) * plotHeight;
 
     // The axises
-    drawAxes(ctx, pad, plotWidth, plotHeight);
+    drawAxes(ctx, plotWidth, plotHeight);
 
-    // The grid and labels
-    drawAxisTicks(ctx, pad, plotWidth, plotHeight, xScale, yScale, minMult, maxMult);
+    // The ticks, grid and labels
+    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult);
 
     // The curves
-    const curves = [{ data: mainData.value, color: curveColor, active: true }];
-    drawCurves(ctx, curves, xScale, yScale);
-
-    // The common labels
-    ctx.fillStyle = "#aaa";
-    ctx.font = "10px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillText("Speed (m/s)", pad.left + plotWidth / 2, pad.top + plotHeight + 12);
-    ctx.textAlign = "right";
-    ctx.textBaseline = "bottom";
-    ctx.fillText("Gain", pad.left - 5, pad.top + 10);
+    drawCurves(ctx, chartCurves, xScale, yScale);
 }
 
 onMounted(() => {
