@@ -12,10 +12,14 @@ const SETTING = "dronecan_device";
 /**
  * Which CAN bus the DroneCAN stack is bound to.
  *
- * There is no build option reporting DroneCAN support, so the probe is the setting itself: a build
- * without it answers `get` with an INVALID NAME error. The same reply carries the bus count for
- * this board, which the app has no other way to learn — `CANDEV_COUNT` is a compile-time constant
- * that never reaches it.
+ * Support is probed with the setting itself: a build without DroneCAN answers `get` with an
+ * INVALID NAME error. The reply also carries the bus count for this board, which the app has no
+ * other way to learn — `CANDEV_COUNT` is a compile-time constant that never reaches it.
+ *
+ * `USE_DRONECAN` is a build option now, but it is not what decides this. Firmware built between
+ * DroneCAN landing and the option existing reports neither, and `checkBuildOption` answers true
+ * for anything it cannot see, so a board would be believed either way. The probe is exact, and
+ * the bus count needs the round trip regardless.
  *
  * The bus is a property of the whole DroneCAN stack rather than of any one feature: GPS, compass,
  * airspeed and ESC telemetry all ride whichever bus this names.
