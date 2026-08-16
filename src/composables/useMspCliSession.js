@@ -93,6 +93,19 @@ export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
+// A numeric setting is printed with its bounds, so the firmware tells us how many of a thing this
+// build has rather than the app having to guess (`CANDEV_COUNT`, for one).
+export function findCliSettingRange(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());
+        if (match) {
+            return { min: Number(match[1]), max: Number(match[2]) };
+        }
+    }
+
+    return null;
+}
+
 // `get <name>` matches on substring, so the reply can carry several settings, each followed by its
 // allowed range and default. Only the line naming the setting exactly holds the current value.
 export function findCliSettingValue(lines, setting) {
