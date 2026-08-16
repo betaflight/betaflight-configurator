@@ -2233,6 +2233,9 @@
     "portsMSPHelp": {
         "message": "<strong>Note:</strong> Do <span class=\"message-negative\">NOT</span> disable MSP on the first serial port unless you know what you are doing.  You may have to reflash and erase your configuration if you do."
     },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab, so this view is read only.  It shows which port every feature currently uses; change an assignment from the tab that owns the feature."
+    },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">required</span>.  Serial port configurations of firmware &lt; 1.8.0 is not supported."
     },
