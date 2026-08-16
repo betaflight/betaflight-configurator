@@ -10,7 +10,7 @@ import supaflyWorkspace from "./ws_supafly.json";
 import { FlightLog } from "./flightlog.js";
 import { stringTimetoMsec, validate, mouseNotification } from "./tools.js";
 import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } from "./pen_adjustment.js";
-import { createKeydownHandler } from "./keyboard_handler.js";
+import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler.js";
 import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io.js";
 import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils.js";
 import {
@@ -609,6 +609,16 @@ export function bootstrapViewer() {
         });
         document.addEventListener("keydown", keydownHandler);
         cleanupFns.push(() => document.removeEventListener("keydown", keydownHandler));
+
+        // Runs in the capture phase so it can neutralise Space on a focused
+        // dropdown trigger before reka-ui's own keydown handler toggles the menu.
+        const dropdownSpaceGuard = createDropdownSpaceGuard({
+            appStore,
+            hasGraph: () => graph != null,
+            logPlayPause,
+        });
+        document.addEventListener("keydown", dropdownSpaceGuard, true);
+        cleanupFns.push(() => document.removeEventListener("keydown", dropdownSpaceGuard, true));
 
         video.addEventListener("loadedmetadata", updateCanvasSize);
         video.addEventListener("error", reportVideoError);
