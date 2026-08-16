@@ -462,12 +462,16 @@ export default defineComponent({
         const showAutoBaud = computed(
             () => (ubloxSelected.value || mspSelected.value) && semver.lt(apiVersion.value, API_VERSION_1_46),
         );
-        // These providers are fed by another subsystem rather than a UART, and the firmware strips
-        // any port assigned to one of them, so offering a port for them would be a lie.
-        const providersWithoutSerialPort = ["MSP", "VIRTUAL", "DRONECAN"];
+        // Only these providers read the module over a UART. MSP, VIRTUAL and DRONECAN are fed by
+        // another subsystem, and the firmware strips any port assigned to one of them.
+        //
+        // Named rather than excluded, so a provider this build of the app does not know about
+        // hides the row instead of offering a port that would be silently dropped: DRONECAN only
+        // joins the firmware's provider table under ENABLE_DRONECAN and is absent from the app's
+        // list entirely, so the index lands outside it.
+        const providersUsingSerialPort = ["NMEA", "UBLOX", "SEPTENTRIO"];
         const showSerialPort = computed(
-            () =>
-                gpsPortAvailable.value && !providersWithoutSerialPort.includes(gpsProtocols.value[gpsConfig.provider]),
+            () => gpsPortAvailable.value && providersUsingSerialPort.includes(gpsProtocols.value[gpsConfig.provider]),
         );
 
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
