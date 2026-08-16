@@ -749,9 +749,8 @@ export function bootstrapViewer() {
     };
     appStore.saveUserSettings = (newSettings) => {
         settingsStore.saveAll(newSettings);
-        if (newSettings.darkMode !== undefined) {
-            DarkTheme.setMode(newSettings.darkMode);
-        }
+        // Theme is owned by the host configurator (see setBlackboxViewerDark); the viewer no
+        // longer exposes or applies its own dark-mode setting, so nothing to do here for it.
         if (graph != null) {
             graph.refreshOptions(userSettings);
             graph.refreshLogo();
