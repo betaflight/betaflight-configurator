@@ -3,7 +3,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { i18n } from "../../js/localization";
-import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
+import { findCliError, findCliSettingValue, isMspCliSupported, send as cliSend } from "../useMspCliSession";
 import { serialPortsAreReadOnly } from "./usePortsReadOnly";
 import { PORT_NONE, formatPortSetCommand, getPortDisplayName } from "./portNames";
 
@@ -54,6 +54,21 @@ export function buildPortOptions(
     return options;
 }
 
+/**
+ * @param {string[]} rates baud rate names the firmware accepts for this feature
+ * @param {string|null} [current] kept in the list even when the feature no longer offers it
+ * @returns {Array<{value: string, label: string}>}
+ */
+export function buildBaudOptions(rates, current = null) {
+    const options = (rates ?? []).map((rate) => ({ value: rate, label: rate }));
+
+    if (current && !options.some((option) => option.value === current)) {
+        options.push({ value: current, label: current });
+    }
+
+    return options;
+}
+
 function describePortFunction(functionName) {
     return i18n.getMessage(`portsFunction_${functionName}`) || functionName;
 }
@@ -65,11 +80,16 @@ function describePortFunction(functionName) {
  * is a read-only view synthesised from those, so the assignment is read over MSP with the rest
  * of the serial config but written through the CLI.
  *
+ * Features that also own their baud rate pass `baud`; the port and the baud are two settings on
+ * the same parameter group, so they load and persist together.
+ *
  * @param {object} options
  * @param {string} options.setting CLI setting name, e.g. "rx_uart"
  * @param {string} options.functionName port function the feature claims, e.g. "RX_SERIAL"
+ * @param {{setting: string, rates: string[]}} [options.baud] omit for a feature with no baud of
+ *   its own, such as a serial receiver, whose rate follows the protocol
  */
-export function useFeaturePort({ setting, functionName }) {
+export function useFeaturePort({ setting, functionName, baud = null }) {
     const fcStore = useFlightControllerStore();
 
     const available = computed(() => serialPortsAreReadOnly(fcStore.config.apiVersion));
@@ -77,8 +97,12 @@ export function useFeaturePort({ setting, functionName }) {
 
     const selectedIdentifier = ref(PORT_NONE);
     const assignedIdentifier = ref(PORT_NONE);
+    const selectedBaud = ref(null);
+    const assignedBaud = ref(null);
 
-    const changed = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
+    const portChanged = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
+    const baudChanged = computed(() => Boolean(baud) && selectedBaud.value !== assignedBaud.value);
+    const changed = computed(() => portChanged.value || baudChanged.value);
 
     const options = computed(() =>
         buildPortOptions(fcStore.serialConfig?.ports, {
@@ -89,6 +113,8 @@ export function useFeaturePort({ setting, functionName }) {
         }),
     );
 
+    const baudOptions = computed(() => buildBaudOptions(baud?.rates, selectedBaud.value));
+
     async function load() {
         if (!available.value) {
             return;
@@ -98,21 +124,38 @@ export function useFeaturePort({ setting, functionName }) {
 
         assignedIdentifier.value = findFeaturePortIdentifier(fcStore.serialConfig?.ports, functionName);
         selectedIdentifier.value = assignedIdentifier.value;
+
+        // Not read from the port entry alongside the mask: the synthesised baud only appears on the
+        // port that owns the function, so an unassigned feature would report the firmware default
+        // instead of what is stored, and a save would then skip a write it owed.
+        if (baud && writable.value) {
+            assignedBaud.value = findCliSettingValue(await cliSend(`get ${baud.setting}`), baud.setting);
+            selectedBaud.value = assignedBaud.value;
+        }
     }
 
-    async function write() {
-        if (!available.value || !changed.value) {
-            return;
-        }
-
-        const lines = await cliSend(formatPortSetCommand(setting, selectedIdentifier.value));
-        const error = findCliError(lines);
+    async function sendSetting(command) {
+        const error = findCliError(await cliSend(command));
         if (error) {
             throw new Error(error);
         }
-
-        assignedIdentifier.value = selectedIdentifier.value;
     }
 
-    return { available, writable, options, selectedIdentifier, changed, load, write };
+    async function write() {
+        if (!available.value) {
+            return;
+        }
+
+        if (portChanged.value) {
+            await sendSetting(formatPortSetCommand(setting, selectedIdentifier.value));
+            assignedIdentifier.value = selectedIdentifier.value;
+        }
+
+        if (baudChanged.value) {
+            await sendSetting(`set ${baud.setting} = ${selectedBaud.value}`);
+            assignedBaud.value = selectedBaud.value;
+        }
+    }
+
+    return { available, writable, options, selectedIdentifier, baudOptions, selectedBaud, changed, load, write };
 }
