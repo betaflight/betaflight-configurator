@@ -93,6 +93,19 @@ export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
+// `get <name>` matches on substring, so the reply can carry several settings, each followed by its
+// allowed range and default. Only the line naming the setting exactly holds the current value.
+export function findCliSettingValue(lines, setting) {
+    for (const line of lines ?? []) {
+        const [name, ...rest] = line.split("=");
+        if (name.trim() === setting && rest.length) {
+            return rest.join("=").trim();
+        }
+    }
+
+    return null;
+}
+
 export async function saveAndReconnect() {
     let saveError = null;
     try {

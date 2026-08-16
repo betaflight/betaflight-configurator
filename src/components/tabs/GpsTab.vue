@@ -43,6 +43,26 @@
                             />
                         </SettingRow>
 
+                        <SettingRow v-if="showSerialPort" :label="$t('gpsSerialPort')" :help="$t('gpsSerialPortHelp')">
+                            <USelect
+                                v-model="gpsPortIdentifier"
+                                :items="gpsPortOptions"
+                                :disabled="!gpsPortWritable"
+                                size="xs"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+
+                        <SettingRow v-if="showSerialPort" :label="$t('gpsSerialBaud')" :help="$t('gpsSerialBaudHelp')">
+                            <USelect
+                                v-model="gpsBaud"
+                                :items="gpsBaudOptions"
+                                :disabled="!gpsPortWritable"
+                                size="xs"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
                             <USwitch v-model="autoBaudChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
@@ -293,6 +313,7 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
+import { gui_log } from "@/js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -303,6 +324,8 @@ import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useBuildOptions } from "../../composables/useBuildOptions";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { GPS_BAUD_RATES } from "@/composables/ports/featureBaudRates";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -396,6 +419,24 @@ export default defineComponent({
             home_point_once: 0,
         });
 
+        // From API 1.49 the port and its baud rate live on the GPS parameter group rather than the
+        // shared port function mask, so they are assigned here instead of on the (by then
+        // read-only) ports tab.
+        const {
+            available: gpsPortAvailable,
+            writable: gpsPortWritable,
+            options: gpsPortOptions,
+            selectedIdentifier: gpsPortIdentifier,
+            baudOptions: gpsBaudOptions,
+            selectedBaud: gpsBaud,
+            load: loadGpsPort,
+            write: writeGpsPort,
+        } = useFeaturePort({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
         /** @returns {string} serialized tab state for dirty comparison */
         const serializeGpsTabState = () =>
             JSON.stringify({
@@ -406,6 +447,8 @@ export default defineComponent({
                 ublox_use_galileo: gpsConfig.ublox_use_galileo,
                 ublox_sbas: gpsConfig.ublox_sbas,
                 home_point_once: gpsConfig.home_point_once,
+                gpsPortIdentifier: gpsPortIdentifier.value,
+                gpsBaud: gpsBaud.value,
             });
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
@@ -419,6 +462,14 @@ export default defineComponent({
         const showAutoBaud = computed(
             () => (ubloxSelected.value || mspSelected.value) && semver.lt(apiVersion.value, API_VERSION_1_46),
         );
+        // These providers are fed by another subsystem rather than a UART, and the firmware strips
+        // any port assigned to one of them, so offering a port for them would be a lie.
+        const providersWithoutSerialPort = ["MSP", "VIRTUAL", "DRONECAN"];
+        const showSerialPort = computed(
+            () =>
+                gpsPortAvailable.value && !providersWithoutSerialPort.includes(gpsProtocols.value[gpsConfig.provider]),
+        );
+
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showPositionalDop = computed(() => semver.gte(apiVersion.value, API_VERSION_1_46));
@@ -716,7 +767,7 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
-        const { addInterval, removeAllIntervals } = useInterval();
+        const { addInterval, removeAllIntervals, pauseInterval, resumeInterval } = useInterval();
 
         const checkConnectivity = () => {
             isOnline.value = ispConnected();
@@ -741,6 +792,7 @@ export default defineComponent({
                 Object.assign(gpsConfig, fcStore.gpsConfig || {});
 
                 await updateGpsProtocols();
+                await loadGpsPort();
 
                 markClean();
 
@@ -772,13 +824,31 @@ export default defineComponent({
 
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_FEATURE_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                    );
-                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+                    // The CLI has its own queue, so the telemetry poll's MSP chain has to stop for
+                    // the port write below rather than run alongside it.
+                    pauseInterval("gps_pull");
+                    try {
+                        await MSP.promise(
+                            MSPCodes.MSP_SET_FEATURE_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                        );
+                        await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
-                    await saveAndReboot();
+                        // gps_uart and gps_baud share the parameter group MSP_SET_GPS_CONFIG just
+                        // wrote, and the persist below serialises that group, so this has to sit
+                        // between the two. Throwing skips the persist, so a refused port leaves
+                        // nothing written to EEPROM.
+                        try {
+                            await writeGpsPort();
+                        } catch (error) {
+                            gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
+                            throw error;
+                        }
+
+                        await saveAndReboot();
+                    } finally {
+                        resumeInterval("gps_pull");
+                    }
 
                     markClean(savedSnapshot);
                 },
@@ -858,6 +928,12 @@ export default defineComponent({
             homeOnceChecked,
             showAutoBaud,
             showAutoConfig,
+            showSerialPort,
+            gpsPortWritable,
+            gpsPortOptions,
+            gpsPortIdentifier,
+            gpsBaudOptions,
+            gpsBaud,
             showUbloxGalileo,
             showUbloxSbas,
             showPositionalDop,

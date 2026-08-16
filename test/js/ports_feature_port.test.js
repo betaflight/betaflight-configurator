@@ -5,8 +5,10 @@ import FC from "../../src/js/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
+import { GPS_BAUD_RATES } from "../../src/composables/ports/featureBaudRates";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
 import {
+    buildBaudOptions,
     buildPortOptions,
     findFeaturePortIdentifier,
     useFeaturePort,
@@ -191,5 +193,30 @@ describe("useFeaturePort", () => {
 
         await expect(port.write()).rejects.toThrow(/ERROR/);
         expect(port.changed.value).toBe(true);
+    });
+});
+
+describe("buildBaudOptions", () => {
+    it("offers the feature's rates, labelled as they are sent", () => {
+        expect(buildBaudOptions(GPS_BAUD_RATES)).toEqual(GPS_BAUD_RATES.map((rate) => ({ value: rate, label: rate })));
+    });
+
+    it("does not offer AUTO for GPS, which the firmware silently reads as 230400", () => {
+        expect(GPS_BAUD_RATES).not.toContain("AUTO");
+    });
+
+    it("keeps a stored rate the feature no longer offers", () => {
+        const values = buildBaudOptions(GPS_BAUD_RATES, "AUTO").map((option) => option.value);
+
+        expect(values).toContain("AUTO");
+        expect(values).toHaveLength(GPS_BAUD_RATES.length + 1);
+    });
+
+    it("does not duplicate a stored rate that is already offered", () => {
+        expect(buildBaudOptions(GPS_BAUD_RATES, "57600")).toHaveLength(GPS_BAUD_RATES.length);
+    });
+
+    it("copes with a feature that has no baud of its own", () => {
+        expect(buildBaudOptions(undefined)).toEqual([]);
     });
 });

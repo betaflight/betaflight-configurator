@@ -3,6 +3,7 @@ import MSP from "../../src/js/msp";
 import FC from "../../src/js/fc";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
+    findCliSettingValue,
     isMspCliSupported,
     useMspCliSession,
     send,
@@ -207,5 +208,27 @@ describe("useMspCliSession", () => {
             FC.CONFIG.flightControllerVersion = "4.6.0";
             expect(isMspCliSupported()).toBe(true);
         });
+    });
+});
+
+describe("findCliSettingValue", () => {
+    // `get` matches on substring, so asking for one setting can return several.
+    const reply = [
+        "gps_baud = 115200",
+        "Allowed values: AUTO, 9600, 19200, 38400, 57600, 115200, 230400",
+        "Default value: 57600",
+    ];
+
+    it("reads the current value", () => {
+        expect(findCliSettingValue(reply, "gps_baud")).toBe("115200");
+    });
+
+    it("ignores a setting whose name merely contains the one asked for", () => {
+        expect(findCliSettingValue(["gps_baud_extra = 9600", "gps_baud = 57600"], "gps_baud")).toBe("57600");
+    });
+
+    it("reports nothing when the setting is absent", () => {
+        expect(findCliSettingValue(reply, "gps_uart")).toBeNull();
+        expect(findCliSettingValue(undefined, "gps_baud")).toBeNull();
     });
 });

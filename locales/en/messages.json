@@ -2157,6 +2157,21 @@
     "configurationGPSubxSbas": {
         "message": "Ground Assistance Type"
     },
+    "gpsSerialPort": {
+        "message": "Serial Port"
+    },
+    "gpsSerialPortHelp": {
+        "message": "The UART the GPS module is wired to. Changing it requires a reboot."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud Rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "The rate the GPS module is expected to run at. Betaflight tries the other rates as well when it cannot make contact, so this is a starting point rather than a fixed setting."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Could not set the GPS serial port, so nothing was saved."
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
