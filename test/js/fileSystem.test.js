@@ -152,6 +152,16 @@ describe("FileSystem on Tauri desktop", () => {
 
         await FileSystem.writeFile(file, new Uint8Array([1, 2, 3]));
         expect(tauriFs.writeFile).toHaveBeenCalledWith("/tmp/dump.txt", new Uint8Array([1, 2, 3]));
+
+        // A view over part of a larger buffer must write its own bytes only,
+        // never the whole backing buffer.
+        const backing = new Uint8Array([9, 9, 1, 2, 3, 9]);
+
+        await FileSystem.writeFile(file, new DataView(backing.buffer, 2, 3));
+        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
+
+        await FileSystem.writeFile(file, backing.subarray(2, 5));
+        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
     });
 
     it("streams chunks straight to disk, truncating on the first and appending after", async () => {
