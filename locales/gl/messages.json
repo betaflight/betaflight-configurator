@@ -177,9 +177,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir a web de descargas"
-    },
     "deviceRebooting": {
         "message": "Dispositivo  - <span class=\"message-negative\">Reiniciando<\/span>"
     },

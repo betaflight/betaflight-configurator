@@ -42,6 +42,10 @@
         "message": "Вам нужно обновить страницу, чтобы получить последние изменения. Обновив страницу, вы потеряете все несохраненные изменения и прервёте текущие операции.<br><br> Желаете обновить его сейчас? Вы также можете отменить это сообщение и обновить страницу вручную позже.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnOfflineReadyText": {
+        "message": "При желании вы можете установить его на своё устройство как отдельное приложение. Найдите соответствующую опцию в адресной строке или меню браузера.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Операция не поддерживается устройством."
     },
@@ -271,9 +275,6 @@
     "configuratorUpdateHelp": {
         "message": "При доступном интернете, приложение будет автоматически запрашивать доступные обновления."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Перейти на сайт с релизами"
-    },
     "rebootFlightController": {
         "message": "Перезагрузка полетного контроллера, переподключение по мере готовности"
     },
@@ -306,6 +307,10 @@
     },
     "tabOptions": {
         "message": "Настройки"
+    },
+    "sidebarOpenOptions": {
+        "message": "Настройки",
+        "description": "Tooltip for the options icon button in the sidebar footer."
     },
     "tabSetup": {
         "message": "Система"
@@ -366,6 +371,12 @@
     },
     "tabPidTuning": {
         "message": "PID настройки"
+    },
+    "tabAutotune": {
+        "message": "Автонастройка"
+    },
+    "autotuneApplying": {
+        "message": "Применяется..."
     },
     "tabReceiver": {
         "message": "Приёмник"
@@ -557,6 +568,9 @@
     "firmwareTypeNotSupported": {
         "message": "Прошивка не Betaflight <span class=\"message-negative\">не поддерживается<\/span>, за исключением режима CLI."
     },
+    "firmwareUpgradeRequired": {
+        "message": "Текущая версия приложения может не поддерживать версию прошивки на этом устройстве. Для прошивок версии 4.1 и новее можно использовать более раннюю версию приложения, например <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.8.0\" target=\"_blank\" rel=\"noopener noreferrer\">10.8.0<\/a>, а для ещё более старых версий прошивки — <a href=\"https:\/\/github.com\/betaflight\/betaflight-configurator\/releases\/10.5.1\" target=\"_blank\" rel=\"noopener noreferrer\">10.5.1<\/a>.<br><br>Приложение попытается получить доступ к CLI устройства. Если подключение будет установлено, текущую версию прошивки можно узнать, отправив в CLI команду <code>version<\/code>.<br><br>Также можно обновить прошивку до более новой версии. Перед прошивкой создайте резервную копию конфигурации через CLI. Процедура описана в <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/setup-guide#backup-your-configuration\" target=\"_blank\" rel=\"noopener noreferrer\">документации<\/a>. Учтите, что резервные копии, созданные в старых версиях прошивки, могут некорректно восстанавливаться в более новых версиях. Режимы, OSD, Rates и настройки портов должны переноситься без проблем, однако будьте особенно внимательны при переносе настроек PID и Failsafe."
+    },
     "resetToCustomDefaultsDialog": {
         "message": "Для этой платы есть особые параметры по умолчанию. Обычно, плата не будет работать должным образом, если не будут применены такие настройки.<br\/>Хотите применить пользовательские настройки по умолчанию для этой платы?"
     },
@@ -740,6 +754,9 @@
     },
     "defaultContributingHead": {
         "message": "Содействие"
+    },
+    "defaultContributingText": {
+        "message": "Если вы хотите помочь сделать Betaflight ещё лучше, это можно сделать разными способами, в том числе:<br \/><ul><li>использовать свои знания Betaflight для создания или обновления материалов в <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">нашей Wiki<\/a> или отвечать на вопросы других пользователей на форумах;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">участвовать в разработке<\/a> прошивки и приложения — добавлять новые функции, исправления и улучшения;<\/li><li>тестировать <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">новые функции и исправления<\/a> и оставлять обратную связь;<\/li><li>помогать другим пользователям решать проблемы, о которых они сообщают в <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">нашем трекере задач<\/a>, а также участвовать в обсуждении предложений по новым функциям;<\/li><li>помогать с <a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/README.md#translators\" target=\"_blank\" rel=\"noopener noreferrer\">переводом<\/a> приложения Betaflight на новые языки или поддерживать существующие переводы.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Также у нас есть группа на Facebook<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a>.<br \/>Присоединяйтесь к нам, чтобы поговорить о Betaflight, задать вопросы о конфигурации или просто пообщаться с другими пилотами."
@@ -1473,6 +1490,123 @@
     },
     "configurationBoardAlignmentHelp": {
         "message": "Произвольный поворот платы в градусах, чтобы сделать возможным установить её боком, вверх ногами или повёрнутой и т. д. При использовании внешних датчиков используйте настройки выравнивания датчиков (гироскоп, акселерометр, магнитометр) для определения положения датчиков независимо от ориентации платы. "
+    },
+    "boardAlignmentWizard-Launch": {
+        "message": "Автоопределение выравнивания платы"
+    },
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Мастер настройки ориентации полётного контроллера"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Этот мастер определит ориентацию полётного контроллера с помощью четырёх простых движений. Установите дрон на ровную поверхность камерой от себя (в сторону экрана), затем следуйте инструкциям."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Начать"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Шаг"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Расположите дрон горизонтально, камерой от себя (в сторону экрана)."
+    },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Наклоните дрон носом вниз примерно на 45°, чтобы камера была направлена к земле."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Наклоните дрон вправо примерно на 45°, опустив правые лучи и подняв левые."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Поверните дрон примерно на 45° по часовой стрелке (если смотреть сверху)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Верните дрон в горизонтальное положение."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Удерживайте дрон неподвижно..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Стабилизация"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Наклоните ещё"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Верните в горизонтальное положение"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "Ось определена — удерживайте дрон неподвижно"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Поворот"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Расчёт ориентации..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Вычисление ориентации"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "Ориентация полётного контроллера настроена правильно — изменения не требуются."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Текущее"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Определено"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Назад"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Применить"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Отмена"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Попробуйте снова"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Зафиксировать положение"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "Точность определения снижена — перед применением проверьте результат по текущему положению модели."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Для работы этого мастера требуется акселерометр."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Откалибруйте акселерометр перед запуском мастера."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Не все измерения были получены. Повторите попытку."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "Акселерометр не регистрирует гравитацию. Убедитесь, что полётный контроллер подключён и неподвижен."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Наклон по тангажу не обнаружен. Повторите попытку, сильнее наклонив нос дрона вниз."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Наклон вправо не обнаружен. Повторите попытку, сильнее опустив правую сторону дрона."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Один из наклонов выполнен в неправильном направлении. Проверьте направления тангажа и крена и повторите попытку."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Горизонтально"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Тангаж"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Крен"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Рыскание"
+    },
+    "boardAlignmentWizard-Confirmed": {
+        "message": "Положение зафиксировано!"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -2357,6 +2491,9 @@
     },
     "receiverModelId": {
         "message": "Model Match ID"
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Всегда проверяйте правильность работы Failsafe!<\/a><\/strong><\/b> Настройки находятся на вкладке «Failsafe», для доступа к которой необходимо включить режим эксперта.<br> &#8226; <b>Используйте последнюю версию прошивки передатчика!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Отключите аппаратный ADC-фильтр<\/a><\/strong> в передатчике при использовании OpenTX или EdgeTX.<br>Базовая настройка: правильно настройте параметры «Приёмника». Выберите правильную «Карту каналов» для вашей аппаратуры. Убедитесь, что индикаторы Roll, Pitch и других каналов перемещаются правильно. Настройте конечные точки или диапазоны каналов в передатчике примерно от 1000 до 2000, а среднее значение установите на 1500. Дополнительную информацию см. в <strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документации<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Газ, средняя точка"
@@ -5460,6 +5597,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Откалиброванная шкала тока:"
     },
+    "powerBatteryProfile": {
+        "message": "Профиль аккумулятора"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Профиль аккумулятора $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "например, LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Название профиля"
+    },
     "powerBatteryHead": {
         "message": "Батарея"
     },
@@ -5483,6 +5632,15 @@
     },
     "powerBatteryAmperage": {
         "message": "Ток потребления"
+    },
+    "powerBatteryPowerDraw": {
+        "message": "Потребляемая мощность"
+    },
+    "powerWattValue": {
+        "message": "$1 Вт"
+    },
+    "powerBatteryVoltageDrop": {
+        "message": "Просадка напряжения"
     },
     "powerBatteryCapacity": {
         "message": "Ёмкость (mAh)"
@@ -7229,7 +7387,7 @@
         "message": "Частота PWM мотора"
     },
     "configurationDshotBidir": {
-        "message": "Двухсторонний DShot (требуется поддерживаемая прошивка ESC)",
+        "message": "Двунаправленный DShot (при наличии соответствующей прошивки ESC)",
         "description": "Feature for the ESC\/Motor"
     },
     "configurationDshotBidirHelp": {
@@ -7254,6 +7412,9 @@
     "configurationAccHardware": {
         "message": "Акселерометр"
     },
+    "configurationBaroHardware": {
+        "message": "Барометр"
+    },
     "sensorConfigMagDetect": {
         "message": "Определить"
     },
@@ -7274,6 +7435,12 @@
     },
     "sensorConfigAlignDetectFailed": {
         "message": "Не удалось определить параметры. Попробуйте изменять наклон в более широком диапазоне."
+    },
+    "magCalibrationFullApply": {
+        "message": "Применить"
+    },
+    "magAlignmentApply": {
+        "message": "Применить"
     },
     "configurationSmallAngle": {
         "message": "Максимальный наклон коптера (в градусах) при котором разрешён arming"

@@ -133,6 +133,30 @@
         "message": "シリアルパスまたは接続先のURLを入力してください。",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "保存済みの接続",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "名称:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "この接続の名称",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "保存",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "更新",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "保存済みの接続を削除",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "自動接続"
     },
@@ -306,14 +330,14 @@
     "configuratorUpdateHelp": {
         "message": "インターネットが利用可能な場合、アプリは自動的に利用可能なアップデートを要求します。"
     },
-    "configuratorUpdateWebsite": {
-        "message": "リリースサイトに移動"
-    },
     "rebootFlightController": {
         "message": "フライトコントローラを再起動中、準備でき次第再接続"
     },
     "rebootFlightControllerReady": {
         "message": "フライトコントローラ 準備完了"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "フライトコントローラが再接続されませんでした"
     },
     "deviceRebooting": {
         "message": "デバイス - <span class=\"message-negative\">再起動中<\/span>"
@@ -653,6 +677,9 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">接続失敗<\/span>：選択したポートに接続できませんでした。デバイスと接続設定を確認してから、もう一度お試しください。"
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "iOSでは【設定】 &rarr; 【プライバシー &amp; セキュリティ】 &rarr; 【ローカルネットワーク】でBetaflightの<strong>ローカルネットワーク<\/strong>へのアクセスを許可してから、もう一度お試しください。"
     },
     "connectionLostTitle": {
         "message": "接続が切断されました"
@@ -1746,6 +1773,12 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "カメラを自分とは反対側 (画面の方向) に向けて、ドローンを平らな場所に置いてください。"
     },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "機首を約45°下に傾け、カメラを地面に向けてください。"
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "右側を約45°下に傾け、右側のアームを下げ、左側のアームを上げてください。"
+    },
     "boardAlignmentWizard-HintYawCW": {
         "message": "ドローンを約45°時計回りに回転させてください。(上から見た場合)"
     },
@@ -1815,8 +1848,14 @@
     "boardAlignmentWizard-Error-no_gravity": {
         "message": "加速度センサーが重力を検出していません。FCボードが接続され、動いていないことを確認してください。"
     },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "ピッチ操作が検出されませんでした。再試行し、機首をさらに下へ傾けてください。"
+    },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "ロール操作を検出できませんでした。再試行し、右側をさらに下へ傾けてください。"
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "傾き操作のいずれかが逆方向に行われました。ピッチとロールの方向を確認して、もう一度お試しください。"
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "水平"
@@ -8881,6 +8920,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "現在有効なバッテリープロファイル名称、またはインデックスを表示"
+    },
+    "osdTextElementWpNumber": {
+        "message": "ウェイポイント番号",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "有効な飛行計画の現在のウェイポイント番号／総ウェイポイント数を表示します"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "ウェイポイント緯度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "現在のウェイポイントの緯度を表示します"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "ウェイポイント経度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "現在のウェイポイントの経度を表示します"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "ウェイポイント高度",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "現在のウェイポイントの高度を表示します"
+    },
+    "osdTextElementWpDistance": {
+        "message": "ウェイポイント距離",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "現在のウェイポイントまでの距離を表示します"
+    },
+    "osdTextElementWpDirection": {
+        "message": "ウェイポイント方向",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "現在のウェイポイントの方向を示す矢印を表示します"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "次のウェイポイント番号",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "有効なな飛行計画の次のウェイポイント番号を表示します"
+    },
+    "osdTextElementWpEta": {
+        "message": "ウェイポイントETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "現在のウェイポイントへの到着予想時刻を表示します"
+    },
+    "osdTextElementNavMap": {
+        "message": "ナビゲーションマップ",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "ホーム、飛行計画、飛行軌跡を表示するミニマップ"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "ポジションホールド準備完了",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "モードスイッチを有効にする前に、ポジションホールドの開始条件が現在満たされているかを表示します"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "ルーラー",

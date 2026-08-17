@@ -137,6 +137,30 @@
         "message": "Digite o caminho de série ou URL a que se ligar.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Ligações guardadas",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nome:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nome para esta ligação",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Gravar",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Atualizar",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Remover ligação guardada",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Auto-Conectar"
     },
@@ -317,9 +341,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Quando a internet estiver disponível, a app deverá solicitar por atualizações disponíveis."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Ir para a Página Web do lançamento"
     },
     "rebootFlightController": {
         "message": "A reiniciar a controladora de voo, reconecte quando estiver pronta"

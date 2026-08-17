@@ -298,9 +298,6 @@
     "configuratorUpdateHelp": {
         "message": "Cuando internet está disponible, la aplicación consultará automáticamente si hay actualizaciones disponibles."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir a la Web de Versiones"
-    },
     "rebootFlightController": {
         "message": "Reiniciando el controlador de vuelo, vuelve a conectar cuando disponible"
     },
