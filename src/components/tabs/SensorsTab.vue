@@ -250,14 +250,6 @@
                         :aria-label="$t('configurationMagAlignment')"
                         :ui="{ viewport: 'max-h-none' }"
                     />
-                    <UButton
-                        v-if="calGuidedAvailable"
-                        size="xs"
-                        variant="outline"
-                        :label="$t('configurationMagDetectAlignment')"
-                        :disabled="alignDetectPhase === 'collecting'"
-                        @click="startAlignDetection"
-                    />
                 </SettingRow>
 
                 <!-- Mag alignment custom angles -->
@@ -268,57 +260,6 @@
                     v-model:yaw="sensorAlignment.mag_align_yaw"
                     label-prefix="configurationMagAlignment"
                 />
-
-                <!-- Inline alignment detection (replaces dialog) -->
-                <div v-if="alignDetectPhase !== 'idle'" class="align-detect-inline">
-                    <!-- Collecting -->
-                    <div v-if="alignDetectPhase === 'collecting'" class="flex items-center gap-3 flex-wrap">
-                        <div class="flex-1 min-w-48">
-                            <UProgress :model-value="alignDetectProgress" :max="100" size="sm" />
-                        </div>
-                        <span class="text-xs text-[var(--surface-500)]">{{
-                            $t("sensorConfigAlignSamples", { count: alignDetectSampleCount })
-                        }}</span>
-                        <span
-                            v-if="
-                                alignDetectTiltPercent < ALIGN_TILT_WARN_PERCENT &&
-                                alignDetectSampleCount > ALIGN_TILT_WARN_MIN_SAMPLES
-                            "
-                            class="text-xs text-[var(--warning-500)]"
-                        >
-                            {{ $t("sensorConfigAlignTiltMore") }}
-                        </span>
-                        <UButton size="xs" variant="outline" :label="$t('cancel')" @click="cancelAlignDetection" />
-                    </div>
-                    <!-- Result -->
-                    <div v-else-if="alignDetectPhase === 'result'" class="flex items-center gap-3 flex-wrap">
-                        <span class="text-sm font-semibold text-[var(--primary-500)]">{{
-                            alignDetectResult.label
-                        }}</span>
-                        <span :class="'text-xs font-medium ' + statusClass(alignDetectConfidenceLevel)">
-                            {{ alignDetectResult.confidence }}x {{ alignDetectConfidenceLevel }}
-                        </span>
-                        <UButton size="xs" :label="$t('magAlignmentApply')" @click="applyAlignDetection" />
-                        <UButton
-                            size="xs"
-                            variant="outline"
-                            :label="$t('magCalibrationRetry')"
-                            @click="resetAlignDetection"
-                        />
-                    </div>
-                    <!-- Error -->
-                    <div v-else-if="alignDetectPhase === 'error'" class="flex items-center gap-3">
-                        <span class="text-xs text-[var(--error-500)] font-medium">{{
-                            $t("sensorConfigAlignDetectFailed")
-                        }}</span>
-                        <UButton
-                            size="xs"
-                            variant="outline"
-                            :label="$t('magCalibrationRetry')"
-                            @click="resetAlignDetection"
-                        />
-                    </div>
-                </div>
 
                 <!-- API >= 1.47: full mag cal UI (declination, cal editor, check, guided modes) -->
                 <template v-if="calGuidedAvailable">
@@ -426,6 +367,7 @@
                     <!-- Calibrate Magnetometer (inline) -->
                     <div class="mag-cal-section">
                         <!-- Idle: check + calibrate buttons -->
+                        <!-- Idle: check + calibrate buttons -->
                         <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <UButton
@@ -436,9 +378,9 @@
                                     @click="startCheckMode()"
                                 />
                                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                                    <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
+                                    <UButton size="xs" :label="$t('magCalibrationFull')" @click="startFullCal()">
                                         <template #trailing>
-                                            <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                                            <HelpIcon :text="$t('magCalibrationFullDesc')" />
                                         </template>
                                     </UButton>
                                     <UDropdownMenu
@@ -461,25 +403,7 @@
                         <!-- Calibrating -->
                         <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
                             <div class="mag-cal-inline-steps">
-                                <template v-if="calIsGuided">
-                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
-                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                        {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
-                                    </p>
-                                    <p
-                                        v-if="guidedSecondsRemaining > 0"
-                                        class="text-lg font-bold text-center tabular-nums"
-                                    >
-                                        {{ guidedSecondsRemaining }}s
-                                    </p>
-                                    <p
-                                        v-if="guidedSecondsRemaining === 0"
-                                        class="text-xs font-semibold status-ok text-center"
-                                    >
-                                        {{ $t("magCalibrationGuidedDone") }}
-                                    </p>
-                                </template>
-                                <template v-else-if="cal.mode === 'full'">
+                                <template v-if="cal.mode === 'full'">
                                     <div class="mag-cal-step-counter">
                                         {{ $t("magCalibrationFullTitle") }} —
                                         {{
@@ -510,12 +434,6 @@
                                         {{ $t("magCalibrationCheckInstruction") }}
                                     </p>
                                 </template>
-                                <template v-else-if="cal.mode === 'guided'">
-                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
-                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                        {{ $t("magCalibrationGuidedInstruction") }}
-                                    </p>
-                                </template>
                                 <template v-else>
                                     <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
                                     <p class="text-sm text-[var(--surface-600)] text-center my-2">
@@ -531,15 +449,6 @@
                                         {{ $t("magCalibrationUnguidedDone") }}
                                     </p>
                                 </template>
-                                <dl
-                                    v-if="cal.mode !== 'check' && cal.mode !== 'full' && cal.sphereFitResult"
-                                    class="mag-cal-stats-inline"
-                                >
-                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                    <dd>{{ calOffsetsText }}</dd>
-                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                    <dd>{{ calResidualText }}</dd>
-                                </dl>
                                 <UProgress
                                     v-if="cal.mode !== 'check'"
                                     :model-value="cal.progress"
@@ -566,16 +475,12 @@
                                         @click="clearMagCalSamples()"
                                     />
                                     <UButton
-                                        v-if="cal.mode === 'guided' || cal.mode === 'full'"
+                                        v-if="cal.mode === 'full'"
                                         size="xs"
                                         :loading="isAcceptingCal"
-                                        :disabled="cal.mode === 'full' ? !fullReady : !cal.quality"
-                                        :label="
-                                            cal.mode === 'full'
-                                                ? $t('magCalibrationFullCompute')
-                                                : $t('magCalibrationAccept')
-                                        "
-                                        @click="acceptGuidedMagCal()"
+                                        :disabled="!fullReady"
+                                        :label="$t('magCalibrationFullCompute')"
+                                        @click="acceptFullCal()"
                                     />
                                 </div>
                                 <div class="mag-cal-live-inline">
@@ -628,19 +533,8 @@
                                 <dl v-if="!calIsFull" class="mag-cal-stats-inline">
                                     <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
                                     <dd>{{ calFirmwareOffsetsText }}</dd>
-                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                    <dd>{{ calOffsetsText }}</dd>
                                     <dt>{{ $t("magCalibrationSamples") }}</dt>
                                     <dd>{{ cal.sampleCount }}</dd>
-                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                    <dd>{{ calResidualText }}</dd>
-                                    <dt>{{ $t("magCalibrationQuality") }}</dt>
-                                    <dd>
-                                        <span v-if="cal.quality" :class="statusClass(cal.quality)"
-                                            >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
-                                        >
-                                        <span v-else>&mdash;</span>
-                                    </dd>
                                 </dl>
                                 <template v-if="calIsFull">
                                     <dl
@@ -831,7 +725,6 @@ import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
 import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
-import { detectAlignment } from "../../js/utils/magAlignment";
 import { degToRad } from "../../js/utils/common";
 import { useDialog } from "@/composables/useDialog";
 import {
@@ -872,10 +765,6 @@ const IP_GEOLOCATION_TIMEOUT_MS = 10000;
 const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
-const CONFIDENCE_HIGH = 5;
-const CONFIDENCE_MEDIUM = 2;
-const ALIGN_TILT_WARN_PERCENT = 30;
-const ALIGN_TILT_WARN_MIN_SAMPLES = 20;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
 const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_48));
@@ -889,10 +778,6 @@ function roundOneDp(val) {
 onUnmounted(() => {
     removeAllIntervals();
     disposeModel();
-    alignDetectPhase.value = "idle";
-    cleanupAlignDetection();
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
     if (calIsCalibrating.value) {
         cal.cancelCalibration();
@@ -1145,188 +1030,6 @@ const gyroAlignSelectItems = computed(() => {
     return items;
 });
 
-// --- Inline Alignment Detection (replaces dialog) ---
-
-const ALIGN_POLL_MS = 100;
-const ALIGN_TARGET_SAMPLES = 150;
-const ALIGN_TIMEOUT_MS = 15000;
-const ALIGN_MOVEMENT_THRESHOLD = 5;
-const ALIGN_TILT_THRESHOLD_DEG = 15;
-
-const alignDetectPhase = ref("idle"); // idle | collecting | result | error
-const alignDetectProgress = ref(0);
-const alignDetectSampleCount = ref(0);
-const alignDetectResult = ref(null);
-const alignDetectTiltPercent = ref(0);
-
-let alignSamples = [];
-let alignImuTimeout = null;
-let alignAttTimeout = null;
-let alignMovementInterval = null;
-let alignLastMag = null;
-let alignLastMovement = 0;
-let alignCurrentRoll = 0;
-let alignCurrentPitch = 0;
-let alignTiltedCount = 0;
-
-const alignDetectConfidenceLevel = computed(() => {
-    if (!alignDetectResult.value) {
-        return "none";
-    }
-    if (alignDetectResult.value.confidence >= CONFIDENCE_HIGH) {
-        return "high";
-    }
-    if (alignDetectResult.value.confidence > CONFIDENCE_MEDIUM) {
-        return "medium";
-    }
-    return "low";
-});
-
-function startAlignDetection() {
-    alignSamples = [];
-    alignDetectSampleCount.value = 0;
-    alignDetectProgress.value = 0;
-    alignDetectResult.value = null;
-    alignLastMag = null;
-    alignLastMovement = Date.now();
-    alignCurrentRoll = fcStore.sensorData.kinematics[0];
-    alignCurrentPitch = fcStore.sensorData.kinematics[1];
-    alignTiltedCount = 0;
-    alignDetectTiltPercent.value = 0;
-    alignDetectPhase.value = "collecting";
-
-    function pollAtt() {
-        if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-            return;
-        }
-        MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
-            if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-                return;
-            }
-            alignCurrentRoll = fcStore.sensorData.kinematics[0];
-            alignCurrentPitch = fcStore.sensorData.kinematics[1];
-            alignAttTimeout = setTimeout(pollAtt, ALIGN_POLL_MS);
-        });
-    }
-
-    function pollImu() {
-        if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-            return;
-        }
-        MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, () => {
-            onAlignImuData();
-            if (isMounted.value && alignDetectPhase.value === "collecting") {
-                alignImuTimeout = setTimeout(pollImu, ALIGN_POLL_MS);
-            }
-        });
-    }
-
-    pollAtt();
-    pollImu();
-
-    alignMovementInterval = setInterval(() => {
-        if (Date.now() - alignLastMovement > ALIGN_TIMEOUT_MS) {
-            cleanupAlignDetection();
-            alignDetectPhase.value = "error";
-        }
-    }, 1000);
-}
-
-function onAlignImuData() {
-    if (alignDetectPhase.value !== "collecting") {
-        return;
-    }
-
-    const mx = fcStore.sensorData.magnetometer[0];
-    const my = fcStore.sensorData.magnetometer[1];
-    const mz = fcStore.sensorData.magnetometer[2];
-    if (mx === 0 && my === 0 && mz === 0) {
-        return;
-    }
-
-    if (
-        alignLastMag === null ||
-        Math.abs(mx - alignLastMag[0]) > ALIGN_MOVEMENT_THRESHOLD ||
-        Math.abs(my - alignLastMag[1]) > ALIGN_MOVEMENT_THRESHOLD ||
-        Math.abs(mz - alignLastMag[2]) > ALIGN_MOVEMENT_THRESHOLD
-    ) {
-        alignLastMovement = Date.now();
-    }
-    alignLastMag = [mx, my, mz];
-
-    alignSamples.push({ mag: [mx, my, mz], roll: alignCurrentRoll, pitch: alignCurrentPitch });
-    alignDetectSampleCount.value = alignSamples.length;
-
-    const tilt = Math.hypot(alignCurrentRoll, alignCurrentPitch);
-    if (tilt > ALIGN_TILT_THRESHOLD_DEG) {
-        alignTiltedCount++;
-    }
-    alignDetectTiltPercent.value =
-        alignSamples.length > 0 ? Math.round((alignTiltedCount / alignSamples.length) * 100) : 0;
-
-    alignDetectProgress.value = Math.min(100, Math.round((alignSamples.length / ALIGN_TARGET_SAMPLES) * 100));
-
-    if (alignSamples.length >= ALIGN_TARGET_SAMPLES) {
-        finishAlignDetection();
-    }
-}
-
-function finishAlignDetection() {
-    cleanupAlignDetection();
-
-    const customAngles =
-        sensorAlignment.align_mag === SENSOR_ALIGN_CUSTOM
-            ? {
-                roll: sensorAlignment.mag_align_roll,
-                pitch: sensorAlignment.mag_align_pitch,
-                yaw: sensorAlignment.mag_align_yaw,
-            }
-            : null;
-
-    const detection = detectAlignment(alignSamples, sensorAlignment.align_mag, customAngles);
-    if (detection.error) {
-        alignDetectPhase.value = "error";
-        return;
-    }
-
-    alignDetectResult.value = detection;
-    alignDetectPhase.value = "result";
-}
-
-function cancelAlignDetection() {
-    cleanupAlignDetection();
-    alignDetectPhase.value = "idle";
-}
-
-function applyAlignDetection() {
-    if (alignDetectResult.value) {
-        sensorAlignment.align_mag = alignDetectResult.value.alignment;
-    }
-    resetAlignDetection();
-}
-
-function resetAlignDetection() {
-    alignDetectPhase.value = "idle";
-    alignDetectResult.value = null;
-    alignDetectProgress.value = 0;
-    alignDetectSampleCount.value = 0;
-}
-
-function cleanupAlignDetection() {
-    if (alignImuTimeout !== null) {
-        clearTimeout(alignImuTimeout);
-        alignImuTimeout = null;
-    }
-    if (alignAttTimeout !== null) {
-        clearTimeout(alignAttTimeout);
-        alignAttTimeout = null;
-    }
-    if (alignMovementInterval !== null) {
-        clearInterval(alignMovementInterval);
-        alignMovementInterval = null;
-    }
-}
-
 // --- Magnetometer ---
 
 const magDeclination = ref(0);
@@ -1489,7 +1192,6 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
-const calIsGuided = ref(false);
 const calIsFull = ref(false);
 const fullCalResult = ref(null);
 
@@ -1535,23 +1237,8 @@ function clearFullStepTimer() {
         fullStepTimer = null;
     }
 }
-const calCurrentPrompt = ref(0);
-const guidedSecondsRemaining = ref(-1);
-let promptTimer = null;
-let guidedCountdownTimer = null;
 const calGeoRef = ref(null);
 let lastCalStarter = null;
-
-const GUIDED_DURATION_S = 60;
-const PROMPT_INTERVAL_S = 10;
-const CAL_PROMPTS = [
-    { i18n: "magCalibrationPrompt1" },
-    { i18n: "magCalibrationPrompt2" },
-    { i18n: "magCalibrationPrompt3" },
-    { i18n: "magCalibrationPrompt4" },
-    { i18n: "magCalibrationPrompt5" },
-    { i18n: "magCalibrationPrompt6" },
-];
 
 const CAL_QUALITY_KEY = {
     good: "magCalibrationQualityGood",
@@ -1574,22 +1261,6 @@ function statusClass(level) {
 
 const calIsCalibrating = computed(() => cal.phase === "waiting" || cal.phase === "collecting");
 
-const calOffsetsText = computed(() => {
-    const fit = cal.sphereFitResult;
-    if (!fit) {
-        return "\u2014";
-    }
-    return `${fit.center.x.toFixed(0)}, ${fit.center.y.toFixed(0)}, ${fit.center.z.toFixed(0)}`;
-});
-
-const calResidualText = computed(() => {
-    const fit = cal.sphereFitResult;
-    if (!fit) {
-        return "\u2014";
-    }
-    return fit.residual.toFixed(1);
-});
-
 const calFirmwareOffsetsText = computed(() => {
     const fw = cal.firmwareOffsets;
     if (!fw) {
@@ -1598,31 +1269,14 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
-async function startGuidedCal() {
-    if (!calGuidedAvailable.value) {
-        await startLegacyFirmwareCal();
-        return;
-    }
-    lastCalStarter = startGuidedCal;
-    calIsGuided.value = true;
-    calCurrentPrompt.value = 0;
-    calGeoRef.value = getGeoReference();
-    await cal.startCalibration("guided");
-    startPromptTimer();
-    startGuidedCountdown();
-}
-
 async function startLegacyFirmwareCal() {
     lastCalStarter = startLegacyFirmwareCal;
     calGeoRef.value = getGeoReference();
-    await cal.startCalibration();
+    await cal.startCalibration("quick");
 }
 
 function cancelMagCal() {
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
-    calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
     cal.cancelCalibration();
@@ -1639,34 +1293,16 @@ const magVizMode = ref("pointcloud");
 const calGuidedAvailable = computed(() => isApi147.value && isMspCliSupported());
 
 const calModeItems = computed(() => {
-    const items = [];
-    if (calGuidedAvailable.value) {
-        items.push({
-            label: i18n.getMessage("magCalibrationGuidedFw"),
-            description: i18n.getMessage("magCalibrationGuidedFwDesc"),
-            icon: "i-lucide-compass",
-            onSelect: () => startGuidedCal(),
-        });
-        items.push({
-            label: i18n.getMessage("magCalibrationGuided"),
-            description: i18n.getMessage("magCalibrationGuidedDesc"),
-            icon: "i-lucide-crosshair",
-            onSelect: () => startClientCal(),
-        });
-        items.push({
-            label: i18n.getMessage("magCalibrationFull"),
-            description: i18n.getMessage("magCalibrationFullDesc"),
-            icon: "i-lucide-sparkles",
-            onSelect: () => startFullCal(),
-        });
-    }
-    items.push({
-        label: i18n.getMessage("magCalibrationUnguided"),
-        description: i18n.getMessage("magCalibrationUnguidedDesc"),
-        icon: "i-lucide-shuffle",
-        onSelect: () => startLegacyFirmwareCal(),
-    });
-    return [items];
+    return [
+        [
+            {
+                label: i18n.getMessage("magCalibrationUnguided"),
+                description: i18n.getMessage("magCalibrationUnguidedDesc"),
+                icon: "i-lucide-shuffle",
+                onSelect: () => startLegacyFirmwareCal(),
+            },
+        ],
+    ];
 });
 
 async function startCheckMode() {
@@ -1675,21 +1311,13 @@ async function startCheckMode() {
     await cal.startCalibration("check");
 }
 
-async function startClientCal() {
-    lastCalStarter = startClientCal;
-    calGeoRef.value = getGeoReference();
-    await cal.startCalibration("guided");
-}
-
 async function startFullCal() {
     if (!calGuidedAvailable.value) {
         return;
     }
     lastCalStarter = startFullCal;
     calIsFull.value = true;
-    calIsGuided.value = false;
     fullCalResult.value = null;
-    calCurrentPrompt.value = 0;
 
     // The dip-angle alignment solve needs the WMM inclination. Resolve it up front
     // (best effort, no consent prompt) and reflect it in the panel + field arrow.
@@ -1701,65 +1329,52 @@ async function startFullCal() {
 
 const isAcceptingCal = ref(false);
 
-async function acceptGuidedMagCal() {
+async function acceptFullCal() {
     isAcceptingCal.value = true;
     try {
-        if (calIsFull.value) {
-            await acceptFullCal();
+        clearFullStepTimer();
+        const samples = cal.samples;
+        if (samples.length < 40) {
+            gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
             return;
         }
-        const result = await cal.acceptCalibration();
-        if (result?.ok) {
-            magNeedsCalibration.value = false;
-        } else {
-            gui_log(i18n.getMessage("magCalibrationError"));
+
+        // Resolve the reference (cached, else GPS, else IP — prompting for consent now
+        // rather than discarding the tumble). Also refreshes the panel + arrow inclination.
+        const geoRef = await resolveGeoReference(true);
+        if (!geoRef) {
+            gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
+            return;
         }
+        calGeoRef.value = geoRef;
+
+        const align_mag = fcStore.sensorAlignment.align_mag || 0;
+        const customAngles =
+            align_mag === 9
+                ? {
+                    roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                    pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                    yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+                }
+                : null;
+        const R_cur = currentMatrixOf(align_mag, customAngles);
+
+        const result = characterizeTumble({
+            samples,
+            currentMatrix: R_cur,
+            inclinationRad: degToRad(geoRef.inclination),
+        });
+
+        if (!result.ok) {
+            gui_log(result.error || i18n.getMessage("magCalibrationError"));
+            return;
+        }
+
+        fullCalResult.value = result;
+        cal.completeCalibration();
     } finally {
         isAcceptingCal.value = false;
     }
-}
-
-async function acceptFullCal() {
-    clearFullStepTimer();
-    const samples = cal.samples;
-    if (samples.length < 40) {
-        gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
-        return;
-    }
-
-    // Resolve the reference (cached, else GPS, else IP — prompting for consent now
-    // rather than discarding the tumble). Also refreshes the panel + arrow inclination.
-    const geoRef = await resolveGeoReference(true);
-    if (!geoRef) {
-        gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
-        return;
-    }
-    calGeoRef.value = geoRef;
-
-    const align_mag = fcStore.sensorAlignment.align_mag || 0;
-    const customAngles =
-        align_mag === 9
-            ? {
-                roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-            }
-            : null;
-    const R_cur = currentMatrixOf(align_mag, customAngles);
-
-    const result = characterizeTumble({
-        samples,
-        currentMatrix: R_cur,
-        inclinationRad: degToRad(geoRef.inclination),
-    });
-
-    if (!result.ok) {
-        gui_log(result.error || i18n.getMessage("magCalibrationError"));
-        return;
-    }
-
-    fullCalResult.value = result;
-    cal.completeCalibration();
 }
 
 const isSavingCal = ref(false);
@@ -1921,77 +1536,20 @@ function exportFullCalModel() {
 }
 
 function retryAndStartMagCal() {
-    const starter = lastCalStarter ?? startGuidedCal;
+    const starter = lastCalStarter ?? startFullCal;
     retryMagCal();
     starter();
 }
 
 function clearMagCalSamples() {
-    clearPromptTimer();
-    calCurrentPrompt.value = 0;
-    if (calIsGuided.value) {
-        startPromptTimer();
-        restartGuidedCountdown();
-    }
     cal.clearSamples();
 }
 
 function retryMagCal() {
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
-    calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
     cal.retry();
-}
-
-function startPromptTimer() {
-    clearPromptTimer();
-    calCurrentPrompt.value = 0;
-    promptTimer = setInterval(() => {
-        if (cal.phase === "error" || cal.phase === "complete") {
-            clearPromptTimer();
-            return;
-        }
-        if (calCurrentPrompt.value < CAL_PROMPTS.length - 1) {
-            calCurrentPrompt.value++;
-        }
-    }, PROMPT_INTERVAL_S * 1000);
-}
-
-function clearPromptTimer() {
-    if (promptTimer !== null) {
-        clearInterval(promptTimer);
-        promptTimer = null;
-    }
-}
-
-function startGuidedCountdown() {
-    clearGuidedCountdown();
-    const startTime = Date.now();
-    guidedSecondsRemaining.value = GUIDED_DURATION_S;
-    guidedCountdownTimer = setInterval(() => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        const remaining = Math.max(0, Math.ceil(GUIDED_DURATION_S - elapsed));
-        guidedSecondsRemaining.value = remaining;
-        if (remaining <= 0) {
-            clearGuidedCountdown();
-            playCalCompletionBeep();
-        }
-    }, 1000);
-}
-
-function restartGuidedCountdown() {
-    startGuidedCountdown();
-}
-
-function clearGuidedCountdown() {
-    if (guidedCountdownTimer !== null) {
-        clearInterval(guidedCountdownTimer);
-        guidedCountdownTimer = null;
-    }
-    guidedSecondsRemaining.value = -1;
 }
 
 const BEEP_NOTES = [
@@ -2025,22 +1583,9 @@ watch(
     () => cal.firmwareDone,
     (done) => {
         if (done && cal.mode === "quick") {
-            clearPromptTimer();
-            calIsGuided.value = false;
             cal.completeCalibration();
             magNeedsCalibration.value = false;
             playCalCompletionBeep();
-        }
-    },
-);
-
-watch(
-    () => cal.phase,
-    (phase) => {
-        if (phase === "error" || phase === "complete") {
-            clearPromptTimer();
-            clearGuidedCountdown();
-            calIsGuided.value = false;
         }
     },
 );
