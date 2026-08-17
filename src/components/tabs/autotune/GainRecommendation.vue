@@ -76,9 +76,11 @@
             <span v-if="applyError" class="text-sm text-red-500 font-bold">{{ applyError }}</span>
         </div>
 
-        <!-- The craft's own phase peak caps how much margin is reachable, so a
-             target above it leaves the gain held rather than guessed. -->
-        <p v-if="unreachableAxes.length" class="text-sm text-dimmed">{{ unreachableMessage }}</p>
+        <!-- Notes on any axis where the recommendation is not simply the margin
+             target met in full: the craft's phase peak caps the reachable
+             margin, the per-pass clamp cuts the change short, or robustness
+             rather than margin set the gain. -->
+        <p v-for="note in recommendationNotes" :key="note.key" class="text-sm text-dimmed">{{ note.text }}</p>
     </UiBox>
 </template>
 
@@ -164,6 +166,54 @@ const unreachableMessage = computed(() =>
         formatDeg(maxReachableMargin.value),
     ]),
 );
+
+// Axes carrying a given flag on their recommendation, named for a message.
+function axesFlagged(flag) {
+    return visibleAxisList.value
+        .filter((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.[flag])
+        .map((axis) => i18n.getMessage(axis.labelKey));
+}
+
+// Every way the recommendation can be something other than the margin target
+// met in full. Without these the table shows a crossover limit and a proposed
+// gain with no indication that the second does not reach the first.
+const recommendationNotes = computed(() => {
+    const notes = [];
+
+    if (unreachableAxes.value.length) {
+        notes.push({ key: "unreachable", text: unreachableMessage.value });
+    }
+
+    const clamped = axesFlagged("gainClamped");
+    if (clamped.length) {
+        const requested = Math.max(
+            ...visibleAxisList.value
+                .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains)
+                .filter((g) => g?.gainClamped)
+                .map((g) => g.requestedGain),
+        );
+        notes.push({
+            key: "clamped",
+            text: i18n.getMessage("autotuneGainClamped", [clamped.join(", "), requested.toFixed(1)]),
+        });
+    }
+
+    const fragile = axesFlagged("sensitivityUnreachable");
+    if (fragile.length) {
+        notes.push({
+            key: "fragile",
+            text: i18n.getMessage("autotuneSensitivityUnreachable", [fragile.join(", ")]),
+        });
+    }
+
+    // Suppressed where the stronger message above already covers the axis.
+    const binds = axesFlagged("sensitivityBinds").filter((name) => !fragile.includes(name));
+    if (binds.length) {
+        notes.push({ key: "binds", text: i18n.getMessage("autotuneSensitivityBinds", [binds.join(", ")]) });
+    }
+
+    return notes;
+});
 
 const AXIS_DEFS = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },

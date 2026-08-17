@@ -187,6 +187,11 @@ const MAX_SENSITIVITY_PEAK = 2.0;
 // scan resolution rather than a real robustness limit.
 const SENSITIVITY_BIND_TOLERANCE = 0.02;
 
+// Resolution of the gain scans used for the sensitivity bound. One step is
+// roughly one unit of slider travel, so a finer grid would not survive the
+// rounding in buildProposedSliders().
+const GAIN_SCAN_STEP = 0.01;
+
 /**
  * Selectable phase-margin targets.
  *
@@ -259,8 +264,12 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
         resonantPeakDb,
         resonantFreqHz,
         maxAchievablePhaseMarginDeg,
-        // Largest loop-gain change that keeps peak sensitivity within the
-        // robustness bound. Can be below 1 on a craft that is already fragile.
+        // Largest loop-gain change over the full per-pass range that keeps peak
+        // sensitivity within the robustness bound. Can be below 1 on a craft
+        // that is already fragile, and Number.NaN on one where no gain the
+        // sliders can express meets the bound at all. Reported as a diagnostic;
+        // the gain actually applied is searched against the narrower interval
+        // the margin target admits, in computeGainScales().
         sensitivityLimitedGain,
         // True open-loop crossover and the phase margin there. Both are Number.NaN when
         // no crossing exists inside the coherent band.
@@ -298,11 +307,19 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
  * Phase is unwrapped upward from MIN_OPEN_LOOP_HZ. Starting from DC would seed
  * the unwrap chain with the ill-conditioned bins where 1 - T approaches zero.
  *
+ * Bins below the coherence gate are left as Number.NaN and take no part in the
+ * unwrap. They have to be excluded here rather than only at the point of use:
+ * the unwrap offset is cumulative, so one noisy bin far enough from its
+ * neighbours applies a spurious +/-360 that then persists into every bin above
+ * it, including bins whose own coherence is fine. Skipping them widens the gap
+ * between consecutive accepted bins, which is harmless while the true phase
+ * change across the gap stays under 180 deg — a few bins of a rate loop.
+ *
  * @param {object} tf - transfer function from welchTransferFunction()
  * @returns {{ magnitude: Float64Array, phase: Float64Array, startIndex: number }}
  */
 export function openLoopResponse(tf) {
-    const { frequencies, hReal, hImag } = tf;
+    const { frequencies, hReal, hImag, coherence } = tf;
     const n = frequencies.length;
     const magnitude = new Float64Array(n).fill(Number.NaN);
     const phase = new Float64Array(n).fill(Number.NaN);
@@ -318,6 +335,9 @@ export function openLoopResponse(tf) {
     let offset = 0;
     let previousRaw = null;
     for (let k = startIndex; k < n; k++) {
+        if (coherence[k] < CROSSOVER_COHERENCE_MIN) {
+            continue;
+        }
         const a = hReal[k];
         const b = hImag[k];
         const denominator = (1 - a) * (1 - a) + b * b;
@@ -426,29 +446,56 @@ function peakSensitivityAtGain(tf, openLoop, gainScale) {
 }
 
 /**
- * Largest gain scale whose predicted peak sensitivity stays within `limit`.
+ * Largest gain scale in [GAIN_SCALE_MIN, maxGain] whose predicted peak
+ * sensitivity stays within `limit`, or Number.NaN when no gain in that range
+ * does.
  *
- * Scans upward from the minimum and stops at the first violation, returning the
- * last value that passed. Bisection would be cheaper but assumes Ms rises
- * monotonically with gain; that holds on every log tested so far but is not
- * guaranteed, and stopping at the first violation keeps the guarantee that
- * everything from GAIN_SCALE_MIN up to the returned value is within bound.
+ * Every candidate is evaluated and the largest passing one returned. An earlier
+ * version scanned upward and broke at the first violation, seeding the result
+ * with GAIN_SCALE_MIN — which returned the floor as safe without ever checking
+ * it, and assumed Ms rises monotonically with gain. It does not: on a craft with
+ * a lightly damped mode above crossover, reducing gain can bring |L| back
+ * towards 1 at a frequency where the phase is already past -180, so the loop
+ * passes closer to -1 than it did at full gain. On a synthetic 15 Hz crossover
+ * with a 40 Hz mode at zeta 0.05, Ms is 2.66 at gain 0.5 against 1.16 at gain
+ * 1.0, so the break-on-first-violation form returned the worst gain in range and
+ * reported it as the bound.
  */
-function findMaxGainForSensitivity(tf, openLoop, limit) {
-    const step = 0.01;
-    let best = GAIN_SCALE_MIN;
-    for (let gain = GAIN_SCALE_MIN; gain <= GAIN_SCALE_MAX + 1e-9; gain += step) {
+function findMaxGainForSensitivity(tf, openLoop, limit, maxGain = GAIN_SCALE_MAX) {
+    let best = Number.NaN;
+    for (let gain = GAIN_SCALE_MIN; gain <= maxGain + 1e-9; gain += GAIN_SCAN_STEP) {
         const peak = peakSensitivityAtGain(tf, openLoop, gain);
         if (!Number.isFinite(peak)) {
             // Nothing coherent to judge by; leave the gain untouched.
-            return 1;
+            return Math.min(1, maxGain);
         }
-        if (peak > limit) {
-            break;
+        if (peak <= limit) {
+            best = gain;
         }
-        best = gain;
     }
     return best;
+}
+
+/**
+ * Gain scale in [GAIN_SCALE_MIN, maxGain] with the lowest predicted peak
+ * sensitivity.
+ *
+ * Only used when no gain in range meets the bound. Such a craft is fragile
+ * beyond what one pass of the sliders can repair, and since Ms is not monotonic
+ * in gain there is no direction that is safe by construction — so pick the
+ * measured minimum rather than assuming the floor is it.
+ */
+function findMinSensitivityGain(tf, openLoop, maxGain) {
+    let bestGain = Number.NaN;
+    let bestPeak = Infinity;
+    for (let gain = GAIN_SCALE_MIN; gain <= maxGain + 1e-9; gain += GAIN_SCAN_STEP) {
+        const peak = peakSensitivityAtGain(tf, openLoop, gain);
+        if (Number.isFinite(peak) && peak < bestPeak) {
+            bestPeak = peak;
+            bestGain = gain;
+        }
+    }
+    return bestGain;
 }
 
 // Ceiling on phase margin for this craft. Open-loop phase peaks where the D
@@ -473,6 +520,15 @@ function findMaxAchievablePhaseMargin(tf, openLoop) {
 // Effective loop delay from the slope of open-loop phase against frequency:
 // phase_deg ~ -360·tau·f, so tau = -slope/360. Reported for diagnosis — it is
 // the hard ceiling on crossover that no amount of gain can move.
+//
+// The 20 Hz floor is deliberate and not derived from the coherent band. Open-loop
+// phase peaks where the D term's lead is strongest — around 10-12 Hz on the logs
+// this was developed against — and the slope there is set by that lead rather
+// than by transport delay, so a window reaching down to the start of the band
+// would pull the phase peak into the regression and bias the estimate low. Bins
+// are already filtered individually on coherence, so a band that stops short of
+// fHiHz simply contributes fewer of them; the 5-bin floor is only reached when
+// coherence is poor across the whole window, where Number.NaN is the right answer.
 function estimateLoopDelayMs(tf, openLoop, fLoHz = 20, fHiHz = 140) {
     const { frequencies, coherence } = tf;
     let n = 0;
@@ -552,14 +608,24 @@ function computeLowFreqError(frequencies, magnitude, coherence) {
     return count > 0 ? sum / count : 0;
 }
 
-// 6. Noise floor: frequency where coherence drops below 0.5
+// 6. Noise floor: frequency where coherence drops below 0.5, having first been
+// above it.
+//
+// The qualifier matters. Without it a log that was never coherent anywhere
+// returns its first bin above 20 Hz, which reads as an extremely low noise floor
+// and drives the D-term filter recommendation straight into its tightest clamp —
+// a clamp reported as a measurement, on a sweep that measured nothing. Number.NaN
+// says there is no floor to find, only noise.
 function findNoiseFloor(frequencies, coherence) {
+    let everCoherent = false;
     for (let k = 1; k < frequencies.length; k++) {
-        if (frequencies[k] > 20 && coherence[k] < 0.5) {
+        if (coherence[k] >= 0.5) {
+            everCoherent = true;
+        } else if (everCoherent && frequencies[k] > 20) {
             return frequencies[k];
         }
     }
-    return frequencies.at(-1);
+    return everCoherent ? frequencies.at(-1) : Number.NaN;
 }
 
 // 7. Overall coherence (measurement quality) in 5-100 Hz
@@ -576,10 +642,9 @@ function computeMeanCoherence(frequencies, coherence) {
 }
 
 function computeGainScales(metrics, tf, openLoop) {
-    const { gainToTarget, sensitivityLimitedGain, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
+    const { gainToTarget, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
 
-    // P (via pi_gain) is bounded by two independent conditions, and takes
-    // whichever is lower.
+    // P (via pi_gain) is bounded by two independent conditions.
     //
     // 1. Phase margin: place crossover where the open loop still has the target
     //    margin. If the phase never falls that far inside the coherent band
@@ -591,35 +656,65 @@ function computeGainScales(metrics, tf, openLoop) {
     // peak sits at 66-105 Hz against a 20-50 Hz crossover, where delay has rolled
     // the phase past -180 and |L| is not yet small. Targeting margin alone raised
     // predicted Ms from a healthy 1.5-1.7 to 2.7-3.9 on roll and pitch, which is
-    // fragile by a measure this file already computes. sensitivityLimitedGain can
-    // also fall below 1, which correctly asks a already-fragile craft to back off.
+    // fragile by a measure this file already computes.
+    //
+    // The two are combined by searching the admissible interval rather than by
+    // taking min() of two independently computed answers. min() would be right
+    // only if Ms fell monotonically with gain: it does not, so the gain the
+    // margin target asks for can violate the bound even when some higher gain
+    // satisfies it, and min() would then return a value never checked against
+    // the bound at all.
     const gainForMargin = Number.isFinite(gainToTarget) ? gainToTarget : 1;
-    const gainForRobustness = Number.isFinite(sensitivityLimitedGain) ? sensitivityLimitedGain : gainForMargin;
-    let piScale = Math.min(gainForMargin, gainForRobustness);
 
-    // D: raised only when robustness is what stopped the gain short.
-    //
-    // The rule this replaces derived D from a "phase margin" computed off the
-    // closed-loop response at the closed-loop 0 dB crossing. That crossing sits a
-    // few Hz up on a well-damped craft, where closed-loop phase is still near
-    // zero, so the figure landed near 180° on anything stable and drove dScale
-    // hard negative into its 0.5 clamp — halving D on 6 of 6 axis-flights across
-    // two independent logs, regardless of the craft.
-    //
-    // Here the trigger is measured: if the sensitivity bound holds the gain below
-    // what the margin target asked for, the loop is passing too close to -1 above
-    // crossover, and more phase lead there is the lever that moves it away. That
-    // is what D provides. When the margin target binds instead, the gain change
-    // meets it on its own and D has nothing to correct.
-    //
-    // D is never reduced. A chirp says nothing about the broadband motor and gyro
-    // noise that D amplifies, so the same argument that caps the D-term filter
-    // recommendation at tighten-only applies to the gain itself: this can ask for
-    // more damping on evidence, but has no evidence on which to ask for less.
-    // Reported so it is visible which of the two conditions limited the gain.
-    // Judged with a tolerance comfortably above the gain scan's step, so grid
-    // resolution alone does not register as robustness binding.
-    const sensitivityBinds = gainForRobustness < gainForMargin * (1 - SENSITIVITY_BIND_TOLERANCE);
+    // Safety: back off on a resonant closed-loop peak. Folded in before the
+    // robustness search rather than applied to its answer afterwards, so the
+    // gain the search verifies is the gain that actually gets applied. Scaling
+    // the result down after the fact could land back outside the bound the
+    // search exists to enforce, Ms not being monotonic in gain.
+    let resonanceBackoff = 1;
+    let ffResonanceBackoff = 1;
+    if (resonantPeakDb > 6) {
+        resonanceBackoff = 0.75;
+        ffResonanceBackoff = 0.8;
+    } else if (resonantPeakDb > 3) {
+        resonanceBackoff = 0.9;
+    }
+
+    // The sliders cannot express more than a GAIN_SCALE_MAX change in one pass,
+    // so nothing above that is admissible however much margin invites it.
+    const requestedGain = gainForMargin * resonanceBackoff;
+    const admissibleMax = clamp(requestedGain, GAIN_SCALE_MIN, GAIN_SCALE_MAX);
+
+    // When that clamp bites, targetCrossoverHz is still the correct crossover
+    // limit for the craft but is not the crossover the applied gain reaches.
+    // Reported so the interface can say so instead of showing a figure the
+    // recommendation does not deliver.
+    const gainClamped =
+        Number.isFinite(gainToTarget) && (requestedGain > GAIN_SCALE_MAX || requestedGain < GAIN_SCALE_MIN);
+
+    // Common case: what the margin target asks for is already within the
+    // robustness bound. Take it exactly, rather than off the scan grid.
+    let piScale = admissibleMax;
+    let sensitivityUnreachable = false;
+    if (peakSensitivityAtGain(tf, openLoop, admissibleMax) > MAX_SENSITIVITY_PEAK) {
+        const withinBound = findMaxGainForSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK, admissibleMax);
+        if (Number.isFinite(withinBound)) {
+            piScale = withinBound;
+        } else {
+            // No admissible gain meets the bound. Take the one that comes
+            // closest and flag it, rather than silently applying a gain the
+            // robustness test rejects.
+            sensitivityUnreachable = true;
+            const leastBad = findMinSensitivityGain(tf, openLoop, admissibleMax);
+            piScale = Number.isFinite(leastBad) ? leastBad : admissibleMax;
+        }
+    }
+
+    // Which of the two conditions limited the gain, reported so it is visible
+    // rather than implied. Judged against the admissible ceiling with a
+    // tolerance comfortably above the scan step, so neither the GAIN_SCALE_MAX
+    // clamp nor grid resolution alone registers as robustness binding.
+    const sensitivityBinds = piScale < admissibleMax * (1 - SENSITIVITY_BIND_TOLERANCE);
 
     // D: held.
     //
@@ -651,16 +746,10 @@ function computeGainScales(metrics, tf, openLoop) {
         iScale = 1 - lowFreqErrorDb * 0.05;
     }
 
-    // FF: approximates P adjustment
-    let ffScale = piScale;
-
-    // Safety: back off on resonance
-    if (resonantPeakDb > 6) {
-        piScale *= 0.75;
-        ffScale *= 0.8;
-    } else if (resonantPeakDb > 3) {
-        piScale *= 0.9;
-    }
+    // FF: approximates the P adjustment, carrying the same reduction where the
+    // robustness search cut the gain back, but with FF's own resonance backoff.
+    const robustnessFactor = piScale / admissibleMax;
+    const ffScale = gainForMargin * ffResonanceBackoff * robustnessFactor;
 
     // D-term filter: derive a cutoff hint from where the measurement stops
     // being coherent. NOTE: chirp coherence is NOT a gyro-noise measurement —
@@ -669,19 +758,34 @@ function computeGainScales(metrics, tf, openLoop) {
     // falls back to the top frequency, which would drive the cutoff up and
     // *reduce* filtering — feeding D-term noise into the motors and risking
     // instability/flyaway on arm. So this may only ever tighten filtering.
-    const filterScale = noiseFloorHz / DEFAULT_DTERM_FILTER_HZ;
+    //
+    // A sweep with no coherent band anywhere has no noise floor to report, and
+    // tightening filtering to the clamp on that basis would be the same mistake
+    // as the D rule this replaced: an unconditional clamp presented as a reading.
+    // Hold instead.
+    const filterScale = Number.isFinite(noiseFloorHz) ? noiseFloorHz / DEFAULT_DTERM_FILTER_HZ : 1;
 
-    // Clamp all to safe range (max 2x change per iteration)
+    // piScale is already inside the per-pass range by construction; the clamp is
+    // kept so the invariant holds locally rather than by inspection above.
     const finalPiScale = clamp(piScale, GAIN_SCALE_MIN, GAIN_SCALE_MAX);
 
     return {
         piScale: finalPiScale,
+        // Gain the margin target and resonance backoff asked for, before the
+        // per-pass clamp. Reported alongside piScale so the interface can show
+        // what was wanted against what was applied.
+        requestedGain,
         iScale: clamp(iScale, GAIN_SCALE_MIN, GAIN_SCALE_MAX),
         dScale,
         ffScale: clamp(ffScale, GAIN_SCALE_MIN, GAIN_SCALE_MAX),
         // Safety: cap at 1.0 — never recommend *less* D-term filtering (see note above).
         filterScale: clamp(filterScale, GAIN_SCALE_MIN, 1),
         sensitivityBinds,
+        gainClamped,
+        // True when no gain the sliders can express meets the robustness bound.
+        // The craft is fragile beyond what one pass can repair, so the value
+        // applied is the least bad rather than a compliant one.
+        sensitivityUnreachable,
         // Peak sensitivity the recommendation is predicted to land at, reported so
         // the effect of applying it on robustness is visible rather than implied.
         predictedSensitivityPeakDb: 20 * Math.log10(peakSensitivityAtGain(tf, openLoop, finalPiScale)),

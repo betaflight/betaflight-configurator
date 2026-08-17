@@ -29,6 +29,9 @@ function makeSyntheticTf({
     coherence = 1,
     resonanceHz = 0,
     resonanceZeta = 0.1,
+    // [[frequencyHz, coherence, hReal, hImag], ...] — overwrite individual bins
+    // to model a log that is clean apart from a few bad ones.
+    badBins = [],
 }) {
     const K = 2 * Math.PI * crossoverHz; // |L| = 1 exactly at crossoverHz
     const tau = delayMs / 1000;
@@ -89,6 +92,15 @@ function makeSyntheticTf({
         phase[k] = Math.atan2(tIm, tRe) * (180 / Math.PI);
     }
 
+    for (const [freqHz, coh, re, im] of badBins) {
+        const k = Math.round(freqHz / binHz);
+        coherenceArr[k] = coh;
+        hReal[k] = re;
+        hImag[k] = im;
+        magnitude[k] = 20 * Math.log10(Math.hypot(re, im));
+        phase[k] = Math.atan2(im, re) * (180 / Math.PI);
+    }
+
     return { frequencies, magnitude, phase, coherence: coherenceArr, hReal, hImag };
 }
 
@@ -123,6 +135,47 @@ describe("openLoopResponse", () => {
         const L = openLoopResponse(tf);
         expect(tf.frequencies[L.startIndex]).toBeGreaterThanOrEqual(2);
         expect(Number.isNaN(L.magnitude[0])).toBe(true);
+    });
+
+    it("keeps one noisy bin out of the unwrap chain", () => {
+        // The unwrap offset is cumulative, so a single bin far enough from its
+        // neighbours applies a +/-360 that then persists into every bin above it,
+        // including bins whose own coherence is fine. Gating at the point of use
+        // is not enough; the bad bin has to be kept out of the chain itself.
+        // T = 0.2 + 0.3i at 12 Hz is an ordinary noisy-bin value and shifted
+        // everything above it by a full turn.
+        const clean = makeSyntheticTf({ crossoverHz: 20, delayMs: 3 });
+        const dirty = makeSyntheticTf({ crossoverHz: 20, delayMs: 3, badBins: [[12, 0.05, 0.2, 0.3]] });
+
+        const cleanL = openLoopResponse(clean);
+        const dirtyL = openLoopResponse(dirty);
+
+        const at50 = Math.round(50 / 0.5);
+        const at200 = Math.round(200 / 0.5);
+        expect(dirtyL.phase[at50]).toBeCloseTo(cleanL.phase[at50], 6);
+        expect(dirtyL.phase[at200]).toBeCloseTo(cleanL.phase[at200], 6);
+
+        // The bad bin itself contributes nothing rather than a wrong value.
+        expect(Number.isNaN(dirtyL.phase[Math.round(12 / 0.5)])).toBe(true);
+    });
+
+    it("leaves every reported metric unchanged when a bin goes noisy", () => {
+        const clean = recommendGains(makeSyntheticTf({ crossoverHz: 20, delayMs: 3 }), SLIDERS).analysis;
+        const dirty = recommendGains(
+            makeSyntheticTf({ crossoverHz: 20, delayMs: 3, badBins: [[12, 0.05, 0.2, 0.3]] }),
+            SLIDERS,
+        ).analysis;
+
+        for (const key of [
+            "openLoopCrossoverHz",
+            "phaseMarginDeg",
+            "targetCrossoverHz",
+            "maxAchievablePhaseMarginDeg",
+            "loopDelayMs",
+            "piScale",
+        ]) {
+            expect(dirty[key]).toBeCloseTo(clean[key], 6);
+        }
     });
 });
 
@@ -243,6 +296,37 @@ describe("coherence gate", () => {
         expect(proposed.slider_pi_gain).toBe(100);
     });
 
+    it("holds every slider on a log that was never coherent, filtering included", () => {
+        // The D-term filter recommendation has its own path to the sliders and
+        // needs its own guard. findNoiseFloor() looks for where coherence falls
+        // away; on a log where it was never there, the first bin above 20 Hz
+        // qualifies, which read as a 20 Hz noise floor and cut the D-term filter
+        // multiplier to its 0.5 clamp — a clamp presented as a measurement, the
+        // same defect as the D rule this file replaced.
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3, coherence: 0.2 });
+        const { analysis, proposed } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+
+        expect(Number.isNaN(analysis.noiseFloorHz)).toBe(true);
+        expect(analysis.filterScale).toBe(1);
+        for (const key of Object.keys(proposed)) {
+            expect(proposed[key]).toBe(100);
+        }
+    });
+
+    it("still finds the noise floor once the sweep is coherent below it", () => {
+        // Coherent to 60 Hz, noise above. That is a real floor and must still
+        // tighten filtering.
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3 });
+        for (let k = 0; k < tf.frequencies.length; k++) {
+            if (tf.frequencies[k] > 60) {
+                tf.coherence[k] = 0.1;
+            }
+        }
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+        expect(analysis.noiseFloorHz).toBeCloseTo(60.5, 1);
+        expect(analysis.filterScale).toBeLessThan(1);
+    });
+
     it("accepts the same measurement once coherence is above the gate", () => {
         const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3, coherence: 0.9 });
         const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
@@ -272,6 +356,41 @@ describe("peak sensitivity bound", () => {
         const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.AGGRESSIVE);
         expect(analysis.sensitivityBinds).toBe(true);
         expect(analysis.piScale).toBeLessThan(analysis.gainToTarget);
+    });
+
+    it("never returns a gain it has not checked against the bound", () => {
+        // Ms is not monotonic in gain. On this craft the lightly damped 40 Hz
+        // mode sits where reducing gain brings |L| back towards 1 with the phase
+        // already past -180, so Ms is 2.66 at gain 0.5 against 1.16 at gain 1.0.
+        // An upward scan that breaks at the first violation seeded its answer
+        // with GAIN_SCALE_MIN and returned it without ever evaluating it —
+        // reporting the worst gain in range as the robustness bound.
+        const tf = makeSyntheticTf({ crossoverHz: 15, delayMs: 3, resonanceHz: 40, resonanceZeta: 0.05 });
+        for (const target of Object.values(PHASE_MARGIN_PRESETS)) {
+            const { analysis } = recommendGains(tf, SLIDERS, target);
+            expect(analysis.predictedSensitivityPeakDb).toBeLessThanOrEqual(6.1);
+            expect(analysis.piScale).toBeGreaterThan(0.5);
+        }
+    });
+
+    it("reports when the per-pass clamp stops the recommendation being delivered", () => {
+        // A craft far below its crossover limit asks for more than a 2x change,
+        // which one pass of the sliders cannot express. targetCrossoverHz is
+        // still the craft's limit, but the applied gain does not reach it, so
+        // that has to be visible rather than implied.
+        const tf = makeSyntheticTf({ crossoverHz: 3, delayMs: 3 });
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.AGGRESSIVE);
+
+        expect(analysis.gainClamped).toBe(true);
+        expect(analysis.requestedGain).toBeGreaterThan(2);
+        expect(analysis.piScale).toBe(2);
+    });
+
+    it("does not report a clamp when the recommendation fits in one pass", () => {
+        const tf = makeSyntheticTf({ crossoverHz: 20, delayMs: 3 });
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.NORMAL);
+        expect(analysis.gainClamped).toBe(false);
+        expect(analysis.sensitivityUnreachable).toBe(false);
     });
 
     it("leaves the margin target in charge when robustness is not the limit", () => {

@@ -208,6 +208,14 @@ function buildGains(rec, sensitivity, stepResponse) {
         resonantPeak: rec.analysis.resonantPeakDb,
         sensitivityPeak: sensitivity.peakDb,
         predictedSensitivityPeak: rec.analysis.predictedSensitivityPeakDb,
+        // Which constraint limited the gain, and whether the recommendation
+        // could be delivered in full. The interface reports these so a figure it
+        // shows is never one the applied gain does not reach.
+        sensitivityBinds: rec.analysis.sensitivityBinds,
+        sensitivityUnreachable: rec.analysis.sensitivityUnreachable,
+        gainClamped: rec.analysis.gainClamped,
+        requestedGain: rec.analysis.requestedGain,
+        appliedGain: rec.analysis.piScale,
         overshoot: stepResponse.overshootPct,
         riseTime: stepResponse.riseTimeMs,
         settlingTime: stepResponse.settlingTimeMs,
