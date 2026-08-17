@@ -2175,6 +2175,18 @@
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
     },
+    "portsPortNone": {
+        "message": "None"
+    },
+    "receiverSerialPort": {
+        "message": "Serial Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "The UART the serial receiver is wired to. The baud rate follows the provider, so there is nothing to set here. Changing the port requires a reboot."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Could not set the receiver serial port, so nothing was saved."
+    },
     "someRXTypesDisabled": {
         "message": "Some Receiver Providers are not supported by current Build Configuration."
     },
