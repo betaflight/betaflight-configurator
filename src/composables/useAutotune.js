@@ -214,6 +214,7 @@ function buildGains(rec, sensitivity, stepResponse) {
         sensitivityBinds: rec.analysis.sensitivityBinds,
         sensitivityUnreachable: rec.analysis.sensitivityUnreachable,
         gainClamped: rec.analysis.gainClamped,
+        gainClampLimit: rec.analysis.gainClampLimit,
         requestedGain: rec.analysis.requestedGain,
         appliedGain: rec.analysis.piScale,
         overshoot: stepResponse.overshootPct,

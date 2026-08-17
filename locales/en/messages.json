@@ -555,7 +555,7 @@
         "message": "$1: this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
     },
     "autotuneGainClamped": {
-        "message": "$1: the measurement asks for a $2× gain change, but a single pass is limited to 2×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
+        "message": "$1: the measurement asks for a $2× gain change, but a single pass is limited to $3×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
     },
     "autotuneSensitivityBinds": {
         "message": "$1: peak sensitivity, not phase margin, set the gain here. The loop passes close to −1 above crossover, so the recommendation stops short of the margin target."

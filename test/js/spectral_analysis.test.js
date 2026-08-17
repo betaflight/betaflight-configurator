@@ -383,7 +383,21 @@ describe("peak sensitivity bound", () => {
 
         expect(analysis.gainClamped).toBe(true);
         expect(analysis.requestedGain).toBeGreaterThan(2);
+        expect(analysis.gainClampLimit).toBe(2);
         expect(analysis.piScale).toBe(2);
+    });
+
+    it("reports the lower bound when the craft is asked to back off past it", () => {
+        // The clamp bites at both ends. A craft running far more gain than its
+        // delay supports asks for a large reduction, and the bound that holds it
+        // is GAIN_SCALE_MIN — quoting the 2x upper bound there would be nonsense.
+        const tf = makeSyntheticTf({ crossoverHz: 200, delayMs: 3 });
+        const { analysis } = recommendGains(tf, SLIDERS, PHASE_MARGIN_PRESETS.CONSERVATIVE);
+
+        expect(analysis.gainClamped).toBe(true);
+        expect(analysis.requestedGain).toBeLessThan(0.5);
+        expect(analysis.gainClampLimit).toBe(0.5);
+        expect(analysis.piScale).toBe(0.5);
     });
 
     it("does not report a clamp when the recommendation fits in one pass", () => {

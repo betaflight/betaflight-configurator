@@ -167,11 +167,19 @@ const unreachableMessage = computed(() =>
     ]),
 );
 
-// Axes carrying a given flag on their recommendation, named for a message.
-function axesFlagged(flag) {
+// Axes carrying a given flag on their recommendation, as { name, gains } pairs
+// so a message can quote the figures behind the flag as well as name the axis.
+function flaggedAxes(flag) {
     return visibleAxisList.value
-        .filter((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.[flag])
-        .map((axis) => i18n.getMessage(axis.labelKey));
+        .map((axis) => ({
+            name: i18n.getMessage(axis.labelKey),
+            gains: store.analysisResult?.axes?.[axis.key]?.gains,
+        }))
+        .filter((entry) => entry.gains?.[flag]);
+}
+
+function axesFlagged(flag) {
+    return flaggedAxes(flag).map((entry) => entry.name);
 }
 
 // Every way the recommendation can be something other than the margin target
@@ -184,17 +192,32 @@ const recommendationNotes = computed(() => {
         notes.push({ key: "unreachable", text: unreachableMessage.value });
     }
 
-    const clamped = axesFlagged("gainClamped");
-    if (clamped.length) {
-        const requested = Math.max(
-            ...visibleAxisList.value
-                .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains)
-                .filter((g) => g?.gainClamped)
-                .map((g) => g.requestedGain),
-        );
+    // Split by which end of the per-pass range bit. A craft asking for more gain
+    // than one pass allows and one asking for less are held by different bounds,
+    // so they cannot share a single quoted limit.
+    const clamped = flaggedAxes("gainClamped");
+    const clampedUp = clamped.filter((e) => e.gains.requestedGain > e.gains.gainClampLimit);
+    const clampedDown = clamped.filter((e) => e.gains.requestedGain < e.gains.gainClampLimit);
+
+    if (clampedUp.length) {
         notes.push({
-            key: "clamped",
-            text: i18n.getMessage("autotuneGainClamped", [clamped.join(", "), requested.toFixed(1)]),
+            key: "clamped-up",
+            text: i18n.getMessage("autotuneGainClamped", [
+                clampedUp.map((e) => e.name).join(", "),
+                Math.max(...clampedUp.map((e) => e.gains.requestedGain)).toFixed(1),
+                clampedUp[0].gains.gainClampLimit.toFixed(1),
+            ]),
+        });
+    }
+
+    if (clampedDown.length) {
+        notes.push({
+            key: "clamped-down",
+            text: i18n.getMessage("autotuneGainClamped", [
+                clampedDown.map((e) => e.name).join(", "),
+                Math.min(...clampedDown.map((e) => e.gains.requestedGain)).toFixed(2),
+                clampedDown[0].gains.gainClampLimit.toFixed(1),
+            ]),
         });
     }
 

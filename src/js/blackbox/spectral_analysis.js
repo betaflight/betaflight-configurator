@@ -257,7 +257,7 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
     const meanCoherence = computeMeanCoherence(frequencies, coherence);
     const loopDelayMs = estimateLoopDelayMs(tf, openLoop);
     const maxAchievablePhaseMarginDeg = findMaxAchievablePhaseMargin(tf, openLoop);
-    const sensitivityLimitedGain = findMaxGainForSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK);
+    const sensitivityLimitedGain = scanSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK).withinBound;
 
     return {
         bandwidthHz,
@@ -446,11 +446,16 @@ function peakSensitivityAtGain(tf, openLoop, gainScale) {
 }
 
 /**
- * Largest gain scale in [GAIN_SCALE_MIN, maxGain] whose predicted peak
- * sensitivity stays within `limit`, or Number.NaN when no gain in that range
- * does.
+ * Walk the gain grid over [GAIN_SCALE_MIN, maxGain] once, returning both answers
+ * the recommendation can need:
  *
- * Every candidate is evaluated and the largest passing one returned. An earlier
+ *   withinBound - largest gain whose predicted peak sensitivity stays within
+ *                 `limit`, or Number.NaN when no gain in range does.
+ *   leastBad    - gain with the lowest predicted peak, whatever that peak is.
+ *                 Only consulted when withinBound is Number.NaN, on a craft
+ *                 fragile beyond what one pass of the sliders can repair.
+ *
+ * Every candidate is evaluated and the largest passing one kept. An earlier
  * version scanned upward and broke at the first violation, seeding the result
  * with GAIN_SCALE_MIN — which returned the floor as safe without ever checking
  * it, and assumed Ms rises monotonically with gain. It does not: on a craft with
@@ -459,43 +464,32 @@ function peakSensitivityAtGain(tf, openLoop, gainScale) {
  * passes closer to -1 than it did at full gain. On a synthetic 15 Hz crossover
  * with a 40 Hz mode at zeta 0.05, Ms is 2.66 at gain 0.5 against 1.16 at gain
  * 1.0, so the break-on-first-violation form returned the worst gain in range and
- * reported it as the bound.
+ * reported it as the bound. Both answers come off the one walk for the same
+ * reason they cannot be reasoned about separately: there is no safe direction to
+ * assume, so the grid has to be measured either way.
  */
-function findMaxGainForSensitivity(tf, openLoop, limit, maxGain = GAIN_SCALE_MAX) {
-    let best = Number.NaN;
+function scanSensitivity(tf, openLoop, limit, maxGain = GAIN_SCALE_MAX) {
+    let withinBound = Number.NaN;
+    let leastBad = Number.NaN;
+    let bestPeak = Infinity;
+
     for (let gain = GAIN_SCALE_MIN; gain <= maxGain + 1e-9; gain += GAIN_SCAN_STEP) {
         const peak = peakSensitivityAtGain(tf, openLoop, gain);
         if (!Number.isFinite(peak)) {
             // Nothing coherent to judge by; leave the gain untouched.
-            return Math.min(1, maxGain);
+            const hold = Math.min(1, maxGain);
+            return { withinBound: hold, leastBad: hold };
         }
         if (peak <= limit) {
-            best = gain;
+            withinBound = gain;
         }
-    }
-    return best;
-}
-
-/**
- * Gain scale in [GAIN_SCALE_MIN, maxGain] with the lowest predicted peak
- * sensitivity.
- *
- * Only used when no gain in range meets the bound. Such a craft is fragile
- * beyond what one pass of the sliders can repair, and since Ms is not monotonic
- * in gain there is no direction that is safe by construction — so pick the
- * measured minimum rather than assuming the floor is it.
- */
-function findMinSensitivityGain(tf, openLoop, maxGain) {
-    let bestGain = Number.NaN;
-    let bestPeak = Infinity;
-    for (let gain = GAIN_SCALE_MIN; gain <= maxGain + 1e-9; gain += GAIN_SCAN_STEP) {
-        const peak = peakSensitivityAtGain(tf, openLoop, gain);
-        if (Number.isFinite(peak) && peak < bestPeak) {
+        if (peak < bestPeak) {
             bestPeak = peak;
-            bestGain = gain;
+            leastBad = gain;
         }
     }
-    return bestGain;
+
+    return { withinBound, leastBad };
 }
 
 // Ceiling on phase margin for this craft. Open-loop phase peaks where the D
@@ -692,12 +686,21 @@ function computeGainScales(metrics, tf, openLoop) {
     const gainClamped =
         Number.isFinite(gainToTarget) && (requestedGain > GAIN_SCALE_MAX || requestedGain < GAIN_SCALE_MIN);
 
+    // Which end of the per-pass range bit, so a note can quote the bound that
+    // actually applied rather than assuming it was the upper one. A craft asking
+    // for x0.19 is held by GAIN_SCALE_MIN, and telling it the pass is limited to
+    // 2x would be nonsense.
+    let gainClampLimit = Number.NaN;
+    if (gainClamped) {
+        gainClampLimit = requestedGain > GAIN_SCALE_MAX ? GAIN_SCALE_MAX : GAIN_SCALE_MIN;
+    }
+
     // Common case: what the margin target asks for is already within the
     // robustness bound. Take it exactly, rather than off the scan grid.
     let piScale = admissibleMax;
     let sensitivityUnreachable = false;
     if (peakSensitivityAtGain(tf, openLoop, admissibleMax) > MAX_SENSITIVITY_PEAK) {
-        const withinBound = findMaxGainForSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK, admissibleMax);
+        const { withinBound, leastBad } = scanSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK, admissibleMax);
         if (Number.isFinite(withinBound)) {
             piScale = withinBound;
         } else {
@@ -705,7 +708,6 @@ function computeGainScales(metrics, tf, openLoop) {
             // closest and flag it, rather than silently applying a gain the
             // robustness test rejects.
             sensitivityUnreachable = true;
-            const leastBad = findMinSensitivityGain(tf, openLoop, admissibleMax);
             piScale = Number.isFinite(leastBad) ? leastBad : admissibleMax;
         }
     }
@@ -782,6 +784,7 @@ function computeGainScales(metrics, tf, openLoop) {
         filterScale: clamp(filterScale, GAIN_SCALE_MIN, 1),
         sensitivityBinds,
         gainClamped,
+        gainClampLimit,
         // True when no gain the sliders can express meets the robustness bound.
         // The craft is fragile beyond what one pass can repair, so the value
         // applied is the least bad rather than a compliant one.
