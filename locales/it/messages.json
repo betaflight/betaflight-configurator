@@ -310,9 +310,6 @@
     "configuratorUpdateHelp": {
         "message": "Quando internet è disponibile, l'app controlla automaticamente gli aggiornamenti disponibili."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Pagina web degli aggiornamenti"
-    },
     "rebootFlightController": {
         "message": "Riavvio del controllore di volo, riconnettersi quando pronto"
     },

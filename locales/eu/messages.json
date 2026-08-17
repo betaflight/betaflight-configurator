@@ -136,9 +136,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Bertsio agirien webgunera joan"
-    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Abiarazten<\/span>"
     },

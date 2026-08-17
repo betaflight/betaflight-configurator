@@ -137,6 +137,30 @@
         "message": "Introduïu el port sèrie o l'URL a la qual voleu connectar-vos.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Connexions desades",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nom:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nom per aquesta connexió",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Desa",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Actualitza",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Treu la connexió desada",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Auto-Connectar"
     },
@@ -325,9 +349,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Quan Internet está disponible la app pot preguntar sobre actualitzacions disponibles."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Ves a la pàgina de publicació"
     },
     "rebootFlightController": {
         "message": "S'està reiniciant el controlador de vol, torneu a connectar-vos quan estigui llest"
