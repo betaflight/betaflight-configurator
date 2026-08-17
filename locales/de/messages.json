@@ -227,9 +227,6 @@
     "configuratorUpdateHelp": {
         "message": "Wenn Internet verfügbar ist, sollte die App automatisch nach verfügbaren Updates fragen."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Webseite mit Downloadversionen aufrufen"
-    },
     "deviceRebooting": {
         "message": "Gerät - <span class=\"message-negative\">startet neu<\/span>"
     },

@@ -492,7 +492,10 @@ const pidControllerParams = computed(() => {
         // abs_control_gain removed in BF 2026.6
         ...(isBF.value && lt("2026.6.0") ? [param("Abs Control Gain", fmtVal(s.abs_control_gain, 0))] : []),
         param("PID At Min Throttle", selectVal(s.pidAtMinThrottle, OFF_ON)),
-        param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON)),
+        // use_integrated_yaw removed in BF 2026.12
+        ...(isBF.value && lt("2026.12.0")
+            ? [param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON))]
+            : []),
     ].filter((p) => !p.missing);
 });
 

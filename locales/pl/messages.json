@@ -287,9 +287,6 @@
     "configuratorUpdateHelp": {
         "message": "Gdy masz dostęp do internetu, aplikacja powinna automatycznie sprawdzić dostępne aktualizacje."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Idź do strony z aktualizacjami"
-    },
     "rebootFlightController": {
         "message": "Ponowne uruchamianie kontrolera lotu, gdy będziesz gotowy podłącz się ponownie"
     },
