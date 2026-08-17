@@ -2586,7 +2586,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.WING_CONFIG.tpa_curve_stall_throttle)
                 .push16(FC.WING_CONFIG.tpa_curve_pid_thr0)
                 .push16(FC.WING_CONFIG.tpa_curve_pid_thr100)
-                .push8(FC.WING_CONFIG.tpa_curve_expo)
+                .push8(
+                    FC.WING_CONFIG.tpa_curve_expo < 0
+                        ? FC.WING_CONFIG.tpa_curve_expo & 0xff
+                        : FC.WING_CONFIG.tpa_curve_expo,
+                )
                 .push8(FC.WING_CONFIG.tpa_speed_type)
                 .push16(FC.WING_CONFIG.tpa_speed_basic_delay)
                 .push16(FC.WING_CONFIG.tpa_speed_basic_gravity)
@@ -2595,9 +2599,17 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push16(FC.WING_CONFIG.tpa_speed_adv_drag_k)
                 .push16(FC.WING_CONFIG.tpa_speed_adv_thrust)
                 .push16(FC.WING_CONFIG.tpa_speed_max_voltage)
-                .push16(FC.WING_CONFIG.tpa_speed_pitch_offset)
+                .push16(
+                    FC.WING_CONFIG.tpa_speed_pitch_offset < 0
+                        ? FC.WING_CONFIG.tpa_speed_pitch_offset & 0xffff
+                        : FC.WING_CONFIG.tpa_speed_pitch_offset,
+                )
                 .push8(FC.WING_CONFIG.yaw_type)
-                .push16(FC.WING_CONFIG.angle_pitch_offset);
+                .push16(
+                    FC.WING_CONFIG.angle_pitch_offset < 0
+                        ? FC.WING_CONFIG.angle_pitch_offset & 0xffff
+                        : FC.WING_CONFIG.angle_pitch_offset,
+                );
 
             break;
 
