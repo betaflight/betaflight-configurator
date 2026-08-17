@@ -310,9 +310,6 @@
     "configuratorUpdateHelp": {
         "message": "当网络可用时，应用会自动请求可用的更新。"
     },
-    "configuratorUpdateWebsite": {
-        "message": "打开版本发布网站"
-    },
     "rebootFlightController": {
         "message": "正在重启飞控，完成后重新连接"
     },
