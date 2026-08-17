@@ -137,6 +137,30 @@
         "message": "For oprettelse af forbindelse, angiv seriel sti eller URL.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Gemte forbindelser",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Navn:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Navn for denne forbindelse",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Gem",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Opdater",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Fjern gemt forbindelse",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Autotilslut"
     },
@@ -321,9 +345,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Åbn udgivelseswebsted"
     },
     "rebootFlightController": {
         "message": "Genstart FC, tilslut igen, når du er klar"
