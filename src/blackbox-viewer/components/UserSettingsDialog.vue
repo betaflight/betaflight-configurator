@@ -17,7 +17,7 @@
                             <USelect
                                 v-model="local.mixerConfiguration"
                                 :items="mixerOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="sm"
                                 class="flex-1"
                             />
@@ -51,7 +51,7 @@
                             <USelect
                                 v-model="local.stickMode"
                                 :items="stickModeOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="sm"
                                 class="min-w-24"
                             />
@@ -77,7 +77,7 @@
                             <USelect
                                 v-model="local.speedUnits"
                                 :items="speedOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="sm"
                                 class="min-w-24"
                             />
@@ -86,18 +86,9 @@
                             <USelect
                                 v-model="local.altitudeUnits"
                                 :items="altitudeOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="sm"
                                 class="min-w-24"
-                            />
-                        </SettingRow>
-                        <SettingRow label="Dark mode">
-                            <USelect
-                                v-model="local.darkMode"
-                                :items="darkModeOptions"
-                                :ui="{ content: 'z-[300]' }"
-                                size="sm"
-                                class="min-w-40"
                             />
                         </SettingRow>
                     </UiBox>
@@ -295,12 +286,6 @@ const speedOptions = [
 const altitudeOptions = [
     { label: "meters", value: 1 },
     { label: "feet", value: 2 },
-];
-
-const darkModeOptions = [
-    { label: "Auto (system)", value: 2 },
-    { label: "Off (light)", value: 1 },
-    { label: "On (dark)", value: 0 },
 ];
 
 // Overlay position rows — driven by local state so grid columns align
