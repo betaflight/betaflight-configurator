@@ -10063,10 +10063,10 @@
         "message": "Hyperbolic curve settings"
     },
     "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
-        "message": "Stall speed"
+        "message": "Stall speed, %"
     },
     "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
-        "message": "Speed at which PIDs should be maxed out (stall speed)"
+        "message": "Speed at which PIDs should be maxed out (stall speed), %"
     },
     "pidTuningWingTpaAdvSpeedCurvePidThr0": {
         "message": "Stall speed PIDs"

@@ -1323,6 +1323,8 @@
                                 :motorThrust="wingConfig.tpa_speed_adv_thrust / 1000"
                                 :maxVoltage="wingConfig.tpa_speed_max_voltage / 100"
                                 :motorKv="motorKv"
+                                :basicGravity="wingConfig.tpa_speed_basic_gravity / 100"
+                                :basicDelay="wingConfig.tpa_speed_basic_delay / 1000"
                                 :curveExpo="wingConfig.tpa_curve_expo / 10"
                                 :stallThrottle="wingConfig.tpa_curve_stall_throttle / 100"
                                 :pidStallThrottle="wingConfig.tpa_curve_pid_thr0 / 100"
