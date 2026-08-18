@@ -10,15 +10,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick, computed } from "vue";
 const props = defineProps({
     showGrid: { type: Boolean, default: true },
     curveActive: { type: Boolean, default: true },
-    isAdvancedMode: { type: Boolean, default: false },
-    propPitch: { type: Number, default: 3.7 },
-    craftMass: { type: Number, default: 1 },
-    dragCoef: { type: Number, default: 0.01 },
-    motorThrust: { type: Number, default: 2 },
-    maxVoltage: { type: Number, default: 25.2 },
-    motorKv: { type: Number, default: 0 },
-    basicGravity: { type: Number, default: 0.5 },
-    basicDelay: { type: Number, default: 1 },
+    maximalSpeed: { type: Number, default: 50 },
     curveExpo: { type: Number, default: 2 },
     stallThrottle: { type: Number, default: 0.3 },
     pidStallThrottle: { type: Number, default: 2 },
@@ -35,34 +27,6 @@ let resizeObserver = null;
 // Hyperbolic curve definition
 const curveColor = "#e24761";
 
-function getWingMaximalSpeed() {
-    const G_ACCELERATION = 9.80665;
-    let maxSpeed;
-    if (props.isAdvancedMode) {
-        const maxFallSpeed = Math.sqrt((props.craftMass * G_ACCELERATION) / props.dragCoef);
-
-        const propMaxSpeed = (2.54 / 100 / 60) * props.propPitch * props.motorKv * props.maxVoltage;
-        const inversePropMaxSpeed = propMaxSpeed > 0 ? 1 / propMaxSpeed : 0;
-
-        const twr = props.motorThrust / props.craftMass;
-        const a = props.dragCoef;
-        const b = props.craftMass * twr * G_ACCELERATION * inversePropMaxSpeed;
-        const c = -props.craftMass * (twr + 1) * G_ACCELERATION;
-
-        const D = b * b - 4 * a * c;
-        const maxDiveSpeed = D >= 0 ? (-b + Math.sqrt(D)) / (2 * a) : 0;
-
-        maxSpeed = Math.max(Math.max(maxFallSpeed, maxDiveSpeed), 1);
-    } else {
-        const twr = 1 / (props.basicGravity * props.basicGravity);
-        const massDragRatio =
-            (2 / Math.log(3)) * (2 / Math.log(3)) * twr * G_ACCELERATION * props.basicDelay * props.basicDelay;
-        maxSpeed = Math.sqrt(massDragRatio * twr * G_ACCELERATION + G_ACCELERATION);
-    }
-
-    return maxSpeed;
-}
-
 function scaleRange(value, fromMin, fromMax, toMin, toMax) {
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
 }
@@ -70,7 +34,6 @@ function scaleRange(value, fromMin, fromMax, toMin, toMax) {
 function generateHyperbolicCurve() {
     const steps = 100;
     const data = [];
-    const maxSpeed = getWingMaximalSpeed();
     for (let i = 0; i <= steps; i++) {
         const x = i / steps;
         let curveValue;
@@ -85,7 +48,7 @@ function generateHyperbolicCurve() {
             curveValue = props.pidStallThrottle / divisor;
         }
         data.push({
-            speed: x * maxSpeed,
+            speed: x * props.maximalSpeed,
             multiplier: curveValue,
         });
     }
@@ -325,21 +288,7 @@ onUnmounted(() => {
 });
 
 watch(
-    () => [
-        props.isAdvancedMode,
-        props.propPitch,
-        props.craftMass,
-        props.dragCoef,
-        props.motorThrust,
-        props.maxVoltage,
-        props.motorKv,
-        props.basicGravity,
-        props.basicDelay,
-        props.curveExpo,
-        props.stallThrottle,
-        props.pidStallThrottle,
-        props.pidFullThrottle,
-    ],
+    () => [props.maximalSpeed, props.curveExpo, props.stallThrottle, props.pidStallThrottle, props.pidFullThrottle],
     () => nextTick(() => drawChart()),
     { deep: true },
 );
