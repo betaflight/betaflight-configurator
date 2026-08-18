@@ -651,24 +651,8 @@ const escProtocolItems = computed(() =>
     })),
 );
 
-// Explicit ESC protocol -> firmware build option map. Names on the left come from
-// EscProtocols.GetAvailableProtocols(), names on the right are keys of
-// FIRMWARE_BUILD_OPTIONS. DISABLED is deliberately absent: it is always selectable,
-// and any protocol without an entry here is never disabled.
-const ESC_PROTOCOL_BUILD_OPTIONS = {
-    [EscProtocols.PROTOCOL_PWM]: "USE_PWM_OUTPUT",
-    [EscProtocols.PROTOCOL_ONESHOT125]: "USE_ONESHOT",
-    [EscProtocols.PROTOCOL_ONESHOT42]: "USE_ONESHOT",
-    [EscProtocols.PROTOCOL_MULTISHOT]: "USE_MULTISHOT",
-    [EscProtocols.PROTOCOL_BRUSHED]: "USE_BRUSHED",
-    [EscProtocols.PROTOCOL_DSHOT150]: "USE_DSHOT",
-    [EscProtocols.PROTOCOL_DSHOT300]: "USE_DSHOT",
-    [EscProtocols.PROTOCOL_DSHOT600]: "USE_DSHOT",
-    [EscProtocols.PROTOCOL_PROSHOT1000]: "USE_PROSHOT",
-};
-
 const isProtocolDisabled = (escProtocolName) => {
-    const requiredOption = ESC_PROTOCOL_BUILD_OPTIONS[escProtocolName];
+    const requiredOption = EscProtocols.GetBuildOption(escProtocolName);
     if (!requiredOption) {
         return false;
     }

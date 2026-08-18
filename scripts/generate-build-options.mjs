@@ -70,17 +70,17 @@ function endpointUrl(target) {
 }
 
 const JSON_STRING_ESCAPES = {
-    '"': '\\"',
-    "\\": "\\\\",
-    "\n": "\\n",
-    "\r": "\\r",
-    "\t": "\\t",
-    "\b": "\\b",
-    "\f": "\\f",
+    '"': String.raw`\"`,
+    "\\": String.raw`\\`,
+    "\n": String.raw`\n`,
+    "\r": String.raw`\r`,
+    "\t": String.raw`\t`,
+    "\b": String.raw`\b`,
+    "\f": String.raw`\f`,
 };
 
 function unicodeEscape(codePoint) {
-    return `\\u${codePoint.toString(16).padStart(4, "0")}`;
+    return String.raw`\u${codePoint.toString(16).padStart(4, "0")}`;
 }
 
 // Mirrors python's json string encoder with ensure_ascii=True.
@@ -138,7 +138,7 @@ function pythonJsonDumps(value) {
     }
     if (typeof value === "number") {
         if (!Number.isSafeInteger(value)) {
-            throw new Error(
+            throw new TypeError(
                 `Cannot reproduce python's json.dumps() for the number ${value}: the input hash serializer supports safe integers only`,
             );
         }
@@ -157,7 +157,10 @@ function pythonJsonDumps(value) {
 }
 
 function inputHash(data) {
-    return createHash("md5").update(pythonJsonDumps(data), "utf8").digest("hex");
+    // NOSONAR javascript:S4790 — md5 here is a content fingerprint recorded in the
+    // generated header, chosen to match the firmware generator's hash for the same
+    // payload. It guards nothing and is never used in a security context.
+    return createHash("md5").update(pythonJsonDumps(data), "utf8").digest("hex"); // NOSONAR
 }
 
 // Mirrors camel_case_to_title() in the firmware generator.
@@ -191,7 +194,7 @@ async function fetchBuildOptions(url) {
         throw new Error(`Response from ${url} is not valid JSON: ${error.message}`);
     }
     if (data === null || typeof data !== "object" || Array.isArray(data)) {
-        throw new Error(`Response from ${url} is not a JSON object of option groups`);
+        throw new TypeError(`Response from ${url} is not a JSON object of option groups`);
     }
 
     return data;
@@ -200,44 +203,63 @@ async function fetchBuildOptions(url) {
 // A define is emitted as a bare object key, so it has to be a valid JS identifier.
 const DEFINE_PATTERN = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
+function validateOption(option, group, url) {
+    if (option === null || typeof option !== "object") {
+        throw new TypeError(`Group "${group}" from ${url} contains a malformed option entry`);
+    }
+
+    const define = option.value;
+    // The "[None]" entry carries neither a define nor a key, and is not an option.
+    if (!define) {
+        return undefined;
+    }
+    if (typeof define !== "string") {
+        throw new TypeError(`Group "${group}" from ${url} has an option with a non-string value`);
+    }
+    if (!DEFINE_PATTERN.test(define)) {
+        throw new Error(
+            `Group "${group}" from ${url} has option value "${define}", which is not a valid JavaScript identifier`,
+        );
+    }
+    // An option that lost its numeric key would silently shrink the table, which is
+    // the drift this generator exists to prevent.
+    if (!Number.isInteger(option.key)) {
+        throw new TypeError(`Group "${group}" from ${url} has option "${define}" without an integer key`);
+    }
+
+    return { define, key: option.key };
+}
+
+function collectGroupOptions(group, optionList, url, seenDefines) {
+    if (!Array.isArray(optionList)) {
+        throw new TypeError(`Group "${group}" from ${url} is not an array of options`);
+    }
+
+    const options = [];
+    for (const option of optionList) {
+        const validated = validateOption(option, group, url);
+        if (!validated) {
+            continue;
+        }
+        const seenIn = seenDefines.get(validated.define);
+        if (seenIn !== undefined) {
+            throw new Error(
+                `Option value "${validated.define}" from ${url} appears in both group "${seenIn}" and group "${group}"`,
+            );
+        }
+        seenDefines.set(validated.define, group);
+        options.push(validated);
+    }
+
+    return options;
+}
+
 function collectOptions(data, url) {
     const groups = [];
     const seenDefines = new Map();
 
     for (const [group, optionList] of Object.entries(data)) {
-        if (!Array.isArray(optionList)) {
-            throw new Error(`Group "${group}" from ${url} is not an array of options`);
-        }
-        const options = [];
-        for (const option of optionList) {
-            if (option === null || typeof option !== "object") {
-                throw new Error(`Group "${group}" from ${url} contains a malformed option entry`);
-            }
-            const define = option.value;
-            // The "[None]" entry carries neither a define nor a numeric key.
-            if (!define) {
-                continue;
-            }
-            if (typeof define !== "string") {
-                throw new Error(`Group "${group}" from ${url} has an option with a non-string value`);
-            }
-            if (typeof option.key !== "number") {
-                continue;
-            }
-            if (!DEFINE_PATTERN.test(define)) {
-                throw new Error(
-                    `Group "${group}" from ${url} has option value "${define}", which is not a valid JavaScript identifier`,
-                );
-            }
-            const seenIn = seenDefines.get(define);
-            if (seenIn !== undefined) {
-                throw new Error(
-                    `Option value "${define}" from ${url} appears in both group "${seenIn}" and group "${group}"`,
-                );
-            }
-            seenDefines.set(define, group);
-            options.push({ define, key: option.key });
-        }
+        const options = collectGroupOptions(group, optionList, url, seenDefines);
         if (options.length > 0) {
             groups.push({ title: camelCaseToTitle(group), options });
         }
@@ -296,9 +318,16 @@ async function main() {
     console.log(`generate-build-options: wrote ${count} options to ${outPath}`);
 }
 
+// Error messages interpolate CLI arguments and the endpoint URL, so strip anything
+// that could forge a second line before the message reaches stderr.
+function singleLine(message) {
+    // eslint-disable-next-line no-control-regex
+    return String(message).replace(/[\u0000-\u001f\u007f]/g, " ");
+}
+
 try {
     await main();
 } catch (error) {
-    console.error(`generate-build-options: ${error.message}`);
+    console.error(`generate-build-options: ${singleLine(error.message)}`); // NOSONAR jssecurity:S5145 — sanitised above
     process.exit(1);
 }

@@ -15,11 +15,9 @@
                         collapsible
                         :help="$t('configurationGPSHelp')"
                     >
-                        <div
-                            v-if="!hasGpsBuildOption"
-                            class="text-center p-2 text-sm"
-                            v-html="$t('configurationGPSNotInBuild')"
-                        ></div>
+                        <div v-if="!hasGpsBuildOption" class="text-center p-2 text-sm">
+                            {{ $t("configurationGPSNotInBuild") }}
+                        </div>
 
                         <SettingRow
                             v-for="feature in gpsFeatures"
@@ -38,6 +36,7 @@
                             <USelect
                                 :items="gpsProtocolItems"
                                 v-model="gpsConfig.provider"
+                                :disabled="!hasGpsBuildOption"
                                 @update:model-value="onGpsProtocolChange"
                                 size="xs"
                                 class="min-w-40"
@@ -45,11 +44,11 @@
                         </SettingRow>
 
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
-                            <USwitch v-model="autoBaudChecked" />
+                            <USwitch v-model="autoBaudChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow v-if="showAutoConfig" :label="$t('configurationGPSAutoConfig')">
-                            <USwitch v-model="autoConfigChecked" />
+                            <USwitch v-model="autoConfigChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow
@@ -57,15 +56,21 @@
                             :label="$t('configurationGPSGalileo')"
                             :help="$t('configurationGPSGalileoHelp')"
                         >
-                            <USwitch v-model="ubloxGalileoChecked" />
+                            <USwitch v-model="ubloxGalileoChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow :label="$t('configurationGPSHomeOnce')" :help="$t('configurationGPSHomeOnceHelp')">
-                            <USwitch v-model="homeOnceChecked" />
+                            <USwitch v-model="homeOnceChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow v-if="showUbloxSbas" :label="$t('configurationGPSubxSbas')">
-                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="xs" class="min-w-40" />
+                            <USelect
+                                :items="gpsSbasItems"
+                                v-model="gpsConfig.ublox_sbas"
+                                :disabled="!hasGpsBuildOption"
+                                size="xs"
+                                class="min-w-40"
+                            />
                         </SettingRow>
                     </UiBox>
 
@@ -753,8 +758,15 @@ export default defineComponent({
             }
         };
 
-        const saveConfig = () =>
-            runSave(
+        const saveConfig = () => {
+            // The firmware answers MSP_SET_GPS_CONFIG with an error when it was
+            // built without USE_GPS, and MSP_SET_FEATURE_CONFIG has been written
+            // by then. Do not start the sequence at all.
+            if (!hasGpsBuildOption.value) {
+                return undefined;
+            }
+
+            return runSave(
                 async () => {
                     const savedSnapshot = takeSnapshot();
 
@@ -772,6 +784,7 @@ export default defineComponent({
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },
             );
+        };
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;
