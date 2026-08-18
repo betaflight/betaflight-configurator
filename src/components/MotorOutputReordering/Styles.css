@@ -1,6 +1,8 @@
+/* No `height: 100%` on the flex containers below: the dialog they live in is sized
+   `height: fit-content` (see main.less), and WebKit resolves a percentage height against
+   that intrinsic height as 0 instead of auto, collapsing the whole modal on macOS. */
 .motorOutputReorderComponent {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
@@ -10,13 +12,11 @@
 
 #dialogMotorOutputReorderMainContent {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
 #dialogMotorOutputReorderWarning {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
