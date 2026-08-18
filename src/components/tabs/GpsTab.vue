@@ -10,18 +10,26 @@
                     <!-- GPS Configuration -->
                     <UiBox
                         :title="$t('configurationGPS')"
-                        type="neutral"
+                        :type="hasGpsBuildOption ? 'neutral' : 'warning'"
+                        :highlight="!hasGpsBuildOption"
                         collapsible
                         :help="$t('configurationGPSHelp')"
                     >
+                        <div
+                            v-if="!hasGpsBuildOption"
+                            class="text-center p-2 text-sm"
+                            v-html="$t('configurationGPSNotInBuild')"
+                        ></div>
+
                         <SettingRow
                             v-for="feature in gpsFeatures"
                             :key="feature.bit"
                             :label="$t(`feature${feature.name}`)"
-                            :help="feature.haveTip ? $t(`feature${feature.name}Tip`) : $t('featureGPSTip')"
+                            :help="$t(featureHelpKey(feature))"
                         >
                             <USwitch
                                 :model-value="isFeatureEnabled(feature)"
+                                :disabled="!hasGpsBuildOption"
                                 @update:model-value="toggleFeature(feature, $event)"
                             />
                         </SettingRow>
@@ -289,6 +297,7 @@ import { useMapViewport } from "../../composables/useMapViewport";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useBuildOptions } from "../../composables/useBuildOptions";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -305,6 +314,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const { hasBuildOption } = useBuildOptions();
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
@@ -364,8 +374,12 @@ export default defineComponent({
 
         const apiVersion = computed(() => fcStore.config.apiVersion);
         const hasGpsSensor = computed(() => have_sensor(fcStore.config.activeSensors, "gps"));
+        const hasGpsBuildOption = computed(() => hasBuildOption("USE_GPS"));
         const hasMag = computed(
-            () => have_sensor(fcStore.config.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
+            () =>
+                have_sensor(fcStore.config.activeSensors, "mag") &&
+                semver.gte(apiVersion.value, API_VERSION_1_46) &&
+                hasBuildOption("USE_MAG"),
         );
 
         const gpsConfig = reactive({
@@ -446,6 +460,18 @@ export default defineComponent({
             }
             return fcStore.features.features.getFeatures().filter((feature) => feature.group === "gps");
         });
+
+        // Returns the i18n key so the template resolves it with $t and stays
+        // reactive to locale changes.
+        const featureHelpKey = (feature) => {
+            if (!hasGpsBuildOption.value) {
+                return "configurationGPSNotInBuild";
+            }
+            if (feature.haveTip) {
+                return `feature${feature.name}Tip`;
+            }
+            return "featureGPSTip";
+        };
 
         const isFeatureEnabled = (feature) => {
             return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
@@ -811,6 +837,7 @@ export default defineComponent({
             gpsInfo,
             signalRows,
             hasGpsSensor,
+            hasGpsBuildOption,
             hasMag,
             autoBaudChecked,
             autoConfigChecked,
@@ -826,6 +853,7 @@ export default defineComponent({
             showWaiting,
             showLoadMap,
             gpsFeatures,
+            featureHelpKey,
             isFeatureEnabled,
             toggleFeature,
             setLayer,

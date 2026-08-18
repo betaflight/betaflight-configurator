@@ -558,11 +558,13 @@ import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguratio
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useBuildOptions } from "@/composables/useBuildOptions";
 
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
+const { hasBuildOption } = useBuildOptions();
 
 // Initialize motors state management
 const motorsState = useMotorsState();
@@ -649,15 +651,28 @@ const escProtocolItems = computed(() =>
     })),
 );
 
-const isProtocolDisabled = (protocolName) => {
-    if (protocolName === "DISABLED") {
+// Explicit ESC protocol -> firmware build option map. Names on the left come from
+// EscProtocols.GetAvailableProtocols(), names on the right are keys of
+// FIRMWARE_BUILD_OPTIONS. DISABLED is deliberately absent: it is always selectable,
+// and any protocol without an entry here is never disabled.
+const ESC_PROTOCOL_BUILD_OPTIONS = {
+    [EscProtocols.PROTOCOL_PWM]: "USE_PWM_OUTPUT",
+    [EscProtocols.PROTOCOL_ONESHOT125]: "USE_ONESHOT",
+    [EscProtocols.PROTOCOL_ONESHOT42]: "USE_ONESHOT",
+    [EscProtocols.PROTOCOL_MULTISHOT]: "USE_MULTISHOT",
+    [EscProtocols.PROTOCOL_BRUSHED]: "USE_BRUSHED",
+    [EscProtocols.PROTOCOL_DSHOT150]: "USE_DSHOT",
+    [EscProtocols.PROTOCOL_DSHOT300]: "USE_DSHOT",
+    [EscProtocols.PROTOCOL_DSHOT600]: "USE_DSHOT",
+    [EscProtocols.PROTOCOL_PROSHOT1000]: "USE_PROSHOT",
+};
+
+const isProtocolDisabled = (escProtocolName) => {
+    const requiredOption = ESC_PROTOCOL_BUILD_OPTIONS[escProtocolName];
+    if (!requiredOption) {
         return false;
     }
-    const buildOptions = fcStore.config.buildOptions;
-    if (buildOptions && buildOptions.length > 0) {
-        return !buildOptions.some((option) => protocolName.includes(option.substring(4)));
-    }
-    return false;
+    return !hasBuildOption(requiredOption);
 };
 
 const selectedEscProtocol = computed({

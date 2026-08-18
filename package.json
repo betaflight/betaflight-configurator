@@ -15,6 +15,7 @@
     "test": "vitest",
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --ext .js,.vue src --fix",
+    "generate:build-options": "node scripts/generate-build-options.mjs",
     "android:dev": "node capacitor.config.generator.mjs --dev && npx cap run android",
     "android:open": "vite build && node capacitor.config.generator.mjs && npx cap open android",
     "android:run": "vite build && node capacitor.config.generator.mjs && npx cap run android",

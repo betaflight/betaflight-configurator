@@ -131,6 +131,7 @@ const VirtualFC = {
             "USE_DASHBOARD",
             "USE_GPS",
             "USE_LED_STRIP",
+            "USE_MAG",
             "USE_OSD",
             "USE_VTX",
             "USE_SOFTSERIAL",
