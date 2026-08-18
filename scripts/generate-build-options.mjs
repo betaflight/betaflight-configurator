@@ -203,6 +203,10 @@ async function fetchBuildOptions(url) {
 // A define is emitted as a bare object key, so it has to be a valid JS identifier.
 const DEFINE_PATTERN = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
+// A group name is emitted as a `//` comment, so anything that could end that line
+// would escape the comment and land in the module as code.
+const GROUP_PATTERN = /^[A-Za-z0-9 _-]+$/;
+
 function validateOption(option, group, url) {
     if (option === null || typeof option !== "object") {
         throw new TypeError(`Group "${group}" from ${url} contains a malformed option entry`);
@@ -210,11 +214,12 @@ function validateOption(option, group, url) {
 
     const define = option.value;
     // The "[None]" entry carries neither a define nor a key, and is not an option.
-    if (!define) {
+    // Anything else that is missing one of the two is malformed, not skippable.
+    if (!define && option.key === undefined) {
         return undefined;
     }
-    if (typeof define !== "string") {
-        throw new TypeError(`Group "${group}" from ${url} has an option with a non-string value`);
+    if (typeof define !== "string" || define.length === 0) {
+        throw new TypeError(`Group "${group}" from ${url} has an option without a usable string value`);
     }
     if (!DEFINE_PATTERN.test(define)) {
         throw new Error(
@@ -233,6 +238,9 @@ function validateOption(option, group, url) {
 function collectGroupOptions(group, optionList, url, seenDefines) {
     if (!Array.isArray(optionList)) {
         throw new TypeError(`Group "${group}" from ${url} is not an array of options`);
+    }
+    if (!GROUP_PATTERN.test(group)) {
+        throw new Error(`Group name ${JSON.stringify(group)} from ${url} is not a plain group name`);
     }
 
     const options = [];
