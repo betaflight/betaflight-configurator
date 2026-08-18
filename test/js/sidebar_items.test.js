@@ -45,27 +45,34 @@ describe("isItemVisible", () => {
         expect(isItemVisible(item, { expertMode: true })).toBe(true);
     });
 
-    it("hides buildOptions items when no matching build option is present", () => {
-        const item = {
-            key: "gps",
-            mode: "connected",
-            i18n: "tabGPS",
-            icon: "i-lucide-map-pin",
-            buildOptions: ["USE_GPS"],
-        };
-        expect(isItemVisible(item, { expertMode: false, buildOptions: [] })).toBe(false);
-        expect(isItemVisible(item, { expertMode: false, buildOptions: undefined })).toBe(false);
+    const gpsItem = {
+        key: "gps",
+        mode: "connected",
+        i18n: "tabGPS",
+        icon: "i-lucide-map-pin",
+        buildOptions: ["USE_GPS"],
+    };
+
+    it("hides buildOptions items when the firmware reported options and none match", () => {
+        const config = { apiVersion: "1.47.0", buildOptions: ["USE_SERVOS"] };
+        expect(isItemVisible(gpsItem, { expertMode: false, config })).toBe(false);
     });
 
     it("shows buildOptions items when a matching build option is present", () => {
-        const item = {
-            key: "gps",
-            mode: "connected",
-            i18n: "tabGPS",
-            icon: "i-lucide-map-pin",
-            buildOptions: ["USE_GPS"],
-        };
-        expect(isItemVisible(item, { expertMode: false, buildOptions: ["USE_GPS", "USE_SERVOS"] })).toBe(true);
+        const config = { apiVersion: "1.47.0", buildOptions: ["USE_GPS", "USE_SERVOS"] };
+        expect(isItemVisible(gpsItem, { expertMode: false, config })).toBe(true);
+    });
+
+    it("shows buildOptions items when the firmware cannot report its build options", () => {
+        // A firmware below API 1.45, or one that answers with an empty list, tells us
+        // nothing about what it contains. Hiding the tab there is always wrong.
+        expect(isItemVisible(gpsItem, { expertMode: false, config: { apiVersion: "1.44.0", buildOptions: [] } })).toBe(
+            true,
+        );
+        expect(isItemVisible(gpsItem, { expertMode: false, config: { apiVersion: "1.47.0", buildOptions: [] } })).toBe(
+            true,
+        );
+        expect(isItemVisible(gpsItem, { expertMode: false, config: undefined })).toBe(true);
     });
 
     it("hides feature items when the feature is not enabled", () => {

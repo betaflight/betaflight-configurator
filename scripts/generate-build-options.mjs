@@ -329,7 +329,6 @@ async function main() {
 // Error messages interpolate CLI arguments and the endpoint URL, so strip anything
 // that could forge a second line before the message reaches stderr.
 function singleLine(message) {
-    // eslint-disable-next-line no-control-regex
     return String(message).replace(/[\u0000-\u001f\u007f]/g, " ");
 }
 

@@ -2,7 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { computed } from "vue";
 import FC from "../../src/js/fc";
-import { useBuildOptions } from "../../src/composables/useBuildOptions";
+import {
+    buildOptionsReported,
+    configHasBuildOption,
+    configReportsBuildOption,
+    useBuildOptions,
+} from "../../src/composables/useBuildOptions";
 import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
 
 describe("useBuildOptions", () => {
@@ -166,5 +171,37 @@ describe("useBuildOptions", () => {
             expect(FIRMWARE_BUILD_OPTIONS.USE_DRONECAN).toBe(16430);
             expect(FIRMWARE_BUILD_OPTIONS.USE_DRONECAN_ESC).toBe(8236);
         });
+    });
+});
+
+describe("configHasBuildOption / configReportsBuildOption", () => {
+    const reported = { apiVersion: "1.47.0", buildOptions: ["USE_GPS"] };
+
+    it("agree when the firmware reported its options", () => {
+        expect(configHasBuildOption(reported, "USE_GPS")).toBe(true);
+        expect(configReportsBuildOption(reported, "USE_GPS")).toBe(true);
+        expect(configHasBuildOption(reported, "USE_MAG")).toBe(false);
+        expect(configReportsBuildOption(reported, "USE_MAG")).toBe(false);
+    });
+
+    it("disagree when it did not, which is the whole point of the pair", () => {
+        for (const config of [
+            { apiVersion: "1.44.0", buildOptions: ["USE_GPS"] },
+            { apiVersion: "1.47.0", buildOptions: [] },
+            { apiVersion: "not-a-version", buildOptions: ["USE_GPS"] },
+            { apiVersion: "1.47.0", buildOptions: undefined },
+            undefined,
+        ]) {
+            expect(buildOptionsReported(config)).toBe(false);
+            // Shown-to-the-user gating fails open...
+            expect(configHasBuildOption(config, "USE_GPS")).toBe(true);
+            // ...payload-layout gating fails closed.
+            expect(configReportsBuildOption(config, "USE_GPS")).toBe(false);
+        }
+    });
+
+    it("treats an unknown name as present for UI and absent for payload layout", () => {
+        expect(configHasBuildOption(reported, "USE_NOT_A_REAL_OPTION")).toBe(true);
+        expect(configReportsBuildOption(reported, "USE_NOT_A_REAL_OPTION")).toBe(false);
     });
 });
