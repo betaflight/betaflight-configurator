@@ -170,9 +170,14 @@ jobs:
           printf '%s' "$MACOS_API_KEY_P8" > "$KEY_PATH"
           chmod 600 "$KEY_PATH"
 
+          # base64 wraps at 76 columns; Tauri's decoder rejects newlines. The
+          # stripped value no longer matches the registered secret, so mask it
+          # explicitly or it would be logged in the clear from here on.
+          CERT=$(printf '%s' "$MACOS_CERTIFICATE" | tr -d '[:space:]')
+          echo "::add-mask::$CERT"
+
           {
-            # base64 wraps at 76 columns; Tauri's decoder rejects newlines.
-            echo "APPLE_CERTIFICATE=$(printf '%s' "$MACOS_CERTIFICATE" | tr -d '[:space:]')"
+            echo "APPLE_CERTIFICATE=$CERT"
             echo "APPLE_CERTIFICATE_PASSWORD<<__BF_EOF__"
             printf '%s\n' "$MACOS_CERTIFICATE_PASSWORD"
             echo "__BF_EOF__"
