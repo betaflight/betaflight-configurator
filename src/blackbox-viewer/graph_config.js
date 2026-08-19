@@ -238,6 +238,14 @@ const gatedByApi149 = function (fromApi149, beforeApi149 = {}) {
 
 const GYRO_SCALED_CURVE = { default: (curves) => curves.gyro() };
 
+// Firmware before 1.47 called this slot D_MIN, so a log reports one name or the other.
+const D_MAX_CURVE = {
+    0: (curves) => curves.combined("debug[0]", "debug[1]"), // roll gyro factor
+    1: (curves) => curves.combined("debug[0]", "debug[1]"), // roll setpoint factor
+    2: (curves) => curves.combined("debug[2]", "debug[3]"), // roll actual D
+    3: (curves) => curves.combined("debug[2]", "debug[3]"), // pitch actual D
+};
+
 const RPM_CURVE = { default: (curves) => curves.combined("debug[0]", "debug[1]", "debug[2]", "debug[3]") };
 
 const FEEDFORWARD_LIMIT_CURVE = {
@@ -271,6 +279,7 @@ const DEBUG_MODE_CURVES = {
     DUAL_GYRO_RAW: GYRO_SCALED_CURVE,
     DUAL_GYRO_SCALED: GYRO_SCALED_CURVE,
     // From API 1.47 the dual gyro modes are reported as MULTI_GYRO_*.
+    MULTI_GYRO_COMBINED: GYRO_SCALED_CURVE,
     MULTI_GYRO_DIFF: GYRO_SCALED_CURVE,
     MULTI_GYRO_RAW: GYRO_SCALED_CURVE,
     MULTI_GYRO_SCALED: GYRO_SCALED_CURVE,
@@ -338,12 +347,8 @@ const DEBUG_MODE_CURVES = {
     ESC_SENSOR_RPM: RPM_CURVE,
     DSHOT_RPM_TELEMETRY: RPM_CURVE,
     RPM_FILTER: RPM_CURVE,
-    D_MAX: {
-        0: (curves) => curves.combined("debug[0]", "debug[1]"), // roll gyro factor
-        1: (curves) => curves.combined("debug[0]", "debug[1]"), // roll setpoint factor
-        2: (curves) => curves.combined("debug[2]", "debug[3]"), // roll actual D
-        3: (curves) => curves.combined("debug[2]", "debug[3]"), // pitch actual D
-    },
+    D_MIN: D_MAX_CURVE,
+    D_MAX: D_MAX_CURVE,
     ITERM_RELAX: {
         2: (curves) => curves.zeroCentred(), // roll I relaxed error
         3: (curves) => curves.zeroCentred(), // roll absolute control axis error, unused from 2026.6
