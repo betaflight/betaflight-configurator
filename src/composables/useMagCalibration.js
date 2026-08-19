@@ -109,6 +109,10 @@ export function useMagCalibration() {
     let firmwareFlagSeen = false;
     let reconstructionOffsets = null; // firmware offsets to add back in full mode for raw sensor reconstruction
     let starting = false;
+    // Bumped by every teardown path. startCalibration() captures it before awaiting the
+    // CLI offset read and re-checks after, so a cancel/retry/discard/unmount during that
+    // await cannot resurrect the phase and start polling on a session the user abandoned.
+    let startSequence = 0;
 
     /**
      * Start a calibration session.
@@ -123,6 +127,7 @@ export function useMagCalibration() {
         }
 
         starting = true;
+        const startToken = ++startSequence;
         try {
             cleanup();
             mode.value = calMode;
@@ -142,6 +147,11 @@ export function useMagCalibration() {
             firmwareOffsets.value = await readFirmwareOffsets();
         } finally {
             starting = false;
+        }
+
+        // Abandoned while the CLI read was in flight — leave the teardown state alone.
+        if (startToken !== startSequence) {
+            return;
         }
 
         if (calMode === "check") {
@@ -167,6 +177,7 @@ export function useMagCalibration() {
 
     function cancelCalibration() {
         cleanup();
+        startSequence++;
         starting = false;
         phase.value = "idle";
         statusMessage.value = "";
@@ -203,7 +214,10 @@ export function useMagCalibration() {
         stopCountdown();
     }
 
-    onScopeDispose(cleanup);
+    onScopeDispose(() => {
+        startSequence++;
+        cleanup();
+    });
 
     // --- Internal ---
 
@@ -337,6 +351,7 @@ export function useMagCalibration() {
 
     function retry() {
         cleanup();
+        startSequence++;
         starting = false;
         phase.value = "idle";
         statusMessage.value = "";
@@ -399,6 +414,7 @@ export function useMagCalibration() {
 
     function discardCalibration() {
         cleanup();
+        startSequence++;
         starting = false;
         samples.value = [];
         sphereFitResult.value = null;
@@ -467,6 +483,9 @@ export function getGeoReference() {
     return lastGeoReference;
 }
 
+// Decimal degrees, comma- or whitespace-separated. Hoisted so it is compiled once.
+const COORDINATE_RE = /^([+-]?\d+(?:\.\d+)?)[,\s]+([+-]?\d+(?:\.\d+)?)$/;
+
 /**
  * Parse latitude and longitude from user input (e.g. Google Maps: "63.728263, -68.446117").
  *
@@ -477,7 +496,7 @@ export function parseCoordinates(input) {
     if (!input || typeof input !== "string") {
         return null;
     }
-    const match = input.trim().match(/^([+-]?\d+(?:\.\d+)?)[,\s]+([+-]?\d+(?:\.\d+)?)$/);
+    const match = COORDINATE_RE.exec(input.trim());
     if (!match) {
         return null;
     }

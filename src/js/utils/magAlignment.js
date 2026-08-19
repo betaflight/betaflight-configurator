@@ -2,7 +2,11 @@
  * Magnetometer alignment rotation matrices, Euler transformations, and 3x3 linear algebra helpers.
  *
  * Defines the standard Betaflight sensor-to-body alignment rotation matrices (presets 1-8)
- * and the ZYX intrinsic Euler transform matching the firmware convention (betaflight#14849).
+ * and the ZYX intrinsic Euler transform order used by the firmware (betaflight#14849).
+ *
+ * Yaw sign: eulerToMatrix() is counter-clockwise-positive (standard maths), while
+ * Betaflight reports and stores yaw clockwise-positive. Callers must negate yaw on the
+ * way in — see boardAlignment.js. Passing a raw firmware yaw value mirrors the rotation.
  */
 
 // Rotation matrices: sensor frame → body frame for each alignment value.
@@ -111,11 +115,11 @@ function mat3mulVec(m, v) {
 }
 
 /**
- * Build a 3×3 rotation matrix from Euler angles (degrees) using ZYX order,
- * matching Betaflight's custom alignment convention (Rz(yaw) * Ry(pitch) * Rx(roll)).
+ * Build a 3×3 rotation matrix from Euler angles (degrees) using Betaflight's ZYX
+ * matrix order (Rz(yaw) * Ry(pitch) * Rx(roll)).
  * @param {number} rollDeg
  * @param {number} pitchDeg
- * @param {number} yawDeg
+ * @param {number} yawDeg - counter-clockwise-positive; negate Betaflight's clockwise-positive yaw
  * @returns {number[][]}
  */
 function eulerToMatrix(rollDeg, pitchDeg, yawDeg) {

@@ -239,6 +239,32 @@ describe("useMagCalibration", () => {
             expect(cal.phase.value).toBe("idle");
             expect(cal.statusMessage.value).toBe("");
         });
+
+        it("honours a cancel issued while the firmware offset read is still in flight", async () => {
+            // Hold the CLI read open so the cancel lands mid-await.
+            let releaseCliRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseCliRead = () => resolve([]);
+                }),
+            );
+
+            const pending = cal.startCalibration("quick");
+            cal.cancelCalibration();
+
+            releaseCliRead();
+            await pending;
+
+            // The abandoned start must not resurrect the phase or restart polling.
+            expect(cal.phase.value).toBe("idle");
+
+            MSP.send_message.mockClear();
+            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            await vi.advanceTimersByTimeAsync(500);
+
+            expect(MSP.send_message).not.toHaveBeenCalled();
+            expect(cal.samples.value).toEqual([]);
+        });
     });
 
     describe("retry", () => {

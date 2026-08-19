@@ -367,7 +367,6 @@
                     <!-- Calibrate Magnetometer (inline) -->
                     <div class="mag-cal-section">
                         <!-- Idle: check + calibrate buttons -->
-                        <!-- Idle: check + calibrate buttons -->
                         <div v-if="cal.phase === 'idle'" class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <UButton
@@ -723,11 +722,12 @@
                         </p>
                         <UInput
                             v-model="manualCoordsInput"
+                            :aria-label="$t('magCalibrationManualLocationTitle')"
                             :placeholder="$t('magCalibrationManualLocationPlaceholder')"
                             autofocus
                             @keydown.enter="submitManualLocation"
                         />
-                        <p v-if="manualCoordsError" class="text-xs text-error">
+                        <p v-if="manualCoordsError" class="text-xs text-error" role="alert">
                             {{ manualCoordsError }}
                         </p>
                     </div>
@@ -740,7 +740,14 @@
                             :label="$t('magCalibrationCancel')"
                             @click="manualLocationModalOpen = false"
                         />
-                        <UButton :label="$t('magCalibrationFullCompute')" @click="submitManualLocation" />
+                        <UButton
+                            :label="
+                                manualLocationAction === 'fullCal'
+                                    ? $t('magCalibrationFullCompute')
+                                    : $t('sensorConfigMagUpdate')
+                            "
+                            @click="submitManualLocation"
+                        />
                     </div>
                 </template>
             </UModal>
@@ -810,6 +817,7 @@ const SENSOR_ALIGN_CUSTOM = 9;
 const GPS_COORD_SCALE = 1e7;
 const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
 const IP_GEOLOCATION_TIMEOUT_MS = 10000;
+const BROWSER_GEOLOCATION_TIMEOUT_MS = 15000;
 const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
@@ -1152,17 +1160,28 @@ async function browserCoordinates(promptConsent = false) {
         }
     }
     return new Promise((resolve) => {
+        // The spec's `timeout` option bounds position acquisition only — time spent
+        // waiting for the user to answer the permission prompt is excluded. A stalled
+        // prompt would leave both callbacks unfired, so guard with our own deadline to
+        // guarantee this settles and the caller never hangs mid-calibration.
+        let settled = false;
+        const settle = (value) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(deadline);
+            resolve(value);
+        };
+        const deadline = setTimeout(() => settle(null), BROWSER_GEOLOCATION_TIMEOUT_MS);
+
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                if (Number.isFinite(lat) && Number.isFinite(lon)) {
-                    resolve({ lat, lon });
-                } else {
-                    resolve(null);
-                }
+                settle(Number.isFinite(lat) && Number.isFinite(lon) ? { lat, lon } : null);
             },
-            () => resolve(null),
+            () => settle(null),
             { timeout: 5000, maximumAge: 300000 },
         );
     });
@@ -1478,9 +1497,8 @@ const isAcceptingCal = ref(false);
 async function acceptFullCal(manualGeoRef = null) {
     isAcceptingCal.value = true;
     try {
-        clearFullStepTimer();
         const samples = cal.samples;
-        if (samples.length < 40) {
+        if (samples.length < FULL_MIN_SAMPLES) {
             gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
             return;
         }
@@ -1517,6 +1535,9 @@ async function acceptFullCal(manualGeoRef = null) {
             return;
         }
 
+        // Only now: an early return above leaves the user still collecting, and the step
+        // guidance has to keep advancing behind the manual-location modal.
+        clearFullStepTimer();
         fullCalResult.value = result;
         cal.completeCalibration();
     } finally {
