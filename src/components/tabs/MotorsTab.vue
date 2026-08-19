@@ -558,11 +558,13 @@ import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguratio
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useBuildOptions } from "@/composables/useBuildOptions";
 
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
+const { hasBuildOption } = useBuildOptions();
 
 // Initialize motors state management
 const motorsState = useMotorsState();
@@ -649,15 +651,12 @@ const escProtocolItems = computed(() =>
     })),
 );
 
-const isProtocolDisabled = (protocolName) => {
-    if (protocolName === "DISABLED") {
+const isProtocolDisabled = (escProtocolName) => {
+    const requiredOption = EscProtocols.GetBuildOption(escProtocolName);
+    if (!requiredOption) {
         return false;
     }
-    const buildOptions = fcStore.config.buildOptions;
-    if (buildOptions && buildOptions.length > 0) {
-        return !buildOptions.some((option) => protocolName.includes(option.substring(4)));
-    }
-    return false;
+    return !hasBuildOption(requiredOption);
 };
 
 const selectedEscProtocol = computed({
