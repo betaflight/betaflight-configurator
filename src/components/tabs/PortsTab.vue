@@ -6,7 +6,8 @@
 
             <div class="require-support">
                 <UiBox type="warning" highlight class="mb-4">
-                    <p v-html="$t('portsHelp')"></p>
+                    <!-- Only reachable in Expert mode; otherwise an invalid layout can't be saved -->
+                    <p v-if="expertMode" v-html="$t('portsHelp')"></p>
                     <p v-html="$t('portsMSPHelp')"></p>
                 </UiBox>
 
@@ -35,7 +36,7 @@
                         <!-- Rows -->
                         <template v-for="(port, index) in ports" :key="port.identifier">
                             <!-- Identifier -->
-                            <div class="flex items-center pl-3 font-semibold p-1.5">
+                            <div class="flex items-center pl-3 font-semibold p-1.5" :class="portNameClass(port)">
                                 {{ getPortName(port.identifier) }}
                             </div>
 
@@ -100,7 +101,8 @@
                     <UiBox
                         v-for="port in ports"
                         :key="port.identifier"
-                        type="neutral"
+                        :type="portHasError(port.identifier) ? portSeverity : 'neutral'"
+                        :highlight="portHasError(port.identifier)"
                         collapsible
                         :title="getPortName(port.identifier)"
                     >
@@ -168,19 +170,49 @@
                         </div>
                     </UiBox>
                 </div>
+
+                <!-- Validation summary (appended below the ports so it can't shift the table) -->
+                <UiBox v-if="tabReady && !isLoading && !isValid" :type="portSeverity" highlight class="mt-4">
+                    <p class="font-semibold">{{ $t(bannerTitleKey) }}</p>
+                    <p v-if="expertMode">{{ $t("portsValidationResetWarning") }}</p>
+                    <p v-if="expertMode">{{ $t("portsValidationExpertOverride") }}</p>
+                    <ul class="list-disc pl-5">
+                        <li v-for="(msg, i) in configErrors" :key="`cfg-${i}`">{{ msg }}</li>
+                        <template v-for="port in ports" :key="`pe-${port.identifier}`">
+                            <li
+                                v-for="(msg, i) in portErrors[port.identifier] || []"
+                                :key="`pe-${port.identifier}-${i}`"
+                            >
+                                <strong>{{ getPortName(port.identifier) }}:</strong> {{ msg }}
+                            </li>
+                        </template>
+                    </ul>
+                </UiBox>
+
+                <!-- Advisory softserial notices (non-blocking). -->
+                <UiBox v-if="tabReady && !isLoading && uniqueNotices.length" type="neutral" highlight class="mt-4">
+                    <ul class="list-disc pl-5">
+                        <li v-for="(msg, i) in uniqueNotices" :key="`notice-${i}`">{{ msg }}</li>
+                    </ul>
+                </UiBox>
             </div>
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="saveConfig" />
+                <UButton
+                    :label="$t('configurationButtonSave')"
+                    size="xs"
+                    :disabled="!dirty || (!isValid && !expertMode)"
+                    @click="saveConfig"
+                />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -188,9 +220,12 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import TabLoadingState from "@/components/elements/TabLoadingState.vue";
 import { useTranslation } from "i18next-vue";
+import { EventBus } from "@/components/eventBus";
+import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { usePortsRules } from "../../composables/ports/usePortsRules";
 import { usePortsState } from "../../composables/ports/usePortsState";
 import { usePortsConfiguration } from "../../composables/ports/usePortsConfiguration";
+import { usePortsValidation } from "../../composables/ports/usePortsValidation";
 
 const { t } = useTranslation();
 
@@ -207,14 +242,42 @@ const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfigurat
     functionRules,
 );
 
+const { isValid, portErrors, configErrors, notices, portHasError } = usePortsValidation(ports);
+
+// De-duplicate advisory notices (the same clamp can be reported per field).
+const uniqueNotices = computed(() => [...new Set(notices.value)]);
+
+// Expert mode is validated the same way, but is allowed to save anyway; the
+// summary is then shown as a warning rather than a blocking error.
+const expertMode = ref(isExpertModeEnabled());
+function onExpertModeChange(checked) {
+    expertMode.value = checked;
+}
+
+const portSeverity = computed(() => (expertMode.value ? "warning" : "error"));
+const bannerTitleKey = computed(() =>
+    expertMode.value ? "portsValidationBannerTitleExpert" : "portsValidationBannerTitle",
+);
+function portNameClass(port) {
+    if (!portHasError(port.identifier)) {
+        return "";
+    }
+    return expertMode.value ? "text-warning" : "text-error";
+}
+
 const tabReady = ref(false);
 
 onMounted(() => {
+    EventBus.$on("expert-mode-change", onExpertModeChange);
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             tabReady.value = true;
         });
     });
+});
+
+onUnmounted(() => {
+    EventBus.$off("expert-mode-change", onExpertModeChange);
 });
 
 const mspBaudItems = mspBaudRates.map((r) => ({ value: r, label: r }));

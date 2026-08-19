@@ -7,6 +7,8 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
 import { useReboot } from "../useReboot";
+import { validatePortsConfig } from "./usePortsValidation";
+import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 
 export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     const { saveAndReboot } = useReboot();
@@ -62,6 +64,14 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     };
 
     const saveConfig = () => {
+        // Backstop for the disabled Save button: don't send a layout the firmware
+        // would silently reset to defaults. Expert mode may save anyway.
+        const validation = validatePortsConfig(ports);
+        if (!validation.valid && !isExpertModeEnabled()) {
+            gui_log(i18n.getMessage("portsValidationBannerTitle"));
+            return;
+        }
+
         tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "ports");
 
         // Clear analytics changes

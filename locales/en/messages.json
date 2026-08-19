@@ -2234,6 +2234,42 @@
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">WARNING:</span> The VTX table has not been set up correctly and without it VTX control will not be possible. Please set up the VTX table in $t(tabVtx.message) tab."
     },
+    "portsValidationBannerTitle": {
+        "message": "This port configuration cannot be saved"
+    },
+    "portsValidationBannerTitleExpert": {
+        "message": "This port configuration is invalid"
+    },
+    "portsValidationResetWarning": {
+        "message": "Saving this would make the flight controller silently reset ALL port assignments back to defaults."
+    },
+    "portsValidationExpertOverride": {
+        "message": "Expert mode is enabled, so you can save anyway — but be aware the flight controller will still reset the ports."
+    },
+    "portsValidationVcpRequiresMsp": {
+        "message": "The USB (VCP) port must have MSP enabled."
+    },
+    "portsValidationVtxMspNotShared": {
+        "message": "VTX (MSP) must share this port with MSP or Serial RX; it cannot be the only function."
+    },
+    "portsValidationTooManyFunctions": {
+        "message": "A port may not have more than {{max}} functions enabled (this port has {{count}})."
+    },
+    "portsValidationInvalidCombination": {
+        "message": "This combination of functions cannot share one port. MSP may be shared with Blackbox, VTX (MSP) or telemetry; Serial RX may be shared with FrSky Hub, LTM or MAVLink telemetry on supported receiver protocols."
+    },
+    "portsValidationNoMspPort": {
+        "message": "At least one port must have MSP enabled, otherwise the flight controller cannot be configured."
+    },
+    "portsValidationTooManyMspPorts": {
+        "message": "At most {{max}} ports may have MSP enabled (currently {{count}})."
+    },
+    "portsNoticeSoftserialFunctionStripped": {
+        "message": "MSP and Serial RX are not supported on softserial ports and will be removed by the flight controller."
+    },
+    "portsNoticeSoftserialBaudClamped": {
+        "message": "Softserial baud rate is limited to 19200 and will be clamped by the flight controller."
+    },
     "portsMSPHelp": {
         "message": "<strong>Note:</strong> Do <span class=\"message-negative\">NOT</span> disable MSP on the first serial port unless you know what you are doing.  You may have to reflash and erase your configuration if you do."
     },
