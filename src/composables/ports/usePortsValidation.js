@@ -2,7 +2,21 @@ import { computed } from "vue";
 import FC from "../../js/fc";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { i18n } from "../../js/localization";
+import { buildOptionsReported } from "../useBuildOptions";
 import { validateSerialConfig, SERIAL_VALIDATION_CODE as CODE } from "../../js/utils/serialConfigValidation";
+
+// The firmware's USE_TELEMETRY umbrella flag is not a reported build option, but
+// it is on whenever any telemetry protocol is compiled in, so we infer it from
+// the protocol options that are reported.
+const TELEMETRY_BUILD_OPTIONS = [
+    "USE_TELEMETRY_FRSKY_HUB",
+    "USE_TELEMETRY_HOTT",
+    "USE_TELEMETRY_IBUS_EXTENDED",
+    "USE_TELEMETRY_LTM",
+    "USE_TELEMETRY_MAVLINK",
+    "USE_TELEMETRY_SMARTPORT",
+    "USE_TELEMETRY_SRXL",
+];
 
 // Maps a reactive Ports-tab port model to the { identifier, functionMask,
 // *_baudrateIndex } shape the validator expects. The function list is built the
@@ -30,13 +44,26 @@ function portModelToRawPort(port) {
         return index < 0 ? 0 : index;
     };
 
+    // saveConfig resolves the GPS/Blackbox "AUTO" rate to a concrete value before
+    // sending, so validate the same rate the FC will actually receive (otherwise
+    // the softserial baud clamp notice disagrees with what gets sent).
     return {
         identifier: port.identifier,
         functionMask: mspHelper.serialPortFunctionsToMask(functions),
-        gps_baudrateIndex: baudIndex(port.gps_baudrate),
+        gps_baudrateIndex: baudIndex(port.gps_baudrate === "AUTO" ? "57600" : port.gps_baudrate),
         telemetry_baudrateIndex: baudIndex(port.telemetry_baudrate),
-        blackbox_baudrateIndex: baudIndex(port.blackbox_baudrate),
+        blackbox_baudrateIndex: baudIndex(port.blackbox_baudrate === "AUTO" ? "115200" : port.blackbox_baudrate),
     };
+}
+
+// Mirror of the firmware's USE_TELEMETRY: present when the build reports any
+// telemetry protocol. Fails open (true) when build options were not reported,
+// which matches every standard build and only ever widens an advisory ceiling.
+function targetHasTelemetry(config) {
+    if (!buildOptionsReported(config)) {
+        return true;
+    }
+    return TELEMETRY_BUILD_OPTIONS.some((name) => config.buildOptions.includes(name));
 }
 
 const CODE_TO_I18N = {
@@ -65,9 +92,11 @@ export function validatePortsConfig(ports) {
     const rawPorts = ports.map(portModelToRawPort);
     const serialRxProvider = FC.RX_CONFIG?.serialrx_provider ?? 0;
 
-    // hasTelemetry / hasVtxMsp default to true — matches every standard build;
-    // where wrong it only widens an advisory ceiling (8 vs 3).
-    return validateSerialConfig(rawPorts, serialRxProvider);
+    // Thread the connected target's telemetry capability through; hasVtxMsp keeps
+    // its default (true) since a no-VTX_MSP build only drops an error, never adds one.
+    return validateSerialConfig(rawPorts, serialRxProvider, {
+        hasTelemetry: targetHasTelemetry(FC.CONFIG),
+    });
 }
 
 export function usePortsValidation(ports) {

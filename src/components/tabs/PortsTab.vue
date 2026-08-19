@@ -173,18 +173,17 @@
 
                 <!-- Validation summary (appended below the ports so it can't shift the table) -->
                 <UiBox v-if="tabReady && !isLoading && !isValid" :type="portSeverity" highlight class="mt-4">
-                    <p class="font-semibold" v-html="$t(bannerTitleKey)"></p>
-                    <p v-html="$t('portsValidationResetWarning')"></p>
-                    <p v-if="expertMode" v-html="$t('portsValidationExpertOverride')"></p>
+                    <p class="font-semibold">{{ $t(bannerTitleKey) }}</p>
+                    <p v-if="expertMode">{{ $t("portsValidationResetWarning") }}</p>
+                    <p v-if="expertMode">{{ $t("portsValidationExpertOverride") }}</p>
                     <ul class="list-disc pl-5">
-                        <li v-for="(msg, i) in configErrors" :key="`cfg-${i}`" v-html="msg"></li>
+                        <li v-for="(msg, i) in configErrors" :key="`cfg-${i}`">{{ msg }}</li>
                         <template v-for="port in ports" :key="`pe-${port.identifier}`">
                             <li
                                 v-for="(msg, i) in portErrors[port.identifier] || []"
                                 :key="`pe-${port.identifier}-${i}`"
                             >
-                                <strong>{{ getPortName(port.identifier) }}:</strong>
-                                <span v-html="msg"></span>
+                                <strong>{{ getPortName(port.identifier) }}:</strong> {{ msg }}
                             </li>
                         </template>
                     </ul>
@@ -193,7 +192,7 @@
                 <!-- Advisory softserial notices (non-blocking). -->
                 <UiBox v-if="tabReady && !isLoading && uniqueNotices.length" type="neutral" highlight class="mt-4">
                     <ul class="list-disc pl-5">
-                        <li v-for="(msg, i) in uniqueNotices" :key="`notice-${i}`" v-html="msg"></li>
+                        <li v-for="(msg, i) in uniqueNotices" :key="`notice-${i}`">{{ msg }}</li>
                     </ul>
                 </UiBox>
             </div>

@@ -2241,7 +2241,7 @@
         "message": "This port configuration is invalid"
     },
     "portsValidationResetWarning": {
-        "message": "Saving this would make the flight controller silently reset <strong>all</strong> port assignments back to defaults."
+        "message": "Saving this would make the flight controller silently reset ALL port assignments back to defaults."
     },
     "portsValidationExpertOverride": {
         "message": "Expert mode is enabled, so you can save anyway — but be aware the flight controller will still reset the ports."
