@@ -2103,6 +2103,9 @@ const maximalSpeed = computed(() => {
     const G_ACCELERATION = 9.80665;
     let maxSpeed;
     if (wingConfig.value.tpa_speed_type == 1) {
+        if (wingConfig.value.tpa_speed_adv_mass === 0 || wingConfig.value.tpa_speed_adv_drag_k === 0) {
+            return 1;
+        }
         const propPitch = wingConfig.value.tpa_speed_adv_prop_pitch / 100;
         const craftMass = wingConfig.value.tpa_speed_adv_mass / 1000;
         const dragCoef = wingConfig.value.tpa_speed_adv_drag_k / 10000;
@@ -2123,6 +2126,9 @@ const maximalSpeed = computed(() => {
         const maxDiveSpeed = D >= 0 ? (-b + Math.sqrt(D)) / (2 * a) : 0;
         maxSpeed = Math.max(maxFallSpeed, maxDiveSpeed);
     } else {
+        if (wingConfig.value.tpa_speed_basic_gravity === 0) {
+            return 1;
+        }
         const basicGravity = wingConfig.value.tpa_speed_basic_gravity / 100;
         const basicDelay = wingConfig.value.tpa_speed_basic_delay / 1000;
 
