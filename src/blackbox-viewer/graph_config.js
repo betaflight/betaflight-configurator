@@ -430,6 +430,12 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 case "DUAL_GYRO_DIFF":
                 case "DUAL_GYRO_RAW":
                 case "DUAL_GYRO_SCALED":
+                // Firmware renamed the DUAL_GYRO_* slots to MULTI_GYRO_* in 1.47,
+                // so a log reports one name or the other depending on its firmware.
+                case "MULTI_GYRO_COMBINED":
+                case "MULTI_GYRO_DIFF":
+                case "MULTI_GYRO_RAW":
+                case "MULTI_GYRO_SCALED":
                 case "NOTCH":
                 case "AC_CORRECTION":
                 case "AC_ERROR":
@@ -624,6 +630,8 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 case "DSHOT_RPM_TELEMETRY":
                 case "RPM_FILTER":
                     return getCurveForMinMaxFields("debug[0]", "debug[1]", "debug[2]", "debug[3]");
+                // D_MIN is what firmware before 1.47 called the D_MAX slot.
+                case "D_MIN":
                 case "D_MAX":
                     switch (fieldName) {
                         case "debug[0]": // roll gyro factor
@@ -793,7 +801,9 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+                // Renamed to AUTOPILOT_ALTITUDE in 1.47, same enum slot.
                 case "GPS_RESCUE_THROTTLE_PID":
+                case "AUTOPILOT_ALTITUDE":
                     switch (fieldName) {
                         case "debug[0]": // Throttle P uS added
                         case "debug[1]": // Throttle D uS added
