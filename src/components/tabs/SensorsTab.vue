@@ -1139,8 +1139,15 @@ async function gpsCoordinates() {
     return null;
 }
 
-// Browser native geolocation (HTML5 Geolocation API), or null.
-// Prompts for browser permission ONLY when promptConsent is true (e.g. clicking "Finish calibration" or "Detect").
+/**
+ * Browser native geolocation (HTML5 Geolocation API).
+ *
+ * @param {boolean} [promptConsent=false] - When false, resolves null unless permission was
+ *   already granted, so background refreshes never raise a permission prompt. Pass true only
+ *   for user-initiated actions ("Finish calibration", "Detect").
+ * @returns {Promise<{lat: number, lon: number}|null>} null on denial, timeout, or when the
+ *   API is unavailable.
+ */
 async function browserCoordinates(promptConsent = false) {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
         return null;
