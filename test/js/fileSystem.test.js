@@ -1,5 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import FileSystem, { buildAcceptTypes, normalizeExtensions } from "../../src/js/FileSystem";
+import FileSystem, { buildAcceptTypes, buildNativeFilters, normalizeExtensions } from "../../src/js/FileSystem";
+
+// The Tauri plugins are loaded on demand and only exist inside a Tauri shell, so
+// stub them for the desktop-path tests below.
+const tauriDialog = vi.hoisted(() => ({ save: vi.fn(), open: vi.fn() }));
+const tauriFs = vi.hoisted(() => ({
+    writeFile: vi.fn(),
+    writeTextFile: vi.fn(),
+    readFile: vi.fn(),
+    readTextFile: vi.fn(),
+}));
+vi.mock("@tauri-apps/plugin-dialog", () => tauriDialog);
+vi.mock("@tauri-apps/plugin-fs", () => tauriFs);
 
 describe("normalizeExtensions", () => {
     it("expands a single extension to both lower and upper case", () => {
@@ -50,6 +62,139 @@ describe("buildAcceptTypes", () => {
 
     it("returns an empty types array when no extension is given", () => {
         expect(buildAcceptTypes("anything", undefined)).toEqual([]);
+    });
+});
+
+describe("buildNativeFilters", () => {
+    it("strips the leading dot the native dialogs don't take", () => {
+        expect(buildNativeFilters("Text", ".txt")).toEqual([{ name: "Text", extensions: ["txt", "TXT"] }]);
+    });
+
+    it("drops the upper-case variants when they are not wanted (save dialogs)", () => {
+        expect(buildNativeFilters("Text", ".txt", false)).toEqual([{ name: "Text", extensions: ["txt"] }]);
+    });
+
+    it("keeps every extension of a multi-extension filter", () => {
+        const [filter] = buildNativeFilters("Firmware", ["hex", "uf2"], false);
+        expect(filter.extensions).toEqual(["hex", "uf2"]);
+    });
+
+    it("returns no filter at all when no extension is given", () => {
+        expect(buildNativeFilters("anything", undefined)).toEqual([]);
+    });
+});
+
+// The Tauri desktop build routes through the native dialog + fs plugins: its
+// WebKit webviews have neither the File System Access API nor working
+// `<a download>` blob downloads.
+describe("FileSystem on Tauri desktop", () => {
+    beforeEach(() => {
+        globalThis.__TAURI_INTERNALS__ = {};
+    });
+
+    afterEach(() => {
+        delete globalThis.__TAURI_INTERNALS__;
+        vi.resetAllMocks();
+    });
+
+    it("pickSaveFile returns a path descriptor from the native save dialog", async () => {
+        tauriDialog.save.mockResolvedValue("/home/pilot/Documents/log.csv");
+
+        const file = await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv");
+
+        expect(file).toEqual({ name: "log.csv", _tauriPath: "/home/pilot/Documents/log.csv" });
+        expect(tauriDialog.save).toHaveBeenCalledWith({
+            defaultPath: "log.csv",
+            filters: [{ name: "CSV file", extensions: ["csv"] }],
+        });
+    });
+
+    it("takes the bare file name off a Windows path", async () => {
+        tauriDialog.save.mockResolvedValue("C:\\Users\\pilot\\Documents\\log.csv");
+
+        const file = await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv");
+
+        expect(file.name).toBe("log.csv");
+    });
+
+    it("rejects with an AbortError when the save dialog is dismissed", async () => {
+        tauriDialog.save.mockResolvedValue(null);
+
+        await expect(FileSystem.pickSaveFile("log.csv", "CSV file", ".csv")).rejects.toMatchObject({
+            name: "AbortError",
+        });
+    });
+
+    it("rejects with an AbortError when the open dialog is dismissed", async () => {
+        tauriDialog.open.mockResolvedValue(null);
+
+        await expect(FileSystem.pickOpenFile("CSV file", ".csv")).rejects.toMatchObject({ name: "AbortError" });
+    });
+
+    it("pickOpenFile keeps the case variants so case-sensitive GTK filters still match", async () => {
+        tauriDialog.open.mockResolvedValue("/home/pilot/log.bbl");
+
+        const file = await FileSystem.pickOpenFile("Blackbox log", ".bbl");
+
+        expect(file).toEqual({ name: "log.bbl", _tauriPath: "/home/pilot/log.bbl" });
+        expect(tauriDialog.open).toHaveBeenCalledWith({
+            multiple: false,
+            directory: false,
+            filters: [{ name: "Blackbox log", extensions: ["bbl", "BBL"] }],
+        });
+    });
+
+    it("writeFile sends text as text and everything else as bytes", async () => {
+        const file = { name: "dump.txt", _tauriPath: "/tmp/dump.txt" };
+
+        await FileSystem.writeFile(file, "hello");
+        expect(tauriFs.writeTextFile).toHaveBeenCalledWith("/tmp/dump.txt", "hello");
+
+        await FileSystem.writeFile(file, new Uint8Array([1, 2, 3]));
+        expect(tauriFs.writeFile).toHaveBeenCalledWith("/tmp/dump.txt", new Uint8Array([1, 2, 3]));
+
+        // A view over part of a larger buffer must write its own bytes only,
+        // never the whole backing buffer.
+        const backing = new Uint8Array([9, 9, 1, 2, 3, 9]);
+
+        await FileSystem.writeFile(file, new DataView(backing.buffer, 2, 3));
+        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
+
+        await FileSystem.writeFile(file, backing.subarray(2, 5));
+        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
+    });
+
+    it("streams chunks straight to disk, truncating on the first and appending after", async () => {
+        const writable = await FileSystem.openFile({ name: "log.bbl", _tauriPath: "/tmp/log.bbl" });
+
+        await FileSystem.writeChunck(writable, new Blob([new Uint8Array([1])]));
+        await FileSystem.writeChunck(writable, new Blob([new Uint8Array([2])]));
+        await FileSystem.closeFile(writable);
+
+        expect(tauriFs.writeFile.mock.calls).toEqual([
+            ["/tmp/log.bbl", new Uint8Array([1]), { append: false, create: true }],
+            ["/tmp/log.bbl", new Uint8Array([2]), { append: true, create: true }],
+        ]);
+    });
+
+    it("closing without a single chunk still leaves an empty file, as the picker would", async () => {
+        const writable = await FileSystem.openFile({ name: "log.bbl", _tauriPath: "/tmp/log.bbl" });
+
+        await FileSystem.closeFile(writable);
+
+        expect(tauriFs.writeFile).toHaveBeenCalledWith("/tmp/log.bbl", new Uint8Array(), { create: true });
+    });
+
+    it("reads a picked file as text and as a typed blob", async () => {
+        const file = { name: "font.mcm", _tauriPath: "/tmp/font.mcm" };
+        tauriFs.readTextFile.mockResolvedValue("MAX7456");
+        tauriFs.readFile.mockResolvedValue(new Uint8Array([1, 2]));
+
+        expect(await FileSystem.readFile(file)).toBe("MAX7456");
+
+        const blob = await FileSystem.readFileAsBlob(file);
+        expect(blob.type).toBe("application/octet-stream");
+        expect(blob.size).toBe(2);
     });
 });
 

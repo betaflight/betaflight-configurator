@@ -1039,7 +1039,7 @@
                     />
                 </SettingRow>
 
-                <div class="flex flex-col gap-1">
+                <div v-if="isIntegratedYawSupported" class="flex flex-col gap-1">
                     <SettingRow :label="$t('pidTuningIntegratedYaw')" :help="$t('pidTuningIntegratedYawHelp')">
                         <USwitch v-model="integratedYawEnabled" size="sm" />
                     </SettingRow>
@@ -1518,6 +1518,9 @@ const isPreApi145 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 // Absolute Control was removed from firmware in API 1.48
 const isPreApi148 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48));
+// Firmware stops honoring these fields starting at API 1.49. Until that version ships,
+// apiVersion stays at 1.48 for all firmware, so this check harmlessly always passes.
+const isIntegratedYawSupported = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_49));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
 const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
 const dMaxLabel = computed(() => (isPreApi147.value ? "pidTuningDerivative" : "pidTuningDMax"));

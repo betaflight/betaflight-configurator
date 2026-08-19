@@ -133,6 +133,30 @@
         "message": "Ulanish uchun serial yo‘l yoki URL manzilini kiriting.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Saqlangan ulanishlar",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nomi:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Ushbu ulanish uchun nom",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Saqlash",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Yangilash",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Saqlangan ulanishlarni o‘chirish",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Avto-ulanish"
     },
@@ -305,9 +329,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Internet mavjud bo‘lganda, ilova mavjud yangilanishlarni avtomatik so‘rashi kerak."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Chiqarilish veb-saytiga o‘tish"
     },
     "rebootFlightController": {
         "message": "Parvoz kontrolleri qayta yuklanmoqda, tayyor bo‘lganda qayta ulang"
