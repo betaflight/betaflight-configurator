@@ -991,7 +991,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Our <a href=\"https://blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer</a> is available as an online app.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware, this app, and the blackbox viewer can be downloaded from GitHub."
+        "message": "Our Blackbox log viewer is built into this app. Open the <strong>Blackbox Viewer</strong> tab to analyse your flight logs.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware and this app can be downloaded from GitHub."
     },
     "defaultContributingHead": {
         "message": "Contributing"
