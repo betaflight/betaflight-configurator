@@ -60,8 +60,9 @@ describe("MotorsTab ESC_SENSOR serial row", () => {
         });
     });
 
-    // MotorsTab's ESC_SENSOR feature switch and this row edit the same thing from two directions:
-    // writeConfig() derives the feature bit from the port array, so the port assignment wins.
+    // This row is MotorsTab's only ESC_SENSOR control - there is no feature switch beside it,
+    // because writeConfig() derives the feature bit from the port array and would turn one back
+    // off on the next save.
     describe("the feature bit the port assignment implies", () => {
         it("is off while no port carries ESC telemetry", () => {
             expect(store.ports.some((p) => store.portUses(p, "ESC_SENSOR"))).toBe(false);
@@ -75,6 +76,18 @@ describe("MotorsTab ESC_SENSOR serial row", () => {
             // showEscSensorPort keeps the row visible on an analog protocol whenever this is true,
             // so an assignment can never be stranded with no way to clear it.
             expect(store.ports.some((p) => store.portUses(p, "ESC_SENSOR"))).toBe(true);
+        });
+
+        // MotorsTab shows the motor pole count for a port picked here rather than waiting on the
+        // feature bit, which only agrees after the save's reboot. That reads selectedValue off the
+        // row, so it has to carry the pending pick while the store still has nothing.
+        it("names the pending port before apply, while no port carries the function yet", () => {
+            const row = escSensorRow();
+
+            row.selectPort(1);
+
+            expect(row.selectedValue.value).toEqual(1);
+            expect(store.ports.some((p) => store.portUses(p, "ESC_SENSOR"))).toBe(false);
         });
 
         it("stays selectable whatever the build reports, since the rule has no build dependency", () => {

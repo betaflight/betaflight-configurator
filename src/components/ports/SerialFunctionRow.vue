@@ -239,6 +239,7 @@ const {
     selectedFunction,
     selectFunction,
     portItems,
+    selectedValue,
     portSelectValue,
     assignedPort,
     hasBaudField,
@@ -263,5 +264,8 @@ const {
 
 // The host tab owns the Save button, so it needs to know there is something to save and how to
 // apply it. Nothing reaches the shared store until it calls apply().
-defineExpose({ hasPendingChange, apply, reset });
+// selectedValue is exposed alongside the lifecycle three because a host may need to lay out
+// around what the row is about to become rather than what the FC currently has: MotorsTab shows
+// the motor pole count for a port picked here, one reboot before the feature bit agrees.
+defineExpose({ hasPendingChange, selectedValue, apply, reset });
 </script>

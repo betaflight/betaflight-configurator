@@ -86,21 +86,12 @@
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
-                                <USwitch
-                                    :model-value="isFeatureEnabled('ESC_SENSOR')"
-                                    @update:model-value="toggleFeature('ESC_SENSOR', $event)"
-                                    size="xs"
-                                />
-                                <template #label>
-                                    <span class="font-semibold">ESC_SENSOR</span>
-                                    <span class="ml-2" v-html="$t('featureESC_SENSOR')"></span>
-                                </template>
-                            </SettingRow>
                             <!--
-                                Assigning the port is what turns ESC_SENSOR on: writeConfig()
-                                derives the feature bit from the port array, so the switch above
-                                follows this row after a save rather than the other way round.
+                                This row is the ESC_SENSOR control, and the only one: writeConfig()
+                                derives the feature bit from the port array, so a switch beside it
+                                could be turned on and then be turned straight back off by the next
+                                save. ESC telemetry needs a UART either way - a feature bit with no
+                                port behind it does nothing.
                             -->
                             <SerialFunctionRow
                                 v-if="showEscSensorPort"
@@ -555,6 +546,7 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
+import { NO_PORT } from "@/composables/ports/useSerialFunctionRow";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
@@ -722,9 +714,19 @@ const escSensorPortAssigned = computed(() =>
 );
 const showEscSensorPort = computed(() => digitalProtocolConfigured.value || escSensorPortAssigned.value);
 
+// Motor poles are read by both RPM sources. For ESC telemetry, follow the row rather than the
+// feature bit: the bit only catches up on the reboot that follows the save, and a pole count that
+// appears one reboot after the port was chosen reads as the field having been missing.
+const escSensorPortSelected = computed(() => {
+    const selected = escSensorRow.value?.selectedValue;
+    return selected === undefined ? escSensorPortAssigned.value : selected !== NO_PORT;
+});
+
 const rpmFeaturesVisible = computed(() => {
     return (
-        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) || isFeatureEnabled("ESC_SENSOR")
+        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) ||
+        escSensorPortSelected.value ||
+        isFeatureEnabled("ESC_SENSOR")
     );
 });
 
