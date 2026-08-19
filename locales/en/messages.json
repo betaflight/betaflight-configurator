@@ -2312,9 +2312,6 @@
     "serialPortRebootRequired": {
         "message": "Saving serial port changes reboots the flight controller."
     },
-    "serialPortSaveAndReboot": {
-        "message": "Save &amp; Reboot"
-    },
     "serialPortReserved": {
         "message": "Other (reserved)"
     },
