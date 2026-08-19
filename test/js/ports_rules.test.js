@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 vi.mock("../../src/js/localization", () => ({
     i18n: { getMessage: (key) => key },
@@ -15,6 +16,10 @@ function rulesAt(apiVersion) {
 
 describe("usePortsRules", () => {
     beforeEach(() => {
+        // usePortsRules reads the build options through useBuildOptions, which reaches FC.CONFIG
+        // via the fc store - so the rules need a Pinia, even though nothing here touches a store
+        // directly.
+        setActivePinia(createPinia());
         FC.resetState();
         FC.CONFIG.buildOptions = [];
     });
