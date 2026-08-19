@@ -432,7 +432,6 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 case "DUAL_GYRO_SCALED":
                 // Firmware renamed the DUAL_GYRO_* slots to MULTI_GYRO_* in 1.47,
                 // so a log reports one name or the other depending on its firmware.
-                case "MULTI_GYRO_COMBINED":
                 case "MULTI_GYRO_DIFF":
                 case "MULTI_GYRO_RAW":
                 case "MULTI_GYRO_SCALED":

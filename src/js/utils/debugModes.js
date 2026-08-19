@@ -50,10 +50,10 @@ const LEGACY_MODE_NAMES = Object.entries(DEBUG_MODE_ALIASES).reduce((map, [legac
 }, new Map());
 
 /**
- * Every name the firmware has used for the enum slot `name` identifies, current
- * name first. A 4.5 log reports "D_MIN" for the slot called "D_MAX" today, and
- * the hand-written tables below are keyed by whichever name was current when the
- * entry was written, so lookups have to try both.
+ * Every name the firmware has used for the enum slot `name` identifies, the name
+ * as reported first. A 4.5 log reports "D_MIN" for the slot called "D_MAX" today,
+ * and the label tables below are keyed by whichever name was current when the
+ * entry was written, so label lookups have to try both directions.
  *
  * @param {string} [name]
  * @returns {string[]}
@@ -67,20 +67,25 @@ function modeNameCandidates(name) {
 }
 
 /**
- * Looks a debug mode up in one of the hand-written tables below, trying every
- * name the firmware has used for that enum slot.
+ * Looks a debug mode up in the decode / convert tables below, which carry units
+ * rather than labels.
+ *
+ * Unlike the labels, these are matched forwards only: exact name first, then the
+ * name that renamed it. Falling back the other way - from the current name to the
+ * entry written for the name it replaced - would apply the old firmware's units to
+ * new data whenever a slot was reworked rather than merely renamed, which is what
+ * happened to AUTOPILOT_ALTITUDE (GPS_RESCUE_THROTTLE_PID's µs and its × 100
+ * altitude scaling are not what 1.47+ writes there).
  *
  * @param {object} table - keyed by debug mode name.
  * @param {string} [name]
  * @returns {*} the entry, or undefined if no name matches.
  */
 function lookupByModeName(table, name) {
-    for (const candidate of modeNameCandidates(name)) {
-        if (table[candidate] !== undefined) {
-            return table[candidate];
-        }
+    if (!name) {
+        return undefined;
     }
-    return undefined;
+    return table[name] ?? table[DEBUG_MODE_ALIASES[name]];
 }
 
 /**
@@ -800,14 +805,15 @@ export function getDebugFieldNames(apiVersion) {
         },
     };
 
-    if (!apiVersion) {
-        return baseFieldNames;
-    }
+    // Normalised the same way as getDebugModes, so the two agree on which firmware
+    // they are describing - including for a falsy or unparseable version, which
+    // resolves to the oldest generated table rather than skipping the work below.
+    const version = resolveTableVersion(apiVersion);
 
     // Make a copy to modify
     const result = { ...baseFieldNames };
 
-    if (semver.gte(apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(version, API_VERSION_1_46)) {
         result.ATTITUDE = {
             "debug[all]": "Attitude",
             "debug[0]": "Roll Angle",
@@ -890,7 +896,7 @@ export function getDebugFieldNames(apiVersion) {
         };
     }
 
-    if (semver.gte(apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(version, API_VERSION_1_47)) {
         delete result.GPS_RESCUE_THROTTLE_PID;
         delete result.GYRO_SCALED;
 
@@ -1060,7 +1066,7 @@ export function getDebugFieldNames(apiVersion) {
         };
     }
 
-    if (semver.gte(apiVersion, API_VERSION_1_48)) {
+    if (semver.gte(version, API_VERSION_1_48)) {
         result.AUTOPILOT_PID = {
             "debug[all]": "Autopilot PID",
             "debug[0]": "Velocity Error [dbg-axis]",
@@ -1155,7 +1161,7 @@ export function getDebugFieldNames(apiVersion) {
     // renamed enum slot depends on the firmware version: a 4.5 log reports
     // "D_MIN" where 2025.12 reports "D_MAX". Mirror the labels onto whichever of
     // the two names this version's firmware actually uses.
-    for (const modeName of getDebugModes(apiVersion)) {
+    for (const modeName of getDebugModes(version)) {
         if (result[modeName]) {
             continue;
         }
