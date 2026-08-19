@@ -8,8 +8,8 @@
     "source": "https://github.com/betaflight/betaflight",
     "versions": {
         "1.44.0": {
-            "commit": "b28b07eb95b6a9779d762874aa0a994f0aa7035e",
-            "date": "2022-06-16",
+            "commit": "c05ad2ec9b7d3a0915ef9748a160a0cc28931069",
+            "date": "2022-01-11",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -282,8 +282,8 @@
             }
         },
         "1.45.0": {
-            "commit": "8a7068d6335b9f773c850a5a4ec8aa38e401ff65",
-            "date": "2023-03-16",
+            "commit": "241e9a9b941215dce95696ec3ce0c56ef98669e2",
+            "date": "2023-03-15",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -600,8 +600,8 @@
             }
         },
         "1.46.0": {
-            "commit": "d82c8facb22fac637db8cdb28904875f713a0f87",
-            "date": "2024-06-11",
+            "commit": "ae71256da701a44e063fae28a2306972748b0622",
+            "date": "2023-12-09",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -946,8 +946,8 @@
             }
         },
         "1.47.0": {
-            "commit": "5de5ad190618448c76a59b2aefc90e4a78f21f46",
-            "date": "2026-01-28",
+            "commit": "ee3bf4257f69e6d00648d7a90e08ca9be4c98963",
+            "date": "2025-09-21",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -1336,8 +1336,8 @@
             }
         },
         "1.48.0": {
-            "commit": "087699dba08e3f518edef05770dea5ad8e054ac7",
-            "date": "2026-08-18",
+            "commit": "16e12368bc043341070490c900741668738b8099",
+            "date": "2026-08-05",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
