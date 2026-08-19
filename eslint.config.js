@@ -70,4 +70,33 @@ export default [
         },
         processor: "vue/vue",
     },
+    {
+        // Build and release tooling: real Node scripts, not browser code. Without this
+        // block `.mjs` matches no `files` pattern and is linted with zero rules.
+        files: ["**/*.mjs"],
+        languageOptions: {
+            ecmaVersion: "latest",
+            sourceType: "module",
+            globals: {
+                ...globals.node,
+            },
+        },
+        plugins: {
+            "unused-imports": unusedImportsPlugin,
+        },
+        rules: {
+            "no-unused-vars": "off",
+            "unused-imports/no-unused-imports": "error",
+            "unused-imports/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_",
+                },
+            ],
+            "no-undef": "error",
+        },
+    },
 ];
