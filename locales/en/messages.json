@@ -8021,7 +8021,7 @@
         "message": "Calibrate & detect alignment"
     },
     "magCalibrationFullDesc": {
-        "message": "One spin — sets offsets, soft-iron, and the mag's mounting orientation"
+        "message": "Rotate the craft in all directions to calibrate the sensor and automatically detect its mounting orientation."
     },
     "magCalibrationFullTitle": {
         "message": "Calibrate & Detect Alignment"
@@ -8060,7 +8060,10 @@
         "message": "{{covered}} / {{total}} zones covered"
     },
     "magCalibrationFullCompute": {
-        "message": "Compute"
+        "message": "Finish calibration"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "More covered zones give higher accuracy — aim for 20 / 20 for best calibration and alignment detection."
     },
     "magCalibrationFullCoverage": {
         "message": "Coverage:"
@@ -8090,7 +8093,22 @@
         "message": "Not enough samples — spin longer"
     },
     "magCalibrationFullNoGeo": {
-        "message": "No GPS or IP location — cannot determine magnetic inclination"
+        "message": "No GPS, browser, or IP location — enter coordinates manually to continue"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Location Required for Calibration"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Manually input latitude and longitude by picking from Google Maps. Your drone has no GPS lock and your device failed to provide location data. Location is needed for magnetometer calibration."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Invalid coordinates format. Please enter as: latitude, longitude (e.g. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Could not compute a magnetic reference for those coordinates. Please check them and try again."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI commands copied to clipboard"

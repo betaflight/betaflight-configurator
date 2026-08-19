@@ -466,3 +466,28 @@ export function computeDeclination(lat, lon) {
 export function getGeoReference() {
     return lastGeoReference;
 }
+
+/**
+ * Parse latitude and longitude from user input (e.g. Google Maps: "63.728263, -68.446117").
+ *
+ * @param {string} input - Coordinate string (comma or space separated)
+ * @returns {{ lat: number, lon: number } | null}
+ */
+export function parseCoordinates(input) {
+    if (!input || typeof input !== "string") {
+        return null;
+    }
+    const match = input.trim().match(/^([+-]?\d+(?:\.\d+)?)[,\s]+([+-]?\d+(?:\.\d+)?)$/);
+    if (!match) {
+        return null;
+    }
+    const lat = Number.parseFloat(match[1]);
+    const lon = Number.parseFloat(match[2]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        return null;
+    }
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        return null;
+    }
+    return { lat, lon };
+}

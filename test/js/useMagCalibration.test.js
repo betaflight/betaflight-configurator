@@ -26,7 +26,7 @@ vi.mock("geomagnetism", () => ({
     },
 }));
 
-import { useMagCalibration } from "../../src/composables/useMagCalibration";
+import { useMagCalibration, parseCoordinates } from "../../src/composables/useMagCalibration";
 import { send, isMspCliSupported } from "../../src/composables/useMspCliSession";
 import { fitSphere, computeDirectionalCoverage } from "../../src/js/utils/sphereFit";
 import { useFlightControllerStore } from "../../src/stores/fc";
@@ -319,6 +319,43 @@ describe("useMagCalibration", () => {
         it("initializes quaternion to null in SENSOR_DATA", () => {
             FC.resetState();
             expect(FC.SENSOR_DATA.quaternion).toBeNull();
+        });
+    });
+
+    describe("parseCoordinates", () => {
+        it("parses Google Maps comma-separated coordinates", () => {
+            const result = parseCoordinates("63.72826289513788, -68.44611728719269");
+            expect(result).not.toBeNull();
+            expect(result.lat).toBeCloseTo(63.728263, 5);
+            expect(result.lon).toBeCloseTo(-68.446117, 5);
+        });
+
+        it("parses space-separated coordinates", () => {
+            const result = parseCoordinates("45.5017 -73.5673");
+            expect(result).not.toBeNull();
+            expect(result.lat).toBeCloseTo(45.5017, 4);
+            expect(result.lon).toBeCloseTo(-73.5673, 4);
+        });
+
+        it("parses signed and integer coordinates", () => {
+            const result = parseCoordinates("-33.8688, +151.2093");
+            expect(result).not.toBeNull();
+            expect(result.lat).toBeCloseTo(-33.8688, 4);
+            expect(result.lon).toBeCloseTo(151.2093, 4);
+        });
+
+        it("returns null on invalid input string", () => {
+            expect(parseCoordinates("")).toBeNull();
+            expect(parseCoordinates("invalid string")).toBeNull();
+            expect(parseCoordinates(null)).toBeNull();
+            expect(parseCoordinates(undefined)).toBeNull();
+        });
+
+        it("returns null on out-of-range coordinates", () => {
+            expect(parseCoordinates("95.0, 10.0")).toBeNull(); // lat > 90
+            expect(parseCoordinates("-95.0, 10.0")).toBeNull(); // lat < -90
+            expect(parseCoordinates("45.0, 195.0")).toBeNull(); // lon > 180
+            expect(parseCoordinates("45.0, -195.0")).toBeNull(); // lon < -180
         });
     });
 });

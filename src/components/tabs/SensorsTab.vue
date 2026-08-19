@@ -479,10 +479,17 @@
                                         size="xs"
                                         :loading="isAcceptingCal"
                                         :disabled="!fullReady"
+                                        :color="finishButtonColor"
                                         :label="$t('magCalibrationFullCompute')"
                                         @click="acceptFullCal()"
                                     />
                                 </div>
+                                <p
+                                    v-if="cal.mode === 'full'"
+                                    class="text-xs text-[var(--surface-500)] text-center mt-1.5"
+                                >
+                                    {{ $t("magCalibrationFullCoverageHint") }}
+                                </p>
                                 <div class="mag-cal-live-inline">
                                     <span v-if="cal.mode !== 'check'"
                                         >{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span
@@ -701,6 +708,42 @@
                     @click="saveConfig"
                 />
             </div>
+
+            <!-- MANUAL LOCATION FALLBACK DIALOG -->
+            <UModal
+                v-model:open="manualLocationModalOpen"
+                :title="$t('magCalibrationManualLocationTitle')"
+                :close="true"
+                :dismissible="true"
+            >
+                <template #body>
+                    <div class="flex flex-col gap-3">
+                        <p class="text-sm text-dimmed leading-relaxed">
+                            {{ $t("magCalibrationManualLocationPrompt") }}
+                        </p>
+                        <UInput
+                            v-model="manualCoordsInput"
+                            :placeholder="$t('magCalibrationManualLocationPlaceholder')"
+                            autofocus
+                            @keydown.enter="submitManualLocation"
+                        />
+                        <p v-if="manualCoordsError" class="text-xs text-error">
+                            {{ manualCoordsError }}
+                        </p>
+                    </div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton
+                            color="neutral"
+                            variant="soft"
+                            :label="$t('magCalibrationCancel')"
+                            @click="manualLocationModalOpen = false"
+                        />
+                        <UButton :label="$t('magCalibrationFullCompute')" @click="submitManualLocation" />
+                    </div>
+                </template>
+            </UModal>
         </div>
     </BaseTab>
 </template>
@@ -723,7 +766,12 @@ import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/d
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
-import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
+import {
+    useMagCalibration,
+    computeDeclination,
+    getGeoReference,
+    parseCoordinates,
+} from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { degToRad } from "../../js/utils/common";
 import { useDialog } from "@/composables/useDialog";
@@ -1051,13 +1099,20 @@ function dismissDeclinationNote() {
 }
 
 /**
- * Acquire GPS coordinates from flight controller or IP geolocation.
- * @param {boolean} promptConsent - If true, prompt user for IP geolocation consent when no GPS fix.
+ * Acquire GPS coordinates from flight controller, browser geolocation, or IP geolocation.
+ * @param {boolean} promptConsent - If true, prompt user for location consent when no GPS fix exists.
  * @returns {Promise<{lat: number, lon: number}|null>}
  */
 async function acquireCoordinates(promptConsent) {
     const gps = await gpsCoordinates();
-    return gps ?? ipCoordinates(promptConsent);
+    if (gps) {
+        return gps;
+    }
+    const browser = await browserCoordinates(promptConsent);
+    if (browser) {
+        return browser;
+    }
+    return ipCoordinates(promptConsent);
 }
 
 // A live GPS fix from the flight controller, or null if there's no fix.
@@ -1074,6 +1129,43 @@ async function gpsCoordinates() {
         // GPS not available
     }
     return null;
+}
+
+// Browser native geolocation (HTML5 Geolocation API), or null.
+// Prompts for browser permission ONLY when promptConsent is true (e.g. clicking "Finish calibration" or "Detect").
+async function browserCoordinates(promptConsent = false) {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+        return null;
+    }
+    if (!promptConsent) {
+        if (navigator.permissions?.query) {
+            try {
+                const status = await navigator.permissions.query({ name: "geolocation" });
+                if (status.state !== "granted") {
+                    return null;
+                }
+            } catch {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                    resolve({ lat, lon });
+                } else {
+                    resolve(null);
+                }
+            },
+            () => resolve(null),
+            { timeout: 5000, maximumAge: 300000 },
+        );
+    });
 }
 
 // IP geolocation (consent-gated), or null. The caller decides when to attempt it,
@@ -1123,6 +1215,17 @@ function applyDetectedDeclination(detected) {
     }
 }
 
+function setDeclinationFrom(result) {
+    if (!result) {
+        return;
+    }
+    magDeclination.value = roundOneDp(result.declination);
+    magInclination.value = roundOneDp(result.inclination);
+    magFieldStrength.value = result.fieldStrength;
+    declinationWarning.value = "";
+    gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+}
+
 async function tryAutoGeoReference() {
     const coords = await acquireCoordinates(false);
     if (!coords) {
@@ -1138,17 +1241,21 @@ async function tryAutoGeoReference() {
     applyDetectedDeclination(roundOneDp(result.declination));
 }
 
-// Resolve the best geomagnetic reference (cached, else GPS, else IP) and reflect its
+// Resolve the best geomagnetic reference (cached, else GPS, else browser, else IP) and reflect its
 // inclination + field strength in the reactive panel state. The magSphere field-
-// direction arrow binds to magInclination, so this makes the arrow appear for BOTH
-// GPS and IP sources, consistently and live. Returns the reference or null.
+// direction arrow binds to magInclination, so the arrow appears for every source,
+// consistently and live. Returns the reference or null.
 async function resolveGeoReference(promptConsent) {
-    // No movement during capture, so a single fix suffices. Prefer a live GPS fix:
-    // it overwrites any earlier IP snapshot. Otherwise reuse the cached reference
-    // (last good value); fall back to IP geolocation only when there's nothing
-    // better — so IP is never fetched or prompted while GPS is available.
+    // Prefer a live GPS fix from the flight controller; otherwise reuse cached reference if available;
+    // fall back to browser geolocation, then IP geolocation, then manual fallback.
     const gps = await gpsCoordinates();
     let geo = gps ? computeDeclination(gps.lat, gps.lon) : getGeoReference();
+    if (!geo) {
+        const browser = await browserCoordinates(promptConsent);
+        if (browser) {
+            geo = computeDeclination(browser.lat, browser.lon);
+        }
+    }
     if (!geo) {
         const ip = await ipCoordinates(promptConsent);
         if (ip) {
@@ -1162,6 +1269,39 @@ async function resolveGeoReference(promptConsent) {
     return geo;
 }
 
+const manualLocationModalOpen = ref(false);
+const manualCoordsInput = ref("");
+const manualCoordsError = ref("");
+const manualLocationAction = ref("fullCal"); // "fullCal" | "declination"
+
+function openManualLocationModal(action = "fullCal") {
+    manualLocationAction.value = action;
+    manualCoordsInput.value = "";
+    manualCoordsError.value = "";
+    manualLocationModalOpen.value = true;
+}
+
+async function submitManualLocation() {
+    const coords = parseCoordinates(manualCoordsInput.value);
+    if (!coords) {
+        manualCoordsError.value = i18n.getMessage("magCalibrationManualLocationInvalid");
+        return;
+    }
+    const result = computeDeclination(coords.lat, coords.lon);
+    if (!result) {
+        manualCoordsError.value = i18n.getMessage("magCalibrationManualLocationFailed");
+        return;
+    }
+    manualCoordsError.value = "";
+    manualLocationModalOpen.value = false;
+
+    if (manualLocationAction.value === "fullCal") {
+        await acceptFullCal(result);
+    } else {
+        setDeclinationFrom(result);
+    }
+}
+
 async function autoSetDeclination() {
     if (isFetchingDeclination.value) {
         return;
@@ -1170,20 +1310,16 @@ async function autoSetDeclination() {
     try {
         const coords = await acquireCoordinates(true);
         if (!coords) {
-            gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+            openManualLocationModal("declination");
             return;
         }
 
         const result = computeDeclination(coords.lat, coords.lon);
         if (!result) {
-            gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+            openManualLocationModal("declination");
             return;
         }
-        magDeclination.value = roundOneDp(result.declination);
-        magInclination.value = roundOneDp(result.inclination);
-        magFieldStrength.value = result.fieldStrength;
-        declinationWarning.value = "";
-        gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+        setDeclinationFrom(result);
     } finally {
         isFetchingDeclination.value = false;
     }
@@ -1218,6 +1354,16 @@ const FULL_MIN_SAMPLES = 40;
 const fullReady = computed(
     () => cal.sampleCount >= FULL_MIN_SAMPLES && (cal.coverage?.fraction ?? 0) >= FULL_READY_FRACTION,
 );
+
+const finishButtonColor = computed(() => {
+    if (!fullReady.value) {
+        return "neutral";
+    }
+    if ((cal.coverage?.covered ?? 0) >= (cal.coverage?.totalFaces ?? 20)) {
+        return "primary";
+    }
+    return "warning";
+});
 
 function startFullStepTimer() {
     clearFullStepTimer();
@@ -1329,7 +1475,7 @@ async function startFullCal() {
 
 const isAcceptingCal = ref(false);
 
-async function acceptFullCal() {
+async function acceptFullCal(manualGeoRef = null) {
     isAcceptingCal.value = true;
     try {
         clearFullStepTimer();
@@ -1339,11 +1485,12 @@ async function acceptFullCal() {
             return;
         }
 
-        // Resolve the reference (cached, else GPS, else IP — prompting for consent now
-        // rather than discarding the tumble). Also refreshes the panel + arrow inclination.
-        const geoRef = await resolveGeoReference(true);
+        // Reference resolved by the manual modal, else live GPS, else browser, else IP.
+        const geoRef = manualGeoRef ?? (await resolveGeoReference(true));
+
         if (!geoRef) {
             gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
+            openManualLocationModal("fullCal");
             return;
         }
         calGeoRef.value = geoRef;
