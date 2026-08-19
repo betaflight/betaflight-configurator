@@ -13,7 +13,7 @@ import { useFlightControllerStore } from "@/stores/fc";
  * An unreadable version reads as writable, which is how every firmware behaved
  * before the split.
  *
- * @param {string} apiVersion
+ * @param {string|undefined} apiVersion
  * @returns {boolean}
  */
 export function serialPortsAreReadOnly(apiVersion) {

@@ -1,6 +1,27 @@
-import { describe, expect, it } from "vitest";
-import { buildPortOptions, findFeaturePortIdentifier } from "../../src/composables/ports/useFeaturePort";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope } from "vue";
+import { createPinia, setActivePinia } from "pinia";
+import FC from "../../src/js/fc";
+import MSP from "../../src/js/msp";
+import MSPCodes from "../../src/js/msp/MSPCodes";
+import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
+import {
+    buildPortOptions,
+    findFeaturePortIdentifier,
+    useFeaturePort,
+} from "../../src/composables/ports/useFeaturePort";
+
+vi.mock("../../src/js/localization", () => ({
+    __esModule: true,
+    i18n: { getMessage: (key) => key },
+}));
+
+const { cliSend } = vi.hoisted(() => ({ cliSend: vi.fn() }));
+vi.mock("../../src/composables/useMspCliSession", async (importOriginal) => ({
+    ...(await importOriginal()),
+    send: cliSend,
+}));
 
 const ports = [
     { identifier: 20, functions: ["MSP"] },
@@ -78,5 +99,97 @@ describe("buildPortOptions", () => {
 
     it("copes with no ports at all", () => {
         expect(buildPortOptions(undefined, { functionName: "RX_SERIAL" })).toHaveLength(1);
+    });
+});
+
+describe("useFeaturePort", () => {
+    let scope;
+    let port;
+
+    function withApiVersion(apiVersion) {
+        FC.CONFIG.apiVersion = apiVersion;
+        FC.CONFIG.flightControllerVersion = "4.6.0";
+        FC.SERIAL_CONFIG = { ports: [...ports] };
+
+        scope?.stop();
+        scope = effectScope();
+        scope.run(() => {
+            port = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
+        });
+    }
+
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        FC.resetState();
+        cliSend.mockReset();
+        cliSend.mockResolvedValue([]);
+        vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
+        withApiVersion(API_VERSION_1_49);
+    });
+
+    afterEach(() => {
+        scope?.stop();
+        scope = undefined;
+        vi.restoreAllMocks();
+    });
+
+    it("does nothing on firmware that still owns the port through the mask", async () => {
+        withApiVersion(API_VERSION_1_48);
+
+        expect(port.available.value).toBe(false);
+
+        await port.load();
+        expect(MSP.promise).not.toHaveBeenCalled();
+
+        port.selectedIdentifier.value = 51;
+        await port.write();
+        expect(cliSend).not.toHaveBeenCalled();
+    });
+
+    it("reads the current assignment out of the serial config", async () => {
+        await port.load();
+
+        expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP2_COMMON_SERIAL_CONFIG);
+        expect(port.selectedIdentifier.value).toBe(53);
+        expect(port.changed.value).toBe(false);
+    });
+
+    it("writes the selection as a CLI set and settles the dirty state", async () => {
+        await port.load();
+        port.selectedIdentifier.value = 51;
+
+        expect(port.changed.value).toBe(true);
+
+        await port.write();
+
+        expect(cliSend).toHaveBeenCalledWith("set rx_uart = UART1");
+        expect(port.changed.value).toBe(false);
+    });
+
+    it("clears the assignment with NONE", async () => {
+        await port.load();
+        port.selectedIdentifier.value = PORT_NONE;
+
+        await port.write();
+
+        expect(cliSend).toHaveBeenCalledWith("set rx_uart = NONE");
+    });
+
+    it("writes nothing when the selection has not moved", async () => {
+        await port.load();
+
+        await port.write();
+
+        expect(cliSend).not.toHaveBeenCalled();
+    });
+
+    it("keeps the change pending when the firmware rejects the set", async () => {
+        cliSend.mockResolvedValue(["###ERROR: invalid name###"]);
+
+        await port.load();
+        port.selectedIdentifier.value = 51;
+
+        await expect(port.write()).rejects.toThrow(/ERROR/);
+        expect(port.changed.value).toBe(true);
     });
 });
