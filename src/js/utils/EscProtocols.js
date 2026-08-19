@@ -30,6 +30,30 @@ class EscProtocols {
         return "DISABLED";
     }
 
+    /**
+     * Firmware build option each ESC protocol needs. Keys are the protocol
+     * names returned by GetAvailableProtocols(), values are keys of
+     * FIRMWARE_BUILD_OPTIONS. DISABLED is deliberately absent: it is always
+     * selectable, and a protocol without an entry is never gated.
+     */
+    static get BUILD_OPTIONS() {
+        return {
+            [EscProtocols.PROTOCOL_PWM]: "USE_PWM_OUTPUT",
+            [EscProtocols.PROTOCOL_ONESHOT125]: "USE_ONESHOT",
+            [EscProtocols.PROTOCOL_ONESHOT42]: "USE_ONESHOT",
+            [EscProtocols.PROTOCOL_MULTISHOT]: "USE_MULTISHOT",
+            [EscProtocols.PROTOCOL_BRUSHED]: "USE_BRUSHED",
+            [EscProtocols.PROTOCOL_DSHOT150]: "USE_DSHOT",
+            [EscProtocols.PROTOCOL_DSHOT300]: "USE_DSHOT",
+            [EscProtocols.PROTOCOL_DSHOT600]: "USE_DSHOT",
+            [EscProtocols.PROTOCOL_PROSHOT1000]: "USE_PROSHOT",
+        };
+    }
+
+    static GetBuildOption(protocolName) {
+        return EscProtocols.BUILD_OPTIONS[protocolName];
+    }
+
     static get DSHOT_PROTOCOLS_SET() {
         return [
             EscProtocols.PROTOCOL_DSHOT150,

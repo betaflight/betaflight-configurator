@@ -2188,6 +2188,10 @@
         "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the aircraft is armed, the home point will be updated.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "GPS support is not included in this firmware build. Rebuild the firmware with the GPS build option to configure and use GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
     },

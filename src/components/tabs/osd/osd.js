@@ -1,6 +1,7 @@
 import { i18n } from "../../../js/localization";
 import { bit_check } from "../../../js/bit";
 import FC from "../../../js/fc";
+import { configReportsBuildOption } from "../../../composables/useBuildOptions";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../js/data_storage";
 import semver from "semver";
 import { have_sensor } from "../../../js/sensor_helpers";
@@ -1601,14 +1602,16 @@ OSD.chooseFields = function () {
         // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
         // when their compile flags are present. Unconditional listing would
         // misalign every later DISPLAY_FIELDS position on builds lacking them.
-        // Gate on reported build options instead.
-        const buildOptions = FC.CONFIG.buildOptions ?? [];
-        const hasFlightPlanWaypoints = buildOptions.includes("USE_GPS") && buildOptions.includes("USE_FLIGHT_PLAN");
+        //
+        // This is the one place that must NOT use the fail-open rule the rest of
+        // the gating follows: an unreported option decides how the firmware's enum
+        // is laid out, not whether a control is shown, so guessing "present" would
+        // misread every later field.
+        const reports = (name) => configReportsBuildOption(FC.CONFIG, name);
+        const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
         const hasNavMap =
-            hasFlightPlanWaypoints &&
-            !buildOptions.includes("USE_WING") &&
-            (buildOptions.includes("USE_OSD_SD") || buildOptions.includes("USE_OSD_HD"));
-        const hasPositionHold = buildOptions.includes("USE_POSITION_HOLD");
+            hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
+        const hasPositionHold = reports("USE_POSITION_HOLD");
 
         if (hasFlightPlanWaypoints) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([

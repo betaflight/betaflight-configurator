@@ -160,9 +160,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ga naar de Release Pagina"
-    },
     "deviceRebooting": {
         "message": "Apparaat - <span class=\"message-negative\">is aan het heropstarten<\/span>"
     },

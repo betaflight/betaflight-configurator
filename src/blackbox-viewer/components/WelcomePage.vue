@@ -39,7 +39,7 @@
                 <div class="welcome-help">
                     <UIcon name="i-lucide-help-circle" class="welcome-help-icon" />
                     <ULink
-                        to="https://github.com/betaflight/betaflight/blob/master/docs/Blackbox.md"
+                        to="https://betaflight.com/docs/wiki/guides/current/Black-Box-logging-and-usage"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

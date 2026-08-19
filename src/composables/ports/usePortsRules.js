@@ -1,9 +1,12 @@
 import FC from "../../js/fc";
+import { useBuildOptions } from "../useBuildOptions";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "../../js/data_storage";
 
 export function usePortsRules() {
+    const { hasBuildOption } = useBuildOptions();
+
     const functionRules = [
         // MAX_MSP_PORT_COUNT in the firmware (msp_serial.h) is 3, and master rejects a config
         // asking for more (serial.c canApplyFunctionMask). USB VCP counts towards the total.
@@ -109,11 +112,7 @@ export function usePortsRules() {
     };
 
     const isRuleDisabled = (rule) => {
-        return (
-            FC.CONFIG.buildOptions.length &&
-            rule.dependsOn !== undefined &&
-            !FC.CONFIG.buildOptions.includes(rule.dependsOn)
-        );
+        return rule.dependsOn !== undefined && !hasBuildOption(rule.dependsOn);
     };
 
     return {

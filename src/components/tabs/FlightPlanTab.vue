@@ -86,18 +86,19 @@ import FlightPlanMap from "./FlightPlan/FlightPlanMap.vue";
 import ElevationProfile from "./FlightPlan/ElevationProfile.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useConnectionStore } from "@/stores/connection";
-import FC from "@/js/fc";
+import { useBuildOptions } from "@/composables/useBuildOptions";
 import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 
 const { loadFromFC, saveToFC, clearOnFC, clearPlan, loadPlan, waypoints } = useFlightPlan();
 const connectionStore = useConnectionStore();
+const { hasBuildOption } = useBuildOptions();
 const showClearDialog = ref(false);
 const showLoadPromptDialog = ref(false);
 
 const isConnected = computed(() => connectionStore.connectionValid);
-const fcHasFlightPlan = computed(() => FC.CONFIG?.buildOptions?.includes("USE_FLIGHT_PLAN") ?? false);
+const fcHasFlightPlan = computed(() => hasBuildOption("USE_FLIGHT_PLAN"));
 const canUseFC = computed(() => isConnected.value && fcHasFlightPlan.value);
 
 onMounted(async () => {
