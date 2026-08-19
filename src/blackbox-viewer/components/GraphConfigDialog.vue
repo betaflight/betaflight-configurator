@@ -83,7 +83,7 @@
                             <USelect
                                 v-model.number="graph.height"
                                 :items="heightOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="xs"
                                 class="w-16"
                                 @change="emitUpdate()"

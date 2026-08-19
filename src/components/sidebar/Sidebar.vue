@@ -117,7 +117,7 @@ const ctx = computed(() => {
     const fc = model?.FC ?? FCModule;
     return {
         expertMode: Boolean(model?.expertMode),
-        buildOptions: fc?.CONFIG?.buildOptions,
+        config: fc?.CONFIG,
         features: fc?.FEATURE_CONFIG?.features,
     };
 });
