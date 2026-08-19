@@ -186,7 +186,9 @@ describe("debug modes against the firmware source", () => {
 
     describe("field labels", () => {
         it("match the debug[n] indices the firmware writes, except for known gaps", () => {
-            expect(collectLabelGaps()).toEqual(KNOWN_LABEL_GAPS);
+            // Sorted on both sides: a mode inserted mid-enum reorders the report, and
+            // the diff should show what changed, not where everything moved to.
+            expect([...collectLabelGaps()].sort()).toEqual([...KNOWN_LABEL_GAPS].sort());
         });
 
         it("never label a field outside debug[0]..debug[7]", () => {

@@ -4,11 +4,11 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (src/main/build/debug.h, src/main/build/debug.c)
  * Firmware refs:
- *   API 1.44.0  b28b07eb95 2022-06-16  (71 modes)
- *   API 1.45.0  8a7068d633 2023-03-16  (83 modes)
- *   API 1.46.0  d82c8facb2 2024-06-11  (90 modes)
- *   API 1.47.0  5de5ad1906 2026-01-28  (100 modes)
- *   API 1.48.0  087699dba0 2026-08-18  (103 modes)
+ *   API 1.44.0  c05ad2ec9b 2022-01-11  (71 modes)
+ *   API 1.45.0  241e9a9b94 2023-03-15  (83 modes)
+ *   API 1.46.0  ae71256da7 2023-12-09  (90 modes)
+ *   API 1.47.0  ee3bf4257f 2025-09-21  (100 modes)
+ *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
  */
 
 /**

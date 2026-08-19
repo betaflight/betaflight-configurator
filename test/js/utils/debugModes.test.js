@@ -131,6 +131,16 @@ describe("debugModes helper", () => {
     });
 
     describe("getDebugFieldNames", () => {
+        it("labels every mode of the list it resolves to, including renamed ones", () => {
+            // getDebugFieldNames and getDebugModes must agree on which firmware they
+            // describe: with no API version both resolve to the oldest table, whose
+            // modes carry the pre-rename names.
+            const names = getDebugFieldNames();
+            expect(getDebugModes()).toContain("D_MIN");
+            expect(names.D_MIN).toBeDefined();
+            expect(names.D_MIN).toEqual(names.D_MAX);
+        });
+
         it("returns the base labels when no API version is given", () => {
             const names = getDebugFieldNames();
             expect(names.NONE["debug[0]"]).toBe("Debug [0]");
@@ -262,6 +272,33 @@ describe("debugModes helper", () => {
                     stubCtx({ gyroRawToDegreesPerSecond: (v) => v * 2 }),
                 ),
             ).toBe("20 °/s");
+        });
+
+        it("does not decode a renamed mode with the units of the mode it replaced", () => {
+            // AUTOPILOT_ALTITUDE took over the GPS_RESCUE_THROTTLE_PID enum slot in
+            // 1.47, but firmware reworked what it writes there - it is not the old
+            // mode under a new name. Falling back to the old entry would report
+            // "12.3 m" for a field the labels call "Target Altitude cm".
+            expect(decodeDebugFieldToFriendly("AUTOPILOT_ALTITUDE", "debug[2]", 1234, stubCtx())).toBe("1234");
+            expect(convertDebugFieldValue("AUTOPILOT_ALTITUDE", "debug[2]", true, 1234, stubCtx())).toBe(1234);
+
+            // The firmware that used the old name still decodes with the old units.
+            expect(
+                decodeDebugFieldToFriendly(
+                    "GPS_RESCUE_THROTTLE_PID",
+                    "debug[2]",
+                    1234,
+                    stubCtx({ apiVersion: API_VERSION_1_46 }),
+                ),
+            ).toBe("12.3 m");
+        });
+
+        it("decodes a pure rename through the name the table is keyed by", () => {
+            // D_MIN is what firmware before 1.47 called D_MAX - same slot, same
+            // meaning - so a 4.5 log reaches the D_MAX entry.
+            expect(
+                decodeDebugFieldToFriendly("D_MIN", "debug[2]", 100, stubCtx({ apiVersion: API_VERSION_1_46 })),
+            ).toBe(decodeDebugFieldToFriendly("D_MAX", "debug[2]", 100, stubCtx()));
         });
 
         it("uses ctx.motorPoles for DSHOT_RPM_TELEMETRY", () => {

@@ -116,8 +116,15 @@ function parseArgs(argv) {
 // git plumbing
 // ---------------------------------------------------------------------------
 
+/*
+ * NOSONAR javascript:S4036 - `git` is resolved through PATH deliberately. This is a
+ * developer/CI tool run against a checkout the caller already trusts, and git has no
+ * fixed install path across the platforms this repository is developed on (unlike
+ * the Tauri toolchain probes in `check-tauri-prereqs.mjs`, which can name absolute
+ * candidates). Hard-coding one would break the script, not secure it.
+ */
 function git(repo, gitArgs) {
-    return execFileSync("git", ["-C", repo, ...gitArgs], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+    return execFileSync("git", ["-C", repo, ...gitArgs], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 }); // NOSONAR javascript:S4036
 }
 
 function gitShow(repo, ref, path) {
@@ -173,6 +180,11 @@ function apiMinorAt(repo, ref) {
  * after a release and occasionally reverted, hence "newest run" rather than
  * "only run".
  */
+function debugTablesCommit(repo, ref) {
+    const commit = git(repo, ["log", "-1", "--format=%H", ref, "--", DEBUG_HEADER, DEBUG_SOURCE]).trim();
+    return commit || git(repo, ["rev-parse", ref]).trim();
+}
+
 function buildVersionRefs(repo, devRef, minMinor) {
     const devMinor = apiMinorAt(repo, devRef);
     const commits = git(repo, ["log", "--first-parent", "--format=%H", devRef, "--", MSP_PROTOCOL_HEADER])
@@ -203,13 +215,20 @@ function buildVersionRefs(repo, devRef, minMinor) {
     return [...refs.entries()]
         .filter(([minor]) => minor >= minMinor)
         .sort(([left], [right]) => left - right)
-        .map(([minor, { ref, commit }]) => ({
-            apiVersion: `1.${minor}.0`,
-            minor,
-            ref,
-            commit,
-            date: git(repo, ["log", "-1", "--format=%ad", "--date=short", commit]).trim(),
-        }));
+        .map(([minor, { ref }]) => {
+            // Provenance is the newest commit that actually touched debug.h/debug.c at
+            // that ref, not the ref itself: recording master's tip would make the
+            // generated header churn on every unrelated firmware commit, and `--check`
+            // would report drift when nothing about the debug modes had moved.
+            const commit = debugTablesCommit(repo, ref);
+            return {
+                apiVersion: `1.${minor}.0`,
+                minor,
+                ref,
+                commit,
+                date: git(repo, ["log", "-1", "--format=%ad", "--date=short", commit]).trim(),
+            };
+        });
 }
 
 // ---------------------------------------------------------------------------
@@ -369,18 +388,34 @@ function parseLocalEnumConstants(source) {
     const constants = new Map();
     const blocks = stripComments(source).matchAll(/enum\s*(?:[A-Za-z_][A-Za-z0-9_]*\s*)?\{([^}]*)\}/g);
     for (const block of blocks) {
+        const entries = new Map();
         let next = 0;
+        let usable = true;
+
         for (const rawEntry of block[1].split(",")) {
-            const parsed = rawEntry.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)\s*(?:=\s*(\d+))?$/);
-            if (!parsed) {
-                next += 1;
+            const entry = rawEntry.trim();
+            if (!entry) {
                 continue;
+            }
+            const parsed = entry.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*(?:=\s*(\d+))?$/);
+            if (!parsed) {
+                // An initialiser this parser cannot evaluate (`FOO = BAR + 1`,
+                // `FOO = (1 << 2)`) shifts every enumerator after it, so drop the
+                // whole block rather than record indices the firmware disagrees with.
+                usable = false;
+                break;
             }
             if (parsed[2] !== undefined) {
                 next = Number(parsed[2]);
             }
-            constants.set(parsed[1], next);
+            entries.set(parsed[1], next);
             next += 1;
+        }
+
+        if (usable) {
+            for (const [name, value] of entries) {
+                constants.set(name, value);
+            }
         }
     }
     return constants;
@@ -412,6 +447,36 @@ function groupDebugSetLines(grepOutput) {
     return byFile;
 }
 
+/*
+ * The mode and index arguments of one DEBUG_SET() call site. A wrapper macro puts
+ * its own argument first, so the mode is either the first or the second argument;
+ * neither being a known mode means this is a macro definition or a stale call site.
+ */
+function resolveDebugSetCall(text, call, identifierToMode) {
+    const args = splitCallArguments(text, call.index + call[0].length - 1);
+    const modeArgument = identifierToMode.has(args[0]) ? 0 : 1;
+    const mode = identifierToMode.get(args[modeArgument]);
+
+    return mode === undefined ? undefined : { mode, rawIndex: args[modeArgument + 1] };
+}
+
+/*
+ * The debug[n] a call site writes, or undefined when the index is computed at run
+ * time (`axis`, `2 * axis + 1`, ...) and this scan cannot enumerate it.
+ * `readConstants` is called only for an identifier index, since resolving it needs
+ * the whole file.
+ */
+function resolveFieldIndex(rawIndex, readConstants) {
+    let index;
+    if (/^\d+$/.test(rawIndex)) {
+        index = Number(rawIndex);
+    } else if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(rawIndex)) {
+        index = readConstants().get(rawIndex);
+    }
+
+    return index !== undefined && index >= 0 && index < DEBUG_VALUE_COUNT ? index : undefined;
+}
+
 function extractFieldUsage(repo, version, modes) {
     let grepOutput;
     try {
@@ -427,36 +492,26 @@ function extractFieldUsage(repo, version, modes) {
 
     for (const [path, lines] of groupDebugSetLines(grepOutput)) {
         let constants = null;
+        const readConstants = () => (constants ??= parseLocalEnumConstants(gitShow(repo, version.ref, path)));
+
         for (const text of lines) {
             for (const call of text.matchAll(DEBUG_SET_CALL)) {
-                const args = splitCallArguments(text, call.index + call[0].length - 1);
-                // A wrapper macro puts its own argument first, so the mode is either
-                // the first or the second argument. Neither being a known mode means
-                // this is a macro definition or a stale call site.
-                const modeArgument = identifierToMode.has(args[0]) ? 0 : 1;
-                const mode = identifierToMode.get(args[modeArgument]);
-                const rawIndex = args[modeArgument + 1];
-                if (!mode || rawIndex === undefined) {
+                const resolved = resolveDebugSetCall(text, call, identifierToMode);
+                if (resolved?.rawIndex === undefined) {
                     continue;
                 }
-                if (!usage.has(mode)) {
-                    usage.set(mode, { fields: new Set(), dynamic: false });
+                if (!usage.has(resolved.mode)) {
+                    usage.set(resolved.mode, { fields: new Set(), dynamic: false });
                 }
-                const entry = usage.get(mode);
 
-                let index = /^\d+$/.test(rawIndex) ? Number(rawIndex) : undefined;
-                if (index === undefined && /^[A-Za-z_][A-Za-z0-9_]*$/.test(rawIndex)) {
-                    constants ??= parseLocalEnumConstants(gitShow(repo, version.ref, path));
-                    index = constants.get(rawIndex);
-                }
-                if (index === undefined || index < 0 || index >= DEBUG_VALUE_COUNT) {
-                    // A computed index (`axis`, `2 * axis + 1`, ...): the mode writes
-                    // fields this scan cannot enumerate, so it is not checkable.
+                const entry = usage.get(resolved.mode);
+                const index = resolveFieldIndex(resolved.rawIndex, readConstants);
+                if (index === undefined) {
                     entry.dynamic = true;
                     unresolved += 1;
-                    continue;
+                } else {
+                    entry.fields.add(index);
                 }
-                entry.fields.add(index);
             }
         }
     }
@@ -682,10 +737,10 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
  * the generated fixture is already formatted the way `npm run format` wants it.
  */
 function collapseNumberArrays(json) {
-    return json.replaceAll(
-        /\[\s*\n\s*((?:\d+,\s*\n\s*)*\d+)\s*\n\s*\]/g,
-        (match, body) => `[${body.split(/,\s*\n\s*/).join(", ")}]`,
-    );
+    // Anchored to line breaks with no nested whitespace repetition: nothing in the
+    // pattern can match the same characters two ways, so a near-match input has
+    // nothing to backtrack over (SonarCloud javascript:S5852).
+    return json.replaceAll(/\[\n[ ]*\d+(?:,\n[ ]*\d+)*\n[ ]*\]/g, (match) => `[${match.match(/\d+/g).join(", ")}]`);
 }
 
 function renderFieldUsage({ repoUrl, versions }) {
