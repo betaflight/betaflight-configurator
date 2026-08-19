@@ -6,7 +6,13 @@ import {
     decodeDebugFieldToFriendly,
     convertDebugFieldValue,
 } from "../../../src/js/utils/debugModes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
+import {
+    API_VERSION_1_44,
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+} from "../../../src/js/data_storage";
 
 describe("debugModes helper", () => {
     describe("getDebugModes", () => {
@@ -53,12 +59,34 @@ describe("debugModes helper", () => {
             // AUTOPILOT_POSITION was removed from the firmware enum in 1.48.
             expect(modes).not.toContain("AUTOPILOT_POSITION");
             // Tail must match the firmware debug_mode_e enum order exactly:
-            // AUTOPILOT_PID(99), POSITION_NAV(100), AUTOPILOT_STOP(101).
+            // AUTOPILOT_PID(99), POSITION_NAV(100), AUTOPILOT_STOP(101), PITOT(102).
             expect(getDebugModeIndex("AUTOPILOT_PID", API_VERSION_1_48)).toBe(99);
             expect(getDebugModeIndex("POSITION_NAV", API_VERSION_1_48)).toBe(100);
             expect(getDebugModeIndex("AUTOPILOT_STOP", API_VERSION_1_48)).toBe(101);
-            // AUTOPILOT_STOP is the last entry.
-            expect(modes.indexOf("AUTOPILOT_STOP")).toBe(modes.length - 1);
+            expect(getDebugModeIndex("PITOT", API_VERSION_1_48)).toBe(102);
+            // PITOT is the last entry.
+            expect(modes.indexOf("PITOT")).toBe(modes.length - 1);
+        });
+
+        it("resolves an API version newer than the generated table to the newest entry", () => {
+            // A firmware reporting an API version this build has no table for still
+            // decodes through the closest known enum rather than falling back to the
+            // oldest one.
+            expect(getDebugModes("1.49.0")).toEqual(getDebugModes(API_VERSION_1_48));
+            expect(getDebugModes("1.47.3")).toEqual(getDebugModes(API_VERSION_1_47));
+        });
+
+        it("falls back to the oldest generated list for an unusable API version", () => {
+            expect(getDebugModes("not-a-version")).toEqual(getDebugModes(API_VERSION_1_44));
+            expect(getDebugModes()).toEqual(getDebugModes(API_VERSION_1_44));
+        });
+
+        it("keeps the pre-rename firmware names on the firmware that used them", () => {
+            // The firmware renamed these enum slots in 1.47; logs recorded before
+            // that report the old name, and the index must not move.
+            expect(getDebugModes(API_VERSION_1_46)).toContain("D_MIN");
+            expect(getDebugModes(API_VERSION_1_47)).toContain("D_MAX");
+            expect(getDebugModeIndex("D_MIN", API_VERSION_1_46)).toBe(getDebugModeIndex("D_MAX", API_VERSION_1_47));
         });
 
         it("does not expose the 1.48 autopilot modes on 1.47 firmware", () => {
