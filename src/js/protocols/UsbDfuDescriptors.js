@@ -29,6 +29,10 @@ class UsbDfuDescriptors extends EventTarget {
     _invalidateDescriptorCache() {
         this._langId = undefined;
         this._configDescriptor = undefined;
+        // A read already awaiting a transfer when the device changes must not
+        // land its (old-device) result in the new device's cache; each read
+        // captures this generation and only caches while it still matches.
+        this._descriptorGeneration = (this._descriptorGeneration ?? 0) + 1;
     }
 
     /**
@@ -67,6 +71,14 @@ class UsbDfuDescriptors extends EventTarget {
             return this._langId;
         }
 
+        const generation = this._descriptorGeneration ?? 0;
+        const cache = (langId) => {
+            if ((this._descriptorGeneration ?? 0) === generation) {
+                this._langId = langId;
+            }
+            return langId;
+        };
+
         try {
             const setup = {
                 requestType: "standard",
@@ -78,15 +90,13 @@ class UsbDfuDescriptors extends EventTarget {
 
             const result = await this._withTimeout(this._rawControlTransferIn(setup, 255), 5000, "getLangId");
             if (result.status === "ok" && result.data.length >= 4) {
-                this._langId = (result.data[3] << 8) | result.data[2];
-                return this._langId;
+                return cache((result.data[3] << 8) | result.data[2]);
             }
         } catch (error) {
             console.warn(`${this.logHead} Failed to read LANGID, falling back to 0x0409:`, error);
         }
 
-        this._langId = 0x0409;
-        return this._langId;
+        return cache(0x0409);
     }
 
     async getString(index) {
@@ -125,6 +135,7 @@ class UsbDfuDescriptors extends EventTarget {
             return this._configDescriptor;
         }
 
+        const generation = this._descriptorGeneration ?? 0;
         const setup = {
             requestType: "standard",
             recipient: "device",
@@ -149,8 +160,11 @@ class UsbDfuDescriptors extends EventTarget {
             throw new Error(`USB getConfigDescriptor returned a ${header.data.length}-byte header`);
         }
 
+        // wTotalLength is device-supplied. Real configuration descriptors are
+        // at most a couple of KiB; a bogus device can claim up to 64 KiB and
+        // stall the flasher on one huge read, so treat that as implausible too.
         const totalLength = (header.data[3] << 8) | header.data[2];
-        if (totalLength < 9) {
+        if (totalLength < 9 || totalLength > 4096) {
             throw new Error(`USB getConfigDescriptor reported an implausible length of ${totalLength}`);
         }
 
@@ -167,8 +181,10 @@ class UsbDfuDescriptors extends EventTarget {
             throw new Error(`USB getConfigDescriptor returned ${result.data.length} of ${totalLength} bytes`);
         }
 
-        this._configDescriptor = result.data;
-        return this._configDescriptor;
+        if ((this._descriptorGeneration ?? 0) === generation) {
+            this._configDescriptor = result.data;
+        }
+        return result.data;
     }
 
     async getInterfaceDescriptor(interfaceIndex) {

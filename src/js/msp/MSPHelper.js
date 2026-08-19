@@ -611,7 +611,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
                     data.readU8(); // was FC.ARMING_CONFIG.auto_disarm_kill_switch
                     FC.ARMING_CONFIG.small_angle = data.readU8();
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
                     }
                     break;
@@ -1357,6 +1357,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
                     FC.ADVANCED_TUNING.dMaxGain = data.readU8();
                     FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
+                    // No Configurator UI for these; round-tripped as-is so saving other PID_ADVANCED
+                    // fields doesn't reset a value still active on firmware older than 2026.12.0.
                     FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                     FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
@@ -2043,7 +2045,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ARMING_CONFIG.auto_disarm_delay)
                 .push8(0) // was disarm_kill_switch
                 .push8(FC.ARMING_CONFIG.small_angle);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm);
             }
             break;

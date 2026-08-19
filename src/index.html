@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
         <script type="module" src="/src/js/utils/common.js"></script>
         <script type="module" src="/src/js/browserMain.js"></script>
@@ -16,113 +16,10 @@
         <meta name="theme-color" content="#eea600" />
     </head>
     <body>
+        <!-- Every dialog lives in Vue now (see src/components/dialogs). Do not add markup after
+             <app></app>: it would be parsed as slot content and dropped, since App.vue has no slot. -->
         <div id="main-wrapper">
-        <app />
-        <dialog
-            id="dialogWaiting"
-            style="border: 1px solid var(--surface-600); border-radius: 8px; padding: 30px; min-width: 300px"
-        >
-            <div style="text-align: center">
-                <div style="margin-bottom: 15px">
-                    <div
-                        style="
-                            border: 4px solid rgba(255, 255, 255, 0.2);
-                            border-top: 4px solid var(--primary-500);
-                            border-radius: 50%;
-                            width: 50px;
-                            height: 50px;
-                            animation: spin 1s linear infinite;
-                            margin: 0 auto;
-                        "
-                    ></div>
-                </div>
-                <p id="dialogWaiting-message" style="font-size: 14px; color: var(--text); margin: 0">
-                    Processing passkey authentication...
-                </p>
-            </div>
-        </dialog>
-
-        <dialog class="dialogConfiguratorUpdate">
-            <h3 i18n="noticeTitle"></h3>
-            <div class="content">
-                <div class="dialogConfiguratorUpdate-content" style="margin-top: 10px"></div>
-            </div>
-            <div class="buttons">
-                <a href="#" class="dialogConfiguratorUpdate-websitebtn regular-button" i18n="configuratorUpdateWebsite"
-                    >Visit Website</a
-                >
-                <a href="#" class="dialogConfiguratorUpdate-closebtn regular-button" i18n="close">Close</a>
-            </div>
-        </dialog>
-
-        <dialog class="dialogConnectWarning">
-            <h3 i18n="warningTitle"></h3>
-            <div class="content">
-                <div class="dialogConnectWarning-content" style="margin-top: 10px"></div>
-            </div>
-            <div class="buttons">
-                <a href="#" class="dialogConnectWarning-closebtn regular-button" i18n="close">Close</a>
-            </div>
-        </dialog>
-
-        <dialog id="dialogResetToCustomDefaults">
-            <h3 i18n="noticeTitle"></h3>
-            <div class="content">
-                <div id="dialogResetToCustomDefaults-content" i18n="resetToCustomDefaultsDialog"></div>
-            </div>
-            <div>
-                <span class="buttons">
-                    <a
-                        href="#"
-                        id="dialogResetToCustomDefaults-acceptbtn"
-                        class="regular-button"
-                        i18n="resetToCustomDefaultsAccept"
-                        >Accept</a
-                    >
-                </span>
-                <span class="buttons">
-                    <a href="#" id="dialogResetToCustomDefaults-cancelbtn" class="regular-button" i18n="cancel"
-                        >Cancel</a
-                    >
-                </span>
-            </div>
-        </dialog>
-
-        <dialog class="dialogError">
-            <h3 i18n="errorTitle"></h3>
-            <div class="content">
-                <div class="dialogError-content" style="margin-top: 10px"></div>
-            </div>
-            <div class="buttons">
-                <a href="#" class="dialogError-closebtn regular-button" i18n="close">Close</a>
-            </div>
-        </dialog>
-
-        <dialog class="dialogYesNo">
-            <h3 class="dialogYesNoTitle"></h3>
-            <div class="dialogYesNoContent"></div>
-            <div class="buttons">
-                <a href="#" class="dialogYesNo-yesButton regular-button">Yes</a>
-                <a href="#" class="dialogYesNo-noButton regular-button">No</a>
-            </div>
-        </dialog>
-
-        <dialog class="dialogWait">
-            <div class="data-loading"></div>
-            <h3 class="dialogWaitTitle"></h3>
-            <div class="buttons">
-                <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel">Cancel</a>
-            </div>
-        </dialog>
-
-        <dialog class="dialogInformation">
-            <h3 class="dialogInformationTitle"></h3>
-            <div class="dialogInformationContent"></div>
-            <div class="buttons">
-                <a href="#" class="dialogInformation-confirmButton regular-button">OK</a>
-            </div>
-        </dialog>
-
+            <app></app>
         </div>
     </body>
 </html>

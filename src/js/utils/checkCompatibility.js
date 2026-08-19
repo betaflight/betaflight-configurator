@@ -25,10 +25,13 @@ export function getOS() {
         os = "Windows";
     } else if (/Android/.test(userAgent)) {
         os = "Android";
+    } else if (/CrOS/.test(userAgent) || /Chrom(e|ium) OS/.test(platform)) {
+        // userAgentData.platform says "Chrome OS"/"Chromium OS"; only the user
+        // agent carries the CrOS token, and the legacy platform reports plain
+        // Linux, so ChromeOS has to be ruled out before the Linux fallback.
+        os = "ChromeOS";
     } else if (/Linux/.test(platform)) {
         os = "Linux";
-    } else if (/CrOS/.test(platform)) {
-        os = "ChromeOS";
     }
 
     return os;
@@ -309,7 +312,8 @@ export function checkBluetoothSupport() {
  */
 export function checkUsbSupport() {
     let result = false;
-    if (isAndroid()) {
+    if (isAndroid() || isTauriAndroid()) {
+        // Native USB DFU in both Android shells; the system webview has no WebUSB.
         result = true;
     } else if (navigator.usb) {
         result = true;

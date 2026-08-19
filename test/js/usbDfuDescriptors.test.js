@@ -157,6 +157,12 @@ describe("getConfigDescriptor", () => {
         await expect(transport.getConfigDescriptor()).rejects.toThrow(/implausible length of 4/);
     });
 
+    it("rejects a device-supplied length large enough to stall the flasher", async () => {
+        // wTotalLength 0xffff from a bogus device must not trigger a 64 KiB read.
+        const transport = new ScriptedTransport({ config: [9, 2, 0xff, 0xff, 1, 1, 0, 0x80, 50] });
+        await expect(transport.getConfigDescriptor()).rejects.toThrow(/implausible length of 65535/);
+    });
+
     it("rejects a body shorter than the advertised length", async () => {
         // Claims 64 bytes but only ever returns the 18 it has.
         const short = [9, 2, 64, 0, 1, 1, 0, 0x80, 50, ...interfaceDescriptor()];
@@ -229,5 +235,57 @@ describe("getFunctionalDescriptor", () => {
         });
 
         await expect(transport.getFunctionalDescriptor()).rejects.toThrow(/Invalid DFU functional descriptor/);
+    });
+});
+
+describe("_invalidateDescriptorCache", () => {
+    it("drops the cached LANGID and configuration blob", async () => {
+        const transport = new ScriptedTransport({ config: buildConfig([interfaceDescriptor()]) });
+
+        await transport.getLangId();
+        await transport.getConfigDescriptor();
+        const before = transport.calls.length;
+
+        transport._invalidateDescriptorCache();
+        await transport.getLangId();
+        await transport.getConfigDescriptor();
+
+        expect(transport.calls.length).toBeGreaterThan(before);
+    });
+
+    it("keeps an in-flight read from caching against the new device", async () => {
+        const transport = new ScriptedTransport({ config: buildConfig([interfaceDescriptor()]) });
+        let release;
+        const gate = new Promise((resolve) => {
+            release = resolve;
+        });
+        const scripted = transport._rawControlTransferIn.bind(transport);
+        transport._rawControlTransferIn = async (setup, length) => {
+            await gate;
+            return scripted(setup, length);
+        };
+
+        const read = transport.getLangId();
+        transport._invalidateDescriptorCache();
+        release();
+
+        expect(await read).toBe(0x0409);
+        expect(transport._langId).toBeUndefined();
+    });
+});
+
+describe("_withTimeout", () => {
+    it("rejects an operation that never settles", async () => {
+        const transport = new ScriptedTransport();
+
+        await expect(transport._withTimeout(new Promise(() => {}), 10, "stuck")).rejects.toThrow(
+            "USB stuck timed out after 10ms",
+        );
+    });
+
+    it("passes the result through when the operation settles in time", async () => {
+        const transport = new ScriptedTransport();
+
+        await expect(transport._withTimeout(Promise.resolve(42), 1000, "fast")).resolves.toBe(42);
     });
 });

@@ -14,6 +14,11 @@ pub fn run() {
     #[cfg(not(target_os = "ios"))]
     let builder = builder.plugin(tauri_plugin_serialplugin::init());
 
+    // USB DFU flashing: desktop keeps WebUSB in the webview, so the native
+    // plugin is Android-only.
+    #[cfg(target_os = "android")]
+    let builder = builder.plugin(tauri_plugin_dfu::init());
+
     // Restore the last window size, position and maximized/fullscreen state on launch.
     #[cfg(desktop)]
     let builder = builder.plugin(tauri_plugin_window_state::Builder::default().build());

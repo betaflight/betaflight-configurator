@@ -365,6 +365,21 @@ export function bootstrapViewer() {
         }
     }
 
+    // Retitle a slot in place. Unlike onSaveWorkspace this keeps the stored graphConfig
+    // instead of replacing it with whatever happens to be on screen, so renaming a
+    // workspace never costs the user the setup they saved into it.
+    function onRenameWorkspace(id, title) {
+        const entry = workspaceStore.workspaceGraphConfigs[id];
+        if (!entry) {
+            return;
+        }
+        workspaceStore.workspaceGraphConfigs[id] = { ...entry, title };
+        prefs.set("workspaceGraphConfigs", workspaceStore.workspaceGraphConfigs);
+        if (id === workspaceStore.activeWorkspace) {
+            graphStore.legendTitle = title;
+        }
+    }
+
     // Save current config
     function onSaveWorkspace(id, title) {
         workspaceStore.workspaceGraphConfigs[id] = {
@@ -697,6 +712,7 @@ export function bootstrapViewer() {
             }
         };
         workspaceStore.saveWorkspace = (id, title) => onSaveWorkspace(id, title);
+        workspaceStore.renameWorkspace = (id, title) => onRenameWorkspace(id, title);
         workspaceStore.applyDefaultWorkspace = (index) => {
             const presets = [null, structuredClone(ctzsnoozeWorkspace), structuredClone(supaflyWorkspace)];
             if (presets[index]) {

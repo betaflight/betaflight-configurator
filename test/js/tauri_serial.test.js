@@ -18,8 +18,8 @@ const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({ invoke }));
 
 vi.mock("../../src/js/protocols/devices", () => ({
-    serialDevices: [],
-    vendorIdNames: { 0x2e3c: "AT32" },
+    serialDevices: [{ vendorId: 0x0483, productId: 0x5740 }],
+    vendorIdNames: { 0x2e3c: "AT32", 0x0483: "STM32" },
 }));
 
 vi.mock("../../src/js/gui", () => ({
@@ -100,13 +100,29 @@ describe("TauriSerial write lock timeout", () => {
     });
 
     it("does not retry an unrelated write error", async () => {
-        mockWrites("Port '/dev/ttyACM0' not found");
+        mockWrites("Failed to write binary data: Input/output error");
         const serial = connectedSerial();
 
         const result = await serial.send(new Uint8Array([1, 2, 3]));
 
         expect(result).toEqual({ bytesSent: 0 });
         expect(writeCalls()).toHaveLength(1);
+        // Not a dead link — an I/O hiccup leaves the port open.
+        expect(serial.connected).toBe(true);
+    });
+
+    it("tears the connection down once the plugin has dropped the port", async () => {
+        // A flight controller re-enumerates on every reboot, and on Android the
+        // path is the USB device node, so it never comes back. Without this the
+        // MSP queue keeps writing to a dead path until the 1 s hotplug poll
+        // catches up, which reads as a hang.
+        mockWrites("Port '/dev/ttyACM0' not found");
+        const serial = connectedSerial();
+
+        const result = await serial.send(new Uint8Array([1, 2, 3]));
+
+        expect(result).toEqual({ bytesSent: 0 });
+        expect(serial.connected).toBe(false);
     });
 
     it("still tears the connection down on a broken pipe", async () => {
@@ -153,6 +169,66 @@ describe("TauriSerial write lock timeout", () => {
     });
 });
 
+describe("TauriSerial port enumeration", () => {
+    // The plugin's two backends format the USB IDs differently: the desktop
+    // serialport enumerator stringifies them as decimal, the Android USB bridge
+    // as hex. Both must survive into the known-device filter, or the transport
+    // reports no ports at all on that platform.
+    const STM32_VCP = { type: "Usb", manufacturer: "Betaflight", product: "SPEEDYBEEF405MINI" };
+
+    beforeEach(() => {
+        invoke.mockReset();
+        vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
+        vi.spyOn(console, "log").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    /** Resolve available_ports with `portsMap` and return the filtered port list. */
+    async function listPorts(portsMap) {
+        invoke.mockImplementation((cmd) =>
+            Promise.resolve(cmd === "plugin:serialplugin|available_ports" ? portsMap : undefined),
+        );
+        return new TauriSerial().getDevices();
+    }
+
+    it("parses the decimal IDs the desktop backend reports", async () => {
+        const ports = await listPorts({ "/dev/ttyACM0": { ...STM32_VCP, vid: "1155", pid: "22336" } });
+
+        expect(ports).toHaveLength(1);
+        expect(ports[0]).toMatchObject({ path: "/dev/ttyACM0", vendorId: 0x0483, productId: 0x5740 });
+    });
+
+    it("parses the hex IDs the Android backend reports", async () => {
+        const ports = await listPorts({ "/dev/bus/usb/002/003": { ...STM32_VCP, vid: "0x0483", pid: "0x5740" } });
+
+        expect(ports).toHaveLength(1);
+        expect(ports[0]).toMatchObject({
+            path: "/dev/bus/usb/002/003",
+            vendorId: 0x0483,
+            productId: 0x5740,
+            displayName: "Betaflight STM32",
+        });
+    });
+
+    it("drops a port whose IDs are unknown rather than reading them as zero", async () => {
+        const ports = await listPorts({ "/dev/ttyS0": { type: "Unknown", vid: "Unknown", pid: "Unknown" } });
+
+        expect(ports).toEqual([]);
+    });
+
+    it("drops a port whose IDs are only partly numeric", async () => {
+        // parseInt stops at the first invalid character, so a lenient parse would
+        // read "1155unknown" as 1155 and promote an unrecognised device into the
+        // known-device list.
+        const ports = await listPorts({ "/dev/ttyS0": { ...STM32_VCP, vid: "1155unknown", pid: "22336" } });
+
+        expect(ports).toEqual([]);
+    });
+});
+
 describe("TauriSerial connect", () => {
     beforeEach(() => {
         invoke.mockReset();
@@ -164,6 +240,43 @@ describe("TauriSerial connect", () => {
         vi.restoreAllMocks();
     });
 
+    it("refuses to open a path the transport no longer lists", async () => {
+        // Opening a vanished USB node makes the plugin's Kotlin bridge throw, and
+        // its JNI wrapper leaves that exception pending, wedging every later call
+        // over the bridge. The reconnect after "Save and Reboot" aims at exactly
+        // such a stale path, so the open must not be attempted at all.
+        invoke.mockImplementation((cmd) =>
+            Promise.resolve(cmd === "plugin:serialplugin|available_ports" ? {} : undefined),
+        );
+        const serial = new TauriSerial();
+
+        const connected = await serial.connect(PORT, { baudRate: 115200 });
+
+        expect(connected).toBe(false);
+        expect(invoke.mock.calls.map(([cmd]) => cmd)).not.toContain("plugin:serialplugin|open");
+        // The flag must clear, or every later connect is refused as "already requested".
+        expect(serial.openRequested).toBe(false);
+    });
+
+    it("opens a path that is still present", async () => {
+        invoke.mockImplementation((cmd) => {
+            if (cmd === "plugin:serialplugin|available_ports") {
+                return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
+            }
+            if (cmd === "plugin:serialplugin|read_binary") {
+                return Promise.resolve([]);
+            }
+            return Promise.resolve(undefined);
+        });
+        const serial = new TauriSerial();
+
+        const connected = await serial.connect(PORT, { baudRate: 115200 });
+        serial.reading = false;
+
+        expect(connected).toBe(true);
+        expect(invoke.mock.calls.map(([cmd]) => cmd)).toContain("plugin:serialplugin|open");
+    });
+
     it("does not call the inert set_timeout command", async () => {
         // set_timeout is a no-op on 3.x: the RX hub owns the fd and every
         // command re-applies its own timeout to the guard before each op.
@@ -172,7 +285,7 @@ describe("TauriSerial connect", () => {
                 return Promise.resolve([]);
             }
             if (cmd === "plugin:serialplugin|available_ports") {
-                return Promise.resolve({});
+                return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
             }
             return Promise.resolve(undefined);
         });
@@ -183,5 +296,31 @@ describe("TauriSerial connect", () => {
 
         expect(connected).toBe(true);
         expect(invoke.mock.calls.map(([cmd]) => cmd)).not.toContain("plugin:serialplugin|set_timeout");
+    });
+
+    it("polls for more bytes than the plugin's RX chunk can hold", async () => {
+        // The plugin's RX hub reads the port into a 1024-byte buffer and hands
+        // the whole chunk to the pending read slot, which keeps only what fits
+        // in the requested size and drops the remainder instead of buffering
+        // it. A request below one hub chunk therefore truncates every burst
+        // above it — MSP_BOXNAMES (~500 bytes) fails its CRC and the stream
+        // never resynchronises.
+        invoke.mockImplementation((cmd) => {
+            if (cmd === "plugin:serialplugin|read_binary") {
+                return Promise.resolve([]);
+            }
+            if (cmd === "plugin:serialplugin|available_ports") {
+                return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
+            }
+            return Promise.resolve(undefined);
+        });
+        const serial = new TauriSerial();
+
+        await serial.connect(PORT, { baudRate: 115200 });
+        serial.reading = false;
+
+        const read = invoke.mock.calls.find(([cmd]) => cmd === "plugin:serialplugin|read_binary");
+        expect(read).toBeDefined();
+        expect(read[1].size).toBeGreaterThan(1024);
     });
 });

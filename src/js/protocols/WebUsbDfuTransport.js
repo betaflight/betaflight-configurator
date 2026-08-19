@@ -14,7 +14,7 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
         this.usbDevice = null;
 
         if (!navigator?.usb) {
-            console.error(`${this.logHead} WebUSB API not supported`);
+            console.log(`${this.logHead} WebUSB API not supported`);
             return;
         }
 
@@ -184,6 +184,8 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
      * rather than throwing, so the descriptor layer can decide what a stall means for a
      * given request (an unsupported LANGID read is recoverable; a truncated
      * configuration descriptor is not).
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {number} length - Maximum bytes to read.
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async _rawControlTransferIn(setup, length) {
@@ -196,10 +198,19 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
 
     /**
      * Perform a USB control transfer IN (device -> host), throwing on a failed transfer.
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {number} length - Maximum bytes to read.
      * @returns {Promise<{status: string, data: Uint8Array}>}
      */
     async controlTransferIn(setup, length) {
-        const result = await this._rawControlTransferIn(setup, length);
+        // Bound the DFU class requests the same way descriptor reads are
+        // bounded (and the Tauri transport's native 5 s default), so a wedged
+        // bootloader fails the flash instead of hanging it.
+        const result = await this._withTimeout(
+            this._rawControlTransferIn(setup, length),
+            5000,
+            `controlTransferIn(${setup.request})`,
+        );
         if (result.status === "ok") {
             return result;
         }
@@ -208,11 +219,17 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
 
     /**
      * Perform a USB control transfer OUT (host -> device).
+     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
+     * @param {ArrayBuffer|Uint8Array} [data] - Payload to send; an empty transfer when omitted.
      * @returns {Promise<{status: string}>}
      */
     async controlTransferOut(setup, data) {
         const arrayBuf = data ? new Uint8Array(data) : new Uint8Array(0);
-        const result = await this.usbDevice.controlTransferOut(setup, arrayBuf);
+        const result = await this._withTimeout(
+            this.usbDevice.controlTransferOut(setup, arrayBuf),
+            5000,
+            `controlTransferOut(${setup.request})`,
+        );
         if (result.status === "ok") {
             return { status: "ok" };
         }
