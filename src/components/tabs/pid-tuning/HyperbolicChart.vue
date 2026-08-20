@@ -30,6 +30,9 @@ function getCssVar(varName, fallback = "#000000") {
 }
 
 function scaleRange(value, fromMin, fromMax, toMin, toMax) {
+    if (fromMax - fromMin === 0) {
+        return (toMin + toMax) / 2;
+    }
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
 }
 
