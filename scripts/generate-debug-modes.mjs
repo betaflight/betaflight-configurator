@@ -583,6 +583,7 @@ const ANNOTATION = /\/\/!<(.*)$/;
 const INDEX_SPEC = /^\[([\d \t,.]+)\][ \t]*/;
 const UNIT_SPEC = /\[([^[\]]+)\]$/;
 const EXPANSION = /\{([^{}]*)\}/;
+const BRACE = /[{}]/g;
 const INDEX_BOUND = /^\d+$/;
 const UNIT_FACTOR = /^-?\d+(?:\.\d+)?/;
 
@@ -669,8 +670,13 @@ function parseUnitSpec(raw) {
     if (factor === undefined && unit === null) {
         return undefined;
     }
+    const scale = factor === undefined ? 1 : Number(factor);
+    if (scale === 0) {
+        // Would read every sample as zero, and its inverse would diverge.
+        return undefined;
+    }
 
-    return { unit, scale: factor === undefined ? 1 : Number(factor) };
+    return { unit, scale };
 }
 
 /*
@@ -713,10 +719,19 @@ function parseAnnotation(raw) {
     }
 
     const expansion = label.match(EXPANSION);
+    // Every brace has to belong to that one group, or the expansion would leave
+    // some of them in the label it produces.
+    const braces = label.match(BRACE)?.length ?? 0;
+    if (braces !== (expansion ? 2 : 0)) {
+        return { error: `label "${label}" needs exactly one {a|b|c} group or none, with both braces` };
+    }
     if (!expansion) {
         return { indices, labels: null, label, unit, scale, enumTag };
     }
     const alternatives = expansion[1].split("|");
+    if (alternatives.some((alternative) => alternative.trim() === "")) {
+        return { error: `"{${expansion[1]}}" has an empty alternative` };
+    }
     if (indices === null || alternatives.length !== indices.length) {
         const covered = indices === null ? "one implicit index" : `${indices.length} indices`;
         return {
@@ -1311,6 +1326,9 @@ function renderConflict(conflict) {
             `                label: ${quote(variant.label)},`,
             `                unit: ${variant.unit === null ? "null" : quote(variant.unit)},`,
             `                scale: ${variant.scale},`,
+            // Two meanings can differ by their enum alone, so the values are part
+            // of what distinguishes them and belong in the report.
+            ...(variant.values === undefined ? [] : renderFrozenList("                ", "values", variant.values)),
             ...renderFrozenList("                ", "sites", variant.sites),
             "            }),",
         );
