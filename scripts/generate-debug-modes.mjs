@@ -117,7 +117,7 @@ function parseArgs(argv) {
 // ---------------------------------------------------------------------------
 
 /*
- * NOSONAR javascript:S4036 - `git` is resolved through PATH deliberately. This is a
+ * NOSONAR javascript:S4036 — `git` is resolved through PATH deliberately. This is a
  * developer/CI tool run against a checkout the caller already trusts, and git has no
  * fixed install path across the platforms this repository is developed on (unlike
  * the Tauri toolchain probes in `check-tauri-prereqs.mjs`, which can name absolute
@@ -162,7 +162,7 @@ function resolveRepo(explicit) {
 
 function apiMinorAt(repo, ref) {
     const source = gitShow(repo, ref, MSP_PROTOCOL_HEADER);
-    const match = source.match(/^\s*#define\s+API_VERSION_MINOR\s+(\d+)/m);
+    const match = source.match(/^[ \t]*#define[ \t]+API_VERSION_MINOR[ \t]+(\d+)/m);
     if (!match) {
         throw new Error(`Cannot find API_VERSION_MINOR in ${MSP_PROTOCOL_HEADER} at ${ref}`);
     }
@@ -276,11 +276,13 @@ function parseDebugEnum(header, ref) {
 
 /*
  * `debugModeNames[]` from debug.c. Older firmware lists the names positionally,
- * newer firmware uses designated initialisers - and leaves a hole for reserved
+ * newer firmware uses designated initialisers — and leaves a hole for reserved
  * enum slots (DEBUG_POSITION_NAV owns an index but has no name).
  */
 function parseDebugModeNames(source, ref) {
-    const match = stripComments(source).match(/debugModeNames\s*\[[^\]]*\]\s*=\s*\{([\s\S]*?)\n\s*\}\s*;/);
+    const match = stripComments(source).match(
+        /debugModeNames[ \t]*\[[^\]]*\][ \t]*=[ \t]*\{([\s\S]*?)\n[ \t]*\}[ \t]*;/,
+    );
     if (!match) {
         throw new Error(`Cannot find debugModeNames[] in ${DEBUG_SOURCE} at ${ref}`);
     }
@@ -317,61 +319,76 @@ function extractModes(repo, version) {
 }
 
 // ---------------------------------------------------------------------------
-// DEBUG_SET() call-site scan - which debug[n] each mode actually writes
+// DEBUG_SET() call-site scan — which debug[n] each mode actually writes
 // ---------------------------------------------------------------------------
 
 // Every call that reaches the DEBUG_SET macro, including the wrapper macros that
 // forward to it (GYRO_FILTER_AXIS_DEBUG_SET(axis, mode, index, ...)).
-const DEBUG_SET_CALL = /(?<![A-Za-z0-9_])(?:[A-Z][A-Z0-9_]*_)?DEBUG_SET\s*\(/g;
+const DEBUG_SET_CALL = /(?<!\w)(?:[A-Z][A-Z0-9_]*_)?DEBUG_SET\s*\(/g;
 
-/*
- * Split the argument list that starts at `open` (the index of its "(").
- * Commas nested in parentheses, brackets or literals do not separate arguments:
- * `DEBUG_SET(DEBUG_SBUS, DEBUG_SBUS_FRAME_TIME, cmpTimeUs(nowUs, startUs))` has
- * three of them, not four. A truncated line yields the arguments it does carry,
- * which is all this scan needs - the mode and the index come first.
- */
-function splitCallArguments(text, open) {
-    const args = [];
+const OPENING_BRACKETS = new Set(["(", "[", "{"]);
+const CLOSING_BRACKETS = new Set([")", "]", "}"]);
+
+// Index of the quote that closes the literal opening at `start`, or the last index
+// when the line is truncated mid-literal.
+function findLiteralEnd(text, start) {
+    const quote = text[start];
+    for (let i = start + 1; i < text.length; i++) {
+        if (text[i] === "\\") {
+            i += 1;
+        } else if (text[i] === quote) {
+            return i;
+        }
+    }
+    return text.length - 1;
+}
+
+// Index of the bracket closing the one at `open`, or `text.length` when the line is
+// truncated before it.
+function findCallEnd(text, open) {
     let depth = 0;
-    let current = "";
-    let quote = null;
 
     for (let i = open; i < text.length; i++) {
         const character = text[i];
-
-        if (quote) {
-            current += character;
-            if (character === "\\") {
-                current += text[++i] ?? "";
-            } else if (character === quote) {
-                quote = null;
-            }
-            continue;
-        }
-
         if (character === '"' || character === "'") {
-            quote = character;
-            current += character;
-            continue;
-        }
-        if (character === "(" || character === "[" || character === "{") {
+            i = findLiteralEnd(text, i);
+        } else if (OPENING_BRACKETS.has(character)) {
             depth += 1;
-            if (depth === 1) {
-                continue;
-            }
-        } else if (character === ")" || character === "]" || character === "}") {
+        } else if (CLOSING_BRACKETS.has(character)) {
             depth -= 1;
             if (depth === 0) {
-                args.push(current.trim());
-                return args;
+                return i;
             }
-        } else if (character === "," && depth === 1) {
+        }
+    }
+
+    return text.length;
+}
+
+// Split on the commas that are not nested inside brackets or a literal.
+function splitTopLevel(inner) {
+    const args = [];
+    let depth = 0;
+    let current = "";
+
+    for (let i = 0; i < inner.length; i++) {
+        const character = inner[i];
+        if (character === '"' || character === "'") {
+            const end = findLiteralEnd(inner, i);
+            current += inner.slice(i, end + 1);
+            i = end;
+        } else if (OPENING_BRACKETS.has(character)) {
+            depth += 1;
+            current += character;
+        } else if (CLOSING_BRACKETS.has(character)) {
+            depth -= 1;
+            current += character;
+        } else if (character === "," && depth === 0) {
             args.push(current.trim());
             current = "";
-            continue;
+        } else {
+            current += character;
         }
-        current += character;
     }
 
     args.push(current.trim());
@@ -379,45 +396,64 @@ function splitCallArguments(text, open) {
 }
 
 /*
+ * Split the argument list that starts at `open` (the index of its "(").
+ * Commas nested in parentheses, brackets or literals do not separate arguments:
+ * `DEBUG_SET(DEBUG_SBUS, DEBUG_SBUS_FRAME_TIME, cmpTimeUs(nowUs, startUs))` has
+ * three of them, not four. A truncated line yields the arguments it does carry,
+ * which is all this scan needs — the mode and the index come first.
+ */
+function splitCallArguments(text, open) {
+    return splitTopLevel(text.slice(open + 1, findCallEnd(text, open)));
+}
+
+/*
+ * One `enum { ... }` body as a name -> value map, or undefined when it carries an
+ * initialiser this parser cannot evaluate (`FOO = BAR + 1`, `FOO = (1 << 2)`). Such
+ * an entry shifts every enumerator after it, so the whole block is discarded rather
+ * than recording indices the firmware disagrees with.
+ */
+function parseEnumBlock(body) {
+    const entries = new Map();
+    let next = 0;
+
+    for (const rawEntry of body.split(",")) {
+        const entry = rawEntry.trim();
+        if (!entry) {
+            continue;
+        }
+        const parsed = entry.match(/^([A-Za-z_]\w*)\s*(?:=\s*(\d+))?$/);
+        if (!parsed) {
+            return undefined;
+        }
+        if (parsed[2] !== undefined) {
+            next = Number(parsed[2]);
+        }
+        entries.set(parsed[1], next);
+        next += 1;
+    }
+
+    return entries;
+}
+
+/*
  * Resolve enum constants used as debug indices: several files index their debug
  * slots through a file-local `enum { DEBUG_FOO_BAR, ... }`. Only plain
- * implicit/decimal enumerators are resolved; anything else stays unresolved and
- * marks the mode dynamic.
+ * implicit/decimal enumerators are resolved; anything else leaves the index
+ * unresolved, which marks the mode dynamic.
  */
 function parseLocalEnumConstants(source) {
     const constants = new Map();
-    const blocks = stripComments(source).matchAll(/enum\s*(?:[A-Za-z_][A-Za-z0-9_]*\s*)?\{([^}]*)\}/g);
-    for (const block of blocks) {
-        const entries = new Map();
-        let next = 0;
-        let usable = true;
 
-        for (const rawEntry of block[1].split(",")) {
-            const entry = rawEntry.trim();
-            if (!entry) {
-                continue;
-            }
-            const parsed = entry.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*(?:=\s*(\d+))?$/);
-            if (!parsed) {
-                // An initialiser this parser cannot evaluate (`FOO = BAR + 1`,
-                // `FOO = (1 << 2)`) shifts every enumerator after it, so drop the
-                // whole block rather than record indices the firmware disagrees with.
-                usable = false;
-                break;
-            }
-            if (parsed[2] !== undefined) {
-                next = Number(parsed[2]);
-            }
-            entries.set(parsed[1], next);
-            next += 1;
+    for (const block of stripComments(source).matchAll(/enum\s*(?:[A-Za-z_]\w*\s*)?\{([^}]*)\}/g)) {
+        const entries = parseEnumBlock(block[1]);
+        if (entries === undefined) {
+            continue;
         }
-
-        if (usable) {
-            for (const [name, value] of entries) {
-                constants.set(name, value);
-            }
+        for (const [name, value] of entries) {
+            constants.set(name, value);
         }
     }
+
     return constants;
 }
 
@@ -470,63 +506,83 @@ function resolveFieldIndex(rawIndex, readConstants) {
     let index;
     if (/^\d+$/.test(rawIndex)) {
         index = Number(rawIndex);
-    } else if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(rawIndex)) {
+    } else if (/^[A-Za-z_]\w*$/.test(rawIndex)) {
         index = readConstants().get(rawIndex);
     }
 
     return index !== undefined && index >= 0 && index < DEBUG_VALUE_COUNT ? index : undefined;
 }
 
-function extractFieldUsage(repo, version, modes) {
-    let grepOutput;
+// Every DEBUG_SET() line in the firmware source at `ref`, by file.
+function grepDebugSetLines(repo, ref) {
     try {
-        grepOutput = git(repo, ["grep", "-n", "DEBUG_SET(", version.ref, "--", FIRMWARE_SOURCE_DIR]);
+        return groupDebugSetLines(git(repo, ["grep", "-n", "DEBUG_SET(", ref, "--", FIRMWARE_SOURCE_DIR]));
     } catch (error) {
         // git grep exits 1 when nothing matched, which is not an error here.
-        grepOutput = error.stdout ?? "";
+        return groupDebugSetLines(error.stdout ?? "");
     }
+}
 
-    const identifierToMode = new Map(modes.map((mode) => [`DEBUG_${mode}`, mode]));
-    const usage = new Map();
+function usageEntry(usage, mode) {
+    if (!usage.has(mode)) {
+        usage.set(mode, { fields: new Set(), dynamic: false });
+    }
+    return usage.get(mode);
+}
+
+/*
+ * Fold every DEBUG_SET() call site on `lines` into `usage`, and report how many of
+ * their indices could not be enumerated.
+ */
+function scanLinesForUsage(lines, identifierToMode, readConstants, usage) {
     let unresolved = 0;
 
-    for (const [path, lines] of groupDebugSetLines(grepOutput)) {
-        let constants = null;
-        const readConstants = () => (constants ??= parseLocalEnumConstants(gitShow(repo, version.ref, path)));
-
-        for (const text of lines) {
-            for (const call of text.matchAll(DEBUG_SET_CALL)) {
-                const resolved = resolveDebugSetCall(text, call, identifierToMode);
-                if (resolved?.rawIndex === undefined) {
-                    continue;
-                }
-                if (!usage.has(resolved.mode)) {
-                    usage.set(resolved.mode, { fields: new Set(), dynamic: false });
-                }
-
-                const entry = usage.get(resolved.mode);
-                const index = resolveFieldIndex(resolved.rawIndex, readConstants);
-                if (index === undefined) {
-                    entry.dynamic = true;
-                    unresolved += 1;
-                } else {
-                    entry.fields.add(index);
-                }
+    for (const text of lines) {
+        for (const call of text.matchAll(DEBUG_SET_CALL)) {
+            const resolved = resolveDebugSetCall(text, call, identifierToMode);
+            if (resolved?.rawIndex === undefined) {
+                continue;
+            }
+            const entry = usageEntry(usage, resolved.mode);
+            const index = resolveFieldIndex(resolved.rawIndex, readConstants);
+            if (index === undefined) {
+                entry.dynamic = true;
+                unresolved += 1;
+            } else {
+                entry.fields.add(index);
             }
         }
     }
 
-    return {
-        usage: Object.fromEntries(
-            [...usage.entries()]
-                .sort(([left], [right]) => left.localeCompare(right))
-                .map(([mode, entry]) => [
-                    mode,
-                    { fields: [...entry.fields].sort((a, b) => a - b), dynamic: entry.dynamic },
-                ]),
-        ),
-        unresolved,
-    };
+    return unresolved;
+}
+
+function renderUsage(usage) {
+    return Object.fromEntries(
+        [...usage.entries()]
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([mode, entry]) => [
+                mode,
+                { fields: [...entry.fields].sort((a, b) => a - b), dynamic: entry.dynamic },
+            ]),
+    );
+}
+
+function extractFieldUsage(repo, version, modes) {
+    const identifierToMode = new Map(modes.map((mode) => [`DEBUG_${mode}`, mode]));
+    const usage = new Map();
+    let unresolved = 0;
+
+    for (const [path, lines] of grepDebugSetLines(repo, version.ref)) {
+        // Resolving an identifier index needs the whole file, so read it at most once
+        // and only for a file that actually has one.
+        let constants = null;
+        const readConstants = () => (constants ??= parseLocalEnumConstants(gitShow(repo, version.ref, path)));
+
+        unresolved += scanLinesForUsage(lines, identifierToMode, readConstants, usage);
+    }
+
+    return { usage: renderUsage(usage), unresolved };
 }
 
 // ---------------------------------------------------------------------------
@@ -740,7 +796,7 @@ function collapseNumberArrays(json) {
     // Anchored to line breaks with no nested whitespace repetition: nothing in the
     // pattern can match the same characters two ways, so a near-match input has
     // nothing to backtrack over (SonarCloud javascript:S5852).
-    return json.replaceAll(/\[\n[ ]*\d+(?:,\n[ ]*\d+)*\n[ ]*\]/g, (match) => `[${match.match(/\d+/g).join(", ")}]`);
+    return json.replaceAll(/\[\n *\d+(?:,\n *\d+)*\n *\]/g, (match) => `[${match.match(/\d+/g).join(", ")}]`);
 }
 
 function renderFieldUsage({ repoUrl, versions }) {
@@ -769,6 +825,50 @@ function renderFieldUsage({ repoUrl, versions }) {
 
 // ---------------------------------------------------------------------------
 
+/*
+ * Fill in the modes and the field usage of every version, in place, and report how
+ * many DEBUG_SET() indices across all of them could not be enumerated.
+ */
+function collectVersionData(repo, versions) {
+    let unresolvedTotal = 0;
+
+    for (const version of versions) {
+        version.modes = extractModes(repo, version);
+        const { usage, unresolved } = extractFieldUsage(repo, version, version.modes);
+        version.usage = usage;
+        unresolvedTotal += unresolved;
+        console.log(
+            `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ${version.modes.length} modes`,
+        );
+    }
+
+    return unresolvedTotal;
+}
+
+async function assertUpToDate(outputs) {
+    const stale = [];
+    for (const [path, expected] of outputs) {
+        const actual = existsSync(path) ? await readFile(path, "utf8") : null;
+        if (actual !== expected) {
+            stale.push(path);
+        }
+    }
+
+    if (stale.length > 0) {
+        throw new Error(
+            `Out of date with the firmware source: ${stale.join(", ")}. Re-run: node scripts/generate-debug-modes.mjs`,
+        );
+    }
+    console.log("generate-debug-modes: up to date with the firmware source");
+}
+
+async function writeOutputs(outputs) {
+    for (const [path, contents] of outputs) {
+        await mkdir(dirname(path), { recursive: true });
+        await writeFile(path, contents, "utf8");
+    }
+}
+
 async function main() {
     const args = parseArgs(process.argv.slice(2));
     const repo = resolveRepo(args.repo);
@@ -787,16 +887,7 @@ async function main() {
         throw new Error(`No firmware commits found for API 1.${minMinor} or newer in ${repo}`);
     }
 
-    let unresolvedTotal = 0;
-    for (const version of versions) {
-        version.modes = extractModes(repo, version);
-        const { usage, unresolved } = extractFieldUsage(repo, version, version.modes);
-        version.usage = usage;
-        unresolvedTotal += unresolved;
-        console.log(
-            `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ${version.modes.length} modes`,
-        );
-    }
+    const unresolvedTotal = collectVersionData(repo, versions);
 
     const generated = Object.fromEntries(versions.map((version) => [version.apiVersion, version.modes]));
     const committed = await readCommittedTable(outPath);
@@ -815,30 +906,17 @@ async function main() {
     const moduleSource = renderModule({ repoUrl, versions, aliases, renames });
     const fieldUsageSource = renderFieldUsage({ repoUrl, versions });
 
+    const outputs = [
+        [outPath, moduleSource],
+        [fieldsOutPath, fieldUsageSource],
+    ];
+
     if (args.check) {
-        const stale = [];
-        for (const [path, expected] of [
-            [outPath, moduleSource],
-            [fieldsOutPath, fieldUsageSource],
-        ]) {
-            const actual = existsSync(path) ? await readFile(path, "utf8") : null;
-            if (actual !== expected) {
-                stale.push(path);
-            }
-        }
-        if (stale.length > 0) {
-            throw new Error(
-                `Out of date with the firmware source: ${stale.join(", ")}. Re-run: node scripts/generate-debug-modes.mjs`,
-            );
-        }
-        console.log("generate-debug-modes: up to date with the firmware source");
+        await assertUpToDate(outputs);
         return;
     }
 
-    await mkdir(dirname(outPath), { recursive: true });
-    await writeFile(outPath, moduleSource, "utf8");
-    await mkdir(dirname(fieldsOutPath), { recursive: true });
-    await writeFile(fieldsOutPath, fieldUsageSource, "utf8");
+    await writeOutputs(outputs);
 
     console.log(`generate-debug-modes: wrote ${versions.length} API versions to ${outPath}`);
     console.log(
@@ -848,7 +926,7 @@ async function main() {
 
 // Error messages interpolate CLI arguments and firmware paths. The compatibility
 // report is deliberately multi-line, so newlines survive sanitising and every
-// other control character - anything that could forge a log line - does not.
+// other control character — anything that could forge a log line — does not.
 function sanitiseMessage(message) {
     return String(message).replaceAll(/[\u0000-\u0009\u000b-\u001f\u007f]/g, " ");
 }

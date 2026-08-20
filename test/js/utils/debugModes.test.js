@@ -12,6 +12,7 @@ import {
     API_VERSION_1_46,
     API_VERSION_1_47,
     API_VERSION_1_48,
+    API_VERSION_1_49,
 } from "../../../src/js/data_storage";
 
 describe("debugModes helper", () => {
@@ -72,7 +73,7 @@ describe("debugModes helper", () => {
             // A firmware reporting an API version this build has no table for still
             // decodes through the closest known enum rather than falling back to the
             // oldest one.
-            expect(getDebugModes("1.49.0")).toEqual(getDebugModes(API_VERSION_1_48));
+            expect(getDebugModes("1.50.0")).toEqual(getDebugModes(API_VERSION_1_49));
             expect(getDebugModes("1.47.3")).toEqual(getDebugModes(API_VERSION_1_47));
         });
 
@@ -276,7 +277,7 @@ describe("debugModes helper", () => {
 
         it("does not decode a renamed mode with the units of the mode it replaced", () => {
             // AUTOPILOT_ALTITUDE took over the GPS_RESCUE_THROTTLE_PID enum slot in
-            // 1.47, but firmware reworked what it writes there - it is not the old
+            // 1.47, but firmware reworked what it writes there — it is not the old
             // mode under a new name. Falling back to the old entry would report
             // "12.3 m" for a field the labels call "Target Altitude cm".
             expect(decodeDebugFieldToFriendly("AUTOPILOT_ALTITUDE", "debug[2]", 1234, stubCtx())).toBe("1234");
@@ -294,8 +295,8 @@ describe("debugModes helper", () => {
         });
 
         it("decodes a pure rename through the name the table is keyed by", () => {
-            // D_MIN is what firmware before 1.47 called D_MAX - same slot, same
-            // meaning - so a 4.5 log reaches the D_MAX entry.
+            // D_MIN is what firmware before 1.47 called D_MAX — same slot, same
+            // meaning — so a 4.5 log reaches the D_MAX entry.
             expect(
                 decodeDebugFieldToFriendly("D_MIN", "debug[2]", 100, stubCtx({ apiVersion: API_VERSION_1_46 })),
             ).toBe(decodeDebugFieldToFriendly("D_MAX", "debug[2]", 100, stubCtx()));
