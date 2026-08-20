@@ -24,14 +24,8 @@ const canvasHeight = ref(0);
 const dpr = window.devicePixelRatio || 1;
 let resizeObserver = null;
 
-// Hyperbolic curve definition
-const curveColor = "#e24761";
-
 function getCssVar(varName, fallback = "#000000") {
-    if (!containerRef.value) {
-        return fallback;
-    }
-    const value = getComputedStyle(containerRef.value).getPropertyValue(varName).trim();
+    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
     return value || fallback;
 }
 
@@ -39,6 +33,7 @@ function scaleRange(value, fromMin, fromMax, toMin, toMax) {
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
 }
 
+// Hyperbolic curve definition
 function generateHyperbolicCurve() {
     const steps = 100;
     const data = [];
@@ -98,7 +93,7 @@ function drawAxes(ctx, plotWidth, plotHeight, colors) {
     ctx.stroke();
 
     // The axises labels
-    ctx.fillStyle = "#aaa";
+    ctx.fillStyle = colors.axisLabel;
     ctx.font = "10px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
@@ -311,23 +306,12 @@ watch(
 </script>
 
 <style scoped>
-div {
-    width: 100%;
-    height: 100%;
-    min-height: 150px;
-}
 canvas {
     display: block;
     width: 100%;
     height: 100%;
 }
 .chart-container {
-    --chart-axis-color: #555555;
-    --chart-axis-label-color: #aaaaaa;
-    --chart-tick-color: #888888;
-    --chart-grid-line-color: #333333;
-    --chart-curve-color: #e24761;
-
     width: 100%;
     height: 100%;
     min-height: 150px;
