@@ -1724,6 +1724,396 @@
                     "dynamic": true
                 }
             }
+        },
+        "1.49.0": {
+            "commit": "16e12368bc043341070490c900741668738b8099",
+            "date": "2026-08-05",
+            "modes": {
+                "ACCELEROMETER": {
+                    "fields": [0, 1, 2, 3, 4],
+                    "dynamic": false
+                },
+                "ACRO_TRAINER": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ADC_INTERNAL": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ALTITUDE": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ANGLE_MODE": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ANGLE_TARGET": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ANGLERATE": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "ANTI_GRAVITY": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ATTITUDE": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6],
+                    "dynamic": false
+                },
+                "AUTOPILOT_ALTITUDE": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_PID": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_STOP": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "BARO": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "BATTERY": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "BLACKBOX_OUTPUT": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "CHIRP": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "CRSF_LINK_STATISTICS_DOWN": {
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "CRSF_LINK_STATISTICS_PWR": {
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "CRSF_LINK_STATISTICS_UPLINK": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "CURRENT_ANGLE": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "CURRENT_SENSOR": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "CYCLETIME": {
+                    "fields": [0, 1],
+                    "dynamic": false
+                },
+                "D_LPF": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "D_MAX": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "DSHOT_RPM_TELEMETRY": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "DSHOT_TELEMETRY_COUNTS": {
+                    "fields": [3],
+                    "dynamic": false
+                },
+                "DYN_IDLE": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "DYN_LPF": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ESC_SENSOR": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "ESC_SENSOR_RPM": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "ESC_SENSOR_TMP": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "EZLANDING": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "FAILSAFE": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "FEEDFORWARD": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "FEEDFORWARD_LIMIT": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "FFT": {
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "FFT_FREQ": {
+                    "fields": [0],
+                    "dynamic": true
+                },
+                "FFT_TIME": {
+                    "fields": [0, 1],
+                    "dynamic": false
+                },
+                "FLASH_TEST_PRBS": {
+                    "fields": [0, 2, 6, 7],
+                    "dynamic": false
+                },
+                "FPORT": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "GHST": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "GHST_MSP": {
+                    "fields": [0, 1],
+                    "dynamic": false
+                },
+                "GIMBAL": {
+                    "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "GPS_CONNECTION": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "GPS_DOP": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "GPS_RESCUE_HEADING": {
+                    "fields": [0, 1, 2, 3, 4, 7],
+                    "dynamic": false
+                },
+                "GPS_RESCUE_TRACKING": {
+                    "fields": [0, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "GPS_RESCUE_VELOCITY": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "GYRO_CALIBRATION": {
+                    "fields": [3],
+                    "dynamic": true
+                },
+                "GYRO_FILTERED": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "GYRO_RAW": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "GYRO_SAMPLE": {
+                    "fields": [0, 1, 2, 3, 4],
+                    "dynamic": false
+                },
+                "ITERM_RELAX": {
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "LIDAR_TF": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "MAG_CALIB": {
+                    "fields": [3, 7],
+                    "dynamic": true
+                },
+                "MAG_TASK_RATE": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6],
+                    "dynamic": false
+                },
+                "MAVLINK_TELEMETRY": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "MAX7456_SIGNAL": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "MAX7456_SPICLOCK": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "MULTI_GYRO_DIFF": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "MULTI_GYRO_RAW": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "MULTI_GYRO_SCALED": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "OPTICALFLOW": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "PIDLOOP": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "PITOT": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "POSITION_NAV": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "RANGEFINDER": {
+                    "fields": [1, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "RANGEFINDER_QUALITY": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "RC_INTERPOLATION": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "RC_SMOOTHING": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "RC_SMOOTHING_RATE": {
+                    "fields": [0, 2, 3],
+                    "dynamic": false
+                },
+                "RC_STATS": {
+                    "fields": [0],
+                    "dynamic": false
+                },
+                "RPM_LIMIT": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "RTH": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "RUNAWAY_TAKEOFF": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "RX_EXPRESSLRS_PHASELOCK": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "RX_EXPRESSLRS_SPI": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "RX_FRSKY_SPI": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": true
+                },
+                "RX_SFHSS_SPI": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "RX_SIGNAL_LOSS": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "RX_SPEKTRUM_SPI": {
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "RX_TIMING": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "S_TERM": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "SBUS": {
+                    "fields": [0, 2],
+                    "dynamic": false
+                },
+                "SCHEDULER": {
+                    "fields": [2],
+                    "dynamic": false
+                },
+                "SCHEDULER_DETERMINISM": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "SMARTAUDIO": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "SPA": {
+                    "fields": [],
+                    "dynamic": true
+                },
+                "STACK": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "TASK": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "TIMING_ACCURACY": {
+                    "fields": [0, 1, 2, 3, 4, 7],
+                    "dynamic": false
+                },
+                "TPA": {
+                    "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "USB": {
+                    "fields": [0, 1],
+                    "dynamic": false
+                },
+                "VTX_MSP": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "VTX_TRAMP": {
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
+                },
+                "WING_SETPOINT": {
+                    "fields": [],
+                    "dynamic": true
+                }
+            }
         }
     }
 }
