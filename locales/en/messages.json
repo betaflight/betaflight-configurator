@@ -10057,6 +10057,12 @@
     "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
         "message": "Theoretical max voltage *100. Used for throttle scailing with voltage for air speed estimation"
     },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Motor KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "Motor KV, look at the Motors tab to change value"
+    },
     "pidTuningWingTpaAdvSpeedPitchOffset": {
         "message": "Pitch offset"
     },

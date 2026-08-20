@@ -1238,6 +1238,12 @@
                         />
                     </SettingRow>
                     <SettingRow
+                        :label="$t('pidTuningWingTpaAdvSpeedMotorKv')"
+                        :help="$t('pidTuningWingTpaAdvSpeedMotorKvHelp')"
+                    >
+                        <UInputNumber v-model="motorKv" disabled size="xs" orientation="vertical" class="w-20" />
+                    </SettingRow>
+                    <SettingRow
                         :label="$t('pidTuningWingTpaAdvSpeedPitchOffset')"
                         :help="$t('pidTuningWingTpaAdvSpeedPitchOffsetHelp')"
                     >
