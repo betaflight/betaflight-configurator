@@ -1115,7 +1115,19 @@
             </UiBox>
             <!-- TPA -->
             <UiBox :title="$t('pidTuningWingTPA')" type="neutral">
-                <SettingRow :label="$t('pidTuningWingTpaSpeedType')" :help="$t('pidTuningWingTpaSpeedTypeHelp')">
+                <SettingRow :label="$t('pidTuningWingTpaCurveType')" :help="$t('pidTuningWingTpaCurveTypeHelp')">
+                    <USelect
+                        v-model="wingConfig.tpa_curve_type"
+                        :items="wingTpaCurveTypeItems"
+                        size="xs"
+                        class="w-24"
+                    />
+                </SettingRow>
+                <SettingRow
+                    v-if="isWingTpaHyperbolicCurveMode"
+                    :label="$t('pidTuningWingTpaSpeedType')"
+                    :help="$t('pidTuningWingTpaSpeedTypeHelp')"
+                >
                     <USelect
                         v-model="wingConfig.tpa_speed_type"
                         :items="wingTpaSpeedTypeItems"
@@ -1124,7 +1136,7 @@
                     />
                 </SettingRow>
                 <UiBox
-                    v-if="wingConfig.tpa_speed_type == 0"
+                    v-if="isWingTpaBasicSpeedMode && isWingTpaHyperbolicCurveMode"
                     :title="$t('pidTuningWingTpaBasicSpeedSettings')"
                     type="neutral"
                 >
@@ -1156,7 +1168,7 @@
                     </SettingRow>
                 </UiBox>
                 <UiBox
-                    v-if="wingConfig.tpa_speed_type == 1"
+                    v-if="isWingTpaAdvancedSpeedMode && isWingTpaHyperbolicCurveMode"
                     :title="$t('pidTuningWingTpaAdvancedSpeedSettings')"
                     type="neutral"
                 >
@@ -1238,16 +1250,8 @@
                         />
                     </SettingRow>
                 </UiBox>
-                <SettingRow :label="$t('pidTuningWingTpaCurveType')" :help="$t('pidTuningWingTpaCurveTypeHelp')">
-                    <USelect
-                        v-model="wingConfig.tpa_curve_type"
-                        :items="wingTpaCurveTypeItems"
-                        size="xs"
-                        class="w-24"
-                    />
-                </SettingRow>
                 <UiBox
-                    v-if="wingConfig.tpa_curve_type == 1"
+                    v-if="isWingTpaHyperbolicCurveMode"
                     :title="$t('pidTuningWingTpaAdvSpeedCurveSettings')"
                     type="neutral"
                 >
@@ -2073,6 +2077,12 @@ onUnmounted(() => {
 const isWingBuildGte49 = computed(
     () => FC.CONFIG.buildOptions.includes("USE_WING") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49),
 );
+
+const isWingTpaHyperbolicCurveMode = computed(() => wingConfig.value.tpa_curve_type == 1);
+
+const isWingTpaBasicSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 0);
+
+const isWingTpaAdvancedSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 1);
 
 // Wing config - reactive reference
 const wingConfig = computed(() => FC.WING_CONFIG);

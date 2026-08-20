@@ -10001,7 +10001,7 @@
         "message": "Curve type"
     },
     "pidTuningWingTpaCurveTypeHelp": {
-        "message": "Classic type - for multirotor, hyperbolic - usually for wings"
+        "message": "Hyperbolic is usually for wings. Classic is for multirotor, the standard TPA is used."
     },
     "pidTuningWingTpaCurveClassic": {
         "message": "Classic"
