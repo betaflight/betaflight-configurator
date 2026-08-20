@@ -1,5 +1,5 @@
 <template>
-    <div ref="containerRef" class="w-full h-full">
+    <div ref="containerRef" class="chart-container">
         <canvas ref="chartCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
     </div>
 </template>
@@ -26,6 +26,14 @@ let resizeObserver = null;
 
 // Hyperbolic curve definition
 const curveColor = "#e24761";
+
+function getCssVar(varName, fallback = "#000000") {
+    if (!containerRef.value) {
+        return fallback;
+    }
+    const value = getComputedStyle(containerRef.value).getPropertyValue(varName).trim();
+    return value || fallback;
+}
 
 function scaleRange(value, fromMin, fromMax, toMin, toMax) {
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
@@ -80,8 +88,8 @@ function resizeCanvas() {
 const pad = { top: 20, right: 20, bottom: 30, left: 40 };
 
 // Draw axises
-function drawAxes(ctx, plotWidth, plotHeight) {
-    ctx.strokeStyle = "#555";
+function drawAxes(ctx, plotWidth, plotHeight, colors) {
+    ctx.strokeStyle = colors.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(pad.left, pad.top);
@@ -111,10 +119,10 @@ function getStepAxisX(maxSpeed) {
 }
 
 // Draw axises ticks and grid
-function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult) {
+function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors) {
     const fontSize = 9;
     ctx.font = `${fontSize}px sans-serif`;
-    ctx.fillStyle = "#888";
+    ctx.fillStyle = colors.tick;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
 
@@ -133,7 +141,7 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
         ctx.beginPath();
         ctx.moveTo(x, pad.top + plotHeight);
         ctx.lineTo(x, pad.top + plotHeight + 3);
-        ctx.strokeStyle = "#555";
+        ctx.strokeStyle = colors.axis;
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -142,7 +150,7 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
             ctx.beginPath();
             ctx.moveTo(x, pad.top);
             ctx.lineTo(x, pad.top + plotHeight);
-            ctx.strokeStyle = "#333";
+            ctx.strokeStyle = colors.grid;
             ctx.lineWidth = 0.5;
             ctx.setLineDash([2, 4]);
             ctx.stroke();
@@ -164,7 +172,7 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
         ctx.beginPath();
         ctx.moveTo(pad.left, y);
         ctx.lineTo(pad.left - 3, y);
-        ctx.strokeStyle = "#555";
+        ctx.strokeStyle = colors.axis;
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -173,7 +181,7 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
             ctx.beginPath();
             ctx.moveTo(pad.left, y);
             ctx.lineTo(pad.left + plotWidth, y);
-            ctx.strokeStyle = "#333";
+            ctx.strokeStyle = colors.grid;
             ctx.lineWidth = 0.5;
             ctx.setLineDash([2, 4]);
             ctx.stroke();
@@ -183,13 +191,13 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
 }
 
 // The curves drawing
-function drawCurves(ctx, chartCurves, xScale, yScale) {
+function drawCurves(ctx, chartCurves, xScale, yScale, colors) {
     chartCurves.forEach((curve) => {
         if (!curve.data) {
             return;
         }
         ctx.beginPath();
-        ctx.strokeStyle = curve.color;
+        ctx.strokeStyle = curve.color || colors.curve;
         ctx.lineWidth = curve.active ? 2 : 1.5;
         ctx.globalAlpha = curve.active ? 1.0 : 0.35;
         curve.data.forEach((point, index) => {
@@ -215,6 +223,14 @@ function drawChart() {
     const w = canvasWidth.value / dpr;
     const h = canvasHeight.value / dpr;
 
+    const colors = {
+        axis: getCssVar("--chart-axis-color", "#555555"),
+        axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
+        tick: getCssVar("--chart-tick-color", "#888888"),
+        grid: getCssVar("--chart-grid-line-color", "#333333"),
+        curve: getCssVar("--chart-curve-color", "#e24761"),
+    };
+
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.scale(dpr, dpr);
@@ -229,7 +245,7 @@ function drawChart() {
     const chartCurves = [
         {
             data: curveData.value,
-            color: curveColor,
+            color: colors.curve,
             active: props.curveActive,
         },
     ];
@@ -259,13 +275,13 @@ function drawChart() {
     const yScale = (mult) => pad.top + plotHeight - ((mult - minMult) / yRange) * plotHeight;
 
     // The axises
-    drawAxes(ctx, plotWidth, plotHeight);
+    drawAxes(ctx, plotWidth, plotHeight, colors);
 
     // The ticks, grid and labels
-    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult);
+    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors);
 
     // The curves
-    drawCurves(ctx, chartCurves, xScale, yScale);
+    drawCurves(ctx, chartCurves, xScale, yScale, colors);
 }
 
 onMounted(() => {
@@ -304,5 +320,16 @@ canvas {
     display: block;
     width: 100%;
     height: 100%;
+}
+.chart-container {
+    --chart-axis-color: #555555;
+    --chart-axis-label-color: #aaaaaa;
+    --chart-tick-color: #888888;
+    --chart-grid-line-color: #333333;
+    --chart-curve-color: #e24761;
+
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
 }
 </style>
