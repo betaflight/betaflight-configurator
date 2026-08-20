@@ -156,7 +156,7 @@
                     "dynamic": true
                 },
                 "GYRO_RAW": {
-                    "fields": [],
+                    "fields": [3],
                     "dynamic": true
                 },
                 "GYRO_SAMPLE": {
@@ -176,12 +176,12 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "PIDLOOP": {
                     "fields": [0, 1, 2, 3],
@@ -216,8 +216,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -229,11 +229,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -322,7 +322,7 @@
                     "dynamic": false
                 },
                 "ATTITUDE": {
-                    "fields": [],
+                    "fields": [0, 1],
                     "dynamic": true
                 },
                 "BARO": {
@@ -470,7 +470,7 @@
                     "dynamic": true
                 },
                 "GYRO_RAW": {
-                    "fields": [],
+                    "fields": [3],
                     "dynamic": true
                 },
                 "GYRO_SAMPLE": {
@@ -490,12 +490,12 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "PIDLOOP": {
                     "fields": [0, 1, 2, 3],
@@ -530,8 +530,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -543,11 +543,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -800,7 +800,7 @@
                     "dynamic": true
                 },
                 "GYRO_RAW": {
-                    "fields": [],
+                    "fields": [3],
                     "dynamic": true
                 },
                 "GYRO_SAMPLE": {
@@ -828,12 +828,12 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "PIDLOOP": {
                     "fields": [0, 1, 2, 3],
@@ -876,8 +876,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -889,11 +889,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -1154,7 +1154,7 @@
                     "dynamic": true
                 },
                 "GYRO_RAW": {
-                    "fields": [],
+                    "fields": [3],
                     "dynamic": true
                 },
                 "GYRO_SAMPLE": {
@@ -1182,12 +1182,12 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MULTI_GYRO_DIFF": {
                     "fields": [],
@@ -1246,8 +1246,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -1259,11 +1259,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -1540,7 +1540,7 @@
                     "dynamic": true
                 },
                 "GYRO_RAW": {
-                    "fields": [],
+                    "fields": [3],
                     "dynamic": true
                 },
                 "GYRO_SAMPLE": {
@@ -1568,12 +1568,12 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MULTI_GYRO_DIFF": {
                     "fields": [],
@@ -1636,8 +1636,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -1649,11 +1649,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "16e12368bc043341070490c900741668738b8099",
-            "date": "2026-08-05",
+            "commit": "d5e589f1924a64c8da440e13ca53d4befd8f3939",
+            "date": "2026-08-20",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1754,8 +1754,8 @@
                     "dynamic": false
                 },
                 "ANGLERATE": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2],
+                    "dynamic": false
                 },
                 "ANTI_GRAVITY": {
                     "fields": [0, 1, 2, 3],
@@ -1806,8 +1806,8 @@
                     "dynamic": false
                 },
                 "CURRENT_ANGLE": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2],
+                    "dynamic": false
                 },
                 "CURRENT_SENSOR": {
                     "fields": [0, 1, 2, 3],
@@ -1818,16 +1818,16 @@
                     "dynamic": false
                 },
                 "D_LPF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "D_MAX": {
                     "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "DSHOT_RPM_TELEMETRY": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "DSHOT_TELEMETRY_COUNTS": {
                     "fields": [3],
@@ -1846,12 +1846,12 @@
                     "dynamic": false
                 },
                 "ESC_SENSOR_RPM": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "ESC_SENSOR_TMP": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "EZLANDING": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
@@ -1874,8 +1874,8 @@
                     "dynamic": false
                 },
                 "FFT_FREQ": {
-                    "fields": [0],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "FFT_TIME": {
                     "fields": [0, 1],
@@ -1922,16 +1922,16 @@
                     "dynamic": false
                 },
                 "GYRO_CALIBRATION": {
-                    "fields": [3],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "GYRO_FILTERED": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2],
+                    "dynamic": false
                 },
                 "GYRO_RAW": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "GYRO_SAMPLE": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1946,8 +1946,8 @@
                     "dynamic": false
                 },
                 "MAG_CALIB": {
-                    "fields": [3, 7],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "MAG_TASK_RATE": {
                     "fields": [0, 1, 2, 3, 4, 5, 6],
@@ -1958,24 +1958,24 @@
                     "dynamic": false
                 },
                 "MAX7456_SIGNAL": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MAX7456_SPICLOCK": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "MULTI_GYRO_DIFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "MULTI_GYRO_RAW": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "MULTI_GYRO_SCALED": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
                 },
                 "OPTICALFLOW": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
@@ -2002,8 +2002,8 @@
                     "dynamic": false
                 },
                 "RC_INTERPOLATION": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RC_SMOOTHING": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
@@ -2026,8 +2026,8 @@
                     "dynamic": false
                 },
                 "RUNAWAY_TAKEOFF": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
                     "fields": [0, 1, 2, 3],
@@ -2039,11 +2039,11 @@
                 },
                 "RX_FRSKY_SPI": {
                     "fields": [0, 1, 2, 3],
-                    "dynamic": true
+                    "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3],
+                    "dynamic": false
                 },
                 "RX_SIGNAL_LOSS": {
                     "fields": [0, 1, 2, 3],
@@ -2058,8 +2058,8 @@
                     "dynamic": false
                 },
                 "S_TERM": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
                 },
                 "SBUS": {
                     "fields": [0, 2],
@@ -2078,8 +2078,8 @@
                     "dynamic": false
                 },
                 "SPA": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2],
+                    "dynamic": false
                 },
                 "STACK": {
                     "fields": [0, 1, 2, 3],
@@ -2110,8 +2110,8 @@
                     "dynamic": false
                 },
                 "WING_SETPOINT": {
-                    "fields": [],
-                    "dynamic": true
+                    "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
                 }
             }
         }

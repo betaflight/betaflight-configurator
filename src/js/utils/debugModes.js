@@ -1,6 +1,7 @@
 import semver from "semver";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
+import { FIRMWARE_DEBUG_FIELDS } from "../debug_fields_table";
 
 /*
  * The ordered debug_mode lists come straight from the firmware enum, one entry
@@ -9,9 +10,14 @@ import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
  * this file may reorder them, because a name's index is the numeric debug_mode
  * stored in every blackbox log header recorded with that firmware.
  *
- * The field labels and the decode/convert tables below stay hand-written — the
- * firmware carries no labels or units — but they are checked against the
- * firmware's own `DEBUG_SET()` call sites by
+ * Firmware from API 1.49 on also records what each `debug[n]` holds, in a `//!<`
+ * annotation on the DEBUG_SET() call site (the grammar is in the firmware's
+ * `src/main/build/debug.h`). Those labels, units and scalings are generated into
+ * `src/js/debug_fields_table.js` by the same script and take precedence here: for
+ * an annotated field the firmware is the source of truth, and the hand-written
+ * tables below serve the firmware versions that carry no annotations, the
+ * mode-level `debug[all]` names, and the few formatters an annotation cannot
+ * express. They are checked against the firmware's own `DEBUG_SET()` call sites by
  * `test/js/utils/debugModesFirmware.test.js`.
  */
 const GENERATED_API_VERSIONS = Object.freeze(
@@ -64,6 +70,208 @@ function modeNameCandidates(name) {
     }
     const current = DEBUG_MODE_ALIASES[name] ?? name;
     return [...new Set([name, current, ...(LEGACY_MODE_NAMES.get(current) ?? [])])];
+}
+
+// ---------------------------------------------------------------------------
+// Firmware field annotations (generated)
+// ---------------------------------------------------------------------------
+
+const GENERATED_FIELD_VERSIONS = Object.freeze(
+    Object.keys(FIRMWARE_DEBUG_FIELDS).sort((left, right) => semver.compare(left, right)),
+);
+
+/**
+ * Newest annotated API version that is not newer than `apiVersion`, or undefined
+ * when the firmware predates the annotations (nothing to overlay, so the
+ * hand-written tables answer alone).
+ *
+ * @param {string} [apiVersion]
+ * @returns {string|undefined}
+ */
+function resolveFieldsVersion(apiVersion) {
+    if (!apiVersion || !semver.valid(apiVersion)) {
+        return undefined;
+    }
+    let resolved;
+    for (const candidate of GENERATED_FIELD_VERSIONS) {
+        if (semver.gte(apiVersion, candidate)) {
+            resolved = candidate;
+        }
+    }
+    return resolved;
+}
+
+/**
+ * The firmware annotation for one field: `{ label, unit, scale }`, or undefined
+ * when this firmware does not annotate it.
+ *
+ * @param {string} [debugModeName]
+ * @param {string} fieldName - e.g. "debug[3]".
+ * @param {string} [apiVersion]
+ * @returns {{label: string, unit: string|null, scale: number}|undefined}
+ */
+function generatedField(debugModeName, fieldName, apiVersion) {
+    const version = resolveFieldsVersion(apiVersion);
+    const index = /^debug\[([0-7])\]$/.exec(fieldName)?.[1];
+    if (version === undefined || index === undefined) {
+        return undefined;
+    }
+    const modes = FIRMWARE_DEBUG_FIELDS[version];
+    for (const candidate of modeNameCandidates(debugModeName)) {
+        const field = modes[candidate]?.[index];
+        if (field) {
+            return field;
+        }
+    }
+    return undefined;
+}
+
+/*
+ * How each firmware unit symbol is shown. `factor` takes the firmware unit to the
+ * displayed one (centimetres are shown as metres); `ctx` names a conversion only
+ * the flight controller's own configuration can do, because the firmware stores
+ * the value in device-native units; `decimals` is only given where the scaling
+ * cannot imply it, since a field stored in thousandths is shown to three decimals
+ * and one stored in whole units to none - printing more would invent precision the
+ * field does not have.
+ */
+const UNIT_DISPLAY = Object.freeze({
+    s: { suffix: "s" },
+    ms: { suffix: "ms" },
+    us: { suffix: "μs" },
+    Hz: { suffix: "Hz" },
+    kHz: { suffix: "kHz" },
+    MHz: { suffix: "MHz" },
+    "kbit/s": { suffix: "kbit/s" },
+    rad: { suffix: "rad" },
+    "rad/s": { suffix: "rad/s" },
+    deg: { suffix: "°" },
+    dps: { suffix: "°/s" },
+    dps2: { suffix: "°/s²" },
+    m: { suffix: "m" },
+    cm: { suffix: "m", factor: 0.01 },
+    "m/s": { suffix: "m/s" },
+    "cm/s": { suffix: "m/s", factor: 0.01 },
+    g: { suffix: "g" },
+    "g/s": { suffix: "g/s" },
+    V: { suffix: "V" },
+    A: { suffix: "A" },
+    mAh: { suffix: "mAh" },
+    degC: { suffix: "°C" },
+    Pa: { suffix: "Pa" },
+    hPa: { suffix: "hPa" },
+    rpm: { suffix: "rpm" },
+    "%": { suffix: "%" },
+    dB: { suffix: "dB" },
+    dBm: { suffix: "dBm" },
+    bytes: { suffix: "bytes" },
+    ticks: { suffix: "ticks" },
+    gyroADC: { suffix: "°/s", ctx: "gyro", decimals: 0 },
+    accADC: { suffix: "g", ctx: "acc", decimals: 2 },
+    "accADC/s": { suffix: "g/s", ctx: "acc", decimals: 2 },
+    rcCommand: { suffix: "%", ctx: "throttle", decimals: 0 },
+    eRPM: { suffix: "rpm", ctx: "erpm", decimals: 0 },
+});
+
+// Hardware conversions for the device-native units, and their inverses. Each is
+// linear, so the inverse of a scale factor is one division by it.
+const CTX_CONVERSIONS = Object.freeze({
+    gyro: {
+        toDisplay: (value, ctx) => ctx.gyroRawToDegreesPerSecond(value),
+        toRaw: (value, ctx) => value / ctx.gyroRawToDegreesPerSecond(1),
+    },
+    acc: {
+        toDisplay: (value, ctx) => ctx.accRawToGs(value),
+        toRaw: (value, ctx) => value / ctx.accRawToGs(1),
+    },
+    throttle: {
+        toDisplay: (value, ctx) => ctx.rcCommandRawToThrottle(value),
+        toRaw: (value, ctx) => ctx.throttleToRcCommandRaw?.(value) ?? value / ctx.rcCommandRawToThrottle(1),
+    },
+    erpm: {
+        toDisplay: (value, ctx) => (value * 200) / ctx.motorPoles,
+        toRaw: (value, ctx) => (value * ctx.motorPoles) / 200,
+    },
+});
+
+function defaultDecimals(multiplier) {
+    if (multiplier >= 1) {
+        return 0;
+    }
+    return Math.min(3, Math.max(0, Math.round(-Math.log10(multiplier))));
+}
+
+/**
+ * The scaling and formatting an annotated field implies, or undefined when the
+ * field is not annotated. A field holding an enumerator carries `values` instead
+ * of a scaling: the firmware's own enumerator names, indexed by value.
+ *
+ * @param {string} [debugModeName]
+ * @param {string} fieldName
+ * @param {string} [apiVersion]
+ * @returns {{suffix: string, decimals: number, toDisplay: (v:number, ctx:object)=>number,
+ *            toRaw: (v:number, ctx:object)=>number}|undefined}
+ */
+function generatedScaling(debugModeName, fieldName, apiVersion) {
+    const field = generatedField(debugModeName, fieldName, apiVersion);
+    if (!field) {
+        return undefined;
+    }
+
+    const display = field.unit === null ? {} : (UNIT_DISPLAY[field.unit] ?? {});
+    const multiplier = field.scale * (display.factor ?? 1);
+    const conversion = display.ctx === undefined ? undefined : CTX_CONVERSIONS[display.ctx];
+
+    return {
+        values: field.values,
+        suffix: display.suffix ?? "",
+        decimals: display.decimals ?? defaultDecimals(multiplier),
+        toDisplay: (value, ctx) => (conversion ? conversion.toDisplay(value * multiplier, ctx) : value * multiplier),
+        toRaw: (value, ctx) => (conversion ? conversion.toRaw(value, ctx) : value) / multiplier,
+    };
+}
+
+/*
+ * A mode-level display name for a mode the hand-written table does not carry at
+ * all: "AUTOPILOT_PID" -> "Debug Autopilot Pid". Only ever used for `debug[all]`,
+ * which names the whole mode and is not something firmware records.
+ */
+function modeDisplayName(modeName) {
+    const words = modeName
+        .toLowerCase()
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    return `Debug ${words}`;
+}
+
+/**
+ * Replace the hand-written field labels of every annotated mode with the
+ * firmware's own, in place.
+ *
+ * The annotations are per call site, so for an annotated mode they cover exactly
+ * the fields that firmware writes: taking the whole set from firmware also drops
+ * the labels left behind when a mode was reworked, which would otherwise name a
+ * field this firmware no longer writes. Modes the firmware does not annotate, and
+ * the mode-level `debug[all]` names, which firmware has no equivalent of, are left
+ * as they were.
+ *
+ * @param {object} result - label table keyed by mode name, mutated.
+ * @param {string} [apiVersion]
+ */
+function overlayGeneratedLabels(result, apiVersion) {
+    const version = resolveFieldsVersion(apiVersion);
+    if (version === undefined) {
+        return;
+    }
+
+    for (const [modeName, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[version])) {
+        const labels = { "debug[all]": result[modeName]?.["debug[all]"] ?? modeDisplayName(modeName) };
+        for (const [index, field] of Object.entries(fields)) {
+            labels[`debug[${index}]`] = field.label;
+        }
+        result[modeName] = labels;
+    }
 }
 
 /**
@@ -269,6 +477,9 @@ export function getDebugFieldNames(apiVersion) {
             "debug[0]": "Gyro Raw [X]",
             "debug[1]": "Gyro Raw [Y]",
             "debug[2]": "Gyro Raw [Z]",
+            // The gyro calibration writes the roll standard deviation into the
+            // spare field while calibrating (DEBUG_GYRO_CALIBRATION_VALUE).
+            "debug[3]": "Calibration Deviation [roll]",
         },
         DUAL_GYRO_RAW: {
             "debug[all]": "Debug Dual Gyro Raw",
@@ -301,6 +512,7 @@ export function getDebugFieldNames(apiVersion) {
             "debug[0]": "Overclock",
             "debug[1]": "DevType",
             "debug[2]": "Divisor",
+            "debug[3]": "SPI Clock",
         },
         SBUS: {
             "debug[all]": "SBus Rx",
@@ -1157,6 +1369,11 @@ export function getDebugFieldNames(apiVersion) {
         };
     }
 
+    // Firmware labels win where the firmware carries them: the annotation sits on
+    // the DEBUG_SET() call site, so it cannot drift from what the field holds,
+    // while the tables above were written by reading firmware diffs.
+    overlayGeneratedLabels(result, version);
+
     // Labels are looked up by the mode name the firmware reported, which for a
     // renamed enum slot depends on the firmware version: a 4.5 log reports
     // "D_MIN" where 2025.12 reports "D_MAX". Mirror the labels onto whichever of
@@ -1464,7 +1681,8 @@ DEBUG_DECODE.BARO = DEBUG_DECODE.NONE;
 
 /**
  * Format a debug field value as a human-readable string with units, for the
- * given debug mode. Mirrors the firmware's per-debug-mode field semantics.
+ * given debug mode. A field the firmware annotates is formatted from that
+ * annotation; the rest mirror the firmware's per-debug-mode field semantics.
  * This is the single source of truth shared by the blackbox viewer and the
  * sensors live view.
  *
@@ -1475,6 +1693,15 @@ DEBUG_DECODE.BARO = DEBUG_DECODE.NONE;
  * @returns {string}
  */
 export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx) {
+    const scaling = generatedScaling(debugModeName, fieldName, ctx?.apiVersion);
+    if (scaling) {
+        if (scaling.values) {
+            return scaling.values[value] ?? value.toFixed(0);
+        }
+        const scaled = scaling.toDisplay(value, ctx).toFixed(scaling.decimals);
+        return scaling.suffix === "" ? scaled : `${scaled} ${scaling.suffix}`;
+    }
+
     const entry = lookupByModeName(DEBUG_DECODE, debugModeName);
     if (entry === undefined) {
         return value.toFixed(0);
@@ -1674,6 +1901,11 @@ DEBUG_CONVERT.BARO = DEBUG_CONVERT.NONE;
  * @returns {number}
  */
 export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, value, ctx) {
+    const scaling = generatedScaling(debugModeName, fieldName, ctx?.apiVersion);
+    if (scaling) {
+        return toFriendly ? scaling.toDisplay(value, ctx) : scaling.toRaw(value, ctx);
+    }
+
     const entry = lookupByModeName(DEBUG_CONVERT, debugModeName);
     if (entry === undefined) {
         return value;
