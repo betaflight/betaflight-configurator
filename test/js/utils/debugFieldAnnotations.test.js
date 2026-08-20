@@ -74,6 +74,36 @@ describe("firmware debug field annotations", () => {
             );
         });
 
+        it("shows every unit the firmware may use, so none renders bare", () => {
+            // The generator accepts a documented set of unit symbols; the app has
+            // to display all of them. A symbol it does not know would fall back to
+            // no suffix, and the number would still look plausible.
+            for (const [apiVersion, modes] of Object.entries(FIRMWARE_DEBUG_FIELDS)) {
+                const scaleContext = ctx(apiVersion);
+                for (const [mode, fields] of Object.entries(modes)) {
+                    for (const [index, field] of Object.entries(fields)) {
+                        if (field.unit === null) {
+                            continue;
+                        }
+                        const decoded = decodeDebugFieldToFriendly(mode, `debug[${index}]`, 1, scaleContext);
+                        expect(decoded, `${apiVersion} ${mode}[${index}] (${field.unit})`).toMatch(/^[-\d.]+ \S+$/);
+                    }
+                }
+            }
+        });
+
+        it("names both meanings only when they differ", () => {
+            // Two variants can disagree on the unit alone - the LIDAR-TF driver
+            // reports centimetres where the UPT1 reports millimetres - and
+            // "Distance / Distance" would name nothing.
+            expect(getDebugFieldNames(ANNOTATED).LIDAR_TF["debug[0]"]).toBe("Distance");
+            expect(
+                FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
+                    (conflict) => conflict.mode === "LIDAR_TF" && conflict.index === 0,
+                ).meanings.map((meaning) => meaning.unit),
+            ).toEqual(["cm", "m"]);
+        });
+
         it("drops the unit of a conflicting field, since it belongs to one meaning only", () => {
             for (const conflict of FIRMWARE_DEBUG_FIELD_CONFLICTS) {
                 expect(FIRMWARE_DEBUG_FIELDS[conflict.apiVersion][conflict.mode][conflict.index].unit).toBeNull();

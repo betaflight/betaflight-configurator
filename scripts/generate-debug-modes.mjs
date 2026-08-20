@@ -744,43 +744,88 @@ function lineNumberAt(text, offset) {
 }
 
 /*
- * Every DEBUG_SET() call site in one file: the mode it writes, the indices it
- * writes them to, and the annotation on the line the call ends on. Whole files are
- * read rather than grepped lines because a call may span several lines and its
- * annotation sits on the last of them.
+ * Fold the index constants and named enumerations of one included header into
+ * `scope`. First definition wins, so the file's own always outranks a header's.
+ */
+function mergeScope(scope, source) {
+    for (const [name, value] of parseLocalConstants(source)) {
+        if (!scope.constants.has(name)) {
+            scope.constants.set(name, value);
+        }
+    }
+    for (const [tag, names] of parseNamedEnums(source)) {
+        if (!scope.enums.has(tag)) {
+            scope.enums.set(tag, names);
+        }
+    }
+}
+
+/*
+ * The index constants and named enumerations visible in one file: its own, plus
+ * those of the headers it includes by relative path.
+ */
+function readFileScope(repo, ref, path, text) {
+    const scope = { constants: parseLocalConstants(text), enums: parseNamedEnums(text) };
+
+    for (const header of includedHeaders(path, text)) {
+        try {
+            mergeScope(scope, gitShow(repo, ref, header));
+        } catch {
+            // not a path in this tree, or not readable at this ref
+        }
+    }
+
+    return scope;
+}
+
+/*
+ * The parsed `//!<` annotation on the line a call ends on, or null when there is
+ * none, or when it is malformed - which is recorded in `problems` and fails the
+ * run, since a field's meaning exists nowhere else.
+ */
+function annotationAt(text, resolved, where, readScope, problems) {
+    const lineEnd = text.indexOf("\n", resolved.end);
+    const trailing = text.slice(resolved.end, lineEnd === -1 ? text.length : lineEnd);
+    const annotationText = trailing.match(ANNOTATION)?.[1];
+    if (annotationText === undefined) {
+        return null;
+    }
+
+    const annotation = parseAnnotation(annotationText);
+    if (annotation.error) {
+        problems.push(`${where}: ${annotation.error}`);
+        return null;
+    }
+    if (annotation.enumTag === undefined) {
+        return annotation;
+    }
+
+    // The field holds an enumerator: take the names from the firmware enum the
+    // annotation points at, so no tool has to keep its own copy of them.
+    annotation.values = readScope().enums.get(annotation.enumTag);
+    if (annotation.values !== undefined) {
+        return annotation;
+    }
+    problems.push(
+        `${where}: no enum "${annotation.enumTag}" reachable from ${where.split(":")[0]}` +
+            " (or its enumerators are not plain decimal values)",
+    );
+
+    return null;
+}
+
+/*
+ * Every DEBUG_SET() call site in one file: the mode it writes, the index it
+ * writes to, and its annotation. Whole files are read rather than grepped lines
+ * because a call may span several lines and its annotation sits on the last.
  */
 function scanFile(repo, ref, path, identifierToMode, problems) {
     const text = gitShow(repo, ref, path);
     const calls = [];
+    // Resolving an index constant or an enum needs the whole file and its
+    // headers, so read them at most once, and only for a file that has one.
     let scope = null;
-    /*
-     * The file and the headers it includes, as index constants and named
-     * enumerations. Read at most once per file, and only for a file that needs it.
-     */
-    const readScope = () => {
-        if (scope === null) {
-            scope = { constants: parseLocalConstants(text), enums: parseNamedEnums(text) };
-            for (const header of includedHeaders(path, text)) {
-                let headerSource;
-                try {
-                    headerSource = gitShow(repo, ref, header);
-                } catch {
-                    continue; // not a path in this tree, or not readable at this ref
-                }
-                for (const [name, value] of parseLocalConstants(headerSource)) {
-                    if (!scope.constants.has(name)) {
-                        scope.constants.set(name, value);
-                    }
-                }
-                for (const [tag, names] of parseNamedEnums(headerSource)) {
-                    if (!scope.enums.has(tag)) {
-                        scope.enums.set(tag, names);
-                    }
-                }
-            }
-        }
-        return scope;
-    };
+    const readScope = () => (scope ??= readFileScope(repo, ref, path, text));
 
     for (const call of text.matchAll(DEBUG_SET_CALL)) {
         const resolved = resolveDebugSetCall(text, call, identifierToMode);
@@ -788,32 +833,10 @@ function scanFile(repo, ref, path, identifierToMode, problems) {
             continue;
         }
         const index = resolveFieldIndex(resolved.rawIndex, readScope().constants);
-        const lineEnd = text.indexOf("\n", resolved.end);
-        const trailing = text.slice(resolved.end, lineEnd === -1 ? text.length : lineEnd);
-        const annotationText = trailing.match(ANNOTATION)?.[1];
         const where = `${path}:${lineNumberAt(text, resolved.end)}`;
+        const annotation = annotationAt(text, resolved, where, readScope, problems);
 
-        let annotation = null;
-        if (annotationText !== undefined) {
-            annotation = parseAnnotation(annotationText);
-            if (annotation.error) {
-                problems.push(`${where}: ${annotation.error}`);
-                annotation = null;
-            } else if (annotation.enumTag !== undefined) {
-                // The field holds an enumerator: take the names from the firmware
-                // enum the annotation points at, so the app cannot drift from it.
-                annotation.values = readScope().enums.get(annotation.enumTag);
-                if (annotation.values === undefined) {
-                    problems.push(
-                        `${where}: no enum "${annotation.enumTag}" in ${path} or the headers it includes` +
-                            " (or its enumerators are not plain decimal values)",
-                    );
-                    annotation = null;
-                }
-            }
-        }
-
-        if (annotation && annotation.indices && index !== undefined && !annotation.indices.includes(index)) {
+        if (annotation?.indices && index !== undefined && !annotation.indices.includes(index)) {
             problems.push(
                 `${where}: annotation covers debug[${annotation.indices.join(",")}] but the call writes debug[${index}]`,
             );
@@ -1114,12 +1137,20 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
 }
 
 /*
+ * A string as a JavaScript literal. Field labels are free text from the firmware
+ * comments, so a quote or a backslash in one must not break the generated module.
+ */
+function quote(text) {
+    return JSON.stringify(text);
+}
+
+/*
  * `<key>: Object.freeze([...])` at `indent`, wrapped one item per line when the
  * single-line form would run past the print width - which is what Prettier does
  * to it, so the generated file comes out already formatted.
  */
 function renderFrozenList(indent, key, items) {
-    const quoted = items.map((item) => `"${item}"`);
+    const quoted = items.map((item) => quote(item));
     const single = `${indent}${key}: Object.freeze([${quoted.join(", ")}]),`;
     if (single.length <= PRINT_WIDTH) {
         return [single];
@@ -1133,17 +1164,17 @@ function renderFrozenList(indent, key, items) {
  * fits, one property per line when it does not.
  */
 function renderFieldEntry(index, { label, unit, scale, values }) {
-    const unitSource = unit === null ? "null" : `"${unit}"`;
+    const unitSource = unit === null ? "null" : quote(unit);
     const valuesSource =
-        values === undefined ? "" : `, values: Object.freeze([${values.map((name) => `"${name}"`).join(", ")}])`;
-    const single = `            ${index}: Object.freeze({ label: "${label}", unit: ${unitSource}, scale: ${scale}${valuesSource} }),`;
+        values === undefined ? "" : `, values: Object.freeze([${values.map((name) => quote(name)).join(", ")}])`;
+    const single = `            ${index}: Object.freeze({ label: ${quote(label)}, unit: ${unitSource}, scale: ${scale}${valuesSource} }),`;
     if (single.length <= PRINT_WIDTH) {
         return [single];
     }
 
     return [
         `            ${index}: Object.freeze({`,
-        `                label: "${label}",`,
+        `                label: ${quote(label)},`,
         `                unit: ${unitSource},`,
         `                scale: ${scale},`,
         ...(values === undefined ? [] : renderFrozenList("                ", "values", values)),
@@ -1202,7 +1233,10 @@ function renderFieldsModule({ repoUrl, versions }) {
                 const agreed = variants.length === 1;
                 // Two meanings: name both, and drop the unit, since it belongs to
                 // only one of them and would scale the other's samples wrongly.
-                const label = variants.map((variant) => variant.label).join(" / ");
+                // Two variants can disagree only in unit - the LIDAR-TF and UPT1
+                // drivers both call debug[0] the distance, in cm and in mm - and
+                // "Distance / Distance" names nothing the reader did not know.
+                const label = [...new Set(variants.map((variant) => variant.label))].join(" / ");
                 const scale = agreed ? variants[0].scale : 1;
                 lines.push(
                     ...renderFieldEntry(index, {
@@ -1242,10 +1276,10 @@ function renderFieldsModule({ repoUrl, versions }) {
             "        meanings: Object.freeze([",
         );
         for (const variant of conflict.variants) {
-            const unit = variant.unit === null ? "null" : `"${variant.unit}"`;
+            const unit = variant.unit === null ? "null" : quote(variant.unit);
             lines.push(
                 "            Object.freeze({",
-                `                label: "${variant.label}",`,
+                `                label: ${quote(variant.label)},`,
                 `                unit: ${unit},`,
                 `                scale: ${variant.scale},`,
                 ...renderFrozenList("                ", "sites", variant.sites),
