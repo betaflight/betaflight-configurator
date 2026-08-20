@@ -283,9 +283,10 @@ export function createKeydownHandler(ctx) {
                 logJumpEnd();
                 break;
             case "Escape":
-                // Leave fullscreen, unless Escape is already busy dismissing a dialog, dropdown
-                // menu or select — those trap focus inside themselves, so the target tells us.
-                if (!graphStore.isFullscreen || e.target.closest?.("[role='dialog'],[role='menu'],[role='listbox']")) {
+                // Leave fullscreen, unless Escape is already busy dismissing a dialog — that
+                // traps focus inside itself, so the target tells us. Open popups never get
+                // here; they are filtered out before dispatch.
+                if (!graphStore.isFullscreen || e.target.closest?.("[role='dialog']")) {
                     return false;
                 }
                 graphStore.toggleFullscreen();
@@ -297,6 +298,12 @@ export function createKeydownHandler(ctx) {
         return true;
     }
 
+    // An open reka-ui dropdown menu or select owns the keyboard: it runs its own type-ahead
+    // and arrow navigation, which every shortcut below would otherwise double up on. Only the
+    // open popup is matched, never its trigger, so the shortcuts keep working while a closed
+    // trigger holds focus — the same distinction createDropdownSpaceGuard draws below.
+    const OPEN_POPUP = "[role='menu'],[role='listbox']";
+
     return function (e) {
         // Dormant behind other tabs (embedded): don't hijack keys the user means for the host.
         if (!appStore.viewerActive) {
@@ -306,7 +313,7 @@ export function createKeydownHandler(ctx) {
         if (e.key === "Enter" && e.target.type === "text" && !e.target.closest(".modal")) {
             e.target.blur();
         }
-        if (hasGraph() && e.target.type !== "text" && !e.target.closest(".modal")) {
+        if (hasGraph() && e.target.type !== "text" && !e.target.closest(".modal") && !e.target.closest?.(OPEN_POPUP)) {
             if (e.code.startsWith("Digit")) {
                 try {
                     handleDigitKey(e);
