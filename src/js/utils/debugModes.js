@@ -189,16 +189,17 @@ const CTX_CONVERSIONS = Object.freeze({
         toRaw: (value, ctx) => ctx.throttleToRcCommandRaw?.(value) ?? value / ctx.rcCommandRawToThrottle(1),
     },
     erpm: {
-        toDisplay: (value, ctx) => (value * 200) / ctx.motorPoles,
-        toRaw: (value, ctx) => (value * ctx.motorPoles) / 200,
+        toDisplay: (value, ctx) => (value * 2) / ctx.motorPoles,
+        toRaw: (value, ctx) => (value * ctx.motorPoles) / 2,
     },
 });
 
 function defaultDecimals(multiplier) {
-    if (multiplier >= 1) {
+    const magnitude = Math.abs(multiplier);
+    if (magnitude >= 1) {
         return 0;
     }
-    return Math.min(3, Math.max(0, Math.round(-Math.log10(multiplier))));
+    return Math.min(3, Math.max(0, Math.round(-Math.log10(magnitude))));
 }
 
 /**

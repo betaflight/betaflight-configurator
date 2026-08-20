@@ -625,7 +625,7 @@ function parseIndexSpec(spec) {
 }
 
 // "0.1deg" -> { unit: "deg", scale: 0.1 }, "%" -> { unit: "%", scale: 1 },
-// "0.001" -> { unit: null, scale: 0.001 }
+// "0.001" -> { unit: null, scale: 0.001 }, "-1dBm" -> { unit: "dBm", scale: -1 }
 function parseUnitSpec(raw) {
     const enumTag = raw.trim().match(/^enum:([A-Za-z_]\w*)$/);
     if (enumTag) {
@@ -634,7 +634,7 @@ function parseUnitSpec(raw) {
         return { unit: null, scale: 1, enumTag: enumTag[1] };
     }
 
-    const parsed = raw.trim().match(/^(\d+(?:\.\d+)?)?[ \t]*(.*)$/);
+    const parsed = raw.trim().match(/^(-?\d+(?:\.\d+)?)?[ \t]*(.*)$/);
     const scale = parsed[1] === undefined ? 1 : Number(parsed[1]);
     const unit = parsed[2] === "" ? null : parsed[2];
 
