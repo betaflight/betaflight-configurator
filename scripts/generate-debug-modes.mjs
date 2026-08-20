@@ -11,6 +11,15 @@
  *   src/js/debug_modes_table.js     - shipped: per-API-version ordered mode
  *                                     names, plus the rename aliases needed to
  *                                     keep labels working for older firmware.
+ *   src/js/debug_fields_table.js    - shipped: the label, unit and scaling of
+ *                                     each `debug[n]`, read from the `//!<`
+ *                                     annotations the firmware carries on its
+ *                                     DEBUG_SET() call sites (see
+ *                                     `src/main/build/debug.h`). A field with no
+ *                                     annotation is absent, and the
+ *                                     hand-written table in
+ *                                     `src/js/utils/debugModes.js` still
+ *                                     supplies it.
  *   test/generated/debug_field_usage.json
  *                                   - test fixture: which `debug[n]` indices
  *                                     each firmware version actually writes,
@@ -44,6 +53,7 @@
  *   --min-api <minor>   Lowest MSP API minor to emit (default: 44, the oldest
  *                       version the configurator connects to).
  *   --out <path>        Mode table output (default: src/js/debug_modes_table.js).
+ *   --labels-out <path> Field label/unit output (default: src/js/debug_fields_table.js).
  *   --fields-out <path> Field-usage output (default: test/generated/debug_field_usage.json).
  *   --source-url <url>  Project URL recorded as provenance (default: the
  *                       upstream betaflight repository).
@@ -62,12 +72,17 @@ const projectRoot = resolve(__dirname, "..");
 const DEFAULT_DEV_REF = "master";
 const DEFAULT_MIN_API_MINOR = 44;
 const DEFAULT_OUT = "src/js/debug_modes_table.js";
+const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.js";
 const DEFAULT_FIELDS_OUT = "test/generated/debug_field_usage.json";
 const DEBUG_HEADER = "src/main/build/debug.h";
 const DEBUG_SOURCE = "src/main/build/debug.c";
 const MSP_PROTOCOL_HEADER = "src/main/msp/msp_protocol.h";
 const FIRMWARE_SOURCE_DIR = "src/main";
 const DEBUG_VALUE_COUNT = 8;
+
+// Prettier's default printWidth, which this repository keeps, so the generated
+// files come out already formatted.
+const PRINT_WIDTH = 120;
 
 // Recorded as provenance in the generated files. The commits below are the real
 // provenance; the URL just names the project, so a fork or a mirror used as the
@@ -84,7 +99,7 @@ const REPO_CANDIDATES = [
 ];
 
 const BOOLEAN_FLAGS = new Set(["check", "allow-rewrite"]);
-const VALUE_FLAGS = new Set(["repo", "dev-ref", "min-api", "out", "fields-out", "source-url"]);
+const VALUE_FLAGS = new Set(["repo", "dev-ref", "min-api", "out", "labels-out", "fields-out", "source-url"]);
 
 function parseArgs(argv) {
     const args = {};
@@ -436,15 +451,17 @@ function parseEnumBlock(body) {
 }
 
 /*
- * Resolve enum constants used as debug indices: several files index their debug
- * slots through a file-local `enum { DEBUG_FOO_BAR, ... }`. Only plain
- * implicit/decimal enumerators are resolved; anything else leaves the index
- * unresolved, which marks the mode dynamic.
+ * Resolve the constants used as debug indices: several files index their debug
+ * slots through a file-local `enum { DEBUG_FOO_BAR, ... }` or a run of
+ * `#define DEBUG_FOO_BAR 0`, some of which live in the driver's own header. Only
+ * plain implicit/decimal enumerators and decimal defines are resolved; anything
+ * else leaves the index unresolved, which marks the mode dynamic.
  */
-function parseLocalEnumConstants(source) {
+function parseLocalConstants(source) {
     const constants = new Map();
+    const stripped = stripComments(source);
 
-    for (const block of stripComments(source).matchAll(/enum\s*(?:[A-Za-z_]\w*\s*)?\{([^}]*)\}/g)) {
+    for (const block of stripped.matchAll(/enum\s*(?:[A-Za-z_]\w*\s*)?\{([^}]*)\}/g)) {
         const entries = parseEnumBlock(block[1]);
         if (entries === undefined) {
             continue;
@@ -454,33 +471,55 @@ function parseLocalEnumConstants(source) {
         }
     }
 
+    for (const define of stripped.matchAll(/^[ \t]*#[ \t]*define[ \t]+([A-Za-z_]\w*)[ \t]+(\d+)[ \t]*$/gm)) {
+        if (!constants.has(define[1])) {
+            constants.set(define[1], Number(define[2]));
+        }
+    }
+
     return constants;
 }
 
-function groupDebugSetLines(grepOutput) {
-    const byFile = new Map();
+/*
+ * The named enumerations in one file, as tag -> value names in index order, for
+ * both `typedef enum { ... } tag_e;` and `enum tag { ... }`. A block this parser
+ * cannot evaluate - a computed initialiser, or entries behind a preprocessor
+ * conditional, where the value of a name depends on the build - is skipped rather
+ * than recorded with indices the firmware may disagree with.
+ */
+function parseNamedEnums(source) {
+    const enums = new Map();
 
-    for (const line of grepOutput.split("\n")) {
-        if (!line) {
+    for (const block of stripComments(source).matchAll(/enum\s*([A-Za-z_]\w*)?\s*\{([^}]*)\}\s*([A-Za-z_]\w*)?\s*;/g)) {
+        const entries = parseEnumBlock(block[2]);
+        if (entries === undefined) {
             continue;
         }
-        // git grep <ref> prints "<ref>:<path>:<line>:<text>"
-        const parsed = line.match(/^[^:]*:([^:]+):\d+:(.*)$/);
-        if (!parsed) {
-            continue;
+        const names = [];
+        for (const [name, value] of entries) {
+            names[value] = name;
         }
-        const [, path, text] = parsed;
-        if (path === DEBUG_HEADER) {
-            // The DEBUG_SET macro definition itself.
-            continue;
+        for (const tag of [block[1], block[3]]) {
+            if (tag !== undefined) {
+                enums.set(tag, names);
+            }
         }
-        if (!byFile.has(path)) {
-            byFile.set(path, []);
-        }
-        byFile.get(path).push(text);
     }
 
-    return byFile;
+    return enums;
+}
+
+// The headers a file includes by relative path, resolved against the file's own
+// directory and then against the firmware source root.
+function includedHeaders(path, source) {
+    const directory = path.slice(0, path.lastIndexOf("/"));
+    const headers = [];
+
+    for (const include of stripComments(source).matchAll(/^[ \t]*#[ \t]*include[ \t]+"([^"]+)"/gm)) {
+        headers.push(`${directory}/${include[1]}`, `${FIRMWARE_SOURCE_DIR}/${include[1]}`);
+    }
+
+    return headers;
 }
 
 /*
@@ -489,38 +528,301 @@ function groupDebugSetLines(grepOutput) {
  * neither being a known mode means this is a macro definition or a stale call site.
  */
 function resolveDebugSetCall(text, call, identifierToMode) {
-    const args = splitCallArguments(text, call.index + call[0].length - 1);
+    const open = call.index + call[0].length - 1;
+    const args = splitCallArguments(text, open);
     const modeArgument = identifierToMode.has(args[0]) ? 0 : 1;
     const mode = identifierToMode.get(args[modeArgument]);
 
-    return mode === undefined ? undefined : { mode, rawIndex: args[modeArgument + 1] };
+    return mode === undefined ? undefined : { mode, rawIndex: args[modeArgument + 1], end: findCallEnd(text, open) };
 }
 
 /*
  * The debug[n] a call site writes, or undefined when the index is computed at run
  * time (`axis`, `2 * axis + 1`, ...) and this scan cannot enumerate it.
- * `readConstants` is called only for an identifier index, since resolving it needs
- * the whole file.
  */
-function resolveFieldIndex(rawIndex, readConstants) {
+function resolveFieldIndex(rawIndex, constants) {
     let index;
-    if (/^\d+$/.test(rawIndex)) {
+    if (/^\d+$/.test(rawIndex ?? "")) {
         index = Number(rawIndex);
-    } else if (/^[A-Za-z_]\w*$/.test(rawIndex)) {
-        index = readConstants().get(rawIndex);
+    } else if (/^[A-Za-z_]\w*$/.test(rawIndex ?? "")) {
+        index = constants.get(rawIndex);
     }
 
     return index !== undefined && index >= 0 && index < DEBUG_VALUE_COUNT ? index : undefined;
 }
 
-// Every DEBUG_SET() line in the firmware source at `ref`, by file.
-function grepDebugSetLines(repo, ref) {
+// ---------------------------------------------------------------------------
+// `//!<` field annotations
+//
+// Firmware records what each debug[n] means in a trailing comment on the call
+// site; `src/main/build/debug.h` carries the grammar. This is the only place the
+// meaning of a field exists, so a malformed annotation is a hard error rather
+// than a field silently dropped back onto the hand-written table.
+// ---------------------------------------------------------------------------
+
+const ANNOTATION = /\/\/!<[ \t]*(\S.*?)[ \t]*$/;
+const INDEX_SPEC = /^\[[ \t]*(\d+(?:[ \t]*\.\.[ \t]*\d+)?(?:[ \t]*,[ \t]*\d+)*)[ \t]*\][ \t]*/;
+const UNIT_SPEC = /[ \t]*\[([^[\]]+)\]$/;
+const EXPANSION = /\{([^{}]*)\}/;
+
+// Every unit symbol `debug.h` documents. A symbol outside this set is a typo or a
+// unit the tooling has no conversion for, and either way must not reach the app.
+const UNIT_SYMBOLS = new Set([
+    "s",
+    "ms",
+    "us",
+    "Hz",
+    "kHz",
+    "MHz",
+    "kbit/s",
+    "rad",
+    "rad/s",
+    "deg",
+    "dps",
+    "dps2",
+    "m",
+    "cm",
+    "m/s",
+    "cm/s",
+    "g",
+    "g/s",
+    "V",
+    "A",
+    "mAh",
+    "degC",
+    "Pa",
+    "hPa",
+    "rpm",
+    "%",
+    "dB",
+    "dBm",
+    "bytes",
+    "ticks",
+    // device-native: only the FC's own configuration converts these
+    "gyroADC",
+    "accADC",
+    "accADC/s",
+    "rcCommand",
+    "eRPM",
+]);
+
+// "0..2" -> [0, 1, 2], "0,2,4" -> [0, 2, 4], "3" -> [3]
+function parseIndexSpec(spec) {
+    const indices = [];
+
+    for (const part of spec.split(",")) {
+        const range = part.split("..").map((bound) => Number(bound.trim()));
+        const [from, to] = range.length === 2 ? range : [range[0], range[0]];
+        if (!(from >= 0) || to >= DEBUG_VALUE_COUNT || to < from) {
+            return undefined;
+        }
+        for (let index = from; index <= to; index++) {
+            indices.push(index);
+        }
+    }
+
+    return [...new Set(indices)];
+}
+
+// "0.1deg" -> { unit: "deg", scale: 0.1 }, "%" -> { unit: "%", scale: 1 },
+// "0.001" -> { unit: null, scale: 0.001 }
+function parseUnitSpec(raw) {
+    const enumTag = raw.trim().match(/^enum:([A-Za-z_]\w*)$/);
+    if (enumTag) {
+        // The field holds an enumerator, not a quantity: no unit scales it, and
+        // the names come from the firmware's own enum.
+        return { unit: null, scale: 1, enumTag: enumTag[1] };
+    }
+
+    const parsed = raw.trim().match(/^(\d+(?:\.\d+)?)?[ \t]*(.*)$/);
+    const scale = parsed[1] === undefined ? 1 : Number(parsed[1]);
+    const unit = parsed[2] === "" ? null : parsed[2];
+
+    if (unit !== null && !UNIT_SYMBOLS.has(unit)) {
+        return undefined;
+    }
+    if (parsed[1] === undefined && unit === null) {
+        return undefined;
+    }
+
+    return { unit, scale };
+}
+
+/*
+ * One annotation as {indices, labels, unit, scale}, with the `{a|b|c}` group
+ * expanded into one label per index. `indices` is null when the annotation gave
+ * no index spec, in which case the caller uses the index from the call itself.
+ */
+function parseAnnotation(raw) {
+    let rest = raw;
+
+    const indexMatch = rest.match(INDEX_SPEC);
+    let indices = null;
+    if (indexMatch) {
+        indices = parseIndexSpec(indexMatch[1]);
+        if (indices === undefined) {
+            return { error: `index spec "${indexMatch[1]}" is not 0..${DEBUG_VALUE_COUNT - 1}` };
+        }
+        rest = rest.slice(indexMatch[0].length);
+    }
+
+    let unit = null;
+    let scale = 1;
+    let enumTag;
+    const unitMatch = rest.match(UNIT_SPEC);
+    if (unitMatch) {
+        const parsed = parseUnitSpec(unitMatch[1]);
+        if (parsed === undefined) {
+            return { error: `unknown unit "${unitMatch[1]}"` };
+        }
+        ({ unit, scale, enumTag } = parsed);
+        rest = rest.slice(0, rest.length - unitMatch[0].length);
+    }
+
+    const label = rest.trim();
+    if (label === "") {
+        return { error: "no label" };
+    }
+    if (/[[\]]/.test(label)) {
+        return { error: `label "${label}" contains a bracket, which delimits the index spec and the unit` };
+    }
+
+    const expansion = label.match(EXPANSION);
+    if (!expansion) {
+        return { indices, labels: null, label, unit, scale, enumTag };
+    }
+    const alternatives = expansion[1].split("|");
+    if (indices === null || alternatives.length !== indices.length) {
+        return {
+            error: `"{${expansion[1]}}" spells out ${alternatives.length} labels, but the annotation covers ${indices === null ? "one implicit index" : `${indices.length} indices`}`,
+        };
+    }
+
+    return {
+        indices,
+        labels: alternatives.map((alternative) =>
+            label
+                .replace(EXPANSION, alternative)
+                .replaceAll(/[ \t]+/g, " ")
+                .trim(),
+        ),
+        label,
+        unit,
+        scale,
+        enumTag,
+    };
+}
+
+// ---------------------------------------------------------------------------
+// per-file scan
+// ---------------------------------------------------------------------------
+
+// The files that carry DEBUG_SET() call sites at `ref`.
+function debugSetFiles(repo, ref) {
+    let output;
     try {
-        return groupDebugSetLines(git(repo, ["grep", "-n", "DEBUG_SET(", ref, "--", FIRMWARE_SOURCE_DIR]));
+        output = git(repo, ["grep", "-l", "DEBUG_SET(", ref, "--", FIRMWARE_SOURCE_DIR]);
     } catch (error) {
         // git grep exits 1 when nothing matched, which is not an error here.
-        return groupDebugSetLines(error.stdout ?? "");
+        output = error.stdout ?? "";
     }
+
+    return output
+        .split("\n")
+        .map((line) => line.replace(/^[^:]*:/, ""))
+        .filter((path) => path !== "" && path !== DEBUG_HEADER);
+}
+
+function lineNumberAt(text, offset) {
+    let line = 1;
+    for (let i = 0; i < offset; i++) {
+        if (text[i] === "\n") {
+            line += 1;
+        }
+    }
+    return line;
+}
+
+/*
+ * Every DEBUG_SET() call site in one file: the mode it writes, the indices it
+ * writes them to, and the annotation on the line the call ends on. Whole files are
+ * read rather than grepped lines because a call may span several lines and its
+ * annotation sits on the last of them.
+ */
+function scanFile(repo, ref, path, identifierToMode, problems) {
+    const text = gitShow(repo, ref, path);
+    const calls = [];
+    let scope = null;
+    /*
+     * The file and the headers it includes, as index constants and named
+     * enumerations. Read at most once per file, and only for a file that needs it.
+     */
+    const readScope = () => {
+        if (scope === null) {
+            scope = { constants: parseLocalConstants(text), enums: parseNamedEnums(text) };
+            for (const header of includedHeaders(path, text)) {
+                let headerSource;
+                try {
+                    headerSource = gitShow(repo, ref, header);
+                } catch {
+                    continue; // not a path in this tree, or not readable at this ref
+                }
+                for (const [name, value] of parseLocalConstants(headerSource)) {
+                    if (!scope.constants.has(name)) {
+                        scope.constants.set(name, value);
+                    }
+                }
+                for (const [tag, names] of parseNamedEnums(headerSource)) {
+                    if (!scope.enums.has(tag)) {
+                        scope.enums.set(tag, names);
+                    }
+                }
+            }
+        }
+        return scope;
+    };
+
+    for (const call of text.matchAll(DEBUG_SET_CALL)) {
+        const resolved = resolveDebugSetCall(text, call, identifierToMode);
+        if (resolved?.rawIndex === undefined) {
+            continue;
+        }
+        const index = resolveFieldIndex(resolved.rawIndex, readScope().constants);
+        const lineEnd = text.indexOf("\n", resolved.end);
+        const trailing = text.slice(resolved.end, lineEnd === -1 ? text.length : lineEnd);
+        const annotationText = trailing.match(ANNOTATION)?.[1];
+        const where = `${path}:${lineNumberAt(text, resolved.end)}`;
+
+        let annotation = null;
+        if (annotationText !== undefined) {
+            annotation = parseAnnotation(annotationText);
+            if (annotation.error) {
+                problems.push(`${where}: ${annotation.error}`);
+                annotation = null;
+            } else if (annotation.enumTag !== undefined) {
+                // The field holds an enumerator: take the names from the firmware
+                // enum the annotation points at, so the app cannot drift from it.
+                annotation.values = readScope().enums.get(annotation.enumTag);
+                if (annotation.values === undefined) {
+                    problems.push(
+                        `${where}: no enum "${annotation.enumTag}" in ${path} or the headers it includes` +
+                            " (or its enumerators are not plain decimal values)",
+                    );
+                    annotation = null;
+                }
+            }
+        }
+
+        if (annotation && annotation.indices && index !== undefined && !annotation.indices.includes(index)) {
+            problems.push(
+                `${where}: annotation covers debug[${annotation.indices.join(",")}] but the call writes debug[${index}]`,
+            );
+        }
+
+        calls.push({ mode: resolved.mode, index, annotation, where });
+    }
+
+    return calls;
 }
 
 function usageEntry(usage, mode) {
@@ -528,33 +830,6 @@ function usageEntry(usage, mode) {
         usage.set(mode, { fields: new Set(), dynamic: false });
     }
     return usage.get(mode);
-}
-
-/*
- * Fold every DEBUG_SET() call site on `lines` into `usage`, and report how many of
- * their indices could not be enumerated.
- */
-function scanLinesForUsage(lines, identifierToMode, readConstants, usage) {
-    let unresolved = 0;
-
-    for (const text of lines) {
-        for (const call of text.matchAll(DEBUG_SET_CALL)) {
-            const resolved = resolveDebugSetCall(text, call, identifierToMode);
-            if (resolved?.rawIndex === undefined) {
-                continue;
-            }
-            const entry = usageEntry(usage, resolved.mode);
-            const index = resolveFieldIndex(resolved.rawIndex, readConstants);
-            if (index === undefined) {
-                entry.dynamic = true;
-                unresolved += 1;
-            } else {
-                entry.fields.add(index);
-            }
-        }
-    }
-
-    return unresolved;
 }
 
 function renderUsage(usage) {
@@ -568,21 +843,71 @@ function renderUsage(usage) {
     );
 }
 
-function extractFieldUsage(repo, version, modes) {
-    const identifierToMode = new Map(modes.map((mode) => [`DEBUG_${mode}`, mode]));
-    const usage = new Map();
-    let unresolved = 0;
+/*
+ * Fold one call site into `usage` (which debug[n] the mode writes) and into
+ * `fields` (what each of them means). A field written from two places has to mean
+ * one thing in a given build, so disagreeing annotations are both kept as
+ * variants rather than one being picked: the app shows both, and the disagreement
+ * is reported as the firmware bug it is.
+ */
+function foldCall(call, usage, fields) {
+    const entry = usageEntry(usage, call.mode);
+    const annotation = call.annotation;
+    const indices = annotation?.indices ?? (call.index === undefined ? null : [call.index]);
 
-    for (const [path, lines] of grepDebugSetLines(repo, version.ref)) {
-        // Resolving an identifier index needs the whole file, so read it at most once
-        // and only for a file that actually has one.
-        let constants = null;
-        const readConstants = () => (constants ??= parseLocalEnumConstants(gitShow(repo, version.ref, path)));
-
-        unresolved += scanLinesForUsage(lines, identifierToMode, readConstants, usage);
+    if (indices === null) {
+        entry.dynamic = true;
+        return 1;
+    }
+    for (const index of indices) {
+        entry.fields.add(index);
     }
 
-    return { usage: renderUsage(usage), unresolved };
+    if (!annotation) {
+        return 0;
+    }
+
+    const modeFields = (fields[call.mode] ??= {});
+    indices.forEach((index, position) => {
+        const label = annotation.labels ? annotation.labels[position] : annotation.label;
+        const variants = (modeFields[index] ??= []);
+        const existing = variants.find(
+            (variant) =>
+                variant.label === label && variant.unit === annotation.unit && variant.scale === annotation.scale,
+        );
+        if (existing) {
+            existing.sites.push(call.where);
+        } else {
+            variants.push({
+                label,
+                unit: annotation.unit,
+                scale: annotation.scale,
+                values: annotation.values,
+                sites: [call.where],
+            });
+        }
+    });
+
+    return 0;
+}
+
+/*
+ * Which debug[n] each mode writes at `version.ref`, and what each of them means.
+ * `problems` collects malformed annotations, which fail the run.
+ */
+function extractFields(repo, version, modes, problems) {
+    const identifierToMode = new Map(modes.map((mode) => [`DEBUG_${mode}`, mode]));
+    const usage = new Map();
+    const fields = {};
+    let unresolved = 0;
+
+    for (const path of debugSetFiles(repo, version.ref)) {
+        for (const call of scanFile(repo, version.ref, path, identifierToMode, problems)) {
+            unresolved += foldCall(call, usage, fields);
+        }
+    }
+
+    return { usage: renderUsage(usage), fields, unresolved };
 }
 
 // ---------------------------------------------------------------------------
@@ -789,6 +1114,153 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
 }
 
 /*
+ * `<key>: Object.freeze([...])` at `indent`, wrapped one item per line when the
+ * single-line form would run past the print width - which is what Prettier does
+ * to it, so the generated file comes out already formatted.
+ */
+function renderFrozenList(indent, key, items) {
+    const quoted = items.map((item) => `"${item}"`);
+    const single = `${indent}${key}: Object.freeze([${quoted.join(", ")}]),`;
+    if (single.length <= PRINT_WIDTH) {
+        return [single];
+    }
+
+    return [`${indent}${key}: Object.freeze([`, ...quoted.map((item) => `${indent}    ${item},`), `${indent}]),`];
+}
+
+/*
+ * One field of the shipped table, as Prettier would print it: on one line when it
+ * fits, one property per line when it does not.
+ */
+function renderFieldEntry(index, { label, unit, scale, values }) {
+    const unitSource = unit === null ? "null" : `"${unit}"`;
+    const valuesSource =
+        values === undefined ? "" : `, values: Object.freeze([${values.map((name) => `"${name}"`).join(", ")}])`;
+    const single = `            ${index}: Object.freeze({ label: "${label}", unit: ${unitSource}, scale: ${scale}${valuesSource} }),`;
+    if (single.length <= PRINT_WIDTH) {
+        return [single];
+    }
+
+    return [
+        `            ${index}: Object.freeze({`,
+        `                label: "${label}",`,
+        `                unit: ${unitSource},`,
+        `                scale: ${scale},`,
+        ...(values === undefined ? [] : renderFrozenList("                ", "values", values)),
+        "            }),",
+    ];
+}
+
+/*
+ * The shipped field table: what each `debug[n]` means, per API version, straight
+ * from the firmware annotations. Only annotated fields appear; the hand-written
+ * table in src/js/utils/debugModes.js still supplies the rest, so this file can
+ * land incrementally as annotations do.
+ */
+function renderFieldsModule({ repoUrl, versions }) {
+    const annotated = versions.filter((version) => Object.keys(version.fields).length > 0);
+    const conflicts = [];
+
+    const lines = [
+        "/*",
+        " * WARNING: This is an auto-generated file, please do not edit directly!",
+        " *",
+        " * Generator    : `scripts/generate-debug-modes.mjs`",
+        ` * Source       : ${repoUrl} (\`//!<\` annotations on the DEBUG_SET() call sites)`,
+        " * Firmware refs:",
+        ...annotated.map((version) => {
+            const fields = Object.values(version.fields).reduce((total, mode) => total + Object.keys(mode).length, 0);
+            return ` *   API ${version.apiVersion.padEnd(7)} ${version.commit.slice(0, 10)} ${version.date}  (${fields} annotated fields)`;
+        }),
+        " */",
+        "",
+        "/**",
+        " * What each `debug[n]` of each debug mode holds, per MSP API version, as the",
+        " * firmware itself records it at the DEBUG_SET() call site:",
+        " *",
+        " *   label - the field name to show, firmware's own wording.",
+        " *   unit  - unit symbol of the stored value, or null when it is a plain count,",
+        " *           flag or enumeration. `gyroADC`, `accADC`, `accADC/s`, `rcCommand`",
+        " *           and `eRPM` are device-native and need the FC's own scaling.",
+        " *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means",
+        " *           the field holds decidegrees.",
+        " *   values - present when the field holds an enumerator: the firmware enum's",
+        " *           own names, indexed by value.",
+        " *",
+        " * A field the firmware does not annotate is absent here.",
+        " */",
+        "export const FIRMWARE_DEBUG_FIELDS = Object.freeze({",
+    ];
+
+    for (const version of annotated) {
+        lines.push(`    "${version.apiVersion}": Object.freeze({`);
+        for (const mode of Object.keys(version.fields).sort((left, right) => left.localeCompare(right))) {
+            const fields = version.fields[mode];
+            lines.push(`        ${mode}: Object.freeze({`);
+            for (const index of Object.keys(fields).sort((left, right) => Number(left) - Number(right))) {
+                const variants = fields[index];
+                const agreed = variants.length === 1;
+                // Two meanings: name both, and drop the unit, since it belongs to
+                // only one of them and would scale the other's samples wrongly.
+                const label = variants.map((variant) => variant.label).join(" / ");
+                const scale = agreed ? variants[0].scale : 1;
+                lines.push(
+                    ...renderFieldEntry(index, {
+                        label,
+                        unit: agreed ? variants[0].unit : null,
+                        scale,
+                        values: agreed ? variants[0].values : undefined,
+                    }),
+                );
+                if (!agreed) {
+                    conflicts.push({ apiVersion: version.apiVersion, mode, index: Number(index), variants });
+                }
+            }
+            lines.push("        }),");
+        }
+        lines.push("    }),");
+    }
+
+    lines.push(
+        "});",
+        "",
+        "/**",
+        " * Indices two subsystems write with different meanings in the same build. A",
+        " * logged debug[n] records only the number, never which code wrote it, so such a",
+        " * field cannot be labelled: both meanings are kept here so the app can say so",
+        " * rather than pick one. Every entry is a firmware bug.",
+        " */",
+        "export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([",
+    );
+
+    for (const conflict of conflicts) {
+        lines.push(
+            "    Object.freeze({",
+            `        apiVersion: "${conflict.apiVersion}",`,
+            `        mode: "${conflict.mode}",`,
+            `        index: ${conflict.index},`,
+            "        meanings: Object.freeze([",
+        );
+        for (const variant of conflict.variants) {
+            const unit = variant.unit === null ? "null" : `"${variant.unit}"`;
+            lines.push(
+                "            Object.freeze({",
+                `                label: "${variant.label}",`,
+                `                unit: ${unit},`,
+                `                scale: ${variant.scale},`,
+                ...renderFrozenList("                ", "sites", variant.sites),
+                "            }),",
+            );
+        }
+        lines.push("        ]),", "    }),");
+    }
+
+    lines.push("]);", "");
+
+    return { source: lines.join("\n"), conflicts };
+}
+
+/*
  * Prettier collapses short numeric arrays onto one line, so do the same here and
  * the generated fixture is already formatted the way `npm run format` wants it.
  */
@@ -831,14 +1303,28 @@ function renderFieldUsage({ repoUrl, versions }) {
  */
 function collectVersionData(repo, versions) {
     let unresolvedTotal = 0;
+    const problems = [];
 
     for (const version of versions) {
         version.modes = extractModes(repo, version);
-        const { usage, unresolved } = extractFieldUsage(repo, version, version.modes);
+        const { usage, fields, unresolved } = extractFields(repo, version, version.modes, problems);
         version.usage = usage;
+        version.fields = fields;
         unresolvedTotal += unresolved;
+        const annotated = Object.values(fields).reduce((total, mode) => total + Object.keys(mode).length, 0);
+        const written = Object.values(usage).reduce((total, mode) => total + mode.fields.length, 0);
         console.log(
-            `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ${version.modes.length} modes`,
+            `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ` +
+                `${version.modes.length} modes, ${annotated}/${written} fields annotated`,
+        );
+    }
+
+    if (problems.length > 0) {
+        throw new Error(
+            [
+                "Malformed `//!<` field annotations - see the grammar in src/main/build/debug.h:",
+                ...problems.map((problem) => `  - ${problem}`),
+            ].join("\n"),
         );
     }
 
@@ -878,6 +1364,7 @@ async function main() {
         throw new Error(`--min-api must be a positive integer, got: ${args["min-api"]}`);
     }
     const outPath = resolve(projectRoot, args.out ?? DEFAULT_OUT);
+    const labelsOutPath = resolve(projectRoot, args["labels-out"] ?? DEFAULT_LABELS_OUT);
     const fieldsOutPath = resolve(projectRoot, args["fields-out"] ?? DEFAULT_FIELDS_OUT);
 
     const repoUrl = args["source-url"] ?? SOURCE_URL;
@@ -904,10 +1391,24 @@ async function main() {
     }
 
     const moduleSource = renderModule({ repoUrl, versions, aliases, renames });
+    const { source: fieldsModuleSource, conflicts } = renderFieldsModule({ repoUrl, versions });
     const fieldUsageSource = renderFieldUsage({ repoUrl, versions });
+
+    for (const conflict of conflicts) {
+        const meanings = conflict.variants
+            .map(
+                (variant) =>
+                    `"${variant.label}"${variant.unit === null ? "" : ` [${variant.scale === 1 ? "" : variant.scale}${variant.unit}]`} at ${variant.sites.join(", ")}`,
+            )
+            .join(" vs ");
+        console.warn(
+            `generate-debug-modes: WARNING ${conflict.mode}[${conflict.index}] has ${conflict.variants.length} meanings: ${meanings}`,
+        );
+    }
 
     const outputs = [
         [outPath, moduleSource],
+        [labelsOutPath, fieldsModuleSource],
         [fieldsOutPath, fieldUsageSource],
     ];
 
@@ -919,6 +1420,7 @@ async function main() {
     await writeOutputs(outputs);
 
     console.log(`generate-debug-modes: wrote ${versions.length} API versions to ${outPath}`);
+    console.log(`generate-debug-modes: wrote the annotated field labels to ${labelsOutPath}`);
     console.log(
         `generate-debug-modes: wrote debug field usage to ${fieldsOutPath} (${unresolvedTotal} computed indices left unenumerated)`,
     );

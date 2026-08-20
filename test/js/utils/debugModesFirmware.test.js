@@ -2,22 +2,29 @@ import { describe, expect, it } from "vitest";
 import semver from "semver";
 import fieldUsage from "../../generated/debug_field_usage.json";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../../../src/js/debug_modes_table";
+import { FIRMWARE_DEBUG_FIELDS } from "../../../src/js/debug_fields_table";
 import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugModes";
 
 /*
  * Keeps the hand-written half of `src/js/utils/debugModes.js` honest against the
  * firmware, which is the single source of truth for debug modes.
  *
- * `src/js/debug_modes_table.js` and `test/generated/debug_field_usage.json` are
- * both produced by `npm run generate:debug-modes` from the firmware sources: the
- * table holds the `debug_mode_e` enum per API version, the fixture holds the
- * `debug[n]` indices each mode's `DEBUG_SET()` call sites actually write. The
- * labels, units and scaling next to them cannot be generated — the firmware
- * carries none — so this file checks them against what firmware really writes.
+ * `src/js/debug_modes_table.js`, `src/js/debug_fields_table.js` and
+ * `test/generated/debug_field_usage.json` are all produced by
+ * `npm run generate:debug-modes` from the firmware sources: the mode table holds
+ * the `debug_mode_e` enum per API version, the field table holds the label, unit
+ * and scaling of every `debug[n]` the firmware annotates, and the fixture holds
+ * the indices each mode's `DEBUG_SET()` call sites actually write.
+ *
+ * Firmware from API 1.49 on annotates its call sites, so its labels are generated
+ * and cannot drift — that is asserted below. For older firmware the labels stay
+ * hand-written, and this file holds them to what those firmwares really write.
  */
 
 /*
- * Label gaps that exist today, as `<api> <mode>: <problem>`.
+ * Label gaps that exist today in the hand-written table, as
+ * `<api> <mode>: <problem>`. Only firmware that predates the `//!<` field
+ * annotations can appear here; an annotated version has no gaps by construction.
  *
  * "unlabelled fields"           - firmware writes the field, no label for it, so
  *                                 it shows as a bare "Debug [n]".
@@ -76,16 +83,6 @@ const KNOWN_LABEL_GAPS = [
     "1.48.0 GPS_RESCUE_TRACKING: labels for unwritten fields [1,7]",
     "1.48.0 ATTITUDE: labels for unwritten fields [7]",
     "1.48.0 FLASH_TEST_PRBS: labels for unwritten fields [1]",
-    "1.49.0 SBUS: labels for unwritten fields [1]",
-    "1.49.0 RANGEFINDER: labels for unwritten fields [0]",
-    "1.49.0 LIDAR_TF: unlabelled fields [4,5,6,7]",
-    "1.49.0 RTH: unlabelled fields [4,5,6,7]",
-    "1.49.0 GPS_RESCUE_VELOCITY: labels for unwritten fields [4,5,6,7]",
-    "1.49.0 GPS_RESCUE_HEADING: unlabelled fields [4]",
-    "1.49.0 GPS_RESCUE_HEADING: labels for unwritten fields [5,6]",
-    "1.49.0 GPS_RESCUE_TRACKING: labels for unwritten fields [1,7]",
-    "1.49.0 ATTITUDE: labels for unwritten fields [7]",
-    "1.49.0 FLASH_TEST_PRBS: labels for unwritten fields [1]",
 ];
 
 const generatedVersions = Object.keys(FIRMWARE_DEBUG_MODES);
@@ -195,6 +192,32 @@ describe("debug modes against the firmware source", () => {
     });
 
     describe("field labels", () => {
+        it("come from the firmware annotations for every version that carries them", () => {
+            const annotated = Object.keys(FIRMWARE_DEBUG_FIELDS);
+            expect(annotated.length).toBeGreaterThan(0);
+
+            for (const apiVersion of annotated) {
+                const labels = getDebugFieldNames(apiVersion);
+                for (const [mode, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[apiVersion])) {
+                    const generated = Object.fromEntries(
+                        Object.entries(fields).map(([index, field]) => [`debug[${index}]`, field.label]),
+                    );
+                    const shown = Object.fromEntries(
+                        Object.entries(labels[mode]).filter(([field]) => field !== "debug[all]"),
+                    );
+                    // Exactly the annotated fields, with exactly firmware's wording:
+                    // nothing added by hand, and nothing left over from a rework.
+                    expect(shown, `${apiVersion} ${mode}`).toEqual(generated);
+                }
+            }
+        });
+
+        it("leaves no gap on a version whose firmware is annotated", () => {
+            for (const gap of collectLabelGaps()) {
+                expect(Object.keys(FIRMWARE_DEBUG_FIELDS)).not.toContain(gap.split(" ")[0]);
+            }
+        });
+
         it("match the debug[n] indices the firmware writes, except for known gaps", () => {
             // Sorted on both sides: a mode inserted mid-enum reorders the report, and
             // the diff should show what changed, not where everything moved to.
