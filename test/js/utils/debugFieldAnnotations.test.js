@@ -76,10 +76,14 @@ describe("firmware debug field annotations", () => {
             );
         });
 
-        it("shows every unit the firmware may use, so none renders bare", () => {
+        it("shows every unit the firmware may use, with one suffix per unit", () => {
             // The generator accepts a documented set of unit symbols; the app has
             // to display all of them. A symbol it does not know would fall back to
-            // no suffix, and the number would still look plausible.
+            // no suffix, and the number would still look plausible. The suffix is
+            // not the firmware symbol - centimetres are shown in metres, gyro ADC
+            // counts in °/s - but it has to be the same one every time.
+            const suffixes = new Map();
+
             for (const [apiVersion, modes] of Object.entries(FIRMWARE_DEBUG_FIELDS)) {
                 const scaleContext = ctx(apiVersion);
                 for (const [mode, fields] of Object.entries(modes)) {
@@ -87,11 +91,34 @@ describe("firmware debug field annotations", () => {
                         if (field.unit === null) {
                             continue;
                         }
+                        const where = `${apiVersion} ${mode}[${index}] (${field.unit})`;
                         const decoded = decodeDebugFieldToFriendly(mode, `debug[${index}]`, 1, scaleContext);
-                        expect(decoded, `${apiVersion} ${mode}[${index}] (${field.unit})`).toMatch(/^[-\d.]+ \S+$/);
+                        const parsed = /^(-?[\d.]+) (\S+)$/.exec(decoded);
+                        expect(parsed, `${where}: "${decoded}"`).not.toBeNull();
+                        const seen = suffixes.get(field.unit);
+                        if (seen === undefined) {
+                            suffixes.set(field.unit, parsed[2]);
+                        } else {
+                            expect(parsed[2], where).toBe(seen);
+                        }
                     }
                 }
             }
+
+            // Spot-check the mappings that are not the identity, since those are
+            // the ones a display change could silently get wrong.
+            expect(Object.fromEntries(suffixes)).toMatchObject({
+                us: "μs",
+                cm: "m",
+                "cm/s": "m/s",
+                deg: "°",
+                dps: "°/s",
+                degC: "°C",
+                dBm: "dBm",
+                gyroADC: "°/s",
+                accADC: "g",
+                eRPM: "rpm",
+            });
         });
 
         it("names both meanings only when they differ", () => {

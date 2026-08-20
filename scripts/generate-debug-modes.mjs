@@ -866,6 +866,17 @@ function renderUsage(usage) {
     );
 }
 
+// Whether two annotations name the same enumerator list.
+function sameValues(left, right) {
+    if (left === right) {
+        return true;
+    }
+    if (left === undefined || right === undefined || left.length !== right.length) {
+        return false;
+    }
+    return left.every((name, index) => name === right[index]);
+}
+
 /*
  * Fold one call site into `usage` (which debug[n] the mode writes) and into
  * `fields` (what each of them means). A field written from two places has to mean
@@ -894,9 +905,16 @@ function foldCall(call, usage, fields) {
     indices.forEach((index, position) => {
         const label = annotation.labels ? annotation.labels[position] : annotation.label;
         const variants = (modeFields[index] ??= []);
+        // Enum values are part of a variant's identity: two call sites that agree
+        // on the label but name different enums do not agree on what the field
+        // holds, and that has to surface as a conflict rather than the first one
+        // winning.
         const existing = variants.find(
             (variant) =>
-                variant.label === label && variant.unit === annotation.unit && variant.scale === annotation.scale,
+                variant.label === label &&
+                variant.unit === annotation.unit &&
+                variant.scale === annotation.scale &&
+                sameValues(variant.values, annotation.values),
         );
         if (existing) {
             existing.sites.push(call.where);
