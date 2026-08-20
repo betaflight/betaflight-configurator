@@ -1,5 +1,5 @@
 import semver from "semver";
-import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import { addArrayElement, addArrayElementAfter, removeArrayElement, replaceArrayElement } from "./array";
 
 /**
@@ -150,9 +150,13 @@ export function getDebugModes(apiVersion) {
         addArrayElement(result, "AUTOPILOT_STOP");
     }
 
+    if (semver.gte(apiVersion, API_VERSION_1_49)) {
+        addArrayElement(result, "PITOT");
+        addArrayElement(result, "POSITION_EST");
+    }
+
     return result;
 }
-
 /**
  * Returns the numeric debug_mode value for a given name in the firmware
  * identified by `apiVersion`, or -1 if the name is not defined in that
@@ -1184,6 +1188,114 @@ export function getDebugFieldNames(apiVersion) {
             "debug[2]": "Relaxed I Error [roll]",
         };
     }
+    if (semver.gte(apiVersion, API_VERSION_1_49)) {
+        result.ALTITUDE = {
+            "debug[all]": "Altitude",
+            "debug[0]": "RangeFinder Altitude",
+            "debug[1]": "Baro Altitude",
+            "debug[2]": "GPS Altitude",
+            "debug[3]": "Kalman Altitude",
+            "debug[4]": "GPS Velocity",
+            "debug[5]": "Kalman Velocity",
+            "debug[6]": "Accelerometer",
+            "debug[7]": "Kalman Acceleration",
+        };
+
+        result.AUTOPILOT_ALTITUDE = {
+            "debug[all]": "Autopilot Altitude",
+            "debug[0]": "newThrottle",
+            "debug[1]": "Target Altitude",
+            "debug[2]": "Current Altitude",
+            "debug[3]": "Alt P",
+            "debug[4]": "Alt I",
+            "debug[5]": "Alt D",
+            "debug[6]": "Alt A",
+            "debug[7]": "Alt F",
+        };
+
+        result.AUTOPILOT_PID = {
+            "debug[all]": "Autopilot PID",
+            "debug[0]": "XY Velocity",
+            "debug[1]": "XY Distance Error",
+            "debug[2]": "XY P",
+            "debug[3]": "XY I",
+            "debug[4]": "XY D",
+            "debug[5]": "XY A",
+            "debug[6]": "XY F",
+            "debug[7]": "Status",
+        };
+
+        result.AUTOPILOT_STOP = {
+            "debug[all]": "Autopilot Stop",
+            "debug[0]": "East Vel Error",
+            "debug[1]": "North Vel Error",
+            "debug[2]": "East PIDsum",
+            "debug[3]": "North PIDsum",
+            "debug[4]": "Roll Angle",
+            "debug[5]": "Pitch Angle",
+            "debug[6]": "Status",
+            "debug[7]": "-",
+        };
+        result.GPS_RESCUE_VELOCITY = {
+            "debug[all]": "GPS Rescue Velocity",
+            "debug[0]": "Target Velocity",
+            "debug[1]": "Velocity / Phase",
+            "debug[2]": "Step East",
+            "debug[3]": "Step North",
+            "debug[4]": "Not Used",
+            "debug[5]": "Not Used",
+            "debug[6]": "Not Used",
+            "debug[7]": "Not Used",
+        };
+
+        result.GPS_RESCUE_HEADING = {
+            "debug[all]": "GPS Rescue Heading",
+            "debug[0]": "Ground Speed",
+            "debug[1]": "GPS Ground Course",
+            "debug[2]": "Yaw Attitude",
+            "debug[3]": "Direction To Home",
+            "debug[4]": "Mag Yaw",
+            "debug[5]": "Not Used",
+            "debug[6]": "Not Used",
+            "debug[7]": "Rescue Yaw Rate",
+        };
+
+        result.GPS_RESCUE_TRACKING = {
+            "debug[all]": "GPS Rescue Tracking",
+            "debug[0]": "Velocity",
+            "debug[1]": "Not Used",
+            "debug[2]": "Altitude",
+            "debug[3]": "Target Altitude",
+            "debug[4]": "Aircraft Heading",
+            "debug[5]": "Bearing To Home",
+            "debug[6]": "Not Used",
+            "debug[7]": "Not Used",
+        };
+
+        result.PITOT = {
+            "debug[all]": "Pitot",
+            "debug[0]": "Airspeed",
+            "debug[1]": "Diff Pressure",
+            "debug[2]": "Pressure Pa",
+            "debug[3]": "Temperature",
+            "debug[4]": "-",
+            "debug[5]": "-",
+            "debug[6]": "-",
+            "debug[7]": "-",
+        };
+
+        result.POSITION_EST = {
+            "debug[all]": "Position Estimate",
+            "debug[0]": "Position",
+            "debug[1]": "Velocity",
+            "debug[2]": "Acceleration",
+            "debug[3]": "velEast",
+            "debug[4]": "velNorth",
+            "debug[5]": "AccelRaw",
+            "debug[6]": "RGpsPos",
+            "debug[7]": "RGpsVel",
+        };
+    }
 
     return result;
 }
@@ -1230,6 +1342,173 @@ const opticalflowDecode = (v, ctx, fieldName) => {
     }
     return (v / 1000).toFixed(1);
 };
+const altitudeDecode = (v, ctx, fieldName) => {
+    if (semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+                return `${(v / 100).toFixed(2)} m`;
+            case "debug[4]":
+            case "debug[5]":
+                return `${(v / 100).toFixed(2)} m/s`;
+            case "debug[6]":
+            case "debug[7]":
+                return `${(v / 100).toFixed(2)} m/s/s`;
+            default:
+                return f0(v);
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[1]":
+        case "debug[2]":
+        case "debug[3]":
+            return `${(v / 100).toFixed(2)} m`;
+        default:
+            return f0(v);
+    }
+};
+
+const autopilotAltitudeDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return f0(v);
+    }
+
+    switch (fieldName) {
+        case "debug[1]": // Target Altitude
+        case "debug[2]": // Current Altitude
+            return `${(v / 100).toFixed(2)} m`;
+        default:
+            return f0(v);
+    }
+};
+
+const autopilotPidDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return f0(v);
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity
+            return `${(v / 100).toFixed(2)} m/s`;
+        case "debug[1]": // Distance Error
+            return `${(v / 100).toFixed(2)} m`;
+        default:
+            return f0(v);
+    }
+};
+
+const autopilotStopDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return f0(v);
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity Error East
+        case "debug[1]": // Velocity Error North
+            return `${(v / 100).toFixed(2)} m/s`;
+        case "debug[4]": // Roll Angle
+        case "debug[5]": // Pitch Angle
+            return `${(v / 10).toFixed(1)} °`;
+        default:
+            return f0(v);
+    }
+};
+
+const gpsRescueVelocityDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[1]":
+                return `${(v / 100).toFixed(1)} °`;
+            case "debug[2]":
+            case "debug[3]":
+                return `${(v / 100).toFixed(1)} m/s`;
+            case "debug[4]":
+            case "debug[5]":
+            case "debug[7]":
+                return `${(v / 100).toFixed(1)} °`;
+            default:
+                return f0(v);
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Target Velocity
+            return `${(v / 100).toFixed(2)} m/s`;
+        case "debug[1]": // Velocity / Phase - provisional mixed-use field
+            return f0(v);
+        case "debug[2]": // Step East * 100
+        case "debug[3]": // Step North * 100
+            return (v / 100).toFixed(2);
+        default:
+            return f0(v);
+    }
+};
+
+const gpsRescueHeadingDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+                return `${(v / 100).toFixed(2)} m/s`;
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+                return `${(v / 10).toFixed(1)} °`;
+            case "debug[6]":
+                return `${(v / 100).toFixed(1)} °`;
+            default:
+                return f0(v);
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Ground Speed
+            return `${(v / 100).toFixed(2)} m/s`;
+        case "debug[1]": // GPS Ground Course
+        case "debug[2]": // Yaw Attitude
+        case "debug[3]": // Direction To Home
+        case "debug[4]": // Mag Yaw
+            return `${(v / 10).toFixed(1)} °`;
+        default:
+            return f0(v);
+    }
+};
+
+const gpsRescueTrackingDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[1]":
+                return `${(v / 100).toFixed(1)} m/s`;
+            case "debug[2]":
+            case "debug[3]":
+                return `${(v / 100).toFixed(1)} m`;
+            case "debug[4]":
+            case "debug[5]":
+                return `${(v / 10).toFixed(1)} °`;
+            case "debug[7]":
+                return `${(v / 100).toFixed(1)} °`;
+            default:
+                return f0(v);
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity
+            return `${(v / 100).toFixed(1)} m/s`;
+        case "debug[2]": // Altitude
+        case "debug[3]": // Target Altitude
+            return `${(v / 100).toFixed(1)} m`;
+        case "debug[4]": // Aircraft Heading
+        case "debug[5]": // Bearing To Home
+            return `${v.toFixed(0)} °`;
+        default:
+            return f0(v);
+    }
+};
 
 const DEBUG_DECODE = {
     NONE: {
@@ -1272,10 +1551,18 @@ const DEBUG_DECODE = {
     SCHEDULER: (v) => `${v.toFixed(0)} μS`,
     ESC_SENSOR_RPM: (v) => `${v.toFixed(0)} rpm`,
     ESC_SENSOR_TMP: (v) => `${v.toFixed(0)} °C`,
-    ALTITUDE: {
-        "debug[1]": (v) => `${(v / 100).toFixed(2)} m`,
-        "debug[2]": (v) => `${(v / 100).toFixed(2)} m`,
-        "debug[3]": (v) => `${(v / 100).toFixed(2)} m`,
+    ALTITUDE: altitudeDecode,
+    AUTOPILOT_ALTITUDE: autopilotAltitudeDecode,
+    AUTOPILOT_PID: autopilotPidDecode,
+    AUTOPILOT_STOP: autopilotStopDecode,
+
+    POSITION_EST: {
+        "debug[0]": (v) => `${(v / 100).toFixed(2)} m`,
+        "debug[1]": (v) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[2]": (v) => `${(v / 100).toFixed(2)} m/s/s`,
+        "debug[3]": (v) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[4]": (v) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[5]": (v) => `${(v / 100).toFixed(2)} m/s/s`,
         _default: f0,
     },
     FFT: {
@@ -1377,34 +1664,9 @@ const DEBUG_DECODE = {
         "debug[3]": (v) => `${(v / 100).toFixed(1)} m`,
         _default: f0,
     },
-    GPS_RESCUE_VELOCITY: {
-        "debug[0]": (v) => `${(v / 100).toFixed(1)} °`,
-        "debug[1]": (v) => `${(v / 100).toFixed(1)} °`,
-        "debug[2]": (v) => `${(v / 100).toFixed(1)} m/s`,
-        "debug[3]": (v) => `${(v / 100).toFixed(1)} m/s`,
-        "debug[4]": (v) => `${(v / 100).toFixed(1)} °`,
-        "debug[5]": (v) => `${(v / 100).toFixed(1)} °`,
-        "debug[7]": (v) => `${(v / 100).toFixed(1)} °`,
-        _default: f0,
-    },
-    GPS_RESCUE_HEADING: {
-        "debug[0]": (v) => `${(v / 100).toFixed(2)} m/s`,
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[6]": (v) => `${(v / 100).toFixed(1)} °`,
-        _default: f0,
-    },
-    GPS_RESCUE_TRACKING: {
-        "debug[0]": (v) => `${(v / 100).toFixed(1)} m/s`,
-        "debug[1]": (v) => `${(v / 100).toFixed(1)} m/s`,
-        "debug[2]": (v) => `${(v / 100).toFixed(1)} m`,
-        "debug[3]": (v) => `${(v / 100).toFixed(1)} m`,
-        "debug[4]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[5]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[7]": (v) => `${(v / 100).toFixed(1)} °`,
-        _default: f0,
-    },
+    GPS_RESCUE_VELOCITY: gpsRescueVelocityDecode,
+    GPS_RESCUE_HEADING: gpsRescueHeadingDecode,
+    GPS_RESCUE_TRACKING: gpsRescueTrackingDecode,
     GPS_CONNECTION: {
         "debug[3]": (v) => (v * 100).toFixed(0),
         _default: f0,
@@ -1513,15 +1775,158 @@ const cFftFreq = (toFriendly, v, ctx, fieldName) => {
     const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
     return fieldName === gyroField ? cGyro(toFriendly, v, ctx) : v;
 };
+
 const cScale100 = cScale(100);
 const cScale10 = cScale(10);
 const cScale1000 = cScale(1000);
+
 // Pre-1.48: debug[0]/debug[5] (quality/deltaTimeUs) pass through unscaled.
 const cOpticalflow = (toFriendly, v, ctx, fieldName) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_48) && (fieldName === "debug[0]" || fieldName === "debug[5]")) {
         return v;
     }
     return cScale1000(toFriendly, v);
+};
+
+const cAltitude = (toFriendly, v, ctx, fieldName) => {
+    if (semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return cScale100(toFriendly, v);
+    }
+
+    switch (fieldName) {
+        case "debug[1]":
+        case "debug[2]":
+        case "debug[3]":
+            return cScale100(toFriendly, v);
+        default:
+            return v;
+    }
+};
+
+const cAutopilotAltitude = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return v;
+    }
+
+    switch (fieldName) {
+        case "debug[1]": // Target Altitude
+        case "debug[2]": // Current Altitude
+            return cScale100(toFriendly, v);
+        default:
+            return v;
+    }
+};
+
+const cAutopilotPid = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return v;
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity
+        case "debug[1]": // Distance Error
+            return cScale100(toFriendly, v);
+        default:
+            return v;
+    }
+};
+
+const cAutopilotStop = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return v;
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity Error East
+        case "debug[1]": // Velocity Error North
+            return cScale100(toFriendly, v);
+        case "debug[4]": // Roll Angle
+        case "debug[5]": // Pitch Angle
+            return cScale10(toFriendly, v);
+        default:
+            return v;
+    }
+};
+const cGpsRescueVelocity = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+            case "debug[4]":
+            case "debug[5]":
+            case "debug[7]":
+                return cScale100(toFriendly, v);
+            default:
+                return v;
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Target Velocity
+        case "debug[2]": // Step East * 100
+        case "debug[3]": // Step North * 100
+            return cScale100(toFriendly, v);
+        default:
+            return v;
+    }
+};
+
+const cGpsRescueHeading = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[6]":
+                return cScale100(toFriendly, v);
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+                return cScale10(toFriendly, v);
+            default:
+                return v;
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Ground Speed
+            return cScale100(toFriendly, v);
+        case "debug[1]": // GPS Ground Course
+        case "debug[2]": // Yaw Attitude
+        case "debug[3]": // Direction To Home
+        case "debug[4]": // Mag Yaw
+            return cScale10(toFriendly, v);
+        default:
+            return v;
+    }
+};
+
+const cGpsRescueTracking = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]":
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+            case "debug[7]":
+                return cScale100(toFriendly, v);
+            case "debug[4]":
+            case "debug[5]":
+                return cScale10(toFriendly, v);
+            default:
+                return v;
+        }
+    }
+
+    switch (fieldName) {
+        case "debug[0]": // Velocity
+        case "debug[2]": // Altitude
+        case "debug[3]": // Target Altitude
+            return cScale100(toFriendly, v);
+        default:
+            // Heading/Bearing are already in degrees.
+            return v;
+    }
 };
 
 const DEBUG_CONVERT = {
@@ -1543,11 +1948,23 @@ const DEBUG_CONVERT = {
         "debug[4]": cScale1000,
     },
     MIXER: (toFriendly, v, ctx) => (toFriendly ? ctx.rcCommandRawToThrottle(v) : ctx.throttleToRcCommandRaw(v)),
-    ALTITUDE: {
-        "debug[1]": cScale100,
-        "debug[2]": cScale100,
-        "debug[3]": cScale100,
+
+    ALTITUDE: cAltitude,
+    AUTOPILOT_ALTITUDE: cAutopilotAltitude,
+    AUTOPILOT_PID: cAutopilotPid,
+    AUTOPILOT_STOP: cAutopilotStop,
+
+    POSITION_EST: {
+        "debug[0]": cScale100, // Position
+        "debug[1]": cScale100, // Velocity
+        "debug[2]": cScale100, // Kalman Acceleration
+        "debug[3]": cScale100, // Velocity East
+        "debug[4]": cScale100, // Velocity North
+        "debug[5]": cScale100, // Raw Acceleration
+        // debug[6] = GPS R Pos
+        // debug[7] = GPS R Vel
     },
+
     FFT: {
         "debug[0]": cGyro,
         "debug[1]": cGyro,
@@ -1595,31 +2012,9 @@ const DEBUG_CONVERT = {
         "debug[2]": cScale100,
         "debug[3]": cScale100,
     },
-    GPS_RESCUE_VELOCITY: {
-        "debug[0]": cScale100,
-        "debug[1]": cScale100,
-        "debug[2]": cScale100,
-        "debug[3]": cScale100,
-        "debug[4]": cScale100,
-        "debug[5]": cScale100,
-        "debug[7]": cScale100,
-    },
-    GPS_RESCUE_HEADING: {
-        "debug[0]": cScale100,
-        "debug[1]": cScale10,
-        "debug[2]": cScale10,
-        "debug[3]": cScale10,
-        "debug[6]": cScale100,
-    },
-    GPS_RESCUE_TRACKING: {
-        "debug[0]": cScale100,
-        "debug[1]": cScale100,
-        "debug[2]": cScale100,
-        "debug[3]": cScale100,
-        "debug[4]": cScale10,
-        "debug[5]": cScale10,
-        "debug[7]": cScale100,
-    },
+    GPS_RESCUE_VELOCITY: cGpsRescueVelocity,
+    GPS_RESCUE_HEADING: cGpsRescueHeading,
+    GPS_RESCUE_TRACKING: cGpsRescueTracking,
     GPS_CONNECTION: {
         "debug[3]": cInvScale(100),
     },
@@ -1654,6 +2049,7 @@ const DEBUG_CONVERT = {
         "debug[6]": cScale(1000),
     },
 };
+
 for (const m of [
     "GYRO",
     "GYRO_FILTERED",
@@ -1670,6 +2066,7 @@ for (const m of [
 ]) {
     DEBUG_CONVERT[m] = cGyroGroup;
 }
+
 // NONE/AIRMODE/BARO share one block (firmware groups them).
 DEBUG_CONVERT.AIRMODE = DEBUG_CONVERT.NONE;
 DEBUG_CONVERT.BARO = DEBUG_CONVERT.NONE;
@@ -1693,6 +2090,7 @@ export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, val
     if (typeof entry === "function") {
         return entry(toFriendly, value, ctx, fieldName);
     }
+
     // `null` field entries are explicit passthroughs that override `_default`.
     const fn = fieldName in entry ? entry[fieldName] : entry._default;
     return fn ? fn(toFriendly, value, ctx) : value;
