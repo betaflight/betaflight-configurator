@@ -10004,7 +10004,7 @@
         "message": "Curve type"
     },
     "pidTuningWingTpaCurveTypeHelp": {
-        "message": "Hyperbolic is usually for wings. Classic is for multirotor, the standard TPA is used."
+        "message": "Hyperbolic is usually for wings. Classic is for multirotors and uses standard TPA."
     },
     "pidTuningWingTpaCurveClassic": {
         "message": "Classic"
@@ -10064,7 +10064,7 @@
         "message": "Motor KV"
     },
     "pidTuningWingTpaAdvSpeedMotorKvHelp": {
-        "message": "Motor KV, look at the Motors tab to change value"
+        "message": "Motor KV. Change this value on the Motors tab."
     },
     "pidTuningWingTpaAdvSpeedPitchOffset": {
         "message": "Pitch offset"
