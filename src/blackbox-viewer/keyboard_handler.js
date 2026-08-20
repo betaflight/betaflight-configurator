@@ -226,6 +226,12 @@ export function createKeydownHandler(ctx) {
                 workspaceStore.showDefaultMenu = true;
             }
         },
+        KeyF(e, shifted) {
+            if (!shifted) {
+                graphStore.toggleFullscreen();
+                e.preventDefault();
+            }
+        },
         KeyZ: handleKeyZoom,
         KeyS: handleKeySave,
         KeyX(e, shifted) {
@@ -275,6 +281,14 @@ export function createKeydownHandler(ctx) {
                 break;
             case "End":
                 logJumpEnd();
+                break;
+            case "Escape":
+                // Leave fullscreen, unless Escape is already busy dismissing a dialog, dropdown
+                // menu or select — those trap focus inside themselves, so the target tells us.
+                if (!graphStore.isFullscreen || e.target.closest?.("[role='dialog'],[role='menu'],[role='listbox']")) {
+                    return false;
+                }
+                graphStore.toggleFullscreen();
                 break;
             default:
                 return false;
