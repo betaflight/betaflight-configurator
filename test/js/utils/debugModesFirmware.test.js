@@ -199,6 +199,9 @@ describe("debug modes against the firmware source", () => {
             for (const apiVersion of annotated) {
                 const labels = getDebugFieldNames(apiVersion);
                 for (const [mode, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[apiVersion])) {
+                    // A generated mode with no labels means the overlay never ran
+                    // for it, which is worth saying rather than reading undefined.
+                    expect(labels[mode], `${apiVersion} ${mode}`).toBeDefined();
                     const generated = Object.fromEntries(
                         Object.entries(fields).map(([index, field]) => [`debug[${index}]`, field.label]),
                     );

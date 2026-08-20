@@ -434,7 +434,7 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             2: Object.freeze({ label: "Relaxed I Error (roll)", unit: "dps", scale: 1 }),
         }),
         LIDAR_TF: Object.freeze({
-            0: Object.freeze({ label: "Distance / Distance", unit: null, scale: 1 }),
+            0: Object.freeze({ label: "Distance", unit: null, scale: 1 }),
             1: Object.freeze({ label: "Signal Strength / Confidence", unit: null, scale: 1 }),
             2: Object.freeze({ label: "Frame Byte 4 / Optical Flow X", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Frame Byte 5 / Optical Flow Y", unit: null, scale: 1 }),
