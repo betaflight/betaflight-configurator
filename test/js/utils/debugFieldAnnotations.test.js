@@ -133,6 +133,17 @@ describe("firmware debug field annotations", () => {
             ).toEqual(["cm", "m"]);
         });
 
+        it("reports the enum values of a conflicting meaning, which may be all that differs", () => {
+            const rescue = FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
+                (conflict) => conflict.mode === "GPS_RESCUE_VELOCITY" && conflict.index === 1,
+            );
+            // gps_rescue_multirotor.c writes the ground speed there in one place
+            // and the rescue phase in another; the phase names come from firmware.
+            expect(rescue.meanings.map((meaning) => meaning.label)).toEqual(["Ground Speed", "Rescue Phase"]);
+            expect(rescue.meanings[1].values).toContain("RESCUE_LANDING");
+            expect(rescue.meanings[0].values).toBeUndefined();
+        });
+
         it("drops the unit of a conflicting field, since it belongs to one meaning only", () => {
             for (const conflict of FIRMWARE_DEBUG_FIELD_CONFLICTS) {
                 expect(FIRMWARE_DEBUG_FIELDS[conflict.apiVersion][conflict.mode][conflict.index].unit).toBeNull();
