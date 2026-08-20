@@ -1993,6 +1993,9 @@
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
     },
+    "configurationMotorKv": {
+        "message": "Motor KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"
     },

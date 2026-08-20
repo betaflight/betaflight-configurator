@@ -200,6 +200,18 @@
                                     class="w-16"
                                 />
                             </SettingRow>
+                            <SettingRow :label="$t('configurationMotorKv')" fullWidth>
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_kv"
+                                    :min="1"
+                                    :max="40000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-16"
+                                />
+                            </SettingRow>
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
