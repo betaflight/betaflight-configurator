@@ -89,6 +89,19 @@
                                         :ui="{ content: 'max-h-72' }"
                                     />
                                 </SettingRow>
+                                <SettingRow
+                                    v-if="rxPortAvailable"
+                                    :label="$t('receiverSerialPort')"
+                                    :help="$t('receiverSerialPortHelp')"
+                                >
+                                    <USelect
+                                        v-model="rxPortIdentifier"
+                                        :items="rxPortOptions"
+                                        :disabled="!rxPortWritable"
+                                        class="min-w-52"
+                                        @update:model-value="onRxPortChange"
+                                    />
+                                </SettingRow>
                                 <UiBox highlight v-if="showSomeRxTypesDisabled">
                                     <p v-html="$t('someRXTypesDisabled')"></p>
                                 </UiBox>
@@ -560,6 +573,7 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
@@ -648,6 +662,17 @@ const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 // RX link, so the banner/tint warn that channel values are failsafe output.
 const failsafeActive = computed(() => fcStore.failsafeActive);
 
+// From API 1.49 the port lives on the RX parameter group rather than the shared port function
+// mask, so it is assigned here instead of on the (by then read-only) ports tab.
+const {
+    available: rxPortAvailable,
+    writable: rxPortWritable,
+    options: rxPortOptions,
+    selectedIdentifier: rxPortIdentifier,
+    load: loadRxPort,
+    write: writeRxPort,
+} = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
+
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */
 function serializeReceiverState() {
@@ -655,6 +680,7 @@ function serializeReceiverState() {
         channelMap: channelMapString.value,
         rxMode: selectedRxMode.value,
         serialrxProvider: rxConfig.value?.serialrx_provider,
+        rxPortIdentifier: rxPortIdentifier.value,
         rxSpiProtocol: rxConfig.value?.rxSpiProtocol,
         elrsModelId: rxConfig.value?.elrsModelId,
         stickMin: rxConfig.value?.stick_min,
@@ -976,6 +1002,12 @@ function onRxModeChange() {
     }
 }
 
+// Deliberately a change handler rather than a watcher: seeding the selection during load would
+// trip a watcher and leave the tab asking for a reboot every time it is opened.
+function onRxPortChange() {
+    needReboot.value = true;
+}
+
 // Actions
 function resetRefreshRate() {
     refreshRate.value = 50;
@@ -1046,6 +1078,7 @@ async function loadConfig() {
             await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
             await MSP.promise(MSPCodes.MSP_RX_CONFIG);
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await loadRxPort();
 
             // Update local state from FC
             updateChannelMapFromRcMap();
@@ -1118,6 +1151,16 @@ const saveConfig = (withReboot = false) =>
             await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+
+            // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
+            // and the persist below serialises that group, so this has to sit between the two.
+            // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
+            try {
+                await writeRxPort();
+            } catch (error) {
+                gui_log(t("receiverSerialPortSaveFailed"));
+                throw error;
+            }
 
             if (withReboot) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
