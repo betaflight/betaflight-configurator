@@ -52,7 +52,9 @@ describe("firmware debug field annotations", () => {
                             expect(field.unit, where).toBeNull();
                         }
                         expect(Number.isFinite(field.scale), where).toBe(true);
-                        expect(field.scale, where).toBeGreaterThan(0);
+                        // Negative for a field that stores the magnitude of a
+                        // negative quantity, as CRSF does with its RSSI in dBm.
+                        expect(field.scale, where).not.toBe(0);
                     }
                 }
             }
@@ -159,6 +161,18 @@ describe("firmware debug field annotations", () => {
 
         it("prints a plain integer for a field the firmware gives no unit", () => {
             expect(decodeDebugFieldToFriendly("BATTERY", "debug[4]", 1, ctx(ANNOTATED))).toBe("1");
+        });
+
+        it("carries the sign of a field that stores a negative quantity as a magnitude", () => {
+            // CRSF sends RSSI as a positive number of dBm below zero, and the
+            // annotation says so with `[-1dBm]`, so the value reads as it should.
+            expect(decodeDebugFieldToFriendly("CRSF_LINK_STATISTICS_DOWN", "debug[0]", 72, ctx(ANNOTATED))).toBe(
+                "-72 dBm",
+            );
+            expect(convertDebugFieldValue("CRSF_LINK_STATISTICS_DOWN", "debug[0]", true, 72, ctx(ANNOTATED))).toBe(-72);
+            expect(convertDebugFieldValue("CRSF_LINK_STATISTICS_DOWN", "debug[0]", false, -72, ctx(ANNOTATED))).toBe(
+                72,
+            );
         });
 
         it("names an enumerator from the firmware enum the annotation points at", () => {
