@@ -140,6 +140,30 @@
         "message": "Enter the serial path or URL to connect to.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Saved connections",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Name:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Name for this connection",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Save",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Update",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Remove saved connection",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
@@ -400,9 +424,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "When internet is available, the app should automatically ask for available updates."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Go to Release Website"
     },
     "rebootFlightController": {
         "message": "Rebooting flight controller, reconnect when ready"
@@ -2150,6 +2171,10 @@
     "configurationGPSHomeOnceHelp": {
         "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the aircraft is armed, the home point will be updated.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSNotInBuild": {
+        "message": "GPS support is not included in this firmware build. Rebuild the firmware with the GPS build option to configure and use GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
     },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"

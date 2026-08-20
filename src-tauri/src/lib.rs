@@ -23,6 +23,14 @@ pub fn run() {
     #[cfg(desktop)]
     let builder = builder.plugin(tauri_plugin_window_state::Builder::default().build());
 
+    // Native file open/save dialogs plus the file IO the frontend performs on the path
+    // they return. Desktop only: the mobile webviews keep the browser flow. `dialog` must
+    // be registered alongside `fs` — picking a file is what grants `fs` its scope entry.
+    #[cfg(desktop)]
+    let builder = builder
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init());
+
     // iOS: network (TCP/WebSocket) is the only transport, and a raw socket never raises the
     // Local Network permission prompt on its own. Request it at startup — before any connect —
     // so the user grants it up front instead of the first connect failing while it's pending.

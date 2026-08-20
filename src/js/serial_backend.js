@@ -906,32 +906,39 @@ function processCustomDefaults() {
         bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
         FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE
     ) {
-        const dialog = document.getElementById("dialogResetToCustomDefaults");
+        const dialogStore = useDialogStore();
+        dialogStore.open(
+            "YesNoDialog",
+            {
+                title: i18n.getMessage("noticeTitle"),
+                text: i18n.getMessage("resetToCustomDefaultsDialog"),
+                yesText: i18n.getMessage("resetToCustomDefaultsAccept"),
+                noText: i18n.getMessage("cancel"),
+            },
+            {
+                yes: () => {
+                    dialogStore.close();
 
-        document.getElementById("dialogResetToCustomDefaults-acceptbtn").onclick = function () {
-            const buffer = [];
-            buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
-            MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
+                    const buffer = [];
+                    buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
+                    MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
 
-            dialog.close();
-
-            GUI.timeout_add(
-                "disconnect",
-                function () {
-                    connectDisconnect(); // disconnect
+                    GUI.timeout_add(
+                        "disconnect",
+                        function () {
+                            connectDisconnect(); // disconnect
+                        },
+                        0,
+                    );
                 },
-                0,
-            );
-        };
+                no: () => {
+                    dialogStore.close();
 
-        document.getElementById("dialogResetToCustomDefaults-cancelbtn").onclick = function () {
-            dialog.close();
-
-            setConnectionTimeout();
-            checkReportProblems();
-        };
-
-        dialog.showModal();
+                    setConnectionTimeout();
+                    checkReportProblems();
+                },
+            },
+        );
 
         GUI.timeout_remove("connecting"); // kill connecting timer
     } else {
@@ -978,7 +985,7 @@ async function checkReportProblems() {
 
     if (needsProblemReportingDialog) {
         const dialogStore = useDialogStore();
-        dialogStore.open("ReportProblemsDialog", { problems }, { onClose: () => dialogStore.close() });
+        dialogStore.open("ReportProblemsDialog", { problems }, { close: () => dialogStore.close() });
     }
 
     processUid();
