@@ -16,7 +16,8 @@
  *           flag or enumeration. `gyroADC`, `accADC`, `accADC/s`, `rcCommand`
  *           and `eRPM` are device-native and need the FC's own scaling.
  *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means
- *           the field holds decidegrees.
+ *           the field holds decidegrees. Negative where the firmware stores
+ *           the magnitude of a negative quantity, as CRSF does with dBm.
  *   values - present when the field holds an enumerator: the firmware enum's
  *           own names, indexed by value.
  *

@@ -341,6 +341,16 @@ function extractModes(repo, version) {
 // forward to it (GYRO_FILTER_AXIS_DEBUG_SET(axis, mode, index, ...)).
 const DEBUG_SET_CALL = /(?<!\w)(?:[A-Z][A-Z0-9_]*_)?DEBUG_SET\s*\(/g;
 
+/*
+ * `enum { ... }` and `typedef enum { ... } tag_e;`. The optional identifiers keep
+ * their separating whitespace inside the optional group, so no part of either
+ * pattern can match the same input two ways - which is what makes a regex
+ * backtrack (SonarCloud javascript:S8786).
+ */
+const ANY_ENUM_BLOCK = /\benum(?:[ \t\r\n]+[A-Za-z_]\w*)?[ \t\r\n]*\{([^}]*)\}/g;
+const NAMED_ENUM_BLOCK =
+    /\benum(?:[ \t\r\n]+([A-Za-z_]\w*))?[ \t\r\n]*\{([^}]*)\}[ \t\r\n]*(?:([A-Za-z_]\w*)[ \t\r\n]*)?;/g;
+
 const OPENING_BRACKETS = new Set(["(", "[", "{"]);
 const CLOSING_BRACKETS = new Set([")", "]", "}"]);
 
@@ -362,8 +372,9 @@ function findLiteralEnd(text, start) {
 // truncated before it.
 function findCallEnd(text, open) {
     let depth = 0;
+    let i = open;
 
-    for (let i = open; i < text.length; i++) {
+    while (i < text.length) {
         const character = text[i];
         if (character === '"' || character === "'") {
             i = findLiteralEnd(text, i);
@@ -375,6 +386,7 @@ function findCallEnd(text, open) {
                 return i;
             }
         }
+        i += 1;
     }
 
     return text.length;
@@ -386,7 +398,8 @@ function splitTopLevel(inner) {
     let depth = 0;
     let current = "";
 
-    for (let i = 0; i < inner.length; i++) {
+    let i = 0;
+    while (i < inner.length) {
         const character = inner[i];
         if (character === '"' || character === "'") {
             const end = findLiteralEnd(inner, i);
@@ -404,6 +417,7 @@ function splitTopLevel(inner) {
         } else {
             current += character;
         }
+        i += 1;
     }
 
     args.push(current.trim());
@@ -461,7 +475,7 @@ function parseLocalConstants(source) {
     const constants = new Map();
     const stripped = stripComments(source);
 
-    for (const block of stripped.matchAll(/enum\s*(?:[A-Za-z_]\w*\s*)?\{([^}]*)\}/g)) {
+    for (const block of stripped.matchAll(ANY_ENUM_BLOCK)) {
         const entries = parseEnumBlock(block[1]);
         if (entries === undefined) {
             continue;
@@ -490,7 +504,7 @@ function parseLocalConstants(source) {
 function parseNamedEnums(source) {
     const enums = new Map();
 
-    for (const block of stripComments(source).matchAll(/enum\s*([A-Za-z_]\w*)?\s*\{([^}]*)\}\s*([A-Za-z_]\w*)?\s*;/g)) {
+    for (const block of stripComments(source).matchAll(NAMED_ENUM_BLOCK)) {
         const entries = parseEnumBlock(block[2]);
         if (entries === undefined) {
             continue;
@@ -560,10 +574,17 @@ function resolveFieldIndex(rawIndex, constants) {
 // than a field silently dropped back onto the hand-written table.
 // ---------------------------------------------------------------------------
 
-const ANNOTATION = /\/\/!<[ \t]*(\S.*?)[ \t]*$/;
-const INDEX_SPEC = /^\[[ \t]*(\d+(?:[ \t]*\.\.[ \t]*\d+)?(?:[ \t]*,[ \t]*\d+)*)[ \t]*\][ \t]*/;
-const UNIT_SPEC = /[ \t]*\[([^[\]]+)\]$/;
+/*
+ * Each of these is greedy and unambiguous, with the trimming and the structure of
+ * an index spec left to the code below: a pattern that could match the same input
+ * two ways is a pattern that backtracks (SonarCloud javascript:S8786).
+ */
+const ANNOTATION = /\/\/!<(.*)$/;
+const INDEX_SPEC = /^\[([\d \t,.]+)\][ \t]*/;
+const UNIT_SPEC = /\[([^[\]]+)\]$/;
 const EXPANSION = /\{([^{}]*)\}/;
+const INDEX_BOUND = /^\d+$/;
+const UNIT_FACTOR = /^-?\d+(?:\.\d+)?/;
 
 // Every unit symbol `debug.h` documents. A symbol outside this set is a typo or a
 // unit the tooling has no conversion for, and either way must not reach the app.
@@ -611,9 +632,12 @@ function parseIndexSpec(spec) {
     const indices = [];
 
     for (const part of spec.split(",")) {
-        const range = part.split("..").map((bound) => Number(bound.trim()));
-        const [from, to] = range.length === 2 ? range : [range[0], range[0]];
-        if (!(from >= 0) || to >= DEBUG_VALUE_COUNT || to < from) {
+        const bounds = part.split("..").map((bound) => bound.trim());
+        if (bounds.length > 2 || !bounds.every((bound) => INDEX_BOUND.test(bound))) {
+            return undefined;
+        }
+        const [from, to] = bounds.length === 2 ? bounds.map(Number) : [Number(bounds[0]), Number(bounds[0])];
+        if (to >= DEBUG_VALUE_COUNT || to < from) {
             return undefined;
         }
         for (let index = from; index <= to; index++) {
@@ -621,7 +645,7 @@ function parseIndexSpec(spec) {
         }
     }
 
-    return [...new Set(indices)];
+    return indices.length === 0 ? undefined : [...new Set(indices)];
 }
 
 // "0.1deg" -> { unit: "deg", scale: 0.1 }, "%" -> { unit: "%", scale: 1 },
@@ -634,18 +658,19 @@ function parseUnitSpec(raw) {
         return { unit: null, scale: 1, enumTag: enumTag[1] };
     }
 
-    const parsed = raw.trim().match(/^(-?\d+(?:\.\d+)?)?[ \t]*(.*)$/);
-    const scale = parsed[1] === undefined ? 1 : Number(parsed[1]);
-    const unit = parsed[2] === "" ? null : parsed[2];
+    const trimmed = raw.trim();
+    const factor = UNIT_FACTOR.exec(trimmed)?.[0];
+    const symbol = trimmed.slice(factor?.length ?? 0).trim();
+    const unit = symbol === "" ? null : symbol;
 
     if (unit !== null && !UNIT_SYMBOLS.has(unit)) {
         return undefined;
     }
-    if (parsed[1] === undefined && unit === null) {
+    if (factor === undefined && unit === null) {
         return undefined;
     }
 
-    return { unit, scale };
+    return { unit, scale: factor === undefined ? 1 : Number(factor) };
 }
 
 /*
@@ -693,8 +718,9 @@ function parseAnnotation(raw) {
     }
     const alternatives = expansion[1].split("|");
     if (indices === null || alternatives.length !== indices.length) {
+        const covered = indices === null ? "one implicit index" : `${indices.length} indices`;
         return {
-            error: `"{${expansion[1]}}" spells out ${alternatives.length} labels, but the annotation covers ${indices === null ? "one implicit index" : `${indices.length} indices`}`,
+            error: `"{${expansion[1]}}" spells out ${alternatives.length} labels, but the annotation covers ${covered}`,
         };
     }
 
@@ -786,8 +812,12 @@ function readFileScope(repo, ref, path, text) {
 function annotationAt(text, resolved, where, readScope, problems) {
     const lineEnd = text.indexOf("\n", resolved.end);
     const trailing = text.slice(resolved.end, lineEnd === -1 ? text.length : lineEnd);
-    const annotationText = trailing.match(ANNOTATION)?.[1];
+    const annotationText = trailing.match(ANNOTATION)?.[1]?.trim();
     if (annotationText === undefined) {
+        return null;
+    }
+    if (annotationText === "") {
+        problems.push(`${where}: the \`//!<\` marker carries no annotation`);
         return null;
     }
 
@@ -1200,17 +1230,9 @@ function renderFieldEntry(index, { label, unit, scale, values }) {
     ];
 }
 
-/*
- * The shipped field table: what each `debug[n]` means, per API version, straight
- * from the firmware annotations. Only annotated fields appear; the hand-written
- * table in src/js/utils/debugModes.js still supplies the rest, so this file can
- * land incrementally as annotations do.
- */
-function renderFieldsModule({ repoUrl, versions }) {
-    const annotated = versions.filter((version) => Object.keys(version.fields).length > 0);
-    const conflicts = [];
-
-    const lines = [
+// The header of the generated field table, up to its first version.
+function fieldsModuleHeader(repoUrl, annotated) {
+    return [
         "/*",
         " * WARNING: This is an auto-generated file, please do not edit directly!",
         " *",
@@ -1232,7 +1254,8 @@ function renderFieldsModule({ repoUrl, versions }) {
         " *           flag or enumeration. `gyroADC`, `accADC`, `accADC/s`, `rcCommand`",
         " *           and `eRPM` are device-native and need the FC's own scaling.",
         " *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means",
-        " *           the field holds decidegrees.",
+        " *           the field holds decidegrees. Negative where the firmware stores",
+        " *           the magnitude of a negative quantity, as CRSF does with dBm.",
         " *   values - present when the field holds an enumerator: the firmware enum's",
         " *           own names, indexed by value.",
         " *",
@@ -1240,35 +1263,77 @@ function renderFieldsModule({ repoUrl, versions }) {
         " */",
         "export const FIRMWARE_DEBUG_FIELDS = Object.freeze({",
     ];
+}
+
+/*
+ * One mode's fields. A field two subsystems write with different meanings cannot
+ * be labelled from one of them, so both names are kept and the unit dropped - it
+ * belongs to one meaning only and would scale the other's samples wrongly - and
+ * the disagreement is pushed onto `conflicts` for the caller to report. Identical
+ * names are collapsed: the LIDAR-TF and UPT1 drivers both call debug[0] the
+ * distance, in cm and in mm, and "Distance / Distance" names nothing.
+ */
+function renderModeFields(mode, fields, apiVersion, conflicts) {
+    const lines = [`        ${mode}: Object.freeze({`];
+
+    for (const index of Object.keys(fields).sort((left, right) => Number(left) - Number(right))) {
+        const variants = fields[index];
+        const agreed = variants.length === 1;
+        lines.push(
+            ...renderFieldEntry(index, {
+                label: [...new Set(variants.map((variant) => variant.label))].join(" / "),
+                unit: agreed ? variants[0].unit : null,
+                scale: agreed ? variants[0].scale : 1,
+                values: agreed ? variants[0].values : undefined,
+            }),
+        );
+        if (!agreed) {
+            conflicts.push({ apiVersion, mode, index: Number(index), variants });
+        }
+    }
+
+    return [...lines, "        }),"];
+}
+
+// One conflict as a `FIRMWARE_DEBUG_FIELD_CONFLICTS` entry.
+function renderConflict(conflict) {
+    const lines = [
+        "    Object.freeze({",
+        `        apiVersion: ${quote(conflict.apiVersion)},`,
+        `        mode: ${quote(conflict.mode)},`,
+        `        index: ${conflict.index},`,
+        "        meanings: Object.freeze([",
+    ];
+
+    for (const variant of conflict.variants) {
+        lines.push(
+            "            Object.freeze({",
+            `                label: ${quote(variant.label)},`,
+            `                unit: ${variant.unit === null ? "null" : quote(variant.unit)},`,
+            `                scale: ${variant.scale},`,
+            ...renderFrozenList("                ", "sites", variant.sites),
+            "            }),",
+        );
+    }
+
+    return [...lines, "        ]),", "    }),"];
+}
+
+/*
+ * The shipped field table: what each `debug[n]` means, per API version, straight
+ * from the firmware annotations. Only annotated fields appear; the hand-written
+ * table in src/js/utils/debugModes.js still supplies the rest, so this file can
+ * land incrementally as annotations do.
+ */
+function renderFieldsModule({ repoUrl, versions }) {
+    const annotated = versions.filter((version) => Object.keys(version.fields).length > 0);
+    const conflicts = [];
+    const lines = fieldsModuleHeader(repoUrl, annotated);
 
     for (const version of annotated) {
-        lines.push(`    "${version.apiVersion}": Object.freeze({`);
+        lines.push(`    ${quote(version.apiVersion)}: Object.freeze({`);
         for (const mode of Object.keys(version.fields).sort((left, right) => left.localeCompare(right))) {
-            const fields = version.fields[mode];
-            lines.push(`        ${mode}: Object.freeze({`);
-            for (const index of Object.keys(fields).sort((left, right) => Number(left) - Number(right))) {
-                const variants = fields[index];
-                const agreed = variants.length === 1;
-                // Two meanings: name both, and drop the unit, since it belongs to
-                // only one of them and would scale the other's samples wrongly.
-                // Two variants can disagree only in unit - the LIDAR-TF and UPT1
-                // drivers both call debug[0] the distance, in cm and in mm - and
-                // "Distance / Distance" names nothing the reader did not know.
-                const label = [...new Set(variants.map((variant) => variant.label))].join(" / ");
-                const scale = agreed ? variants[0].scale : 1;
-                lines.push(
-                    ...renderFieldEntry(index, {
-                        label,
-                        unit: agreed ? variants[0].unit : null,
-                        scale,
-                        values: agreed ? variants[0].values : undefined,
-                    }),
-                );
-                if (!agreed) {
-                    conflicts.push({ apiVersion: version.apiVersion, mode, index: Number(index), variants });
-                }
-            }
-            lines.push("        }),");
+            lines.push(...renderModeFields(mode, version.fields[mode], version.apiVersion, conflicts));
         }
         lines.push("    }),");
     }
@@ -1286,25 +1351,7 @@ function renderFieldsModule({ repoUrl, versions }) {
     );
 
     for (const conflict of conflicts) {
-        lines.push(
-            "    Object.freeze({",
-            `        apiVersion: "${conflict.apiVersion}",`,
-            `        mode: "${conflict.mode}",`,
-            `        index: ${conflict.index},`,
-            "        meanings: Object.freeze([",
-        );
-        for (const variant of conflict.variants) {
-            const unit = variant.unit === null ? "null" : quote(variant.unit);
-            lines.push(
-                "            Object.freeze({",
-                `                label: ${quote(variant.label)},`,
-                `                unit: ${unit},`,
-                `                scale: ${variant.scale},`,
-                ...renderFrozenList("                ", "sites", variant.sites),
-                "            }),",
-            );
-        }
-        lines.push("        ]),", "    }),");
+        lines.push(...renderConflict(conflict));
     }
 
     lines.push("]);", "");
@@ -1407,6 +1454,14 @@ async function writeOutputs(outputs) {
     }
 }
 
+// One meaning of a conflicting field, for the warning that reports it.
+function describeMeaning(variant) {
+    const factor = variant.scale === 1 ? "" : variant.scale;
+    const unit = variant.unit === null ? "" : ` [${factor}${variant.unit}]`;
+
+    return `"${variant.label}"${unit} at ${variant.sites.join(", ")}`;
+}
+
 async function main() {
     const args = parseArgs(process.argv.slice(2));
     const repo = resolveRepo(args.repo);
@@ -1447,12 +1502,7 @@ async function main() {
     const fieldUsageSource = renderFieldUsage({ repoUrl, versions });
 
     for (const conflict of conflicts) {
-        const meanings = conflict.variants
-            .map(
-                (variant) =>
-                    `"${variant.label}"${variant.unit === null ? "" : ` [${variant.scale === 1 ? "" : variant.scale}${variant.unit}]`} at ${variant.sites.join(", ")}`,
-            )
-            .join(" vs ");
+        const meanings = conflict.variants.map(describeMeaning).join(" vs ");
         console.warn(
             `generate-debug-modes: WARNING ${conflict.mode}[${conflict.index}] has ${conflict.variants.length} meanings: ${meanings}`,
         );
