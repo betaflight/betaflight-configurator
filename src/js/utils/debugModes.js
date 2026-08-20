@@ -9,8 +9,8 @@ import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
  * this file may reorder them, because a name's index is the numeric debug_mode
  * stored in every blackbox log header recorded with that firmware.
  *
- * The field labels and the decode/convert tables below stay hand-written - the
- * firmware carries no labels or units - but they are checked against the
+ * The field labels and the decode/convert tables below stay hand-written — the
+ * firmware carries no labels or units — but they are checked against the
  * firmware's own `DEBUG_SET()` call sites by
  * `test/js/utils/debugModesFirmware.test.js`.
  */
@@ -71,8 +71,8 @@ function modeNameCandidates(name) {
  * rather than labels.
  *
  * Unlike the labels, these are matched forwards only: exact name first, then the
- * name that renamed it. Falling back the other way - from the current name to the
- * entry written for the name it replaced - would apply the old firmware's units to
+ * name that renamed it. Falling back the other way — from the current name to the
+ * entry written for the name it replaced — would apply the old firmware's units to
  * new data whenever a slot was reworked rather than merely renamed, which is what
  * happened to AUTOPILOT_ALTITUDE (GPS_RESCUE_THROTTLE_PID's µs and its × 100
  * altitude scaling are not what 1.47+ writes there).
@@ -816,7 +816,7 @@ export function getDebugFieldNames(apiVersion) {
     };
 
     // Normalised the same way as getDebugModes, so the two agree on which firmware
-    // they are describing - including for a falsy or unparseable version, which
+    // they are describing — including for a falsy or unparseable version, which
     // resolves to the oldest generated table rather than skipping the work below.
     const version = resolveTableVersion(apiVersion);
 

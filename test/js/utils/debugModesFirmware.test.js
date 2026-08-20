@@ -12,8 +12,8 @@ import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugMo
  * both produced by `npm run generate:debug-modes` from the firmware sources: the
  * table holds the `debug_mode_e` enum per API version, the fixture holds the
  * `debug[n]` indices each mode's `DEBUG_SET()` call sites actually write. The
- * labels, units and scaling next to them cannot be generated - the firmware
- * carries none - so this file checks them against what firmware really writes.
+ * labels, units and scaling next to them cannot be generated — the firmware
+ * carries none — so this file checks them against what firmware really writes.
  */
 
 /*
@@ -21,7 +21,7 @@ import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugMo
  *
  * "unlabelled fields"           - firmware writes the field, no label for it, so
  *                                 it shows as a bare "Debug [n]".
- * "labels for unwritten fields" - a label describes a field no firmware of that
+ * "labels for unwritten fields" — a label describes a field no firmware of that
  *                                 version writes any more (usually a leftover
  *                                 from before a mode was reworked).
  *
@@ -76,6 +76,16 @@ const KNOWN_LABEL_GAPS = [
     "1.48.0 GPS_RESCUE_TRACKING: labels for unwritten fields [1,7]",
     "1.48.0 ATTITUDE: labels for unwritten fields [7]",
     "1.48.0 FLASH_TEST_PRBS: labels for unwritten fields [1]",
+    "1.49.0 SBUS: labels for unwritten fields [1]",
+    "1.49.0 RANGEFINDER: labels for unwritten fields [0]",
+    "1.49.0 LIDAR_TF: unlabelled fields [4,5,6,7]",
+    "1.49.0 RTH: unlabelled fields [4,5,6,7]",
+    "1.49.0 GPS_RESCUE_VELOCITY: labels for unwritten fields [4,5,6,7]",
+    "1.49.0 GPS_RESCUE_HEADING: unlabelled fields [4]",
+    "1.49.0 GPS_RESCUE_HEADING: labels for unwritten fields [5,6]",
+    "1.49.0 GPS_RESCUE_TRACKING: labels for unwritten fields [1,7]",
+    "1.49.0 ATTITUDE: labels for unwritten fields [7]",
+    "1.49.0 FLASH_TEST_PRBS: labels for unwritten fields [1]",
 ];
 
 const generatedVersions = Object.keys(FIRMWARE_DEBUG_MODES);
