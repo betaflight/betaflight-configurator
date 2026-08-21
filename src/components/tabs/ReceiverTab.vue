@@ -1019,7 +1019,7 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 370;
+    const windowWidth = 410;
     const windowHeight = 550;
 
     const rxFunction = (channels) => {
