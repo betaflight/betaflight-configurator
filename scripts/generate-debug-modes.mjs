@@ -66,6 +66,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { debugUnitSymbols } from "../src/js/debug_units.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 
@@ -598,46 +600,10 @@ const INDEX_BOUND = /^\d+$/;
 const UNIT_FACTOR = /^-?\d+(?:\.\d+)?/;
 const UNKEYED_BRACKET = /\[[^[\]]+\]$/;
 
-// Every unit symbol `debug.h` documents. A symbol outside this set is a typo or a
-// unit the tooling has no conversion for, and either way must not reach the app.
-const UNIT_SYMBOLS = new Set([
-    "s",
-    "ms",
-    "us",
-    "Hz",
-    "kHz",
-    "MHz",
-    "kbit/s",
-    "rad",
-    "rad/s",
-    "deg",
-    "dps",
-    "dps2",
-    "m",
-    "cm",
-    "m/s",
-    "cm/s",
-    "g",
-    "g/s",
-    "V",
-    "A",
-    "mAh",
-    "degC",
-    "Pa",
-    "hPa",
-    "rpm",
-    "%",
-    "dB",
-    "dBm",
-    "bytes",
-    "ticks",
-    // device-native: only the FC's own configuration converts these
-    "gyroADC",
-    "accADC",
-    "accADC/s",
-    "rcCommand",
-    "eRPM",
-]);
+// The accepted vocabulary is the shared unit table's keys, not a second copy of
+// it: a firmware unit with no display rule then fails generation here rather than
+// reaching the app as a bare number.
+const UNIT_SYMBOLS = new Set(debugUnitSymbols());
 
 // "0..2" -> [0, 1, 2], "0,2,4" -> [0, 2, 4], "3" -> [3]
 function parseIndexSpec(spec) {
