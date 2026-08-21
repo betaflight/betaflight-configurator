@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  375b52a27e 2026-08-21  (473 annotated fields)
+ *   API 1.49.0  cf6d171f9a 2026-08-21  (473 annotated fields)
  */
 
 /**

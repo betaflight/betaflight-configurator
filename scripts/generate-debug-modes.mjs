@@ -583,12 +583,13 @@ function resolveFieldIndex(rawIndex, constants) {
  * two ways is a pattern that backtracks (SonarCloud javascript:S8786).
  */
 const ANNOTATION = /\/\/!<(.*)$/;
-const INDEX_SPEC = /^\[([\d \t,.]+)\][ \t]*/;
-const UNIT_SPEC = /\[([^[\]]+)\]$/;
+const INDEX_SPEC = /^\[index:([\d \t,.]+)\][ \t]*/;
+const SHAPE_SPEC = /\[([A-Za-z]+):([^[\]]+)\]$/;
 const EXPANSION = /\{([^{}]*)\}/;
 const BRACE = /[{}]/g;
 const INDEX_BOUND = /^\d+$/;
 const UNIT_FACTOR = /^-?\d+(?:\.\d+)?/;
+const UNKEYED_BRACKET = /\[[^[\]]+\]$/;
 
 // Every unit symbol `debug.h` documents. A symbol outside this set is a typo or a
 // unit the tooling has no conversion for, and either way must not reach the app.
@@ -654,26 +655,43 @@ function parseIndexSpec(spec) {
 
 // "0.1deg" -> { unit: "deg", scale: 0.1 }, "%" -> { unit: "%", scale: 1 },
 // "0.001" -> { unit: null, scale: 0.001 }, "-1dBm" -> { unit: "dBm", scale: -1 }
-function parseUnitSpec(raw) {
-    const enumTag = raw.trim().match(/^enum:([A-Za-z_]\w*)$/);
-    if (enumTag) {
-        // The field holds an enumerator, not a quantity: no unit scales it, and
-        // the names come from the firmware's own enum.
-        return { unit: null, scale: 1, enumTag: enumTag[1] };
-    }
-
-    const flagTag = raw.trim().match(/^flags:(.+)$/);
-    if (flagTag) {
-        // The field holds bit flags, lowest bit first. The names are in the
-        // annotation rather than read from the source because flag bits are
-        // `#define`s rather than an enum. `-` marks a bit the field does not use.
-        const flags = flagTag[1].split("|").map((name) => name.trim());
-        if (flags.length > DEBUG_VALUE_BITS || flags.some((name) => name === "")) {
+/*
+ * One shape bracket, dispatched on its key. Every bracket in an annotation names
+ * itself, so an unknown key is refused rather than guessed at - a field whose
+ * shape the tooling cannot read would be shown as a bare integer, silently.
+ */
+function parseShapeSpec(key, raw) {
+    switch (key) {
+        case "unit":
+            return parseUnitShape(raw);
+        case "enum":
+            return parseEnumShape(raw);
+        case "flags":
+            return parseFlagsShape(raw);
+        default:
             return undefined;
-        }
-        return { unit: null, scale: 1, flags: flags.map((name) => (name === "-" ? null : name)) };
     }
+}
 
+function parseEnumShape(raw) {
+    const type = raw.trim().match(/^[A-Za-z_]\w*$/);
+    // The field holds an enumerator, not a quantity: no unit scales it, and the
+    // names come from the firmware's own enum.
+    return type === null ? undefined : { unit: null, scale: 1, enumTag: type[0] };
+}
+
+function parseFlagsShape(raw) {
+    // Bit flags, lowest bit first. The names are in the annotation rather than
+    // read from the source because flag bits are `#define`s rather than an enum.
+    // `-` marks a bit the field does not use.
+    const flags = raw.split("|").map((name) => name.trim());
+    if (flags.length > DEBUG_VALUE_BITS || flags.some((name) => name === "")) {
+        return undefined;
+    }
+    return { unit: null, scale: 1, flags: flags.map((name) => (name === "-" ? null : name)) };
+}
+
+function parseUnitShape(raw) {
     const trimmed = raw.trim();
     const factor = UNIT_FACTOR.exec(trimmed)?.[0];
     const symbol = trimmed.slice(factor?.length ?? 0).trim();
@@ -716,14 +734,18 @@ function parseAnnotation(raw) {
     let scale = 1;
     let enumTag;
     let flags;
-    const unitMatch = rest.match(UNIT_SPEC);
-    if (unitMatch) {
-        const parsed = parseUnitSpec(unitMatch[1]);
+    const shapeMatch = rest.match(SHAPE_SPEC);
+    if (shapeMatch) {
+        const parsed = parseShapeSpec(shapeMatch[1], shapeMatch[2]);
         if (parsed === undefined) {
-            return { error: `unknown unit "${unitMatch[1]}"` };
+            return { error: `"[${shapeMatch[1]}:${shapeMatch[2]}]" is not a unit, enum or flags shape` };
         }
         ({ unit, scale, enumTag, flags } = parsed);
-        rest = rest.slice(0, rest.length - unitMatch[0].length);
+        rest = rest.slice(0, rest.length - shapeMatch[0].length);
+    } else if (UNKEYED_BRACKET.test(rest)) {
+        // Before the shapes were keyed, a bare `[us]` meant a unit. Refusing it
+        // keeps one way to write an annotation, rather than two that drift.
+        return { error: `bracket "${UNKEYED_BRACKET.exec(rest)[0]}" needs a key: unit:, enum: or flags:` };
     }
 
     const label = rest.trim();
