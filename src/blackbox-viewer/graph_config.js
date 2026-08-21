@@ -1490,8 +1490,10 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
-
                 case "AUTOPILOT_ALTITUDE":
+                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                        return getCurveForMinMaxFields(fieldName);
+                    }
                     switch (fieldName) {
                         case "debug[1]": // Target Altitude
                         case "debug[2]": // Current Altitude
@@ -1525,8 +1527,10 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
-
                 case "AUTOPILOT_PID":
+                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                        return getCurveForMinMaxFields(fieldName);
+                    }
                     switch (fieldName) {
                         case "debug[0]": // XY Velocity
                         case "debug[1]": // XY Distance Error
@@ -1560,8 +1564,10 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
-
                 case "AUTOPILOT_STOP":
+                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                        return getCurveForMinMaxFields(fieldName);
+                    }
                     switch (fieldName) {
                         case "debug[0]": // Velocity Error East
                         case "debug[1]": // Velocity Error North
@@ -1595,7 +1601,6 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
-
                 case "POSITION_EST":
                     switch (fieldName) {
                         case "debug[0]": // Position
