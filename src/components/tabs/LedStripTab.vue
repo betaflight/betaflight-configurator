@@ -1117,11 +1117,15 @@ watch(auxChannelValue, (newVal) => {
 
 /* Grid Container */
 .grid-container {
+    /* Pitch is the gPoint box plus its margins; LedGridPoint reads both. */
+    --led-cell: 23px;
+    --led-cell-gap: 3px;
+    --led-cell-pitch: calc(var(--led-cell) + var(--led-cell-gap) * 2);
     position: relative;
     float: left;
     margin-right: 30px;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
+    width: calc(var(--led-cell-pitch) * 16 + 3px);
+    height: calc(var(--led-cell-pitch) * 16 + 3px);
 }
 
 /* Grid Sections Overlay */
@@ -1130,8 +1134,8 @@ watch(auxChannelValue, (newVal) => {
     top: 0;
     left: 0;
     z-index: 0;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
+    width: calc(var(--led-cell-pitch) * 16 + 3px);
+    height: calc(var(--led-cell-pitch) * 16 + 3px);
     border: 1px solid var(--surface-500);
     border-radius: 3px;
     pointer-events: none;
@@ -1144,6 +1148,14 @@ watch(auxChannelValue, (newVal) => {
     float: left;
     border: 1px solid var(--surface-500);
     box-sizing: border-box;
+}
+
+@container main-wrapper (max-width: 575px) {
+    .grid-container {
+        --led-cell: 20px;
+        --led-cell-gap: 1px;
+        margin-right: 0;
+    }
 }
 
 /* Controls Panel */
