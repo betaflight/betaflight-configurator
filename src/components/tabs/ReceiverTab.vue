@@ -1030,8 +1030,13 @@ function openSticksWindow() {
         return false;
     };
 
+    // Resolve against the document base rather than the server root: the build uses
+    // `base: "./"`, so the app can be served from a sub-path (PR previews) or from a
+    // custom scheme (Tauri/Capacitor), where an absolute "/..." path would miss.
+    const stickWindowUrl = new URL("components/tabs/receiver-msp/receiver_msp.html", document.baseURI).href;
+
     const createdWindow = globalThis.open(
-        "/components/tabs/receiver-msp/receiver_msp.html",
+        stickWindowUrl,
         "receiver_msp",
         `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
