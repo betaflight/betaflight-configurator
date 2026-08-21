@@ -1019,10 +1019,11 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 430;
-    // Sized to the tallest state: gimbals + aux sliders + the arming warning box, which is
-    // the popup's initial content. Dismissing the warning leaves the controls centred.
-    const windowHeight = 570;
+    const windowWidth = 420;
+    // Minimum that fits the initial state: gimbals + aux sliders + the expanded arming
+    // warning. Collapsing the warning or dismissing it leaves slack; resizing from there
+    // is left to the user rather than driven from the app.
+    const windowHeight = 600;
 
     const rxFunction = (channels) => {
         if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
