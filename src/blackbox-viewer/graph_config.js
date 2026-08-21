@@ -1,7 +1,7 @@
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
-import { getDebugModes } from "../js/utils/debugModes";
+import { getDebugFieldAxis, getDebugModes } from "../js/utils/debugModes";
 
 export function GraphConfig(graphConfig) {
     const listeners = [];
@@ -235,6 +235,12 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
         }
     };
 
+    // The accelerometer's own full scale, so an accADC axis follows the craft's
+    // configuration the way a gyro axis does.
+    const maxAccelerometerG = function () {
+        return Math.abs(flightLog.accRawToGs(32767));
+    };
+
     const getMinMaxForFields = function (...fieldNames) {
         // helper to make a curve scale based on the combined min/max of one or more fields
         let min = Number.MAX_VALUE,
@@ -394,6 +400,27 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
             };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
             const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
+
+            // Firmware from API 1.49 on annotates what each debug field holds, so the
+            // axis follows from the field's shape and none of the cases below are
+            // consulted. The switch remains for logs recorded before the annotations.
+            const axis = getDebugFieldAxis(debugModeName, fieldName, sysConfig.apiVersion);
+            if (axis) {
+                if (axis.range) {
+                    return { power: 1, MinMax: axis.range };
+                }
+                if (axis.dynamic === "gyro") {
+                    return {
+                        power: 1,
+                        MinMax: { min: -maxDegreesSecond(gyroScaleMargin), max: maxDegreesSecond(gyroScaleMargin) },
+                    };
+                }
+                if (axis.dynamic === "acc") {
+                    return { power: 1, MinMax: { min: -maxAccelerometerG(), max: maxAccelerometerG() } };
+                }
+                return getCurveForMinMaxFields(...axis.fit);
+            }
+
             switch (debugModeName) {
                 case "CYCLETIME":
                     switch (fieldName) {

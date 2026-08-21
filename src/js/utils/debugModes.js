@@ -2,6 +2,7 @@ import semver from "semver";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
 import { FIRMWARE_DEBUG_FIELDS } from "../debug_fields_table";
+import { DEBUG_UNITS } from "../debug_units";
 
 /*
  * The ordered debug_mode lists come straight from the firmware enum, one entry
@@ -126,6 +127,79 @@ function generatedField(debugModeName, fieldName, apiVersion) {
     return undefined;
 }
 
+/**
+ * The fields of one mode that share a field's unit and scaling, as field names,
+ * including the field itself. Those are the fields whose samples belong on one
+ * axis - the four motors of `RPM_FILTER`, the roll and pitch of a `D_MAX` factor -
+ * and grouping is by unit rather than by hand, so a mode reworked in firmware
+ * regroups itself.
+ *
+ * A field with no unit is never grouped: a 0/1 flag sharing an axis with a 16-bit
+ * word would be a flat line at the bottom of it.
+ *
+ * @param {string} [debugModeName]
+ * @param {string} fieldName - e.g. "debug[3]".
+ * @param {string} [apiVersion]
+ * @returns {string[]}
+ */
+function generatedFieldGroup(debugModeName, fieldName, apiVersion) {
+    const field = generatedField(debugModeName, fieldName, apiVersion);
+    if (!field || field.unit === null) {
+        return [fieldName];
+    }
+
+    const version = resolveFieldsVersion(apiVersion);
+    const modes = FIRMWARE_DEBUG_FIELDS[version];
+    const mode = modeNameCandidates(debugModeName).find((candidate) => modes[candidate] !== undefined);
+
+    return Object.entries(modes[mode])
+        .filter(([, other]) => other.unit === field.unit && other.scale === field.scale)
+        .map(([index]) => `debug[${index}]`);
+}
+
+/**
+ * The graph axis an annotated field deserves, derived from its shape, or undefined
+ * when the firmware does not annotate it and a caller's own table has to answer.
+ *
+ * One of three answers, in the order the contract implies:
+ *
+ *   `{ range }`    - bounded by definition: an enumerator spans its values, bit
+ *                    flags span their bits, and a unit such as `%` is bounded by
+ *                    the unit itself. Already in displayed units.
+ *   `{ dynamic }`  - follows the craft's configuration rather than a constant, so
+ *                    the caller resolves it: "gyro", "acc" or "throttle".
+ *   `{ fit }`      - the logged data should decide, over these field names
+ *                    together, which is the common case.
+ *
+ * @param {string} [debugModeName]
+ * @param {string} fieldName - e.g. "debug[3]".
+ * @param {string} [apiVersion]
+ * @returns {{range?: {min: number, max: number}, dynamic?: string, fit?: string[]}|undefined}
+ */
+export function getDebugFieldAxis(debugModeName, fieldName, apiVersion) {
+    const field = generatedField(debugModeName, fieldName, apiVersion);
+    if (!field) {
+        return undefined;
+    }
+
+    if (field.values) {
+        return { range: { min: 0, max: Math.max(1, field.values.length - 1) } };
+    }
+    if (field.flags) {
+        return { range: { min: 0, max: 2 ** field.flags.length - 1 } };
+    }
+
+    const unitRange = field.unit === null ? undefined : DEBUG_UNITS[field.unit]?.range;
+    if (typeof unitRange === "string") {
+        return { dynamic: unitRange };
+    }
+    if (unitRange !== undefined) {
+        return { range: unitRange };
+    }
+
+    return { fit: generatedFieldGroup(debugModeName, fieldName, apiVersion) };
+}
+
 /*
  * How each firmware unit symbol is shown. `factor` takes the firmware unit to the
  * displayed one (centimetres are shown as metres); `ctx` names a conversion only
@@ -135,43 +209,6 @@ function generatedField(debugModeName, fieldName, apiVersion) {
  * and one stored in whole units to none - printing more would invent precision the
  * field does not have.
  */
-const UNIT_DISPLAY = Object.freeze({
-    s: { suffix: "s" },
-    ms: { suffix: "ms" },
-    us: { suffix: "μs" },
-    Hz: { suffix: "Hz" },
-    kHz: { suffix: "kHz" },
-    MHz: { suffix: "MHz" },
-    "kbit/s": { suffix: "kbit/s" },
-    rad: { suffix: "rad" },
-    "rad/s": { suffix: "rad/s" },
-    deg: { suffix: "°" },
-    dps: { suffix: "°/s" },
-    dps2: { suffix: "°/s²" },
-    m: { suffix: "m" },
-    cm: { suffix: "m", factor: 0.01 },
-    "m/s": { suffix: "m/s" },
-    "cm/s": { suffix: "m/s", factor: 0.01 },
-    g: { suffix: "g" },
-    "g/s": { suffix: "g/s" },
-    V: { suffix: "V" },
-    A: { suffix: "A" },
-    mAh: { suffix: "mAh" },
-    degC: { suffix: "°C" },
-    Pa: { suffix: "Pa" },
-    hPa: { suffix: "hPa" },
-    rpm: { suffix: "rpm" },
-    "%": { suffix: "%" },
-    dB: { suffix: "dB" },
-    dBm: { suffix: "dBm" },
-    bytes: { suffix: "bytes" },
-    ticks: { suffix: "ticks" },
-    gyroADC: { suffix: "°/s", ctx: "gyro", decimals: 0 },
-    accADC: { suffix: "g", ctx: "acc", decimals: 2 },
-    "accADC/s": { suffix: "g/s", ctx: "acc", decimals: 2 },
-    rcCommand: { suffix: "%", ctx: "throttle", decimals: 0 },
-    eRPM: { suffix: "rpm", ctx: "erpm", decimals: 0 },
-});
 
 // Hardware conversions for the device-native units, and their inverses. Each is
 // linear, so the inverse of a scale factor is one division by it.
@@ -219,7 +256,7 @@ function generatedScaling(debugModeName, fieldName, apiVersion) {
         return undefined;
     }
 
-    const display = field.unit === null ? {} : (UNIT_DISPLAY[field.unit] ?? {});
+    const display = field.unit === null ? {} : (DEBUG_UNITS[field.unit] ?? {});
     const multiplier = field.scale * (display.factor ?? 1);
     const conversion = display.ctx === undefined ? undefined : CTX_CONVERSIONS[display.ctx];
 
