@@ -1,5 +1,5 @@
 <template>
-    <div class="receiver-msp">
+    <div class="receiver-msp" :class="{ 'flex-1': !enableTX }">
         <div class="control-gimbals">
             <div
                 v-for="(gimbal, index) in gimbals"
@@ -36,9 +36,11 @@
             </div>
         </div>
 
-        <div v-if="!enableTX" class="flex w-full flex-col items-center gap-6">
-            <p class="warning-text text-center" v-html="t('receiverMspWarningText')"></p>
-            <UButton class="w-fit" :label="t('receiverMspEnableButton')" @click="enableControls" />
+        <div v-if="!enableTX" class="flex w-full flex-1 flex-col items-center gap-4">
+            <UiBox :title="t('warningTitle')" type="error" highlight class="w-full">
+                <p class="warning-text" v-html="t('receiverMspWarningText')"></p>
+            </UiBox>
+            <UButton class="mt-auto w-fit" :label="t('receiverMspEnableButton')" @click="enableControls" />
         </div>
     </div>
 </template>
@@ -46,6 +48,7 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { clamp } from "@/js/utils/common";
+import UiBox from "@/components/elements/UiBox.vue";
 
 // i18n instance handed to this window by the opener (see openSticksWindow in ReceiverTab.vue).
 const i18n = globalThis.i18n ?? globalThis.opener?.i18n;
@@ -263,7 +266,7 @@ body {
 }
 
 .warning-text {
-    line-height: 1.7;
+    line-height: 1.6;
     margin: 0;
 }
 

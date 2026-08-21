@@ -1019,8 +1019,10 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 410;
-    const windowHeight = 550;
+    const windowWidth = 430;
+    // Sized to the tallest state: gimbals + aux sliders + the arming warning box, which is
+    // the popup's initial content. Dismissing the warning leaves the controls centred.
+    const windowHeight = 570;
 
     const rxFunction = (channels) => {
         if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
