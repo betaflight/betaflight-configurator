@@ -66,7 +66,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { debugUnitSymbols } from "../src/js/debug_units.js";
+import { debugUnitSymbols } from "../src/js/debug_units.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -143,15 +143,17 @@ function parseArgs(argv) {
  * the Tauri toolchain probes in `check-tauri-prereqs.mjs`, which can name absolute
  * candidates). Hard-coding one would break the script, not secure it.
  */
+// stderr is captured rather than inherited: resolving an include walks a list of
+// candidate header paths, and the ones that do not exist at a given ref are
+// expected misses, not something to print several hundred times per run.
+const GIT_OPTIONS = Object.freeze({
+    encoding: "utf8",
+    maxBuffer: 256 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+});
+
 function git(repo, gitArgs) {
-    // stderr is captured rather than inherited: resolving an include walks a list of
-    // candidate header paths, and the ones that do not exist at a given ref are
-    // expected misses, not something to print several hundred times per run.
-    return execFileSync("git", ["-C", repo, ...gitArgs], {
-        encoding: "utf8",
-        maxBuffer: 256 * 1024 * 1024,
-        stdio: ["ignore", "pipe", "pipe"],
-    }); // NOSONAR javascript:S4036
+    return execFileSync("git", ["-C", repo, ...gitArgs], GIT_OPTIONS); // NOSONAR javascript:S4036
 }
 
 function gitShow(repo, ref, path) {
@@ -658,7 +660,7 @@ function parseFlagsShape(raw) {
     // read from the source because flag bits are `#define`s rather than an enum.
     // `-` marks a bit the field does not use.
     const flags = raw.split("|").map((name) => name.trim());
-    if (flags.length > DEBUG_VALUE_BITS || flags.some((name) => name === "")) {
+    if (flags.length > DEBUG_VALUE_BITS || flags.includes("")) {
         return undefined;
     }
     return { unit: null, scale: 1, flags: flags.map((name) => (name === "-" ? null : name)) };
@@ -690,45 +692,11 @@ function parseUnitShape(raw) {
  * expanded into one label per index. `indices` is null when the annotation gave
  * no index spec, in which case the caller uses the index from the call itself.
  */
-function parseAnnotation(raw) {
-    let rest = raw;
-
-    const indexMatch = rest.match(INDEX_SPEC);
-    let indices = null;
-    if (indexMatch) {
-        indices = parseIndexSpec(indexMatch[1]);
-        if (indices === undefined) {
-            return { error: `index spec "${indexMatch[1]}" is not 0..${DEBUG_VALUE_COUNT - 1}` };
-        }
-        rest = rest.slice(indexMatch[0].length);
-    }
-
-    let unit = null;
-    let scale = 1;
-    let enumTag;
-    let flags;
-    const shapeMatch = rest.match(SHAPE_SPEC);
-    if (shapeMatch) {
-        const parsed = parseShapeSpec(shapeMatch[1], shapeMatch[2]);
-        if (parsed === undefined) {
-            return { error: `"[${shapeMatch[1]}:${shapeMatch[2]}]" is not a unit, enum or flags shape` };
-        }
-        ({ unit, scale, enumTag, flags } = parsed);
-        rest = rest.slice(0, rest.length - shapeMatch[0].length);
-    } else if (UNKEYED_BRACKET.test(rest)) {
-        // Before the shapes were keyed, a bare `[us]` meant a unit. Refusing it
-        // keeps one way to write an annotation, rather than two that drift.
-        return { error: `bracket "${UNKEYED_BRACKET.exec(rest)[0]}" needs a key: unit:, enum: or flags:` };
-    }
-
-    const label = rest.trim();
-    if (label === "") {
-        return { error: "no label" };
-    }
-    if (/[[\]]/.test(label)) {
-        return { error: `label "${label}" contains a bracket, which delimits the index spec and the unit` };
-    }
-
+/*
+ * The `{a|b|c}` group of a label expanded into one label per index, or an error
+ * when the group and the indices do not describe the same thing.
+ */
+function expandLabel(label, indices) {
     const expansion = label.match(EXPANSION);
     // Every brace has to belong to that one group, or the expansion would leave
     // some of them in the label it produces.
@@ -737,8 +705,9 @@ function parseAnnotation(raw) {
         return { error: `label "${label}" needs exactly one {a|b|c} group or none, with both braces` };
     }
     if (!expansion) {
-        return { indices, labels: null, label, unit, scale, enumTag, flags };
+        return { labels: null };
     }
+
     const alternatives = expansion[1].split("|");
     if (alternatives.some((alternative) => alternative.trim() === "")) {
         return { error: `"{${expansion[1]}}" has an empty alternative` };
@@ -751,19 +720,70 @@ function parseAnnotation(raw) {
     }
 
     return {
-        indices,
         labels: alternatives.map((alternative) =>
             label
                 .replace(EXPANSION, alternative)
                 .replaceAll(/[ \t]+/g, " ")
                 .trim(),
         ),
-        label,
-        unit,
-        scale,
-        enumTag,
-        flags,
     };
+}
+
+/* The index spec, if the annotation opens with one, and the text after it. */
+function takeIndexSpec(raw) {
+    const match = raw.match(INDEX_SPEC);
+    if (!match) {
+        return { indices: null, rest: raw };
+    }
+    const indices = parseIndexSpec(match[1]);
+    if (indices === undefined) {
+        return { error: `index spec "${match[1]}" is not 0..${DEBUG_VALUE_COUNT - 1}` };
+    }
+    return { indices, rest: raw.slice(match[0].length) };
+}
+
+/* The shape bracket, if the annotation ends with one, and the text before it. */
+function takeShapeSpec(raw) {
+    const match = raw.match(SHAPE_SPEC);
+    if (!match) {
+        // Before the shapes were keyed, a bare `[us]` meant a unit. Refusing it
+        // keeps one way to write an annotation, rather than two that drift.
+        return UNKEYED_BRACKET.test(raw)
+            ? { error: `bracket "${UNKEYED_BRACKET.exec(raw)[0]}" needs a key: unit:, enum: or flags:` }
+            : { shape: { unit: null, scale: 1 }, rest: raw };
+    }
+
+    const shape = parseShapeSpec(match[1], match[2]);
+    if (shape === undefined) {
+        return { error: `"[${match[1]}:${match[2]}]" is not a unit, enum or flags shape` };
+    }
+    return { shape, rest: raw.slice(0, raw.length - match[0].length) };
+}
+
+function parseAnnotation(raw) {
+    const index = takeIndexSpec(raw);
+    if (index.error) {
+        return index;
+    }
+    const shape = takeShapeSpec(index.rest);
+    if (shape.error) {
+        return shape;
+    }
+
+    const label = shape.rest.trim();
+    if (label === "") {
+        return { error: "no label" };
+    }
+    if (/[[\]]/.test(label)) {
+        return { error: `label "${label}" contains a bracket, which delimits the index spec and the shape` };
+    }
+
+    const expanded = expandLabel(label, index.indices);
+    if (expanded.error) {
+        return expanded;
+    }
+
+    return { indices: index.indices, labels: expanded.labels, label, ...shape.shape };
 }
 
 // ---------------------------------------------------------------------------

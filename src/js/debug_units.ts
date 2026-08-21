@@ -29,7 +29,21 @@
  *              range - `us` covers both a 500 us loop and a 2000 us cycle - so
  *              absent is the common and correct case.
  */
-export const DEBUG_UNITS = Object.freeze({
+/** How one annotated unit is displayed, and what axis it implies. */
+export interface DebugUnit {
+    /** What to print after the value. */
+    suffix: string;
+    /** Multiplies the stored value to reach `suffix`, when the two differ. */
+    factor?: number;
+    /** A hardware conversion in `DebugScaleContext`, for a device-native unit. */
+    ctx?: "gyro" | "acc" | "throttle" | "erpm";
+    /** Fixed decimal places, where the one derived from the scaling reads badly. */
+    decimals?: number;
+    /** A bounded axis, or the name of one that follows the craft's configuration. */
+    range?: { min: number; max: number } | "gyro" | "acc" | "throttle";
+}
+
+export const DEBUG_UNITS: Readonly<Record<string, DebugUnit>> = Object.freeze({
     s: { suffix: "s" },
     ms: { suffix: "ms" },
     us: { suffix: "μs" },
@@ -67,7 +81,7 @@ export const DEBUG_UNITS = Object.freeze({
     eRPM: { suffix: "rpm", ctx: "erpm", decimals: 0 },
 });
 
-/** Every unit symbol an annotation may name. @returns {string[]} */
-export function debugUnitSymbols() {
+/** Every unit symbol an annotation may name. */
+export function debugUnitSymbols(): string[] {
     return Object.keys(DEBUG_UNITS);
 }
