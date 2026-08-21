@@ -1042,6 +1042,10 @@ function openSticksWindow() {
     );
     if (createdWindow) {
         createdWindow.setRawRx = rxFunction;
+        // The popup is a separate document with its own module graph, so it cannot import the
+        // initialised i18n instance — hand it over the same way as setRawRx above. This used to
+        // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
+        createdWindow.i18n = i18n;
         DarkTheme.isDarkThemeEnabled((isEnabled) => {
             windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
         });

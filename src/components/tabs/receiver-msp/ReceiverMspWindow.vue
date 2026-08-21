@@ -52,8 +52,8 @@
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { clamp } from "@/js/utils/common";
 
-// i18n from parent window
-const i18n = globalThis.opener?.i18n;
+// i18n instance handed to this window by the opener (see openSticksWindow in ReceiverTab.vue).
+const i18n = globalThis.i18n ?? globalThis.opener?.i18n;
 const t = (key) => i18n?.getMessage(key) ?? key;
 
 const CHANNEL_MIN_VALUE = 1000;
