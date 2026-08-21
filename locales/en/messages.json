@@ -534,10 +534,15 @@
         "message": "PID Tuning"
     },
     "tabAutotune": { "message": "Autotune" },
-    "tabBlackboxViewer": { "message": "Blackbox Viewer", "description": "Navigation sidebar label for the Blackbox log viewer tab" },
+    "tabBlackboxViewer": {
+        "message": "Blackbox Viewer",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
-    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
@@ -553,7 +558,9 @@
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
-    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
     "autotuneSampleCount": { "message": "{{count}} samples" },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
     "autotuneImportAnother": { "message": "Import Another" },
@@ -1716,6 +1723,15 @@
     "configurationMagDeclinationHelp": {
         "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
     },
+    "sensorConfigSensorPort": {
+        "message": "Serial port"
+    },
+    "sensorConfigSensorPortHelp": {
+        "message": "The UART this sensor is wired to. Switch on below whatever it needs on that port \u2014 some rangefinders need their own serial function, while modules that report over MSP need only MSP."
+    },
+    "sensorConfigSensorPortSharedHelp": {
+        "message": "The UART this module is wired to. It carries both sensors, so one port serves them both. Switch on below whatever it needs on that port."
+    },
     "configurationRangefinder": {
         "message": "Rangefinder",
         "description": "Don't translate!!!"
@@ -2261,6 +2277,72 @@
     "portsTelemetryDisabled": {
         "message": "Disabled"
     },
+    "receiverSerialPortTitle": {
+        "message": "Serial Receiver Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "The UART your receiver is wired to. Assigning a port is what enables serial RX \u2014 there is nothing else to switch on."
+    },
+    "receiverTelemetryPortTitle": {
+        "message": "Telemetry Output"
+    },
+    "receiverTelemetryPortHelp": {
+        "message": "Telemetry sent out over a UART. Not needed for receivers that carry telemetry back over the RX link itself, such as CRSF or GHST."
+    },
+    "receiverTelemetryProtocol": {
+        "message": "Protocol"
+    },
+    "serialPortAssign": {
+        "message": "Serial port"
+    },
+    "serialPortChoose": {
+        "message": "Select a port",
+        "description": "Placeholder on the serial port picker before a port has been chosen, where the row offers no \"not assigned\" entry to show instead."
+    },
+    "serialPortNone": {
+        "message": "Not assigned"
+    },
+    "serialPortBaudrate": {
+        "message": "Baudrate"
+    },
+    "serialPortOccupiedBy": {
+        "message": "{{port}} ({{serialFunction}})",
+        "description": "A port option in a serial port selector, annotated with the function already assigned to that port."
+    },
+    "serialPortAlsoAssigned": {
+        "message": "<strong>{{serialFunction}}</strong> is also assigned, on {{port}}. This control shows one at a time \u2014 change that one on the Ports tab.",
+        "description": "Shown when firmware has more than one of a picker's functions assigned, since the picker can only represent one."
+    },
+    "serialPortWillEvict": {
+        "message": "Saving will remove <strong>{{serialFunction}}</strong> from {{port}}.",
+        "description": "Shown when assigning a function displaced another one, which happened on a screen the user may not be looking at."
+    },
+    "serialPortMspSatisfied": {
+        "message": "MSP is already enabled on this port, which is all this sensor needs - there is nothing to save here.",
+        "description": "Shown on a port-only sensor row when the chosen UART already has MSP, so the row has nothing to contribute to the tab's save."
+    },
+    "serialPortMspLimit": {
+        "message": "MSP is already on the maximum of three ports, so it could not be enabled here. Turn it off on another port and save again.",
+        "description": "Shown when a save could not honour the MSP switch because firmware's MAX_MSP_PORT_COUNT of 3, USB VCP included, is already reached."
+    },
+    "serialPortPendingChanges": {
+        "message": "Serial port changes pending"
+    },
+    "serialPortRebootRequired": {
+        "message": "Saving serial port changes reboots the flight controller."
+    },
+    "serialPortReserved": {
+        "message": "Other (reserved)"
+    },
+    "serialPortReservedHelp": {
+        "message": "This port has a function assigned that this version of the app does not recognise. It is kept unchanged when you save, but cannot be edited here. Update the app if the function was added in a newer firmware release."
+    },
+    "portsLoadFailed": {
+        "message": "Could not read the serial port configuration from the flight controller. Reconnect and try again."
+    },
+    "portsSaveRejected": {
+        "message": "The flight controller <span class=\"message-negative\">rejected</span> this serial port configuration. Nothing was saved. Check for two functions sharing a port that cannot be shared, or for more MSP ports than the firmware supports."
+    },
     "portsFunction_MSP": {
         "message": "MSP"
     },
@@ -2328,7 +2410,13 @@
         "message": "Rateprofile $1"
     },
     "portsFunction_LIDAR_TF": {
-        "message": "Benewake LIDAR"
+        "message": "Serial rangefinder"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD custom text"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
@@ -3845,6 +3933,12 @@
     "motorsTelemetryHelp": {
         "message": "These numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (R, in RPM), the error rate (E) of the telemetry link and the temperature (T) of the ESCs.",
         "description": "Help text for the telemetry values in the motors tab."
+    },
+    "motorsEscSensorPort": {
+        "message": "ESC telemetry port"
+    },
+    "motorsEscSensorPortHelp": {
+        "message": "The UART wired to the ESC telemetry pad. Assigning a port is what enables ESC telemetry — there is nothing else to switch on. This is the same port slot GPS uses, so one port can carry one or the other, not both."
     },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
@@ -7585,6 +7679,15 @@
         "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
+    "vtxSerialPortTitle": {
+        "message": "VTX & Camera Control Port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "The UART your VTX control wire is connected to, or a RunCam camera's control wire. Without one the flight controller cannot read or change VTX settings and the panels below stay empty."
+    },
+    "vtxSerialPortProtocol": {
+        "message": "Protocol"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Attention:</span> Your VTX is not configured or not supported. So you can't modify the VTX values from here. This will only be possible if the flight controller is attached to the VTX using some protocol like Tramp or SmartAudio and is correctly configured in the $t(tabPorts.message) tab if needed.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -8340,6 +8443,9 @@
     },
     "onboardLoggingSerialLogger": {
         "message": "Outboard serial logging device"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "The UART your external logging device (such as an OpenLager) is wired to. Assigning a port is what enables blackbox serial logging — there is nothing else to switch on."
     },
     "onboardLoggingFlashLogger": {
         "message": "Onboard dataflash chip"

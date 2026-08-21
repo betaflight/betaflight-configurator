@@ -1,6 +1,9 @@
 export const PORT_NONE = -1;
 export const PORT_NAME_NONE = "NONE";
 
+/** The USB VCP port - the app's own link, and not somewhere a feature's UART ever goes. */
+export const USB_VCP_IDENTIFIER = 20;
+
 // Keyed by serialPortIdentifier_e. The UART block appears twice because the identifier base
 // moved; only one of the two blocks is ever populated on a given target, so a name round trip
 // is unambiguous in practice.

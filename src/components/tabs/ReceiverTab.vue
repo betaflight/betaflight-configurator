@@ -156,6 +156,38 @@
                                 </SettingRow>
                             </template>
                         </UiBox>
+
+                        <!--
+                            Serial Receiver Port. Driven by the selected receiver mode, NOT by the
+                            RX_SERIAL feature bit: that bit is derived from port assignment on save,
+                            so gating the only port selector on it would make serial RX
+                            unconfigurable from a clean state.
+                        -->
+                        <UiBox
+                            v-if="serialRowsAvailable && showSerialRxPortBox"
+                            :title="$t('receiverSerialPortTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('receiverSerialPortHelp')"
+                        >
+                            <SerialFunctionRow ref="serialRxRow" serial-function="RX_SERIAL" />
+                        </UiBox>
+
+                        <!-- Telemetry Output: one protocol on one port, with its baudrate. -->
+                        <UiBox
+                            v-if="serialRowsAvailable"
+                            :title="$t('receiverTelemetryPortTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('receiverTelemetryPortHelp')"
+                        >
+                            <SerialFunctionRow
+                                ref="telemetryRow"
+                                group="telemetry"
+                                baud-field="telemetry_baudrate"
+                                :protocol-label="$t('receiverTelemetryProtocol')"
+                            />
+                        </UiBox>
                     </div>
 
                     <div class="grid-box col6">
@@ -575,6 +607,8 @@ import * as THREE from "three";
 import * as d3 from "d3";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import UiBox from "../elements/UiBox.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
@@ -705,7 +739,11 @@ function serializeReceiverState() {
     });
 }
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
+const { dirty: receiverSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
+
+// The serial rows hold their edits locally until this tab's save applies them, so ask the rows
+// rather than the store.
+const dirty = computed(() => receiverSettingsDirty.value || serialRowsPending.value);
 
 const saveMenuItems = computed(() => [
     [
@@ -782,6 +820,36 @@ const isTelemetryEnabled = computed(() => features.value?.features?.isEnabled?.(
 const isRssiAdcEnabled = computed(() => features.value?.features?.isEnabled?.("RSSI_ADC") ?? false);
 
 const showSerialRxBox = computed(() => isRxSerialEnabled());
+
+const serialRxRow = ref(null);
+const telemetryRow = ref(null);
+const {
+    serialPortsStore,
+    serialRowsAvailable,
+    serialRowsPending,
+    applySerialRows,
+    writeSerialRows,
+    resetSerialRows,
+    loadSerialPorts,
+} = useSerialRowHost([serialRxRow, telemetryRow]);
+
+// The RX_SERIAL feature bit is what showSerialRxBox reads, and updateFeatures() derives that bit
+// from port assignment on save. Gating the port selector on it would be circular - no port until
+// the feature is on, no feature until a port is assigned - so this box follows the receiver mode
+// the user picked instead.
+const rxSerialFeatureBit = computed(
+    () => features.value?.features?.getFeatures?.()?.find((f) => f.name === "RX_SERIAL")?.bit ?? 3,
+);
+// Never hide a port firmware has already been given, the way MotorsTab keeps its ESC_SENSOR row:
+// updateFeatures() derives the RX_SERIAL bit from the port array, so an assignment left behind by a
+// mode change would silently turn serial RX back on with no way to clear it from this tab.
+const serialRxPortAssigned = computed(() =>
+    serialPortsStore.ports.some((port) => serialPortsStore.portUses(port, "RX_SERIAL")),
+);
+const showSerialRxPortBox = computed(
+    () => selectedRxMode.value === rxSerialFeatureBit.value || serialRxPortAssigned.value,
+);
+
 const showSpiRxBox = computed(() => isRxSpiEnabled());
 const showSticksButton = computed(() => isRxMspEnabled());
 
@@ -1044,7 +1112,10 @@ function openSticksWindow() {
 }
 
 async function refreshTab() {
+    // Refresh means "show me what the FC has", so pending row edits go too.
+    resetSerialRows();
     await loadConfig();
+    await loadSerialPorts({ force: true });
     gui_log(t("receiverDataRefreshed"));
 }
 
@@ -1120,6 +1191,12 @@ const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
             const savedSnapshot = takeSnapshot();
+            // A serial change always reboots, so it decides the save path for the whole tab. Read
+            // before applying, which clears the rows - and covers a write still owed from a save
+            // the FC rejected, which this Save is retrying.
+            const serialPending = serialRowsPending.value;
+            applySerialRows();
+            const withRebootNow = withReboot || serialPending;
 
             // Update RC_MAP from channel map string
             validateChannelMap();
@@ -1152,6 +1229,14 @@ const saveConfig = (withReboot = false) =>
             await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
+            // Two ways to the same assignment, one per firmware generation, and only ever one of
+            // them live: below API 1.49 the port array is writable and carries the feature bits
+            // with it - RX_SERIAL among them, which is what makes picking a port rather than the
+            // receiver-mode dropdown the thing that turns serial RX on. From 1.49 the mask is a
+            // read-only view and rx_uart is written through the CLI instead. Each call is inert on
+            // the firmware it does not belong to.
+            await writeSerialRows();
+
             // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
             // and the persist below serialises that group, so this has to sit between the two.
             // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
@@ -1162,7 +1247,7 @@ const saveConfig = (withReboot = false) =>
                 throw error;
             }
 
-            if (withReboot) {
+            if (withRebootNow) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
                 await saveAndReboot();
             } else {
@@ -1331,6 +1416,7 @@ onMounted(async () => {
     keepRendering = true;
 
     await loadConfig();
+    await loadSerialPorts();
     await nextTick();
 
     // Initialize model preview

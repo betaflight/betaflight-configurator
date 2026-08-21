@@ -43,6 +43,13 @@
                             />
                         </SettingRow>
 
+                        <SerialFunctionRow
+                            ref="serialRow"
+                            serial-function="GPS"
+                            baud-field="gps_baudrate"
+                            :label="$t('serialPortAssign')"
+                        />
+
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
                             <USwitch v-model="autoBaudChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
@@ -306,6 +313,8 @@ import { useBuildOptions } from "../../composables/useBuildOptions";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
@@ -316,6 +325,7 @@ export default defineComponent({
         WikiButton,
         UiBox,
         SettingRow,
+        SerialFunctionRow,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -408,7 +418,13 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
+        const { dirty: gpsSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
+
+        // The serial row holds its edit locally until this tab's save applies it - see
+        // useSerialRowHost for why the row is asked rather than the store.
+        const serialRow = ref(null);
+        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
+        const dirty = computed(() => gpsSettingsDirty.value || serialRowsPending.value);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -772,6 +788,11 @@ export default defineComponent({
 
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
+                    // A pending port assignment rides along on this save so the two together cost
+                    // one reboot, not two. The feature write below repeats the same mask
+                    // harmlessly, and one saveAndReboot at the end persists the lot.
+                    await saveSerialRows();
+
                     await MSP.promise(
                         MSPCodes.MSP_SET_FEATURE_CONFIG,
                         mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
@@ -807,6 +828,7 @@ export default defineComponent({
                 mapInstance.value?.map?.updateSize();
             });
             loadGpsConfig();
+            loadSerialPorts();
         });
 
         const teardown = () => {
@@ -840,6 +862,7 @@ export default defineComponent({
         });
 
         return {
+            serialRow,
             mapRef,
             mapContainerRef,
             activeLayer,

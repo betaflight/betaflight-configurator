@@ -8,6 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
+import {
+    serialPortFunctionsFor,
+    serialPortFunctionMaskToFunctions,
+    serialPortFunctionsToMask,
+    serialPortKnownFunctionMask,
+    serialPortUnknownFunctionMask,
+} from "./serialPortFunctions";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
@@ -64,27 +71,6 @@ function MspHelper() {
         "2000000",
         "2470000",
     ];
-    // needs to be identical to 'serialPortFunction_e' in 'src/main/io/serial.h' in betaflight
-    self.SERIAL_PORT_FUNCTIONS = {
-        MSP: 0,
-        GPS: 1,
-        TELEMETRY_FRSKY: 2,
-        TELEMETRY_HOTT: 3,
-        TELEMETRY_LTM: 4,
-        TELEMETRY_SMARTPORT: 5,
-        RX_SERIAL: 6,
-        BLACKBOX: 7,
-        TELEMETRY_MAVLINK: 9,
-        ESC_SENSOR: 10,
-        TBS_SMARTAUDIO: 11,
-        TELEMETRY_IBUS: 12,
-        IRC_TRAMP: 13,
-        RUNCAM_DEVICE_CONTROL: 14, // support communitate with RunCam Device
-        LIDAR_TF: 15,
-        FRSKY_OSD: 16,
-        VTX_MSP: 17,
-    };
-
     self.REBOOT_TYPES = {
         FIRMWARE: 0,
         BOOTLOADER: 1,
@@ -987,9 +973,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     const serialPortCount = data.byteLength / bytesPerPort;
                     for (let i = 0; i < serialPortCount; i++) {
+                        const identifier = data.readU8();
+                        const functionMask = data.readU16();
                         const serialPort = {
-                            identifier: data.readU8(),
-                            functions: self.serialPortFunctionMaskToFunctions(data.readU16()),
+                            identifier,
+                            // retained so bits this build cannot name survive the next write
+                            functionMask,
+                            functions: self.serialPortFunctionMaskToFunctions(functionMask),
                             msp_baudrate: self.BAUD_RATES[data.readU8()],
                             gps_baudrate: self.BAUD_RATES[data.readU8()],
                             telemetry_baudrate: self.BAUD_RATES[data.readU8()],
@@ -1006,9 +996,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     const portConfigSize = data.remaining() / count;
                     for (let ii = 0; ii < count; ii++) {
                         const start = data.remaining();
+                        const identifier = data.readU8();
+                        const functionMask = data.readU32();
                         const serialPort = {
-                            identifier: data.readU8(),
-                            functions: self.serialPortFunctionMaskToFunctions(data.readU32()),
+                            identifier,
+                            // retained so bits this build cannot name survive the next write
+                            functionMask,
+                            functions: self.serialPortFunctionMaskToFunctions(functionMask),
                             msp_baudrate: self.BAUD_RATES[data.readU8()],
                             gps_baudrate: self.BAUD_RATES[data.readU8()],
                             telemetry_baudrate: self.BAUD_RATES[data.readU8()],
@@ -2119,7 +2113,10 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
                 buffer.push8(serialPort.identifier);
 
-                const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                // & 0xffff: this legacy command only ever carried 16 bits, so a reserved bit
+                // above 15 cannot be represented here and must not corrupt the low half.
+                const reservedMask = self.serialPortUnknownFunctionMask(serialPort.functionMask) & 0xffff;
+                const functionMask = self.serialPortFunctionsToMask(serialPort.functions, reservedMask);
                 buffer
                     .push16(functionMask)
                     .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -2137,7 +2134,10 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
                 buffer.push8(serialPort.identifier);
 
-                const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                const functionMask = self.serialPortFunctionsToMask(
+                    serialPort.functions,
+                    self.serialPortUnknownFunctionMask(serialPort.functionMask),
+                );
                 buffer
                     .push32(functionMask)
                     .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -2783,33 +2783,30 @@ MspHelper.prototype.sendLedStripConfigValues = function (onCompleteCallback) {
     MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
-MspHelper.prototype.serialPortFunctionMaskToFunctions = function (functionMask) {
-    const self = this;
-    const functions = [];
+/**
+ * The bit layout for the connected firmware. A getter rather than a field because the API version
+ * is not known when the helper is constructed.
+ */
+Object.defineProperty(MspHelper.prototype, "SERIAL_PORT_FUNCTIONS", {
+    get() {
+        return serialPortFunctionsFor(FC.CONFIG?.apiVersion);
+    },
+});
 
-    const keys = Object.keys(self.SERIAL_PORT_FUNCTIONS);
-    for (const key of keys) {
-        const bit = self.SERIAL_PORT_FUNCTIONS[key];
-        if (bit_check(functionMask, bit)) {
-            functions.push(key);
-        }
-    }
-    return functions;
+MspHelper.prototype.serialPortFunctionMaskToFunctions = function (functionMask) {
+    return serialPortFunctionMaskToFunctions(functionMask, FC.CONFIG?.apiVersion);
 };
 
-MspHelper.prototype.serialPortFunctionsToMask = function (functions) {
-    const self = this;
-    let mask = 0;
+MspHelper.prototype.serialPortKnownFunctionMask = function () {
+    return serialPortKnownFunctionMask(FC.CONFIG?.apiVersion);
+};
 
-    for (let index = 0; index < functions.length; index++) {
-        const key = functions[index];
-        const bitIndex = self.SERIAL_PORT_FUNCTIONS[key];
-        if (bitIndex >= 0) {
-            mask = bit_set(mask, bitIndex);
-        }
-    }
+MspHelper.prototype.serialPortUnknownFunctionMask = function (functionMask) {
+    return serialPortUnknownFunctionMask(functionMask, FC.CONFIG?.apiVersion);
+};
 
-    return mask;
+MspHelper.prototype.serialPortFunctionsToMask = function (functions, reservedMask = 0) {
+    return serialPortFunctionsToMask(functions, reservedMask, FC.CONFIG?.apiVersion);
 };
 
 MspHelper.prototype.sendRxFailConfig = function (onCompleteCallback) {
@@ -2879,11 +2876,6 @@ MspHelper.prototype.loadSerialConfig = function (callback) {
     MSP.send_message(mspCode, false, false, callback);
 };
 
-MspHelper.prototype.sendSerialConfig = function (callback) {
-    const mspCode = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
-    MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
-};
-
 MspHelper.prototype.writeConfiguration = function (reboot, callback) {
     // We need some protection when testing motors on motors tab
     if (!FC.CONFIG.armingDisabled) {
@@ -2912,4 +2904,5 @@ let mspHelper;
 // instance or re-use existing where needed.
 window.mspHelper = mspHelper = new MspHelper();
 export { mspHelper };
+export { isMspRejected } from "./mspErrors";
 export default MspHelper;

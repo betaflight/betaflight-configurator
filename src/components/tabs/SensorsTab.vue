@@ -87,6 +87,26 @@
                                 size="xs"
                             />
                         </SettingRow>
+
+                        <!--
+                            One port selector for both sensors: an MT module carries the rangefinder
+                            and the optical flow sensor on one wire, and so does UPT1. The function
+                            switch is separate and only offered for the hardware that needs it - TF,
+                            Nooploop and UPT1 open FUNCTION_LIDAR, while an MT module reports over
+                            MSP and wants no function bit at all.
+                        -->
+                        <SerialFunctionRow
+                            v-if="needsSensorPort"
+                            ref="sensorPortRow"
+                            port-only
+                            :toggle-function="needsSerialFunction ? 'LIDAR_TF' : ''"
+                            :label="$t('sensorConfigSensorPort')"
+                            :help="
+                                sensorsShareOnePort
+                                    ? $t('sensorConfigSensorPortSharedHelp')
+                                    : $t('sensorConfigSensorPortHelp')
+                            "
+                        />
                         <!-- Board Alignment -->
                         <SettingRow :label="$t('configurationBoardAlignment')" fullWidth>
                             <HelpIcon :text="$t('configurationBoardAlignmentHelp')" />
@@ -815,6 +835,8 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
+import { sensorTransportsFor } from "@/composables/ports/sensorTransport";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
@@ -857,8 +879,12 @@ import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 
 const fcStore = useFlightControllerStore();
+// One row for both sensors: they share a wire, so they share a port selector.
+const sensorPortRow = ref(null);
+const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([sensorPortRow]);
 const { saveAndReboot } = useReboot();
 
 const { isSaving, runSave } = useSaving();
@@ -950,6 +976,27 @@ const opticalFlowHardwareEnabled = computed({
 const showRangefinder = ref(false);
 const showOpticalFlow = ref(false);
 
+/** How the selected sensor hardware talks to the FC - see sensorTransport.js for the rules. */
+const sensorTransports = computed(() =>
+    sensorTransportsFor(
+        sonarTypesList.value[sensorConfig.sonar_hardware] ?? "",
+        opticalFlowTypesList.value[sensorConfig.opticalflow_hardware] ?? "",
+    ),
+);
+
+/** Any selected sensor needs a UART at all. */
+const needsSensorPort = computed(() => sensorTransports.value.size > 0);
+
+/** ...and some of them additionally need FUNCTION_LIDAR set on that port. */
+const needsSerialFunction = computed(() => sensorTransports.value.has("serial"));
+
+/** True when both sensors are set and share one transport, i.e. one module on one wire. */
+const sensorsShareOnePort = computed(
+    () =>
+        sensorConfig.sonar_hardware !== 0 &&
+        sensorConfig.opticalflow_hardware !== 0 &&
+        sensorTransports.value.size === 1,
+);
 // --- Board Alignment ---
 
 const boardAlignment = reactive({
@@ -2267,7 +2314,11 @@ const serializeState = () =>
         magDeclination: magDeclination.value,
     });
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+const { dirty: sensorSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+
+// The serial row holds its edit locally until this tab's save applies it - see useSerialRowHost
+// for why the row is asked rather than the store.
+const dirty = computed(() => sensorSettingsDirty.value || serialRowsPending.value);
 
 // --- Load helpers ---
 
@@ -2418,6 +2469,10 @@ const loadConfig = async () => {
             setupMagSection();
             setupPeripherals();
 
+            // Read the ports here rather than from onMounted so it finishes before the 33 ms
+            // attitude poll below starts competing for the link.
+            await loadSerialPorts();
+
             markClean();
 
             suggestGeoDeclination();
@@ -2448,6 +2503,13 @@ const saveConfig = () =>
     runSave(
         async () => {
             const savedSnapshot = takeSnapshot();
+
+            // A pending rangefinder port rides along on this save, so the port and the hardware
+            // type it pairs with cost one reboot rather than two. It goes before the sensor writes
+            // deliberately: a firmware rejection throws here, and aborting before anything else is
+            // written beats leaving the sensor config saved against a serial config that was
+            // refused.
+            await saveSerialRows();
 
             // Push sensor hardware to store
             fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;

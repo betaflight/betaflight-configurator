@@ -86,17 +86,21 @@
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
-                                <USwitch
-                                    :model-value="isFeatureEnabled('ESC_SENSOR')"
-                                    @update:model-value="toggleFeature('ESC_SENSOR', $event)"
-                                    size="xs"
-                                />
-                                <template #label>
-                                    <span class="font-semibold">ESC_SENSOR</span>
-                                    <span class="ml-2" v-html="$t('featureESC_SENSOR')"></span>
-                                </template>
-                            </SettingRow>
+                            <!--
+                                This row is the ESC_SENSOR control, and the only one: writeConfig()
+                                derives the feature bit from the port array, so a switch beside it
+                                could be turned on and then be turned straight back off by the next
+                                save. ESC telemetry needs a UART either way - a feature bit with no
+                                port behind it does nothing.
+                            -->
+                            <SerialFunctionRow
+                                v-if="showEscSensorPort"
+                                ref="escSensorRow"
+                                serial-function="ESC_SENSOR"
+                                :show-msp="false"
+                                :label="$t('motorsEscSensorPort')"
+                                :help="$t('motorsEscSensorPortHelp')"
+                            />
                             <SettingRow
                                 v-if="digitalProtocolConfigured"
                                 :label="$t('configurationDshotBidir')"
@@ -539,7 +543,10 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
+import { NO_PORT } from "@/composables/ports/useSerialFunctionRow";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
@@ -565,6 +572,11 @@ const API_VERSION_1_47 = "1.47.0";
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
 const { hasBuildOption } = useBuildOptions();
+
+const escSensorRow = ref(null);
+// The row holds its edit locally until save, so it is ORed into the tab's dirty state rather than
+// tracked through configChanges - see useSerialRowHost.
+const { serialPortsStore, serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([escSensorRow]);
 
 // Initialize motors state management
 const motorsState = useMotorsState();
@@ -693,9 +705,31 @@ const analogProtocolConfigured = computed(() => {
     return protocolConfigured.value && !digitalProtocolConfigured.value;
 });
 
+// ESC telemetry over a wire is a digital-protocol setup, so that is when the row is offered.
+const escSensorPortAssigned = computed(() =>
+    serialPortsStore.ports.some((port) => serialPortsStore.portUses(port, "ESC_SENSOR")),
+);
+
+// What the row will hold after the next save: the pending pick while one is mounted, the saved
+// assignment otherwise.
+const escSensorPortSelected = computed(() => {
+    const selected = escSensorRow.value?.selectedValue;
+    return selected === undefined ? escSensorPortAssigned.value : selected !== NO_PORT;
+});
+
+const showEscSensorPort = computed(
+    // Neither a saved assignment nor a pending one may be hidden by switching to an analog
+    // protocol. A saved one would be stranded with no way to clear it from this tab; a pending one
+    // is worse, because v-if unmounts the row and an unmounted row's draft is simply gone - and
+    // checking what else is on the tab is exactly when someone changes protocol.
+    () => digitalProtocolConfigured.value || escSensorPortSelected.value,
+);
+
 const rpmFeaturesVisible = computed(() => {
     return (
-        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) || isFeatureEnabled("ESC_SENSOR")
+        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) ||
+        escSensorPortSelected.value ||
+        isFeatureEnabled("ESC_SENSOR")
     );
 });
 
@@ -761,10 +795,14 @@ const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTesting
 // Initialize data polling
 useMotorDataPolling(motorsTestingEnabled);
 
+const hasUnsavedChanges = computed(() => configHasChanged.value || serialRowsPending.value);
+
 // Button states (central controller like original setContentButtons)
+// toolsDisabled stays on configHasChanged: a pending port change is no reason to lock the motor
+// reorder and DShot direction dialogs, which only care about motor config being in sync.
 const buttonStates = computed(() => ({
     toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
-    saveDisabled: !configHasChanged.value,
+    saveDisabled: !hasUnsavedChanges.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
 
@@ -812,6 +850,8 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
+
+    await loadSerialPorts();
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
@@ -1395,12 +1435,15 @@ const openEscDshotDirectionDialog = () => {
 // Action Toolbar Buttons
 const handleSave = (reboot = true) => {
     // Don't save if no changes
-    if (!configHasChanged.value) {
+    if (!hasUnsavedChanges.value) {
         return;
     }
 
     return runSave(
         async () => {
+            // A serial change always reboots, so it decides the save path for the whole tab.
+            const withReboot = reboot || serialRowsPending.value;
+
             // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
             // This prevents motors from spinning after reboot due to DShot beacon commands
             if (motorsTestingEnabled.value) {
@@ -1414,6 +1457,11 @@ const handleSave = (reboot = true) => {
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
 
+            // writeConfig() derives the ESC_SENSOR feature bit from the port array and sends its
+            // own feature write, so it has to run before the feature write below - which then
+            // harmlessly repeats the mask.
+            await saveSerialRows();
+
             // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
@@ -1426,7 +1474,7 @@ const handleSave = (reboot = true) => {
             await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
             // Persist to EEPROM, rebooting when requested.
-            if (reboot) {
+            if (withReboot) {
                 await saveAndReboot();
             } else {
                 await saveToEeprom();

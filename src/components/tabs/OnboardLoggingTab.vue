@@ -83,6 +83,20 @@
 
                         <UiBox :title="$t('onboardLoggingSerialLogger')" type="neutral" collapsible>
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
+                            <!--
+                                The port lives here rather than beside the device selector: this box
+                                IS the outboard serial logger, so the UART it writes to belongs in
+                                it. Still gated on the device being set to serial, since that is
+                                what makes the assignment mean anything.
+                            -->
+                            <SerialFunctionRow
+                                v-if="showBlackboxSerialPort"
+                                ref="serialRow"
+                                serial-function="BLACKBOX"
+                                baud-field="blackbox_baudrate"
+                                :label="$t('serialPortAssign')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            />
                         </UiBox>
 
                         <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>
@@ -289,6 +303,8 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
+import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
+import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -313,6 +329,10 @@ import { useReboot } from "../../composables/useReboot";
 import { runTabLoad } from "../../composables/useTabLoad";
 
 const BLOCK_SIZE = 4096;
+
+// Matches BLACKBOX_DEVICE_SERIAL in the firmware's blackboxDevice_e, and the value pushed for
+// blackboxLoggingSerial in blackboxDeviceOptions below.
+const BLACKBOX_DEVICE_SERIAL = 3;
 
 // Helper function for GCD calculation
 function gcd(a, b) {
@@ -362,6 +382,7 @@ export default defineComponent({
         UiBox,
         SettingRow,
         HelpIcon,
+        SerialFunctionRow,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -552,7 +573,20 @@ export default defineComponent({
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+        const { dirty: loggingSettingsDirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+
+        // The serial row holds its edit locally until this tab's save applies it - see
+        // useSerialRowHost for why the row is asked rather than the store.
+        const serialRow = ref(null);
+        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
+        const dirty = computed(() => loggingSettingsDirty.value || serialRowsPending.value);
+
+        // A UART only carries blackbox when logs are streamed out of it. Gated on
+        // blackboxConfigSupported as well, because the enclosing box is v-show, so its children stay
+        // mounted on a board whose blackbox config saveSettings() refuses to write.
+        const showBlackboxSerialPort = computed(
+            () => blackboxConfigSupported.value && Number(blackboxDevice.value) === BLACKBOX_DEVICE_SERIAL,
+        );
 
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
@@ -567,6 +601,10 @@ export default defineComponent({
             return runSave(
                 async () => {
                     const savedSnapshot = takeSnapshot();
+
+                    // A pending port assignment rides along on this save so the two together cost
+                    // one reboot, not two - this tab's save always reboots anyway.
+                    await saveSerialRows();
 
                     fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
                     fcStore.blackbox.blackboxPDenom = blackboxRate.value;
@@ -974,6 +1012,7 @@ export default defineComponent({
 
         onMounted(() => {
             loadData();
+            loadSerialPorts();
         });
 
         onUnmounted(() => {
@@ -985,6 +1024,8 @@ export default defineComponent({
 
         return {
             MSP,
+            serialRow,
+            showBlackboxSerialPort,
             eraseOpen,
             saveOpen,
             saveDone,
