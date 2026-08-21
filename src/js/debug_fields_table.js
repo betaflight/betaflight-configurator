@@ -389,7 +389,17 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             3: Object.freeze({ label: "Baud Rate / 100, Else Nav Message Age In Milliseconds", unit: null, scale: 1 }),
             4: Object.freeze({ label: "State And State Position", unit: null, scale: 1 }),
             5: Object.freeze({ label: "Task Execute Time", unit: "us", scale: 1 }),
-            6: Object.freeze({ label: "Config Ack State", unit: null, scale: 1 }),
+            6: Object.freeze({
+                label: "Config Ack State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "UBLOX_ACK_IDLE",
+                    "UBLOX_ACK_WAITING",
+                    "UBLOX_ACK_GOT_ACK",
+                    "UBLOX_ACK_GOT_NACK",
+                ]),
+            }),
             7: Object.freeze({ label: "Rx Bytes Waiting", unit: "bytes", scale: 1 }),
         }),
         GPS_DOP: Object.freeze({
@@ -797,7 +807,18 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             3: Object.freeze({ label: "MSP Port Descriptor", unit: null, scale: 1 }),
         }),
         VTX_TRAMP: Object.freeze({
-            0: Object.freeze({ label: "Tramp Status", unit: null, scale: 1 }),
+            0: Object.freeze({
+                label: "Tramp Status",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "TRAMP_STATUS_OFFLINE",
+                    "TRAMP_STATUS_INIT",
+                    "TRAMP_STATUS_ONLINE_MONITOR_FREQPWRPIT",
+                    "TRAMP_STATUS_ONLINE_MONITOR_TEMP",
+                    "TRAMP_STATUS_ONLINE_CONFIG",
+                ]),
+            }),
             1: Object.freeze({ label: "Reply Code", unit: null, scale: 1 }),
             2: Object.freeze({ label: "Packed Pit Modes, Power And Change Flags", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Retry Count", unit: null, scale: 1 }),
