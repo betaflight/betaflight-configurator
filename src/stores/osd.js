@@ -36,6 +36,10 @@ async function fetchOsdInfo(fcStore) {
 }
 
 async function decodeOsdData(info) {
+    if (!CONFIGURATOR.virtualMode) {
+        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+    }
+
     OSD.loadDisplayFields();
     OSD.chooseFields();
 
@@ -50,7 +54,6 @@ async function decodeOsdData(info) {
     }
 
     OSD.msp.decode(info);
-    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
 }
 
 async function ensureDefaultFontLoaded() {
@@ -185,6 +188,11 @@ export const useOsdStore = defineStore("osd", () => {
         if (displayItems.value[itemIndex]) {
             displayItems.value[itemIndex].isVisible[profileIndex] = visible;
         }
+    }
+
+    function refreshDisplayItemPreview(displayItem) {
+        syncToLegacy();
+        OSD.refreshDisplayItemPreview(OSD.data, displayItem);
     }
 
     // Sync state to legacy OSD.data object for compatibility
@@ -409,6 +417,7 @@ export const useOsdStore = defineStore("osd", () => {
         updateDisplaySize,
         setSelectedPreviewProfile,
         updateDisplayItemVisibility,
+        refreshDisplayItemPreview,
         syncToLegacy,
         fetchOsdConfig,
         saveAllConfig,
