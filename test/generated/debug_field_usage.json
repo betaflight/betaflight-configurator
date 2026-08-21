@@ -1726,7 +1726,7 @@
             }
         },
         "1.49.0": {
-            "commit": "375b52a27e92045f3cd79b53f2e2175d831372d6",
+            "commit": "a8e640ad51fe8f719e0f0c4ede75a9e9dbb18e87",
             "date": "2026-08-21",
             "modes": {
                 "ACCELEROMETER": {

@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  cf6d171f9a 2026-08-21  (473 annotated fields)
+ *   API 1.49.0  a8e640ad51 2026-08-21  (473 annotated fields)
  */
 
 /**
@@ -936,7 +936,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Distance",
                 unit: "cm",
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:176"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:178"]),
             }),
             Object.freeze({
                 label: "Distance",
@@ -955,7 +955,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Signal Strength",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:177"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:179"]),
             }),
             Object.freeze({
                 label: "Confidence",
@@ -974,7 +974,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Frame Byte 4",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:178"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:180"]),
             }),
             Object.freeze({
                 label: "Optical Flow X",
@@ -993,7 +993,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Frame Byte 5",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:179"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:181"]),
             }),
             Object.freeze({
                 label: "Optical Flow Y",
@@ -1012,7 +1012,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Checksum Error Count",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:257"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:259"]),
             }),
             Object.freeze({
                 label: "Laser Valid Status",
