@@ -37,7 +37,7 @@
         </div>
 
         <div v-if="!enableTX" class="flex w-full flex-1 flex-col items-center gap-4">
-            <UiBox :title="t('warningTitle')" type="error" highlight class="w-full">
+            <UiBox :title="t('warningTitle')" type="error" highlight collapsible class="w-full">
                 <p class="warning-text" v-html="t('receiverMspWarningText')"></p>
             </UiBox>
             <UButton class="mt-auto w-fit" :label="t('receiverMspEnableButton')" @click="enableControls" />
@@ -188,6 +188,15 @@ body {
     box-sizing: border-box;
     padding: 1.5rem;
     margin: 0;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
 }
 
 .receiver-msp {
