@@ -1,3 +1,5 @@
+import { configHasBuildOption } from "../../composables/useBuildOptions";
+
 export const sidebarItems = [
     { key: "landing", mode: "disconnected", i18n: "tabLanding", icon: "i-lucide-home" },
     { key: "firmware_flasher", mode: "disconnected", i18n: "tabFirmwareFlasher", icon: "i-lucide-zap" },
@@ -53,7 +55,7 @@ export function isItemVisible(item, ctx) {
     if (item.expert && !ctx.expertMode) {
         return false;
     }
-    if (item.buildOptions && !item.buildOptions.some((o) => ctx.buildOptions?.includes(o))) {
+    if (item.buildOptions && !item.buildOptions.some((o) => configHasBuildOption(ctx.config, o))) {
         return false;
     }
     if (item.feature && !ctx.features?.isEnabled?.(item.feature)) {

@@ -10,18 +10,24 @@
                     <!-- GPS Configuration -->
                     <UiBox
                         :title="$t('configurationGPS')"
-                        type="neutral"
+                        :type="hasGpsBuildOption ? 'neutral' : 'warning'"
+                        :highlight="!hasGpsBuildOption"
                         collapsible
                         :help="$t('configurationGPSHelp')"
                     >
+                        <div v-if="!hasGpsBuildOption" class="text-center p-2 text-sm">
+                            {{ $t("configurationGPSNotInBuild") }}
+                        </div>
+
                         <SettingRow
                             v-for="feature in gpsFeatures"
                             :key="feature.bit"
                             :label="$t(`feature${feature.name}`)"
-                            :help="feature.haveTip ? $t(`feature${feature.name}Tip`) : $t('featureGPSTip')"
+                            :help="$t(featureHelpKey(feature))"
                         >
                             <USwitch
                                 :model-value="isFeatureEnabled(feature)"
+                                :disabled="!hasGpsBuildOption"
                                 @update:model-value="toggleFeature(feature, $event)"
                             />
                         </SettingRow>
@@ -30,6 +36,7 @@
                             <USelect
                                 :items="gpsProtocolItems"
                                 v-model="gpsConfig.provider"
+                                :disabled="!hasGpsBuildOption"
                                 @update:model-value="onGpsProtocolChange"
                                 size="xs"
                                 class="min-w-40"
@@ -37,11 +44,11 @@
                         </SettingRow>
 
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
-                            <USwitch v-model="autoBaudChecked" />
+                            <USwitch v-model="autoBaudChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow v-if="showAutoConfig" :label="$t('configurationGPSAutoConfig')">
-                            <USwitch v-model="autoConfigChecked" />
+                            <USwitch v-model="autoConfigChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow
@@ -49,15 +56,21 @@
                             :label="$t('configurationGPSGalileo')"
                             :help="$t('configurationGPSGalileoHelp')"
                         >
-                            <USwitch v-model="ubloxGalileoChecked" />
+                            <USwitch v-model="ubloxGalileoChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow :label="$t('configurationGPSHomeOnce')" :help="$t('configurationGPSHomeOnceHelp')">
-                            <USwitch v-model="homeOnceChecked" />
+                            <USwitch v-model="homeOnceChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
 
                         <SettingRow v-if="showUbloxSbas" :label="$t('configurationGPSubxSbas')">
-                            <USelect :items="gpsSbasItems" v-model="gpsConfig.ublox_sbas" size="xs" class="min-w-40" />
+                            <USelect
+                                :items="gpsSbasItems"
+                                v-model="gpsConfig.ublox_sbas"
+                                :disabled="!hasGpsBuildOption"
+                                size="xs"
+                                class="min-w-40"
+                            />
                         </SettingRow>
                     </UiBox>
 
@@ -289,6 +302,7 @@ import { useMapViewport } from "../../composables/useMapViewport";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useBuildOptions } from "../../composables/useBuildOptions";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -305,6 +319,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const { hasBuildOption } = useBuildOptions();
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
@@ -364,8 +379,12 @@ export default defineComponent({
 
         const apiVersion = computed(() => fcStore.config.apiVersion);
         const hasGpsSensor = computed(() => have_sensor(fcStore.config.activeSensors, "gps"));
+        const hasGpsBuildOption = computed(() => hasBuildOption("USE_GPS"));
         const hasMag = computed(
-            () => have_sensor(fcStore.config.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
+            () =>
+                have_sensor(fcStore.config.activeSensors, "mag") &&
+                semver.gte(apiVersion.value, API_VERSION_1_46) &&
+                hasBuildOption("USE_MAG"),
         );
 
         const gpsConfig = reactive({
@@ -446,6 +465,18 @@ export default defineComponent({
             }
             return fcStore.features.features.getFeatures().filter((feature) => feature.group === "gps");
         });
+
+        // Returns the i18n key so the template resolves it with $t and stays
+        // reactive to locale changes.
+        const featureHelpKey = (feature) => {
+            if (!hasGpsBuildOption.value) {
+                return "configurationGPSNotInBuild";
+            }
+            if (feature.haveTip) {
+                return `feature${feature.name}Tip`;
+            }
+            return "featureGPSTip";
+        };
 
         const isFeatureEnabled = (feature) => {
             return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
@@ -727,8 +758,15 @@ export default defineComponent({
             }
         };
 
-        const saveConfig = () =>
-            runSave(
+        const saveConfig = () => {
+            // The firmware answers MSP_SET_GPS_CONFIG with an error when it was
+            // built without USE_GPS, and MSP_SET_FEATURE_CONFIG has been written
+            // by then. Do not start the sequence at all.
+            if (!hasGpsBuildOption.value) {
+                return undefined;
+            }
+
+            return runSave(
                 async () => {
                     const savedSnapshot = takeSnapshot();
 
@@ -746,6 +784,7 @@ export default defineComponent({
                 },
                 { onError: (e) => console.error("Failed to save GPS configuration", e) },
             );
+        };
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;
@@ -811,6 +850,7 @@ export default defineComponent({
             gpsInfo,
             signalRows,
             hasGpsSensor,
+            hasGpsBuildOption,
             hasMag,
             autoBaudChecked,
             autoConfigChecked,
@@ -826,6 +866,7 @@ export default defineComponent({
             showWaiting,
             showLoadMap,
             gpsFeatures,
+            featureHelpKey,
             isFeatureEnabled,
             toggleFeature,
             setLayer,

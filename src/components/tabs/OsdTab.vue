@@ -544,9 +544,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
-import { useFlightControllerStore } from "@/stores/fc";
 import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
+import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
@@ -567,11 +567,9 @@ import MSP from "@/js/msp";
 import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
-import semver from "semver";
-import { API_VERSION_1_45 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
-const fcStore = useFlightControllerStore();
+const { hasBuildOption } = useBuildOptions();
 
 // Refs for DOM elements
 const previewContainer = ref(null);
@@ -670,20 +668,11 @@ const videoTypeOptions = computed(() => {
         NTSC: "osdSetupVideoFormatOptionNtsc",
         HD: "osdSetupVideoFormatOptionHd",
     };
-    const buildOptions = fcStore.config?.buildOptions || [];
-    const apiVersion = fcStore.config?.apiVersion;
-    const hasBuildOptionGating = apiVersion && semver.gte(apiVersion, API_VERSION_1_45) && buildOptions.length > 0;
+    const hasSdOsd = hasBuildOption("USE_OSD_SD");
+    const hasHdOsd = hasBuildOption("USE_OSD_HD");
 
     return types.map((type, value) => {
-        let disabled = false;
-        if (hasBuildOptionGating) {
-            if (type !== "HD" && !buildOptions.includes("USE_OSD_SD")) {
-                disabled = true;
-            }
-            if (type === "HD" && !buildOptions.includes("USE_OSD_HD")) {
-                disabled = true;
-            }
-        }
+        const disabled = type === "HD" ? !hasHdOsd : !hasSdOsd;
 
         return {
             type,

@@ -1,9 +1,12 @@
 import FC from "../../js/fc";
+import { useBuildOptions } from "../useBuildOptions";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 
 export function usePortsRules() {
+    const { hasBuildOption } = useBuildOptions();
+
     const functionRules = [
         { name: "MSP", groups: ["configuration", "msp"], maxPorts: 2 },
         { name: "GPS", groups: ["sensors"], maxPorts: 1, dependsOn: "USE_GPS" },
@@ -92,11 +95,7 @@ export function usePortsRules() {
     };
 
     const isRuleDisabled = (rule) => {
-        return (
-            FC.CONFIG.buildOptions.length &&
-            rule.dependsOn !== undefined &&
-            !FC.CONFIG.buildOptions.includes(rule.dependsOn)
-        );
+        return rule.dependsOn !== undefined && !hasBuildOption(rule.dependsOn);
     };
 
     return {

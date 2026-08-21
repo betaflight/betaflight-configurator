@@ -34,6 +34,16 @@ tauri-plugin-serialplugin = "3.0"
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-window-state = "2"
 
+# Native file open/save dialogs and the file IO behind them. The webviews on macOS
+# (WKWebView) and Linux (WebKitGTK) implement neither the File System Access API nor
+# `<a download>` blob downloads, so the frontend has no way to write a file without
+# these. Desktop only: mobile keeps the webview flow.
+#
+# `dialog` picks the path and grants `fs` a runtime scope entry for exactly that file,
+# so no static filesystem scope is configured in the capabilities.
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+
 # Native BLE for the platforms whose webview has no Web Bluetooth. blec uses a Kotlin
 # backend on Android and btleplug elsewhere; raw btleplug can't serve Android because its
 # droidplug JNI half needs gradle wiring Tauri regenerates, and R8 strips it on release.
