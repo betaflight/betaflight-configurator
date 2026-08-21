@@ -47,12 +47,13 @@
 </template>
 
 <script setup>
-import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref } from "vue";
+import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
 import { bootstrapViewer } from "../../blackbox-viewer/main.js";
 import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init.js";
+import { useGraphStore } from "../../blackbox-viewer/stores/graph.js";
 import { useDataflashPull } from "../../composables/useDataflashPull";
 
 // Named so <keep-alive :include> in App.vue can target this tab (and only this tab) for caching.
@@ -63,6 +64,19 @@ const viewerReady = ref(false);
 let themeObserver = null;
 let teardownViewer = null;
 const dataflash = useDataflashPull();
+const graphStore = useGraphStore();
+
+// Going fullscreen means painting over the configurator's own chrome, which is outside this
+// tab: #content isolates its stacking context, so the viewer's z-index can never escape it.
+// Marking the body lets the rule below lift #content itself instead. Only the class lives on
+// the host document — the layout state stays on the viewer root (see App.vue).
+const FULLSCREEN_BODY_CLASS = "blackbox-viewer-fullscreen";
+
+function markHostFullscreen(on) {
+    document.body.classList.toggle(FULLSCREEN_BODY_CLASS, on);
+}
+
+watch(() => graphStore.isFullscreen, markHostFullscreen);
 
 // The viewer renders as a child of this tab, on the host's Vue app and pinia. Hand it the
 // root element (for its scoped state classes) and the FC dataflash pull via provide/inject.
@@ -92,10 +106,19 @@ onMounted(async () => {
 });
 
 // Kept alive across tab switches: pause/resume instead of unmounting so the loaded log survives.
-onActivated(() => setViewerActive(true));
-onDeactivated(() => setViewerActive(false));
+// The fullscreen mode is part of that surviving state, but the class that widens #content must
+// not outlive the tab being on screen.
+onActivated(() => {
+    setViewerActive(true);
+    markHostFullscreen(graphStore.isFullscreen);
+});
+onDeactivated(() => {
+    setViewerActive(false);
+    markHostFullscreen(false);
+});
 
 onBeforeUnmount(() => {
+    markHostFullscreen(false);
     themeObserver?.disconnect();
     themeObserver = null;
     try {
@@ -121,5 +144,32 @@ onBeforeUnmount(() => {
        on this root makes those fixed descendants resolve against the tab pane instead of the
        window, so the viewer stays inside the content area and never covers the sidebar. */
     transform: translateZ(0);
+}
+
+/* Fullscreen: the viewer covers the sidebar menu and the status bar. Everything inside it
+   already lays out with `position: fixed` against this root (see the transform above), so
+   pinning the root to #main-wrapper's box is all it takes to grow the whole viewer with it.
+   Gated on a log being open: the welcome page has no toolbar to leave fullscreen from. */
+.blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
+    position: fixed;
+    inset: 0;
+    background-color: var(--surface-100);
+}
+
+/* The mobile top bar paints above the viewer, so keep the toolbar clear of it. */
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
+        top: calc(3rem + env(safe-area-inset-top, 0px));
+    }
+}
+</style>
+
+<style>
+/* Host-side half of the viewer's fullscreen mode (see the tab's own styles above). #content
+   is `isolation: isolate`, so lift #content itself to let the viewer paint over the sidebar
+   and the status bar. Kept well below the Nuxt UI portal layer rooted at #main-wrapper, so
+   dialogs, dropdowns and the mobile sidebar still land on top of the viewer. */
+body.blackbox-viewer-fullscreen #content {
+    z-index: 40;
 }
 </style>

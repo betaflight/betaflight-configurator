@@ -108,6 +108,8 @@ export function bootstrapViewer() {
     logStore.hasVideo = false;
     logStore.flightLog = null;
     graphStore.graph = null;
+    // A fresh mount lands on the welcome page, which has no toolbar to leave fullscreen with.
+    graphStore.isFullscreen = false;
 
     graphStore.invalidateGraph = invalidateGraph;
     graphStore.updateCanvasSize = updateCanvasSize;
