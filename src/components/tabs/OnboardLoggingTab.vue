@@ -649,7 +649,8 @@ export default defineComponent({
                 // errorAware request so a timeout settles instead of stranding a legacy
                 // callback: the flash chip can stop answering MSP mid-erase, and we must
                 // keep polling rather than abandon the dialog on a single missed summary.
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
+                // That silence is expected, so do not let it trip the connection watchdog.
+                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY, false, { notifyTimeout: false });
             } catch {
                 // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
                 // reading the stale cached ready flag — it still holds the pre-erase value and

@@ -89,6 +89,24 @@ describe("MSP promise semantics", () => {
                 MSP.onTimeout = null;
             }
         });
+
+        it("can reject without notifying the connection timeout hook when silence is expected", async () => {
+            const onTimeout = vi.fn();
+            MSP.onTimeout = onTimeout;
+            try {
+                const rejection = expect(
+                    MSP.promise(EEPROM_WRITE_CODE, false, { notifyTimeout: false }),
+                ).rejects.toBeInstanceOf(MspTimeoutError);
+
+                await vi.advanceTimersByTimeAsync(MSP.TIMEOUT * MSP.MAX_RETRIES);
+                await rejection;
+
+                expect(onTimeout).not.toHaveBeenCalled();
+                expect(MSP.callbacks).toHaveLength(0);
+            } finally {
+                MSP.onTimeout = null;
+            }
+        });
     });
 
     describe("disconnect_cleanup", () => {
