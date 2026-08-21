@@ -157,6 +157,17 @@ export function getDebugModes(apiVersion) {
 
     return result;
 }
+
+const debugFields = (all, ...fields) => {
+    const result = { "debug[all]": all };
+
+    fields.forEach((field, index) => {
+        result[`debug[${index}]`] = field;
+    });
+
+    return result;
+};
+
 /**
  * Returns the numeric debug_mode value for a given name in the firmware
  * identified by `apiVersion`, or -1 if the name is not defined in that
@@ -1119,182 +1130,183 @@ export function getDebugFieldNames(apiVersion) {
     }
 
     if (semver.gte(apiVersion, API_VERSION_1_48)) {
-        result.AUTOPILOT_PID = {
-            "debug[all]": "Autopilot PID",
-            "debug[0]": "Velocity Error [dbg-axis]",
-            "debug[1]": "Distance Error [dbg-axis]",
-            "debug[2]": "P Term [dbg-axis] * 10",
-            "debug[3]": "I Term [dbg-axis] * 10",
-            "debug[4]": "D Term [dbg-axis] * 10",
-            "debug[5]": "A Term [dbg-axis] * 10",
-            "debug[6]": "F Term [dbg-axis] * 10",
-            "debug[7]": "Status Flags [dbg-axis]",
-        };
+        result.AUTOPILOT_PID = debugFields(
+            "Autopilot PID",
+            "Velocity Error [dbg-axis]",
+            "Distance Error [dbg-axis]",
+            "P Term [dbg-axis] * 10",
+            "I Term [dbg-axis] * 10",
+            "D Term [dbg-axis] * 10",
+            "A Term [dbg-axis] * 10",
+            "F Term [dbg-axis] * 10",
+            "Status Flags [dbg-axis]",
+        );
 
-        result.AUTOPILOT_STOP = {
-            "debug[all]": "Autopilot Stop",
-            "debug[0]": "Velocity Error [East]",
-            "debug[1]": "Velocity Error [North]",
-            "debug[2]": "PID Sum [East] * 10",
-            "debug[3]": "PID Sum [North] * 10",
-            "debug[4]": "Roll Angle Command * 10",
-            "debug[5]": "Pitch Angle Command * 10",
-            "debug[6]": "Status Flags [East]",
-            "debug[7]": "Status Flags [North]",
-        };
+        result.AUTOPILOT_STOP = debugFields(
+            "Autopilot Stop",
+            "Velocity Error [East]",
+            "Velocity Error [North]",
+            "PID Sum [East] * 10",
+            "PID Sum [North] * 10",
+            "Roll Angle Command * 10",
+            "Pitch Angle Command * 10",
+            "Status Flags [East]",
+            "Status Flags [North]",
+        );
 
-        result.GYRO_SAMPLE = {
-            "debug[all]": "Gyro Sample",
-            "debug[0]": "Gyro before downsampling [dbg-axis]",
-            "debug[1]": "Gyro after downsampling [dbg-axis]",
-            "debug[2]": "Gyro after RPM [dbg-axis]",
-            "debug[3]": "Gyro after all filtering [dbg-axis]",
-            "debug[4]": "CPU Load at Sample",
-        };
-
+        result.GYRO_SAMPLE = debugFields(
+            "Gyro Sample",
+            "Gyro before downsampling [dbg-axis]",
+            "Gyro after downsampling [dbg-axis]",
+            "Gyro after RPM [dbg-axis]",
+            "Gyro after all filtering [dbg-axis]",
+            "CPU Load at Sample",
+        );
         // Flow-processing pipeline replaced the quality/raw/processed/delta-time
         // layout used prior to 1.48 (opticalflow.c rewrite).
-        result.OPTICALFLOW = {
-            "debug[all]": "Optical Flow",
-            "debug[0]": "Rotated Flow Rate X",
-            "debug[1]": "Rotated Flow Rate Y",
-            "debug[2]": "Gyro Compensation X",
-            "debug[3]": "Gyro Compensation Y",
-            "debug[4]": "Compensated Flow Rate X",
-            "debug[5]": "Compensated Flow Rate Y",
-            "debug[6]": "Filtered Flow Rate X",
-            "debug[7]": "Filtered Flow Rate Y",
-        };
+        result.OPTICALFLOW = debugFields(
+            "Optical Flow",
+            "Rotated Flow Rate X",
+            "Rotated Flow Rate Y",
+            "Gyro Compensation X",
+            "Gyro Compensation Y",
+            "Compensated Flow Rate X",
+            "Compensated Flow Rate Y",
+            "Filtered Flow Rate X",
+            "Filtered Flow Rate Y",
+        );
 
         // POSITION_NAV is a reserved firmware enum slot with no fields yet,
         // so it intentionally has no fieldNames entry.
         delete result.AUTOPILOT_POSITION;
 
-        result.RANGEFINDER = {
-            "debug[all]": "Rangefinder",
-            "debug[0]": "not used",
-            "debug[1]": "Raw Altitude",
-            "debug[2]": "Calc Altitude",
-            "debug[3]": "SNR",
-            "debug[4]": "Cos Tilt Angle * 1000",
-            "debug[5]": "Max Tilt Cos * 1000",
-        };
+        result.RANGEFINDER = debugFields(
+            "Rangefinder",
+            "not used",
+            "Raw Altitude",
+            "Calc Altitude",
+            "SNR",
+            "Cos Tilt Angle * 1000",
+            "Max Tilt Cos * 1000",
+        );
 
         // debug[3] ("Axis Error [roll]") was removed by "Remove absolute control" (#15023).
-        result.ITERM_RELAX = {
-            "debug[all]": "I-term Relax",
-            "debug[0]": "Setpoint HPF [roll]",
-            "debug[1]": "I Relax Factor [roll]",
-            "debug[2]": "Relaxed I Error [roll]",
-        };
+        result.ITERM_RELAX = debugFields(
+            "I-term Relax",
+            "Setpoint HPF [roll]",
+            "I Relax Factor [roll]",
+            "Relaxed I Error [roll]",
+        );
     }
+
     if (semver.gte(apiVersion, API_VERSION_1_49)) {
-        result.ALTITUDE = {
-            "debug[all]": "Altitude",
-            "debug[0]": "RangeFinder Altitude",
-            "debug[1]": "Baro Altitude",
-            "debug[2]": "GPS Altitude",
-            "debug[3]": "Kalman Altitude",
-            "debug[4]": "GPS Velocity",
-            "debug[5]": "Kalman Velocity",
-            "debug[6]": "Accelerometer",
-            "debug[7]": "Kalman Acceleration",
-        };
+        result.ALTITUDE = debugFields(
+            "Altitude",
+            "RangeFinder Altitude",
+            "Baro Altitude",
+            "GPS Altitude",
+            "Kalman Altitude",
+            "GPS Velocity",
+            "Kalman Velocity",
+            "Accelerometer",
+            "Kalman Acceleration",
+        );
 
-        result.AUTOPILOT_ALTITUDE = {
-            "debug[all]": "Autopilot Altitude",
-            "debug[0]": "newThrottle",
-            "debug[1]": "Target Altitude",
-            "debug[2]": "Current Altitude",
-            "debug[3]": "Alt P",
-            "debug[4]": "Alt I",
-            "debug[5]": "Alt D",
-            "debug[6]": "Alt A",
-            "debug[7]": "Alt F",
-        };
+        result.AUTOPILOT_ALTITUDE = debugFields(
+            "Autopilot Altitude",
+            "newThrottle",
+            "Target Altitude",
+            "Current Altitude",
+            "Alt P",
+            "Alt I",
+            "Alt D",
+            "Alt A",
+            "Alt F",
+        );
 
-        result.AUTOPILOT_PID = {
-            "debug[all]": "Autopilot PID",
-            "debug[0]": "XY Velocity",
-            "debug[1]": "XY Distance Error",
-            "debug[2]": "XY P",
-            "debug[3]": "XY I",
-            "debug[4]": "XY D",
-            "debug[5]": "XY A",
-            "debug[6]": "XY F",
-            "debug[7]": "Status",
-        };
+        result.AUTOPILOT_PID = debugFields(
+            "Autopilot PID",
+            "XY Velocity",
+            "XY Distance Error",
+            "XY P",
+            "XY I",
+            "XY D",
+            "XY A",
+            "XY F",
+            "Status",
+        );
 
-        result.AUTOPILOT_STOP = {
-            "debug[all]": "Autopilot Stop",
-            "debug[0]": "East Vel Error",
-            "debug[1]": "North Vel Error",
-            "debug[2]": "East PIDsum",
-            "debug[3]": "North PIDsum",
-            "debug[4]": "Roll Angle",
-            "debug[5]": "Pitch Angle",
-            "debug[6]": "Status",
-            "debug[7]": "-",
-        };
-        result.GPS_RESCUE_VELOCITY = {
-            "debug[all]": "GPS Rescue Velocity",
-            "debug[0]": "Target Velocity",
-            "debug[1]": "Velocity / Phase",
-            "debug[2]": "Step East",
-            "debug[3]": "Step North",
-            "debug[4]": "Not Used",
-            "debug[5]": "Not Used",
-            "debug[6]": "Not Used",
-            "debug[7]": "Not Used",
-        };
+        result.AUTOPILOT_STOP = debugFields(
+            "Autopilot Stop",
+            "East Vel Error",
+            "North Vel Error",
+            "East PIDsum",
+            "North PIDsum",
+            "Roll Angle",
+            "Pitch Angle",
+            "Status",
+            "-",
+        );
 
-        result.GPS_RESCUE_HEADING = {
-            "debug[all]": "GPS Rescue Heading",
-            "debug[0]": "Ground Speed",
-            "debug[1]": "GPS Ground Course",
-            "debug[2]": "Yaw Attitude",
-            "debug[3]": "Direction To Home",
-            "debug[4]": "Mag Yaw",
-            "debug[5]": "Not Used",
-            "debug[6]": "Not Used",
-            "debug[7]": "Rescue Yaw Rate",
-        };
+        result.GPS_RESCUE_VELOCITY = debugFields(
+            "GPS Rescue Velocity",
+            "Target Velocity",
+            "Velocity / Phase",
+            "Step East",
+            "Step North",
+            "Not Used",
+            "Not Used",
+            "Not Used",
+            "Not Used",
+        );
 
-        result.GPS_RESCUE_TRACKING = {
-            "debug[all]": "GPS Rescue Tracking",
-            "debug[0]": "Velocity",
-            "debug[1]": "Not Used",
-            "debug[2]": "Altitude",
-            "debug[3]": "Target Altitude",
-            "debug[4]": "Aircraft Heading",
-            "debug[5]": "Bearing To Home",
-            "debug[6]": "Not Used",
-            "debug[7]": "Not Used",
-        };
+        result.GPS_RESCUE_HEADING = debugFields(
+            "GPS Rescue Heading",
+            "Ground Speed",
+            "GPS Ground Course",
+            "Yaw Attitude",
+            "Direction To Home",
+            "Mag Yaw",
+            "Not Used",
+            "Not Used",
+            "Rescue Yaw Rate",
+        );
 
-        result.PITOT = {
-            "debug[all]": "Pitot",
-            "debug[0]": "Airspeed",
-            "debug[1]": "Diff Pressure",
-            "debug[2]": "Pressure Pa",
-            "debug[3]": "Temperature",
-            "debug[4]": "-",
-            "debug[5]": "-",
-            "debug[6]": "-",
-            "debug[7]": "-",
-        };
+        result.GPS_RESCUE_TRACKING = debugFields(
+            "GPS Rescue Tracking",
+            "Velocity",
+            "Not Used",
+            "Altitude",
+            "Target Altitude",
+            "Aircraft Heading",
+            "Bearing To Home",
+            "Not Used",
+            "Not Used",
+        );
 
-        result.POSITION_EST = {
-            "debug[all]": "Position Estimate",
-            "debug[0]": "Position",
-            "debug[1]": "Velocity",
-            "debug[2]": "Acceleration",
-            "debug[3]": "velEast",
-            "debug[4]": "velNorth",
-            "debug[5]": "AccelRaw",
-            "debug[6]": "RGpsPos",
-            "debug[7]": "RGpsVel",
-        };
+        result.PITOT = debugFields(
+            "Pitot",
+            "Airspeed",
+            "Diff Pressure",
+            "Pressure Pa",
+            "Temperature",
+            "-",
+            "-",
+            "-",
+            "-",
+        );
+
+        result.POSITION_EST = debugFields(
+            "Position Estimate",
+            "Position",
+            "Velocity",
+            "Acceleration",
+            "velEast",
+            "velNorth",
+            "AccelRaw",
+            "RGpsPos",
+            "RGpsVel",
+        );
     }
 
     return result;
