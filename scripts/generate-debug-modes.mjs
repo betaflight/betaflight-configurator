@@ -142,7 +142,14 @@ function parseArgs(argv) {
  * candidates). Hard-coding one would break the script, not secure it.
  */
 function git(repo, gitArgs) {
-    return execFileSync("git", ["-C", repo, ...gitArgs], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 }); // NOSONAR javascript:S4036
+    // stderr is captured rather than inherited: resolving an include walks a list of
+    // candidate header paths, and the ones that do not exist at a given ref are
+    // expected misses, not something to print several hundred times per run.
+    return execFileSync("git", ["-C", repo, ...gitArgs], {
+        encoding: "utf8",
+        maxBuffer: 256 * 1024 * 1024,
+        stdio: ["ignore", "pipe", "pipe"],
+    }); // NOSONAR javascript:S4036
 }
 
 function gitShow(repo, ref, path) {
