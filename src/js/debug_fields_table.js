@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  26074b41c0 2026-08-20  (473 annotated fields)
+ *   API 1.49.0  375b52a27e 2026-08-21  (473 annotated fields)
  */
 
 /**
@@ -18,6 +18,8 @@
  *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means
  *           the field holds decidegrees. Negative where the firmware stores
  *           the magnitude of a negative quantity, as CRSF does with dBm.
+ *   flags  - present when the field holds bit flags: the name of each bit,
+ *           lowest first, null for a bit the field does not use.
  *   values - present when the field holds an enumerator: the firmware enum's
  *           own names, indexed by value.
  *
@@ -720,7 +722,12 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             5: Object.freeze({ label: "S-Term After TPA (yaw)", unit: null, scale: 1 }),
         }),
         SBUS: Object.freeze({
-            0: Object.freeze({ label: "Frame Flags", unit: null, scale: 1 }),
+            0: Object.freeze({
+                label: "Frame Flags",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Channel 17", "Channel 18", "Signal Loss", "Failsafe"]),
+            }),
             2: Object.freeze({ label: "Frame Time", unit: "us", scale: 1 }),
         }),
         SCHEDULER: Object.freeze({
