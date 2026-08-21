@@ -1,5 +1,10 @@
 <template>
-    <div class="flex flex-col gap-2">
+    <!--
+        This row writes the port function mask, which API 1.49 made read-only - there each feature
+        owns its port on its own parameter group and the CLI writes it. Rendering a control that
+        silently does nothing is worse than rendering none, so on that firmware there is none.
+    -->
+    <div v-if="!readOnly" class="flex flex-col gap-2">
         <!-- Protocol picker, when this row edits a whole group rather than one function. -->
         <SettingRow v-if="hasGroup" :label="protocolLabel || $t('portsTelemetryOut')">
             <USelect
@@ -135,6 +140,7 @@
 <script setup>
 import SettingRow from "../elements/SettingRow.vue";
 import { useSerialFunctionRow } from "../../composables/ports/useSerialFunctionRow";
+import { usePortsReadOnly } from "../../composables/ports/usePortsReadOnly";
 
 /**
  * The reusable inline serial-port editor. Every feature tab renders this same component against
@@ -261,6 +267,8 @@ const {
     apply,
     reset,
 } = useSerialFunctionRow(props);
+
+const readOnly = usePortsReadOnly();
 
 // The host tab owns the Save button, so it needs to know there is something to save and how to
 // apply it. Nothing reaches the shared store until it calls apply().

@@ -12,6 +12,7 @@
                 @export-csv="onExportCsv"
                 @export-gpx="onExportGpx"
                 @export-workspaces="onExportWorkspaces"
+                @toggle-fullscreen="onToggleFullscreen"
             />
         </Teleport>
         <Teleport to="#vue-statusbar">
@@ -198,6 +199,10 @@ function onOpenSettings() {
 
 function onOpenKeys() {
     appStore.keysDialogOpen = true;
+}
+
+function onToggleFullscreen() {
+    graphStore.toggleFullscreen();
 }
 
 function onExportCsv() {

@@ -32,6 +32,7 @@
                 serial RX box on the Receiver tab had to break (C5).
             -->
             <UiBox
+                v-if="serialRowsAvailable"
                 :title="$t('vtxSerialPortTitle')"
                 type="neutral"
                 collapsible
@@ -437,7 +438,9 @@ export default defineComponent({
         const { t } = useTranslation();
         const { saveAndReboot } = useReboot();
         const serialRow = ref(null);
-        const { serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([serialRow]);
+        const { serialRowsAvailable, serialRowsPending, saveSerialRows, loadSerialPorts } = useSerialRowHost([
+            serialRow,
+        ]);
 
         const {
             MAX_POWERLEVEL_VALUES,
@@ -720,6 +723,7 @@ export default defineComponent({
             // Serial port row - the template ref has to be returned, or it silently stays null
             // and apply() becomes a no-op with no error anywhere.
             serialRow,
+            serialRowsAvailable,
             vtxSerialFunctions: VTX_SERIAL_FUNCTIONS,
 
             // Computed

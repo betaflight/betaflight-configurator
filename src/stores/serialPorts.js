@@ -4,6 +4,7 @@ import CONFIGURATOR from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
+import { getPortDisplayName } from "../composables/ports/portNames";
 import { isMspRejected } from "../js/msp/mspErrors";
 import { serialPortUnknownFunctionMask } from "../js/msp/serialPortFunctions";
 import { gui_log } from "../js/gui_log";
@@ -17,49 +18,6 @@ import { usePortsRules } from "../composables/ports/usePortsRules";
 // that closes an import cycle, and a partial HMR re-evaluation can enter it before the export
 // bindings exist. Both are imported dynamically at their (already async) call sites instead; the
 // pure bit-layout helpers live in a leaf module so the render path needs no dynamic import at all.
-
-const PORT_NAMES = {
-    0: "UART1",
-    1: "UART2",
-    2: "UART3",
-    3: "UART4",
-    4: "UART5",
-    5: "UART6",
-    6: "UART7",
-    7: "UART8",
-    8: "UART9",
-    9: "UART10",
-    20: "USB VCP",
-    30: "SOFTSERIAL1",
-    31: "SOFTSERIAL2",
-    40: "LPUART1",
-    50: "UART0",
-    51: "UART1",
-    52: "UART2",
-    53: "UART3",
-    54: "UART4",
-    55: "UART5",
-    56: "UART6",
-    57: "UART7",
-    58: "UART8",
-    59: "UART9",
-    60: "UART10",
-    61: "UART11",
-    62: "UART12",
-    63: "UART13",
-    64: "UART14",
-    65: "UART15",
-    70: "PIOUART0",
-    71: "PIOUART1",
-    72: "PIOUART2",
-    73: "PIOUART3",
-    74: "PIOUART4",
-    75: "PIOUART5",
-    76: "PIOUART6",
-    77: "PIOUART7",
-    78: "PIOUART8",
-    79: "PIOUART9",
-};
 
 // A port holds one function per group, not one per function (see usePortsRules): the group a
 // function belongs to determines which single field on the port it occupies. MSP and RX_SERIAL
@@ -76,10 +34,6 @@ const EXCLUSIVE_SLOT = {
     telemetry: "peripheral",
     peripheral: "telemetry",
 };
-
-function portName(identifier) {
-    return PORT_NAMES[identifier] || `UART (${identifier})`;
-}
 
 /**
  * True when a port carries something this build preserves but will not edit: a bit it cannot name,
@@ -288,7 +242,11 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
 
         const rule = findRule(serialFunction);
         const record = (port, displaced) =>
-            evicted.push({ portId: port.identifier, portName: portName(port.identifier), serialFunction: displaced });
+            evicted.push({
+                portId: port.identifier,
+                portName: getPortDisplayName(port.identifier),
+                serialFunction: displaced,
+            });
 
         // A single-instance function moves rather than duplicates, so it leaves its old port.
         if (rule?.maxPorts === 1) {
@@ -353,7 +311,7 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
 
             return {
                 portId: port.identifier,
-                portName: portName(port.identifier),
+                portName: getPortDisplayName(port.identifier),
                 selected,
                 occupiedBy,
                 evicts: disabledReason ? [] : evictionsFor(serialFunction, port.identifier),
@@ -465,7 +423,7 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
             }
             evicted.push({
                 portId: port.identifier,
-                portName: portName(port.identifier),
+                portName: getPortDisplayName(port.identifier),
                 serialFunction,
             });
         }
@@ -610,7 +568,7 @@ export const useSerialPortsStore = defineStore("serialPorts", () => {
         dirty,
         analyticsChanges,
         functionRules,
-        portName,
+        portName: getPortDisplayName,
         portById,
         portUses,
         hasReservedFunctions,

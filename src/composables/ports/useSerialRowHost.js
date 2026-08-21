@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 import { useSerialPortsStore } from "../../stores/serialPorts";
+import { usePortsReadOnly } from "./usePortsReadOnly";
 
 /**
  * What a feature tab has to do to host a SerialFunctionRow.
@@ -34,6 +35,17 @@ import { useSerialPortsStore } from "../../stores/serialPorts";
  */
 export function useSerialRowHost(rowRefs) {
     const store = useSerialPortsStore();
+    const readOnly = usePortsReadOnly();
+
+    /**
+     * Whether these rows are the way to assign a port on this firmware.
+     *
+     * They write the port function mask, which firmware retired as a write path in API 1.49 - from
+     * there each feature owns its port on its own parameter group and useFeaturePort writes it over
+     * the CLI. A host with a box or a heading of its own reads this so the box goes too; the row
+     * itself will not render either way.
+     */
+    const available = computed(() => !readOnly.value);
 
     const rows = () => rowRefs.map((r) => r.value).filter(Boolean);
 
@@ -114,6 +126,7 @@ export function useSerialRowHost(rowRefs) {
         // The store itself, for a host that also reads it - MotorsTab keeps its ESC_SENSOR row
         // visible while any port carries the function, whatever the protocol.
         serialPortsStore: store,
+        serialRowsAvailable: available,
         serialRowsPending: pending,
         applySerialRows: applyRows,
         writeSerialRows: writeRows,

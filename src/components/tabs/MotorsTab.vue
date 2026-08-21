@@ -705,21 +705,25 @@ const analogProtocolConfigured = computed(() => {
     return protocolConfigured.value && !digitalProtocolConfigured.value;
 });
 
-// The ESC_SENSOR feature switch above is offered only for digital protocols, so match it - but
-// never hide a port firmware has already assigned, or switching to an analog protocol would strand
-// that assignment with no way to clear it from this tab.
+// ESC telemetry over a wire is a digital-protocol setup, so that is when the row is offered.
 const escSensorPortAssigned = computed(() =>
     serialPortsStore.ports.some((port) => serialPortsStore.portUses(port, "ESC_SENSOR")),
 );
-const showEscSensorPort = computed(() => digitalProtocolConfigured.value || escSensorPortAssigned.value);
 
-// Motor poles are read by both RPM sources. For ESC telemetry, follow the row rather than the
-// feature bit: the bit only catches up on the reboot that follows the save, and a pole count that
-// appears one reboot after the port was chosen reads as the field having been missing.
+// What the row will hold after the next save: the pending pick while one is mounted, the saved
+// assignment otherwise.
 const escSensorPortSelected = computed(() => {
     const selected = escSensorRow.value?.selectedValue;
     return selected === undefined ? escSensorPortAssigned.value : selected !== NO_PORT;
 });
+
+const showEscSensorPort = computed(
+    // Neither a saved assignment nor a pending one may be hidden by switching to an analog
+    // protocol. A saved one would be stranded with no way to clear it from this tab; a pending one
+    // is worse, because v-if unmounts the row and an unmounted row's draft is simply gone - and
+    // checking what else is on the tab is exactly when someone changes protocol.
+    () => digitalProtocolConfigured.value || escSensorPortSelected.value,
+);
 
 const rpmFeaturesVisible = computed(() => {
     return (

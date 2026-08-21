@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useTranslation } from "i18next-vue";
 import { usePortsRules } from "./usePortsRules";
 import { useSerialPortsStore } from "../../stores/serialPorts";
+import { USB_VCP_IDENTIFIER } from "./portNames";
 
 /** Sentinel for "no port", since a port identifier of 0 is a real port (UART1). */
 export const NO_PORT = "_NONE_";
@@ -14,9 +15,6 @@ export const NO_PORT = "_NONE_";
 export const NO_FUNCTION = "_NO_FUNCTION_";
 
 const BAUD_RATE_FIELDS = new Set(["msp_baudrate", "gps_baudrate", "telemetry_baudrate", "blackbox_baudrate"]);
-
-/** The USB VCP port - the app's own link, and not somewhere a feature's UART ever goes. */
-const USB_VCP_IDENTIFIER = 20;
 
 /**
  * Everything SerialFunctionRow.vue does apart from render it. Split out so the option-list
@@ -540,6 +538,11 @@ export function useSerialFunctionRow(props) {
         // with no account of itself. Held, the row stays dirty and says why, the switch is still
         // there to turn back off, and freeing a slot elsewhere makes the next save take it.
         if (mspRefused) {
+            // The port is held with it. A row that assigns a function can find its way back from
+            // savedPortId, but a port-only row assigns nothing, so with the draft cleared the
+            // retained enable would point at NO_PORT - and the next save would quietly drop the
+            // edit this branch exists to keep.
+            draftPortId.value = portId;
             draftMsp.value = true;
             mspBlocked.value = true;
         }

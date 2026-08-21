@@ -221,6 +221,24 @@ describe("useSerialRowHost", () => {
         });
     });
 
+    // Firmware retired the function mask as a write path in API 1.49 (betaflight#15573): each
+    // feature owns its port on its own parameter group there, and useFeaturePort writes it over
+    // the CLI. These rows write the mask, so from 1.49 they are not the control - the host reads
+    // this to drop its own heading or box along with them.
+    describe("which firmware these rows are for", () => {
+        it("is the control below API 1.49", async () => {
+            await resetPortsEnv({ apiVersion: "1.48.0" });
+
+            expect(host(gpsRow()).serialRowsAvailable.value).toBe(true);
+        });
+
+        it("stands aside from 1.49, where the mask is a read-only view", async () => {
+            await resetPortsEnv({ apiVersion: "1.49.0" });
+
+            expect(host(gpsRow()).serialRowsAvailable.value).toBe(false);
+        });
+    });
+
     describe("loadSerialPorts", () => {
         it("refetches a clean store, so a fresh tab mount sees what the FC has", async () => {
             const { loadSerialPorts } = host();

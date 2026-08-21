@@ -235,6 +235,31 @@ describe("useSerialFunctionRow", () => {
                     expect(store.portById(2).msp).toBe(false);
                 });
 
+                // A port-only row assigns no function, so it has no saved assignment to find its
+                // way back to: without the port being held with the refusal, the retained enable
+                // points at nothing and the next save drops it. This is the SensorsTab MT row,
+                // where MSP on the sensor's UART is the whole requirement.
+                it("holds the port too, for a row that assigns no function", () => {
+                    store.assign("MSP", 0);
+                    store.assign("MSP", 1); // VCP + two = the cap, nothing left
+                    const row = makeRow({ portOnly: true, toggleFunction: "" });
+
+                    row.selectPort(2);
+                    row.setMsp(true);
+                    row.apply();
+
+                    expect(row.mspBlocked.value).toBe(true);
+                    expect(row.selectedValue.value).toEqual(2); // still pointing at the user's pick
+                    expect(row.hasPendingChange.value).toBe(true);
+
+                    store.clear("MSP", 1); // a slot comes free
+                    row.apply();
+
+                    expect(store.portById(2).msp).toBe(true);
+                    expect(row.mspBlocked.value).toBe(false);
+                    expect(row.hasPendingChange.value).toBe(false);
+                });
+
                 it("drops the refused edit when the row is reset", () => {
                     const { first, second } = twoRowsBothEnabling();
                     first.apply();

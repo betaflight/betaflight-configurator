@@ -89,6 +89,19 @@
                                         :ui="{ content: 'max-h-72' }"
                                     />
                                 </SettingRow>
+                                <SettingRow
+                                    v-if="rxPortAvailable"
+                                    :label="$t('receiverSerialPort')"
+                                    :help="$t('receiverSerialPortHelp')"
+                                >
+                                    <USelect
+                                        v-model="rxPortIdentifier"
+                                        :items="rxPortOptions"
+                                        :disabled="!rxPortWritable"
+                                        class="min-w-52"
+                                        @update:model-value="onRxPortChange"
+                                    />
+                                </SettingRow>
                                 <UiBox highlight v-if="showSomeRxTypesDisabled">
                                     <p v-html="$t('someRXTypesDisabled')"></p>
                                 </UiBox>
@@ -151,7 +164,7 @@
                             unconfigurable from a clean state.
                         -->
                         <UiBox
-                            v-if="showSerialRxPortBox"
+                            v-if="serialRowsAvailable && showSerialRxPortBox"
                             :title="$t('receiverSerialPortTitle')"
                             type="neutral"
                             collapsible
@@ -162,6 +175,7 @@
 
                         <!-- Telemetry Output: one protocol on one port, with its baudrate. -->
                         <UiBox
+                            v-if="serialRowsAvailable"
                             :title="$t('receiverTelemetryPortTitle')"
                             type="neutral"
                             collapsible
@@ -591,6 +605,7 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import UiBox from "../elements/UiBox.vue";
 import SerialFunctionRow from "../ports/SerialFunctionRow.vue";
 import { useSerialRowHost } from "@/composables/ports/useSerialRowHost";
@@ -681,6 +696,17 @@ const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 // RX link, so the banner/tint warn that channel values are failsafe output.
 const failsafeActive = computed(() => fcStore.failsafeActive);
 
+// From API 1.49 the port lives on the RX parameter group rather than the shared port function
+// mask, so it is assigned here instead of on the (by then read-only) ports tab.
+const {
+    available: rxPortAvailable,
+    writable: rxPortWritable,
+    options: rxPortOptions,
+    selectedIdentifier: rxPortIdentifier,
+    load: loadRxPort,
+    write: writeRxPort,
+} = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
+
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */
 function serializeReceiverState() {
@@ -688,6 +714,7 @@ function serializeReceiverState() {
         channelMap: channelMapString.value,
         rxMode: selectedRxMode.value,
         serialrxProvider: rxConfig.value?.serialrx_provider,
+        rxPortIdentifier: rxPortIdentifier.value,
         rxSpiProtocol: rxConfig.value?.rxSpiProtocol,
         elrsModelId: rxConfig.value?.elrsModelId,
         stickMin: rxConfig.value?.stick_min,
@@ -796,8 +823,15 @@ const showSerialRxBox = computed(() => isRxSerialEnabled());
 
 const serialRxRow = ref(null);
 const telemetryRow = ref(null);
-const { serialPortsStore, serialRowsPending, applySerialRows, writeSerialRows, resetSerialRows, loadSerialPorts } =
-    useSerialRowHost([serialRxRow, telemetryRow]);
+const {
+    serialPortsStore,
+    serialRowsAvailable,
+    serialRowsPending,
+    applySerialRows,
+    writeSerialRows,
+    resetSerialRows,
+    loadSerialPorts,
+} = useSerialRowHost([serialRxRow, telemetryRow]);
 
 // The RX_SERIAL feature bit is what showSerialRxBox reads, and updateFeatures() derives that bit
 // from port assignment on save. Gating the port selector on it would be circular - no port until
@@ -1036,6 +1070,12 @@ function onRxModeChange() {
     }
 }
 
+// Deliberately a change handler rather than a watcher: seeding the selection during load would
+// trip a watcher and leave the tab asking for a reboot every time it is opened.
+function onRxPortChange() {
+    needReboot.value = true;
+}
+
 // Actions
 function resetRefreshRate() {
     refreshRate.value = 50;
@@ -1109,6 +1149,7 @@ async function loadConfig() {
             await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
             await MSP.promise(MSPCodes.MSP_RX_CONFIG);
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await loadRxPort();
 
             // Update local state from FC
             updateChannelMapFromRcMap();
@@ -1188,10 +1229,23 @@ const saveConfig = (withReboot = false) =>
             await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
-            // Writes the port array and the feature bits it implies - including RX_SERIAL, which
-            // updateFeatures() derives from whether any port carries it. That is what makes picking
-            // a port, rather than the receiver-mode dropdown, the thing that turns serial RX on.
+            // Two ways to the same assignment, one per firmware generation, and only ever one of
+            // them live: below API 1.49 the port array is writable and carries the feature bits
+            // with it - RX_SERIAL among them, which is what makes picking a port rather than the
+            // receiver-mode dropdown the thing that turns serial RX on. From 1.49 the mask is a
+            // read-only view and rx_uart is written through the CLI instead. Each call is inert on
+            // the firmware it does not belong to.
             await writeSerialRows();
+
+            // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
+            // and the persist below serialises that group, so this has to sit between the two.
+            // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
+            try {
+                await writeRxPort();
+            } catch (error) {
+                gui_log(t("receiverSerialPortSaveFailed"));
+                throw error;
+            }
 
             if (withRebootNow) {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));

@@ -5,7 +5,11 @@
             <WikiButton docUrl="ports" />
 
             <div class="require-support">
-                <UiBox type="warning" highlight class="mb-4">
+                <UiBox v-if="readOnly" type="warning" highlight class="mb-4">
+                    <p v-html="$t('portsReadOnlyHelp')"></p>
+                </UiBox>
+
+                <UiBox v-else type="warning" highlight class="mb-4">
                     <p v-html="$t('portsHelp')"></p>
                     <p v-html="$t('portsMSPHelp')"></p>
                 </UiBox>
@@ -56,48 +60,75 @@
                             <!-- Configuration (MSP) -->
                             <div class="flex items-center gap-2 p-1.5">
                                 <USwitch v-model="port.msp" :disabled="isMspDisabled(port)" />
-                                <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.msp_baudrate"
+                                    :items="mspBaudItems"
+                                    size="xs"
+                                />
                             </div>
 
                             <!-- Serial RX -->
                             <div class="flex items-center justify-center p-1.5">
-                                <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="xs" />
+                                <USwitch
+                                    v-model="port.rxSerial"
+                                    :disabled="readOnly || isSerialRxDisabled(port)"
+                                    size="xs"
+                                />
                             </div>
 
                             <!-- Telemetry -->
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'telemetry')"
                                     :items="groupItems('telemetry', port)"
                                     size="xs"
                                     class="min-w-22"
                                     @update:model-value="onSlotChange(port, 'telemetry', $event)"
                                 />
-                                <USelect v-model="port.telemetry_baudrate" :items="telemetryBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.telemetry_baudrate"
+                                    :items="telemetryBaudItems"
+                                    size="xs"
+                                />
                             </div>
 
                             <!-- Sensors -->
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'sensor')"
                                     :items="groupItems('sensors', port)"
                                     size="xs"
                                     class="min-w-22"
                                     @update:model-value="onSlotChange(port, 'sensor', $event)"
                                 />
-                                <USelect v-model="port.gps_baudrate" :items="gpsBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.gps_baudrate"
+                                    :items="gpsBaudItems"
+                                    size="xs"
+                                />
                             </div>
 
                             <!-- Peripherals -->
                             <div class="flex items-center gap-2 p-1.5">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'peripheral')"
                                     :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-48"
                                     @update:model-value="onSlotChange(port, 'peripheral', $event)"
                                 />
-                                <USelect v-model="port.blackbox_baudrate" :items="blackboxBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.blackbox_baudrate"
+                                    :items="blackboxBaudItems"
+                                    size="xs"
+                                />
                             </div>
                         </template>
                     </div>
@@ -122,12 +153,16 @@
                         <div class="flex items-center gap-2">
                             <USwitch v-model="port.msp" :disabled="isMspDisabled(port)" size="xs" />
                             <span class="text-xs flex-1">MSP</span>
-                            <USelect v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
+                            <USelect :disabled="readOnly" v-model="port.msp_baudrate" :items="mspBaudItems" size="xs" />
                         </div>
 
                         <!-- Serial RX -->
                         <div class="flex items-center gap-2">
-                            <USwitch v-model="port.rxSerial" :disabled="isSerialRxDisabled(port)" size="xs" />
+                            <USwitch
+                                v-model="port.rxSerial"
+                                :disabled="readOnly || isSerialRxDisabled(port)"
+                                size="xs"
+                            />
                             <span class="text-xs flex-1" v-html="$t('portsSerialRx')"></span>
                             <HelpIcon :text="$t('portsSerialRxHelp')" />
                         </div>
@@ -137,12 +172,18 @@
                             <span class="text-xs text-dimmed" v-html="$t('portsTelemetryOut')"></span>
                             <div class="flex items-center gap-2">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'telemetry')"
                                     :items="groupItems('telemetry', port)"
                                     size="xs"
                                     @update:model-value="onSlotChange(port, 'telemetry', $event)"
                                 />
-                                <USelect v-model="port.telemetry_baudrate" :items="telemetryBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.telemetry_baudrate"
+                                    :items="telemetryBaudItems"
+                                    size="xs"
+                                />
                             </div>
                         </div>
 
@@ -151,12 +192,18 @@
                             <span class="text-xs text-dimmed" v-html="$t('portsSensorIn')"></span>
                             <div class="flex items-center gap-2">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'sensor')"
                                     :items="groupItems('sensors', port)"
                                     size="xs"
                                     @update:model-value="onSlotChange(port, 'sensor', $event)"
                                 />
-                                <USelect v-model="port.gps_baudrate" :items="gpsBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.gps_baudrate"
+                                    :items="gpsBaudItems"
+                                    size="xs"
+                                />
                             </div>
                         </div>
 
@@ -165,13 +212,19 @@
                             <span class="text-xs text-dimmed" v-html="$t('portsPeripherals')"></span>
                             <div class="flex items-center gap-2">
                                 <USelect
+                                    :disabled="readOnly"
                                     :model-value="portFieldGet(port, 'peripheral')"
                                     :items="groupItems('peripherals', port)"
                                     size="xs"
                                     class="min-w-44"
                                     @update:model-value="onSlotChange(port, 'peripheral', $event)"
                                 />
-                                <USelect v-model="port.blackbox_baudrate" :items="blackboxBaudItems" size="xs" />
+                                <USelect
+                                    :disabled="readOnly"
+                                    v-model="port.blackbox_baudrate"
+                                    :items="blackboxBaudItems"
+                                    size="xs"
+                                />
                             </div>
                         </div>
                     </UiBox>
@@ -179,7 +232,7 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div v-if="!readOnly" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
                 <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="save" />
             </div>
@@ -204,10 +257,14 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { usePortsRules } from "../../composables/ports/usePortsRules";
 import { useSerialPortsStore } from "../../stores/serialPorts";
+import { usePortsReadOnly } from "../../composables/ports/usePortsReadOnly";
+import { USB_VCP_IDENTIFIER } from "../../composables/ports/portNames";
 
 const { t } = useTranslation();
 
 const isDesktop = useMediaQuery("(min-width: 1010px)");
+
+const readOnly = usePortsReadOnly();
 
 // usePortsRules is stateless and pure, so the tab derives its own copy for the dropdown and
 // baudrate lists rather than routing them through the store.
@@ -281,6 +338,14 @@ function isSerialRxDisabled(port) {
 }
 
 function isMspDisabled(port) {
+    // From API 1.49 nothing here is editable, and USB VCP is never editable: it carries the link
+    // this tab is talking over, so turning MSP off there would cut the connection mid-edit. What
+    // is left is the cap - a port that has MSP can always give it up, one that does not can only
+    // take it while a slot is free.
+    if (readOnly.value || port.identifier === USB_VCP_IDENTIFIER) {
+        return true;
+    }
+
     const mspRule = functionRules.value.find((r) => r.name === "MSP");
     return !port.msp && isFunctionAtLimit(mspRule, port);
 }
