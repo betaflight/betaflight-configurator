@@ -5,6 +5,10 @@
 // alone does not guarantee.
 import L from "leaflet";
 
-globalThis.L ??= L;
+// Bind unconditionally. graph_map.js reads the bare global rather than importing Leaflet,
+// so leaving a pre-existing `globalThis.L` in place would silently hand the viewer, and the
+// plugins patching it, some other page's Leaflet instead of the version pinned here.
+// Leaflet's own UMD build assigns `window.L` the same way.
+globalThis.L = L;
 
 export default L;
