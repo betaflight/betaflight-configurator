@@ -755,7 +755,7 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
         }),
         SMARTAUDIO: Object.freeze({
             0: Object.freeze({ label: "Version And Mode", unit: null, scale: 1 }),
-            1: Object.freeze({ label: "Channel", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Band And Channel Index", unit: null, scale: 1 }),
             2: Object.freeze({ label: "Frequency", unit: "MHz", scale: 1 }),
             3: Object.freeze({ label: "Power Table Index", unit: null, scale: 1 }),
         }),
