@@ -991,7 +991,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Our <a href=\"https://blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer</a> is available as an online app.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware, this app, and the blackbox viewer can be downloaded from GitHub."
+        "message": "Our Blackbox log viewer is built into this app. Open the <strong>Blackbox Viewer</strong> tab to analyse your flight logs.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware and this app can be downloaded from GitHub."
     },
     "defaultContributingHead": {
         "message": "Contributing"
@@ -2182,6 +2182,18 @@
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
     },
+    "portsPortNone": {
+        "message": "None"
+    },
+    "receiverSerialPort": {
+        "message": "Serial Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "The UART the serial receiver is wired to. The baud rate follows the provider, so there is nothing to set here. Changing the port requires a reboot."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Could not set the receiver serial port, so nothing was saved."
+    },
     "someRXTypesDisabled": {
         "message": "Some Receiver Providers are not supported by current Build Configuration."
     },
@@ -2239,6 +2251,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Note:</strong> Do <span class=\"message-negative\">NOT</span> disable MSP on the first serial port unless you know what you are doing.  You may have to reflash and erase your configuration if you do."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab, so this view is read only.  It shows which port every feature currently uses; change an assignment from the tab that owns the feature."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">required</span>.  Serial port configurations of firmware &lt; 1.8.0 is not supported."
