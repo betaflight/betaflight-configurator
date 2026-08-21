@@ -4,6 +4,7 @@ import {
     getDebugFieldNames,
     decodeDebugFieldToFriendly,
     convertDebugFieldValue,
+    getDebugFieldAxis,
 } from "../../../src/js/utils/debugModes";
 import { FIRMWARE_DEBUG_FIELDS, FIRMWARE_DEBUG_FIELD_CONFLICTS } from "../../../src/js/debug_fields_table";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage";
@@ -266,6 +267,48 @@ describe("firmware debug field annotations", () => {
 
         it("passes an unscaled field through unchanged", () => {
             expect(convertDebugFieldValue("BATTERY", "debug[4]", true, 1, ctx(ANNOTATED))).toBe(1);
+        });
+    });
+
+    describe("graph axis", () => {
+        it("bounds a field whose unit is bounded, in displayed units", () => {
+            // DEBUG_CYCLETIME[1] is annotated [unit:%].
+            expect(getDebugFieldAxis("CYCLETIME", "debug[1]", ANNOTATED)).toEqual({ range: { min: 0, max: 100 } });
+        });
+
+        it("spans the values of an enumerator and the bits of a flag field", () => {
+            // failsafePhase_e has 8 enumerators; the SBUS frame flags name 4 bits.
+            expect(getDebugFieldAxis("FAILSAFE", "debug[3]", ANNOTATED)).toEqual({ range: { min: 0, max: 7 } });
+            expect(getDebugFieldAxis("SBUS", "debug[0]", ANNOTATED)).toEqual({ range: { min: 0, max: 15 } });
+        });
+
+        it("defers a device-native unit to the craft's configuration", () => {
+            expect(getDebugFieldAxis("ACCELEROMETER", "debug[0]", ANNOTATED)).toEqual({ dynamic: "acc" });
+        });
+
+        it("fits the logged data over the fields that share a unit and scaling", () => {
+            // FFT_FREQ[0] is a gyro trace in dps and the rest are notch centres in
+            // Hz, so they do not belong on one axis - which the hand-written table
+            // got wrong, graphing debug[0..2] together.
+            expect(getDebugFieldAxis("FFT_FREQ", "debug[0]", ANNOTATED)).toEqual({ fit: ["debug[0]"] });
+            expect(getDebugFieldAxis("FFT_FREQ", "debug[1]", ANNOTATED).fit).toEqual([
+                "debug[1]",
+                "debug[2]",
+                "debug[3]",
+                "debug[4]",
+                "debug[5]",
+                "debug[6]",
+                "debug[7]",
+            ]);
+        });
+
+        it("never groups a field with no unit, whatever else the mode holds", () => {
+            expect(getDebugFieldAxis("GPS_CONNECTION", "debug[4]", ANNOTATED)).toEqual({ fit: ["debug[4]"] });
+        });
+
+        it("answers nothing for firmware that predates the annotations", () => {
+            // The caller's own table decides, exactly as before.
+            expect(getDebugFieldAxis("CYCLETIME", "debug[1]", "1.48.0")).toBeUndefined();
         });
     });
 });
