@@ -2,40 +2,40 @@
     <div id="status-bar">
         <template v-if="connectionTimestamp">
             <template v-if="expertMode">
-                <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
+                <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" class="sb-secondary" />
 
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
                 <UTooltip :text="$t('statusbar_connection_time')">
-                    <span class="stat-group">
+                    <span class="stat-group sb-secondary">
                         <UIcon name="i-lucide-clock" class="stat-icon" />
                         <span class="value">{{ formattedConnectionTime }}</span>
                     </span>
                 </UTooltip>
 
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
                 <UTooltip :text="$t('statusbar_packet_error')">
-                    <span class="stat-group">
+                    <span class="stat-group sb-secondary">
                         <UIcon name="i-lucide-triangle-alert" class="stat-icon" />
                         <span class="value">{{ packetError }}</span>
                     </span>
                 </UTooltip>
 
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
                 <UTooltip :text="$t('statusbar_cycle_time')">
-                    <span class="stat-group">
+                    <span class="stat-group sb-secondary">
                         <UIcon name="i-lucide-timer" class="stat-icon" />
                         <span class="value">{{ cycleTime }}</span>
                     </span>
                 </UTooltip>
 
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
 
             <UTooltip :text="`${$t('statusbar_cpu_load')} ${cpuLoad}%`">
-                <span class="stat-group cpu-load">
+                <span class="stat-group cpu-load sb-secondary">
                     <UIcon name="i-lucide-cpu" class="stat-icon" />
                     <span class="cpu-bar" :class="cpuLoadClass">
                         <span class="cpu-bar__fill" :style="{ width: `${clampedCpuLoad}%` }"></span>
@@ -43,11 +43,15 @@
                 </span>
             </UTooltip>
 
-            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
-            <SensorStatus :sensors-detected="fcConfig.activeSensors ?? 0" :gps-fix-state="gps.fix ?? 0" />
+            <SensorStatus
+                :sensors-detected="fcConfig.activeSensors ?? 0"
+                :gps-fix-state="gps.fix ?? 0"
+                class="sb-sensors"
+            />
 
-            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
             <BatteryIcon
                 compact
@@ -62,7 +66,7 @@
                 :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
             />
 
-            <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+            <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
             <BottomStatusIcons
                 compact
@@ -72,25 +76,30 @@
             />
 
             <template v-if="dataflashSupported">
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
-                <DataFlash compact :fc-total-size="dataflash.totalSize" :fc-used-size="dataflash.usedSize" />
+                <DataFlash
+                    compact
+                    :fc-total-size="dataflash.totalSize"
+                    :fc-used-size="dataflash.usedSize"
+                    class="sb-secondary"
+                />
             </template>
         </template>
-        <div class="flex gap-2 text-xs text-muted ml-auto items-center h-full">
+        <div class="flex gap-2 text-xs text-muted ml-auto items-center h-full sb-secondary">
             <template v-if="firmwareTarget && firmwareVersion">
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
                 <UIcon name="i-lucide-cpu" class="size-4" />
                 <UTooltip :text="$t('versionLabelFirmware')">
                     <span>{{ displayedFirmwareTarget }} {{ displayedFirmwareVersion }}</span>
                 </UTooltip>
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
             <template v-if="isConnectedToVirtual">
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
                 <UIcon name="i-lucide-cpu" class="size-4" />
                 <span>{{ $t("virtualMode") }}</span>
-                <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
+                <USeparator orientation="vertical" class="sb-sep" :ui="{ root: 'py-1', border: 'border-accented' }" />
             </template>
 
             <UIcon name="i-lucide-monitor" class="size-4" />
@@ -332,6 +341,43 @@ export default defineComponent({
 #status-bar > * {
     display: flex;
     align-items: center;
+}
+
+/* The full row needs ~1318px, so on a phone it can only ever scroll sideways.
+   Keep the live flight controller status; the reference and diagnostic readouts
+   dropped here all have a home on their own tabs. */
+@container main-wrapper (max-width: 575px) {
+    #status-bar {
+        gap: 0.4rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    /* :deep so the rule still lands on child component roots, which do not all
+       inherit this component's scope attribute. */
+    #status-bar > :deep(.sb-secondary),
+    #status-bar > :deep(.sb-sep) {
+        display: none;
+    }
+
+    :deep(.sb-sensors) {
+        gap: 0.5rem;
+    }
+}
+
+/* Narrower still (small phones, or a phone above 100% UI scale): the sensor icons
+   go too. They report static configuration the Setup tab also shows, where battery
+   and arming state are live. */
+@container main-wrapper (max-width: 360px) {
+    #status-bar {
+        gap: 0.3rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+
+    #status-bar > :deep(.sb-sensors) {
+        display: none;
+    }
 }
 
 .stat-group {
