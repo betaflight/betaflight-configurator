@@ -226,6 +226,23 @@ describe("firmware debug field annotations", () => {
             expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0b10000, ctx(ANNOTATED))).toBe("bit 4");
         });
 
+        it("reads a flag field's top bit without running away", () => {
+            // A debug field is an int16_t, so a value with bit 15 set arrives here
+            // negative. Masking to the field width is what makes the scan finite:
+            // unmasked, `>>>` wraps its shift count at 32 and never reaches zero.
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", -1, ctx(ANNOTATED))).toBe(
+                [
+                    "Channel 17",
+                    "Channel 18",
+                    "Signal Loss",
+                    "Failsafe",
+                    ...Array.from({ length: 12 }, (unused, index) => `bit ${index + 4}`),
+                ].join(" | "),
+            );
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", -0x8000, ctx(ANNOTATED))).toBe("bit 15");
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", Number.NaN, ctx(ANNOTATED))).toBe("none");
+        });
+
         it("names an enumerator from the firmware enum the annotation points at", () => {
             // `[enum:batteryState_e]` / `[enum:step_e]`: the names come from the
             // firmware enum, not from a list this repository keeps in step by hand.

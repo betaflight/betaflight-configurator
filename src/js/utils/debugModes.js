@@ -77,6 +77,9 @@ function modeNameCandidates(name) {
 // Firmware field annotations (generated)
 // ---------------------------------------------------------------------------
 
+// A debug field is an int16_t, so a flag list cannot name more bits than it holds.
+const DEBUG_FIELD_BITS = 16;
+
 const GENERATED_FIELD_VERSIONS = Object.freeze(
     Object.keys(FIRMWARE_DEBUG_FIELDS).sort((left, right) => semver.compare(left, right)),
 );
@@ -144,7 +147,7 @@ function generatedField(debugModeName, fieldName, apiVersion) {
  */
 function generatedFieldGroup(debugModeName, fieldName, apiVersion) {
     const field = generatedField(debugModeName, fieldName, apiVersion);
-    if (!field || field.unit === null) {
+    if (field?.unit == null) {
         return [fieldName];
     }
 
@@ -280,13 +283,16 @@ function generatedScaling(debugModeName, fieldName, apiVersion) {
  * @returns {string}
  */
 function decodeFlags(value, flags) {
-    const raw = Math.trunc(value);
-    if (raw === 0) {
+    // A debug field is an int16_t, so a value with the top bit set arrives here
+    // negative. Mask it to the field's own width: unmasked, `>>>` wraps its shift
+    // count at 32 and the scan below would never end for a negative value.
+    const raw = Math.trunc(value) & 0xffff;
+    if (!Number.isFinite(value) || raw === 0) {
         return "none";
     }
 
     const set = [];
-    for (let bit = 0; raw >>> bit; bit++) {
+    for (let bit = 0; bit < DEBUG_FIELD_BITS; bit++) {
         if ((raw >>> bit) & 1) {
             set.push(flags[bit] ?? `bit ${bit}`);
         }
