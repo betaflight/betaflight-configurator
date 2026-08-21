@@ -534,7 +534,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         },
                     };
                 case "ALTITUDE":
-                    if (semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         switch (fieldName) {
                             case "debug[0]": // RangeFinder Alt
                             case "debug[1]": // Baro Alt
@@ -1038,7 +1038,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                             return getCurveForMinMaxFields(fieldName);
                     }
                 case "GPS_RESCUE_VELOCITY":
-                    if (semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         switch (fieldName) {
                             case "debug[0]": // Target Velocity
                             case "debug[1]": // Velocity / Phase
@@ -1080,7 +1080,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     }
 
                 case "GPS_RESCUE_HEADING":
-                    if (semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         switch (fieldName) {
                             case "debug[0]": // Ground Speed
                                 return {
@@ -1163,7 +1163,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     }
 
                 case "GPS_RESCUE_TRACKING":
-                    if (semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         switch (fieldName) {
                             case "debug[0]": // Velocity
                             case "debug[2]": // Altitude
