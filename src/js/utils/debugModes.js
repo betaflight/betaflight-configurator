@@ -1724,6 +1724,13 @@ const DEBUG_DECODE = {
         "debug[7]": (v) => `${v.toFixed(0)} Hz`,
         _default: f0,
     },
+    PITOT: {
+        "debug[0]": (v) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[1]": (v) => `${v.toFixed(0)} Pa`,
+        "debug[2]": (v) => `${v.toFixed(0)} Pa`,
+        "debug[3]": (v) => `${v.toFixed(0)} °C`,
+        _default: f0,
+    },
     VELOCITY: () => "",
     DFILTER: () => "",
 };
