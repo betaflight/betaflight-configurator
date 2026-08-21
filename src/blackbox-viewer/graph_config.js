@@ -547,8 +547,8 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                                 return {
                                     power: 1,
                                     MinMax: {
-                                        min: -5,
-                                        max: 5,
+                                        min: -10,
+                                        max: 10,
                                     },
                                 };
                             default:
