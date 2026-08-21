@@ -1453,9 +1453,24 @@ function renderFieldUsage({ repoUrl, versions }) {
 
 // ---------------------------------------------------------------------------
 
-// `if (debugMode == DEBUG_X)` around a bare `debug[n] = ...`, which is how a
-// handful of modes write their fields without going through the macro.
+// `if (debugMode == DEBUG_X)`, the guard a mode writing `debug[]` by hand sits behind.
 const DIRECT_WRITE_GUARD = /debugMode\s*==\s*DEBUG_([A-Z0-9_]+)/g;
+const BARE_DEBUG_WRITE = /(?<!DEBUG_SET\s*\()\bdebug\s*\[[^\]]*\]\s*=/;
+
+/*
+ * The statement the guard at `from` controls: a block if one follows, otherwise up
+ * to the end of the single statement. Only that range can be attributed to the
+ * mode the guard names - a file may guard several modes, and a bare `debug[]`
+ * write elsewhere in it belongs to whichever guard encloses it.
+ */
+function guardedStatement(text, from) {
+    const block = text.indexOf("{", from);
+    const statementEnd = text.indexOf(";", from);
+    if (block !== -1 && (statementEnd === -1 || block < statementEnd)) {
+        return text.slice(block, findCallEnd(text, block) + 1);
+    }
+    return text.slice(from, statementEnd === -1 ? text.length : statementEnd + 1);
+}
 
 /*
  * Modes that write `debug[]` directly instead of through DEBUG_SET(), so neither
@@ -1472,11 +1487,10 @@ function directWriteModes(repo, ref, modes) {
         if (path === DEBUG_SOURCE) {
             continue;
         }
-        const text = gitShow(repo, ref, path);
+        // Comments are stripped so a mode named in prose cannot look like a guard.
+        const text = stripComments(gitShow(repo, ref, path));
         for (const match of text.matchAll(DIRECT_WRITE_GUARD)) {
-            // The guard names the mode; a bare `debug[` write in the same file is
-            // what makes it invisible to the macro scan.
-            if (known.has(match[1]) && /(?<!DEBUG_SET\([^)]{0,80})\bdebug\s*\[/.test(text)) {
+            if (known.has(match[1]) && BARE_DEBUG_WRITE.test(guardedStatement(text, match.index + match[0].length))) {
                 found.add(match[1]);
             }
         }
@@ -1486,22 +1500,29 @@ function directWriteModes(repo, ref, modes) {
 }
 
 /*
- * Every mode of a version that has no annotated field, split by why: written
- * directly and so beyond the reach of an annotation, or not written at all.
+ * Every mode of a version that has no annotated field, split by what can be done
+ * about it: written directly and so beyond the reach of an annotation, written
+ * through the macro but not yet annotated, or not written at all.
  */
-function unannotatedModes(repo, version, fields) {
+function unannotatedModes(repo, version, fields, usage) {
     const direct = directWriteModes(repo, version.ref, version.modes);
-    const bare = [];
-    const unwritten = [];
+    const groups = { bare: [], unannotated: [], unwritten: [] };
 
     for (const mode of version.modes) {
         if (Object.keys(fields[mode] ?? {}).length > 0 || mode === "NONE") {
             continue;
         }
-        (direct.has(mode) ? bare : unwritten).push(mode);
+        const written = usage[mode];
+        if (direct.has(mode)) {
+            groups.bare.push(mode);
+        } else if (written && (written.fields.length > 0 || written.dynamic)) {
+            groups.unannotated.push(mode);
+        } else {
+            groups.unwritten.push(mode);
+        }
     }
 
-    return { bare, unwritten };
+    return groups;
 }
 
 /*
@@ -1527,11 +1548,17 @@ function collectVersionData(repo, versions) {
 
         // Only the newest version is actionable: an older one cannot gain annotations.
         if (annotated > 0 && version === versions.at(-1)) {
-            const { bare, unwritten } = unannotatedModes(repo, version, fields);
+            const { bare, unannotated, unwritten } = unannotatedModes(repo, version, fields, usage);
             if (bare.length > 0) {
                 console.warn(
                     `generate-debug-modes: WARNING ${bare.length} mode(s) write debug[] directly, so they cannot ` +
                         `carry an annotation and have no labels: ${bare.join(", ")}`,
+                );
+            }
+            if (unannotated.length > 0) {
+                console.warn(
+                    `generate-debug-modes: WARNING ${unannotated.length} mode(s) write through DEBUG_SET() with no ` +
+                        `annotation, so they have no labels: ${unannotated.join(", ")}`,
                 );
             }
             if (unwritten.length > 0) {
