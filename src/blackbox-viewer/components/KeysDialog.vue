@@ -84,6 +84,8 @@ const layout = [
                 { keys: ["G"], action: "QuickGrid — hide all grids" },
                 { keys: ["T"], action: "Toggle field values table" },
                 { keys: ["C"], action: "Toggle configuration dump" },
+                { keys: ["F"], action: "Toggle full screen" },
+                { keys: ["Esc"], action: "Leave full screen" },
             ],
         },
         {
