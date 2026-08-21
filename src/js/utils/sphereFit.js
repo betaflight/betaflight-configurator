@@ -189,56 +189,6 @@ function computeResidual(points, a, b, c, radius) {
 }
 
 /**
- * Classify points into 6 directional zones relative to a center point.
- * Zones correspond to the 6 faces of a cube: +X, -X, +Y, -Y, +Z, -Z.
- * Each point is assigned to the zone of its dominant axis direction from center.
- *
- * @param {Array<{x: number, y: number, z: number}>} points
- * @param {{x: number, y: number, z: number}} center
- * @returns {{ zones: Object<string, number>, total: number, uniform: number }}
- *   zones: count per zone, total: total classified points, uniform: 0-1 score (1 = perfectly uniform)
- */
-export function computeCoverage(points, center) {
-    const zones = { "+X": 0, "-X": 0, "+Y": 0, "-Y": 0, "+Z": 0, "-Z": 0 };
-
-    for (const pt of points) {
-        const zone = classifyZone(pt, center);
-        zones[zone]++;
-    }
-
-    const total = points.length;
-    const zoneValues = Object.values(zones);
-    const nonZero = zoneValues.filter((c) => c > 0);
-
-    let uniform = 0;
-    if (nonZero.length > 0) {
-        const min = Math.min(...nonZero);
-        const max = Math.max(...nonZero);
-        uniform = max > 0 ? (min / max) * (nonZero.length / 6) : 0;
-    }
-
-    return { zones, total, uniform };
-}
-
-function classifyZone(pt, center) {
-    const dx = pt.x - center.x;
-    const dy = pt.y - center.y;
-    const dz = pt.z - center.z;
-
-    const ax = Math.abs(dx);
-    const ay = Math.abs(dy);
-    const az = Math.abs(dz);
-
-    if (ax >= ay && ax >= az) {
-        return dx >= 0 ? "+X" : "-X";
-    }
-    if (ay >= ax && ay >= az) {
-        return dy >= 0 ? "+Y" : "-Y";
-    }
-    return dz >= 0 ? "+Z" : "-Z";
-}
-
-/**
  * Tilt-diversity gate: checks that a sample set of 3D points covers the full
  * sphere of directions (needed for the yaw alignment to be observable).
  *
@@ -376,21 +326,19 @@ const ICOSA_FACE_DIRS = (() => {
  * Directional sphere coverage: what fraction of the sphere of directions
  * (as seen from `center`) has been sampled?
  *
- * Unlike computeCoverage()'s min/max dwell ratio — which punishes spending
- * extra time in any orientation and therefore goes DOWN with more data —
- * this metric is presence-based and monotonically non-decreasing for a
- * fixed center: directions are binned onto the 20 icosahedron faces and a
+ * This metric is presence-based and monotonically non-decreasing for a
+ * fixed center: directions are binned onto 20 icosahedron faces and a
  * face counts as covered once it has `minHits` samples. A thorough tumble
  * reaches 100%.
  *
  * @param {Array<{x:number,y:number,z:number}>} points
  * @param {{x:number,y:number,z:number}} center - best available cloud center
- *   (running sphere-fit center; falls back to origin early in a capture)
+ *   (running sphere-fit center or sample centroid)
  * @param {number} [minHits=3] - samples required before a face counts
  * @returns {{ covered: number, totalFaces: number, fraction: number,
  *             faceCounts: number[], uniform: number }}
  *   `uniform` aliases `fraction` for backward compatibility with consumers
- *   of computeCoverage()'s shape.
+ *   expecting a [0, 1] coverage metric.
  */
 export function computeDirectionalCoverage(points, center, minHits = 3) {
     const faceCounts = new Array(ICOSA_FACE_DIRS.length).fill(0);
