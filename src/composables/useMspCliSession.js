@@ -86,6 +86,13 @@ export function isConnectionClosedError(error) {
     return error?.connectionClosed === true;
 }
 
+// `send` resolves with whatever the FC replied, and a command the FC refused replies normally —
+// the refusal is a line in the response, not a transport error. Callers that need to know whether
+// a command took effect have to look for it.
+export function findCliError(lines) {
+    return parseErrors(lines ?? [])[0] ?? null;
+}
+
 export async function saveAndReconnect() {
     let saveError = null;
     try {
