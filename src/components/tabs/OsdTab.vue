@@ -825,6 +825,7 @@ function toggleFieldVisibility(fieldIndex, profileIndex, event) {
 
 // Handle variant change
 function onVariantChange(field) {
+    osdStore.refreshDisplayItemPreview(field);
     trackChange("variant", field.name);
     updatePreview();
 }

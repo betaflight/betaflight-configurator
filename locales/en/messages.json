@@ -6941,6 +6941,14 @@
     "osdDescElementLinkQuality": {
         "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF mode:Link quality",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Link quality only",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
         "description": "One of the elements of the OSD"
