@@ -110,9 +110,9 @@ const colorStyle = computed(() => {
 .gPoint {
     float: inline-start;
     border: solid 1px var(--surface-500);
-    width: 23px;
-    height: 23px;
-    margin: 3px;
+    width: var(--led-cell, 23px);
+    height: var(--led-cell, 23px);
+    margin: var(--led-cell-gap, 3px);
     border-radius: 7px;
     background: var(--surface-300);
     cursor: pointer;
