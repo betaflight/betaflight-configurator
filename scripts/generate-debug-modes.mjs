@@ -770,11 +770,11 @@ function parseAnnotation(raw) {
 // per-file scan
 // ---------------------------------------------------------------------------
 
-// The files that carry DEBUG_SET() call sites at `ref`.
-function debugSetFiles(repo, ref) {
+// The firmware files that carry `pattern` at `ref`, DEBUG_SET() call sites by default.
+function debugSetFiles(repo, ref, pattern = "DEBUG_SET(") {
     let output;
     try {
-        output = git(repo, ["grep", "-l", "DEBUG_SET(", ref, "--", FIRMWARE_SOURCE_DIR]);
+        output = git(repo, ["grep", "-l", pattern, ref, "--", FIRMWARE_SOURCE_DIR]);
     } catch (error) {
         // git grep exits 1 when nothing matched, which is not an error here.
         output = error.stdout ?? "";
@@ -1433,6 +1433,57 @@ function renderFieldUsage({ repoUrl, versions }) {
 
 // ---------------------------------------------------------------------------
 
+// `if (debugMode == DEBUG_X)` around a bare `debug[n] = ...`, which is how a
+// handful of modes write their fields without going through the macro.
+const DIRECT_WRITE_GUARD = /debugMode\s*==\s*DEBUG_([A-Z0-9_]+)/g;
+
+/*
+ * Modes that write `debug[]` directly instead of through DEBUG_SET(), so neither
+ * the annotation scan nor the usage scan can see their fields. They are reported
+ * rather than silently counted as unwritten: a live mode with no annotation is a
+ * gap in the contract, and the fix is in firmware - route the write through
+ * DEBUG_SET() so it can carry an annotation.
+ */
+function directWriteModes(repo, ref, modes) {
+    const known = new Set(modes);
+    const found = new Set();
+
+    for (const path of debugSetFiles(repo, ref, "debugMode ==")) {
+        if (path === DEBUG_SOURCE) {
+            continue;
+        }
+        const text = gitShow(repo, ref, path);
+        for (const match of text.matchAll(DIRECT_WRITE_GUARD)) {
+            // The guard names the mode; a bare `debug[` write in the same file is
+            // what makes it invisible to the macro scan.
+            if (known.has(match[1]) && /(?<!DEBUG_SET\([^)]{0,80})\bdebug\s*\[/.test(text)) {
+                found.add(match[1]);
+            }
+        }
+    }
+
+    return found;
+}
+
+/*
+ * Every mode of a version that has no annotated field, split by why: written
+ * directly and so beyond the reach of an annotation, or not written at all.
+ */
+function unannotatedModes(repo, version, fields) {
+    const direct = directWriteModes(repo, version.ref, version.modes);
+    const bare = [];
+    const unwritten = [];
+
+    for (const mode of version.modes) {
+        if (Object.keys(fields[mode] ?? {}).length > 0 || mode === "NONE") {
+            continue;
+        }
+        (direct.has(mode) ? bare : unwritten).push(mode);
+    }
+
+    return { bare, unwritten };
+}
+
 /*
  * Fill in the modes and the field usage of every version, in place, and report how
  * many DEBUG_SET() indices across all of them could not be enumerated.
@@ -1453,6 +1504,23 @@ function collectVersionData(repo, versions) {
             `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ` +
                 `${version.modes.length} modes, ${annotated}/${written} fields annotated`,
         );
+
+        // Only the newest version is actionable: an older one cannot gain annotations.
+        if (annotated > 0 && version === versions.at(-1)) {
+            const { bare, unwritten } = unannotatedModes(repo, version, fields);
+            if (bare.length > 0) {
+                console.warn(
+                    `generate-debug-modes: WARNING ${bare.length} mode(s) write debug[] directly, so they cannot ` +
+                        `carry an annotation and have no labels: ${bare.join(", ")}`,
+                );
+            }
+            if (unwritten.length > 0) {
+                console.log(
+                    `generate-debug-modes: ${unwritten.length} mode(s) hold an enum slot but write nothing: ` +
+                        unwritten.join(", "),
+                );
+            }
+        }
     }
 
     if (problems.length > 0) {
