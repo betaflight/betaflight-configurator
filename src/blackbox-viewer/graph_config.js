@@ -418,7 +418,11 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 if (axis.dynamic === "acc") {
                     return { power: 1, MinMax: { min: -maxAccelerometerG(), max: maxAccelerometerG() } };
                 }
-                return getCurveForMinMaxFields(...axis.fit);
+                // The group names every field firmware writes in that unit, but a
+                // log only holds the fields it was configured to record; asking for
+                // an absent one yields the generic fallback range.
+                const logged = axis.fit.filter((name) => flightLog.getMainFieldIndexByName(name) !== undefined);
+                return getCurveForMinMaxFields(...(logged.length > 0 ? logged : [fieldName]));
             }
 
             switch (debugModeName) {
