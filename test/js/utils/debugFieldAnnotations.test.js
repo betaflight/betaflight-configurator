@@ -213,6 +213,18 @@ describe("firmware debug field annotations", () => {
             );
         });
 
+        it("names the set bits of a flag field, and shows an unnamed bit as its number", () => {
+            // DEBUG_SBUS[0] is annotated [flags:Channel 17|Channel 18|Signal Loss|Failsafe].
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0, ctx(ANNOTATED))).toBe("none");
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0b1000, ctx(ANNOTATED))).toBe("Failsafe");
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0b1100, ctx(ANNOTATED))).toBe(
+                "Signal Loss | Failsafe",
+            );
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0b1, ctx(ANNOTATED))).toBe("Channel 17");
+            // A bit the annotation does not name is still reported, not dropped.
+            expect(decodeDebugFieldToFriendly("SBUS", "debug[0]", 0b10000, ctx(ANNOTATED))).toBe("bit 4");
+        });
+
         it("names an enumerator from the firmware enum the annotation points at", () => {
             // `[enum:batteryState_e]` / `[enum:step_e]`: the names come from the
             // firmware enum, not from a list this repository keeps in step by hand.
