@@ -80,6 +80,9 @@ const MSP_PROTOCOL_HEADER = "src/main/msp/msp_protocol.h";
 const FIRMWARE_SOURCE_DIR = "src/main";
 const DEBUG_VALUE_COUNT = 8;
 
+// A debug field is an int16_t, so a flag list cannot name more bits than it holds.
+const DEBUG_VALUE_BITS = 15;
+
 // Prettier's default printWidth, which this repository keeps, so the generated
 // files come out already formatted.
 const PRINT_WIDTH = 120;
@@ -659,6 +662,18 @@ function parseUnitSpec(raw) {
         return { unit: null, scale: 1, enumTag: enumTag[1] };
     }
 
+    const flagTag = raw.trim().match(/^flags:(.+)$/);
+    if (flagTag) {
+        // The field holds bit flags, lowest bit first. The names are in the
+        // annotation rather than read from the source because flag bits are
+        // `#define`s rather than an enum. `-` marks a bit the field does not use.
+        const flags = flagTag[1].split("|").map((name) => name.trim());
+        if (flags.length > DEBUG_VALUE_BITS || flags.some((name) => name === "")) {
+            return undefined;
+        }
+        return { unit: null, scale: 1, flags: flags.map((name) => (name === "-" ? null : name)) };
+    }
+
     const trimmed = raw.trim();
     const factor = UNIT_FACTOR.exec(trimmed)?.[0];
     const symbol = trimmed.slice(factor?.length ?? 0).trim();
@@ -700,13 +715,14 @@ function parseAnnotation(raw) {
     let unit = null;
     let scale = 1;
     let enumTag;
+    let flags;
     const unitMatch = rest.match(UNIT_SPEC);
     if (unitMatch) {
         const parsed = parseUnitSpec(unitMatch[1]);
         if (parsed === undefined) {
             return { error: `unknown unit "${unitMatch[1]}"` };
         }
-        ({ unit, scale, enumTag } = parsed);
+        ({ unit, scale, enumTag, flags } = parsed);
         rest = rest.slice(0, rest.length - unitMatch[0].length);
     }
 
@@ -726,7 +742,7 @@ function parseAnnotation(raw) {
         return { error: `label "${label}" needs exactly one {a|b|c} group or none, with both braces` };
     }
     if (!expansion) {
-        return { indices, labels: null, label, unit, scale, enumTag };
+        return { indices, labels: null, label, unit, scale, enumTag, flags };
     }
     const alternatives = expansion[1].split("|");
     if (alternatives.some((alternative) => alternative.trim() === "")) {
@@ -751,6 +767,7 @@ function parseAnnotation(raw) {
         unit,
         scale,
         enumTag,
+        flags,
     };
 }
 
@@ -959,7 +976,8 @@ function foldCall(call, usage, fields) {
                 variant.label === label &&
                 variant.unit === annotation.unit &&
                 variant.scale === annotation.scale &&
-                sameValues(variant.values, annotation.values),
+                sameValues(variant.values, annotation.values) &&
+                sameValues(variant.flags, annotation.flags),
         );
         if (existing) {
             existing.sites.push(call.where);
@@ -969,6 +987,7 @@ function foldCall(call, usage, fields) {
                 unit: annotation.unit,
                 scale: annotation.scale,
                 values: annotation.values,
+                flags: annotation.flags,
                 sites: [call.where],
             });
         }
@@ -1226,11 +1245,12 @@ function renderFrozenList(indent, key, items) {
  * One field of the shipped table, as Prettier would print it: on one line when it
  * fits, one property per line when it does not.
  */
-function renderFieldEntry(index, { label, unit, scale, values }) {
+function renderFieldEntry(index, { label, unit, scale, values, flags }) {
     const unitSource = unit === null ? "null" : quote(unit);
-    const valuesSource =
-        values === undefined ? "" : `, values: Object.freeze([${values.map((name) => quote(name)).join(", ")}])`;
-    const single = `            ${index}: Object.freeze({ label: ${quote(label)}, unit: ${unitSource}, scale: ${scale}${valuesSource} }),`;
+    const listSource = (name, list) =>
+        list === undefined ? "" : `, ${name}: Object.freeze([${list.map((entry) => quote(entry)).join(", ")}])`;
+    const tail = `${listSource("values", values)}${listSource("flags", flags)}`;
+    const single = `            ${index}: Object.freeze({ label: ${quote(label)}, unit: ${unitSource}, scale: ${scale}${tail} }),`;
     if (single.length <= PRINT_WIDTH) {
         return [single];
     }
@@ -1241,6 +1261,7 @@ function renderFieldEntry(index, { label, unit, scale, values }) {
         `                unit: ${unitSource},`,
         `                scale: ${scale},`,
         ...(values === undefined ? [] : renderFrozenList("                ", "values", values)),
+        ...(flags === undefined ? [] : renderFrozenList("                ", "flags", flags)),
         "            }),",
     ];
 }
@@ -1271,6 +1292,8 @@ function fieldsModuleHeader(repoUrl, annotated) {
         " *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means",
         " *           the field holds decidegrees. Negative where the firmware stores",
         " *           the magnitude of a negative quantity, as CRSF does with dBm.",
+        " *   flags  - present when the field holds bit flags: the name of each bit,",
+        " *           lowest first, null for a bit the field does not use.",
         " *   values - present when the field holds an enumerator: the firmware enum's",
         " *           own names, indexed by value.",
         " *",
@@ -1300,6 +1323,7 @@ function renderModeFields(mode, fields, apiVersion, conflicts) {
                 unit: agreed ? variants[0].unit : null,
                 scale: agreed ? variants[0].scale : 1,
                 values: agreed ? variants[0].values : undefined,
+                flags: agreed ? variants[0].flags : undefined,
             }),
         );
         if (!agreed) {

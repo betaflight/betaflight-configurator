@@ -225,11 +225,37 @@ function generatedScaling(debugModeName, fieldName, apiVersion) {
 
     return {
         values: field.values,
+        flags: field.flags,
         suffix: display.suffix ?? "",
         decimals: display.decimals ?? defaultDecimals(multiplier),
         toDisplay: (value, ctx) => (conversion ? conversion.toDisplay(value * multiplier, ctx) : value * multiplier),
         toRaw: (value, ctx) => (conversion ? conversion.toRaw(value, ctx) : value) / multiplier,
     };
+}
+
+/**
+ * The set bits of a flag field, by the names the firmware annotation gives them.
+ * A bit with no name - one the field does not use, or above the named ones -
+ * shows as its bit number, so an unexpected bit is visible rather than dropped.
+ *
+ * @param {number} value
+ * @param {(string|null)[]} flags - bit names, lowest bit first.
+ * @returns {string}
+ */
+function decodeFlags(value, flags) {
+    const raw = Math.trunc(value);
+    if (raw === 0) {
+        return "none";
+    }
+
+    const set = [];
+    for (let bit = 0; raw >>> bit; bit++) {
+        if ((raw >>> bit) & 1) {
+            set.push(flags[bit] ?? `bit ${bit}`);
+        }
+    }
+
+    return set.join(" | ");
 }
 
 /*
@@ -1698,6 +1724,9 @@ export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx)
     if (scaling) {
         if (scaling.values) {
             return scaling.values[value] ?? value.toFixed(0);
+        }
+        if (scaling.flags) {
+            return decodeFlags(value, scaling.flags);
         }
         const scaled = scaling.toDisplay(value, ctx).toFixed(scaling.decimals);
         return scaling.suffix === "" ? scaled : `${scaled} ${scaling.suffix}`;
