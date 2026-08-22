@@ -24,6 +24,10 @@ vi.mock("three", async (importOriginal) => {
     };
 });
 
+// Mirrors NUM_PROP_LEVELS in craft_3d.js. Level 0 is deliberately empty, the rest are the
+// widening prop disc.
+const PROP_LEVELS = 100;
+
 function vertexCount(geometry) {
     return geometry.getAttribute("position")?.count ?? 0;
 }
@@ -86,7 +90,7 @@ describe("blackbox 3D craft model", () => {
     it("builds every prop level from empty through to a full disc", () => {
         const craft = buildCraft(4);
         const [frame, frameFieldIndexes] = frameFor(4);
-        const counts = new Set();
+        const propGeometries = new Set();
 
         // motorOutput spans 0 to 2047, so this walks the whole prop level table.
         for (let throttle = 0; throttle <= 2047; throttle++) {
@@ -96,14 +100,17 @@ describe("blackbox 3D craft model", () => {
             meshGeometries.length = 0;
             craft.render(frame, frameFieldIndexes);
             for (const geometry of meshGeometries) {
-                counts.add(vertexCount(geometry));
+                propGeometries.add(geometry);
             }
         }
 
-        // Zero throttle is deliberately an empty geometry, everything above it must have vertices.
-        expect(counts.has(0)).toBe(true);
-        expect([...counts].filter((count) => count > 0).length).toBeGreaterThan(0);
-        expect(Math.max(...counts)).toBeGreaterThan(100);
+        // Collect the geometry instances rather than their vertex counts. A count set collapses
+        // levels that happen to agree, so a single broken level could hide behind a healthy one.
+        expect(propGeometries.size).toBe(PROP_LEVELS);
+
+        const levels = [...propGeometries];
+        expect(levels.filter((geometry) => vertexCount(geometry) === 0)).toHaveLength(1);
+        expect(levels.filter((geometry) => vertexCount(geometry) > 0)).toHaveLength(PROP_LEVELS - 1);
     });
 
     it("resizes without touching a stale projection matrix", () => {
