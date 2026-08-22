@@ -454,10 +454,6 @@ function buildExampleGraphs() {
     exampleGraphs.value = examples;
 }
 
-function cloneGraphs(graphs) {
-    return structuredClone(graphs);
-}
-
 // Convert internal graph config to the format expected by legacy code
 function convertToConfig() {
     return localGraphs.value.map((g) => ({
@@ -505,25 +501,6 @@ function getDefaults(fieldName) {
     const smoothing = GraphConfig.getDefaultSmoothingForField(props.flightLog, fieldName);
     const curve = GraphConfig.getDefaultCurveForField(props.flightLog, fieldName);
     return { smoothing, ...curve };
-}
-
-function formatSmoothing(field) {
-    return `${((field.smoothing ?? 0) / 100).toFixed(0)}%`;
-}
-
-function parseSmoothing(field, val) {
-    field.smoothing = Number.parseInt(val) * 100;
-}
-
-function formatExpo(field) {
-    return `${((field.curve?.power ?? 1) * 100).toFixed(0)}%`;
-}
-
-function parseExpo(field, val) {
-    if (!field.curve) {
-        field.curve = {};
-    }
-    field.curve.power = Number.parseInt(val) / 100;
 }
 
 function ensureCurveMinMax(field) {

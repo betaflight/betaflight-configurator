@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import { useSettingsStore } from "./stores/settings.js";
 
 export function Craft3D(flightLog, canvas, propColors) {
@@ -281,7 +283,7 @@ export function Craft3D(flightLog, canvas, propColors) {
         }
 
         // Display the craft's attitude
-        craftParent.rotation.x = -frame[frameFieldIndexes["heading[1]"]] /*- Math.PI / 2*/; // pitch
+        craftParent.rotation.x = -frame[frameFieldIndexes["heading[1]"]]; /*- Math.PI / 2*/ // pitch
         craftParent.rotation.y = frame[frameFieldIndexes["heading[0]"]]; // roll
 
         renderer.render(scene, camera);
