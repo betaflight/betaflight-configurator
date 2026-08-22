@@ -1347,6 +1347,8 @@ export function getDebugFieldNames(apiVersion) {
 // ---------------------------------------------------------------------------
 
 const f0 = (v) => v.toFixed(0);
+const isApiAtLeast = (ctx, version) => Boolean(ctx?.apiVersion) && semver.gte(ctx.apiVersion, version);
+
 const gyroDps = (v, ctx) => `${Math.round(ctx.gyroRawToDegreesPerSecond(v))} °/s`;
 const gyroDecode = (v, ctx, fieldName) => (fieldName === "debug[4]" ? `${v.toFixed(0)} %` : gyroDps(v, ctx));
 const fftFreqDecode = (v, ctx, fieldName) => {
@@ -1362,7 +1364,7 @@ const opticalflowDecode = (v, ctx, fieldName) => {
     return (v / 1000).toFixed(1);
 };
 const altitudeDecode = (v, ctx, fieldName) => {
-    if (semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
             case "debug[1]":
@@ -1510,7 +1512,7 @@ const gpsRescueHeadingDecode = (v, ctx, fieldName) => {
 };
 
 const gpsRescueTrackingDecode = (v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (!isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
             case "debug[1]":
@@ -1829,79 +1831,91 @@ const cOpticalflow = (toFriendly, v, ctx, fieldName) => {
 };
 
 const cAltitude = (toFriendly, v, ctx, fieldName) => {
-    if (semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         return cScale100(toFriendly, v);
-    }
-
-    switch (fieldName) {
-        case "debug[1]":
-        case "debug[2]":
-        case "debug[3]":
-            return cScale100(toFriendly, v);
-        default:
-            return v;
+    } else {
+        switch (fieldName) {
+            case "debug[1]":
+            case "debug[2]":
+            case "debug[3]":
+                return cScale100(toFriendly, v);
+            default:
+                return v;
+        }
     }
 };
 
 const cAutopilotAltitude = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[1]": // Target Altitude
+            case "debug[2]": // Current Altitude
+                return cScale100(toFriendly, v);
+            default:
+                return v;
+        }
+    } else {
         return v;
-    }
-
-    switch (fieldName) {
-        case "debug[1]": // Target Altitude
-        case "debug[2]": // Current Altitude
-            return cScale100(toFriendly, v);
-        default:
-            return v;
     }
 };
 
 const cAutopilotPid = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Velocity
+            case "debug[1]": // Distance Error
+                return cScale100(toFriendly, v);
+            default:
+                return v;
+        }
+    } else {
         return v;
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Velocity
-        case "debug[1]": // Distance Error
-            return cScale100(toFriendly, v);
-        default:
-            return v;
-    }
 };
+
 const cPositionNav = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Target Velocity
+            case "debug[1]": // Velocity
+            case "debug[2]": // Velocity Error
+                return cScale100(toFriendly, v);
+            default: // PIDs and status pass through unchanged
+                return v;
+        }
+    } else {
         return v;
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Target Velocity
-        case "debug[1]": // Velocity
-        case "debug[2]": // Velocity Error
-            return cScale100(toFriendly, v);
-        default: // PIDs and status pass through unchanged
-            return v;
-    }
 };
+
 const cAutopilotStop = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Velocity Error East
+            case "debug[1]": // Velocity Error North
+                return cScale100(toFriendly, v);
+            case "debug[4]": // Roll Angle
+            case "debug[5]": // Pitch Angle
+                return cScale10(toFriendly, v);
+            default:
+                return v;
+        }
+    } else {
         return v;
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Velocity Error East
-        case "debug[1]": // Velocity Error North
-            return cScale100(toFriendly, v);
-        case "debug[4]": // Roll Angle
-        case "debug[5]": // Pitch Angle
-            return cScale10(toFriendly, v);
-        default:
-            return v;
-    }
 };
+
 const cGpsRescueVelocity = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Target Velocity
+            case "debug[2]": // Step East * 100
+            case "debug[3]": // Step North * 100
+                return cScale100(toFriendly, v);
+            default:
+                return v;
+        }
+    } else {
         switch (fieldName) {
             case "debug[0]":
             case "debug[1]":
@@ -1915,19 +1929,22 @@ const cGpsRescueVelocity = (toFriendly, v, ctx, fieldName) => {
                 return v;
         }
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Target Velocity
-        case "debug[2]": // Step East * 100
-        case "debug[3]": // Step North * 100
-            return cScale100(toFriendly, v);
-        default:
-            return v;
-    }
 };
 
 const cGpsRescueHeading = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Ground Speed
+                return cScale100(toFriendly, v);
+            case "debug[1]": // GPS Ground Course
+            case "debug[2]": // Yaw Attitude
+            case "debug[3]": // Direction To Home
+            case "debug[4]": // Mag Yaw
+                return cScale10(toFriendly, v);
+            default:
+                return v;
+        }
+    } else {
         switch (fieldName) {
             case "debug[0]":
             case "debug[6]":
@@ -1940,22 +1957,19 @@ const cGpsRescueHeading = (toFriendly, v, ctx, fieldName) => {
                 return v;
         }
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Ground Speed
-            return cScale100(toFriendly, v);
-        case "debug[1]": // GPS Ground Course
-        case "debug[2]": // Yaw Attitude
-        case "debug[3]": // Direction To Home
-        case "debug[4]": // Mag Yaw
-            return cScale10(toFriendly, v);
-        default:
-            return v;
-    }
 };
-
 const cGpsRescueTracking = (toFriendly, v, ctx, fieldName) => {
-    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+    if (isApiAtLeast(ctx, API_VERSION_1_49)) {
+        switch (fieldName) {
+            case "debug[0]": // Velocity
+            case "debug[2]": // Altitude
+            case "debug[3]": // Target Altitude
+                return cScale100(toFriendly, v);
+            default:
+                // Heading/Bearing are already in degrees.
+                return v;
+        }
+    } else {
         switch (fieldName) {
             case "debug[0]":
             case "debug[1]":
@@ -1970,18 +1984,7 @@ const cGpsRescueTracking = (toFriendly, v, ctx, fieldName) => {
                 return v;
         }
     }
-
-    switch (fieldName) {
-        case "debug[0]": // Velocity
-        case "debug[2]": // Altitude
-        case "debug[3]": // Target Altitude
-            return cScale100(toFriendly, v);
-        default:
-            // Heading/Bearing are already in degrees.
-            return v;
-    }
 };
-
 const DEBUG_CONVERT = {
     NONE: {
         "debug[2]": cScale100,
