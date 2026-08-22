@@ -1693,6 +1693,21 @@
     "configurationTelemetry": {
         "message": "Telemetry"
     },
+    "telemetryInstanceProtocol": {
+        "message": "Telemetry $1 Protocol"
+    },
+    "telemetryInstancePort": {
+        "message": "Telemetry $1 Serial Port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Telemetry $1 Baud Rate"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Camera Control Serial Port"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART a RunCam protocol camera is wired to. Set on the device itself from API 1.49; the Ports tab only shows it."
+    },
     "configurationTelemetryHelp": {
         "message": "Telemetry output from receiver"
     },
@@ -6271,6 +6286,24 @@
     "osdSetupVideoFormatOptionHd": {
         "message": "HD",
         "description": "Option for the video format in the OSD"
+    },
+    "osdSerialPort": {
+        "message": "OSD Serial Port"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART a serial OSD is wired to. Set on the OSD itself from API 1.49; the Ports tab only shows it."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Custom Text Serial Port"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART custom OSD text is received on."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Custom Text Baud Rate"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Baud rate for the custom OSD text port."
     },
     "osdSetupUnitsTitle": {
         "message": "Units"
