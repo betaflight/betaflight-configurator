@@ -1234,7 +1234,7 @@ export function getDebugFieldNames(apiVersion) {
             "XY F",
             "Status",
         );
-        result.AUTOPILOT_NAV = debugFields(
+        result.POSITION_NAV = debugFields(
             "Autopilot Nav",
             "Target Velocity",
             "Velocity Error",
@@ -1421,7 +1421,7 @@ const autopilotPidDecode = (v, ctx, fieldName) => {
             return f0(v);
     }
 };
-const autopilotNavDecode = (v, ctx, fieldName) => {
+const positionNavDecode = (v, ctx, fieldName) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
     }
@@ -1589,7 +1589,7 @@ const DEBUG_DECODE = {
     ALTITUDE: altitudeDecode,
     AUTOPILOT_ALTITUDE: autopilotAltitudeDecode,
     AUTOPILOT_PID: autopilotPidDecode,
-    AUTOPILOT_NAV: autopilotNavDecode,
+    POSITION_NAV: positionNavDecode,
     AUTOPILOT_STOP: autopilotStopDecode,
 
     POSITION_EST: {
@@ -2008,7 +2008,7 @@ const DEBUG_CONVERT = {
     ALTITUDE: cAltitude,
     AUTOPILOT_ALTITUDE: cAutopilotAltitude,
     AUTOPILOT_PID: cAutopilotPid,
-    AUTOPILOT_NAV: cPositionNav,
+    POSITION_NAV: cPositionNav,
     AUTOPILOT_STOP: cAutopilotStop,
 
     POSITION_EST: {
