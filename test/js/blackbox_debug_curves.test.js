@@ -77,6 +77,17 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "GYRO_SAMPLE", "debug[4]")).toEqual({ min: 0, max: 100 });
     });
 
+    it("keeps gyro scaling across the multi gyro rename in API 1.47", () => {
+        const gyro = { min: -1200, max: 1200 };
+        expect(rangeFor("1.46.0", "DUAL_GYRO_RAW", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.46.0", "DUAL_GYRO_DIFF", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.46.0", "DUAL_GYRO_SCALED", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.49.0", "MULTI_GYRO_RAW", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.49.0", "MULTI_GYRO_DIFF", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.49.0", "MULTI_GYRO_SCALED", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.49.0", "GYRO_RAW", "debug[0]")).toEqual(gyro);
+    });
+
     it("keeps EZLANDING on its own curve shape", () => {
         expect(curveFor("1.49.0", "EZLANDING", "debug[0]")).toEqual({
             offset: -5000,
