@@ -73,6 +73,19 @@
                                 size="xs"
                             />
                         </SettingRow>
+                        <SettingRow
+                            v-if="showRangefinder && sonarHardwareEnabled && rangefinderPortAvailable"
+                            :label="$t('rangefinderSerialPort')"
+                            :help="$t('rangefinderSerialPortHelp')"
+                        >
+                            <USelect
+                                v-model="rangefinderPortIdentifier"
+                                :items="rangefinderPortOptions"
+                                :disabled="!rangefinderPortWritable"
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
                         <SettingRow v-if="showOpticalFlow" :label="$t('configurationOpticalflow')" fullWidth>
                             <USwitch v-model="opticalFlowHardwareEnabled" />
                             <USelect
@@ -83,6 +96,19 @@
                                         .filter((_, i) => i > 0)
                                         .map((label, i) => ({ label, value: i + 1 }))
                                 "
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            v-if="showOpticalFlow && opticalFlowHardwareEnabled && opticalFlowPortAvailable"
+                            :label="$t('opticalflowSerialPort')"
+                            :help="$t('opticalflowSerialPortHelp')"
+                        >
+                            <USelect
+                                v-model="opticalFlowPortIdentifier"
+                                :items="opticalFlowPortOptions"
+                                :disabled="!opticalFlowPortWritable"
                                 class="min-w-40"
                                 size="xs"
                             />
@@ -762,6 +788,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
@@ -808,6 +835,27 @@ import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 
 const fcStore = useFlightControllerStore();
 const { saveAndReboot } = useReboot();
+
+// From API 1.49 each of these owns its own UART. Both still set the same FUNCTION_LIDAR bit in the
+// synthesised mask, which is why neither can be read back from it — the setting is the only thing
+// that says which port belongs to which sensor.
+const {
+    available: rangefinderPortAvailable,
+    writable: rangefinderPortWritable,
+    options: rangefinderPortOptions,
+    selectedIdentifier: rangefinderPortIdentifier,
+    load: loadRangefinderPort,
+    write: writeRangefinderPort,
+} = useFeaturePort({ setting: "rangefinder_uart", functionName: "LIDAR_TF" });
+
+const {
+    available: opticalFlowPortAvailable,
+    writable: opticalFlowPortWritable,
+    options: opticalFlowPortOptions,
+    selectedIdentifier: opticalFlowPortIdentifier,
+    load: loadOpticalFlowPort,
+    write: writeOpticalFlowPort,
+} = useFeaturePort({ setting: "opticalflow_uart", functionName: "LIDAR_TF" });
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -1985,6 +2033,8 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        rangefinderPort: rangefinderPortIdentifier.value,
+        opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
@@ -2132,6 +2182,9 @@ const loadConfig = async () => {
                 console.warn("Failed to load sensor types", error);
             }
 
+            await loadRangefinderPort();
+            await loadOpticalFlowPort();
+
             hydrateSensorConfig();
             hydrateAlignment();
             resolveSensorNames();
@@ -2231,6 +2284,11 @@ const saveConfig = () =>
             if (isApi146.value) {
                 await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
             }
+
+            // Between the parameter group writes and the persist that serialises them, so a
+            // refused port throws before anything reaches EEPROM.
+            await writeRangefinderPort();
+            await writeOpticalFlowPort();
 
             gui_log(i18n.getMessage("sensorConfigSaved"));
 

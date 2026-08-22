@@ -5,12 +5,9 @@ import FC from "../../src/js/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
+import { GPS_BAUD_RATES } from "../../src/composables/ports/featureBaudRates";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
-import {
-    buildPortOptions,
-    findFeaturePortIdentifier,
-    useFeaturePort,
-} from "../../src/composables/ports/useFeaturePort";
+import { buildBaudOptions, buildPortOptions, useFeaturePort } from "../../src/composables/ports/useFeaturePort";
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
@@ -28,32 +25,6 @@ const ports = [
     { identifier: 51, functions: [] },
     { identifier: 53, functions: ["RX_SERIAL"] },
 ];
-
-describe("findFeaturePortIdentifier", () => {
-    it("finds the port the feature is assigned to", () => {
-        expect(findFeaturePortIdentifier(ports, "RX_SERIAL")).toBe(53);
-        expect(findFeaturePortIdentifier(ports, "MSP")).toBe(20);
-    });
-
-    it("reports no port when the feature is unassigned", () => {
-        expect(findFeaturePortIdentifier(ports, "GPS")).toBe(PORT_NONE);
-    });
-
-    it("survives a port list the FC has not filled in", () => {
-        expect(findFeaturePortIdentifier([], "RX_SERIAL")).toBe(PORT_NONE);
-        expect(findFeaturePortIdentifier(undefined, "RX_SERIAL")).toBe(PORT_NONE);
-        expect(findFeaturePortIdentifier([{ identifier: 51 }], "RX_SERIAL")).toBe(PORT_NONE);
-    });
-
-    it("takes the first claimant when two ports carry the function", () => {
-        const duplicated = [
-            { identifier: 51, functions: ["RX_SERIAL"] },
-            { identifier: 53, functions: ["RX_SERIAL"] },
-        ];
-
-        expect(findFeaturePortIdentifier(duplicated, "RX_SERIAL")).toBe(51);
-    });
-});
 
 describe("buildPortOptions", () => {
     const options = () => buildPortOptions(ports, { functionName: "RX_SERIAL", noneLabel: "None" });
@@ -105,8 +76,17 @@ describe("buildPortOptions", () => {
 describe("useFeaturePort", () => {
     let scope;
     let port;
+    let replies;
 
-    function withApiVersion(apiVersion) {
+    // A `get` for a setting the firmware was not built with is refused; a `set` just succeeds.
+    function reply(command) {
+        if (replies[command]) {
+            return replies[command];
+        }
+        return command.startsWith("get ") ? ["###ERROR IN get: INVALID NAME###"] : [];
+    }
+
+    function withFeature(options, apiVersion = API_VERSION_1_49) {
         FC.CONFIG.apiVersion = apiVersion;
         FC.CONFIG.flightControllerVersion = "4.6.0";
         FC.SERIAL_CONFIG = { ports: [...ports] };
@@ -114,17 +94,18 @@ describe("useFeaturePort", () => {
         scope?.stop();
         scope = effectScope();
         scope.run(() => {
-            port = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
+            port = useFeaturePort(options);
         });
     }
 
     beforeEach(() => {
         setActivePinia(createPinia());
         FC.resetState();
+        replies = { "get rx_uart": ["rx_uart = UART3"] };
         cliSend.mockReset();
-        cliSend.mockResolvedValue([]);
+        cliSend.mockImplementation((command) => Promise.resolve(reply(command)));
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
-        withApiVersion(API_VERSION_1_49);
+        withFeature({ setting: "rx_uart", functionName: "RX_SERIAL" });
     });
 
     afterEach(() => {
@@ -134,7 +115,7 @@ describe("useFeaturePort", () => {
     });
 
     it("does nothing on firmware that still owns the port through the mask", async () => {
-        withApiVersion(API_VERSION_1_48);
+        withFeature({ setting: "rx_uart", functionName: "RX_SERIAL" }, API_VERSION_1_48);
 
         expect(port.available.value).toBe(false);
 
@@ -146,12 +127,52 @@ describe("useFeaturePort", () => {
         expect(cliSend).not.toHaveBeenCalled();
     });
 
-    it("reads the current assignment out of the serial config", async () => {
+    it("reads the port from the feature's own setting, not from the mask", async () => {
+        // the mask would answer 53 for RX_SERIAL either way, so point the setting somewhere else
+        replies["get rx_uart"] = ["rx_uart = UART1"];
+
         await port.load();
 
         expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP2_COMMON_SERIAL_CONFIG);
-        expect(port.selectedIdentifier.value).toBe(53);
+        expect(cliSend).toHaveBeenCalledWith("get rx_uart");
+        expect(port.selectedIdentifier.value).toBe(51);
         expect(port.changed.value).toBe(false);
+    });
+
+    it("resolves the port name against the ports this board reported", async () => {
+        // UART3 is both identifier 2 and 53; only the reported list settles which
+        await port.load();
+
+        expect(port.selectedIdentifier.value).toBe(53);
+    });
+
+    it("reads an unassigned feature as no port", async () => {
+        replies["get rx_uart"] = ["rx_uart = NONE"];
+
+        await port.load();
+
+        expect(port.selectedIdentifier.value).toBe(PORT_NONE);
+    });
+
+    it("reports itself unsupported when the build has no such setting", async () => {
+        withFeature({ setting: "msp_uart_3", functionName: "MSP" });
+
+        await port.load();
+
+        expect(port.supported.value).toBe(false);
+        expect(port.available.value).toBe(false);
+    });
+
+    it("writes nothing for an instance the build does not have", async () => {
+        // the tabs loop write() over all three instances, so an absent one has to be inert
+        withFeature({ setting: "msp_uart_3", functionName: "MSP", baud: { setting: "msp_baud_3" } });
+
+        await port.load();
+        expect(port.supported.value).toBe(false);
+
+        cliSend.mockClear();
+        await expect(port.write()).resolves.toBeUndefined();
+        expect(cliSend).not.toHaveBeenCalled();
     });
 
     it("writes the selection as a CLI set and settles the dirty state", async () => {
@@ -177,6 +198,7 @@ describe("useFeaturePort", () => {
 
     it("writes nothing when the selection has not moved", async () => {
         await port.load();
+        cliSend.mockClear();
 
         await port.write();
 
@@ -184,12 +206,157 @@ describe("useFeaturePort", () => {
     });
 
     it("keeps the change pending when the firmware rejects the set", async () => {
-        cliSend.mockResolvedValue(["###ERROR: invalid name###"]);
-
         await port.load();
         port.selectedIdentifier.value = 51;
+        cliSend.mockResolvedValue(["###ERROR IN set: INVALID NAME###"]);
 
         await expect(port.write()).rejects.toThrow(/ERROR/);
         expect(port.changed.value).toBe(true);
+    });
+
+    it("offers the baud rates the firmware prints when the feature has no curated list", async () => {
+        replies = {
+            "get blackbox_uart": ["blackbox_uart = UART3"],
+            "get blackbox_baud": [
+                "blackbox_baud = 115200",
+                "Allowed values: AUTO, 9600, 115200, 230400",
+                "Default value: AUTO",
+            ],
+        };
+        withFeature({ setting: "blackbox_uart", functionName: "BLACKBOX", baud: { setting: "blackbox_baud" } });
+
+        await port.load();
+
+        expect(port.selectedBaud.value).toBe("115200");
+        expect(port.baudOptions.value.map((option) => option.value)).toEqual(["AUTO", "9600", "115200", "230400"]);
+    });
+
+    it("keeps a curated rate list rather than the firmware's", async () => {
+        replies = {
+            "get gps_uart": ["gps_uart = UART3"],
+            "get gps_baud": ["gps_baud = 57600", "Allowed values: AUTO, 9600, 57600"],
+        };
+        withFeature({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        await port.load();
+
+        expect(port.baudOptions.value.map((option) => option.value)).not.toContain("AUTO");
+    });
+
+    it("writes only the baud when the port has not moved", async () => {
+        replies = {
+            "get gps_uart": ["gps_uart = UART3"],
+            "get gps_baud": ["gps_baud = 57600"],
+        };
+        withFeature({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        await port.load();
+        port.selectedBaud.value = "115200";
+        expect(port.changed.value).toBe(true);
+
+        cliSend.mockClear();
+        await port.write();
+
+        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_baud = 115200"]);
+        expect(port.changed.value).toBe(false);
+    });
+
+    it("keeps the baud pending when the firmware refuses it, after the port already went through", async () => {
+        replies = {
+            "get gps_uart": ["gps_uart = UART3"],
+            "get gps_baud": ["gps_baud = 57600"],
+        };
+        withFeature({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        await port.load();
+        port.selectedIdentifier.value = 51;
+        port.selectedBaud.value = "115200";
+
+        cliSend.mockClear();
+        cliSend.mockImplementation((command) =>
+            Promise.resolve(command.startsWith("set gps_baud") ? ["###ERROR IN set: INVALID VALUE###"] : []),
+        );
+
+        await expect(port.write()).rejects.toThrow(/ERROR/);
+
+        // the port has to have gone out first, or the pending state below proves nothing
+        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_uart = UART1", "set gps_baud = 115200"]);
+        expect(port.changed.value).toBe(true);
+    });
+
+    it("carries a protocol beside the port and writes it first", async () => {
+        replies = {
+            "get telemetry_1_uart": ["telemetry_1_uart = UART3"],
+            "get telemetry_1_baud": ["telemetry_1_baud = AUTO", "Allowed values: AUTO, 115200"],
+            "get telemetry_1_protocol": [
+                "telemetry_1_protocol = SMARTPORT",
+                "Allowed values: NONE, FRSKY_HUB, SMARTPORT, MAVLINK",
+            ],
+        };
+        withFeature({
+            setting: "telemetry_1_uart",
+            functionName: ["TELEMETRY_SMARTPORT", "TELEMETRY_MAVLINK"],
+            baud: { setting: "telemetry_1_baud" },
+            protocol: { setting: "telemetry_1_protocol" },
+        });
+
+        await port.load();
+
+        expect(port.selectedProtocol.value).toBe("SMARTPORT");
+        expect(port.protocolOptions.value.map((option) => option.value)).toContain("MAVLINK");
+
+        port.selectedProtocol.value = "MAVLINK";
+        port.selectedIdentifier.value = 51;
+        cliSend.mockClear();
+
+        await port.write();
+
+        const sent = cliSend.mock.calls.map((call) => call[0]);
+        expect(sent).toEqual(["set telemetry_1_protocol = MAVLINK", "set telemetry_1_uart = UART1"]);
+    });
+
+    it("leaves a shared bit off its own annotations for every protocol it may claim", async () => {
+        const labels = buildPortOptions([{ identifier: 53, functions: ["TELEMETRY_SMARTPORT"] }], {
+            functionName: ["TELEMETRY_SMARTPORT", "TELEMETRY_MAVLINK"],
+        }).map((option) => option.label);
+
+        expect(labels).toContain("UART3");
+    });
+});
+
+describe("buildBaudOptions", () => {
+    it("offers the feature's rates, labelled as they are sent", () => {
+        expect(buildBaudOptions(GPS_BAUD_RATES)).toEqual(GPS_BAUD_RATES.map((rate) => ({ value: rate, label: rate })));
+    });
+
+    it("does not offer AUTO for GPS, which the firmware silently reads as 230400", () => {
+        expect(GPS_BAUD_RATES).not.toContain("AUTO");
+    });
+
+    it("keeps a stored rate the feature no longer offers", () => {
+        const values = buildBaudOptions(GPS_BAUD_RATES, "AUTO").map((option) => option.value);
+
+        expect(values).toContain("AUTO");
+        expect(values).toHaveLength(GPS_BAUD_RATES.length + 1);
+    });
+
+    it("does not duplicate a stored rate that is already offered", () => {
+        expect(buildBaudOptions(GPS_BAUD_RATES, "57600")).toHaveLength(GPS_BAUD_RATES.length);
+    });
+
+    it("copes with a feature that has no baud of its own", () => {
+        expect(buildBaudOptions(undefined)).toEqual([]);
     });
 });

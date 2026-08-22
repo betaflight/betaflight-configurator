@@ -87,6 +87,19 @@
                                 />
                             </SettingRow>
 
+                            <SettingRow
+                                v-if="vtxPortAvailable"
+                                :label="$t('vtxSerialPort')"
+                                :help="$t('vtxSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="vtxPortIdentifier"
+                                    :items="vtxPortOptions"
+                                    :disabled="!vtxPortWritable"
+                                    class="w-36"
+                                />
+                            </SettingRow>
+
                             <!-- Low power disarm -->
                             <SettingRow :label="$t('vtxLowPowerDisarm')" :help="$t('vtxLowPowerDisarmHelp')">
                                 <USelect
@@ -387,6 +400,7 @@ import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { useTranslation } from "i18next-vue";
 
 export default defineComponent({
@@ -413,7 +427,7 @@ export default defineComponent({
             powerLevelList,
             deviceReady,
             vtxTypeString,
-            saveButtonDisabled,
+            saveButtonDisabled: vtxConfigSaveDisabled,
             vtxSupported,
             vtxTableNotConfigured,
             factoryBandsNotSupported,
@@ -437,6 +451,23 @@ export default defineComponent({
 
         const { addInterval } = useInterval();
         const { isSaving, runSave } = useSaving();
+
+        // The mask bit a VTX claims is chosen by its protocol, so all three are its own.
+        const {
+            available: vtxPortAvailable,
+            writable: vtxPortWritable,
+            options: vtxPortOptions,
+            selectedIdentifier: vtxPortIdentifier,
+            changed: vtxPortChanged,
+            load: loadVtxPort,
+            write: writeVtxPort,
+        } = useFeaturePort({
+            setting: "vtx_uart",
+            functionName: ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP"],
+        });
+
+        // A port-only change still has to enable Save; the VTX config's own dirty state cannot see it.
+        const saveButtonDisabled = computed(() => vtxConfigSaveDisabled.value && !vtxPortChanged.value);
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },
@@ -497,6 +528,7 @@ export default defineComponent({
 
         onMounted(async () => {
             await loadVtxConfig();
+            await loadVtxPort();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
             GUI.content_ready();
@@ -505,8 +537,9 @@ export default defineComponent({
         const handleSave = () =>
             runSave(
                 async () => {
-                    await saveVtx();
+                    await saveVtx(writeVtxPort);
                     await loadVtxConfig();
+                    await loadVtxPort();
                 },
                 {
                     onError: (error) => {
@@ -647,6 +680,10 @@ export default defineComponent({
 
         return {
             // State
+            vtxPortAvailable,
+            vtxPortWritable,
+            vtxPortOptions,
+            vtxPortIdentifier,
             savePending,
             factoryBandsSupported,
             frequencyMode,
