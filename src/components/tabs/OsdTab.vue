@@ -672,13 +672,13 @@ const saveMenuItems = computed(() => [
         {
             label: i18n.getMessage("osdSetupSave"),
             icon: "i-lucide-save",
-            disabled: !osdStore.dirty || isSaving.value,
+            disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
             icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value || (hasLoadedConfig.value && !osdStore.dirty),
+            disabled: isSaving.value || (hasLoadedConfig.value && !portsOrConfigDirty.value),
             onSelect: refreshConfig,
         },
     ],

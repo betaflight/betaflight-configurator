@@ -284,11 +284,15 @@ describe("useFeaturePort", () => {
         port.selectedIdentifier.value = 51;
         port.selectedBaud.value = "115200";
 
+        cliSend.mockClear();
         cliSend.mockImplementation((command) =>
             Promise.resolve(command.startsWith("set gps_baud") ? ["###ERROR IN set: INVALID VALUE###"] : []),
         );
 
         await expect(port.write()).rejects.toThrow(/ERROR/);
+
+        // the port has to have gone out first, or the pending state below proves nothing
+        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_uart = UART1", "set gps_baud = 115200"]);
         expect(port.changed.value).toBe(true);
     });
 

@@ -1423,7 +1423,7 @@ const openEscDshotDirectionDialog = () => {
 // Action Toolbar Buttons
 const handleSave = (reboot = true) => {
     // Don't save if no changes
-    if (!configHasChanged.value) {
+    if (!configHasChanged.value && !escSensorPortChanged.value) {
         return;
     }
 
