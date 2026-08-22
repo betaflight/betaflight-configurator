@@ -72,6 +72,36 @@ export function getPortDisplayName(identifier) {
 }
 
 /**
+ * The identifier a CLI port name refers to on this board.
+ *
+ * The name alone is ambiguous — the two UART identifier blocks share their names — so only the
+ * ports the FC reported can settle it. A name this board does not report reads as unassigned,
+ * which is also what the firmware does with an assignment naming a port it has no driver for.
+ *
+ * @param {Array<{identifier: number}>} ports FC.SERIAL_CONFIG.ports
+ * @param {string|null} name as the CLI prints it, e.g. "UART3", "VCP", "NONE"
+ * @returns {number} identifier, or PORT_NONE
+ */
+export function findPortIdentifierByCliName(ports, name) {
+    const wanted = (name ?? "").trim().toUpperCase();
+
+    if (!wanted || wanted === PORT_NAME_NONE) {
+        return PORT_NONE;
+    }
+
+    const reported = (ports ?? []).find((port) => getPortCliName(port.identifier) === wanted);
+    if (reported) {
+        return reported.identifier;
+    }
+
+    const candidates = Object.keys(portCliNames)
+        .map(Number)
+        .filter((identifier) => portCliNames[identifier] === wanted);
+
+    return candidates.length === 1 ? candidates[0] : PORT_NONE;
+}
+
+/**
  * Builds the CLI command that assigns a port to a feature.
  *
  * Throws rather than falling back to the raw identifier: the firmware resolves this setting by

@@ -2352,6 +2352,12 @@
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
     },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD Custom Text"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },

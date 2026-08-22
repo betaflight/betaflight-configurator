@@ -3,27 +3,22 @@ import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { i18n } from "../../js/localization";
-import { findCliError, findCliSettingValue, isMspCliSupported, send as cliSend } from "../useMspCliSession";
+import {
+    findCliError,
+    findCliSettingAllowedValues,
+    findCliSettingValue,
+    isMspCliSupported,
+    send as cliSend,
+} from "../useMspCliSession";
 import { serialPortsAreReadOnly } from "./usePortsReadOnly";
-import { PORT_NONE, formatPortSetCommand, getPortDisplayName } from "./portNames";
-
-/**
- * The port a feature is currently assigned to, read from the per-port function mask.
- *
- * @param {Array<{identifier: number, functions: string[]}>} ports FC.SERIAL_CONFIG.ports
- * @param {string} functionName e.g. "RX_SERIAL"
- * @returns {number} identifier, or PORT_NONE when unassigned
- */
-export function findFeaturePortIdentifier(ports, functionName) {
-    const port = (ports ?? []).find((candidate) => (candidate.functions ?? []).includes(functionName));
-
-    return port ? port.identifier : PORT_NONE;
-}
+import { PORT_NONE, findPortIdentifierByCliName, formatPortSetCommand, getPortDisplayName } from "./portNames";
 
 /**
  * @param {Array<{identifier: number, functions: string[]}>} ports
  * @param {object} options
- * @param {string} options.functionName the feature's own function, left out of the annotations
+ * @param {string|string[]} options.functionName the feature's own function(s), left out of the
+ *   annotations. An array where the bit the firmware sets depends on the configured protocol,
+ *   as it does for a VTX.
  * @param {number} [options.currentIdentifier] kept in the list even if the FC did not report it
  * @param {string} [options.noneLabel]
  * @param {(functionName: string) => string} [options.describeFunction]
@@ -34,9 +29,10 @@ export function buildPortOptions(
     { functionName, currentIdentifier = PORT_NONE, noneLabel = "None", describeFunction = (name) => name } = {},
 ) {
     const options = [{ value: PORT_NONE, label: noneLabel }];
+    const own = Array.isArray(functionName) ? functionName : [functionName];
 
     for (const port of ports ?? []) {
-        const claimedElsewhere = (port.functions ?? []).filter((name) => name !== functionName);
+        const claimedElsewhere = (port.functions ?? []).filter((name) => !own.includes(name));
         const displayName = getPortDisplayName(port.identifier);
 
         options.push({
@@ -76,33 +72,48 @@ function describePortFunction(functionName) {
 /**
  * Serial port assignment for one feature, owned by that feature's own tab.
  *
- * From API 1.49 the port lives on the feature's parameter group and the per-port function mask
- * is a read-only view synthesised from those, so the assignment is read over MSP with the rest
- * of the serial config but written through the CLI.
+ * From API 1.49 the port lives on the feature's parameter group, so it is read and written
+ * through that setting rather than through the per-port function mask. The mask is only a
+ * synthesised view and cannot answer "which port is this feature on" in general: the three MSP
+ * and three telemetry instances share a bit, a rangefinder and an optical flow sensor share one,
+ * a VTX sets a bit chosen by its protocol, and an OSD on MSP DisplayPort sets none at all. The
+ * mask is still what builds the port list and its "claimed by" annotations.
  *
- * Features that also own their baud rate pass `baud`; the port and the baud are two settings on
- * the same parameter group, so they load and persist together.
+ * Whether a build has the setting at all is discovered the same way — a `get` for a setting the
+ * firmware was not built with answers INVALID NAME, which is how the instance count for MSP and
+ * telemetry reaches the app (MAX_MSP_PORT_COUNT and MAX_TELEMETRY_PROVIDERS never do).
  *
  * @param {object} options
  * @param {string} options.setting CLI setting name, e.g. "rx_uart"
- * @param {string} options.functionName port function the feature claims, e.g. "RX_SERIAL"
- * @param {{setting: string, rates: string[]}} [options.baud] omit for a feature with no baud of
- *   its own, such as a serial receiver, whose rate follows the protocol
+ * @param {string|string[]} options.functionName port function(s) the feature claims in the mask,
+ *   used only to keep its own claim out of the annotations
+ * @param {{setting: string, rates?: string[]}} [options.baud] omit for a feature with no baud of
+ *   its own, such as a serial receiver, whose rate follows the protocol. Without `rates` the
+ *   values the firmware prints for the setting are offered.
+ * @param {{setting: string}} [options.protocol] a lookup setting the feature carries beside its
+ *   port, as a telemetry instance carries its protocol
  */
-export function useFeaturePort({ setting, functionName, baud = null }) {
+export function useFeaturePort({ setting, functionName, baud = null, protocol = null }) {
     const fcStore = useFlightControllerStore();
 
-    const available = computed(() => serialPortsAreReadOnly(fcStore.config.apiVersion));
+    const apiSupported = computed(() => serialPortsAreReadOnly(fcStore.config.apiVersion));
+    const supported = ref(true);
+    const available = computed(() => apiSupported.value && supported.value);
     const writable = computed(() => available.value && isMspCliSupported());
 
     const selectedIdentifier = ref(PORT_NONE);
     const assignedIdentifier = ref(PORT_NONE);
     const selectedBaud = ref(null);
     const assignedBaud = ref(null);
+    const baudRates = ref(baud?.rates ?? null);
+    const selectedProtocol = ref(null);
+    const assignedProtocol = ref(null);
+    const protocolValues = ref(null);
 
     const portChanged = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
     const baudChanged = computed(() => Boolean(baud) && selectedBaud.value !== assignedBaud.value);
-    const changed = computed(() => portChanged.value || baudChanged.value);
+    const protocolChanged = computed(() => Boolean(protocol) && selectedProtocol.value !== assignedProtocol.value);
+    const changed = computed(() => portChanged.value || baudChanged.value || protocolChanged.value);
 
     const options = computed(() =>
         buildPortOptions(fcStore.serialConfig?.ports, {
@@ -113,24 +124,71 @@ export function useFeaturePort({ setting, functionName, baud = null }) {
         }),
     );
 
-    const baudOptions = computed(() => buildBaudOptions(baud?.rates, selectedBaud.value));
+    const baudOptions = computed(() => buildBaudOptions(baudRates.value, selectedBaud.value));
+    const protocolOptions = computed(() => (protocolValues.value ?? []).map((value) => ({ value, label: value })));
+
+    // Returns null when the firmware does not have the setting, so the caller can tell an absent
+    // instance from one that is simply unassigned.
+    async function readSetting(name, { discoverValues = false } = {}) {
+        const lines = await cliSend(`get ${name}`);
+        if (findCliError(lines)) {
+            return null;
+        }
+
+        const value = findCliSettingValue(lines, name);
+        if (value === null) {
+            return null;
+        }
+
+        return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
+    }
 
     async function load() {
-        if (!available.value) {
+        supported.value = true;
+        selectedIdentifier.value = PORT_NONE;
+        assignedIdentifier.value = PORT_NONE;
+        selectedBaud.value = null;
+        assignedBaud.value = null;
+        selectedProtocol.value = null;
+        assignedProtocol.value = null;
+
+        if (!apiSupported.value) {
             return;
         }
 
         await MSP.promise(MSPCodes.MSP2_COMMON_SERIAL_CONFIG);
 
-        assignedIdentifier.value = findFeaturePortIdentifier(fcStore.serialConfig?.ports, functionName);
+        if (!isMspCliSupported()) {
+            return;
+        }
+
+        const port = await readSetting(setting);
+        if (!port) {
+            supported.value = false;
+            return;
+        }
+
+        assignedIdentifier.value = findPortIdentifierByCliName(fcStore.serialConfig?.ports, port.value);
         selectedIdentifier.value = assignedIdentifier.value;
 
-        // Not read from the port entry alongside the mask: the synthesised baud only appears on the
-        // port that owns the function, so an unassigned feature would report the firmware default
-        // instead of what is stored, and a save would then skip a write it owed.
-        if (baud && writable.value) {
-            assignedBaud.value = findCliSettingValue(await cliSend(`get ${baud.setting}`), baud.setting);
-            selectedBaud.value = assignedBaud.value;
+        if (baud) {
+            const stored = await readSetting(baud.setting, { discoverValues: !baud.rates });
+            if (stored) {
+                if (!baud.rates && stored.allowed) {
+                    baudRates.value = stored.allowed;
+                }
+                assignedBaud.value = stored.value;
+                selectedBaud.value = stored.value;
+            }
+        }
+
+        if (protocol) {
+            const stored = await readSetting(protocol.setting, { discoverValues: true });
+            if (stored) {
+                protocolValues.value = stored.allowed;
+                assignedProtocol.value = stored.value;
+                selectedProtocol.value = stored.value;
+            }
         }
     }
 
@@ -146,6 +204,11 @@ export function useFeaturePort({ setting, functionName, baud = null }) {
             return;
         }
 
+        if (protocolChanged.value) {
+            await sendSetting(`set ${protocol.setting} = ${selectedProtocol.value}`);
+            assignedProtocol.value = selectedProtocol.value;
+        }
+
         if (portChanged.value) {
             await sendSetting(formatPortSetCommand(setting, selectedIdentifier.value));
             assignedIdentifier.value = selectedIdentifier.value;
@@ -157,5 +220,18 @@ export function useFeaturePort({ setting, functionName, baud = null }) {
         }
     }
 
-    return { available, writable, options, selectedIdentifier, baudOptions, selectedBaud, changed, load, write };
+    return {
+        available,
+        supported,
+        writable,
+        options,
+        selectedIdentifier,
+        baudOptions,
+        selectedBaud,
+        protocolOptions,
+        selectedProtocol,
+        changed,
+        load,
+        write,
+    };
 }

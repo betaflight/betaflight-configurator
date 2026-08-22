@@ -119,6 +119,23 @@ export function findCliSettingValue(lines, setting) {
     return null;
 }
 
+// A MODE_LOOKUP setting is printed with the names it accepts, so the app can offer exactly those
+// rather than carrying its own copy of a firmware table. NULL table entries are skipped by the
+// firmware, so the list is not positionally aligned with the enum — names only.
+export function findCliSettingAllowedValues(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed values:\s*(.+)$/.exec(line.trim());
+        if (match) {
+            return match[1]
+                .split(",")
+                .map((value) => value.trim())
+                .filter(Boolean);
+        }
+    }
+
+    return null;
+}
+
 export async function saveAndReconnect() {
     let saveError = null;
     try {
