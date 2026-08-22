@@ -79,6 +79,18 @@ const REBOOT_RECONNECT_RETRY_MS = 1000;
 // it is dropped for the next retry. Short because the normal 10s handshake timeout would
 // consume the whole reboot window (the retry loop skips ticks while a connection is open).
 const REBOOT_HANDSHAKE_STALL_MS = 3000;
+// How long (from the start of the reboot window) a serial link must stay open before we treat
+// it as having SURVIVED the reboot rather than being about to drop. A soft-resetting ESP32
+// keeps its USB serial enumerated (USB-UART bridge or native USB-JTAG), so the link never
+// drops and the transport-reconnect branch — gated on !isConnected() — never fires. Once past
+// this settle (~flush 1.5s + ~1s FC boot) we drop the stale link ourselves so the reconnect
+// runs a fresh handshake. Short enough for a fast recovery, long enough not to tear down an
+// STM32 link whose OS-level drop the platform has not reported yet.
+const REBOOT_FORCED_RELINK_SETTLE_MS = 2500;
+// A reboot's link survived past the settle above and we forced a single reconnect for it.
+// Guards the forced drop to one attempt per reboot; after it, the normal stall/reconnect
+// machinery owns the rest. Reset at the start of every reboot cycle (rebootReconnect).
+let rebootForcedRelinkTried = false;
 // The BLE link was kept open across the current reboot (softResetForReboot). While true,
 // a stalled handshake keeps riding the known-good GATT session instead of dropping it.
 // Cleared on any real transport close.
@@ -1464,6 +1476,9 @@ function rebootReconnect() {
     // never run two overlapping retry loops.
     stopRebootReconnect();
 
+    // Fresh cycle: allow one forced relink for a link that survives the reboot (see the loop).
+    rebootForcedRelinkTried = false;
+
     rebootReconnectTimerId = setTimeout(() => {
         const driven = isDrivenRebootTarget(DeviceHandler.devicePicker.selectedDevice);
 
@@ -1531,15 +1546,51 @@ function rebootReconnect() {
             // which is exactly what stops the flasher from picking up the board.
             const waitedOut = !mayConnect && (driven || flasherOwnsPort() || ourDeviceBack);
 
-            if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
+            // Success, or the window truly ran out.
+            if (CONFIGURATOR.connectionValid || timedOut) {
                 stopRebootReconnect();
-                // The reboot window has closed (reconnected, timed out, or nothing left to wait
-                // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
-                // link that never made it back to connected is dropped for real here.
+                // Reconnected, or timed out: concludeReboot settles to CONNECTED/IDLE so normal
+                // selection resumes. A kept BLE link that never made it back to connected is
+                // dropped for real here.
                 getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
                 releaseKeptRebootLink();
                 return;
             }
+
+            // A link that SURVIVED the reboot (e.g. an ESP32 soft-reset keeps its USB serial
+            // enumerated — USB-UART bridge or native USB-JTAG) never drops, so no transport
+            // reconnect fires and connectionValid stays false. The FC came back and answers MSP,
+            // but nothing re-runs the handshake. Force it: once the link has stayed open past a
+            // short settle, drop it ONCE and then drive the reconnect to completion. This runs
+            // regardless of Auto-Connect — it finishes the reboot the user asked for on the link
+            // we already own, it is NOT an auto-grab of a re-enumerated device — but still yields
+            // the port to the flasher.
+            const settled = Date.now() - state.rebootWindowStartedAt >= REBOOT_FORCED_RELINK_SETTLE_MS;
+            if (isConnected() && settled && !GUI.connecting_to && !rebootForcedRelinkTried && !flasherOwnsPort()) {
+                console.log(`${logHead} Link survived reboot past settle — dropping once to force reconnect`);
+                rebootForcedRelinkTried = true;
+                dropStalledRebootConnection(); // closes the transport WITHOUT stopping this loop
+                return;
+            }
+            // Drive the forced relink's reconnect: the link we dropped above is now closed, so
+            // re-open it and run a fresh handshake (-> finishOpen -> connectionValid), Auto-Connect
+            // aside. The reboot window bounds the retries.
+            if (rebootForcedRelinkTried && !isConnected() && !GUI.connecting_to && !flasherOwnsPort()) {
+                MSP.disconnect_cleanup();
+                connectDisconnect({ automatic: true });
+                return;
+            }
+
+            // Auto-Connect off and nothing left to wait for: end the window. Skip while a link is
+            // still open (its forced relink above owns it) or while a forced relink is in flight —
+            // those conclude on connectionValid or the window timeout, not here.
+            if (waitedOut && !rebootForcedRelinkTried && !isConnected()) {
+                stopRebootReconnect();
+                getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
+                releaseKeptRebootLink();
+                return;
+            }
+
             if (mayConnect && !isConnected() && !GUI.connecting_to) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
