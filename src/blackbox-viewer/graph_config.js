@@ -1491,7 +1491,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                             return getCurveForMinMaxFields(fieldName);
                     }
                 case "AUTOPILOT_ALTITUDE":
-                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
                     }
                     switch (fieldName) {
@@ -1528,7 +1528,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                             return getCurveForMinMaxFields(fieldName);
                     }
                 case "AUTOPILOT_PID":
-                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
                     }
                     switch (fieldName) {
@@ -1565,7 +1565,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                             return getCurveForMinMaxFields(fieldName);
                     }
                 case "AUTOPILOT_STOP":
-                    if (!semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                    if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
                     }
                     switch (fieldName) {
