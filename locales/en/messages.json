@@ -1739,6 +1739,18 @@
     "configurationRangefinderType": {
         "message": "Type"
     },
+    "rangefinderSerialPort": {
+        "message": "Rangefinder Serial Port"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART the rangefinder is wired to. Set on the rangefinder itself from API 1.49; the Ports tab only shows it."
+    },
+    "opticalflowSerialPort": {
+        "message": "Optical Flow Serial Port"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART the optical flow sensor is wired to. A module reporting both flow and range needs each set separately."
+    },
     "configurationOpticalflow": {
         "message": "Optical Flow",
         "description": "Don't translate!!!"
