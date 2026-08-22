@@ -281,8 +281,19 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
         };
     };
 
+    const minMaxPower1 = function (min, max) {
+        return {
+            power: 1,
+            MinMax: {
+                min,
+                max,
+            },
+        };
+    };
+
     const gyroScaleMargin = 1.2; // Give a 20% margin for gyro graphs
     const highResolutionScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1;
+
     try {
         if (
             fieldName.match(/^motor\[/) ||
@@ -1466,13 +1477,7 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 case "MAVLINK_TELEMETRY":
                     switch (fieldName) {
                         case "debug[0]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1,
-                                },
-                            };
+                            return minMaxPower1(0, 1);
                         case "debug[1]":
                         case "debug[2]":
                         case "debug[3]":
@@ -1480,16 +1485,11 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         case "debug[5]":
                         case "debug[6]":
                         case "debug[7]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
+                            return minMaxPower1(0, 100);
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+
                 case "AUTOPILOT_ALTITUDE":
                     if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
@@ -1497,36 +1497,22 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     switch (fieldName) {
                         case "debug[1]": // Target Altitude
                         case "debug[2]": // Current Altitude
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
+                            return minMaxPower1(-10, 10);
+
                         case "debug[0]": // New Throttle
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 1000,
-                                    max: 2000,
-                                },
-                            };
+                            return minMaxPower1(1000, 2000);
+
                         case "debug[3]": // P
                         case "debug[4]": // I
                         case "debug[5]": // D
                         case "debug[6]": // A
                         case "debug[7]": // F
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(-500, 500);
+
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+
                 case "AUTOPILOT_PID":
                     if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
@@ -1534,36 +1520,22 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     switch (fieldName) {
                         case "debug[0]": // XY Velocity
                         case "debug[1]": // XY Distance Error
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
+                            return minMaxPower1(-10, 10);
+
                         case "debug[2]": // XY P
                         case "debug[3]": // XY I
                         case "debug[4]": // XY D
                         case "debug[5]": // XY A
                         case "debug[6]": // XY F
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(-500, 500);
+
                         case "debug[7]": // Status
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(0, 500);
+
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+
                 case "AUTOPILOT_NAV":
                     if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
@@ -1572,35 +1544,21 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         case "debug[0]": // Target Velocity
                         case "debug[1]": // Velocity
                         case "debug[2]": // Velocity Error
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
+                            return minMaxPower1(-10, 10);
+
                         case "debug[3]": // P
                         case "debug[4]": // I
                         case "debug[5]": // D
                         case "debug[6]": // A
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(-500, 500);
+
                         case "debug[7]": // Status
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(0, 500);
+
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+
                 case "AUTOPILOT_STOP":
                     if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);
@@ -1608,36 +1566,22 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     switch (fieldName) {
                         case "debug[0]": // Velocity Error East
                         case "debug[1]": // Velocity Error North
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -5,
-                                    max: 5,
-                                },
-                            };
+                            return minMaxPower1(-5, 5);
+
                         case "debug[2]": // PID Sum East
                         case "debug[3]": // PID Sum North
                         case "debug[4]": // Roll Angle Command
                         case "debug[5]": // Pitch Angle Command
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(-500, 500);
+
                         case "debug[6]": // Status Flags East
                         case "debug[7]": // Status Flags North
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 500,
-                                },
-                            };
+                            return minMaxPower1(0, 500);
+
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+
                 case "POSITION_EST":
                     switch (fieldName) {
                         case "debug[0]": // Position
@@ -1646,22 +1590,12 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         case "debug[3]": // Velocity East
                         case "debug[4]": // Velocity North
                         case "debug[5]": // Raw Acceleration
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
+                            return minMaxPower1(-10, 10);
+
                         case "debug[6]": // GPS R Pos
                         case "debug[7]": // GPS R Vel
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1000,
-                                },
-                            };
+                            return minMaxPower1(0, 1000);
+
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
