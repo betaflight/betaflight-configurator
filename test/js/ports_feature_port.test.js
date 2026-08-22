@@ -247,6 +247,51 @@ describe("useFeaturePort", () => {
         expect(port.baudOptions.value.map((option) => option.value)).not.toContain("AUTO");
     });
 
+    it("writes only the baud when the port has not moved", async () => {
+        replies = {
+            "get gps_uart": ["gps_uart = UART3"],
+            "get gps_baud": ["gps_baud = 57600"],
+        };
+        withFeature({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        await port.load();
+        port.selectedBaud.value = "115200";
+        expect(port.changed.value).toBe(true);
+
+        cliSend.mockClear();
+        await port.write();
+
+        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_baud = 115200"]);
+        expect(port.changed.value).toBe(false);
+    });
+
+    it("keeps the baud pending when the firmware refuses it, after the port already went through", async () => {
+        replies = {
+            "get gps_uart": ["gps_uart = UART3"],
+            "get gps_baud": ["gps_baud = 57600"],
+        };
+        withFeature({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        await port.load();
+        port.selectedIdentifier.value = 51;
+        port.selectedBaud.value = "115200";
+
+        cliSend.mockImplementation((command) =>
+            Promise.resolve(command.startsWith("set gps_baud") ? ["###ERROR IN set: INVALID VALUE###"] : []),
+        );
+
+        await expect(port.write()).rejects.toThrow(/ERROR/);
+        expect(port.changed.value).toBe(true);
+    });
+
     it("carries a protocol beside the port and writes it first", async () => {
         replies = {
             "get telemetry_1_uart": ["telemetry_1_uart = UART3"],

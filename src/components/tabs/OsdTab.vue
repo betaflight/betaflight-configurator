@@ -563,12 +563,12 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving" size="xs">
+                    <UButton @click="saveConfig()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
                         <UButton
-                            :disabled="!osdStore.dirty || isSaving"
+                            :disabled="!portsOrConfigDirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                             square
                             size="xs"
@@ -599,6 +599,7 @@ const {
     writable: osdPortWritable,
     options: osdPortOptions,
     selectedIdentifier: osdPortIdentifier,
+    changed: osdPortChanged,
     load: loadOsdPort,
     write: writeOsdPort,
 } = useFeaturePort({ setting: "osd_uart", functionName: "FRSKY_OSD" });
@@ -610,6 +611,7 @@ const {
     selectedIdentifier: customTextPortIdentifier,
     baudOptions: customTextBaudOptions,
     selectedBaud: customTextBaud,
+    changed: customTextPortChanged,
     load: loadCustomTextPort,
     write: writeCustomTextPort,
 } = useFeaturePort({
@@ -617,6 +619,9 @@ const {
     functionName: "OSD_CUSTOM_TEXT",
     baud: { setting: "osd_custom_text_baud" },
 });
+
+// A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
+const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";

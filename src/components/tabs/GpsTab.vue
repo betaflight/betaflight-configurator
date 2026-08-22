@@ -492,10 +492,10 @@ export default defineComponent({
         // Named rather than excluded, so a provider this build of the app does not know about
         // hides the row instead of offering a port that would be silently dropped — the provider
         // index can land outside the list, which reads back as undefined.
-        const providersUsingSerialPort = ["NMEA", "UBLOX", "SEPTENTRIO"];
+        const providersUsingSerialPort = new Set(["NMEA", "UBLOX", "SEPTENTRIO"]);
         const selectedProviderName = computed(() => gpsProtocols.value[gpsConfig.provider]);
         const showSerialPort = computed(
-            () => gpsPortAvailable.value && providersUsingSerialPort.includes(selectedProviderName.value),
+            () => gpsPortAvailable.value && providersUsingSerialPort.has(selectedProviderName.value),
         );
 
         // The bus belongs to the DroneCAN stack rather than to the GPS, so it is offered here only

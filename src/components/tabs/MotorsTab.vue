@@ -595,6 +595,7 @@ const {
     writable: escSensorPortWritable,
     options: escSensorPortOptions,
     selectedIdentifier: escSensorPortIdentifier,
+    changed: escSensorPortChanged,
     load: loadEscSensorPort,
     write: writeEscSensorPort,
 } = useFeaturePort({ setting: "esc_sensor_uart", functionName: "ESC_SENSOR" });
@@ -789,7 +790,7 @@ useMotorDataPolling(motorsTestingEnabled);
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
     toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
-    saveDisabled: !configHasChanged.value,
+    saveDisabled: !configHasChanged.value && !escSensorPortChanged.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
 

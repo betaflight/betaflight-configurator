@@ -124,7 +124,7 @@ export function findCliSettingValue(lines, setting) {
 // firmware, so the list is not positionally aligned with the enum — names only.
 export function findCliSettingAllowedValues(lines) {
     for (const line of lines ?? []) {
-        const match = /^Allowed values:\s*(.+)$/.exec(line.trim());
+        const match = /^Allowed values:(.*)$/.exec(line.trim());
         if (match) {
             return match[1]
                 .split(",")

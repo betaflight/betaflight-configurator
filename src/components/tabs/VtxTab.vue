@@ -427,7 +427,7 @@ export default defineComponent({
             powerLevelList,
             deviceReady,
             vtxTypeString,
-            saveButtonDisabled,
+            saveButtonDisabled: vtxConfigSaveDisabled,
             vtxSupported,
             vtxTableNotConfigured,
             factoryBandsNotSupported,
@@ -458,12 +458,16 @@ export default defineComponent({
             writable: vtxPortWritable,
             options: vtxPortOptions,
             selectedIdentifier: vtxPortIdentifier,
+            changed: vtxPortChanged,
             load: loadVtxPort,
             write: writeVtxPort,
         } = useFeaturePort({
             setting: "vtx_uart",
             functionName: ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP"],
         });
+
+        // A port-only change still has to enable Save; the VTX config's own dirty state cannot see it.
+        const saveButtonDisabled = computed(() => vtxConfigSaveDisabled.value && !vtxPortChanged.value);
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },

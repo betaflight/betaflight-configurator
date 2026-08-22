@@ -70,6 +70,33 @@ function describePortFunction(functionName) {
 }
 
 /**
+ * Reads one CLI setting.
+ *
+ * @returns {Promise<{value: string, allowed: string[]|null}|null>} null when the firmware does not
+ *   have the setting, so a caller can tell an absent instance from one that is simply unassigned
+ */
+async function readSetting(name, { discoverValues = false } = {}) {
+    const lines = await cliSend(`get ${name}`);
+    if (findCliError(lines)) {
+        return null;
+    }
+
+    const value = findCliSettingValue(lines, name);
+    if (value === null) {
+        return null;
+    }
+
+    return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
+}
+
+async function sendSetting(command) {
+    const error = findCliError(await cliSend(command));
+    if (error) {
+        throw new Error(error);
+    }
+}
+
+/**
  * Serial port assignment for one feature, owned by that feature's own tab.
  *
  * From API 1.49 the port lives on the feature's parameter group, so it is read and written
@@ -127,22 +154,6 @@ export function useFeaturePort({ setting, functionName, baud = null, protocol = 
     const baudOptions = computed(() => buildBaudOptions(baudRates.value, selectedBaud.value));
     const protocolOptions = computed(() => (protocolValues.value ?? []).map((value) => ({ value, label: value })));
 
-    // Returns null when the firmware does not have the setting, so the caller can tell an absent
-    // instance from one that is simply unassigned.
-    async function readSetting(name, { discoverValues = false } = {}) {
-        const lines = await cliSend(`get ${name}`);
-        if (findCliError(lines)) {
-            return null;
-        }
-
-        const value = findCliSettingValue(lines, name);
-        if (value === null) {
-            return null;
-        }
-
-        return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
-    }
-
     async function load() {
         supported.value = true;
         selectedIdentifier.value = PORT_NONE;
@@ -189,13 +200,6 @@ export function useFeaturePort({ setting, functionName, baud = null, protocol = 
                 assignedProtocol.value = stored.value;
                 selectedProtocol.value = stored.value;
             }
-        }
-    }
-
-    async function sendSetting(command) {
-        const error = findCliError(await cliSend(command));
-        if (error) {
-            throw new Error(error);
         }
     }
 
