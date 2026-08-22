@@ -463,17 +463,17 @@ const pidControllerParams = computed(() => {
     const s = filteredSc.value;
     const gainDec = isBF.value && gte("3.1.0") && lte("4.3.9") ? 3 : 0;
 
+    const dMaxParams = [
+        param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
+        param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
+        param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
+        param("D Max Gain", fmtVal(s.d_max_gain, 0)),
+        param("D Max Advance", fmtVal(s.d_max_advance, 0)),
+    ];
+
     return [
         // D Max (BF 4.0+)
-        ...(isBF.value && gte("4.0.0")
-            ? [
-                  param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
-                  param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
-                  param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
-                  param("D Max Gain", fmtVal(s.d_max_gain, 0)),
-                  param("D Max Advance", fmtVal(s.d_max_advance, 0)),
-              ]
-            : []),
+        ...(isBF.value && gte("4.0.0") ? dMaxParams : []),
         // Anti Gravity, TPA, PID limits & modifiers
         param("AG Mode", selectVal(s.anti_gravity_mode, ANTI_GRAVITY_MODE)),
         param("AG Gain", fmtVal(s.anti_gravity_gain, gainDec)),
