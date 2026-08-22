@@ -21,6 +21,12 @@ function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}) {
         }),
         getMinMaxForFieldDuringAllTime: () => ({ ...LOGGED_RANGE }),
         rcCommandRawToDegreesPerSecond: (value, axis) => value * (axis + 2) * 0.5,
+        // The debug field unit conversions reach back into the flight log for hardware scaling.
+        // Without these the conversion throws and the catch quietly hands back the fallback curve.
+        gyroRawToDegreesPerSecond: (value) => value / 16.4,
+        accRawToGs: (value) => value / 2048,
+        rcCommandRawToThrottle: (value) => (value - 1000) / 10,
+        ThrottleTorcCommandRaw: (value) => value * 10 + 1000,
         getMainFieldNames: () => [],
     };
 }
