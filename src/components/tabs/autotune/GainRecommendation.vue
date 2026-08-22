@@ -58,18 +58,15 @@
             </table>
         </div>
 
-        <!-- Axis selector + Apply Button -->
+        <!-- Tuning target + Axis selector + Apply Button -->
         <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 text-sm">
+                <span class="text-dimmed">{{ $t("autotuneTargetMargin") }}</span>
+                <USelect v-model="targetPhaseMargin" :items="marginOptions" size="xs" class="min-w-40" />
+            </label>
             <label v-if="visibleAxisList.length > 1" class="flex items-center gap-2 text-sm">
                 <span class="text-dimmed">{{ $t("autotuneApplyFromAxis") }}</span>
-                <select
-                    v-model="selectedAxisKey"
-                    class="bg-transparent border border-[var(--surface-300)] rounded px-2 py-1"
-                >
-                    <option v-for="axis in visibleAxisList" :key="axis.key" :value="axis.key">
-                        {{ $t(axis.labelKey) }}
-                    </option>
-                </select>
+                <USelect v-model="selectedAxisKey" :items="axisOptions" size="xs" class="min-w-28" />
             </label>
             <UButton @click="onApply" size="xs" :disabled="!isConnected || !selectedAxisKey || applying">
                 {{ $t("autotuneApplyGains") }}
@@ -78,6 +75,12 @@
             <span v-if="applied" class="text-sm text-green-500 font-bold" v-html="$t('autotuneApplied')"></span>
             <span v-if="applyError" class="text-sm text-red-500 font-bold">{{ applyError }}</span>
         </div>
+
+        <!-- Notes on any axis where the recommendation is not simply the margin
+             target met in full: the craft's phase peak caps the reachable
+             margin, the per-pass clamp cuts the change short, or robustness
+             rather than margin set the gain. -->
+        <p v-for="note in recommendationNotes" :key="note.key" class="text-sm text-dimmed">{{ note.text }}</p>
     </UiBox>
 </template>
 
@@ -86,12 +89,13 @@ import { computed, ref, watch } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import { useConnectionStore } from "@/stores/connection";
 import { useAutotune } from "@/composables/useAutotune";
+import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
 import { i18n } from "@/js/localization";
 import UiBox from "../../elements/UiBox.vue";
 
 const store = useAutotuneStore();
 const connectionStore = useConnectionStore();
-const { applyGains } = useAutotune();
+const { applyGains, recomputeGains } = useAutotune();
 
 const applied = ref(false);
 const applying = ref(false);
@@ -99,6 +103,140 @@ const applyError = ref("");
 const selectedAxisKey = ref(null);
 
 const isConnected = computed(() => connectionStore.connectionValid);
+
+const MARGIN_OPTIONS = [
+    { value: PHASE_MARGIN_PRESETS.AGGRESSIVE, labelKey: "autotuneMarginAggressive" },
+    { value: PHASE_MARGIN_PRESETS.NORMAL, labelKey: "autotuneMarginNormal" },
+    { value: PHASE_MARGIN_PRESETS.CONSERVATIVE, labelKey: "autotuneMarginConservative" },
+];
+
+const marginOptions = computed(() =>
+    MARGIN_OPTIONS.map((opt) => ({
+        label: `${i18n.getMessage(opt.labelKey)} (${opt.value}°)`,
+        value: opt.value,
+    })),
+);
+
+const axisOptions = computed(() =>
+    visibleAxisList.value.map((axis) => ({ label: i18n.getMessage(axis.labelKey), value: axis.key })),
+);
+
+const targetPhaseMargin = computed({
+    get: () => store.targetPhaseMarginDeg,
+    set: (v) => {
+        store.targetPhaseMarginDeg = v;
+    },
+});
+
+// Changing the target only re-derives gains from the stored transfer functions,
+// so there is no need to re-import the log. Watching the store rather than
+// acting in the setter also covers writes from elsewhere, such as reset().
+watch(
+    () => store.targetPhaseMarginDeg,
+    (target) => {
+        recomputeGains(target);
+        applied.value = false;
+        applyError.value = "";
+    },
+);
+
+// Axes whose phase never reaches the requested margin, so their gain is held.
+const unreachableAxisDefs = computed(() =>
+    visibleAxisList.value.filter((axis) => {
+        const g = store.analysisResult?.axes?.[axis.key]?.gains;
+        return g && !Number.isFinite(g.targetCrossover);
+    }),
+);
+
+const unreachableAxes = computed(() => unreachableAxisDefs.value.map((axis) => i18n.getMessage(axis.labelKey)));
+
+// Scoped to the axes actually named in the message, so the limit reported is
+// theirs — a reachable axis with a lower ceiling must not be quoted here.
+const maxReachableMargin = computed(() => {
+    const values = unreachableAxisDefs.value
+        .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.maxPhaseMargin)
+        .filter((v) => Number.isFinite(v));
+    return values.length ? Math.min(...values) : Number.NaN;
+});
+
+const unreachableMessage = computed(() =>
+    i18n.getMessage("autotuneTargetUnreachable", [
+        unreachableAxes.value.join(", "),
+        targetPhaseMargin.value,
+        formatDeg(maxReachableMargin.value),
+    ]),
+);
+
+// Axes carrying a given flag on their recommendation, as { name, gains } pairs
+// so a message can quote the figures behind the flag as well as name the axis.
+function flaggedAxes(flag) {
+    return visibleAxisList.value
+        .map((axis) => ({
+            name: i18n.getMessage(axis.labelKey),
+            gains: store.analysisResult?.axes?.[axis.key]?.gains,
+        }))
+        .filter((entry) => entry.gains?.[flag]);
+}
+
+function axesFlagged(flag) {
+    return flaggedAxes(flag).map((entry) => entry.name);
+}
+
+// Every way the recommendation can be something other than the margin target
+// met in full. Without these the table shows a crossover limit and a proposed
+// gain with no indication that the second does not reach the first.
+const recommendationNotes = computed(() => {
+    const notes = [];
+
+    if (unreachableAxes.value.length) {
+        notes.push({ key: "unreachable", text: unreachableMessage.value });
+    }
+
+    // Split by which end of the per-pass range bit. A craft asking for more gain
+    // than one pass allows and one asking for less are held by different bounds,
+    // so they cannot share a single quoted limit.
+    const clamped = flaggedAxes("gainClamped");
+    const clampedUp = clamped.filter((e) => e.gains.requestedGain > e.gains.gainClampLimit);
+    const clampedDown = clamped.filter((e) => e.gains.requestedGain < e.gains.gainClampLimit);
+
+    if (clampedUp.length) {
+        notes.push({
+            key: "clamped-up",
+            text: i18n.getMessage("autotuneGainClamped", [
+                clampedUp.map((e) => e.name).join(", "),
+                Math.max(...clampedUp.map((e) => e.gains.requestedGain)).toFixed(1),
+                clampedUp[0].gains.gainClampLimit.toFixed(1),
+            ]),
+        });
+    }
+
+    if (clampedDown.length) {
+        notes.push({
+            key: "clamped-down",
+            text: i18n.getMessage("autotuneGainClamped", [
+                clampedDown.map((e) => e.name).join(", "),
+                Math.min(...clampedDown.map((e) => e.gains.requestedGain)).toFixed(2),
+                clampedDown[0].gains.gainClampLimit.toFixed(1),
+            ]),
+        });
+    }
+
+    const fragile = axesFlagged("sensitivityUnreachable");
+    if (fragile.length) {
+        notes.push({
+            key: "fragile",
+            text: i18n.getMessage("autotuneSensitivityUnreachable", [fragile.join(", ")]),
+        });
+    }
+
+    // Suppressed where the stronger message above already covers the axis.
+    const binds = axesFlagged("sensitivityBinds").filter((name) => !fragile.includes(name));
+    if (binds.length) {
+        notes.push({ key: "binds", text: i18n.getMessage("autotuneSensitivityBinds", [binds.join(", ")]) });
+    }
+
+    return notes;
+});
 
 const AXIS_DEFS = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
@@ -114,9 +252,14 @@ const PID_ROWS = [
 
 const ANALYSIS_FIELDS = [
     { key: "bandwidth", labelKey: "autotuneBandwidth", format: formatHz },
+    { key: "crossover", labelKey: "autotuneCrossover", format: formatHz },
     { key: "phaseMargin", labelKey: "autotunePhaseMargin", format: formatDeg },
+    { key: "targetCrossover", labelKey: "autotuneTargetCrossover", format: formatHz },
+    { key: "maxPhaseMargin", labelKey: "autotuneMaxPhaseMargin", format: formatDeg },
+    { key: "loopDelay", labelKey: "autotuneLoopDelay", format: formatMs },
     { key: "resonantPeak", labelKey: "autotuneResonantPeak", format: formatDb },
     { key: "sensitivityPeak", labelKey: "autotuneSensitivityPeak", format: formatDb },
+    { key: "predictedSensitivityPeak", labelKey: "autotunePredictedSensitivity", format: formatDb },
     { key: "overshoot", labelKey: "autotuneOvershoot", format: formatPct },
     { key: "riseTime", labelKey: "autotuneRiseTime", format: formatMs },
     { key: "settlingTime", labelKey: "autotuneSettlingTime", format: formatMs },
@@ -261,20 +404,23 @@ function changeClass(pct) {
     return "text-dimmed";
 }
 
+// Metrics are NaN when the measurement gives no basis for them \u2014 for example a
+// craft whose open-loop phase never reaches the margin limit inside the
+// coherent band. Render those as "--" rather than "NaN".
 function formatHz(v) {
-    return v == null ? "--" : `${v.toFixed(1)} Hz`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} Hz` : "--";
 }
 function formatDeg(v) {
-    return v == null ? "--" : `${v.toFixed(1)}\u00B0`;
+    return Number.isFinite(v) ? `${v.toFixed(1)}\u00B0` : "--";
 }
 function formatDb(v) {
-    return v == null ? "--" : `${v.toFixed(1)} dB`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} dB` : "--";
 }
 function formatPct(v) {
-    return v == null ? "--" : `${v.toFixed(0)}%`;
+    return Number.isFinite(v) ? `${v.toFixed(0)}%` : "--";
 }
 function formatMs(v) {
-    return v == null ? "--" : `${v.toFixed(1)} ms`;
+    return Number.isFinite(v) ? `${v.toFixed(1)} ms` : "--";
 }
 
 function formatChangePct(v) {
