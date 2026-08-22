@@ -534,10 +534,15 @@
         "message": "PID Tuning"
     },
     "tabAutotune": { "message": "Autotune" },
-    "tabBlackboxViewer": { "message": "Blackbox Viewer", "description": "Navigation sidebar label for the Blackbox log viewer tab" },
+    "tabBlackboxViewer": {
+        "message": "Blackbox Viewer",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
     "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
     "autotuneImportButton": { "message": "Import Blackbox Log" },
-    "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
@@ -553,7 +558,9 @@
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
-    "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
     "autotuneSampleCount": { "message": "{{count}} samples" },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
     "autotuneImportAnother": { "message": "Import Another" },
@@ -6944,6 +6951,14 @@
     "osdDescElementLinkQuality": {
         "message": "Link quality indicator based on the percentage of successfully received uncorrupted data packets"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF mode:Link quality",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Link quality only",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
         "description": "One of the elements of the OSD"
@@ -7951,45 +7966,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} samples"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Tilt more!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Detection failed — try with more varied tilting."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Client Cal (Guided)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Auto-prompting 60s calibration"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Guided Calibration"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Step 1/6 — Hold flat, yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Step 2/6 — Flip inverted, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Step 3/6 — Nose straight up, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Step 4/6 — Nose straight down, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Step 5/6 — Left side up, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Step 6/6 — Right side up, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Data collection complete — review and save"
-    },
     "magCalibrationCancel": {
         "message": "Cancel"
     },
@@ -8020,12 +7996,6 @@
     "magCalibrationSamples": {
         "message": "Samples"
     },
-    "magCalibrationQuality": {
-        "message": "Quality"
-    },
-    "magCalibrationResidual": {
-        "message": "Fit Residual"
-    },
     "magCalibrationQualityGood": {
         "message": "Good"
     },
@@ -8037,9 +8007,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offsets"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Sphere fit offsets"
     },
     "magCalibrationUnguided": {
         "message": "Firmware Cal (Legacy)"
@@ -8055,18 +8022,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
-    },
-    "magCalibrationGuided": {
-        "message": "Client Cal (Free)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Rotate freely — configurator computes offsets"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Client Calibration"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Rotate your vehicle in all directions. Aim to make a complete sphere of dots over about one or two minutes. Save the result when the calibration values have stabilised."
     },
     "magCalibrationCheck": {
         "message": "Check"
@@ -8092,17 +8047,14 @@
     "magCalibrationSaveError": {
         "message": "Failed to save calibration values"
     },
-    "magCalibrationAccept": {
-        "message": "Save Calibration"
-    },
     "magCalibrationFull": {
-        "message": "Full Cal (auto-align)"
+        "message": "Calibrate & detect alignment"
     },
     "magCalibrationFullDesc": {
-        "message": "One spin — sets offsets, soft-iron, and the mag's mounting orientation"
+        "message": "Rotate the craft in all directions to calibrate the sensor and automatically detect its mounting orientation."
     },
     "magCalibrationFullTitle": {
-        "message": "Full Calibration"
+        "message": "Calibrate & Detect Alignment"
     },
     "magCalibrationFullInstruction": {
         "message": "Follow the steps below, holding the craft steady through each full turn. The zone count climbs as you reach new angles — aim to cover all 20."
@@ -8138,7 +8090,10 @@
         "message": "{{covered}} / {{total}} zones covered"
     },
     "magCalibrationFullCompute": {
-        "message": "Compute"
+        "message": "Finish calibration"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "More covered zones give higher accuracy — aim for 20 / 20 for best calibration and alignment detection."
     },
     "magCalibrationFullCoverage": {
         "message": "Coverage:"
@@ -8168,7 +8123,22 @@
         "message": "Not enough samples — spin longer"
     },
     "magCalibrationFullNoGeo": {
-        "message": "No GPS or IP location — cannot determine magnetic inclination"
+        "message": "No GPS, browser, or IP location — enter coordinates manually to continue"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Location Required for Calibration"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Manually input latitude and longitude by picking from Google Maps. Your drone has no GPS lock and your device failed to provide location data. Location is needed for magnetometer calibration."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Invalid coordinates format. Please enter as: latitude, longitude (e.g. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Could not compute a magnetic reference for those coordinates. Please check them and try again."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI commands copied to clipboard"
@@ -8208,12 +8178,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "New"
-    },
-    "magAlignmentApply": {
-        "message": "Apply"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detect"
     },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"

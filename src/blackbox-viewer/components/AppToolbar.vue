@@ -53,6 +53,15 @@
                 title="Keyboard Shortcuts"
                 @click="$emit('open-keys')"
             />
+            <UButton
+                variant="ghost"
+                color="neutral"
+                :icon="graphStore.isFullscreen ? 'i-lucide-minimize' : 'i-lucide-maximize'"
+                size="xs"
+                :title="graphStore.isFullscreen ? 'Exit Full Screen (F)' : 'Full Screen (F)'"
+                :aria-pressed="graphStore.isFullscreen"
+                @click="$emit('toggle-fullscreen')"
+            />
         </div>
     </div>
 </template>
@@ -60,12 +69,22 @@
 <script setup>
 import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
+import { useGraphStore } from "../stores/graph.js";
 import LogFileInput from "./LogFileInput.vue";
 
-defineEmits(["files-selected", "export-csv", "export-gpx", "export-workspaces", "open-settings", "open-keys"]);
+defineEmits([
+    "files-selected",
+    "export-csv",
+    "export-gpx",
+    "export-workspaces",
+    "open-settings",
+    "open-keys",
+    "toggle-fullscreen",
+]);
 
 const logStore = useLogStore();
 const appStore = useAppStore();
+const graphStore = useGraphStore();
 </script>
 
 <style scoped>

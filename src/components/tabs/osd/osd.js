@@ -2,7 +2,13 @@ import { i18n } from "../../../js/localization";
 import { bit_check } from "../../../js/bit";
 import FC from "../../../js/fc";
 import { configReportsBuildOption } from "../../../composables/useBuildOptions";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../js/data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../../../js/data_storage";
 import semver from "semver";
 import { have_sensor } from "../../../js/sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
@@ -48,6 +54,17 @@ OSD.initData();
 
 OSD.getVariantForPreview = function (osdData, elementName) {
     return osdData.displayItems.find((element) => element.name === elementName).variant;
+};
+
+OSD.refreshDisplayItemPreview = function (osdData, displayItem) {
+    const displayField = OSD.constants.DISPLAY_FIELDS[displayItem.index] ?? OSD.ALL_DISPLAY_FIELDS[displayItem.name];
+    if (typeof displayField?.preview === "function") {
+        displayItem.preview = displayField.preview(osdData);
+    }
+};
+
+OSD.isCrsfReceiver = function () {
+    return FC.getSerialRxTypes().indexOf("CRSF") === FC.RX_CONFIG.serialrx_provider;
 };
 
 OSD.generateAltitudePreview = function (osdData) {
@@ -181,10 +198,9 @@ OSD.generateTemperaturePreview = function (osdData, temperature) {
     return preview;
 };
 
-OSD.generateLQPreview = function () {
-    const crsfIndex = FC.getSerialRxTypes().indexOf("CRSF");
-    const isXF = crsfIndex === FC.RX_CONFIG.serialrx_provider;
-    return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? "2:100" : "8");
+OSD.generateLQPreview = function (osdData) {
+    const variantSelected = OSD.getVariantForPreview(osdData, "LINK_QUALITY");
+    return FONT.symbol(SYM.LINK_QUALITY) + (OSD.isCrsfReceiver() ? (variantSelected === 0 ? "2:100" : "100") : "8");
 };
 
 OSD.generateCraftName = function () {
@@ -1477,6 +1493,13 @@ OSD.loadDisplayFields = function () {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
         OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants.push("osdTextElementRtcDateTimeVariantTimeOnly");
     }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
+        OSD.ALL_DISPLAY_FIELDS.LINK_QUALITY.variants = [
+            "osdTextElementLinkQualityVariantRfMode",
+            "osdTextElementLinkQualityVariantQualityOnly",
+        ];
+    }
 };
 
 OSD.constants = OSD_CONSTANTS;
@@ -1820,11 +1843,9 @@ OSD.msp = {
             });
         }
 
-        // Generate OSD element previews and positionable that are defined by a function
+        // Generate OSD element previews defined by functions.
         for (const item of data.displayItems) {
-            if (typeof item.preview === "function") {
-                item.preview = item.preview(data);
-            }
+            OSD.refreshDisplayItemPreview(data, item);
         }
     },
     // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled

@@ -25,6 +25,7 @@ import {
     API_VERSION_1_46,
     API_VERSION_1_47,
     API_VERSION_1_48,
+    API_VERSION_1_49,
 } from "../js/data_storage";
 
 /**
@@ -66,6 +67,9 @@ function firmwareToApiVersion(firmwareType, firmwareVersion) {
 
     // Betaflight switched from 4.x to a year-based scheme (2025.12, 2026.x),
     // so a calendar version always compares greater than any 4.x version.
+    if (semver.gte(version, "2026.12.0")) {
+        return API_VERSION_1_49;
+    }
     if (semver.gte(version, "2026.0.0")) {
         return API_VERSION_1_48;
     }
