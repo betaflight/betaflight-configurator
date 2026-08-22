@@ -1,3 +1,7 @@
+import semver from "semver";
+
+import { API_VERSION_1_49 } from "../js/data_storage";
+
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
