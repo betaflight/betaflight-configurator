@@ -2307,6 +2307,18 @@
     "portsHelp": {
         "message": "<strong>Note:</strong> not all combinations are valid.  When the flight controller firmware detects this the serial port configuration will be reset."
     },
+    "portsMspSectionTitle": {
+        "message": "MSP Ports"
+    },
+    "portsMspSectionHelp": {
+        "message": "MSP has no tab of its own, so its ports are assigned here. The table below is a read-only view of what every feature has claimed."
+    },
+    "portsMspInstancePort": {
+        "message": "MSP $1 Serial Port"
+    },
+    "portsMspInstanceBaud": {
+        "message": "MSP $1 Baud Rate"
+    },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">WARNING:</span> The VTX table has not been set up correctly and without it VTX control will not be possible. Please set up the VTX table in $t(tabVtx.message) tab."
     },

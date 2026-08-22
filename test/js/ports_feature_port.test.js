@@ -163,6 +163,18 @@ describe("useFeaturePort", () => {
         expect(port.available.value).toBe(false);
     });
 
+    it("writes nothing for an instance the build does not have", async () => {
+        // the tabs loop write() over all three instances, so an absent one has to be inert
+        withFeature({ setting: "msp_uart_3", functionName: "MSP", baud: { setting: "msp_baud_3" } });
+
+        await port.load();
+        expect(port.supported.value).toBe(false);
+
+        cliSend.mockClear();
+        await expect(port.write()).resolves.toBeUndefined();
+        expect(cliSend).not.toHaveBeenCalled();
+    });
+
     it("writes the selection as a CLI set and settles the dirty state", async () => {
         await port.load();
         port.selectedIdentifier.value = 51;
