@@ -99,6 +99,13 @@ html {
     --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.3);
 
     --ui-radius: 0.35rem;
+
+    --chart-axis-color: var(--surface-600);
+    --chart-axis-label-color: var(--chart-text-color);
+    --chart-tick-color: var(--chart-text-color);
+    --chart-grid-line-color: var(--surface-400);
+    --chart-curve-color: var(--error-500);
+    --chart-text-color: var(--text);
 }
 
 .dark {
@@ -129,6 +136,13 @@ html {
     --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.6);
 
     --text: hsl(0, 0%, 95%);
+
+    --chart-axis-color: var(--surface-500);
+    --chart-axis-label-color: var(--chart-text-color);
+    --chart-tick-color: var(--chart-text-color);
+    --chart-grid-line-color: var(--surface-600);
+    --chart-curve-color: var(--error-400);
+    --chart-text-color: var(--text);
 }
 
 body[data-theme="amber"] {
