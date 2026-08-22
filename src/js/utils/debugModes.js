@@ -144,7 +144,6 @@ export function getDebugModes(apiVersion) {
     if (semver.gte(apiVersion, API_VERSION_1_48)) {
         removeArrayElement(result, "AUTOPILOT_POSITION");
         addArrayElement(result, "AUTOPILOT_PID");
-        // POSITION_NAV  had no debug name/fields in 1.48, but existed in the enum
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
     }
@@ -153,7 +152,6 @@ export function getDebugModes(apiVersion) {
         addArrayElement(result, "PITOT");
         addArrayElement(result, "POSITION_EST");
     }
-
     return result;
 }
 
@@ -1237,15 +1235,14 @@ export function getDebugFieldNames(apiVersion) {
         result.POSITION_NAV = debugFields(
             "Autopilot Nav",
             "Target Velocity",
+            "Velocity",
             "Velocity Error",
-            "Nav P ",
+            "Nav P",
             "Nav I",
             "Nav D",
             "Nav A",
             "Status",
-            "-",
         );
-
         result.AUTOPILOT_STOP = debugFields(
             "Autopilot Stop",
             "East Vel Error",
