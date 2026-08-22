@@ -1648,6 +1648,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC Telemetry Serial Port"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART the ESC telemetry is read on. Set on the ESC sensor itself from API 1.49; the Ports tab only shows it."
+    },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
     },
@@ -7766,6 +7772,12 @@
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxSerialPort": {
+        "message": "Serial Port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART the VTX control protocol runs on. Set on the VTX itself from API 1.49; the Ports tab only shows it."
+    },
     "vtxLowPowerDisarm": {
         "message": "Low Power Disarm",
         "description": "Text of one of the fields of the VTX tab"
@@ -8311,6 +8323,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logging device"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Serial Port"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART used when the logging device is Serial. Set on the blackbox itself from API 1.49; the Ports tab only shows it."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Serial Baud Rate"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud rate for the serial logging port."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"
