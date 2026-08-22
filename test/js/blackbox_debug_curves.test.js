@@ -82,6 +82,8 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.46.0", "DUAL_GYRO_RAW", "debug[0]")).toEqual(gyro);
         expect(rangeFor("1.46.0", "DUAL_GYRO_DIFF", "debug[0]")).toEqual(gyro);
         expect(rangeFor("1.46.0", "DUAL_GYRO_SCALED", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.47.0", "MULTI_GYRO_RAW", "debug[0]")).toEqual(gyro);
+        expect(rangeFor("1.48.0", "MULTI_GYRO_RAW", "debug[0]")).toEqual(gyro);
         expect(rangeFor("1.49.0", "MULTI_GYRO_RAW", "debug[0]")).toEqual(gyro);
         expect(rangeFor("1.49.0", "MULTI_GYRO_DIFF", "debug[0]")).toEqual(gyro);
         expect(rangeFor("1.49.0", "MULTI_GYRO_SCALED", "debug[0]")).toEqual(gyro);
