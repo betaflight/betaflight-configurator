@@ -1564,6 +1564,43 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                         default:
                             return getCurveForMinMaxFields(fieldName);
                     }
+                case "AUTOPILOT_NAV":
+                    if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
+                        return getCurveForMinMaxFields(fieldName);
+                    }
+                    switch (fieldName) {
+                        case "debug[0]": // Target Velocity
+                        case "debug[1]": // Velocity
+                        case "debug[2]": // Velocity Error
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -10,
+                                    max: 10,
+                                },
+                            };
+                        case "debug[3]": // P
+                        case "debug[4]": // I
+                        case "debug[5]": // D
+                        case "debug[6]": // A
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: -500,
+                                    max: 500,
+                                },
+                            };
+                        case "debug[7]": // Status
+                            return {
+                                power: 1,
+                                MinMax: {
+                                    min: 0,
+                                    max: 500,
+                                },
+                            };
+                        default:
+                            return getCurveForMinMaxFields(fieldName);
+                    }
                 case "AUTOPILOT_STOP":
                     if (sysConfig.apiVersion && !semver.gte(sysConfig.apiVersion, API_VERSION_1_49)) {
                         return getCurveForMinMaxFields(fieldName);

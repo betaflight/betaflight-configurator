@@ -144,8 +144,7 @@ export function getDebugModes(apiVersion) {
     if (semver.gte(apiVersion, API_VERSION_1_48)) {
         removeArrayElement(result, "AUTOPILOT_POSITION");
         addArrayElement(result, "AUTOPILOT_PID");
-        // POSITION_NAV is a reserved enum slot in firmware (no name/fields yet);
-        // it must occupy its index so AUTOPILOT_STOP decodes correctly.
+        // POSITION_NAV  had no debug name/fields in 1.48, but existed in the enum
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
     }
@@ -1176,8 +1175,8 @@ export function getDebugFieldNames(apiVersion) {
             "Filtered Flow Rate Y",
         );
 
-        // POSITION_NAV is a reserved firmware enum slot with no fields yet,
-        // so it intentionally has no fieldNames entry.
+        // POSITION_NAV had no names or fields set in 1.48
+        // AUTOPILOT_POSITION was deprecated in 1.48
         delete result.AUTOPILOT_POSITION;
 
         result.RANGEFINDER = debugFields(
@@ -1234,6 +1233,17 @@ export function getDebugFieldNames(apiVersion) {
             "XY A",
             "XY F",
             "Status",
+        );
+        result.AUTOPILOT_NAV = debugFields(
+            "Autopilot Nav",
+            "Target Velocity",
+            "Velocity Error",
+            "Nav P ",
+            "Nav I",
+            "Nav D",
+            "Nav A",
+            "Status",
+            "-",
         );
 
         result.AUTOPILOT_STOP = debugFields(
@@ -1411,7 +1421,20 @@ const autopilotPidDecode = (v, ctx, fieldName) => {
             return f0(v);
     }
 };
+const autopilotNavDecode = (v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return f0(v);
+    }
 
+    switch (fieldName) {
+        case "debug[0]": // Target Velocity
+        case "debug[1]": // Velocity
+        case "debug[2]": // Velocity Error
+            return `${(v / 100).toFixed(2)} m/s`;
+        default:
+            return f0(v);
+    }
+};
 const autopilotStopDecode = (v, ctx, fieldName) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
@@ -1566,6 +1589,7 @@ const DEBUG_DECODE = {
     ALTITUDE: altitudeDecode,
     AUTOPILOT_ALTITUDE: autopilotAltitudeDecode,
     AUTOPILOT_PID: autopilotPidDecode,
+    AUTOPILOT_NAV: autopilotNavDecode,
     AUTOPILOT_STOP: autopilotStopDecode,
 
     POSITION_EST: {
@@ -1849,7 +1873,20 @@ const cAutopilotPid = (toFriendly, v, ctx, fieldName) => {
             return v;
     }
 };
+const cPositionNav = (toFriendly, v, ctx, fieldName) => {
+    if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
+        return v;
+    }
 
+    switch (fieldName) {
+        case "debug[0]": // Target Velocity
+        case "debug[1]": // Velocity
+        case "debug[2]": // Velocity Error
+            return cScale100(toFriendly, v);
+        default: // PIDs and status pass through unchanged
+            return v;
+    }
+};
 const cAutopilotStop = (toFriendly, v, ctx, fieldName) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return v;
@@ -1971,6 +2008,7 @@ const DEBUG_CONVERT = {
     ALTITUDE: cAltitude,
     AUTOPILOT_ALTITUDE: cAutopilotAltitude,
     AUTOPILOT_PID: cAutopilotPid,
+    AUTOPILOT_NAV: cPositionNav,
     AUTOPILOT_STOP: cAutopilotStop,
 
     POSITION_EST: {
