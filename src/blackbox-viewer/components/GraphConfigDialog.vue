@@ -191,6 +191,7 @@
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.min ?? -500"
                                             :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
                                             size="xs"
@@ -215,6 +216,7 @@
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.max ?? 500"
                                             :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
                                             size="xs"
@@ -582,19 +584,22 @@ function onFieldChange(graph, field) {
     } else {
         // Apply defaults for the selected field
         const defaults = getDefaults(field.name);
+        const minMax = { ...defaults.MinMax };
         field.smoothing = defaults.smoothing;
-        field.curve = { power: defaults.power, MinMax: { ...defaults.MinMax } };
+        field.curve = { power: defaults.power, MinMax: minMax, highPrecise: isHighPrecise(minMax) };
     }
 }
 
 function makeField(name, existing, color) {
     const defaults = getDefaults(name);
+    const minMax = existing?.curve?.MinMax ? { ...existing.curve.MinMax } : { ...defaults.MinMax };
     return {
         name,
         smoothing: existing?.smoothing ?? defaults.smoothing,
         curve: {
             power: existing?.curve?.power ?? defaults.power,
-            MinMax: existing?.curve?.MinMax ? { ...existing.curve.MinMax } : { ...defaults.MinMax },
+            MinMax: minMax,
+            highPrecise: isHighPrecise(minMax),
         },
         color: color || existing?.color || palette[0].color,
         lineWidth: existing?.lineWidth ?? 1,
@@ -704,13 +709,19 @@ watch(open, (val) => {
 const normalMinMaxStep = 10;
 const smallMinMaxStep = 0.1;
 
+function isHighPrecise(minMax) {
+    if (!Number.isFinite(minMax?.min) || !Number.isFinite(minMax?.max)) {
+        return false;
+    }
+    return minMax.min % normalMinMaxStep !== 0 || minMax.max % normalMinMaxStep !== 0;
+}
+
 function defineFieldsResolution() {
     for (const graph of localGraphs.value) {
         for (const field of graph.fields) {
-            const min = field?.curve?.MinMax?.min;
-            const max = field?.curve?.MinMax?.max;
-            if (min != null && max != null) {
-                field.curve.highPrecise = min % normalMinMaxStep !== 0 || max % normalMinMaxStep !== 0;
+            const minMax = field?.curve?.MinMax;
+            if (minMax?.min != null && minMax?.max != null) {
+                field.curve.highPrecise = isHighPrecise(minMax);
             }
         }
     }
