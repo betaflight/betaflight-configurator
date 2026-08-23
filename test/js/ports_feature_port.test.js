@@ -175,6 +175,21 @@ describe("useFeaturePort", () => {
         expect(cliSend).not.toHaveBeenCalled();
     });
 
+    it("survives a CLI that never answers, rather than taking the tab load down", async () => {
+        // a busy FC times out, and virtual mode has no CLI at all
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+        cliSend.mockRejectedValue(new Error('Timed out after 2000ms waiting for response to "get rx_uart"'));
+
+        await expect(port.load()).resolves.toBeUndefined();
+
+        expect(port.supported.value).toBe(false);
+        expect(port.available.value).toBe(false);
+
+        cliSend.mockClear();
+        await port.write();
+        expect(cliSend).not.toHaveBeenCalled();
+    });
+
     it("writes the selection as a CLI set and settles the dirty state", async () => {
         await port.load();
         port.selectedIdentifier.value = 51;

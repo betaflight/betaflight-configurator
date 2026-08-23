@@ -72,11 +72,22 @@ function describePortFunction(functionName) {
 /**
  * Reads one CLI setting.
  *
+ * A transport failure reads the same as an absent setting: the row hides and write() becomes a
+ * no-op, so a reply we never saw cannot be mistaken for an unassigned port and written back as
+ * NONE. Letting it throw would take the whole tab load down with it, and a busy FC times out.
+ *
  * @returns {Promise<{value: string, allowed: string[]|null}|null>} null when the firmware does not
  *   have the setting, so a caller can tell an absent instance from one that is simply unassigned
  */
 async function readSetting(name, { discoverValues = false } = {}) {
-    const lines = await cliSend(`get ${name}`);
+    let lines;
+    try {
+        lines = await cliSend(`get ${name}`);
+    } catch (error) {
+        console.warn(`Could not read ${name} over the CLI:`, error);
+        return null;
+    }
+
     if (findCliError(lines)) {
         return null;
     }
