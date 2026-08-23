@@ -164,7 +164,7 @@ describe("useFeaturePort", () => {
     });
 
     it("writes nothing for an instance the build does not have", async () => {
-        // the tabs loop write() over all three instances, so an absent one has to be inert
+        // a caller may write() a setting the build lacks, so an absent one has to be inert
         withFeature({ setting: "msp_uart_3", functionName: "MSP", baud: { setting: "msp_baud_3" } });
 
         await port.load();

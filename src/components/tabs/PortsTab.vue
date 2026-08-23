@@ -18,37 +18,6 @@
                     <p v-html="$t('portsVtxTableNotSet')"></p>
                 </UiBox>
 
-                <UiBox
-                    v-if="anyMspAvailable"
-                    :title="$t('portsMspSectionTitle')"
-                    :help="$t('portsMspSectionHelp')"
-                    type="neutral"
-                    class="mb-4"
-                >
-                    <template v-for="(msp, index) in mspPorts" :key="index">
-                        <template v-if="msp.available">
-                            <SettingRow :label="$t('portsMspInstancePort', [index + 1])">
-                                <USelect
-                                    v-model="msp.selectedIdentifier"
-                                    :items="msp.options"
-                                    :disabled="!msp.writable"
-                                    size="xs"
-                                    class="min-w-40"
-                                />
-                            </SettingRow>
-                            <SettingRow :label="$t('portsMspInstanceBaud', [index + 1])">
-                                <USelect
-                                    v-model="msp.selectedBaud"
-                                    :items="msp.baudOptions"
-                                    :disabled="!msp.writable"
-                                    size="xs"
-                                    class="min-w-40"
-                                />
-                            </SettingRow>
-                        </template>
-                    </template>
-                </UiBox>
-
                 <TabLoadingState v-if="!tabReady || isLoading" size="size-8" color-class="text-muted">
                     <span class="ml-2 text-dimmed">{{ $t("dataWaitingForData") }}</span>
                 </TabLoadingState>
@@ -255,34 +224,20 @@
             </div>
         </div>
 
-        <div v-if="!readOnly || anyMspAvailable" class="content_toolbar toolbar_fixed_bottom">
+        <div v-if="!readOnly" class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
-                <UButton
-                    v-if="!readOnly"
-                    :label="$t('configurationButtonSave')"
-                    size="xs"
-                    :disabled="!dirty"
-                    @click="saveConfig"
-                />
-                <UButton
-                    v-else
-                    :label="$t('configurationButtonSave')"
-                    size="xs"
-                    :disabled="!mspDirty || isSavingMsp"
-                    @click="saveMspPorts"
-                />
+                <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="saveConfig" />
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
-import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import TabLoadingState from "@/components/elements/TabLoadingState.vue";
 import { useTranslation } from "i18next-vue";
@@ -290,9 +245,6 @@ import { usePortsRules } from "../../composables/ports/usePortsRules";
 import { usePortsState } from "../../composables/ports/usePortsState";
 import { usePortsConfiguration } from "../../composables/ports/usePortsConfiguration";
 import { usePortsReadOnly } from "../../composables/ports/usePortsReadOnly";
-import { useFeaturePort } from "../../composables/ports/useFeaturePort";
-import { useReboot } from "@/composables/useReboot";
-import { useSaving } from "@/composables/useSaving";
 
 const { t } = useTranslation();
 
@@ -313,47 +265,12 @@ const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfigurat
 
 const tabReady = ref(false);
 
-// The MSP ports have no feature tab of their own, so from API 1.49 they are assigned here even
-// though the mask grid above is read-only. All three instances set the same FUNCTION_MSP bit, so
-// none of them can be read back from it. MAX_MSP_PORT_COUNT is compile-time, so each is probed.
-const mspPorts = [1, 2, 3].map((instance) =>
-    reactive(
-        useFeaturePort({
-            setting: `msp_uart_${instance}`,
-            functionName: "MSP",
-            baud: { setting: `msp_baud_${instance}` },
-        }),
-    ),
-);
-
-const anyMspAvailable = computed(() => mspPorts.some((port) => port.available));
-const mspDirty = computed(() => mspPorts.some((port) => port.changed));
-
-const { saveAndReboot } = useReboot();
-const { isSaving: isSavingMsp, runSave: runMspSave } = useSaving();
-
-// A reassigned MSP port only takes effect once the firmware opens it, so this always reboots.
-const saveMspPorts = () =>
-    runMspSave(
-        async () => {
-            for (const port of mspPorts) {
-                await port.write();
-            }
-            await saveAndReboot();
-        },
-        { onError: (error) => console.error("Failed to save MSP ports", error) },
-    );
-
 onMounted(() => {
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             tabReady.value = true;
         });
     });
-
-    Promise.all(mspPorts.map((port) => port.load())).catch((error) =>
-        console.error("Failed to read the MSP ports", error),
-    );
 });
 
 const mspBaudItems = mspBaudRates.map((r) => ({ value: r, label: r }));
