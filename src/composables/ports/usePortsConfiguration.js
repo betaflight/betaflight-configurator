@@ -8,6 +8,13 @@ import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
 import { useReboot } from "../useReboot";
 
+/** @typedef {import("./usePortsState").PortRow} PortRow */
+
+/**
+ * @param {PortRow[]} ports - the rows the Ports tab is editing
+ * @param {Record<string, string>} analyticsChanges - accumulated for the save event
+ * @param {object[]} functionRules - the serial function rules for this API version
+ */
 export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     const { saveAndReboot } = useReboot();
 
@@ -87,9 +94,13 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
             if (p.peripheral) {
                 functions.push(p.peripheral);
             }
+            // Functions the FC reported that no slot could hold; the bits this build cannot
+            // name ride along in functionMask and are restored by serialPortFunctionsToMask.
+            functions.push(...(p.reservedFunctions ?? []));
 
             return {
                 identifier: p.identifier,
+                functionMask: p.functionMask ?? 0,
                 msp_baudrate: p.msp_baudrate,
                 telemetry_baudrate: p.telemetry_baudrate,
                 gps_baudrate: p.gps_baudrate === "AUTO" ? "57600" : p.gps_baudrate,
@@ -117,6 +128,11 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     const findRule = (name) => functionRules.find((r) => r.name === name);
     const isMspShareable = (rule) => rule?.sharableWith?.includes("msp") === true;
 
+    // A preserved function is written back on save, and VTX_MSP is the one peripheral firmware
+    // lets share a port with MSP. Clearing MSP under it would produce a combination
+    // serialPortFunctionsConflict() refuses, so the enable stays.
+    const reservedRequiresMsp = (port) => (port.reservedFunctions ?? []).some((name) => name.includes("MSP"));
+
     const onTelemetryChange = (port) => {
         if (port.telemetry) {
             const rule = findRule(port.telemetry);
@@ -124,7 +140,7 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
                 analyticsChanges["Telemetry"] = rule.displayName;
             }
 
-            if (!isMspShareable(rule)) {
+            if (!isMspShareable(rule) && !reservedRequiresMsp(port)) {
                 port.msp = false;
             }
 
@@ -143,7 +159,9 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
             port.msp = true;
             analyticsChanges["MspControl"] = port.peripheral;
         } else if (port.peripheral && !isMspShareable(rule)) {
-            port.msp = false;
+            if (!reservedRequiresMsp(port)) {
+                port.msp = false;
+            }
             delete analyticsChanges["MspControl"];
         }
 
