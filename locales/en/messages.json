@@ -1693,17 +1693,23 @@
     "configurationTelemetry": {
         "message": "Telemetry"
     },
+    "telemetryInstanceTitle": {
+        "message": "Telemetry $1"
+    },
     "telemetryInstanceProtocol": {
-        "message": "Telemetry $1 Protocol"
+        "message": "Protocol"
     },
     "telemetryInstancePort": {
-        "message": "Telemetry $1 Serial Port"
+        "message": "Serial Port"
     },
     "telemetryInstanceBaud": {
-        "message": "Telemetry $1 Baud Rate"
+        "message": "Baud Rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Camera Control"
     },
     "rcdeviceSerialPort": {
-        "message": "Camera Control Serial Port"
+        "message": "Serial Port"
     },
     "rcdeviceSerialPortHelp": {
         "message": "UART a RunCam protocol camera is wired to. Set on the device itself from API 1.49; the Ports tab only shows it."

@@ -159,70 +159,6 @@
                     </div>
 
                     <div class="grid-box col6">
-                        <!-- Telemetry -->
-                        <UiBox
-                            :title="$t('configurationTelemetry')"
-                            :help="$t('configurationTelemetryHelp')"
-                            type="neutral"
-                            collapsible
-                            class="col-span-2"
-                        >
-                            <SettingRow :label="$t('featureTELEMETRY')">
-                                <USwitch
-                                    :model-value="isTelemetryEnabled"
-                                    @update:model-value="(checked) => toggleTelemetry(checked)"
-                                />
-                            </SettingRow>
-                            <template v-for="(telemetry, index) in telemetryPorts" :key="index">
-                                <template v-if="telemetry.available">
-                                    <SettingRow :label="$t('telemetryInstanceProtocol', [index + 1])">
-                                        <USelect
-                                            v-model="telemetry.selectedProtocol"
-                                            :items="telemetry.protocolOptions"
-                                            :disabled="!telemetry.writable"
-                                            size="xs"
-                                            class="min-w-40"
-                                            @update:model-value="onSerialDeviceChange"
-                                        />
-                                    </SettingRow>
-                                    <SettingRow :label="$t('telemetryInstancePort', [index + 1])">
-                                        <USelect
-                                            v-model="telemetry.selectedIdentifier"
-                                            :items="telemetry.options"
-                                            :disabled="!telemetry.writable"
-                                            size="xs"
-                                            class="min-w-40"
-                                            @update:model-value="onSerialDeviceChange"
-                                        />
-                                    </SettingRow>
-                                    <SettingRow :label="$t('telemetryInstanceBaud', [index + 1])">
-                                        <USelect
-                                            v-model="telemetry.selectedBaud"
-                                            :items="telemetry.baudOptions"
-                                            :disabled="!telemetry.writable"
-                                            size="xs"
-                                            class="min-w-40"
-                                            @update:model-value="onSerialDeviceChange"
-                                        />
-                                    </SettingRow>
-                                </template>
-                            </template>
-                            <SettingRow
-                                v-if="rcdevicePortAvailable"
-                                :label="$t('rcdeviceSerialPort')"
-                                :help="$t('rcdeviceSerialPortHelp')"
-                            >
-                                <USelect
-                                    v-model="rcdevicePortIdentifier"
-                                    :items="rcdevicePortOptions"
-                                    :disabled="!rcdevicePortWritable"
-                                    size="xs"
-                                    class="min-w-40"
-                                    @update:model-value="onSerialDeviceChange"
-                                />
-                            </SettingRow>
-                        </UiBox>
-
                         <!-- RSSI -->
                         <UiBox
                             :title="$t('configurationRSSI')"
@@ -276,6 +212,81 @@
                                     />
                                 </UFieldGroup>
                             </SettingRow>
+                        </UiBox>
+
+                        <!-- Camera Control -->
+                        <UiBox
+                            v-if="rcdevicePortAvailable"
+                            :title="$t('rcdeviceSectionTitle')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-2"
+                        >
+                            <SettingRow :label="$t('rcdeviceSerialPort')" :help="$t('rcdeviceSerialPortHelp')">
+                                <USelect
+                                    v-model="rcdevicePortIdentifier"
+                                    :items="rcdevicePortOptions"
+                                    :disabled="!rcdevicePortWritable"
+                                    size="xs"
+                                    class="min-w-28"
+                                    @update:model-value="onSerialDeviceChange"
+                                />
+                            </SettingRow>
+                        </UiBox>
+
+                        <!-- Telemetry -->
+                        <UiBox
+                            :title="$t('configurationTelemetry')"
+                            :help="$t('configurationTelemetryHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-6"
+                        >
+                            <SettingRow :label="$t('featureTELEMETRY')">
+                                <USwitch
+                                    :model-value="isTelemetryEnabled"
+                                    @update:model-value="(checked) => toggleTelemetry(checked)"
+                                />
+                            </SettingRow>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <UiBox
+                                    v-for="{ port, instance } in visibleTelemetryPorts"
+                                    :key="instance"
+                                    :title="$t('telemetryInstanceTitle', { 1: instance })"
+                                    type="neutral"
+                                >
+                                    <SettingRow :label="$t('telemetryInstanceProtocol')">
+                                        <USelect
+                                            v-model="port.selectedProtocol"
+                                            :items="port.protocolOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstancePort')">
+                                        <USelect
+                                            v-model="port.selectedIdentifier"
+                                            :items="port.options"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstanceBaud')">
+                                        <USelect
+                                            v-model="port.selectedBaud"
+                                            :items="port.baudOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                </UiBox>
+                            </div>
                         </UiBox>
 
                         <!-- Stick settings -->
@@ -622,6 +633,7 @@ import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
@@ -746,6 +758,22 @@ const telemetryPorts = [1, 2, 3].map((instance) =>
         }),
     ),
 );
+
+const isTelemetryInstanceInUse = (port) =>
+    port.selectedIdentifier !== PORT_NONE || (port.selectedProtocol && port.selectedProtocol !== "NONE");
+
+// An unused instance is noise, so each one is revealed by the one before it filling in.
+const visibleTelemetryPorts = computed(() => {
+    const supported = telemetryPorts
+        .map((port, index) => ({ port, instance: index + 1 }))
+        .filter(({ port }) => port.available);
+    return supported.filter(
+        (entry, position) =>
+            position === 0 ||
+            isTelemetryInstanceInUse(supported[position - 1].port) ||
+            isTelemetryInstanceInUse(entry.port),
+    );
+});
 
 const {
     available: rcdevicePortAvailable,
