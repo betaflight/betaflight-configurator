@@ -52,8 +52,8 @@ export function usePortsState(getRules) {
         // A port has one slot per group (see functionRules), so a decoded function that no slot
         // claimed - a second peripheral, or a named function with no rule on this API version -
         // would be dropped on save. Park it here and re-emit it verbatim instead.
-        const claimed = [msp && "MSP", rxSerial && "RX_SERIAL", telemetry, sensor, peripheral].filter(Boolean);
-        const reservedFunctions = fcPort.functions.filter((f) => !claimed.includes(f));
+        const claimed = new Set([msp && "MSP", rxSerial && "RX_SERIAL", telemetry, sensor, peripheral].filter(Boolean));
+        const reservedFunctions = fcPort.functions.filter((f) => !claimed.has(f));
 
         return {
             identifier: fcPort.identifier,
