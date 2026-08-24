@@ -28,6 +28,14 @@ describe("computeZeroThrottleValue", () => {
         expect(computeZeroThrottleValue(true, 1460, 1000)).toBe(1460);
     });
 
+    it("treats the lower clamp boundary 1425 as in-range", () => {
+        expect(computeZeroThrottleValue(true, 1425, 1000)).toBe(1425);
+    });
+
+    it("treats the upper clamp boundary 1575 as in-range", () => {
+        expect(computeZeroThrottleValue(true, 1575, 1000)).toBe(1575);
+    });
+
     it("falls back to minSliderValue when 3D mode is disabled", () => {
         expect(computeZeroThrottleValue(false, 1500, 1000)).toBe(1000);
     });
