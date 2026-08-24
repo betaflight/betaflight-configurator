@@ -1015,7 +1015,7 @@
         "message": "Programari"
     },
     "defaultSoftwareText": {
-        "message": "El nostre <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualitzador de registres de Blackbox<\/a> està disponible com a aplicació en línia.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scripts TX Lua<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware, aquesta aplicació i el visor de Blackbox es pot descarregar des de GitHub."
+        "message": "El nostre visor de registre Blackbox està integrat en aquesta aplicació. Obriu la pestanya <strong>Visualitzador Blackbox<\/strong> per analitzar els vostres registres de vol.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware i aquesta aplicació es pot descarregar des de GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -2193,8 +2193,24 @@
         "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el dron sigui armat s’actualitzarà el punt d’inici.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "La compatibilitat amb GPS no està inclosa en aquesta compilació del programari. Reconstrueix el programari amb l'opció de compilació GPS per configurar i utilitzar el GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Proveïdor del receptor sèrie"
+    },
+    "portsPortNone": {
+        "message": "Cap"
+    },
+    "receiverSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART al qual està connectat el receptor sèrie. La velocitat en bauds segueix el proveïdor, per tant no hi ha res a configurar aquí. Canviar el port requereix un reinici."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "No s'ha pogut configurar el port sèrie del receptor, per tant no s'ha desat res."
     },
     "someRXTypesDisabled": {
         "message": "Alguns proveïdors de receptors no són compatibles amb la configuració de compilació actual."
@@ -2253,6 +2269,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NO<\/span> deshabilitis MSP al primer port sèrie si no saps per què ho fas. D'altra forma potser has de reflashejar i esborrar la configuració."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> aquest programari assigna ports sèrie a la pestanya de cada funció, de manera que aquesta vista és de només lectura. Mostra quin port utilitza actualment cada funció; canvieu una assignació de la pestanya propietària de la funció."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Actualització de firmware <span class=\"message-negative\">requerida<\/span>. La configuració dels port sèrie del firmware &lt; 1.8.0 no està suportada."
@@ -6943,6 +6962,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicador de qualitat d'enllaç basat en el percentatge de paquets de dades sense corrupció rebuts correctament"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Mode RF:Qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Només qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distància de vol",
         "description": "One of the elements of the OSD"
@@ -7950,45 +7977,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinació és de {{saved}}° però el GPS detecta {{detected}}° per a aquesta ubicació. Feu clic a Actualitza per corregir-la."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} mostres"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclina-ho més!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "La detecció ha fallat - intenta-ho amb una inclinació més variada."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Calibratge del client (guiat)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Calibratge automàtic de 60 segons"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibratge guiat"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Pas 1\/6 — Mantingueu la posició plana, gireu 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Pas 2\/6 — Gir cap enrere, girar 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Pas 3\/6 — Morro recte cap amunt, yaw de 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Pas 4\/6 — Morro recte cap avall, yaw de 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Pas 5\/6 — Costat esquerre cap amunt, gir de 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Pas 6\/6 — Costat dret cap amunt, gir de 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Recopilació de dades completada: reviseu-la i deseu-la"
-    },
     "magCalibrationCancel": {
         "message": "Canceŀlar"
     },
@@ -8019,12 +8007,6 @@
     "magCalibrationSamples": {
         "message": "Mostres"
     },
-    "magCalibrationQuality": {
-        "message": "Qualitat"
-    },
-    "magCalibrationResidual": {
-        "message": "Ajust residual"
-    },
     "magCalibrationQualityGood": {
         "message": "Bé"
     },
@@ -8036,9 +8018,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Òfsets del programari"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Desplaçaments d'ajust d'esfera"
     },
     "magCalibrationUnguided": {
         "message": "Calibració programari (Guiat)"
@@ -8054,18 +8033,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibratge del programari completat!"
-    },
-    "magCalibrationGuided": {
-        "message": "Calibratge del client (lliure)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Gira lliurement: el configurador calcula els desplaçaments"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibratge client"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Gira el vehicle en totes direccions. Intenta crear una esfera completa de punts en un o dos minuts aproximadament. Desa el resultat quan els valors de calibratge s'hagin estabilitzat."
     },
     "magCalibrationCheck": {
         "message": "Comprova"
@@ -8091,17 +8058,14 @@
     "magCalibrationSaveError": {
         "message": "No s'han pogut desar els valors de calibratge"
     },
-    "magCalibrationAccept": {
-        "message": "Desa el calibratge"
-    },
     "magCalibrationFull": {
-        "message": "Calibratge complet (alineació automàtica)"
+        "message": "Calibració i detecció d'alineació"
     },
     "magCalibrationFullDesc": {
-        "message": "Un gir: estableix els desplaçaments, el planxat i l'orientació de muntatge del magnetòmetre"
+        "message": "Gireu la nau en totes direccions per calibrar el sensor i detectar automàticament la seva orientació de muntatge."
     },
     "magCalibrationFullTitle": {
-        "message": "Calibratge complet"
+        "message": "Calibració i detecció d'alineació"
     },
     "magCalibrationFullInstruction": {
         "message": "Segueix els passos següents, mantenint la nau ferma durant cada gir complet. El recompte de zones puja a mesura que arribes a nous angles; intenta cobrir-los tots 20."
@@ -8137,7 +8101,10 @@
         "message": "{{covered}} \/ {{total}} zones cobertes"
     },
     "magCalibrationFullCompute": {
-        "message": "Calcula"
+        "message": "Finalitza el calibratge"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Més zones cobertes donen més precisió; intenta obtenir un valor de 20\/20 per obtenir la millor calibració i detecció d'alineació."
     },
     "magCalibrationFullCoverage": {
         "message": "Cobertura:"
@@ -8167,7 +8134,22 @@
         "message": "No hi ha prou mostres: girar més estona"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Sense localització GPS ni IP: no es pot determinar la inclinació magnètica"
+        "message": "Sense GPS, navegador ni ubicació IP; introduïu les coordenades manualment per continuar"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Ubicació necessària per a la calibració"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Introduïu manualment la latitud i la longitud seleccionant-les a Google Maps. El vostre dron no té bloqueig GPS i el dispositiu no ha pogut proporcionar dades d'ubicació. La ubicació és necessària per a la calibració del magnetòmetre."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.x. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Format de coordenades no vàlid. Si us plau, introduïu-ho com a: latitud, longitud (per exemple, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "No s'ha pogut calcular una referència magnètica per a aquestes coordenades. Si us plau, comproveu-les i torneu-ho a intentar."
     },
     "magCalibrationFullCliCopied": {
         "message": "Ordres de la CLI copiades al porta-retalls"
@@ -8207,12 +8189,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nou"
-    },
-    "magAlignmentApply": {
-        "message": "Aplicar"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detectar"
     },
     "configurationSmallAngle": {
         "message": "Angle máxim d'armat [graus]"

@@ -950,9 +950,6 @@
     "defaultSoftwareHead": {
         "message": "Software"
     },
-    "defaultSoftwareText": {
-        "message": "Nuestro <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visor de Log de Blackbox<\/a> está disponible como una aplicación en línea.<br \/><br \/>Nuestra colección de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> están disponibles en GitHub.<br \/><br \/>Nuestro código fuente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> para el firmware, esta aplicación y el visor de blackbox se pueden descargar desde GitHub."
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -7706,39 +7703,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinación es {{saved}}° pero el GPS detecta {{detected}}° para esta ubicación. Pulsa Actualizar para corregir."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} muestras"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "¡Inclina más!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Detección fallida — prueba con inclinación más variada."
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibración guiada"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Paso 1\/6 — Mantén plano, yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Paso 2\/6 — Flip invertido, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Paso 3\/6 — Nariz hacia arriba, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Paso 4\/6 — Nariz hacia abajo, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Paso 5\/6 — Lateral izquierdo hacia arriba, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Paso 6\/6 - Lateral derecho hacia arriba, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Recopilación de datos completada — revisa y guarda"
-    },
     "magCalibrationCancel": {
         "message": "Cancelar"
     },
@@ -7768,9 +7732,6 @@
     },
     "magCalibrationSamples": {
         "message": "Muestras"
-    },
-    "magCalibrationQuality": {
-        "message": "Calidad"
     },
     "magCalibrationQualityGood": {
         "message": "Bueno"
@@ -7811,12 +7772,6 @@
     "magCalibrationSaveError": {
         "message": "Error al guardar los valores de calibración"
     },
-    "magCalibrationAccept": {
-        "message": "Guardar calibración"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Calibración completa"
-    },
     "magCalibrationFullStepCounter": {
         "message": "Paso {{n}} de {{total}}"
     },
@@ -7847,9 +7802,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} zonas cubiertas"
     },
-    "magCalibrationFullCompute": {
-        "message": "Calcular"
-    },
     "magCalibrationFullCoverage": {
         "message": "Cobertura:"
     },
@@ -7873,9 +7825,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "No hay suficientes muestras — girar más tiempo"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "No hay GPS ni ubicación IP - no se puede determinar la inclinación magnética"
     },
     "magCalibrationFullCliCopied": {
         "message": "Comandos CLI copiados al portapapeles"
@@ -7909,12 +7858,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nuevo"
-    },
-    "magAlignmentApply": {
-        "message": "Aplicar"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detectar"
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"
