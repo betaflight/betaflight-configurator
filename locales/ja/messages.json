@@ -994,9 +994,6 @@
     "defaultSoftwareHead": {
         "message": "ソフトウェア"
     },
-    "defaultSoftwareText": {
-        "message": "こちらの <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> は、オンラインアプリとして利用できます。<br \/><br \/>\n<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX LUA スクリプト<\/a> の各種スクリプトは、GitHub 上で公開されています。<br \/><br \/>ファームウェア、本アプリ、ならびにBlackbox Viewerの <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ソースコード<\/a> は、GitHub からダウンロードできます。"
-    },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
     },
@@ -7906,45 +7903,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "保存されている磁気偏角は {{saved}}° ですが、GPSでは現在地の磁気偏角が {{detected}}° と検出されています。修正するには【更新】をクリックしてください。"
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} サンプル"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "もっと傾けろ！"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "検出に失敗しました — より多様な傾きを試してください。"
-    },
-    "magCalibrationGuidedFw": {
-        "message": "クライアントキャリブレーション (ガイド付き)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "60秒間のキャリブレーションを自動的に促します"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "ガイド付きキャリブレーション"
-    },
-    "magCalibrationPrompt1": {
-        "message": "ステップ 1\/6 — 水平に保持し、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationPrompt2": {
-        "message": "ステップ 2\/6 — 裏返して保持し、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationPrompt3": {
-        "message": "ステップ 3\/6 — 機首を真上に向け、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationPrompt4": {
-        "message": "ステップ 4\/6 — 機首を真下に向け、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationPrompt5": {
-        "message": "ステップ 5\/6 — 左側面を上に向け、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationPrompt6": {
-        "message": "ステップ 6\/6 — 右側面を上に向け、ヨー方向に360°回転させてください"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "データ収集が完了しました — 確認して保存してください"
-    },
     "magCalibrationCancel": {
         "message": "キャンセル"
     },
@@ -7975,12 +7933,6 @@
     "magCalibrationSamples": {
         "message": "サンプル"
     },
-    "magCalibrationQuality": {
-        "message": "品質"
-    },
-    "magCalibrationResidual": {
-        "message": "フィット残差"
-    },
     "magCalibrationQualityGood": {
         "message": "良好"
     },
@@ -7992,9 +7944,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "ファームウェアオフセット"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "球面フィットオフセット"
     },
     "magCalibrationUnguided": {
         "message": "ファームウェアキャリブレーション (レガシー)"
@@ -8010,18 +7959,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "ファームウェアのキャリブレーションが完了しました！"
-    },
-    "magCalibrationGuided": {
-        "message": "クライアントキャリブレーション (フリー)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "自由に回転させてください — アプリ側でオフセットを計算します"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "クライアント キャリブレーション"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "機体を全方向に回転させてください。1～2分程度かけて、点群が完全な球体になるように動かします。キャリブレーション値が安定したら、結果を保存してください。"
     },
     "magCalibrationCheck": {
         "message": "確認"
@@ -8046,18 +7983,6 @@
     },
     "magCalibrationSaveError": {
         "message": "キャリブレーション値の保存に失敗しました"
-    },
-    "magCalibrationAccept": {
-        "message": "キャリブレーションを保存"
-    },
-    "magCalibrationFull": {
-        "message": "フルキャリブレーション (自動アライメント)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "1回の回転で、オフセット、磁場歪み補正、コンパスの取り付け向きを設定します"
-    },
-    "magCalibrationFullTitle": {
-        "message": "フルキャリブレーション"
     },
     "magCalibrationFullInstruction": {
         "message": "以下の手順に従い、各回転が完了するまで機体を安定させて保持してください。新しい角度に到達するとゾーン数が増えていきます — 20個すべてをカバーすることを目指してください。"
@@ -8092,9 +8017,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} ゾーンをカバーしました"
     },
-    "magCalibrationFullCompute": {
-        "message": "計算"
-    },
     "magCalibrationFullCoverage": {
         "message": "範囲:"
     },
@@ -8121,9 +8043,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "サンプル数が不足しています — もう少し長く回転させてください"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "GPSまたはIP位置情報がありません — 磁気傾斜を特定できません"
     },
     "magCalibrationFullCliCopied": {
         "message": "CLIコマンドをクリップボードにコピーしました"
@@ -8163,12 +8082,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "新規"
-    },
-    "magAlignmentApply": {
-        "message": "適用"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "検出"
     },
     "configurationSmallAngle": {
         "message": "アーム最大角 [degrees]"
