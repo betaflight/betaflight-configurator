@@ -68,7 +68,12 @@ describe("TauriSerial write lock timeout", () => {
         vi.spyOn(console, "error").mockImplementation(() => {});
     });
 
-    afterEach(() => {
+    afterEach(async () => {
+        // Fatal-error paths fire disconnect() un-awaited; its teardown settles
+        // a 50 ms timer before logging. Drain that window here so the trailing
+        // logs land inside the test instead of after vitest closes the worker
+        // RPC ("Closing rpc while onUserConsoleLog was pending", #5418).
+        await new Promise((resolve) => setTimeout(resolve, 60));
         vi.restoreAllMocks();
     });
 
