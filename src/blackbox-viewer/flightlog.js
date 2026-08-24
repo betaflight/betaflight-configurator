@@ -1769,6 +1769,10 @@ FlightLog.prototype.isFieldDisabled = function () {
         disabledFieldsFlags.RPM = (disabledFields & (1 << 13)) !== 0;
         disabledFieldsFlags.GYROUNFILT = (disabledFields & (1 << 14)) !== 0;
         disabledFieldsFlags.SERVO = (disabledFields & (1 << 15)) !== 0;
+
+        if (firmwareGreaterOrEqual(this.getSysConfig(), "2026.12.0")) {
+            disabledFieldsFlags.PITOT = (disabledFields & (1 << 16)) !== 0;
+        }
     } else {
         disabledFieldsFlags.PID = (disabledFields & (1 << 0)) !== 0;
         disabledFieldsFlags.RC_COMMANDS = (disabledFields & (1 << 1)) !== 0;
