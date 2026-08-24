@@ -190,7 +190,11 @@
                                     <div style="display: contents" @contextmenu="(e) => onContextMenu(e, graph, field)">
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.min ?? -500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
                                             :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
@@ -215,7 +219,11 @@
                                         />
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.max ?? 500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
                                             :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
@@ -281,6 +289,7 @@ import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
+import { coarseMinMaxStep, FINE_MIN_MAX_STEP } from "../curve_step.js";
 
 const open = defineModel("open", { type: Boolean, default: false });
 
@@ -703,17 +712,15 @@ watch(open, (val) => {
     }
 });
 
-// Set curves min-max values changes step. Switch between normal 10 or precesion 0.1 step by using Ctrl key.
-// The precesion value input has italic font.
-
-const normalMinMaxStep = 10;
-const smallMinMaxStep = 0.1;
+// The spinner step follows the size of the curve, see coarseMinMaxStep. Ctrl forces the fine step
+// for a field, and those inputs are shown in italics.
 
 function isHighPrecise(minMax) {
     if (!Number.isFinite(minMax?.min) || !Number.isFinite(minMax?.max)) {
         return false;
     }
-    return minMax.min % normalMinMaxStep !== 0 || minMax.max % normalMinMaxStep !== 0;
+    const step = coarseMinMaxStep(minMax);
+    return minMax.min % step !== 0 || minMax.max % step !== 0;
 }
 
 function defineFieldsResolution() {
