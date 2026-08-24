@@ -1482,7 +1482,11 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 675,
             positionable: true,
-            preview: "30",
+            preview(osdData) {
+                const UNIT_METRIC = OSD.constants.UNIT_TYPES.indexOf("METRIC");
+                const unit = FONT.symbol(osdData.unit_mode === UNIT_METRIC ? SYM.KPH : SYM.MPH);
+                return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
+            },
         },
     };
 
