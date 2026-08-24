@@ -3,6 +3,12 @@ import CONFIGURATOR from "./data_storage";
 import FC from "./fc";
 import { EventBus } from "../components/eventBus";
 
+const BUILDER_TIMEOUT_MS = 3000;
+
+// The builder gives up while the FC still owes it the tail of a dump/get response, so output stays
+// suppressed until the last sentinel we sent comes back, or this cap expires on a link gone quiet.
+const DRAIN_TIMEOUT_MS = 2 * BUILDER_TIMEOUT_MS;
+
 /**
  * Encapsulates the AutoComplete cache-building logic.
  *
@@ -11,7 +17,7 @@ import { EventBus } from "../components/eventBus";
  */
 const CliAutoComplete = {
     configEnabled: false,
-    builder: { state: "reset", numFails: 0 },
+    builder: { state: "reset", numFails: 0, draining: false },
 };
 
 CliAutoComplete.isEnabled = function () {
@@ -23,6 +29,18 @@ CliAutoComplete.isEnabled = function () {
 
 CliAutoComplete.isBuilding = function () {
     return this.builder.state !== "reset" && this.builder.state !== "done" && this.builder.state !== "fail";
+};
+
+CliAutoComplete.isSuppressingOutput = function () {
+    return this.isBuilding() || this.builder.draining;
+};
+
+CliAutoComplete.parseSuppressedLine = function (line) {
+    if (this.builder.draining) {
+        this._drainParseLine(line);
+    } else {
+        this.builderParseLine(line);
+    }
 };
 
 CliAutoComplete.setEnabled = function (enable) {
@@ -55,9 +73,26 @@ CliAutoComplete.initialize = function (sendLine, writeToOutput, isIdle) {
 
 CliAutoComplete.cleanup = function () {
     this._builderWatchdogStop();
+    this._drainStop();
     GUI.timeout_remove("autocomplete_builder_defer");
     this.builder.state = "reset";
     this.builder.numFails = 0;
+};
+
+CliAutoComplete._drainStart = function () {
+    this.builder.draining = true;
+    GUI.timeout_add("autocomplete_builder_drain", () => this._drainStop(), DRAIN_TIMEOUT_MS);
+};
+
+CliAutoComplete._drainParseLine = function (line) {
+    if (line.indexOf(this.builder.sentinel) !== -1) {
+        this._drainStop();
+    }
+};
+
+CliAutoComplete._drainStop = function () {
+    GUI.timeout_remove("autocomplete_builder_drain");
+    this.builder.draining = false;
 };
 
 CliAutoComplete._builderWatchdogTouch = function () {
@@ -71,6 +106,7 @@ CliAutoComplete._builderWatchdogTouch = function () {
             if (self.builder.numFails) {
                 self.builder.numFails++;
                 self.builder.state = "fail";
+                self._drainStart();
                 self.writeToOutput("Failed!<br># ");
                 EventBus.$emit("autocomplete:build:stop");
             } else {
@@ -80,7 +116,7 @@ CliAutoComplete._builderWatchdogTouch = function () {
                 self.builderStart();
             }
         },
-        3000,
+        BUILDER_TIMEOUT_MS,
     );
 };
 

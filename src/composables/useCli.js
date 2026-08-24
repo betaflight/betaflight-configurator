@@ -140,6 +140,7 @@ export function useCli() {
 
     let outputHistory = "";
     let cliBuffer = "";
+    let outputSuppressed = false;
 
     // Refs for DOM elements
     const windowWrapperRef = ref(null);
@@ -207,9 +208,9 @@ export function useCli() {
     };
 
     const writeLineToOutput = (text) => {
-        if (CliAutoComplete.isBuilding()) {
-            CliAutoComplete.builderParseLine(text);
-            return; // suppress output if in building state
+        if (CliAutoComplete.isSuppressingOutput()) {
+            CliAutoComplete.parseSuppressedLine(text);
+            return; // suppress output while the cache builder owns the channel
         }
 
         if (text.startsWith("###ERROR")) {
@@ -574,6 +575,16 @@ export function useCli() {
                 continue;
             }
 
+            // snapshot first: processing this character can end suppression, and the character that
+            // ends it still belongs to the builder
+            const suppressed = CliAutoComplete.isSuppressingOutput();
+
+            if (outputSuppressed && !suppressed) {
+                // drop whatever half of a builder line was already buffered
+                cliBuffer = "";
+            }
+            outputSuppressed = suppressed;
+
             if (CONFIGURATOR.cliValid) {
                 const shouldContinue = processCharacterInCliMode(byte, currentChar);
                 if (shouldContinue) {
@@ -581,8 +592,7 @@ export function useCli() {
                 }
             }
 
-            if (!CliAutoComplete.isBuilding()) {
-                // do not include the building dialog into the history
+            if (!suppressed) {
                 outputHistory += currentChar;
             }
 
@@ -594,7 +604,7 @@ export function useCli() {
         validateCliEntry(validateText);
 
         // fallback to native autocomplete
-        if (!CliAutoComplete.isEnabled()) {
+        if (!CliAutoComplete.isEnabled() && !CliAutoComplete.isSuppressingOutput()) {
             setPrompt(removePromptHash(cliBuffer));
         }
     };
@@ -602,6 +612,7 @@ export function useCli() {
     const initialize = async () => {
         outputHistory = "";
         cliBuffer = "";
+        outputSuppressed = false;
         state.startProcessing = false;
 
         CONFIGURATOR.cliActive = true;
