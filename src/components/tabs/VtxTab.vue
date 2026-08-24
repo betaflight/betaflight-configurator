@@ -88,6 +88,14 @@
                             </SettingRow>
 
                             <SettingRow
+                                v-if="vtxProtocolOptions.length"
+                                :label="$t('vtxProtocol')"
+                                :help="$t('vtxProtocolHelp')"
+                            >
+                                <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
+                            </SettingRow>
+
+                            <SettingRow
                                 v-if="vtxPortAvailable"
                                 :label="$t('vtxSerialPort')"
                                 :help="$t('vtxSerialPortHelp')"
@@ -461,10 +469,16 @@ export default defineComponent({
             changed: vtxPortChanged,
             load: loadVtxPort,
             write: writeVtxPort,
+            selectedProtocol: vtxProtocol,
+            protocolOptions: vtxProtocolValues,
         } = useFeaturePort({
             setting: "vtx_uart",
             functionName: ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP"],
+            protocol: { setting: "vtx_type" },
         });
+
+        // vtxDevType_e keeps index 2 open, so the firmware lookup names it RESERVED.
+        const vtxProtocolOptions = computed(() => vtxProtocolValues.value.filter(({ value }) => value !== "RESERVED"));
 
         // A port-only change still has to enable Save; the VTX config's own dirty state cannot see it.
         const saveButtonDisabled = computed(() => vtxConfigSaveDisabled.value && !vtxPortChanged.value);
@@ -684,6 +698,8 @@ export default defineComponent({
             vtxPortWritable,
             vtxPortOptions,
             vtxPortIdentifier,
+            vtxProtocol,
+            vtxProtocolOptions,
             savePending,
             factoryBandsSupported,
             frequencyMode,

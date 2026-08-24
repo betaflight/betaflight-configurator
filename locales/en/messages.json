@@ -7823,6 +7823,12 @@
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxProtocol": {
+        "message": "Protocol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Control protocol the VTX speaks. SmartAudio and Tramp run on the UART below; MSP shares it with MSP, as DJI, HDZero and Walksnail do."
+    },
     "vtxSerialPort": {
         "message": "Serial Port"
     },
