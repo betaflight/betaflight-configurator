@@ -684,10 +684,10 @@ const rpmFilterParams = computed(() => {
     }
     return [
         param("Harmonics", fmtVal(s.gyro_rpm_notch_harmonics, 0)),
+        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Q", fmtVal(s.gyro_rpm_notch_q, 0)),
         param("Min Hz", fmtVal(s.gyro_rpm_notch_min, 0)),
         param("Fade Range Hz", fmtVal(s.rpm_filter_fade_range_hz, 0)),
-        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Notch LPF", fmtVal(s.rpm_notch_lpf, 0)),
         param("D-Term Harmonics", fmtVal(s.dterm_rpm_notch_harmonics, 0)),
         param("D-Term Q", fmtVal(s.dterm_rpm_notch_q, 0)),
