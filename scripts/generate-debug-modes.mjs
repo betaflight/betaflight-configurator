@@ -27,6 +27,18 @@
  *                                     `test/js/utils/debugModesFirmware.test.js`
  *                                     compares it against the hand-written
  *                                     field labels in `src/js/utils/debugModes.js`.
+ *   generated/debug-fields.json     - published: the same definitions as one
+ *                                     schema-validated JSON document, so a tool
+ *                                     outside this repository never has to parse
+ *                                     C or scrape the generated JS. Carries the
+ *                                     mode list, the field labels, the unit
+ *                                     vocabulary, the rename aliases and the
+ *                                     conflicting fields, for every API version.
+ *   generated/debug-fields.schema.json
+ *                                   - published: the JSON Schema for the above,
+ *                                     generated alongside it so its unit
+ *                                     vocabulary cannot drift from
+ *                                     `src/js/debug_units.ts`.
  *
  * Backwards compatibility is the hard part and is enforced, not assumed:
  *
@@ -55,6 +67,8 @@
  *   --out <path>        Mode table output (default: src/js/debug_modes_table.js).
  *   --labels-out <path> Field label/unit output (default: src/js/debug_fields_table.js).
  *   --fields-out <path> Field-usage output (default: test/generated/debug_field_usage.json).
+ *   --json-out <path>   Published artifact (default: generated/debug-fields.json).
+ *   --schema-out <path> Published schema (default: generated/debug-fields.schema.json).
  *   --source-url <url>  Project URL recorded as provenance (default: the
  *                       upstream betaflight repository).
  *   --check             Do not write; exit 1 if the committed files are stale.
@@ -64,9 +78,10 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import { format, resolveConfig } from "prettier";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { debugUnitSymbols } from "../src/js/debug_units.ts";
+import { DEBUG_UNITS, debugUnitSymbols } from "../src/js/debug_units.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -76,6 +91,8 @@ const DEFAULT_MIN_API_MINOR = 44;
 const DEFAULT_OUT = "src/js/debug_modes_table.js";
 const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.js";
 const DEFAULT_FIELDS_OUT = "test/generated/debug_field_usage.json";
+const DEFAULT_JSON_OUT = "generated/debug-fields.json";
+const DEFAULT_SCHEMA_OUT = "generated/debug-fields.schema.json";
 const DEBUG_HEADER = "src/main/build/debug.h";
 const DEBUG_SOURCE = "src/main/build/debug.c";
 const MSP_PROTOCOL_HEADER = "src/main/msp/msp_protocol.h";
@@ -94,6 +111,11 @@ const PRINT_WIDTH = 120;
 // working checkout does not leak into the generated header.
 const SOURCE_URL = "https://github.com/betaflight/betaflight";
 
+// Where the published schema is fetchable from, recorded as `$schema` in the
+// artifact so an editor or a validator resolves it without local paths.
+const SCHEMA_URL =
+    "https://raw.githubusercontent.com/betaflight/betaflight-configurator/master/generated/debug-fields.schema.json";
+
 // Candidate firmware checkouts, relative to this repository, tried in order.
 const REPO_CANDIDATES = [
     "../betaflight",
@@ -104,7 +126,17 @@ const REPO_CANDIDATES = [
 ];
 
 const BOOLEAN_FLAGS = new Set(["check", "allow-rewrite"]);
-const VALUE_FLAGS = new Set(["repo", "dev-ref", "min-api", "out", "labels-out", "fields-out", "source-url"]);
+const VALUE_FLAGS = new Set([
+    "repo",
+    "dev-ref",
+    "min-api",
+    "out",
+    "labels-out",
+    "fields-out",
+    "json-out",
+    "schema-out",
+    "source-url",
+]);
 
 function parseArgs(argv) {
     const args = {};
@@ -1417,37 +1449,324 @@ function renderFieldsModule({ repoUrl, versions }) {
 }
 
 /*
- * Prettier collapses short numeric arrays onto one line, so do the same here and
- * the generated fixture is already formatted the way `npm run format` wants it.
+ * Every generated JSON goes out through the repository's own Prettier
+ * configuration, so a freshly generated file is already formatted the way
+ * `npm run format` wants it and a reviewer never sees a formatting-only diff.
+ * Prettier is a devDependency and this is a dev script, so the import costs the
+ * app nothing.
  */
-function collapseNumberArrays(json) {
-    // Anchored to line breaks with no nested whitespace repetition: nothing in the
-    // pattern can match the same characters two ways, so a near-match input has
-    // nothing to backtrack over (SonarCloud javascript:S5852).
-    return json.replaceAll(/\[\n *\d+(?:,\n *\d+)*\n *\]/g, (match) => `[${match.match(/\d+/g).join(", ")}]`);
+async function formatJson(source, filepath) {
+    const options = await resolveConfig(filepath, { editorconfig: true });
+    return format(source, { ...options, filepath, parser: "json" });
 }
 
 function renderFieldUsage({ repoUrl, versions }) {
-    return `${collapseNumberArrays(
-        JSON.stringify(
-            {
-                _comment: [
-                    "Auto-generated by scripts/generate-debug-modes.mjs - do not edit.",
-                    "Which debug[n] indices each firmware debug mode writes, scraped from DEBUG_SET() call sites.",
-                    "dynamic: the mode also writes a computed index this scan cannot enumerate.",
-                    "A mode missing from a version writes no debug field there (or writes it through code this scan does not see).",
-                ],
-                source: repoUrl,
-                versions: Object.fromEntries(
-                    versions.map((version) => [
-                        version.apiVersion,
-                        { commit: version.commit, date: version.date, modes: version.usage },
-                    ]),
-                ),
+    return `${JSON.stringify(
+        {
+            _comment: [
+                "Auto-generated by scripts/generate-debug-modes.mjs - do not edit.",
+                "Which debug[n] indices each firmware debug mode writes, scraped from DEBUG_SET() call sites.",
+                "dynamic: the mode also writes a computed index this scan cannot enumerate.",
+                "A mode missing from a version writes no debug field there (or writes it through code this scan does not see).",
+            ],
+            source: repoUrl,
+            versions: Object.fromEntries(
+                versions.map((version) => [
+                    version.apiVersion,
+                    { commit: version.commit, date: version.date, modes: version.usage },
+                ]),
+            ),
+        },
+        null,
+        4,
+    )}\n`;
+}
+
+// ---------------------------------------------------------------------------
+// The published JSON artifact
+// ---------------------------------------------------------------------------
+
+/*
+ * One JSON file holding everything a consumer needs to decode a debug field, so
+ * that no tool outside this repository has to parse C or scrape the generated JS.
+ *
+ * The two shipped `.js` tables stay the app's own source: they are tree-shaken
+ * into the bundle and carry no parse cost at runtime. This artifact is the same
+ * data published for everyone else - the blackbox log viewer, third-party log
+ * analysers, anything reading a log the configurator did not record - and is
+ * generated from the same scan in the same run, so the two cannot disagree.
+ */
+
+/** One field's variants collapsed the way the shipped table collapses them. */
+function jsonFieldEntry(variants) {
+    const agreed = variants.length === 1;
+    const entry = {
+        label: [...new Set(variants.map((variant) => variant.label))].join(" / "),
+        // A field two subsystems write with different meanings has no single unit
+        // or scaling, so it is published as a plain integer and listed under
+        // `conflicts`, where both meanings are kept.
+        unit: agreed ? variants[0].unit : null,
+        scale: agreed ? variants[0].scale : 1,
+    };
+    if (agreed && variants[0].values !== undefined) {
+        entry.values = variants[0].values;
+    }
+    if (agreed && variants[0].flags !== undefined) {
+        entry.flags = variants[0].flags;
+    }
+    return entry;
+}
+
+/** One API version's modes, in enum order: the array index is the debug_mode value. */
+function jsonModes(version) {
+    return version.modes.map((name, index) => {
+        const usage = version.usage[name];
+        const fields = version.fields[name] ?? {};
+        return {
+            index,
+            name,
+            // Which debug[n] the firmware writes for this mode, and whether it also
+            // writes an index computed at run time that the scan cannot enumerate.
+            writes: usage?.fields ?? [],
+            dynamic: usage?.dynamic ?? false,
+            fields: Object.fromEntries(
+                Object.keys(fields)
+                    .sort((left, right) => Number(left) - Number(right))
+                    .map((index) => [index, jsonFieldEntry(fields[index])]),
+            ),
+        };
+    });
+}
+
+function renderFieldsJson({ repoUrl, versions, aliases, renames, conflicts }) {
+    return `${JSON.stringify(
+        {
+            $schema: SCHEMA_URL,
+            _comment: [
+                "Auto-generated by scripts/generate-debug-modes.mjs - do not edit.",
+                "What each firmware debug mode is and what each of its debug[n] fields holds.",
+                "A mode's position in `versions[api].modes` is its numeric debug_mode value.",
+                "Read `units` to render a value: displayed = stored * scale, then the unit's own factor.",
+            ],
+            generator: "scripts/generate-debug-modes.mjs",
+            source: repoUrl,
+            units: DEBUG_UNITS,
+            aliases,
+            renames,
+            versions: Object.fromEntries(
+                versions.map((version) => [
+                    version.apiVersion,
+                    { commit: version.commit, date: version.date, modes: jsonModes(version) },
+                ]),
+            ),
+            conflicts: conflicts.map(({ apiVersion, mode, index, variants }) => ({
+                apiVersion,
+                mode,
+                index,
+                meanings: variants.map(({ label, unit, scale, values, sites }) => ({
+                    label,
+                    unit,
+                    scale,
+                    ...(values === undefined ? {} : { values }),
+                    sites,
+                })),
+            })),
+        },
+        null,
+        4,
+    )}\n`;
+}
+
+/*
+ * The schema is generated rather than hand-written so its unit vocabulary cannot
+ * drift from `src/js/debug_units.ts`: a unit added there is accepted by the
+ * generator and described by the schema in the same run.
+ */
+function renderFieldsSchema() {
+    const fieldEntry = {
+        type: "object",
+        description: "What one debug[n] of one mode holds, from the firmware's own annotation.",
+        properties: {
+            label: { type: "string", description: "Field name, in the firmware's wording." },
+            unit: {
+                description: "Unit of one LSB of the stored value, or null for a count, flag or enumeration.",
+                oneOf: [{ type: "string", enum: [...debugUnitSymbols()].sort() }, { type: "null" }],
             },
-            null,
-            4,
-        ),
+            scale: {
+                type: "number",
+                description: "What one LSB is worth in `unit`: 0.1 means the field stores decidegrees.",
+            },
+            values: {
+                type: "array",
+                description: "Enumerator names, lowest value first, for a field holding an enum.",
+                items: { type: "string" },
+            },
+            flags: {
+                type: "array",
+                description: "Bit-flag names, lowest bit first, with `-` for an unused bit.",
+                items: { type: "string" },
+            },
+        },
+        required: ["label", "unit", "scale"],
+        additionalProperties: false,
+    };
+
+    return `${JSON.stringify(
+        {
+            $schema: "https://json-schema.org/draft/2020-12/schema",
+            $id: SCHEMA_URL,
+            title: "Betaflight debug field definitions",
+            description:
+                "Every Betaflight debug mode and debug[n] field, per MSP API version, generated from the " +
+                "firmware's `//!<` annotations on its DEBUG_SET() call sites.",
+            type: "object",
+            properties: {
+                $schema: { type: "string" },
+                _comment: { type: "array", items: { type: "string" } },
+                generator: { type: "string" },
+                source: { type: "string", description: "Firmware project the definitions were read from." },
+                units: {
+                    type: "object",
+                    description: "The unit vocabulary: how to display a value stored in each unit.",
+                    additionalProperties: {
+                        type: "object",
+                        properties: {
+                            suffix: { type: "string", description: "Printed after the displayed value." },
+                            factor: {
+                                type: "number",
+                                description: "Multiplies the scaled value to reach `suffix`; defaults to 1.",
+                            },
+                            ctx: {
+                                type: "string",
+                                enum: ["gyro", "acc", "throttle", "erpm"],
+                                description: "A device-native unit only the FC's own configuration can convert.",
+                            },
+                            decimals: {
+                                type: "integer",
+                                description: "Fixed decimal places, where derived reads badly.",
+                            },
+                            range: {
+                                description: "The graph axis the unit implies, when it implies one.",
+                                oneOf: [
+                                    {
+                                        type: "object",
+                                        properties: { min: { type: "number" }, max: { type: "number" } },
+                                        required: ["min", "max"],
+                                        additionalProperties: false,
+                                    },
+                                    { type: "string", enum: ["gyro", "acc", "throttle"] },
+                                ],
+                            },
+                        },
+                        required: ["suffix"],
+                        additionalProperties: false,
+                    },
+                },
+                aliases: {
+                    type: "object",
+                    description: "Historical mode name -> the name the same enum slot has today.",
+                    additionalProperties: { type: "string" },
+                },
+                renames: {
+                    type: "array",
+                    description: "Where each rename happened, so a log from either side resolves.",
+                    items: {
+                        type: "object",
+                        properties: {
+                            from: { type: "string" },
+                            to: { type: "string" },
+                            fromApi: { type: "string" },
+                            toApi: { type: "string" },
+                        },
+                        required: ["from", "to", "fromApi", "toApi"],
+                        additionalProperties: false,
+                    },
+                },
+                versions: {
+                    type: "object",
+                    description: "Keyed by MSP API version, read from the newest firmware commit still on it.",
+                    propertyNames: { pattern: "^\\d+\\.\\d+\\.\\d+$" },
+                    additionalProperties: {
+                        type: "object",
+                        properties: {
+                            commit: { type: "string", description: "Firmware commit the definitions were read from." },
+                            date: { type: "string", description: "Date of that commit, ISO 8601." },
+                            modes: {
+                                type: "array",
+                                description: "The debug_mode enum in order: a mode's position is its numeric value.",
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        index: { type: "integer", minimum: 0, description: "The debug_mode value." },
+                                        name: { type: "string", description: "Name as the firmware CLI reports it." },
+                                        writes: {
+                                            type: "array",
+                                            description: "Which debug[n] this mode writes.",
+                                            items: { type: "integer", minimum: 0, maximum: DEBUG_VALUE_COUNT - 1 },
+                                        },
+                                        dynamic: {
+                                            type: "boolean",
+                                            description: "The mode also writes an index computed at run time.",
+                                        },
+                                        fields: {
+                                            type: "object",
+                                            description:
+                                                "Annotated fields, keyed by index. Unannotated ones are absent.",
+                                            propertyNames: { pattern: `^[0-${DEBUG_VALUE_COUNT - 1}]$` },
+                                            additionalProperties: fieldEntry,
+                                        },
+                                    },
+                                    required: ["index", "name", "writes", "dynamic", "fields"],
+                                    additionalProperties: false,
+                                },
+                            },
+                        },
+                        required: ["commit", "date", "modes"],
+                        additionalProperties: false,
+                    },
+                },
+                conflicts: {
+                    type: "array",
+                    description:
+                        "Indices two subsystems write with different meanings in one build. A log records only " +
+                        "the number, so such a field cannot be labelled. Every entry is a firmware bug.",
+                    items: {
+                        type: "object",
+                        properties: {
+                            apiVersion: { type: "string" },
+                            mode: { type: "string" },
+                            index: { type: "integer", minimum: 0, maximum: DEBUG_VALUE_COUNT - 1 },
+                            meanings: {
+                                type: "array",
+                                minItems: 2,
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        label: { type: "string" },
+                                        unit: { oneOf: [{ type: "string" }, { type: "null" }] },
+                                        scale: { type: "number" },
+                                        values: { type: "array", items: { type: "string" } },
+                                        sites: {
+                                            type: "array",
+                                            description: "Firmware call sites, as path:line.",
+                                            items: { type: "string" },
+                                        },
+                                    },
+                                    required: ["label", "unit", "scale", "sites"],
+                                    additionalProperties: false,
+                                },
+                            },
+                        },
+                        required: ["apiVersion", "mode", "index", "meanings"],
+                        additionalProperties: false,
+                    },
+                },
+            },
+            required: ["generator", "source", "units", "aliases", "renames", "versions", "conflicts"],
+            additionalProperties: false,
+        },
+        null,
+        4,
     )}\n`;
 }
 
@@ -1625,6 +1944,8 @@ async function main() {
     const outPath = resolve(projectRoot, args.out ?? DEFAULT_OUT);
     const labelsOutPath = resolve(projectRoot, args["labels-out"] ?? DEFAULT_LABELS_OUT);
     const fieldsOutPath = resolve(projectRoot, args["fields-out"] ?? DEFAULT_FIELDS_OUT);
+    const jsonOutPath = resolve(projectRoot, args["json-out"] ?? DEFAULT_JSON_OUT);
+    const schemaOutPath = resolve(projectRoot, args["schema-out"] ?? DEFAULT_SCHEMA_OUT);
 
     const repoUrl = args["source-url"] ?? SOURCE_URL;
 
@@ -1651,7 +1972,7 @@ async function main() {
 
     const moduleSource = renderModule({ repoUrl, versions, aliases, renames });
     const { source: fieldsModuleSource, conflicts } = renderFieldsModule({ repoUrl, versions });
-    const fieldUsageSource = renderFieldUsage({ repoUrl, versions });
+    const fieldUsageSource = await formatJson(renderFieldUsage({ repoUrl, versions }), fieldsOutPath);
 
     for (const conflict of conflicts) {
         const meanings = conflict.variants.map(describeMeaning).join(" vs ");
@@ -1660,10 +1981,19 @@ async function main() {
         );
     }
 
+    // Rendered after the field module, which is what detects the conflicts.
+    const fieldsJsonSource = await formatJson(
+        renderFieldsJson({ repoUrl, versions, aliases, renames, conflicts }),
+        jsonOutPath,
+    );
+    const fieldsSchemaSource = await formatJson(renderFieldsSchema(), schemaOutPath);
+
     const outputs = [
         [outPath, moduleSource],
         [labelsOutPath, fieldsModuleSource],
         [fieldsOutPath, fieldUsageSource],
+        [jsonOutPath, fieldsJsonSource],
+        [schemaOutPath, fieldsSchemaSource],
     ];
 
     if (args.check) {
@@ -1677,6 +2007,9 @@ async function main() {
     console.log(`generate-debug-modes: wrote the annotated field labels to ${labelsOutPath}`);
     console.log(
         `generate-debug-modes: wrote debug field usage to ${fieldsOutPath} (${unresolvedTotal} computed indices left unenumerated)`,
+    );
+    console.log(
+        `generate-debug-modes: wrote the published artifact to ${jsonOutPath} and its schema to ${schemaOutPath}`,
     );
 }
 
