@@ -35,8 +35,7 @@ dependencies = [
 [[package]]
 name = "android-usb-serial"
 version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bca4442188d2b56ad9b37696fd8de549f32271b486d87c94a1c81b4dd2caa712"
+source = "git+https://github.com/blckmn/tauri-plugin-serialplugin?rev=68a58a74fb5fa9cbf41b17c419f0136748d56a50#68a58a74fb5fa9cbf41b17c419f0136748d56a50"
 dependencies = [
  "libc",
  "log",
@@ -4147,8 +4146,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-serialplugin"
 version = "3.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c5073b8ad71cf1c1c31db72169e8723902d0c58e32c54be774b567f38b8bfd2"
+source = "git+https://github.com/blckmn/tauri-plugin-serialplugin?rev=68a58a74fb5fa9cbf41b17c419f0136748d56a50#68a58a74fb5fa9cbf41b17c419f0136748d56a50"
 dependencies = [
  "android-usb-serial",
  "jni 0.21.1",
