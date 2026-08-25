@@ -310,7 +310,7 @@
                                 <USelect
                                     v-model="customTextBaud"
                                     :items="customTextBaudOptions"
-                                    :disabled="!customTextPortWritable"
+                                    :disabled="!customTextPortWritable || !customTextPortAssigned"
                                     size="xs"
                                     class="min-w-40"
                                 />
@@ -602,6 +602,7 @@ import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
 
 // From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
@@ -638,6 +639,8 @@ const {
     functionName: "OSD_CUSTOM_TEXT",
     baud: { setting: "osd_custom_text_baud" },
 });
+
+const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 
 // A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
 const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
