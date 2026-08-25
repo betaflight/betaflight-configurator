@@ -35,6 +35,16 @@
                     title="Export your workspace configurations to file"
                     @click="$emit('export-workspaces')"
                 />
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    label="Export Video"
+                    icon="i-lucide-video"
+                    size="xs"
+                    :disabled="!logStore.hasLog"
+                    title="Render the marked range to a video file"
+                    @click="$emit('export-video')"
+                />
                 <USeparator orientation="vertical" class="h-4" />
             </template>
             <UButton
@@ -77,6 +87,7 @@ defineEmits([
     "export-csv",
     "export-gpx",
     "export-workspaces",
+    "export-video",
     "open-settings",
     "open-keys",
     "toggle-fullscreen",
