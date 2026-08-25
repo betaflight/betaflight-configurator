@@ -8,6 +8,8 @@ import {
     QUALITY_MEDIUM,
 } from "mediabunny";
 
+import { setExportInProgress } from "./playback_controls.js";
+
 // Offscreen video export for the blackbox viewer (design: #5396).
 //
 // This module owns the capability probe, the frame maths, and the
@@ -172,4 +174,118 @@ export function suggestedName(logName, extension) {
             ? logName.slice(0, logName.lastIndexOf("."))
             : String(logName || "blackbox");
     return `${base}.${extension}`;
+}
+
+/**
+ * Run the export: borrow the live grapher offscreen, render every frame in
+ * the marked range into the encoder, and stream the result to FileSystem.
+ *
+ * The grapher is borrowed by resizing its backing store to the export
+ * resolution (CSS layout keeps the on-screen size), so updateCanvasSize()
+ * and animationLoop() must be suppressed by the caller for the duration
+ * via setExportInProgress(); both are restored in the finally block here.
+ *
+ * Options bag (all required unless noted):
+ *   - canvas:        offscreen export canvas (width/height set to target)
+ *   - graph:         live FlightLogGrapher instance to borrow
+ *   - log:           flight log object (has getMinTime/getMaxTime)
+ *   - renderFrame:   callback rendering `timeMicros` onto the canvas
+ *   - inTime/outTime marker bounds in microseconds (falsy = whole log)
+ *   - frameRate, width, height
+ *   - file:          FileSystem file descriptor from pickSaveFile
+ *   - onProgress:    optional ({ frame, totalFrames, bytesWritten, etaSecs })
+ *
+ * Returns { frames, bytes }. Cancels cleanly if options.shouldCancel()
+ * turns true between frames; the partial file stays on disk and is
+ * reported to the user by the dialog.
+ */
+export async function runVideoExport(options) {
+    const { canvas, graph, renderFrame, inTime, outTime, frameRate, width, height, file, onProgress, shouldCancel } =
+        options;
+
+    const probe = await probeVideoExport({ width, height });
+    if (!probe.canEncode) {
+        throw new Error(probe.reason);
+    }
+
+    const totalFrames = estimateFrameCount({
+        inTime,
+        outTime,
+        frameRate,
+        getMinTime: () => options.log.getMinTime(),
+        getMaxTime: () => options.log.getMaxTime(),
+    });
+
+    // Borrow window opens: block resize/re-render interference for real.
+    setExportInProgress(true);
+
+    let output;
+    try {
+        canvas.width = width;
+        canvas.height = height;
+
+        const target = createFileSystemTarget(file);
+        output = new Output({
+            target,
+            format:
+                probe.container === "mp4"
+                    ? new Mp4OutputFormat({ fastStart: "fragmented" })
+                    : new WebMOutputFormat({ appendOnly: true }),
+        });
+        const source = createCanvasSource(canvas, probe.codec, frameRate);
+        output.addVideoTrack(source, { frameRate });
+        await output.start();
+
+        const startMicros = inTime ?? (typeof options.log.getMinTime === "function" ? options.log.getMinTime() : 0);
+        const frameDurationMicros = MICROSECONDS_PER_SECOND / frameRate;
+
+        let lastFrameAt = Date.now();
+        let smoothedFps = 0;
+
+        for (let frame = 0; frame < totalFrames; frame += 1) {
+            if (shouldCancel?.()) {
+                await output.cancel();
+                return { frames: frame, bytes: target.bytesWritten(), cancelled: true };
+            }
+
+            renderFrame(startMicros + frame * frameDurationMicros);
+            await source.add(frame / frameRate, 1 / frameRate);
+
+            const now = Date.now();
+            const instantFps = 1000 / Math.max(1, now - lastFrameAt);
+            smoothedFps = smoothedFps ? smoothedFps * 0.9 + instantFps * 0.1 : instantFps;
+            lastFrameAt = now;
+
+            onProgress?.({
+                frame: frame + 1,
+                totalFrames,
+                bytesWritten: target.bytesWritten(),
+                etaSecs: (totalFrames - frame - 1) / Math.max(1, smoothedFps),
+            });
+        }
+
+        await output.finalize();
+        return { frames: totalFrames, bytes: target.bytesWritten() };
+    } catch (error) {
+        // Never finalize a broken muxer; cancel leaves the partial file which
+        // the dialog reports as unplayable-but-deletable.
+        if (output) {
+            try {
+                await output.cancel();
+            } catch {
+                // already torn down; nothing further to do
+            }
+        }
+        throw error;
+    } finally {
+        // Restore the borrowed grapher on every path.
+        try {
+            graph.updateCanvasSize();
+        } catch {
+            // graph may already be gone after tab teardown
+        }
+        canvas.width = width;
+        canvas.height = height;
+        setExportInProgress(false);
+    }
 }
