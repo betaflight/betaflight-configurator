@@ -7841,6 +7841,9 @@
     "vtxSerialPortHelp": {
         "message": "UART the VTX control protocol runs on. Set on the VTX itself from API 1.49; the Ports tab only shows it."
     },
+    "vtxSerialPortMspHelp": {
+        "message": "An MSP VTX answers on the same MSP link the goggles are drawn over, so it follows the OSD Serial Port on the OSD tab and cannot be set here."
+    },
     "vtxLowPowerDisarm": {
         "message": "Low Power Disarm",
         "description": "Text of one of the fields of the VTX tab"
