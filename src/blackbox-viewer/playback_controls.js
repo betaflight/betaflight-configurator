@@ -35,7 +35,18 @@ function ensureThrottles() {
     }
 }
 
+// While a blackbox video export is borrowing the live grapher offscreen,
+// window resizes and stray re-renders must not resize or repaint it mid-frame
+// (that would letterbox exported frames); see video_export.js and #5396.
+let exportInProgress = false;
+export function setExportInProgress(value) {
+    exportInProgress = value;
+}
+
 export function animationLoop() {
+    if (exportInProgress) {
+        return;
+    }
     ensureThrottles();
     const now = Date.now();
     const graphStore = useGraphStore(pinia);
@@ -99,6 +110,9 @@ export function invalidateGraph() {
 }
 
 export function updateCanvasSize() {
+    if (exportInProgress) {
+        return;
+    }
     const graphStore = useGraphStore(pinia);
     const logStore = useLogStore(pinia);
     const canvas = graphStore.canvasRefs?.canvas;
