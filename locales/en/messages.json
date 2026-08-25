@@ -6293,6 +6293,12 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD Protocol"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocol the OSD is drawn with. MAX7456 and FrSky OSD drive an analogue chip or module; MSP sends the OSD over the UART below, as DJI, HDZero and Walksnail goggles expect."
+    },
     "osdSerialPort": {
         "message": "OSD Serial Port"
     },

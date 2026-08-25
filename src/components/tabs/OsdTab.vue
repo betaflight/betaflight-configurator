@@ -264,6 +264,19 @@
                                 />
                             </SettingRow>
                             <SettingRow
+                                v-if="osdProtocolOptions.length"
+                                :label="$t('osdProtocol')"
+                                :help="$t('osdProtocolHelp')"
+                            >
+                                <USelect
+                                    v-model="osdProtocol"
+                                    :items="osdProtocolOptions"
+                                    :disabled="!osdPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
                                 v-if="osdPortAvailable"
                                 :label="$t('osdSerialPort')"
                                 :help="$t('osdSerialPortHelp')"
@@ -591,9 +604,9 @@ import { useSaving } from "@/composables/useSaving";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "@/composables/useTabLoad";
 
-// From API 1.49 both live on the OSD parameter group. osd_uart only shows up in the synthesised
-// mask when the display port device is FrSky OSD, and sets no bit at all on MSP DisplayPort, so
-// the setting is the only reliable read either way.
+// From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
+// mask follows the display port device, and on MSP DisplayPort it is the shared MSP bit, so the
+// setting is the only reliable read either way.
 const {
     available: osdPortAvailable,
     writable: osdPortWritable,
@@ -602,7 +615,13 @@ const {
     changed: osdPortChanged,
     load: loadOsdPort,
     write: writeOsdPort,
-} = useFeaturePort({ setting: "osd_uart", functionName: "FRSKY_OSD" });
+    selectedProtocol: osdProtocol,
+    protocolOptions: osdProtocolOptions,
+} = useFeaturePort({
+    setting: "osd_uart",
+    functionName: "FRSKY_OSD",
+    protocol: { setting: "osd_displayport_device" },
+});
 
 const {
     available: customTextPortAvailable,
