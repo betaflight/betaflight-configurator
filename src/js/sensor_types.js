@@ -232,7 +232,7 @@ export async function sensorTypes() {
  * @returns {string[]} Array of GPS protocol names
  */
 export function gpsProtocols() {
-    const protocols = ["NMEA", "UBLOX", "MSP"];
+    const protocols = ["NMEA", "UBLOX", "SEPTENTRIO", "MSP"];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         addArrayElement(protocols, "VIRTUAL");
