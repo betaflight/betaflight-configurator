@@ -59,21 +59,33 @@ function connectedSerial() {
 const writeCalls = () => invoke.mock.calls.filter(([cmd]) => cmd === "plugin:serialplugin|write_binary");
 
 describe("TauriSerial write lock timeout", () => {
+    // Fatal-error paths fire disconnect() un-awaited; its teardown settles a
+    // real 50 ms timer before logging. Track the promises here so afterEach
+    // can await them: the trailing logs then land inside the test instead of
+    // after vitest closes the worker RPC ("Closing rpc while
+    // onUserConsoleLog was pending", #5418).
+    /** @type {Set<Promise<unknown>>} */
+    let pendingDisconnects;
+
     beforeEach(() => {
+        pendingDisconnects = new Set();
         invoke.mockReset();
         // _bootstrap() would start the 1 s device monitor asynchronously,
         // leaking an interval into later tests; stub it out at the source.
         vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "warn").mockImplementation(() => {});
         vi.spyOn(console, "error").mockImplementation(() => {});
+        const original = TauriSerial.prototype.disconnect;
+        vi.spyOn(TauriSerial.prototype, "disconnect").mockImplementation(function (...args) {
+            const result = original.apply(this, args);
+            pendingDisconnects.add(result);
+            result.finally(() => pendingDisconnects.delete(result));
+            return result;
+        });
     });
 
     afterEach(async () => {
-        // Fatal-error paths fire disconnect() un-awaited; its teardown settles
-        // a 50 ms timer before logging. Drain that window here so the trailing
-        // logs land inside the test instead of after vitest closes the worker
-        // RPC ("Closing rpc while onUserConsoleLog was pending", #5418).
-        await new Promise((resolve) => setTimeout(resolve, 60));
+        await Promise.allSettled(pendingDisconnects);
         vi.restoreAllMocks();
     });
 
