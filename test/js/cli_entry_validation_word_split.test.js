@@ -23,9 +23,12 @@ import BFClipboard from "../../src/js/Clipboard";
 // whenever a read() boundary lands inside the 3-byte word "CLI", which is a near-certainty in the
 // "extremely fragmented reads" case #5445 itself asked to test.
 //
-// These are written with it.fails() to document the current (buggy) behavior without blocking
-// unrelated CI: they pass by confirming the bug reproduces, and will start *failing* — flagging
-// that this file needs updating — the moment someone fixes the underlying gap.
+// These assert the current (buggy) behavior directly rather than using it.fails(): it.fails()
+// would pass for ANY thrown error, including an unrelated exception from makeCli()/feed()/
+// getHistory(), which would silently mask a different failure instead of documenting this one.
+// Asserting the buggy values directly means setup errors fail the test as themselves, and the
+// test will start *failing* — flagging that this file needs updating — the moment someone fixes
+// the underlying gap.
 
 const BANNER = "\r\nEntering CLI Mode, type 'exit' to reboot, or 'help'\r\n\r\n# ";
 
@@ -69,7 +72,7 @@ describe("useCli: CLI entry never validates when 'CLI' itself is split across re
         CliAutoComplete.builder.state = "reset";
     });
 
-    it.fails("splitting 'CL' | 'I...' leaves cliValid false and drops all subsequent traffic", () => {
+    it("BUG: splitting 'CL' | 'I...' leaves cliValid false and drops all subsequent traffic", () => {
         const cli = makeCli();
 
         feed(cli, ["\r\nEntering CL", "I Mode, type 'exit' to reboot, or 'help'\r\n\r\n# "]);
@@ -77,13 +80,13 @@ describe("useCli: CLI entry never validates when 'CLI' itself is split across re
 
         const history = getHistory(cli);
 
-        // Desired behavior (what should hold once this is fixed): CLI still validates and the
-        // version response is still recorded. Today, both of these fail.
-        expect(CONFIGURATOR.cliValid).toBe(true);
-        expect(history).toContain("Betaflight / STM32F7X2");
+        // Current (buggy) behavior. Once the underlying gap is fixed, cliValid should become
+        // true and the version response should be recorded — flip these assertions then.
+        expect(CONFIGURATOR.cliValid).toBe(false);
+        expect(history).not.toContain("Betaflight / STM32F7X2");
     });
 
-    it.fails("byte-by-byte fragmentation of the whole banner leaves cliValid false", () => {
+    it("BUG: byte-by-byte fragmentation of the whole banner leaves cliValid false", () => {
         const cli = makeCli();
 
         feed(cli, BANNER.split(""));
@@ -91,7 +94,7 @@ describe("useCli: CLI entry never validates when 'CLI' itself is split across re
 
         const history = getHistory(cli);
 
-        expect(CONFIGURATOR.cliValid).toBe(true);
-        expect(history).toContain("Betaflight / STM32F7X2");
+        expect(CONFIGURATOR.cliValid).toBe(false);
+        expect(history).not.toContain("Betaflight / STM32F7X2");
     });
 });
