@@ -18,6 +18,8 @@ const EXTENSION_MIME_MAP = {
     ".gpx": "application/gpx+xml",
     ".lua": "text/plain",
     ".csv": "text/csv",
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
 };
 
 function mimeForExtension(ext) {
