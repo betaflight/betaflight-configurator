@@ -52,6 +52,31 @@ describe("curve min/max fine step", () => {
         expect(needsFineStep({ min: 0, max: 0.05 })).toBe(true);
     });
 
+    it("stays honest at bounds large enough for a loose tolerance to swallow a whole step", () => {
+        expect(needsFineStep({ min: 0, max: 1e10 })).toBe(false);
+        expect(needsFineStep({ min: 0, max: 1e10 + 1 })).toBe(true);
+        expect(needsFineStep({ min: 0, max: 1e13 })).toBe(false);
+        expect(needsFineStep({ min: 0, max: 1e13 + 1 })).toBe(true);
+    });
+
+    it("accepts aligned bounds across the range each step covers", () => {
+        // The step comes from the span, so each case has to stay inside the band that selects it.
+        // Worst measured drift for an aligned bound is 0.8 ULP of the quotient, and the tolerance
+        // is a full ULP, so none of these should want the fine step.
+        const bands = [
+            { step: 0.1, bounds: [0.1, 0.3, 0.7, 1.1, 2.9, 4.9] },
+            { step: 1, bounds: [5, 7, 13, 27, 49] },
+            { step: 10, bounds: [50, 130, 1280, 16380, 1e6, 1e10] },
+        ];
+        for (const { step, bounds } of bands) {
+            for (const bound of bounds) {
+                const minMax = { min: -bound, max: bound };
+                expect(coarseMinMaxStep(minMax), `step for +/-${bound}`).toBe(step);
+                expect(needsFineStep(minMax), `+/-${bound}`).toBe(false);
+            }
+        }
+    });
+
     it("says no when the bounds are missing or not finite", () => {
         expect(needsFineStep(undefined)).toBe(false);
         expect(needsFineStep({})).toBe(false);

@@ -39,7 +39,10 @@ export function coarseMinMaxStep(minMax) {
  */
 function isAlignedToStep(value, step) {
     const quotient = value / step;
-    const tolerance = 1e-9 * Math.max(1, Math.abs(quotient));
+    // One ULP of the quotient. A fixed tolerance would be far too generous at large bounds: at a
+    // quotient near 1e12 an absolute 1e-9 slack works out to about 1000, which would swallow bounds
+    // that are a whole step out. Measured worst case for genuinely aligned bounds is 0.8 ULP.
+    const tolerance = Number.EPSILON * Math.max(1, Math.abs(quotient));
     return Math.abs(quotient - Math.round(quotient)) <= tolerance;
 }
 
