@@ -190,7 +190,11 @@
                                     <div style="display: contents" @contextmenu="(e) => onContextMenu(e, graph, field)">
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.min ?? -500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
                                             :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
@@ -215,7 +219,11 @@
                                         />
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.max ?? 500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
                                             :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
@@ -281,6 +289,7 @@ import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
+import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step.js";
 
 const open = defineModel("open", { type: Boolean, default: false });
 
@@ -586,7 +595,7 @@ function onFieldChange(graph, field) {
         const defaults = getDefaults(field.name);
         const minMax = { ...defaults.MinMax };
         field.smoothing = defaults.smoothing;
-        field.curve = { power: defaults.power, MinMax: minMax, highPrecise: isHighPrecise(minMax) };
+        field.curve = { power: defaults.power, MinMax: minMax, highPrecise: needsFineStep(minMax) };
     }
 }
 
@@ -599,7 +608,7 @@ function makeField(name, existing, color) {
         curve: {
             power: existing?.curve?.power ?? defaults.power,
             MinMax: minMax,
-            highPrecise: isHighPrecise(minMax),
+            highPrecise: needsFineStep(minMax),
         },
         color: color || existing?.color || palette[0].color,
         lineWidth: existing?.lineWidth ?? 1,
@@ -703,25 +712,15 @@ watch(open, (val) => {
     }
 });
 
-// Set curves min-max values changes step. Switch between normal 10 or precesion 0.1 step by using Ctrl key.
-// The precesion value input has italic font.
-
-const normalMinMaxStep = 10;
-const smallMinMaxStep = 0.1;
-
-function isHighPrecise(minMax) {
-    if (!Number.isFinite(minMax?.min) || !Number.isFinite(minMax?.max)) {
-        return false;
-    }
-    return minMax.min % normalMinMaxStep !== 0 || minMax.max % normalMinMaxStep !== 0;
-}
+// The spinner step follows the size of the curve, see coarseMinMaxStep. Ctrl forces the fine step
+// for a field, and those inputs are shown in italics.
 
 function defineFieldsResolution() {
     for (const graph of localGraphs.value) {
         for (const field of graph.fields) {
             const minMax = field?.curve?.MinMax;
             if (minMax?.min != null && minMax?.max != null) {
-                field.curve.highPrecise = isHighPrecise(minMax);
+                field.curve.highPrecise = needsFineStep(minMax);
             }
         }
     }
