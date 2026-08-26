@@ -252,18 +252,16 @@ export function cancelActiveVideoExport() {
     }
 }
 
-/**
- * Borrow the live grapher, render the selected range, and stream the encoded file.
- * The writable and viewer state are restored on success, cancellation, and failure.
- */
-export async function runVideoExport(options) {
+function validateVideoExportOptions(options) {
     if (activeExport) {
         throw new Error("A video export is already running");
     }
     if (!options.graph || !options.canvasRefs?.canvas || !options.file || !options.log) {
         throw new Error("The blackbox viewer is not ready to export video");
     }
+}
 
+async function buildVideoExportPlan(options) {
     const probe = await probeVideoExport({ width: options.width, height: options.height });
     if (!probe.canEncode) {
         throw new Error(probe.reason);
@@ -280,116 +278,144 @@ export async function runVideoExport(options) {
         throw new Error("The selected video range contains no frames");
     }
 
+    return { probe, start, totalFrames };
+}
+
+async function borrowExportGrapher(options, start) {
+    setExportInProgress(true);
+    setGraphState(GRAPH_STATE_PAUSED);
+
+    options.canvas.width = options.width;
+    options.canvas.height = options.height;
+    options.graph.setDrawInOutRegion?.(false);
+    options.graph.resize(options.width, options.height);
+
+    if (options.includeAnalyser) {
+        options.onPhase?.("preparing");
+        options.graph.render(start);
+        await yieldToBrowser();
+    }
+}
+
+function createVideoOutput({ options, target, probe }) {
+    const format =
+        probe.container === "mp4"
+            ? new Mp4OutputFormat({ fastStart: "fragmented" })
+            : new WebMOutputFormat({ appendOnly: true });
+    const output = new Output({ target, format });
+    const source = createCanvasSource(options.canvas, probe.codec);
+    output.addVideoTrack(source, { frameRate: options.frameRate });
+    return { output, source };
+}
+
+async function startVideoOutput(options, output) {
+    await output.start();
+    options.onPhase?.("rendering");
+}
+
+function reportVideoExportProgress({ options, target, frame, totalFrames, smoothedFrameMs }) {
+    options.onProgress?.({
+        frame: frame + 1,
+        totalFrames,
+        bytesWritten: target.bytesWritten(),
+        etaSecs: ((totalFrames - frame - 1) * smoothedFrameMs) / 1000,
+    });
+}
+
+async function renderVideoFrames({ options, output, source, target, exportState, start, totalFrames }) {
+    const frameDurationMicros = MICROSECONDS_PER_SECOND / options.frameRate;
+    let lastFrameAt = performance.now();
+    let lastYieldAt = lastFrameAt;
+    let smoothedFrameMs = 0;
+
+    for (let frame = 0; frame < totalFrames; frame += 1) {
+        if (exportState.cancelled || options.shouldCancel?.()) {
+            await output.cancel();
+            return { frames: frame, bytes: target.bytesWritten(), cancelled: true };
+        }
+
+        options.graph.render(start + frame * frameDurationMicros);
+        compositeVideoFrame({
+            canvas: options.canvas,
+            canvasRefs: options.canvasRefs,
+            userSettings: options.userSettings,
+            includeSticks: options.includeSticks,
+            includeCraft: options.includeCraft,
+            includeAnalyser: options.includeAnalyser,
+            analyserLayout: options.getAnalyserLayout?.(),
+        });
+        await source.add(frame / options.frameRate, 1 / options.frameRate);
+
+        const now = performance.now();
+        const frameMs = Math.max(0.1, now - lastFrameAt);
+        smoothedFrameMs = smoothedFrameMs ? smoothedFrameMs * 0.8 + frameMs * 0.2 : frameMs;
+        lastFrameAt = now;
+        reportVideoExportProgress({ options, target, frame, totalFrames, smoothedFrameMs });
+
+        const budget = typeof document !== "undefined" && document.hidden ? HIDDEN_YIELD_BUDGET_MS : YIELD_BUDGET_MS;
+        if (now - lastYieldAt >= budget) {
+            await yieldToBrowser();
+            lastYieldAt = performance.now();
+        }
+    }
+
+    await output.finalize();
+    return { frames: totalFrames, bytes: target.bytesWritten(), cancelled: false };
+}
+
+async function cancelFailedVideoOutput(output) {
+    if (!output || output.state === "canceled" || output.state === "finalized") {
+        return;
+    }
+    try {
+        await output.cancel();
+    } catch {
+        // The original error remains the useful failure to report.
+    }
+}
+
+async function closeAndRestoreVideoExport({ options, target, exportState }) {
+    try {
+        await target.closeFile();
+    } finally {
+        options.graph.setDrawInOutRegion?.(true);
+        setExportInProgress(false);
+        try {
+            options.restoreCanvasSize?.();
+            (options.invalidateGraph ?? invalidateGraph)?.();
+        } catch {
+            // The tab may already have torn down its graph and canvases.
+        }
+        if (activeExport === exportState) {
+            activeExport = null;
+        }
+    }
+}
+
+/**
+ * Borrow the live grapher, render the selected range, and stream the encoded file.
+ * The writable and viewer state are restored on success, cancellation, and failure.
+ */
+export async function runVideoExport(options) {
+    validateVideoExportOptions(options);
+    const { probe, start, totalFrames } = await buildVideoExportPlan(options);
+
     const fileSystem = options.fileSystem ?? FileSystem;
     const target = await openFileSystemTarget(options.file, { fileSystem });
     const exportState = { cancelled: false };
     activeExport = exportState;
 
     let output = null;
-    let exportGuardSet = false;
-    let drawRegionDisabled = false;
-
     try {
-        setExportInProgress(true);
-        exportGuardSet = true;
-        setGraphState(GRAPH_STATE_PAUSED);
-
-        options.canvas.width = options.width;
-        options.canvas.height = options.height;
-        options.graph.setDrawInOutRegion?.(false);
-        drawRegionDisabled = true;
-        options.graph.resize(options.width, options.height);
-
-        if (options.includeAnalyser) {
-            options.onPhase?.("preparing");
-            options.graph.render(start);
-            await yieldToBrowser();
-        }
-
-        output = new Output({
-            target,
-            format:
-                probe.container === "mp4"
-                    ? new Mp4OutputFormat({ fastStart: "fragmented" })
-                    : new WebMOutputFormat({ appendOnly: true }),
-        });
-        const source = createCanvasSource(options.canvas, probe.codec);
-        output.addVideoTrack(source, { frameRate: options.frameRate });
-        await output.start();
-        options.onPhase?.("rendering");
-
-        const frameDurationMicros = MICROSECONDS_PER_SECOND / options.frameRate;
-        let lastFrameAt = performance.now();
-        let lastYieldAt = lastFrameAt;
-        let smoothedFrameMs = 0;
-
-        for (let frame = 0; frame < totalFrames; frame += 1) {
-            if (exportState.cancelled || options.shouldCancel?.()) {
-                await output.cancel();
-                return { frames: frame, bytes: target.bytesWritten(), cancelled: true };
-            }
-
-            options.graph.render(start + frame * frameDurationMicros);
-            compositeVideoFrame({
-                canvas: options.canvas,
-                canvasRefs: options.canvasRefs,
-                userSettings: options.userSettings,
-                includeSticks: options.includeSticks,
-                includeCraft: options.includeCraft,
-                includeAnalyser: options.includeAnalyser,
-                analyserLayout: options.getAnalyserLayout?.(),
-            });
-            await source.add(frame / options.frameRate, 1 / options.frameRate);
-
-            const now = performance.now();
-            const frameMs = Math.max(0.1, now - lastFrameAt);
-            smoothedFrameMs = smoothedFrameMs ? smoothedFrameMs * 0.8 + frameMs * 0.2 : frameMs;
-            lastFrameAt = now;
-            options.onProgress?.({
-                frame: frame + 1,
-                totalFrames,
-                bytesWritten: target.bytesWritten(),
-                etaSecs: ((totalFrames - frame - 1) * smoothedFrameMs) / 1000,
-            });
-
-            const budget =
-                typeof document !== "undefined" && document.hidden ? HIDDEN_YIELD_BUDGET_MS : YIELD_BUDGET_MS;
-            if (now - lastYieldAt >= budget) {
-                await yieldToBrowser();
-                lastYieldAt = performance.now();
-            }
-        }
-
-        await output.finalize();
-        return { frames: totalFrames, bytes: target.bytesWritten(), cancelled: false };
+        await borrowExportGrapher(options, start);
+        const started = createVideoOutput({ options, target, probe });
+        output = started.output;
+        await startVideoOutput(options, output);
+        return await renderVideoFrames({ options, output, source: started.source, target, exportState, start, totalFrames });
     } catch (error) {
-        if (output && output.state !== "canceled" && output.state !== "finalized") {
-            try {
-                await output.cancel();
-            } catch {
-                // The original error remains the useful failure to report.
-            }
-        }
+        await cancelFailedVideoOutput(output);
         throw error;
     } finally {
-        try {
-            await target.closeFile();
-        } finally {
-            if (drawRegionDisabled) {
-                options.graph.setDrawInOutRegion?.(true);
-            }
-            if (exportGuardSet) {
-                setExportInProgress(false);
-            }
-            try {
-                options.restoreCanvasSize?.();
-                (options.invalidateGraph ?? invalidateGraph)?.();
-            } catch {
-                // The tab may already have torn down its graph and canvases.
-            }
-            if (activeExport === exportState) {
-                activeExport = null;
-            }
-        }
+        await closeAndRestoreVideoExport({ options, target, exportState });
     }
 }

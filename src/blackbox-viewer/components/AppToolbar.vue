@@ -102,7 +102,9 @@ const videoCapability = ref(null);
 let probeGeneration = 0;
 
 const videoExportTitle = computed(() => {
-    if (!videoCapability.value) return "Checking video export support…";
+    if (!videoCapability.value) {
+        return "Checking video export support…";
+    }
     return videoCapability.value.canEncode ? "Render the marked range to a video file" : videoCapability.value.reason;
 });
 
@@ -111,7 +113,9 @@ watch(
     async (hasLog) => {
         const generation = ++probeGeneration;
         videoCapability.value = null;
-        if (!hasLog) return;
+        if (!hasLog) {
+            return;
+        }
         let result;
         try {
             result = await probeVideoExport({ width: 1280, height: 720 });

@@ -16,7 +16,8 @@ import {
     suggestedName,
 } from "../video_export.js";
 
-const FRAMERATES = [30, 50, 60];
+const FRAMERATE_OPTIONS = [30, 50, 60];
+const ALLOWED_FRAMERATES = new Set(FRAMERATE_OPTIONS);
 const RESOLUTIONS = [
     { label: "720p (1280 × 720)", value: "1280x720", width: 1280, height: 720 },
     { label: "1080p (1920 × 1080)", value: "1920x1080", width: 1920, height: 1080 },
@@ -95,7 +96,7 @@ function seedForm() {
     resolutionValue.value = RESOLUTIONS.some((item) => item.value === savedResolution)
         ? savedResolution
         : RESOLUTIONS[0].value;
-    frameRate.value = FRAMERATES.includes(Number(config.frameRate)) ? Number(config.frameRate) : 30;
+    frameRate.value = ALLOWED_FRAMERATES.has(Number(config.frameRate)) ? Number(config.frameRate) : 30;
 }
 
 watch(open, (isOpen) => {
@@ -123,7 +124,9 @@ watch(
 );
 
 function humanSize(bytes) {
-    if (!bytes) return "0 MB";
+    if (!bytes) {
+        return "0 MB";
+    }
     const mb = bytes / (1024 * 1024);
     return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
 }
@@ -135,16 +138,22 @@ function humanTime(seconds) {
 }
 
 async function startExport() {
-    if (!canStart.value) return;
+    if (!canStart.value) {
+        return;
+    }
 
     const selectedProbe = probeResult.value;
     const fileName = suggestedName(appStore.logFilename || "blackbox", selectedProbe.extension);
     let file;
     try {
         file = await FileSystem.pickSaveFile(fileName, selectedProbe.description, `.${selectedProbe.extension}`);
-        if (!file) return;
+        if (!file) {
+            return;
+        }
     } catch (error) {
-        if (error?.name === "AbortError") return;
+        if (error?.name === "AbortError") {
+            return;
+        }
         errorMessage.value = error?.message ?? String(error);
         mode.value = "error";
         return;
@@ -238,7 +247,7 @@ onUnmounted(cancelExport);
 
                 <div class="grid grid-cols-2 gap-3">
                     <UFormField label="Framerate">
-                        <USelect v-model="frameRate" :items="FRAMERATES" class="w-full" />
+                        <USelect v-model="frameRate" :items="FRAMERATE_OPTIONS" class="w-full" />
                     </UFormField>
                     <UFormField label="Resolution">
                         <USelect v-model="resolutionValue" :items="RESOLUTIONS" class="w-full" />
