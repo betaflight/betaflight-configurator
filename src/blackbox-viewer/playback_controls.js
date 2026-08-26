@@ -40,11 +40,18 @@ function ensureThrottles() {
 // (that would letterbox exported frames); see video_export.js and #5396.
 let exportInProgress = false;
 export function setExportInProgress(value) {
-    exportInProgress = value;
+    exportInProgress = Boolean(value);
+}
+
+export function isExportInProgress() {
+    return exportInProgress;
 }
 
 export function animationLoop() {
     if (exportInProgress) {
+        // invalidateGraph() set this before queuing us. Clear it even though no
+        // frame is drawn so the post-export redraw can schedule a fresh rAF.
+        animationFrameIsQueued = false;
         return;
     }
     ensureThrottles();

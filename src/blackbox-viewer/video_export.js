@@ -8,20 +8,14 @@ import {
     QUALITY_MEDIUM,
 } from "mediabunny";
 
-import { setExportInProgress } from "./playback_controls.js";
-
-// Offscreen video export for the blackbox viewer (design: #5396).
-//
-// This module owns the capability probe, the frame maths, and the
-// append-only FileSystem sink. The render loop that drives them lives in
-// runVideoExport(); the dialog only reads stores and calls in here.
+import FileSystem from "@/js/FileSystem.js";
+import { isAndroid, isTauriDesktop } from "@/js/utils/checkCompatibility.js";
+import { ThemeColors } from "./theme_colors.js";
+import { invalidateGraph, setExportInProgress, setGraphState } from "./playback_controls.js";
+import { GRAPH_STATE_PAUSED } from "./stores/playback.js";
 
 const MICROSECONDS_PER_SECOND = 1e6;
-
-// Probe order per design doc 1/5 §4: H.264 first (hardware on every
-// WebCodecs implementation that has one), then the free containers.
 const CODEC_PROBE_ORDER = ["avc", "vp9", "vp8", "av1"];
-
 const CODEC_CONTAINERS = {
     avc: { container: "mp4", extension: "mp4", description: "MP4 video" },
     hevc: { container: "mp4", extension: "mp4", description: "MP4 video" },
@@ -29,145 +23,220 @@ const CODEC_CONTAINERS = {
     vp8: { container: "webm", extension: "webm", description: "WebM video" },
     av1: { container: "webm", extension: "webm", description: "WebM video" },
 };
-
-// Measured constant used by estimateOutputBytes; see the calibration note
-// in runVideoExport() — recalibrate after a real export if needed.
 const ESTIMATED_BITS_PER_PIXEL_PER_FRAME = 0.12;
+const DEFAULT_CHUNK_SIZE = 4 * 1024 * 1024;
+const ANDROID_CHUNK_SIZE = 256 * 1024;
+const YIELD_BUDGET_MS = 12;
+const HIDDEN_YIELD_BUDGET_MS = 250;
 
 const probeCache = new Map();
+let activeExport = null;
 
-/**
- * Check whether this environment can encode + save an export.
- *
- * Returns both halves of the capability question: can we encode (WebCodecs
- * with a supported codec) and how will saving behave ("stream" = direct to
- * disk via showSaveFilePicker, "buffered" = whole file held in memory).
- * Results are cached per canvas size because codec negotiation is not free.
- */
+function saveMode() {
+    return typeof globalThis.showSaveFilePicker === "function" || isAndroid() || isTauriDesktop()
+        ? "stream"
+        : "buffered";
+}
+
+function normalizeBound(value, fallback) {
+    return value === false || value == null ? fallback() : value;
+}
+
+function exportRange({ inTime, outTime, getMinTime, getMaxTime }) {
+    return {
+        start: normalizeBound(inTime, typeof getMinTime === "function" ? getMinTime : () => 0),
+        end: normalizeBound(outTime, typeof getMaxTime === "function" ? getMaxTime : () => 0),
+    };
+}
+
+function sizeEnabled(settings) {
+    return Number.parseInt(settings?.size, 10) > 0;
+}
+
+function canvasPosition(value) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function yieldToBrowser() {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+/** Check encoder and save capabilities, cached per output resolution. */
 export async function probeVideoExport({ width, height } = {}) {
     const cacheKey = `${width || 0}x${height || 0}`;
     if (probeCache.has(cacheKey)) {
         return probeCache.get(cacheKey);
     }
 
-    let result;
-    if (typeof globalThis.VideoEncoder !== "function") {
-        result = {
-            canEncode: false,
-            reason: "This browser cannot encode video (WebCodecs unavailable)",
-        };
-    } else {
-        const codec = await getFirstEncodableVideoCodec(
-            CODEC_PROBE_ORDER,
-            width && height ? { width, height, quality: QUALITY_MEDIUM } : { quality: QUALITY_MEDIUM },
-        );
+    const pending = (async () => {
+        if (typeof globalThis.VideoEncoder !== "function") {
+            return {
+                canEncode: false,
+                reason: "This browser cannot encode video (WebCodecs unavailable)",
+            };
+        }
+
+        let codec;
+        try {
+            codec = await getFirstEncodableVideoCodec(
+                CODEC_PROBE_ORDER,
+                width && height ? { width, height, quality: QUALITY_MEDIUM } : { quality: QUALITY_MEDIUM },
+            );
+        } catch (error) {
+            return {
+                canEncode: false,
+                reason: `Video codec detection failed: ${error?.message ?? String(error)}`,
+            };
+        }
         if (!codec) {
-            result = {
+            return {
                 canEncode: false,
                 reason: "No supported video codec found — on Linux, install the GStreamer H.264 or VP9 plugins",
             };
-        } else {
-            const { container, extension, description } = CODEC_CONTAINERS[codec];
-            result = {
-                canEncode: true,
-                codec,
-                container,
-                extension,
-                description,
-                saveMode: typeof globalThis.showSaveFilePicker === "function" ? "stream" : "buffered",
-            };
         }
-    }
 
-    probeCache.set(cacheKey, result);
-    return result;
+        const format = CODEC_CONTAINERS[codec];
+        if (!format) {
+            return { canEncode: false, reason: `Unsupported video codec returned by the encoder: ${codec}` };
+        }
+
+        return {
+            canEncode: true,
+            codec,
+            ...format,
+            saveMode: saveMode(),
+            androidBridge: isAndroid(),
+        };
+    })();
+
+    probeCache.set(cacheKey, pending);
+    return pending;
 }
 
-/**
- * Frames in the marked range at the chosen framerate. Falsy in/out bounds
- * fall back to the log's own extent so a marker-less range exports whole.
- */
+/** Frames in the marked range at the selected framerate. */
 export function estimateFrameCount({ inTime, outTime, frameRate, getMinTime, getMaxTime }) {
-    const start = inTime ?? (typeof getMinTime === "function" ? getMinTime() : 0);
-    const end = outTime ?? (typeof getMaxTime === "function" ? getMaxTime() : 0);
+    if (!Number.isFinite(frameRate) || frameRate <= 0) {
+        return 0;
+    }
+    const { start, end } = exportRange({ inTime, outTime, getMinTime, getMaxTime });
     const durationMicros = Math.max(0, end - start);
     return Math.round(durationMicros / (MICROSECONDS_PER_SECOND / frameRate));
 }
 
-/** Rough output size so buffered-save users can decide before rendering. */
+/** Rough output size shown before a buffered export starts. */
 export function estimateOutputBytes({ frameCount, width, height, codec }) {
     if (!frameCount || frameCount <= 0 || !width || !height) {
         return 0;
     }
-    // VP8/VP9 have no hardware path in most desktop stacks; their output is
-    // measurably larger than H.264 at QUALITY_MEDIUM.
     const codecFactor = codec === "vp8" || codec === "vp9" ? 1.6 : 1;
     return Math.ceil((frameCount * width * height * ESTIMATED_BITS_PER_PIXEL_PER_FRAME * codecFactor) / 8);
 }
 
+/** Chunk size tuned to avoid the Android hex-bridge allocation spike documented in #5396. */
+export function videoExportChunkSize(android = isAndroid()) {
+    return android ? ANDROID_CHUNK_SIZE : DEFAULT_CHUNK_SIZE;
+}
+
 /**
- * Build the mediabunny output wired to FileSystem's append-only contract.
- *
- * Every chunk is handed to FileSystem.writeChunck as a Blob; a non-sequential
- * position would silently corrupt the file downstream, so it throws here where
- * the cause is visible instead of in the muxer where it is not.
+ * Adapt an already-open FileSystem writable to mediabunny's positioned stream contract.
+ * The selected container is append-only, so any non-sequential write is a hard error.
  */
-export function createFileSystemTarget(file) {
+export function createFileSystemTarget(writableToken, options = {}) {
+    const fileSystem = options.fileSystem ?? FileSystem;
+    const chunkSize = options.chunkSize ?? videoExportChunkSize();
     let bytesWritten = 0;
     let nextPosition = 0;
+    let closePromise = null;
+
+    const closeFile = () => {
+        closePromise ??= Promise.resolve(fileSystem.closeFile(writableToken));
+        return closePromise;
+    };
 
     const writable = new WritableStream({
         async write(chunk) {
-            const data = chunk instanceof Blob ? chunk : new Blob([chunk.data ?? chunk]);
-            await window.FileSystem.writeChunck(file._downloadWritable ?? file.writable, data);
-            bytesWritten += data.size;
-        },
-    });
-
-    const target = new StreamTarget(writable, { chunked: true, chunkSize: 4 * 1024 * 1024 });
-    // Wrap so byte accounting stays exact even when mediabunny batches writes.
-    const originalWrite = target.write.bind(target);
-    target.write = async (chunk) => {
-        if (chunk.type === "write") {
+            if (chunk?.type !== "write" || !(chunk.data instanceof Uint8Array)) {
+                throw new TypeError("Video export received an invalid muxer write");
+            }
             if (chunk.position !== nextPosition) {
                 throw new Error(
                     `Non-sequential write at offset ${chunk.position} (expected ${nextPosition}); ` +
                         "the export sink is append-only",
                 );
             }
+
+            const data = new Blob([chunk.data]);
+            await fileSystem.writeChunck(writableToken, data);
             nextPosition += chunk.data.byteLength;
-        }
-        await originalWrite(chunk);
-    };
+            bytesWritten += data.size;
+        },
+        close: closeFile,
+        abort: closeFile,
+    });
+
+    const target = new StreamTarget(writable, { chunked: true, chunkSize });
     target.bytesWritten = () => bytesWritten;
+    target.closeFile = closeFile;
     return target;
 }
 
-/** Create the mediabunny Output for the probed codec. */
-export function createOutputForCodec(codec) {
-    const { container } = CODEC_CONTAINERS[codec];
-    const format =
-        container === "mp4"
-            ? new Mp4OutputFormat({ fastStart: "fragmented" })
-            : new WebMOutputFormat({ appendOnly: true });
-    return new Output({ target: null, format });
+/** Open a picked descriptor before adapting its production writable token. */
+export async function openFileSystemTarget(file, options = {}) {
+    const fileSystem = options.fileSystem ?? FileSystem;
+    const writableToken = await fileSystem.openFile(file);
+    return createFileSystemTarget(writableToken, { ...options, fileSystem });
 }
 
-/** Build the CanvasSource for the offscreen export canvas. */
-export function createCanvasSource(canvas, codec, frameRate) {
+/** Create a mediabunny source that rejects unexpected canvas size changes. */
+export function createCanvasSource(canvas, codec) {
     return new CanvasSource(canvas, {
         codec,
         quality: QUALITY_MEDIUM,
         keyFrameInterval: 2,
-        // Any size change reaching the encoder means the live grapher escaped
-        // its borrow window; fail loudly rather than letterbox silently.
         sizeChangeBehavior: "deny",
-        bitrate: undefined,
-        frameRate,
     });
 }
 
-/** Replace the log's extension with the export container's. */
+/** Composite the live grapher canvases into the private encoder canvas. */
+export function compositeVideoFrame({
+    canvas,
+    canvasRefs,
+    userSettings,
+    includeSticks,
+    includeCraft,
+    includeAnalyser,
+    analyserLayout,
+}) {
+    const context = canvas.getContext("2d");
+    if (!context) {
+        throw new Error("A 2D canvas is required to export video");
+    }
+
+    context.fillStyle = ThemeColors.getGraphBackground();
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(canvasRefs.canvas, 0, 0);
+
+    if (includeSticks && sizeEnabled(userSettings?.sticks)) {
+        context.drawImage(
+            canvasRefs.stickCanvas,
+            canvasPosition(canvasRefs.stickCanvas.style.left),
+            canvasPosition(canvasRefs.stickCanvas.style.top),
+        );
+    }
+    if (includeCraft && sizeEnabled(userSettings?.craft)) {
+        context.drawImage(
+            canvasRefs.craftCanvas,
+            canvasPosition(canvasRefs.craftCanvas.style.left),
+            canvasPosition(canvasRefs.craftCanvas.style.top),
+        );
+    }
+    if (includeAnalyser && sizeEnabled(userSettings?.analyser)) {
+        context.drawImage(canvasRefs.analyserCanvas, analyserLayout?.left ?? 0, analyserLayout?.top ?? 0);
+    }
+}
+
+/** Replace a log extension with the selected video container extension. */
 export function suggestedName(logName, extension) {
     const base =
         typeof logName === "string" && logName.includes(".")
@@ -176,55 +245,67 @@ export function suggestedName(logName, extension) {
     return `${base}.${extension}`;
 }
 
+/** Ask the active loop to stop at its next frame boundary. Safe to call repeatedly. */
+export function cancelActiveVideoExport() {
+    if (activeExport) {
+        activeExport.cancelled = true;
+    }
+}
+
 /**
- * Run the export: borrow the live grapher offscreen, render every frame in
- * the marked range into the encoder, and stream the result to FileSystem.
- *
- * The grapher is borrowed by resizing its backing store to the export
- * resolution (CSS layout keeps the on-screen size), so updateCanvasSize()
- * and animationLoop() must be suppressed by the caller for the duration
- * via setExportInProgress(); both are restored in the finally block here.
- *
- * Options bag (all required unless noted):
- *   - canvas:        offscreen export canvas (width/height set to target)
- *   - graph:         live FlightLogGrapher instance to borrow
- *   - log:           flight log object (has getMinTime/getMaxTime)
- *   - renderFrame:   callback rendering `timeMicros` onto the canvas
- *   - inTime/outTime marker bounds in microseconds (falsy = whole log)
- *   - frameRate, width, height
- *   - file:          FileSystem file descriptor from pickSaveFile
- *   - onProgress:    optional ({ frame, totalFrames, bytesWritten, etaSecs })
- *
- * Returns { frames, bytes }. Cancels cleanly if options.shouldCancel()
- * turns true between frames; the partial file stays on disk and is
- * reported to the user by the dialog.
+ * Borrow the live grapher, render the selected range, and stream the encoded file.
+ * The writable and viewer state are restored on success, cancellation, and failure.
  */
 export async function runVideoExport(options) {
-    const { canvas, graph, renderFrame, inTime, outTime, frameRate, width, height, file, onProgress, shouldCancel } =
-        options;
+    if (activeExport) {
+        throw new Error("A video export is already running");
+    }
+    if (!options.graph || !options.canvasRefs?.canvas || !options.file || !options.log) {
+        throw new Error("The blackbox viewer is not ready to export video");
+    }
 
-    const probe = await probeVideoExport({ width, height });
+    const probe = await probeVideoExport({ width: options.width, height: options.height });
     if (!probe.canEncode) {
         throw new Error(probe.reason);
     }
 
-    const totalFrames = estimateFrameCount({
-        inTime,
-        outTime,
-        frameRate,
+    const { start, end } = exportRange({
+        inTime: options.inTime,
+        outTime: options.outTime,
         getMinTime: () => options.log.getMinTime(),
         getMaxTime: () => options.log.getMaxTime(),
     });
+    const totalFrames = estimateFrameCount({ inTime: start, outTime: end, frameRate: options.frameRate });
+    if (totalFrames <= 0) {
+        throw new Error("The selected video range contains no frames");
+    }
 
-    // Borrow window opens: block resize/re-render interference for real.
-    setExportInProgress(true);
+    const fileSystem = options.fileSystem ?? FileSystem;
+    const target = await openFileSystemTarget(options.file, { fileSystem });
+    const exportState = { cancelled: false };
+    activeExport = exportState;
 
-    let output;
+    let output = null;
+    let exportGuardSet = false;
+    let drawRegionDisabled = false;
+
     try {
-        canvas.width = width;
-        canvas.height = height;
+        setExportInProgress(true);
+        exportGuardSet = true;
+        setGraphState(GRAPH_STATE_PAUSED);
 
-        const target = createFileSystemTarget(file);
+        options.canvas.width = options.width;
+        options.canvas.height = options.height;
+        options.graph.setDrawInOutRegion?.(false);
+        drawRegionDisabled = true;
+        options.graph.resize(options.width, options.height);
+
+        if (options.includeAnalyser) {
+            options.onPhase?.("preparing");
+            options.graph.render(start);
+            await yieldToBrowser();
+        }
+
         output = new Output({
             target,
             format:
@@ -232,60 +313,83 @@ export async function runVideoExport(options) {
                     ? new Mp4OutputFormat({ fastStart: "fragmented" })
                     : new WebMOutputFormat({ appendOnly: true }),
         });
-        const source = createCanvasSource(canvas, probe.codec, frameRate);
-        output.addVideoTrack(source, { frameRate });
+        const source = createCanvasSource(options.canvas, probe.codec);
+        output.addVideoTrack(source, { frameRate: options.frameRate });
         await output.start();
+        options.onPhase?.("rendering");
 
-        const startMicros = inTime ?? (typeof options.log.getMinTime === "function" ? options.log.getMinTime() : 0);
-        const frameDurationMicros = MICROSECONDS_PER_SECOND / frameRate;
-
-        let lastFrameAt = Date.now();
-        let smoothedFps = 0;
+        const frameDurationMicros = MICROSECONDS_PER_SECOND / options.frameRate;
+        let lastFrameAt = performance.now();
+        let lastYieldAt = lastFrameAt;
+        let smoothedFrameMs = 0;
 
         for (let frame = 0; frame < totalFrames; frame += 1) {
-            if (shouldCancel?.()) {
+            if (exportState.cancelled || options.shouldCancel?.()) {
                 await output.cancel();
                 return { frames: frame, bytes: target.bytesWritten(), cancelled: true };
             }
 
-            renderFrame(startMicros + frame * frameDurationMicros);
-            await source.add(frame / frameRate, 1 / frameRate);
+            options.graph.render(start + frame * frameDurationMicros);
+            compositeVideoFrame({
+                canvas: options.canvas,
+                canvasRefs: options.canvasRefs,
+                userSettings: options.userSettings,
+                includeSticks: options.includeSticks,
+                includeCraft: options.includeCraft,
+                includeAnalyser: options.includeAnalyser,
+                analyserLayout: options.getAnalyserLayout?.(),
+            });
+            await source.add(frame / options.frameRate, 1 / options.frameRate);
 
-            const now = Date.now();
-            const instantFps = 1000 / Math.max(1, now - lastFrameAt);
-            smoothedFps = smoothedFps ? smoothedFps * 0.9 + instantFps * 0.1 : instantFps;
+            const now = performance.now();
+            const frameMs = Math.max(0.1, now - lastFrameAt);
+            smoothedFrameMs = smoothedFrameMs ? smoothedFrameMs * 0.8 + frameMs * 0.2 : frameMs;
             lastFrameAt = now;
-
-            onProgress?.({
+            options.onProgress?.({
                 frame: frame + 1,
                 totalFrames,
                 bytesWritten: target.bytesWritten(),
-                etaSecs: (totalFrames - frame - 1) / Math.max(1, smoothedFps),
+                etaSecs: ((totalFrames - frame - 1) * smoothedFrameMs) / 1000,
             });
+
+            const budget =
+                typeof document !== "undefined" && document.hidden ? HIDDEN_YIELD_BUDGET_MS : YIELD_BUDGET_MS;
+            if (now - lastYieldAt >= budget) {
+                await yieldToBrowser();
+                lastYieldAt = performance.now();
+            }
         }
 
         await output.finalize();
-        return { frames: totalFrames, bytes: target.bytesWritten() };
+        return { frames: totalFrames, bytes: target.bytesWritten(), cancelled: false };
     } catch (error) {
-        // Never finalize a broken muxer; cancel leaves the partial file which
-        // the dialog reports as unplayable-but-deletable.
-        if (output) {
+        if (output && output.state !== "canceled" && output.state !== "finalized") {
             try {
                 await output.cancel();
             } catch {
-                // already torn down; nothing further to do
+                // The original error remains the useful failure to report.
             }
         }
         throw error;
     } finally {
-        // Restore the borrowed grapher on every path.
         try {
-            graph.updateCanvasSize();
-        } catch {
-            // graph may already be gone after tab teardown
+            await target.closeFile();
+        } finally {
+            if (drawRegionDisabled) {
+                options.graph.setDrawInOutRegion?.(true);
+            }
+            if (exportGuardSet) {
+                setExportInProgress(false);
+            }
+            try {
+                options.restoreCanvasSize?.();
+                (options.invalidateGraph ?? invalidateGraph)?.();
+            } catch {
+                // The tab may already have torn down its graph and canvases.
+            }
+            if (activeExport === exportState) {
+                activeExport = null;
+            }
         }
-        canvas.width = width;
-        canvas.height = height;
-        setExportInProgress(false);
     }
 }

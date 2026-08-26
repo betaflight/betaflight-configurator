@@ -41,8 +41,8 @@
                     label="Export Video"
                     icon="i-lucide-video"
                     size="xs"
-                    :disabled="!logStore.hasLog"
-                    title="Render the marked range to a video file"
+                    :disabled="!videoCapability?.canEncode"
+                    :title="videoExportTitle"
                     @click="$emit('export-video')"
                 />
                 <USeparator orientation="vertical" class="h-4" />
@@ -77,9 +77,11 @@
 </template>
 
 <script setup>
+import { computed, ref, watch } from "vue";
 import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import { useGraphStore } from "../stores/graph.js";
+import { probeVideoExport } from "../video_export.js";
 import LogFileInput from "./LogFileInput.vue";
 
 defineEmits([
@@ -96,6 +98,35 @@ defineEmits([
 const logStore = useLogStore();
 const appStore = useAppStore();
 const graphStore = useGraphStore();
+const videoCapability = ref(null);
+let probeGeneration = 0;
+
+const videoExportTitle = computed(() => {
+    if (!videoCapability.value) return "Checking video export support…";
+    return videoCapability.value.canEncode ? "Render the marked range to a video file" : videoCapability.value.reason;
+});
+
+watch(
+    () => logStore.hasLog,
+    async (hasLog) => {
+        const generation = ++probeGeneration;
+        videoCapability.value = null;
+        if (!hasLog) return;
+        let result;
+        try {
+            result = await probeVideoExport({ width: 1280, height: 720 });
+        } catch (error) {
+            result = {
+                canEncode: false,
+                reason: `Video capability detection failed: ${error?.message ?? String(error)}`,
+            };
+        }
+        if (generation === probeGeneration) {
+            videoCapability.value = result;
+        }
+    },
+    { immediate: true },
+);
 </script>
 
 <style scoped>
