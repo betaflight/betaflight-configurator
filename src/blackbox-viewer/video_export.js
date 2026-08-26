@@ -393,9 +393,14 @@ async function cancelFailedVideoOutput(output) {
     }
 }
 
-async function closeAndRestoreVideoExport({ options, target, exportState, viewerState }) {
+async function closeAndRestoreVideoExport({ options, target, exportState, viewerState, failedError }) {
     try {
         await target?.closeFile();
+    } catch (error) {
+        if (!failedError) {
+            throw error;
+        }
+        // Preserve the original encoder or render failure.
     } finally {
         if (viewerState.borrowed) {
             setExportInProgress(false);
@@ -425,6 +430,7 @@ export async function runVideoExport(options) {
 
     let target = null;
     let output = null;
+    let failedError = null;
     const viewerState = { borrowed: false, graphState: GRAPH_STATE_PAUSED };
     try {
         const { probe, start, totalFrames } = await buildVideoExportPlan(options);
@@ -437,9 +443,10 @@ export async function runVideoExport(options) {
         await startVideoOutput(options, output);
         return await renderVideoFrames({ options, output, source: started.source, target, exportState, start, totalFrames });
     } catch (error) {
+        failedError = error;
         await cancelFailedVideoOutput(output);
         throw error;
     } finally {
-        await closeAndRestoreVideoExport({ options, target, exportState, viewerState });
+        await closeAndRestoreVideoExport({ options, target, exportState, viewerState, failedError });
     }
 }

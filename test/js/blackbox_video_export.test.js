@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { GRAPH_STATE_PAUSED, GRAPH_STATE_PLAY } from "../../src/blackbox-viewer/stores/playback.js";
 
 const mod = await import("../../src/blackbox-viewer/video_export");
 
@@ -263,7 +264,7 @@ describe("runVideoExport lifecycle", () => {
         vi.resetModules();
     });
 
-    async function loadRuntime({ codec, graphState = 1 }) {
+    async function loadRuntime({ codec, graphState = GRAPH_STATE_PLAY }) {
         vi.resetModules();
         const controls = {
             getGraphState: vi.fn(() => graphState),
@@ -356,11 +357,28 @@ describe("runVideoExport lifecycle", () => {
 
         expect(result).toMatchObject({ frames: 30, cancelled: false });
         expect(controls.getGraphState).toHaveBeenCalledOnce();
-        expect(controls.setGraphState.mock.calls).toEqual([[0], [1]]);
+        expect(controls.setGraphState.mock.calls).toEqual([[GRAPH_STATE_PAUSED], [GRAPH_STATE_PLAY]]);
         expect(controls.setExportInProgress.mock.calls).toEqual([[true], [false]]);
         expect(restoreCanvasSize).toHaveBeenCalledOnce();
         expect(invalidateGraph).toHaveBeenCalledOnce();
         expect(options.fileSystem.closeFile).toHaveBeenCalledOnce();
+    });
+
+    it("does not let a close failure hide the original export error", async () => {
+        const { fresh } = await loadRuntime({ codec: Promise.resolve("avc") });
+        const renderError = new Error("frame render failed");
+        const options = runtimeOptions({
+            graph: {
+                render: vi.fn(() => {
+                    throw renderError;
+                }),
+                resize: vi.fn(),
+                setDrawInOutRegion: vi.fn(),
+            },
+        });
+        options.fileSystem.closeFile.mockRejectedValue(new Error("file close failed"));
+
+        await expect(fresh.runVideoExport(options)).rejects.toBe(renderError);
     });
 });
 
