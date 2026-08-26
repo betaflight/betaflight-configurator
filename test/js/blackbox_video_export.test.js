@@ -137,6 +137,32 @@ describe("probeVideoExport", () => {
         await fresh.probeVideoExport({ width: 1920, height: 1080 });
         expect(codecSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("retries a failed probe instead of disabling the resolution for the session", async () => {
+        const codecSpy = vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce("avc");
+        vi.stubGlobal(
+            "VideoEncoder",
+            class VideoEncoder {
+                static isConfigSupported() {
+                    return Promise.resolve({ supported: true });
+                }
+            },
+        );
+        vi.doMock("mediabunny", () => ({
+            Output: class {},
+            Mp4OutputFormat: class {},
+            WebMOutputFormat: class {},
+            StreamTarget: class {},
+            CanvasSource: class {},
+            getFirstEncodableVideoCodec: codecSpy,
+            QUALITY_MEDIUM: "medium",
+        }));
+        const fresh = await import("../../src/blackbox-viewer/video_export");
+
+        expect((await fresh.probeVideoExport({ width: 1280, height: 720 })).canEncode).toBe(false);
+        expect((await fresh.probeVideoExport({ width: 1280, height: 720 })).canEncode).toBe(true);
+        expect(codecSpy).toHaveBeenCalledTimes(2);
+    });
 });
 
 describe("createFileSystemTarget", () => {
@@ -144,7 +170,7 @@ describe("createFileSystemTarget", () => {
         const writableToken = { id: "production-writable" };
         const fileSystem = { writeChunck: vi.fn(), closeFile: vi.fn() };
         const target = mod.createFileSystemTarget(writableToken, { fileSystem, chunkSize: 1024 });
-        const writer = target._writable.getWriter();
+        const writer = target.exportWritable.getWriter();
 
         await writer.write({ type: "write", data: new Uint8Array([1, 2]), position: 0 });
         await writer.write({ type: "write", data: new Uint8Array([3, 4, 5]), position: 2 });
@@ -165,7 +191,7 @@ describe("createFileSystemTarget", () => {
     it("throws on a non-sequential position instead of corrupting downstream", async () => {
         const fileSystem = { writeChunck: vi.fn(), closeFile: vi.fn() };
         const target = mod.createFileSystemTarget({}, { fileSystem, chunkSize: 1024 });
-        const writer = target._writable.getWriter();
+        const writer = target.exportWritable.getWriter();
 
         await writer.write({ type: "write", data: new Uint8Array(4), position: 0 });
         await expect(writer.write({ type: "write", data: new Uint8Array(4), position: 8 })).rejects.toThrow(
@@ -188,7 +214,7 @@ describe("createFileSystemTarget", () => {
             closeFile: vi.fn(),
         };
         const target = await mod.openFileSystemTarget(descriptor, { fileSystem, chunkSize: 1024 });
-        const writer = target._writable.getWriter();
+        const writer = target.exportWritable.getWriter();
 
         await writer.write({ type: "write", data: new Uint8Array([9]), position: 0 });
         await writer.close();

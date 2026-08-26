@@ -62,6 +62,21 @@ function yieldToBrowser() {
     return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
+function evictFailedProbe(cacheKey, pending) {
+    pending.then(
+        (result) => {
+            if (!result?.canEncode && probeCache.get(cacheKey) === pending) {
+                probeCache.delete(cacheKey);
+            }
+        },
+        () => {
+            if (probeCache.get(cacheKey) === pending) {
+                probeCache.delete(cacheKey);
+            }
+        },
+    );
+}
+
 /** Check encoder and save capabilities, cached per output resolution. */
 export async function probeVideoExport({ width, height } = {}) {
     const cacheKey = `${width || 0}x${height || 0}`;
@@ -111,6 +126,7 @@ export async function probeVideoExport({ width, height } = {}) {
     })();
 
     probeCache.set(cacheKey, pending);
+    evictFailedProbe(cacheKey, pending);
     return pending;
 }
 
@@ -176,6 +192,7 @@ export function createFileSystemTarget(writableToken, options = {}) {
     });
 
     const target = new StreamTarget(writable, { chunked: true, chunkSize });
+    target.exportWritable = writable;
     target.bytesWritten = () => bytesWritten;
     target.closeFile = closeFile;
     return target;
