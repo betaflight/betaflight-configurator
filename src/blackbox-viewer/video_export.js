@@ -11,7 +11,7 @@ import {
 import FileSystem from "@/js/FileSystem.js";
 import { isAndroid, isTauriDesktop } from "@/js/utils/checkCompatibility.js";
 import { ThemeColors } from "./theme_colors.js";
-import { invalidateGraph, setExportInProgress, setGraphState } from "./playback_controls.js";
+import { getGraphState, invalidateGraph, setExportInProgress, setGraphState } from "./playback_controls.js";
 import { GRAPH_STATE_PAUSED } from "./stores/playback.js";
 
 const MICROSECONDS_PER_SECOND = 1e6;
@@ -298,7 +298,9 @@ async function buildVideoExportPlan(options) {
     return { probe, start, totalFrames };
 }
 
-async function borrowExportGrapher(options, start) {
+async function borrowExportGrapher(options, start, viewerState) {
+    viewerState.graphState = getGraphState();
+    viewerState.borrowed = true;
     setExportInProgress(true);
     setGraphState(GRAPH_STATE_PAUSED);
 
@@ -391,17 +393,20 @@ async function cancelFailedVideoOutput(output) {
     }
 }
 
-async function closeAndRestoreVideoExport({ options, target, exportState }) {
+async function closeAndRestoreVideoExport({ options, target, exportState, viewerState }) {
     try {
-        await target.closeFile();
+        await target?.closeFile();
     } finally {
-        options.graph.setDrawInOutRegion?.(true);
-        setExportInProgress(false);
-        try {
-            options.restoreCanvasSize?.();
-            (options.invalidateGraph ?? invalidateGraph)?.();
-        } catch {
-            // The tab may already have torn down its graph and canvases.
+        if (viewerState.borrowed) {
+            setExportInProgress(false);
+            try {
+                options.graph.setDrawInOutRegion?.(true);
+                options.restoreCanvasSize?.();
+                setGraphState(viewerState.graphState);
+                (options.invalidateGraph ?? invalidateGraph)?.();
+            } catch {
+                // The tab may already have torn down its graph and canvases.
+            }
         }
         if (activeExport === exportState) {
             activeExport = null;
@@ -415,16 +420,18 @@ async function closeAndRestoreVideoExport({ options, target, exportState }) {
  */
 export async function runVideoExport(options) {
     validateVideoExportOptions(options);
-    const { probe, start, totalFrames } = await buildVideoExportPlan(options);
-
-    const fileSystem = options.fileSystem ?? FileSystem;
-    const target = await openFileSystemTarget(options.file, { fileSystem });
     const exportState = { cancelled: false };
     activeExport = exportState;
 
+    let target = null;
     let output = null;
+    const viewerState = { borrowed: false, graphState: GRAPH_STATE_PAUSED };
     try {
-        await borrowExportGrapher(options, start);
+        const { probe, start, totalFrames } = await buildVideoExportPlan(options);
+        const fileSystem = options.fileSystem ?? FileSystem;
+        target = await openFileSystemTarget(options.file, { fileSystem });
+
+        await borrowExportGrapher(options, start, viewerState);
         const started = createVideoOutput({ options, target, probe });
         output = started.output;
         await startVideoOutput(options, output);
@@ -433,6 +440,6 @@ export async function runVideoExport(options) {
         await cancelFailedVideoOutput(output);
         throw error;
     } finally {
-        await closeAndRestoreVideoExport({ options, target, exportState });
+        await closeAndRestoreVideoExport({ options, target, exportState, viewerState });
     }
 }

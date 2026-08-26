@@ -47,6 +47,10 @@ export function isExportInProgress() {
     return exportInProgress;
 }
 
+export function getGraphState() {
+    return usePlaybackStore(pinia).graphState;
+}
+
 export function animationLoop() {
     if (exportInProgress) {
         // invalidateGraph() set this before queuing us. Clear it even though no

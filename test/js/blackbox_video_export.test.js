@@ -254,6 +254,116 @@ describe("compositeVideoFrame", () => {
     });
 });
 
+describe("runVideoExport lifecycle", () => {
+    afterEach(() => {
+        vi.doUnmock("mediabunny");
+        vi.doUnmock("../../src/blackbox-viewer/playback_controls.js");
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+        vi.resetModules();
+    });
+
+    async function loadRuntime({ codec, graphState = 1 }) {
+        vi.resetModules();
+        const controls = {
+            getGraphState: vi.fn(() => graphState),
+            invalidateGraph: vi.fn(),
+            setExportInProgress: vi.fn(),
+            setGraphState: vi.fn(),
+        };
+
+        class FakeOutput {
+            constructor() {
+                this.state = "pending";
+            }
+
+            addVideoTrack() {}
+
+            async start() {
+                this.state = "started";
+            }
+
+            async finalize() {
+                this.state = "finalized";
+            }
+
+            async cancel() {
+                this.state = "canceled";
+            }
+        }
+
+        vi.stubGlobal("VideoEncoder", class VideoEncoder {});
+        vi.doMock("mediabunny", () => ({
+            Output: FakeOutput,
+            Mp4OutputFormat: class {},
+            WebMOutputFormat: class {},
+            StreamTarget: class {},
+            CanvasSource: class {
+                async add() {}
+            },
+            getFirstEncodableVideoCodec: vi.fn(() => codec),
+            QUALITY_MEDIUM: "medium",
+        }));
+        vi.doMock("../../src/blackbox-viewer/playback_controls.js", () => controls);
+
+        return { fresh: await import("../../src/blackbox-viewer/video_export"), controls };
+    }
+
+    function runtimeOptions(overrides = {}) {
+        const context = { fillRect: vi.fn(), drawImage: vi.fn(), fillStyle: "" };
+        const graphCanvas = {};
+        return {
+            canvas: { width: 0, height: 0, getContext: () => context },
+            canvasRefs: { canvas: graphCanvas },
+            graph: { render: vi.fn(), resize: vi.fn(), setDrawInOutRegion: vi.fn() },
+            log: { getMinTime: () => 0, getMaxTime: () => 1e6 },
+            file: { name: "flight.mp4" },
+            fileSystem: {
+                openFile: vi.fn().mockResolvedValue({ id: "writable" }),
+                writeChunck: vi.fn(),
+                closeFile: vi.fn(),
+            },
+            frameRate: 30,
+            width: 1280,
+            height: 720,
+            ...overrides,
+        };
+    }
+
+    it("reserves the grapher before codec planning and releases it after planning fails", async () => {
+        let resolveCodec;
+        const codec = new Promise((resolve) => {
+            resolveCodec = resolve;
+        });
+        const { fresh } = await loadRuntime({ codec });
+        const options = runtimeOptions();
+
+        const first = fresh.runVideoExport(options);
+        await expect(fresh.runVideoExport(options)).rejects.toThrow(/already running/);
+
+        resolveCodec(null);
+        await expect(first).rejects.toThrow(/No supported video codec/);
+        await expect(fresh.runVideoExport(options)).rejects.toThrow(/No supported video codec/);
+    });
+
+    it("restores playback state after returning the grapher", async () => {
+        const { fresh, controls } = await loadRuntime({ codec: Promise.resolve("avc") });
+        const restoreCanvasSize = vi.fn();
+        const invalidateGraph = vi.fn();
+        const options = runtimeOptions({ restoreCanvasSize, invalidateGraph });
+
+        const result = await fresh.runVideoExport(options);
+
+        expect(result).toMatchObject({ frames: 30, cancelled: false });
+        expect(controls.getGraphState).toHaveBeenCalledOnce();
+        expect(controls.setGraphState.mock.calls).toEqual([[0], [1]]);
+        expect(controls.setExportInProgress.mock.calls).toEqual([[true], [false]]);
+        expect(restoreCanvasSize).toHaveBeenCalledOnce();
+        expect(invalidateGraph).toHaveBeenCalledOnce();
+        expect(options.fileSystem.closeFile).toHaveBeenCalledOnce();
+    });
+});
+
 describe("suggestedName", () => {
     it("replaces the log extension with the export container's", () => {
         expect(mod.suggestedName("FOO.BBL", "mp4")).toBe("FOO.mp4");
