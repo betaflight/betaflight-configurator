@@ -29,6 +29,63 @@ const ANDROID_CHUNK_SIZE = 256 * 1024;
 const YIELD_BUDGET_MS = 12;
 const HIDDEN_YIELD_BUDGET_MS = 250;
 
+/**
+ * @typedef {object} VideoExportProgress
+ * @property {number} frame
+ * @property {number} totalFrames
+ * @property {number} bytesWritten
+ * @property {number} etaSecs
+ */
+
+/**
+ * @typedef {object} VideoExportResult
+ * @property {number} frames
+ * @property {number} bytes
+ * @property {boolean} cancelled
+ */
+
+/**
+ * @typedef {object} VideoExportFileSystem
+ * @property {(file: unknown) => Promise<unknown>} openFile
+ * @property {(writable: unknown, data: Blob) => Promise<void>} writeChunck
+ * @property {(writable: unknown) => Promise<void>} closeFile
+ */
+
+/**
+ * @typedef {StreamTarget & {
+ *   exportWritable: WritableStream,
+ *   bytesWritten: () => number,
+ *   closeFile: () => Promise<void>
+ * }} VideoExportTarget
+ */
+
+/**
+ * @typedef {object} VideoExportOptions
+ * @property {HTMLCanvasElement} canvas Private encoder canvas.
+ * @property {{canvas: HTMLCanvasElement, stickCanvas?: HTMLCanvasElement,
+ *   craftCanvas?: HTMLCanvasElement, analyserCanvas?: HTMLCanvasElement}} canvasRefs
+ * @property {{render: (time: number) => void, resize: (width: number, height: number) => void,
+ *   setDrawInOutRegion?: (enabled: boolean) => void}} graph
+ * @property {{getMinTime: () => number, getMaxTime: () => number}} log
+ * @property {unknown} file Picked FileSystem descriptor.
+ * @property {VideoExportFileSystem} [fileSystem]
+ * @property {number} frameRate
+ * @property {number} width
+ * @property {number} height
+ * @property {number | false | null} [inTime]
+ * @property {number | false | null} [outTime]
+ * @property {object} [userSettings]
+ * @property {boolean} [includeSticks]
+ * @property {boolean} [includeCraft]
+ * @property {boolean} [includeAnalyser]
+ * @property {() => {left?: number, top?: number}} [getAnalyserLayout]
+ * @property {() => void} [restoreCanvasSize]
+ * @property {() => void} [invalidateGraph]
+ * @property {() => boolean} [shouldCancel]
+ * @property {(phase: "preparing" | "rendering") => void} [onPhase]
+ * @property {(progress: VideoExportProgress) => void} [onProgress]
+ */
+
 const probeCache = new Map();
 let activeExport = null;
 
@@ -158,6 +215,7 @@ export function videoExportChunkSize(android = isAndroid()) {
  * Adapt an already-open FileSystem writable to mediabunny's positioned stream contract.
  * The selected container is append-only, so any non-sequential write is a hard error.
  */
+/** @returns {VideoExportTarget} */
 export function createFileSystemTarget(writableToken, options = {}) {
     const fileSystem = options.fileSystem ?? FileSystem;
     const chunkSize = options.chunkSize ?? videoExportChunkSize();
@@ -199,6 +257,7 @@ export function createFileSystemTarget(writableToken, options = {}) {
 }
 
 /** Open a picked descriptor before adapting its production writable token. */
+/** @returns {Promise<VideoExportTarget>} */
 export async function openFileSystemTarget(file, options = {}) {
     const fileSystem = options.fileSystem ?? FileSystem;
     const writableToken = await fileSystem.openFile(file);
@@ -269,6 +328,7 @@ export function cancelActiveVideoExport() {
     }
 }
 
+/** @param {VideoExportOptions} options */
 function validateVideoExportOptions(options) {
     if (activeExport) {
         throw new Error("A video export is already running");
@@ -278,6 +338,7 @@ function validateVideoExportOptions(options) {
     }
 }
 
+/** @param {VideoExportOptions} options */
 async function buildVideoExportPlan(options) {
     const probe = await probeVideoExport({ width: options.width, height: options.height });
     if (!probe.canEncode) {
@@ -341,6 +402,7 @@ function reportVideoExportProgress({ options, target, frame, totalFrames, smooth
     });
 }
 
+/** @returns {Promise<VideoExportResult>} */
 async function renderVideoFrames({ options, output, source, target, exportState, start, totalFrames }) {
     const frameDurationMicros = MICROSECONDS_PER_SECOND / options.frameRate;
     let lastFrameAt = performance.now();
@@ -393,11 +455,11 @@ async function cancelFailedVideoOutput(output) {
     }
 }
 
-async function closeAndRestoreVideoExport({ options, target, exportState, viewerState, failedError }) {
+async function closeAndRestoreVideoExport({ options, target, exportState, viewerState, failed }) {
     try {
         await target?.closeFile();
     } catch (error) {
-        if (!failedError) {
+        if (!failed) {
             throw error;
         }
         // Preserve the original encoder or render failure.
@@ -422,6 +484,8 @@ async function closeAndRestoreVideoExport({ options, target, exportState, viewer
 /**
  * Borrow the live grapher, render the selected range, and stream the encoded file.
  * The writable and viewer state are restored on success, cancellation, and failure.
+ * @param {VideoExportOptions} options
+ * @returns {Promise<VideoExportResult>}
  */
 export async function runVideoExport(options) {
     validateVideoExportOptions(options);
@@ -430,7 +494,7 @@ export async function runVideoExport(options) {
 
     let target = null;
     let output = null;
-    let failedError = null;
+    let failed = false;
     const viewerState = { borrowed: false, graphState: GRAPH_STATE_PAUSED };
     try {
         const { probe, start, totalFrames } = await buildVideoExportPlan(options);
@@ -443,10 +507,10 @@ export async function runVideoExport(options) {
         await startVideoOutput(options, output);
         return await renderVideoFrames({ options, output, source: started.source, target, exportState, start, totalFrames });
     } catch (error) {
-        failedError = error;
+        failed = true;
         await cancelFailedVideoOutput(output);
         throw error;
     } finally {
-        await closeAndRestoreVideoExport({ options, target, exportState, viewerState, failedError });
+        await closeAndRestoreVideoExport({ options, target, exportState, viewerState, failed });
     }
 }

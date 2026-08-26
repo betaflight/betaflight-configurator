@@ -3,6 +3,14 @@ import { GRAPH_STATE_PAUSED, GRAPH_STATE_PLAY } from "../../src/blackbox-viewer/
 
 const mod = await import("../../src/blackbox-viewer/video_export");
 
+/** @typedef {Parameters<typeof mod.runVideoExport>[0]} VideoExportOptions */
+/**
+ * @typedef {object} RuntimeHarness
+ * @property {typeof mod} fresh
+ * @property {{getGraphState: import("vitest").Mock, invalidateGraph: import("vitest").Mock,
+ *   setExportInProgress: import("vitest").Mock, setGraphState: import("vitest").Mock}} controls
+ */
+
 describe("estimateFrameCount", () => {
     it("rounds the marker range at the chosen framerate", () => {
         // 1e6 micros / 30 fps = 33_333.3 micros per frame
@@ -264,6 +272,10 @@ describe("runVideoExport lifecycle", () => {
         vi.resetModules();
     });
 
+    /**
+     * @param {{codec: Promise<string | null>, graphState?: number}} settings
+     * @returns {Promise<RuntimeHarness>}
+     */
     async function loadRuntime({ codec, graphState = GRAPH_STATE_PLAY }) {
         vi.resetModules();
         const controls = {
@@ -310,6 +322,10 @@ describe("runVideoExport lifecycle", () => {
         return { fresh: await import("../../src/blackbox-viewer/video_export"), controls };
     }
 
+    /**
+     * @param {Partial<VideoExportOptions>} [overrides]
+     * @returns {VideoExportOptions}
+     */
     function runtimeOptions(overrides = {}) {
         const context = { fillRect: vi.fn(), drawImage: vi.fn(), fillStyle: "" };
         const graphCanvas = {};
@@ -379,6 +395,32 @@ describe("runVideoExport lifecycle", () => {
         options.fileSystem.closeFile.mockRejectedValue(new Error("file close failed"));
 
         await expect(fresh.runVideoExport(options)).rejects.toBe(renderError);
+    });
+
+    it("preserves an undefined export rejection when closing also fails", async () => {
+        const { fresh } = await loadRuntime({ codec: Promise.resolve("avc") });
+        const options = runtimeOptions({
+            graph: {
+                render: vi.fn(() => {
+                    throw undefined;
+                }),
+                resize: vi.fn(),
+                setDrawInOutRegion: vi.fn(),
+            },
+        });
+        options.fileSystem.closeFile.mockRejectedValue(new Error("file close failed"));
+
+        let rejected = false;
+        let reason = "not rejected";
+        try {
+            await fresh.runVideoExport(options);
+        } catch (error) {
+            rejected = true;
+            reason = error;
+        }
+
+        expect(rejected).toBe(true);
+        expect(reason).toBeUndefined();
     });
 });
 
