@@ -3,146 +3,372 @@
  * @vitest-environment-options { "url": "http://localhost/" }
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { createKeydownHandler } from '../src/blackbox-viewer/keyboard_handler.js';
 
 /**
- * Test keyboard layout independence for Blackbox Viewer shortcuts.
+ * Integration tests for keyboard layout independence in Blackbox Viewer shortcuts.
  * 
- * This test verifies that keyboard shortcuts work correctly regardless of
- * the user's keyboard layout (QWERTY, AZERTY, QWERTZ, etc.).
- * 
- * The fix changes from using event.code (physical key position) to
- * event.key.toLowerCase() (actual character produced).
+ * These tests verify that the actual createKeydownHandler function correctly
+ * handles keyboard events from different layouts (QWERTY, AZERTY, QWERTZ) by
+ * using event.key.toLowerCase() instead of event.code for letter keys.
  */
 
-describe('Keyboard Layout Independence', () => {
-    describe('Letter key mapping', () => {
-        it('should map lowercase letter "m" to marker handler', () => {
-            // Simulate AZERTY: physical M key produces key="m", code="Semicolon"
-            const azertyMEvent = {
+describe('Keyboard Handler - Layout Independence', () => {
+    let mockCtx;
+    let handler;
+
+    beforeEach(() => {
+        // Create minimal mocked context for testing
+        mockCtx = {
+            hasGraph: vi.fn(() => true),
+            graphStore: {
+                markerTime: null,
+                hasMarker: false,
+                toggleAnalyserFullscreen: vi.fn(),
+                toggleAnalyser: vi.fn(),
+                toggleFullscreen: vi.fn(),
+                graphZoom: 100,
+            },
+            logStore: {
+                currentBlackboxTime: 1000,
+            },
+            playbackStore: {
+                videoExportInTime: null,
+                videoExportOutTime: null,
+            },
+            workspaceStore: {
+                bookmarkTimes: [],
+                workspaceGraphConfigs: {},
+                activeWorkspace: 1,
+                showDefaultMenu: false,
+            },
+            appStore: {
+                viewerActive: true,
+                headerDialogOpen: false,
+                statusMarkerOffset: '',
+            },
+            // Action spies
+            logPlayPause: vi.fn(),
+            logJumpBack: vi.fn(),
+            logJumpForward: vi.fn(),
+            logJumpStart: vi.fn(),
+            logJumpEnd: vi.fn(),
+            logSmartSync: vi.fn(),
+            setGraphZoom: vi.fn(),
+            setVideoInTime: vi.fn(),
+            setVideoOutTime: vi.fn(),
+            setMarker: vi.fn(),
+            setCurrentBlackboxTime: vi.fn(),
+            showValueTable: vi.fn(),
+            showConfigFile: vi.fn(),
+            newGraphConfig: vi.fn(),
+            toggleOverrideStatus: vi.fn(),
+            invalidateGraph: vi.fn(),
+            onSwitchWorkspace: vi.fn(),
+            onSaveWorkspace: vi.fn(),
+            lastGraphConfig: vi.fn(() => null),
+        };
+
+        handler = createKeydownHandler(mockCtx);
+    });
+
+    describe('Letter shortcuts - AZERTY layout support', () => {
+        it('should trigger marker toggle on M key (AZERTY: physical semicolon position)', () => {
+            const azertyMEvent = new KeyboardEvent('keydown', {
                 key: 'm',
-                code: 'Semicolon',
-                preventDefault: vi.fn(),
-                altKey: false,
-                shiftKey: false,
-                ctrlKey: false,
-                metaKey: false,
-            };
+                code: 'Semicolon', // AZERTY: M key is where semicolon is on QWERTY
+                bubbles: true,
+            });
 
-            // Simulate QWERTY: physical M key produces key="m", code="KeyM"
-            const qwertyMEvent = {
+            document.dispatchEvent(azertyMEvent);
+
+            expect(mockCtx.setMarker).toHaveBeenCalled();
+            expect(mockCtx.invalidateGraph).toHaveBeenCalled();
+        });
+
+        it('should trigger marker toggle on M key (QWERTY: physical M position)', () => {
+            const qwertyMEvent = new KeyboardEvent('keydown', {
                 key: 'm',
-                code: 'KeyM',
-                preventDefault: vi.fn(),
-                altKey: false,
-                shiftKey: false,
-                ctrlKey: false,
-                metaKey: false,
-            };
+                code: 'KeyM', // QWERTY: M key is where M is
+                bubbles: true,
+            });
 
-            // Both should match the same handler (key.toLowerCase() === "m")
-            const letterKeyHandlers = {
-                m: 'markerHandler',
-                i: 'videoInHandler',
-                o: 'videoOutHandler',
-            };
+            document.dispatchEvent(qwertyMEvent);
 
-            expect(letterKeyHandlers[azertyMEvent.key.toLowerCase()]).toBe('markerHandler');
-            expect(letterKeyHandlers[qwertyMEvent.key.toLowerCase()]).toBe('markerHandler');
+            expect(mockCtx.setMarker).toHaveBeenCalled();
+            expect(mockCtx.invalidateGraph).toHaveBeenCalled();
         });
 
-        it('should handle AZERTY-specific key mappings', () => {
-            // AZERTY layout: M is where semicolon is on QWERTY
-            const azertyM = { key: 'm', code: 'Semicolon' };
-            
-            // QWERTY layout: M is where M is
-            const qwertyM = { key: 'm', code: 'KeyM' };
+        it('should trigger analyser toggle on A key (AZERTY: physical Q position)', () => {
+            const azertyAEvent = new KeyboardEvent('keydown', {
+                key: 'a',
+                code: 'KeyQ', // AZERTY: A key is where Q is on QWERTY
+                bubbles: true,
+            });
 
-            // Both should work with key.toLowerCase()
-            expect(azertyM.key.toLowerCase()).toBe('m');
-            expect(qwertyM.key.toLowerCase()).toBe('m');
-            expect(azertyM.key.toLowerCase()).toBe(qwertyM.key.toLowerCase());
+            document.dispatchEvent(azertyAEvent);
+
+            expect(mockCtx.graphStore.toggleAnalyser).toHaveBeenCalled();
         });
 
-        it('should handle QWERTZ Y/Z swap', () => {
-            // QWERTZ: physical Y key produces "z"
-            const qwertzY = { key: 'z', code: 'KeyY' };
-            
-            // QWERTY: physical Y key produces "y"
-            const qwertyY = { key: 'y', code: 'KeyY' };
+        it('should trigger analyser toggle on A key (QWERTY: physical A position)', () => {
+            const qwertyAEvent = new KeyboardEvent('keydown', {
+                key: 'a',
+                code: 'KeyA', // QWERTY: A key is where A is
+                bubbles: true,
+            });
 
-            // key.lowercase correctly identifies the intended character
-            expect(qwertzY.key.toLowerCase()).toBe('z');
-            expect(qwertyY.key.toLowerCase()).toBe('y');
+            document.dispatchEvent(qwertyAEvent);
+
+            expect(mockCtx.graphStore.toggleAnalyser).toHaveBeenCalled();
         });
 
-        it('should preserve case-insensitive matching', () => {
-            // User can press with or without Shift
-            const uppercaseM = { key: 'M' };
-            const lowercaseM = { key: 'm' };
+        it('should trigger video in-point on I key (both layouts)', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'i',
+                code: 'KeyI',
+                bubbles: true,
+            });
 
-            // Both should match after toLowerCase()
-            expect(uppercaseM.key.toLowerCase()).toBe('m');
-            expect(lowercaseM.key.toLowerCase()).toBe('m');
+            document.dispatchEvent(event);
+
+            expect(mockCtx.setVideoInTime).toHaveBeenCalled();
+        });
+
+        it('should trigger video out-point on O key (both layouts)', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'o',
+                code: 'KeyO',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.setVideoOutTime).toHaveBeenCalled();
+        });
+
+        it('should trigger fullscreen toggle on F key (both layouts)', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'f',
+                code: 'KeyF',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.graphStore.toggleFullscreen).toHaveBeenCalled();
+        });
+
+        it('should trigger zoom toggle on Z key (AZERTY: physical W position)', () => {
+            const azertyZEvent = new KeyboardEvent('keydown', {
+                key: 'z',
+                code: 'KeyW', // AZERTY: Z key is where W is on QWERTY
+                bubbles: true,
+            });
+
+            document.dispatchEvent(azertyZEvent);
+
+            expect(mockCtx.setGraphZoom).toHaveBeenCalled();
         });
     });
 
-    describe('Navigation keys (should still use code)', () => {
-        it('Space key should be identified by code', () => {
-            // Space is always Space regardless of layout
-            const spaceEvent = {
+    describe('Letter shortcuts - QWERTZ layout support', () => {
+        it('should handle Y/Z swap in QWERTZ layout', () => {
+            // QWERTZ: physical Y key produces 'z'
+            const qwertzYEvent = new KeyboardEvent('keydown', {
+                key: 'z',
+                code: 'KeyY',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(qwertzYEvent);
+
+            // Should trigger zoom (mapped to 'z'), not fail
+            expect(mockCtx.setGraphZoom).toHaveBeenCalled();
+        });
+
+        it('should handle Z/Y swap in QWERTZ layout', () => {
+            // QWERTZ: physical Z key produces 'y'
+            const qwertzZEvent = new KeyboardEvent('keydown', {
+                key: 'y',
+                code: 'KeyZ',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(qwertzZEvent);
+
+            // 'y' is not a shortcut, so no action should be taken
+            expect(mockCtx.setGraphZoom).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Letter shortcuts - Case independence', () => {
+        it('should handle uppercase M (with Shift)', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'M', // Uppercase with Shift
+                code: 'KeyM',
+                shiftKey: true,
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            // Should still match 'm' after toLowerCase()
+            expect(mockCtx.setMarker).toHaveBeenCalled();
+        });
+
+        it('should handle lowercase m (without Shift)', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'm',
+                code: 'KeyM',
+                shiftKey: false,
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.setMarker).toHaveBeenCalled();
+        });
+    });
+
+    describe('Navigation keys - Use event.code (unchanged)', () => {
+        it('should toggle play/pause on Space', () => {
+            const event = new KeyboardEvent('keydown', {
                 key: ' ',
                 code: 'Space',
-            };
+                bubbles: true,
+            });
 
-            // Navigation keys use code, not key
-            expect(spaceEvent.code).toBe('Space');
-            expect(spaceEvent.key).toBe(' ');
+            document.dispatchEvent(event);
+
+            expect(mockCtx.logPlayPause).toHaveBeenCalled();
         });
 
-        it('Arrow keys should be identified by code', () => {
-            const arrowLeft = { key: 'ArrowLeft', code: 'ArrowLeft' };
-            const arrowRight = { key: 'ArrowRight', code: 'ArrowRight' };
+        it('should jump back on ArrowLeft', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'ArrowLeft',
+                code: 'ArrowLeft',
+                bubbles: true,
+            });
 
-            // Arrow keys have same key and code
-            expect(arrowLeft.code).toBe('ArrowLeft');
-            expect(arrowRight.code).toBe('ArrowRight');
+            document.dispatchEvent(event);
+
+            expect(mockCtx.logJumpBack).toHaveBeenCalled();
         });
 
-        it('Digit keys should be identified by code prefix', () => {
-            const digit1 = { key: '1', code: 'Digit1' };
-            const digit5 = { key: '5', code: 'Digit5' };
-            const digit0 = { key: '0', code: 'Digit0' };
+        it('should jump forward on ArrowRight', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'ArrowRight',
+                code: 'ArrowRight',
+                bubbles: true,
+            });
 
-            // Digits don't move between layouts, code is reliable
-            expect(digit1.code.startsWith('Digit')).toBe(true);
-            expect(digit5.code.startsWith('Digit')).toBe(true);
-            expect(digit0.code.startsWith('Digit')).toBe(true);
+            document.dispatchEvent(event);
+
+            expect(mockCtx.logJumpForward).toHaveBeenCalled();
+        });
+
+        it('should jump to start on Home', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'Home',
+                code: 'Home',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.logJumpStart).toHaveBeenCalled();
+        });
+
+        it('should jump to end on End', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'End',
+                code: 'End',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.logJumpEnd).toHaveBeenCalled();
+        });
+    });
+
+    describe('Digit keys - Use event.code.startsWith("Digit") (unchanged)', () => {
+        it('should handle workspace switch on digit 1', () => {
+            mockCtx.workspaceStore.workspaceGraphConfigs[1] = { title: 'Test' };
+
+            const event = new KeyboardEvent('keydown', {
+                key: '1',
+                code: 'Digit1',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalled();
+        });
+
+        it('should handle workspace switch on digit 5', () => {
+            mockCtx.workspaceStore.workspaceGraphConfigs[5] = { title: 'Test' };
+
+            const event = new KeyboardEvent('keydown', {
+                key: '5',
+                code: 'Digit5',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalled();
         });
     });
 
     describe('Edge cases', () => {
-        it('should handle special characters on different layouts', () => {
-            // On AZERTY, pressing 2 produces "é"
-            const azerty2 = { key: 'é', code: 'Digit2' };
-            
-            // On QWERTY, pressing 2 produces "2"
-            const qwerty2 = { key: '2', code: 'Digit2' };
+        it('should not trigger shortcuts when viewer is not active', () => {
+            mockCtx.appStore.viewerActive = false;
 
-            // For letter shortcuts, we use key.toLowerCase()
-            // For digits, we use code.startsWith('Digit')
-            expect(azerty2.code.startsWith('Digit')).toBe(true);
-            expect(qwerty2.code.startsWith('Digit')).toBe(true);
+            const event = new KeyboardEvent('keydown', {
+                key: 'm',
+                code: 'KeyM',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.setMarker).not.toHaveBeenCalled();
         });
 
-        it('should handle dead keys and accents', () => {
-            // Some layouts have dead keys for accents
-            const deadKey = { key: 'Dead', code: 'Quote' };
-            
-            // Dead keys should not match any letter shortcut
-            expect(deadKey.key.toLowerCase()).toBe('dead');
-            expect(deadKey.key.toLowerCase()).not.toBe('a');
-            expect(deadKey.key.toLowerCase()).not.toBe('q');
+        it('should not trigger shortcuts when text input is focused', () => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            document.body.appendChild(input);
+            input.focus();
+
+            const event = new KeyboardEvent('keydown', {
+                key: 'm',
+                code: 'KeyM',
+                bubbles: true,
+            });
+
+            input.dispatchEvent(event);
+
+            expect(mockCtx.setMarker).not.toHaveBeenCalled();
+            input.remove();
+        });
+
+        it('should not trigger shortcuts for non-letter, non-navigation keys', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'Dead',
+                code: 'Quote',
+                bubbles: true,
+            });
+
+            document.dispatchEvent(event);
+
+            // Dead keys should not match any shortcut
+            expect(mockCtx.setMarker).not.toHaveBeenCalled();
+            expect(mockCtx.logPlayPause).not.toHaveBeenCalled();
         });
     });
 });
