@@ -280,6 +280,36 @@ function debugTablesCommit(repo, ref) {
     return commit || git(repo, ["rev-parse", base]).trim();
 }
 
+/*
+ * The newest commit at `ref` whose diff touches a `//!<` annotation.
+ *
+ * Annotations live on the DEBUG_SET() call sites, spread across src/main, so a
+ * label can change with debug.h and debug.c untouched - which is how a version's
+ * recorded provenance came to name a commit older than the labels it produced.
+ * `-G` finds the commits that changed an annotation and no others, so the
+ * provenance follows the labels without churning on unrelated firmware work.
+ *
+ * Only worth asking for a version that has annotations: with none, git diffs the
+ * whole history to find nothing, which costs seconds per version.
+ */
+function annotationCommit(repo, ref) {
+    const base = worktreeBase(repo, ref);
+    return git(repo, ["log", "-1", "--format=%H", `-G${ANNOTATION_MARKER}`, base, "--", FIRMWARE_SOURCE_DIR]).trim();
+}
+
+// The later of two commits, by ancestry.
+function newerCommit(repo, left, right) {
+    if (!left || !right || left === right) {
+        return left || right;
+    }
+    try {
+        git(repo, ["merge-base", "--is-ancestor", left, right]);
+        return right;
+    } catch {
+        return left;
+    }
+}
+
 function buildVersionRefs(repo, devRef, minMinor) {
     const devMinor = apiMinorAt(repo, devRef);
     const base = worktreeBase(repo, devRef);
@@ -660,6 +690,8 @@ function resolveFieldIndex(rawIndex, constants) {
  * an index spec left to the code below: a pattern that could match the same input
  * two ways is a pattern that backtracks (SonarCloud javascript:S8786).
  */
+// What opens a firmware field annotation, both as a scanner and as a git -G pattern.
+const ANNOTATION_MARKER = "//!<";
 const ANNOTATION = /\/\/!<(.*)$/;
 const INDEX_SPEC = /^\[index:([\d \t,.]+)\][ \t]*/;
 const SHAPE_SPEC = /\[([A-Za-z]+):([^[\]]+)\]$/;
@@ -1969,6 +2001,17 @@ function collectVersionData(repo, versions) {
         version.fields = fields;
         unresolvedTotal += unresolved;
         const annotated = Object.values(fields).reduce((total, mode) => total + Object.keys(mode).length, 0);
+
+        // Provenance was fixed from debug.h/debug.c alone, which cannot see a label
+        // change made at a call site. Now that this version is known to carry
+        // annotations, let the newest of the two decide.
+        if (annotated > 0) {
+            const commit = newerCommit(repo, version.commit, annotationCommit(repo, version.ref));
+            if (commit !== version.commit) {
+                version.commit = commit;
+                version.date = git(repo, ["log", "-1", "--format=%ad", "--date=short", commit]).trim();
+            }
+        }
         const written = Object.values(usage).reduce((total, mode) => total + mode.fields.length, 0);
         console.log(
             `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ` +
