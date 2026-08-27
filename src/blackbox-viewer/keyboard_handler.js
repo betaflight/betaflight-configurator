@@ -200,17 +200,17 @@ export function createKeydownHandler(ctx) {
     }
 
     const letterKeyHandlers = {
-        KeyI: handleKeyVideoIn,
-        KeyO: handleKeyVideoOut,
-        KeyM: handleKeyMarker,
-        KeyC: handleKeyConfig,
-        KeyA(e, shifted) {
+        i: handleKeyVideoIn,
+        o: handleKeyVideoOut,
+        m: handleKeyMarker,
+        c: handleKeyConfig,
+        a(e, shifted) {
             handleAnalyserKey(shifted);
             if (!shifted) {
                 e.preventDefault();
             }
         },
-        KeyH(e, shifted) {
+        h(e, shifted) {
             if (!shifted) {
                 if (!appStore.headerDialogOpen) {
                     showValueTable(false);
@@ -220,30 +220,34 @@ export function createKeydownHandler(ctx) {
                 e.preventDefault();
             }
         },
-        KeyT: handleKeyTable,
-        KeyW(e) {
+        t: handleKeyTable,
+        w(e) {
             if (e.shiftKey) {
                 workspaceStore.showDefaultMenu = true;
             }
         },
-        KeyF(e, shifted) {
+        f(e, shifted) {
             if (!shifted) {
                 graphStore.toggleFullscreen();
                 e.preventDefault();
             }
         },
-        KeyZ: handleKeyZoom,
-        KeyS: handleKeySave,
-        KeyX(e, shifted) {
+        z: handleKeyZoom,
+        s: handleKeySave,
+        x(e, shifted) {
             handleKeyOverride("graphExpoOverride", e, shifted);
         },
-        KeyG(e, shifted) {
+        g(e, shifted) {
             handleKeyOverride("graphGridOverride", e, shifted);
         },
     };
 
     function handleLetterKey(e, shifted) {
-        const handler = letterKeyHandlers[e.code];
+        // Use e.key.toLowerCase() instead of e.code to support non-QWERTY layouts.
+        // e.code reports physical key position (e.g., "KeyM" is always the M key position),
+        // but e.key reports the actual character produced based on the user's keyboard layout.
+        // On AZERTY, the physical M key produces e.key === "m" but e.code === "Semicolon".
+        const handler = letterKeyHandlers[e.key.toLowerCase()];
         if (!handler) {
             return false;
         }
