@@ -1648,6 +1648,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC Telemetry Serial Port"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART the ESC telemetry is read on. Set on the ESC sensor itself from API 1.49; the Ports tab only shows it."
+    },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
     },
@@ -1686,6 +1692,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetry"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetry $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocol"
+    },
+    "telemetryInstancePort": {
+        "message": "Serial Port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud Rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Camera Control"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Serial Port"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART a RunCam protocol camera is wired to. Set on the device itself from API 1.49; the Ports tab only shows it."
     },
     "configurationTelemetryHelp": {
         "message": "Telemetry output from receiver"
@@ -1732,6 +1759,18 @@
     },
     "configurationRangefinderType": {
         "message": "Type"
+    },
+    "rangefinderSerialPort": {
+        "message": "Rangefinder Serial Port"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART the rangefinder is wired to. Set on the rangefinder itself from API 1.49; the Ports tab only shows it."
+    },
+    "opticalflowSerialPort": {
+        "message": "Optical Flow Serial Port"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART the optical flow sensor is wired to. A module reporting both flow and range needs each set separately."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -2157,6 +2196,30 @@
     "configurationGPSubxSbas": {
         "message": "Ground Assistance Type"
     },
+    "gpsSerialPort": {
+        "message": "Serial Port"
+    },
+    "gpsSerialPortHelp": {
+        "message": "The UART the GPS module is wired to. Changing it requires a reboot."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud Rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "The rate the GPS module is expected to run at. Betaflight tries the other rates as well when it cannot make contact, so this is a starting point rather than a fixed setting."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Could not set the GPS serial port, so nothing was saved."
+    },
+    "gpsCanDevice": {
+        "message": "CAN Bus"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "The CAN bus the DroneCAN modules are wired to. This belongs to DroneCAN as a whole, so changing it moves every DroneCAN device, not just the GPS. Changing it requires a reboot."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Could not set the CAN bus, so nothing was saved."
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
@@ -2327,6 +2390,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD Custom Text"
     },
     "pidTuningProfileOption": {
         "message": "Profile $1"
@@ -6224,6 +6293,24 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdSerialPort": {
+        "message": "OSD Serial Port"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART a serial OSD is wired to. Set on the OSD itself from API 1.49; the Ports tab only shows it."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Custom Text Serial Port"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART custom OSD text is received on."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Custom Text Baud Rate"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Baud rate for the custom OSD text port."
+    },
     "osdSetupUnitsTitle": {
         "message": "Units"
     },
@@ -7736,6 +7823,18 @@
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxProtocol": {
+        "message": "Protocol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Control protocol the VTX speaks. SmartAudio and Tramp run on the UART below; MSP shares it with MSP, as DJI, HDZero and Walksnail do."
+    },
+    "vtxSerialPort": {
+        "message": "Serial Port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART the VTX control protocol runs on. Set on the VTX itself from API 1.49; the Ports tab only shows it."
+    },
     "vtxLowPowerDisarm": {
         "message": "Low Power Disarm",
         "description": "Text of one of the fields of the VTX tab"
@@ -8281,6 +8380,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logging device"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Serial Port"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART used when the logging device is Serial. Set on the blackbox itself from API 1.49; the Ports tab only shows it."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Serial Baud Rate"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud rate for the serial logging port."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"

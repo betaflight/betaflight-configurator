@@ -98,6 +98,19 @@
                                 </template>
                             </SettingRow>
                             <SettingRow
+                                v-if="digitalProtocolConfigured && escSensorPortAvailable"
+                                :label="$t('escSensorSerialPort')"
+                                :help="$t('escSensorSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="escSensorPortIdentifier"
+                                    :items="escSensorPortOptions"
+                                    :disabled="!escSensorPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
                                 v-if="digitalProtocolConfigured"
                                 :label="$t('configurationDshotBidir')"
                                 :help="$t('configurationDshotBidirHelp')"
@@ -559,6 +572,7 @@ import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguratio
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 
 const API_VERSION_1_47 = "1.47.0";
@@ -574,6 +588,18 @@ const { configHasChanged, resetChanges } = motorsState;
 // Shared save discipline: runSave owns isSaving and swallows benign MspCancelledError.
 const { isSaving, runSave } = useSaving();
 const { saveToEeprom, saveAndReboot } = useReboot();
+
+// From API 1.49 the ESC telemetry port lives on the ESC sensor parameter group rather than the
+// shared port function mask, so it is assigned beside the feature that uses it.
+const {
+    available: escSensorPortAvailable,
+    writable: escSensorPortWritable,
+    options: escSensorPortOptions,
+    selectedIdentifier: escSensorPortIdentifier,
+    changed: escSensorPortChanged,
+    load: loadEscSensorPort,
+    write: writeEscSensorPort,
+} = useFeaturePort({ setting: "esc_sensor_uart", functionName: "ESC_SENSOR" });
 
 // Warning dialog
 const settingsChangedOpen = ref(false);
@@ -760,7 +786,7 @@ useMotorDataPolling(motorsTestingEnabled);
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
     toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
-    saveDisabled: !configHasChanged.value,
+    saveDisabled: !configHasChanged.value && !escSensorPortChanged.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
 
@@ -808,6 +834,8 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
+
+    await loadEscSensorPort();
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
@@ -1391,7 +1419,7 @@ const openEscDshotDirectionDialog = () => {
 // Action Toolbar Buttons
 const handleSave = (reboot = true) => {
     // Don't save if no changes
-    if (!configHasChanged.value) {
+    if (!configHasChanged.value && !escSensorPortChanged.value) {
         return;
     }
 
@@ -1420,6 +1448,10 @@ const handleSave = (reboot = true) => {
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+
+            // Between the parameter group writes and the persist that serialises them, so a
+            // refused port throws before anything reaches EEPROM.
+            await writeEscSensorPort();
 
             // Persist to EEPROM, rebooting when requested.
             if (reboot) {
