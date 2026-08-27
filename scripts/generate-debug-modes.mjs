@@ -117,6 +117,10 @@ const DEBUG_HEADER = "src/main/build/debug.h";
 const DEBUG_SOURCE = "src/main/build/debug.c";
 const MSP_PROTOCOL_HEADER = "src/main/msp/msp_protocol.h";
 const FIRMWARE_SOURCE_DIR = "src/main";
+
+// What opens a firmware field annotation, used both by the scanner below and
+// by the provenance query, which needs it before the scanner is defined.
+const ANNOTATION_MARKER = "//!<";
 const DEBUG_VALUE_COUNT = 8;
 
 // A debug field is an int16_t, so a flag list cannot name more bits than it holds.
@@ -276,25 +280,26 @@ function apiMinorAt(repo, ref) {
  */
 function debugTablesCommit(repo, ref) {
     const base = worktreeBase(repo, ref);
-    const commit = git(repo, ["log", "-1", "--format=%H", base, "--", DEBUG_HEADER, DEBUG_SOURCE]).trim();
-    return commit || git(repo, ["rev-parse", base]).trim();
+    const tables = git(repo, ["log", "-1", "--format=%H", base, "--", DEBUG_HEADER, DEBUG_SOURCE]).trim();
+    return newerCommit(repo, tables, debugDataCommit(repo, ref)) || git(repo, ["rev-parse", base]).trim();
 }
 
 /*
- * The newest commit at `ref` whose diff touches a `//!<` annotation.
+ * The newest commit at `ref` whose diff touches something this generator reads
+ * out of src/main: a `//!<` annotation, or a DEBUG_SET() call site.
  *
- * Annotations live on the DEBUG_SET() call sites, spread across src/main, so a
- * label can change with debug.h and debug.c untouched - which is how a version's
- * recorded provenance came to name a commit older than the labels it produced.
- * `-G` finds the commits that changed an annotation and no others, so the
- * provenance follows the labels without churning on unrelated firmware work.
- *
- * Only worth asking for a version that has annotations: with none, git diffs the
- * whole history to find nothing, which costs seconds per version.
+ * Both live wherever the debug data is written rather than in debug.h/debug.c,
+ * so a label or a mode's set of written fields can change with those two files
+ * untouched. `-G` picks out the commits that changed one of them and no others,
+ * so provenance follows what was generated without churning on unrelated
+ * firmware work - measured at 5 commits behind master's tip, not at the tip.
  */
-function annotationCommit(repo, ref) {
+const DEBUG_DATA_PATTERN = `${ANNOTATION_MARKER}|DEBUG_SET\\(`;
+
+function debugDataCommit(repo, ref) {
     const base = worktreeBase(repo, ref);
-    return git(repo, ["log", "-1", "--format=%H", `-G${ANNOTATION_MARKER}`, base, "--", FIRMWARE_SOURCE_DIR]).trim();
+    const args = ["log", "-1", "--format=%H", "--extended-regexp", `-G${DEBUG_DATA_PATTERN}`];
+    return git(repo, [...args, base, "--", FIRMWARE_SOURCE_DIR]).trim();
 }
 
 // The later of two commits, by ancestry.
@@ -690,8 +695,6 @@ function resolveFieldIndex(rawIndex, constants) {
  * an index spec left to the code below: a pattern that could match the same input
  * two ways is a pattern that backtracks (SonarCloud javascript:S8786).
  */
-// What opens a firmware field annotation, both as a scanner and as a git -G pattern.
-const ANNOTATION_MARKER = "//!<";
 const ANNOTATION = /\/\/!<(.*)$/;
 const INDEX_SPEC = /^\[index:([\d \t,.]+)\][ \t]*/;
 const SHAPE_SPEC = /\[([A-Za-z]+):([^[\]]+)\]$/;
@@ -2001,17 +2004,6 @@ function collectVersionData(repo, versions) {
         version.fields = fields;
         unresolvedTotal += unresolved;
         const annotated = Object.values(fields).reduce((total, mode) => total + Object.keys(mode).length, 0);
-
-        // Provenance was fixed from debug.h/debug.c alone, which cannot see a label
-        // change made at a call site. Now that this version is known to carry
-        // annotations, let the newest of the two decide.
-        if (annotated > 0) {
-            const commit = newerCommit(repo, version.commit, annotationCommit(repo, version.ref));
-            if (commit !== version.commit) {
-                version.commit = commit;
-                version.date = git(repo, ["log", "-1", "--format=%ad", "--date=short", commit]).trim();
-            }
-        }
         const written = Object.values(usage).reduce((total, mode) => total + mode.fields.length, 0);
         console.log(
             `generate-debug-modes: API ${version.apiVersion} <- ${version.commit.slice(0, 10)} (${version.date}), ` +
