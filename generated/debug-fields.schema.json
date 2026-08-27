@@ -172,10 +172,6 @@
                                                         "enum": [
                                                             "%",
                                                             "A",
-                                                            "Hz",
-                                                            "MHz",
-                                                            "Pa",
-                                                            "V",
                                                             "accADC",
                                                             "accADC/s",
                                                             "bytes",
@@ -192,19 +188,23 @@
                                                             "g/s",
                                                             "gyroADC",
                                                             "hPa",
-                                                            "kHz",
+                                                            "Hz",
                                                             "kbit/s",
+                                                            "kHz",
                                                             "m",
                                                             "m/s",
                                                             "mAh",
+                                                            "MHz",
                                                             "ms",
+                                                            "Pa",
                                                             "rad",
                                                             "rad/s",
                                                             "rcCommand",
                                                             "rpm",
                                                             "s",
                                                             "ticks",
-                                                            "us"
+                                                            "us",
+                                                            "V"
                                                         ]
                                                     },
                                                     {
@@ -288,6 +288,12 @@
                                     "type": "array",
                                     "items": {
                                         "type": "string"
+                                    }
+                                },
+                                "flags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": ["string", "null"]
                                     }
                                 },
                                 "sites": {
