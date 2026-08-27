@@ -27,7 +27,10 @@ describe("generated/debug-fields.json", () => {
 
     it("lists every mode in enum order, so a position is its debug_mode value", () => {
         for (const [apiVersion, version] of Object.entries(artifact.versions)) {
-            expect(version.modes.map((mode) => mode.name), apiVersion).toEqual(FIRMWARE_DEBUG_MODES[apiVersion]);
+            expect(
+                version.modes.map((mode) => mode.name),
+                apiVersion,
+            ).toEqual(FIRMWARE_DEBUG_MODES[apiVersion]);
             expect(
                 version.modes.map((mode) => mode.index),
                 apiVersion,
@@ -39,12 +42,23 @@ describe("generated/debug-fields.json", () => {
         for (const [apiVersion, version] of Object.entries(artifact.versions)) {
             const shipped = FIRMWARE_DEBUG_FIELDS[apiVersion] ?? {};
             const published = Object.fromEntries(
-                version.modes.filter((mode) => Object.keys(mode.fields).length > 0).map((mode) => [mode.name, mode.fields]),
+                version.modes
+                    .filter((mode) => Object.keys(mode.fields).length > 0)
+                    .map((mode) => [mode.name, mode.fields]),
             );
 
-            expect(Object.keys(published).sort(), apiVersion).toEqual(Object.keys(shipped).sort());
+            const byName = (left, right) => left.localeCompare(right);
+            expect(Object.keys(published).sort(byName), apiVersion).toEqual(Object.keys(shipped).sort(byName));
 
             for (const [mode, fields] of Object.entries(published)) {
+                // Assert the index sets first. Reaching straight for
+                // shipped[mode][index] turns a published index the app does not
+                // ship into a TypeError, which reports the drift as a crash
+                // rather than as the mismatch it is.
+                expect(Object.keys(fields).sort(byName), `${apiVersion} ${mode}`).toEqual(
+                    Object.keys(shipped[mode]).sort(byName),
+                );
+
                 for (const [index, field] of Object.entries(fields)) {
                     // The shipped table carries the same three keys plus the
                     // optional enum/flag names; compare what both always have.
@@ -82,7 +96,11 @@ describe("generated/debug-fields.json", () => {
     it("resolves every alias and rename to a mode that exists", () => {
         expect(artifact.aliases).toEqual(DEBUG_MODE_ALIASES);
 
-        const latest = new Set(Object.values(artifact.versions).at(-1).modes.map((mode) => mode.name));
+        const latest = new Set(
+            Object.values(artifact.versions)
+                .at(-1)
+                .modes.map((mode) => mode.name),
+        );
         for (const [legacy, current] of Object.entries(artifact.aliases)) {
             expect(latest.has(current), `alias ${legacy} -> ${current}`).toBe(true);
         }
@@ -117,7 +135,9 @@ describe("generated/debug-fields.json", () => {
 describe("generated/debug-fields.schema.json", () => {
     it("accepts exactly the units the generator does", () => {
         const units = schema.properties.versions.additionalProperties.properties.modes.items.properties.fields;
-        expect(units.additionalProperties.properties.unit.oneOf[0].enum).toEqual([...debugUnitSymbols()].sort());
+        expect(units.additionalProperties.properties.unit.oneOf[0].enum).toEqual(
+            [...debugUnitSymbols()].sort((left, right) => left.localeCompare(right)),
+        );
     });
 
     it("describes the document the generator writes", () => {

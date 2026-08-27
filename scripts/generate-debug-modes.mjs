@@ -1327,9 +1327,9 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
     ];
 
     for (const version of versions) {
-        lines.push(`    "${version.apiVersion}": Object.freeze([`);
+        lines.push(`    ${quote(version.apiVersion)}: Object.freeze([`);
         version.modes.forEach((mode, index) => {
-            lines.push(`        "${mode}", // ${index}`);
+            lines.push(`        ${quote(mode)}, // ${index}`);
         });
         lines.push("    ]),");
     }
@@ -1347,7 +1347,11 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
 
     const renameNote = new Map(renames.map((rename) => [rename.from, `${rename.fromApi} -> ${rename.toApi}`]));
     for (const [from, to] of Object.entries(aliases)) {
-        lines.push(`    ${from}: "${to}", // renamed in ${renameNote.get(from)}`);
+        // The key is left bare: every mode name is DEBUG_[A-Z0-9_]+ or the enum
+        // parser refuses it, so it is always a valid identifier, and Prettier
+        // strips quotes it does not need - which would fail `prettier --check`
+        // on this generated file.
+        lines.push(`    ${from}: ${quote(to)}, // renamed in ${renameNote.get(from)}`);
     }
 
     lines.push("});", "");
@@ -1488,9 +1492,10 @@ function renderConflict(conflict) {
             `                label: ${quote(variant.label)},`,
             `                unit: ${variant.unit === null ? "null" : quote(variant.unit)},`,
             `                scale: ${variant.scale},`,
-            // Two meanings can differ by their enum alone, so the values are part
-            // of what distinguishes them and belong in the report.
+            // Two meanings can differ by their enum or their flag names alone, so
+            // both are part of what distinguishes them and belong in the report.
             ...(variant.values === undefined ? [] : renderFrozenList("                ", "values", variant.values)),
+            ...(variant.flags === undefined ? [] : renderFrozenList("                ", "flags", variant.flags)),
             ...renderFrozenList("                ", "sites", variant.sites),
             "            }),",
         );
@@ -1654,11 +1659,12 @@ function renderFieldsJson({ repoUrl, versions, aliases, renames, conflicts }) {
                 apiVersion,
                 mode,
                 index,
-                meanings: variants.map(({ label, unit, scale, values, sites }) => ({
+                meanings: variants.map(({ label, unit, scale, values, flags, sites }) => ({
                     label,
                     unit,
                     scale,
                     ...(values === undefined ? {} : { values }),
+                    ...(flags === undefined ? {} : { flags }),
                     sites,
                 })),
             })),
@@ -1681,7 +1687,13 @@ function renderFieldsSchema() {
             label: { type: "string", description: "Field name, in the firmware's wording." },
             unit: {
                 description: "Unit of one LSB of the stored value, or null for a count, flag or enumeration.",
-                oneOf: [{ type: "string", enum: [...debugUnitSymbols()].sort() }, { type: "null" }],
+                oneOf: [
+                    {
+                        type: "string",
+                        enum: [...debugUnitSymbols()].sort((left, right) => left.localeCompare(right)),
+                    },
+                    { type: "null" },
+                ],
             },
             scale: {
                 type: "number",
@@ -1776,7 +1788,7 @@ function renderFieldsSchema() {
                 versions: {
                     type: "object",
                     description: "Keyed by MSP API version, read from the newest firmware commit still on it.",
-                    propertyNames: { pattern: "^\\d+\\.\\d+\\.\\d+$" },
+                    propertyNames: { pattern: String.raw`^\d+\.\d+\.\d+$` },
                     additionalProperties: {
                         type: "object",
                         properties: {
@@ -1843,6 +1855,7 @@ function renderFieldsSchema() {
                                         unit: { oneOf: [{ type: "string" }, { type: "null" }] },
                                         scale: { type: "number" },
                                         values: { type: "array", items: { type: "string" } },
+                                        flags: { type: "array", items: { type: ["string", "null"] } },
                                         sites: {
                                             type: "array",
                                             description: "Firmware call sites, as path:line.",
