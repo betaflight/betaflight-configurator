@@ -974,9 +974,6 @@
     "defaultSoftwareHead": {
         "message": "პროგრამული უზრუნველყოფა"
     },
-    "defaultSoftwareText": {
-        "message": "თქვენი <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox ლოგების დამთვალიერებელი<\/a> ხელმისაწვდომია ონლაინ აპლიკაციის სახით.<br \/><br \/>ჩვენი <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua სკრიპტების<\/a> კოლექცია ხელმისაწვდომია GitHub-ზე.<br \/><br \/>ჩვენი <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">საწყისი კოდი <\/a> მიკროპროგრამისთვის, ამ აპლიკაციისა და ბლექბოქსის დამთვალიერებლისთვის შეგიძლიათ ჩამოტვირთოთ GitHub-დან."
-    },
     "defaultContributingHead": {
         "message": "მონაწილეობის მიღება"
     },
@@ -7834,45 +7831,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "დახრილობა არის {{saved}}°, მაგრამ GPS ამოიცნობს {{detected}}°-ს ამ მდებარეობისთვის. დააწკაპუნეთ განახლებაზე გამოსასწორებლად."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} ნიმუშები"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "მეტი დახრილობა!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "აღმოჩენა ვერ მოხერხდა — სცადეთ უფრო მრავალფეროვანი დახრილობა."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "მართული კალიბრაცია (სახელმძღვანელოთი)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "ავტომატური 60-წამიანი კალიბრაცია"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "კალიბრაცია ინსტრუქციით"
-    },
-    "magCalibrationPrompt1": {
-        "message": "​ნაბიჯი 1\/6 — გეჭიროთ ჰორიზონტალურად, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationPrompt2": {
-        "message": "ნაბიჯი 2\/6 — გადააბრუნეთ თავდაყირა, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationPrompt3": {
-        "message": "ნაბიჯი 3\/6 — ცხვირით ვერტიკალურად ზემოთ, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationPrompt4": {
-        "message": "ნაბიჯი 4\/6 — ცხვირით ვერტიკალურად ქვემოთ, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationPrompt5": {
-        "message": "ნაბიჯი 5\/6 — მარცხენა მხარით ზემოთ, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationPrompt6": {
-        "message": "ნაბიჯი 6\/6 — მარჯვენა მხარით ზემოთ, შემოატრიალეთ 360°-ით"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "მონაცემების შეგროვება დასრულდა — გადახედეთ და შეინახეთ"
-    },
     "magCalibrationCancel": {
         "message": "გაუქმება"
     },
@@ -7903,12 +7861,6 @@
     "magCalibrationSamples": {
         "message": "ნიმუშები"
     },
-    "magCalibrationQuality": {
-        "message": "ხარისხიანი"
-    },
-    "magCalibrationResidual": {
-        "message": "მორგებული ნარჩენი"
-    },
     "magCalibrationQualityGood": {
         "message": "კარგი"
     },
@@ -7920,9 +7872,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "პროგრამული უზრუნველყოფის ოფსეტები"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "სფეროს მორგების ოფსეტები"
     },
     "magCalibrationUnguided": {
         "message": "პროგრამული კალიბრაცია (ძველი მეთოდი)"
@@ -7938,18 +7887,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "პროგრამული უზრუნველყოფის კალიბრაცია დასრულდა!"
-    },
-    "magCalibrationGuided": {
-        "message": "მომხმარებლის კალიბრაცია (თავისუფალი)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "ატრიალეთ თავისუფლად — კონფიგურატორი გამოითვლის კორექტირებას"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "მომხმარებლის კალიბრაცია"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "ატრიალეთ საფრენი აპარატი ყველა მიმართულებით. შეეცადეთ შეავსოთ წერტილებისგან შემდგარი სფერო. შეინახეთ შედეგი, როგორც კი კალიბრაციის მონაცემები დასტაბილურდება."
     },
     "magCalibrationCheck": {
         "message": "შემოწმება"
@@ -7974,18 +7911,6 @@
     },
     "magCalibrationSaveError": {
         "message": "კალიბრაციის მონაცემების შენახვა ვერ მოხერხდა"
-    },
-    "magCalibrationAccept": {
-        "message": "კალიბრაციის შენახვა"
-    },
-    "magCalibrationFull": {
-        "message": "სრული კალიბრაცია (ავტო-გასწორება)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "ერთი დატრიალება — ასწორებს ცდომილებებს, მაგნიტურ ხარვეზებს და კომპასის ორიენტაციას"
-    },
-    "magCalibrationFullTitle": {
-        "message": "სრული კალიბრირება"
     },
     "magCalibrationFullInstruction": {
         "message": "მიჰყევით ქვემოთ მოცემულ ნაბიჯებს და სტაბილურად გეჭიროთ დრონი თითოეული სრული ბრუნისას. ახალი კუთხეების მიღწევასთან ერთად ზონების თვლა გაიზრდება — შეეცადეთ შეავსოთ 20."
@@ -8020,9 +7945,6 @@
     "magCalibrationFullZones": {
         "message": "დაფარულია {{covered}} \/ {{total}} ზონა"
     },
-    "magCalibrationFullCompute": {
-        "message": "გამოთვლა"
-    },
     "magCalibrationFullCoverage": {
         "message": "დაფარვა:"
     },
@@ -8049,9 +7971,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "არ არის საკმარისი მონაცემები — დაატრიალეთ უფრო დიდხანს"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "GPS ან IP ლოკაცია ვერ მოიძებნა — მაგნიტური დახრილობის განსაზღვრა შეუძლებელია"
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI-ის ბრძანებები დაკოპირდა გაცვლის ბუფერში"
@@ -8091,12 +8010,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "ახალი"
-    },
-    "magAlignmentApply": {
-        "message": "მიმართეთ"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "გამოვლენა"
     },
     "configurationSmallAngle": {
         "message": "მაქსიმალური დახრა დაქოქვისა [გრადუსი]"

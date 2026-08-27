@@ -42,6 +42,32 @@
                                     class="min-w-40"
                                 />
                             </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialPort')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxPortIdentifier"
+                                    :items="blackboxPortOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialBaud')"
+                                :help="$t('onboardLoggingSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxBaud"
+                                    :items="blackboxBaudOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
                                 <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
@@ -310,6 +336,7 @@ import { bit_check, bit_set } from "../../js/bit";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "../../composables/useTabLoad";
 
 const BLOCK_SIZE = 4096;
@@ -408,6 +435,23 @@ export default defineComponent({
             const index = types.gyro.elements.indexOf("VIRTUAL");
             virtualGyro.value = fcStore.sensorConfigActive?.gyro_hardware === index;
         };
+
+        // From API 1.49 the serial-logging port and its baud live on the blackbox parameter group
+        // rather than the shared port function mask, so they are assigned here.
+        const {
+            available: blackboxPortAvailable,
+            writable: blackboxPortWritable,
+            options: blackboxPortOptions,
+            selectedIdentifier: blackboxPortIdentifier,
+            baudOptions: blackboxBaudOptions,
+            selectedBaud: blackboxBaud,
+            load: loadBlackboxPort,
+            write: writeBlackboxPort,
+        } = useFeaturePort({
+            setting: "blackbox_uart",
+            functionName: "BLACKBOX",
+            baud: { setting: "blackbox_baud" },
+        });
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -550,6 +594,8 @@ export default defineComponent({
                 blackboxRate: blackboxRate.value,
                 debugMode: debugMode.value,
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
+                blackboxPortIdentifier: blackboxPortIdentifier.value,
+                blackboxBaud: blackboxBaud.value,
             });
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
@@ -591,6 +637,10 @@ export default defineComponent({
                         MSPCodes.MSP_SET_ADVANCED_CONFIG,
                         mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
                     );
+
+                    // Between the parameter group write and the persist that serialises it, so a
+                    // refused port throws before anything reaches EEPROM.
+                    await writeBlackboxPort();
 
                     await saveAndReboot();
 
@@ -949,6 +999,8 @@ export default defineComponent({
                         }
 
                         // Populate UI state
+                        await loadBlackboxPort();
+
                         blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
                         blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
                         debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
@@ -1001,6 +1053,12 @@ export default defineComponent({
             isExpertMode,
             virtualGyro,
             blackboxDeviceOptions,
+            blackboxPortAvailable,
+            blackboxPortWritable,
+            blackboxPortOptions,
+            blackboxPortIdentifier,
+            blackboxBaudOptions,
+            blackboxBaud,
             blackboxSupport,
             loggingRates,
             debugModes,
