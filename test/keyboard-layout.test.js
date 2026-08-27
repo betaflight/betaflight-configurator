@@ -3,18 +3,42 @@
  * @vitest-environment-options { "url": "http://localhost/" }
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createKeydownHandler } from '../src/blackbox-viewer/keyboard_handler.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { createKeydownHandler } from "../src/blackbox-viewer/keyboard_handler.js";
+
+/**
+ * Test helper to create a keyboard event with proper target mocking.
+ * The keyboard handler checks e.target.type and e.target.closest(),
+ * so we need to mock these for the tests to work in jsdom.
+ */
+function createKeyboardEvent(key, code, options = {}) {
+    const event = new KeyboardEvent("keydown", {
+        key,
+        code,
+        bubbles: true,
+        ...options,
+    });
+
+    // Mock event target to bypass type checks
+    const mockTarget = { type: undefined, closest: () => null };
+    Object.defineProperty(event, "target", {
+        value: mockTarget,
+        writable: true,
+        configurable: true,
+    });
+
+    return event;
+}
 
 /**
  * Integration tests for keyboard layout independence in Blackbox Viewer shortcuts.
- * 
+ *
  * These tests verify that the actual createKeydownHandler function correctly
  * handles keyboard events from different layouts (QWERTY, AZERTY, QWERTZ) by
  * using event.key.toLowerCase() instead of event.code for letter keys.
  */
 
-describe('Keyboard Handler - Layout Independence', () => {
+describe("Keyboard Handler - Layout Independence", () => {
     let mockCtx;
     let handler;
 
@@ -46,7 +70,7 @@ describe('Keyboard Handler - Layout Independence', () => {
             appStore: {
                 viewerActive: true,
                 headerDialogOpen: false,
-                statusMarkerOffset: '',
+                statusMarkerOffset: "",
             },
             // Action spies
             logPlayPause: vi.fn(),
@@ -71,14 +95,19 @@ describe('Keyboard Handler - Layout Independence', () => {
         };
 
         handler = createKeydownHandler(mockCtx);
+        // Attach handler to document
+        document.addEventListener("keydown", handler);
     });
 
-    describe('Letter shortcuts - AZERTY layout support', () => {
-        it('should trigger marker toggle on M key (AZERTY: physical semicolon position)', () => {
-            const azertyMEvent = new KeyboardEvent('keydown', {
-                key: 'm',
-                code: 'Semicolon', // AZERTY: M key is where semicolon is on QWERTY
-                bubbles: true,
+    afterEach(() => {
+        // Clean up event listener
+        document.removeEventListener("keydown", handler);
+    });
+
+    describe("Letter shortcuts - AZERTY layout support", () => {
+        it("should trigger marker toggle on M key (AZERTY: physical semicolon position)", () => {
+            const azertyMEvent = createKeyboardEvent("m", "Semicolon", {
+                // AZERTY: M key is where semicolon is on QWERTY
             });
 
             document.dispatchEvent(azertyMEvent);
@@ -87,12 +116,8 @@ describe('Keyboard Handler - Layout Independence', () => {
             expect(mockCtx.invalidateGraph).toHaveBeenCalled();
         });
 
-        it('should trigger marker toggle on M key (QWERTY: physical M position)', () => {
-            const qwertyMEvent = new KeyboardEvent('keydown', {
-                key: 'm',
-                code: 'KeyM', // QWERTY: M key is where M is
-                bubbles: true,
-            });
+        it("should trigger marker toggle on M key (QWERTY: physical M position)", () => {
+            const qwertyMEvent = createKeyboardEvent("m", "KeyM");
 
             document.dispatchEvent(qwertyMEvent);
 
@@ -100,72 +125,50 @@ describe('Keyboard Handler - Layout Independence', () => {
             expect(mockCtx.invalidateGraph).toHaveBeenCalled();
         });
 
-        it('should trigger analyser toggle on A key (AZERTY: physical Q position)', () => {
-            const azertyAEvent = new KeyboardEvent('keydown', {
-                key: 'a',
-                code: 'KeyQ', // AZERTY: A key is where Q is on QWERTY
-                bubbles: true,
-            });
+        it("should trigger analyser toggle on A key (AZERTY: physical Q position)", () => {
+            const azertyAEvent = createKeyboardEvent("a", "KeyQ");
+            // AZERTY: A key is where Q is on QWERTY
 
             document.dispatchEvent(azertyAEvent);
 
             expect(mockCtx.graphStore.toggleAnalyser).toHaveBeenCalled();
         });
 
-        it('should trigger analyser toggle on A key (QWERTY: physical A position)', () => {
-            const qwertyAEvent = new KeyboardEvent('keydown', {
-                key: 'a',
-                code: 'KeyA', // QWERTY: A key is where A is
-                bubbles: true,
-            });
+        it("should trigger analyser toggle on A key (QWERTY: physical A position)", () => {
+            const qwertyAEvent = createKeyboardEvent("a", "KeyA");
 
             document.dispatchEvent(qwertyAEvent);
 
             expect(mockCtx.graphStore.toggleAnalyser).toHaveBeenCalled();
         });
 
-        it('should trigger video in-point on I key (both layouts)', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'i',
-                code: 'KeyI',
-                bubbles: true,
-            });
+        it("should trigger video in-point on I key (both layouts)", () => {
+            const event = createKeyboardEvent("i", "KeyI");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.setVideoInTime).toHaveBeenCalled();
         });
 
-        it('should trigger video out-point on O key (both layouts)', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'o',
-                code: 'KeyO',
-                bubbles: true,
-            });
+        it("should trigger video out-point on O key (both layouts)", () => {
+            const event = createKeyboardEvent("o", "KeyO");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.setVideoOutTime).toHaveBeenCalled();
         });
 
-        it('should trigger fullscreen toggle on F key (both layouts)', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'f',
-                code: 'KeyF',
-                bubbles: true,
-            });
+        it("should trigger fullscreen toggle on F key (both layouts)", () => {
+            const event = createKeyboardEvent("f", "KeyF");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.graphStore.toggleFullscreen).toHaveBeenCalled();
         });
 
-        it('should trigger zoom toggle on Z key (AZERTY: physical W position)', () => {
-            const azertyZEvent = new KeyboardEvent('keydown', {
-                key: 'z',
-                code: 'KeyW', // AZERTY: Z key is where W is on QWERTY
-                bubbles: true,
-            });
+        it("should trigger zoom toggle on Z key (AZERTY: physical W position)", () => {
+            const azertyZEvent = createKeyboardEvent("z", "KeyW");
+            // AZERTY: Z key is where W is on QWERTY
 
             document.dispatchEvent(azertyZEvent);
 
@@ -173,14 +176,10 @@ describe('Keyboard Handler - Layout Independence', () => {
         });
     });
 
-    describe('Letter shortcuts - QWERTZ layout support', () => {
-        it('should handle Y/Z swap in QWERTZ layout', () => {
+    describe("Letter shortcuts - QWERTZ layout support", () => {
+        it("should handle Y/Z swap in QWERTZ layout", () => {
             // QWERTZ: physical Y key produces 'z'
-            const qwertzYEvent = new KeyboardEvent('keydown', {
-                key: 'z',
-                code: 'KeyY',
-                bubbles: true,
-            });
+            const qwertzYEvent = createKeyboardEvent("z", "KeyY");
 
             document.dispatchEvent(qwertzYEvent);
 
@@ -188,13 +187,9 @@ describe('Keyboard Handler - Layout Independence', () => {
             expect(mockCtx.setGraphZoom).toHaveBeenCalled();
         });
 
-        it('should handle Z/Y swap in QWERTZ layout', () => {
+        it("should handle Z/Y swap in QWERTZ layout", () => {
             // QWERTZ: physical Z key produces 'y'
-            const qwertzZEvent = new KeyboardEvent('keydown', {
-                key: 'y',
-                code: 'KeyZ',
-                bubbles: true,
-            });
+            const qwertzZEvent = createKeyboardEvent("y", "KeyZ");
 
             document.dispatchEvent(qwertzZEvent);
 
@@ -203,14 +198,9 @@ describe('Keyboard Handler - Layout Independence', () => {
         });
     });
 
-    describe('Letter shortcuts - Case independence', () => {
-        it('should handle uppercase M (with Shift)', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'M', // Uppercase with Shift
-                code: 'KeyM',
-                shiftKey: true,
-                bubbles: true,
-            });
+    describe("Letter shortcuts - Case independence", () => {
+        it("should handle uppercase M (with Shift)", () => {
+            const event = createKeyboardEvent("M", "KeyM", { shiftKey: true });
 
             document.dispatchEvent(event);
 
@@ -218,13 +208,8 @@ describe('Keyboard Handler - Layout Independence', () => {
             expect(mockCtx.setMarker).toHaveBeenCalled();
         });
 
-        it('should handle lowercase m (without Shift)', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'm',
-                code: 'KeyM',
-                shiftKey: false,
-                bubbles: true,
-            });
+        it("should handle lowercase m (without Shift)", () => {
+            const event = createKeyboardEvent("m", "KeyM", { shiftKey: false });
 
             document.dispatchEvent(event);
 
@@ -232,61 +217,41 @@ describe('Keyboard Handler - Layout Independence', () => {
         });
     });
 
-    describe('Navigation keys - Use event.code (unchanged)', () => {
-        it('should toggle play/pause on Space', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: ' ',
-                code: 'Space',
-                bubbles: true,
-            });
+    describe("Navigation keys - Use event.code (unchanged)", () => {
+        it("should toggle play/pause on Space", () => {
+            const event = createKeyboardEvent(" ", "Space");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.logPlayPause).toHaveBeenCalled();
         });
 
-        it('should jump back on ArrowLeft', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'ArrowLeft',
-                code: 'ArrowLeft',
-                bubbles: true,
-            });
+        it("should jump back on ArrowLeft", () => {
+            const event = createKeyboardEvent("ArrowLeft", "ArrowLeft");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.logJumpBack).toHaveBeenCalled();
         });
 
-        it('should jump forward on ArrowRight', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'ArrowRight',
-                code: 'ArrowRight',
-                bubbles: true,
-            });
+        it("should jump forward on ArrowRight", () => {
+            const event = createKeyboardEvent("ArrowRight", "ArrowRight");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.logJumpForward).toHaveBeenCalled();
         });
 
-        it('should jump to start on Home', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'Home',
-                code: 'Home',
-                bubbles: true,
-            });
+        it("should jump to start on Home", () => {
+            const event = createKeyboardEvent("Home", "Home");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.logJumpStart).toHaveBeenCalled();
         });
 
-        it('should jump to end on End', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'End',
-                code: 'End',
-                bubbles: true,
-            });
+        it("should jump to end on End", () => {
+            const event = createKeyboardEvent("End", "End");
 
             document.dispatchEvent(event);
 
@@ -295,28 +260,20 @@ describe('Keyboard Handler - Layout Independence', () => {
     });
 
     describe('Digit keys - Use event.code.startsWith("Digit") (unchanged)', () => {
-        it('should handle workspace switch on digit 1', () => {
-            mockCtx.workspaceStore.workspaceGraphConfigs[1] = { title: 'Test' };
+        it("should handle workspace switch on digit 1", () => {
+            mockCtx.workspaceStore.workspaceGraphConfigs[1] = { title: "Test" };
 
-            const event = new KeyboardEvent('keydown', {
-                key: '1',
-                code: 'Digit1',
-                bubbles: true,
-            });
+            const event = createKeyboardEvent("1", "Digit1");
 
             document.dispatchEvent(event);
 
             expect(mockCtx.onSwitchWorkspace).toHaveBeenCalled();
         });
 
-        it('should handle workspace switch on digit 5', () => {
-            mockCtx.workspaceStore.workspaceGraphConfigs[5] = { title: 'Test' };
+        it("should handle workspace switch on digit 5", () => {
+            mockCtx.workspaceStore.workspaceGraphConfigs[5] = { title: "Test" };
 
-            const event = new KeyboardEvent('keydown', {
-                key: '5',
-                code: 'Digit5',
-                bubbles: true,
-            });
+            const event = createKeyboardEvent("5", "Digit5");
 
             document.dispatchEvent(event);
 
@@ -324,14 +281,23 @@ describe('Keyboard Handler - Layout Independence', () => {
         });
     });
 
-    describe('Edge cases', () => {
-        it('should not trigger shortcuts when viewer is not active', () => {
+    describe("Edge cases", () => {
+        it("should not trigger shortcuts when viewer is not active", () => {
             mockCtx.appStore.viewerActive = false;
 
-            const event = new KeyboardEvent('keydown', {
-                key: 'm',
-                code: 'KeyM',
-                bubbles: true,
+            const event = createKeyboardEvent("m", "KeyM");
+
+            document.dispatchEvent(event);
+
+            expect(mockCtx.setMarker).not.toHaveBeenCalled();
+        });
+
+        it("should not trigger shortcuts when text input is focused", () => {
+            const event = createKeyboardEvent("m", "KeyM");
+            // Mock target as a text input
+            Object.defineProperty(event, "target", {
+                value: { type: "text", closest: () => null },
+                writable: false,
             });
 
             document.dispatchEvent(event);
@@ -339,30 +305,8 @@ describe('Keyboard Handler - Layout Independence', () => {
             expect(mockCtx.setMarker).not.toHaveBeenCalled();
         });
 
-        it('should not trigger shortcuts when text input is focused', () => {
-            const input = document.createElement('input');
-            input.type = 'text';
-            document.body.appendChild(input);
-            input.focus();
-
-            const event = new KeyboardEvent('keydown', {
-                key: 'm',
-                code: 'KeyM',
-                bubbles: true,
-            });
-
-            input.dispatchEvent(event);
-
-            expect(mockCtx.setMarker).not.toHaveBeenCalled();
-            input.remove();
-        });
-
-        it('should not trigger shortcuts for non-letter, non-navigation keys', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'Dead',
-                code: 'Quote',
-                bubbles: true,
-            });
+        it("should not trigger shortcuts for non-letter, non-navigation keys", () => {
+            const event = createKeyboardEvent("Dead", "Quote");
 
             document.dispatchEvent(event);
 
