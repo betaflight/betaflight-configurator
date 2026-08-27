@@ -93,6 +93,49 @@ export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
+// A numeric setting is printed with its bounds, so the firmware tells us how many of a thing this
+// build has rather than the app having to guess (`CANDEV_COUNT`, for one).
+export function findCliSettingRange(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());
+        if (match) {
+            return { min: Number(match[1]), max: Number(match[2]) };
+        }
+    }
+
+    return null;
+}
+
+// `get <name>` matches on substring, so the reply can carry several settings, each followed by its
+// allowed range and default. Only the line naming the setting exactly holds the current value.
+export function findCliSettingValue(lines, setting) {
+    for (const line of lines ?? []) {
+        const [name, ...rest] = line.split("=");
+        if (name.trim() === setting && rest.length) {
+            return rest.join("=").trim();
+        }
+    }
+
+    return null;
+}
+
+// A MODE_LOOKUP setting is printed with the names it accepts, so the app can offer exactly those
+// rather than carrying its own copy of a firmware table. NULL table entries are skipped by the
+// firmware, so the list is not positionally aligned with the enum — names only.
+export function findCliSettingAllowedValues(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed values:(.*)$/.exec(line.trim());
+        if (match) {
+            return match[1]
+                .split(",")
+                .map((value) => value.trim())
+                .filter(Boolean);
+        }
+    }
+
+    return null;
+}
+
 export async function saveAndReconnect() {
     let saveError = null;
     try {

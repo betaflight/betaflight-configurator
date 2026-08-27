@@ -108,21 +108,60 @@
     "bluetoothConnectionError": {
         "message": "Ошибка Bluetooth: $1"
     },
+    "virtualMode": {
+        "message": "Виртуальный режим"
+    },
     "virtualMSPVersion": {
         "message": "Версия виртуальной прошивки"
     },
     "portOverrideText": {
         "message": "Порт:"
     },
+    "connectVirtualDescription": {
+        "message": "Имитация контроллера полета без аппаратного обеспечения.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
     "connectVirtual": {
         "message": "Подключиться (виртуально)",
         "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "Введите последовательный порт или URL для подключения",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Сохранённые подключения",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Имя:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Имя для этого подключения",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Сохранить",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Обновить",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Удалить сохранённое подключение",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "Подключаться автоматически"
     },
     "close": {
         "message": "Закрыть"
+    },
+    "openSidebarMenu": {
+        "message": "Открыть боковое меню",
+        "description": "Accessible label for the floating hamburger button shown on narrow viewports."
     },
     "OK": {
         "message": "OK"
@@ -135,6 +174,18 @@
     },
     "delete": {
         "message": "Удалить"
+    },
+    "edit": {
+        "message": "Изменить"
+    },
+    "add": {
+        "message": "Добавить"
+    },
+    "update": {
+        "message": "Обновить"
+    },
+    "save": {
+        "message": "Сохранить"
     },
     "autoConnectEnabled": {
         "message": "Автоматическое подключение: Включено - конфигуратор будет подключаться при обнаружении нового порта"
@@ -281,6 +332,9 @@
     "rebootFlightControllerReady": {
         "message": "Полетный контроллер готов"
     },
+    "rebootFlightControllerFailed": {
+        "message": "Полётный контроллер не переподключился "
+    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Перезагружается<\/span>"
     },
@@ -311,6 +365,14 @@
     "sidebarOpenOptions": {
         "message": "Настройки",
         "description": "Tooltip for the options icon button in the sidebar footer."
+    },
+    "sidebarToggleDarkMode": {
+        "message": " Переключить тёмный \/ светлый режим",
+        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+    },
+    "sidebarToggleExpertMode": {
+        "message": "Режим эксперта",
+        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
     },
     "tabSetup": {
         "message": "Система"
@@ -375,8 +437,150 @@
     "tabAutotune": {
         "message": "Автонастройка"
     },
+    "tabBlackboxViewer": {
+        "message": "Просмотр черного ящика",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
+    "autotuneImportTitle": {
+        "message": "Анализ Blackbox методом CHIRP"
+    },
+    "autotuneImportButton": {
+        "message": " Импортировать лог Blackbox"
+    },
+    "autotuneImportDescription": {
+        "message": " Импортируйте лог Blackbox, записанный в режиме отладки debug_mode = CHIRP, чтобы проанализировать частотную характеристику и вычислить рекомендуемые настройки PID"
+    },
+    "autotuneSelectingFile": {
+        "message": "Выбор файла..."
+    },
+    "autotuneAnalyzing": {
+        "message": "Анализ данных CHIRP..."
+    },
+    "autotuneBandwidth": {
+        "message": "Полоса пропускания"
+    },
+    "autotunePhaseMargin": {
+        "message": "Запас по фазе"
+    },
+    "autotuneResonantPeak": {
+        "message": "Резонансный пик"
+    },
+    "autotuneCoherence": {
+        "message": "Когерентность"
+    },
+    "autotuneParameter": {
+        "message": "Параметр"
+    },
+    "autotuneCurrent": {
+        "message": "Текущее "
+    },
+    "autotuneProposed": {
+        "message": "Предлагаемое"
+    },
+    "autotuneChange": {
+        "message": "Изменение "
+    },
     "autotuneApplying": {
         "message": "Применяется..."
+    },
+    "autotuneApplied": {
+        "message": "Коэффициенты применены и сохранены."
+    },
+    "autotuneApplyFailed": {
+        "message": " Не удалось применить коэффициенты"
+    },
+    "autotuneConnectRequired": {
+        "message": "Подключитесь к полётному контроллеру, чтобы применить коэффициенты"
+    },
+    "autotuneNoLogs": {
+        "message": "В этом файле не найдено валидных логов Blackbox."
+    },
+    "autotuneNoChirpData": {
+        "message": "Данные CHIRP не найдены. Убедитесь, что лог записывался с режимом отладки debug_mode = CHIRP и что режим CHIRP был активирован во время полёта."
+    },
+    "autotuneSampleCount": {
+        "message": "{{count}} образцов"
+    },
+    "autotuneSampleRate": {
+        "message": "Частота дискретизации: {{rate}} Гц"
+    },
+    "autotuneImportAnother": {
+        "message": "Импортировать другой (файл)"
+    },
+    "autotuneImportRetry": {
+        "message": " Попробовать снова"
+    },
+    "autotuneFile": {
+        "message": "Файл"
+    },
+    "autotuneAxesDetected": {
+        "message": "Обнаруженные оси"
+    },
+    "autotuneApplyGains": {
+        "message": "Применить коэффициенты"
+    },
+    "autotuneGainTitle": {
+        "message": "Рекомендация по коэффициентам"
+    },
+    "autotuneAxisSelector": {
+        "message": "Выберите ось"
+    },
+    "autotuneAxisRoll": {
+        "message": "Roll"
+    },
+    "autotuneAxisPitch": {
+        "message": "Pitch"
+    },
+    "autotuneAxisYaw": {
+        "message": " Yaw"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Частотная характеристика"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "Текущие настройки PID (из лога)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Анализ"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Предложенные ползунки"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Мастер-множитель"
+    },
+    "autotuneSliderPIGain": {
+        "message": "Коэффициенты P и I"
+    },
+    "autotuneSliderIGain": {
+        "message": "Коэффициент I"
+    },
+    "autotuneSliderDGain": {
+        "message": " Коэффициент D"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Feedforward"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "Фильтр D-term"
+    },
+    "autotuneApplyFromAxis": {
+        "message": " Применить коэффициенты для выбранной оси"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Пик чувствительности"
+    },
+    "autotuneOvershoot": {
+        "message": "Перерегулирование"
+    },
+    "autotuneRiseTime": {
+        "message": "Время нарастания"
+    },
+    "autotuneSettlingTime": {
+        "message": "Время установления"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Спектрограмма (Gyro)"
     },
     "tabReceiver": {
         "message": "Приёмник"
@@ -681,6 +885,9 @@
     "versionLabelTarget": {
         "message": "Target"
     },
+    "versionLabelFirmware": {
+        "message": "Версия прошивки"
+    },
     "versionLabelConfigurator": {
         "message": "Версия приложения"
     },
@@ -746,11 +953,14 @@
     "defaultHardwareHead": {
         "message": "Аппаратное обеспечение"
     },
+    "defaultHardwareText": {
+        "message": "Приложение поддерживает всё оборудование, на котором может работать Betaflight. Полный список — на вкладке «Программатор».<br \/><br \/>Полезные утилиты и драйверы:<ul><li>Для устаревшего оборудования с USB-to-serial чипом CP210x последние <b>драйверы CP210x<\/b> можно скачать <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li>Последнюю версию <b>Zadig<\/b> для установки USB-драйверов в Windows можно скачать <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> можно скачать <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "Программное обеспечение"
     },
     "defaultSoftwareText": {
-        "message": "Наш <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Просмотрщик логов чёрного ящика<\/a> доступен в виде онлайн-приложения.<br \/><br \/>Коллекция <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua скриптов<\/a> доступна на GitHub.<br \/><br \/>Наш<a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">исходный код<\/a> для прошивки этого приложения, и просмотрщика логов чёрного ящика может быть загружен с GitHub."
+        "message": "Средство просмотра логов Blackbox встроено в это приложение. Откройте вкладку <strong>Blackbox Viewer<\/strong>, чтобы проанализировать логи полётов.<br \/><br \/>Наш набор <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> доступен на GitHub.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Исходный код<\/a> прошивки и этого приложения доступен на GitHub."
     },
     "defaultContributingHead": {
         "message": "Содействие"
@@ -877,7 +1087,7 @@
         "message": "Сбросить ось Z (ось вращения), смещение: $1 град"
     },
     "initialSetupHeading": {
-        "message": "Рыскание:",
+        "message": "Yaw:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMagHeading": {
@@ -1191,7 +1401,7 @@
         "message": "Информация о прошивке"
     },
     "initialSetupInfoFirmwareHelp": {
-        "message": "Показывает информацию для версии прошивки.<br>Функция показывает определенные параметры, используемые в облачной сборке.<br>Ссылки на журнал и конфиг дают доступ к облачным данным по ключу, хранящемуся в прошивке.<br>В локальной сборке позиция остается пустой.",
+        "message": "Отображает информацию для версии прошивки.<br>Функция отображает определенные параметры, используемые в облачной сборке.<br>Ссылки на журнал и конфиг дают доступ к облачным данным по ключу, хранящемуся в прошивке.<br>В локальной сборке позиция остается пустой.",
         "description": "Message that pops up to describe the Build \/ Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1267,7 +1477,7 @@
         "message": "Информация о соединении"
     },
     "initialSetupNetworkInfoHelp": {
-        "message": "Показывает состояние сетевого подключения",
+        "message": "Отображает состояние сетевого подключения",
         "description": "Message that pops up to describe the Network Connection section"
     },
     "initialSetupNetworkInfoStatus": {
@@ -1379,6 +1589,9 @@
     "featureTRANSPONDER": {
         "message": "Транспондер гонки"
     },
+    "featureTRANSPONDERTip": {
+        "message": "Включает поддержку транспондера в прошивке. Настройте провайдера (<code>set transponder_provider = [ILAP|ARCITIMER|ERLT]<\/code>) и данные (<code>set transponder_data = <bytes><\/code>) через CLI, затем выполните <code>save<\/code>. Команда <code>get transponder<\/code> покажет текущие значения."
+    },
     "featureAIRMODE": {
         "message": "Включить Airmode по умолчанию"
     },
@@ -1484,6 +1697,15 @@
     },
     "configurationBoardAlignment": {
         "message": "Выравнивание платы"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Roll°"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Pitch°"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Yaw°"
     },
     "configurationMagAlignment": {
         "message": "Калибровка магнитометра"
@@ -1905,6 +2127,10 @@
         "message": "При включении, только позиция при первом арме после подключения батареи будет использоваться как домашняя точка. Если выключено - домашняя точка будет обновляться при каждом арме.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Поддержка GPS не включена в эту сборку прошивки. Пересоберите прошивку с опцией GPS, чтобы настроить и использовать GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Приемник с последовательным выходом"
     },
@@ -1958,6 +2184,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Примечание:<\/strong> <span class=\"message-negative\">НЕ ОТКЛЮЧАЙТЕ<\/span> MSP на первом в списке порту, если вы не знаете, что делаете. Сделав это можно случайно перепрошить и стереть конфигурацию."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Примечание:<\/strong> в этой прошивке последовательные порты назначаются на вкладке каждой функции, поэтому здесь доступен только просмотр. Здесь показано, какой порт сейчас использует каждая функция; чтобы изменить назначение, перейдите на вкладку соответствующей функции."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">Требуется<\/span> обновление прошивки. Конфигурация последовательного порта в прошивках &lt; 1.8.0 больше не поддерживается."
@@ -2155,7 +2384,7 @@
         "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Регулирует параметр «Автоматический коэффициент заданного значения». Значение по умолчанию — 10. При увеличении значения RC-сигнал сильнее сглаживается, но возрастает задержка. Полезно при нестабильной связи с передатчиком или для плавных полётов.<br>Осторожно: при значениях около 50 задержка управления становится заметной.<br>Команда CLI rc_smoothing_info (при включённых передатчике и приёмнике) показывает автоматически рассчитанные частоты среза сглаживания RC-сигнала.",
+        "message": "Регулирует параметр «Автоматический коэффициент заданного значения». Значение по умолчанию — 10. При увеличении значения RC-сигнал сильнее сглаживается, но возрастает задержка. Полезно при нестабильной связи с передатчиком или для плавных полётов.<br>Осторожно: при значениях около 50 задержка управления становится заметной.<br>Команда CLI rc_smoothing_info (при включённых передатчике и приёмнике) отображает автоматически рассчитанные частоты среза сглаживания RC-сигнала.",
         "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
@@ -2186,10 +2415,10 @@
         "message": "Фильтр"
     },
     "rcSmoothingSetpointCutoffHelp": {
-        "message": "Частота среза в Гц, используемая при фильтрации значения Setpoint. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение в нуле, что соответствует \"Авто\"."
+        "message": "Частота среза в Гц, используемая при фильтрации значения Setpoint. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение равным 0, что соответствует «Авто»."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
-        "message": "Частота среза в Гц, используемая при фильтрации значения Feedforward. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение в нуле, что соответствует \"Авто\"."
+        "message": "Частота среза в Гц, используемая при фильтрации значения Feedforward. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение равным 0, что соответствует «Авто»."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
@@ -2714,7 +2943,7 @@
         "description": "Help text to CAMSTAB mode"
     },
     "auxiliaryHelpMode_CHIRP": {
-        "message": "Включает режим Chirp",
+        "message": "Включает режим CHIRP",
         "description": "Help text for CHIRP mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
@@ -3039,6 +3268,12 @@
     "gpsMapHead": {
         "message": "Местоположение"
     },
+    "gpsMapZoomIn": {
+        "message": "Приблизить"
+    },
+    "gpsMapZoomOut": {
+        "message": "Отдалить"
+    },
     "gpsMapMessage1": {
         "message": "Пожалуйста, проверьте подключение к интернету"
     },
@@ -3320,7 +3555,7 @@
         "message": "Загрузить план полёта из полётного контроллера?"
     },
     "flightPlanLoadPromptBody": {
-        "message": "Подключён полётный контроллер. Заменить текущий план полёта?"
+        "message": "Подключён полётный контроллер. Заменить текущий план полёта на план, сохранённый в контроллере? Если выбрать «Нет», ваш текущий план останется без изменений, и вы сможете сохранить его в полётный контроллер."
     },
     "flightPlanKeepLocal": {
         "message": "Оставить текущий"
@@ -4084,13 +4319,16 @@
         "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать <\/span> <strong>не поддерживаемые<\/strong> Betaflight-ом контроллеры этим программатором.<br \/><span class=\"message-negative\">Не <\/span><strong>отключайте<\/strong> кабель от полётного контроллера и <strong>не выключайте<\/strong> ваш компьютер во время прошивки.<br \/><br \/><strong>Примечание:<\/strong><ul><li> STM32-загрузчик хранится в ROM-памяти, его нельзя затереть.<\/li><li><span class=\"message-negative\"> Подключаться автоматически<\/span> всегда выключено во вкладке \"Программатор\".<\/li><li>Убедитесь, что Вы сделали резервную копию, т.к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки.<\/li><li>Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера<\/strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<\/li><li> При прошивке полётных контроллеров непосредственно через USB кабель (большинство новых плат) обязательно ознакомьтесь с разделом \"Прошивка по USB\" в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера<\/li><\/ul>"
     },
     "firmwareFlasherWarningShort": {
-        "message": "Не прошивайте устройства, не предназначенные для Betaflight. Не отключайте устройство во время прошивки..."
+        "message": "Не прошивайте устройства, не предназначенные для Betaflight. Не отключайте устройство во время прошивки. Загрузчик STM32 находится в ROM, и его невозможно «убить». Перед обновлением всегда делайте резервную копию конфигурации."
     },
     "firmwareFlasherRecoveryHead": {
         "message": "Восстановление \/ потеря связи"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Если связь с полётным контроллером потеряна, выполните следующие шаги для её восстановления:<ul><li>Выключите питание<\/li><li>Включите «Без перезагрузки» и «Полное стирание чипа».<\/li><li>Замкните перемычкой контакты BOOT или удерживайте кнопку BOOT.<\/li><li>Включите питание (индикатор активности НЕ должен мигать, если всё сделано правильно).<\/li><li>При необходимости установите все драйверы STM32 и Zadig (см. раздел <a href=\"https:\/\/betaflight.com\/docs\/wiki\/getting-started\/firmware-installation\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> руководства Betaflight).<\/li><li>Закройте приложение, затем запустите его снова.<\/li><li>Отпустите кнопку BOOT, если она есть на вашем FC.<\/li><li>Прошейте нужную прошивку (при необходимости указав скорость передачи данных вручную согласно инструкции к вашему FC).<\/li><li>Выключите питание.<\/li><li>Уберите перемычку BOOT.<\/li><li>Включите питание (индикатор активности должен замигать).<\/li><li>Подключитесь обычным способом.<\/li><\/ul>"
+    },
     "firmwareFlasherRecoveryShort": {
-        "message": "Если связь потеряна: отключите питание, включите «No Reboot Sequence»..."
+        "message": "Если связь потеряна: отключите питание, включите «Без перезагрузки» и «Полное стирание чипа», замкните перемычкой контакты BOOT, затем включите питание. При необходимости установите драйверы."
     },
     "firmwareFlasherReadMore": {
         "message": "Подробнее →"
@@ -4140,6 +4378,30 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Не удалось сохранить (flash) UF2"
     },
+    "firmwareFlasherEsp32Connecting": {
+        "message": "Подключение к загрузчику ESP32..."
+    },
+    "firmwareFlasherEsp32Detected": {
+        "message": "Обнаружено: $1"
+    },
+    "firmwareFlasherEsp32Flashing": {
+        "message": "Прошивка ESP32..."
+    },
+    "firmwareFlasherEsp32Rebooting": {
+        "message": "Прошивка завершена, перезагрузка..."
+    },
+    "firmwareFlasherEsp32Complete": {
+        "message": "ESP32 успешно прошит"
+    },
+    "firmwareFlasherEsp32Failed": {
+        "message": "Ошибка прошивки ESP32: $1"
+    },
+    "firmwareFlasherEsp32NotSupported": {
+        "message": "Прошивка ESP32 требует браузерную сборку (Web Serial)"
+    },
+    "firmwareFlasherEsp32NoPort": {
+        "message": "Выберите последовательный порт перед прошивкой ESP32"
+    },
     "firmwareFlasherClickToConnectDfu": {
         "message": "Нажмите, чтобы подключиться к DFU устройству"
     },
@@ -4162,6 +4424,9 @@
     },
     "firmwareFlasherCanceledBackup": {
         "message": "Резервное копирование отменено, процесс прошивки остановлен"
+    },
+    "firmwareFlasherBackupInvalidData": {
+        "message": "Резервное копирование не удалось: получены неверные данные с устройства (не в режиме CLI), прошивка прервана"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Устаревш.)",
@@ -4696,7 +4961,7 @@
         "message": "Настройки фильтра вне зависимости от выбранного профиля"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Эти слайдеры изменяют значения фильтров сигнала от гироскопа (Gyro) и Dterm.<br \/><br \/> Для увелечения фильтрации:<br \/> - Слайдеры влево<br \/> - Более низкие частоты среза у фильтров.<br \/><br \/> Более сильная фильтрация поддерживает двигатели в более холодном состоянии за счет удаления большего количества шумов, но вносит задержку в сигнал гироскопа и может усугубить эффект от propwash или вызвать резонансные колебания. Менее отзывчивые аппараты, например, X-класса, лучше всего работают с более сильной фильтрацией. <br \/><br \/> Для более слабой фильтрации:<br \/> - Слайдеры вправо<br \/> - Более высокие частоты среза <br \/><br \/>Слабая фильтрация снижает задержку сигнала гироскопа и часто улучшает обработку propwash-а. Обычно перемещение фильтра нижних частот гироскопа вправо допустимо, но перемещение D-фильтра вправо обычно не требуется и может быстро привести к перегреву двигателей.",
+        "message": "Эти ползунки изменяют значения фильтров сигнала от гироскопа (Gyro) и Dterm.<br \/><br \/> Для увелечения фильтрации:<br \/> - Ползунки влево<br \/> - Более низкие частоты среза у фильтров.<br \/><br \/> Более сильная фильтрация поддерживает двигатели в более холодном состоянии за счет удаления большего количества шумов, но вносит задержку в сигнал гироскопа и может усугубить эффект от propwash или вызвать резонансные колебания. Менее отзывчивые аппараты, например, X-класса, лучше всего работают с более сильной фильтрацией. <br \/><br \/> Для более слабой фильтрации:<br \/> - Ползунки вправо<br \/> - Более высокие частоты среза <br \/><br \/>Слабая фильтрация снижает задержку сигнала гироскопа и часто улучшает обработку propwash-а. Обычно перемещение фильтра нижних частот гироскопа вправо допустимо, но перемещение D-фильтра вправо обычно не требуется и может быстро привести к перегреву двигателей.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -4724,7 +4989,7 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Изменяет частоты среза НЧ-фильтров D-term.<br \/><br \/>Перемещение слайдера влево дает более сильную фильтрацию D-term (низкие частоты среза).<br \/><br \/>Перемещение слайдера вправо дает меньше фильтрации (более высокие частоты среза).<br \/><br \/>D составлюящая - это наиболее чувствительный элемент PID  к шуму и резонансу. Он может усиливать высокочастотный шум в 10 - 100 раз. Поэтому частоты среза фильтров D намного ниже фильтров сигнала гироскопа.<br \/><br \/>Фильтрация D применяется после и в дополнение к фильтрации гироскопа. По умолчанию D фильтрация оптимальна для большинства бортов и редко требует изменения.<br \/><br \/>Перемещение этого ползунка влево уменьшает нагрев двигателей в шумных сборках и при высоких значения 'D' в ПИД регуляторе, но мы можем заметить усиление негативных последствий от propwash и низкчастотный D резонанс.<br \/><br \/>Перемещение слайдера вправо не рекомендуется, но может улучшить обработку propwash при чистых сборках. Так же, это может привести к скрежету двигателей, внезапному резонансу в полете и серьезному перегреву двигателей.",
+        "message": "Изменяет частоты среза НЧ-фильтров D-term.<br \/><br \/>Перемещение ползунка влево дает более сильную фильтрацию D-term (низкие частоты среза).<br \/><br \/>Перемещение ползунка вправо дает меньше фильтрации (более высокие частоты среза).<br \/><br \/>D составлюящая - это наиболее чувствительный элемент PID  к шуму и резонансу. Он может усиливать высокочастотный шум в 10 - 100 раз. Поэтому частоты среза фильтров D намного ниже фильтров сигнала гироскопа.<br \/><br \/>Фильтрация D применяется после и в дополнение к фильтрации гироскопа. По умолчанию D фильтрация оптимальна для большинства бортов и редко требует изменения.<br \/><br \/>Перемещение этого ползунка влево уменьшает нагрев двигателей в шумных сборках и при высоких значения 'D' в ПИД регуляторе, но мы можем заметить усиление негативных последствий от propwash и низкчастотный D резонанс.<br \/><br \/>Перемещение ползунка вправо не рекомендуется, но может улучшить обработку propwash при чистых сборках. Так же, это может привести к скрежету двигателей, внезапному резонансу в полете и серьезному перегреву двигателей.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
@@ -4732,19 +4997,19 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной \nнеконтролируемого поведения (flyaway), повреждения моторов и другого небезопасного поведения борта. Пожалуйста, продолжайте с осторожностью.",
+        "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции ползунков могут быть причиной \nнеконтролируемого поведения (flyaway), повреждения моторов и другого небезопасного поведения борта. Пожалуйста, продолжайте с осторожностью.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
-        "message": "<strong>Примечание:<\/strong> Слайдеры отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "message": "<strong>Примечание:<\/strong> Ползунки отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningGyroSliderDisabled": {
-        "message": "<strong>Примечание:<\/strong> Слайдеры отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningGyroSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "message": "<strong>Примечание:<\/strong> Ползунки отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningGyroSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
         "description": "Gyro Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningDTermSliderDisabled": {
-        "message": "<strong>Примечание:<\/strong> DTerm слайдер отключен, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningDTermSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "message": "<strong>Примечание:<\/strong> DTerm ползунок отключен, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningDTermSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
         "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
@@ -4752,11 +5017,11 @@
         "description": "Tuning sliders disabled note"
     },
     "pidTuningSliderEnableButton": {
-        "message": "Включить слайдеры",
+        "message": "Включить ползунки",
         "description": "Button label for enabling sliders"
     },
     "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>Примечание:<\/strong> Диапазон слайдеров ограничен, потому что вы не в экспертном режиме. Этот диапазон подходит для большинства квадрокоптеров и для начинающих.",
+        "message": "<strong>Примечание:<\/strong> Диапазон ползунков ограничен, потому что вы не в экспертном режиме. Этот диапазон подходит для большинства квадрокоптеров и для начинающих.",
         "description": "Sliders restricted message"
     },
     "pidTuningPidSlidersNonExpertMode": {
@@ -4768,7 +5033,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<strong>Примечание:<\/strong> Слайдеры отключены из-за того, что текущие значения находятся вне основного диапазона настроек режима Basic. Переключитесь в Режим Expert для внесения изменений",
+        "message": "<strong>Примечание:<\/strong> Ползунки отключены из-за того, что текущие значения находятся вне основного диапазона настроек режима Basic. Переключитесь в Режим Expert для внесения изменений",
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -4828,7 +5093,7 @@
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Увеличивает D max, максимальное значение, до которого D может увеличиваться при более быстрых движениях.<br \/><br \/>Для гоночных летательных аппаратов, где основной слайдер D (демпфирования) имеет низкое значение, чтобы свести к минимуму перегрев моторов, перемещение этого ползунка вправо улучшит контроль над перерегулированием при быстрых изменениях направления движения.<br \/><br \/>Для HD или синематик моделей, нестабильность в прямом полете лучше всего устраняется перемещением D Gains слайдера (не Динамического демпфирования) вправо. Проверяйте температуру двигателей и прислушивайтесь к странным шумам во время быстрых движений при перемещении этого слайдера вправо.<br \/><br \/>Для фристайл сборок, особенно более тяжелых, перемещение этого слайдера вправо может помочь снизить перескок при ролах и флипах.<br \/><br \/><strong>Примечание:<\/strong><br \/>Обычно перескок при ролах и флипах возникает из-за недостаточного 'Ослабление I', или десинхронизации моторов или недостаточного контроля (также известного как насыщение электродвигателя). Если вы обнаружите, что перемещение ползунка вправо не улучшает проблемы с перескоком при ролах или флипах, верните его в нормальное положение и найдите причину перерегулирования или дрожания.",
+        "message": "Увеличивает D max, максимальное значение, до которого D может увеличиваться при более быстрых движениях.<br \/><br \/>Для гоночных летательных аппаратов, где основной ползунок D (демпфирования) имеет низкое значение, чтобы свести к минимуму перегрев моторов, перемещение этого ползунка вправо улучшит контроль над перерегулированием при быстрых изменениях направления движения.<br \/><br \/>Для HD или синематик моделей, нестабильность в прямом полете лучше всего устраняется перемещением D Gains ползунка (не Динамического демпфирования) вправо. Проверяйте температуру двигателей и прислушивайтесь к странным шумам во время быстрых движений при перемещении этого ползунка вправо.<br \/><br \/>Для фристайл сборок, особенно более тяжелых, перемещение этого ползунка вправо может помочь снизить перескок при ролах и флипах.<br \/><br \/><strong>Примечание:<\/strong><br \/>Обычно перескок при ролах и флипах возникает из-за недостаточного 'Ослабление I', или десинхронизации моторов или недостаточного контроля (также известного как насыщение электродвигателя). Если вы обнаружите, что перемещение ползунка вправо не улучшает проблемы с перескоком при ролах или флипах, верните его в нормальное положение и найдите причину перерегулирования или дрожания.",
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -4886,11 +5151,11 @@
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Фильтры низких частот гироскопа ослабляют высокочастотные шумы, чтобы исключить их из PID-цикла. Существуют два фильтра гироскопа с независимой настройкой; по умолчанию оба активны.<br \/><br \/>При включеной Gyro RPM фильтрации, обычно слайдер \"Можитель фильтра Gyro\" можно сдвинуть вправо, или возможно будет достаточно оставить включенным один статический Gyro НЧ-фильтр на 500 Гц.<br \/><br \/>Борт будет испытывать меньше негативных последствий от propwash при низкой задержке от фильтра гироскопа.<br \/><br \/>Всегда следите за температурой моторов, когда перемещаете ползунки вправо. При минимальной фильтрации гироскопа крайне важно обеспечить достаточную фильтрацию D! Будьте осторожны!",
+        "message": "Фильтры низких частот гироскопа ослабляют высокочастотные шумы, чтобы исключить их из PID-цикла. Существуют два фильтра гироскопа с независимой настройкой; по умолчанию оба активны.<br \/><br \/>При включеной Gyro RPM фильтрации, обычно ползунок \"Можитель фильтра Gyro\" можно сдвинуть вправо, или возможно будет достаточно оставить включенным один статический Gyro НЧ-фильтр на 500 Гц.<br \/><br \/>Борт будет испытывать меньше негативных последствий от propwash при низкой задержке от фильтра гироскопа.<br \/><br \/>Всегда следите за температурой моторов, когда перемещаете ползунки вправо. При минимальной фильтрации гироскопа крайне важно обеспечить достаточную фильтрацию D! Будьте осторожны!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "Низкочастотные фильтры D-term ослабляют высокочастотный шум и резонанс, которые в противном случае усиливались бы состовляющей D.<br \/><br \/>\nЕсть два фильтра D и их эффекты складываются. Оба типа необходимы почти во всех сборках, хотя вместо использования двух фильтров PT1 можно использовать один PT2.<br \/><br \/>В целом, борт будет летать лучше и иметь минимальный propwsh при минимальной задержки от фильтров (слайдеры вправо, более высокие частоты среза). Однако, смещение слайдеров в право может значительно увеличить шансы на перегрев двигателей, особенно это касается D-term фильтров.<br \/><br \/>Очень легко спалить двигатели, если у вас не достаточно D-term фильтрации - будте осторожны!",
+        "message": "Низкочастотные фильтры D-term ослабляют высокочастотный шум и резонанс, которые в противном случае усиливались бы состовляющей D.<br \/><br \/>\nЕсть два фильтра D и их эффекты складываются. Оба типа необходимы почти во всех сборках, хотя вместо использования двух фильтров PT1 можно использовать один PT2.<br \/><br \/>В целом, борт будет летать лучше и иметь минимальный propwsh при минимальной задержки от фильтров (ползунки вправо, более высокие частоты среза). Однако, смещение ползунков в право может значительно увеличить шансы на перегрев двигателей, особенно это касается D-term фильтров.<br \/><br \/>Очень легко спалить двигатели, если у вас не достаточно D-term фильтрации - будте осторожны!",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -5382,7 +5647,7 @@
         "message": "Датчик по MSP-порту \/ OSD Slave"
     },
     "powerBatteryMinimum": {
-        "message": "Минимальное напряжение на банку"
+        "message": "Минимальное напряжение ячейки"
     },
     "powerBatteryMaximum": {
         "message": "Максимальное напряжение ячейки"
@@ -5648,6 +5913,9 @@
     "osdSetupTitle": {
         "message": "OSD"
     },
+    "osdToggleElementVisibility": {
+        "message": "Переключить видимость {{element}} для профиля {{profile}}"
+    },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>ВНИМАНИЕ:<\/b><\/span> Не обнаружена микросхема OSD. Некоторые контроллеры полёта не будут включать микросхему OSD пока не подключены к питанию от аккумулятора. Пожалуйста, подключите аккумулятор перед подключением к USB (СО СНЯТЫМИ ПРОПЕЛЛЕРАМИ!)."
     },
@@ -5820,11 +6088,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Свое изображение"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Размер должен быть {{logoWidthPx}}x{{logoHeightPx}} пикселей"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Должен содержать зеленые, черные и белые пиксели"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Нажмите <b>$t(osdSetupUploadFont.message)<\/b> для установки собственного логотипа"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Неверный размер изображения: {{width}}x{{height}} (ожидается {{logoWidthPx}}×{{logoHeightPx}})"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Изображение содержит недопустимый пиксель: rgb ({{valueR}}, {{valueG}}, {{valueB}}) в координаты {{posX}}×{{posY}}"
@@ -5843,6 +6117,9 @@
     },
     "osdSetupSave": {
         "message": "Сохранить"
+    },
+    "osdSetupRefresh": {
+        "message": "Обновить"
     },
     "osdSetupFontManager": {
         "message": "Менеджер шрифтов"
@@ -5876,9 +6153,15 @@
         "message": "Значение RSSI",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementRssiValue": {
+        "message": "Текущее значение RSSI (мигает при значении ниже порога тревоги). Для современных протоколов используйте вместо этого RSSI dBm."
+    },
     "osdTextElementRssiDbmValue": {
         "message": "Значение dBm RSSI",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Индикатор уровня принимаемого сигнала (RSSI), показывает мощность приёма в dBm"
     },
     "osdTextElementTimer": {
         "message": "Таймер",
@@ -5921,7 +6204,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementVoltageWarning": {
-        "message": "Показывает предупреждение, когда напряжение находится ниже аварийного значения"
+        "message": "Отображает предупреждение, когда напряжение находится ниже аварийного значения"
     },
     "osdTextElementArmed": {
         "message": "Включён",
@@ -6441,14 +6724,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "Показывает перегрузку, испытываемую судном"
+        "message": "Отображает перегрузку, испытываемую судном"
     },
     "osdTextElementMotorDiag": {
         "message": "Диагностика моторов",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMotorDiag": {
-        "message": "Показывает график работы каждого мотора"
+        "message": "Отображает график работы каждого мотора"
     },
     "osdTextElementLogStatus": {
         "message": "Статус журнала черного ящика",
@@ -6462,11 +6745,22 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Стрелка показывает в режиме черепахи какая сторона дрона находится выше (акселерометр должен быть включен)"
+        "message": "Стрелка отображает в режиме черепахи какая сторона дрона находится выше (акселерометр должен быть включен)"
     },
     "osdTextElementLinkQuality": {
         "message": "Качество подключения",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "Индикатор качества подключения на основе доли успешно принятых неповреждённых пакетов данных"
+    },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Режим RF: качество подключения",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Только качество подключения",
+        "description": "One of the variants of the Link Quality element of the OSD"
     },
     "osdTextElementFlightDist": {
         "message": "Расстояние полёта",
@@ -6501,7 +6795,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPilotName": {
-        "message": "Имя пилота установленное на вкладке Конфигурация.<\/br>Так же имя можно заменить через переменную \"pilot_name\" в консоли."
+        "message": "Имя пилота установленное на вкладке Конфигурация. Так же имя можно заменить через переменную \"pilot_name\" в консоли."
     },
     "osdTextElementEscRpmFreq": {
         "message": "Частота вращения, полученная от ESC",
@@ -7041,6 +7335,29 @@
         "message": "Предупреждает, если загрузка процессора полетного контроллера слишком высока",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "Удерживание позиции не удалось",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "Показывает предупреждение при сбое удерживания позиции (например, в режиме GPS)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "Удерживание позиции не удалось",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "Удерживание позиции не удалось",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "Полётное задание автопилота прервано",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "Полётное задание автопилота прервано",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "Неизвестно ($1)"
     },
@@ -7338,7 +7655,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Кнопка '$t(vtxButtonSaveLua.message)' позволит вам сохранить <i>mcuid<\/i>.lua файл, содержащий конфигурацию таблицы VTX, который может быть использован в <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts<\/a>.<br><br>Версия 1.6. и выше могут использовать файл как есть, но для более старых версий скриптов его нужно переименовать, чтобы он соответствовал названию модели в TX.",
+        "message": "Кнопка '$t(vtxButtonSaveLua.message)' позволит вам сохранить <i>mcuid<\/i>.lua файл, содержащий конфигурацию таблицы VTX, который может быть использован в <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts<\/a>.<br><br>Версия 1.6.0 и выше может использовать файл как есть, но для более старых версий скриптов его нужно переименовать, чтобы оно соответствовало названию модели в TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -7415,6 +7732,9 @@
     "configurationBaroHardware": {
         "message": "Барометр"
     },
+    "configurationMagHardware": {
+        "message": "Магнитометр"
+    },
     "sensorConfigMagDetect": {
         "message": "Определить"
     },
@@ -7427,20 +7747,218 @@
     "sensorConfigDeclinationDrift": {
         "message": "Сохранённое магнитное склонение составляет {{saved}}°, однако GPS определяет для данного местоположения значение {{detected}}°."
     },
-    "sensorConfigAlignSamples": {
-        "message": "Получено измерений: {{count}}"
+    "magCalibrationCancel": {
+        "message": "Отмена"
     },
-    "sensorConfigAlignTiltMore": {
-        "message": "Наклоните сильнее!"
+    "magCalibrationClear": {
+        "message": "Очистить"
     },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Не удалось определить параметры. Попробуйте изменять наклон в более широком диапазоне."
+    "magCalibrationModeOptions": {
+        "message": "Параметры режима калибровки"
+    },
+    "magCalibrationRetry": {
+        "message": "Повторить"
+    },
+    "magCalibrationWaiting": {
+        "message": "Ожидание движения... Встряхните аппарат, чтобы начать."
+    },
+    "magCalibrationCollecting": {
+        "message": "Медленно поворачивайте аппарат во всех направлениях."
+    },
+    "magCalibrationComplete": {
+        "message": "Калибровка завершена."
+    },
+    "magCalibrationError": {
+        "message": "Калибровка не удалась. Повторите попытку в месте с меньшими магнитными помехами."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Движение не обнаружено в течение 30 секунд. Калибровка отменена."
+    },
+    "magCalibrationSamples": {
+        "message": "Образцы"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Хорошо"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Удовлетворительно"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Плохо"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Смещения в прошивке"
+    },
+    "magCalibrationUnguided": {
+        "message": "Калибровка прошивкой (устар.)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Свободное вращение — прошивка автоматически сохранит значения через 30 с"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Калибровка прошивкой"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "У вас есть 30 секунд, чтобы повернуть аппарат во всех направлениях. По истечении времени прошивка автоматически сохранит значения калибровки."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Калибровка прошивки завершена!"
+    },
+    "magCalibrationCheck": {
+        "message": "Проверить"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Просмотр данных магнитометра в реальном времени с текущей калибровкой"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Проверка калибровки"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Проверьте ориентацию и калибровку магнитометра. Установите аппарат горизонтально, направьте нос в известную точку по компасу (для определения направления на север можно использовать телефон) и убедитесь, что новые точки появляются в ожидаемом месте на 3D-изображении. Значения напряжённости поля по каждой оси и сферичность облака точек показывают точность калибровки. Если точки появляются в совершенно неожиданных местах, вероятно, ориентация магнитометра задана неверно."
+    },
+    "magCalibrationCalValues": {
+        "message": "Значения калибровки"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Сохранить значения"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Значения калибровки сохранены"
+    },
+    "magCalibrationSaveError": {
+        "message": "Не удалось сохранить значения калибровки"
+    },
+    "magCalibrationFull": {
+        "message": "Калибровка и определение ориентации"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Поворачивайте аппарат во всех направлениях, чтобы откалибровать датчик и автоматически определить ориентацию его установки."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Калибровка и определение ориентации"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Выполните шаги ниже, удерживая аппарат устойчиво на протяжении каждого полного оборота. Счётчик зон увеличивается по мере охвата новых углов — старайтесь охватить все 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Шаг {{n}} из {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Удерживайте аппарат горизонтально и медленно поверните его на полные 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Переверните его вверх дном и медленно поверните ещё на полные 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Направьте нос строго вверх и выполните полный оборот вокруг этой оси."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Направьте нос строго вниз и выполните полный оборот."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Положите его на левый бок и выполните полный оборот."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Положите его на правый бок и выполните полный оборот."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Выполните несколько медленных переворотов вперёд, каждый раз меняя направление."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Выполните несколько медленных переворотов назад, снова меняя направление каждый раз."
+    },
+    "magCalibrationFullZones": {
+        "message": "Охвачено зон: {{covered}} \/ {{total}}"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Завершить калибровку"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Чем больше охвачено зон, тем выше точность — старайтесь достичь 20 из 20 для наилучшей калибровки и определения ориентации."
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Охват:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Ориентация:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Калибровка:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Невязка:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Копировать CLI"
     },
     "magCalibrationFullApply": {
         "message": "Применить"
     },
-    "magAlignmentApply": {
-        "message": "Применить"
+    "magCalibrationFullExport": {
+        "message": "Экспортировать модель"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Недостаточно образцов — вращайте дольше"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Нет данных о местоположении (GPS, браузер, IP) — чтобы продолжить, введите координаты вручную"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Для калибровки требуется местоположение"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Введите широту и долготу вручную, выбрав точку на Google Maps. У вашего дрона нет фиксации GPS, а устройству не удалось определить местоположение. Для калибровки магнитометра требуется местоположение."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "например, 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Неверный формат координат. Введите в формате: широта, долгота (например, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Не удалось вычислить эталонное значение магнитного поля для этих координат. Проверьте их и повторите попытку."
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Команды CLI скопированы в буфер обмена"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Не удалось скопировать в буфер обмена"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Прошивка {{version}} слишком старая для произвольной (CUSTOM) ориентации магнитометра (требуется {{min}}+). Обновите прошивку и повторите применение."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Калибровка применена и сохранена"
+    },
+    "magCalibrationDiscard": {
+        "message": "Отклонить"
+    },
+    "magVizPointCloud": {
+        "message": "Облако точек"
+    },
+    "magVizHeatmap": {
+        "message": "Воксельная тепловая карта"
+    },
+    "magVizProjection": {
+        "message": "Тройная проекция"
+    },
+    "magVizPolar": {
+        "message": "Полярная плотность"
+    },
+    "magVizWaitingForData": {
+        "message": "Ожидание данных…"
+    },
+    "magVizAxisField": {
+        "message": "Поле"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Старые"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Новые"
     },
     "configurationSmallAngle": {
         "message": "Максимальный наклон коптера (в градусах) при котором разрешён arming"
@@ -7461,7 +7979,7 @@
         "message": "Минимальное напряжение элемента"
     },
     "configurationBatteryMaximum": {
-        "message": "Максимальное напряжение элемента"
+        "message": "Максимальное напряжение ячейки"
     },
     "configurationBatteryWarning": {
         "message": "Предупредительное напряжение ячейки"
@@ -7902,6 +8420,42 @@
         "message": "Загрузить резервную копию",
         "description": "Button to load backup from the file"
     },
+    "mspCliFirmwareTooOld": {
+        "message": "Для этого действия требуется прошивка Betaflight версии {{required}} или новее (сейчас подключена {{current}}). Обновите прошивку полётного контроллера, прежде чем продолжить.",
+        "description": "Warning shown when an MSP CLI action is attempted on firmware that does not support MSP CLI"
+    },
+    "firmwareFlasherRestoreBackup": {
+        "message": "Восстановить резервную копию",
+        "description": "Button to restore pre-flash backup from flasher tab"
+    },
+    "firmwareFlasherRestoreBackupTitle": {
+        "message": "Восстановить резервную копию перед прошивкой",
+        "description": "Title for the restore backup confirmation dialog"
+    },
+    "firmwareFlasherRestoreBackupConfirm": {
+        "message": "Это восстановит резервную копию конфигурации, сделанную перед прошивкой. Продолжить?",
+        "description": "Confirmation message before restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccess": {
+        "message": "Резервная копия конфигурации успешно восстановлена.",
+        "description": "Success message after restoring a pre-flash backup"
+    },
+    "firmwareFlasherRestoreBackupSuccessSkipped": {
+        "message": "Резервная копия конфигурации восстановлена, пропущено строк: {{count}}.",
+        "description": "Success message after restoring a pre-flash backup when some CLI lines were skipped"
+    },
+    "firmwareFlasherRestoreBackupFailed": {
+        "message": "Ошибка восстановления: {{1}}",
+        "description": "Error message when restoring a pre-flash backup fails"
+    },
+    "firmwareFlasherRestoreConnectionFailed": {
+        "message": "Не удалось подключиться к полётному контроллеру для восстановления.",
+        "description": "Error message when connection fails during restore"
+    },
+    "firmwareFlasherNoBackupAvailable": {
+        "message": "Резервная копия для восстановления отсутствует.",
+        "description": "Error message when no backup data is cached for restore"
+    },
     "presetsLoadingDumpAll": {
         "message": "Загрузка текущей конфигурации из контроллера полета",
         "description": "Title for the waiting dialog when loading dump all into a file"
@@ -8122,6 +8676,90 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Текст с последовательного порта",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Отображает произвольный текст, полученный с последовательного порта"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Профиль: название профиля батареи",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Показывает название или номер активного профиля батареи"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Номер путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Отображает номер текущей путевой точки из общего числа в активном полётном плане"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Широта путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Отображает широту текущей путевой точки"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Долгота путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Отображает долготу текущей путевой точки"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Высота путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Отображает высоту текущей путевой точки"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Расстояние до путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Отображает расстояние до текущей путевой точки"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Направление на путевую точку",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Отображает стрелку направления на текущую путевую точку"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Номер следующей путевой точки",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Отображает номер следующей путевой точки в активном полётном плане"
+    },
+    "osdTextElementWpEta": {
+        "message": "Расчётное время прибытия к точке",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Отображает расчётное время прибытия к текущей путевой точке"
+    },
+    "osdTextElementNavMap": {
+        "message": "Навигационная карта",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Мини-карта с точкой возврата (home), полётным планом и пройденным маршрутом"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Удерживание позиции готово",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Отображает, выполнены ли условия для включения удерживания позиции, до активации переключателя режима"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Линейки",
@@ -8748,7 +9386,7 @@
         "message": "Статус GNSS \/ GPS"
     },
     "preflightGNSSHelp": {
-        "message": "На качество сигнала ГНСС влияет солнечная активность."
+        "message": "На качество сигнала ГНСС влияет солнечная активность. Высокие значения Kp-индекса могут снизить точность позиционирования GPS и надёжность работы GPS Rescue."
     },
     "preflightGNSSNote": {
         "message": "Точность GPS зависит от солнечной и геомагнитной активности. Подключите квадрокоптер, чтобы получить актуальные данные со спутников на вкладке GPS."
@@ -8893,5 +9531,14 @@
     },
     "preflightForecastWeather": {
         "message": "Погода"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
     }
 }

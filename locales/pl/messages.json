@@ -758,9 +758,6 @@
     "defaultSoftwareHead": {
         "message": "Oprogramowanie"
     },
-    "defaultSoftwareText": {
-        "message": "Nasz <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> jest dostępny jako aplikacja online.<br \/><br \/>Kolekcja naszych <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lua Scripts dla nadajników<\/a> znajduje się na GitHub.<br \/><br \/>Nasz <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kod źródłowy<\/a> oprogramowania układowego, tej aplikacji oraz Blackbox Log Viewera można pobrać z GitHub."
-    },
     "defaultContributingHead": {
         "message": "Współtworzenie"
     },
@@ -7076,12 +7073,6 @@
     },
     "magCalibrationRetry": {
         "message": "Ponów"
-    },
-    "magAlignmentApply": {
-        "message": "Zastosuj"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Wykryj"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"

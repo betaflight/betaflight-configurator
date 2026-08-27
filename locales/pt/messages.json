@@ -1006,9 +1006,6 @@
     "defaultSoftwareHead": {
         "message": "Software"
     },
-    "defaultSoftwareText": {
-        "message": "O nosso <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualizador de Log Blackbox<\/a> está disponível como uma app online.<br \/><br \/>A nossa coleção de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> está disponível no GitHub.<br \/><br \/>O nosso <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">código fonte<\/a> para o firmware, esta app, e o visualizador blackbox podem ser baixados do GitHub."
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -7942,45 +7939,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Declinação é {{saved}}° mas GPS deteta {{detected}}° para esta localização. Clique em Atualizar para corrigir."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} amostras"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclinar mais!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Falha na deteção — tente com inclinação mais variada."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Cal Cliente (Guiada)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Autoprompting calibração de 60s"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibração Guiada"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Passo 1\/6 - Segure plano, Yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Etapa 2\/6 — Flip invertido, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Passo 3\/6 — Nariz direito, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Passo 4\/6 — Nariz todo para baixo, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Passo 5\/6 — Lado esquerdo para cima, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Passo 6\/6 — Lado esquerdo para cima, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Coleta de dados completa — reveja e grave"
-    },
     "magCalibrationCancel": {
         "message": "Cancelar"
     },
@@ -8011,12 +7969,6 @@
     "magCalibrationSamples": {
         "message": "Amostras"
     },
-    "magCalibrationQuality": {
-        "message": "Qualidade"
-    },
-    "magCalibrationResidual": {
-        "message": "Ajustar Residual"
-    },
     "magCalibrationQualityGood": {
         "message": "Boa"
     },
@@ -8028,9 +7980,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Offsets de Firmware"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offsets da esfera"
     },
     "magCalibrationUnguided": {
         "message": "Cal Firmware (Legado)"
@@ -8046,18 +7995,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibração de firmware completa!"
-    },
-    "magCalibrationGuided": {
-        "message": "Cal Cliente (Livre)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Gire livremente - configurador calcula offsets"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibração de Cliente"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Gire o seu veículo em todas as direções. Aponte para fazer uma esfera completa de pontos por cerca de um ou dois minutos. Grave o resultado quando os valores de calibração estiverem estabilizados."
     },
     "magCalibrationCheck": {
         "message": "Verificar"
@@ -8082,18 +8019,6 @@
     },
     "magCalibrationSaveError": {
         "message": "Falha ao gravar valores de calibração"
-    },
-    "magCalibrationAccept": {
-        "message": "Gravar Calibração"
-    },
-    "magCalibrationFull": {
-        "message": "Cal Total (auto-alinhada)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "Uma volta — define offsetts, soft-iron e a orientação de montagem do mag"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Calibração Total"
     },
     "magCalibrationFullInstruction": {
         "message": "Siga os passos abaixo, mantendo a aeronave estável. A contagem de zonas sobe conforme alcança novos ângulos — aponte para cobrir todos os 20."
@@ -8128,9 +8053,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} zonas cobertas"
     },
-    "magCalibrationFullCompute": {
-        "message": "Calcular"
-    },
     "magCalibrationFullCoverage": {
         "message": "Cobertura:"
     },
@@ -8157,9 +8079,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Não há amostras suficientes — gire mais tempo"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "Sem GPS ou localização IP — não é possível determinar inclinação magnética"
     },
     "magCalibrationFullCliCopied": {
         "message": "Comandos CLI copiados para a área de transferência"
@@ -8199,12 +8118,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Novo"
-    },
-    "magAlignmentApply": {
-        "message": "Aplicar"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detetar"
     },
     "configurationSmallAngle": {
         "message": "Ângulo máximo permitido para Armar [degrees]"

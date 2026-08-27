@@ -409,6 +409,7 @@ export function FlightLogParser(logData) {
         rc_smoothing_rx_smoothed: null,
         dyn_notch_count: null, // Number of dynamic notches 4.3
         rpm_filter_fade_range_hz: null, // Fade range for RPM notch filters in Hz
+        rpm_filter_weights: null, // RPM filter weights as simple string
         dyn_idle_p_gain: null,
         dyn_idle_i_gain: null,
         dyn_idle_d_gain: null,
@@ -774,6 +775,7 @@ export function FlightLogParser(logData) {
         "chirp_frequency_end_deci_hz",
         "chirp_time_seconds",
         "dterm_lpf_dyn_hz",
+        "rpm_filter_weights",
     ]);
 
     // Fields where parseInt value is divided by 100 on older firmware, raw on newer

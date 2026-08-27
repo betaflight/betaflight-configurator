@@ -995,7 +995,7 @@
         "message": "Dasturiy ta'minot"
     },
     "defaultSoftwareText": {
-        "message": "Bizning <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Qora quti jurnal ko‘rish ilovasi<\/a> onlayn ilova sifatida mavjud.<br \/><br \/>Bizning <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skriptlari<\/a> to‘plamimiz GitHub'da mavjud.<br \/><br \/>Proshivka, ushbu ilova va qora qutini ochish ilovasi uchun bizning <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodimizni<\/a> GitHub'dan yuklab olishingiz mumkin."
+        "message": "Mazkur ilovada qora quti jurnallarini ko'rish vositasi ko‘zda tutilgan. Parvoz jurnallaringizni tahlil qilish uchun <strong>Qora qutini ochish<\/strong> yorlig'ini tanlang.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua<\/a> skriptlari to'plami GitHub'da mavjud.<br \/><br \/>Proshivka va ushbu ilova uchun <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodi<\/a> GitHubdan yuklab olinishi mumkin."
     },
     "defaultContributingHead": {
         "message": "Hissa qo‘shish"
@@ -2125,8 +2125,24 @@
         "message": "Yoqilganda, faqat batareya ulangandan keyingi birinchi ishga tushirish boshlang‘ich nuqta sifatida ishlatiladi. Agar yoqilmagan bo‘lsa, uchar qurilma har safar ishga tushirilganda boshlang‘ich nuqta yangilanadi.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Joriy proshivkada GPS qo'llab-quvvatlashi ko‘zda tutilmagan. GPSni sozlash va undan foydalanish uchun proshivkani GPS imkoniyati bilan qaytadan yarating.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Serial qabul qilgich provayderi"
+    },
+    "portsPortNone": {
+        "message": "Yo‘q"
+    },
+    "receiverSerialPort": {
+        "message": "Serial Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART ketma-ket qabul qilgich ulangan. Bod tezligi uzatuvchiga bog'liq, shuning uchun bu yerda hech narsa o'rnatish shart emas. Portni o'zgartirish uchun qayta ishga tushirish lozim."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Qabul qilgichning ketma-ket portini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
     },
     "someRXTypesDisabled": {
         "message": "Ba'zi qabul qilgich provayderlari joriy Build konfiguratsiyasi tomonidan qo‘llab-quvvatlanmaydi."
@@ -2181,6 +2197,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Eslatma:<\/strong> Nima qilayotganingizni bilmasangiz, birinchi serial portda MSP'ni <span class=\"message-negative\">o‘CHIRMANG<\/span>. Agar shunday qilsangiz, konfiguratsiyangizni qayta yozib, tozalashingizga to‘g‘ri kelishi mumkin."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Eslatma:<\/strong> ushbu proshivka har bir funksiyaning alohida yorlig'ida ketma-ket portlarni tayinlaydi, shuning uchun bu ko'rinish faqat o'qish uchun. Unda har bir funksiya hozirda qaysi portdan foydalanayotganini ko'rsatiladi; funksiyaga egalik qiluvchi yorliqdan o'zgartiring."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Proshivkani yangilash <span class=\"message-negative\">talab qilinadi<\/span>. 1.8.0'dan &lt; eski proshivkalarning serial port konfiguratsiyalari qo‘llab-quvvatlanmaydi."
@@ -6847,6 +6866,14 @@
     "osdDescElementLinkQuality": {
         "message": "Muvaffaqiyatli qabul qilingan buzilmagan ma'lumot paketlari foiziga asoslangan aloqa sifati ko‘rsatkichi"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF rejimi:Aloqa sifati",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Aloqa sifati faqat",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Parvoz masofasi",
         "description": "One of the elements of the OSD"
@@ -7854,45 +7881,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Deklinatsiya {{saved}}°, lekin GPS bu joylashuv uchun {{detected}}° aniqlaydi. Tuzatish uchun Yangilashni bosing."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} namuna"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Ko‘proq egib qiya qiling!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Aniqlash amalga oshmadi — turli xil qiya bilan urinib ko‘ring."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Klient kalibrlash (yo‘l-yo‘riqli)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Avto-so‘rovli 60s kalibrlash"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Yo‘l-yo‘riqli kalibrlash"
-    },
-    "magCalibrationPrompt1": {
-        "message": "1\/6-qadam — Tekis ushlab turing, yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "2\/6-qadam — Teskari ag‘daring, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "3\/6-qadam — Burun tik yuqoriga, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "4\/6-qadam — Burun tik pastga, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "5\/6-qadam — Chap tomon yuqoriga, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "6\/6-qadam — o‘ng tomon yuqoriga, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Ma'lumot yig‘ish tugallandi — ko‘rib chiqing va saqlang"
-    },
     "magCalibrationCancel": {
         "message": "Bekor qilish"
     },
@@ -7923,12 +7911,6 @@
     "magCalibrationSamples": {
         "message": "Namunalar"
     },
-    "magCalibrationQuality": {
-        "message": "Sifat"
-    },
-    "magCalibrationResidual": {
-        "message": "Moslash qoldig‘i"
-    },
     "magCalibrationQualityGood": {
         "message": "Yaxshi"
     },
@@ -7940,9 +7922,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Proshivka siljishlari"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Sfera moslash siljishlari"
     },
     "magCalibrationUnguided": {
         "message": "Proshivka kalibrlash (eski)"
@@ -7958,18 +7937,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Proshivka kalibrlash tugallandi!"
-    },
-    "magCalibrationGuided": {
-        "message": "Klient kalibrlash (erkin)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Erkin aylantiring — konfigurator siljishlarni hisoblaydi"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Klient kalibrlash"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Qurilmangizni barcha yo‘nalishlarda aylantiring. Taxminan bir-ikki daqiqa ichida to‘liq sfera hosil qilishga harakat qiling. Kalibrlash qiymatlari barqarorlashganda natijani saqlang."
     },
     "magCalibrationCheck": {
         "message": "Tekshirish"
@@ -7995,17 +7962,14 @@
     "magCalibrationSaveError": {
         "message": "Kalibrlash qiymatlarini saqlab bo‘lmadi"
     },
-    "magCalibrationAccept": {
-        "message": "Kalibrlashni saqlash"
-    },
     "magCalibrationFull": {
-        "message": "To‘liq kalibrlash (avto-tekislash)"
+        "message": "Kalibrlash va og‘ishni aniqlash"
     },
     "magCalibrationFullDesc": {
-        "message": "Bir aylanish — siljishlar, soft-iron va mag‘ning o‘rnatilgan yo‘nalishini belgilaydi"
+        "message": "Sensorni kalibrlash va uning o‘rnatish yo‘nalishini avtomatik ravishda aniqlash uchun uchish qurilmasini barcha yo'nalishlarda aylantiring."
     },
     "magCalibrationFullTitle": {
-        "message": "To‘liq kalibrlash"
+        "message": "Kalibrlash va Og‘ishni Aniqlash"
     },
     "magCalibrationFullInstruction": {
         "message": "Har bir to‘liq aylanish davomida uchar qurilmani barqaror ushlab, quyidagi qadamlarga amal qiling. Yangi burchaklarga yetganingizda zona soni ko‘payadi — barcha 20 tasini qamrab olishga harakat qiling."
@@ -8041,7 +8005,10 @@
         "message": "{{total}} zonadan {{covered}} tasi qamrab olindi"
     },
     "magCalibrationFullCompute": {
-        "message": "Hisoblash"
+        "message": "Kalibrlashni yakunlash"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Ko‘proq qamrov hududi yuqori aniqlikni beradi — eng yaxshi kalibrlash va og‘ishini aniqlash uchun 20\/20 ga intiling."
     },
     "magCalibrationFullCoverage": {
         "message": "Qamrov:"
@@ -8071,7 +8038,22 @@
         "message": "Namunalar yetarli emas — uzoqroq aylantiring"
     },
     "magCalibrationFullNoGeo": {
-        "message": "GPS yoki IP joylashuvi yo‘q — magnit og‘ishini aniqlab bo‘lmaydi"
+        "message": "GPS, brauzer yoki IP manzili yo‘q — davom etish uchun koordinatalarni qo‘lda kiriting"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Kalibrlash uchun joylashuv zarur"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Google xaritalar orqali kenglik va uzunlikni qo‘lda kiriting. Sizning droningizda GPS bog‘lanish yo‘q va qurilmangiz joylashuv ma'lumotlarini taqdim eta olmadi. Magnitometrni kalibrlash uchun joylashuv kerak."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "masalan, 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Koordinatalar formati noto‘g‘ri. Iltimos, kenglik, uzunlik shaklida quyidagicha kiriting (masalan, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Bu koordinatalar uchun magnit mos yozuvni hisoblab bo‘lmadi. Iltimos, ularni tekshiring va qaytadan urinib ko‘ring."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI buyruqlari vaqtinchalik xotiraga nusxalandi"
@@ -8111,12 +8093,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Yangi"
-    },
-    "magAlignmentApply": {
-        "message": "Qo‘llash"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Aniqlash"
     },
     "configurationSmallAngle": {
         "message": "Maksimal ARM burchagi [daraja]"
