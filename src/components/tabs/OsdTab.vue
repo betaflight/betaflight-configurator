@@ -601,6 +601,7 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
@@ -684,6 +685,7 @@ const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const { isSaving, runSave } = useSaving();
+const { reboot } = useReboot();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
@@ -696,6 +698,12 @@ const saveMenuItems = computed(() => [
             icon: "i-lucide-save",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
+        },
+        {
+            label: i18n.getMessage("osdSetupSaveReboot"),
+            icon: "i-lucide-rotate-cw",
+            disabled: !portsOrConfigDirty.value || isSaving.value,
+            onSelect: saveAndRebootConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
@@ -1454,6 +1462,12 @@ const saveConfig = () =>
             },
         },
     );
+
+// A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
+const saveAndRebootConfig = async () => {
+    await saveConfig();
+    await reboot();
+};
 
 // Font Manager
 const fontCharacterUrls = computed(() => {

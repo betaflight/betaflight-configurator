@@ -6402,6 +6402,9 @@
     "osdSetupUploadingFontFailed": {
         "message": "Upload failed"
     },
+    "osdSetupSaveReboot": {
+        "message": "Save and Reboot"
+    },
     "osdSetupSave": {
         "message": "Save"
     },
