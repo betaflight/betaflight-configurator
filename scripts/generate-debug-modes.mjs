@@ -62,6 +62,13 @@
  *                       $BETAFLIGHT_REPO, then to sibling checkouts of this
  *                       repository (../betaflight, ../../betaflight, ...).
  *   --dev-ref <ref>     Ref holding the in-development firmware (default: master).
+ *   --worktree          Read the newest API version from the firmware checkout as
+ *                       it sits on disk - uncommitted edits and all - instead of
+ *                       from a commit, so a firmware developer can preview the
+ *                       modes and annotations they are still writing. Older API
+ *                       versions still come from committed history. The output
+ *                       describes local firmware only and must not be committed;
+ *                       every generated file says so in its header.
  *   --min-api <minor>   Lowest MSP API minor to emit (default: 44, the oldest
  *                       version the configurator connects to).
  *   --out <path>        Mode table output (default: src/js/debug_modes_table.js).
@@ -75,7 +82,7 @@
  *   --allow-rewrite     Permit non-append changes to an existing version.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { format, resolveConfig } from "prettier";
@@ -87,6 +94,19 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 
 const DEFAULT_DEV_REF = "master";
+
+/*
+ * The in-development version can be read from the firmware checkout as it sits
+ * on disk rather than from a commit, so a firmware developer sees the mode and
+ * the annotations they are still editing. Used as a ref, it means "the working
+ * tree": every older API version still comes from committed history, because
+ * only the newest one can be what the developer is changing.
+ */
+const WORKTREE_REF = "WORKTREE";
+
+// Opens the banner on every file built from a working tree, and is how a later
+// run recognises its own preview output.
+const WORKTREE_MARKER = "NOT FOR COMMIT";
 const DEFAULT_MIN_API_MINOR = 44;
 const DEFAULT_OUT = "src/js/debug_modes_table.js";
 const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.js";
@@ -125,7 +145,7 @@ const REPO_CANDIDATES = [
     "../../../betaflight/master/betaflight",
 ];
 
-const BOOLEAN_FLAGS = new Set(["check", "allow-rewrite"]);
+const BOOLEAN_FLAGS = new Set(["check", "allow-rewrite", "worktree"]);
 const VALUE_FLAGS = new Set([
     "repo",
     "dev-ref",
@@ -189,11 +209,24 @@ function git(repo, gitArgs) {
 }
 
 function gitShow(repo, ref, path) {
+    if (ref === WORKTREE_REF) {
+        try {
+            return readFileSync(join(repo, path), "utf8");
+        } catch {
+            throw new Error(`Cannot read ${path} in the working tree of ${repo}`);
+        }
+    }
     try {
         return git(repo, ["show", `${ref}:${path}`]);
     } catch {
         throw new Error(`Cannot read ${path} at ${ref} in ${repo}`);
     }
+}
+
+// The commit a working-tree read is based on, for provenance and for the history
+// walk, which needs a real ref to follow.
+function worktreeBase(repo, ref) {
+    return ref === WORKTREE_REF ? "HEAD" : ref;
 }
 
 function resolveRepo(explicit) {
@@ -242,17 +275,19 @@ function apiMinorAt(repo, ref) {
  * "only run".
  */
 function debugTablesCommit(repo, ref) {
-    const commit = git(repo, ["log", "-1", "--format=%H", ref, "--", DEBUG_HEADER, DEBUG_SOURCE]).trim();
-    return commit || git(repo, ["rev-parse", ref]).trim();
+    const base = worktreeBase(repo, ref);
+    const commit = git(repo, ["log", "-1", "--format=%H", base, "--", DEBUG_HEADER, DEBUG_SOURCE]).trim();
+    return commit || git(repo, ["rev-parse", base]).trim();
 }
 
 function buildVersionRefs(repo, devRef, minMinor) {
     const devMinor = apiMinorAt(repo, devRef);
-    const commits = git(repo, ["log", "--first-parent", "--format=%H", devRef, "--", MSP_PROTOCOL_HEADER])
+    const base = worktreeBase(repo, devRef);
+    const commits = git(repo, ["log", "--first-parent", "--format=%H", base, "--", MSP_PROTOCOL_HEADER])
         .split("\n")
         .filter(Boolean);
 
-    const refs = new Map([[devMinor, { ref: devRef, commit: git(repo, ["rev-parse", devRef]).trim() }]]);
+    const refs = new Map([[devMinor, { ref: devRef, commit: git(repo, ["rev-parse", base]).trim() }]]);
     let newerCommit = null;
     let newerMinor = devMinor;
 
@@ -824,18 +859,29 @@ function parseAnnotation(raw) {
 
 // The firmware files that carry `pattern` at `ref`, DEBUG_SET() call sites by default.
 function debugSetFiles(repo, ref, pattern = "DEBUG_SET(") {
+    const worktree = ref === WORKTREE_REF;
+    // Without a ref git grep searches the working tree; --untracked also finds a
+    // file the developer has added but not yet told git about.
+    const args = worktree
+        ? ["grep", "-l", "--untracked", pattern, "--", FIRMWARE_SOURCE_DIR]
+        : ["grep", "-l", pattern, ref, "--", FIRMWARE_SOURCE_DIR];
+
     let output;
     try {
-        output = git(repo, ["grep", "-l", pattern, ref, "--", FIRMWARE_SOURCE_DIR]);
+        output = git(repo, args);
     } catch (error) {
         // git grep exits 1 when nothing matched, which is not an error here.
         output = error.stdout ?? "";
     }
 
-    return output
-        .split("\n")
-        .map((line) => line.replace(/^[^:]*:/, ""))
-        .filter((path) => path !== "" && path !== DEBUG_HEADER);
+    return (
+        output
+            .split("\n")
+            // A ref-qualified match is printed as `<ref>:<path>`; a working-tree one
+            // is the bare path, which must not have a leading segment cut off it.
+            .map((line) => (worktree ? line : line.replace(/^[^:]*:/, "")))
+            .filter((path) => path !== "" && path !== DEBUG_HEADER)
+    );
 }
 
 function lineNumberAt(text, offset) {
@@ -1166,6 +1212,17 @@ async function readCommittedTable(outPath) {
     if (!existsSync(outPath)) {
         return null;
     }
+    /*
+     * The append-only guard protects index assignments that firmware in the wild
+     * has already recorded into blackbox logs. A table built from someone's
+     * working tree never left their machine, so it is not a baseline to protect -
+     * and treating it as one makes the run back to the committed tables fail on a
+     * mode that never existed anywhere else, teaching people to reach for
+     * --allow-rewrite, which is the one habit this guard cannot survive.
+     */
+    if (readFileSync(outPath, "utf8").includes(WORKTREE_MARKER)) {
+        return null;
+    }
     try {
         const module = await import(pathToFileURL(outPath).href);
         return module.FIRMWARE_DEBUG_MODES ?? null;
@@ -1211,17 +1268,50 @@ function assertAppendOnly(committed, generated, allowRewrite) {
 // rendering
 // ---------------------------------------------------------------------------
 
+/*
+ * Output built from a working tree describes firmware nobody else has. Say so in
+ * every generated file, loudly enough that it is caught in review if one is ever
+ * committed - `--check` fails on it in CI, but a banner needs no CI to be seen.
+ */
+/*
+ * Marks a version read from a working tree, so a consumer of the published JSON
+ * can tell a developer's local build from firmware anyone can check out.
+ */
+function worktreeMark(version) {
+    return version.ref === WORKTREE_REF ? { worktree: true } : {};
+}
+
+// How a version's provenance reads in a generated header.
+function refLabel(version) {
+    return version.ref === WORKTREE_REF ? `${version.commit.slice(0, 10)}+worktree` : version.commit.slice(0, 10);
+}
+
+function worktreeBanner(versions) {
+    if (!versions.some((version) => version.ref === WORKTREE_REF)) {
+        return [];
+    }
+
+    return [
+        " *",
+        ` * ${WORKTREE_MARKER}: the newest version below was read from a firmware working`,
+        " * tree, not from a commit. It describes uncommitted local firmware and will",
+        " * not match what anyone else builds. Regenerate from a committed ref before",
+        " * committing this file.",
+    ];
+}
+
 function renderModule({ repoUrl, versions, aliases, renames }) {
     const lines = [
         "/*",
         " * WARNING: This is an auto-generated file, please do not edit directly!",
+        ...worktreeBanner(versions),
         " *",
         " * Generator    : `scripts/generate-debug-modes.mjs`",
         ` * Source       : ${repoUrl} (${DEBUG_HEADER}, ${DEBUG_SOURCE})`,
         " * Firmware refs:",
         ...versions.map(
             (version) =>
-                ` *   API ${version.apiVersion.padEnd(7)} ${version.commit.slice(0, 10)} ${version.date}  (${version.modes.length} modes)`,
+                ` *   API ${version.apiVersion.padEnd(7)} ${refLabel(version)} ${version.date}  (${version.modes.length} modes)`,
         ),
         " */",
         "",
@@ -1318,13 +1408,14 @@ function fieldsModuleHeader(repoUrl, annotated) {
     return [
         "/*",
         " * WARNING: This is an auto-generated file, please do not edit directly!",
+        ...worktreeBanner(annotated),
         " *",
         " * Generator    : `scripts/generate-debug-modes.mjs`",
         ` * Source       : ${repoUrl} (\`//!<\` annotations on the DEBUG_SET() call sites)`,
         " * Firmware refs:",
         ...annotated.map((version) => {
             const fields = Object.values(version.fields).reduce((total, mode) => total + Object.keys(mode).length, 0);
-            return ` *   API ${version.apiVersion.padEnd(7)} ${version.commit.slice(0, 10)} ${version.date}  (${fields} annotated fields)`;
+            return ` *   API ${version.apiVersion.padEnd(7)} ${refLabel(version)} ${version.date}  (${fields} annotated fields)`;
         }),
         " */",
         "",
@@ -1473,7 +1564,7 @@ function renderFieldUsage({ repoUrl, versions }) {
             versions: Object.fromEntries(
                 versions.map((version) => [
                     version.apiVersion,
-                    { commit: version.commit, date: version.date, modes: version.usage },
+                    { commit: version.commit, date: version.date, ...worktreeMark(version), modes: version.usage },
                 ]),
             ),
         },
@@ -1556,7 +1647,7 @@ function renderFieldsJson({ repoUrl, versions, aliases, renames, conflicts }) {
             versions: Object.fromEntries(
                 versions.map((version) => [
                     version.apiVersion,
-                    { commit: version.commit, date: version.date, modes: jsonModes(version) },
+                    { commit: version.commit, date: version.date, ...worktreeMark(version), modes: jsonModes(version) },
                 ]),
             ),
             conflicts: conflicts.map(({ apiVersion, mode, index, variants }) => ({
@@ -1691,6 +1782,12 @@ function renderFieldsSchema() {
                         properties: {
                             commit: { type: "string", description: "Firmware commit the definitions were read from." },
                             date: { type: "string", description: "Date of that commit, ISO 8601." },
+                            worktree: {
+                                type: "boolean",
+                                description:
+                                    "Present and true when read from a developer's working tree rather than a " +
+                                    "commit, so it describes local firmware nobody else has.",
+                            },
                             modes: {
                                 type: "array",
                                 description: "The debug_mode enum in order: a mode's position is its numeric value.",
@@ -1936,7 +2033,12 @@ function describeMeaning(variant) {
 async function main() {
     const args = parseArgs(process.argv.slice(2));
     const repo = resolveRepo(args.repo);
-    const devRef = args["dev-ref"] ?? DEFAULT_DEV_REF;
+    if (args.worktree === true && args["dev-ref"] !== undefined) {
+        throw new Error(
+            "--worktree reads the firmware checkout as it sits on disk; it cannot be combined with --dev-ref",
+        );
+    }
+    const devRef = args.worktree === true ? WORKTREE_REF : (args["dev-ref"] ?? DEFAULT_DEV_REF);
     const minMinor = Number(args["min-api"] ?? DEFAULT_MIN_API_MINOR);
     if (!Number.isInteger(minMinor) || minMinor < 1) {
         throw new Error(`--min-api must be a positive integer, got: ${args["min-api"]}`);
@@ -2002,6 +2104,14 @@ async function main() {
     }
 
     await writeOutputs(outputs);
+
+    if (devRef === WORKTREE_REF) {
+        console.warn(
+            "generate-debug-modes: WARNING built from the working tree of " +
+                `${repo} - these tables describe uncommitted local firmware. Do not commit them; ` +
+                "re-run without --worktree to restore the committed ones.",
+        );
+    }
 
     console.log(`generate-debug-modes: wrote ${versions.length} API versions to ${outPath}`);
     console.log(`generate-debug-modes: wrote the annotated field labels to ${labelsOutPath}`);
