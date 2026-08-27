@@ -3,7 +3,7 @@
  * @vitest-environment-options { "url": "http://localhost/" }
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 /**
  * Test keyboard layout independence for Blackbox Viewer shortcuts.
