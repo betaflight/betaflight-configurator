@@ -89,6 +89,8 @@ function MspHelper() {
         LIDAR_TF: 15,
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18,
+        OSD_CUSTOM_TEXT: 19,
     };
 
     self.REBOOT_TYPES = {

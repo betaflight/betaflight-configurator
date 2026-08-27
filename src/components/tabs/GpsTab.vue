@@ -43,6 +43,30 @@
                             />
                         </SettingRow>
 
+                        <SettingRow v-if="showSerialPort" :label="$t('gpsSerialPort')" :help="$t('gpsSerialPortHelp')">
+                            <USelect
+                                v-model="gpsPortIdentifier"
+                                :items="gpsPortOptions"
+                                :disabled="!gpsPortWritable"
+                                size="xs"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+
+                        <SettingRow v-if="showSerialPort" :label="$t('gpsSerialBaud')" :help="$t('gpsSerialBaudHelp')">
+                            <USelect
+                                v-model="gpsBaud"
+                                :items="gpsBaudOptions"
+                                :disabled="!gpsPortWritable"
+                                size="xs"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+
+                        <SettingRow v-if="showCanDevice" :label="$t('gpsCanDevice')" :help="$t('gpsCanDeviceHelp')">
+                            <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
+                        </SettingRow>
+
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
                             <USwitch v-model="autoBaudChecked" :disabled="!hasGpsBuildOption" />
                         </SettingRow>
@@ -293,6 +317,7 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
+import { gui_log } from "@/js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -303,6 +328,10 @@ import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useBuildOptions } from "../../composables/useBuildOptions";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { useDronecanDevice } from "@/composables/useDronecanDevice";
+import { GPS_BAUD_RATES } from "@/composables/ports/featureBaudRates";
+import { addArrayElement } from "../../js/utils/array";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -369,6 +398,14 @@ export default defineComponent({
 
         const updateGpsProtocols = () => {
             gpsProtocols.value = getGpsProtocols();
+
+            // DRONECAN is last in the firmware's provider table and only present under
+            // ENABLE_DRONECAN, which no build option reports — the dronecan_device probe is what
+            // tells us this board has it. Appending is only safe once VIRTUAL is in the list
+            // (API 1.47), or the index would land on VIRTUAL instead.
+            if (dronecanSupported.value && gpsProtocols.value.includes("VIRTUAL")) {
+                addArrayElement(gpsProtocols.value, "DRONECAN");
+            }
         };
 
         const gpsProtocolItems = computed(() =>
@@ -396,6 +433,33 @@ export default defineComponent({
             home_point_once: 0,
         });
 
+        // From API 1.49 the port and its baud rate live on the GPS parameter group rather than the
+        // shared port function mask, so they are assigned here instead of on the (by then
+        // read-only) ports tab.
+        const {
+            available: gpsPortAvailable,
+            writable: gpsPortWritable,
+            options: gpsPortOptions,
+            selectedIdentifier: gpsPortIdentifier,
+            baudOptions: gpsBaudOptions,
+            selectedBaud: gpsBaud,
+            load: loadGpsPort,
+            write: writeGpsPort,
+        } = useFeaturePort({
+            setting: "gps_uart",
+            functionName: "GPS",
+            baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+        });
+
+        // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
+        const {
+            supported: dronecanSupported,
+            deviceOptions: canDeviceOptions,
+            selectedDevice: canDevice,
+            load: loadCanDevice,
+            write: writeCanDevice,
+        } = useDronecanDevice();
+
         /** @returns {string} serialized tab state for dirty comparison */
         const serializeGpsTabState = () =>
             JSON.stringify({
@@ -406,6 +470,9 @@ export default defineComponent({
                 ublox_use_galileo: gpsConfig.ublox_use_galileo,
                 ublox_sbas: gpsConfig.ublox_sbas,
                 home_point_once: gpsConfig.home_point_once,
+                gpsPortIdentifier: gpsPortIdentifier.value,
+                gpsBaud: gpsBaud.value,
+                canDevice: canDevice.value,
             });
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
@@ -419,6 +486,27 @@ export default defineComponent({
         const showAutoBaud = computed(
             () => (ubloxSelected.value || mspSelected.value) && semver.lt(apiVersion.value, API_VERSION_1_46),
         );
+        // Only these providers read the module over a UART. MSP, VIRTUAL and DRONECAN are fed by
+        // another subsystem, and the firmware strips any port assigned to one of them.
+        //
+        // Named rather than excluded, so a provider this build of the app does not know about
+        // hides the row instead of offering a port that would be silently dropped — the provider
+        // index can land outside the list, which reads back as undefined.
+        const providersUsingSerialPort = new Set(["NMEA", "UBLOX", "SEPTENTRIO"]);
+        const selectedProviderName = computed(() => gpsProtocols.value[gpsConfig.provider]);
+        const showSerialPort = computed(
+            () => gpsPortAvailable.value && providersUsingSerialPort.has(selectedProviderName.value),
+        );
+
+        // The bus belongs to the DroneCAN stack rather than to the GPS, so it is offered here only
+        // because this is where a DroneCAN GPS is set up; changing it moves every DroneCAN sensor.
+        const showCanDevice = computed(
+            () =>
+                dronecanSupported.value &&
+                selectedProviderName.value === "DRONECAN" &&
+                canDeviceOptions.value.length > 1,
+        );
+
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showPositionalDop = computed(() => semver.gte(apiVersion.value, API_VERSION_1_46));
@@ -716,7 +804,7 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
-        const { addInterval, removeAllIntervals } = useInterval();
+        const { addInterval, removeAllIntervals, pauseInterval, resumeInterval } = useInterval();
 
         const checkConnectivity = () => {
             isOnline.value = ispConnected();
@@ -740,7 +828,11 @@ export default defineComponent({
 
                 Object.assign(gpsConfig, fcStore.gpsConfig || {});
 
+                // Probed before the protocol list is built, which offers DRONECAN only on a board
+                // that has it.
+                await loadCanDevice();
                 await updateGpsProtocols();
+                await loadGpsPort();
 
                 markClean();
 
@@ -772,13 +864,38 @@ export default defineComponent({
 
                     Object.assign(fcStore.gpsConfig, gpsConfig);
 
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_FEATURE_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                    );
-                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+                    // The CLI has its own queue, so the telemetry poll's MSP chain has to stop for
+                    // the port write below rather than run alongside it.
+                    pauseInterval("gps_pull");
+                    try {
+                        await MSP.promise(
+                            MSPCodes.MSP_SET_FEATURE_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                        );
+                        await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
-                    await saveAndReboot();
+                        // gps_uart and gps_baud share the parameter group MSP_SET_GPS_CONFIG just
+                        // wrote, and the persist below serialises that group, so this has to sit
+                        // between the two. Throwing skips the persist, so a refused port leaves
+                        // nothing written to EEPROM.
+                        try {
+                            await writeGpsPort();
+                        } catch (error) {
+                            gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
+                            throw error;
+                        }
+
+                        try {
+                            await writeCanDevice();
+                        } catch (error) {
+                            gui_log(i18n.getMessage("gpsCanDeviceSaveFailed"));
+                            throw error;
+                        }
+
+                        await saveAndReboot();
+                    } finally {
+                        resumeInterval("gps_pull");
+                    }
 
                     markClean(savedSnapshot);
                 },
@@ -858,6 +975,15 @@ export default defineComponent({
             homeOnceChecked,
             showAutoBaud,
             showAutoConfig,
+            showSerialPort,
+            showCanDevice,
+            canDeviceOptions,
+            canDevice,
+            gpsPortWritable,
+            gpsPortOptions,
+            gpsPortIdentifier,
+            gpsBaudOptions,
+            gpsBaud,
             showUbloxGalileo,
             showUbloxSbas,
             showPositionalDop,

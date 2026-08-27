@@ -1011,7 +1011,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
+        "message": "Vores Blackbox logviser er indbygget i denne app. Åbn fanen <strong>Blackbox Viewer<\/strong> for at analysere dine flylogs.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmwaren og denne app kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -2191,6 +2191,15 @@
     },
     "configurationSerialRX": {
         "message": "Protokol ved seriel konfiguration"
+    },
+    "portsPortNone": {
+        "message": "Ingen"
+    },
+    "receiverSerialPort": {
+        "message": "Seriel port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART den serielle modtager er forbundet til. Baud-raten følger udbyderen, så der er intet at sætte her. Ændring af porten kræver en genstart."
     },
     "someRXTypesDisabled": {
         "message": "Nogle protokoller i den aktuelle konfiguration understøttes ikke."
@@ -7946,45 +7955,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Afvigelse\/deklination er {{saved}}° men GPS registrerer {{detected}}° for denne placering. Klik på Opdater for at korrigere."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} prøver"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Vip mere !"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Klient kalibring (Guidet)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Auto prompt i 60s kalibrering"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Kalibrering via guide"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Trin 1\/6 — Hold fladt, roter 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Trin 2\/6 — Vend omvendt, roter 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Trin 3\/6 — Næsen lige op, roter 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Trin 4\/6 — Næsen lige ned, roter 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Trin 5\/6 — Venstre side op, roter 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Trin 6\/6 — Højre side op, roter 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Dataindsamling færdig — kontroller og gem"
-    },
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
@@ -8015,12 +7985,6 @@
     "magCalibrationSamples": {
         "message": "Prøver"
     },
-    "magCalibrationQuality": {
-        "message": "Kvalitet"
-    },
-    "magCalibrationResidual": {
-        "message": "Tilpasningsfejl"
-    },
     "magCalibrationQualityGood": {
         "message": "God"
     },
@@ -8032,9 +7996,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offset"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offsetværdier fra kugletilpasning"
     },
     "magCalibrationUnguided": {
         "message": "Firmware kalibring (Klassisk)"
@@ -8050,18 +8011,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
-    },
-    "magCalibrationGuided": {
-        "message": "Klient kalibring (Gratis)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Roter frit — app beregner forskydninger"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Klient kalibrering"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Drej dit køretøj i alle retninger. Sigtet er at få en komplet kugle af prikker på omkring et eller to minutter. Gem resultatet, når kalibreringsværdierne er stabiliseret."
     },
     "magCalibrationCheck": {
         "message": "Kontroller"
@@ -8087,17 +8036,8 @@
     "magCalibrationSaveError": {
         "message": "Kunne ikke gemme kalibreringsværdier"
     },
-    "magCalibrationAccept": {
-        "message": "Gem kalibrering"
-    },
-    "magCalibrationFull": {
-        "message": "Fuld kalibring (Autojusteret)"
-    },
     "magCalibrationFullDesc": {
-        "message": "En rotation — fastsætter offset, soft-iron-korrektion og kompassets monteringsretning"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Fuld kalibrering"
+        "message": "Roter fartøjet i alle retninger for at kalibrere sensor og automatisk registrer monteringsretning."
     },
     "magCalibrationFullInstruction": {
         "message": "Følg nedenstående trin ved at holde fartøjet stabilt gennem hver bevægelse. i trinet tælles stigning, når du ændre til ny vinkel - mål at dække alle 20."
@@ -8133,7 +8073,10 @@
         "message": "{{covered}} \/ {{total}} områder dækket"
     },
     "magCalibrationFullCompute": {
-        "message": "Beregn"
+        "message": "Afslut kalibrering"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Flere overdækkede zoner giver højere nøjagtighed — mål er 20 \/ 20 for bedste kalibrering og justering."
     },
     "magCalibrationFullCoverage": {
         "message": "Dækning:"
@@ -8163,7 +8106,19 @@
         "message": "For få målinger — fortsæt rotationen"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Ingen GPS eller placering fra IP netværk — kan derfor ikke bestemme magnetisk hældning"
+        "message": "Ingen GPS, browser eller IP-placering — angiv koordinater manuelt for at fortsætte"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Angiv manuelt breddegrad og længdegrad ved at vælge fra Google Maps. Din drone har ingen GPS-lås, og din enhed kunne derfor ikke give data for placering. Placering er nødvendig for kalibrering af kompas."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "f.eks. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Ugyldigt koordinat format. Angiv som: breddegrad, længdegrad (f.eks. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Kunne ikke beregne en magnetisk reference for disse koordinater. Tjek dem og prøv igen."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI kommandoer kopieret til udklipsholder"
@@ -8203,12 +8158,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Ny"
-    },
-    "magAlignmentApply": {
-        "message": "Anvend"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Registrer"
     },
     "configurationSmallAngle": {
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"

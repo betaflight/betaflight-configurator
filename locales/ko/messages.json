@@ -1007,7 +1007,7 @@
         "message": "소프트웨어"
     },
     "defaultSoftwareText": {
-        "message": "<a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">블랙박스 로그 뷰어<\/a>는 온라인 앱에서 이용이 가능합니다.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua 스크립트<\/a> 모음은 GitHub에서 이용이 가능합니다.<br \/><br \/>펌웨어, 이 앱과 블랙박스 뷰어를 위한 <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">소스 코드<\/a>는 GitHub에서 다운로드 할 수 있습니다."
+        "message": "이 앱에는 블랙박스 로그 뷰어가 내장되어 있습니다. 비행 로그를 분석하려면 <strong>블랙박스 로그 뷰어<\/strong> 탭을 열어주세요.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua 스크립트<\/a> 모음은 GitHub에서 확인할 수 있습니다.<br \/><br \/>펌웨어와 이 앱의 <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">소스 코드<\/a>는 GitHub에서 다운로드할 수 있습니다."
     },
     "defaultContributingHead": {
         "message": "기여하기"
@@ -2185,8 +2185,24 @@
         "message": "활성화되면 배터리를 연결한 후 첫 번째 아밍시에만 홈 포인트로 사용됩니다. 활성화되지 않으면 기체가 설정될 때마다 홈 포인트가 업데이트됩니다.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "이 펌웨어 빌드에는 GPS 지원이 포함되어 있지 않습니다. GPS를 설정하고 사용하려면 GPS 빌드 옵션으로 펌웨어를 다시 빌드하세요.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "시리얼 수신기 공급자"
+    },
+    "portsPortNone": {
+        "message": "없음"
+    },
+    "receiverSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "receiverSerialPortHelp": {
+        "message": "시리얼 수신기가 연결된 UART입니다. 전송 속도는 제공업체를 따르므로 여기서 설정할 필요가 없습니다. 포트를 변경하려면 재부팅이 필요합니다."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "수신기 시리얼 포트를 설정할 수 없어서 아무것도 저장되지 않았습니다."
     },
     "someRXTypesDisabled": {
         "message": "일부 수신기 공급업체는 현재 빌드 구성에서 지원되지 않습니다."
@@ -2245,6 +2261,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>참고:<\/strong> 당신이 하는 일을 모르는 경우 첫 번째 시리얼 포트의 MSP를 비활성화 하지  <span class=\"message-negative\">마십시오<\/span>. 만약 그렇게 할 경우 펌웨어 플래싱을 다시 하고 환경설정을 지워야 할 수도 있습니다."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>노트:<\/strong> 이 펌웨어는 각 기능별 탭에 시리얼 포트를 할당하므로, 이 뷰는 읽기 전용입니다.  현재 각 기능이 사용 중인 포트를 보여주며, 기능을 소유한 탭에서 할당을 변경할 수 있습니다."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "펌웨어 업그레이드가 <span class=\"message-negative\">필요함<\/span>.  펌웨어 &lt; 1.8.0의 시리얼 포트 설정은 지원하지 않습니다."
@@ -7942,45 +7961,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "저장된 편차는 {{saved}}°이지만 GPS가 이 위치에 대해 {{detected}}°로 감지합니다. 수정하려면 업데이트를 클릭하세요."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} 샘플"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "더 기울이세요!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "감지 실패 - 더 다양한 기울기를 시도해 보세요."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "클라이언트 교정 (가이드)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "자동-프롬프트 60초 교정"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "가이드 교정"
-    },
-    "magCalibrationPrompt1": {
-        "message": "단계 1\/6 — 수평 유지하고, 360° 요 회전"
-    },
-    "magCalibrationPrompt2": {
-        "message": "단계 2\/6 — 거꾸로 뒤집어서 360° 요 회전"
-    },
-    "magCalibrationPrompt3": {
-        "message": "단계 3\/6 — 노즈를 위로 향하고, 360° 요 회전"
-    },
-    "magCalibrationPrompt4": {
-        "message": "단계 4\/6 — 노즈를 아래로 향하고, 360° 요 회전"
-    },
-    "magCalibrationPrompt5": {
-        "message": "단계 5\/6 — 왼쪽을 위로 향하고, 360° 요 회전"
-    },
-    "magCalibrationPrompt6": {
-        "message": "단계 6\/6 — 오른쪽을 위로 향하고, 360° 요 회전"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "데이터 수집 완료 — 검토 및 저장"
-    },
     "magCalibrationCancel": {
         "message": "취소"
     },
@@ -8011,12 +7991,6 @@
     "magCalibrationSamples": {
         "message": "샘플"
     },
-    "magCalibrationQuality": {
-        "message": "품질"
-    },
-    "magCalibrationResidual": {
-        "message": "잔차"
-    },
     "magCalibrationQualityGood": {
         "message": "좋음"
     },
@@ -8028,9 +8002,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "펌웨어 오프셋"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "구면 적합 오프셋"
     },
     "magCalibrationUnguided": {
         "message": "펌웨어 교정 (레거시)"
@@ -8046,18 +8017,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "펌웨어 교정 완료!"
-    },
-    "magCalibrationGuided": {
-        "message": "클라이언트 교정 (자유)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "자유롭게 회전 — 컨피규레이터가 오프셋을 계산합니다"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "클라이언트 교정"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "기체를 모든 방향으로 회전합니다. 약 1~2분에 걸쳐 점의 완전한 구를 만드는 것을 목표로 합니다. 교정 값이 안정화되면 결과를 저장합니다."
     },
     "magCalibrationCheck": {
         "message": "확인"
@@ -8082,18 +8041,6 @@
     },
     "magCalibrationSaveError": {
         "message": "교정 값 저장 실패"
-    },
-    "magCalibrationAccept": {
-        "message": "교정 저장"
-    },
-    "magCalibrationFull": {
-        "message": "전체 계산 (자동-정렬)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "한 번 회전 - 오프셋, 소프트 아이언, 그리고 자력계의 장착 방향을 설정할 수 있습니다"
-    },
-    "magCalibrationFullTitle": {
-        "message": "전체 교정"
     },
     "magCalibrationFullInstruction": {
         "message": "아래 단계를 따라 각 회전마다 기체를 고정된 상태로 유지하세요. 새로운 각도에 도달하면 구역 수가 증가하여 20개를 모두 커버하는 것을 목표로 합니다."
@@ -8128,9 +8075,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} 구역 커버됨"
     },
-    "magCalibrationFullCompute": {
-        "message": "계산"
-    },
     "magCalibrationFullCoverage": {
         "message": "범위:"
     },
@@ -8157,9 +8101,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "샘플이 충분하지 않음 - 더 길게 회전하세요"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "GPS 또는 IP 위치정보 없음 — 지자기 기울기를 결정할 수 없습니다"
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI 명령이 클립보드에 복사되었습니다"
@@ -8199,12 +8140,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "신규"
-    },
-    "magAlignmentApply": {
-        "message": "적용"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "감지"
     },
     "configurationSmallAngle": {
         "message": "최대 아밍 각도 [도]"

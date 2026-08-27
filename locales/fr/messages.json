@@ -995,7 +995,7 @@
         "message": "Logiciel"
     },
     "defaultSoftwareText": {
-        "message": "Notre <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\"> Visionneuse des enregistrements de la Blackbox <\/a> est disponible en tant qu'application en ligne.<br \/><br \/> Notre collection de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\"> Scripts Lua de transmission (TX)<\/a> est disponible sur GitHub. <br \/><br \/> Notre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"> Code source<\/a> pour le logiciel, cette application et la visionneuse de Blackbox peut-être téléchargé depuis GitHub."
+        "message": "Notre visualiseur de log Blackbox est intégré dans cette application. Ouvrez l'onglet <strong>Blackbox Viewer<\/strong> pour analyser vos logs de vol.<br \/><br \/>Notre collections de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Script Lua TX<\/a> sont disponibles sur GitHub.<br \/><br \/>Notre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">code source<\/a> pour le firmware et cette application peuvent être téléchargées sur GitHub."
     },
     "defaultContributingHead": {
         "message": "Participation"
@@ -2125,8 +2125,24 @@
         "message": "Si activé, le lieu du premier armement après branchement de la batterie sera défini comme point de départ. Si non activé, l'endroit de chaque armement sera défini comme point de départ.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "La prise en charge du GPS n'est pas incluse dans cette version du firmware. Reconstruisez le firmware avec l'option de construction GPS pour configurer et utiliser le GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Type de récepteur série"
+    },
+    "portsPortNone": {
+        "message": "Aucun"
+    },
+    "receiverSerialPort": {
+        "message": "Port série"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART à laquelle le récepteur série est câblé. Le débit en bauds suit le fournisseur, donc il n'y a rien à définir ici. La modification du port nécessite un redémarrage."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Impossible de définir le port série du récepteur, rien n'a donc été enregistré."
     },
     "someRXTypesDisabled": {
         "message": "Certains fournisseurs de récepteurs ne sont pas pris en charge par la configuration de compilation actuelle."
@@ -2181,6 +2197,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Note:<\/strong> NE <span class=\"message-negative\">PAS<\/span> désactiver MSP sur le premier port série sauf si vous savez exactement ce que vous faites. Vous pourriez être obligé de reflasher entièrement ."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Note :<\/strong> ce firmware assigne des ports série sur chaque onglet de chaque fonctionnalité, donc cette vue est en lecture seule. Il montre quel port chaque fonctionnalité utilise actuellement ; modifiez une affectation depuis l'onglet qui est propriétaire de la fonctionnalité."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Mise à jour du firmware <span class=\"message-negative\">requise<\/span>. La configuration port série du firmware &lt; 1.8.0 n'est pas supportée."
@@ -6844,6 +6863,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicateur de qualité de liaison basé sur le pourcentage de paquets de données non corrompus reçus"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Mode RF:Qualité du lien",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Qualité de la liaison",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distance parcourue en vol",
         "description": "One of the elements of the OSD"
@@ -7851,45 +7878,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La déclinaison est {{saved}}° mais le GPS détecte {{detected}}° pour cet emplacement. Cliquez sur Mettre à jour pour corriger."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} échantillons"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclinez plus !"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "La détection a échoué, essayez avec une inclinaison plus variée."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Calib du client (Guidé)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Calibration automatique de 60 s"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibration Guidée"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Étape 1\/6 — Tenez à plat, lacet(Yaw) à 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Étape 2\/6 — Retournement inversé, lacet(Yaw) à 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Étape 3\/6 — Nez droit vers le haut, lacet(Yaw) à 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Étape 4\/6 — Nez droit vers le bas, lacet(Yaw) à 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Étape 5\/6 — Côté gauche vers le haut, lacet(Yaw) à 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Étape 6\/6 — Côté droite vers le haut, lacet(Yaw) à 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Collecte de données terminée — revue et sauvegarde"
-    },
     "magCalibrationCancel": {
         "message": "Annuler"
     },
@@ -7920,12 +7908,6 @@
     "magCalibrationSamples": {
         "message": "Échantillons"
     },
-    "magCalibrationQuality": {
-        "message": "Qualité"
-    },
-    "magCalibrationResidual": {
-        "message": "Fit résiduel"
-    },
     "magCalibrationQualityGood": {
         "message": "Bon"
     },
@@ -7937,9 +7919,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Offsets de firmware"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offsets d'ajustement de sphère"
     },
     "magCalibrationUnguided": {
         "message": "Calib Firmware (Legacy)"
@@ -7955,18 +7934,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibration du firmware terminée !"
-    },
-    "magCalibrationGuided": {
-        "message": "Calib du client (Guidé)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Tournez librement — le configurateur calcule les décalages"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibration client"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Faites pivoter votre véhicule dans toutes les directions. Essayez de faire une sphère complète de points sur environ une ou deux minutes. Enregistrez le résultat lorsque les valeurs d'étalonnage sont stabilisées."
     },
     "magCalibrationCheck": {
         "message": "Vérifier"
@@ -7992,17 +7959,14 @@
     "magCalibrationSaveError": {
         "message": "Échec de l'enregistrement des valeurs de calibration"
     },
-    "magCalibrationAccept": {
-        "message": "Sauvegarder calibration"
-    },
     "magCalibrationFull": {
-        "message": "Calibration complète (auto-alignement)"
+        "message": "Calibrer et détecter l'alignement"
     },
     "magCalibrationFullDesc": {
-        "message": "Un seul tour — configure les offsets, le soft-iron et l'orientation du magnétomètre"
+        "message": "Faites pivoter la machine dans toutes les directions pour calibrer le capteur et détecter automatiquement son orientation de montage."
     },
     "magCalibrationFullTitle": {
-        "message": "Calibration complète"
+        "message": "Calibrer et détecter l'alignement"
     },
     "magCalibrationFullInstruction": {
         "message": "Suivez les étapes ci-dessous, en maintenant l'engin stable à chaque tour complet. Le nombre de zones grimpent au fur et à mesure que vous atteignez de nouveaux angles — visez à couvrir tous les 20."
@@ -8038,7 +8002,10 @@
         "message": "Zones {{covered}} \/ {{total}} couvertes"
     },
     "magCalibrationFullCompute": {
-        "message": "Calculer"
+        "message": "Terminer l'étalonnage"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Plus de zones couvertes donnent une plus grande précision — viser 20 \/ 20 pour une meilleure détection d'étalonnage et d'alignement."
     },
     "magCalibrationFullCoverage": {
         "message": "Couverture :"
@@ -8068,7 +8035,22 @@
         "message": "Pas assez d'échantillons — tourner plus longtemps"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Pas de localisation GPS ou IP — impossible de déterminer l'inclinaison magnétique"
+        "message": "Pas de GPS, navigateur ou emplacement IP — entrez les coordonnées manuellement pour continuer"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Lieu requis pour l'étalonnage"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Saisir manuellement la latitude et la longitude en choisissant dans Google Maps. Votre drone n'a pas de verrouillage GPS et votre appareil n'a pas pu fournir de données de localisation. La localisation est nécessaire pour l'étalonnage du magnétomètre."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "par exemple 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Format de coordonnées non valide. Veuillez entrer : latitude, longitude (par exemple 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Impossible de calculer une référence magnétique pour ces coordonnées. Veuillez les vérifier et réessayer."
     },
     "magCalibrationFullCliCopied": {
         "message": "Commandes CLI copiées dans le presse-papiers"
@@ -8108,12 +8090,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nouveau"
-    },
-    "magAlignmentApply": {
-        "message": "Appliquer"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Détecter"
     },
     "configurationSmallAngle": {
         "message": "Angle maximum pour armer [degrés]"
