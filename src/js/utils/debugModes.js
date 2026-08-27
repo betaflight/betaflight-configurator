@@ -1407,25 +1407,25 @@ export function getDebugFieldNames(apiVersion) {
 
         // POSITION_NAV owns an enum slot but carries no name in the firmware's
         // debugModeNames[], so it shows up under its enum identifier.
-        result.POSITION_NAV = {
-            "debug[all]": "Position Nav",
-            "debug[0]": "Target Velocity [dbg-axis]",
-            "debug[1]": "Velocity [dbg-axis]",
-            "debug[2]": "Velocity Error [dbg-axis]",
-            "debug[3]": "P Term [dbg-axis] * 10",
-            "debug[4]": "I Term [dbg-axis] * 10",
-            "debug[5]": "D Term [dbg-axis] * 10",
-            "debug[6]": "A Term [dbg-axis] * 10",
-            "debug[7]": "Status Flags [dbg-axis]",
-        };
+        result.POSITION_NAV = debugFields(
+            "Position Nav",
+            "Target Velocity [dbg-axis]",
+            "Velocity [dbg-axis]",
+            "Velocity Error [dbg-axis]",
+            "P Term [dbg-axis] * 10",
+            "I Term [dbg-axis] * 10",
+            "D Term [dbg-axis] * 10",
+            "A Term [dbg-axis] * 10",
+            "Status Flags [dbg-axis]",
+        );
 
-        result.PITOT = {
-            "debug[all]": "Pitot",
-            "debug[0]": "Airspeed cm/s",
-            "debug[1]": "Differential Pressure Pa",
-            "debug[2]": "Raw Differential Pressure Pa",
-            "debug[3]": "Temperature °C",
-        };
+        result.PITOT = debugFields(
+            "Pitot",
+            "Airspeed cm/s",
+            "Differential Pressure Pa",
+            "Raw Differential Pressure Pa",
+            "Temperature °C",
+        );
 
         // AUTOPILOT_POSITION was deprecated in 1.48
         delete result.AUTOPILOT_POSITION;

@@ -638,10 +638,14 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
     const getCurveForMinMaxFields = function (...fieldNames) {
         const mm = getMinMaxForFields(...fieldNames);
         // added convertation min max values from log file units to friendly chart
-        const mmChartUnits = {
-            min: FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min),
-            max: FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max),
-        };
+        const converted = [
+            FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.min),
+            FlightLogFieldPresenter.ConvertFieldValue(flightLog, fieldName, true, mm.max),
+        ];
+        // A field whose unit stores the magnitude of a negative quantity - a CRSF
+        // RSSI in -1 dBm - converts the smaller sample to the larger display value,
+        // so order the pair by what is displayed rather than by what was stored.
+        const mmChartUnits = { min: Math.min(...converted), max: Math.max(...converted) };
         return {
             power: 1,
             MinMax: mmChartUnits,
@@ -812,26 +816,32 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
             // axis follows from the field's own shape and DEBUG_MODE_CURVES is never
             // consulted. That table remains for logs recorded before the annotations.
             const axis = getDebugFieldAxis(debugModeName, fieldName, sysConfig.apiVersion);
-            if (axis) {
-                if (axis.range) {
-                    return minMaxPower1(axis.range.min, axis.range.max);
-                }
-                if (axis.dynamic === "gyro") {
-                    return curves.gyro();
-                }
-                if (axis.dynamic === "acc") {
-                    return minMaxPower1(-maxAccelerometerG(), maxAccelerometerG());
-                }
-                // The group names every field firmware writes in that unit, but a
-                // log only holds the fields it was configured to record; asking for
-                // an absent one yields the generic fallback range.
-                const logged = axis.fit.filter((name) => flightLog.getMainFieldIndexByName(name) !== undefined);
-                return getCurveForMinMaxFields(...(logged.length > 0 ? logged : [fieldName]));
+
+            // A bounded unit or a device-native one fixes the axis outright, and the
+            // firmware is a better authority on that than any table here.
+            if (axis?.range) {
+                return minMaxPower1(axis.range.min, axis.range.max);
+            }
+            if (axis?.dynamic === "gyro") {
+                return curves.gyro();
+            }
+            if (axis?.dynamic === "acc") {
+                return minMaxPower1(-maxAccelerometerG(), maxAccelerometerG());
             }
 
+            // An unbounded unit says only which fields share an axis, not how wide it
+            // should be, so a curated range still wins where somebody wrote one.
             const curve = debugModeCurve(debugModeName);
             if (curve) {
                 return curve;
+            }
+
+            if (axis) {
+                // The group names every field firmware writes in that unit, but a
+                // log only holds the fields it was configured to record; asking for
+                // an absent one yields the generic fallback range.
+                const logged = axis.fit.filter((name) => flightLog.getMainFieldIndexByName?.(name) !== undefined);
+                return getCurveForMinMaxFields(...(logged.length > 0 ? logged : [fieldName]));
             }
         }
 
