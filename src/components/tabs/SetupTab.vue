@@ -677,7 +677,7 @@ function process_html() {
             const pidHz = Math.round(1000000 / cycleTime);
             const pidProcess = fcStore.pidAdvancedConfig?.pid_process_denom || 1;
             const gyroHz = pidHz * pidProcess;
-            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(0)}k` : `${hz}`);
+            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(1)}k` : `${hz}`);
             state.loopTime = `${fmt(gyroHz)} / ${fmt(pidHz)}`;
         } else {
             state.loopTime = "";
