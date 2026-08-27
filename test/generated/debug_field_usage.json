@@ -8,8 +8,8 @@
     "source": "https://github.com/betaflight/betaflight",
     "versions": {
         "1.44.0": {
-            "commit": "c05ad2ec9b7d3a0915ef9748a160a0cc28931069",
-            "date": "2022-01-11",
+            "commit": "ee024aff0c453f679b1b713ff8a6350c0be61567",
+            "date": "2022-04-04",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -600,8 +600,8 @@
             }
         },
         "1.46.0": {
-            "commit": "ae71256da701a44e063fae28a2306972748b0622",
-            "date": "2023-12-09",
+            "commit": "5fd38528bab19368be06e787fa1ea6219013d0be",
+            "date": "2024-05-04",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
@@ -946,8 +946,8 @@
             }
         },
         "1.47.0": {
-            "commit": "ee3bf4257f69e6d00648d7a90e08ca9be4c98963",
-            "date": "2025-09-21",
+            "commit": "c120dd4e9d24bb36c0d930b8fe25ba96a8cf221b",
+            "date": "2025-11-12",
             "modes": {
                 "AC_CORRECTION": {
                     "fields": [],
