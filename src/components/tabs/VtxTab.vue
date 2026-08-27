@@ -98,12 +98,13 @@
                             <SettingRow
                                 v-if="vtxPortAvailable"
                                 :label="$t('vtxSerialPort')"
-                                :help="$t('vtxSerialPortHelp')"
+                                :help="mspVtx ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
                             >
                                 <USelect
-                                    v-model="vtxPortIdentifier"
+                                    :model-value="vtxPortShown"
+                                    @update:model-value="(v) => (vtxPortIdentifier = v)"
                                     :items="vtxPortOptions"
-                                    :disabled="!vtxPortWritable"
+                                    :disabled="!vtxPortWritable || mspVtx"
                                     class="w-36"
                                 />
                             </SettingRow>
@@ -409,6 +410,7 @@ import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
 
 export default defineComponent({
@@ -477,6 +479,18 @@ export default defineComponent({
             protocol: { setting: "vtx_type" },
         });
 
+        // An MSP VTX answers on the goggles' MSP link rather than a port of its own, so the
+        // firmware falls back to the OSD's UART and the row follows the OSD tab, read-only.
+        const { selectedIdentifier: osdPortIdentifier, load: loadOsdPort } = useFeaturePort({
+            setting: "osd_uart",
+            functionName: "FRSKY_OSD",
+        });
+
+        const mspVtx = computed(() => vtxProtocol.value === "MSP");
+        const vtxPortShown = computed(() =>
+            mspVtx.value && vtxPortIdentifier.value === PORT_NONE ? osdPortIdentifier.value : vtxPortIdentifier.value,
+        );
+
         // vtxDevType_e keeps index 2 open, so the firmware lookup names it RESERVED.
         const vtxProtocolOptions = computed(() => vtxProtocolValues.value.filter(({ value }) => value !== "RESERVED"));
 
@@ -543,6 +557,7 @@ export default defineComponent({
         onMounted(async () => {
             await loadVtxConfig();
             await loadVtxPort();
+            await loadOsdPort();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
             GUI.content_ready();
@@ -554,6 +569,7 @@ export default defineComponent({
                     await saveVtx(writeVtxPort);
                     await loadVtxConfig();
                     await loadVtxPort();
+                    await loadOsdPort();
                 },
                 {
                     onError: (error) => {
@@ -700,6 +716,8 @@ export default defineComponent({
             vtxPortIdentifier,
             vtxProtocol,
             vtxProtocolOptions,
+            mspVtx,
+            vtxPortShown,
             savePending,
             factoryBandsSupported,
             frequencyMode,
