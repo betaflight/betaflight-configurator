@@ -267,7 +267,8 @@ describe("Keyboard Handler - Layout Independence", () => {
 
             document.dispatchEvent(event);
 
-            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalled();
+            // Handler uses code ("Digit1") not key ("1") for detection and parsing
+            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalledWith(mockCtx.workspaceStore.workspaceGraphConfigs, 1);
         });
 
         it("should handle workspace switch on digit 5", () => {
@@ -277,7 +278,21 @@ describe("Keyboard Handler - Layout Independence", () => {
 
             document.dispatchEvent(event);
 
-            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalled();
+            // Handler uses code ("Digit5") not key ("5") for detection and parsing
+            expect(mockCtx.onSwitchWorkspace).toHaveBeenCalledWith(mockCtx.workspaceStore.workspaceGraphConfigs, 5);
+        });
+
+        it("should handle bookmark jump on alt+digit (code-based parsing)", () => {
+            mockCtx.workspaceStore.bookmarkTimes[1] = 5000;
+
+            // alt+1: handler uses code to parse bookmark ID
+            const event = createKeyboardEvent("1", "Digit1", { altKey: true });
+
+            document.dispatchEvent(event);
+
+            // Handler parses ID from code, jumps to bookmark time
+            expect(mockCtx.setCurrentBlackboxTime).toHaveBeenCalledWith(5000);
+            expect(mockCtx.invalidateGraph).toHaveBeenCalled();
         });
     });
 
