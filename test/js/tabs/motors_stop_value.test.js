@@ -95,7 +95,9 @@ vi.mock("@/js/ConfigStorage", () => ({
     set: vi.fn(),
 }));
 
-vi.mock("@/js/utils/common", () => ({
+// Preserve real exports: useFeaturePort's chain eagerly loads the tab registry (all tabs, incl. SensorsTab's mag-calibration math) at import time.
+vi.mock("@/js/utils/common", async (importOriginal) => ({
+    ...(await importOriginal()),
     getMixerImageSrc: () => null,
 }));
 
