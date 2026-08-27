@@ -282,15 +282,16 @@ describe("Keyboard Handler - Layout Independence", () => {
             expect(mockCtx.onSwitchWorkspace).toHaveBeenCalledWith(mockCtx.workspaceStore.workspaceGraphConfigs, 5);
         });
 
-        it("should handle bookmark jump on alt+digit (code-based parsing)", () => {
+        it("should handle bookmark jump on alt+digit with layout-specific key (code-based parsing)", () => {
             mockCtx.workspaceStore.bookmarkTimes[1] = 5000;
 
-            // alt+1: handler uses code to parse bookmark ID
-            const event = createKeyboardEvent("1", "Digit1", { altKey: true });
+            // On AZERTY, physical Digit1 key produces "&" by default
+            // This proves handler uses code ("Digit1") not key ("&") for parsing
+            const event = createKeyboardEvent("&", "Digit1", { altKey: true });
 
             document.dispatchEvent(event);
 
-            // Handler parses ID from code, jumps to bookmark time
+            // Handler parses ID from code ("Digit1" -> 1), ignores layout-specific key
             expect(mockCtx.setCurrentBlackboxTime).toHaveBeenCalledWith(5000);
             expect(mockCtx.invalidateGraph).toHaveBeenCalled();
         });
