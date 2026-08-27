@@ -11,7 +11,26 @@ app's JavaScript.
 
 Both files are **generated**; this README is not. Run `npm run generate:debug-modes`
 to rebuild them from the firmware source, and `npm run check:debug-modes` to fail
-a build when they have drifted from it. Everything in them is read from the
+a build when they have drifted from it.
+
+## Working on the firmware
+
+To see a debug mode or an annotation you are still writing — before it is
+committed, let alone merged — point the generator at your firmware checkout and
+let it read the working tree:
+
+```sh
+npm run generate:debug-modes:dev -- --repo /path/to/your/betaflight
+```
+
+That reads the newest API version from the files as they sit on disk, uncommitted
+edits and untracked files included, so `npm run dev` shows your mode with your
+labels. Older API versions still come from committed history, since only the
+newest one can be the version you are changing.
+
+The output describes firmware nobody else has, so every file it writes opens with
+a `NOT FOR COMMIT` banner and the JSON marks that version `"worktree": true`.
+When you are done, `npm run generate:debug-modes` puts the committed tables back. Everything in them is read from the
 firmware: the `debug_mode_e` enum, `debugModeNames[]`, and the `//!<` annotations
 the firmware carries on its `DEBUG_SET()` call sites (the grammar is documented
 above the `DEBUG_SET` macro in the firmware's `src/main/build/debug.h`).

@@ -118,6 +118,10 @@
                         "type": "string",
                         "description": "Date of that commit, ISO 8601."
                     },
+                    "worktree": {
+                        "type": "boolean",
+                        "description": "Present and true when read from a developer's working tree rather than a commit, so it describes local firmware nobody else has."
+                    },
                     "modes": {
                         "type": "array",
                         "description": "The debug_mode enum in order: a mode's position is its numeric value.",
