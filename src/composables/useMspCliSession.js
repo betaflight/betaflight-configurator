@@ -18,7 +18,9 @@ export function isMspCliSupported() {
     if (!version) {
         return false;
     }
-    return semver.gte(version, MIN_FC_VERSION_FOR_MSP_CLI);
+
+    const normalizedVersion = version.replaceAll("_", "-");
+    return semver.valid(normalizedVersion) ? semver.gte(normalizedVersion, MIN_FC_VERSION_FOR_MSP_CLI) : false;
 }
 
 function wait(ms) {
