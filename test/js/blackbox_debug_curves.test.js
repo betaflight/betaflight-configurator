@@ -51,14 +51,19 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "MAG_CALIB", "debug[7]")).toEqual({ min: 0, max: 4000 });
         expect(rangeFor("1.49.0", "MAG_TASK_RATE", "debug[2]")).toEqual({ min: -10000, max: 10000 });
         expect(rangeFor("1.49.0", "RTH", "debug[0]")).toEqual({ min: -4000, max: 4000 });
-        expect(rangeFor("1.49.0", "POSITION_EST", "debug[6]")).toEqual({ min: 0, max: 1000 });
+        // POSITION_EST is not in any released firmware's debug_mode enum - it comes
+        // from betaflight#15584, which is still open - so the mode table generated
+        // from the firmware source has no slot to look it up by. Its DEBUG_MODE_CURVES
+        // entry is kept and starts working the day the firmware PR lands.
     });
 
     it("falls back to the per-mode default, then to the field's own range", () => {
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[1]")).toEqual({ min: 0, max: 100 });
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[4]")).toEqual({ min: 0, max: 2000 });
         expect(rangeFor("1.49.0", "BATTERY", "debug[0]")).toEqual({ min: 0, max: 4096 });
-        expect(rangeFor("1.49.0", "BATTERY", "debug[2]")).toEqual({ min: 0, max: 26 });
+        // debug[2] is a 0-100 goodness percentage, not a voltage: the firmware
+        // annotation gives it its own axis instead of the mode's volts default.
+        expect(rangeFor("1.49.0", "BATTERY", "debug[2]")).toEqual({ min: 0, max: 100 });
         // MAG_CALIB has no entry beyond debug[7], so debug[8] auto-scales to the logged range.
         expect(rangeFor("1.49.0", "MAG_CALIB", "debug[8]")).toEqual(LOGGED_RANGE);
         expect(rangeFor("1.49.0", "GPS_CONNECTION", "debug[2]")).toEqual({ min: -200, max: 200 });
