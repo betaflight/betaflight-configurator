@@ -967,9 +967,6 @@
     "defaultSoftwareHead": {
         "message": "Програмне забезпечення"
     },
-    "defaultSoftwareText": {
-        "message": "Наш <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">аналізатор журналів Blackbox<\/a> доступний як онлайн-програма.<br \/><br \/>Наша збірка <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lua скриптів для передавачів<\/a> є на GitHub.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Вихідні коди<\/a> прошивки, цієї програми, та аналізатора журналів можна також отримати на GitHub."
-    },
     "defaultContributingHead": {
         "message": "Сприяння"
     },
@@ -7879,45 +7876,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Схилення {{saved}}°, проте GPS визначає {{detected}}° для цього місця. Клацніть Оновити для корегування."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} зразків"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Нахиліть більше!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Не вдалося визначити — спробуйте нахиляти апарат більш різноманітно."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Калібр. конфігуратором (покрокове)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Калібрування з покроковими підказками 60 с"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Покрокове калібрування"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Крок 1 із 6 —Тримайте горизонтально, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Крок 2 із 6 — Догори дном, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Крок 3 із 6 — Носом догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Крок 4 із 6 — Носом вниз, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Крок 5 із 6 — Лівою стороною догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Крок 6 із 6 — Правою стороною догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Збір даних завершено — переглянути та зберегти"
-    },
     "magCalibrationCancel": {
         "message": "Скасувати"
     },
@@ -7948,12 +7906,6 @@
     "magCalibrationSamples": {
         "message": "Зразки"
     },
-    "magCalibrationQuality": {
-        "message": "Якість"
-    },
-    "magCalibrationResidual": {
-        "message": "Залишок апроксимації"
-    },
     "magCalibrationQualityGood": {
         "message": "Добра"
     },
@@ -7965,9 +7917,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Зміщення з прошивки"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Зміщення зі сферичної апроксимації"
     },
     "magCalibrationUnguided": {
         "message": "Калібр. прошивкою (застаріле)"
@@ -7983,18 +7932,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Калібрування прошивки завершено!"
-    },
-    "magCalibrationGuided": {
-        "message": "Калібр. конфігуратором (вільне)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Обертайте вільно — конфігуратор обрахує зміщення"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Калібрування конфігуратором"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Обертайте апарат у всіх напрямках. Намагайтеся приблизно за одну або дві хвилини сформувати повну сферу з точок. Збережіть результат, коли значення калібрування стабілізуються."
     },
     "magCalibrationCheck": {
         "message": "Перевірити"
@@ -8019,18 +7956,6 @@
     },
     "magCalibrationSaveError": {
         "message": "Не вдалося зберегти значення калібрування"
-    },
-    "magCalibrationAccept": {
-        "message": "Зберегти калібрування"
-    },
-    "magCalibrationFull": {
-        "message": "Повне калібр. (автоорієнтування)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "Одне обертання — задає зміщення, девіацію від м'якого заліза та орієнтації встановлення магнітометра"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Повне калібрування"
     },
     "magCalibrationFullInstruction": {
         "message": "Виконайте наведені нижче кроки, утримуючи апарат нерухомо протягом кожного повного оберту. Лічильник зон зростає, коли ви досягаєте нових кутів — маєте охопити всі 20."
@@ -8065,9 +7990,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} зон охоплено"
     },
-    "magCalibrationFullCompute": {
-        "message": "Розрахувати"
-    },
     "magCalibrationFullCoverage": {
         "message": "Покриття:"
     },
@@ -8094,9 +8016,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Недостатньо даних — обертайте довше"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "Немає даних про розташування з GPS або IP — неможливо визначити магнітне нахилення"
     },
     "magCalibrationFullCliCopied": {
         "message": "Команди CLI скопійовано до буфера обміну"
@@ -8136,12 +8055,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Нові"
-    },
-    "magAlignmentApply": {
-        "message": "Застосувати"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Визначити"
     },
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"

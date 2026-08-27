@@ -263,6 +263,45 @@
                                     size="xs"
                                 />
                             </SettingRow>
+                            <SettingRow
+                                v-if="osdPortAvailable"
+                                :label="$t('osdSerialPort')"
+                                :help="$t('osdSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="osdPortIdentifier"
+                                    :items="osdPortOptions"
+                                    :disabled="!osdPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="customTextPortAvailable"
+                                :label="$t('osdCustomTextSerialPort')"
+                                :help="$t('osdCustomTextSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="customTextPortIdentifier"
+                                    :items="customTextPortOptions"
+                                    :disabled="!customTextPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="customTextPortAvailable"
+                                :label="$t('osdCustomTextSerialBaud')"
+                                :help="$t('osdCustomTextSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="customTextBaud"
+                                    :items="customTextBaudOptions"
+                                    :disabled="!customTextPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                         </UiBox>
 
                         <!-- Units -->
@@ -524,12 +563,12 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving" size="xs">
+                    <UButton @click="saveConfig()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
                         <UButton
-                            :disabled="!osdStore.dirty || isSaving"
+                            :disabled="!portsOrConfigDirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                             square
                             size="xs"
@@ -549,7 +588,40 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "@/composables/useTabLoad";
+
+// From API 1.49 both live on the OSD parameter group. osd_uart only shows up in the synthesised
+// mask when the display port device is FrSky OSD, and sets no bit at all on MSP DisplayPort, so
+// the setting is the only reliable read either way.
+const {
+    available: osdPortAvailable,
+    writable: osdPortWritable,
+    options: osdPortOptions,
+    selectedIdentifier: osdPortIdentifier,
+    changed: osdPortChanged,
+    load: loadOsdPort,
+    write: writeOsdPort,
+} = useFeaturePort({ setting: "osd_uart", functionName: "FRSKY_OSD" });
+
+const {
+    available: customTextPortAvailable,
+    writable: customTextPortWritable,
+    options: customTextPortOptions,
+    selectedIdentifier: customTextPortIdentifier,
+    baudOptions: customTextBaudOptions,
+    selectedBaud: customTextBaud,
+    changed: customTextPortChanged,
+    load: loadCustomTextPort,
+    write: writeCustomTextPort,
+} = useFeaturePort({
+    setting: "osd_custom_text_uart",
+    functionName: "OSD_CUSTOM_TEXT",
+    baud: { setting: "osd_custom_text_baud" },
+});
+
+// A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
+const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -600,13 +672,13 @@ const saveMenuItems = computed(() => [
         {
             label: i18n.getMessage("osdSetupSave"),
             icon: "i-lucide-save",
-            disabled: !osdStore.dirty || isSaving.value,
+            disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
             icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value || (hasLoadedConfig.value && !osdStore.dirty),
+            disabled: isSaving.value || (hasLoadedConfig.value && !portsOrConfigDirty.value),
             onSelect: refreshConfig,
         },
     ],
@@ -825,6 +897,7 @@ function toggleFieldVisibility(fieldIndex, profileIndex, event) {
 
 // Handle variant change
 function onVariantChange(field) {
+    osdStore.refreshDisplayItemPreview(field);
     trackChange("variant", field.name);
     updatePreview();
 }
@@ -1294,6 +1367,9 @@ async function loadConfig() {
             // Fetch OSD config via Store
             await osdStore.fetchOsdConfig();
 
+            await loadOsdPort();
+            await loadCustomTextPort();
+
             // Set initial profile from store state
             previewProfile.value = osdStore.osdProfiles.selected || 0;
             activeProfile.value = osdStore.osdProfiles.selected || 0;
@@ -1333,7 +1409,10 @@ const saveConfig = () =>
             osdStore.syncToLegacy();
 
             // Send all OSD config to FC and write EEPROM.
-            await osdStore.saveAllConfig();
+            await osdStore.saveAllConfig(async () => {
+                await writeOsdPort();
+                await writeCustomTextPort();
+            });
 
             // Track analytics
             const changes = analyticsChanges.value;
