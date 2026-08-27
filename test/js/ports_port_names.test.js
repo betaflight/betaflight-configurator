@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     PORT_NONE,
+    findPortIdentifierByCliName,
     formatPortSetCommand,
     getPortCliName,
     getPortDisplayName,
@@ -53,5 +54,43 @@ describe("port names", () => {
 
     it("refuses to fall back to the raw identifier, which the firmware would reject", () => {
         expect(() => formatPortSetCommand("rx_uart", 99)).toThrow(/99/);
+    });
+});
+
+describe("findPortIdentifierByCliName", () => {
+    // UART3 is identifier 2 in the legacy block and 53 in the current one; only the ports the FC
+    // reported say which block this board populates.
+    const legacy = [{ identifier: 2 }, { identifier: 20 }];
+    const current = [{ identifier: 53 }, { identifier: 20 }];
+
+    it("resolves an ambiguous UART name against the board's own ports", () => {
+        expect(findPortIdentifierByCliName(legacy, "UART3")).toBe(2);
+        expect(findPortIdentifierByCliName(current, "UART3")).toBe(53);
+    });
+
+    it("reads NONE and an empty reply as unassigned", () => {
+        expect(findPortIdentifierByCliName(current, "NONE")).toBe(PORT_NONE);
+        expect(findPortIdentifierByCliName(current, null)).toBe(PORT_NONE);
+        expect(findPortIdentifierByCliName(current, "")).toBe(PORT_NONE);
+    });
+
+    it("is case and whitespace insensitive, as the CLI is", () => {
+        expect(findPortIdentifierByCliName(current, " uart3 ")).toBe(53);
+    });
+
+    it("resolves an unambiguous name the board did not report", () => {
+        expect(findPortIdentifierByCliName([], "VCP")).toBe(20);
+        expect(findPortIdentifierByCliName([], "SOFTSERIAL2")).toBe(31);
+    });
+
+    it("reads an unreported ambiguous name as unassigned rather than guessing a block", () => {
+        expect(findPortIdentifierByCliName([], "UART3")).toBe(PORT_NONE);
+    });
+
+    it("round trips every name it can build a command from", () => {
+        for (const identifier of [2, 20, 31, 40, 53, 65, 70]) {
+            const name = getPortCliName(identifier);
+            expect(findPortIdentifierByCliName([{ identifier }], name)).toBe(identifier);
+        }
     });
 });

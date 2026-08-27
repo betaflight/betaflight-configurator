@@ -364,7 +364,11 @@ export function useVtx() {
     // (useSaving); this only marshals data and issues the MSP writes. Persist is EEPROM-only
     // (no reboot), matching the previous writeConfiguration(false) behavior. The exact set and
     // order of MSP_SET_VTX* writes is preserved: VTX config, then each power level, then each band.
-    async function saveVtx() {
+    /**
+     * @param {() => Promise<void>} [beforePersist] runs after the parameter groups are written and
+     *   before the persist that serialises them, which is where a CLI `set` has to sit
+     */
+    async function saveVtx(beforePersist) {
         const { saveToEeprom } = useReboot();
 
         syncStateToFC();
@@ -383,6 +387,8 @@ export function useVtx() {
             FC.VTXTABLE_BAND = { ...bandList[index] };
             await MSP.promise(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND));
         }
+
+        await beforePersist?.();
 
         await saveToEeprom();
 

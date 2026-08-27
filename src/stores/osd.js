@@ -367,7 +367,11 @@ export const useOsdStore = defineStore("osd", () => {
         return buffer;
     }
 
-    const saveAllConfig = async () => {
+    /**
+     * @param {() => Promise<void>} [beforePersist] runs after the config is written and before the
+     *   EEPROM write that serialises it, which is where a CLI `set` has to sit
+     */
+    const saveAllConfig = async (beforePersist) => {
         const savedSnapshot = takeSnapshot();
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
@@ -386,6 +390,8 @@ export const useOsdStore = defineStore("osd", () => {
                 encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
             );
         }
+
+        await beforePersist?.();
 
         await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
         captureSnapshot(savedSnapshot);
