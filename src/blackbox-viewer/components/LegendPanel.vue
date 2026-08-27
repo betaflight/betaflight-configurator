@@ -240,10 +240,7 @@ function hideLegend() {
 }
 
 // --- Drag & drop for graph reorder ---
-let dragIndex = null;
-
 function onDragStart(e, gi) {
-    dragIndex = gi;
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", String(gi));
     e.target.classList.add("dragging");
@@ -251,7 +248,6 @@ function onDragStart(e, gi) {
 
 function onDragEnd(e) {
     e.target.classList.remove("dragging");
-    dragIndex = null;
 }
 
 // Dragover/drop on the container
