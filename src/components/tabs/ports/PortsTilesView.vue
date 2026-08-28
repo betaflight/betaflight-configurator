@@ -15,7 +15,7 @@
 
     <template v-else>
         <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionSerial')"></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
             <UiBox v-for="port in serialTiles" :key="port.identifier" type="neutral" :title="port.displayName">
                 <div v-if="!port.claims.length" class="text-xs text-dimmed">
                     {{ $t("portsTileUnassigned") }}
@@ -41,7 +41,7 @@
 
         <template v-if="canNodes.length">
             <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionDronecan')"></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
                 <UiBox
                     v-for="node in canNodes"
                     :key="node.nodeId"
@@ -68,7 +68,7 @@
 
         <template v-if="sensors.length">
             <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionSensors')"></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
                 <UiBox v-for="sensor in sensorTiles" :key="sensor.key" type="neutral" :title="sensor.label">
                     <div class="flex items-center gap-2 text-xs">
                         <UIcon
