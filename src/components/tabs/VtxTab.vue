@@ -6,35 +6,13 @@
             <WikiButton docUrl="vtx" />
 
             <!-- Help note -->
-            <UiBox highlight v-show="vtxSupported">
+            <UiBox highlight v-show="vtxSupported" class="mt-4">
                 <p v-html="$t('vtxHelp')"></p>
             </UiBox>
 
             <!-- Not supported -->
-            <UiBox highlight v-show="!vtxSupported">
+            <UiBox highlight v-show="!vtxSupported" class="mt-4">
                 <div v-html="$t('vtxMessageNotSupported')"></div>
-            </UiBox>
-
-            <!-- Device: protocol and port stay reachable before a VTX answers -->
-            <UiBox v-if="vtxPortAvailable" :title="$t('vtxDeviceSetup')" type="neutral" collapsible class="mt-4">
-                <div class="flex flex-col gap-2">
-                    <SettingRow :label="$t('vtxProtocol')" :help="$t('vtxProtocolHelp')">
-                        <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
-                    </SettingRow>
-
-                    <SettingRow
-                        :label="$t('vtxSerialPort')"
-                        :help="vtxPortFollowsOsd ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
-                    >
-                        <USelect
-                            :model-value="vtxPortShown"
-                            @update:model-value="(v) => (vtxPortIdentifier = v)"
-                            :items="vtxPortOptions"
-                            :disabled="!vtxPortWritable || vtxPortFollowsOsd"
-                            class="w-36"
-                        />
-                    </SettingRow>
-                </div>
             </UiBox>
 
             <!-- Table not configured / factory bands warnings -->
@@ -164,9 +142,39 @@
                         </div>
                     </UiBox>
                 </div>
+            </div>
+
+            <div class="flex flex-wrap items-start gap-x-4">
+                <!-- Device: protocol and port stay reachable before a VTX answers -->
+                <UiBox
+                    v-if="vtxPortAvailable"
+                    :title="$t('vtxDeviceSetup')"
+                    type="neutral"
+                    collapsible
+                    class="mt-4 basis-96 grow max-w-xl"
+                >
+                    <div class="flex flex-wrap gap-x-8 gap-y-2">
+                        <SettingRow :label="$t('vtxProtocol')" :help="$t('vtxProtocolHelp')">
+                            <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
+                        </SettingRow>
+
+                        <SettingRow
+                            :label="$t('vtxSerialPort')"
+                            :help="vtxPortFollowsOsd ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
+                        >
+                            <USelect
+                                :model-value="vtxPortShown"
+                                @update:model-value="(v) => (vtxPortIdentifier = v)"
+                                :items="vtxPortOptions"
+                                :disabled="!vtxPortWritable || vtxPortFollowsOsd"
+                                class="w-36"
+                            />
+                        </SettingRow>
+                    </div>
+                </UiBox>
 
                 <!-- VTX Table -->
-                <div class="lg:col-span-4 overflow-x-auto">
+                <div class="overflow-x-auto min-w-0 grow max-w-3xl">
                     <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="mt-4 min-w-[750px]">
                         <div class="flex flex-col gap-4">
                             <!-- Bands and channels count -->
