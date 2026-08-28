@@ -208,7 +208,7 @@
                     "dynamic": false
                 },
                 "RPM_FILTER": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [],
                     "dynamic": true
                 },
                 "RTH": {
