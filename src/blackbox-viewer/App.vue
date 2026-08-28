@@ -12,6 +12,7 @@
                 @export-csv="onExportCsv"
                 @export-gpx="onExportGpx"
                 @export-workspaces="onExportWorkspaces"
+                @export-video="appStore.videoExportDialogOpen = true"
                 @toggle-fullscreen="onToggleFullscreen"
             />
         </Teleport>
@@ -95,6 +96,7 @@
         <!-- Dialogs -->
         <KeysDialog v-model:open="appStore.keysDialogOpen" />
         <UserSettingsDialog v-model:open="appStore.settingsDialogOpen" @save="onSaveSettings" />
+        <VideoExportDialog v-model:open="appStore.videoExportDialogOpen" />
         <GraphConfigDialog
             v-model:open="appStore.graphConfigDialogOpen"
             :flightLog="logStore.flightLog"
@@ -116,6 +118,7 @@ import { usePlaybackStore } from "./stores/playback.js";
 import { useSettingsStore } from "./stores/settings.js";
 import { useWorkspaceStore } from "./stores/workspace.js";
 import AppToolbar from "./components/AppToolbar.vue";
+import VideoExportDialog from "./components/VideoExportDialog.vue";
 import WelcomePage from "./components/WelcomePage.vue";
 import ViewControls from "./components/ViewControls.vue";
 import PlaybackControls from "./components/PlaybackControls.vue";
