@@ -1,5 +1,6 @@
 import { formatTime } from "./tools.js";
 import { GRAPH_MIN_ZOOM } from "./stores/graph.js";
+import { isExportInProgress } from "./playback_controls.js";
 
 /**
  * Create a keydown event handler for the document.
@@ -310,7 +311,7 @@ export function createKeydownHandler(ctx) {
 
     return function (e) {
         // Dormant behind other tabs (embedded): don't hijack keys the user means for the host.
-        if (!appStore.viewerActive) {
+        if (!appStore.viewerActive || isExportInProgress()) {
             return;
         }
         const shifted = e.altKey || e.shiftKey || e.ctrlKey || e.metaKey;
@@ -362,7 +363,7 @@ export function createDropdownSpaceGuard(ctx) {
     const { appStore, hasGraph, logPlayPause } = ctx;
 
     return function (e) {
-        if (e.code !== "Space" || !appStore.viewerActive || !hasGraph()) {
+        if (e.code !== "Space" || !appStore.viewerActive || isExportInProgress() || !hasGraph()) {
             return;
         }
         // Match a reka-ui dropdown-menu trigger (aria-haspopup="menu") or select
