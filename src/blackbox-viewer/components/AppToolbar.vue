@@ -35,6 +35,27 @@
                     title="Export your workspace configurations to file"
                     @click="$emit('export-workspaces')"
                 />
+                <UTooltip :text="videoExportTitle" :delay-duration="300">
+                    <span
+                        data-testid="video-export-capability"
+                        class="inline-flex"
+                        :role="videoExportDisabled ? 'group' : undefined"
+                        :aria-disabled="videoExportDisabled || undefined"
+                        :aria-label="videoExportDisabled ? `Export Video unavailable: ${videoExportTitle}` : undefined"
+                        :tabindex="videoExportDisabled ? 0 : undefined"
+                    >
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            label="Export Video"
+                            icon="i-lucide-video"
+                            size="xs"
+                            :disabled="videoExportDisabled"
+                            :class="{ 'pointer-events-none': videoExportDisabled }"
+                            @click="$emit('export-video')"
+                        />
+                    </span>
+                </UTooltip>
                 <USeparator orientation="vertical" class="h-4" />
             </template>
             <UButton
@@ -67,9 +88,11 @@
 </template>
 
 <script setup>
+import { computed, ref, watch } from "vue";
 import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import { useGraphStore } from "../stores/graph.js";
+import { probeVideoExport } from "../video_export.js";
 import LogFileInput from "./LogFileInput.vue";
 
 defineEmits([
@@ -77,6 +100,7 @@ defineEmits([
     "export-csv",
     "export-gpx",
     "export-workspaces",
+    "export-video",
     "open-settings",
     "open-keys",
     "toggle-fullscreen",
@@ -85,6 +109,41 @@ defineEmits([
 const logStore = useLogStore();
 const appStore = useAppStore();
 const graphStore = useGraphStore();
+const videoCapability = ref(null);
+let probeGeneration = 0;
+
+const videoExportDisabled = computed(() => !videoCapability.value?.canEncode);
+
+const videoExportTitle = computed(() => {
+    if (!videoCapability.value) {
+        return "Checking video export support…";
+    }
+    return videoCapability.value.canEncode ? "Render the marked range to a video file" : videoCapability.value.reason;
+});
+
+watch(
+    () => logStore.hasLog,
+    async (hasLog) => {
+        const generation = ++probeGeneration;
+        videoCapability.value = null;
+        if (!hasLog) {
+            return;
+        }
+        let result;
+        try {
+            result = await probeVideoExport({ width: 1280, height: 720 });
+        } catch (error) {
+            result = {
+                canEncode: false,
+                reason: `Video capability detection failed: ${error?.message ?? String(error)}`,
+            };
+        }
+        if (generation === probeGeneration) {
+            videoCapability.value = result;
+        }
+    },
+    { immediate: true },
+);
 </script>
 
 <style scoped>
