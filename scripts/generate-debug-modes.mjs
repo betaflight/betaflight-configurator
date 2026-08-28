@@ -2078,7 +2078,7 @@ function collectVersionData(repo, versions) {
     return unresolvedTotal;
 }
 
-async function assertUpToDate(outputs, devRefFlag) {
+async function assertUpToDate(outputs, flags) {
     const stale = [];
     for (const [path, expected] of outputs) {
         const actual = existsSync(path) ? await readFile(path, "utf8") : null;
@@ -2097,9 +2097,10 @@ async function assertUpToDate(outputs, devRefFlag) {
      * generator is worse than none here: the default reads firmware master, and
      * for anything whose labels come from a firmware branch still in review that
      * silently regenerates a different table rather than the one being checked.
-     * The ref is the part the reader cannot guess; the checkout is theirs to name.
+     * The checkout is the reader's own to name; every other flag that decides what
+     * gets written is quoted back, so the command reproduces the run that failed.
      */
-    const invocation = ["npm run generate:debug-modes --", "--repo <your betaflight checkout>", devRefFlag]
+    const invocation = ["npm run generate:debug-modes --", "--repo <your betaflight checkout>", ...flags]
         .filter(Boolean)
         .join(" ");
     throw new Error(
@@ -2153,6 +2154,7 @@ async function main() {
     const schemaOutPath = resolve(projectRoot, args["schema-out"] ?? DEFAULT_SCHEMA_OUT);
 
     const repoUrl = args["source-url"] ?? SOURCE_URL;
+    const sourceUrlFlag = args["source-url"] === undefined ? "" : `--source-url ${args["source-url"]}`;
 
     if (args.pr !== undefined) {
         // Interpolated into a git refspec, so accept nothing but a number.
@@ -2212,7 +2214,7 @@ async function main() {
     ];
 
     if (args.check) {
-        await assertUpToDate(outputs, devRefFlag);
+        await assertUpToDate(outputs, [devRefFlag, sourceUrlFlag]);
         return;
     }
 
