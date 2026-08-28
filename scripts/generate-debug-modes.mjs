@@ -2175,12 +2175,13 @@ async function assertUpToDate(outputs, flags) {
      * generator is worse than none here: the default reads firmware master, and
      * for anything whose labels come from a firmware branch still in review that
      * silently regenerates a different table rather than the one being checked.
-     * The checkout is the reader's own to name; every other flag that decides what
-     * gets written is quoted back, so the command reproduces the run that failed.
+     *
+     * What is quoted back is the run that failed and nothing more. A flag the run
+     * did not need is not added on the reader's behalf: --repo only appears when
+     * this run was given one, because otherwise the checkout was found on its own
+     * and will be again.
      */
-    const invocation = ["npm run generate:debug-modes --", "--repo <your betaflight checkout>", ...flags]
-        .filter(Boolean)
-        .join(" ");
+    const invocation = ["npm run generate:debug-modes --", ...flags].filter(Boolean).join(" ");
     throw new Error(
         [
             "Out of date with the firmware source:",
@@ -2316,6 +2317,7 @@ async function main() {
 
     if (args.check) {
         await assertUpToDate(outputs, [
+            flagFor("repo"),
             devRefFlag,
             ...["source-url", "min-api", "out", "labels-out", "fields-out", "json-out", "schema-out"].map(flagFor),
         ]);
