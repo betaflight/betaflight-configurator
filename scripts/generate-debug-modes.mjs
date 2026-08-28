@@ -114,6 +114,9 @@ const WORKTREE_REF = "WORKTREE";
 // run recognises its own preview output.
 const WORKTREE_MARKER = "NOT FOR COMMIT";
 const DEFAULT_MIN_API_MINOR = 44;
+
+// A value that can be pasted into a shell as it stands.
+const SHELL_SAFE_WORD = /^[\w./:@=-]+$/;
 const DEFAULT_OUT = "src/js/debug_modes_table.js";
 const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.js";
 const DEFAULT_FIELDS_OUT = "test/generated/debug_field_usage.json";
@@ -326,7 +329,7 @@ function debugTablesCommit(repo, ref) {
  * so provenance follows what was generated without churning on unrelated
  * firmware work - measured at 5 commits behind master's tip, not at the tip.
  */
-const DEBUG_DATA_PATTERN = `${ANNOTATION_MARKER}|DEBUG_SET\\(`;
+const DEBUG_DATA_PATTERN = String.raw`${ANNOTATION_MARKER}|DEBUG_SET\(`;
 
 function debugDataCommit(repo, ref) {
     const base = worktreeBase(repo, ref);
@@ -1084,26 +1087,29 @@ function maskNonCode(source) {
         }
     };
 
-    for (let index = 0; index < source.length; index++) {
+    let index = 0;
+    while (index < source.length) {
         const pair = source.slice(index, index + 2);
         if (pair === "/*") {
             const close = source.indexOf("*/", index + 2);
             const end = close === -1 ? source.length : close + 2;
             blank(index, end);
-            index = end - 1;
+            index = end;
         } else if (pair === "//") {
             const newline = source.indexOf("\n", index);
             const end = newline === -1 ? source.length : newline;
             if (source.slice(index, index + 4) !== ANNOTATION_MARKER) {
                 blank(index, end);
             }
-            index = end - 1;
+            index = end;
         } else if (source[index] === '"' || source[index] === "'") {
             // Step over a literal without touching it. Its contents are not code,
             // but they are not a comment either: a `//` inside a URL would
             // otherwise blank the rest of the line, and a `/*` would blank
             // everything up to the next `*/` anywhere in the file.
-            index = findLiteralEnd(source, index);
+            index = findLiteralEnd(source, index) + 1;
+        } else {
+            index += 1;
         }
     }
 
@@ -2206,7 +2212,8 @@ async function main() {
     // Three ways to name the in-development firmware, and they cannot be mixed.
     const sources = ["worktree", "dev-ref", "pr"].filter((flag) => args[flag] !== undefined);
     if (sources.length > 1) {
-        throw new Error(`Name the in-development firmware once: ${sources.map((flag) => `--${flag}`).join(" and ")}`);
+        const named = sources.map((flag) => `--${flag}`).join(" and ");
+        throw new Error(`Name the in-development firmware once: ${named}`);
     }
 
     let devRef = args.worktree === true ? WORKTREE_REF : (args["dev-ref"] ?? DEFAULT_DEV_REF);
@@ -2222,7 +2229,16 @@ async function main() {
      * allowed to proceed, and suggesting it would hand someone the way around
      * the one guard that protects indices already recorded into blackbox logs.
      */
-    const shellQuote = (value) => (/^[\w./:@=-]+$/.test(value) ? value : `'${String(value).replaceAll("'", `'\\''`)}'`);
+    const shellQuote = (value) => {
+        const text = String(value);
+        if (SHELL_SAFE_WORD.test(text)) {
+            return text;
+        }
+        // A single-quoted shell word has to close, carry an escaped quote, and
+        // reopen: 'it'\''s'.
+        const escaped = text.replaceAll("'", String.raw`'\''`);
+        return `'${escaped}'`;
+    };
     const flagFor = (name) => (args[name] === undefined ? "" : `--${name} ${shellQuote(args[name])}`);
 
     let devRefFlag = flagFor("dev-ref");
