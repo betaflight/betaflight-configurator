@@ -114,7 +114,7 @@ async function sendSetting(command) {
  * through that setting rather than through the per-port function mask. The mask is only a
  * synthesised view and cannot answer "which port is this feature on" in general: the three MSP
  * and three telemetry instances share a bit, a rangefinder and an optical flow sensor share one,
- * a VTX sets a bit chosen by its protocol, and an OSD on MSP DisplayPort sets none at all. The
+ * and a VTX or an OSD sets a bit chosen by its protocol, which on MSP is the shared MSP bit. The
  * mask is still what builds the port list and its "claimed by" annotations.
  *
  * Whether a build has the setting at all is discovered the same way — a `get` for a setting the
