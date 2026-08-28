@@ -264,6 +264,19 @@
                                 />
                             </SettingRow>
                             <SettingRow
+                                v-if="osdProtocolOptions.length"
+                                :label="$t('osdProtocol')"
+                                :help="$t('osdProtocolHelp')"
+                            >
+                                <USelect
+                                    v-model="osdProtocol"
+                                    :items="osdProtocolOptions"
+                                    :disabled="!osdPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
                                 v-if="osdPortAvailable"
                                 :label="$t('osdSerialPort')"
                                 :help="$t('osdSerialPortHelp')"
@@ -297,7 +310,7 @@
                                 <USelect
                                     v-model="customTextBaud"
                                     :items="customTextBaudOptions"
-                                    :disabled="!customTextPortWritable"
+                                    :disabled="!customTextPortWritable || !customTextPortAssigned"
                                     size="xs"
                                     class="min-w-40"
                                 />
@@ -588,12 +601,14 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
 
-// From API 1.49 both live on the OSD parameter group. osd_uart only shows up in the synthesised
-// mask when the display port device is FrSky OSD, and sets no bit at all on MSP DisplayPort, so
-// the setting is the only reliable read either way.
+// From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
+// mask follows the display port device, and on MSP DisplayPort it is the shared MSP bit, so the
+// setting is the only reliable read either way.
 const {
     available: osdPortAvailable,
     writable: osdPortWritable,
@@ -602,7 +617,13 @@ const {
     changed: osdPortChanged,
     load: loadOsdPort,
     write: writeOsdPort,
-} = useFeaturePort({ setting: "osd_uart", functionName: "FRSKY_OSD" });
+    selectedProtocol: osdProtocol,
+    protocolOptions: osdProtocolOptions,
+} = useFeaturePort({
+    setting: "osd_uart",
+    functionName: "FRSKY_OSD",
+    protocol: { setting: "osd_displayport_device" },
+});
 
 const {
     available: customTextPortAvailable,
@@ -619,6 +640,8 @@ const {
     functionName: "OSD_CUSTOM_TEXT",
     baud: { setting: "osd_custom_text_baud" },
 });
+
+const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 
 // A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
 const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
@@ -662,6 +685,7 @@ const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const { isSaving, runSave } = useSaving();
+const { reboot } = useReboot();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
@@ -674,6 +698,12 @@ const saveMenuItems = computed(() => [
             icon: "i-lucide-save",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
+        },
+        {
+            label: i18n.getMessage("osdSetupSaveReboot"),
+            icon: "i-lucide-rotate-cw",
+            disabled: !portsOrConfigDirty.value || isSaving.value,
+            onSelect: saveAndRebootConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
@@ -1432,6 +1462,12 @@ const saveConfig = () =>
             },
         },
     );
+
+// A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
+const saveAndRebootConfig = async () => {
+    await saveConfig();
+    await reboot();
+};
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
