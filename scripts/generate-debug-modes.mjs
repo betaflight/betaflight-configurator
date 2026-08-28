@@ -1068,10 +1068,11 @@ function annotationAt(text, resolved, where, readScope, problems) {
  * the fixture that records what each mode writes is what the label check uses to
  * decide whether a field is unlabelled - so a dead call can hide a real gap.
  *
- * String literals are left alone. Blanking them would take the filename out of
- * `#include "foo.h"` with it, and the scope walk needs that to reach the enum an
- * annotation names - which cost seven annotated fields when tried. A literal
- * holding text that parses as a whole DEBUG_SET() call is not a real risk.
+ * String literals are stepped over rather than blanked. Blanking them would take
+ * the filename out of `#include "foo.h"` with it, and the scope walk needs that to
+ * reach the enum an annotation names - which cost seven annotated fields when
+ * tried. Stepping over them still keeps a comment marker inside one from being
+ * read as the start of a comment.
  */
 function maskNonCode(source) {
     const out = [...source];
@@ -1097,6 +1098,12 @@ function maskNonCode(source) {
                 blank(index, end);
             }
             index = end - 1;
+        } else if (source[index] === '"' || source[index] === "'") {
+            // Step over a literal without touching it. Its contents are not code,
+            // but they are not a comment either: a `//` inside a URL would
+            // otherwise blank the rest of the line, and a `/*` would blank
+            // everything up to the next `*/` anywhere in the file.
+            index = findLiteralEnd(source, index);
         }
     }
 
