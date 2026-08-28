@@ -32,8 +32,10 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
 
-// Nuxt UI does not currently ship Serbian locales; use its closely related Croatian
-// messages while keeping the application translation codes distinct.
+// Nuxt UI does not currently ship some languages
+// Create new locale for them extending the English locale as base
+// For Serbian locales, use its closely related Croatian
+const he = { ...en, name: "\u05E2\u05D1\u05E8\u05D9\u05EA", code: "he", dir: "rtl" };
 const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
 const sr_Cyrl = {
     ...hr,
@@ -58,6 +60,7 @@ const supportedLocales = [
     eu,
     fr,
     gl,
+    he,
     it,
     ja,
     ka,
