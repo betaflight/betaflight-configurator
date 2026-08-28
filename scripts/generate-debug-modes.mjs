@@ -84,7 +84,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { format, resolveConfig } from "prettier";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -2046,21 +2046,36 @@ function collectVersionData(repo, versions) {
     return unresolvedTotal;
 }
 
-async function assertUpToDate(outputs) {
+async function assertUpToDate(outputs, devRef) {
     const stale = [];
     for (const [path, expected] of outputs) {
         const actual = existsSync(path) ? await readFile(path, "utf8") : null;
         if (actual !== expected) {
-            stale.push(path);
+            stale.push(relative(projectRoot, path));
         }
     }
 
-    if (stale.length > 0) {
-        throw new Error(
-            `Out of date with the firmware source: ${stale.join(", ")}. Re-run: node scripts/generate-debug-modes.mjs`,
-        );
+    if (stale.length === 0) {
+        console.log("generate-debug-modes: up to date with the firmware source");
+        return;
     }
-    console.log("generate-debug-modes: up to date with the firmware source");
+
+    /*
+     * Name the firmware that was checked against. Bare advice to re-run the
+     * generator is worse than none here: the default reads firmware master, and
+     * for anything whose labels come from a firmware branch still in review that
+     * silently regenerates a different table rather than the one being checked.
+     * The ref is the part the reader cannot guess; the checkout is theirs to name.
+     */
+    const against = devRef === WORKTREE_REF ? "--worktree" : `--dev-ref ${devRef}`;
+    throw new Error(
+        [
+            "Out of date with the firmware source:",
+            ...stale.map((path) => `  - ${path}`),
+            "Regenerate against the same firmware and commit the result:",
+            `  npm run generate:debug-modes -- --repo <your betaflight checkout> ${against}`,
+        ].join("\n"),
+    );
 }
 
 async function writeOutputs(outputs) {
@@ -2147,7 +2162,7 @@ async function main() {
     ];
 
     if (args.check) {
-        await assertUpToDate(outputs);
+        await assertUpToDate(outputs, devRef);
         return;
     }
 
