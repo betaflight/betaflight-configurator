@@ -247,10 +247,20 @@ onUnmounted(cancelExport);
 
                 <div class="grid grid-cols-2 gap-3">
                     <UFormField label="Framerate">
-                        <USelect v-model="frameRate" :items="FRAMERATE_OPTIONS" class="w-full" />
+                        <USelect
+                            v-model="frameRate"
+                            :items="FRAMERATE_OPTIONS"
+                            :ui="{ content: 'z-[3002]' }"
+                            class="w-full"
+                        />
                     </UFormField>
                     <UFormField label="Resolution">
-                        <USelect v-model="resolutionValue" :items="RESOLUTIONS" class="w-full" />
+                        <USelect
+                            v-model="resolutionValue"
+                            :items="RESOLUTIONS"
+                            :ui="{ content: 'z-[3002]' }"
+                            class="w-full"
+                        />
                     </UFormField>
                 </div>
 
