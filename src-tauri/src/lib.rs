@@ -1,3 +1,4 @@
+mod mdns;
 mod tcp;
 
 // Native BLE covers the platforms whose webview has no Web Bluetooth: Apple (WKWebView) and
@@ -40,7 +41,9 @@ pub fn run() {
         Ok(())
     });
 
-    let builder = builder.manage(tcp::TcpState::default());
+    let builder = builder
+        .manage(tcp::TcpState::default())
+        .manage(mdns::MdnsState::default());
 
     // Registering blec is what populates the handler its Rust API resolves, and what registers
     // the Android native plugin — the ble_* commands are dead without it.
@@ -52,6 +55,7 @@ pub fn run() {
             tcp::tcp_connect,
             tcp::tcp_send,
             tcp::tcp_disconnect,
+            mdns::mdns_browse,
             ble::ble_scan,
             ble::ble_connect,
             ble::ble_send,
@@ -61,7 +65,8 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         tcp::tcp_connect,
         tcp::tcp_send,
-        tcp::tcp_disconnect
+        tcp::tcp_disconnect,
+        mdns::mdns_browse
     ]);
 
     builder

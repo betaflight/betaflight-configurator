@@ -92,6 +92,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
     isAndroid: () => false,
+    isTauri: () => true,
     isTauriAndroid: () => false,
 }));
 
@@ -219,6 +220,19 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
         const selected = DeviceHandler.selectActivePort();
 
         expect(selected).toBe("bluetooth_ab12");
+    });
+
+    // Bridges found over mDNS live in currentTcpPorts under a tcp:// path.
+    it("selects the connected bridge by connectionId", () => {
+        const connected = { path: "tcp://10.1.1.208:5761", displayName: "betaflight-bridge-f8a260" };
+        DeviceHandler.currentTcpPorts = [connected];
+        serial.connected = true;
+        serial.connectionId = "tcp://10.1.1.208:5761";
+        serial.getConnectedDevice.mockReturnValue({ rawSocket: true });
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBe("tcp://10.1.1.208:5761");
     });
 });
 
@@ -375,6 +389,7 @@ describe("createDfuProtocol routing", () => {
             checkSerialSupport: () => true,
             checkUsbSupport: () => true,
             isAndroid: () => false,
+            isTauri: () => true,
             isTauriAndroid: () => true,
         }));
 

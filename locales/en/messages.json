@@ -76,6 +76,10 @@
         "message": "Disconnect (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Disconnect ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Disconnect (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
