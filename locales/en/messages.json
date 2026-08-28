@@ -2323,7 +2323,7 @@
         "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab, so this view is read only.  It shows which port every feature currently uses; change an assignment from the tab that owns the feature."
     },
     "portsTilesHelp": {
-        "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab.  Each tile below shows what is attached to the board and which feature every port currently serves."
+        "message": "This firmware assigns serial ports on each feature's own tab.  Each tile below shows what is attached to the board and which feature every port currently serves."
     },
     "portsPeripheralsUnsupported": {
         "message": "This firmware does not report its peripherals inventory yet."

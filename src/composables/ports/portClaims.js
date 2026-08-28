@@ -29,7 +29,7 @@ export function describeClaim(name) {
     let instance = null;
 
     if (!definition) {
-        const match = name.match(/^(.*)_(\d+)$/);
+        const match = /^(.*)_(\d+)$/.exec(name);
         if (match && CLAIM_DEFINITIONS[match[1]]?.instanced) {
             definition = CLAIM_DEFINITIONS[match[1]];
             stem = match[1];

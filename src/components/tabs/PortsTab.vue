@@ -2,7 +2,7 @@
     <BaseTab tab-name="ports">
         <template v-if="tilesView">
             <div class="content_wrapper">
-                <div class="tab_title" v-html="$t('tabPorts')"></div>
+                <div class="tab_title">{{ $t("tabPorts") }}</div>
                 <WikiButton docUrl="ports" />
                 <PortsTilesView />
             </div>

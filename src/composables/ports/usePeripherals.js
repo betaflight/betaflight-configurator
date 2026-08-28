@@ -15,6 +15,78 @@ import { findPortIdentifierByCliName, getPortDisplayName } from "./portNames";
  *
  * @param {string[]} lines
  */
+function splitList(text) {
+    return text
+        .split(",")
+        .map((entry) => entry.trim())
+        .filter(Boolean);
+}
+
+function parseSerialLine(line) {
+    const match = /^serial (\S+): (.*)$/.exec(line);
+    if (!match) {
+        return null;
+    }
+
+    return {
+        portName: match[1],
+        claims: splitList(match[2]).map((claim) => ({
+            name: claim.replace(/\*$/, ""),
+            active: claim.endsWith("*"),
+        })),
+    };
+}
+
+function parseCanNodeLine(line) {
+    const match = /^can node (\d+): (.*)$/.exec(line);
+    if (!match) {
+        return null;
+    }
+
+    // "<name> (<health>[, <mode>])[ <sensor>, ...]" - the name never contains
+    // " (", so the first occurrence splits it off without regex backtracking.
+    const detail = match[2];
+    const open = detail.indexOf(" (");
+    const close = detail.indexOf(")", open);
+    if (open < 0 || close < 0) {
+        return null;
+    }
+
+    const [health, mode] = splitList(detail.slice(open + 2, close));
+
+    return {
+        nodeId: Number(match[1]),
+        name: detail.slice(0, open),
+        health,
+        mode: mode ?? null,
+        sensors: splitList(detail.slice(close + 1)),
+    };
+}
+
+function parseSensorLine(line) {
+    const match = /^(gyro \d+|acc|baro|mag): (.*)$/.exec(line);
+    if (!match) {
+        return null;
+    }
+
+    const key = match[1];
+    const detail = match[2];
+
+    const missingSuffix = " configured, not detected";
+    if (detail.endsWith(missingSuffix)) {
+        return { key, hardware: detail.slice(0, -missingSuffix.length), bus: null, detected: false, enabled: false };
+    }
+
+    const [device, bus] = detail.split(" on ");
+    return {
+        key,
+        hardware: device.replace(/\*$/, ""),
+        bus: bus ?? null,
+        detected: true,
+        enabled: device.endsWith("*"),
+    };
+}
+
 export function parsePeripherals(lines) {
     const serial = [];
     const canNodes = [];
@@ -23,57 +95,21 @@ export function parsePeripherals(lines) {
     for (const raw of lines ?? []) {
         const line = raw.trim();
 
-        let match = line.match(/^serial (\S+): (.*)$/);
-        if (match) {
-            serial.push({
-                portName: match[1],
-                claims: match[2]
-                    .split(",")
-                    .map((claim) => claim.trim())
-                    .filter(Boolean)
-                    .map((claim) => ({
-                        name: claim.replace(/\*$/, ""),
-                        active: claim.endsWith("*"),
-                    })),
-            });
+        const port = parseSerialLine(line);
+        if (port) {
+            serial.push(port);
             continue;
         }
 
-        match = line.match(/^can node (\d+): (.*) \(([^,)]+)(?:, ([^)]+))?\)\s*(.*)$/);
-        if (match) {
-            canNodes.push({
-                nodeId: Number(match[1]),
-                name: match[2],
-                health: match[3],
-                mode: match[4] ?? null,
-                sensors: match[5]
-                    ? match[5]
-                        .split(",")
-                        .map((sensor) => sensor.trim())
-                        .filter(Boolean)
-                    : [],
-            });
+        const node = parseCanNodeLine(line);
+        if (node) {
+            canNodes.push(node);
             continue;
         }
 
-        match = line.match(/^(gyro \d+|acc|baro|mag): (.*)$/);
-        if (match) {
-            const detail = match[2];
-            const missing = detail.match(/^(.*) configured, not detected$/);
-            if (missing) {
-                sensors.push({ key: match[1], hardware: missing[1], bus: null, detected: false, enabled: false });
-                continue;
-            }
-            const device = detail.match(/^(\S+?)(\*)?(?: on (.*))?$/);
-            if (device) {
-                sensors.push({
-                    key: match[1],
-                    hardware: device[1],
-                    bus: device[3] ?? null,
-                    detected: true,
-                    enabled: Boolean(device[2]),
-                });
-            }
+        const sensor = parseSensorLine(line);
+        if (sensor) {
+            sensors.push(sensor);
         }
     }
 
@@ -87,16 +123,16 @@ export function parsePeripherals(lines) {
  * The probe is the command itself — a build without it answers with a CLI
  * error, and the view falls back to a "nothing to show" note.
  */
+function loadSerialPortInventory() {
+    return new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
+}
+
 export function usePeripherals() {
     const isLoading = ref(true);
     const supported = ref(false);
     const serialPorts = ref([]);
     const canNodes = ref([]);
     const sensors = ref([]);
-
-    function loadSerialPortInventory() {
-        return new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
-    }
 
     async function load() {
         isLoading.value = true;

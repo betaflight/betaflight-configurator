@@ -1,6 +1,6 @@
 <template>
     <UiBox type="warning" highlight class="mb-4">
-        <p v-html="$t('portsTilesHelp')"></p>
+        <p>{{ $t("portsTilesHelp") }}</p>
     </UiBox>
 
     <TabLoadingState v-if="isLoading" size="size-8" color-class="text-muted">
@@ -9,12 +9,12 @@
 
     <template v-else-if="!supported">
         <UiBox type="neutral" highlight>
-            <p v-html="$t('portsPeripheralsUnsupported')"></p>
+            <p>{{ $t("portsPeripheralsUnsupported") }}</p>
         </UiBox>
     </template>
 
     <template v-else>
-        <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionSerial')"></div>
+        <div class="text-sm font-semibold mt-4 mb-2">{{ $t("portsSectionSerial") }}</div>
         <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
             <UiBox v-for="port in serialTiles" :key="port.identifier" type="neutral" :title="port.displayName">
                 <div v-if="!port.claims.length" class="text-xs text-dimmed">
@@ -23,7 +23,7 @@
                 <div v-for="claim in port.claims" :key="claim.name" class="flex items-center gap-2 text-xs">
                     <UIcon
                         :name="claim.active ? 'i-lucide-circle-check' : 'i-lucide-alert-triangle'"
-                        :class="claim.active ? 'text-green-500' : 'text-warning'"
+                        :class="claim.active ? 'text-success' : 'text-warning'"
                         :title="$t(claim.active ? 'portsClaimActiveHelp' : 'portsClaimInactiveHelp')"
                         class="size-4 shrink-0"
                     />
@@ -40,7 +40,7 @@
         </div>
 
         <template v-if="canNodes.length">
-            <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionDronecan')"></div>
+            <div class="text-sm font-semibold mt-4 mb-2">{{ $t("portsSectionDronecan") }}</div>
             <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
                 <UiBox
                     v-for="node in canNodes"
@@ -52,7 +52,7 @@
                     <div class="flex items-center gap-2 text-xs">
                         <UIcon
                             :name="node.health === 'OK' ? 'i-lucide-circle-check' : 'i-lucide-alert-triangle'"
-                            :class="node.health === 'OK' ? 'text-green-500' : 'text-warning'"
+                            :class="node.health === 'OK' ? 'text-success' : 'text-warning'"
                             class="size-4 shrink-0"
                         />
                         <span
@@ -67,13 +67,13 @@
         </template>
 
         <template v-if="sensors.length">
-            <div class="text-sm font-semibold mt-4 mb-2" v-html="$t('portsSectionSensors')"></div>
+            <div class="text-sm font-semibold mt-4 mb-2">{{ $t("portsSectionSensors") }}</div>
             <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
                 <UiBox v-for="sensor in sensorTiles" :key="sensor.key" type="neutral" :title="sensor.label">
                     <div class="flex items-center gap-2 text-xs">
                         <UIcon
                             :name="sensor.detected ? 'i-lucide-circle-check' : 'i-lucide-alert-triangle'"
-                            :class="sensor.detected ? 'text-green-500' : 'text-warning'"
+                            :class="sensor.detected ? 'text-success' : 'text-warning'"
                             class="size-4 shrink-0"
                         />
                         <span class="flex-1">
