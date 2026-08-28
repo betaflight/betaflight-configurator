@@ -338,6 +338,7 @@ import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "../../composables/useTabLoad";
+import { useDataflashErase } from "../../composables/useDataflashErase";
 
 const BLOCK_SIZE = 4096;
 
@@ -410,8 +411,6 @@ export default defineComponent({
         const debugFieldsEnabled = ref(debugStore.enableFields ? debugStore.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
-        const eraseCancelled = ref(false);
-        const isErasing = ref(false);
         const blockSize = ref(BLOCK_SIZE);
         const writeError = ref(false);
 
@@ -600,6 +599,35 @@ export default defineComponent({
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
 
+        const {
+            isErasing,
+            start: startFlashErase,
+            cancel: cancelFlashErase,
+        } = useDataflashErase({
+            onComplete: () => {
+                if (
+                    getConfig("showNotifications").showNotifications &&
+                    NotificationManager.checkPermission() === "granted"
+                ) {
+                    NotificationManager.showNotification("Betaflight App", {
+                        body: i18n.getMessage("flashEraseDoneNotification"),
+                        icon: "/images/pwa/favicon.ico",
+                    });
+                }
+            },
+            onError: (error) => {
+                console.error("Dataflash erase failed", error);
+                gui_log(
+                    `<strong><span class="message-negative">${i18n.getMessage("error", {
+                        errorMessage: error,
+                    })}</span></strong>`,
+                );
+            },
+            onFinish: () => {
+                eraseOpen.value = false;
+            },
+        });
+
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
             debugFieldsEnabled.value.splice(index, 1, value);
@@ -654,79 +682,16 @@ export default defineComponent({
             if (dataflashUsedSize.value === 0) {
                 return;
             }
-            eraseCancelled.value = false;
             eraseOpen.value = true;
         }
 
-        async function flashErase() {
-            try {
-                connectionStore.pauseLiveData();
-                // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
-                // firing it unawaited would wipe the pollForEraseCompletion callback we register just
-                // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
-                // dialog stuck forever even though the FC does erase. Drain first, then register.
-                await connectionStore.clearMspQueue();
-                isErasing.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
-            } catch (error) {
-                // Startup failed before the erase poll could take over: restore the UI and
-                // live-data pump so the dialog doesn't strand, and surface the failure.
-                console.error("Failed to start dataflash erase", error);
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                gui_log(
-                    `<strong><span class="message-negative">${i18n.getMessage("error", {
-                        errorMessage: error,
-                    })}</span></strong>`,
-                );
-            }
+        function flashErase() {
+            return startFlashErase();
         }
 
         function flashEraseCancel() {
-            eraseCancelled.value = true;
-            isErasing.value = false;
             eraseOpen.value = false;
-            connectionStore.resumeLiveData();
-        }
-
-        async function pollForEraseCompletion() {
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            try {
-                // errorAware request so a timeout settles instead of stranding a legacy
-                // callback: the flash chip can stop answering MSP mid-erase, and we must
-                // keep polling rather than abandon the dialog on a single missed summary.
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-            } catch {
-                // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
-                // reading the stale cached ready flag — it still holds the pre-erase value and
-                // would otherwise close the dialog before the erase has actually finished.
-                if (connectionStore.connectionValid && !eraseCancelled.value) {
-                    setTimeout(pollForEraseCompletion, 500);
-                }
-                return;
-            }
-
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            if (fcStore.dataflash?.ready) {
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                if (getConfig("showNotifications").showNotifications) {
-                    NotificationManager.showNotification("Betaflight App", {
-                        body: i18n.getMessage("flashEraseDoneNotification"),
-                        icon: "/images/pwa/favicon.ico",
-                    });
-                }
-            } else {
-                setTimeout(pollForEraseCompletion, 500);
-            }
+            cancelFlashErase();
         }
 
         function flashUpdateSummary(onDone) {
@@ -792,11 +757,8 @@ export default defineComponent({
 
         function conditionallyEraseFlash(maxBytes, nextAddress) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
-                connectionStore.pauseLiveData();
-                eraseCancelled.value = false;
-                isErasing.value = true;
                 eraseOpen.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+                void startFlashErase({ clearQueue: false });
             } else {
                 gui_log(
                     i18n.getMessage("dataflashSaveIncompleteWarning") ||
