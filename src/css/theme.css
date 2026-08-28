@@ -145,6 +145,36 @@ html {
     --chart-text-color: var(--text);
 }
 
+[data-theme="dark"] {
+    --surface-50: hsl(0, 0%, 4%);
+    --surface-100: hsl(0, 0%, 8%);
+    --surface-200: hsl(0, 0%, 12%);
+    --surface-300: hsl(0, 0%, 14%);
+    --surface-400: hsl(0, 0%, 20%);
+    --surface-500: hsl(0, 0%, 24%);
+    --surface-600: hsl(0, 0%, 35%);
+    --surface-700: hsl(0, 0%, 45%);
+    --surface-800: hsl(0, 0%, 60%);
+    --surface-900: hsl(0, 0%, 70%);
+    --surface-950: hsl(0, 0%, 80%);
+
+    --ui-primary: var(--primary-500);
+    --ui-error: var(--ui-color-error-500);
+    --ui-bg-muted: var(--color-neutral-850);
+
+    --warning-700: #ff8533;
+    --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --text: hsl(0, 0%, 95%);
+
+    /* Chart colors - dark theme */
+    --chart-axis-color: var(--surface-500);
+    --chart-axis-label-color: var(--chart-text-color);
+    --chart-tick-color: var(--chart-text-color);
+    --chart-grid-line-color: var(--surface-600);
+    --chart-curve-color: var(--error-400);
+    --chart-text-color: var(--text);
+}
+
 body[data-theme="amber"] {
     --primary-50: #fffbe8;
     --primary-100: #fff5d3;
@@ -165,6 +195,14 @@ body[data-theme="amber"] {
     --primary-transparent-2: rgba(255, 167, 36, 0.2);
     --primary-transparent-3: rgba(255, 167, 36, 0.3);
     --primary-transparent-4: rgba(255, 167, 36, 0.4);
+
+    /* Chart colors - amber theme */
+    --chart-axis-color: var(--surface-600);
+    --chart-axis-label-color: var(--chart-text-color);
+    --chart-tick-color: var(--chart-text-color);
+    --chart-grid-line-color: var(--surface-400);
+    --chart-curve-color: var(--error-500);
+    --chart-text-color: var(--text);
 }
 
 body[data-theme="contrast"] {
@@ -186,6 +224,14 @@ body[data-theme="contrast"] {
     --warning-400: #ffaa66;
     --warning-500: #ff8800;
     --warning-600: #cc6600;
+
+    /* Chart colors - contrast theme */
+    --chart-axis-color: var(--surface-500);
+    --chart-axis-label-color: var(--chart-text-color);
+    --chart-tick-color: var(--chart-text-color);
+    --chart-grid-line-color: var(--surface-400);
+    --chart-curve-color: var(--error-400);
+    --chart-text-color: var(--text);
 
     #tabs li.active a {
         color: #000;
