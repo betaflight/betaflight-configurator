@@ -30,12 +30,14 @@
                     <div class="clear-both"></div>
                 </div>
                 <div id="content" @scroll.passive="onContentScroll">
-                    <component
-                        :is="activeTabComponent"
-                        v-if="activeTabComponent"
-                        :key="vueTabState.activeTabKey"
-                        ref="activeTabInstance"
-                    />
+                    <keep-alive :include="keptAliveTabs">
+                        <component
+                            :is="activeTabComponent"
+                            v-if="activeTabComponent"
+                            :key="activeTabKey"
+                            ref="activeTabInstance"
+                        />
+                    </keep-alive>
                 </div>
             </div>
             <status-bar
@@ -184,6 +186,16 @@ const activeTabComponent = computed(() => {
     return tabName ? (VueTabComponents[tabName] ?? null) : null;
 });
 
+// Tabs that keep their state (and heavy resources) alive across switches rather than being torn
+// down. Matched by component name.
+const keptAliveTabs = ["BlackboxViewerTab"];
+
+// The mounter bumps activeTabKey on every switch to force a fresh instance. Kept-alive tabs need
+// a stable key instead, or keep-alive caches by an ever-changing key and never restores.
+const activeTabKey = computed(() =>
+    vueTabState.activeTabName === "blackbox_viewer" ? "blackbox_viewer" : vueTabState.activeTabKey,
+);
+
 provide("betaflightModel", currentVm());
 provide("gui", GUI);
 provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
@@ -227,7 +239,9 @@ watch(
     display: none;
 }
 
-/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down. */
+/* Mobile top bar — hamburger left, centred wide logo, auto-hides on scroll down.
+   The bar grows by the safe-area inset and pads its contents down by the same amount, so the
+   controls sit below the Android/iOS status bar with the content box unchanged. */
 .mobile-topbar {
     display: none;
     position: fixed;
@@ -235,8 +249,11 @@ watch(
     left: 0;
     right: 0;
     z-index: 2001;
-    height: 3rem;
-    padding: 0.25rem 0.5rem;
+    /* Explicit, not inherited from the Tailwind reset: the height below is an outer height, and
+       #content's matching padding-top depends on it staying one. */
+    box-sizing: border-box;
+    height: calc(3rem + env(safe-area-inset-top, 0px));
+    padding: calc(0.25rem + env(safe-area-inset-top, 0px)) 0.5rem 0.25rem;
     align-items: center;
     gap: 0.5rem;
     background-color: var(--surface-100);
@@ -268,9 +285,9 @@ watch(
     .mobile-topbar {
         display: flex;
     }
-    /* Leave room at the top of the content area for the top bar. */
+    /* Leave room at the top of the content area for the top bar (including safe area). */
     #content {
-        padding-top: 3rem;
+        padding-top: calc(3rem + env(safe-area-inset-top, 0px));
     }
 }
 </style>

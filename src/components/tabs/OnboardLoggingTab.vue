@@ -28,24 +28,55 @@
 
                 <div class="grid-box col1">
                     <div class="require-blackbox-supported grid-box col1">
-                        <UiBox :title="$t('blackboxConfiguration')" v-show="blackboxConfigSupported">
+                        <UiBox
+                            :title="$t('blackboxConfiguration')"
+                            v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
+                        >
                             <SettingRow :label="$t('onboardLoggingBlackbox')">
                                 <USelect
                                     v-model="blackboxDevice"
                                     :items="blackboxDeviceOptions"
-                                    size="sm"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialPort')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxPortIdentifier"
+                                    :items="blackboxPortOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialBaud')"
+                                :help="$t('onboardLoggingSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxBaud"
+                                    :items="blackboxBaudOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
                                     class="min-w-40"
                                 />
                             </SettingRow>
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
-                                <USelect v-model="blackboxRate" :items="loggingRates" size="sm" class="min-w-40" />
+                                <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
                             <SettingRow :label="$t('onboardLoggingDebugMode')">
                                 <USelectMenu
                                     v-model="debugMode"
                                     value-key="value"
                                     :items="debugModes"
-                                    size="sm"
+                                    size="xs"
                                     leading-icon="i-lucide-bug"
                                     :search-input="{
                                         placeholder: $t('search'),
@@ -61,12 +92,14 @@
                             v-if="showDebugFields"
                             :title="$t('onboardLoggingDebugFields')"
                             v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
                         >
                             <div class="blackboxDebugFieldsTable">
                                 <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
                                     <USwitch
                                         :model-value="debugFieldsEnabled[index]"
-                                        size="sm"
+                                        size="xs"
                                         @update:model-value="updateDebugField(index, $event)"
                                     />
                                     <span>{{ field }}</span>
@@ -74,11 +107,11 @@
                             </div>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingSerialLogger')">
+                        <UiBox :title="$t('onboardLoggingSerialLogger')" type="neutral" collapsible>
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingFlashLogger')">
+                        <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>
                             <div class="require-dataflash-supported">
                                 <p>{{ $t("dataflashNote") }}</p>
 
@@ -177,59 +210,42 @@
                                     </li>
                                 </ul>
 
-                                <div class="dataflash-buttons">
-                                    <a
-                                        class="regular-button erase-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="askToEraseFlash"
+                                <div class="dataflash-buttons flex flex-wrap items-center gap-2">
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonErase')"
+                                        @click="askToEraseFlash"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveAndErase')"
+                                        @click="flashSaveBegin(true)"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveFile')"
+                                        @click="flashSaveBegin(false)"
                                     >
-                                        {{ $t("dataflashButtonErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        {{ $t("dataflashButtonSaveFile") }}
-                                    </a>
-                                    <a
-                                        v-if="isExpertMode"
-                                        class="regular-button require-msc-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        <span class="inline-flex items-center gap-1">
-                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                        <template #trailing>
                                             <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
-                                        </span>
-                                    </a>
-                                    <p v-html="$t('dataflashSavetoFileNote')"></p>
+                                        </template>
+                                    </UButton>
                                 </div>
+                                <p class="mt-2" v-html="$t('dataflashSavetoFileNote')"></p>
                             </div>
 
                             <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingOnboardSDCard')" class="require-sdcard-supported">
+                        <UiBox
+                            :title="$t('onboardLoggingOnboardSDCard')"
+                            class="require-sdcard-supported"
+                            type="neutral"
+                            collapsible
+                        >
                             <div class="sdcard">
                                 <div class="sdcard-icon"></div>
                                 <div class="sdcard-status" v-html="sdcardStatusText"></div>
@@ -261,18 +277,14 @@
                         </UiBox>
                     </div>
 
-                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported">
+                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported" type="neutral" collapsible>
                         <div class="require-msc-supported">
-                            <div>
-                                <a
-                                    class="require-msc-ready regular-button onboardLoggingRebootMsc"
-                                    :class="{ disabled: !mscReady }"
-                                    href="#"
-                                    @click.prevent="rebootToMsc"
-                                >
-                                    {{ $t("onboardLoggingRebootMscText") }}
-                                </a>
-                            </div>
+                            <UButton
+                                size="xs"
+                                :disabled="!mscReady"
+                                :label="$t('onboardLoggingRebootMscText')"
+                                @click="rebootToMsc"
+                            />
                         </div>
                         <p v-html="$t('onboardLoggingMscNote')"></p>
                         <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>
@@ -283,7 +295,13 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
+            <UButton
+                :label="$t('blackboxButtonSave')"
+                size="xs"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveSettings"
+            />
         </div>
     </BaseTab>
 </template>
@@ -311,11 +329,14 @@ import FileSystem from "../../js/FileSystem";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
+import { tracking } from "../../js/Analytics";
 import { sensorTypes } from "../../js/sensor_types";
 import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
+import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "../../composables/useTabLoad";
 
 const BLOCK_SIZE = 4096;
@@ -414,6 +435,23 @@ export default defineComponent({
             const index = types.gyro.elements.indexOf("VIRTUAL");
             virtualGyro.value = fcStore.sensorConfigActive?.gyro_hardware === index;
         };
+
+        // From API 1.49 the serial-logging port and its baud live on the blackbox parameter group
+        // rather than the shared port function mask, so they are assigned here.
+        const {
+            available: blackboxPortAvailable,
+            writable: blackboxPortWritable,
+            options: blackboxPortOptions,
+            selectedIdentifier: blackboxPortIdentifier,
+            baudOptions: blackboxBaudOptions,
+            selectedBaud: blackboxBaud,
+            load: loadBlackboxPort,
+            write: writeBlackboxPort,
+        } = useFeaturePort({
+            setting: "blackbox_uart",
+            functionName: "BLACKBOX",
+            baud: { setting: "blackbox_baud" },
+        });
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -549,23 +587,18 @@ export default defineComponent({
             );
         });
 
-        /** Baseline after MSP load or successful save; same pattern as Power / Auxiliary */
-        const onboardLoggingBaseline = ref("");
-
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeOnboardLoggingState = () =>
             JSON.stringify({
                 blackboxDevice: blackboxDevice.value,
                 blackboxRate: blackboxRate.value,
                 debugMode: debugMode.value,
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
+                blackboxPortIdentifier: blackboxPortIdentifier.value,
+                blackboxBaud: blackboxBaud.value,
             });
 
-        const dirty = computed(() => {
-            if (!onboardLoggingBaseline.value) {
-                return false;
-            }
-            return onboardLoggingBaseline.value !== serializeOnboardLoggingState();
-        });
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
 
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
@@ -579,6 +612,8 @@ export default defineComponent({
 
             return runSave(
                 async () => {
+                    const savedSnapshot = takeSnapshot();
+
                     fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
                     fcStore.blackbox.blackboxPDenom = blackboxRate.value;
                     fcStore.blackbox.blackboxDevice = blackboxDevice.value;
@@ -603,10 +638,13 @@ export default defineComponent({
                         mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
                     );
 
+                    // Between the parameter group write and the persist that serialises it, so a
+                    // refused port throws before anything reaches EEPROM.
+                    await writeBlackboxPort();
+
                     await saveAndReboot();
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                    markClean(savedSnapshot);
                 },
                 { onError: (e) => console.error("Failed to save onboard logging settings", e) },
             );
@@ -926,7 +964,9 @@ export default defineComponent({
                 }
             }
 
-            if (typeof tracking !== "undefined") {
+            // `tracking` is null until createAnalytics(settings) has run, so it still needs a guard —
+            // but on the imported binding rather than the window global it used to rely on.
+            if (tracking) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
                     logSize: fcStore.dataflash?.usedSize || 0,
                     logStatus: loggingStatus,
@@ -959,6 +999,8 @@ export default defineComponent({
                         }
 
                         // Populate UI state
+                        await loadBlackboxPort();
+
                         blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
                         blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
                         debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
@@ -972,7 +1014,7 @@ export default defineComponent({
                         }
 
                         updateVirtualGyro();
-                        onboardLoggingBaseline.value = serializeOnboardLoggingState();
+                        markClean();
                         updateHtml();
                     },
                     (error) => console.error("Failed to load onboard logging data", error),
@@ -1011,6 +1053,12 @@ export default defineComponent({
             isExpertMode,
             virtualGyro,
             blackboxDeviceOptions,
+            blackboxPortAvailable,
+            blackboxPortWritable,
+            blackboxPortOptions,
+            blackboxPortIdentifier,
+            blackboxBaudOptions,
+            blackboxBaud,
             blackboxSupport,
             loggingRates,
             debugModes,
@@ -1227,9 +1275,6 @@ export default defineComponent({
         display: none;
         border-radius: 5px;
     }
-}
-.dataflash-buttons {
-    display: inline-block;
 }
 .dataflash-confirm-erase.erasing {
     .dataflash-erase-progress {

@@ -42,6 +42,14 @@
         "message": "페이지를 새로 고쳐야 최신 변경 사항을 얻을 수 있습니다. 지금 새로 고침을 하면 페이지가 다시 로드되고 저장되지 않은 변경 사항이 손실되며 진행 중인 작업이 중단됩니다. <br><br>지금 새로 고침을 원하십니까? 이 메시지를 무시하고 나중에 수동으로 페이지를 새로 고칠 수도 있습니다.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnOfflineReadyTitle": {
+        "message": "응용 프로그램을 오프라인에서 사용할 준비가 되었습니다",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOfflineReadyText": {
+        "message": "원하는 경우 장치에 독립 실행형 응용 프로그램으로 설치할 수 있습니다. 브라우저 주소 표시줄이나 메뉴에서 해당 옵션을 검색합니다.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "이 조작은 당신의 하드웨어에서 지원되지 않습니다."
     },
@@ -101,6 +109,42 @@
     },
     "portOverrideText": {
         "message": "포트:"
+    },
+    "connectVirtualDescription": {
+        "message": "하드웨어 없이 비행 컨트롤러를 시뮬레이션합니다.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "연결 (가상)",
+        "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "연결할 시리얼 경로 또는 URL을 입력하세요.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "연결 저장됨",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "이름:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "이 연결의 이름",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "저장",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "업데이트",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "저장된 연결 삭제",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "자동-연결"
@@ -253,14 +297,14 @@
     "configuratorUpdateHelp": {
         "message": "인터넷이 사용 가능하면 앱이 자동으로 사용 가능한 업데이트를 요청합니다."
     },
-    "configuratorUpdateWebsite": {
-        "message": "릴리즈 웹사이트로 가기"
-    },
     "rebootFlightController": {
         "message": "비행 컨트롤러 재부팅 중, 준비되면 다시 연결하세요"
     },
     "rebootFlightControllerReady": {
         "message": "비행 컨트롤러가 준비되었습니다"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "비행 컨트롤러가 재연결되지 않았습니다"
     },
     "deviceRebooting": {
         "message": "기기 - <span class=\"message-negative\">재부팅<\/span>"
@@ -331,6 +375,9 @@
     "tabGPS": {
         "message": "GPS"
     },
+    "tabFlightPlan": {
+        "message": "비행계획"
+    },
     "tabMotorTesting": {
         "message": "모터"
     },
@@ -379,6 +426,21 @@
     },
     "serialPortOpenFail": {
         "message": "시리얼 포트 열기 <span class=\"message-negative\">실패<\/span>"
+    },
+    "connectionFailedTitle": {
+        "message": "연결 실패"
+    },
+    "connectionFailed": {
+        "message": "선택한 포트 연결에 <span class=\"message-negative\">실패<\/span>했습니다. 장치에 연결할 수 있는지, 연결 설정이 올바른지 확인한 후 다시 시도하세요."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "iOS에서는 설정 &rarr; 개인정보 보호 &amp; 보안 &rarr; 로컬 네트워크에서 베타플라이트에 대한 <strong>로컬 네트워크<\/strong> 접근을 허용해주세요."
+    },
+    "connectionLostTitle": {
+        "message": "연결 끊김"
+    },
+    "connectionLostUnresponsive": {
+        "message": "비행 컨트롤러가 <span class=\"message-negative\">응답을 멈추었고<\/span> 연결이 종료되었습니다. 보드를 다시 연결하고 다시 시도해 보세요. 문제가 계속되면 비행 컨트롤러를 재시작하세요."
     },
     "serialPortClosedOk": {
         "message": "시리얼 포트가 <span class=\"message-positive\">성공적으로<\/span> 닫힘"
@@ -678,8 +740,14 @@
     "defaultWelcomeHead": {
         "message": "하드웨어"
     },
-    "defaultWelcomeText": {
-        "message": "어플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 하드웨어 전체 목록의 플래시 탭을 확인하세요.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 블랙박스 로그 뷰어 다운로드<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX Lua 스크립트 다운로드<\/a><br \/><br \/>펌웨어 소스 코드는 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/><br \/>CP210x USB를 시리얼 칩으로 사용하는 레거시 하드웨어:<br \/>최신 <b>CP210x 드라이버<\/b>는 <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/>최신 윈도우 USB 드라이버 설치를 위한 <b>Zadig<\/b>는 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/><b>ImpulseRC 드라이버 픽서<\/b>는 <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다."
+    "defaultHardwareText": {
+        "message": "애플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 펌웨어 플래셔 탭에서 전체 하드웨어 목록을 확인하세요.<br \/><br \/>유용한 하드웨어 유틸리티 \/ 드라이버:<ul><li>CP210x USB 시리얼 칩을 사용하는 기존 하드웨어의 경우, 최신 <b>CP210x 드라이버<\/b>를 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li>Windows USB 드라이버 설치를 위한 최신 <b>Zadig<\/b>는 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li><b>ImpulseRC 드라이버 픽서<\/b>는 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "소프트웨어"
+    },
+    "defaultSoftwareText": {
+        "message": "이 앱에는 블랙박스 로그 뷰어가 내장되어 있습니다. 비행 로그를 분석하려면 <strong>블랙박스 로그 뷰어<\/strong> 탭을 열어주세요.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua 스크립트<\/a> 모음은 GitHub에서 확인할 수 있습니다.<br \/><br \/>펌웨어와 이 앱의 <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">소스 코드<\/a>는 GitHub에서 다운로드할 수 있습니다."
     },
     "defaultContributingHead": {
         "message": "기여하기"
@@ -1066,6 +1134,10 @@
         "message": "포지션 유지가 활성화됨",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
+        "message": "오토파일럿 모드 스위치가 활성화됨",
+        "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1417,14 +1489,119 @@
     "configurationBoardAlignmentHelp": {
         "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "보드 정렬 자동 감지"
+    },
     "boardAlignmentWizard-DialogTitle": {
         "message": "보드 정렬 마법사"
     },
-    "configurationGyroAlignmentHelp": {
-        "message": "자이로 정렬은 비행 컨트롤러 보드에 있는 자이로 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자이로 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
+    "boardAlignmentWizard-Intro": {
+        "message": "이 마법사는 네 가지 간단한 동작을 안내하여 비행 컨트롤러가 어떻게 장착되어 있는지 감지합니다. 드론을 평평한 곳에 놓고 카메라가 사용자 반대 방향(화면 쪽)을 향하도록 한 뒤 다음 프롬프트를 따릅니다."
     },
-    "configurationGyroActiveIMU": {
-        "message": "IMU 활성"
+    "boardAlignmentWizard-Start": {
+        "message": "시작"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "단계"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "드론을 평평한 곳에 놓고 카메라가 사용자 반대 방향(화면 쪽)을 향하도록 하세요."
+    },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "카메라가 바닥을 향하도록 기수를 약 45° 정도 아래로 기울이세요."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "오른쪽 옆를 약 45° 아래로 기울여 오른쪽 암을 내리고 왼쪽 암을 들어 올리세요."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "드론을 시계 방향으로 약 45° 회전시키세요 (위에서 내려다 봤을 때)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "드론을 수평 상태로 되돌리세요."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "고정된 상태로 유지하세요..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "고정"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "기울임 유지"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "수평으로 되돌리기"
+    },
+    "boardAlignmentWizard-AxisDetected": {
+        "message": "축 감지됨 - 고정된 상태로 유지"
+    },
+    "boardAlignmentWizard-YawProgress": {
+        "message": "회전"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "정렬 계산중..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "정렬 감지됨"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "보드 정렬이 정확해 보입니다 — 변경할 필요가 없습니다."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "현재"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "감지됨"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "뒤로"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "적용"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "취소"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "재시도"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "지금 포착"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "검지 신뢰도가 저하되었습니다 — 적용하기 전에 실시간 상태를 기준으로 결과를 확인하시기 바랍니다."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "이 마법사를 실행하려면 가속도계가 필요합니다."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "이 마법사를 실행하기 전에 가속도계를 보정해 주세요."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "일부 샘플이 수집되지 않았습니다. 다시 시도해 주세요."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "가속도계가 중력을 측정하지 않습니다. FC가 연결되어 있고 움직이지 않는지 확인합니다."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "피치 제스처가 감지되지 않았습니다. 다시 시도하고 기수를 더 아래로 기울여 주세요."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "롤 제스처가 감지되지 않았습니다. 다시 시도한 후 오른쪽을 아래로 더 기울여 주세요."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "기울기 제스처 중 하나가 잘못된 방향으로 갔습니다. 피치와 롤 방향을 확인하고 다시 시도하세요."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "수평"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "피치"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "롤"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "요"
     },
     "configurationGyroActiveIMUHelp": {
         "message": "기본 자이로로 사용할 자이로를 선택합니다. 기본 자이로는 안정화 및 제어에 사용됩니다. 자이로가 하나만 있는 경우 자동으로 선택됩니다.<br><br>다양한 종류나 브랜드의 자이로를 항상 활성화할 수 있는 것은 아닙니다."
@@ -1732,8 +1909,24 @@
         "message": "활성화되면 배터리를 연결한 후 첫 번째 아밍시에만 홈 포인트로 사용됩니다. 활성화되지 않으면 기체가 설정될 때마다 홈 포인트가 업데이트됩니다.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "이 펌웨어 빌드에는 GPS 지원이 포함되어 있지 않습니다. GPS를 설정하고 사용하려면 GPS 빌드 옵션으로 펌웨어를 다시 빌드하세요.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "시리얼 수신기 공급자"
+    },
+    "portsPortNone": {
+        "message": "없음"
+    },
+    "receiverSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "receiverSerialPortHelp": {
+        "message": "시리얼 수신기가 연결된 UART입니다. 전송 속도는 제공업체를 따르므로 여기서 설정할 필요가 없습니다. 포트를 변경하려면 재부팅이 필요합니다."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "수신기 시리얼 포트를 설정할 수 없어서 아무것도 저장되지 않았습니다."
     },
     "someRXTypesDisabled": {
         "message": "일부 수신기 공급업체는 현재 빌드 구성에서 지원되지 않습니다."
@@ -1743,6 +1936,9 @@
     },
     "configurationSpiRX": {
         "message": "SPI 버스 수신기 공급자"
+    },
+    "configurationSaved": {
+        "message": "설정이 저장되었습니다"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -1786,6 +1982,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>참고:<\/strong> 당신이 하는 일을 모르는 경우 첫 번째 시리얼 포트의 MSP를 비활성화 하지  <span class=\"message-negative\">마십시오<\/span>. 만약 그렇게 할 경우 펌웨어 플래싱을 다시 하고 환경설정을 지워야 할 수도 있습니다."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>노트:<\/strong> 이 펌웨어는 각 기능별 탭에 시리얼 포트를 할당하므로, 이 뷰는 읽기 전용입니다.  현재 각 기능이 사용 중인 포트를 보여주며, 기능을 소유한 탭에서 할당을 변경할 수 있습니다."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "펌웨어 업그레이드가 <span class=\"message-negative\">필요함<\/span>.  펌웨어 &lt; 1.8.0의 시리얼 포트 설정은 지원하지 않습니다."
@@ -3046,6 +3245,222 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "상태불량"
+    },
+    "motorsVoltage": {
+        "message": "전압:"
+    },
+    "motorsADrawing": {
+        "message": "전류:"
+    },
+    "motorsmAhDrawn": {
+        "message": "전류 소비량:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
+    "motorsText": {
+        "message": "모터"
+    },
+    "flightPlanSpeed": {
+        "message": "속도 <span class=\"units\">노트<\/span>"
+    },
+    "flightPlanType": {
+        "message": "웨이포인트 형식"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "플라이 오버"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "플라이 바이"
+    },
+    "flightPlanTypeHold": {
+        "message": "플라이 홀드"
+    },
+    "flightPlanTypeLand": {
+        "message": "착륙"
+    },
+    "flightPlanTypeTakeoff": {
+        "message": "이륙"
+    },
+    "flightPlanTypeAltChange": {
+        "message": "고도 변경",
+        "description": "Modifier waypoint type: changes the altitude of the next positional waypoint"
+    },
+    "flightPlanTypeDelay": {
+        "message": "딜레이",
+        "description": "Modifier waypoint type: pauses traversal for a duration"
+    },
+    "flightPlanTypeYawRate": {
+        "message": "요 레이트 캡",
+        "description": "Modifier waypoint type: caps the yaw rate of the next positional waypoint"
+    },
+    "flightPlanDuration": {
+        "message": "대기 시간 <span class=\"units\">분<\/span>"
+    },
+    "flightPlanDurationAria": {
+        "message": "대기 시간(분)",
+        "description": "Plain-text aria-label variant of flightPlanDuration for screen readers"
+    },
+    "flightPlanDelayDuration": {
+        "message": "지연 시간 <span class=\"units\">분<\/span>"
+    },
+    "flightPlanDelayDurationAria": {
+        "message": "지연 시간(분)",
+        "description": "Plain-text aria-label variant of flightPlanDelayDuration for screen readers"
+    },
+    "flightPlanYawRate": {
+        "message": "요 레이트 <span class=\"units\">°\/s<\/span>"
+    },
+    "flightPlanYawRateAria": {
+        "message": "요 레이트(도\/초)",
+        "description": "Plain-text aria-label variant of flightPlanYawRate for screen readers"
+    },
+    "flightPlanPattern": {
+        "message": "홀드 패턴"
+    },
+    "flightPlanPatternCircle": {
+        "message": "원형"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "8자 모양"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "타원"
+    },
+    "flightPlanMap": {
+        "message": "비행계획 지도"
+    },
+    "flightPlanMapInstructions": {
+        "message": "웨이포인트를 추가하려면 클릭하세요. 웨이포인트를 이동하려면 마커를 드래그하세요."
+    },
+    "flightPlanLoading": {
+        "message": "잠시 기다려주세요..."
+    },
+    "flightPlanClear": {
+        "message": "제거"
+    },
+    "flightPlanLoad": {
+        "message": "불러오기"
+    },
+    "flightPlanSaveToFC": {
+        "message": "FC에 저장하기"
+    },
+    "flightPlanLoaded": {
+        "message": "비행계획이 성공적으로 로드됨"
+    },
+    "flightPlanSaved": {
+        "message": "비행계획이 성공적으로 저장됨"
+    },
+    "flightPlanCleared": {
+        "message": "비행계획이 삭제됨"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "FC로부터 불러오기"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "비행 컨트롤러로부터 비행계획을 불러옵니다"
+    },
+    "flightPlanSavedToFC": {
+        "message": "비행 컨트롤러에 비행계획에 저장합니다"
+    },
+    "flightPlanFCLoadError": {
+        "message": "비행 컨트롤러에서 비행계획을 로드하지 못함"
+    },
+    "flightPlanFCSaveError": {
+        "message": "비행 컨트롤러에 비행계획을 저장하지 못함"
+    },
+    "flightPlanFCEmpty": {
+        "message": "비행 컨트롤러에 웨이포인트가 발견되지 않음"
+    },
+    "flightPlanClearedFC": {
+        "message": "비행 컨트롤러에 비행계획이 제거됨"
+    },
+    "flightPlanLoadError": {
+        "message": "비행계획 불러오기 실패"
+    },
+    "flightPlanSaveError": {
+        "message": "비행계획 저장 실패"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "잘못된 위도 (-90에서 90 사이여야 함)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "잘못된 경도 (-180에서 180 사이여야 함)"
+    },
+    "flightPlanInvalidAltitude": {
+        "message": "잘못된 고도 (0 또는 양수여야 함)"
+    },
+    "flightPlanInvalidDuration": {
+        "message": "잘못된 시간 (0 또는 양수여야 함)"
+    },
+    "flightPlanInvalidYawRate": {
+        "message": "잘못된 요 레이트 (0 또는 양수여야 함)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "이 웨이포인트를 삭제하시겠습니까?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "웨이포인트 삭제"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "정말로 이 웨이포인트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    },
+    "flightPlanConfirmClear": {
+        "message": "모든 웨이포인트를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
+    },
+    "flightPlanClearTitle": {
+        "message": "비행계획 삭제"
+    },
+    "flightPlanLoadPromptTitle": {
+        "message": "비행 컨트롤러에서 비행계획을 불러오시겠습니까?"
+    },
+    "flightPlanLoadPromptBody": {
+        "message": "비행 컨트롤러가 연결되어 있습니다. 현재 비행계획을 비행 컨트롤러에 저장된 계획으로 바꾸시겠습니까? 아니요를 선택하면 현재 계획이 유지되므로 비행 컨트롤러에 저장할 수 있습니다."
+    },
+    "flightPlanKeepLocal": {
+        "message": "현재 상태 유지"
+    },
+    "flightPlanElevationProfile": {
+        "message": "표고 프로필"
+    },
+    "flightPlanDistance": {
+        "message": "총 거리"
+    },
+    "flightPlanFlightTime": {
+        "message": "비행 시간"
+    },
+    "flightPlanMinAlt": {
+        "message": "최소 고도"
+    },
+    "flightPlanMaxAlt": {
+        "message": "최대 고도"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "표고 프로필을 보려면 웨이포인트 추가하세요"
+    },
+    "flightPlanGroundElev": {
+        "message": "지면 표고"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "최대 지면 표고"
+    },
+    "flightPlanAvgGround": {
+        "message": "평균 지면"
+    },
+    "flightPlanMaxGround": {
+        "message": "최대 지면"
+    },
+    "flightPlanAlt": {
+        "message": "고도"
+    },
+    "flightPlanDist": {
+        "message": "거리"
     },
     "motorsVoltage": {
         "message": "전압:"
@@ -5236,6 +5651,21 @@
     "powerAmperageCalibratedScale": {
         "message": "교정된 전류 스케일:"
     },
+    "powerBatteryProfile": {
+        "message": "배터리 프로필"
+    },
+    "powerBatteryProfileOption": {
+        "message": "배터리 프로필 $1"
+    },
+    "powerReceivedBatteryProfile": {
+        "message": "비행 컨트롤러 설정 배터리 프로파일: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "예. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "프로필 이름"
+    },
     "powerBatteryHead": {
         "message": "배터리"
     },
@@ -6667,6 +7097,29 @@
         "message": "비행 컨트롤러의 CPU 부하가 매우 높을 때 경고합니다",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
+    "osdTextElementPosHoldFailed": {
+        "message": "포지션 홀드 실패",
+        "description": "One of the elements of the OSD that can be enabled to show a warning when position hold fails (e.g. in GPS mode)"
+    },
+    "osdDescElementPosHoldFailed": {
+        "message": "위치 홀드 실패 시 경고 표시 (예. GPS 모드에서)"
+    },
+    "osdWarningTextPosHoldFailed": {
+        "message": "위치 홀드 실패",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningPosHoldFailed": {
+        "message": "위치 홀드 실패",
+        "description": "Warns when the position hold fails (e.g. in GPS mode)"
+    },
+    "osdWarningTextAutopilotAbort": {
+        "message": "오토파일럿 미션이 중단됨",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningAutopilotAbort": {
+        "message": "오토파일럿 미션이 중단됨",
+        "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
     "osdWarningTextUnknown": {
         "message": "알 수 없음 $1"
     },
@@ -7075,6 +7528,213 @@
     "configurationBatteryScale": {
         "message": "전압 스케일"
     },
+    "magCalibrationCancel": {
+        "message": "취소"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br \/><br \/><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다."
+    },
+    "pidTuningPidControllerTip": {
+        "message": "<b>레거시 vs 베타플라이트 (부동 소수점):<\/b> PID 스케일링과 PID 로직은 정확히 동일합니다. 반드시 다시 조정할 필요는 없습니다. 레거시(legacy)는 정수 수학에 기초를 한 기본 PID 컨트롤러로써 오래된 베타플라이트의 진화 된 리라이트 버전입니다. 베타플라이트 PID 컨트롤러는 부동 소수점 연산을 사용하며, 멀티로터 어플리케이션을 위해 특별히 설계된 많은 새로운 기능을 제공합니다. <br> <b>부동 소수점 vs 정수:<\/b> PID 스케일링 및 PID 로직은 동일합니다. 리튠이 필요 없습니다. F1 보드에는 온보드 FPU가 없고 부동 소수점 연산으로 인해 CPU 부하가 증가하고 정수 연산으로 성능이 향상되지만, 부동 소수점 연산은 약간 더 정밀해질 수 있습니다."
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>자이로 소프트 필터:<\/b> 자이로에 대한 저역통과 필터. 더 많은 필터링을 위해 더 낮은 값을 사용하십시오.<br><b>D텀 필터:<\/b> D텀 저역통과 필터. D 튜닝에 영향을 미칠 수 있습니다. 더 많은 필터링을 위해 더 낮은 값을 사용하십시오. <br><b>요 필터:<\/b>요출력을 필터링합니다. 그것은 노이즈가 있는 요 축을 가진 설정에 도움을 줄 수 있습니다."
+    },
+    "pidTuningRatesTip": {
+        "message": "특정 레이트로 플레이하고 이들이 스틱 커브에 어떻게 영향을 주는지 봅니다."
+    },
+    "configurationCamera": {
+        "message": "카메라"
+    },
+    "configurationPersonalization": {
+        "message": "개인화"
+    },
+    "craftName": {
+        "message": "기체 이름"
+    },
+    "configurationCraftNameHelp": {
+        "message": "로그, 백업 파일 이름 및 OSD에 표시할 수 있습니다.<\/br>CLI 변수 <b>craft_name<\/b>를 통해 설정할 수 있습니다."
+    },
+    "configurationPilotName": {
+        "message": "파일럿 이름"
+    },
+    "magCalibrationQualityGood": {
+        "message": "좋음"
+    },
+    "onboardLoggingRateOfLogging": {
+        "message": "블랙박스 로그기록 속도"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "디버그 필드 포함"
+    },
+    "onboardLoggingDebugMode": {
+        "message": "블랙박스 디버그 모드"
+    },
+    "magCalibrationUnguided": {
+        "message": "펌웨어 교정 (레거시)"
+    },
+    "onboardLoggingFlashLogger": {
+        "message": "온보드 데이터 플래시 칩"
+    },
+    "onboardLoggingEraseInProgress": {
+        "message": "삭제가 진행 중입니다. 잠시 기다려주십시오..."
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "기체를 모든 방향으로 회전할 수 있는 시간은 30초입니다. 시간이 지나면 펌웨어가 보정 값을 자동으로 저장합니다."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "펌웨어 교정 완료!"
+    },
+    "magCalibrationCheck": {
+        "message": "확인"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "현재 교정된 실시간 Mag 데이터 보기"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "교정 확인중"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "자력계의 방향과 교정을 확인합니다. 기체를 수평선에 평평하게 놓고 나침반의 알려진 지점을 노즈를 가리킨 다음(전화기를 사용하여 어느 방향이 북쪽인지 알아낼 수 있음) 3D 디스플레이의 예상 위치에 새 점이 나타나는지 확인합니다. 각 축의 필드 강도 값과 점의 구형도는 교정의 정확도를 나타냅니다. 점이 완전히 잘못된 위치로 가면 Mag의 방향이 잘못될 가능성이 높습니다."
+    },
+    "magCalibrationCalValues": {
+        "message": "값 교정"
+    },
+    "magCalibrationSaveValues": {
+        "message": "값 저장"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "교정 값 저장됨"
+    },
+    "magCalibrationSaveError": {
+        "message": "교정 값 저장 실패"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "아래 단계를 따라 각 회전마다 기체를 고정된 상태로 유지하세요. 새로운 각도에 도달하면 구역 수가 증가하여 20개를 모두 커버하는 것을 목표로 합니다."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "{{total}} 단계 중 {{n}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "기체의 수평을 유지하고 360° 로 천천히 회전하세요."
+    },
+    "magCalibrationFullStep2": {
+        "message": "거꾸로 뒤집고 천천히 360°를 더 돌립니다."
+    },
+    "magCalibrationFullStep3": {
+        "message": "기수를 똑바로 위로 향하게 하고, 기수 주위를 완전히 회전합니다."
+    },
+    "magCalibrationFullStep4": {
+        "message": "기수를 똑바로 아래로 향하게 하고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep5": {
+        "message": "왼쪽으로 기울고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep6": {
+        "message": "오른쪽으로 기울고 완전히 회전합니다."
+    },
+    "magCalibrationFullStep7": {
+        "message": "천천히 앞으로 몇 번 뒤집어서 매번 다른 방향을 향하세요."
+    },
+    "magCalibrationFullStep8": {
+        "message": "천천히 뒤로 몇 번 뒤집어서 매번 다른 방향을 향하게 하세요."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} 구역 커버됨"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "범위:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "정렬:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "롤 {{roll}}° 피치 {{pitch}}° 요 {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "교정:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "잔여:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "CLI 복사"
+    },
+    "magCalibrationFullApply": {
+        "message": "적용"
+    },
+    "magCalibrationFullExport": {
+        "message": "모델 내보내기"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "샘플이 충분하지 않음 - 더 길게 회전하세요"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI 명령이 클립보드에 복사되었습니다"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "클립보드에 복사할 수 없습니다"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "펌웨어 {{version}}이 사용자 지정 자력계 정렬을 수행하기에는 너무 오래되었습니다 (최소 {{min}} 이상 필요). 펌웨어를 업데이트한 후 다시 적용해 주세요."
+    },
+    "magCalibrationFullApplied": {
+        "message": "교정 적용 및 저장됨"
+    },
+    "magCalibrationDiscard": {
+        "message": "무시"
+    },
+    "magVizPointCloud": {
+        "message": "포인트 클라우드"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel 히트맵"
+    },
+    "magVizProjection": {
+        "message": "트리플 프로젝션"
+    },
+    "magVizPolar": {
+        "message": "극 밀도"
+    },
+    "magVizWaitingForData": {
+        "message": "데이터를 기다리는 중…"
+    },
+    "magVizAxisField": {
+        "message": "필드"
+    },
+    "magVizAgeLegendOld": {
+        "message": "이전"
+    },
+    "magVizAgeLegendNew": {
+        "message": "신규"
+    },
+    "configurationSmallAngle": {
+        "message": "최대 아밍 각도 [도]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "지정된 각도 이상으로 기울이면 기체가 아밍상태가 되지 않습니다. 가속도계가 활성화된 경우에만 적용됩니다. 180도로 설정하면 점검을 효과적으로 비활성화합니다."
+    },
+    "configurationBatteryVoltage": {
+        "message": "배터리 전압"
+    },
+    "configurationBatteryCurrent": {
+        "message": "배터리 전류"
+    },
+    "configurationBatteryMeterType": {
+        "message": "배터리 측정 형식"
+    },
+    "configurationBatteryMinimum": {
+        "message": "최소 셀 전압"
+    },
+    "configurationBatteryMaximum": {
+        "message": "최대 셀 전압"
+    },
+    "configurationBatteryWarning": {
+        "message": "셀 전압 경고"
+    },
+    "configurationBatteryScale": {
+        "message": "전압 스케일"
+    },
     "configurationCurrentMeterType": {
         "message": "전류 측정 형식"
     },
@@ -7091,16 +7751,16 @@
         "message": "레거시 Multiwii MSP 전류 출력 지원"
     },
     "pidTuningProfile": {
-        "message": "프로파일"
+        "message": "프로필"
     },
     "pidTuningProfileTip": {
-        "message": "최대 3개(일부 컨트롤러의 경우 2개까지)의 다른 프로파일을 비행 컨트롤러에 저장할 수 있습니다. 프로파일에는이 탭의 모든 설정이 포함됩니다. 현장에서 간단한 스틱 명령(온라인 지침 참조)을 사용하여 프로파일을 전환 할 수 있습니다."
+        "message": "최대 3개(일부 컨트롤러의 경우 2개까지)의 다른 프로필을 비행 컨트롤러에 저장할 수 있습니다. 프로필에는이 탭의 모든 설정이 포함됩니다. 현장에서 간단한 스틱 명령(온라인 지침 참조)을 사용하여 프로필을 전환 할 수 있습니다."
     },
     "pidTuningRateProfile": {
-        "message": "레이트 프로파일"
+        "message": "레이트프로필"
     },
     "pidTuningRateProfileTip": {
-        "message": "프로파일 당 최대 3개의 다른 레이트 프로파일을 비행 컨트롤러에 저장할 수 있습니다. 레이트 프로프일에는 'RC 레이트', '레이트', 'RC Expo', '스로틀'및 'TPA'에 대한 설정이 포함됩니다. '조정' 탭에서 '레이트 프로파일 선택'을 위한 3가지 위치 스위치를 설정하여 비행 중 레이트 프로파일 간을 전환 할 수 있습니다."
+        "message": "프로필 당 최대 3개의 다른 레이트 프로필을 비행 컨트롤러에 저장할 수 있습니다. 레이트 프로필에는 'RC 레이트', '레이트', 'RC Expo', '스로틀'및 'TPA'에 대한 설정이 포함됩니다. '조정' 탭에서 '레이트 프로필 선택'을 위한 3가지 위치 스위치를 설정하여 비행 중 레이트 프로필 간을 전환 할 수 있습니다."
     },
     "pidTuningRateSetup": {
         "message": "기본\/아크로 레이트"
@@ -7119,7 +7779,7 @@
         "message": "측정"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br \/><br \/><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다."
+        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br \/><br \/><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>레거시 vs 베타플라이트 (부동 소수점):<\/b> PID 스케일링과 PID 로직은 정확히 동일합니다. 반드시 다시 조정할 필요는 없습니다. 레거시(legacy)는 정수 수학에 기초를 한 기본 PID 컨트롤러로써 오래된 베타플라이트의 진화 된 리라이트 버전입니다. 베타플라이트 PID 컨트롤러는 부동 소수점 연산을 사용하며, 멀티로터 어플리케이션을 위해 특별히 설계된 많은 새로운 기능을 제공합니다. <br> <b>부동 소수점 vs 정수:<\/b> PID 스케일링 및 PID 로직은 동일합니다. 리튠이 필요 없습니다. F1 보드에는 온보드 FPU가 없고 부동 소수점 연산으로 인해 CPU 부하가 증가하고 정수 연산으로 성능이 향상되지만, 부동 소수점 연산은 약간 더 정밀해질 수 있습니다."
@@ -7698,8 +8358,1010 @@
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
     },
+    "osdTextElementCustomSerialText": {
+        "message": "커스텀 시리얼 텍스트",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "직렬 포트에서 수신한 커스텀 텍스트를 표시합니다"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "프로필: 배터리 프로필 이름",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "활성화된 배터리 프로필 이름 또는 인덱스를 표시합니다"
+    },
+    "osdTextElementWpNumber": {
+        "message": "웨이포인트 번호",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "활성 비행계획의 현재\/총 웨이포인트 번호를 표시합니다"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "웨이포인트 위도",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "현재 웨이포인트의 위도를 보여줍니다"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "웨이포인트 경도",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "현재 웨이포인트의 경도를 보여줍니다"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "웨이포인트 고도",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "현재 웨이포인트의 고도를 보여줍니다"
+    },
+    "osdTextElementWpDistance": {
+        "message": "웨이포인트 거리",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "현재 웨이포인트의 거리를 보여줍니다"
+    },
+    "osdTextElementWpDirection": {
+        "message": "웨이포인트 방향",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "현재 웨이포인트를 가리키는 방향 화살표를 표시합니다"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "다음 웨이포인트 번호",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "활성화된 비행계획에서 다음 웨이포인트 번호를 표시합니다"
+    },
+    "osdTextElementWpEta": {
+        "message": "웨이포인트 ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "현재 웨이포인트에 도착할 예상 시간을 보여줍니다"
+    },
+    "osdTextElementNavMap": {
+        "message": "네비게이션 지도",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "홈, 비행계획, 그리고 비행한 경로를 보여주는 미니맵"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "포지션 홀드 준비",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "모드 스위치가 활성화되기 전에 포지션 홀드의 진입 조건이 현재 충족되는지 여부를 보여줍니다"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "눈금자",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "사용자 프로필"
+    },
+    "labelEmail": {
+        "message": "이메일"
+    },
+    "placeholderEmailAddress": {
+        "message": "이메일 주소 입력"
+    },
+    "userEmailRequired": {
+        "message": "이메일 주소가 필요합니다"
+    },
+    "profileLoginMessage": {
+        "message": "프로필을 보려면 로그인해 주세요."
+    },
+    "tabBackups": {
+        "message": "백업"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "패스키가 성공적으로 삭제되었습니다"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "패스키를 삭제하지 못했습니다"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "토큰이 성공적으로 삭제되었습니다"
+    },
+    "userTokenDeleteFailed": {
+        "message": "토큰을 삭제하지 못했습니다"
+    },
+    "userProfileLoadFailed": {
+        "message": "사용자 프로필을 불러오지 못했습니다"
+    },
+    "userTokenLoadFailed": {
+        "message": "사용자 토큰을 불러오지 못했습니다"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "사용자 패스키를 불러오지 못했습니다"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "프로필이 성공적으로 업데이트되었습니다"
+    },
+    "userProfileUpdateFailed": {
+        "message": "프로필을 업데이트하지 못했습니다"
+    },
+    "userBackupsLoadFailed": {
+        "message": "백업을 불러오지 못했습니다"
+    },
+    "userBackupDownloadFailed": {
+        "message": "백업을 다운로드하지 못했습니다"
+    },
+    "userBackupFileEmpty": {
+        "message": "백업 파일이 없습니다"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "백업이 성공적으로 업데이트되었습니다"
+    },
+    "userBackupUpdateFailed": {
+        "message": "백업을 업데이트하지 못했습니다"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "백업을 성공적으로 삭제했습니다"
+    },
+    "userBackupDeleteFailed": {
+        "message": "백업을 삭제하지 못했습니다"
+    },
+    "actionRestore": {
+        "message": "복구"
+    },
+    "titleRestoreBackup": {
+        "message": "백업 복구"
+    },
+    "userBackupRestoreConfirm": {
+        "message": "연결된 비행 컨트롤러에 백업 \"{{name}}\"을 적용하시겠습니까? 현재 환경설정이 덮어쓰게 됩니다."
+    },
+    "userBackupRestoreInProgress": {
+        "message": "백업 복구중..."
+    },
+    "userBackupRestoreSuccess": {
+        "message": "백업이 성공적으로 복구되었습니다"
+    },
+    "userBackupRestoreFailed": {
+        "message": "백업 복구 실패"
+    },
+    "userBackupRestoreErrors": {
+        "message": "<span class='message-negative'>경고!<\/span><br\/>백업에 CLI 오류가 적용되었습니다."
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "사용 가능한 패스키 없음"
+    },
+    "userTokenNoTokens": {
+        "message": "사용 가능한 토큰 없음"
+    },
+    "profileBackupSuccess": {
+        "message": "백업 성공"
+    },
+    "profileBackupApiSuccess": {
+        "message": "백업을 성공적으로 API에 저장하였습니다"
+    },
+    "profileBackupApiFail": {
+        "message": "백업을 API에 저장하지 못했습니다"
+    },
+    "profileBackupEmptyResult": {
+        "message": "백업 성공"
+    },
+    "labelLogin": {
+        "message": "로그인"
+    },
+    "labelSignOut": {
+        "message": "로그아웃"
+    },
+    "labelAvatarUrl": {
+        "message": "아바타 URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "당신의 아바타의 이미지 URL 입력하세요"
+    },
+    "labelCreatePasskey": {
+        "message": "패스키 생성"
+    },
+    "labelUsePasskey": {
+        "message": "패스키 사용"
+    },
+    "labelSignInWithPasskey": {
+        "message": "패스키로 로그인"
+    },
+    "labelSendVerificationCode": {
+        "message": "인증 코드 보내기"
+    },
+    "labelSignInWithEmailCode": {
+        "message": "대신 이메일 코드로 로그인"
+    },
+    "labelBackToPasskey": {
+        "message": "패스키 로그인으로 돌아가기"
+    },
+    "labelBack": {
+        "message": "돌아가기"
+    },
+    "labelNoPasskeyPrompt": {
+        "message": "패스키가 없습니까?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "하나로 설정"
+    },
+    "descriptionPasskeyLogin": {
+        "message": "당신의 패스키를 사용하여 로그인하세요"
+    },
+    "descriptionCodeRequest": {
+        "message": "인증 코드를 이메일로 보내드립니다"
+    },
+    "descriptionCodeEntered": {
+        "message": "$1로 보낸 코드를 입력하세요"
+    },
+    "titleEnterVerificationCode": {
+        "message": "인증 코드 입력"
+    },
+    "labelVerificationCode": {
+        "message": "인증 코드"
+    },
+    "labelCode": {
+        "message": "코드"
+    },
+    "userLoggingIn": {
+        "message": "로그인 중..."
+    },
+    "userSignedOut": {
+        "message": "로그아웃됨"
+    },
+    "userSignOutFailed": {
+        "message": "로그아웃에 실패하였습니다"
+    },
+    "userLoginSuccess": {
+        "message": "로그인 성공"
+    },
+    "userLoginFailed": {
+        "message": "로그인 실패"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "패스키를 생성하지 못했습니다"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "패스키를 성공적으로 생성했습니다"
+    },
+    "userVerifyingCode": {
+        "message": "코드 인증중..."
+    },
+    "userCreatingPasskey": {
+        "message": "패스키 생성중..."
+    },
+    "userCodeRequired": {
+        "message": "인증 코드는 필수입니다"
+    },
+    "userSendingCode": {
+        "message": "인증 코드를 보내는 중..."
+    },
+    "userSendCodeFailed": {
+        "message": "인증 코드 전송 실패"
+    },
+    "dataWaitingForData": {
+        "message": "데이터를 기다리는 중 ..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "생성됨"
+    },
+    "labelLastUsed": {
+        "message": "마지막 사용"
+    },
+    "labelActions": {
+        "message": "액션"
+    },
+    "labelDetails": {
+        "message": "세부 사항"
+    },
+    "labelExpiry": {
+        "message": "만료"
+    },
+    "labelDescription": {
+        "message": "설명"
+    },
+    "labelDate": {
+        "message": "일자"
+    },
+    "actionDownload": {
+        "message": "다운로드"
+    },
+    "actionBackup": {
+        "message": "백업"
+    },
+    "actionEdit": {
+        "message": "편집"
+    },
+    "actionDelete": {
+        "message": "삭제"
+    },
+    "actionSave": {
+        "message": "저장"
+    },
+    "titleEditProfile": {
+        "message": "프로필 편집"
+    },
+    "titleLogin": {
+        "message": "로그인"
+    },
+    "labelName": {
+        "message": "이름"
+    },
+    "labelAddress": {
+        "message": "주소"
+    },
+    "labelCountry": {
+        "message": "국가"
+    },
+    "confirmDelete": {
+        "message": "이 {{item}}을 삭제하시겠습니까?"
+    },
+    "itemBackup": {
+        "message": "백업"
+    },
+    "itemToken": {
+        "message": "토큰"
+    },
+    "itemPasskey": {
+        "message": "패스키"
+    },
+    "notLoggedIn": {
+        "message": "로그인 안 됨"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "사용 가능한 백업 없음"
+    },
+    "backupRequiresConnection": {
+        "message": "이 작업을 활성화하려면 비행 컨트롤러를 연결하세요",
+        "description": "Tooltip shown on disabled backup and restore buttons when no flight controller is connected"
+    },
+    "titleEditBackup": {
+        "message": "백업 편집"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU 알 수 없음"
+    },
+    "sectionUserTokens": {
+        "message": "사용자 토큰"
+    },
+    "sectionUserPasskeys": {
+        "message": "사용자 패스키"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "위치로 정렬",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "위치를 선택하세요",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "비행준비"
+    },
+    "preflightTitle": {
+        "message": "비행 전 환경 점검"
+    },
+    "preflightLocation": {
+        "message": "비행 지역"
+    },
+    "preflightUseMyLocation": {
+        "message": "내 위치 사용"
+    },
+    "preflightDetecting": {
+        "message": "감지 중..."
+    },
+    "preflightOr": {
+        "message": "또는 좌표 입력:"
+    },
+    "preflightLatitude": {
+        "message": "위도"
+    },
+    "preflightLongitude": {
+        "message": "경도"
+    },
+    "preflightApply": {
+        "message": "적용"
+    },
+    "preflightLaunchStatus": {
+        "message": "실행 상태"
+    },
+    "preflightStatusGo": {
+        "message": "출발"
+    },
+    "preflightStatusCaution": {
+        "message": "주의"
+    },
+    "preflightStatusWarning": {
+        "message": "경고"
+    },
+    "preflightStatusNoGo": {
+        "message": "출발 전"
+    },
+    "preflightStatusNoData": {
+        "message": "데이터 없음"
+    },
+    "preflightCheckWind": {
+        "message": "바람"
+    },
+    "preflightCheckVisibility": {
+        "message": "가시성"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "강우"
+    },
+    "preflightCheckSolar": {
+        "message": "태양"
+    },
+    "preflightLevelUnknown": {
+        "message": "알 수 없음"
+    },
+    "preflightWmoClearSky": {
+        "message": "맑음"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "대체로 맑음"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "구름 조금"
+    },
+    "preflightWmoOvercast": {
+        "message": "흐림"
+    },
+    "preflightWmoFog": {
+        "message": "안개"
+    },
+    "preflightWmoRimeFog": {
+        "message": "착빙성 안개"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "약한 이슬비"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "보통 이슬비"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "굵은 이슬비"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "약한 어는 이슬비"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "굵은 어는 이슬비"
+    },
+    "preflightWmoSlightRain": {
+        "message": "약한 비"
+    },
+    "preflightWmoModerateRain": {
+        "message": "보통 비"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "폭우"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "약한 어는 비"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "굵은 어는 비"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "약한 눈"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "보통 눈"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "폭설"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "싸락눈"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "약한 소나기"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "일반 소나기"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "격한 소나기"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "약한 눈보라"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "강한 눈보라"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "뇌우"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "약한 우박을 동반한 뇌우"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "강한 우박을 동반한 뇌우"
+    },
+    "preflightKpLow": {
+        "message": "낮음"
+    },
+    "preflightKpModerate": {
+        "message": "보통"
+    },
+    "preflightKpElevated": {
+        "message": "높음"
+    },
+    "preflightKpStorm": {
+        "message": "폭풍"
+    },
+    "preflightWindCalm": {
+        "message": "평온"
+    },
+    "preflightWindLight": {
+        "message": "약함"
+    },
+    "preflightWindModerate": {
+        "message": "보통"
+    },
+    "preflightWindStrong": {
+        "message": "강함"
+    },
+    "preflightWindDangerous": {
+        "message": "위험"
+    },
+    "preflightVisExcellent": {
+        "message": "매우 좋음"
+    },
+    "preflightVisGood": {
+        "message": "좋음"
+    },
+    "preflightVisReduced": {
+        "message": "떨어짐"
+    },
+    "preflightVisPoor": {
+        "message": "나쁨"
+    },
+    "preflightPrecipNone": {
+        "message": "없음"
+    },
+    "preflightPrecipLight": {
+        "message": "약함"
+    },
+    "preflightPrecipModerate": {
+        "message": "보통 비"
+    },
+    "preflightPrecipHeavy": {
+        "message": "폭우"
+    },
+    "preflightDewNoRisk": {
+        "message": "위험 없음"
+    },
+    "preflightDewLowRisk": {
+        "message": "낮은 위험"
+    },
+    "preflightDewFogLikely": {
+        "message": "안개\/응결 가능"
+    },
+    "preflightDewFogExpected": {
+        "message": "안개\/렌즈 김서림 예상"
+    },
+    "preflightUvLow": {
+        "message": "낮음"
+    },
+    "preflightUvModerate": {
+        "message": "보통"
+    },
+    "preflightUvHigh": {
+        "message": "높음"
+    },
+    "preflightUvVeryHigh": {
+        "message": "매우 높음"
+    },
+    "preflightBatteryRisk": {
+        "message": "배터리 위험"
+    },
+    "preflightBatteryOk": {
+        "message": "정상 범위"
+    },
+    "preflightBatteryCool": {
+        "message": "성능 저하, 배터리를 따뜻하게 하세요"
+    },
+    "preflightBatteryCold": {
+        "message": "심각한 용량 감소"
+    },
+    "preflightBatteryHot": {
+        "message": "스웰링(부품) 위험, 그늘을 유지하세요"
+    },
+    "preflightBatteryExtreme": {
+        "message": "과열, 비행하지 마세요"
+    },
+    "preflightCheckBattery": {
+        "message": "배터리"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "밀도 고도"
+    },
+    "preflightFeelsLike": {
+        "message": "체감 온도"
+    },
+    "preflightFogRisk": {
+        "message": "안개 위험"
+    },
+    "preflightFogUnlikely": {
+        "message": "가능 희박"
+    },
+    "preflightFogLow": {
+        "message": "낮은 위험"
+    },
+    "preflightFogModerate": {
+        "message": "보통 위험"
+    },
+    "preflightFogHigh": {
+        "message": "높은 위험"
+    },
+    "preflightElevation": {
+        "message": "표고"
+    },
+    "preflightDensityAlt": {
+        "message": "밀도 고도"
+    },
+    "preflightDaNormal": {
+        "message": "정상 성능"
+    },
+    "preflightDaReduced": {
+        "message": "약간 줄어든 양력"
+    },
+    "preflightDaLow": {
+        "message": "눈에 띄게 성능 저하"
+    },
+    "preflightDaPoor": {
+        "message": "상당한 양력 감소"
+    },
+    "preflightCivilTwilight": {
+        "message": "시민박명 윈도우"
+    },
+    "preflightRefresh": {
+        "message": "새로고침"
+    },
+    "preflightCurrentWeather": {
+        "message": "현재 날씨"
+    },
+    "preflightWind": {
+        "message": "풍속"
+    },
+    "preflightGusts": {
+        "message": "돌풍"
+    },
+    "preflightVisibility": {
+        "message": "가시성"
+    },
+    "preflightPrecipitation": {
+        "message": "강우"
+    },
+    "preflightCloudCover": {
+        "message": "구름덮힘"
+    },
+    "preflightHumidity": {
+        "message": "습도"
+    },
+    "preflightPressure": {
+        "message": "기압"
+    },
+    "preflightDewPoint": {
+        "message": "이슬점"
+    },
+    "preflightFlightWindow": {
+        "message": "비행 윈도우"
+    },
+    "preflightSunrise": {
+        "message": "일출"
+    },
+    "preflightSunset": {
+        "message": "일몰"
+    },
+    "preflightDaylight": {
+        "message": "일광"
+    },
+    "preflightUvIndex": {
+        "message": "자외선 지수"
+    },
+    "preflightTempRange": {
+        "message": "기온 범위"
+    },
+    "preflightCurrentlyDay": {
+        "message": "현재"
+    },
+    "preflightDaytime": {
+        "message": "주간"
+    },
+    "preflightNighttime": {
+        "message": "야간"
+    },
+    "preflightWindForecast": {
+        "message": "고도 풍속 예보"
+    },
+    "preflightWindForecastHelp": {
+        "message": "장거리 및 고고도 FPV 비행에서는 다양한 고도의 풍속이 매우 중요합니다. 고도가 높을수록 일반적으로 바람이 더 강합니다."
+    },
+    "preflightTime": {
+        "message": "시간"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "돌풍"
+    },
+    "preflightRainProb": {
+        "message": "비 %"
+    },
+    "preflightWindUnit": {
+        "message": "풍속(m\/s). 지상 고도(AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "태양 활동"
+    },
+    "preflightSolarHelp": {
+        "message": "높은 태양 활동(Kp > 5)은 전리층 간섭을 일으켜 GPS 정확도를 저하시키고 GPS 레스큐 신뢰성에 영향을 미칠 수 있습니다."
+    },
+    "preflightGeoStorm": {
+        "message": "지자기 폭풍"
+    },
+    "preflightSolarRadiation": {
+        "message": "태양 방사선"
+    },
+    "preflightRadioBlackout": {
+        "message": "전파 두절"
+    },
+    "preflightLastMeasurement": {
+        "message": "마지막 측정"
+    },
+    "preflightLoadingSolar": {
+        "message": "태양 데이터 로딩중..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS 상태"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS 위성 신호 품질은 태양 활동의 영향을 받습니다. 높은 Kp 값은 GPS 위치 정확도를 저하시키고 GPS 레스큐 신뢰성을 저하시킬 수 있습니다."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS 정확도는 태양\/지자기 조건의 영향을 받습니다. GPS 탭에서 실시간 위성 데이터를 보려면 기체를 연결하세요."
+    },
+    "preflightKpEffect": {
+        "message": "전리층 충돌"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS 레스큐 상태"
+    },
+    "preflightMagDeclination": {
+        "message": "자기 편차"
+    },
+    "preflightMagInclination": {
+        "message": "자기 경사"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS 위성 계획 툴"
+    },
+    "preflightAirspace": {
+        "message": "공역 & 비행금지구역"
+    },
+    "preflightAirspaceNote": {
+        "message": "비행하기 전에 항상 현지 공역 제한사항과 NOTAM을 확인하세요. 규칙은 국가와 지역에 따라 다릅니다."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "드론 안전 지도 (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector 공역 차트"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "위치 지도"
+    },
+    "preflightNoData": {
+        "message": "환경 데이터를 로드할 위치를 선택하세요"
+    },
+    "preflightAttribution": {
+        "message": "기상 데이터: Open-Meteo.com (CC BY 4.0) | 태양 데이터: NOAA 우주 기상 예측 센터"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "위치 저장됨..."
+    },
+    "preflightLoadLocation": {
+        "message": "불러오기"
+    },
+    "preflightSaveLocation": {
+        "message": "저장"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "최대 5개의 위치 저장 한도에 도달함"
+    },
+    "preflightLocationLabel": {
+        "message": "위치 이름 (최대 20자)"
+    },
+    "preflightDeleteLocation": {
+        "message": "선택한 위치 삭제"
+    },
+    "preflightRenameLocation": {
+        "message": "선택한 위치 이름 바꾸기"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "이름 바꾸기"
+    },
+    "preflightCoordinates": {
+        "message": "좌표"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "위치 저장"
+    },
+    "preflightConfirmSave": {
+        "message": "저장"
+    },
+    "preflightCancel": {
+        "message": "취소"
+    },
+    "preflightGeolocationFailed": {
+        "message": "위치를 감지할 수 없습니다. 좌표를 수동으로 입력하세요."
+    },
+    "preflightIpConsentMessage": {
+        "message": "브라우저 위치 확인에 실패했습니다. 귀하의 대략적인 위치는 타사 서비스인 ipapi.co 을 통해 IP 주소를 사용하여 감지할 수 있습니다."
+    },
+    "preflightIpConsentAllow": {
+        "message": "허용"
+    },
+    "preflightIpConsentDeny": {
+        "message": "거절"
+    },
+    "preflightMapSatellite": {
+        "message": "위성 뷰"
+    },
+    "preflightMapHybrid": {
+        "message": "하이브리드 위성 거리 뷰"
+    },
+    "preflightMapStreet": {
+        "message": "거리 지도 뷰"
+    },
+    "preflightMapZoomIn": {
+        "message": "확대"
+    },
+    "preflightMapZoomOut": {
+        "message": "축소"
+    },
+    "preflightMapFullscreen": {
+        "message": "전체화면 전환"
+    },
+    "preflightKpMinimal": {
+        "message": "GPS 최소 영향"
+    },
+    "preflightKpDegraded": {
+        "message": "GPS 정확도 저하 가능"
+    },
+    "preflightKpSevere": {
+        "message": "상당한 GPS 간섭 예상"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "먼저 태양 활동을 확인하세요"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS 레스큐 신뢰성"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS 레스큐의 신뢰성이 떨어질 수 있습니다"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS 레스큐가 권장되지 않습니다"
+    },
+    "preflightForecast": {
+        "message": "5일간 일기 예보"
+    },
+    "preflightForecastHelp": {
+        "message": "비행 세션을 미리 계획하는 데 도움이 되는 일일 날씨 개요"
+    },
+    "preflightForecastDay": {
+        "message": "일"
+    },
+    "preflightForecastWeather": {
+        "message": "날씨"
+    },
+    "preflightNotamProvider": {
+        "message": "NOTAM 제공자"
+    },
+    "preflightNotamProviderNone": {
+        "message": "비활성화됨"
+    },
+    "preflightNotamProviderFaa": {
+        "message": "FAA NOTAM API (US, API 키 필수)"
+    },
+    "preflightNotamProviderOpenaip": {
+        "message": "OpenAIP (글로벌 공역, API 키 필수)"
+    },
+    "preflightNotamFaaApiKeyLabel": {
+        "message": "FAA API 키 (client_id:client_secret)"
+    },
+    "preflightNotamOpenAipApiKeyLabel": {
+        "message": "OpenAIP API 키"
+    },
+    "preflightNotamRadius": {
+        "message": "탐색 반경"
+    },
+    "preflightNotamRadiusUnitNm": {
+        "message": "NM"
+    },
+    "preflightNotamRadiusUnitKm": {
+        "message": "km"
+    },
+    "preflightNotamSettings": {
+        "message": "공역 데이터 설정"
+    },
+    "preflightNotamPrivacyNote": {
+        "message": "공역 데이터는 선택한 제공자에게 회원님의 좌표를 전송합니다. 추가 개인정보는 전송되지 않습니다."
+    },
+    "preflightNotamLoading": {
+        "message": "공역 데이터를 가져오는 중..."
+    },
+    "preflightNotamEmpty": {
+        "message": "이 위치와 반경에 대한 알림을 찾을 수 없습니다"
+    },
+    "preflightNotamApiKeyRequired": {
+        "message": "선택한 공급자에게 API 키가 필요합니다. 위의 설정에서 키를 입력하세요."
+    },
+    "preflightNotamFetchError": {
+        "message": "공역 데이터를 가져오지 못했습니다"
+    },
+    "preflightNotamActiveNow": {
+        "message": "지금 활성화됨"
+    },
+    "preflightNotamPermanent": {
+        "message": "영구적"
+    },
+    "preflightNotamExpired": {
+        "message": "만료됨"
+    },
+    "preflightNotamTypeTfr": {
+        "message": "TFR"
+    },
+    "preflightNotamTypeSua": {
+        "message": "SUA"
+    },
+    "preflightNotamTypeSnow": {
+        "message": "SNOWTAM"
+    },
+    "preflightNotamTypeAsh": {
+        "message": "ASHTAM"
+    },
+    "preflightNotamTypeNotam": {
+        "message": "NOTAM"
+    },
+    "preflightNotamAltFrom": {
+        "message": "낮게"
+    },
+    "preflightNotamAltTo": {
+        "message": "높게"
+    },
+    "preflightNotamShowMore": {
+        "message": "더 보기"
+    },
+    "preflightNotamShowLess": {
+        "message": "간략히 보기"
+    },
+    "preflightNotamLastFetched": {
+        "message": "마지막 가져옴"
     }
 }

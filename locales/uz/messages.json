@@ -11,7 +11,7 @@
         "message": "Yoniq"
     },
     "off": {
-        "message": "o‘chiq"
+        "message": "O‘chiq"
     },
     "auto": {
         "message": "Avto"
@@ -132,6 +132,30 @@
     "connectManualDescription": {
         "message": "Ulanish uchun serial yo‘l yoki URL manzilini kiriting.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Saqlangan ulanishlar",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nomi:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Ushbu ulanish uchun nom",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Saqlash",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Yangilash",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Saqlangan ulanishlarni o‘chirish",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "Avto-ulanish"
@@ -306,14 +330,14 @@
     "configuratorUpdateHelp": {
         "message": "Internet mavjud bo‘lganda, ilova mavjud yangilanishlarni avtomatik so‘rashi kerak."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Chiqarilish veb-saytiga o‘tish"
-    },
     "rebootFlightController": {
         "message": "Parvoz kontrolleri qayta yuklanmoqda, tayyor bo‘lganda qayta ulang"
     },
     "rebootFlightControllerReady": {
         "message": "Parvoz kontrolleri tayyor"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "Parvoz kontrolleri qayta ulana olmadi"
     },
     "deviceRebooting": {
         "message": "Qurilma - <span class=\"message-negative\">Qayta yuklanmoqda<\/span>"
@@ -654,6 +678,9 @@
     "connectionFailed": {
         "message": "Tanlangan portga ulanib <span class=\"message-negative\">bo‘lmadi<\/span>. Qurilma mavjudligini va ulanish sozlamalari to‘g‘riligini tekshiring, so‘ng qayta urinib ko‘ring."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "iOS qurilmangizda Sozlamalar &rarr; Maxfiylik &amp; xavfsizlik &rarr; Mahalliy tarmoq bo‘limiga o‘ting va Betaflight uchun <strong>Mahalliy tarmoq<\/strong> ruxsatini yoqing, so‘ng yana urinib ko‘ring."
+    },
     "connectionLostTitle": {
         "message": "Aloqa uzildi"
     },
@@ -968,7 +995,7 @@
         "message": "Dasturiy ta'minot"
     },
     "defaultSoftwareText": {
-        "message": "Bizning <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Qora quti jurnal ko‘rish ilovasi<\/a> onlayn ilova sifatida mavjud.<br \/><br \/>Bizning <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skriptlari<\/a> to‘plamimiz GitHub'da mavjud.<br \/><br \/>Proshivka, ushbu ilova va qora qutini ochish ilovasi uchun bizning <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodimizni<\/a> GitHub'dan yuklab olishingiz mumkin."
+        "message": "Mazkur ilovada qora quti jurnallarini ko'rish vositasi ko‘zda tutilgan. Parvoz jurnallaringizni tahlil qilish uchun <strong>Qora qutini ochish<\/strong> yorlig'ini tanlang.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua<\/a> skriptlari to'plami GitHub'da mavjud.<br \/><br \/>Proshivka va ushbu ilova uchun <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">manba kodi<\/a> GitHubdan yuklab olinishi mumkin."
     },
     "defaultContributingHead": {
         "message": "Hissa qo‘shish"
@@ -1106,7 +1133,7 @@
         "message": "Mikser turi"
     },
     "initialSetupThrottleHead": {
-        "message": "Gaz sozlamalari"
+        "message": "Throttle sozlamalari"
     },
     "initialSetupMinimum": {
         "message": "Minimum:"
@@ -1277,7 +1304,7 @@
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "Gaz kanali juda yuqori",
+        "message": "Throttle kanali juda yuqori",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
@@ -1738,11 +1765,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Dronni kamerani o‘zingizdan nariga (ekranga) qaratib, tekis joylashtiring."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Uchki qismini tepaga 45°ga buring."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Uchki qismini taxminan 45° pastga eging, shunda kamera yer tomonga qaraydi."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "o‘ng tomonini pastga 45° eging."
+        "message": "O‘ng tomonini taxminan 45° pastga eging, bunda o‘ng qo‘llar pastga, chap qo‘llar esa yuqoriga ko‘tariladi."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Dronni 45° soat strelkasi bo‘yicha aylantiring (yuqoridagi kabi)."
@@ -1814,10 +1841,13 @@
         "message": "Akselerometr gravitatsiya tortishish kuchini ko‘rsatmayapti. FC ulanganligiga va harakatlanmayotganligiga ishonch hosil qiling."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Pitch harakati aniqlanmadi. Iltimos, qayta urinib ko‘ring va uchki qismini yuqoriga ko‘taring."
+        "message": "Pitch harakati aniqlanmadi. Iltimos, qayta urinib ko‘ring va uchki qismini yanada pastroqqa eging."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Roll harakati aniqlanmadi. Qayta urinib ko‘ring va o‘ng tomonni pastga eging."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Egish harakatlaridan biri noto‘g‘ri yo‘nalishda bajarildi. Pitch va roll yo‘nalishlarini tekshirib, qaytadan urinib ko‘ring."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Tekis"
@@ -1911,13 +1941,13 @@
         "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
-        "message": "Minimal gaz (Ishga tushirilganda eng past ESC qiymati)"
+        "message": "Minimal throttle (Ishga tushirilganda eng past ESC qiymati)"
     },
     "configurationThrottleMinimumHelp": {
         "message": "Bu uchar qurilma ishga tushirilganda va gaz dastasi minimal holatda bo‘lganda ESC'larga yuboriladigan 'bo‘sh yurish' qiymati. Ko‘proq bo‘sh yurish tezligiga ega bo‘lish uchun qiymatni oshiring. Shuningdek, desinklar bo‘lsa ham qiymatni oshiring!"
     },
     "configurationThrottleMaximum": {
-        "message": "Maksimal gaz (Ishga tushirilganda eng yuqori ESC qiymati)"
+        "message": "Maksimal throttle (Ishga tushirilganda eng yuqori ESC qiymati)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimal buyruq (Disarm qilinganda ESC qiymati)"
@@ -2031,7 +2061,7 @@
         "message": "3D neytral"
     },
     "configuration3dDeadbandThrottle": {
-        "message": "3D o‘lik zona - gaz"
+        "message": "3D o‘lik zona - throttle"
     },
     "configurationSystem": {
         "message": "Tizim konfiguratsiyasi"
@@ -2095,8 +2125,24 @@
         "message": "Yoqilganda, faqat batareya ulangandan keyingi birinchi ishga tushirish boshlang‘ich nuqta sifatida ishlatiladi. Agar yoqilmagan bo‘lsa, uchar qurilma har safar ishga tushirilganda boshlang‘ich nuqta yangilanadi.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Joriy proshivkada GPS qo'llab-quvvatlashi ko‘zda tutilmagan. GPSni sozlash va undan foydalanish uchun proshivkani GPS imkoniyati bilan qaytadan yarating.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Serial qabul qilgich provayderi"
+    },
+    "portsPortNone": {
+        "message": "Yo‘q"
+    },
+    "receiverSerialPort": {
+        "message": "Serial Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART ketma-ket qabul qilgich ulangan. Bod tezligi uzatuvchiga bog'liq, shuning uchun bu yerda hech narsa o'rnatish shart emas. Portni o'zgartirish uchun qayta ishga tushirish lozim."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Qabul qilgichning ketma-ket portini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
     },
     "someRXTypesDisabled": {
         "message": "Ba'zi qabul qilgich provayderlari joriy Build konfiguratsiyasi tomonidan qo‘llab-quvvatlanmaydi."
@@ -2151,6 +2197,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Eslatma:<\/strong> Nima qilayotganingizni bilmasangiz, birinchi serial portda MSP'ni <span class=\"message-negative\">o‘CHIRMANG<\/span>. Agar shunday qilsangiz, konfiguratsiyangizni qayta yozib, tozalashingizga to‘g‘ri kelishi mumkin."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Eslatma:<\/strong> ushbu proshivka har bir funksiyaning alohida yorlig'ida ketma-ket portlarni tayinlaydi, shuning uchun bu ko'rinish faqat o'qish uchun. Unda har bir funksiya hozirda qaysi portdan foydalanayotganini ko'rsatiladi; funksiyaga egalik qiluvchi yorliqdan o'zgartiring."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Proshivkani yangilash <span class=\"message-negative\">talab qilinadi<\/span>. 1.8.0'dan &lt; eski proshivkalarning serial port konfiguratsiyalari qo‘llab-quvvatlanmaydi."
@@ -2370,7 +2419,7 @@
         "message": "Setpoint chegara turi"
     },
     "receiverThrottleTypeSelect": {
-        "message": "Gaz chegara turi"
+        "message": "Throttle chegara turi"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolyatsiya"
@@ -2403,7 +2452,7 @@
         "message": "Setpoint chegara chastotasi"
     },
     "receiverRcSmoothingThrottleCutoffHz": {
-        "message": "Gaz chegara chastotasi"
+        "message": "Throttle chegara chastotasi"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward chegara chastotasi"
@@ -2567,13 +2616,13 @@
         "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
-        "message": "Gaz egri chizig‘i ko‘rinishi"
+        "message": "Throttle egri chizig‘i ko‘rinishi"
     },
     "pidTuningThrottleLimitType": {
-        "message": "Gaz chegarasi"
+        "message": "Throttle chegarasi"
     },
     "pidTuningThrottleLimitPercent": {
-        "message": "Gaz chegarasi %"
+        "message": "Throttle chegarasi %"
     },
     "pidTuningThrottleLimitTypeOff": {
         "message": "o‘CHIQ"
@@ -2600,7 +2649,7 @@
         "message": "Tezliklar ko‘rinishi"
     },
     "throttle": {
-        "message": "Gaz"
+        "message": "Throttle"
     },
     "pidTuningButtonSave": {
         "message": "Saqlash"
@@ -2677,7 +2726,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>PID sozlash slayder rejimi<\/strong><br><br>Pidtuning slayder rejimi quyidagicha bo‘lishi mumkin:<br><br>&bull; OFF - slayderlar yo‘q, qiymatlarni qo‘lda kiriting<br>&bull; RP - slayderlar faqat Roll va Pitch'ni boshqaradi, Yaw qiymatlarini qo‘lda kiriting<br>&bull; RPY - slayderlar barcha PID qiymatlarini boshqaradi<br><br><span class=\"message-negative\"><b>Ogohlantirish:<\/b><\/span>RP'dan RPY rejimiga o‘tish Yaw sozlamalarini proshivka sozlamalari bilan qayta yozadi."
+        "message": "<strong>PID sozlash slayder rejimi<\/strong><br><br>Pidtuning slayder rejimi quyidagicha bo‘lishi mumkin:<br><br>&bull; O‘chiq - slayderlar yo‘q, qiymatlarni qo‘lda kiriting<br>&bull; RP - slayderlar faqat Roll va Pitch'ni boshqaradi, Yaw qiymatlarini qo‘lda kiriting<br>&bull; RPY - slayderlar barcha PID qiymatlarini boshqaradi<br><br><span class=\"message-negative\"><b>Ogohlantirish:<\/b><\/span>RP'dan RPY rejimiga o‘tish Yaw sozlamalarini proshivka sozlamalari bilan qayta yozadi."
     },
     "receiverHelpModelId": {
         "message": "Agar quyidagi Model Match'ni 255'dan boshqa songa o‘rnatsangiz, OpenTX\/EdgeTX model sozlash sahifasida qabul qilgich raqamini belgilashingiz va ushbu model uchun ELRS LUA skriptida Model Match'ni yoqishingiz mumkin. Model match 0 dan 63 gacha (ikkalasi ham kiradi).<br \/>Ko‘proq ma'lumot uchun ELRS hujjatlariga qarang."
@@ -2695,10 +2744,10 @@
         "message": "Parvoz kontrolleri failsafe holatida. Quyida ko‘rsatilgan kanal qiymatlari failsafe chiqishi bo‘lib, qabul qilgichingizdan kelayotgan jonli qiymatlar emas. Qabul qilgich aloqangiz va failsafe sozlamalaringizni tekshiring."
     },
     "receiverThrottleMid": {
-        "message": "Gaz o‘rtasi (MID)"
+        "message": "Throttle o‘rtasi (MID)"
     },
     "receiverThrottleExpo": {
-        "message": "Gaz EXPO"
+        "message": "Throttle EXPO"
     },
     "receiverThrottleHover": {
         "message": "Muallaq turish nuqtasi"
@@ -3137,7 +3186,7 @@
         "message": "RC Expo‘ni moslashtirish"
     },
     "adjustmentsFunction3": {
-        "message": "Gaz Expo‘ni moslashtirish"
+        "message": "Throttle Expo‘ni moslashtirish"
     },
     "adjustmentsFunction4": {
         "message": "Pitch va Roll tezligini moslashtirish"
@@ -4801,11 +4850,11 @@
         "message": "Doimo miltillash"
     },
     "ledStripThrottleHue": {
-        "message": "Gaz rangi (hue)",
+        "message": "Throttle rangi (hue)",
         "description": "Label of throttle hue modifier switch on LED Strip tab"
     },
     "ledStripThrottleHueChannel": {
-        "message": "Gaz rangi kanali",
+        "message": "Throttle rangi kanali",
         "description": "Accessible label for the aux-channel select next to the throttle hue switch"
     },
     "ledStripRainbowOverlay": {
@@ -5146,7 +5195,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "I'ni oshiradi yoki kamaytiradi. Yuqoriroq I spiral burilishlarda, orbitalarda yoki 0% gaz buyruqlarida kuzatuvni yaxshilashi mumkin. Juda ko‘p I, ayniqsa yetarli P bo‘lmaganda, fliplar\/rollardan keyin yoki gazni 0%'ga tushirganda tebranishlar yoki qaytishlarga sabab bo‘lishi mumkin.<br \/><br \/>Odatda siz uchar qurilmani spiral burilishlarda, orbitalarda va h.k.da kuzatuvda ushlab turish uchun 'Drift - Tebranish' slayderini imkon qadar yuqori qilishni xohlaysiz... lekin gazni 0%'ga tushirganda tebranishlar ko‘rina boshlaydigan darajada yuqori emas.<br \/><br \/><strong>Eslatma:<\/strong><br \/>Agar biror vaqtda oson ko‘rinadigan qaytishni sezsangiz, \"I-term Relax\" yoqilganligiga ishonch hosil qiling va iterm_relax_cutoff qiymatini pasaytirib ko‘ring.",
+        "message": "I'ni oshiradi yoki kamaytiradi. Yuqoriroq I spiral burilishlarda, orbitalarda yoki 0% gaz buyruqlarida kuzatuvni yaxshilashi mumkin. Juda ko‘p I, ayniqsa yetarli P bo‘lmaganda, fliplar\/rollardan keyin yoki gazni 0%'ga tushirganda tebranishlar yoki qaytishlarga sabab bo‘lishi mumkin.<br \/><br \/>Odatda siz uchar qurilmani spiral burilishlarda, orbitalarda va h.k.da kuzatuvda ushlab turish uchun 'Drift - Tebranish' slayderini imkon qadar yuqori qilishni xohlaysiz... lekin throttle 0%'ga tushirganda tebranishlar ko‘rina boshlaydigan darajada yuqori emas.<br \/><br \/><strong>Eslatma:<\/strong><br \/>Agar biror vaqtda oson ko‘rinadigan qaytishni sezsangiz, \"I-term Relax\" yoqilganligiga ishonch hosil qiling va iterm_relax_cutoff qiymatini pasaytirib ko‘ring.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -5448,7 +5497,7 @@
         "message": "Bu funksiya $t(pidTuningItermRotation.message)ning ba'zi tub muammolarini hal qiladi va bir kun uni almashtirishi mumkin. U uchar qurilma koordinatalarida mutlaq giro xatosini to‘playdi va setpoint'ga mutanosib tuzatishni aralashtiradi.<br><br>AirMode yoqilgan bo‘lishi va $t(pidTuningItermRelax.message) ($t(pidTuningOptionRP.message) uchun) yoqilgan bo‘lishi kerak. $t(pidTuningIntegratedYaw.message) bilan birlashtirilganda, $t(pidTuningItermRelax.message)ni $t(pidTuningOptionRPY.message) uchun yoqilgan qilib o‘rnatishingiz mumkin."
     },
     "pidTuningThrottleBoost": {
-        "message": "Gaz kuchaytirish"
+        "message": "Throttle kuchaytirish"
     },
     "pidTuningThrottleBoostHelp": {
         "message": "Tezroq gaz kirishlari bilan gazni vaqtinchalik kuchaytiradi, tezroq gaz javobini ta'minlaydi."
@@ -5532,13 +5581,13 @@
         "message": "Signal yo‘qolgandan keyin 1-bosqich failsafe'dagi vaqt davrini o‘rnating. Agar kechikish vaqti signal qaytmasdan tugasa, 2-bosqich failsafe boshlanadi"
     },
     "failsafeThrottleLowItem": {
-        "message": "Failsafe Gaz past kechikishi [soniya]"
+        "message": "Failsafe Throttle past kechikishi [soniya]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Gaz shu vaqt davomida past bo‘lsa, tanlangan failsafe tartibini bajarish o‘rniga uchar qurilmani shunchaki disarm qiling"
+        "message": "Throttle shu vaqt davomida past bo‘lsa, tanlangan failsafe tartibini bajarish o‘rniga uchar qurilmani shunchaki disarm qiling"
     },
     "failsafeThrottleItem": {
-        "message": "Qo‘nish paytida ishlatiladigan gaz qiymati"
+        "message": "Qo‘nish paytida ishlatiladigan throttle qiymati"
     },
     "failsafeOffDelayItem": {
         "message": "Failsafe davomida Motorlarni o‘chirish kechikishi [soniya]"
@@ -5589,7 +5638,7 @@
         "message": "Maksimal pitch burchagi"
     },
     "failsafeGpsRescueAngleHelp": {
-        "message": "Yuqoriroq maksimal burchaklar tajovuzkorroq qaytishlarga va yuqoriroq oldinga tezliklarga olib keladi. Og‘irroq, yuqori qarshilikli yoki past quvvatli uchar qurilmalar uchun, yoki kuchliroq shamolda foydalanish uchun foydali bo‘lishi mumkin. OGOHLANTIRISH: Agar maks burchak oshirilsa, odatda Rescue gazini oshirish kerak! Aks holda uchar qurilma balandlikni yo‘qotib qulashi mumkin!"
+        "message": "Yuqoriroq maksimal burchaklar keskinroq qaytishlarga va yuqoriroq oldinga tezliklarga olib keladi. Og‘irroq, yuqori qarshilikli yoki past quvvatli uchar qurilmalar uchun, yoki kuchliroq shamolda foydalanish uchun foydali bo‘lishi mumkin. OGOHLANTIRISH: Agar maksimal burchak oshirilsa, odatda Rescue Throttleni oshirish kerak! Aks holda uchuvchi moslama balandlikni yo‘qotib qulashi mumkin!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Pastga tushish masofasi (metr)"
@@ -6817,6 +6866,14 @@
     "osdDescElementLinkQuality": {
         "message": "Muvaffaqiyatli qabul qilingan buzilmagan ma'lumot paketlari foiziga asoslangan aloqa sifati ko‘rsatkichi"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF rejimi:Aloqa sifati",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Aloqa sifati faqat",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Parvoz masofasi",
         "description": "One of the elements of the OSD"
@@ -7824,45 +7881,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Deklinatsiya {{saved}}°, lekin GPS bu joylashuv uchun {{detected}}° aniqlaydi. Tuzatish uchun Yangilashni bosing."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} namuna"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Ko‘proq egib qiya qiling!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Aniqlash amalga oshmadi — turli xil qiya bilan urinib ko‘ring."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Klient kalibrlash (yo‘l-yo‘riqli)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Avto-so‘rovli 60s kalibrlash"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Yo‘l-yo‘riqli kalibrlash"
-    },
-    "magCalibrationPrompt1": {
-        "message": "1\/6-qadam — Tekis ushlab turing, yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "2\/6-qadam — Teskari ag‘daring, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "3\/6-qadam — Burun tik yuqoriga, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "4\/6-qadam — Burun tik pastga, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "5\/6-qadam — Chap tomon yuqoriga, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "6\/6-qadam — o‘ng tomon yuqoriga, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Ma'lumot yig‘ish tugallandi — ko‘rib chiqing va saqlang"
-    },
     "magCalibrationCancel": {
         "message": "Bekor qilish"
     },
@@ -7893,12 +7911,6 @@
     "magCalibrationSamples": {
         "message": "Namunalar"
     },
-    "magCalibrationQuality": {
-        "message": "Sifat"
-    },
-    "magCalibrationResidual": {
-        "message": "Moslash qoldig‘i"
-    },
     "magCalibrationQualityGood": {
         "message": "Yaxshi"
     },
@@ -7910,9 +7922,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Proshivka siljishlari"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Sfera moslash siljishlari"
     },
     "magCalibrationUnguided": {
         "message": "Proshivka kalibrlash (eski)"
@@ -7928,18 +7937,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Proshivka kalibrlash tugallandi!"
-    },
-    "magCalibrationGuided": {
-        "message": "Klient kalibrlash (erkin)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Erkin aylantiring — konfigurator siljishlarni hisoblaydi"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Klient kalibrlash"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Qurilmangizni barcha yo‘nalishlarda aylantiring. Taxminan bir-ikki daqiqa ichida to‘liq sfera hosil qilishga harakat qiling. Kalibrlash qiymatlari barqarorlashganda natijani saqlang."
     },
     "magCalibrationCheck": {
         "message": "Tekshirish"
@@ -7965,17 +7962,14 @@
     "magCalibrationSaveError": {
         "message": "Kalibrlash qiymatlarini saqlab bo‘lmadi"
     },
-    "magCalibrationAccept": {
-        "message": "Kalibrlashni saqlash"
-    },
     "magCalibrationFull": {
-        "message": "To‘liq kalibrlash (avto-tekislash)"
+        "message": "Kalibrlash va og‘ishni aniqlash"
     },
     "magCalibrationFullDesc": {
-        "message": "Bir aylanish — siljishlar, soft-iron va mag‘ning o‘rnatilgan yo‘nalishini belgilaydi"
+        "message": "Sensorni kalibrlash va uning o‘rnatish yo‘nalishini avtomatik ravishda aniqlash uchun uchish qurilmasini barcha yo'nalishlarda aylantiring."
     },
     "magCalibrationFullTitle": {
-        "message": "To‘liq kalibrlash"
+        "message": "Kalibrlash va Og‘ishni Aniqlash"
     },
     "magCalibrationFullInstruction": {
         "message": "Har bir to‘liq aylanish davomida uchar qurilmani barqaror ushlab, quyidagi qadamlarga amal qiling. Yangi burchaklarga yetganingizda zona soni ko‘payadi — barcha 20 tasini qamrab olishga harakat qiling."
@@ -8011,7 +8005,10 @@
         "message": "{{total}} zonadan {{covered}} tasi qamrab olindi"
     },
     "magCalibrationFullCompute": {
-        "message": "Hisoblash"
+        "message": "Kalibrlashni yakunlash"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Ko‘proq qamrov hududi yuqori aniqlikni beradi — eng yaxshi kalibrlash va og‘ishini aniqlash uchun 20\/20 ga intiling."
     },
     "magCalibrationFullCoverage": {
         "message": "Qamrov:"
@@ -8041,7 +8038,22 @@
         "message": "Namunalar yetarli emas — uzoqroq aylantiring"
     },
     "magCalibrationFullNoGeo": {
-        "message": "GPS yoki IP joylashuvi yo‘q — magnit og‘ishini aniqlab bo‘lmaydi"
+        "message": "GPS, brauzer yoki IP manzili yo‘q — davom etish uchun koordinatalarni qo‘lda kiriting"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Kalibrlash uchun joylashuv zarur"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Google xaritalar orqali kenglik va uzunlikni qo‘lda kiriting. Sizning droningizda GPS bog‘lanish yo‘q va qurilmangiz joylashuv ma'lumotlarini taqdim eta olmadi. Magnitometrni kalibrlash uchun joylashuv kerak."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "masalan, 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Koordinatalar formati noto‘g‘ri. Iltimos, kenglik, uzunlik shaklida quyidagicha kiriting (masalan, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Bu koordinatalar uchun magnit mos yozuvni hisoblab bo‘lmadi. Iltimos, ularni tekshiring va qaytadan urinib ko‘ring."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI buyruqlari vaqtinchalik xotiraga nusxalandi"
@@ -8081,12 +8093,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Yangi"
-    },
-    "magAlignmentApply": {
-        "message": "Qo‘llash"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Aniqlash"
     },
     "configurationSmallAngle": {
         "message": "Maksimal ARM burchagi [daraja]"
@@ -8834,6 +8840,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Faol batareya profili nomini yoki indeksini ko‘rsatadi"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Yo‘l nuqtasi raqami",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Hozirgi parvoz rejasining joriy\/umumiy yo'nalish nuqtasi raqamini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Yo'nalish nuqtasi kengligi (Lat.)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Joriy yo'nalish nuqtasining koordinata kengligini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Yo'nalish nuqtasi uzunligi (Lon.)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Joriy yo'nalish nuqtasining koordinata uzunligini ko'rsatadi"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Yo'nalish nuqtasining balandligi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Joriy yo'nalish nuqtasining balandligini ko'rsatadi"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Yo'nalish nuqtasi masofasi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Joriy yo'nalish nuqtasigacha bo'lgan masofani ko'rsatadi"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Yo'nalish nuqtasi yo'nalishi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Joriy yo'nalish nuqtasiga ishora qiluvchi yo'nalish strelkasini ko'rsatadi"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Keyingi yo'nalish raqami",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Faol parvoz rejasida keyingi yo'nalish nuqtasi raqamini ko'rsatadi"
+    },
+    "osdTextElementWpEta": {
+        "message": "Yo'nalish nuqtasiga yetib borish vaqti",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Joriy yo'nalish nuqtasiga taxminiy yetib kelish vaqtini ko'rsatadi"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigatsiya xaritasi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Uyni, parvoz rejasini va uchish yo'lini ko'rsatuvchi mini-xarita"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Pozitsiyani ushlab turishga tayyor",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Rejim tugmasi ishga tushirilgunga qadar Pozitsiyani ushlab turishning kirish shartlari bajarilganligini ko'rsatadi"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Chizg‘ichlar",

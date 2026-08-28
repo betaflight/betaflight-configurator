@@ -249,9 +249,6 @@
     "configuratorUpdateHelp": {
         "message": "Gdy masz dostęp do internetu, aplikacja powinna automatycznie sprawdzić dostępne aktualizacje."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Idź do strony z aktualizacjami"
-    },
     "rebootFlightController": {
         "message": "Ponowne uruchamianie kontrolera lotu, gdy będziesz gotowy podłącz się ponownie"
     },
@@ -674,8 +671,8 @@
     "defaultWelcomeHead": {
         "message": "Sprzęt"
     },
-    "defaultWelcomeText": {
-        "message": "Ten program obsługuje każdy sprzęt komputerowy, pracujący na Betaflight. Pełną listę sprzętu znajdziesz w zakładce Wgraj Oprogramowanie.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz program Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz Lua skrypt Betaflight dla nadajnika<\/a><br \/><br \/>Kod źródłowy oprogramowania układowego można pobrać <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><br \/><br \/>Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br \/>Najnowsze <b>sterowniki CP210x<\/b> można pobrać <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj<\/a><br \/>Najnowsze sterowniki USB <b>Zadig<\/b> dla systemu Windows można pobrać <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> można pobrać <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj<\/a>"
+    "defaultSoftwareHead": {
+        "message": "Oprogramowanie"
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
@@ -7012,7 +7009,22 @@
         "message": "Barometr (jeśli jest wspierany)"
     },
     "configurationMagHardware": {
-        "message": "Magnetometr (jeśli jest wspierany)"
+        "message": "Magnetometr"
+    },
+    "configurationMagInclination": {
+        "message": "Inklinacja"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Wykryj"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Aktualizuj"
+    },
+    "magCalibrationCancel": {
+        "message": "Anuluj"
+    },
+    "magCalibrationRetry": {
+        "message": "Ponów"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"

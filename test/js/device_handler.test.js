@@ -12,8 +12,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // getConnectionState().isReconnecting being false — see the tests below.
 // ---------------------------------------------------------------------------
 
-const { serial, dfuProtocol, isExpertModeEnabled } = vi.hoisted(() => {
+const { serial, dfuProtocol, isExpertModeEnabled, TauriDfuTransportMock } = vi.hoisted(() => {
     return {
+        TauriDfuTransportMock: class {},
         serial: {
             connected: false,
             connectionId: null,
@@ -43,12 +44,30 @@ vi.mock("../../src/js/serial.js", () => ({
 vi.mock("../../src/js/protocols/usbdfu", () => ({
     __esModule: true,
     default: dfuProtocol,
-    UsbDfuProtocol: class {},
+    // Captures the transport it wraps so the createDfuProtocol() routing tests can
+    // assert which transport was chosen; the listener API is what DeviceHandler's
+    // constructor touches.
+    UsbDfuProtocol: class {
+        constructor(transport) {
+            this.transport = transport;
+            this.usbDevice = null;
+            this.getConnectedDevice = vi.fn(() => null);
+            this.getDevices = vi.fn(async () => []);
+            this.requestPermission = vi.fn();
+            this.addEventListener = vi.fn();
+            this.removeEventListener = vi.fn();
+        }
+    },
 }));
 
 vi.mock("../../src/js/protocols/CapacitorDfuTransport", () => ({
     __esModule: true,
     default: class {},
+}));
+
+vi.mock("../../src/js/protocols/TauriDfuTransport", () => ({
+    __esModule: true,
+    default: TauriDfuTransportMock,
 }));
 
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({
@@ -73,6 +92,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
     isAndroid: () => false,
+    isTauriAndroid: () => false,
 }));
 
 import DeviceHandler from "../../src/js/device_handler";
@@ -202,6 +222,127 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
     });
 });
 
+// Regression. On Linux the FC gives two ports quickly, because udev and ModemManager remove
+// the CDC-ACM node and add it again. Only the second port stays in the list after the refresh.
+// The addedDevice event of the first port put a dead path in the selection. Auto-connect then
+// used that path and failed with "[WEBSERIAL] Device not found: serial_5".
+describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    it("ignores a suggested device that is no longer in the refreshed lists", () => {
+        const ghost = { path: "serial_5", displayName: "Betaflight STM Electronics" };
+        const real = { path: "serial_6", displayName: "Betaflight STM Electronics" };
+        // The refresh removed the first port. The list holds the second port only.
+        DeviceHandler.currentSerialPorts = [real];
+
+        const selected = DeviceHandler.selectActivePort(ghost);
+
+        expect(selected).not.toBe("serial_5");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("serial_6");
+    });
+
+    it("still honours a suggested device that is present in the refreshed lists", () => {
+        const real = { path: "serial_6", displayName: "Betaflight STM Electronics" };
+        DeviceHandler.currentSerialPorts = [real];
+
+        const selected = DeviceHandler.selectActivePort(real);
+
+        expect(selected).toBe("serial_6");
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("serial_6");
+    });
+
+    // Only the suggestion can select a device that the AT32/CP210/SPR/STM filter does not
+    // match. The check on the suggestion must not apply that filter too.
+    it("honours a present suggestion whose displayName does not match the device filter", () => {
+        const odd = { path: "serial_7", displayName: "Betaflight VID:1234 PID:5678" };
+        DeviceHandler.currentSerialPorts = [odd];
+
+        const selected = DeviceHandler.selectActivePort(odd);
+
+        expect(selected).toBe("serial_7");
+    });
+
+    it("falls through to 'noselection' when the only suggestion is a ghost", () => {
+        DeviceHandler.currentSerialPorts = [];
+        isExpertModeEnabled.mockReturnValue(false);
+
+        const selected = DeviceHandler.selectActivePort({ path: "serial_5", displayName: "Betaflight STM" });
+
+        expect(selected).toBeUndefined();
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+});
+
+// A rebooting device usually comes back under a NEW path — the browser mints a fresh
+// SerialPort object — so "is it back?" cannot be a path comparison, and it must not degrade
+// into "is anything back?" either.
+describe("DeviceHandler reboot-target identity", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    const fc = { path: "serial_6", displayName: "Betaflight STM Electronics", vendorId: 1155, productId: 22336 };
+    const other = { path: "serial_2", displayName: "Betaflight CP210", vendorId: 4292, productId: 60000 };
+
+    it("describes a listed device, and nothing for one that is not listed", () => {
+        DeviceHandler.currentSerialPorts = [fc];
+
+        expect(DeviceHandler.describeDevice("serial_6")).toEqual({
+            path: "serial_6",
+            vendorId: 1155,
+            productId: 22336,
+        });
+        expect(DeviceHandler.describeDevice("serial_99")).toBeNull();
+    });
+
+    it("finds the device again under a new path, by make", () => {
+        const target = { path: "serial_6", vendorId: 1155, productId: 22336 };
+        DeviceHandler.currentSerialPorts = [other, { ...fc, path: "serial_13" }];
+
+        expect(DeviceHandler.findDescribedDevice(target)?.path).toBe("serial_13");
+    });
+
+    it("does not match on absent USB ids — a port without them is not 'the same make'", () => {
+        // SerialPortInfo has usbVendorId/usbProductId for USB ports only. Two platform-native
+        // ports (built-in COM, Bluetooth SPP) both carry undefined, and undefined === undefined
+        // would pair them up.
+        const target = { path: "serial_6", vendorId: undefined, productId: undefined };
+        DeviceHandler.currentSerialPorts = [{ path: "serial_1", displayName: "COM3" }];
+
+        expect(DeviceHandler.findDescribedDevice(target)).toBeUndefined();
+    });
+
+    it("does not mistake another device for it", () => {
+        const target = { path: "serial_6", vendorId: 1155, productId: 22336 };
+        DeviceHandler.currentSerialPorts = [other];
+
+        expect(DeviceHandler.findDescribedDevice(target)).toBeUndefined();
+        expect(DeviceHandler.findDescribedDevice(null)).toBeUndefined();
+    });
+
+    it("selectActivePort prefers the rebooted device over another that just appeared", () => {
+        // The burst case: our FC comes back as serial_13 while an unrelated device is added
+        // too. Without the preference the selection follows whichever event arrived last.
+        DeviceHandler.currentSerialPorts = [other, { ...fc, path: "serial_13" }];
+        getConnectionState().requestReboot(10000, { path: "serial_6", vendorId: 1155, productId: 22336 });
+
+        const selected = DeviceHandler.selectActivePort(other);
+
+        expect(selected).toBe("serial_13");
+    });
+
+    it("is a preference, not a lock: an unrecognised return still gets selected", () => {
+        // A board that comes back as something else (different USB descriptor) must not be
+        // locked out — the normal rules still apply when the target is not found.
+        DeviceHandler.currentSerialPorts = [other];
+        getConnectionState().requestReboot(10000, { path: "serial_6", vendorId: 1155, productId: 22336 });
+
+        expect(DeviceHandler.selectActivePort(other)).toBe("serial_2");
+    });
+});
+
 describe("DeviceHandler show* setters", () => {
     beforeEach(() => {
         resetPortHandler();
@@ -219,5 +360,32 @@ describe("DeviceHandler show* setters", () => {
         expect(spy).toHaveBeenCalledTimes(1);
 
         spy.mockRestore();
+    });
+});
+
+describe("createDfuProtocol routing", () => {
+    // dfuProtocol is chosen at module scope, so exercising the Tauri Android branch
+    // needs a fresh module graph with isTauriAndroid flipped before the re-import.
+    it("wraps the Tauri transport on Tauri Android", async () => {
+        vi.resetModules();
+        vi.doMock("../../src/js/utils/checkCompatibility.js", () => ({
+            __esModule: true,
+            checkCompatibility: vi.fn(),
+            checkBluetoothSupport: () => true,
+            checkSerialSupport: () => true,
+            checkUsbSupport: () => true,
+            isAndroid: () => false,
+            isTauriAndroid: () => true,
+        }));
+
+        try {
+            const { default: handler } = await import("../../src/js/device_handler");
+
+            expect(handler.dfuProtocol).not.toBe(dfuProtocol);
+            expect(handler.dfuProtocol.transport).toBeInstanceOf(TauriDfuTransportMock);
+        } finally {
+            vi.doUnmock("../../src/js/utils/checkCompatibility.js");
+            vi.resetModules();
+        }
     });
 });

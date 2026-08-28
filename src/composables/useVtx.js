@@ -10,6 +10,7 @@ import { VtxDeviceTypes } from "../js/utils/VtxDeviceStatus/VtxDeviceStatus";
 import { generateFilename } from "../js/utils/generate_filename";
 import { gui_log } from "../js/gui_log";
 import FileSystem from "../js/FileSystem";
+import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
 const MAX_POWERLEVEL_VALUES = 8;
@@ -144,7 +145,6 @@ export function useVtx() {
     const vtxTypeString = ref("");
 
     // Dirty tracking
-    const configSnapshot = ref("");
 
     // Computed properties
     const vtxSupported = computed(
@@ -271,16 +271,7 @@ export function useVtx() {
         });
     }
 
-    function takeSnapshot() {
-        configSnapshot.value = serializeState();
-    }
-
-    const configDirty = computed(() => {
-        if (!configSnapshot.value) {
-            return false;
-        }
-        return serializeState() !== configSnapshot.value;
-    });
+    const { dirty: configDirty, markClean: captureBaseline } = useDirtyState(serializeState);
 
     const saveButtonDisabled = computed(() => !configDirty.value);
 
@@ -356,7 +347,7 @@ export function useVtx() {
         await loadVtxTableBands();
         await loadVtxTablePowerLevels();
         populateStateFromFC();
-        takeSnapshot();
+        captureBaseline();
         updating.value = false;
     }
 
@@ -373,7 +364,11 @@ export function useVtx() {
     // (useSaving); this only marshals data and issues the MSP writes. Persist is EEPROM-only
     // (no reboot), matching the previous writeConfiguration(false) behavior. The exact set and
     // order of MSP_SET_VTX* writes is preserved: VTX config, then each power level, then each band.
-    async function saveVtx() {
+    /**
+     * @param {() => Promise<void>} [beforePersist] runs after the parameter groups are written and
+     *   before the persist that serialises them, which is where a CLI `set` has to sit
+     */
+    async function saveVtx(beforePersist) {
         const { saveToEeprom } = useReboot();
 
         syncStateToFC();
@@ -392,6 +387,8 @@ export function useVtx() {
             FC.VTXTABLE_BAND = { ...bandList[index] };
             await MSP.promise(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND));
         }
+
+        await beforePersist?.();
 
         await saveToEeprom();
 

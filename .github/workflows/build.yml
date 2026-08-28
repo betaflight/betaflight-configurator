@@ -13,6 +13,11 @@ on:
         default: true
         required: false
         type: boolean
+      build_apk:
+        description: 'Build the Capacitor Android APK (debug or release per debug_build)'
+        default: true
+        required: false
+        type: boolean
 # 📌 2. DEFINE SECRETS THE WORKFLOW ACCEPTS
 #    Only consumed by release builds (debug_build == false). Debug builds run
 #    untrusted PR code and must never receive these, so they are optional.
@@ -75,12 +80,15 @@ jobs:
       - run: npm run build
 
       - name: Generate Capacitor Config
+        if: ${{ inputs.build_apk }}
         run: node capacitor.config.generator.mjs
 
       - name: Sync Capacitor Android Project
+        if: ${{ inputs.build_apk }}
         run: npx cap sync android
 
       - name: Set up Java
+        if: ${{ inputs.build_apk }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -91,7 +99,9 @@ jobs:
       # the release signing secrets are never referenced here. The APK is
       # signed with the Android debug keystore, which is enough for test installs.
       - name: Build debug APK
-        if: ${{ inputs.debug_build }}
+        if: ${{ inputs.build_apk && inputs.debug_build }}
+        env:
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           pushd android >/dev/null
           ./gradlew clean
@@ -99,12 +109,13 @@ jobs:
           popd >/dev/null
 
       - name: Build and Sign Android APK
-        if: ${{ !inputs.debug_build }}
+        if: ${{ inputs.build_apk && !inputs.debug_build }}
         env:
           RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
           : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"
@@ -124,6 +135,7 @@ jobs:
           popd >/dev/null
 
       - name: Set APK name
+        if: ${{ inputs.build_apk }}
         id: apk_name_set
         env:
           IS_DEBUG: ${{ inputs.debug_build }}
@@ -144,6 +156,7 @@ jobs:
           echo "apk_name=$apk_name" >> $GITHUB_OUTPUT
 
       - name: Upload APK as Artifact
+        if: ${{ inputs.build_apk }}
         id: apk_upload
         uses: actions/upload-artifact@v4
         with:

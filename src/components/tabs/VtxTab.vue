@@ -3,38 +3,36 @@
         <div class="content_wrapper">
             <!-- Title -->
             <div class="tab_title" v-html="$t('tabVtx')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="vtx" />
-            </div>
+            <WikiButton docUrl="vtx" />
 
             <!-- Help note -->
-            <UiBox highlight class="mb-3" v-show="vtxSupported">
+            <UiBox highlight v-show="vtxSupported">
                 <p v-html="$t('vtxHelp')"></p>
             </UiBox>
 
             <!-- Not supported -->
-            <UiBox highlight class="mb-3" v-show="!vtxSupported">
+            <UiBox highlight v-show="!vtxSupported">
                 <div v-html="$t('vtxMessageNotSupported')"></div>
             </UiBox>
 
-            <!-- Table not configured -->
-            <UiBox highlight class="mb-3" v-show="vtxTableNotConfigured">
-                <div v-html="$t('vtxMessageTableNotConfigured')"></div>
-            </UiBox>
-
-            <!-- Factory bands not supported -->
-            <UiBox highlight class="mb-3" v-show="factoryBandsNotSupported">
-                <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
-            </UiBox>
+            <!-- Table not configured / factory bands warnings -->
+            <div v-if="vtxTableNotConfigured || factoryBandsNotSupported" class="flex flex-col gap-2">
+                <UiBox v-show="vtxTableNotConfigured" highlight>
+                    <div v-html="$t('vtxMessageTableNotConfigured')"></div>
+                </UiBox>
+                <UiBox v-show="factoryBandsNotSupported" highlight>
+                    <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
+                </UiBox>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
                 <div class="lg:col-span-3" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxSelectedMode')">
+                    <UiBox :title="$t('vtxSelectedMode')" type="neutral" collapsible class="mt-4">
                         <div class="flex flex-col gap-2">
                             <!-- Frequency/Channel toggle -->
                             <SettingRow :label="$t('vtxFrequencyChannel')" :help="$t('vtxFrequencyChannelHelp')">
-                                <USwitch v-model="frequencyMode" size="sm" />
+                                <USwitch v-model="frequencyMode" size="xs" />
                             </SettingRow>
 
                             <!-- Band select -->
@@ -72,7 +70,7 @@
 
                             <!-- Pit mode -->
                             <SettingRow :label="$t('vtxPitMode')" :help="$t('vtxPitModeHelp')">
-                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="sm" />
+                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="xs" />
                             </SettingRow>
 
                             <!-- Pit mode frequency -->
@@ -86,6 +84,28 @@
                                     size="xs"
                                     orientation="vertical"
                                     class="w-20"
+                                />
+                            </SettingRow>
+
+                            <SettingRow
+                                v-if="vtxProtocolOptions.length"
+                                :label="$t('vtxProtocol')"
+                                :help="$t('vtxProtocolHelp')"
+                            >
+                                <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
+                            </SettingRow>
+
+                            <SettingRow
+                                v-if="vtxPortAvailable"
+                                :label="$t('vtxSerialPort')"
+                                :help="mspVtx ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
+                            >
+                                <USelect
+                                    :model-value="vtxPortShown"
+                                    @update:model-value="(v) => (vtxPortIdentifier = v)"
+                                    :items="vtxPortOptions"
+                                    :disabled="!vtxPortWritable || mspVtx"
+                                    class="w-36"
                                 />
                             </SettingRow>
 
@@ -103,7 +123,7 @@
 
                 <!-- VTX Info Panel -->
                 <div class="lg:col-span-1" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxActualState')">
+                    <UiBox :title="$t('vtxActualState')" type="neutral" collapsible class="mt-4">
                         <div class="flex flex-col text-xs">
                             <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
                                 <span v-html="$t('vtxDeviceReady')"></span>
@@ -147,7 +167,7 @@
 
                 <!-- VTX Table -->
                 <div class="lg:col-span-4 overflow-x-auto">
-                    <UiBox :title="$t('vtxTable')" class="min-w-[750px]">
+                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="mt-4 min-w-[750px]">
                         <div class="flex flex-col gap-4">
                             <!-- Bands and channels count -->
                             <div class="flex flex-wrap items-end gap-4">
@@ -348,20 +368,20 @@
             </div>
 
             <!-- Save pending warning -->
-            <UiBox highlight class="mb-3" v-show="savePending">
+            <UiBox highlight v-show="savePending">
                 <div v-html="$t('vtxMessageVerifyTable')"></div>
             </UiBox>
         </div>
 
         <!-- Toolbar -->
-        <div class="content_toolbar xs-compressed toolbar_fixed_bottom">
-            <UFieldGroup size="sm" orientation="horizontal">
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <UFieldGroup size="xs" orientation="horizontal">
                 <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="sm" orientation="horizontal">
+            <UFieldGroup size="xs" orientation="horizontal">
                 <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
@@ -389,6 +409,8 @@ import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
 
 export default defineComponent({
@@ -415,7 +437,7 @@ export default defineComponent({
             powerLevelList,
             deviceReady,
             vtxTypeString,
-            saveButtonDisabled,
+            saveButtonDisabled: vtxConfigSaveDisabled,
             vtxSupported,
             vtxTableNotConfigured,
             factoryBandsNotSupported,
@@ -439,6 +461,41 @@ export default defineComponent({
 
         const { addInterval } = useInterval();
         const { isSaving, runSave } = useSaving();
+
+        // The mask bit a VTX claims is chosen by its protocol, so all three are its own.
+        const {
+            available: vtxPortAvailable,
+            writable: vtxPortWritable,
+            options: vtxPortOptions,
+            selectedIdentifier: vtxPortIdentifier,
+            changed: vtxPortChanged,
+            load: loadVtxPort,
+            write: writeVtxPort,
+            selectedProtocol: vtxProtocol,
+            protocolOptions: vtxProtocolValues,
+        } = useFeaturePort({
+            setting: "vtx_uart",
+            functionName: ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP"],
+            protocol: { setting: "vtx_type" },
+        });
+
+        // An MSP VTX answers on the goggles' MSP link rather than a port of its own, so the
+        // firmware falls back to the OSD's UART and the row follows the OSD tab, read-only.
+        const { selectedIdentifier: osdPortIdentifier, load: loadOsdPort } = useFeaturePort({
+            setting: "osd_uart",
+            functionName: "FRSKY_OSD",
+        });
+
+        const mspVtx = computed(() => vtxProtocol.value === "MSP");
+        const vtxPortShown = computed(() =>
+            mspVtx.value && vtxPortIdentifier.value === PORT_NONE ? osdPortIdentifier.value : vtxPortIdentifier.value,
+        );
+
+        // vtxDevType_e keeps index 2 open, so the firmware lookup names it RESERVED.
+        const vtxProtocolOptions = computed(() => vtxProtocolValues.value.filter(({ value }) => value !== "RESERVED"));
+
+        // A port-only change still has to enable Save; the VTX config's own dirty state cannot see it.
+        const saveButtonDisabled = computed(() => vtxConfigSaveDisabled.value && !vtxPortChanged.value);
 
         const lowPowerDisarmOptions = computed(() => [
             { value: 0, label: t("vtxLowPowerDisarmOption_0") },
@@ -499,6 +556,8 @@ export default defineComponent({
 
         onMounted(async () => {
             await loadVtxConfig();
+            await loadVtxPort();
+            await loadOsdPort();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
             GUI.content_ready();
@@ -507,8 +566,10 @@ export default defineComponent({
         const handleSave = () =>
             runSave(
                 async () => {
-                    await saveVtx();
+                    await saveVtx(writeVtxPort);
                     await loadVtxConfig();
+                    await loadVtxPort();
+                    await loadOsdPort();
                 },
                 {
                     onError: (error) => {
@@ -649,6 +710,14 @@ export default defineComponent({
 
         return {
             // State
+            vtxPortAvailable,
+            vtxPortWritable,
+            vtxPortOptions,
+            vtxPortIdentifier,
+            vtxProtocol,
+            vtxProtocolOptions,
+            mspVtx,
+            vtxPortShown,
             savePending,
             factoryBandsSupported,
             frequencyMode,

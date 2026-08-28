@@ -3,7 +3,7 @@ import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { useFlightControllerStore } from "../stores/fc";
-import { fitSphere, computeCoverage, computeDirectionalCoverage } from "../js/utils/sphereFit";
+import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit";
 import { bit_check } from "../js/bit";
 import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
 
@@ -18,8 +18,7 @@ const PROGRESS_TARGET_SAMPLES = 300;
 const MAG_CAL_MIN = -32768;
 const MAG_CAL_MAX = 32767;
 
-// Full calibration is gated on icosahedral coverage (fraction of the 20 face
-// directions reached), not dwell time. These set the live good/fair/poor verdict.
+// Coverage quality thresholds based on icosahedral directional coverage (20 faces).
 const FULL_COVERAGE_GOOD = 0.8;
 const FULL_COVERAGE_FAIR = 0.5;
 
@@ -33,49 +32,19 @@ function coverageQuality(fraction) {
     return "poor";
 }
 
-function centroid(pts) {
-    let sx = 0,
-        sy = 0,
-        sz = 0;
-    for (const p of pts) {
-        sx += p.x;
-        sy += p.y;
-        sz += p.z;
+function centroid(points) {
+    let sx = 0;
+    let sy = 0;
+    let sz = 0;
+    const n = points.length;
+    for (let i = 0; i < n; i++) {
+        sx += points[i].x;
+        sy += points[i].y;
+        sz += points[i].z;
     }
-    const n = pts.length;
     return { x: sx / n, y: sy / n, z: sz / n };
 }
 
-function computeQuality(fit, cov) {
-    if (!fit || !cov) {
-        return null;
-    }
-    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
-    if (relResidual < 0.08 && cov.uniform > 0.3) {
-        return "good";
-    }
-    if (relResidual < 0.15) {
-        return "fair";
-    }
-    return "poor";
-}
-
-function computeQualityScore(fit, cov) {
-    if (!fit || !cov) {
-        return 0;
-    }
-    const relResidual = fit.radius > 0 ? fit.residual / fit.radius : 1;
-    const fitPart = Math.max(0, Math.min(100, Math.round((1 - relResidual / 0.2) * 100)));
-    const covPart = Math.round(Math.min(1, cov.uniform / 0.5) * 100);
-    return Math.round(fitPart * 0.6 + covPart * 0.4);
-}
-
-/**
- * Composable managing the magnetometer calibration lifecycle.
- * Triggers firmware calibration via MSP, polls raw IMU data,
- * performs client-side sphere fitting for visualization, and
- * tracks coverage across 6 orientation zones.
- */
 async function readFirmwareOffsets() {
     if (!isMspCliSupported()) {
         return null;
@@ -98,12 +67,17 @@ async function readFirmwareOffsets() {
     return null;
 }
 
+/**
+ * Composable managing the magnetometer calibration lifecycle.
+ * Supports full 9-DOF characterization with 20-zone icosahedral coverage,
+ * legacy onboard 30s firmware calibration via MSP, and read-only check mode.
+ */
 export function useMagCalibration() {
     const fcStore = useFlightControllerStore();
 
     // --- Reactive state ---
     const phase = ref("idle"); // 'idle' | 'waiting' | 'collecting' | 'complete' | 'error'
-    const mode = ref("quick"); // 'quick' | 'guided'
+    const mode = ref("full"); // 'full' | 'quick' | 'check'
     const samples = shallowRef([]);
     const sphereFitResult = ref(null);
     const coverage = ref(null);
@@ -133,15 +107,27 @@ export function useMagCalibration() {
     let lastMovementTime = 0;
     let lastMag = null;
     let firmwareFlagSeen = false;
-    let guidedOffsets = null; // offsets to add back in guided mode
+    let reconstructionOffsets = null; // firmware offsets to add back in full mode for raw sensor reconstruction
     let starting = false;
+    // Bumped by every teardown path. startCalibration() captures it before awaiting the
+    // CLI offset read and re-checks after, so a cancel/retry/discard/unmount during that
+    // await cannot resurrect the phase and start polling on a session the user abandoned.
+    let startSequence = 0;
 
-    async function startCalibration(calMode = "quick") {
+    /**
+     * Start a calibration session.
+     * @param {'full' | 'quick' | 'check'} [calMode='full'] - Calibration mode:
+     *   'full' (default): reconstructs raw samples, tracks 20-zone directional coverage for 9-DOF solve.
+     *   'quick': triggers the FC onboard 30s min/max routine (legacy).
+     *   'check': real-time validation without altering calibration.
+     */
+    async function startCalibration(calMode = "full") {
         if (phase.value !== "idle" || starting) {
             return;
         }
 
         starting = true;
+        const startToken = ++startSequence;
         try {
             cleanup();
             mode.value = calMode;
@@ -156,28 +142,31 @@ export function useMagCalibration() {
             lastMag = null;
             firmwareDone.value = false;
             firmwareFlagSeen = false;
-            guidedOffsets = null;
+            reconstructionOffsets = null;
 
             firmwareOffsets.value = await readFirmwareOffsets();
         } finally {
             starting = false;
         }
 
+        // Abandoned while the CLI read was in flight — leave the teardown state alone.
+        if (startToken !== startSequence) {
+            return;
+        }
+
         if (calMode === "check") {
-            // Check mode: display calibrated data as-is, no firmware trigger, no sphere fit
+            // Check mode: display calibrated data as-is, no firmware trigger
             phase.value = "collecting";
             statusMessage.value = "magCalibrationCheckTitle";
             startDataPolling();
-        } else if (calMode === "guided" || calMode === "full") {
-            // Guided / full modes: reconstruct raw samples by adding the firmware
-            // offset back, skip the firmware trigger. Full mode additionally solves
-            // soft-iron + mounting alignment when the user accepts.
-            guidedOffsets = firmwareOffsets.value ?? { x: 0, y: 0, z: 0 };
+        } else if (calMode === "full") {
+            // Full mode: reconstruct raw samples by adding firmware offsets back
+            reconstructionOffsets = firmwareOffsets.value ?? { x: 0, y: 0, z: 0 };
             phase.value = "collecting";
             statusMessage.value = "magCalibrationCollecting";
             startDataPolling();
         } else {
-            // Quick mode: trigger firmware calibration
+            // Quick / legacy mode: trigger firmware calibration
             phase.value = "waiting";
             statusMessage.value = "magCalibrationWaiting";
             MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false);
@@ -188,6 +177,7 @@ export function useMagCalibration() {
 
     function cancelCalibration() {
         cleanup();
+        startSequence++;
         starting = false;
         phase.value = "idle";
         statusMessage.value = "";
@@ -224,7 +214,10 @@ export function useMagCalibration() {
         stopCountdown();
     }
 
-    onScopeDispose(cleanup);
+    onScopeDispose(() => {
+        startSequence++;
+        cleanup();
+    });
 
     // --- Internal ---
 
@@ -276,11 +269,11 @@ export function useMagCalibration() {
             return;
         }
 
-        // In guided/full modes, reconstruct raw samples by adding back firmware offsets
-        if ((mode.value === "guided" || mode.value === "full") && guidedOffsets) {
-            mx += guidedOffsets.x;
-            my += guidedOffsets.y;
-            mz += guidedOffsets.z;
+        // In full mode, reconstruct raw samples by adding back firmware offsets
+        if (mode.value === "full" && reconstructionOffsets) {
+            mx += reconstructionOffsets.x;
+            my += reconstructionOffsets.y;
+            mz += reconstructionOffsets.z;
         }
 
         // Track movement for stale-data timeout
@@ -312,8 +305,7 @@ export function useMagCalibration() {
             samplesSinceLastFit = 0;
         }
 
-        // Update progress (rough estimate based on sample count, capped at 95 until firmware signals done).
-        // Full mode drives progress from coverage instead (set in updateAnalysis), so skip it here.
+        // For quick mode, update progress based on sample count capped at 95 until firmware finishes.
         if (mode.value !== "full") {
             progress.value = Math.min(95, Math.round((samples.value.length / PROGRESS_TARGET_SAMPLES) * 100));
         }
@@ -326,31 +318,20 @@ export function useMagCalibration() {
         }
 
         const fit = fitSphere(pts);
-        // Use sphere center for coverage when available, otherwise fall back to centroid
         const center = fit ? fit.center : centroid(pts);
 
-        if (mode.value === "full") {
-            // Presence-based icosahedral coverage (20 faces): climbs monotonically toward
-            // 100% as new orientations are reached. This is the observability condition the
-            // alignment solve needs — a flat spin never reaches the tilted faces.
-            const cov = computeDirectionalCoverage(pts, center);
-            coverage.value = cov;
-            progress.value = Math.min(100, Math.round(cov.fraction * 100));
-            if (fit) {
-                sphereFitResult.value = fit;
-                quality.value = coverageQuality(cov.fraction);
-                qualityScore.value = Math.round(cov.fraction * 100);
-            }
-            return;
-        }
-
-        const cov = computeCoverage(pts, center);
+        // 20-zone icosahedral directional coverage
+        const cov = computeDirectionalCoverage(pts, center);
         coverage.value = cov;
+
+        if (mode.value === "full") {
+            progress.value = Math.min(100, Math.round(cov.fraction * 100));
+        }
 
         if (fit) {
             sphereFitResult.value = fit;
-            quality.value = computeQuality(fit, cov);
-            qualityScore.value = computeQualityScore(fit, cov);
+            quality.value = coverageQuality(cov.fraction);
+            qualityScore.value = Math.round(cov.fraction * 100);
         }
     }
 
@@ -370,6 +351,7 @@ export function useMagCalibration() {
 
     function retry() {
         cleanup();
+        startSequence++;
         starting = false;
         phase.value = "idle";
         statusMessage.value = "";
@@ -381,35 +363,7 @@ export function useMagCalibration() {
         progress.value = 0;
         firmwareDone.value = false;
         firmwareFlagSeen = false;
-        guidedOffsets = null;
-    }
-
-    async function acceptCalibration() {
-        const fit = sphereFitResult.value;
-        if (!fit) {
-            return { ok: false, error: "No sphere fit result" };
-        }
-        const { x, y, z } = fit.center;
-        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
-            return { ok: false, error: "Invalid calibration offsets" };
-        }
-        try {
-            cleanup();
-            const rx = Math.round(x);
-            const ry = Math.round(y);
-            const rz = Math.round(z);
-            await cliSend(`set mag_calibration = ${rx},${ry},${rz}`);
-            firmwareOffsets.value = { x: rx, y: ry, z: rz };
-            phase.value = "complete";
-            statusMessage.value = "magCalibrationComplete";
-            progress.value = 100;
-            return { ok: true };
-        } catch (error) {
-            startDataPolling();
-            phase.value = "collecting";
-            statusMessage.value = "magCalibrationError";
-            return { ok: false, error };
-        }
+        reconstructionOffsets = null;
     }
 
     async function refreshFirmwareOffsets() {
@@ -460,6 +414,7 @@ export function useMagCalibration() {
 
     function discardCalibration() {
         cleanup();
+        startSequence++;
         starting = false;
         samples.value = [];
         sphereFitResult.value = null;
@@ -469,7 +424,7 @@ export function useMagCalibration() {
         progress.value = 0;
         phase.value = "idle";
         statusMessage.value = "";
-        guidedOffsets = null;
+        reconstructionOffsets = null;
     }
 
     return {
@@ -494,7 +449,6 @@ export function useMagCalibration() {
         startCalibration,
         cancelCalibration,
         completeCalibration,
-        acceptCalibration,
         discardCalibration,
         clearSamples,
         cleanup,
@@ -527,4 +481,32 @@ export function computeDeclination(lat, lon) {
 
 export function getGeoReference() {
     return lastGeoReference;
+}
+
+// Decimal degrees, comma- or whitespace-separated. Hoisted so it is compiled once.
+const COORDINATE_RE = /^([+-]?\d+(?:\.\d+)?)[,\s]+([+-]?\d+(?:\.\d+)?)$/;
+
+/**
+ * Parse latitude and longitude from user input (e.g. Google Maps: "63.728263, -68.446117").
+ *
+ * @param {string} input - Coordinate string (comma or space separated)
+ * @returns {{ lat: number, lon: number } | null}
+ */
+export function parseCoordinates(input) {
+    if (!input || typeof input !== "string") {
+        return null;
+    }
+    const match = COORDINATE_RE.exec(input.trim());
+    if (!match) {
+        return null;
+    }
+    const lat = Number.parseFloat(match[1]);
+    const lon = Number.parseFloat(match[2]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        return null;
+    }
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        return null;
+    }
+    return { lat, lon };
 }

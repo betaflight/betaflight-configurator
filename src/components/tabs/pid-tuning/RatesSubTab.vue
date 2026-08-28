@@ -199,7 +199,7 @@
             </UiBox>
 
             <!-- Rate Curve -->
-            <UiBox :title="$t('pidTuningRatesCurve')" :help="$t('pidTuningRatesTip')" type="neutral">
+            <UiBox :title="$t('pidTuningRatesCurve')" :help="$t('pidTuningRatesTip')" type="neutral" collapsible>
                 <div
                     class="relative bg-white dark:bg-neutral-900 border border-default p-1"
                     style="height: 362px; min-width: 200px"
@@ -286,14 +286,14 @@
             </UiBox>
 
             <!-- Throttle Curve Preview -->
-            <UiBox :title="$t('pidTuningThrottleCurvePreview')" type="neutral">
+            <UiBox :title="$t('pidTuningThrottleCurvePreview')" type="neutral" collapsible>
                 <div class="bg-white dark:bg-neutral-900 border border-default p-1" style="height: 164px">
                     <canvas ref="throttleCurveCanvas" class="w-full h-full block"></canvas>
                 </div>
             </UiBox>
 
             <!-- Rates 3D Preview -->
-            <UiBox :title="$t('pidTuningRatesModelPreview')" type="neutral">
+            <UiBox :title="$t('pidTuningRatesModelPreview')" type="neutral" collapsible>
                 <div class="bg-white dark:bg-neutral-900 border border-default p-1 w-full" ref="ratesPreviewContainer">
                     <canvas ref="ratesPreviewCanvas" class="block"></canvas>
                 </div>
@@ -323,8 +323,6 @@ import raceflightLogo from "@/images/rate_logos/raceflight.svg";
 import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
-
-const emit = defineEmits(["change"]);
 
 const { t } = useTranslation();
 
@@ -387,7 +385,6 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
-                    emit("change");
                 },
                 cancel: () => {
                     dialog.close();
@@ -1691,11 +1688,6 @@ watch(
         }
     },
     { immediate: true },
-);
-
-watch(
-    () => JSON.stringify(FC.RC_TUNING),
-    () => emit("change"),
 );
 
 onMounted(() => {

@@ -213,9 +213,6 @@
     "configuratorUpdateHelp": {
         "message": "Quando a internet estiver disponível, o app deverá solicitar atualizações automaticamente disponíveis."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir para a Página Web do lançamento"
-    },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Reiniciando<\/span>"
     },

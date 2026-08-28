@@ -24,9 +24,21 @@ vi.mock("../../src/js/pinia_instance.js", () => ({
     pinia: {},
 }));
 
-import { buildTabAdapter } from "../../src/js/vue_tab_mounter.js";
-import { TABS } from "../../src/js/gui.js";
+import { buildTabAdapter, unmountVueTab } from "../../src/js/vue_tab_mounter.js";
+import GUI, { TABS } from "../../src/js/gui.js";
 import { useNavigationStore } from "../../src/stores/navigation.js";
+
+describe("unmountVueTab", () => {
+    it("clears tab_switch_in_progress — an unmount cancels the mount that would have cleared it", () => {
+        // Otherwise teardownConnectionUi's unmount + switchTab("landing") leaves the content
+        // blank: the switch is silently refused and the flag never falls.
+        GUI.tab_switch_in_progress = true;
+
+        unmountVueTab();
+
+        expect(GUI.tab_switch_in_progress).toBe(false);
+    });
+});
 
 describe("buildTabAdapter", () => {
     let navigationStore;

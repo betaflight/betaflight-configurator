@@ -10,7 +10,13 @@
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
+                    <UiBox
+                        :title="$t('receiverModelPreview')"
+                        type="neutral"
+                        collapsible
+                        :padding="false"
+                        class="bg-muted"
+                    >
                         <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>
@@ -55,7 +61,7 @@
                 <div class="col-span-3">
                     <!-- Receiver Mode -->
                     <div class="receiver">
-                        <UiBox :title="$t('configurationReceiver')">
+                        <UiBox :title="$t('configurationReceiver')" type="neutral" collapsible>
                             <SettingRow :label="$t('configurationReceiverMode')">
                                 <USelect
                                     :items="rxModeOptions"
@@ -81,6 +87,19 @@
                                         }"
                                         class="min-w-52"
                                         :ui="{ content: 'max-h-72' }"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="rxPortAvailable"
+                                    :label="$t('receiverSerialPort')"
+                                    :help="$t('receiverSerialPortHelp')"
+                                >
+                                    <USelect
+                                        v-model="rxPortIdentifier"
+                                        :items="rxPortOptions"
+                                        :disabled="!rxPortWritable"
+                                        class="min-w-52"
+                                        @update:model-value="onRxPortChange"
                                     />
                                 </SettingRow>
                                 <UiBox highlight v-if="showSomeRxTypesDisabled">
@@ -140,22 +159,14 @@
                     </div>
 
                     <div class="grid-box col6">
-                        <!-- Telemetry -->
-                        <UiBox
-                            :title="$t('configurationTelemetry')"
-                            :help="$t('configurationTelemetryHelp')"
-                            class="col-span-2"
-                        >
-                            <SettingRow :label="$t('featureTELEMETRY')">
-                                <USwitch
-                                    :model-value="isTelemetryEnabled"
-                                    @update:model-value="(checked) => toggleTelemetry(checked)"
-                                />
-                            </SettingRow>
-                        </UiBox>
-
                         <!-- RSSI -->
-                        <UiBox :title="$t('configurationRSSI')" :help="$t('configurationRSSIHelp')" class="col-span-3">
+                        <UiBox
+                            :title="$t('configurationRSSI')"
+                            :help="$t('configurationRSSIHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-3"
+                        >
                             <div class="flex justify-between gap-2 flex-wrap">
                                 <SettingRow :label="$t('featureRSSI_ADC')">
                                     <USwitch
@@ -180,7 +191,7 @@
                         </UiBox>
 
                         <!-- Channel Map -->
-                        <UiBox :title="$t('receiverChannelMap')" class="col-span-1">
+                        <UiBox :title="$t('receiverChannelMap')" type="neutral" collapsible class="col-span-1">
                             <SettingRow>
                                 <UFieldGroup>
                                     <UInput
@@ -203,8 +214,83 @@
                             </SettingRow>
                         </UiBox>
 
+                        <!-- Camera Control -->
+                        <UiBox
+                            v-if="rcdevicePortAvailable"
+                            :title="$t('rcdeviceSectionTitle')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-2"
+                        >
+                            <SettingRow :label="$t('rcdeviceSerialPort')" :help="$t('rcdeviceSerialPortHelp')">
+                                <USelect
+                                    v-model="rcdevicePortIdentifier"
+                                    :items="rcdevicePortOptions"
+                                    :disabled="!rcdevicePortWritable"
+                                    size="xs"
+                                    class="min-w-28"
+                                    @update:model-value="onSerialDeviceChange"
+                                />
+                            </SettingRow>
+                        </UiBox>
+
+                        <!-- Telemetry -->
+                        <UiBox
+                            :title="$t('configurationTelemetry')"
+                            :help="$t('configurationTelemetryHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-6"
+                        >
+                            <SettingRow :label="$t('featureTELEMETRY')">
+                                <USwitch
+                                    :model-value="isTelemetryEnabled"
+                                    @update:model-value="(checked) => toggleTelemetry(checked)"
+                                />
+                            </SettingRow>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <UiBox
+                                    v-for="{ port, instance } in visibleTelemetryPorts"
+                                    :key="instance"
+                                    :title="$t('telemetryInstanceTitle', { 1: instance })"
+                                    type="neutral"
+                                >
+                                    <SettingRow :label="$t('telemetryInstanceProtocol')">
+                                        <USelect
+                                            v-model="port.selectedProtocol"
+                                            :items="port.protocolOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstancePort')">
+                                        <USelect
+                                            v-model="port.selectedIdentifier"
+                                            :items="port.options"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstanceBaud')">
+                                        <USelect
+                                            v-model="port.selectedBaud"
+                                            :items="port.baudOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                </UiBox>
+                            </div>
+                        </UiBox>
+
                         <!-- Stick settings -->
-                        <UiBox :title="$t('receiverStickRange')" class="col-span-6">
+                        <UiBox :title="$t('receiverStickRange')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverStickMin')"
@@ -258,7 +344,7 @@
                         </UiBox>
 
                         <!-- Deadband settings -->
-                        <UiBox :title="$t('receiverDeadband')" class="col-span-6">
+                        <UiBox :title="$t('receiverDeadband')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverDeadband')"
@@ -310,7 +396,7 @@
                     </div>
 
                     <!-- RC Smoothing -->
-                    <UiBox :title="$t('receiverRcSmoothing')" class="col-span-6">
+                    <UiBox :title="$t('receiverRcSmoothing')" type="neutral" collapsible class="col-span-6">
                         <SettingRow :label="$t('receiverRcSmoothing')">
                             <USwitch
                                 :model-value="rxConfig.rcSmoothing === 1"
@@ -491,10 +577,17 @@
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
+                size="xs"
             />
-            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+            <UButton
+                :label="$t('receiverButtonBind')"
+                @click="sendBind"
+                v-if="showBindButton"
+                variant="soft"
+                size="xs"
+            />
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
                     {{ $t("receiverButtonSave") }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -510,9 +603,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
@@ -538,6 +632,8 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
@@ -568,7 +664,7 @@ const selectedRxMode = ref(0);
 let model = null;
 let rateCurve = null;
 let currentRates = null;
-let clock = null;
+let timer = null;
 let keepRendering = true;
 let animationFrameId = null;
 
@@ -626,14 +722,82 @@ const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 // RX link, so the banner/tint warn that channel values are failsafe output.
 const failsafeActive = computed(() => fcStore.failsafeActive);
 
-// Dirty state tracking
-const savedSnapshot = ref("");
+// From API 1.49 the port lives on the RX parameter group rather than the shared port function
+// mask, so it is assigned here instead of on the (by then read-only) ports tab.
+const {
+    available: rxPortAvailable,
+    writable: rxPortWritable,
+    options: rxPortOptions,
+    selectedIdentifier: rxPortIdentifier,
+    load: loadRxPort,
+    write: writeRxPort,
+} = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
 
-function takeSnapshot() {
+// Every protocol a telemetry instance may claim in the synthesised mask. Which one it sets depends
+// on its configured protocol, and the three instances collapse into the same bits, so none of them
+// can be read back from the mask.
+const TELEMETRY_FUNCTIONS = [
+    "TELEMETRY_FRSKY",
+    "TELEMETRY_HOTT",
+    "TELEMETRY_LTM",
+    "TELEMETRY_SMARTPORT",
+    "TELEMETRY_MAVLINK",
+    "TELEMETRY_IBUS",
+];
+
+// MAX_TELEMETRY_PROVIDERS is a compile-time constant that never reaches the app, so each instance
+// is probed and only the ones this build has report themselves available. reactive() rather than a
+// destructure because the template iterates them.
+const telemetryPorts = [1, 2, 3].map((instance) =>
+    reactive(
+        useFeaturePort({
+            setting: `telemetry_${instance}_uart`,
+            functionName: TELEMETRY_FUNCTIONS,
+            baud: { setting: `telemetry_${instance}_baud` },
+            protocol: { setting: `telemetry_${instance}_protocol` },
+        }),
+    ),
+);
+
+const isTelemetryInstanceInUse = (port) =>
+    port.selectedIdentifier !== PORT_NONE || (port.selectedProtocol && port.selectedProtocol !== "NONE");
+
+// An unused instance is noise, so each one is revealed by the one before it filling in.
+const visibleTelemetryPorts = computed(() => {
+    const supported = telemetryPorts
+        .map((port, index) => ({ port, instance: index + 1 }))
+        .filter(({ port }) => port.available);
+    return supported.filter(
+        (entry, position) =>
+            position === 0 ||
+            isTelemetryInstanceInUse(supported[position - 1].port) ||
+            isTelemetryInstanceInUse(entry.port),
+    );
+});
+
+const {
+    available: rcdevicePortAvailable,
+    writable: rcdevicePortWritable,
+    options: rcdevicePortOptions,
+    selectedIdentifier: rcdevicePortIdentifier,
+    load: loadRcdevicePort,
+    write: writeRcdevicePort,
+} = useFeaturePort({ setting: "rcdevice_uart", functionName: "RUNCAM_DEVICE_CONTROL" });
+
+// Dirty state tracking
+/** @returns {string} serialized receiver state for dirty comparison */
+function serializeReceiverState() {
     return JSON.stringify({
         channelMap: channelMapString.value,
         rxMode: selectedRxMode.value,
         serialrxProvider: rxConfig.value?.serialrx_provider,
+        rxPortIdentifier: rxPortIdentifier.value,
+        rcdevicePortIdentifier: rcdevicePortIdentifier.value,
+        telemetryPorts: telemetryPorts.map((port) => [
+            port.selectedProtocol,
+            port.selectedIdentifier,
+            port.selectedBaud,
+        ]),
         rxSpiProtocol: rxConfig.value?.rxSpiProtocol,
         elrsModelId: rxConfig.value?.elrsModelId,
         stickMin: rxConfig.value?.stick_min,
@@ -658,9 +822,7 @@ function takeSnapshot() {
     });
 }
 
-const dirty = computed(() => {
-    return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
-});
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
 const saveMenuItems = computed(() => [
     [
@@ -957,6 +1119,17 @@ function onRxModeChange() {
     }
 }
 
+// Deliberately a change handler rather than a watcher: seeding the selection during load would
+// trip a watcher and leave the tab asking for a reboot every time it is opened.
+function onRxPortChange() {
+    needReboot.value = true;
+}
+
+// A telemetry or camera port only takes effect once the firmware opens it.
+function onSerialDeviceChange() {
+    needReboot.value = true;
+}
+
 // Actions
 function resetRefreshRate() {
     refreshRate.value = 50;
@@ -1027,6 +1200,11 @@ async function loadConfig() {
             await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
             await MSP.promise(MSPCodes.MSP_RX_CONFIG);
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await loadRxPort();
+            await loadRcdevicePort();
+            for (const port of telemetryPorts) {
+                await port.load();
+            }
 
             // Update local state from FC
             updateChannelMapFromRcMap();
@@ -1057,7 +1235,7 @@ async function loadConfig() {
             }
 
             needReboot.value = false;
-            savedSnapshot.value = takeSnapshot();
+            markClean();
         },
         (e) => console.error("Failed to load Receiver configuration", e),
     );
@@ -1067,6 +1245,8 @@ async function loadConfig() {
 const saveConfig = (withReboot = false) =>
     runSave(
         async () => {
+            const savedSnapshot = takeSnapshot();
+
             // Update RC_MAP from channel map string
             validateChannelMap();
 
@@ -1098,14 +1278,32 @@ const saveConfig = (withReboot = false) =>
             await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
 
+            // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
+            // and the persist below serialises that group, so this has to sit between the two.
+            // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
+            try {
+                await writeRxPort();
+                await writeRcdevicePort();
+                for (const port of telemetryPorts) {
+                    await port.write();
+                }
+            } catch (error) {
+                gui_log(t("receiverSerialPortSaveFailed"));
+                throw error;
+            }
+
+            // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
+            // to reach the FC whether or not the save also reboots.
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
             if (withReboot) {
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
                 await saveAndReboot();
             } else {
                 await saveToEeprom();
                 gui_log(t("receiverConfigSaved") || "Configuration saved");
-                savedSnapshot.value = takeSnapshot();
             }
+
+            markClean(savedSnapshot);
 
             needReboot.value = false;
         },
@@ -1129,17 +1327,19 @@ function handleModelResize() {
     }
 }
 
-function renderModel() {
+function renderModel(timestamp) {
     if (!keepRendering) return;
     animationFrameId = requestAnimationFrame(renderModel);
 
-    if (!clock) {
-        clock = new THREE.Clock();
+    if (!timer) {
+        timer = new THREE.Timer();
+        timer.connect(document);
     }
+    timer.update(timestamp);
 
     const channels = rc.value?.channels;
     if (channels?.[0] && channels?.[1] && channels?.[2] && model && rateCurve && currentRates) {
-        const delta = clock.getDelta();
+        const delta = timer.getDelta();
 
         const roll =
             delta *
@@ -1296,6 +1496,8 @@ onUnmounted(() => {
     if (model?.dispose) {
         model.dispose();
     }
+    timer?.dispose();
+    timer = null;
 });
 </script>
 

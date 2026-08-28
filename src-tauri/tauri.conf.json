@@ -1,7 +1,7 @@
 {
     "$schema": "https://schema.tauri.app/config/2",
     "productName": "Betaflight",
-    "version": "2026.6.0",
+    "version": "2026.12.0",
     "identifier": "com.betaflight.app",
     "build": {
         "beforeDevCommand": "npm run dev",
@@ -13,7 +13,8 @@
         "security": {
             "csp": null,
             "capabilities": [
-                "default"
+                "default",
+                "android"
             ]
         },
         "windows": [
@@ -24,7 +25,8 @@
                 "minWidth": 1024,
                 "minHeight": 550,
                 "resizable": true,
-                "fullscreen": false
+                "fullscreen": false,
+                "dragDropEnabled": false
             }
         ]
     },

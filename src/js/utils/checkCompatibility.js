@@ -10,7 +10,9 @@ import { Capacitor } from "@capacitor/core";
 export function getOS() {
     let os = "unknown";
     const userAgent = globalThis.navigator.userAgent;
-    const platform = globalThis.navigator?.userAgentData?.platform;
+    // userAgentData is Chromium-only: WKWebView (Tauri macOS/iOS) and Safari never
+    // expose it, so fall back to the legacy navigator.platform ("MacIntel", "iPhone").
+    const platform = globalThis.navigator?.userAgentData?.platform ?? globalThis.navigator?.platform;
     const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
@@ -23,10 +25,13 @@ export function getOS() {
         os = "Windows";
     } else if (/Android/.test(userAgent)) {
         os = "Android";
+    } else if (/CrOS/.test(userAgent) || /Chrom(e|ium) OS/.test(platform)) {
+        // userAgentData.platform says "Chrome OS"/"Chromium OS"; only the user
+        // agent carries the CrOS token, and the legacy platform reports plain
+        // Linux, so ChromeOS has to be ruled out before the Linux fallback.
+        os = "ChromeOS";
     } else if (/Linux/.test(platform)) {
         os = "Linux";
-    } else if (/CrOS/.test(platform)) {
-        os = "ChromeOS";
     }
 
     return os;
@@ -84,7 +89,7 @@ export function isEmbeddedDeployment() {
 }
 
 /**
- * @returns {boolean} Whether running inside a Tauri shell (desktop or iOS).
+ * @returns {boolean} Whether running inside a Tauri shell (desktop, Android or iOS).
  */
 export function isTauri() {
     return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
@@ -101,6 +106,80 @@ export function isTauriIOS() {
     // iPad in desktop mode reports "Macintosh" but still exposes touch points.
     const ua = navigator.userAgent ?? "";
     return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
+/**
+ * @returns {boolean} Whether running inside a Tauri shell on Android.
+ */
+export function isTauriAndroid() {
+    return isTauri() && getOS() === "Android";
+}
+
+/**
+ * The major Android release as it appears in the user agent.
+ *
+ * Unreliable on its own: Chrome's user-agent reduction pins this at "Android 10" on
+ * every modern release, so treat it only as a fallback for `getAndroidRelease()`.
+ *
+ * @returns {number|null} The major version, or null when it can't be determined.
+ */
+export function getAndroidVersion() {
+    const match = /Android\s+(\d+)/.exec(globalThis.navigator?.userAgent ?? "");
+    return match ? Number(match[1]) : null;
+}
+
+/**
+ * The real major Android release, preferring client hints over the frozen user agent.
+ *
+ * @returns {Promise<number|null>} The major version, or null when it can't be determined.
+ */
+export async function getAndroidRelease() {
+    const uaData = globalThis.navigator?.userAgentData;
+    if (uaData?.getHighEntropyValues) {
+        try {
+            const { platformVersion } = await uaData.getHighEntropyValues(["platformVersion"]);
+            const major = Number.parseInt(platformVersion, 10);
+            if (Number.isFinite(major)) {
+                return major;
+            }
+        } catch (error) {
+            console.warn("Could not read the platform version from client hints:", error);
+        }
+    }
+    return getAndroidVersion();
+}
+
+/**
+ * Android returns no BLE scan results unless location is granted, until Android 12
+ * where the scan permission is declared neverForLocation and stands alone. Asking
+ * only where it is required keeps the prompt away from everyone else.
+ *
+ * @returns {Promise<boolean>} Whether a BLE scan here needs location permission first.
+ */
+export async function androidScanNeedsLocation() {
+    if (!isTauriAndroid()) {
+        return false;
+    }
+    const release = await getAndroidRelease();
+    // An indeterminate release is treated as old: a redundant prompt beats a scan that
+    // silently finds nothing.
+    return release === null || release < 12;
+}
+
+/**
+ * @returns {boolean} Whether running inside a Tauri shell on macOS.
+ */
+export function isTauriMacOS() {
+    // isTauriIOS() claims an iPad in desktop mode, which also reports "Macintosh".
+    return isTauri() && !isTauriIOS() && getOS() === "MacOS";
+}
+
+/**
+ * @returns {boolean} Whether running inside a Tauri shell on a desktop OS
+ * (macOS, Linux or Windows) as opposed to Tauri's mobile targets.
+ */
+export function isTauriDesktop() {
+    return isTauri() && !isTauriIOS() && !isTauriAndroid();
 }
 
 /**
@@ -224,8 +303,9 @@ export function checkBluetoothSupport() {
     let result = false;
     if (isAndroid()) {
         result = true;
-    } else if (isTauriIOS()) {
-        // Native btleplug transport — WKWebView has no navigator.bluetooth.
+    } else if (isTauriIOS() || isTauriMacOS() || isTauriAndroid()) {
+        // Native BLE transport — neither WKWebView nor the Android System WebView
+        // exposes navigator.bluetooth.
         result = true;
     } else if (navigator.bluetooth) {
         result = true;
@@ -240,7 +320,8 @@ export function checkBluetoothSupport() {
  */
 export function checkUsbSupport() {
     let result = false;
-    if (isAndroid()) {
+    if (isAndroid() || isTauriAndroid()) {
+        // Native USB DFU in both Android shells; the system webview has no WebUSB.
         result = true;
     } else if (navigator.usb) {
         result = true;

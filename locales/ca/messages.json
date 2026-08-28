@@ -110,6 +110,42 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simular un controlador de vol sense maquinari.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connectar (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "Introduïu el port sèrie o l'URL a la qual voleu connectar-vos.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Connexions desades",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nom:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nom per aquesta connexió",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Desa",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Actualitza",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Treu la connexió desada",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Auto-Connectar"
     },
@@ -265,14 +301,14 @@
     "configuratorUpdateHelp": {
         "message": "Quan Internet está disponible la app pot preguntar sobre actualitzacions disponibles."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ves a la pàgina de publicació"
-    },
     "rebootFlightController": {
         "message": "S'està reiniciant el controlador de vol, torneu a connectar-vos quan estigui llest"
     },
     "rebootFlightControllerReady": {
         "message": "La controladora de vol està llesta"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "El controlador de vol no s'ha reconnectat"
     },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant<\/span>"
@@ -397,6 +433,9 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "A iOS, permeteu l'accés a la <strong>Xarxa local<\/strong> per a Betaflight a Configuració &rarr; Privacitat &amp; Seguretat &rarr; Xarxa local i, a continuació, torneu-ho a provar."
     },
     "connectionLostTitle": {
         "message": "S'ha perdut la connexió"
@@ -702,8 +741,14 @@
     "defaultWelcomeHead": {
         "message": "Maquinari"
     },
-    "defaultWelcomeText": {
-        "message": "L'aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per obtenir la llista completa de maquinari.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregueu Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Descarregueu scripts Betaflight TX Lua<\/a><br \/><br \/>El codi font del microprogramari es pot descarregar des de <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Per al maquinari heretat que utilitza un xip USB a sèrie CP210x:<br \/>Els <b>controladors CP210x<\/b> més recents es poden baixar des de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers \" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>El La darrera instal·lació del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des d'<a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a ><br \/><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
+    "defaultHardwareText": {
+        "message": "L'aplicació admet tot el maquinari que pot executar Betaflight. Consulteu la pestanya \"Firmware flasher\" per obtenir la llista completa del maquinari.<br \/><br \/>Utilitats\/controladors de maquinari útils:<ul><li>Per al maquinari antic que utilitza un xip USB a sèrie CP210x, els <b>controladors CP210x<\/b> més recents es poden descarregar des de <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>La instal·lació més recent del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des de <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Programari"
+    },
+    "defaultSoftwareText": {
+        "message": "El nostre visor de registre Blackbox està integrat en aquesta aplicació. Obriu la pestanya <strong>Visualitzador Blackbox<\/strong> per analitzar els vostres registres de vol.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware i aquesta aplicació es pot descarregar des de GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1459,11 +1504,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Inclina el nas cap amunt uns 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Inclineu el morro cap avall uns 45°, de manera que la càmera apunti cap a terra."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Inclina el nas cap abaix uns 45°."
+        "message": "Inclineu el costat dret cap avall uns 45°, baixant els braços drets i aixecant l'esquerre."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
@@ -1528,14 +1573,32 @@
     "boardAlignmentWizard-AccNeedsCalibration": {
         "message": "Si us plau, calibra l'acceleròmetre abans d'executar aquest assistent."
     },
-    "configurationGyroAlignment": {
-        "message": "Alineació del giroscopi"
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "No s'han recollit algunes mostres. Si us plau, torna-ho a intentar."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "L'acceleròmetre no llegeix la gravetat. Assegureu-vos que la controladora estigui connectada i no estigui en moviment."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap a baix encara més."
     },
     "configurationGyroAlignmentHelp": {
         "message": "L'alineació del giroscopi és l'orientació del sensor del giroscopi a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació de giroscopi diferent, és possible que hàgiu d'ajustar aquesta configuració."
     },
-    "configurationGyroActiveIMU": {
-        "message": "IMU actiu"
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Un dels gestos d'inclinació ha anat en la direcció equivocada. Comprova les direccions de inclinació i balanceig i torna-ho a provar."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Pla"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Pitch"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Roll"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Yaw"
     },
     "configurationGyroActiveIMUHelp": {
         "message": "Seleccioneu quin giroscopi voleu utilitzar com a giroscopi principal. El giroscopi principal s'utilitza per a l'estabilització i el control. Si només teniu un giroscopi, es seleccionarà automàticament.<br><br>No sempre és possible habilitar diversos giroscopis quan són de diferents tipus o marques."
@@ -1843,8 +1906,24 @@
         "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el dron sigui armat s’actualitzarà el punt d’inici.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "La compatibilitat amb GPS no està inclosa en aquesta compilació del programari. Reconstrueix el programari amb l'opció de compilació GPS per configurar i utilitzar el GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Proveïdor del receptor sèrie"
+    },
+    "portsPortNone": {
+        "message": "Cap"
+    },
+    "receiverSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART al qual està connectat el receptor sèrie. La velocitat en bauds segueix el proveïdor, per tant no hi ha res a configurar aquí. Canviar el port requereix un reinici."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "No s'ha pogut configurar el port sèrie del receptor, per tant no s'ha desat res."
     },
     "someRXTypesDisabled": {
         "message": "Alguns proveïdors de receptors no són compatibles amb la configuració de compilació actual."
@@ -1897,6 +1976,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NO<\/span> deshabilitis MSP al primer port sèrie si no saps per què ho fas. D'altra forma potser has de reflashejar i esborrar la configuració."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> aquest programari assigna ports sèrie a la pestanya de cada funció, de manera que aquesta vista és de només lectura. Mostra quin port utilitza actualment cada funció; canvieu una assignació de la pestanya propietària de la funció."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Actualització de firmware <span class=\"message-negative\">requerida<\/span>. La configuració dels port sèrie del firmware &lt; 1.8.0 no està suportada."
@@ -6198,6 +6280,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicador alternatiu de \"qualitat d'enllaç\" basat en la pèrdua de paquets: fes-ho servir amb cura"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Mode RF:Qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Només qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distància de vol",
         "description": "One of the elements of the OSD"
@@ -7157,7 +7247,250 @@
         "message": "Baròmetre (si existeix)"
     },
     "configurationMagHardware": {
-        "message": "Magnetòmetre (si és compatible)"
+        "message": "Magnetòmetre"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "No s'ha pogut determinar la ubicació. Connecteu un mòdul GPS o permeteu l'accés a la ubicació del navegador."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Declinació magnètica establerta a {{declination}}° des de la ubicació detectada."
+    },
+    "configurationMagInclination": {
+        "message": "Inclinació"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "L'angle entre el camp magnètic terrestre i el pla horitzontal a la teva ubicació. Els valors positius indiquen que el camp apunta cap avall (hemisferi nord)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Força del camp"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "La intensitat total del camp magnètic terrestre a la vostra ubicació en nanotesles (nT). Els valors típics oscil·len entre 25.000 i 65.000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detectar"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Actualitza"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Declinació magnètica detectada automàticament com a {{value}}° per a la vostra ubicació."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "La declinació és de {{saved}}° però el GPS detecta {{detected}}° per a aquesta ubicació. Feu clic a Actualitza per corregir-la."
+    },
+    "magCalibrationCancel": {
+        "message": "Canceŀlar"
+    },
+    "magCalibrationClear": {
+        "message": "Esborrar"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Opcions del mode de calibratge"
+    },
+    "magCalibrationRetry": {
+        "message": "Reintenta"
+    },
+    "magCalibrationWaiting": {
+        "message": "Esperant moviment... Sacseja el vehicle per començar."
+    },
+    "magCalibrationCollecting": {
+        "message": "Gira l'aparell lentament en totes les orientacions."
+    },
+    "magCalibrationComplete": {
+        "message": "S'ha completat la calibració."
+    },
+    "magCalibrationError": {
+        "message": "El calibratge ha fallat. Torna-ho a provar en una zona amb menys interferències magnètiques."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No s'ha detectat cap moviment durant 30 segons. Calibratge cancel·lat."
+    },
+    "magCalibrationSamples": {
+        "message": "Mostres"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Bé"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Insuficient"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Pobre"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Òfsets del programari"
+    },
+    "magCalibrationUnguided": {
+        "message": "Calibració programari (Guiat)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Gira lliurement: el programari es desa automàticament després de 30 segons"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibratge del programari"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Tens 30 segons per girar el vehicle en totes direccions. El programari desarà automàticament els valors de calibratge quan s'acabi el temps."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Calibratge del programari completat!"
+    },
+    "magCalibrationCheck": {
+        "message": "Comprova"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Visualitza dades de mag en directe amb calibratge actual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Comprovació del calibratge"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirmeu l'orientació i el calibratge del magnetòmetre. Col·loqueu la vostra nau plana respecte a l'horitzó, apunteu el morro cap a un punt conegut de la brúixola (es pot utilitzar un telèfon per esbrinar on és el nord) i confirmeu que apareixen punts nous a la ubicació esperada a la pantalla 3D. Els valors de la intensitat del camp per a cada eix i l'esfericitat dels punts indiquen la precisió del calibratge. Si els punts van a llocs completament equivocats, és probable que l'orientació del magnetòmetre sigui incorrecta."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valors de Calibració"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Desa valors"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valors de calibratge desats"
+    },
+    "magCalibrationSaveError": {
+        "message": "No s'han pogut desar els valors de calibratge"
+    },
+    "magCalibrationFull": {
+        "message": "Calibració i detecció d'alineació"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Gireu la nau en totes direccions per calibrar el sensor i detectar automàticament la seva orientació de muntatge."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Calibració i detecció d'alineació"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Segueix els passos següents, mantenint la nau ferma durant cada gir complet. El recompte de zones puja a mesura que arribes a nous angles; intenta cobrir-los tots 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Pas {{n}} de {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Mantingueu el dron anivellat i gireu-la lentament 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Gireu-lo cap per avall i gireu-lo lentament 360° complets més."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Apunta el nas cap amunt i gira-hi una volta completa."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Apunta el nas cap avall i gira-hi una volta completa."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Recolza-la sobre el costat esquerre i gira-la una volta completa."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Recolza-la sobre el costat dret i gira-la una volta completa."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Feu uns quants salts cap endavant lents, mirant de nou en una direcció diferent cada vegada."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Feu uns quants salts cap enrere lents, mirant de nou en una direcció diferent cada vegada."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} zones cobertes"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Finalitza el calibratge"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Més zones cobertes donen més precisió; intenta obtenir un valor de 20\/20 per obtenir la millor calibració i detecció d'alineació."
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Cobertura:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alineació:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibració:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copiar CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Aplica"
+    },
+    "magCalibrationFullExport": {
+        "message": "Exportar Model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "No hi ha prou mostres: girar més estona"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Sense GPS, navegador ni ubicació IP; introduïu les coordenades manualment per continuar"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Ubicació necessària per a la calibració"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Introduïu manualment la latitud i la longitud seleccionant-les a Google Maps. El vostre dron no té bloqueig GPS i el dispositiu no ha pogut proporcionar dades d'ubicació. La ubicació és necessària per a la calibració del magnetòmetre."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.x. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Format de coordenades no vàlid. Si us plau, introduïu-ho com a: latitud, longitud (per exemple, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "No s'ha pogut calcular una referència magnètica per a aquestes coordenades. Si us plau, comproveu-les i torneu-ho a intentar."
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Ordres de la CLI copiades al porta-retalls"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "No s'ha pogut copiar al porta-retalls"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "El maquinari {{version}} és massa antic per a l'alineació del magnetòmetre PERSONALITZAT (cal {{min}}+). Actualitza el maquinari i després aplica'l."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibratge aplicat i desat"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descarta"
+    },
+    "magVizPointCloud": {
+        "message": "Núvol de punts"
+    },
+    "magVizHeatmap": {
+        "message": "Mapa de calor de vòxels"
+    },
+    "magVizProjection": {
+        "message": "Triple Projecció"
+    },
+    "magVizPolar": {
+        "message": "Densitat polar"
+    },
+    "magVizWaitingForData": {
+        "message": "Esperant dades…"
+    },
+    "magVizAxisField": {
+        "message": "Camp"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Vell"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Nou"
     },
     "configurationSmallAngle": {
         "message": "Angle máxim d'armat [graus]"
@@ -7808,6 +8141,90 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Text serie personalitzat",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Mostra el texte rebut des de el port serie"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Perfil: nom de perfil de bateria",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Mostra el perfil actiu de la bataria o index"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Número de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra el número de punt de referència actual\/total del pla de vol actiu"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra la latitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Longitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra la longitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra l'altitud del punt de referència actual"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distància de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra la distància del punt de referència actual"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direcció del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra una fletxa de direcció que apunta al punt de referència actual"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Número del següent punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra el número de punt de referència següent del pla de vol actiu"
+    },
+    "osdTextElementWpEta": {
+        "message": "Hora estimada d'arribada al punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra l'hora estimada d'arribada al punt de referència actual"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mapa de navegació",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimapa que mostra la destinació, el pla de vol i la trajectòria volada"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Manteniment de la posició a punt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra si les condicions d'entrada de Position Hold es compleixen actualment, abans que s'activi el selector de mode"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",

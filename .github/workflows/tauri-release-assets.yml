@@ -1,0 +1,414 @@
+name: Release platform assets
+
+# Builds the Tauri desktop bundles (Windows/macOS/Linux) and a signed Tauri
+# Android APK for a published release, then attaches them to that release.
+#
+# Called by build-release.yml on `release: published`, and runnable on its own
+# via workflow_dispatch to (re)build and attach assets to an existing tag —
+# e.g. to backfill a release cut before this workflow existed.
+#
+# The Tauri APK signs with RELEASE_KEYSTORE via the keystore.properties the
+# Tauri Gradle project reads.
+#
+# The macOS DMGs are signed with a Developer ID Application certificate and
+# notarised. That needs:
+#   MACOS_CERTIFICATE           base64 of the Developer ID Application .p12
+#   MACOS_CERTIFICATE_PASSWORD  the .p12 export password
+#   APPLE_API_ISSUER            App Store Connect API issuer id
+#   APPLE_API_KEY               App Store Connect API key id
+#   APPLE_API_KEY_P8            contents of the AuthKey_<keyid>.p8 file
+# plus the MACOS_SIGNING_IDENTITY and APPLE_DEVELOPMENT_TEAM variables. All but
+# MACOS_CERTIFICATE* are shared with the iOS release. Without them the macOS
+# jobs still build, just unsigned.
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Release tag to build and attach assets to'
+        required: true
+        type: string
+    # Only the signing secrets are passed through; the Linux and Windows builds
+    # need none, and the attach job uses the auto-provided GITHUB_TOKEN. The
+    # Apple ones are optional so a caller without them still gets a build.
+    secrets:
+      RELEASE_KEYSTORE:
+        description: 'Base64-encoded Android signing keystore'
+        required: true
+      RELEASE_KEYSTORE_PASSWORD:
+        description: 'Keystore password'
+        required: true
+      RELEASE_KEY_ALIAS:
+        description: 'Signing key alias'
+        required: true
+      RELEASE_KEY_ALIAS_PASSWORD:
+        description: 'Signing key alias password'
+        required: true
+      MACOS_CERTIFICATE:
+        description: 'Base64-encoded Developer ID Application .p12'
+        required: false
+      MACOS_CERTIFICATE_PASSWORD:
+        description: 'Developer ID .p12 export password'
+        required: false
+      APPLE_API_ISSUER:
+        description: 'App Store Connect API issuer id'
+        required: false
+      APPLE_API_KEY:
+        description: 'App Store Connect API key id'
+        required: false
+      APPLE_API_KEY_P8:
+        description: 'App Store Connect API private key contents'
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag to build and attach assets to'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  NDK_VERSION: 27.2.12479018
+
+jobs:
+  desktop:
+    name: Desktop (${{ matrix.label }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            target: ''
+          - os: macos-latest
+            label: macos-arm64
+            target: aarch64-apple-darwin
+          - os: macos-15-intel
+            label: macos-x64
+            target: x86_64-apple-darwin
+          - os: windows-latest
+            label: windows
+            target: ''
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install Tauri Linux prereqs
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libsoup-3.0-dev \
+            librsvg2-dev \
+            libssl-dev \
+            libudev-dev \
+            rpm
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@e081816240890017053eacbb1bdf337761dc5582 # 1.95.0
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+          key: ${{ matrix.label }}
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # The Tauri config version drives desktop bundle names and the app's
+      # self-reported version, but the release bump only touches package.json.
+      # Sync it here so bundles carry the release version, not a stale one.
+      # Inlined (not a repo script) so it also works when building an old tag.
+      - name: Sync bundle version to package.json
+        shell: bash
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = version;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").replace(/^version = ".*"$/m, `version = "${version}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", cargo);
+            console.log("Synced bundle version to", version);
+          '
+
+      # Sign and notarise the macOS bundles with the Developer ID Application
+      # certificate, so the DMGs open without a Gatekeeper warning. Tauri reads
+      # the APPLE_* names from the environment. A run without the certificate
+      # (a fork, or before the secrets are provisioned) builds unsigned.
+      - name: Stage macOS signing credentials
+        id: signing
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ vars.MACOS_SIGNING_IDENTITY }}
+          MACOS_TEAM_ID: ${{ vars.APPLE_DEVELOPMENT_TEAM }}
+          MACOS_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          MACOS_API_KEY_ID: ${{ secrets.APPLE_API_KEY }}
+          MACOS_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          if [ -z "$MACOS_CERTIFICATE" ]; then
+            echo "::notice::No macOS signing certificate available; building unsigned."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # A certificate without the notarisation credentials would produce a
+          # signed but unnotarised bundle that still trips Gatekeeper, so fail
+          # rather than ship one.
+          : "${MACOS_CERTIFICATE_PASSWORD:?Set the MACOS_CERTIFICATE_PASSWORD secret}"
+          : "${MACOS_SIGNING_IDENTITY:?Set the MACOS_SIGNING_IDENTITY variable}"
+          : "${MACOS_TEAM_ID:?Set the APPLE_DEVELOPMENT_TEAM variable}"
+          : "${MACOS_API_ISSUER:?Set the APPLE_API_ISSUER secret}"
+          : "${MACOS_API_KEY_ID:?Set the APPLE_API_KEY secret (key id)}"
+          : "${MACOS_API_KEY_P8:?Set the APPLE_API_KEY_P8 secret (.p8 contents)}"
+
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${MACOS_API_KEY_ID}.p8"
+          printf '%s' "$MACOS_API_KEY_P8" > "$KEY_PATH"
+          chmod 600 "$KEY_PATH"
+
+          # base64 wraps at 76 columns; Tauri's decoder rejects newlines. The
+          # stripped value no longer matches the registered secret, so mask it
+          # explicitly or it would be logged in the clear from here on.
+          CERT=$(printf '%s' "$MACOS_CERTIFICATE" | tr -d '[:space:]')
+          echo "::add-mask::$CERT"
+
+          {
+            echo "APPLE_CERTIFICATE=$CERT"
+            echo "APPLE_CERTIFICATE_PASSWORD<<__BF_EOF__"
+            printf '%s\n' "$MACOS_CERTIFICATE_PASSWORD"
+            echo "__BF_EOF__"
+            echo "APPLE_SIGNING_IDENTITY=$MACOS_SIGNING_IDENTITY"
+            echo "APPLE_TEAM_ID=$MACOS_TEAM_ID"
+            echo "APPLE_API_ISSUER=$MACOS_API_ISSUER"
+            echo "APPLE_API_KEY=$MACOS_API_KEY_ID"
+            echo "APPLE_API_KEY_PATH=$KEY_PATH"
+          } >> "$GITHUB_ENV"
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build Tauri bundle
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.target }}" ]; then
+            npm run tauri:build -- --target ${{ matrix.target }}
+          else
+            npm run tauri:build
+          fi
+
+      - name: Stage desktop bundles
+        shell: bash
+        run: |
+          mkdir -p staging
+          shopt -s nullglob
+          for path in \
+            src-tauri/target/release/bundle/deb/*.deb \
+            src-tauri/target/release/bundle/rpm/*.rpm \
+            src-tauri/target/release/bundle/appimage/*.AppImage \
+            src-tauri/target/release/bundle/dmg/*.dmg \
+            src-tauri/target/release/bundle/nsis/*.exe \
+            src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb \
+            src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm \
+            src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage \
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg \
+            src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
+          do
+            cp "$path" staging/
+          done
+          if ! compgen -G 'staging/*' > /dev/null; then
+            echo "No desktop bundles produced for ${{ matrix.label }}" >&2
+            exit 1
+          fi
+          node scripts/rename-tauri-bundles.mjs --dir staging
+          ls -la staging
+
+      # Tauri notarises and staples the .app but only signs the .dmg it wraps it
+      # in. Gatekeeper assesses the downloaded .dmg, so the container needs its
+      # own ticket for the download to open cleanly, including offline.
+      - name: Notarise macOS disk images
+        if: runner.os == 'macOS' && steps.signing.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          shopt -s nullglob
+          dmgs=(staging/*.dmg)
+          if [ ${#dmgs[@]} -eq 0 ]; then
+            echo "No DMG to notarise" >&2
+            exit 1
+          fi
+          for dmg in "${dmgs[@]}"; do
+            xcrun notarytool submit "$dmg" \
+              --key "$APPLE_API_KEY_PATH" \
+              --key-id "$APPLE_API_KEY" \
+              --issuer "$APPLE_API_ISSUER" \
+              --wait --timeout 30m
+            xcrun stapler staple "$dmg"
+            xcrun stapler validate "$dmg"
+            spctl -a -t open --context context:primary-signature -v "$dmg"
+          done
+
+      - name: Upload desktop artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-desktop-${{ matrix.label }}
+          path: staging/*
+          if-no-files-found: error
+          retention-days: 30
+
+  android:
+    name: Android (Tauri APK)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;${NDK_VERSION}"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Cache Cargo registry and target
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: src-tauri
+          key: tauri-android
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # Keep the APK's internal version in step with package.json (see desktop job).
+      - name: Sync bundle version to package.json
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = version;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").replace(/^version = ".*"$/m, `version = "${version}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", cargo);
+            console.log("Synced bundle version to", version);
+          '
+
+      # Sign with the same RELEASE_KEYSTORE the nightly Tauri APK uses, via the
+      # keystore.properties the Tauri Gradle project reads.
+      - name: Configure signing
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+        run: |
+          : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret (base64 keystore)}"
+          : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret}"
+          : "${RELEASE_KEY_ALIAS:?Set the RELEASE_KEY_ALIAS secret}"
+          : "${RELEASE_KEY_ALIAS_PASSWORD:?Set the RELEASE_KEY_ALIAS_PASSWORD secret}"
+          KS="$RUNNER_TEMP/betaflight-release.jks"
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$KS"
+          {
+            printf 'storeFile=%s\n' "$KS"
+            printf 'storePassword=%s\n' "$RELEASE_KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$RELEASE_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$RELEASE_KEY_ALIAS_PASSWORD"
+          } > src-tauri/gen/android/keystore.properties
+
+      - name: Build signed APK
+        run: npx --no tauri android build --apk
+
+      - name: Stage APK
+        run: |
+          mkdir -p staging
+          VERSION=$(jq -r '.version' package.json)
+          APK_NAME="betaflight-${VERSION}-tauri.apk"
+          APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | grep -i universal | head -1)
+          if [ -z "$APK" ]; then
+            APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | head -1)
+          fi
+          if [ -z "$APK" ]; then
+            echo "No signed release APK produced" >&2
+            exit 1
+          fi
+          cp "$APK" "staging/${APK_NAME}"
+          ls -la staging
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-android-apk
+          path: staging/*
+          if-no-files-found: error
+          retention-days: 30
+
+  attach:
+    name: Attach assets to release
+    needs: [desktop, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: release-assets
+          pattern: release-*
+          merge-multiple: true
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -x
+          if ! compgen -G 'release-assets/*' > /dev/null; then
+            echo "No assets to attach" >&2
+            exit 1
+          fi
+          gh release upload "$TAG" release-assets/* --clobber

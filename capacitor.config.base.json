@@ -1,5 +1,5 @@
 {
-  "appId": "betaflight.app",
+  "appId": "com.betaflight.app.capacitor",
   "appName": "Betaflight App",
   "webDir": "src/dist"
 }

@@ -5,7 +5,7 @@
             <WikiButton docUrl="preflight" />
 
             <!-- Location Bar -->
-            <UiBox :title="$t('preflightLocation')">
+            <UiBox :title="$t('preflightLocation')" type="neutral" collapsible>
                 <div class="location-bar">
                     <div class="location-inputs">
                         <div class="default_btn">
@@ -221,7 +221,7 @@
                 <!-- Left Column: Weather -->
                 <div class="flex flex-col gap-4 md:col-span-3">
                     <!-- Current Weather -->
-                    <UiBox :title="$t('preflightCurrentWeather')">
+                    <UiBox :title="$t('preflightCurrentWeather')" type="neutral" collapsible>
                         <template #title>
                             <UIcon name="i-lucide-cloud-sun" class="size-4" />
                             <div v-if="preflight.weather.loading" class="text-primary">
@@ -301,7 +301,12 @@
                     </UiBox>
 
                     <!-- Flight Window -->
-                    <UiBox v-if="preflight.weather.daily" :title="$t('preflightFlightWindow')">
+                    <UiBox
+                        v-if="preflight.weather.daily"
+                        :title="$t('preflightFlightWindow')"
+                        type="neutral"
+                        collapsible
+                    >
                         <template #title>
                             <UIcon name="i-lucide-clock" class="size-4" />
                         </template>
@@ -371,7 +376,12 @@
                     </UiBox>
 
                     <!-- Wind at Altitude (Hourly) -->
-                    <UiBox :title="$t('preflightWindForecast')" :help="$t('preflightWindForecastHelp')">
+                    <UiBox
+                        :title="$t('preflightWindForecast')"
+                        type="neutral"
+                        collapsible
+                        :help="$t('preflightWindForecastHelp')"
+                    >
                         <template #title>
                             <UIcon name="i-lucide-wind" class="size-4" />
                         </template>
@@ -427,6 +437,8 @@
                     <UiBox
                         v-if="preflight.weather.forecast && preflight.weather.forecast.length > 0"
                         :title="$t('preflightForecast')"
+                        type="neutral"
+                        collapsible
                         :help="$t('preflightForecastHelp')"
                     >
                         <template #title>
@@ -484,7 +496,12 @@
                 <!-- Right Column: Solar, GNSS, Airspace -->
                 <div class="flex flex-col gap-4 md:col-span-2">
                     <!-- Solar Activity -->
-                    <UiBox :title="$t('preflightSolarActivity')" :help="$t('preflightSolarHelp')">
+                    <UiBox
+                        :title="$t('preflightSolarActivity')"
+                        type="neutral"
+                        collapsible
+                        :help="$t('preflightSolarHelp')"
+                    >
                         <template #title>
                             <UIcon name="i-lucide-sun" class="size-4" />
                         </template>
@@ -541,7 +558,7 @@
                     </UiBox>
 
                     <!-- GNSS Info -->
-                    <UiBox :title="$t('preflightGNSS')" :help="$t('preflightGNSSHelp')">
+                    <UiBox :title="$t('preflightGNSS')" type="neutral" collapsible :help="$t('preflightGNSSHelp')">
                         <template #title>
                             <UIcon name="i-lucide-satellite" class="size-4" />
                         </template>
@@ -568,7 +585,7 @@
                     </UiBox>
 
                     <!-- Airspace / No-Fly Zones -->
-                    <UiBox :title="$t('preflightAirspace')">
+                    <UiBox :title="$t('preflightAirspace')" type="neutral" collapsible>
                         <template #title>
                             <UIcon name="i-lucide-circle-off" class="size-4" />
                         </template>
@@ -771,7 +788,7 @@
                     </UiBox>
 
                     <!-- Map -->
-                    <UiBox :title="$t('preflightMap')" class="preflight-map-box">
+                    <UiBox :title="$t('preflightMap')" type="neutral" collapsible class="preflight-map-box">
                         <template #title>
                             <UIcon name="i-lucide-map-pinned" class="size-4" />
                         </template>
@@ -836,6 +853,7 @@ import UiBox from "../elements/UiBox.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
+import { useMapViewport } from "@/composables/useMapViewport";
 import { getNotamStatus } from "@/js/notam/index.js";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
@@ -973,8 +991,13 @@ export default defineComponent({
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
+        const {
+            isFullscreen,
+            toggleFullscreen,
+            observeContainer,
+            teardown: teardownMapViewport,
+        } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
         const activeLayer = ref("street");
-        const isFullscreen = ref(false);
         const detectingLocation = ref(false);
         const locationError = ref(null);
         const manualLat = ref("");
@@ -1398,37 +1421,6 @@ export default defineComponent({
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
         }
 
-        function toggleFullscreen() {
-            const container = mapContainerRef.value;
-            if (!container) {
-                return;
-            }
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) {
-                    container.msRequestFullscreen();
-                }
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-
-        function handleFullscreenChange() {
-            isFullscreen.value = !!(
-                document.fullscreenElement ||
-                document.webkitFullscreenElement ||
-                document.msFullscreenElement
-            );
-            requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
-        }
-
         function getWindStatusClass(speed, gusts) {
             return preflight.getWindStatus(speed, gusts).cssClass;
         }
@@ -1598,10 +1590,8 @@ export default defineComponent({
 
         onMounted(() => {
             GUI.content_ready();
-            document.addEventListener("fullscreenchange", handleFullscreenChange);
-            document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.addEventListener("MSFullscreenChange", handleFullscreenChange);
             nextTick(() => {
+                observeContainer();
                 if (preflight.location.latitude !== null) {
                     initializeMap();
                     updateMapPosition();
@@ -1610,9 +1600,7 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+            teardownMapViewport();
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }

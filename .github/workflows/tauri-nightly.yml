@@ -1,15 +1,15 @@
 name: Nightly downloads
 
-# Builds Tauri desktop bundles + a Capacitor Android APK + signed Tauri mobile
-# builds (Android APK, and an ad-hoc iOS IPA) every day, uploads them to the
-# Cloudflare R2 bucket behind binaries.betaflight.com, regenerates the static
-# downloads index, and deploys it to the betaflight-downloads Cloudflare Pages
-# project (downloads.betaflight.com).
+# Builds Tauri desktop bundles + a Capacitor Android APK + a signed Tauri Android
+# APK every day, uploads them to the Cloudflare R2 bucket behind
+# binaries.betaflight.com, regenerates the static downloads index, and deploys it
+# to the betaflight-downloads Cloudflare Pages project (downloads.betaflight.com).
 #
-# The Tauri mobile jobs reuse existing secrets (no new ones): the Tauri APK signs
-# with RELEASE_KEYSTORE, and the ad-hoc IPA signs via the App Store Connect API
-# key (APPLE_API_KEY / APPLE_API_KEY_P8 / APPLE_API_ISSUER) with automatic signing,
-# so Xcode manages an ad-hoc profile — installable on devices registered to the team.
+# iOS ships via TestFlight (tauri-ios-release.yml), not the downloads page, so the
+# nightly runs the full unsigned iOS compile check from tauri-pr-build.yml instead
+# of building an IPA — it protects master without needing signing secrets.
+#
+# The Tauri Android job reuses the existing RELEASE_KEYSTORE secrets (no new ones).
 #
 # Required repository configuration:
 #   Variables:
@@ -25,6 +25,12 @@ name: Nightly downloads
 #     CLOUDFLARE_API_TOKEN                 — already provisioned for the existing PWA deploy
 #     CLOUDFLARE_ACCOUNT_ID                — already provisioned
 #     RELEASE_KEYSTORE / *_PASSWORD / *_ALIAS / *_ALIAS_PASSWORD — already provisioned for APK signing
+#     MACOS_CERTIFICATE / MACOS_CERTIFICATE_PASSWORD — Developer ID Application .p12 and its password
+#     APPLE_API_ISSUER / APPLE_API_KEY / APPLE_API_KEY_P8 — shared with the iOS release, used to notarise
+#
+# The macOS DMGs are signed and notarised so nightly testers don't hit Gatekeeper.
+# That also needs the MACOS_SIGNING_IDENTITY and APPLE_DEVELOPMENT_TEAM variables;
+# without them the macOS jobs still build, just unsigned.
 #
 # R2 lifecycle: configure a 30-day expiry rule on prefix "nightly/" against the bucket
 # (one-time, in the Cloudflare dashboard or via the R2 API).
@@ -126,6 +132,64 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Sign and notarise the macOS bundles with the Developer ID Application
+      # certificate, so the DMGs open without a Gatekeeper warning. Tauri reads
+      # the APPLE_* names from the environment. A run without the certificate
+      # (a fork, or before the secrets are provisioned) builds unsigned.
+      - name: Stage macOS signing credentials
+        id: signing
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ vars.MACOS_SIGNING_IDENTITY }}
+          MACOS_TEAM_ID: ${{ vars.APPLE_DEVELOPMENT_TEAM }}
+          MACOS_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          MACOS_API_KEY_ID: ${{ secrets.APPLE_API_KEY }}
+          MACOS_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          if [ -z "$MACOS_CERTIFICATE" ]; then
+            echo "::notice::No macOS signing certificate available; building unsigned."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # A certificate without the notarisation credentials would produce a
+          # signed but unnotarised bundle that still trips Gatekeeper, so fail
+          # rather than ship one.
+          : "${MACOS_CERTIFICATE_PASSWORD:?Set the MACOS_CERTIFICATE_PASSWORD secret}"
+          : "${MACOS_SIGNING_IDENTITY:?Set the MACOS_SIGNING_IDENTITY variable}"
+          : "${MACOS_TEAM_ID:?Set the APPLE_DEVELOPMENT_TEAM variable}"
+          : "${MACOS_API_ISSUER:?Set the APPLE_API_ISSUER secret}"
+          : "${MACOS_API_KEY_ID:?Set the APPLE_API_KEY secret (key id)}"
+          : "${MACOS_API_KEY_P8:?Set the APPLE_API_KEY_P8 secret (.p8 contents)}"
+
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${MACOS_API_KEY_ID}.p8"
+          printf '%s' "$MACOS_API_KEY_P8" > "$KEY_PATH"
+          chmod 600 "$KEY_PATH"
+
+          # base64 wraps at 76 columns; Tauri's decoder rejects newlines. The
+          # stripped value no longer matches the registered secret, so mask it
+          # explicitly or it would be logged in the clear from here on.
+          CERT=$(printf '%s' "$MACOS_CERTIFICATE" | tr -d '[:space:]')
+          echo "::add-mask::$CERT"
+
+          {
+            echo "APPLE_CERTIFICATE=$CERT"
+            echo "APPLE_CERTIFICATE_PASSWORD<<__BF_EOF__"
+            printf '%s\n' "$MACOS_CERTIFICATE_PASSWORD"
+            echo "__BF_EOF__"
+            echo "APPLE_SIGNING_IDENTITY=$MACOS_SIGNING_IDENTITY"
+            echo "APPLE_TEAM_ID=$MACOS_TEAM_ID"
+            echo "APPLE_API_ISSUER=$MACOS_API_ISSUER"
+            echo "APPLE_API_KEY=$MACOS_API_KEY_ID"
+            echo "APPLE_API_KEY_PATH=$KEY_PATH"
+          } >> "$GITHUB_ENV"
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
       - name: Build Tauri bundle
         shell: bash
         run: |
@@ -169,6 +233,30 @@ jobs:
             --from-version "${STRIPPED}" \
             --to-version "${NIGHTLY_VERSION}"
           ls -la staging
+
+      # Tauri notarises and staples the .app but only signs the .dmg it wraps it
+      # in. Gatekeeper assesses the downloaded .dmg, so the container needs its
+      # own ticket for the download to open cleanly, including offline.
+      - name: Notarise macOS disk images
+        if: runner.os == 'macOS' && steps.signing.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          shopt -s nullglob
+          dmgs=(staging/*.dmg)
+          if [ ${#dmgs[@]} -eq 0 ]; then
+            echo "No DMG to notarise" >&2
+            exit 1
+          fi
+          for dmg in "${dmgs[@]}"; do
+            xcrun notarytool submit "$dmg" \
+              --key "$APPLE_API_KEY_PATH" \
+              --key-id "$APPLE_API_KEY" \
+              --issuer "$APPLE_API_ISSUER" \
+              --wait --timeout 30m
+            xcrun stapler staple "$dmg"
+            xcrun stapler validate "$dmg"
+            spctl -a -t open --context context:primary-signature -v "$dmg"
+          done
 
       - name: Sync desktop bundles to R2
         shell: bash
@@ -272,6 +360,7 @@ jobs:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
           : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"
@@ -297,7 +386,7 @@ jobs:
         run: |
           mkdir -p staging
           SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          APK_NAME="betaflight-app-${VERSION}-${SHA_SHORT}.apk"
+          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}-capacitor.apk"
           cp android/app/build/outputs/apk/release/app-release.apk "staging/${APK_NAME}"
           echo "APK_NAME=${APK_NAME}" >> "$GITHUB_ENV"
 
@@ -320,7 +409,7 @@ jobs:
           mkdir -p manifest-fragments
           BASE="${PUBLIC_BASE%/}"
           SIZE=$(stat -c %s "staging/${APK_NAME}")
-          jq -n --arg label "Android APK" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
+          jq -n --arg label "Android (Capacitor)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
             '{label: $label, url: $url, size: $size}' > manifest-fragments/android.json
 
       - name: Upload manifest fragment
@@ -409,7 +498,7 @@ jobs:
         run: |
           mkdir -p staging
           SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          APK_NAME="betaflight-app-tauri-${VERSION}-${SHA_SHORT}.apk"
+          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}-tauri.apk"
           APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | grep -i universal | head -1)
           if [ -z "$APK" ]; then
             APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | head -1)
@@ -440,7 +529,7 @@ jobs:
           mkdir -p manifest-fragments
           BASE="${PUBLIC_BASE%/}"
           SIZE=$(stat -c %s "staging/${APK_NAME}")
-          jq -n --arg label "Android APK (Tauri)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
+          jq -n --arg label "Android (Tauri)" --arg url "${BASE}/${PREFIX}/${APK_NAME}" --argjson size "$SIZE" \
             '{label: $label, url: $url, size: $size}' > manifest-fragments/tauri-android.json
 
       - name: Upload manifest fragment
@@ -449,125 +538,28 @@ jobs:
           name: manifest-tauri-android
           path: manifest-fragments/tauri-android.json
 
-  tauri_ios:
-    name: Tauri iOS IPA (ad-hoc)
-    needs: prepare
-    runs-on: macos-26
+  # Full unsigned iOS build — same check PRs run, so master stays iOS-buildable
+  # without any Apple signing secrets or a downloadable IPA.
+  tauri_ios_check:
+    name: Tauri iOS compile check
+    uses: ./.github/workflows/tauri-pr-build.yml
     permissions:
       contents: read
-    env:
-      APPLE_DEVELOPMENT_TEAM: ${{ vars.APPLE_DEVELOPMENT_TEAM }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-
-      - name: Select Xcode 26 (iOS 26 SDK)
-        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
-        with:
-          xcode-version: '26'
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
-        with:
-          targets: aarch64-apple-ios
-
-      - name: Cache Cargo registry and target
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
-        with:
-          workspaces: src-tauri
-          key: tauri-ios
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      # Same automatic (App Store Connect API key) signing the release workflow uses —
-      # Xcode manages the ad-hoc profile, so no manual certificate/profile is needed.
-      - name: Stage App Store Connect API key
-        env:
-          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
-        run: |
-          : "${APPLE_API_KEY:?Set the APPLE_API_KEY secret (key id)}"
-          : "${APPLE_API_KEY_P8:?Set the APPLE_API_KEY_P8 secret (.p8 contents)}"
-          mkdir -p "$HOME/.appstoreconnect/private_keys"
-          KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${APPLE_API_KEY}.p8"
-          printf '%s' "$APPLE_API_KEY_P8" > "$KEY_PATH"
-          echo "APPLE_API_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
-
-      # release-testing = ad-hoc export: installable on devices registered to the team,
-      # unlike the App Store IPA (which only installs via TestFlight).
-      - name: Build ad-hoc IPA
-        env:
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-        run: |
-          conf='{"bundle":{"iOS":{"bundleVersion":"${{ github.run_number }}"}}}'
-          npx --no tauri ios build --export-method release-testing -c "$conf"
-
-      - name: Stage IPA
-        env:
-          VERSION: ${{ needs.prepare.outputs.version }}
-          COMMIT_SHA: ${{ needs.prepare.outputs.commit_sha }}
-        run: |
-          mkdir -p staging
-          SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          IPA=$(ls src-tauri/gen/apple/build/arm64/*.ipa | head -1)
-          if [ -z "$IPA" ]; then
-            echo "No IPA produced" >&2
-            exit 1
-          fi
-          IPA_NAME="betaflight-app-tauri-${VERSION}-${SHA_SHORT}.ipa"
-          cp "$IPA" "staging/${IPA_NAME}"
-          echo "IPA_NAME=${IPA_NAME}" >> "$GITHUB_ENV"
-
-      - name: Sync IPA to R2
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
-          R2_BUCKET: ${{ vars.CLOUDFLARE_R2_BUCKET }}
-          R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_ENDPOINT }}
-          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/tauri-ios
-        run: |
-          aws s3 sync staging/ "s3://${R2_BUCKET}/${PREFIX}/" --endpoint-url "${R2_ENDPOINT}" --no-progress
-
-      - name: Emit manifest fragment
-        env:
-          PUBLIC_BASE: ${{ vars.CLOUDFLARE_R2_PUBLIC_BASE_URL }}
-          PREFIX: ${{ needs.prepare.outputs.nightly_prefix }}/tauri-ios
-        run: |
-          mkdir -p manifest-fragments
-          BASE="${PUBLIC_BASE%/}"
-          SIZE=$(stat -f %z "staging/${IPA_NAME}")
-          jq -n --arg label "iOS (ad-hoc IPA)" --arg url "${BASE}/${PREFIX}/${IPA_NAME}" --argjson size "$SIZE" \
-            '{label: $label, url: $url, size: $size}' > manifest-fragments/tauri-ios.json
-
-      - name: Upload manifest fragment
-        uses: actions/upload-artifact@v4
-        with:
-          name: manifest-tauri-ios
-          path: manifest-fragments/tauri-ios.json
+    with:
+      ios-only: true
 
   publish:
     name: Publish downloads index
-    # Run once the established desktop + Capacitor Android builds succeed; the new
-    # Tauri mobile jobs are best-effort (their fragments are included if present) so
-    # an iOS/Android signing hiccup can't block the whole downloads index.
+    # Run once the established desktop + Capacitor Android builds succeed; the
+    # Tauri Android job is best-effort (its fragment is included if present) so a
+    # signing hiccup can't block the whole downloads index.
     if: >-
       always() &&
       needs.prepare.result == 'success' &&
       needs.desktop.result == 'success' &&
       needs.android.result == 'success' &&
       github.ref == 'refs/heads/master'
-    needs: [prepare, desktop, android, tauri_android, tauri_ios]
+    needs: [prepare, desktop, android, tauri_android]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -603,7 +595,6 @@ jobs:
           const desktop = { windows: [], macos: [], linux: [] };
           let android = null;
           let tauriAndroid = null;
-          let tauriIos = null;
           for (const file of fs.readdirSync(fragmentsDir)) {
               const data = JSON.parse(fs.readFileSync(path.join(fragmentsDir, file), 'utf8'));
               if (file === 'android.json') {
@@ -612,10 +603,6 @@ jobs:
               }
               if (file === 'tauri-android.json') {
                   tauriAndroid = data;
-                  continue;
-              }
-              if (file === 'tauri-ios.json') {
-                  tauriIos = data;
                   continue;
               }
               for (const item of data) {
@@ -631,7 +618,6 @@ jobs:
                   desktop,
                   android,
                   tauriAndroid,
-                  tauriIos,
               },
           };
           fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));

@@ -1,5 +1,5 @@
 <template>
-    <UiBox :title="$t('firmwareFlasherBoardSelectionHead')" type="neutral" class="mt-4">
+    <UiBox :title="$t('firmwareFlasherBoardSelectionHead')" type="neutral" collapsible class="mt-4">
         <UiBox
             highlight
             v-if="state.targetQualificationVisible"
@@ -7,17 +7,17 @@
         >
             {{ state.targetQualificationText }}
         </UiBox>
-        <SettingRow :label="$t('expertMode')" :help="$t('expertModeDescription')" full-width>
+        <SettingRow :label="$t('expertMode')" :help="$t('expertModeDescription')" fullWidth>
             <USwitch v-model="state.expertMode" @change="onExpertModeChange" />
         </SettingRow>
         <SettingRow
             :label="$t('firmwareFlasherShowDevelopmentReleases')"
             :help="$t('firmwareFlasherShowDevelopmentReleasesDescription')"
-            full-width
+            fullWidth
         >
             <USwitch v-model="state.showDevelopmentReleases" @change="onShowDevelopmentReleasesChange" />
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectBuildType')" full-width v-if="state.buildTypeRowVisible">
+        <SettingRow :help="$t('firmwareFlasherOnlineSelectBuildType')" fullWidth v-if="state.buildTypeRowVisible">
             <USelect
                 v-model="state.selectedBuildType"
                 :items="state.buildTypeOptions"
@@ -25,7 +25,7 @@
                 @update:model-value="onBuildTypeChange"
             />
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" full-width>
+        <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" fullWidth>
             <div class="flex items-center gap-2">
                 <UFieldGroup class="min-w-80">
                     <USelectMenu
@@ -48,12 +48,13 @@
                         :title="$t('firmwareFlasherOnlineSelectBoardDescription')"
                         icon="i-lucide-search"
                         :loading="boardSelection.state.detectingBoard"
+                        size="xs"
                         @click="onDetectBoard"
                     />
                 </UFieldGroup>
             </div>
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')" full-width>
+        <SettingRow :help="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')" fullWidth>
             <USelect
                 v-model="boardSelection.state.selectedFirmwareVersion"
                 value-key="release"
@@ -70,7 +71,7 @@
         <SettingRow
             :label="$t('firmwareFlasherFlashOnConnect')"
             :help="$t('firmwareFlasherFlashOnConnectDescription')"
-            full-width
+            fullWidth
             v-if="state.flashOnConnectWrapperVisible"
         >
             <USwitch v-model="state.flashOnConnect" />
@@ -80,6 +81,7 @@
     <UiBox
         :title="$t('firmwareFlasherBuildConfigurationHead')"
         type="neutral"
+        collapsible
         class="build_configuration col-span-1 mt-4"
     >
         <SettingRow :label="$t('coreBuild')" :help="$t('coreBuildModeDescription')">

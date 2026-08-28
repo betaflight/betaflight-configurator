@@ -241,9 +241,6 @@
     "configuratorUpdateHelp": {
         "message": "Cuando internet está disponible, la aplicación consultará automáticamente si hay actualizaciones disponibles."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir a la Web de Versiones"
-    },
     "rebootFlightController": {
         "message": "Reiniciando el controlador de vuelo, vuelve a conectar cuando disponible"
     },
@@ -666,8 +663,11 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts<\/a><br \/><br \/>El código fuente del firmware puede descargarse desde <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Para hardware antiguo que use un chip USB CP210x a serie:<br \/>Los últimos <b>Drivers CP210x<\/b> pueden descargarse desde <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>El último driver <b>Zadig<\/b> para instalación del driver USB de Windows puede descargarse desde <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><b>Solucionador de Driver de ImpulseRC<\/b> puede ser descargado <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
+    "defaultHardwareText": {
+        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Revisa la pestaña Instalar Firmware para ver la lista completa de hardware.<br \/><br \/>Utilidades de hardware \/ controladores:<ul><li>Para hardware heredado usando un chip USB CP210x a serial, los últimos drivers <b>CP210x<\/b> se puede descargar desde <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>Los últimos de <b>Zadig<\/b> para la instalación del controlador USB Windows se puede descargar desde <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> se puede descargar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -7011,6 +7011,189 @@
     },
     "configurationSmallAngleHelp": {
         "message": "La aeronave no se armará si está ladeada más que el número de grados especificados. Sólo aplica si el acelerómetro está activado. Ajustarlo a 180 desactiva esta comprobación"
+    },
+    "configurationBatteryVoltage": {
+        "message": "Voltaje de la Batería"
+    },
+    "configurationBatteryCurrent": {
+        "message": "Corriente de la Batería"
+    },
+    "configurationBatteryMeterType": {
+        "message": "Tipo de Medido de Batería"
+    },
+    "configurationBatteryMinimum": {
+        "message": "Voltaje Mínimo por Celda"
+    },
+    "configurationBatteryMaximum": {
+        "message": "Voltaje Máximo por Celda"
+    },
+    "configurationBatteryWarning": {
+        "message": "Aviso de Voltaje por Celda"
+    },
+    "configurationBatteryScale": {
+        "message": "Escala del Voltaje"
+    },
+    "magCalibrationCancel": {
+        "message": "Cancelar"
+    },
+    "pidTuningDeltaError": {
+        "message": "Error"
+    },
+    "pidTuningDeltaMeasurement": {
+        "message": "Medida"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivativo desde Error<\/b> proporciona una respuesta más directa del stick y se prefiere para Carreras.<br \/><br \/><b>Derivativo desde Medida<\/b> proporciona una respuesta del stick más suave lo cual es más útil para freestyle"
+    },
+    "pidTuningPidControllerTip": {
+        "message": "<b>Tradicional vs Betaflight (flotante):<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Tradicional es el antiguo betaflight evolucionado a rewrite, que es controlador PID básico basado en matemáticas de enteros. El controlador PID de Betaflight PID usa matemáticas en punto flotante y tiene muchas nuevas funcionalidades especialmente diseñadas para aplicaciones multirotor<br> <b>Flotante vs Entero:<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Las placas F1 no tienen FPU integrada y el cálculo en punto flotante incrementa la carga de CPU y la matemática entera mejoraría el rendimiento, pero la matemática en punto flotante puede dar algo más de precisión."
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>Filtro Soft del Giro:<\/b> Filtro paso bajo para el giro. Usa un valor más bajo para mayor filtrado.<br><b>Filtro D Term:<\/b> Filtro paso bajo para Dterm. Puede afectar al ajuste de D . Usa un valor más bajo para mayor filtrado. <br><b>Filtro Yaw:<\/b> Filtra la salida de yaw. Puede ayudar en configuraciones con eje yaw ruidoso."
+    },
+    "pidTuningRatesTip": {
+        "message": "Juega con las tasas y mira como afectan a la curva de las palancas"
+    },
+    "magCalibrationError": {
+        "message": "Error en la calibración. Inténtalo de nuevo en un área con menos interferencia magnética."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No se ha detectado ningún movimiento durante 30 segundos. Calibración cancelada."
+    },
+    "magCalibrationSamples": {
+        "message": "Muestras"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Bueno"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Aceptable"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Deficiente"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Girar libremente — se autoguarda en el firmware después de 30 segundos"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibración de firmware"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Tienes 30 segundos para rotar el vehículo en todas las direcciones. El firmware automáticamente guardará los valores de calibración cuando se acabe el tiempo."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "¡Calibración de firmware completada!"
+    },
+    "magCalibrationCheck": {
+        "message": "Comprobar"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Ver datos mag en vivo con la calibración actual"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Comprobando calibración"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Guardar valores"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valores de calibración guardados"
+    },
+    "magCalibrationSaveError": {
+        "message": "Error al guardar los valores de calibración"
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Paso {{n}} de {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Mantén la aeronave nivelada y rótala lentamente en un giro completo de 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Ponla boca abajo y rótala de nuevo a través de otro giro completo de 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Apunta la nariz hacia arriba y rota un giro completo alrededor de ella."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Apunta la nariz hacia abajo y rota un giro completo."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Apóyala en su lado izquierdo y rota un giro completo."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Apóyala en su lado derecho y rota un giro completo."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Haz algunos flips lentos hacia delante, mirando en una dirección diferente cada vez."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Haz algunos flips lentos hacia atrás, mirando de nuevo en una dirección diferente cada vez."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} zonas cubiertas"
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Cobertura:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alineación:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibración:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copiar CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Aplicar"
+    },
+    "magCalibrationFullExport": {
+        "message": "Exportar modelo"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "No hay suficientes muestras — girar más tiempo"
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Comandos CLI copiados al portapapeles"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "No se ha podio copiar en el portapapeles"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "El firmware {{version}} es demasiado antiguo para la alineación mag PERSONALIZADA (necesita {{min}}+). Actualiza el firmware, luego reintenta."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibración aplicada y guardada"
+    },
+    "magCalibrationDiscard": {
+        "message": "Descartar"
+    },
+    "magVizProjection": {
+        "message": "Proyección Triple"
+    },
+    "magVizPolar": {
+        "message": "Densidad polar"
+    },
+    "magVizWaitingForData": {
+        "message": "Esperando datos…"
+    },
+    "magVizAxisField": {
+        "message": "Campo"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Antiguo"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Nuevo"
+    },
+    "configurationSmallAngle": {
+        "message": "Ángulo de armado máximo [grados]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "La aeronave no se armará si está ladeada más que el número de grados especificados. Sólo aplica si el acelerómetro está activado. Ajustarlo a 180 desactiva esta comprobación."
     },
     "configurationBatteryVoltage": {
         "message": "Voltaje de la Batería"

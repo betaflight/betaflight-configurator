@@ -1,11 +1,8 @@
 import { ref } from "vue";
 import semver from "semver";
 import MSP from "../js/msp";
-import GUI from "../js/gui";
 import FC from "../js/fc";
-import { disconnect, isDrivenRebootTarget, scheduleRebootReconnect } from "../js/serial_backend";
-import DeviceHandler from "../js/device_handler";
-import { getConnectionState, State } from "../js/connection_state";
+import { cancelRebootReconnect, scheduleRebootReconnect } from "../js/serial_backend";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const SAVE_COMMAND_TIMEOUT_MS = 5000;
@@ -13,8 +10,6 @@ const DUMP_READ_TIMEOUT_MS = 10000;
 const LINE_DELAY_MS = 15;
 const PROFILE_COMMAND_DELAY_MS = 100;
 const ERROR_PREFIX = "###ERROR";
-const RECONNECT_TIMEOUT_NAME = "msp_cli_reconnect";
-const RECONNECT_DELAY_MS = 500;
 
 export const MIN_FC_VERSION_FOR_MSP_CLI = "4.5.4";
 
@@ -67,53 +62,20 @@ export function readDumpAll() {
     return send("diff all", { timeoutMs: DUMP_READ_TIMEOUT_MS });
 }
 
+/**
+ * A CLI `save`/`exit` has already rebooted the FC. Hand the wait to serial_backend's reconnect
+ * cycle — the same one a Save & Reboot uses, minus the reboot command it does not need to send.
+ * The cycle drops the stale link, retries while Auto-Connect is on, and ends the window on a
+ * deadline. Previously this path ran its own 500 ms timeout and put the connection state into
+ * RECONNECTING with no window, so a device that never came back left the phase there for good.
+ */
 export function scheduleReconnect() {
-    const willAutoReconnect = DeviceHandler.devicePicker.autoConnect;
-    const target = DeviceHandler.devicePicker.selectedDevice;
-
-    // BLE and manual/TCP links never re-enumerate after an FC reboot, so the passive path
-    // below (drop the link, let auto-connect pick up the re-added device) would leave them
-    // disconnected forever. Hand them to serial_backend's driven reboot cycle instead — the
-    // same machinery a BLE/manual Save & Reboot uses. It reads Auto-Connect live, so with it
-    // off the cycle still ends in a clean disconnect.
-    if (isDrivenRebootTarget(target)) {
-        scheduleRebootReconnect();
-        return;
-    }
-
-    // The FC reboots after save/exit, so its port drops and re-enumerates, often under a new id
-    // (serial_0 -> serial_1). Don't reconnect explicitly: that would target the old, gone id and
-    // race the reboot into a spurious failure dialog. Just drop the stale link — with Auto-Connect
-    // on, auto-connect picks up the re-added device; with it off, the user reconnects manually.
-
-    // When we expect an auto-reconnect, hold the reconnect-in-progress window so selectActivePort()
-    // keeps the current selection and does NOT hijack it with the expert-mode virtual/manual
-    // fallback while the device is briefly off the port list.
-    if (willAutoReconnect && target && target !== "noselection" && target !== "virtual" && target !== "manual") {
-        getConnectionState().reconnectStarted();
-    }
-
-    GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    GUI.timeout_add(
-        RECONNECT_TIMEOUT_NAME,
-        () => {
-            // Drop the stale link only. disconnect() is a no-op if the reboot already closed the
-            // port; reconnection (if any) is auto-connect's job on device re-enumeration.
-            disconnect();
-        },
-        RECONNECT_DELAY_MS,
-    );
+    scheduleRebootReconnect();
 }
 
+/** Abandon that wait (a tab unmounting mid-reconnect). */
 export function cancelScheduledReconnect() {
-    const removed = GUI.timeout_remove(RECONNECT_TIMEOUT_NAME);
-    // Only conclude the window this function actually cancelled: the timer was still
-    // pending (removed) AND we are still in the RECONNECTING wait it opened. Once the
-    // timer has fired, connectDisconnect() owns the phase (CONNECTING/HANDSHAKING) and
-    // its own concludeReboot settles it — forcing IDLE here would abort a live connect.
-    if (removed && getConnectionState().state === State.RECONNECTING) {
-        getConnectionState().concludeReboot(false);
-    }
+    cancelRebootReconnect();
 }
 
 // A `save`/`exit` reboots the FC, so the port closes before the command can reply and its
@@ -122,6 +84,56 @@ export function cancelScheduledReconnect() {
 // a failure, so callers should not surface it as an error.
 export function isConnectionClosedError(error) {
     return error?.connectionClosed === true;
+}
+
+// `send` resolves with whatever the FC replied, and a command the FC refused replies normally —
+// the refusal is a line in the response, not a transport error. Callers that need to know whether
+// a command took effect have to look for it.
+export function findCliError(lines) {
+    return parseErrors(lines ?? [])[0] ?? null;
+}
+
+// A numeric setting is printed with its bounds, so the firmware tells us how many of a thing this
+// build has rather than the app having to guess (`CANDEV_COUNT`, for one).
+export function findCliSettingRange(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());
+        if (match) {
+            return { min: Number(match[1]), max: Number(match[2]) };
+        }
+    }
+
+    return null;
+}
+
+// `get <name>` matches on substring, so the reply can carry several settings, each followed by its
+// allowed range and default. Only the line naming the setting exactly holds the current value.
+export function findCliSettingValue(lines, setting) {
+    for (const line of lines ?? []) {
+        const [name, ...rest] = line.split("=");
+        if (name.trim() === setting && rest.length) {
+            return rest.join("=").trim();
+        }
+    }
+
+    return null;
+}
+
+// A MODE_LOOKUP setting is printed with the names it accepts, so the app can offer exactly those
+// rather than carrying its own copy of a firmware table. NULL table entries are skipped by the
+// firmware, so the list is not positionally aligned with the enum — names only.
+export function findCliSettingAllowedValues(lines) {
+    for (const line of lines ?? []) {
+        const match = /^Allowed values:(.*)$/.exec(line.trim());
+        if (match) {
+            return match[1]
+                .split(",")
+                .map((value) => value.trim())
+                .filter(Boolean);
+        }
+    }
+
+    return null;
 }
 
 export async function saveAndReconnect() {

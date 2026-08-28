@@ -13,8 +13,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        // tauri-plugin-serialplugin pulls com.github.mik3y:usb-serial-for-android from JitPack
-        maven { url = uri("https://jitpack.io") }
     }
 }
 

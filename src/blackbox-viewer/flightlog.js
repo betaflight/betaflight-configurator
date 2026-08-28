@@ -1192,7 +1192,7 @@ export function FlightLog(logData) {
                         continue;
                     }
 
-                    for (centerFrameIndex = 0; centerFrameIndex < sourceChunks[centerChunkIndex].frames.length; ) {
+                    for (centerFrameIndex = 0; centerFrameIndex < sourceChunks[centerChunkIndex].frames.length;) {
                         let //Current beginning & end of the smoothing window:
                             leftChunkIndex = centerChunkIndex,
                             leftFrameIndex = centerFrameIndex,
@@ -1365,32 +1365,29 @@ export function FlightLog(logData) {
 
     this.getMinMaxForFieldDuringAllTime = function (field_name) {
         const stats = this.getStats();
-        let min = Number.MAX_VALUE,
-            max = -Number.MAX_VALUE;
+        let range;
 
         const fieldIndex = this.getMainFieldIndexByName(field_name),
             fieldStat = fieldIndex === undefined ? false : stats.field[fieldIndex];
 
         if (fieldStat) {
-            min = Math.min(min, fieldStat.min);
-            max = Math.max(max, fieldStat.max);
+            range = {
+                min: fieldStat.min,
+                max: fieldStat.max,
+            };
         } else {
-            const mm = this.getMinMaxForFieldDuringTimeInterval(field_name, this.getMinTime(), this.getMaxTime());
-            if (mm !== undefined) {
-                min = Math.min(mm.min, min);
-                max = Math.max(mm.max, max);
-            }
+            range = this.getMinMaxForFieldDuringTimeInterval(field_name, this.getMinTime(), this.getMaxTime());
         }
 
-        return { min: min, max: max };
+        return range;
     };
 
     /**
-     * Function to compute of min and max curve values during time interval.
-     * @param field_name String: Curve fields name.
-     * @param start_time Integer: The interval start time .
-     * @end_time start_time Integer: The interval end time .
-     * @returns {min: MinValue, max: MaxValue} if success, or {min: Number.MAX_VALUE, max: Number.MAX_VALUE} if error
+     * Function to compute min and max curve values during time interval.
+     * @param {string} field_name - Curve field name.
+     * @param {number} start_time - The interval start time.
+     * @param {number} end_time - The interval end time.
+     * @returns {{min: number, max: number} | undefined} - Min and max values if success, or undefined if error
      */
     this.getMinMaxForFieldDuringTimeInterval = function (field_name, start_time, end_time) {
         const chunks = this.getSmoothedChunksInTimeRange(start_time, end_time);
@@ -1430,10 +1427,15 @@ export function FlightLog(logData) {
             }
             frameIndex = 0;
         }
-        return {
-            min: minValue,
-            max: maxValue,
-        };
+
+        if (minValue !== Number.MAX_VALUE && maxValue !== -Number.MAX_VALUE) {
+            return {
+                min: minValue,
+                max: maxValue,
+            };
+        } else {
+            return undefined;
+        }
     };
 
     this.getCurrentLogRowsCount = function () {

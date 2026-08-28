@@ -463,17 +463,17 @@ const pidControllerParams = computed(() => {
     const s = filteredSc.value;
     const gainDec = isBF.value && gte("3.1.0") && lte("4.3.9") ? 3 : 0;
 
+    const dMaxParams = [
+        param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
+        param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
+        param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
+        param("D Max Gain", fmtVal(s.d_max_gain, 0)),
+        param("D Max Advance", fmtVal(s.d_max_advance, 0)),
+    ];
+
     return [
         // D Max (BF 4.0+)
-        ...(isBF.value && gte("4.0.0")
-            ? [
-                  param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
-                  param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
-                  param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
-                  param("D Max Gain", fmtVal(s.d_max_gain, 0)),
-                  param("D Max Advance", fmtVal(s.d_max_advance, 0)),
-              ]
-            : []),
+        ...(isBF.value && gte("4.0.0") ? dMaxParams : []),
         // Anti Gravity, TPA, PID limits & modifiers
         param("AG Mode", selectVal(s.anti_gravity_mode, ANTI_GRAVITY_MODE)),
         param("AG Gain", fmtVal(s.anti_gravity_gain, gainDec)),
@@ -492,7 +492,10 @@ const pidControllerParams = computed(() => {
         // abs_control_gain removed in BF 2026.6
         ...(isBF.value && lt("2026.6.0") ? [param("Abs Control Gain", fmtVal(s.abs_control_gain, 0))] : []),
         param("PID At Min Throttle", selectVal(s.pidAtMinThrottle, OFF_ON)),
-        param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON)),
+        // use_integrated_yaw removed in BF 2026.12
+        ...(isBF.value && lt("2026.12.0")
+            ? [param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON))]
+            : []),
     ].filter((p) => !p.missing);
 });
 
@@ -681,10 +684,10 @@ const rpmFilterParams = computed(() => {
     }
     return [
         param("Harmonics", fmtVal(s.gyro_rpm_notch_harmonics, 0)),
+        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Q", fmtVal(s.gyro_rpm_notch_q, 0)),
         param("Min Hz", fmtVal(s.gyro_rpm_notch_min, 0)),
         param("Fade Range Hz", fmtVal(s.rpm_filter_fade_range_hz, 0)),
-        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Notch LPF", fmtVal(s.rpm_notch_lpf, 0)),
         param("D-Term Harmonics", fmtVal(s.dterm_rpm_notch_harmonics, 0)),
         param("D-Term Q", fmtVal(s.dterm_rpm_notch_q, 0)),

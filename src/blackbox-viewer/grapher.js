@@ -68,7 +68,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         craft3D = null,
         craft2D = null,
         analyser = null /* define a new spectrum analyser */,
-        watermarkLogo /* Watermark feature */;
+        watermarkLogo; /* Watermark feature */
     this.onSeek = null;
 
     this.getAnalyser = function () {
@@ -512,12 +512,10 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             canvasContext.lineTo(x + labelDirection * margin, labelY + drawingParams.fontSizeEventLabel / 2);
             canvasContext.lineTo(x + labelDirection * (width - 1), labelY - drawingParams.fontSizeEventLabel / 2);
 
-            canvasContext.fillStyle = color || "rgba(255,255,255,0.5)";
-            canvasContext.fill();
+            canvasContext.strokeStyle = color || "rgba(255,255,255,0.5)";
             canvasContext.stroke();
             canvasContext.fillStyle = labelColor || "rgba(200,200,200,0.9)";
             canvasContext.closePath();
-
             canvasContext.fillText(label, x + labelDirection * (width + 8), labelY);
         }
     }
@@ -1188,8 +1186,6 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
 
     graphConfig.addListener(this.refreshGraphConfig);
     this.refreshGraphConfig();
-
-    document.documentElement.classList.toggle("has-grid-override", options["graphGridOverride"]);
 
     this.resize(canvas.width, canvas.height);
 }

@@ -100,6 +100,14 @@ Features.prototype.getMask = function () {
     return self._featureMask;
 };
 
+/**
+ * Side-effect free counterpart to getMask(), which flushes pending analytics changes.
+ * @returns {number} the current feature bitmask
+ */
+Features.prototype.peekMask = function () {
+    return this._featureMask;
+};
+
 Features.prototype.setMask = function (featureMask) {
     const self = this;
 

@@ -3,11 +3,14 @@
         <!-- Normal sensor layout -->
         <UiBox v-if="!isDebug">
             <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
+                <!-- The `x` groups are positioned on the plot baseline by
+                     useSensorGraph's applyGraphTransforms — their offset depends on the
+                     measured height, so it must not be hardcoded here. -->
                 <svg :id="svgId" ref="svgElement" class="w-full h-full">
-                    <g class="grid x" transform="translate(40, 120)"></g>
+                    <g class="grid x"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
-                    <g class="data" transform="translate(41, 10)"></g>
-                    <g class="axis x" transform="translate(40, 120)"></g>
+                    <g class="data" transform="translate(40, 10)"></g>
+                    <g class="axis x"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
                 <div class="text-[10px] flex flex-col gap-1 [&_button]:text-[10px]! [&_[data-slot=base]]:text-[10px]!">
@@ -64,10 +67,10 @@
         <UiBox v-else>
             <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
                 <svg :id="svgId" ref="svgElement" class="w-full h-[140px]">
-                    <g class="grid x" transform="translate(40, 120)"></g>
+                    <g class="grid x"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
-                    <g class="data" transform="translate(41, 10)"></g>
-                    <g class="axis x" transform="translate(40, 120)"></g>
+                    <g class="data" transform="translate(40, 10)"></g>
+                    <g class="axis x"></g>
                     <g class="axis y" transform="translate(40, 10)"></g>
                 </svg>
                 <div class="text-[10px] flex flex-col gap-1 [&_button]:text-[10px]! [&_[data-slot=base]]:text-[10px]!">

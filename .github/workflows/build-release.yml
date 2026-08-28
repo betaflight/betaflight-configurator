@@ -33,38 +33,31 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: false
+      build_apk: false
       commit_ref: ${{ github.event.release.target_commitish }}
+
+  # Build the Tauri desktop bundles (Windows/macOS/Linux) and the signed Tauri
+  # Android APK, then attach them to the release. The Tauri APK is the release's
+  # Android download; the Capacitor APK from build.yml is no longer attached.
+  modern_release:
+    name: Attach Release Artifacts
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/tauri-release-assets.yml
+    with:
+      tag: ${{ github.event.release.tag_name }}
     secrets:
       RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
       RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
       RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
       RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
-
-  modern_release:
-    permissions:
-      contents: write
-    name: Attach Release Artifacts
-    needs: modern_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Code Checkout
-        uses: actions/checkout@v5
-
-      - name: Fetch build artifacts (APK only at this stage)
-        uses: actions/download-artifact@v5
-        with:
-          name: betaflight-app-apk
-          path: artifacts
-
-      - name: Attach assets to release
-        run: |
-          set -x
-          ASSETS=()
-          ASSETS+=("artifacts/${{ needs.modern_build.outputs.apk_name }}")
-          TAG_NAME="${GITHUB_REF##*/}"
-          gh release upload "${TAG_NAME}" "${ASSETS[@]}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+      MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+      APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+      APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+      APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
 
   prepare_environment:
     name: Prepare Environment Name

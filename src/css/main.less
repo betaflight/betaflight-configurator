@@ -512,46 +512,6 @@ dialog {
         backdrop-filter: blur(0.5rem);
     }
 }
-.dialogYesNo {
-    .dialogYesNoContent {
-        margin-bottom: 12px;
-        margin-top: 12px;
-        white-space: pre-line;
-    }
-    .dialogYesNo-yesButton {
-        margin: 0px;
-        margin-right: 12px;
-    }
-    .dialogYesNo-noButton {
-        margin: 0px;
-    }
-    width: fit-content;
-    max-width: 400px;
-}
-.dialogWait {
-    width: fit-content;
-    max-width: 500px;
-    min-width: 300px;
-    .dialogWaitTitle {
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 16px;
-        width: fit-content;
-    }
-}
-.dialogInformation {
-    .dialogInformationContent {
-        margin-bottom: 12px;
-        margin-top: 12px;
-        white-space: pre-line;
-    }
-    .dialogInformation-confirmButton {
-        margin: 0px;
-    }
-    width: fit-content;
-    max-width: 42rem;
-}
-
 .tab_title {
     border-bottom: 2px solid var(--primary-500);
     font-size: 2rem;
@@ -681,7 +641,8 @@ dialog {
         display: flex;
         flex-wrap: wrap;
         position: fixed;
-        bottom: 2.5rem;
+        /* Sit directly on top of #status-bar, which grows by the bottom safe-area inset */
+        bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
         right: 0;
     }
 }
@@ -1137,22 +1098,6 @@ table {
     border-top: 1px solid var(--surface-400);
     padding-top: 5px;
 }
-#dialogResetToCustomDefaults-content {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-#dialogReportProblems-header {
-    margin-top: 10px;
-    margin-bottom: 5px;
-}
-.dialogReportProblems-listItem {
-    list-style: circle;
-    margin-left: 20px;
-    margin-bottom: 5px;
-}
-#dialogReportProblems-footer {
-    margin-bottom: 10px;
-}
 .grid-row {
     width: 100%;
     display: flex;
@@ -1447,7 +1392,8 @@ each(range(12), {
     }
     .tab_container.reveal {
         left: 0;
-        padding-top: 3.5rem;
+        /* Clear the mobile top bar plus the status bar / display cutout above it */
+        padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
     }
     #content {
         width: 100% !important;
@@ -1461,8 +1407,10 @@ each(range(12), {
         width: calc(100% - 2em - 2px) !important;
         max-width: unset;
         height: auto !important;
-        bottom: 0;
-        top: 56px;
+        /* height is auto with both edges pinned, so the box stretches between them: keep the
+           bottom edge above the navigation bar / home indicator or the actions land under it */
+        bottom: env(safe-area-inset-bottom, 0px);
+        top: calc(56px + env(safe-area-inset-top, 0px));
         border-radius: unset;
         border: none;
         overflow: auto;

@@ -1,113 +1,114 @@
 <template>
-    <UApp>
-        <div id="blackbox-app">
-            <!-- Teleported into legacy DOM layout -->
-            <Teleport to="#vue-welcome">
-                <WelcomePage @files-selected="onFilesSelected" />
-            </Teleport>
-            <Teleport to="#vue-navbar">
-                <AppToolbar
-                    @files-selected="onFilesSelected"
-                    @open-settings="onOpenSettings"
-                    @open-keys="onOpenKeys"
-                    @export-csv="onExportCsv"
-                    @export-gpx="onExportGpx"
-                />
-            </Teleport>
-            <Teleport to="#vue-statusbar">
-                <StatusBar @goto-bookmark="onGotoBookmark" />
-            </Teleport>
-
-            <Teleport to="#vue-view-controls">
-                <ViewControls
-                    :header-active="appStore.headerDialogOpen"
-                    :table-active="graphStore.hasTableOverlay"
-                    :video-active="appStore.viewVideo"
-                    :craft-active="graphStore.hasCraft"
-                    :sticks-active="graphStore.hasSticks"
-                    :analyser-active="graphStore.hasAnalyser"
-                    :map-active="graphStore.hasMap"
-                    @view-config="onViewConfig"
-                    @toggle-header="onToggleHeader"
-                    @toggle-table="onToggleTable"
-                    @toggle-video="onToggleVideo"
-                    @toggle-craft="onToggleCraft"
-                    @toggle-sticks="onToggleSticks"
-                    @toggle-analyser="onToggleAnalyser"
-                    @toggle-map="onToggleMap"
-                />
-            </Teleport>
-            <Teleport to="#vue-playback">
-                <PlaybackControls
-                    @jump-start="onJumpStart"
-                    @jump-end="onJumpEnd"
-                    @step-back="onStepBack"
-                    @step-forward="onStepForward"
-                    @play-pause="onPlayPause"
-                    @video-jump-start="onVideoJumpStart"
-                    @video-jump-end="onVideoJumpEnd"
-                />
-            </Teleport>
-
-            <Teleport to="#vue-speed-panel">
-                <SpeedPanel @rate-change="onRateChange" />
-            </Teleport>
-            <Teleport to="#vue-zoom-panel">
-                <ZoomPanel @zoom-change="onZoomChange" />
-            </Teleport>
-            <Teleport to="#vue-time-panel">
-                <TimePanel @time-change="onTimeChange" />
-            </Teleport>
-            <Teleport to="#vue-sync-panel">
-                <SyncPanel
-                    @sync-back="onSyncBack"
-                    @sync-forward="onSyncForward"
-                    @sync-here="onSyncHere"
-                    @smart-sync="onSmartSync"
-                    @offset-change="onOffsetChange"
-                />
-            </Teleport>
-            <Teleport to="#vue-workspace-panel">
-                <WorkspacePanel
-                    @switch-workspace="onSwitchWorkspace"
-                    @save-workspace="onSaveWorkspace"
-                    @apply-default="onApplyDefaultWorkspace"
-                />
-            </Teleport>
-            <Teleport to="#vue-log-panel">
-                <LogPanel />
-            </Teleport>
-
-            <Teleport to="#vue-analyser">
-                <SpectrumAnalyser />
-            </Teleport>
-            <Teleport to="#vue-legend-panel">
-                <LegendPanel />
-            </Teleport>
-            <FieldValuesPanel />
-            <ConfigurationPanel />
-            <Teleport to="#vue-seekbar-toolbar">
-                <SeekBarToolbar />
-            </Teleport>
-
-            <!-- Dialogs -->
-            <KeysDialog v-model:open="appStore.keysDialogOpen" />
-            <UserSettingsDialog v-model:open="appStore.settingsDialogOpen" @save="onSaveSettings" />
-            <GraphConfigDialog
-                v-model:open="appStore.graphConfigDialogOpen"
-                :flightLog="logStore.flightLog"
-                :graphConfig="graphStore.activeGraphConfig"
-                :grapher="graphStore.graph"
-                @save="onGraphConfigSave"
-                @update="onGraphConfigUpdate"
+    <div id="blackbox-app">
+        <!-- Teleported into legacy DOM layout -->
+        <Teleport to="#vue-welcome">
+            <WelcomePage @files-selected="onFilesSelected" />
+        </Teleport>
+        <Teleport to="#vue-navbar">
+            <AppToolbar
+                @files-selected="onFilesSelected"
+                @open-settings="onOpenSettings"
+                @open-keys="onOpenKeys"
+                @export-csv="onExportCsv"
+                @export-gpx="onExportGpx"
+                @export-workspaces="onExportWorkspaces"
+                @toggle-fullscreen="onToggleFullscreen"
             />
-            <HeaderDialog v-model:open="appStore.headerDialogOpen" :sysConfig="sysConfig" />
-        </div>
-    </UApp>
+        </Teleport>
+        <Teleport to="#vue-statusbar">
+            <StatusBar @goto-bookmark="onGotoBookmark" />
+        </Teleport>
+
+        <Teleport to="#vue-view-controls">
+            <ViewControls
+                :header-active="appStore.headerDialogOpen"
+                :table-active="graphStore.hasTableOverlay"
+                :video-active="appStore.viewVideo"
+                :craft-active="graphStore.hasCraft"
+                :sticks-active="graphStore.hasSticks"
+                :analyser-active="graphStore.hasAnalyser"
+                :map-active="graphStore.hasMap"
+                @view-config="onViewConfig"
+                @toggle-header="onToggleHeader"
+                @toggle-table="onToggleTable"
+                @toggle-video="onToggleVideo"
+                @toggle-craft="onToggleCraft"
+                @toggle-sticks="onToggleSticks"
+                @toggle-analyser="onToggleAnalyser"
+                @toggle-map="onToggleMap"
+            />
+        </Teleport>
+        <Teleport to="#vue-playback">
+            <PlaybackControls
+                @jump-start="onJumpStart"
+                @jump-end="onJumpEnd"
+                @step-back="onStepBack"
+                @step-forward="onStepForward"
+                @play-pause="onPlayPause"
+                @video-jump-start="onVideoJumpStart"
+                @video-jump-end="onVideoJumpEnd"
+            />
+        </Teleport>
+
+        <Teleport to="#vue-speed-panel">
+            <SpeedPanel @rate-change="onRateChange" />
+        </Teleport>
+        <Teleport to="#vue-zoom-panel">
+            <ZoomPanel @zoom-change="onZoomChange" />
+        </Teleport>
+        <Teleport to="#vue-time-panel">
+            <TimePanel @time-change="onTimeChange" />
+        </Teleport>
+        <Teleport to="#vue-sync-panel">
+            <SyncPanel
+                @sync-back="onSyncBack"
+                @sync-forward="onSyncForward"
+                @sync-here="onSyncHere"
+                @smart-sync="onSmartSync"
+                @offset-change="onOffsetChange"
+            />
+        </Teleport>
+        <Teleport to="#vue-workspace-panel">
+            <WorkspacePanel
+                @switch-workspace="onSwitchWorkspace"
+                @save-workspace="onSaveWorkspace"
+                @rename-workspace="onRenameWorkspace"
+                @apply-default="onApplyDefaultWorkspace"
+            />
+        </Teleport>
+        <Teleport to="#vue-log-panel">
+            <LogPanel />
+        </Teleport>
+
+        <Teleport to="#vue-analyser">
+            <SpectrumAnalyser />
+        </Teleport>
+        <Teleport to="#vue-legend-panel">
+            <LegendPanel />
+        </Teleport>
+        <FieldValuesPanel />
+        <ConfigurationPanel />
+        <Teleport to="#vue-seekbar-toolbar">
+            <SeekBarToolbar />
+        </Teleport>
+
+        <!-- Dialogs -->
+        <KeysDialog v-model:open="appStore.keysDialogOpen" />
+        <UserSettingsDialog v-model:open="appStore.settingsDialogOpen" @save="onSaveSettings" />
+        <GraphConfigDialog
+            v-model:open="appStore.graphConfigDialogOpen"
+            :flightLog="logStore.flightLog"
+            :graphConfig="graphStore.activeGraphConfig"
+            :grapher="graphStore.graph"
+            @save="onGraphConfigSave"
+            @update="onGraphConfigUpdate"
+        />
+        <HeaderDialog v-model:open="appStore.headerDialogOpen" :sysConfig="sysConfig" />
+    </div>
 </template>
 
 <script setup>
-import { computed, watchEffect, onMounted, onUnmounted, inject } from "vue";
+import { computed, watchEffect, onMounted, onUnmounted, inject, unref } from "vue";
 import { useGraphStore } from "./stores/graph.js";
 import { useAppStore } from "./stores/app.js";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log.js";
@@ -144,11 +145,18 @@ const workspaceStore = useWorkspaceStore();
 
 // State classes are applied to the viewer root element (provided by the embedding tab) so
 // they stay scoped to the viewer subtree and never leak onto the host configurator's <html>.
-const viewerRoot = inject("bbvRoot", null);
+// Embedded: a ref to the tab root, null until the tab mounts. Standalone: nothing injected.
+const injectedRoot = inject("bbvRoot", null);
 
 // Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js
 watchEffect(() => {
-    const cl = (viewerRoot ?? document.documentElement).classList;
+    // Only fall back to <html> when running standalone (no root injected); when embedded, wait
+    // for the ref to resolve rather than toggling classes onto the host document.
+    const el = injectedRoot === null ? document.documentElement : unref(injectedRoot);
+    if (!el) {
+        return;
+    }
+    const cl = el.classList;
     cl.toggle("has-log", logStore.hasLog);
     cl.toggle("has-video", logStore.hasVideo);
     cl.toggle("has-gps", logStore.hasGps);
@@ -193,12 +201,20 @@ function onOpenKeys() {
     appStore.keysDialogOpen = true;
 }
 
+function onToggleFullscreen() {
+    graphStore.toggleFullscreen();
+}
+
 function onExportCsv() {
     appStore.exportCsv?.();
 }
 
 function onExportGpx() {
     appStore.exportGpx?.();
+}
+
+function onExportWorkspaces() {
+    appStore.exportWorkspaces?.();
 }
 
 function onViewConfig() {
@@ -322,6 +338,10 @@ function onSaveWorkspace(id, title) {
     workspaceStore.saveWorkspace?.(id, title);
 }
 
+function onRenameWorkspace(id, title) {
+    workspaceStore.renameWorkspace?.(id, title);
+}
+
 function onApplyDefaultWorkspace(index) {
     workspaceStore.applyDefaultWorkspace?.(index);
 }
@@ -332,16 +352,30 @@ function onGotoBookmark(index) {
 
 // Drag-and-drop file loading (window-level)
 function onDragOver(e) {
+    // Always swallow the browser default so a stray file drop never navigates away, even while
+    // the viewer is kept alive behind another tab; only the copy affordance is viewer-specific.
     e.preventDefault();
+    if (!appStore.viewerActive) {
+        return;
+    }
     e.dataTransfer.dropEffect = "copy";
 }
 function onDrop(e) {
     e.preventDefault();
-    const item = e.dataTransfer.items?.[0];
-    const entry = item?.webkitGetAsEntry?.();
-    if (entry?.isFile) {
-        appStore.loadFiles?.([e.dataTransfer.files[0]]);
+    if (!appStore.viewerActive) {
+        return;
     }
+    const file = e.dataTransfer.files?.[0];
+    if (!file) {
+        return;
+    }
+    // Skip directory drops where the webview can tell us; not every webview implements
+    // webkitGetAsEntry, so a null entry must not block loading the file.
+    const entry = e.dataTransfer.items?.[0]?.webkitGetAsEntry?.();
+    if (entry && !entry.isFile) {
+        return;
+    }
+    appStore.loadFiles?.([file]);
 }
 onMounted(() => {
     document.addEventListener("dragover", onDragOver);

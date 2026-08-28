@@ -42,6 +42,14 @@
         "message": "Вам потрібно оновити сторінку для отримання останніх змін. Оновлення зараз перезавантажить сторінку, і ви втратите будь-які незбережені зміни, та скасує будь-яку операцію, яка триває.<br><br>Бажаєте оновити її зараз? Також ви можете відхилити це повідомлення і власноруч оновити сторінку пізніше.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnOfflineReadyTitle": {
+        "message": "Застосунок готовий до використання без мережі",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOfflineReadyText": {
+        "message": "Ви можете встановити це як автономний застосунок на вашому пристрої, якщо бажаєте. Шукайте таку функцію в адресному рядку браузера або в меню.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Операція не підтримується пристроєм."
     },
@@ -241,9 +249,6 @@
     "configuratorUpdateHelp": {
         "message": "Коли мережа доступна, застосунок має автоматично перевіряти наявність оновлень."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Перейти на сайт з Релізами"
-    },
     "rebootFlightController": {
         "message": "Перезавантаження польотного контролера, перепідключення після готовності"
     },
@@ -373,6 +378,15 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Не вдалося<\/span> під'єднатися до вибраного порту. Переконайтеся, що пристрій доступний, а параметри підключення налаштовано правильно, після чого повторіть спробу."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "На iOS дозвольте застосунку Betaflight доступ до <strong>локальної мережі<\/strong>: Параметри &rarr; Приватність і безпека &rarr; Локальна мережа, потім повторіть спробу."
+    },
+    "connectionLostTitle": {
+        "message": "З'єднання втрачено"
+    },
+    "connectionLostUnresponsive": {
+        "message": "Польотний контролер <span class=\"message-negative\">перестав відповідати<\/span> й з'єднання було закрите. Перепідключіть плату і спробуйте знову; якщо проблема лишилась, вимкніть та увімкніть польотний контролер."
     },
     "serialPortClosedOk": {
         "message": "Послідовний порт <span class=\"message-positive\">успішно<\/span> закрито"
@@ -672,8 +686,11 @@
     "defaultWelcomeHead": {
         "message": "Апаратне забезпечення"
     },
-    "defaultWelcomeText": {
-        "message": "Застосунок підтримує все обладнання, яке може запускати Betaflight. Перегляньте вкладку програматора, щоб отримати повний список обладнання.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Завантажити Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Завантажити Betaflight TX Lua Scripts<\/a><br \/><br \/>Вихідний код застосунка можна завантажити <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/><br \/>Для застарілого обладнання з контролером CP210x USB:<br \/>Останні <b>CP210x Драйвери<\/b> можна завантажити <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/>Останній <b>Zadig<\/b> для встановлення USB-драйвера Windows можна завантажити <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> можна завантажити <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">тут<\/a>"
+    "defaultHardwareText": {
+        "message": "Застосунок підтримує все обладнання, на якому можна запустити Betaflight. Повний список обладнная знаходится у вкладці \"Програматор\".<br \/><br \/>Корисні утиліти \/ драйвери:<ul><li>Для застарілих чипів CP210x, остання версія <b>драйверів CP210x<\/b> може бути завантажено <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li>Останню версію <b>Zadig<\/b> для встановлення USB драйверів для Windows можна завантажити <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> можна завантажити <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Програмне забезпечення"
     },
     "defaultContributingHead": {
         "message": "Сприяння"
@@ -1408,6 +1425,9 @@
     "configurationGyroAlignment": {
         "message": "Вирівнювання гіроскопа"
     },
+    "boardAlignmentWizard-Launch": {
+        "message": "Автовизначення орієнтації плати"
+    },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Майстер орієнтації плати"
     },
@@ -1423,11 +1443,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Розмістіть дрон рівно, камерою від вас (до екрана)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Підніміть ніс приблизно на 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Нахиліть ніс донизу приблизно на 45°, щоб камера була направлена донизу."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Нахиліть правий бік униз приблизно на 45°."
+        "message": "Нахиліть праву сторону донизу приблизно на 45°, опускаючи праві промені та піднявши ліві."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Прокрутіть дрон приблизно на 45° за годинниковою стрілкою (як видно зверху)."
@@ -1499,10 +1519,13 @@
         "message": "Акселерометр не зчитує гравітацію. Переконайтеся, що польотний контролер під'єднано та він нерухомий."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та нахиліть ніс вище."
+        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та опустіть ніс більше."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Рух за віссю крену не виявлено. Повторіть спробу та нахиліть правий бік нижче."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Один із нахилів виконано в неправильному напрямку. Перевірте напрямки тангажу та крену і повторіть спробу."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Горизонтально"
@@ -7211,48 +7234,8 @@
     "configurationBatteryScale": {
         "message": "Маштаб напруги"
     },
-    "configurationCurrentMeterType": {
-        "message": "Тип вимірювача струму"
-    },
-    "configurationCurrent": {
-        "message": "Датчик струму"
-    },
-    "configurationCurrentScale": {
-        "message": "Масштабувати вихідну напругу в міліампери [1\/10та мВ\/А]"
-    },
-    "configurationCurrentOffset": {
-        "message": "Зсув у мілівольтових кроках"
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": "Увімкнути підтримку застарілого Multiwii MSP у якості джерела інформації про струм"
-    },
-    "pidTuningProfile": {
-        "message": "Профіль"
-    },
-    "pidTuningProfileTip": {
-        "message": "В польотному контролері можна зберігати до 3 (до 2 для деяких контролерів) різних профілів PID. Профілі PID включають налаштування PID, задане значення Д та налаштування режимів Кут\/Горизонт на цій вкладці. Під час польоту на місцевості, можна використовувати прості команди зі стіків (див. онлайн інструкції) для перемикання між профілями."
-    },
-    "pidTuningRateProfile": {
-        "message": "Rateprofile"
-    },
-    "pidTuningRateProfileTip": {
-        "message": "До 3-х різних профілів коефіцієнтів може бути збережено на польотному контролері. Ці профілі включають налаштування \"RC Коефіцієнт\", \"Коефіцієнт\", \"RC Експонента\", \"Тяга\" та \"TPA\". Переключення між профілями коефіцієнтів можливе під час польоту, налаштувавши перемикач з 3 положеннями для \"Вибору профілю коефіцієнтів\" на вкладці \"Налаштування\"."
-    },
-    "pidTuningRateSetup": {
-        "message": "Базові\/Акро коефіцієнти"
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "Настроюйте ці значення для встановлення своїх коефіцієнтів. Використовуйте RC коефіцієнт для загального збільшення максимальної швидкості руху, використовуйте Супер Коефіцієнт для більших коефіцієнтів у кінці ходу стіків, а також використовуйте RC Експо для забезпечення більш плавного відчуття стіків близько до центрального положення.",
-        "description": "Rate table helpicon message"
-    },
-    "pidTuningDelta": {
-        "message": "Метод похідних"
-    },
-    "pidTuningDeltaError": {
-        "message": "Помилка"
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": "Вимірювання"
+    "magCalibrationCancel": {
+        "message": "Скасувати"
     },
     "pidTuningDeltaTip": {
         "message": "<b>Похідна від помилки<\/b> забезпечує більш пряму реакцію на рух стіків та переважно використовується в гонках.<br \/><br \/><b>Похідна від вимірювання<\/b> забезпечує більш плавну реакцію на рух стіків, що більш корисно для фрістайлу"
@@ -7281,12 +7264,6 @@
     "magCalibrationSamples": {
         "message": "Зразки"
     },
-    "magCalibrationQuality": {
-        "message": "Якість"
-    },
-    "magCalibrationResidual": {
-        "message": "Залишок апроксимації"
-    },
     "magCalibrationQualityGood": {
         "message": "Добра"
     },
@@ -7298,9 +7275,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Зміщення з прошивки"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Зміщення зі сферичної апроксимації"
     },
     "magCalibrationUnguided": {
         "message": "Калібр. прошивкою (застаріле)"
@@ -7316,18 +7290,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Калібрування прошивки завершено!"
-    },
-    "magCalibrationGuided": {
-        "message": "Калібр. конфігуратором (вільне)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Обертайте вільно — конфігуратор обрахує зміщення"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Калібрування конфігуратором"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Обертайте апарат у всіх напрямках. Намагайтеся приблизно за одну або дві хвилини сформувати повну сферу з точок. Збережіть результат, коли значення калібрування стабілізуються."
     },
     "magCalibrationCheck": {
         "message": "Перевірити"
@@ -7352,18 +7314,6 @@
     },
     "magCalibrationSaveError": {
         "message": "Не вдалося зберегти значення калібрування"
-    },
-    "magCalibrationAccept": {
-        "message": "Зберегти калібрування"
-    },
-    "magCalibrationFull": {
-        "message": "Повне калібр. (автоорієнтування)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "Одне обертання — задає зміщення, девіацію від м'якого заліза та орієнтації встановлення магнітометра"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Повне калібрування"
     },
     "magCalibrationFullInstruction": {
         "message": "Виконайте наведені нижче кроки, утримуючи апарат нерухомо протягом кожного повного оберту. Лічильник зон зростає, коли ви досягаєте нових кутів — маєте охопити всі 20."
@@ -7398,9 +7348,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} зон охоплено"
     },
-    "magCalibrationFullCompute": {
-        "message": "Розрахувати"
-    },
     "magCalibrationFullCoverage": {
         "message": "Покриття:"
     },
@@ -7427,9 +7374,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Недостатньо даних — обертайте довше"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "Немає даних про розташування з GPS або IP — неможливо визначити магнітне нахилення"
     },
     "magCalibrationFullCliCopied": {
         "message": "Команди CLI скопійовано до буфера обміну"
@@ -7469,12 +7413,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Нові"
-    },
-    "magAlignmentApply": {
-        "message": "Застосувати"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Визначити"
     },
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"

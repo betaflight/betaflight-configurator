@@ -110,6 +110,42 @@
     "portOverrideText": {
         "message": "Porta:"
     },
+    "connectVirtualDescription": {
+        "message": "Simula un controllore di volo senza hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connetti (Virtuale)",
+        "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "Inserire il percorso seriale o l'URL a cui connettersi.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Connessioni salvate",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nome:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nome per questa connessione",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Salva",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Aggiorna",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Rimuovi connessione salvata",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Connessione automatica"
     },
@@ -253,14 +289,14 @@
     "configuratorUpdateHelp": {
         "message": "Quando internet è disponibile, l'app controlla automaticamente gli aggiornamenti disponibili."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Pagina web degli aggiornamenti"
-    },
     "rebootFlightController": {
         "message": "Riavvio del controllore di volo, riconnettersi quando pronto"
     },
     "rebootFlightControllerReady": {
         "message": "Il controllore di volo è pronto"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "Il Controllore di Volo non si è riconnesso"
     },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Riavvio in corso<\/span>"
@@ -385,6 +421,9 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Fallita<\/span> la connessione alla porta selezionata. Controllare che il dispositivo sia raggiungibile e che le impostazioni di connessione siano corrette, quindi riprovare."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "Su iOS, consentire l'accesso <strong>Rete Locale<\/strong> per Betaflight in Impostazioni &rarr; Privacy &amp; Sicurezza &rarr; Rete Locale, quindi riprovare."
     },
     "connectionLostTitle": {
         "message": "Connessione persa"
@@ -690,8 +729,14 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "L'applicazione supporta tutto l'hardware eseguibile da Betaflight. Controlla la scheda flash per una lista completa dell'hardware.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente<\/a><br \/><br \/>Il codice sorgente del firmware può essere scaricato da <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><br \/>Per hardware obsoleti che usano un chip USB-seriale CP210x:<br \/>gli ultimi <b>driver CP210x<\/b> possono essere scaricati da <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/>L'ultima versione di <b>Zadig<\/b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> può essere scaricato da <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui<\/a>"
+    "defaultHardwareText": {
+        "message": "L'applicazione supporta tutto l'hardware compatibile con Betaflight. Controllare la scheda Firmware Flash per l'elenco completo dell'hardware.<br \/><br \/>Utilità hardware utili \/ driver:<ul><li>Per hardware legacy utilizza un USB CP210x a seriale, gli ultimi driver <b>CP210x<\/b> possono essere scaricati da <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><li>Gli ultimi driver <b>Zadig<\/b> per l'installazione del driver USB Windows possono essere scaricati da <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><li><b>Il driver Fixer ImpulseRC<\/b> può essere scaricato <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Il nostro visualizzatore di log Blackbox è integrato in questa app. Apri la scheda <strong>Blackbox Viewer<\/strong> per analizzare i registri dei voli.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware e questa app può essere scaricata da GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
@@ -1436,14 +1481,116 @@
     "boardAlignmentWizard-Launch": {
         "message": "Auto-rilevamento allineamento scheda"
     },
-    "configurationGyroAlignment": {
-        "message": "Allineamento Gyro"
+    "boardAlignmentWizard-DialogTitle": {
+        "message": "Wizard Allineamento Scheda"
+    },
+    "boardAlignmentWizard-Intro": {
+        "message": "Questa procedura guidata rileva come il controllore di volo è montato guidandoti attraverso quattro semplici movimenti. Posizionare il drone su una superficie piana con la fotocamera lontana da voi (verso lo schermo), quindi seguire i suggerimenti."
+    },
+    "boardAlignmentWizard-Start": {
+        "message": "Inizia"
+    },
+    "boardAlignmentWizard-Step": {
+        "message": "Passo"
+    },
+    "boardAlignmentWizard-HintFlat": {
+        "message": "Posiziona il drone su una superficie piana con la fotocamera rivolta lontano da te (verso lo schermo)."
+    },
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Inclinare il naso verso il basso di circa 45°, quindi la fotocamera punta verso il suolo."
+    },
+    "boardAlignmentWizard-HintRollRight": {
+        "message": "Inclinare il lato destro verso il basso di circa 45°, abbassando il braccio destro e alzando il sinistro."
+    },
+    "boardAlignmentWizard-HintYawCW": {
+        "message": "Ruota il drone di circa 45° in senso orario (visto dall'alto)."
+    },
+    "boardAlignmentWizard-HintLevel": {
+        "message": "Riporta il drone in posizione orizzontale."
+    },
+    "boardAlignmentWizard-HoldSteady": {
+        "message": "Mantieni il drone fermo..."
+    },
+    "boardAlignmentWizard-Settling": {
+        "message": "Stabilizzazione"
+    },
+    "boardAlignmentWizard-Tilting": {
+        "message": "Continua a inclinare"
+    },
+    "boardAlignmentWizard-LevelOut": {
+        "message": "Ritorna al livello"
     },
     "configurationGyroAlignmentHelp": {
         "message": "L'allineamento del gyro è l'orientamento del sensore gyro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
     },
-    "configurationGyroActiveIMU": {
-        "message": "IMU Attiva"
+    "boardAlignmentWizard-YawProgress": {
+        "message": "Rotazione"
+    },
+    "boardAlignmentWizard-Computing": {
+        "message": "Calcolo dell'allineamento..."
+    },
+    "boardAlignmentWizard-ResultTitle": {
+        "message": "Allineamento Rilevato"
+    },
+    "boardAlignmentWizard-ResultNoChange": {
+        "message": "L'allineamento della scheda sembra corretto — non sono necessarie modifiche."
+    },
+    "boardAlignmentWizard-ResultCurrent": {
+        "message": "Corrente"
+    },
+    "boardAlignmentWizard-ResultDetected": {
+        "message": "Rilevato"
+    },
+    "boardAlignmentWizard-Back": {
+        "message": "Precedente"
+    },
+    "boardAlignmentWizard-Apply": {
+        "message": "Applica"
+    },
+    "boardAlignmentWizard-Cancel": {
+        "message": "Cancella"
+    },
+    "boardAlignmentWizard-Retry": {
+        "message": "Riprova"
+    },
+    "boardAlignmentWizard-CaptureNow": {
+        "message": "Rileva ora"
+    },
+    "boardAlignmentWizard-LowConfidence": {
+        "message": "L'affidabilità del rilevamento è ridotta. Verifica il risultato con l'assetto in tempo reale prima di applicarlo."
+    },
+    "boardAlignmentWizard-NoAccelerometer": {
+        "message": "Per eseguire questa procedura è necessario un accelerometro."
+    },
+    "boardAlignmentWizard-AccNeedsCalibration": {
+        "message": "Calibrare l'accelerometro prima di eseguire questa procedura."
+    },
+    "boardAlignmentWizard-Error-missing_samples": {
+        "message": "Alcuni campioni non sono stati raccolti. Riprova."
+    },
+    "boardAlignmentWizard-Error-no_gravity": {
+        "message": "L'accelerometro non sta leggendo la gravità. Assicurarsi che il FC sia collegato e non in movimento."
+    },
+    "boardAlignmentWizard-Error-no_pitch_tilt": {
+        "message": "Il movimento di beccheggio non è stato rilevato. Riprova e inclina di più il naso verso il basso."
+    },
+    "boardAlignmentWizard-Error-no_roll_tilt": {
+        "message": "Il movimento di rollio non è stato rilevato. Riprova e inclina di più il lato destro verso il basso."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Uno dei movimenti di inclinazione è andato nella direzione sbagliata. Controlla le direzioni di beccheggio e rollio e riprova."
+    },
+    "boardAlignmentWizard-StepFlat": {
+        "message": "Piatto"
+    },
+    "boardAlignmentWizard-StepPitch": {
+        "message": "Beccheggio"
+    },
+    "boardAlignmentWizard-StepRoll": {
+        "message": "Rollio"
+    },
+    "boardAlignmentWizard-StepYaw": {
+        "message": "Imbardata"
     },
     "configurationGyroActiveIMUHelp": {
         "message": "Seleziona quale giroscopio usare come giroscopio primario. Il giroscopio primario viene utilizzato per la stabilizzazione e il controllo. Se è disponibile un solo giroscopio, verrà selezionato automaticamente.<br><br>Non sempre è possibile abilitare più giroscopi, se sono di tipi o marche diversi."
@@ -1751,8 +1898,24 @@
         "message": "Quando abilitato, solo il primo armamento dopo la connessione della batteria sarà usato come punto di partenza. Se non abilitato, ogni volta che il modello viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Il supporto GPS non è incluso in questa build del firmware. Ricaricare il firmware con l'opzione GPS per configurare e utilizzare il GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Protocollo ricevente seriale"
+    },
+    "portsPortNone": {
+        "message": "Nessuno"
+    },
+    "receiverSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART a cui è collegato il ricevitore seriale. Il baud rate segue il provider, quindi non c'è nulla da impostare qui. Cambiare la porta richiede un riavvio."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Impossibile impostare la porta seriale del ricevitore, quindi non è stato salvato nulla."
     },
     "someRXTypesDisabled": {
         "message": "Alcuni protocolli del ricevitore non sono supportati dalla configurazione della build."
@@ -1805,6 +1968,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NON<\/span> \n disabilitare mai MSP sulla prima porta seriale a meno che tu non sappia BENE cosa stai per fare. Potrebbe rendersi necessario riflashare e cancellare la tua configurazione se lo fai."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> questo firmware assegna le porte seriali sulla scheda di ogni funzione, quindi questa vista è di sola lettura. Mostra quale porta ogni funzione usa attualmente; cambia l'impostazione dalla scheda che possiede la funzione."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">È necessario<\/span> un aggiornamento del firmware. La configurazione delle porte seriali non è supportata per firmware &lt; di 1.8.0."
@@ -6106,6 +6272,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicatore alternativo per la 'qualità di collegamento' basato sulla perdita di frame - usare con cautela"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Modalità RF:Qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Solo qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distanza del volo",
         "description": "One of the elements of the OSD"
@@ -7088,7 +7262,250 @@
         "message": "Barometro (se supportato)"
     },
     "configurationMagHardware": {
-        "message": "Magnetometro (se supportato)"
+        "message": "Magnetometro"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Impossibile determinare la posizione. Collegare un modulo GPS o consentire l'accesso del browser per la posizione."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Declinazione magnetica impostata su {{declination}}° dalla posizione rilevata."
+    },
+    "configurationMagInclination": {
+        "message": "Inclinazione"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "L'angolo tra il campo magnetico terrestre e il piano orizzontale nella vostra posizione. Valori positivi indicano i punti di campo verso il basso (emisfero settentrionale)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Intensità di campo"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "L'intensità totale del campo magnetico terrestre nella tua posizione in nanotesla (nT). I valori tipici vanno da 25.000 a 65.000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Rileva"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Aggiorna"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Declinazione magnetica auto rilevata come {{value}}° per la tua posizione."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "La declinazione è {{saved}}° ma il GPS rileva {{detected}}° per questa posizione. Fare clic su Aggiorna per correggere."
+    },
+    "magCalibrationCancel": {
+        "message": "Cancella"
+    },
+    "magCalibrationClear": {
+        "message": "Cancella"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Opzioni modalità calibrazione"
+    },
+    "magCalibrationRetry": {
+        "message": "Riprova"
+    },
+    "magCalibrationWaiting": {
+        "message": "In attesa di movimento... Muovere il veicolo per iniziare."
+    },
+    "magCalibrationCollecting": {
+        "message": "Ruota lentamente il veicolo attraverso tutti gli orientamenti."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibrazione completata."
+    },
+    "magCalibrationError": {
+        "message": "Calibrazione fallita. Riprova in un'area con meno interferenze magnetiche."
+    },
+    "magCalibrationNoMovement": {
+        "message": "Nessun movimento rilevato per 30 secondi. Calibrazione annullata."
+    },
+    "magCalibrationSamples": {
+        "message": "Esempi"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Buono"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Sufficiente"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Scarso"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Offset firmware"
+    },
+    "magCalibrationUnguided": {
+        "message": "Firmware Cal (Legacy)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Ruota liberamente — firmware salva automaticamente dopo 30 secondi"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Calibrazione Firmware"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "Hai 30 secondi per ruotare il veicolo in tutte le direzioni. Il firmware salverà automaticamente i valori di calibrazione quando il tempo è scaduto."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Calibrazione firmware completata!"
+    },
+    "magCalibrationCheck": {
+        "message": "Controlla"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "Visualizza dati live del mag con la calibrazione corrente"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Controllo Calibrazione"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Conferma l'orientamento e la calibrazione del Magnetometro. Imposta il velivolo in posizione orizzontale rispetto all’orizzonte, punta il muso verso un punto noto della bussola (puoi usare un telefono per determinare dove è il Nord) e conferma che nuovi punti nella posizione prevista nel display 3D. I valori dell’intensità del campo magnetico per ciascun asse e la distribuzione sferica dei punti indicano l’accuratezza della calibrazione. Se i punti appaiono in posizioni completamente errate, è probabile che l’orientamento del Magnetometro sia sbagliato."
+    },
+    "magCalibrationCalValues": {
+        "message": "Valori Cal"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Salva i valori"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Valori di calibrazione salvati"
+    },
+    "magCalibrationSaveError": {
+        "message": "Impossibile salvare i valori di calibrazione"
+    },
+    "magCalibrationFull": {
+        "message": "Calibra e rileva l'allineamento"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Ruotare il velivolo in tutte le direzioni per calibrare il sensore e rilevare automaticamente il suo orientamento di montaggio."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Calibra e Rileva l'allineamento"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Segui i passaggi qui sotto, mantenendo il velivolo stabile durante ogni rotazione completa. Il conteggio delle zone aumenta man mano che raggiungi nuovi angoli: cerca di coprirle tutte e 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Passaggio {{n}} di {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Mantieni il velivolo a livello e ruotalo lentamente di un giro completo di 360°."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Capovolgere e ruotare lentamente di un altro giro di 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Punta il muso del velivolo verso l'alto e ruotalo di un giro completo attorno al suo asse."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Punta il muso del velivolo verso il basso e ruotalo di un giro completo attorno al suo asse."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Appoggialo sul lato sinistro e ruotalo di un giro completo."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Appoggialo sul lato destro e ruotalo di un giro completo."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Esegui alcune lente capovolte in avanti, cambiando direzione di fronte ogni volta."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Esegui alcune lente capovolte all’indietro, cambiando direzione di fronte ogni volta."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} \/ {{total}} zone coperte"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Calibrazione Finale"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Più zone ricoperte danno maggiore precisione — puntare a 20 \/ 20 per la migliore calibrazione e rilevamento d' allineamento."
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Copertura:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Allineamento:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "rollio {{roll}}° – beccheggio {{pitch}}° – imbardata {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibrazione:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residuo:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copia CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Applica"
+    },
+    "magCalibrationFullExport": {
+        "message": "Esporta Modello"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Campioni non sufficienti — gira più lungo"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Nessun GPS, browser o indirizzo IP — inserisci le coordinate per continuare"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Posizione richiesta per la calibrazione"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Inserisci latitudine e longitudine scegliendo da Google Maps. Il drone non ha nessun aggancio GPS e il dispositivo non è riuscito a fornire i dati di posizione. La posizione è necessaria per la calibrazione del magnetometro."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Formato coordinate non valido. Inserisci come: latitudine, longitudine (es. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Impossibile calcolare un riferimento magnetico per queste coordinate. Si prega di controllarle e riprovare."
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "Comandi CLI copiati negli appunti"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Impossibile copiare negli appunti"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Il firmware {{version}} è troppo vecchio per l'allineamento CUSTOM mag (richiede {{min}}+). Aggiornare il firmware, quindi applicare."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibrazione applicata e salvata"
+    },
+    "magCalibrationDiscard": {
+        "message": "Scarta"
+    },
+    "magVizPointCloud": {
+        "message": "Nuvola di punti"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Proiezione Tripla"
+    },
+    "magVizPolar": {
+        "message": "Densità Polare"
+    },
+    "magVizWaitingForData": {
+        "message": "In attesa dei dati…"
+    },
+    "magVizAxisField": {
+        "message": "Campo"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Precedente"
+    },
+    "magVizAgeLegendNew": {
+        "message": "Nuovo"
     },
     "configurationSmallAngle": {
         "message": "Angolo massimo di armamento [gradi]"
@@ -7739,6 +8156,90 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Testo seriale personalizzato",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Visualizza testo personalizzato ricevuto da una porta seriale"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profilo: Nome profilo batteria",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Mostra il nome o l'indice del profilo attivo della batteria"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Numero Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra il numero di waypoint corrente\/totale del piano di volo attivo"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra la latitudine del waypoint corrente"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Longitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra la longitudine del waypoint corrente"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitudine Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra l'altitudine del waypoint corrente"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distanza Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra la distanza del waypoint corrente"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direzione Waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra una freccia di direzione che punta al waypoint corrente"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Numero Waypoint successivo",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra il prossimo numero waypoint nel piano di volo attivo"
+    },
+    "osdTextElementWpEta": {
+        "message": "Waypoint ETA",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra l'ora di arrivo prevista del waypoint corrente"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mappa di navigazione",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimappa che mostra la posizione di partenza, il piano di volo e la traiettoria percorsa"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Mantieni Posizione Attiva",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra se le condizioni di mantenimento della posizione sono attualmente soddisfatte, prima che l'interruttore di modalità sia attivato"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Righelli",

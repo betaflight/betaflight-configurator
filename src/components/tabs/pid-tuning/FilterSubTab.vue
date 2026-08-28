@@ -76,7 +76,7 @@
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- LEFT COLUMN: Non-Profile Filter Settings -->
-            <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningNonProfileFilterSettings')" type="neutral" collapsible>
                 <!-- Gyro Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</span>
@@ -399,7 +399,7 @@
             </UiBox>
 
             <!-- RIGHT COLUMN: Profile-dependent Filter Settings -->
-            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral">
+            <UiBox :title="$t('pidTuningFilterSettings')" type="neutral" collapsible>
                 <!-- D-Term Lowpass Filters Section -->
                 <div class="flex items-center gap-2 font-semibold text-sm border-b border-default pb-1 mt-2">
                     <span>{{ $t("pidTuningDTermLowpassFiltersGroup") }}</span>
@@ -606,8 +606,6 @@ const props = defineProps({
         default: true,
     },
 });
-
-const emit = defineEmits(["change"]);
 
 // USelect item arrays
 const lowpassModeItems = computed(() => [
@@ -1190,11 +1188,9 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 
     // Compute new gyro filter cutoffs (via FC on a real connection, or
     // client-side in virtual mode).
-    calculateNewGyroFilters(newValue)
-        .then(() => emit("change"))
-        .catch((error) => {
-            console.error("Failed to calculate simplified gyro filters:", error);
-        });
+    calculateNewGyroFilters(newValue).catch((error) => {
+        console.error("Failed to calculate simplified gyro filters:", error);
+    });
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
@@ -1222,20 +1218,10 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
 
     // Compute new D-term filter cutoffs (via FC on a real connection, or
     // client-side in virtual mode).
-    calculateNewDTermFilters(newValue)
-        .then(() => emit("change"))
-        .catch((error) => {
-            console.error("Failed to calculate simplified dterm filters:", error);
-        });
+    calculateNewDTermFilters(newValue).catch((error) => {
+        console.error("Failed to calculate simplified dterm filters:", error);
+    });
 });
-
-watch(
-    () => JSON.stringify(FC.FILTER_CONFIG),
-    () => emit("change"),
-);
-
-watch(gyroSliderMode, () => emit("change"));
-watch(dtermSliderMode, () => emit("change"));
 
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {

@@ -113,6 +113,42 @@
     "portOverrideText": {
         "message": "Port:"
     },
+    "connectVirtualDescription": {
+        "message": "Simulate a flight controller without hardware.",
+        "description": "Helper text in the connect dialog when choosing the virtual FC mode."
+    },
+    "connectVirtual": {
+        "message": "Connect (Virtual)",
+        "description": "Connect button label shown when virtual mode port is selected."
+    },
+    "connectManualDescription": {
+        "message": "Enter the serial path or URL to connect to.",
+        "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Saved connections",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Name:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Name for this connection",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Save",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Update",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Remove saved connection",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
@@ -345,14 +381,14 @@
     "configuratorUpdateHelp": {
         "message": "When internet is available, the app should automatically ask for available updates."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Go to Release Website"
-    },
     "rebootFlightController": {
         "message": "Rebooting flight controller, reconnect when ready"
     },
     "rebootFlightControllerReady": {
         "message": "Flight Controller is ready"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "Flight Controller did not reconnect"
     },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
@@ -397,6 +433,62 @@
     "tabPidTuning": {
         "message": "PID Tuning"
     },
+    "tabAutotune": { "message": "Autotune" },
+    "tabBlackboxViewer": {
+        "message": "Blackbox Viewer",
+        "description": "Navigation sidebar label for the Blackbox log viewer tab"
+    },
+    "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
+    "autotuneImportButton": { "message": "Import Blackbox Log" },
+    "autotuneImportDescription": {
+        "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
+    },
+    "autotuneSelectingFile": { "message": "Selecting file..." },
+    "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
+    "autotuneBandwidth": { "message": "Bandwidth" },
+    "autotunePhaseMargin": { "message": "Phase Margin" },
+    "autotuneResonantPeak": { "message": "Resonant Peak" },
+    "autotuneCoherence": { "message": "Coherence" },
+    "autotuneParameter": { "message": "Parameter" },
+    "autotuneCurrent": { "message": "Current" },
+    "autotuneProposed": { "message": "Proposed" },
+    "autotuneChange": { "message": "Change" },
+    "autotuneApplying": { "message": "Applying..." },
+    "autotuneApplied": { "message": "Gains applied and saved." },
+    "autotuneApplyFailed": { "message": "Failed to apply gains" },
+    "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
+    "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
+    "autotuneNoChirpData": {
+        "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated."
+    },
+    "autotuneSampleCount": { "message": "{{count}} samples" },
+    "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
+    "autotuneImportAnother": { "message": "Import Another" },
+    "autotuneImportRetry": { "message": "Try Again" },
+    "autotuneFile": { "message": "File" },
+    "autotuneAxesDetected": { "message": "Axes Detected" },
+    "autotuneApplyGains": { "message": "Apply Gains" },
+    "autotuneGainTitle": { "message": "Gain Recommendation" },
+    "autotuneAxisSelector": { "message": "Select Axis" },
+    "autotuneAxisRoll": { "message": "Roll" },
+    "autotuneAxisPitch": { "message": "Pitch" },
+    "autotuneAxisYaw": { "message": "Yaw" },
+    "autotuneBodePlotTitle": { "message": "Frequency Response" },
+    "autotuneSectionCurrentPids": { "message": "Current PIDs (from log)" },
+    "autotuneSectionAnalysis": { "message": "Analysis" },
+    "autotuneSectionProposedSliders": { "message": "Proposed Sliders" },
+    "autotuneSliderMasterMultiplier": { "message": "Master Multiplier" },
+    "autotuneSliderPIGain": { "message": "P / I Gain" },
+    "autotuneSliderIGain": { "message": "I Gain" },
+    "autotuneSliderDGain": { "message": "D Gain" },
+    "autotuneSliderFeedforward": { "message": "Feedforward" },
+    "autotuneSliderDTermFilter": { "message": "D-Term Filter" },
+    "autotuneApplyFromAxis": { "message": "Apply gains from axis" },
+    "autotuneSensitivityPeak": { "message": "Sensitivity Peak" },
+    "autotuneOvershoot": { "message": "Overshoot" },
+    "autotuneRiseTime": { "message": "Rise Time" },
+    "autotuneSettlingTime": { "message": "Settling Time" },
+    "autotuneSpectrogramTitle": { "message": "Spectrogram (Gyro)" },
     "tabReceiver": {
         "message": "Receiver"
     },
@@ -788,8 +880,14 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "The application supports all hardware that can run Betaflight. Check flash tab for full list of hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><br />For legacy hardware using a CP210x USB to serial chip:<br />The latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br />The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"blank\" rel=\"noopener noreferrer\">here</a>"
+    "defaultHardwareText": {
+        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Our Blackbox log viewer is built into this app. Open the <strong>Blackbox Viewer</strong> tab to analyse your flight logs.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware and this app can be downloaded from GitHub."
     },
     "defaultContributingHead": {
         "message": "Contributing"
@@ -1416,6 +1514,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC Telemetry Serial Port"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART the ESC telemetry is read on. Set on the ESC sensor itself from API 1.49; the Ports tab only shows it."
+    },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
     },
@@ -1454,6 +1558,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetry"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetry $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocol"
+    },
+    "telemetryInstancePort": {
+        "message": "Serial Port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud Rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Camera Control"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Serial Port"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART a RunCam protocol camera is wired to. Set on the device itself from API 1.49; the Ports tab only shows it."
     },
     "configurationTelemetryHelp": {
         "message": "Telemetry output from receiver"
@@ -1506,6 +1631,18 @@
     },
     "configurationRangefinderType": {
         "message": "Type"
+    },
+    "rangefinderSerialPort": {
+        "message": "Rangefinder Serial Port"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART the rangefinder is wired to. Set on the rangefinder itself from API 1.49; the Ports tab only shows it."
+    },
+    "opticalflowSerialPort": {
+        "message": "Optical Flow Serial Port"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART the optical flow sensor is wired to. A module reporting both flow and range needs each set separately."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -1934,6 +2071,30 @@
     "configurationGPSubxSbas": {
         "message": "Ground Assistance Type"
     },
+    "gpsSerialPort": {
+        "message": "Serial Port"
+    },
+    "gpsSerialPortHelp": {
+        "message": "The UART the GPS module is wired to. Changing it requires a reboot."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud Rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "The rate the GPS module is expected to run at. Betaflight tries the other rates as well when it cannot make contact, so this is a starting point rather than a fixed setting."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Could not set the GPS serial port, so nothing was saved."
+    },
+    "gpsCanDevice": {
+        "message": "CAN Bus"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "The CAN bus the DroneCAN modules are wired to. This belongs to DroneCAN as a whole, so changing it moves every DroneCAN device, not just the GPS. Changing it requires a reboot."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Could not set the CAN bus, so nothing was saved."
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
@@ -1956,8 +2117,24 @@
         "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the aircraft is armed, the home point will be updated.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "GPS support is not included in this firmware build. Rebuild the firmware with the GPS build option to configure and use GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
+    },
+    "portsPortNone": {
+        "message": "None"
+    },
+    "receiverSerialPort": {
+        "message": "Serial Port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "The UART the serial receiver is wired to. The baud rate follows the provider, so there is nothing to set here. Changing the port requires a reboot."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Could not set the receiver serial port, so nothing was saved."
     },
     "someRXTypesDisabled": {
         "message": "Some Receiver Providers are not supported by current Build Configuration."
@@ -2010,6 +2187,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Note:</strong> Do <span class=\"message-negative\">NOT</span> disable MSP on the first serial port unless you know what you are doing.  You may have to reflash and erase your configuration if you do."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab, so this view is read only.  It shows which port every feature currently uses; change an assignment from the tab that owns the feature."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">required</span>.  Serial port configurations of firmware &lt; 1.8.0 is not supported."
@@ -2079,6 +2259,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD Custom Text"
     },
     "pidTuningProfileOption": {
         "message": "Profile $1"
@@ -5605,6 +5791,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD Protocol"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocol the OSD is drawn with. MAX7456 and FrSky OSD drive an analogue chip or module; MSP sends the OSD over the UART below, as DJI, HDZero and Walksnail goggles expect."
+    },
+    "osdSerialPort": {
+        "message": "OSD Serial Port"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART a serial OSD is wired to. Set on the OSD itself from API 1.49; the Ports tab only shows it."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Custom Text Serial Port"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART custom OSD text is received on."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Custom Text Baud Rate"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Baud rate for the custom OSD text port."
+    },
     "osdSetupUnitsTitle": {
         "message": "Units"
     },
@@ -5687,7 +5897,12 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
-
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Save and Reboot"
+    },
     "osdSetupSave": {
         "message": "Save"
     },
@@ -6312,6 +6527,14 @@
     },
     "osdDescElementLinkQuality": {
         "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+    },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF mode:Link quality",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Link quality only",
+        "description": "One of the variants of the Link Quality element of the OSD"
     },
     "osdTextElementFlightDist": {
         "message": "Flight distance",
@@ -7080,6 +7303,21 @@
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxProtocol": {
+        "message": "Protocol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Control protocol the VTX speaks. SmartAudio and Tramp run on the UART below; MSP shares it with MSP, as DJI, HDZero and Walksnail do."
+    },
+    "vtxSerialPort": {
+        "message": "Serial Port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART the VTX control protocol runs on. Set on the VTX itself from API 1.49; the Ports tab only shows it."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "An MSP VTX answers on the same MSP link the goggles are drawn over, so it follows the OSD Serial Port on the OSD tab and cannot be set here."
+    },
     "vtxLowPowerDisarm": {
         "message": "Low Power Disarm",
         "description": "Text of one of the fields of the VTX tab"
@@ -7276,7 +7514,250 @@
         "message": "Barometer (if supported)"
     },
     "configurationMagHardware": {
-        "message": "Magnetometer (if supported)"
+        "message": "Magnetometer"
+    },
+    "configurationMagDeclinationNoGps": {
+        "message": "Could not determine location. Connect a GPS module or allow browser location access."
+    },
+    "configurationMagDeclinationSet": {
+        "message": "Magnetic declination set to {{declination}}° from detected location."
+    },
+    "configurationMagInclination": {
+        "message": "Inclination"
+    },
+    "configurationMagInclinationHelp": {
+        "message": "The angle between the earth's magnetic field and the horizontal plane at your location. Positive values indicate the field points downward (northern hemisphere)"
+    },
+    "configurationMagFieldStrengthLabel": {
+        "message": "Field Strength"
+    },
+    "configurationMagFieldStrengthHelp": {
+        "message": "The total intensity of the earth's magnetic field at your location in nanotesla (nT). Typical values range from 25,000 to 65,000 nT"
+    },
+    "sensorConfigMagDetect": {
+        "message": "Detect"
+    },
+    "sensorConfigMagUpdate": {
+        "message": "Update"
+    },
+    "sensorConfigDeclinationAutoSet": {
+        "message": "Magnetic declination auto-detected as {{value}}° for your location."
+    },
+    "sensorConfigDeclinationDrift": {
+        "message": "Declination is {{saved}}° but GPS detects {{detected}}° for this location. Click Update to correct."
+    },
+    "magCalibrationCancel": {
+        "message": "Cancel"
+    },
+    "magCalibrationClear": {
+        "message": "Clear"
+    },
+    "magCalibrationModeOptions": {
+        "message": "Calibration mode options"
+    },
+    "magCalibrationRetry": {
+        "message": "Retry"
+    },
+    "magCalibrationWaiting": {
+        "message": "Waiting for movement... Shake the vehicle to begin."
+    },
+    "magCalibrationCollecting": {
+        "message": "Rotate the vehicle slowly through all orientations."
+    },
+    "magCalibrationComplete": {
+        "message": "Calibration complete."
+    },
+    "magCalibrationError": {
+        "message": "Calibration failed. Try again in an area with less magnetic interference."
+    },
+    "magCalibrationNoMovement": {
+        "message": "No movement detected for 30 seconds. Calibration cancelled."
+    },
+    "magCalibrationSamples": {
+        "message": "Samples"
+    },
+    "magCalibrationQualityGood": {
+        "message": "Good"
+    },
+    "magCalibrationQualityFair": {
+        "message": "Fair"
+    },
+    "magCalibrationQualityPoor": {
+        "message": "Poor"
+    },
+    "magCalibrationFirmwareOffsets": {
+        "message": "Firmware offsets"
+    },
+    "magCalibrationUnguided": {
+        "message": "Firmware Cal (Legacy)"
+    },
+    "magCalibrationUnguidedDesc": {
+        "message": "Rotate freely — firmware auto-saves after 30s"
+    },
+    "magCalibrationUnguidedTitle": {
+        "message": "Firmware Calibration"
+    },
+    "magCalibrationUnguidedInstruction": {
+        "message": "You have 30 seconds to rotate the vehicle in all directions. The firmware will automatically save the calibration values when the time is up."
+    },
+    "magCalibrationUnguidedDone": {
+        "message": "Firmware calibration complete!"
+    },
+    "magCalibrationCheck": {
+        "message": "Check"
+    },
+    "magCalibrationCheckDesc": {
+        "message": "View live mag data with current calibration"
+    },
+    "magCalibrationCheckTitle": {
+        "message": "Checking Calibration"
+    },
+    "magCalibrationCheckInstruction": {
+        "message": "Confirm the orientation and calibration of the Magnetometer. Set your craft flat to the horizon, point the nose to a known point on the compass (a phone may be used to figure out which way is North), and confirm that new dots appear at the expected location in the 3D display. The field strength values for each axis and the sphericity of the dots indicate the accuracy of the calibration. If the points go to completely wrong places, the orientation of the Mag is likely to be wrong."
+    },
+    "magCalibrationCalValues": {
+        "message": "Cal Values"
+    },
+    "magCalibrationSaveValues": {
+        "message": "Save Values"
+    },
+    "magCalibrationSaveSuccess": {
+        "message": "Calibration values saved"
+    },
+    "magCalibrationSaveError": {
+        "message": "Failed to save calibration values"
+    },
+    "magCalibrationFull": {
+        "message": "Calibrate & detect alignment"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Rotate the craft in all directions to calibrate the sensor and automatically detect its mounting orientation."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Calibrate & Detect Alignment"
+    },
+    "magCalibrationFullInstruction": {
+        "message": "Follow the steps below, holding the craft steady through each full turn. The zone count climbs as you reach new angles — aim to cover all 20."
+    },
+    "magCalibrationFullStepCounter": {
+        "message": "Step {{n}} of {{total}}"
+    },
+    "magCalibrationFullStep1": {
+        "message": "Hold the craft level and rotate it slowly through a full 360° turn."
+    },
+    "magCalibrationFullStep2": {
+        "message": "Turn it upside-down and rotate slowly through another full 360°."
+    },
+    "magCalibrationFullStep3": {
+        "message": "Point the nose straight up and rotate a full turn around it."
+    },
+    "magCalibrationFullStep4": {
+        "message": "Point the nose straight down and rotate a full turn."
+    },
+    "magCalibrationFullStep5": {
+        "message": "Rest it on its left side and rotate a full turn."
+    },
+    "magCalibrationFullStep6": {
+        "message": "Rest it on its right side and rotate a full turn."
+    },
+    "magCalibrationFullStep7": {
+        "message": "Do a few slow forward flips, facing a different direction each time."
+    },
+    "magCalibrationFullStep8": {
+        "message": "Do a few slow backward flips, again facing a different direction each time."
+    },
+    "magCalibrationFullZones": {
+        "message": "{{covered}} / {{total}} zones covered"
+    },
+    "magCalibrationFullCompute": {
+        "message": "Finish calibration"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "More covered zones give higher accuracy — aim for 20 / 20 for best calibration and alignment detection."
+    },
+    "magCalibrationFullCoverage": {
+        "message": "Coverage:"
+    },
+    "magCalibrationFullAlignment": {
+        "message": "Alignment:"
+    },
+    "magCalibrationFullCustomAngles": {
+        "message": "roll {{roll}}° pitch {{pitch}}° yaw {{yaw}}°"
+    },
+    "magCalibrationFullOffsets": {
+        "message": "Calibration:"
+    },
+    "magCalibrationFullResidual": {
+        "message": "Residual:"
+    },
+    "magCalibrationFullCopyCli": {
+        "message": "Copy CLI"
+    },
+    "magCalibrationFullApply": {
+        "message": "Apply"
+    },
+    "magCalibrationFullExport": {
+        "message": "Export Model"
+    },
+    "magCalibrationFullInsufficientSamples": {
+        "message": "Not enough samples — spin longer"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "No GPS, browser, or IP location — enter coordinates manually to continue"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Location Required for Calibration"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Manually input latitude and longitude by picking from Google Maps. Your drone has no GPS lock and your device failed to provide location data. Location is needed for magnetometer calibration."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Invalid coordinates format. Please enter as: latitude, longitude (e.g. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Could not compute a magnetic reference for those coordinates. Please check them and try again."
+    },
+    "magCalibrationFullCliCopied": {
+        "message": "CLI commands copied to clipboard"
+    },
+    "magCalibrationFullCliCopyFailed": {
+        "message": "Could not copy to clipboard"
+    },
+    "magCalibrationFullCustomUnsupported": {
+        "message": "Firmware {{version}} is too old for CUSTOM mag alignment (needs {{min}}+). Update firmware, then apply."
+    },
+    "magCalibrationFullApplied": {
+        "message": "Calibration applied and saved"
+    },
+    "magCalibrationDiscard": {
+        "message": "Discard"
+    },
+    "magVizPointCloud": {
+        "message": "Point Cloud"
+    },
+    "magVizHeatmap": {
+        "message": "Voxel Heatmap"
+    },
+    "magVizProjection": {
+        "message": "Triple Projection"
+    },
+    "magVizPolar": {
+        "message": "Polar Density"
+    },
+    "magVizWaitingForData": {
+        "message": "Waiting for data…"
+    },
+    "magVizAxisField": {
+        "message": "Field"
+    },
+    "magVizAgeLegendOld": {
+        "message": "Old"
+    },
+    "magVizAgeLegendNew": {
+        "message": "New"
     },
     "configurationSmallAngle": {
         "message": "Maximum ARM Angle [degrees]"
@@ -7383,6 +7864,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logging device"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Serial Port"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART used when the logging device is Serial. Set on the blackbox itself from API 1.49; the Ports tab only shows it."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Serial Baud Rate"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud rate for the serial logging port."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"
@@ -8004,6 +8497,13 @@
     },
     "osdDescElementNavMap": {
         "message": "Minimap showing home, the flight plan, and the flown trail"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Position Hold Ready",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Shows whether Position Hold's entry conditions are currently met, before the mode switch is engaged"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",

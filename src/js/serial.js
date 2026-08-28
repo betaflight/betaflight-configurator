@@ -2,7 +2,7 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriAndroid, isTauriIOS, isTauriMacOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
@@ -53,9 +53,13 @@ class Serial extends EventTarget {
             // is desktop + Android only — iOS has no USB serial.
             this._protocols = [
                 ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
-                // iOS WKWebView has no Web Bluetooth, so use the native btleplug transport there;
-                // desktop Tauri keeps the webview's Web Bluetooth.
-                { name: "bluetooth", instance: isTauriIOS() ? new TauriBle() : new WebBluetooth() },
+                // Neither WKWebView (iOS, macOS) nor the Android System WebView exposes Web
+                // Bluetooth, so those use the native transport; Linux and Windows keep the
+                // webview's own Web Bluetooth.
+                {
+                    name: "bluetooth",
+                    instance: isTauriIOS() || isTauriMacOS() || isTauriAndroid() ? new TauriBle() : new WebBluetooth(),
+                },
                 { name: "tcp", instance: new TauriTcp() },
                 { name: "websocket", instance: new Websocket() },
             ];
@@ -240,12 +244,17 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Send data through the serial connection
+     * Send data through the serial connection.
+     *
+     * The callback is invoked here and only here. Protocols must not be handed
+     * it, or every transport that fires it internally would deliver it twice.
      */
     async send(data, callback) {
         let result;
         try {
-            result = (await this._protocol?.send(data, callback)) ?? { bytesSent: 0 };
+            // Guard the method too: virtual mode has no send(), and that is a
+            // normal path, not an error to log.
+            result = (await this._protocol?.send?.(data)) ?? { bytesSent: 0 };
         } catch (error) {
             result = { bytesSent: 0 };
             console.error(`${this.logHead} Error sending data:`, error);

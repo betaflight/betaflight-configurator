@@ -133,9 +133,6 @@
         "message": "聲納",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "打開版本發佈網站"
-    },
     "deviceRebooting": {
         "message": "設備 - <span class=\"message-negative\">重啟中<\/span>"
     },

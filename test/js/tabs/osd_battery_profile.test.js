@@ -113,6 +113,7 @@ function buildAllDisplayFields() {
         "WP_NEXT_NUMBER",
         "WP_ETA",
         "NAV_MAP",
+        "POS_HOLD_READY",
     ];
 
     const fields = {};
