@@ -13,6 +13,26 @@ Both files are **generated**; this README is not. Run `npm run generate:debug-mo
 to rebuild them from the firmware source, and `npm run check:debug-modes` to fail
 a build when they have drifted from it.
 
+## Generating from a firmware pull request
+
+The annotations reach a release long after they reach a pull request, so the
+useful question while one is open is what the tables would look like with it
+merged. Point the generator at it by number:
+
+```sh
+npm run generate:debug-modes -- --repo /path/to/betaflight --pr 15596
+```
+
+The pull request head is fetched from the upstream project, so this works whether
+or not the branch behind it is on a fork, and whether or not your checkout has a
+remote naming it. The commit it resolves to is recorded as the provenance of the
+newest API version, which means a later `npm run check:debug-modes` against the
+same pull request reproduces the files exactly.
+
+That last property is what makes these files reviewable: the commit each one
+names is the newest that changed anything the generator reads, so regenerating
+from it must reproduce them byte for byte.
+
 ## Working on the firmware
 
 To see a debug mode or an annotation you are still writing — before it is
