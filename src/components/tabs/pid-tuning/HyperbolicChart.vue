@@ -23,6 +23,7 @@ const canvasWidth = ref(0);
 const canvasHeight = ref(0);
 const dpr = window.devicePixelRatio || 1;
 let resizeObserver = null;
+let themeObserver = null;
 
 function getCssVar(varName, fallback = "#000000") {
     const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
@@ -282,15 +283,31 @@ function drawChart() {
     drawCurves(ctx, chartCurves, xScale, yScale, colors);
 }
 
-onMounted(() => {
-    nextTick(() => {
-        resizeCanvas();
-        resizeObserver = new ResizeObserver(() => resizeCanvas());
-        if (containerRef.value) {
-            resizeObserver.observe(containerRef.value);
+function setupThemeObserver() {
+    themeObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                drawChart();
+                break;
+            }
         }
-        window.addEventListener("resize", resizeCanvas);
     });
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+    });
+}
+
+onMounted(() => {
+    resizeCanvas();
+
+    resizeObserver = new ResizeObserver(() => resizeCanvas());
+    if (containerRef.value) {
+        resizeObserver.observe(containerRef.value);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    setupThemeObserver();
 });
 
 onUnmounted(() => {
@@ -299,6 +316,10 @@ onUnmounted(() => {
         resizeObserver = null;
     }
     window.removeEventListener("resize", resizeCanvas);
+    if (themeObserver) {
+        themeObserver.disconnect();
+        themeObserver = null;
+    }
 });
 
 watch(
