@@ -175,7 +175,7 @@
 
                 <!-- VTX Table -->
                 <div class="max-w-full overflow-x-auto">
-                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="w-fit min-w-[750px]">
+                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="w-fit">
                         <div class="flex flex-col gap-4">
                             <!-- Bands and channels count -->
                             <div class="flex flex-wrap items-end gap-4">
