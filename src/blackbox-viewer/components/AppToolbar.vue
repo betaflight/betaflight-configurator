@@ -35,16 +35,27 @@
                     title="Export your workspace configurations to file"
                     @click="$emit('export-workspaces')"
                 />
-                <UButton
-                    variant="ghost"
-                    color="neutral"
-                    label="Export Video"
-                    icon="i-lucide-video"
-                    size="xs"
-                    :disabled="!videoCapability?.canEncode"
-                    :title="videoExportTitle"
-                    @click="$emit('export-video')"
-                />
+                <UTooltip :text="videoExportTitle" :delay-duration="300">
+                    <span
+                        data-testid="video-export-capability"
+                        class="inline-flex"
+                        :role="videoExportDisabled ? 'group' : undefined"
+                        :aria-disabled="videoExportDisabled || undefined"
+                        :aria-label="videoExportDisabled ? `Export Video unavailable: ${videoExportTitle}` : undefined"
+                        :tabindex="videoExportDisabled ? 0 : undefined"
+                    >
+                        <UButton
+                            variant="ghost"
+                            color="neutral"
+                            label="Export Video"
+                            icon="i-lucide-video"
+                            size="xs"
+                            :disabled="videoExportDisabled"
+                            :class="{ 'pointer-events-none': videoExportDisabled }"
+                            @click="$emit('export-video')"
+                        />
+                    </span>
+                </UTooltip>
                 <USeparator orientation="vertical" class="h-4" />
             </template>
             <UButton
@@ -100,6 +111,8 @@ const appStore = useAppStore();
 const graphStore = useGraphStore();
 const videoCapability = ref(null);
 let probeGeneration = 0;
+
+const videoExportDisabled = computed(() => !videoCapability.value?.canEncode);
 
 const videoExportTitle = computed(() => {
     if (!videoCapability.value) {
