@@ -473,12 +473,22 @@ function extractModes(repo, version) {
     const identifiers = parseDebugEnum(gitShow(repo, version.ref, DEBUG_HEADER), version.ref);
     const { byIdentifier, byPosition } = parseDebugModeNames(gitShow(repo, version.ref, DEBUG_SOURCE), version.ref);
 
-    return identifiers.map((identifier, index) => {
+    const names = identifiers.map((identifier, index) => {
         const fromFirmware = byIdentifier.size > 0 ? byIdentifier.get(identifier) : byPosition[index];
         // A reserved slot carries no name in debug.c but still owns its index, so
         // fall back to the enum identifier to keep the positions aligned.
         return fromFirmware || identifier.replace(/^DEBUG_/, "");
     });
+
+    /*
+     * The call sites name a mode by its enum identifier, while everything the app
+     * shows uses the name debug.c gives it. The two agree throughout the firmware
+     * history read here, but rebuilding one from the other assumes they always
+     * will: the day debug.c names a mode anything else, every DEBUG_SET() for it
+     * would stop resolving and the mode would lose its fields with nothing said.
+     * So carry the identifiers rather than reconstructing them.
+     */
+    return { names, identifierToMode: new Map(identifiers.map((identifier, index) => [identifier, names[index]])) };
 }
 
 // ---------------------------------------------------------------------------
@@ -660,6 +670,14 @@ function parseNamedEnums(source) {
         const names = [];
         for (const [name, value] of entries) {
             names[value] = name;
+        }
+        // An enum that pins values can leave gaps, and a hole renders as an
+        // elision in JS but as null in JSON. Name the gaps so both agree, the
+        // way an unused flag bit is already named.
+        for (let value = 0; value < names.length; value++) {
+            if (!(value in names)) {
+                names[value] = null;
+            }
         }
         for (const tag of [block[1], block[3]]) {
             if (tag !== undefined) {
@@ -1041,8 +1059,52 @@ function annotationAt(text, resolved, where, readScope, problems) {
  * writes to, and its annotation. Whole files are read rather than grepped lines
  * because a call may span several lines and its annotation sits on the last.
  */
+/*
+ * Blank out everything that is not code, keeping every offset: the scan reports
+ * line numbers and finds a call's annotation by where the call ended, so deleting
+ * text would move both. Annotations are themselves comments, so `//!<` survives.
+ *
+ * Without this a commented-out DEBUG_SET() counts as a field the mode writes, and
+ * the fixture that records what each mode writes is what the label check uses to
+ * decide whether a field is unlabelled - so a dead call can hide a real gap.
+ *
+ * String literals are left alone. Blanking them would take the filename out of
+ * `#include "foo.h"` with it, and the scope walk needs that to reach the enum an
+ * annotation names - which cost seven annotated fields when tried. A literal
+ * holding text that parses as a whole DEBUG_SET() call is not a real risk.
+ */
+function maskNonCode(source) {
+    const out = [...source];
+    const blank = (from, to) => {
+        for (let index = from; index < to; index++) {
+            if (out[index] !== "\n") {
+                out[index] = " ";
+            }
+        }
+    };
+
+    for (let index = 0; index < source.length; index++) {
+        const pair = source.slice(index, index + 2);
+        if (pair === "/*") {
+            const close = source.indexOf("*/", index + 2);
+            const end = close === -1 ? source.length : close + 2;
+            blank(index, end);
+            index = end - 1;
+        } else if (pair === "//") {
+            const newline = source.indexOf("\n", index);
+            const end = newline === -1 ? source.length : newline;
+            if (source.slice(index, index + 4) !== ANNOTATION_MARKER) {
+                blank(index, end);
+            }
+            index = end - 1;
+        }
+    }
+
+    return out.join("");
+}
+
 function scanFile(repo, ref, path, identifierToMode, problems) {
-    const text = gitShow(repo, ref, path);
+    const text = maskNonCode(gitShow(repo, ref, path));
     const calls = [];
     // Resolving an index constant or an enum needs the whole file and its
     // headers, so read them at most once, and only for a file that has one.
@@ -1160,8 +1222,8 @@ function foldCall(call, usage, fields) {
  * Which debug[n] each mode writes at `version.ref`, and what each of them means.
  * `problems` collects malformed annotations, which fail the run.
  */
-function extractFields(repo, version, modes, problems) {
-    const identifierToMode = new Map(modes.map((mode) => [`DEBUG_${mode}`, mode]));
+function extractFields(repo, version, problems) {
+    const identifierToMode = version.identifierToMode;
     const usage = new Map();
     const fields = {};
     let unresolved = 0;
@@ -1768,13 +1830,14 @@ function renderFieldsSchema() {
             },
             values: {
                 type: "array",
-                description: "Enumerator names, lowest value first, for a field holding an enum.",
-                items: { type: "string" },
+                description:
+                    "Enumerator names, lowest value first, for a field holding an enum. Null where the enum pins values and leaves a gap.",
+                items: { type: ["string", "null"] },
             },
             flags: {
                 type: "array",
-                description: "Bit-flag names, lowest bit first, with `-` for an unused bit.",
-                items: { type: "string" },
+                description: "Bit-flag names, lowest bit first, null for a bit the field does not use.",
+                items: { type: ["string", "null"] },
             },
         },
         required: ["label", "unit", "scale"],
@@ -1921,7 +1984,7 @@ function renderFieldsSchema() {
                                         label: { type: "string" },
                                         unit: { oneOf: [{ type: "string" }, { type: "null" }] },
                                         scale: { type: "number" },
-                                        values: { type: "array", items: { type: "string" } },
+                                        values: { type: "array", items: { type: ["string", "null"] } },
                                         flags: { type: "array", items: { type: ["string", "null"] } },
                                         sites: {
                                             type: "array",
@@ -1975,8 +2038,7 @@ function guardedStatement(text, from) {
  * gap in the contract, and the fix is in firmware - route the write through
  * DEBUG_SET() so it can carry an annotation.
  */
-function directWriteModes(repo, ref, modes) {
-    const known = new Set(modes);
+function directWriteModes(repo, ref, identifierToMode) {
     const found = new Set();
 
     for (const path of debugSetFiles(repo, ref, "debugMode ==")) {
@@ -1986,8 +2048,9 @@ function directWriteModes(repo, ref, modes) {
         // Comments are stripped so a mode named in prose cannot look like a guard.
         const text = stripComments(gitShow(repo, ref, path));
         for (const match of text.matchAll(DIRECT_WRITE_GUARD)) {
-            if (known.has(match[1]) && BARE_DEBUG_WRITE.test(guardedStatement(text, match.index + match[0].length))) {
-                found.add(match[1]);
+            const mode = identifierToMode.get(`DEBUG_${match[1]}`);
+            if (mode !== undefined && BARE_DEBUG_WRITE.test(guardedStatement(text, match.index + match[0].length))) {
+                found.add(mode);
             }
         }
     }
@@ -2001,7 +2064,7 @@ function directWriteModes(repo, ref, modes) {
  * through the macro but not yet annotated, or not written at all.
  */
 function unannotatedModes(repo, version, fields, usage) {
-    const direct = directWriteModes(repo, version.ref, version.modes);
+    const direct = directWriteModes(repo, version.ref, version.identifierToMode);
     const groups = { bare: [], unannotated: [], unwritten: [] };
 
     for (const mode of version.modes) {
@@ -2030,8 +2093,10 @@ function collectVersionData(repo, versions) {
     const problems = [];
 
     for (const version of versions) {
-        version.modes = extractModes(repo, version);
-        const { usage, fields, unresolved } = extractFields(repo, version, version.modes, problems);
+        const { names, identifierToMode } = extractModes(repo, version);
+        version.modes = names;
+        version.identifierToMode = identifierToMode;
+        const { usage, fields, unresolved } = extractFields(repo, version, problems);
         version.usage = usage;
         version.fields = fields;
         unresolvedTotal += unresolved;
@@ -2138,8 +2203,22 @@ async function main() {
     }
 
     let devRef = args.worktree === true ? WORKTREE_REF : (args["dev-ref"] ?? DEFAULT_DEV_REF);
-    // How to reproduce this run, quoted back when the committed files are stale.
-    let devRefFlag = args["dev-ref"] === undefined ? "" : `--dev-ref ${args["dev-ref"]}`;
+
+    /*
+     * How to reproduce this run, quoted back when the committed files are stale.
+     * Every option that decides what gets written belongs here - a hint missing
+     * one regenerates something other than what was just rejected - and each
+     * value is shell-quoted, since the line is meant to be pasted into a shell.
+     *
+     * --allow-rewrite is deliberately left out. It does not change what is
+     * generated, only whether a rewrite of an already-published version is
+     * allowed to proceed, and suggesting it would hand someone the way around
+     * the one guard that protects indices already recorded into blackbox logs.
+     */
+    const shellQuote = (value) => (/^[\w./:@=-]+$/.test(value) ? value : `'${String(value).replaceAll("'", `'\\''`)}'`);
+    const flagFor = (name) => (args[name] === undefined ? "" : `--${name} ${shellQuote(args[name])}`);
+
+    let devRefFlag = flagFor("dev-ref");
     if (args.worktree === true) {
         devRefFlag = "--worktree";
     }
@@ -2154,7 +2233,6 @@ async function main() {
     const schemaOutPath = resolve(projectRoot, args["schema-out"] ?? DEFAULT_SCHEMA_OUT);
 
     const repoUrl = args["source-url"] ?? SOURCE_URL;
-    const sourceUrlFlag = args["source-url"] === undefined ? "" : `--source-url ${args["source-url"]}`;
 
     if (args.pr !== undefined) {
         // Interpolated into a git refspec, so accept nothing but a number.
@@ -2214,7 +2292,10 @@ async function main() {
     ];
 
     if (args.check) {
-        await assertUpToDate(outputs, [devRefFlag, sourceUrlFlag]);
+        await assertUpToDate(outputs, [
+            devRefFlag,
+            ...["source-url", "min-api", "out", "labels-out", "fields-out", "json-out", "schema-out"].map(flagFor),
+        ]);
         return;
     }
 

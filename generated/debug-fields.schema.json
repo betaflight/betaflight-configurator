@@ -218,16 +218,16 @@
                                             },
                                             "values": {
                                                 "type": "array",
-                                                "description": "Enumerator names, lowest value first, for a field holding an enum.",
+                                                "description": "Enumerator names, lowest value first, for a field holding an enum. Null where the enum pins values and leaves a gap.",
                                                 "items": {
-                                                    "type": "string"
+                                                    "type": ["string", "null"]
                                                 }
                                             },
                                             "flags": {
                                                 "type": "array",
-                                                "description": "Bit-flag names, lowest bit first, with `-` for an unused bit.",
+                                                "description": "Bit-flag names, lowest bit first, null for a bit the field does not use.",
                                                 "items": {
-                                                    "type": "string"
+                                                    "type": ["string", "null"]
                                                 }
                                             }
                                         },
@@ -287,7 +287,7 @@
                                 "values": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
+                                        "type": ["string", "null"]
                                     }
                                 },
                                 "flags": {

@@ -506,7 +506,7 @@
                 {
                     "index": 46,
                     "name": "RPM_FILTER",
-                    "writes": [0, 1, 2, 3],
+                    "writes": [],
                     "dynamic": true,
                     "fields": {}
                 },
