@@ -32,7 +32,7 @@ function getCssVar(varName, fallback = "#000000") {
 
 function scaleRange(value, fromMin, fromMax, toMin, toMax) {
     if (fromMax - fromMin === 0) {
-        return (toMin + toMax) / 2;
+        return toMin;
     }
     return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
 }
@@ -41,6 +41,20 @@ function scaleRange(value, fromMin, fromMax, toMin, toMax) {
 function generateHyperbolicCurve() {
     const steps = 100;
     const data = [];
+
+    // Guard against edge cases
+    if (props.stallThrottle >= 1 || props.pidStallThrottle === props.pidFullThrottle) {
+        const multiplier = props.pidStallThrottle;
+        for (let i = 0; i <= steps; i++) {
+            const x = i / steps;
+            data.push({
+                speed: x * props.maximalSpeed,
+                multiplier: multiplier,
+            });
+        }
+        return data;
+    }
+
     for (let i = 0; i <= steps; i++) {
         const x = i / steps;
         let curveValue;
