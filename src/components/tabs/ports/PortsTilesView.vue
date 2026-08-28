@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "../../../js/gui";
 import { switchTab } from "../../../js/tab_switch";
@@ -132,8 +132,18 @@ function healthBoxType(health) {
     return health === "WARNING" ? "warning" : "error";
 }
 
+// The inventory load is a multi-second CLI exchange; a navigation away midway
+// must not let a late content_ready rewrite shared state for the next tab.
+let disposed = false;
+onBeforeUnmount(() => {
+    disposed = true;
+});
+
 onMounted(async () => {
     await load();
+    if (disposed) {
+        return;
+    }
     nextTick(() => {
         GUI.content_ready();
     });
