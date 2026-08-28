@@ -15,6 +15,28 @@
                 <div v-html="$t('vtxMessageNotSupported')"></div>
             </UiBox>
 
+            <!-- Device: protocol and port stay reachable before a VTX answers -->
+            <UiBox v-if="vtxPortAvailable" :title="$t('vtxDeviceSetup')" type="neutral" collapsible class="mt-4">
+                <div class="flex flex-col gap-2">
+                    <SettingRow :label="$t('vtxProtocol')" :help="$t('vtxProtocolHelp')">
+                        <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
+                    </SettingRow>
+
+                    <SettingRow
+                        :label="$t('vtxSerialPort')"
+                        :help="vtxPortFollowsOsd ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
+                    >
+                        <USelect
+                            :model-value="vtxPortShown"
+                            @update:model-value="(v) => (vtxPortIdentifier = v)"
+                            :items="vtxPortOptions"
+                            :disabled="!vtxPortWritable || vtxPortFollowsOsd"
+                            class="w-36"
+                        />
+                    </SettingRow>
+                </div>
+            </UiBox>
+
             <!-- Table not configured / factory bands warnings -->
             <div v-if="vtxTableNotConfigured || factoryBandsNotSupported" class="flex flex-col gap-2">
                 <UiBox v-show="vtxTableNotConfigured" highlight>
@@ -84,28 +106,6 @@
                                     size="xs"
                                     orientation="vertical"
                                     class="w-20"
-                                />
-                            </SettingRow>
-
-                            <SettingRow
-                                v-if="vtxProtocolOptions.length"
-                                :label="$t('vtxProtocol')"
-                                :help="$t('vtxProtocolHelp')"
-                            >
-                                <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
-                            </SettingRow>
-
-                            <SettingRow
-                                v-if="vtxPortAvailable"
-                                :label="$t('vtxSerialPort')"
-                                :help="mspVtx ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
-                            >
-                                <USelect
-                                    :model-value="vtxPortShown"
-                                    @update:model-value="(v) => (vtxPortIdentifier = v)"
-                                    :items="vtxPortOptions"
-                                    :disabled="!vtxPortWritable || mspVtx"
-                                    class="w-36"
                                 />
                             </SettingRow>
 
@@ -491,6 +491,13 @@ export default defineComponent({
             mspVtx.value && vtxPortIdentifier.value === PORT_NONE ? osdPortIdentifier.value : vtxPortIdentifier.value,
         );
 
+        // Only the fallback is locked: an MSP VTX with no port of its own rides
+        // the OSD's UART, which is assigned on the OSD tab. A dedicated port
+        // stays editable whatever the protocol.
+        const vtxPortFollowsOsd = computed(
+            () => mspVtx.value && vtxPortIdentifier.value === PORT_NONE && osdPortIdentifier.value !== PORT_NONE,
+        );
+
         // vtxDevType_e keeps index 2 open, so the firmware lookup names it RESERVED.
         const vtxProtocolOptions = computed(() => vtxProtocolValues.value.filter(({ value }) => value !== "RESERVED"));
 
@@ -716,7 +723,7 @@ export default defineComponent({
             vtxPortIdentifier,
             vtxProtocol,
             vtxProtocolOptions,
-            mspVtx,
+            vtxPortFollowsOsd,
             vtxPortShown,
             savePending,
             factoryBandsSupported,
