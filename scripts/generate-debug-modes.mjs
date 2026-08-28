@@ -2333,9 +2333,22 @@ function sanitiseMessage(message) {
     return String(message).replaceAll(/[\u0000-\u0009\u000b-\u001f\u007f]/g, " ");
 }
 
-try {
-    await main();
-} catch (error) {
-    console.error(`generate-debug-modes: ${sanitiseMessage(error.message)}`); // NOSONAR jssecurity:S5145 - sanitised above
-    process.exit(1);
+/*
+ * Run only when this file is the program, so a test can import the parsing and
+ * scanning below without the generator walking a firmware checkout first. Those
+ * are pure functions over text, and the two bugs found in them so far - a comment
+ * marker inside a string literal, and blanking a literal that held an #include
+ * filename - were both invisible to a test suite that could not reach them.
+ */
+const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (invokedDirectly) {
+    try {
+        await main();
+    } catch (error) {
+        console.error(`generate-debug-modes: ${sanitiseMessage(error.message)}`); // NOSONAR jssecurity:S5145 - sanitised above
+        process.exit(1);
+    }
 }
+
+export { maskNonCode, parseAnnotation, parseEnumBlock, parseNamedEnums, resolveFieldIndex };
