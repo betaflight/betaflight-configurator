@@ -5,12 +5,12 @@
             <div class="tab_title" v-html="$t('tabVtx')"></div>
             <WikiButton docUrl="vtx" />
 
-            <!-- Help note -->
-            <UiBox highlight v-show="vtxSupported" class="mt-4">
-                <p v-html="$t('vtxHelp')"></p>
-            </UiBox>
-
             <div class="mt-4 flex flex-wrap items-start gap-4">
+                <!-- Help note -->
+                <UiBox highlight v-show="vtxSupported" class="mt-3 w-full sm:max-w-xl">
+                    <p v-html="$t('vtxHelp')"></p>
+                </UiBox>
+
                 <!-- Not supported -->
                 <UiBox highlight v-show="!vtxSupported" class="mt-3 w-full sm:w-96">
                     <div v-html="$t('vtxMessageNotSupported')"></div>
