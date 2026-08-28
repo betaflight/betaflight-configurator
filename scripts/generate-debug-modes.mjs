@@ -62,6 +62,12 @@
  *                       $BETAFLIGHT_REPO, then to sibling checkouts of this
  *                       repository (../betaflight, ../../betaflight, ...).
  *   --dev-ref <ref>     Ref holding the in-development firmware (default: master).
+ *   --pr <number>       Read the newest API version from a firmware pull request
+ *                       instead, fetching its head from the upstream project. The
+ *                       debug annotations arrive that way long before they reach a
+ *                       release, so this is how to see what a firmware change does
+ *                       to the tables while it is still open, and how to regenerate
+ *                       against the one that carries them.
  *   --worktree          Read the newest API version from the firmware checkout as
  *                       it sits on disk - uncommitted edits and all - instead of
  *                       from a commit, so a firmware developer can preview the
@@ -153,6 +159,7 @@ const BOOLEAN_FLAGS = new Set(["check", "allow-rewrite", "worktree"]);
 const VALUE_FLAGS = new Set([
     "repo",
     "dev-ref",
+    "pr",
     "min-api",
     "out",
     "labels-out",
@@ -225,6 +232,31 @@ function gitShow(repo, ref, path) {
     } catch {
         throw new Error(`Cannot read ${path} at ${ref} in ${repo}`);
     }
+}
+
+/*
+ * Resolve a firmware pull request to the commit at its head.
+ *
+ * The debug annotations reach the configurator through a firmware pull request
+ * long before they reach a release, so the useful question while one is open is
+ * "what would the tables look like with this merged". GitHub publishes every pull
+ * request head under refs/pull/<n>/head, which is fetchable whether or not the
+ * branch belongs to a fork.
+ *
+ * Fetched from the canonical repository rather than from a remote of the local
+ * checkout: pull requests live on the upstream project even when the branch
+ * behind them does not, and a firmware checkout may well have no remote naming
+ * it. The result is resolved to a hash rather than left as FETCH_HEAD, which the
+ * next fetch would overwrite.
+ */
+function pullRequestHead(repo, number, sourceUrl) {
+    console.log(`generate-debug-modes: fetching firmware pull request #${number}`);
+    try {
+        git(repo, ["fetch", "--quiet", sourceUrl, `refs/pull/${number}/head`]);
+    } catch (error) {
+        throw new Error(`Cannot fetch pull request #${number} from ${sourceUrl}: ${sanitiseMessage(error.message)}`);
+    }
+    return git(repo, ["rev-parse", "FETCH_HEAD"]).trim();
 }
 
 // The commit a working-tree read is based on, for provenance and for the history
@@ -2046,7 +2078,7 @@ function collectVersionData(repo, versions) {
     return unresolvedTotal;
 }
 
-async function assertUpToDate(outputs, devRef) {
+async function assertUpToDate(outputs, devRefFlag) {
     const stale = [];
     for (const [path, expected] of outputs) {
         const actual = existsSync(path) ? await readFile(path, "utf8") : null;
@@ -2067,13 +2099,15 @@ async function assertUpToDate(outputs, devRef) {
      * silently regenerates a different table rather than the one being checked.
      * The ref is the part the reader cannot guess; the checkout is theirs to name.
      */
-    const against = devRef === WORKTREE_REF ? "--worktree" : `--dev-ref ${devRef}`;
+    const invocation = ["npm run generate:debug-modes --", "--repo <your betaflight checkout>", devRefFlag]
+        .filter(Boolean)
+        .join(" ");
     throw new Error(
         [
             "Out of date with the firmware source:",
             ...stale.map((path) => `  - ${path}`),
             "Regenerate against the same firmware and commit the result:",
-            `  npm run generate:debug-modes -- --repo <your betaflight checkout> ${against}`,
+            `  ${invocation}`,
         ].join("\n"),
     );
 }
@@ -2096,12 +2130,18 @@ function describeMeaning(variant) {
 async function main() {
     const args = parseArgs(process.argv.slice(2));
     const repo = resolveRepo(args.repo);
-    if (args.worktree === true && args["dev-ref"] !== undefined) {
-        throw new Error(
-            "--worktree reads the firmware checkout as it sits on disk; it cannot be combined with --dev-ref",
-        );
+    // Three ways to name the in-development firmware, and they cannot be mixed.
+    const sources = ["worktree", "dev-ref", "pr"].filter((flag) => args[flag] !== undefined);
+    if (sources.length > 1) {
+        throw new Error(`Name the in-development firmware once: ${sources.map((flag) => `--${flag}`).join(" and ")}`);
     }
-    const devRef = args.worktree === true ? WORKTREE_REF : (args["dev-ref"] ?? DEFAULT_DEV_REF);
+
+    let devRef = args.worktree === true ? WORKTREE_REF : (args["dev-ref"] ?? DEFAULT_DEV_REF);
+    // How to reproduce this run, quoted back when the committed files are stale.
+    let devRefFlag = args["dev-ref"] === undefined ? "" : `--dev-ref ${args["dev-ref"]}`;
+    if (args.worktree === true) {
+        devRefFlag = "--worktree";
+    }
     const minMinor = Number(args["min-api"] ?? DEFAULT_MIN_API_MINOR);
     if (!Number.isInteger(minMinor) || minMinor < 1) {
         throw new Error(`--min-api must be a positive integer, got: ${args["min-api"]}`);
@@ -2113,6 +2153,16 @@ async function main() {
     const schemaOutPath = resolve(projectRoot, args["schema-out"] ?? DEFAULT_SCHEMA_OUT);
 
     const repoUrl = args["source-url"] ?? SOURCE_URL;
+
+    if (args.pr !== undefined) {
+        // Interpolated into a git refspec, so accept nothing but a number.
+        if (!/^\d+$/.test(args.pr)) {
+            throw new Error(`--pr takes a pull request number, got: ${args.pr}`);
+        }
+        devRef = pullRequestHead(repo, args.pr, repoUrl);
+        devRefFlag = `--pr ${args.pr}`;
+        console.log(`generate-debug-modes: pull request #${args.pr} is at ${devRef}`);
+    }
 
     const versions = buildVersionRefs(repo, devRef, minMinor);
     if (versions.length === 0) {
@@ -2162,7 +2212,7 @@ async function main() {
     ];
 
     if (args.check) {
-        await assertUpToDate(outputs, devRef);
+        await assertUpToDate(outputs, devRefFlag);
         return;
     }
 
