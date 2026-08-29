@@ -1,3 +1,7 @@
+import semver from "semver";
+
+import { API_VERSION_1_49 } from "../js/data_storage";
+
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
@@ -214,6 +218,374 @@ GraphConfig.getDefaultSmoothingForField = function (flightLog, fieldName) {
     }
 };
 
+const minMaxPower1 = function (min, max) {
+    return {
+        power: 1,
+        MinMax: {
+            min,
+            max,
+        },
+    };
+};
+
+const isApi149OrLater = function (apiVersion) {
+    return Boolean(apiVersion) && semver.gte(apiVersion, API_VERSION_1_49);
+};
+
+const gatedByApi149 = function (fromApi149, beforeApi149 = {}) {
+    return { fromApi149, beforeApi149 };
+};
+
+const GYRO_SCALED_CURVE = { default: (curves) => curves.gyro() };
+
+const RPM_CURVE = { default: (curves) => curves.combined("debug[0]", "debug[1]", "debug[2]", "debug[3]") };
+
+const FEEDFORWARD_LIMIT_CURVE = {
+    0: [-100, 100], // jitter attenuator
+    1: (curves) => curves.gyro(), // max setpoint rate for axis
+    2: (curves) => curves.gyro(), // setpoint
+    3: [-200, 200], // feedforward
+    4: [-200, 200], // setpoint speed unsmoothed
+    5: [-200, 200], // setpoint speed smoothed
+    6: [0, 1], // pt1K 0-1
+    7: [0, 1200], // smoothed Rx rate Hz
+};
+
+/**
+ * Default curve per debug mode, keyed by the debug field index.
+ *
+ * An entry is either a fixed `[min, max]` range or a function picking a curve derived from the log
+ * itself. `default` covers the indices with no entry of their own; without one they auto-scale to
+ * the field's own observed range.
+ */
+const DEBUG_MODE_CURVES = {
+    CYCLETIME: { 1: [0, 100], default: [0, 2000] }, // debug[1] is CPU load
+    PIDLOOP: { default: [0, 500] },
+    GYRO: GYRO_SCALED_CURVE,
+    GYRO_FILTERED: GYRO_SCALED_CURVE,
+    GYRO_SCALED: GYRO_SCALED_CURVE,
+    GYRO_RAW: GYRO_SCALED_CURVE,
+    DUAL_GYRO: GYRO_SCALED_CURVE,
+    DUAL_GYRO_COMBINED: GYRO_SCALED_CURVE,
+    DUAL_GYRO_DIFF: GYRO_SCALED_CURVE,
+    DUAL_GYRO_RAW: GYRO_SCALED_CURVE,
+    DUAL_GYRO_SCALED: GYRO_SCALED_CURVE,
+    // From API 1.47 the dual gyro modes are reported as MULTI_GYRO_*.
+    MULTI_GYRO_DIFF: GYRO_SCALED_CURVE,
+    MULTI_GYRO_RAW: GYRO_SCALED_CURVE,
+    MULTI_GYRO_SCALED: GYRO_SCALED_CURVE,
+    NOTCH: GYRO_SCALED_CURVE,
+    AC_CORRECTION: GYRO_SCALED_CURVE,
+    AC_ERROR: GYRO_SCALED_CURVE,
+    ANGLERATE: GYRO_SCALED_CURVE,
+    ACCELEROMETER: { default: [-16, 16] },
+    MIXER: { default: [-100, 100] },
+    BATTERY: { 0: [0, 4096], default: [0, 26] }, // debug[0] is the raw 0-4095 reading
+    RC_INTERPOLATION: {
+        0: (curves) => curves.zeroCentred(), // roll RC command
+        3: (curves) => curves.zeroCentred(), // refresh period
+    },
+    RC_SMOOTHING: {
+        0: [0, 1200], // current Rx rate Hz
+        1: [0, 1200], // smoothed but stepped Rx rate Hz
+        2: [0, 1200], // setpoint cutoff Hz
+        3: [0, 1200], // throttle cutoff Hz
+        4: [0, 1], // pt1K 0-1
+        5: [0, 1200], // smoothed Rx rate Hz, without steps
+        6: [0, 50], // outlier count 0-3, kept at the very bottom
+        7: [0, 50], // valid count 0-3, kept at the very bottom
+    },
+    RC_SMOOTHING_RATE: {
+        0: (curves) => curves.combined("debug[0]", "debug[2]"), // current frame rate us
+        2: (curves) => curves.combined("debug[0]", "debug[2]"), // average frame rate us
+    },
+    ALTITUDE: gatedByApi149(
+        {
+            0: [-10, 10], // rangefinder alt
+            1: [-10, 10], // baro alt
+            2: [-10, 10], // GPS alt
+            3: [-10, 10], // Kalman alt
+            4: [-10, 10], // GPS vel up
+            5: [-10, 10], // Kalman vel up
+            6: [-10, 10], // accelerometer up
+            7: [-10, 10], // Kalman accel up
+        },
+        {
+            0: [-200, 200], // GPS trust
+            1: [-50, 50], // baro alt
+            2: [-50, 50], // GPS alt
+            3: [-5, 5], // vario
+        },
+    ),
+    FFT: {
+        0: (curves) => curves.gyro(), // pre-dyn notch gyro
+        1: (curves) => curves.gyro(), // post-dyn notch gyro
+        2: (curves) => curves.gyro(), // pre-dyn notch gyro downsampled for FFT
+    },
+    FFT_FREQ: {
+        0: (curves) => curves.combined("debug[0]", "debug[1]", "debug[2]"), // notch 1 centre freq
+        1: (curves) => curves.combined("debug[0]", "debug[1]", "debug[2]"), // notch 2 centre freq
+        2: (curves) => curves.combined("debug[0]", "debug[1]", "debug[2]"), // notch 3 centre freq
+        3: (curves) => curves.gyro(), // pre-dyn notch gyro
+    },
+    DYN_LPF: {
+        0: (curves) => curves.gyro(), // gyro scaled
+        1: (curves) => curves.combined("debug[1]", "debug[2]"), // notch centre
+        2: (curves) => curves.combined("debug[1]", "debug[2]"), // lowpass cutoff
+        3: (curves) => curves.gyro(), // pre-dyn notch gyro
+    },
+    FFT_TIME: { default: [-100, 100] },
+    ESC_SENSOR_RPM: RPM_CURVE,
+    DSHOT_RPM_TELEMETRY: RPM_CURVE,
+    RPM_FILTER: RPM_CURVE,
+    D_MAX: {
+        0: (curves) => curves.combined("debug[0]", "debug[1]"), // roll gyro factor
+        1: (curves) => curves.combined("debug[0]", "debug[1]"), // roll setpoint factor
+        2: (curves) => curves.combined("debug[2]", "debug[3]"), // roll actual D
+        3: (curves) => curves.combined("debug[2]", "debug[3]"), // pitch actual D
+    },
+    ITERM_RELAX: {
+        2: (curves) => curves.zeroCentred(), // roll I relaxed error
+        3: (curves) => curves.zeroCentred(), // roll absolute control axis error, unused from 2026.6
+    },
+    FF_INTERPOLATED: {
+        0: [-1000, 1000], // setpoint delta
+        1: [-1000, 1000], // acceleration modified
+        2: [-1000, 1000], // acceleration
+        3: [0, 20], // clip or count
+    },
+    FEEDFORWARD: {
+        0: (curves) => curves.gyro(), // un-smoothed setpoint, interpolated setpoint in 4.3
+        1: [-200, 200], // feedforward delta element
+        2: [-200, 200], // feedforward boost element
+        3: [0, 100], // rcCommand deltaAbs
+        4: [-100, 100], // jitter attenuator
+        5: [0, 10], // packet duplicate boolean
+        6: [-200, 200], // yaw feedforward
+        7: [-200, 200], // yaw feedforward hold element
+    },
+    FF_LIMIT: FEEDFORWARD_LIMIT_CURVE,
+    FEEDFORWARD_LIMIT: FEEDFORWARD_LIMIT_CURVE,
+    BARO: {
+        0: [-20, 20], // baro state 0-10
+        1: [-200, 200], // baro temp
+        2: [-200, 200], // baro raw
+        3: [-200, 200], // baro smoothed
+    },
+    GPS_RESCUE_THROTTLE_PID: {
+        0: [-200, 200], // throttle P uS added
+        1: [-200, 200], // throttle D uS added
+        2: [-50, 50], // altitude
+        3: [-50, 50], // target altitude
+    },
+    DYN_IDLE: {
+        0: [-1000, 1000], // dyn idle P
+        1: [-1000, 1000], // dyn idle I
+        2: [-1000, 1000], // dyn idle D
+        3: [0, 12000], // minRPS
+    },
+    GYRO_SAMPLE: {
+        0: (curves) => curves.gyroHighResolution(), // before downsampling
+        1: (curves) => curves.gyroHighResolution(), // after downsampling
+        2: (curves) => curves.gyroHighResolution(), // after RPM
+        3: (curves) => curves.gyroHighResolution(), // after all but dyn notch
+        4: [0, 100], // average system load %
+    },
+    RX_TIMING: {
+        0: [0, 30], // interval in ms, starting at the bottom
+        1: [0, 30], // frame time stamp us/100
+        2: [0, 10], // isRateValid boolean
+        3: [0, 30], // constrained interval in ms
+        4: [0, 1200], // Rx rate
+        5: [0, 1200], // smoothed Rx rate
+        6: [0, 100], // LQ
+        7: [0, 10], // isReceivingSignal boolean
+    },
+    GHST: {
+        0: (curves) => curves.zeroCentred(), // CRC, 0 to max int16_t
+        1: (curves) => curves.zeroCentred(), // count of unknown frames
+        2: [-256, 0], // RSSI
+        3: [0, 100], // LQ percent
+    },
+    SCHEDULER_DETERMINISM: {
+        0: [0, 1000], // gyro task cycle us * 10, so 1250 is 125us
+        1: [0, 200], // ID of late task
+        2: [0, 200], // task delay time, 100us in the middle
+        3: [-50, 50], // gyro skew, 100 is 10us
+    },
+    TIMING_ACCURACY: {
+        0: [0, 100], // % CPU busy
+        1: [0, 100], // late tasks per second
+        2: [0, 100], // total delay in the last second
+        3: [0, 10000], // total tasks per second
+    },
+    RX_EXPRESSLRS_SPI: { 2: [0, 100] }, // debug[2] is uplink LQ; lost connection count, RSSI and SNR auto-scale
+    RX_EXPRESSLRS_PHASELOCK: { 2: (curves) => curves.zeroCentred() }, // debug[2] is the frequency offset in ticks
+    GPS_RESCUE_VELOCITY: gatedByApi149(
+        {
+            0: [-1000, 1000], // target velocity
+            1: [-1000, 1000], // velocity / phase
+            2: [-1000, 1000], // step east * 100
+            3: [-1000, 1000], // step north * 100
+        },
+        {
+            0: [-20, 20], // pitch P deg * 100
+            1: [-20, 20], // pitch D deg * 100
+            2: [-5, 5], // velocity in cm/s
+            3: [-5, 5], // velocity to home in cm/s
+        },
+    ),
+    GPS_RESCUE_HEADING: gatedByApi149(
+        {
+            0: [-20, 20], // ground speed
+            1: [0, 360], // GPS ground course
+            2: [0, 360], // yaw attitude
+            3: [0, 360], // direction to home
+            4: [0, 360], // mag yaw
+            7: [-100, 100], // rescue yaw rate
+        },
+        {
+            0: [-100, 100], // groundspeed cm/s
+            1: [0, 360], // GPS ground course
+            2: [0, 360], // yaw attitude * 10
+            3: [0, 360], // angle to home * 10
+            4: [0, 360], // magYaw * 10
+            5: [0, 20], // magYaw * 10
+            6: [0, 180], // roll angle * 100
+            7: [0, 200], // yaw rate deg/s
+        },
+    ),
+    GPS_RESCUE_TRACKING: gatedByApi149(
+        {
+            0: [-10, 10], // velocity
+            2: [-10, 10], // altitude
+            3: [-10, 10], // target altitude
+            4: [0, 360], // aircraft heading
+            5: [0, 360], // bearing to home
+        },
+        {
+            0: [-10, 10], // velocity to home cm/s
+            1: [-10, 10], // target velocity cm/s
+            2: [-50, 50], // altitude m
+            3: [-50, 50], // target altitude m
+        },
+    ),
+    GPS_CONNECTION: {
+        0: [-200, 200], // GPS flight model
+        1: [-200, 200], // nav data interval
+        2: [-200, 200], // task interval
+        3: (curves) => curves.ownRange(), // baud rate / resolved packet interval
+        4: (curves) => curves.ownRange(), // state * 100 + substate
+        5: [-100, 100], // executeTimeUs
+        6: [-10, 10], // ackState
+        7: [-100, 100], // incoming buffer
+    },
+    GPS_DOP: {
+        0: [-200, 200], // number of satellites
+        1: [-200, 200], // pDOP
+        2: [-200, 200], // hDOP
+        3: [-200, 200], // vDOP
+    },
+    RTH: {
+        0: [-4000, 4000], // pitch angle, deg * 100
+        1: [0, 20], // rescue phase
+        2: [0, 20], // failure code
+        3: [0, 4000], // failure counters, coded
+    },
+    FAILSAFE: { 0: [-200, 200], 1: [-200, 200], 2: [-200, 200], 3: [-200, 200] },
+    ANGLE_MODE: {
+        0: [-100, 100], // angle target
+        1: [-500, 500], // angle error correction
+        2: [-500, 500], // angle feedforward
+        3: [-100, 100], // angle achieved
+    },
+    DSHOT_TELEMETRY_COUNTS: { 0: [-200, 200], 1: [-200, 200], 2: [-200, 200], 3: [-200, 200] },
+    MAG_CALIB: {
+        0: [-2000, 2000], // X
+        1: [-2000, 2000], // Y
+        2: [-2000, 2000], // Z
+        3: [-2000, 2000], // field
+        4: [-500, 500], // X cal
+        5: [-500, 500], // Y cal
+        6: [-500, 500], // Z cal
+        7: [0, 4000], // lambda
+    },
+    MAG_TASK_RATE: {
+        0: [-1000, 1000], // task rate
+        1: [-1000, 1000], // data rate
+        2: [-10000, 10000], // data interval
+        3: [-20, 20], // execute time
+        4: [-2, 2], // bus busy check
+        5: [-2, 2], // read state check
+        6: [-10000, 10000], // time since previous task uS
+    },
+    EZLANDING: { default: () => ({ offset: -5000, power: 1, inputRange: 5000, outputRange: 1 }) },
+    ATTITUDE: {
+        0: [-180, 180], // roll angle
+        1: [-180, 180], // pitch angle
+    },
+    MAVLINK_TELEMETRY: {
+        0: [0, 1],
+        1: [0, 100],
+        2: [0, 100],
+        3: [0, 100],
+        4: [0, 100],
+        5: [0, 100],
+        6: [0, 100],
+        7: [0, 100],
+    },
+    AUTOPILOT_ALTITUDE: gatedByApi149({
+        0: [1000, 2000], // new throttle
+        1: [-10, 10], // target altitude
+        2: [-10, 10], // current altitude
+        3: [-500, 500], // P
+        4: [-500, 500], // I
+        5: [-500, 500], // D
+        6: [-500, 500], // A
+        7: [-500, 500], // F
+    }),
+    AUTOPILOT_PID: gatedByApi149({
+        0: [-10, 10], // XY velocity
+        1: [-10, 10], // XY distance error
+        2: [-500, 500], // XY P
+        3: [-500, 500], // XY I
+        4: [-500, 500], // XY D
+        5: [-500, 500], // XY A
+        6: [-500, 500], // XY F
+        7: [0, 500], // status
+    }),
+    POSITION_NAV: gatedByApi149({
+        0: [-10, 10], // target velocity
+        1: [-10, 10], // velocity
+        2: [-10, 10], // velocity error
+        3: [-500, 500], // P
+        4: [-500, 500], // I
+        5: [-500, 500], // D
+        6: [-500, 500], // A
+        7: [0, 500], // status
+    }),
+    AUTOPILOT_STOP: gatedByApi149({
+        0: [-5, 5], // velocity error east
+        1: [-5, 5], // velocity error north
+        2: [-500, 500], // PID sum east
+        3: [-500, 500], // PID sum north
+        4: [-500, 500], // roll angle command
+        5: [-500, 500], // pitch angle command
+        6: [0, 500], // status flags east
+        7: [0, 500], // status flags north
+    }),
+    POSITION_EST: {
+        0: [-10, 10], // position
+        1: [-10, 10], // velocity
+        2: [-10, 10], // Kalman acceleration
+        3: [-10, 10], // velocity east
+        4: [-10, 10], // velocity north
+        5: [-10, 10], // raw acceleration
+        6: [0, 1000], // GPS R pos
+        7: [0, 1000], // GPS R vel
+    },
+};
+
 GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
     const sysConfig = flightLog.getSysConfig();
 
@@ -283,6 +655,37 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
 
     const gyroScaleMargin = 1.2; // Give a 20% margin for gyro graphs
     const highResolutionScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1;
+
+    const curves = {
+        ownRange: () => getCurveForMinMaxFields(fieldName),
+        zeroCentred: () => getCurveForMinMaxFieldsZeroOffset(fieldName),
+        combined: (...fieldNames) => getCurveForMinMaxFields(...fieldNames),
+        gyro: () => {
+            const limit = maxDegreesSecond(gyroScaleMargin);
+            return minMaxPower1(-limit, limit);
+        },
+        gyroHighResolution: () => {
+            const limit = maxDegreesSecond(gyroScaleMargin * highResolutionScale);
+            return minMaxPower1(-limit, limit);
+        },
+    };
+
+    const debugModeCurve = function (debugModeName) {
+        let fields = DEBUG_MODE_CURVES[debugModeName];
+        if (fields?.fromApi149) {
+            fields = isApi149OrLater(sysConfig.apiVersion) ? fields.fromApi149 : fields.beforeApi149;
+        }
+
+        const index = fieldName.match(/^debug\[(\d+)\]$/)?.[1];
+        const spec = fields?.[index] ?? fields?.default;
+        if (Array.isArray(spec)) {
+            const [min, max] = spec;
+            return minMaxPower1(min, max);
+        }
+
+        return typeof spec === "function" ? spec(curves) : null;
+    };
+
     try {
         if (
             fieldName.match(/^motor\[/) ||
@@ -393,1003 +796,12 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 },
             };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
-            const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
-            switch (debugModeName) {
-                case "CYCLETIME":
-                    switch (fieldName) {
-                        case "debug[1]": //CPU Load
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 2000,
-                                },
-                            };
-                    }
-                case "PIDLOOP":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: 0,
-                            max: 500,
-                        },
-                    };
-                case "GYRO":
-                case "GYRO_FILTERED":
-                case "GYRO_SCALED":
-                case "DUAL_GYRO":
-                case "DUAL_GYRO_COMBINED":
-                case "DUAL_GYRO_DIFF":
-                case "DUAL_GYRO_RAW":
-                case "DUAL_GYRO_SCALED":
-                case "NOTCH":
-                case "AC_CORRECTION":
-                case "AC_ERROR":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: -maxDegreesSecond(gyroScaleMargin),
-                            max: maxDegreesSecond(gyroScaleMargin),
-                        },
-                    };
-                case "ACCELEROMETER":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: -16,
-                            max: 16,
-                        },
-                    };
-                case "MIXER":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: -100,
-                            max: 100,
-                        },
-                    };
-                case "BATTERY":
-                    switch (fieldName) {
-                        case "debug[0]": //Raw Value (0-4095)
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 4096,
-                                },
-                            };
-                        default:
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 26,
-                                },
-                            };
-                    }
-                case "RC_INTERPOLATION":
-                    switch (fieldName) {
-                        case "debug[0]": // Roll RC Command
-                        case "debug[3]": // refresh period
-                            return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RC_SMOOTHING":
-                    switch (fieldName) {
-                        case "debug[0]": // current Rx Rate Hz
-                        case "debug[1]": // smoothed but stepped Rx Rate Hz
-                        case "debug[2]": // setpoint cutoff Hz
-                        case "debug[3]": // throttle cutoff Hz
-                        case "debug[5]": // smoothed Rx Rate Hz, without steps
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1200,
-                                },
-                            };
-                        case "debug[4]": // pt1K 0-1
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1,
-                                },
-                            };
-                        case "debug[6]": // outlier count 0-3
-                        case "debug[7]": // valid count 0-3
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 50, // put them at the very bottom
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RC_SMOOTHING_RATE":
-                    switch (fieldName) {
-                        case "debug[0]": // current frame rate [us]
-                        case "debug[2]": // average frame rate [us]
-                            return getCurveForMinMaxFields("debug[0]", "debug[2]");
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "ANGLERATE":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: -maxDegreesSecond(gyroScaleMargin),
-                            max: maxDegreesSecond(gyroScaleMargin),
-                        },
-                    };
-                case "ALTITUDE":
-                    switch (fieldName) {
-                        case "debug[0]": // GPS Trust
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[1]": // Baro Alt
-                        case "debug[2]": // GPS Alt
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -50,
-                                    max: 50,
-                                },
-                            };
-                        case "debug[3]": // vario
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -5,
-                                    max: 5,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FFT":
-                    switch (fieldName) {
-                        case "debug[0]": // pre-dyn notch gyro [for gyro debug axis]
-                        case "debug[1]": // post-dyn notch gyro [for gyro debug axis]
-                        case "debug[2]": // pre-dyn notch gyro downsampled for FFT [for gyro debug axis]
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin),
-                                    max: maxDegreesSecond(gyroScaleMargin),
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FFT_FREQ":
-                    switch (fieldName) {
-                        case "debug[0]": // notch 1 center freq [for gyro debug axis]
-                        case "debug[1]": // notch 2 center freq [for gyro debug axis]
-                        case "debug[2]": // notch 3 center freq [for gyro debug axis]
-                            return getCurveForMinMaxFields("debug[0]", "debug[1]", "debug[2]");
-                        case "debug[3]": // pre-dyn notch gyro [for gyro debug axis]
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin),
-                                    max: maxDegreesSecond(gyroScaleMargin),
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "DYN_LPF":
-                    switch (fieldName) {
-                        case "debug[1]": // Notch center
-                        case "debug[2]": // Lowpass Cutoff
-                            return getCurveForMinMaxFields("debug[1]", "debug[2]");
-                        case "debug[0]": // gyro scaled [for selected axis]
-                        case "debug[3]": // pre-dyn notch gyro [for selected axis]
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin),
-                                    max: maxDegreesSecond(gyroScaleMargin),
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FFT_TIME":
-                    return {
-                        power: 1,
-                        MinMax: {
-                            min: -100,
-                            max: 100,
-                        },
-                    };
-                case "ESC_SENSOR_RPM":
-                case "DSHOT_RPM_TELEMETRY":
-                case "RPM_FILTER":
-                    return getCurveForMinMaxFields("debug[0]", "debug[1]", "debug[2]", "debug[3]");
-                case "D_MAX":
-                    switch (fieldName) {
-                        case "debug[0]": // roll gyro factor
-                        case "debug[1]": // roll setpoint Factor
-                            return getCurveForMinMaxFields("debug[0]", "debug[1]");
-                        case "debug[2]": // roll actual D
-                        case "debug[3]": // pitch actual D
-                            return getCurveForMinMaxFields("debug[2]", "debug[3]");
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "ITERM_RELAX":
-                    switch (fieldName) {
-                        case "debug[2]": // roll I relaxed error
-                        case "debug[3]": // roll absolute control axis error (pre-2026.6; unused/zero in firmware >= 2026.6)
-                            return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FF_INTERPOLATED":
-                    switch (fieldName) {
-                        case "debug[0]": // setpoint Delta
-                        case "debug[1]": // AccelerationModified
-                        case "debug[2]": // Acceleration
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -1000,
-                                    max: 1000,
-                                },
-                            };
-                        case "debug[3]": // Clip or Count
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 20,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FEEDFORWARD": // replaces FF_INTERPOLATED in 4.3
-                    switch (fieldName) {
-                        case "debug[0]": // in 4.3 is interpolated setpoint, now un-smoothed setpoint
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin),
-                                    max: maxDegreesSecond(gyroScaleMargin),
-                                },
-                            };
-                        case "debug[1]": // feedforward delta element
-                        case "debug[2]": // feedforward boost element
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[3]": // rcCommand deltaAbs
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[4]": // Jitter Attenuator
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[5]": // Packet Duplicate boolean
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 10,
-                                },
-                            };
-                        case "debug[6]": // Yaw feedforward
-                        case "debug[7]": // Yaw feedforward hold element
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FF_LIMIT":
-                case "FEEDFORWARD_LIMIT":
-                    switch (fieldName) {
-                        case "debug[0]": // Jitter Attenuator
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[1]": // Max setpoint rate for axis
-                        case "debug[2]": // Setpoint
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin),
-                                    max: maxDegreesSecond(gyroScaleMargin),
-                                },
-                            };
-                        case "debug[3]": // feedforward
-                        case "debug[4]": // setpoint speed unsmoothed
-                        case "debug[5]": // setpoint speed smoothed
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[6]": // pt1K 0-1
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1,
-                                },
-                            };
-                        case "debug[7]": // smoothed Rx Rate Hz
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "BARO":
-                    switch (fieldName) {
-                        case "debug[0]": // Baro state 0-10
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -20,
-                                    max: 20,
-                                },
-                            };
-                        case "debug[1]": // Baro Temp
-                        case "debug[2]": // Baro Raw
-                        case "debug[3]": // Baro smoothed
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_RESCUE_THROTTLE_PID":
-                    switch (fieldName) {
-                        case "debug[0]": // Throttle P uS added
-                        case "debug[1]": // Throttle D uS added
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[2]": // Altitude
-                        case "debug[3]": // Target Altitude
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -50,
-                                    max: 50,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "DYN_IDLE":
-                    switch (fieldName) {
-                        case "debug[0]": // in 4.3 is dyn idle P
-                        case "debug[1]": // in 4.3 is dyn idle I
-                        case "debug[2]": // in 4.3 is dyn idle D
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -1000,
-                                    max: 1000,
-                                },
-                            };
-                        case "debug[3]": // in 4.3 and 4.2 is minRPS
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 12000,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GYRO_SAMPLE":
-                    switch (fieldName) {
-                        case "debug[0]": // Before downsampling
-                        case "debug[1]": // After downsampling
-                        case "debug[2]": // After RPM
-                        case "debug[3]": // After all but Dyn Notch
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -maxDegreesSecond(gyroScaleMargin * highResolutionScale),
-                                    max: maxDegreesSecond(gyroScaleMargin * highResolutionScale),
-                                },
-                            };
-                        case "debug[4]": // Avg System Load %
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RX_TIMING":
-                    switch (fieldName) {
-                        case "debug[0]": // interval in ms
-                        case "debug[1]": // Frame time stamp us/100
-                        case "debug[3]": // constrained interval in ms
-                            return {
-                                // start at bottom, scale up to 30ms
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 30,
-                                },
-                            };
-                        case "debug[2]": // IsRateValid boolean
-                        case "debug[7]": // isReceivingSignal boolean
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 10,
-                                },
-                            };
-                        case "debug[4]": // Rx Rate
-                        case "debug[5]": // Smoothed Rx Rate
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1200,
-                                },
-                            };
-                        case "debug[6]": // LQ
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GHST":
-                    switch (fieldName) {
-                        case "debug[0]": // CRC 0 to max int16_t
-                        case "debug[1]": // Count of Unknown Frames
-                            return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        case "debug[2]": // RSSI
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -256,
-                                    max: 0,
-                                },
-                            };
-                        case "debug[3]": // LQ percent
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "SCHEDULER_DETERMINISM":
-                    switch (fieldName) {
-                        case "debug[0]": // Gyro task cycle us * 10 so 1250 = 125us
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1000,
-                                },
-                            };
-                        case "debug[1]": // ID of late task
-                        case "debug[2]": // task delay time 100us in middle
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[3]": // gyro skew 100 = 10us
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -50,
-                                    max: 50,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "TIMING_ACCURACY":
-                    switch (fieldName) {
-                        case "debug[0]": // % CPU Busy
-                        case "debug[1]": // late tasks per second
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[2]": // total delay in last second
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[3]": // total tasks per second
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 10000,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RX_EXPRESSLRS_SPI":
-                    switch (fieldName) {
-                        case "debug[2]": // Uplink LQ
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        // debug 0 = Lost connection count
-                        // debug 1 = RSSI
-                        // debug 3 = SNR
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RX_EXPRESSLRS_PHASELOCK":
-                    switch (fieldName) {
-                        case "debug[2]": // Frequency offset in ticks
-                            return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        // debug 0 = Phase offset us
-                        // debug 1 = Filtered phase offset us
-                        // debug 3 = Phase shift in us
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_RESCUE_VELOCITY":
-                    switch (fieldName) {
-                        case "debug[0]": // Pitch P deg * 100
-                        case "debug[1]": // Pitch D deg * 100
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -20,
-                                    max: 20,
-                                },
-                            };
-                        case "debug[2]": // Velocity in cm/s
-                        case "debug[3]": // Velocity to home in cm/s
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -5,
-                                    max: 5,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_RESCUE_HEADING":
-                    switch (fieldName) {
-                        case "debug[0]": // Groundspeed cm/s
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[1]": // GPS GroundCourse
-                        case "debug[2]": // Yaw attitude * 10
-                        case "debug[3]": // Angle to home * 10
-                        case "debug[4]": // magYaw * 10
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 360,
-                                },
-                            };
-                        case "debug[5]": // magYaw * 10
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 20,
-                                },
-                            };
-                        case "debug[6]": // roll angle *100
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 180,
-                                },
-                            };
-                        case "debug[7]": // yaw rate deg/s
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "RTH":
-                    switch (fieldName) {
-                        case "debug[0]": // Pitch angle, deg * 100
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -4000,
-                                    max: 4000,
-                                },
-                            };
-                        case "debug[1]": // Rescue Phase
-                        case "debug[2]": // Failure code
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 20,
-                                },
-                            };
-                        case "debug[3]": // Failure counters coded
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 4000,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_RESCUE_TRACKING":
-                    switch (fieldName) {
-                        case "debug[0]": // velocity to home cm/s
-                        case "debug[1]": // target velocity cm/s
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
-                        case "debug[2]": // altitude m
-                        case "debug[3]": // Target altitude m
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -50,
-                                    max: 50,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_CONNECTION":
-                    switch (fieldName) {
-                        case "debug[0]": // GPS flight model
-                        case "debug[1]": // Nav Data interval
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[2]": // task interval
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        case "debug[3]": // Baud rate / resolved packet interval
-                        case "debug[4]": // State*100 + SubState
-                            return getCurveForMinMaxFields(fieldName);
-                        case "debug[5]": // ExecuteTimeUs
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[6]": // ackState
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10,
-                                    max: 10,
-                                },
-                            };
-                        case "debug[7]": // Incoming buffer
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "GPS_DOP":
-                    switch (fieldName) {
-                        case "debug[0]": // Number of Satellites (now this is in normal GPS data, maybe gpsTrust?)
-                        case "debug[1]": // pDOP
-                        case "debug[2]": // hDOP
-                        case "debug[3]": // vDOP
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "FAILSAFE":
-                    switch (fieldName) {
-                        case "debug[0]":
-                        case "debug[1]":
-                        case "debug[2]":
-                        case "debug[3]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "ANGLE_MODE":
-                    switch (fieldName) {
-                        case "debug[0]": // angle target
-                        case "debug[3]": // angle achieved
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -100,
-                                    max: 100,
-                                },
-                            };
-                        case "debug[1]": // angle error correction
-                        case "debug[2]": // angle feedforward
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "DSHOT_TELEMETRY_COUNTS":
-                    switch (fieldName) {
-                        case "debug[0]":
-                        case "debug[1]":
-                        case "debug[2]":
-                        case "debug[3]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -200,
-                                    max: 200,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "MAG_CALIB":
-                    switch (fieldName) {
-                        case "debug[0]": // X
-                        case "debug[1]": // Y
-                        case "debug[2]": // Z
-                        case "debug[3]": // Field
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -2000,
-                                    max: 2000,
-                                },
-                            };
-                        case "debug[4]": // X Cal
-                        case "debug[5]": // Y Cal
-                        case "debug[6]": // Z Cal
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -500,
-                                    max: 500,
-                                },
-                            };
-                        case "debug[7]": // Lambda
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 4000,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "MAG_TASK_RATE":
-                    switch (fieldName) {
-                        case "debug[0]": // Task Rate
-                        case "debug[1]": // Data Rate
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -1000,
-                                    max: 1000,
-                                },
-                            };
-                        case "debug[2]": // Data Interval
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10000,
-                                    max: 10000,
-                                },
-                            };
-                        case "debug[3]": // Execute Time
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -20,
-                                    max: 20,
-                                },
-                            };
-                        case "debug[4]": // Bus Busy Check
-                        case "debug[5]": // Read State Check
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -2,
-                                    max: 2,
-                                },
-                            };
-                        case "debug[6]": // Time since previous task uS
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -10000,
-                                    max: 10000,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "EZLANDING":
-                    return {
-                        offset: -5000,
-                        power: 1,
-                        inputRange: 5000,
-                        outputRange: 1,
-                    };
-                case "ATTITUDE":
-                    switch (fieldName) {
-                        case "debug[0]": // Roll angle
-                        case "debug[1]": // Pitch angle
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: -180,
-                                    max: 180,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
-                case "MAVLINK_TELEMETRY":
-                    switch (fieldName) {
-                        case "debug[0]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 1,
-                                },
-                            };
-                        case "debug[1]":
-                        case "debug[2]":
-                        case "debug[3]":
-                        case "debug[4]":
-                        case "debug[5]":
-                        case "debug[6]":
-                        case "debug[7]":
-                            return {
-                                power: 1,
-                                MinMax: {
-                                    min: 0,
-                                    max: 100,
-                                },
-                            };
-                        default:
-                            return getCurveForMinMaxFields(fieldName);
-                    }
+            const curve = debugModeCurve(getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode]);
+            if (curve) {
+                return curve;
             }
         }
+
         // if not found above then
         // Scale and center the field based on the whole-log observed ranges for that field
         return getCurveForMinMaxFields(fieldName);

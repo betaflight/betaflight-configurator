@@ -36,6 +36,10 @@ async function fetchOsdInfo(fcStore) {
 }
 
 async function decodeOsdData(info) {
+    if (!CONFIGURATOR.virtualMode) {
+        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+    }
+
     OSD.loadDisplayFields();
     OSD.chooseFields();
 
@@ -50,7 +54,6 @@ async function decodeOsdData(info) {
     }
 
     OSD.msp.decode(info);
-    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
 }
 
 async function ensureDefaultFontLoaded() {
@@ -185,6 +188,11 @@ export const useOsdStore = defineStore("osd", () => {
         if (displayItems.value[itemIndex]) {
             displayItems.value[itemIndex].isVisible[profileIndex] = visible;
         }
+    }
+
+    function refreshDisplayItemPreview(displayItem) {
+        syncToLegacy();
+        OSD.refreshDisplayItemPreview(OSD.data, displayItem);
     }
 
     // Sync state to legacy OSD.data object for compatibility
@@ -359,7 +367,11 @@ export const useOsdStore = defineStore("osd", () => {
         return buffer;
     }
 
-    const saveAllConfig = async () => {
+    /**
+     * @param {() => Promise<void>} [beforePersist] runs after the config is written and before the
+     *   EEPROM write that serialises it, which is where a CLI `set` has to sit
+     */
+    const saveAllConfig = async (beforePersist) => {
         const savedSnapshot = takeSnapshot();
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
@@ -378,6 +390,8 @@ export const useOsdStore = defineStore("osd", () => {
                 encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
             );
         }
+
+        await beforePersist?.();
 
         await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
         captureSnapshot(savedSnapshot);
@@ -409,6 +423,7 @@ export const useOsdStore = defineStore("osd", () => {
         updateDisplaySize,
         setSelectedPreviewProfile,
         updateDisplayItemVisibility,
+        refreshDisplayItemPreview,
         syncToLegacy,
         fetchOsdConfig,
         saveAllConfig,

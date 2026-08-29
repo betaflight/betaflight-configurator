@@ -137,6 +137,30 @@
         "message": "Inserire il percorso seriale o l'URL a cui connettersi.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Connessioni salvate",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nome:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nome per questa connessione",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Salva",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Aggiorna",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Rimuovi connessione salvata",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Connessione automatica"
     },
@@ -975,7 +999,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Il <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualizzatore di Log Blackbox<\/a> è disponibile come app.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware, questa app e il visualizzatore di blackbox possono essere scaricati da GitHub.<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">."
+        "message": "Il nostro visualizzatore di log Blackbox è integrato in questa app. Apri la scheda <strong>Blackbox Viewer<\/strong> per analizzare i registri dei voli.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware e questa app può essere scaricata da GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
@@ -2153,8 +2177,24 @@
         "message": "Quando abilitato, solo il primo armamento dopo la connessione della batteria sarà usato come punto di partenza. Se non abilitato, ogni volta che il modello viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Il supporto GPS non è incluso in questa build del firmware. Ricaricare il firmware con l'opzione GPS per configurare e utilizzare il GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Protocollo ricevente seriale"
+    },
+    "portsPortNone": {
+        "message": "Nessuno"
+    },
+    "receiverSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART a cui è collegato il ricevitore seriale. Il baud rate segue il provider, quindi non c'è nulla da impostare qui. Cambiare la porta richiede un riavvio."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Impossibile impostare la porta seriale del ricevitore, quindi non è stato salvato nulla."
     },
     "someRXTypesDisabled": {
         "message": "Alcuni protocolli del ricevitore non sono supportati dalla configurazione della build."
@@ -2213,6 +2253,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NON<\/span> \n disabilitare mai MSP sulla prima porta seriale a meno che tu non sappia BENE cosa stai per fare. Potrebbe rendersi necessario riflashare e cancellare la tua configurazione se lo fai."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> questo firmware assegna le porte seriali sulla scheda di ogni funzione, quindi questa vista è di sola lettura. Mostra quale porta ogni funzione usa attualmente; cambia l'impostazione dalla scheda che possiede la funzione."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">È necessario<\/span> un aggiornamento del firmware. La configurazione delle porte seriali non è supportata per firmware &lt; di 1.8.0."
@@ -6903,6 +6946,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicatore di qualità del link basato sulla percentuale di pacchetti di dati non corrotti ricevuti con successo"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Modalità RF:Qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Solo qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distanza del volo",
         "description": "One of the elements of the OSD"
@@ -7910,45 +7961,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinazione è {{saved}}° ma il GPS rileva {{detected}}° per questa posizione. Fare clic su Aggiorna per correggere."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} esempi"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclinare di più!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Rilevamento fallito — prova con inclinazione più varia."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Cal Cliente (Guidato)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Calibrazione automatica 60s"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibrazione Guidata"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Passo 1\/6 — Tieni il velivolo orizzontale, ruota di 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Passo 2\/6 — Mettilo a testa in giù, ruota di 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Passo 3\/6 — Muso verso l’alto, ruota di 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Passo 4\/6 — Muso verso il basso, ruota di 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Passo 5\/6 — Lato sinistro in alto, ruota di 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Passo 6\/6 — Lato destro in alto, ruota di 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Raccolta dati completata — controlla e salva"
-    },
     "magCalibrationCancel": {
         "message": "Cancella"
     },
@@ -7979,12 +7991,6 @@
     "magCalibrationSamples": {
         "message": "Esempi"
     },
-    "magCalibrationQuality": {
-        "message": "Qualità"
-    },
-    "magCalibrationResidual": {
-        "message": "Adatta Residua"
-    },
     "magCalibrationQualityGood": {
         "message": "Buono"
     },
@@ -7996,9 +8002,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Offset firmware"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offset di adattamento sferico"
     },
     "magCalibrationUnguided": {
         "message": "Firmware Cal (Legacy)"
@@ -8014,18 +8017,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibrazione firmware completata!"
-    },
-    "magCalibrationGuided": {
-        "message": "Cal Cliente (Libera)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Ruota liberamente — il configuratore calcola le compensazioni (offset)"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibrazione Cliente"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Ruotare il veicolo in tutte le direzioni. Scopo è di creare una sfera completa di punti per circa uno o due minuti. Salva il risultato quando i valori di taratura si sono stabilizzati."
     },
     "magCalibrationCheck": {
         "message": "Controlla"
@@ -8051,17 +8042,14 @@
     "magCalibrationSaveError": {
         "message": "Impossibile salvare i valori di calibrazione"
     },
-    "magCalibrationAccept": {
-        "message": "Salva Calibrazione"
-    },
     "magCalibrationFull": {
-        "message": "Cal Completa (auto allineamento)"
+        "message": "Calibra e rileva l'allineamento"
     },
     "magCalibrationFullDesc": {
-        "message": "Una rotazione completa - calibra gli offset, il soft-iron e l'orientamento del magnetometro"
+        "message": "Ruotare il velivolo in tutte le direzioni per calibrare il sensore e rilevare automaticamente il suo orientamento di montaggio."
     },
     "magCalibrationFullTitle": {
-        "message": "Calibrazione Completa"
+        "message": "Calibra e Rileva l'allineamento"
     },
     "magCalibrationFullInstruction": {
         "message": "Segui i passaggi qui sotto, mantenendo il velivolo stabile durante ogni rotazione completa. Il conteggio delle zone aumenta man mano che raggiungi nuovi angoli: cerca di coprirle tutte e 20."
@@ -8097,7 +8085,10 @@
         "message": "{{covered}} \/ {{total}} zone coperte"
     },
     "magCalibrationFullCompute": {
-        "message": "Calcola"
+        "message": "Calibrazione Finale"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Più zone ricoperte danno maggiore precisione — puntare a 20 \/ 20 per la migliore calibrazione e rilevamento d' allineamento."
     },
     "magCalibrationFullCoverage": {
         "message": "Copertura:"
@@ -8127,7 +8118,22 @@
         "message": "Campioni non sufficienti — gira più lungo"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Nessuna posizione GPS o IP — non é possibile determinare l'inclinazione magnetica"
+        "message": "Nessun GPS, browser o indirizzo IP — inserisci le coordinate per continuare"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Posizione richiesta per la calibrazione"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Inserisci latitudine e longitudine scegliendo da Google Maps. Il drone non ha nessun aggancio GPS e il dispositivo non è riuscito a fornire i dati di posizione. La posizione è necessaria per la calibrazione del magnetometro."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Formato coordinate non valido. Inserisci come: latitudine, longitudine (es. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Impossibile calcolare un riferimento magnetico per queste coordinate. Si prega di controllarle e riprovare."
     },
     "magCalibrationFullCliCopied": {
         "message": "Comandi CLI copiati negli appunti"
@@ -8167,12 +8173,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nuovo"
-    },
-    "magAlignmentApply": {
-        "message": "Applica"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Rileva"
     },
     "configurationSmallAngle": {
         "message": "Angolo massimo di armamento [gradi]"
