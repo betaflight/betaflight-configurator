@@ -9,7 +9,7 @@
  *   API 1.46.0  5fd38528ba 2024-05-04  (90 modes)
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
- *   API 1.49.0  34f54066fd 2026-08-22  (103 modes)
+ *   API 1.49.0  34de470d73 2026-08-30  (104 modes)
  */
 
 /**
@@ -582,6 +582,7 @@ export const FIRMWARE_DEBUG_MODES = Object.freeze({
         "POSITION_NAV", // 100
         "AUTOPILOT_STOP", // 101
         "PITOT", // 102
+        "POSITION_EST", // 103
     ]),
 });
 

@@ -59,6 +59,10 @@
             "suffix": "m/s",
             "factor": 0.01
         },
+        "cm/s2": {
+            "suffix": "m/s²",
+            "factor": 0.01
+        },
         "g": {
             "suffix": "g"
         },
@@ -3337,8 +3341,8 @@
             ]
         },
         "1.49.0": {
-            "commit": "34f54066fdf7a5af2d849eabeadc4b4d30f10c8e",
-            "date": "2026-08-22",
+            "commit": "34de470d73c8f06842e429a6e5f3528c8794a7eb",
+            "date": "2026-08-30",
             "modes": [
                 {
                     "index": 0,
@@ -3683,27 +3687,47 @@
                 {
                     "index": 13,
                     "name": "ALTITUDE",
-                    "writes": [0, 1, 2, 3],
+                    "writes": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false,
                     "fields": {
                         "0": {
-                            "label": "Altitude Estimate Trust",
-                            "unit": "%",
+                            "label": "Relative Rangefinder Altitude",
+                            "unit": "cm",
                             "scale": 1
                         },
                         "1": {
-                            "label": "Estimated Altitude",
-                            "unit": "m",
-                            "scale": 0.1
+                            "label": "Relative Baro Altitude",
+                            "unit": "cm",
+                            "scale": 1
                         },
                         "2": {
-                            "label": "Smoothed Altitude",
-                            "unit": "m",
-                            "scale": 0.1
+                            "label": "Relative GPS Altitude",
+                            "unit": "cm",
+                            "scale": 1
                         },
                         "3": {
-                            "label": "Vario",
+                            "label": "Estimated Altitude",
+                            "unit": "cm",
+                            "scale": 1
+                        },
+                        "4": {
+                            "label": "GPS Vertical Velocity",
                             "unit": "cm/s",
+                            "scale": 1
+                        },
+                        "5": {
+                            "label": "Estimated Vertical Velocity",
+                            "unit": "cm/s",
+                            "scale": 1
+                        },
+                        "6": {
+                            "label": "Vertical Acceleration",
+                            "unit": "cm/s2",
+                            "scale": 1
+                        },
+                        "7": {
+                            "label": "Estimated Vertical Acceleration",
+                            "unit": "cm/s2",
                             "scale": 1
                         }
                     }
@@ -4402,8 +4426,8 @@
                         },
                         "1": {
                             "label": "Displayed Altitude",
-                            "unit": "m",
-                            "scale": 0.1
+                            "unit": "cm",
+                            "scale": 1
                         },
                         "2": {
                             "label": "Rescue Phase",
@@ -4965,32 +4989,32 @@
                             "scale": 1
                         },
                         "1": {
-                            "label": "Tilt Multiplier",
-                            "unit": null,
-                            "scale": 0.01
-                        },
-                        "2": {
                             "label": "Target Altitude",
                             "unit": "cm",
                             "scale": 1
                         },
-                        "3": {
+                        "2": {
                             "label": "Current Altitude",
                             "unit": "cm",
                             "scale": 1
                         },
-                        "4": {
+                        "3": {
                             "label": "Altitude P Term",
                             "unit": "us",
                             "scale": 1
                         },
-                        "5": {
+                        "4": {
                             "label": "Altitude I Term",
                             "unit": "us",
                             "scale": 1
                         },
-                        "6": {
+                        "5": {
                             "label": "Altitude D Term",
+                            "unit": "us",
+                            "scale": 1
+                        },
+                        "6": {
+                            "label": "Altitude A Term",
                             "unit": "us",
                             "scale": 1
                         },
@@ -6443,7 +6467,7 @@
                     "dynamic": false,
                     "fields": {
                         "0": {
-                            "label": "Velocity Error (dbg-axis)",
+                            "label": "Velocity (dbg-axis)",
                             "unit": "cm/s",
                             "scale": 1
                         },
@@ -6607,6 +6631,54 @@
                             "scale": 1
                         }
                     }
+                },
+                {
+                    "index": 103,
+                    "name": "POSITION_EST",
+                    "writes": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false,
+                    "fields": {
+                        "0": {
+                            "label": "Estimated Position (dbg-axis)",
+                            "unit": "cm",
+                            "scale": 1
+                        },
+                        "1": {
+                            "label": "Estimated Velocity (dbg-axis)",
+                            "unit": "cm/s",
+                            "scale": 1
+                        },
+                        "2": {
+                            "label": "Estimated Acceleration (dbg-axis)",
+                            "unit": "cm/s2",
+                            "scale": 1
+                        },
+                        "3": {
+                            "label": "Flow Velocity East",
+                            "unit": "cm/s",
+                            "scale": 1
+                        },
+                        "4": {
+                            "label": "Flow Velocity North",
+                            "unit": "cm/s",
+                            "scale": 1
+                        },
+                        "5": {
+                            "label": "Linear Acceleration (dbg-axis)",
+                            "unit": "cm/s2",
+                            "scale": 1
+                        },
+                        "6": {
+                            "label": "GPS Position Measurement Noise",
+                            "unit": null,
+                            "scale": 1
+                        },
+                        "7": {
+                            "label": "GPS Velocity Measurement Noise",
+                            "unit": null,
+                            "scale": 1
+                        }
+                    }
                 }
             ]
         }
@@ -6697,7 +6769,7 @@
                     "label": "Ground Speed",
                     "unit": "cm/s",
                     "scale": 1,
-                    "sites": ["src/main/flight/gps_rescue_multirotor.c:225"]
+                    "sites": ["src/main/flight/gps_rescue_multirotor.c:223"]
                 },
                 {
                     "label": "Rescue Phase",
@@ -6715,7 +6787,7 @@
                         "RESCUE_EMERG_DESCENT",
                         "RESCUE_DO_NOTHING"
                     ],
-                    "sites": ["src/main/flight/gps_rescue_multirotor.c:693"]
+                    "sites": ["src/main/flight/gps_rescue_multirotor.c:689"]
                 }
             ]
         },
@@ -6734,7 +6806,7 @@
                     "label": "Distance",
                     "unit": "m",
                     "scale": 0.001,
-                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:206"]
+                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:228"]
                 }
             ]
         },
@@ -6753,7 +6825,7 @@
                     "label": "Confidence",
                     "unit": null,
                     "scale": 1,
-                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:207"]
+                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:229"]
                 }
             ]
         },
@@ -6772,7 +6844,7 @@
                     "label": "Optical Flow X",
                     "unit": null,
                     "scale": 1,
-                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:208"]
+                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:230"]
                 }
             ]
         },
@@ -6791,7 +6863,7 @@
                     "label": "Optical Flow Y",
                     "unit": null,
                     "scale": 1,
-                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:209"]
+                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:231"]
                 }
             ]
         },
@@ -6810,7 +6882,7 @@
                     "label": "Laser Valid Status",
                     "unit": null,
                     "scale": 1,
-                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:210"]
+                    "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:232"]
                 }
             ]
         },
@@ -6823,13 +6895,13 @@
                     "label": "Target Step Scale",
                     "unit": "%",
                     "scale": 1,
-                    "sites": ["src/main/flight/gps_rescue_multirotor.c:277"]
+                    "sites": ["src/main/flight/gps_rescue_multirotor.c:275"]
                 },
                 {
                     "label": "Seconds With Low Satellite Count",
                     "unit": "s",
                     "scale": 1,
-                    "sites": ["src/main/flight/gps_rescue_multirotor.c:346"]
+                    "sites": ["src/main/flight/gps_rescue_multirotor.c:344"]
                 }
             ]
         },
