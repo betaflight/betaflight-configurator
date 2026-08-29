@@ -3,6 +3,24 @@
     <div class="toolbar-bar">
         <div class="toolbar-group toolbar-group--start">
             <LogFileInput size="xs" label="Open log file" @files-selected="$emit('files-selected', $event)" />
+            <UTooltip
+                :text="
+                    downloadAvailable
+                        ? 'Download the onboard log from the connected flight controller'
+                        : 'Connect a flight controller that has a recorded log'
+                "
+            >
+                <UButton
+                    size="xs"
+                    color="primary"
+                    variant="soft"
+                    icon="i-lucide-download"
+                    :loading="pulling"
+                    :disabled="!downloadAvailable || pulling"
+                    :label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
+                    @click="$emit('download-from-fc')"
+                />
+            </UTooltip>
             <span v-if="appStore.logFilename" class="toolbar-filename" :title="appStore.logFilename">
                 {{ appStore.logFilename }}
             </span>
@@ -88,7 +106,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, inject, ref, watch } from "vue";
 import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import { useGraphStore } from "../stores/graph.js";
@@ -97,6 +115,7 @@ import LogFileInput from "./LogFileInput.vue";
 
 defineEmits([
     "files-selected",
+    "download-from-fc",
     "export-csv",
     "export-gpx",
     "export-workspaces",
@@ -144,6 +163,13 @@ watch(
     },
     { immediate: true },
 );
+
+// Host-provided FC dataflash pull capability (null when not embedded / unavailable). Shared
+// with WelcomePage.vue via the same injection so both surfaces reflect one source of truth.
+const dataflash = inject("bbvDataflash", null);
+const downloadAvailable = computed(() => !!dataflash?.available?.value);
+const pulling = computed(() => !!dataflash?.pulling?.value);
+const progress = computed(() => dataflash?.progress?.value ?? 0);
 </script>
 
 <style scoped>
