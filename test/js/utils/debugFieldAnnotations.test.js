@@ -184,9 +184,10 @@ describe("firmware debug field annotations", () => {
             // [us] and [%] pass through.
             expect(decodeDebugFieldToFriendly("CYCLETIME", "debug[0]", 125, ctx(ANNOTATED))).toBe("125 μs");
             expect(decodeDebugFieldToFriendly("CYCLETIME", "debug[1]", 42, ctx(ANNOTATED))).toBe("42 %");
-            // [cm] is shown in metres, [0.1m] in metres too.
+            // [cm] is shown in metres, and [cm/s2] in metres per second squared.
             expect(decodeDebugFieldToFriendly("BARO", "debug[3]", 1234, ctx(ANNOTATED))).toBe("12.34 m");
-            expect(decodeDebugFieldToFriendly("ALTITUDE", "debug[1]", 123, ctx(ANNOTATED))).toBe("12.3 m");
+            expect(decodeDebugFieldToFriendly("ALTITUDE", "debug[1]", 123, ctx(ANNOTATED))).toBe("1.23 m");
+            expect(decodeDebugFieldToFriendly("POSITION_EST", "debug[2]", 250, ctx(ANNOTATED))).toBe("2.50 m/s²");
         });
 
         it("uses the flight controller's own scaling for a device-native unit", () => {

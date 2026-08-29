@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  34f54066fd 2026-08-22  (473 annotated fields)
+ *   API 1.49.0  34de470d73 2026-08-30  (485 annotated fields)
  */
 
 /**
@@ -47,10 +47,14 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             3: Object.freeze({ label: "VRef", unit: "V", scale: 0.001 }),
         }),
         ALTITUDE: Object.freeze({
-            0: Object.freeze({ label: "Altitude Estimate Trust", unit: "%", scale: 1 }),
-            1: Object.freeze({ label: "Estimated Altitude", unit: "m", scale: 0.1 }),
-            2: Object.freeze({ label: "Smoothed Altitude", unit: "m", scale: 0.1 }),
-            3: Object.freeze({ label: "Vario", unit: "cm/s", scale: 1 }),
+            0: Object.freeze({ label: "Relative Rangefinder Altitude", unit: "cm", scale: 1 }),
+            1: Object.freeze({ label: "Relative Baro Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Relative GPS Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Estimated Altitude", unit: "cm", scale: 1 }),
+            4: Object.freeze({ label: "GPS Vertical Velocity", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({ label: "Estimated Vertical Velocity", unit: "cm/s", scale: 1 }),
+            6: Object.freeze({ label: "Vertical Acceleration", unit: "cm/s2", scale: 1 }),
+            7: Object.freeze({ label: "Estimated Vertical Acceleration", unit: "cm/s2", scale: 1 }),
         }),
         ANGLE_MODE: Object.freeze({
             0: Object.freeze({ label: "Angle Target (roll)", unit: "deg", scale: 0.1 }),
@@ -102,16 +106,16 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
         }),
         AUTOPILOT_ALTITUDE: Object.freeze({
             0: Object.freeze({ label: "Throttle Output", unit: "us", scale: 1 }),
-            1: Object.freeze({ label: "Tilt Multiplier", unit: null, scale: 0.01 }),
-            2: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
-            3: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
-            4: Object.freeze({ label: "Altitude P Term", unit: "us", scale: 1 }),
-            5: Object.freeze({ label: "Altitude I Term", unit: "us", scale: 1 }),
-            6: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Altitude P Term", unit: "us", scale: 1 }),
+            4: Object.freeze({ label: "Altitude I Term", unit: "us", scale: 1 }),
+            5: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
+            6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
             7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
         }),
         AUTOPILOT_PID: Object.freeze({
-            0: Object.freeze({ label: "Velocity Error (dbg-axis)", unit: "cm/s", scale: 1 }),
+            0: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
             1: Object.freeze({ label: "Distance Error (dbg-axis)", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "P Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             3: Object.freeze({ label: "I Term (dbg-axis)", unit: "deg", scale: 0.1 }),
@@ -573,6 +577,16 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
             2: Object.freeze({ label: "Differential Pressure Before Zero Offset", unit: "Pa", scale: 1 }),
             3: Object.freeze({ label: "Temperature", unit: "degC", scale: 1 }),
         }),
+        POSITION_EST: Object.freeze({
+            0: Object.freeze({ label: "Estimated Position (dbg-axis)", unit: "cm", scale: 1 }),
+            1: Object.freeze({ label: "Estimated Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Estimated Acceleration (dbg-axis)", unit: "cm/s2", scale: 1 }),
+            3: Object.freeze({ label: "Flow Velocity East", unit: "cm/s", scale: 1 }),
+            4: Object.freeze({ label: "Flow Velocity North", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({ label: "Linear Acceleration (dbg-axis)", unit: "cm/s2", scale: 1 }),
+            6: Object.freeze({ label: "GPS Position Measurement Noise", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "GPS Velocity Measurement Noise", unit: null, scale: 1 }),
+        }),
         POSITION_NAV: Object.freeze({
             0: Object.freeze({ label: "Target Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
             1: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
@@ -632,7 +646,7 @@ export const FIRMWARE_DEBUG_FIELDS = Object.freeze({
         }),
         RTH: Object.freeze({
             0: Object.freeze({ label: "Ground Speed", unit: "m/s", scale: 0.1 }),
-            1: Object.freeze({ label: "Displayed Altitude", unit: "m", scale: 0.1 }),
+            1: Object.freeze({ label: "Displayed Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
@@ -926,7 +940,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Ground Speed",
                 unit: "cm/s",
                 scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:225"]),
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:223"]),
             }),
             Object.freeze({
                 label: "Rescue Phase",
@@ -944,7 +958,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                     "RESCUE_EMERG_DESCENT",
                     "RESCUE_DO_NOTHING",
                 ]),
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:693"]),
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:689"]),
             }),
         ]),
     }),
@@ -963,7 +977,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Distance",
                 unit: "m",
                 scale: 0.001,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:206"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:228"]),
             }),
         ]),
     }),
@@ -982,7 +996,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Confidence",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:207"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:229"]),
             }),
         ]),
     }),
@@ -1001,7 +1015,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Optical Flow X",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:208"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:230"]),
             }),
         ]),
     }),
@@ -1020,7 +1034,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Optical Flow Y",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:209"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:231"]),
             }),
         ]),
     }),
@@ -1039,7 +1053,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Laser Valid Status",
                 unit: null,
                 scale: 1,
-                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:210"]),
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:232"]),
             }),
         ]),
     }),
@@ -1052,13 +1066,13 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([
                 label: "Target Step Scale",
                 unit: "%",
                 scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:277"]),
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:275"]),
             }),
             Object.freeze({
                 label: "Seconds With Low Satellite Count",
                 unit: "s",
                 scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:346"]),
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:344"]),
             }),
         ]),
     }),

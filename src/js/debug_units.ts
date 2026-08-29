@@ -60,6 +60,7 @@ export const DEBUG_UNITS: Readonly<Record<string, DebugUnit>> = Object.freeze({
     cm: { suffix: "m", factor: 0.01 },
     "m/s": { suffix: "m/s" },
     "cm/s": { suffix: "m/s", factor: 0.01 },
+    "cm/s2": { suffix: "m/s²", factor: 0.01 },
     g: { suffix: "g" },
     "g/s": { suffix: "g/s" },
     V: { suffix: "V" },
