@@ -35,9 +35,23 @@ pub fn run() {
     // iOS: network (TCP/WebSocket) is the only transport, and a raw socket never raises the
     // Local Network permission prompt on its own. Request it at startup — before any connect —
     // so the user grants it up front instead of the first connect failing while it's pending.
+    // WebKit keeps the layout viewport inside the safe area despite `viewport-fit=cover`, so on
+    // a notched screen the page is laid out short and the strips above and below it are webview
+    // background no CSS can reach. The Swift side frees the layout and feeds the real insets back
+    // to the page.
+    #[cfg(target_os = "ios")]
+    unsafe extern "C" {
+        fn bf_use_full_screen_webview();
+    }
+
     #[cfg(target_os = "ios")]
     let builder = builder.setup(|_app| {
         tcp::trigger_local_network_permission();
+        // Safety: provided by the app's Swift side, linked into the same binary; it only
+        // schedules work on the main queue and returns.
+        unsafe {
+            bf_use_full_screen_webview();
+        }
         Ok(())
     });
 

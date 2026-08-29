@@ -1,3 +1,13 @@
+/* Safe-area insets. On iOS the native shell cancels the webview's safe area so the page can
+   use the whole window, and pushes the real insets in as these properties; everywhere else they
+   fall back to env(). Always use these rather than env(safe-area-inset-*) directly. */
+:root {
+    --bf-inset-top: var(--bf-inset-top);
+    --bf-inset-bottom: var(--bf-inset-bottom);
+    --bf-inset-left: env(safe-area-inset-left, 0px);
+    --bf-inset-right: env(safe-area-inset-right, 0px);
+}
+
 * {
     outline: none;
     user-select: none;
@@ -642,7 +652,7 @@ dialog {
         flex-wrap: wrap;
         position: fixed;
         /* Sit directly on top of #status-bar, which grows by the bottom safe-area inset */
-        bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+        bottom: calc(2.5rem + var(--bf-inset-bottom));
         inset-inline-end: 0;
     }
 }
@@ -1390,7 +1400,7 @@ each(range(12), {
     .tab_container.reveal {
         inset-inline-start: 0;
         /* Clear the mobile top bar plus the status bar / display cutout above it */
-        padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+        padding-top: calc(3.5rem + var(--bf-inset-top));
     }
     #content {
         width: 100% !important;
@@ -1406,8 +1416,8 @@ each(range(12), {
         height: auto !important;
         /* height is auto with both edges pinned, so the box stretches between them: keep the
            bottom edge above the navigation bar / home indicator or the actions land under it */
-        bottom: env(safe-area-inset-bottom, 0px);
-        top: calc(56px + env(safe-area-inset-top, 0px));
+        bottom: var(--bf-inset-bottom);
+        top: calc(56px + var(--bf-inset-top));
         border-radius: unset;
         border: none;
         overflow: auto;

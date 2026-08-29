@@ -1,9 +1,24 @@
 <template>
     <BaseTab tab-name="cli" @mounted="onTabMounted" @cleanup="onTabCleanup">
         <div class="content_wrapper flex flex-col overflow-hidden pb-0 max-[1055px]:h-[calc(100%-87px)]">
-            <UiBox highlight class="mb-3">
+            <UiBox highlight class="cli-info-tile mb-3">
                 <p v-html="$t('cliInfo')"></p>
             </UiBox>
+            <UButton
+                class="cli-info-button"
+                icon="i-lucide-info"
+                color="neutral"
+                variant="ghost"
+                size="sm"
+                square
+                :aria-label="$t('cliInfo')"
+                @click="infoOpen = true"
+            />
+            <UModal v-model:open="infoOpen" :title="$t('tabCLI')" :ui="{ content: 'w-[92vw] max-w-[600px]' }">
+                <template #body>
+                    <p v-html="$t('cliInfo')"></p>
+                </template>
+            </UModal>
 
             <div
                 class="cli-backdrop grow w-full border border-(--surface-500) bg-black/75 bg-no-repeat bg-[position:50%_80%] bg-[size:600px] rounded-[5px] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] max-[575px]:bg-[size:100%]"
@@ -110,7 +125,7 @@
 </template>
 
 <script>
-import { defineComponent, nextTick } from "vue";
+import { defineComponent, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import CliAutocompleteDropdown from "../cli/CliAutocompleteDropdown.vue";
 import { useCli } from "../../composables/useCli";
@@ -242,8 +257,11 @@ export default defineComponent({
             }
         };
 
+        const infoOpen = ref(false);
+
         return {
             cli,
+            infoOpen,
             onTabMounted,
             onTabCleanup,
             handleLoadFile,
@@ -267,6 +285,60 @@ export default defineComponent({
 /* BaseTab wrapper — no template access to add Tailwind classes */
 .tab-cli {
     height: calc(100% - 3rem);
+}
+
+.cli-info-button {
+    display: none;
+}
+
+/* Phone/tablet shell only: the terminal is pinned to the viewport between the account button
+   and the floating status bar, so it never scrolls with the page and keeps a stable height
+   while the on-screen keyboard is up. Desktop and the browser keep the flow layout. */
+body.mobile-app-shell {
+    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        .cli-info-tile {
+            display: none;
+        }
+
+        /* iOS zooms the page whenever a focused field is under 16px, which leaves the terminal
+           scaled and off-centre after the first keystroke. 16px is the threshold, not a design
+           choice; the box grows to match so the text still fits. */
+        textarea[name="commands"] {
+            font-size: 16px;
+            height: auto;
+            min-height: 1.75rem;
+        }
+
+        .cli-info-button {
+            display: inline-flex;
+            position: fixed;
+            top: calc(0.5rem + var(--bf-inset-top));
+            /* Clear of the floating connect control, which owns the far corner. */
+            right: 4rem;
+            z-index: 2002;
+            border-radius: 9999px;
+            border: 1px solid var(--surface-200);
+            background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+        }
+
+        .tab-cli {
+            height: 100%;
+        }
+
+        .tab-cli .content_wrapper {
+            position: fixed;
+            top: calc(3rem + var(--bf-inset-top));
+            left: 0.5rem;
+            right: 0.5rem;
+            bottom: calc(5.75rem + var(--bf-inset-bottom));
+            height: auto;
+            margin: 0;
+            padding: 0;
+        }
+    }
 }
 
 /* background-image needs CSS for Vite asset resolution */

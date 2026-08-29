@@ -41,6 +41,23 @@ function handleDisallowedTab(tabKey, tabLabel) {
     }
 }
 
+function resetPageZoom() {
+    // iOS zooms in on a focused field and never zooms back out by itself, so without this the
+    // next tab inherits the scale. Clamping maximum-scale for one frame is the only way to
+    // restore it from script; the clamp is lifted again so pinch zoom still works.
+    if (!document.body.classList.contains("mobile-app-shell")) {
+        return;
+    }
+    document.activeElement?.blur?.();
+    const meta = document.querySelector("meta[name=viewport]");
+    if (!meta) {
+        return;
+    }
+    const content = meta.getAttribute("content");
+    meta.setAttribute("content", `${content},maximum-scale=1`);
+    requestAnimationFrame(() => meta.setAttribute("content", content));
+}
+
 export function switchTab(tabKey, options = {}) {
     const mode = options.mode ?? "disconnected";
     const label = options.label ?? defaultLabel(tabKey);
@@ -67,6 +84,8 @@ export function switchTab(tabKey, options = {}) {
     if (mode === "connected" && tabKey !== "cli") {
         setConfig({ lastTab: `tab_${tabKey}` });
     }
+
+    resetPageZoom();
 
     GUI.tab_switch_in_progress = true;
     GUI.tab_switch_cleanup(function () {
