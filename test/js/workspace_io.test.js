@@ -9,6 +9,58 @@ vi.mock("../../src/js/FileSystem", () => ({ default: fileSystem }));
 
 import { loadWorkspaces, saveWorkspaces } from "../../src/blackbox-viewer/workspace_io.js";
 
+const INVALID_WORKSPACE_MESSAGE = "Invalid workspace file. No settings were changed.";
+const HEADER_LAYOUT_STORAGE_KEYS = {
+    hiddenGroups: "bbv-hidden-groups",
+    hiddenFields: "bbv-hidden-fields",
+    paneOrder: "bbv-pane-order",
+};
+
+function createExistingWorkspaceState() {
+    const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
+
+    return {
+        existingWorkspaces,
+        workspaceStore: { workspaceGraphConfigs: existingWorkspaces },
+        onSwitchWorkspace: vi.fn(),
+    };
+}
+
+async function expectRejectedImport(payload, storedLayout = { hiddenGroups: ["Rates"] }, raw = false) {
+    const { existingWorkspaces, workspaceStore, onSwitchWorkspace } = createExistingWorkspaceState();
+
+    for (const [property, value] of Object.entries(storedLayout)) {
+        localStorage.setItem(HEADER_LAYOUT_STORAGE_KEYS[property], JSON.stringify(value));
+    }
+
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const contents = raw ? payload : JSON.stringify(payload);
+
+    await expect(
+        loadWorkspaces({ text: vi.fn().mockResolvedValue(contents) }, workspaceStore, onSwitchWorkspace),
+    ).resolves.toBeUndefined();
+
+    expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
+    expect(onSwitchWorkspace).not.toHaveBeenCalled();
+    for (const [property, value] of Object.entries(storedLayout)) {
+        expect(JSON.parse(localStorage.getItem(HEADER_LAYOUT_STORAGE_KEYS[property]))).toEqual(value);
+    }
+    expect(globalThis.alert).toHaveBeenCalledWith(INVALID_WORKSPACE_MESSAGE);
+}
+
+async function importWorkspacePayload(payload) {
+    const workspaceStore = {};
+    const onSwitchWorkspace = vi.fn();
+
+    await loadWorkspaces(
+        { text: vi.fn().mockResolvedValue(JSON.stringify(payload)) },
+        workspaceStore,
+        onSwitchWorkspace,
+    );
+
+    return { workspaceStore, onSwitchWorkspace };
+}
+
 describe("Blackbox workspace export", () => {
     beforeEach(() => {
         localStorage.clear();
@@ -62,164 +114,56 @@ describe("Blackbox workspace import", () => {
     });
 
     it("handles invalid JSON without changing workspace or header state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-
-        await expect(
-            loadWorkspaces({ text: vi.fn().mockResolvedValue("not json") }, workspaceStore, onSwitchWorkspace),
-        ).resolves.toBeUndefined();
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
+        await expectRejectedImport("not json", undefined, true);
     });
 
-    it("rejects malformed versioned wrappers before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-        const malformed = {
-            version: 2,
-            workspaces: {},
-            headerLayout: { hiddenGroups: [], hiddenFields: [], paneOrder: [] },
-        };
-
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify(malformed)) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
-    });
-
-    it("rejects a malformed versioned workspace slot before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-        const malformed = {
-            version: 2,
-            workspaces: [null, { title: "Bad", graphConfig: {} }],
-            headerLayout: { hiddenGroups: ["PID Settings"], hiddenFields: [], paneOrder: [] },
-        };
-
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify(malformed)) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
-    });
-
-    it("rejects unsupported workspace export versions", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        vi.spyOn(console, "error").mockImplementation(() => {});
-
-        await loadWorkspaces(
+    it.each([
+        [
+            "malformed versioned wrappers",
             {
-                text: vi
-                    .fn()
-                    .mockResolvedValue(JSON.stringify({ version: 3, workspaces: [null], headerLayout: undefined })),
+                version: 2,
+                workspaces: {},
+                headerLayout: { hiddenGroups: [], hiddenFields: [], paneOrder: [] },
             },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
-    });
-
-    it("rejects invalid header layout metadata before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const importedWorkspaces = [null, { title: "Imported", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-
-        await loadWorkspaces(
+        ],
+        [
+            "malformed versioned workspace slots",
             {
-                text: vi
-                    .fn()
-                    .mockResolvedValue(
-                        JSON.stringify({ version: 2, workspaces: importedWorkspaces, headerLayout: "invalid" }),
-                    ),
+                version: 2,
+                workspaces: [null, { title: "Bad", graphConfig: {} }],
+                headerLayout: { hiddenGroups: ["PID Settings"], hiddenFields: [], paneOrder: [] },
             },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
+        ],
+        ["unsupported workspace export versions", { version: 3, workspaces: [null] }],
+        [
+            "invalid header layout metadata",
+            {
+                version: 2,
+                workspaces: [null, { title: "Imported", graphConfig: [] }],
+                headerLayout: "invalid",
+            },
+        ],
+        ["unsupported object payloads", { title: "Not a workspace file" }],
+        ["malformed raw workspace slots", [null, { title: "Bad", graphConfig: {} }]],
+        ["malformed original graphConfig slots", { graphConfig: [null, {}] }],
+    ])("rejects %s before changing state", async (_description, payload) => {
+        await expectRejectedImport(payload);
     });
 
     it("rejects partial header layout metadata without clearing the current layout", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
         const importedWorkspaces = [null, { title: "Imported", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        localStorage.setItem("bbv-hidden-fields", JSON.stringify(["debug_mode"]));
-        localStorage.setItem("bbv-pane-order", JSON.stringify(["Rates", "Parameters"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-
-        await loadWorkspaces(
+        await expectRejectedImport(
             {
-                text: vi.fn().mockResolvedValue(
-                    JSON.stringify({
-                        version: 2,
-                        workspaces: importedWorkspaces,
-                        headerLayout: { hiddenGroups: [] },
-                    }),
-                ),
+                version: 2,
+                workspaces: importedWorkspaces,
+                headerLayout: { hiddenGroups: [] },
             },
-            workspaceStore,
-            onSwitchWorkspace,
+            {
+                hiddenGroups: ["Rates"],
+                hiddenFields: ["debug_mode"],
+                paneOrder: ["Rates", "Parameters"],
+            },
         );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-fields"))).toEqual(["debug_mode"]);
-        expect(JSON.parse(localStorage.getItem("bbv-pane-order"))).toEqual(["Rates", "Parameters"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
-    });
-
-    it("rejects unsupported object payloads before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        vi.spyOn(console, "error").mockImplementation(() => {});
-
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify({ title: "Not a workspace file" })) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
     });
 
     it("restores workspaces and header layout from a versioned bundle", async () => {
@@ -251,17 +195,9 @@ describe("Blackbox workspace import", () => {
 
     it("imports a versioned bundle without optional header layout metadata", async () => {
         const workspaces = [null, { title: "No metadata", graphConfig: [] }];
-        const workspaceStore = {};
-        const onSwitchWorkspace = vi.fn();
         localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
 
-        await loadWorkspaces(
-            {
-                text: vi.fn().mockResolvedValue(JSON.stringify({ version: 2, workspaces })),
-            },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
+        const { workspaceStore, onSwitchWorkspace } = await importWorkspacePayload({ version: 2, workspaces });
 
         expect(workspaceStore.workspaceGraphConfigs).toEqual(workspaces);
         expect(onSwitchWorkspace).toHaveBeenCalledWith(workspaces, 1);
@@ -290,59 +226,15 @@ describe("Blackbox workspace import", () => {
         expect(JSON.parse(localStorage.getItem("bbv-pane-order"))).toEqual(["Rates", "Future Pane"]);
     });
 
-    it("rejects a malformed raw workspace slot before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        vi.spyOn(console, "error").mockImplementation(() => {});
-        const malformed = [null, { title: "Bad", graphConfig: {} }];
-
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify(malformed)) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
-    });
-
     it("still imports the current array format without replacing the header layout", async () => {
         const workspaces = [null, { title: "Legacy array", graphConfig: [] }];
         localStorage.setItem("bbv-hidden-groups", JSON.stringify(["Rates"]));
-        const workspaceStore = {};
-        const onSwitchWorkspace = vi.fn();
 
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify(workspaces)) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
+        const { workspaceStore, onSwitchWorkspace } = await importWorkspacePayload(workspaces);
 
         expect(workspaceStore.workspaceGraphConfigs).toEqual(workspaces);
         expect(onSwitchWorkspace).toHaveBeenCalledWith(workspaces, 1);
         expect(JSON.parse(localStorage.getItem("bbv-hidden-groups"))).toEqual(["Rates"]);
-    });
-
-    it("rejects a malformed original graphConfig slot before changing state", async () => {
-        const existingWorkspaces = [null, { title: "Existing", graphConfig: [] }];
-        const workspaceStore = { workspaceGraphConfigs: existingWorkspaces };
-        const onSwitchWorkspace = vi.fn();
-        vi.spyOn(console, "error").mockImplementation(() => {});
-        const malformed = { graphConfig: [null, {}] };
-
-        await loadWorkspaces(
-            { text: vi.fn().mockResolvedValue(JSON.stringify(malformed)) },
-            workspaceStore,
-            onSwitchWorkspace,
-        );
-
-        expect(workspaceStore.workspaceGraphConfigs).toBe(existingWorkspaces);
-        expect(onSwitchWorkspace).not.toHaveBeenCalled();
-        expect(globalThis.alert).toHaveBeenCalledWith("Invalid workspace file. No settings were changed.");
     });
 
     it("still upgrades the original graphConfig format", async () => {
