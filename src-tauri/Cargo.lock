@@ -121,6 +121,7 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 name = "betaflight-app"
 version = "2026.12.0"
 dependencies = [
+ "libc",
  "mdns-sd",
  "serde",
  "serde_json",

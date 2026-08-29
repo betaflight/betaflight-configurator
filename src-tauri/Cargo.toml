@@ -24,9 +24,15 @@ serde_json = "1.0"
 # Tauri CLI can discover its Android library path.
 tauri-plugin-dfu = { path = "plugins/dfu" }
 
-# Browses the bridge's `_betaflight._tcp` mDNS service so bridges appear in the connect
-# list without typing an IP. Pure Rust, so it builds for every target.
+# Browses the bridge's `_betaflight._tcp` mDNS service so bridges appear in the connect list
+# without typing an IP. Apple platforms go through mDNSResponder instead (src/mdns/apple.rs),
+# because iOS drops multicast from an app's own socket without a special entitlement.
+[target.'cfg(not(any(target_os = "ios", target_os = "macos")))'.dependencies]
 mdns-sd = "0.21"
+
+# poll(2) for the dns_sd resolve socket in src/mdns/apple.rs.
+[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
+libc = "0.2"
 
 # USB serial is desktop + Android only. iOS has no USB serial API, and
 # tauri-plugin-serialplugin's iOS build path doesn't compile, so exclude it there.
