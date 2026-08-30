@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
  * Generate src/js/build_options.js from the Betaflight cloud build API.
  *
