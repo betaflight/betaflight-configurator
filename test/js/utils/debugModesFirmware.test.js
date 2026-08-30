@@ -9,7 +9,7 @@ import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugMo
  * Keeps the hand-written half of `src/js/utils/debugModes.js` honest against the
  * firmware, which is the single source of truth for debug modes.
  *
- * `src/js/debug_modes_table.js`, `src/js/debug_fields_table.js` and
+ * `src/js/debug_modes_table.ts`, `src/js/debug_fields_table.ts` and
  * `test/generated/debug_field_usage.json` are all produced by
  * `npm run generate:debug-modes` from the firmware sources: the mode table holds
  * the `debug_mode_e` enum per API version, the field table holds the label, unit

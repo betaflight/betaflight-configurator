@@ -8,10 +8,10 @@
  * fixes the name shown in the CLI/OSD. This generator reads both, once per MSP
  * API version, and writes:
  *
- *   src/js/debug_modes_table.js     - shipped: per-API-version ordered mode
+ *   src/js/debug_modes_table.ts     - shipped: per-API-version ordered mode
  *                                     names, plus the rename aliases needed to
  *                                     keep labels working for older firmware.
- *   src/js/debug_fields_table.js    - shipped: the label, unit and scaling of
+ *   src/js/debug_fields_table.ts    - shipped: the label, unit and scaling of
  *                                     each `debug[n]`, read from the `//!<`
  *                                     annotations the firmware carries on its
  *                                     DEBUG_SET() call sites (see
@@ -77,8 +77,8 @@
  *                       every generated file says so in its header.
  *   --min-api <minor>   Lowest MSP API minor to emit (default: 44, the oldest
  *                       version the configurator connects to).
- *   --out <path>        Mode table output (default: src/js/debug_modes_table.js).
- *   --labels-out <path> Field label/unit output (default: src/js/debug_fields_table.js).
+ *   --out <path>        Mode table output (default: src/js/debug_modes_table.ts).
+ *   --labels-out <path> Field label/unit output (default: src/js/debug_fields_table.ts).
  *   --fields-out <path> Field-usage output (default: test/generated/debug_field_usage.json).
  *   --json-out <path>   Published artifact (default: generated/debug-fields.json).
  *   --schema-out <path> Published schema (default: generated/debug-fields.schema.json).
