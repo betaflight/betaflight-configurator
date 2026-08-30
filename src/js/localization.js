@@ -6,6 +6,7 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 const i18n = {};
 
 const languagesAvailables = [
+    "ar",
     "ca",
     "da",
     "de",
