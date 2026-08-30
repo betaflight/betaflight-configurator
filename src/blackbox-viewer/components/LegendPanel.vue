@@ -39,7 +39,7 @@
                     class="graph-legend-group"
                     @click="onGraphClick($event, gi)"
                     @mousedown.middle.prevent="onResetPen(gi, null)"
-                    @wheel.prevent="onFieldWheel($event, gi, null)"
+                    @wheel="onFieldWheel($event, gi, null)"
                 >
                     <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
                     {{ graph.label }}
@@ -54,7 +54,7 @@
                         @mouseenter="onFieldHover(gi, fi)"
                         @mouseleave="onFieldLeave"
                         @mousedown.middle.prevent="onResetPen(gi, fi)"
-                        @wheel.prevent="onFieldWheel($event, gi, fi)"
+                        @wheel="onFieldWheel($event, gi, fi)"
                     >
                         <span class="graph-legend-field-name" @click="onFieldClick($event, gi, fi, field)">{{
                             field.friendlyName
@@ -305,10 +305,13 @@ function onResetPen(gi, fi) {
 }
 
 function onFieldWheel(e, gi, fi) {
-    if (e.shiftKey || e.altKey || e.ctrlKey) {
-        const delta = e.deltaY < 0 ? 1 : -1;
-        graphStore.fieldWheel?.(gi, fi, delta, e.shiftKey, e.altKey, e.ctrlKey);
+    // Without a modifier key the wheel scrolls the legend list natively.
+    if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
+        return;
     }
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 1 : -1;
+    graphStore.fieldWheel?.(gi, fi, delta, e.shiftKey, e.altKey, e.ctrlKey);
 }
 
 // --- Override toggles ---

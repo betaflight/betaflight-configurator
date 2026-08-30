@@ -5,168 +5,177 @@
             <div class="tab_title" v-html="$t('tabVtx')"></div>
             <WikiButton docUrl="vtx" />
 
-            <!-- Help note -->
-            <UiBox highlight v-show="vtxSupported">
-                <p v-html="$t('vtxHelp')"></p>
-            </UiBox>
+            <div class="mt-4 flex flex-wrap items-start gap-4">
+                <!-- Help note -->
+                <UiBox highlight v-show="vtxSupported" class="mt-3 w-full sm:max-w-xl">
+                    <p v-html="$t('vtxHelp')"></p>
+                </UiBox>
 
-            <!-- Not supported -->
-            <UiBox highlight v-show="!vtxSupported">
-                <div v-html="$t('vtxMessageNotSupported')"></div>
-            </UiBox>
+                <!-- Not supported -->
+                <UiBox highlight v-show="!vtxSupported" class="mt-3 w-full sm:w-96">
+                    <div v-html="$t('vtxMessageNotSupported')"></div>
+                </UiBox>
 
-            <!-- Table not configured / factory bands warnings -->
-            <div v-if="vtxTableNotConfigured || factoryBandsNotSupported" class="flex flex-col gap-2">
-                <UiBox v-show="vtxTableNotConfigured" highlight>
+                <!-- Table not configured / factory bands warnings -->
+                <UiBox v-show="vtxTableNotConfigured" highlight class="mt-3 w-full sm:w-96">
                     <div v-html="$t('vtxMessageTableNotConfigured')"></div>
                 </UiBox>
-                <UiBox v-show="factoryBandsNotSupported" highlight>
+                <UiBox v-show="factoryBandsNotSupported" highlight class="mt-3 w-full sm:w-96">
                     <div v-html="$t('vtxMessageFactoryBandsNotSupported')"></div>
                 </UiBox>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Configuration Panel -->
-                <div class="lg:col-span-3" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxSelectedMode')" type="neutral" collapsible class="mt-4">
-                        <div class="flex flex-col gap-2">
-                            <!-- Frequency/Channel toggle -->
-                            <SettingRow :label="$t('vtxFrequencyChannel')" :help="$t('vtxFrequencyChannelHelp')">
-                                <USwitch v-model="frequencyMode" size="xs" />
-                            </SettingRow>
+                <UiBox
+                    v-show="vtxSupported"
+                    :title="$t('vtxSelectedMode')"
+                    type="neutral"
+                    collapsible
+                    class="w-full sm:w-fit"
+                >
+                    <div class="flex flex-col gap-2">
+                        <!-- Frequency/Channel toggle -->
+                        <SettingRow :label="$t('vtxFrequencyChannel')" :help="$t('vtxFrequencyChannelHelp')">
+                            <USwitch v-model="frequencyMode" size="xs" />
+                        </SettingRow>
 
-                            <!-- Band select -->
-                            <SettingRow v-show="!frequencyMode" :label="$t('vtxBand')" :help="$t('vtxBandHelp')">
-                                <USelect v-model="vtxConfig.vtx_band" :items="bandOptions" class="w-32" />
-                            </SettingRow>
+                        <!-- Band select -->
+                        <SettingRow v-show="!frequencyMode" :label="$t('vtxBand')" :help="$t('vtxBandHelp')">
+                            <USelect v-model="vtxConfig.vtx_band" :items="bandOptions" class="w-32" />
+                        </SettingRow>
 
-                            <!-- Channel select -->
-                            <SettingRow v-show="!frequencyMode" :label="$t('vtxChannel')" :help="$t('vtxChannelHelp')">
-                                <USelect v-model="vtxConfig.vtx_channel" :items="channelOptions" class="w-32" />
-                            </SettingRow>
+                        <!-- Channel select -->
+                        <SettingRow v-show="!frequencyMode" :label="$t('vtxChannel')" :help="$t('vtxChannelHelp')">
+                            <USelect v-model="vtxConfig.vtx_channel" :items="channelOptions" class="w-32" />
+                        </SettingRow>
 
-                            <!-- Frequency input -->
-                            <SettingRow
-                                v-show="frequencyMode"
-                                :label="$t('vtxFrequency')"
-                                :help="$t('vtxFrequencyHelp')"
-                            >
-                                <UInputNumber
-                                    v-model="vtxConfig.vtx_frequency"
-                                    :min="64"
-                                    :max="5999"
-                                    :step="1"
-                                    :format-options="{ useGrouping: false }"
-                                    size="xs"
-                                    orientation="vertical"
-                                    class="w-20"
-                                />
-                            </SettingRow>
+                        <!-- Frequency input -->
+                        <SettingRow v-show="frequencyMode" :label="$t('vtxFrequency')" :help="$t('vtxFrequencyHelp')">
+                            <UInputNumber
+                                v-model="vtxConfig.vtx_frequency"
+                                :min="64"
+                                :max="5999"
+                                :step="1"
+                                :format-options="{ useGrouping: false }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
 
-                            <!-- Power select -->
-                            <SettingRow :label="$t('vtxPower')" :help="$t('vtxPowerHelp')">
-                                <USelect v-model="vtxConfig.vtx_power" :items="powerOptions" class="w-32" />
-                            </SettingRow>
+                        <!-- Power select -->
+                        <SettingRow :label="$t('vtxPower')" :help="$t('vtxPowerHelp')">
+                            <USelect v-model="vtxConfig.vtx_power" :items="powerOptions" class="w-32" />
+                        </SettingRow>
 
-                            <!-- Pit mode -->
-                            <SettingRow :label="$t('vtxPitMode')" :help="$t('vtxPitModeHelp')">
-                                <USwitch v-model="vtxConfig.vtx_pit_mode" size="xs" />
-                            </SettingRow>
+                        <!-- Pit mode -->
+                        <SettingRow :label="$t('vtxPitMode')" :help="$t('vtxPitModeHelp')">
+                            <USwitch v-model="vtxConfig.vtx_pit_mode" size="xs" />
+                        </SettingRow>
 
-                            <!-- Pit mode frequency -->
-                            <SettingRow :label="$t('vtxPitModeFrequency')" :help="$t('vtxPitModeFrequencyHelp')">
-                                <UInputNumber
-                                    v-model="vtxConfig.vtx_pit_mode_frequency"
-                                    :min="0"
-                                    :max="5999"
-                                    :step="1"
-                                    :format-options="{ useGrouping: false }"
-                                    size="xs"
-                                    orientation="vertical"
-                                    class="w-20"
-                                />
-                            </SettingRow>
+                        <!-- Pit mode frequency -->
+                        <SettingRow :label="$t('vtxPitModeFrequency')" :help="$t('vtxPitModeFrequencyHelp')">
+                            <UInputNumber
+                                v-model="vtxConfig.vtx_pit_mode_frequency"
+                                :min="0"
+                                :max="5999"
+                                :step="1"
+                                :format-options="{ useGrouping: false }"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
 
-                            <SettingRow
-                                v-if="vtxProtocolOptions.length"
-                                :label="$t('vtxProtocol')"
-                                :help="$t('vtxProtocolHelp')"
-                            >
-                                <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
-                            </SettingRow>
-
-                            <SettingRow
-                                v-if="vtxPortAvailable"
-                                :label="$t('vtxSerialPort')"
-                                :help="$t('vtxSerialPortHelp')"
-                            >
-                                <USelect
-                                    v-model="vtxPortIdentifier"
-                                    :items="vtxPortOptions"
-                                    :disabled="!vtxPortWritable"
-                                    class="w-36"
-                                />
-                            </SettingRow>
-
-                            <!-- Low power disarm -->
-                            <SettingRow :label="$t('vtxLowPowerDisarm')" :help="$t('vtxLowPowerDisarmHelp')">
-                                <USelect
-                                    v-model="vtxConfig.vtx_low_power_disarm"
-                                    :items="lowPowerDisarmOptions"
-                                    class="w-36"
-                                />
-                            </SettingRow>
-                        </div>
-                    </UiBox>
-                </div>
+                        <!-- Low power disarm -->
+                        <SettingRow :label="$t('vtxLowPowerDisarm')" :help="$t('vtxLowPowerDisarmHelp')">
+                            <USelect
+                                v-model="vtxConfig.vtx_low_power_disarm"
+                                :items="lowPowerDisarmOptions"
+                                class="w-36"
+                            />
+                        </SettingRow>
+                    </div>
+                </UiBox>
 
                 <!-- VTX Info Panel -->
-                <div class="lg:col-span-1" v-show="vtxSupported">
-                    <UiBox :title="$t('vtxActualState')" type="neutral" collapsible class="mt-4">
-                        <div class="flex flex-col text-xs">
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxDeviceReady')"></span>
-                                <span class="colorToggle" :class="{ ready: deviceReady }">{{ deviceReadyText }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxType')"></span>
-                                <span>{{ vtxTypeString }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxBand')"></span>
-                                <span>{{ bandDescription }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxChannel')"></span>
-                                <span>{{ vtxConfig.vtx_channel }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxFrequency')"></span>
-                                <span>{{ vtxConfig.vtx_frequency }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxPower')"></span>
-                                <span>{{ powerDescription }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxPitMode')"></span>
-                                <span>{{ pitModeDescription }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
-                                <span v-html="$t('vtxPitModeFrequency')"></span>
-                                <span>{{ vtxConfig.vtx_pit_mode_frequency }}</span>
-                            </div>
-                            <div class="flex justify-between py-1.5">
-                                <span v-html="$t('vtxLowPowerDisarm')"></span>
-                                <span>{{ lowPowerDisarmDescription }}</span>
-                            </div>
+                <UiBox
+                    v-show="vtxSupported"
+                    :title="$t('vtxActualState')"
+                    type="neutral"
+                    collapsible
+                    class="w-full sm:w-80"
+                >
+                    <div class="flex flex-col text-xs">
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxDeviceReady')"></span>
+                            <span class="colorToggle" :class="{ ready: deviceReady }">{{ deviceReadyText }}</span>
                         </div>
-                    </UiBox>
-                </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxType')"></span>
+                            <span>{{ vtxTypeString }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxBand')"></span>
+                            <span>{{ bandDescription }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxChannel')"></span>
+                            <span>{{ vtxConfig.vtx_channel }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxFrequency')"></span>
+                            <span>{{ vtxConfig.vtx_frequency }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxPower')"></span>
+                            <span>{{ powerDescription }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxPitMode')"></span>
+                            <span>{{ pitModeDescription }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-(--ui-border)">
+                            <span v-html="$t('vtxPitModeFrequency')"></span>
+                            <span>{{ vtxConfig.vtx_pit_mode_frequency }}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5">
+                            <span v-html="$t('vtxLowPowerDisarm')"></span>
+                            <span>{{ lowPowerDisarmDescription }}</span>
+                        </div>
+                    </div>
+                </UiBox>
+
+                <!-- Device: protocol and port stay reachable before a VTX answers -->
+                <UiBox
+                    v-if="vtxPortAvailable"
+                    :title="$t('vtxDeviceSetup')"
+                    type="neutral"
+                    collapsible
+                    class="w-full sm:w-fit"
+                >
+                    <div class="flex flex-col gap-2">
+                        <SettingRow :label="$t('vtxProtocol')" :help="$t('vtxProtocolHelp')">
+                            <USelect v-model="vtxProtocol" :items="vtxProtocolOptions" class="w-36" />
+                        </SettingRow>
+
+                        <SettingRow
+                            :label="$t('vtxSerialPort')"
+                            :help="vtxPortFollowsOsd ? $t('vtxSerialPortMspHelp') : $t('vtxSerialPortHelp')"
+                        >
+                            <USelect
+                                :model-value="vtxPortShown"
+                                @update:model-value="(v) => (vtxPortIdentifier = v)"
+                                :items="vtxPortOptions"
+                                :disabled="!vtxPortWritable || vtxPortFollowsOsd"
+                                class="w-36"
+                            />
+                        </SettingRow>
+                    </div>
+                </UiBox>
 
                 <!-- VTX Table -->
-                <div class="lg:col-span-4 overflow-x-auto">
-                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="mt-4 min-w-[750px]">
+                <div class="max-w-full overflow-x-auto">
+                    <UiBox :title="$t('vtxTable')" type="neutral" collapsible class="w-fit">
                         <div class="flex flex-col gap-4">
                             <!-- Bands and channels count -->
                             <div class="flex flex-wrap items-end gap-4">
@@ -409,6 +418,7 @@ import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
 
 export default defineComponent({
@@ -477,6 +487,25 @@ export default defineComponent({
             protocol: { setting: "vtx_type" },
         });
 
+        // An MSP VTX answers on the goggles' MSP link rather than a port of its own, so the
+        // firmware falls back to the OSD's UART and the row follows the OSD tab, read-only.
+        const { selectedIdentifier: osdPortIdentifier, load: loadOsdPort } = useFeaturePort({
+            setting: "osd_uart",
+            functionName: "FRSKY_OSD",
+        });
+
+        const mspVtx = computed(() => vtxProtocol.value === "MSP");
+        const vtxPortShown = computed(() =>
+            mspVtx.value && vtxPortIdentifier.value === PORT_NONE ? osdPortIdentifier.value : vtxPortIdentifier.value,
+        );
+
+        // Only the fallback is locked: an MSP VTX with no port of its own rides
+        // the OSD's UART, which is assigned on the OSD tab. A dedicated port
+        // stays editable whatever the protocol.
+        const vtxPortFollowsOsd = computed(
+            () => mspVtx.value && vtxPortIdentifier.value === PORT_NONE && osdPortIdentifier.value !== PORT_NONE,
+        );
+
         // vtxDevType_e keeps index 2 open, so the firmware lookup names it RESERVED.
         const vtxProtocolOptions = computed(() => vtxProtocolValues.value.filter(({ value }) => value !== "RESERVED"));
 
@@ -543,6 +572,7 @@ export default defineComponent({
         onMounted(async () => {
             await loadVtxConfig();
             await loadVtxPort();
+            await loadOsdPort();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
             GUI.content_ready();
@@ -554,6 +584,7 @@ export default defineComponent({
                     await saveVtx(writeVtxPort);
                     await loadVtxConfig();
                     await loadVtxPort();
+                    await loadOsdPort();
                 },
                 {
                     onError: (error) => {
@@ -700,6 +731,8 @@ export default defineComponent({
             vtxPortIdentifier,
             vtxProtocol,
             vtxProtocolOptions,
+            vtxPortFollowsOsd,
+            vtxPortShown,
             savePending,
             factoryBandsSupported,
             frequencyMode,
