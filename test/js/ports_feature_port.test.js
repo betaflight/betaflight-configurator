@@ -201,7 +201,7 @@ describe("useFeaturePort", () => {
     });
 
     it("reports itself unsupported when the build has no such setting", async () => {
-        withFeature({ setting: "msp_uart_3", functionName: "MSP" });
+        withFeature({ setting: "msp_3_uart", functionName: "MSP" });
 
         await port.load();
 
@@ -211,7 +211,7 @@ describe("useFeaturePort", () => {
 
     it("writes nothing for an instance the build does not have", async () => {
         // a caller may write() a setting the build lacks, so an absent one has to be inert
-        withFeature({ setting: "msp_uart_3", functionName: "MSP", baud: { setting: "msp_baud_3" } });
+        withFeature({ setting: "msp_3_uart", functionName: "MSP", baud: { setting: "msp_3_baud" } });
 
         await port.load();
         expect(port.supported.value).toBe(false);
