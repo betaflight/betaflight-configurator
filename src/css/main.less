@@ -2,8 +2,8 @@
    use the whole window, and pushes the real insets in as these properties; everywhere else they
    fall back to env(). Always use these rather than env(safe-area-inset-*) directly. */
 :root {
-    --bf-inset-top: var(--bf-inset-top);
-    --bf-inset-bottom: var(--bf-inset-bottom);
+    --bf-inset-top: env(safe-area-inset-top, 0px);
+    --bf-inset-bottom: env(safe-area-inset-bottom, 0px);
     --bf-inset-left: env(safe-area-inset-left, 0px);
     --bf-inset-right: env(safe-area-inset-right, 0px);
 }
