@@ -151,6 +151,7 @@ class TauriSerial extends EventTarget {
         // open port, and port-list changes for hotplug.
         this.dataChannelId = null;
         this.portListChannelId = null;
+        this.portListChannel = null;
         this.monitoringDevices = false;
         this.portListSubscription = null;
 
@@ -197,7 +198,13 @@ class TauriSerial extends EventTarget {
 
         this.monitoringDevices = true;
         const channel = new Channel();
-        channel.onmessage = (event) => this._handlePortListEvent(event);
+        this.portListChannel = channel;
+        channel.onmessage = (event) => {
+            if (this.portListChannel !== channel) {
+                return;
+            }
+            this._handlePortListEvent(event);
+        };
 
         this.portListSubscription = invoke("plugin:serialplugin|watch_ports", {
             options: { pollIntervalMs: PORT_LIST_POLL_INTERVAL_MS },
@@ -209,6 +216,7 @@ class TauriSerial extends EventTarget {
             })
             .catch((error) => {
                 this.monitoringDevices = false;
+                this.portListChannel = null;
                 console.error(`${logHead} Could not start device monitoring:`, error);
             });
 
@@ -222,6 +230,7 @@ class TauriSerial extends EventTarget {
         await this.portListSubscription;
 
         this.monitoringDevices = false;
+        this.portListChannel = null;
         const channelId = this.portListChannelId;
         this.portListChannelId = null;
         if (channelId === null) {
@@ -238,6 +247,10 @@ class TauriSerial extends EventTarget {
 
     /**
      * Apply one `PortListEvent` from the monitor.
+     *
+     * Only the current subscription's events are applied: a channel already in
+     * flight when `stopDeviceMonitoring` unsubscribed would otherwise report a
+     * device removal underneath an open port, which the reconnect cycle acts on.
      *
      * A `snapshot` is a full reconciliation, not just an initial state: the
      * monitor sends one on every subscribe, and this transport unsubscribes for

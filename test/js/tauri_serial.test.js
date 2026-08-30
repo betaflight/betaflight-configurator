@@ -369,6 +369,19 @@ describe("TauriSerial connect", () => {
 
         expect(stop).toHaveBeenCalled();
     });
+
+    it("resumes port enumeration after disconnecting", async () => {
+        // The snapshot the monitor sends on subscribe is what reports a device
+        // unplugged while the port was open, which the reconnect cycle waits on.
+        mockPresentPort();
+        const serial = new TauriSerial();
+        await serial.connect(PORT, { baudRate: 115200 });
+        const start = vi.spyOn(serial, "startDeviceMonitoring");
+
+        await serial.disconnect();
+
+        expect(start).toHaveBeenCalled();
+    });
 });
 
 describe("TauriSerial receive", () => {
@@ -537,6 +550,30 @@ describe("TauriSerial hotplug", () => {
         channel.onmessage({ kind: "added", path: PORT, info: STM32 });
 
         expect(serial.ports.map((port) => port.path)).toEqual([PORT]);
+    });
+
+    it("drops a port-list event that arrives after the monitor was torn down", async () => {
+        // connect() suspends the monitor. A channel still in flight would
+        // otherwise report a removal underneath the open port, which the
+        // reconnect cycle acts on.
+        const { serial, channel, events } = await monitored({ [PORT]: STM32 });
+
+        await serial.stopDeviceMonitoring();
+        channel.onmessage({ kind: "removed", path: PORT });
+
+        expect(events).toEqual([]);
+        expect(serial.ports.map((port) => port.path)).toEqual([PORT]);
+    });
+
+    it("ignores the previous subscription once the monitor has restarted", async () => {
+        const { serial, channel, events } = await monitored({ [PORT]: STM32 });
+
+        await serial.stopDeviceMonitoring();
+        await serial.startDeviceMonitoring();
+        channel.onmessage({ kind: "snapshot", ports: {} });
+
+        expect(events).toEqual([]);
+        expect(lastChannel()).not.toBe(channel);
     });
 
     it("waits for an in-flight subscribe before tearing the monitor down", async () => {
