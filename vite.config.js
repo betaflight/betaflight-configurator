@@ -164,15 +164,6 @@ export default defineConfig({
         environment: "jsdom",
         setupFiles: ["test/setup.js"],
         root: ".",
-        server: {
-            deps: {
-                // The build scripts are Node programs, not app source: Node runs
-                // them directly, shebang and all, and transforming one puts an
-                // import ahead of that shebang and fails to parse. Load them the
-                // way they are actually run, so a test can reach their parsing.
-                external: [/[\\/]scripts[\\/]/],
-            },
-        },
         alias: {
             "/images/": `${path.resolve(__dirname, "src/images")}/`,
         },
