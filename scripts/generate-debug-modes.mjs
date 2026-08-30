@@ -117,8 +117,8 @@ const DEFAULT_MIN_API_MINOR = 44;
 
 // A value that can be pasted into a shell as it stands.
 const SHELL_SAFE_WORD = /^[\w./:@=-]+$/;
-const DEFAULT_OUT = "src/js/debug_modes_table.js";
-const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.js";
+const DEFAULT_OUT = "src/js/debug_modes_table.ts";
+const DEFAULT_LABELS_OUT = "src/js/debug_fields_table.ts";
 const DEFAULT_FIELDS_OUT = "test/generated/debug_field_usage.json";
 const DEFAULT_JSON_OUT = "generated/debug-fields.json";
 const DEFAULT_SCHEMA_OUT = "generated/debug-fields.schema.json";
@@ -1465,7 +1465,7 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
         " * Each list comes from the newest firmware commit that still carried that API",
         " * version, which is the largest enum any firmware reporting it can have.",
         " */",
-        "export const FIRMWARE_DEBUG_MODES = Object.freeze({",
+        "export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> = Object.freeze({",
     ];
 
     for (const version of versions) {
@@ -1484,7 +1484,7 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
         " * decode and convert tables are keyed by the current name, so a log from",
         " * firmware that used the old name resolves through this map.",
         " */",
-        "export const DEBUG_MODE_ALIASES = Object.freeze({",
+        "export const DEBUG_MODE_ALIASES: Readonly<Record<string, string>> = Object.freeze({",
     );
 
     const renameNote = new Map(renames.map((rename) => [rename.from, `${rename.fromApi} -> ${rename.toApi}`]));
@@ -1583,7 +1583,39 @@ function fieldsModuleHeader(repoUrl, annotated) {
         " *",
         " * A field the firmware does not annotate is absent here.",
         " */",
-        "export const FIRMWARE_DEBUG_FIELDS = Object.freeze({",
+        "export interface FirmwareDebugField {",
+        "    /** The field name to show, in the firmware's own wording. */",
+        "    label: string;",
+        "    /** Unit symbol of the stored value, or null for a count, flag or enumeration. */",
+        "    unit: string | null;",
+        "    /** What one LSB is worth in `unit`. */",
+        "    scale: number;",
+        "    /** Enumerator names indexed by value, null where the enum leaves a gap. */",
+        "    values?: readonly (string | null)[];",
+        "    /** Bit-flag names, lowest bit first, null for a bit the field does not use. */",
+        "    flags?: readonly (string | null)[];",
+        "}",
+        "",
+        "/** Keyed by MSP API version, then by mode name, then by `debug[n]` index. */",
+        "export type FirmwareDebugFields = Readonly<",
+        "    Record<string, Readonly<Record<string, Readonly<Record<string, FirmwareDebugField>>>>>",
+        ">;",
+        "",
+        "/** One meaning of an index two subsystems write differently in the same build. */",
+        "export interface FirmwareDebugFieldMeaning extends FirmwareDebugField {",
+        "    /** The firmware call sites carrying this meaning, as path:line. */",
+        "    sites: readonly string[];",
+        "}",
+        "",
+        "/** An index that cannot be labelled, because a log records only the number. */",
+        "export interface FirmwareDebugFieldConflict {",
+        "    apiVersion: string;",
+        "    mode: string;",
+        "    index: number;",
+        "    meanings: readonly FirmwareDebugFieldMeaning[];",
+        "}",
+        "",
+        "export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({",
     ];
 }
 
@@ -1674,7 +1706,7 @@ function renderFieldsModule({ repoUrl, versions }) {
         " * field cannot be labelled: both meanings are kept here so the app can say so",
         " * rather than pick one. Every entry is a firmware bug.",
         " */",
-        "export const FIRMWARE_DEBUG_FIELD_CONFLICTS = Object.freeze([",
+        "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([",
     );
 
     for (const conflict of conflicts) {

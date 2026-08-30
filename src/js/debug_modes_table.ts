@@ -20,7 +20,7 @@
  * Each list comes from the newest firmware commit that still carried that API
  * version, which is the largest enum any firmware reporting it can have.
  */
-export const FIRMWARE_DEBUG_MODES = Object.freeze({
+export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> = Object.freeze({
     "1.44.0": Object.freeze([
         "NONE", // 0
         "CYCLETIME", // 1
@@ -591,7 +591,7 @@ export const FIRMWARE_DEBUG_MODES = Object.freeze({
  * decode and convert tables are keyed by the current name, so a log from
  * firmware that used the old name resolves through this map.
  */
-export const DEBUG_MODE_ALIASES = Object.freeze({
+export const DEBUG_MODE_ALIASES: Readonly<Record<string, string>> = Object.freeze({
     D_MIN: "D_MAX", // renamed in 1.46.0 -> 1.47.0
     DUAL_GYRO_DIFF: "MULTI_GYRO_DIFF", // renamed in 1.46.0 -> 1.47.0
     DUAL_GYRO_RAW: "MULTI_GYRO_RAW", // renamed in 1.46.0 -> 1.47.0
