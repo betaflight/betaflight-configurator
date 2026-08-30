@@ -3341,7 +3341,7 @@
             ]
         },
         "1.49.0": {
-            "commit": "45e43a64d082749b4d66f133efe3860d9d32388b",
+            "commit": "4873e1ef2a915d8e48517ac7e85b4d41b2e4f125",
             "date": "2026-08-30",
             "modes": [
                 {
@@ -6823,7 +6823,7 @@
                 },
                 {
                     "label": "Confidence",
-                    "unit": null,
+                    "unit": "%",
                     "scale": 1,
                     "sites": ["src/main/drivers/rangefinder/rangefinder_upt1.c:229"]
                 }

@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  45e43a64d0 2026-08-30  (485 annotated fields)
+ *   API 1.49.0  4873e1ef2a 2026-08-30  (485 annotated fields)
  */
 
 /**
@@ -1026,7 +1026,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
             }),
             Object.freeze({
                 label: "Confidence",
-                unit: null,
+                unit: "%",
                 scale: 1,
                 sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:229"]),
             }),
