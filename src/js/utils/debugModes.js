@@ -14,7 +14,7 @@ import { DEBUG_UNITS } from "../debug_units";
  * Firmware from API 1.49 on also records what each `debug[n]` holds, in a `//!<`
  * annotation on the DEBUG_SET() call site (the grammar is in the firmware's
  * `src/main/build/debug.h`). Those labels, units and scalings are generated into
- * `src/js/debug_fields_table.js` by the same script and take precedence here: for
+ * `src/js/debug_fields_table.ts` by the same script and take precedence here: for
  * an annotated field the firmware is the source of truth, and the hand-written
  * tables below serve the firmware versions that carry no annotations, the
  * mode-level `debug[all]` names, and the few formatters an annotation cannot

@@ -12,7 +12,7 @@ import { API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage
 /*
  * The firmware annotates its DEBUG_SET() call sites with what each debug[n] holds
  * (`//!< <label> [<unit>]`, grammar in the firmware's src/main/build/debug.h), and
- * `npm run generate:debug-modes` turns those into src/js/debug_fields_table.js.
+ * `npm run generate:debug-modes` turns those into src/js/debug_fields_table.ts.
  * These tests cover what the app does with them: an annotated field takes its
  * label, unit and scaling from firmware, an unannotated one still comes from the
  * hand-written tables, and firmware that predates the annotations is untouched.
