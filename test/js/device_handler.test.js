@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
 // ---------------------------------------------------------------------------
 // device_handler.js pulls in ConfigStorage, the serial facade, the DFU protocol,
@@ -118,6 +119,8 @@ function resetPortHandler() {
     DeviceHandler.currentSerialPorts = [];
     DeviceHandler.currentUsbPorts = [];
     DeviceHandler.currentBluetoothPorts = [];
+    DeviceHandler.currentTcpPorts = [];
+    DeviceHandler.tcpAvailable = false;
     DeviceHandler.showVirtualMode = false;
     DeviceHandler.showManualMode = false;
     DeviceHandler.devicePicker.selectedDevice = "noselection";
@@ -402,5 +405,26 @@ describe("createDfuProtocol routing", () => {
             vi.doUnmock("../../src/js/utils/checkCompatibility.js");
             vi.resetModules();
         }
+    });
+});
+
+// The connect menu reads the bridge list through a computed over DeviceHandler. The module
+// default-exports reactive(DeviceHandler), so a refresh must invalidate that computed.
+describe("DeviceHandler.currentTcpPorts reactivity", () => {
+    beforeEach(() => {
+        resetPortHandler();
+    });
+
+    it("invalidates a computed over currentTcpPorts when a refresh finds a bridge", async () => {
+        const tcpPorts = computed(() => DeviceHandler.currentTcpPorts);
+        expect(tcpPorts.value).toHaveLength(0);
+
+        serial.getDevices.mockResolvedValue([
+            { path: "tcp://10.1.1.208:5761", displayName: "betaflight-bridge-f8a260" },
+        ]);
+        await DeviceHandler.updateDeviceList("tcp");
+
+        expect(tcpPorts.value).toHaveLength(1);
+        expect(DeviceHandler.tcpAvailable).toBe(true);
     });
 });
