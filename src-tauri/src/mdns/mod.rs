@@ -21,10 +21,21 @@ mod backend;
 #[path = "generic.rs"]
 mod backend;
 
+use std::net::IpAddr;
+
 use serde::Serialize;
 use tauri::State;
 
 pub const SERVICE_TYPE: &str = "_betaflight._tcp";
+
+/// A link-local v6 address needs a scope id to be usable, which the frontend's `tcp://`
+/// URL cannot carry, so it would only ever produce a failed connect.
+fn is_link_local(ip: IpAddr) -> bool {
+    match ip {
+        IpAddr::V6(v6) => (v6.segments()[0] & 0xffc0) == 0xfe80,
+        IpAddr::V4(_) => false,
+    }
+}
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -45,4 +56,16 @@ pub struct MdnsState(backend::Browser);
 #[tauri::command]
 pub fn mdns_browse(state: State<'_, MdnsState>) -> Result<Vec<Bridge>, String> {
     state.0.snapshot()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn link_local_v6_is_rejected() {
+        assert!(is_link_local("fe80::1".parse().unwrap()));
+        assert!(!is_link_local("fd00::1".parse().unwrap()));
+        assert!(!is_link_local("10.1.1.208".parse().unwrap()));
+    }
 }

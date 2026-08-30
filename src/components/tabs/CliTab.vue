@@ -321,7 +321,7 @@ body.mobile-app-shell {
             background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+            box-shadow: var(--shadow-chrome-floating);
         }
 
         .tab-cli {

@@ -8,9 +8,9 @@ use std::collections::BTreeMap;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
-use mdns_sd::{Receiver, ResolvedService, ServiceDaemon, ServiceEvent};
+use mdns_sd::{Receiver, ResolvedService, ServiceDaemon, ServiceEvent, TryRecvError};
 
-use super::{Bridge, SERVICE_TYPE};
+use super::{is_link_local, Bridge, SERVICE_TYPE};
 
 // The bridge's records carry a 120 s TTL and it does not answer the daemon's known-answer
 // refresh queries, so a single long-lived browse expires the bridge after two minutes. A
@@ -44,23 +44,39 @@ impl Browser {
         let mut found = self.found.lock().unwrap();
 
         // A fresh browse replaces the daemon's sender for the service type, orphaning the
-        // previous receiver, so drain it before taking the new one.
+        // previous receiver, so drain it before taking the new one. It reports the
+        // disconnection that replacement causes, which is expected and not the daemon's.
         if browser.last_browse.elapsed() >= REBROWSE_INTERVAL {
             let events = browser
                 .daemon
                 .browse(&service_type())
                 .map_err(|e| e.to_string())?;
-            while let Ok(event) = browser.events.try_recv() {
-                apply(&mut found, event);
-            }
+            let _ = drain(&mut found, &browser.events);
             browser.events = events;
             browser.last_browse = Instant::now();
         }
 
-        while let Ok(event) = browser.events.try_recv() {
-            apply(&mut found, event);
+        // The live receiver only disconnects when the daemon thread is gone. Serving the
+        // entries it left behind would leave a bridge listed that nothing is confirming,
+        // so drop the daemon and let the next call start a new one.
+        if drain(&mut found, &browser.events).is_err() {
+            *guard = None;
+            found.clear();
+            return Err("mDNS daemon stopped".to_string());
         }
+
         Ok(found.values().cloned().collect())
+    }
+}
+
+/// Applies every event queued on `events`, stopping at the first that is not there.
+fn drain(found: &mut BTreeMap<String, Bridge>, events: &Receiver<ServiceEvent>) -> Result<(), TryRecvError> {
+    loop {
+        match events.try_recv() {
+            Ok(event) => apply(found, event),
+            Err(TryRecvError::Empty) => return Ok(()),
+            Err(error) => return Err(error),
+        }
     }
 }
 
@@ -91,13 +107,29 @@ fn txt_u16(txt: &mdns_sd::TxtProperties, key: &str) -> Option<u16> {
 }
 
 fn bridge_from(info: &ResolvedService) -> Bridge {
-    let mut addresses: Vec<std::net::IpAddr> =
-        info.addresses.iter().map(|a| a.to_ip_addr()).collect();
+    // to_ip_addr() drops the scope id, so a link-local v6 address survives only as an
+    // endpoint nothing can connect to.
+    let mut addresses: Vec<std::net::IpAddr> = info
+        .addresses
+        .iter()
+        .map(|a| a.to_ip_addr())
+        .filter(|a| !is_link_local(*a))
+        .collect();
     addresses.sort_by_key(|a| (a.is_ipv6(), *a));
+
+    let host = trim_dot(&info.host).to_string();
+    // Falling back to the name keeps the contract `apple.rs` also holds: a bridge that
+    // resolved always carries somewhere to connect to.
+    let addresses: Vec<String> = if addresses.is_empty() {
+        vec![host.clone()]
+    } else {
+        addresses.iter().map(ToString::to_string).collect()
+    };
+
     Bridge {
         name: instance_name(&info.fullname),
-        host: trim_dot(&info.host).to_string(),
-        addresses: addresses.iter().map(ToString::to_string).collect(),
+        host,
+        addresses,
         port: info.port,
         board: info
             .txt_properties

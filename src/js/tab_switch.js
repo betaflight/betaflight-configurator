@@ -48,7 +48,12 @@ function resetPageZoom() {
     if (!document.body.classList.contains("mobile-app-shell")) {
         return;
     }
-    document.activeElement?.blur?.();
+    // Only a focused field zooms iOS in. Blurring anything else would take keyboard focus
+    // off the tab the user just activated.
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement || active?.isContentEditable) {
+        active.blur();
+    }
     const meta = document.querySelector("meta[name=viewport]");
     if (!meta) {
         return;

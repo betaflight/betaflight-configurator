@@ -13,7 +13,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
-use super::{Bridge, SERVICE_TYPE};
+use super::{is_link_local, Bridge, SERVICE_TYPE};
 
 /// A service that never answers must not wedge the browse thread.
 const RESOLVE_TIMEOUT: Duration = Duration::from_secs(3);
@@ -371,8 +371,6 @@ unsafe extern "C" fn get_addr_info_reply(
     if error_code == NO_ERROR
         && flags & FLAGS_ADD != 0
         && let Some(ip) = unsafe { ip_from_sockaddr(address) }
-        // A link-local v6 address needs a scope id to be usable, which the frontend's
-        // `tcp://` URL cannot carry, so it would only ever produce a failed connect.
         && !is_link_local(ip)
     {
         out.found.push(ip);
@@ -380,13 +378,6 @@ unsafe extern "C" fn get_addr_info_reply(
 
     if flags & FLAGS_MORE_COMING == 0 {
         out.complete = true;
-    }
-}
-
-fn is_link_local(ip: IpAddr) -> bool {
-    match ip {
-        IpAddr::V6(v6) => (v6.segments()[0] & 0xffc0) == 0xfe80,
-        IpAddr::V4(_) => false,
     }
 }
 
@@ -491,13 +482,6 @@ mod tests {
     fn missing_txt_keys_are_none() {
         assert_eq!(txt_value(&[], "board"), None);
         assert_eq!(txt_u16(&[], "ws"), None);
-    }
-
-    #[test]
-    fn link_local_v6_is_rejected() {
-        assert!(is_link_local("fe80::1".parse().unwrap()));
-        assert!(!is_link_local("fd00::1".parse().unwrap()));
-        assert!(!is_link_local("10.1.1.208".parse().unwrap()));
     }
 
     #[test]

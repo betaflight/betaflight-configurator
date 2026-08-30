@@ -264,7 +264,7 @@ watch(
     gap: 0.5rem;
     background-color: var(--surface-100);
     border-bottom: 1px solid var(--surface-200);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-chrome-bar);
     transition: transform 0.25s ease;
 }
 /* Compact only: a round, always-reachable account button over the content, matching the
@@ -281,7 +281,7 @@ watch(
     background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+    box-shadow: var(--shadow-chrome-floating);
     overflow: hidden;
 }
 
@@ -296,7 +296,7 @@ watch(
     background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+    box-shadow: var(--shadow-chrome-floating);
 }
 
 .mobile-topbar--hidden {
