@@ -7773,7 +7773,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attention:</span> Your VTX is not configured or not supported. So you can't modify the VTX values from here. This will only be possible if the flight controller is attached to the VTX using some protocol like Tramp or SmartAudio and is correctly configured in the $t(tabPorts.message) tab if needed.",
+        "message": "<span class=\"message-negative\">Attention:</span> No VTX is answering yet. Pick the protocol the VTX speaks and the UART it is wired to below, then save; the remaining settings appear once the device responds.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7915,6 +7915,9 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX Device"
     },
     "vtxProtocol": {
         "message": "Protocol"
