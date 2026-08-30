@@ -2352,6 +2352,18 @@
     "portsClaimInactiveHelp": {
         "message": "Assigned but not active — it lost a port conflict or a reboot is pending"
     },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inactive — enable the SOFTSERIAL feature on the Configuration tab"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inactive — no pins are assigned to this port"
+    },
+    "portsInactiveReason": {
+        "message": "Inactive — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inactive"
+    },
     "portsClaimMsp": {
         "message": "MSP"
     },

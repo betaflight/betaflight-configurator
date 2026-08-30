@@ -47,3 +47,23 @@ export function describeClaim(name) {
         tab: definition.tab,
     };
 }
+
+// Keyed by the reason the firmware prints beside a port it cannot open.  An
+// unknown reason still reads as inactive, with the firmware's own wording.
+const INACTIVE_REASONS = {
+    "feature SOFTSERIAL off": { i18nKey: "portsInactiveSoftSerialFeature", tab: "configuration" },
+    "no pins": { i18nKey: "portsInactiveNoPins", tab: null },
+};
+
+/**
+ * @param {string} reason as `peripherals` prints it, e.g. "feature SOFTSERIAL off"
+ * @returns {{label: string, tab: string|null}}
+ */
+export function describeInactiveReason(reason) {
+    const definition = INACTIVE_REASONS[reason];
+    if (!definition) {
+        return { label: i18n.getMessage("portsInactiveReason", [reason]) || reason, tab: null };
+    }
+
+    return { label: i18n.getMessage(definition.i18nKey), tab: definition.tab };
+}

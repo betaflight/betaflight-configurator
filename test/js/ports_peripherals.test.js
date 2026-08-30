@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import FC from "../../src/js/fc";
 import { parsePeripherals, usePeripherals } from "../../src/composables/ports/usePeripherals";
-import { describeClaim } from "../../src/composables/ports/portClaims";
+import { describeClaim, describeInactiveReason } from "../../src/composables/ports/portClaims";
 
 const { cliSend, loadSerialConfig } = vi.hoisted(() => ({
     cliSend: vi.fn(),
@@ -30,12 +30,32 @@ describe("parsePeripherals", () => {
         expect(serial).toEqual([
             {
                 portName: "UART1",
+                inactiveReason: null,
                 claims: [
                     { name: "vtx", active: true },
                     { name: "osd", active: false },
                 ],
             },
-            { portName: "UART2", claims: [{ name: "gps", active: false }] },
+            { portName: "UART2", inactiveReason: null, claims: [{ name: "gps", active: false }] },
+        ]);
+    });
+
+    it("reads a port nothing has claimed", () => {
+        const { serial } = parsePeripherals(["serial UART4:"]);
+
+        expect(serial).toEqual([{ portName: "UART4", inactiveReason: null, claims: [] }]);
+    });
+
+    it("reads the reason a port the board has cannot be opened", () => {
+        const { serial } = parsePeripherals(["serial SOFT1 (feature SOFTSERIAL off): vtx", "serial SOFT2 (no pins):"]);
+
+        expect(serial).toEqual([
+            {
+                portName: "SOFT1",
+                inactiveReason: "feature SOFTSERIAL off",
+                claims: [{ name: "vtx", active: false }],
+            },
+            { portName: "SOFT2", inactiveReason: "no pins", claims: [] },
         ]);
     });
 
@@ -71,6 +91,16 @@ describe("parsePeripherals", () => {
     });
 });
 
+describe("describeInactiveReason", () => {
+    it("names the feature to enable and the tab that owns it", () => {
+        expect(describeInactiveReason("feature SOFTSERIAL off").tab).toBe("configuration");
+    });
+
+    it("passes an unknown reason through", () => {
+        expect(describeInactiveReason("something new").tab).toBe(null);
+    });
+});
+
 describe("describeClaim", () => {
     it("resolves instanced claims and owning tabs", () => {
         expect(describeClaim("gps").tab).toBe("gps");
@@ -101,10 +131,35 @@ describe("usePeripherals", () => {
 
         expect(peripherals.supported.value).toBe(true);
         expect(peripherals.serialPorts.value).toEqual([
-            { identifier: 20, displayName: "USB VCP", claims: [{ name: "msp_1", active: true }] },
-            { identifier: 0, displayName: "UART1", claims: [] },
-            { identifier: 1, displayName: "UART2", claims: [{ name: "gps", active: false }] },
+            {
+                identifier: 20,
+                displayName: "USB VCP",
+                inactiveReason: null,
+                claims: [{ name: "msp_1", active: true }],
+            },
+            { identifier: 0, displayName: "UART1", inactiveReason: null, claims: [] },
+            {
+                identifier: 1,
+                displayName: "UART2",
+                inactiveReason: null,
+                claims: [{ name: "gps", active: false }],
+            },
         ]);
+    });
+
+    it("tiles a soft serial port the FC cannot open, with the reason", async () => {
+        FC.SERIAL_CONFIG.ports = [{ identifier: 20 }];
+        cliSend.mockResolvedValue(["serial VCP: msp_1*", "serial SOFT1 (feature SOFTSERIAL off): vtx"]);
+
+        const peripherals = usePeripherals();
+        await peripherals.load();
+
+        expect(peripherals.serialPorts.value[1]).toEqual({
+            identifier: 30,
+            displayName: "SOFTSERIAL1",
+            inactiveReason: "feature SOFTSERIAL off",
+            claims: [{ name: "vtx", active: false }],
+        });
     });
 
     it("reports unsupported on a build without the command", async () => {

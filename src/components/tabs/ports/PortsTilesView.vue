@@ -16,7 +16,23 @@
     <template v-else>
         <div class="text-sm font-semibold mt-4 mb-2">{{ $t("portsSectionSerial") }}</div>
         <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
-            <UiBox v-for="port in serialTiles" :key="port.identifier" type="neutral" :title="port.displayName">
+            <UiBox
+                v-for="port in serialTiles"
+                :key="port.identifier"
+                :type="port.inactive ? 'warning' : 'neutral'"
+                :title="port.displayName"
+            >
+                <div v-if="port.inactive" class="flex items-center gap-2 text-xs text-warning">
+                    <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
+                    <span class="flex-1">{{ port.inactive.label }}</span>
+                    <UButton
+                        v-if="port.inactive.tab"
+                        variant="link"
+                        size="xs"
+                        :label="$t('portsTileConfigure')"
+                        @click="switchTab(port.inactive.tab)"
+                    />
+                </div>
                 <div v-if="!port.claims.length" class="text-xs text-dimmed">
                     {{ $t("portsTileUnassigned") }}
                 </div>
@@ -97,7 +113,7 @@ import { switchTab } from "../../../js/tab_switch";
 import UiBox from "@/components/elements/UiBox.vue";
 import TabLoadingState from "@/components/elements/TabLoadingState.vue";
 import { usePeripherals } from "../../../composables/ports/usePeripherals";
-import { describeClaim } from "../../../composables/ports/portClaims";
+import { describeClaim, describeInactiveReason } from "../../../composables/ports/portClaims";
 
 const { t } = useTranslation();
 
@@ -106,6 +122,7 @@ const { isLoading, supported, serialPorts, canNodes, sensors, load } = usePeriph
 const serialTiles = computed(() =>
     serialPorts.value.map((port) => ({
         ...port,
+        inactive: port.inactiveReason ? describeInactiveReason(port.inactiveReason) : null,
         claims: port.claims.map((claim) => ({ ...claim, ...describeClaim(claim.name) })),
     })),
 );

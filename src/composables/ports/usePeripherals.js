@@ -2,12 +2,14 @@ import { ref } from "vue";
 import FC from "../../js/fc";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
-import { findPortIdentifierByCliName, getPortDisplayName } from "./portNames";
+import { PORT_NONE, findPortIdentifierByCliName, getPortDisplayName } from "./portNames";
 
 /**
  * Parses the firmware `peripherals` command output. One line per device:
  *
  *   serial UART1: vtx*, osd     claims on a port, the one it opened for starred
+ *   serial SOFTSERIAL1 (feature SOFTSERIAL off): vtx
+ *                               a port the FC cannot open, and why
  *   can node 125: org.gps (OK) gps, mag
  *   gyro 1: ICM42688P* on SPI1  starred when the instance is enabled
  *   baro: BMP280 on I2C1 @0x76
@@ -23,14 +25,17 @@ function splitList(text) {
 }
 
 function parseSerialLine(line) {
-    const match = /^serial (\S+): (.*)$/.exec(line);
+    // The claims are absent altogether on a port nothing has claimed, which the
+    // firmware prints as a bare "serial UART4:".
+    const match = /^serial (\S+)(?: \(([^)]*)\))?:(?: (.*))?$/.exec(line);
     if (!match) {
         return null;
     }
 
     return {
         portName: match[1],
-        claims: splitList(match[2]).map((claim) => ({
+        inactiveReason: match[2] ?? null,
+        claims: splitList(match[3] ?? "").map((claim) => ({
             name: claim.replace(/\*$/, ""),
             active: claim.endsWith("*"),
         })),
@@ -118,7 +123,8 @@ export function parsePeripherals(lines) {
 
 /**
  * The peripherals inventory the tiles Ports view renders: every serial port the
- * FC reports (claimed or not), discovered DroneCAN nodes, and detected sensors.
+ * board has, whether claimed, unclaimed or not openable at all, discovered
+ * DroneCAN nodes, and detected sensors.
  *
  * The probe is the command itself — a build without it answers with a CLI
  * error, and the view falls back to a "nothing to show" note.
@@ -156,20 +162,35 @@ export function usePeripherals() {
             const parsed = parsePeripherals(lines);
             const fcPorts = FC.SERIAL_CONFIG?.ports ?? [];
 
-            const claimed = new Map();
+            const reported = new Map();
+            const unopenable = [];
             for (const entry of parsed.serial) {
                 const identifier = findPortIdentifierByCliName(fcPorts, entry.portName);
-                claimed.set(identifier, entry.claims);
+                if (identifier === PORT_NONE) {
+                    continue;
+                }
+                if (fcPorts.some((port) => port.identifier === identifier)) {
+                    reported.set(identifier, entry);
+                } else {
+                    unopenable.push({ identifier, entry });
+                }
             }
 
-            // The command only prints ports the FC reports over MSP too, so the
-            // MSP list is the complete inventory and unclaimed ports fall out
-            // of it with an empty claims list.
-            serialPorts.value = fcPorts.map((port) => ({
-                identifier: port.identifier,
-                displayName: getPortDisplayName(port.identifier),
-                claims: claimed.get(port.identifier) ?? [],
-            }));
+            // The command lists every port that can be opened, claimed or not,
+            // plus the ones nothing can open yet - a soft serial port waiting on
+            // its feature - so it, rather than the MSP list, is the inventory.
+            // A port MSP does not report at all is therefore an inactive one.
+            const tileFor = (identifier, entry) => ({
+                identifier,
+                displayName: getPortDisplayName(identifier),
+                inactiveReason: entry?.inactiveReason ?? null,
+                claims: entry?.claims ?? [],
+            });
+
+            serialPorts.value = [
+                ...fcPorts.map((port) => tileFor(port.identifier, reported.get(port.identifier))),
+                ...unopenable.map(({ identifier, entry }) => tileFor(identifier, entry)),
+            ];
             canNodes.value = parsed.canNodes;
             sensors.value = parsed.sensors;
             supported.value = true;

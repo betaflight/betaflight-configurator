@@ -71,6 +71,26 @@ describe("buildPortOptions", () => {
     it("copes with no ports at all", () => {
         expect(buildPortOptions(undefined, { functionName: "RX_SERIAL" })).toHaveLength(1);
     });
+
+    it("offers a port the board has but the FC cannot open, marked inactive", () => {
+        const withSoftSerial = buildPortOptions(ports, {
+            functionName: "RX_SERIAL",
+            inactiveIdentifiers: [30, 31],
+            inactiveLabel: "inactive",
+        });
+
+        expect(withSoftSerial.map((option) => option.value)).toEqual([PORT_NONE, 20, 51, 53, 30, 31]);
+        expect(withSoftSerial.find((option) => option.value === 30).label).toBe("SOFTSERIAL1 (inactive)");
+    });
+
+    it("does not repeat an inactive port the FC did report", () => {
+        const values = buildPortOptions([...ports, { identifier: 30, functions: [] }], {
+            functionName: "RX_SERIAL",
+            inactiveIdentifiers: [30],
+        }).map((option) => option.value);
+
+        expect(values.filter((value) => value === 30)).toHaveLength(1);
+    });
 });
 
 describe("useFeaturePort", () => {
@@ -144,6 +164,32 @@ describe("useFeaturePort", () => {
         await port.load();
 
         expect(port.selectedIdentifier.value).toBe(53);
+    });
+
+    it("offers the board's soft serial ports the FC did not report", async () => {
+        FC.CONFIG.targetCapabilities = 1 << FC.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
+        await port.load();
+
+        const values = port.options.value.map((option) => option.value);
+        expect(values).toContain(30);
+        expect(values).toContain(31);
+    });
+
+    it("leaves soft serial out for a board without it", async () => {
+        FC.CONFIG.targetCapabilities = 0;
+        await port.load();
+
+        expect(port.options.value.map((option) => option.value)).not.toContain(30);
+    });
+
+    it("writes a soft serial assignment by name", async () => {
+        FC.CONFIG.targetCapabilities = 1 << FC.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
+        await port.load();
+
+        port.selectedIdentifier.value = 30;
+        await port.write();
+
+        expect(cliSend).toHaveBeenCalledWith("set rx_uart = SOFT1");
     });
 
     it("reads an unassigned feature as no port", async () => {
