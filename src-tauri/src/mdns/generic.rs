@@ -41,15 +41,22 @@ impl Browser {
         }
         let browser = guard.as_mut().unwrap();
 
+        let mut found = self.found.lock().unwrap();
+
+        // A fresh browse replaces the daemon's sender for the service type, orphaning the
+        // previous receiver, so drain it before taking the new one.
         if browser.last_browse.elapsed() >= REBROWSE_INTERVAL {
-            browser
+            let events = browser
                 .daemon
                 .browse(&service_type())
                 .map_err(|e| e.to_string())?;
+            while let Ok(event) = browser.events.try_recv() {
+                apply(&mut found, event);
+            }
+            browser.events = events;
             browser.last_browse = Instant::now();
         }
 
-        let mut found = self.found.lock().unwrap();
         while let Ok(event) = browser.events.try_recv() {
             apply(&mut found, event);
         }
