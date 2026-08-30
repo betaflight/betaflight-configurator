@@ -61,10 +61,7 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "MAG_CALIB", "debug[7]")).toEqual({ min: 0, max: 4000 });
         expect(rangeFor("1.49.0", "MAG_TASK_RATE", "debug[2]")).toEqual({ min: -10000, max: 10000 });
         expect(rangeFor("1.49.0", "RTH", "debug[0]")).toEqual({ min: -4000, max: 4000 });
-        // POSITION_EST is not in any released firmware's debug_mode enum - it comes
-        // from betaflight#15584, which is still open - so the mode table generated
-        // from the firmware source has no slot to look it up by. Its DEBUG_MODE_CURVES
-        // entry is kept and starts working the day the firmware PR lands.
+        expect(rangeFor("1.49.0", "POSITION_EST", "debug[6]")).toEqual({ min: 0, max: 1000 });
     });
 
     it("falls back to the per-mode default, then to the field's own range", () => {
