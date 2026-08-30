@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
  * Generate the firmware debug-mode tables from the Betaflight firmware source.
  *
@@ -57,6 +56,11 @@
  *
  * Usage:
  *   node scripts/generate-debug-modes.mjs [options]
+ *
+ * No shebang: the npm scripts run this through `node`, and the file is not
+ * executable, so it would be decoration - but Vite puts its own import ahead of
+ * the first line, which a shebang then fails to parse, and the unit tests import
+ * the parsing below.
  *
  *   --repo <path>       Betaflight firmware git checkout. Defaults to
  *                       $BETAFLIGHT_REPO, then to sibling checkouts of this
