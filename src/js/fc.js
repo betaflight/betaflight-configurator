@@ -894,6 +894,10 @@ const FC = {
         return bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_VCP);
     },
 
+    boardHasSoftSerial() {
+        return bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL);
+    },
+
     boardHasFlashBootloader() {
         return bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER);
     },

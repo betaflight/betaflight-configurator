@@ -12,6 +12,7 @@ import {
 } from "../useMspCliSession";
 import { serialPortsAreReadOnly } from "./usePortsReadOnly";
 import { PORT_NONE, findPortIdentifierByCliName, formatPortSetCommand, getPortDisplayName } from "./portNames";
+import { unreportedSoftSerialIdentifiers } from "./softSerial";
 
 /**
  * @param {Array<{identifier: number, functions: string[]}>} ports
@@ -22,11 +23,21 @@ import { PORT_NONE, findPortIdentifierByCliName, formatPortSetCommand, getPortDi
  * @param {number} [options.currentIdentifier] kept in the list even if the FC did not report it
  * @param {string} [options.noneLabel]
  * @param {(functionName: string) => string} [options.describeFunction]
+ * @param {number[]} [options.inactiveIdentifiers] ports the board has but the FC cannot open yet,
+ *   listed after the reported ones and marked with `inactiveLabel`
+ * @param {string} [options.inactiveLabel]
  * @returns {Array<{value: number, label: string}>}
  */
 export function buildPortOptions(
     ports,
-    { functionName, currentIdentifier = PORT_NONE, noneLabel = "None", describeFunction = (name) => name } = {},
+    {
+        functionName,
+        currentIdentifier = PORT_NONE,
+        noneLabel = "None",
+        describeFunction = (name) => name,
+        inactiveIdentifiers = [],
+        inactiveLabel = "inactive",
+    } = {},
 ) {
     const options = [{ value: PORT_NONE, label: noneLabel }];
     const own = Array.isArray(functionName) ? functionName : [functionName];
@@ -41,6 +52,12 @@ export function buildPortOptions(
                 ? `${displayName} (${claimedElsewhere.map(describeFunction).join(", ")})`
                 : displayName,
         });
+    }
+
+    for (const identifier of inactiveIdentifiers) {
+        if (!options.some((option) => option.value === identifier)) {
+            options.push({ value: identifier, label: `${getPortDisplayName(identifier)} (${inactiveLabel})` });
+        }
     }
 
     if (currentIdentifier !== PORT_NONE && !options.some((option) => option.value === currentIdentifier)) {
@@ -159,6 +176,8 @@ export function useFeaturePort({ setting, functionName, baud = null, protocol = 
             currentIdentifier: selectedIdentifier.value,
             noneLabel: i18n.getMessage("portsPortNone"),
             describeFunction: describePortFunction,
+            inactiveIdentifiers: unreportedSoftSerialIdentifiers(fcStore.serialConfig?.ports),
+            inactiveLabel: i18n.getMessage("portsPortInactive"),
         }),
     );
 
