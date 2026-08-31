@@ -1070,7 +1070,7 @@ defineExpose({ show, close });
 
 .wizard-warning {
     background: var(--warning-500-15, rgba(255, 187, 0, 0.15));
-    border-left: 3px solid var(--warning-500, #f0b400);
+    border-inline-start: 3px solid var(--warning-500, #f0b400);
     padding: 8px 12px;
     font-size: 13px;
     border-radius: 2px;
@@ -1092,7 +1092,7 @@ defineExpose({ show, close });
 
 .wizard-result-table th:first-child,
 .wizard-result-table td:first-child {
-    text-align: left;
+    text-align: start;
 }
 
 .wizard-result-detected td {
@@ -1142,8 +1142,8 @@ defineExpose({ show, close });
 .wizard-timeline-step:not(:first-child)::before {
     content: "";
     position: absolute;
-    left: -50%;
-    right: 50%;
+    inset-inline-start: -50%;
+    inset-inline-end: 50%;
     top: 11px;
     height: 2px;
     background: var(--surface-300);
@@ -1258,7 +1258,7 @@ defineExpose({ show, close });
 .attitude-overlay {
     position: absolute;
     top: 0.5rem;
-    left: 0.5rem;
+    inset-inline-start: 0.5rem;
     font-size: 0.75rem;
     color: var(--surface-950);
     pointer-events: none;
@@ -1280,7 +1280,7 @@ defineExpose({ show, close });
 .yaw-reset-btn {
     position: absolute;
     top: 0.5rem;
-    right: 0.5rem;
+    inset-inline-end: 0.5rem;
     z-index: 10;
 }
 </style>

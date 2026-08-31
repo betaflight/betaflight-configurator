@@ -90,7 +90,7 @@ export default defineComponent({
         background-size: 12px;
 
         span {
-            margin-left: 17px;
+            margin-inline-start: 17px;
             display: block;
 
             a {

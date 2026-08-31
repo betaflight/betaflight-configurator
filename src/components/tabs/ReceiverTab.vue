@@ -1609,7 +1609,7 @@ onUnmounted(() => {
     }
     .name {
         width: 5rem;
-        text-align: right;
+        text-align: end;
     }
     .meter {
         width: 100%;
@@ -1626,7 +1626,7 @@ onUnmounted(() => {
             position: absolute;
             width: 50px;
             text-align: center;
-            left: calc(50cqi - 25px);
+            inset-inline-start: calc(50cqi - 25px);
             color: var(--text);
         }
         .fill {
@@ -1657,8 +1657,8 @@ onUnmounted(() => {
 .plot_control {
     width: 14rem;
     margin: 0;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-start-end-radius: 3px;
+    border-end-end-radius: 3px;
     .value {
         padding: 4px;
         color: #fff;

@@ -1724,7 +1724,7 @@ export default defineComponent({
                 padding: 0.35rem 0.75rem;
                 white-space: nowrap;
                 em {
-                    margin-right: 4px;
+                    margin-inline-end: 4px;
                 }
             }
         }
@@ -1767,7 +1767,7 @@ export default defineComponent({
                 a {
                     padding: 0.35rem 0.5rem;
                     em {
-                        margin-right: 0;
+                        margin-inline-end: 0;
                     }
                 }
             }
@@ -1789,7 +1789,7 @@ export default defineComponent({
             color: var(--primary-500);
             font-weight: bold;
             em {
-                margin-right: 4px;
+                margin-inline-end: 4px;
             }
             .location-source {
                 color: var(--surface-600);
@@ -1802,7 +1802,7 @@ export default defineComponent({
             margin-top: 8px;
             color: #e74c3c;
             em {
-                margin-right: 4px;
+                margin-inline-end: 4px;
             }
         }
 
@@ -1826,7 +1826,7 @@ export default defineComponent({
             .ip-consent-actions {
                 display: flex;
                 gap: 6px;
-                margin-left: auto;
+                margin-inline-start: auto;
             }
         }
     }
@@ -1878,7 +1878,7 @@ export default defineComponent({
         .refresh-btn {
             width: auto;
             float: none;
-            margin-left: auto;
+            margin-inline-start: auto;
             margin-bottom: 0;
             a {
                 background: rgba(0, 0, 0, 0.1);
@@ -1891,7 +1891,7 @@ export default defineComponent({
                     color: inherit;
                 }
                 em {
-                    margin-right: 4px;
+                    margin-inline-end: 4px;
                 }
             }
         }
@@ -2009,14 +2009,14 @@ export default defineComponent({
     /* Status badge (inline) */
     .status-badge {
         font-size: 11px;
-        margin-left: 6px;
+        margin-inline-start: 6px;
     }
 
     .table-note {
         font-size: 11px;
         color: var(--surface-600);
         margin-top: 4px;
-        text-align: right;
+        text-align: end;
     }
 
     /* 5-Day Forecast row highlights (applied via UTable meta.class.tr) */
@@ -2131,7 +2131,7 @@ export default defineComponent({
                     text-decoration: underline;
                 }
                 em {
-                    margin-right: 4px;
+                    margin-inline-end: 4px;
                     font-size: 10px;
                 }
             }
@@ -2168,7 +2168,7 @@ export default defineComponent({
                 }
 
                 em {
-                    margin-right: 8px;
+                    margin-inline-end: 8px;
                     width: 16px;
                     text-align: center;
                 }
@@ -2205,7 +2205,7 @@ export default defineComponent({
                 }
 
                 em {
-                    margin-right: 8px;
+                    margin-inline-end: 8px;
                     width: 16px;
                     text-align: center;
                 }
@@ -2287,7 +2287,7 @@ export default defineComponent({
             padding: 6px 8px;
 
             em {
-                margin-right: 4px;
+                margin-inline-end: 4px;
             }
         }
 
@@ -2303,7 +2303,7 @@ export default defineComponent({
                 text-align: center;
 
                 em {
-                    margin-right: 6px;
+                    margin-inline-end: 6px;
                 }
             }
 
@@ -2316,7 +2316,7 @@ export default defineComponent({
                 border-radius: 4px;
 
                 em {
-                    margin-right: 6px;
+                    margin-inline-end: 6px;
                 }
             }
 
@@ -2336,15 +2336,15 @@ export default defineComponent({
                 background: var(--surface-0);
 
                 &.notam-card-active {
-                    border-left: 3px solid var(--color-success-500);
+                    border-inline-start: 3px solid var(--color-success-500);
                 }
 
                 &.notam-card-future {
-                    border-left: 3px solid var(--color-warning-500);
+                    border-inline-start: 3px solid var(--color-warning-500);
                 }
 
                 &.notam-card-expired {
-                    border-left: 3px solid var(--surface-400);
+                    border-inline-start: 3px solid var(--surface-400);
                     opacity: 0.6;
                 }
             }
@@ -2365,7 +2365,7 @@ export default defineComponent({
             .notam-location {
                 color: var(--surface-600);
                 font-size: 11px;
-                margin-left: auto;
+                margin-inline-start: auto;
             }
 
             .notam-type-badge,
@@ -2437,7 +2437,7 @@ export default defineComponent({
 
             .notam-expand-link {
                 display: inline-block;
-                margin-left: 4px;
+                margin-inline-start: 4px;
                 font-size: 11px;
                 color: var(--primary-500);
                 text-decoration: underline;
@@ -2448,7 +2448,7 @@ export default defineComponent({
                 margin-top: 6px;
                 font-size: 11px;
                 color: var(--surface-500);
-                text-align: right;
+                text-align: end;
             }
         }
     }
@@ -2474,7 +2474,7 @@ export default defineComponent({
         .controls {
             position: absolute;
             top: 8px;
-            right: 8px;
+            inset-inline-end: 8px;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -2515,12 +2515,12 @@ export default defineComponent({
             .controls {
                 position: fixed;
                 bottom: 0;
-                left: 0;
+                inset-inline-start: 0;
                 width: 100vw !important;
                 z-index: 1000;
                 flex-direction: row;
                 top: auto;
-                right: auto;
+                inset-inline-end: auto;
                 justify-content: center;
                 gap: 4px;
                 padding: 4px;
@@ -2534,7 +2534,7 @@ export default defineComponent({
         color: #e74c3c;
         padding: 8px;
         em {
-            margin-right: 4px;
+            margin-inline-end: 4px;
         }
     }
 

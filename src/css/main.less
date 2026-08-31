@@ -82,10 +82,10 @@ a.disabled {
         -1px -1px;
 }
 .standard_input {
-    padding-left: 3px;
+    padding-inline-start: 3px;
     height: 20px;
     line-height: 20px;
-    text-align: left;
+    text-align: start;
     border-radius: 3px;
     font-size: 12px;
     font-weight: normal;
@@ -93,9 +93,9 @@ a.disabled {
     background: var(--surface-200);
 }
 .helpicon {
-    float: right;
+    float: inline-end;
     margin-top: 7px;
-    margin-right: 7px;
+    margin-inline-end: 7px;
     display: block;
     height: 14px;
     width: 14px;
@@ -118,7 +118,7 @@ a.disabled {
         border-radius: 3px;
         border: 1px solid var(--primary-600);
         color: var(--text);
-        float: right;
+        float: inline-end;
         font-weight: bold;
         font-size: 10px;
         line-height: 17px;
@@ -210,8 +210,8 @@ td [role="group"] {
         gap: 0.5rem;
     }
     .helpicon {
-        margin-right: 7px !important;
-        margin-left: auto !important;
+        margin-inline-end: 7px !important;
+        margin-inline-start: auto !important;
         float: none;
     }
 }
@@ -219,10 +219,10 @@ td [role="group"] {
     clear: both;
 }
 .left {
-    float: left;
+    float: inline-start;
 }
 .right {
-    float: right;
+    float: inline-end;
 }
 .margin-top {
     margin-top: 20px;
@@ -266,8 +266,8 @@ td [role="group"] {
     position: fixed;
     z-index: 1500;
     top: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     bottom: 0;
     display: block;
     backdrop-filter: blur(0.25rem);
@@ -433,7 +433,7 @@ each(@tabIcons, {
             mask: @value no-repeat center center;
             -webkit-mask: @value no-repeat center center;
             background-color: var(--surface-700);
-            margin-right: 4px;
+            margin-inline-end: 4px;
         }
         &:hover::before {
             background-color: var(--primary-500);
@@ -474,12 +474,12 @@ dialog {
             button {
                 margin-top: 0;
                 margin-bottom: 0;
-                margin-right: 20px;
+                margin-inline-end: 20px;
                 background-color: var(--primary-500);
                 border-radius: 3px;
                 border: 1px solid var(--primary-600);
                 color: #000;
-                float: left;
+                float: inline-start;
                 font-weight: bold;
                 font-size: 12px;
                 display: block;
@@ -573,7 +573,7 @@ dialog {
     justify-content: end;
     gap: 0.5rem;
     padding: 0.75rem 1rem 0.25rem 1rem;
-    border-top-left-radius: 1.5rem;
+    border-start-start-radius: 1.5rem;
     &::before {
         width: 1.5rem;
         aspect-ratio: 1;
@@ -581,7 +581,7 @@ dialog {
         mask: url(../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
-        left: -1.5rem;
+        inset-inline-start: -1.5rem;
         bottom: 0;
     }
     .btn {
@@ -593,7 +593,7 @@ dialog {
             border-radius: 3px;
             border: 1px solid var(--primary-600);
             color: #000;
-            float: right;
+            float: inline-end;
             font-family: inherit;
             font-weight: bold;
             font-size: 12px;
@@ -615,7 +615,7 @@ dialog {
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
             .helpicon {
-                margin-left: 5px;
+                margin-inline-start: 5px;
             }
         }
         a.disabled,
@@ -643,7 +643,7 @@ dialog {
         position: fixed;
         /* Sit directly on top of #status-bar, which grows by the bottom safe-area inset */
         bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
-        right: 0;
+        inset-inline-end: 0;
     }
 }
 .content_toolbar.xs-compressed {
@@ -652,7 +652,7 @@ dialog {
 .toolbar_expand_btn {
     display: none;
     bottom: 15px;
-    left: 15px;
+    inset-inline-start: 15px;
     width: 20px;
     height: 20px;
     font-size: 20px;
@@ -665,15 +665,15 @@ dialog {
     margin-bottom: 0;
 }
 .full {
-    float: left;
+    float: inline-start;
     width: 100%;
 }
 .half {
-    float: left;
+    float: inline-start;
     width: 50%;
 }
 .third_left {
-    float: left;
+    float: inline-start;
     width: 33%;
 }
 .third_center {
@@ -681,37 +681,37 @@ dialog {
     width: 34%;
 }
 .third_right {
-    float: right;
+    float: inline-end;
     width: 33%;
 }
 .fourth {
-    float: left;
+    float: inline-start;
     width: 25%;
 }
 .threefourth_right {
-    float: right;
+    float: inline-end;
     width: 75%;
 }
 .threefourth_left {
-    float: left;
+    float: inline-start;
     width: 75%;
 }
 .twothird {
-    float: left;
+    float: inline-start;
     width: 67%;
 }
 .spacer {
     width: 100%;
 }
 .spacer_left {
-    padding-left: 15px;
-    float: left;
+    padding-inline-start: 15px;
+    float: inline-start;
     width: calc(100% - 15px);
 }
 .spacer_right {
-    padding-right: 15px;
+    padding-inline-end: 15px;
     width: calc(100% - 15px);
-    float: left;
+    float: inline-start;
 }
 .gui_warning {
     background: var(--error-transparent-1);
@@ -741,7 +741,7 @@ dialog {
     height: 50px;
     background-color: #e4e4e4;
     width: calc(100% + 40px);
-    margin-left: -20px;
+    margin-inline-start: -20px;
     box-shadow: rgba(0, 0, 0, 0) 0 -3px 8px;
     bottom: 0;
     margin-bottom: 0;
@@ -749,12 +749,12 @@ dialog {
         a {
             margin-top: 9px;
             margin-bottom: 0;
-            margin-right: 20px;
+            margin-inline-end: 20px;
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
             color: #000;
-            float: right;
+            float: inline-end;
             font-weight: bold;
             font-size: 12px;
             display: block;
@@ -774,7 +774,7 @@ dialog {
     position: relative;
     margin-bottom: 10px;
     margin-top: 0;
-    float: left;
+    float: inline-start;
     a,
     button {
         padding: 0.35rem 0 0.35rem 0;
@@ -816,7 +816,7 @@ dialog {
     -webkit-user-drag: none;
     margin-top: 8px;
     margin-bottom: 8px;
-    margin-right: 10px;
+    margin-inline-end: 10px;
     background-color: var(--primary-500);
     border-radius: 3px;
     border: 1px solid var(--primary-600);
@@ -849,7 +849,7 @@ dialog {
     -webkit-user-drag: none;
     margin-top: 8px;
     margin-bottom: 8px;
-    margin-right: 10px;
+    margin-inline-end: 10px;
     background-color: var(--error-500);
     border-radius: 3px;
     border: 1px solid var(--error-600);
@@ -938,7 +938,7 @@ table {
     border-radius: 3px;
     color: #ffffff;
     font-size: 11px;
-    margin-left: 3px;
+    margin-inline-start: 3px;
 }
 .gps_true {
     background-color: var(--primary-500);
@@ -946,7 +946,7 @@ table {
     border-radius: 3px;
     color: #ffffff;
     font-size: 11px;
-    margin-left: 3px;
+    margin-inline-start: 3px;
 }
 .tab-setup,
 .tab-landing,
@@ -1035,7 +1035,7 @@ table {
 .buildInfoBtn {
     position: relative;
     margin: 4px;
-    float: right;
+    float: inline-end;
     a {
         padding: 2px 5px 2px 5px;
         text-align: center;
@@ -1071,7 +1071,7 @@ table {
 .buildInfoClassOptions {
     margin-bottom: 0px;
     margin-top: 3px;
-    float: right;
+    float: inline-end;
     background-color: grey;
     padding: 2px 5px 2px 5px;
     border-radius: 4px;
@@ -1084,8 +1084,8 @@ table {
     background-color: var(--surface-300);
     height: 31px;
     margin-top: 2px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-end-start-radius: 5px;
+    border-end-end-radius: 5px;
 }
 .darkgrey_box {
     background-color: var(--surface-500);
@@ -1103,13 +1103,13 @@ table {
     box-sizing: border-box;
 }
 .grid-col {
-    margin-left: 7px;
-    margin-right: 7px;
+    margin-inline-start: 7px;
+    margin-inline-end: 7px;
     &:first-child {
-        margin-left: 0;
+        margin-inline-start: 0;
     }
     &:last-child {
-        margin-right: 0;
+        margin-inline-end: 0;
     }
 }
 
@@ -1262,9 +1262,9 @@ each(range(12), {
         margin-bottom: 10px;
     }
     .helpicon {
-        float: right;
+        float: inline-end;
         margin-top: 5px;
-        margin-right: 7px;
+        margin-inline-end: 7px;
         height: 14px;
         width: 14px;
         transition: none;
@@ -1293,7 +1293,7 @@ each(range(12), {
                 padding-bottom: 6px;
             }
             ::before {
-                padding-left: 3px;
+                padding-inline-start: 3px;
             }
         }
     }
@@ -1330,16 +1330,16 @@ each(range(12), {
         margin-bottom: 10px;
     }
     .spacer_box_title {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-inline-start: 10px;
+        padding-inline-end: 10px;
         padding-top: 3px;
         margin-bottom: 0;
-        float: left;
+        float: inline-start;
     }
     .helpicon {
-        float: right;
+        float: inline-end;
         margin-top: 5px;
-        margin-right: 7px;
+        margin-inline-end: 7px;
         height: 14px;
         width: 14px;
         transition: none;
@@ -1356,7 +1356,7 @@ each(range(12), {
         .btn {
             a,
             button {
-                margin-right: 15px;
+                margin-inline-end: 15px;
             }
         }
     }
@@ -1381,14 +1381,14 @@ each(range(12), {
         position: fixed;
         z-index: 2000;
         top: 0;
-        left: -100%;
+        inset-inline-start: -100%;
         bottom: 0;
         min-width: fit-content;
         transition: all 0.3s;
         padding: 1rem;
     }
     .tab_container.reveal {
-        left: 0;
+        inset-inline-start: 0;
         /* Clear the mobile top bar plus the status bar / display cutout above it */
         padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
     }
@@ -1425,8 +1425,8 @@ each(range(12), {
     each(range(12), {
         .grid-col.col@{value} {
             width: 100% !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
+            margin-inline-start: 0 !important;
+            margin-inline-end: 0 !important;
         }
     });
 }
@@ -1506,7 +1506,7 @@ body.compact-header-layout {
         background-color: var(--surface-300);
         color: var(--text);
         border: 1px solid var(--surface-400);
-        margin-left: 5px;
+        margin-inline-start: 5px;
         cursor: pointer;
         &:hover {
             background-color: var(--surface-400);
