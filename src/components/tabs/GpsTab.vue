@@ -1025,7 +1025,7 @@ export default defineComponent({
         .map-controls {
             position: fixed;
             bottom: 0;
-            left: 0;
+            inset-inline-start: 0;
             width: 100vw !important;
             z-index: 1000;
         }

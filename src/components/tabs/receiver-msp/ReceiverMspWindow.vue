@@ -218,8 +218,8 @@ body {
     width: 120px;
     height: 120px;
     background-color: var(--surface-200);
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
+    margin-inline-start: 1.5rem;
+    margin-inline-end: 1.5rem;
     margin-bottom: 2rem;
     display: inline-block;
     border-radius: 5px;
@@ -235,7 +235,7 @@ body {
 .crosshair-vert {
     width: 1px;
     height: 100%;
-    left: 50%;
+    inset-inline-start: 50%;
 }
 
 .crosshair-horz {
@@ -259,14 +259,14 @@ body {
     transform: rotate(-90deg);
     top: calc(50% - 0.5em);
     width: 100%;
-    left: calc(-50% - 1.5rem);
+    inset-inline-start: calc(-50% - 1.5rem);
 }
 
 .control-stick {
     background-color: var(--primary-500);
     width: 20px;
     height: 20px;
-    margin-left: -10px;
+    margin-inline-start: -10px;
     margin-top: -10px;
     display: block;
     border-radius: 100%;

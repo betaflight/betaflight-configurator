@@ -190,13 +190,13 @@ export default defineComponent({
     :deep(.list) {
         ul {
             margin-top: 2px;
-            padding-left: 20px;
+            padding-inline-start: 20px;
             list-style: inside;
         }
         li {
             padding: 2px 0;
             list-style-type: disc;
-            margin-left: 0;
+            margin-inline-start: 0;
             display: list-item;
         }
     }
@@ -231,8 +231,8 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
     margin-top: 5px;
     color: var(--text);
     font-size: 14px;
@@ -258,7 +258,7 @@ export default defineComponent({
     margin-bottom: 15px;
 
     .logoSocialMedia {
-        float: left;
+        float: inline-start;
         width: 30px;
 
         img {
@@ -273,7 +273,7 @@ export default defineComponent({
 
     .socialMediaText {
         margin-top: 0;
-        margin-left: 35px;
+        margin-inline-start: 35px;
         display: block;
         font-weight: normal;
         font-size: 12px;
@@ -281,8 +281,8 @@ export default defineComponent({
 }
 
 .languageSwitcher {
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
     text-align: center;
 
     .selected_language {

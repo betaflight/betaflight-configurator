@@ -1076,7 +1076,7 @@ export default defineComponent({
             width: 100%;
             height: 26px;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             text-align: center;
             line-height: 24px;
             color: white;
@@ -1090,7 +1090,7 @@ export default defineComponent({
         }
         dd {
             display: block;
-            margin-left: 130px;
+            margin-inline-start: 130px;
             height: 20px;
             line-height: 20px;
         }
@@ -1145,8 +1145,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1171,8 +1171,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1212,7 +1212,7 @@ export default defineComponent({
         clear: left;
     }
     .blackboxDebugModeText {
-        margin-left: 7px !important;
+        margin-inline-start: 7px !important;
     }
     .sdcard-status {
         padding-top: 4px;
