@@ -329,7 +329,7 @@ export default defineComponent({
         max-width: 100%;
         flex-wrap: wrap;
         justify-content: center;
-        border-top-left-radius: 0;
+        border-start-start-radius: 0;
     }
     .tab-cli .content_toolbar.toolbar_fixed_bottom::before {
         display: none;
