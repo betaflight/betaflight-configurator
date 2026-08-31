@@ -279,6 +279,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ar": {
+        "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+        "description": "Don't translate!!!"
+    },
     "language_ca": {
         "message": "Catal\u00e0",
         "description": "Don't translate!!!"
@@ -6293,6 +6297,12 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD Protocol"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocol the OSD is drawn with. MAX7456 and FrSky OSD drive an analogue chip or module; MSP sends the OSD over the UART below, as DJI, HDZero and Walksnail goggles expect."
+    },
     "osdSerialPort": {
         "message": "OSD Serial Port"
     },
@@ -6395,6 +6405,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Upload failed"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Save and Reboot"
     },
     "osdSetupSave": {
         "message": "Save"
@@ -7680,7 +7693,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attention:</span> Your VTX is not configured or not supported. So you can't modify the VTX values from here. This will only be possible if the flight controller is attached to the VTX using some protocol like Tramp or SmartAudio and is correctly configured in the $t(tabPorts.message) tab if needed.",
+        "message": "<span class=\"message-negative\">Attention:</span> No VTX is answering yet. Pick the protocol the VTX speaks and the UART it is wired to below, then save; the remaining settings appear once the device responds.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7823,6 +7836,9 @@
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxDeviceSetup": {
+        "message": "VTX Device"
+    },
     "vtxProtocol": {
         "message": "Protocol"
     },
@@ -7834,6 +7850,9 @@
     },
     "vtxSerialPortHelp": {
         "message": "UART the VTX control protocol runs on. Set on the VTX itself from API 1.49; the Ports tab only shows it."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "An MSP VTX answers on the same MSP link the goggles are drawn over, so it follows the OSD Serial Port on the OSD tab and cannot be set here."
     },
     "vtxLowPowerDisarm": {
         "message": "Low Power Disarm",

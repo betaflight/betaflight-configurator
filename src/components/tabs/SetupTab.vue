@@ -829,7 +829,7 @@ function openBuildOptionsDialog() {
         :deep(.reset-zaxis) {
             position: absolute;
             top: 0.75rem;
-            right: 0.75rem;
+            inset-inline-end: 0.75rem;
             z-index: 100;
         }
     }
@@ -841,7 +841,7 @@ function openBuildOptionsDialog() {
             height: 100%;
             max-height: 32rem;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             border-radius: 1rem;
         }
     }
@@ -884,7 +884,7 @@ function openBuildOptionsDialog() {
 .attitude_info {
     position: absolute;
     top: 1rem;
-    left: 1rem;
+    inset-inline-start: 1rem;
     margin: 0;
     font-weight: normal;
     color: var(--surface-950);
@@ -899,7 +899,7 @@ function openBuildOptionsDialog() {
 .instruments-right {
     position: absolute;
     bottom: 1rem;
-    right: 1rem;
+    inset-inline-end: 1rem;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
@@ -925,7 +925,7 @@ function openBuildOptionsDialog() {
     bottom: 20px;
 }
 .disarm-flag {
-    padding-right: 5px;
+    padding-inline-end: 5px;
     display: inline-block;
 }
 

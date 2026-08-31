@@ -63,6 +63,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
         graphs = [],
         inTime = false,
         outTime = false,
+        drawInOutRegionEnabled = true,
         lastMouseX,
         sticks = null,
         craft3D = null,
@@ -967,7 +968,9 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             }
         }
 
-        drawInOutRegion();
+        if (drawInOutRegionEnabled) {
+            drawInOutRegion();
+        }
     };
 
     this.refreshGraphConfig = function () {
@@ -1100,6 +1103,10 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
             inTime = false;
             analyser.setInTime(inTime);
         }
+    };
+
+    this.setDrawInOutRegion = function (state) {
+        drawInOutRegionEnabled = Boolean(state);
     };
 
     // New function to return the current window scale.

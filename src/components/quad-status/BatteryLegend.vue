@@ -26,13 +26,13 @@ const reading = computed(() => {
     position: relative;
     top: -2px;
     margin-top: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     width: 40px;
-    text-align: left;
+    text-align: start;
     color: var(--surface-800);
-    margin-left: -8px;
-    padding-right: 4px;
+    margin-inline-start: -8px;
+    padding-inline-end: 4px;
 }
 
 .battery-legend--compact {
