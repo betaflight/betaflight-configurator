@@ -1105,7 +1105,7 @@ watch(auxChannelValue, (newVal) => {
     margin-bottom: 1.5rem;
     padding: 0.75rem;
     background: var(--surface-100);
-    border-left: 3px solid var(--primary-500);
+    border-inline-start: 3px solid var(--primary-500);
 }
 
 .section {
@@ -1118,8 +1118,8 @@ watch(auxChannelValue, (newVal) => {
 /* Grid Container */
 .grid-container {
     position: relative;
-    float: left;
-    margin-right: 30px;
+    float: inline-start;
+    margin-inline-end: 30px;
     width: calc(29px * 16 + 3px);
     height: calc(29px * 16 + 3px);
 }
@@ -1128,7 +1128,7 @@ watch(auxChannelValue, (newVal) => {
 .gridSections {
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     z-index: 0;
     width: calc(29px * 16 + 3px);
     height: calc(29px * 16 + 3px);
@@ -1141,7 +1141,7 @@ watch(auxChannelValue, (newVal) => {
 .gridSections .block {
     width: 25%;
     height: 25%;
-    float: left;
+    float: inline-start;
     border: 1px solid var(--surface-500);
     box-sizing: border-box;
 }
@@ -1149,7 +1149,7 @@ watch(auxChannelValue, (newVal) => {
 /* Controls Panel */
 .controls {
     position: relative;
-    float: left;
+    float: inline-start;
     width: 325px;
 }
 
@@ -1270,7 +1270,7 @@ watch(auxChannelValue, (newVal) => {
 .select span {
     display: block;
     margin-bottom: 5px;
-    margin-left: 3px;
+    margin-inline-start: 3px;
 }
 
 /* Function-specific select backgrounds — reach USelect's trigger button */
@@ -1355,7 +1355,7 @@ watch(auxChannelValue, (newVal) => {
 
 .modifiers .sliders-group {
     margin-top: 5px;
-    margin-left: 20px;
+    margin-inline-start: 20px;
     width: 100%;
 }
 
@@ -1379,7 +1379,7 @@ watch(auxChannelValue, (newVal) => {
 
 .slider-value {
     min-width: 2.5rem;
-    text-align: right;
+    text-align: end;
     font-variant-numeric: tabular-nums;
     font-size: 12px;
     color: var(--text);
@@ -1506,7 +1506,7 @@ watch(auxChannelValue, (newVal) => {
 .colorDefineSliderLabel {
     width: 15px;
     display: inline-block;
-    margin-right: 5px;
+    margin-inline-end: 5px;
 }
 
 .colorDefineSliderContainer input {
@@ -1517,7 +1517,7 @@ watch(auxChannelValue, (newVal) => {
 .colorDefineSliderValue {
     width: 30px;
     display: inline-block;
-    text-align: right;
+    text-align: end;
 }
 
 /* Directions */
@@ -1533,7 +1533,7 @@ watch(auxChannelValue, (newVal) => {
     grid-template-rows: 30px 30px 30px;
     gap: 4px;
     vertical-align: middle;
-    margin-right: 12px;
+    margin-inline-end: 12px;
 }
 
 .directions :deep(button) {

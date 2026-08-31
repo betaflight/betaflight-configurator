@@ -1,5 +1,5 @@
 <template>
-    <div class="receiver-msp">
+    <div class="receiver-msp" :class="{ 'flex-1': !enableTX }">
         <div class="control-gimbals">
             <div
                 v-for="(gimbal, index) in gimbals"
@@ -22,28 +22,25 @@
             </div>
         </div>
 
-        <div class="control-sliders">
-            <div v-for="i in 4" :key="i" class="control-slider">
-                <span class="slider-label">{{ t(`controlAxisAux${i}`) }}</span>
-                <input
-                    type="range"
+        <div class="flex w-full flex-col gap-3">
+            <div v-for="i in 4" :key="i" class="flex items-center gap-3">
+                <span class="w-10 shrink-0 text-right">{{ t(`controlAxisAux${i}`) }}</span>
+                <USlider
+                    v-model="stickValues[`Aux${i}`]"
                     :min="CHANNEL_MIN_VALUE"
                     :max="CHANNEL_MAX_VALUE"
-                    v-model.number="stickValues[`Aux${i}`]"
                     :aria-label="t(`controlAxisAux${i}`)"
-                    class="slider"
+                    class="flex-1"
                 />
-                <span class="tooltip">{{ stickValues[`Aux${i}`] }}</span>
+                <span class="w-9 shrink-0 tabular-nums">{{ stickValues[`Aux${i}`] }}</span>
             </div>
         </div>
 
-        <div v-if="!enableTX" class="warning">
-            <p v-html="t('receiverMspWarningText')"></p>
-            <div class="button-enable">
-                <a class="btn" href="#" @click.prevent="enableControls">
-                    {{ t("receiverMspEnableButton") }}
-                </a>
-            </div>
+        <div v-if="!enableTX" class="flex w-full flex-1 flex-col items-center gap-4">
+            <UiBox :title="t('warningTitle')" type="error" highlight collapsible class="w-full">
+                <p class="warning-text" v-html="t('receiverMspWarningText')"></p>
+            </UiBox>
+            <UButton class="mt-auto w-fit" :label="t('receiverMspEnableButton')" @click="enableControls" />
         </div>
     </div>
 </template>
@@ -51,9 +48,10 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { clamp } from "@/js/utils/common";
+import UiBox from "@/components/elements/UiBox.vue";
 
-// i18n from parent window
-const i18n = globalThis.opener?.i18n;
+// i18n instance handed to this window by the opener (see openSticksWindow in ReceiverTab.vue).
+const i18n = globalThis.i18n ?? globalThis.opener?.i18n;
 const t = (key) => i18n?.getMessage(key) ?? key;
 
 const CHANNEL_MIN_VALUE = 1000;
@@ -176,24 +174,41 @@ body {
     font-size: 12px;
     background-color: var(--surface-100);
     color: var(--text);
-    overflow: hidden;
+    /* The safety warning makes the initial state nearly fill the popup, so scroll rather than
+       clip it. `safe center` centres the short armed state (warning hidden) but falls back to
+       top-anchored when the content is tall — plain `center` would push the first line out of
+       reach above the scroll origin. */
+    overflow-y: auto;
     user-select: none;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: safe center;
     align-items: center;
-    padding: 2rem;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 1.5rem;
+    margin: 0;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
 }
 
 .receiver-msp {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    gap: 1.5rem;
 }
 
 .control-gimbals {
-    padding: 1.5rem;
-    padding-bottom: 0;
+    padding: 0.5rem 1.5rem 0;
     text-align: center;
     display: inline-flex;
 }
@@ -203,8 +218,8 @@ body {
     width: 120px;
     height: 120px;
     background-color: var(--surface-200);
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
+    margin-inline-start: 1.5rem;
+    margin-inline-end: 1.5rem;
     margin-bottom: 2rem;
     display: inline-block;
     border-radius: 5px;
@@ -220,7 +235,7 @@ body {
 .crosshair-vert {
     width: 1px;
     height: 100%;
-    left: 50%;
+    inset-inline-start: 50%;
 }
 
 .crosshair-horz {
@@ -244,14 +259,14 @@ body {
     transform: rotate(-90deg);
     top: calc(50% - 0.5em);
     width: 100%;
-    left: calc(-50% - 1.5rem);
+    inset-inline-start: calc(-50% - 1.5rem);
 }
 
 .control-stick {
     background-color: var(--primary-500);
     width: 20px;
     height: 20px;
-    margin-left: -10px;
+    margin-inline-start: -10px;
     margin-top: -10px;
     display: block;
     border-radius: 100%;
@@ -259,72 +274,9 @@ body {
     cursor: pointer;
 }
 
-.control-sliders {
-    width: 100%;
-}
-
-.control-slider {
-    margin: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.slider-label {
-    flex-shrink: 0;
-    width: 40px;
-    text-align: right;
-}
-
-.slider {
-    flex: 1;
-    margin-left: 10px;
-    margin-right: 10px;
-    accent-color: var(--primary-500);
-}
-
-.tooltip {
-    flex-shrink: 0;
-    width: 35px;
-}
-
-.warning {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.button-enable {
-    width: fit-content;
-}
-
-.button-enable a {
-    width: fit-content;
-    margin-top: 20px;
-    background-color: var(--primary-500);
-    border-radius: 3px;
-    border: 1px solid var(--primary-600);
-    color: var(--surface-50);
-    font-size: 12px;
-    display: block;
-    cursor: pointer;
-    transition: all ease 0.2s;
-    padding: 0px 9px;
-    line-height: 28px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.button-enable a:hover {
-    background-color: var(--primary-400);
-    transition: all ease 0.2s;
-}
-
-.button-enable a:active {
-    background-color: var(--success-500);
-    border: 1px solid var(--success-600);
-    transition: all ease 0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+.warning-text {
+    line-height: 1.6;
+    margin: 0;
 }
 
 @media all and (max-width: 575px) {

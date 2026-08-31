@@ -1717,7 +1717,7 @@ onUnmounted(() => {
     background-size: cover;
     background-repeat: no-repeat;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-inline-start: 20px;
 }
 
 .tab-osd-char {
@@ -1751,7 +1751,7 @@ onUnmounted(() => {
     content: "";
     position: absolute;
     top: 50%;
-    left: 40%;
+    inset-inline-start: 40%;
     border-top: 0.3em dashed var(--gimbalCrosshair);
     width: 20%;
     transform: translateY(-50%);
@@ -1762,7 +1762,7 @@ onUnmounted(() => {
     content: "";
     position: absolute;
     top: 50%;
-    left: 40%;
+    inset-inline-start: 40%;
     border-top: 0.3em dashed var(--gimbalCrosshair);
     width: 20%;
     transform: translateY(-50%) rotate(90deg);
@@ -1790,7 +1790,7 @@ onUnmounted(() => {
     border-radius: 2px;
     font-size: 10px;
     line-height: 0;
-    margin-left: 4px;
+    margin-inline-start: 4px;
 }
 
 .tab-osd-preset-btn:hover {
@@ -1808,8 +1808,8 @@ onUnmounted(() => {
     display: inline-block;
     min-width: 140px;
     top: -5px;
-    left: 100%;
-    margin-left: 5px;
+    inset-inline-start: 100%;
+    margin-inline-start: 5px;
     padding: 2px;
     background-color: var(--surface-50);
     border: 1px solid var(--surface-500);
@@ -1845,9 +1845,9 @@ onUnmounted(() => {
 
 .tab-osd-context-menu-content {
     position: absolute;
-    left: 100%;
+    inset-inline-start: 100%;
     top: -5px;
-    margin-left: 5px;
+    margin-inline-start: 5px;
     display: none;
     opacity: 0;
     z-index: 10002;
