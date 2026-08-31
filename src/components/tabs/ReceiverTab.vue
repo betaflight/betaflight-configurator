@@ -1141,8 +1141,11 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 370;
-    const windowHeight = 550;
+    const windowWidth = 420;
+    // Minimum that fits the initial state: gimbals + aux sliders + the expanded arming
+    // warning. Collapsing the warning or dismissing it leaves slack; resizing from there
+    // is left to the user rather than driven from the app.
+    const windowHeight = 600;
 
     const rxFunction = (channels) => {
         if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
@@ -1152,13 +1155,22 @@ function openSticksWindow() {
         return false;
     };
 
+    // Resolve against the document base rather than the server root: the build uses
+    // `base: "./"`, so the app can be served from a sub-path (PR previews) or from a
+    // custom scheme (Tauri/Capacitor), where an absolute "/..." path would miss.
+    const stickWindowUrl = new URL("components/tabs/receiver-msp/receiver_msp.html", document.baseURI).href;
+
     const createdWindow = globalThis.open(
-        "/components/tabs/receiver-msp/receiver_msp.html",
+        stickWindowUrl,
         "receiver_msp",
         `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
     if (createdWindow) {
         createdWindow.setRawRx = rxFunction;
+        // The popup is a separate document with its own module graph, so it cannot import the
+        // initialised i18n instance — hand it over the same way as setRawRx above. This used to
+        // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
+        createdWindow.i18n = i18n;
         DarkTheme.isDarkThemeEnabled((isEnabled) => {
             windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
         });
