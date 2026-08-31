@@ -279,6 +279,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ar": {
+        "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+        "description": "Don't translate!!!"
+    },
     "language_ca": {
         "message": "Catal\u00e0",
         "description": "Don't translate!!!"

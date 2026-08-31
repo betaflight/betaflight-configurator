@@ -209,6 +209,17 @@ describe("useMspCliSession", () => {
             FC.CONFIG.flightControllerVersion = "4.6.0";
             expect(isMspCliSupported()).toBe(true);
         });
+
+        it("supports vendor firmware versions with underscore prerelease identifiers", () => {
+            FC.CONFIG.flightControllerVersion = "2025.12.3-alpha.KAACK_V19";
+            expect(isMspCliSupported()).toBe(true);
+        });
+
+        it("returns false for an invalid firmware version without throwing", () => {
+            FC.CONFIG.flightControllerVersion = "not-a-version";
+            expect(() => isMspCliSupported()).not.toThrow();
+            expect(isMspCliSupported()).toBe(false);
+        });
     });
 });
 
