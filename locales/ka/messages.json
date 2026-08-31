@@ -133,6 +133,30 @@
         "message": "დასაკავშირებლად შეიყვანეთ მისამართი.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "შენახული კავშირები",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "სახელი:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "სახელი ამ კავშირისთვის",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "შენახვა",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "განახლება",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "შენახული კავშირების წაშლა",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "ავტომატური კავშირი"
     },
@@ -974,6 +998,9 @@
     "defaultSoftwareHead": {
         "message": "პროგრამული უზრუნველყოფა"
     },
+    "defaultSoftwareText": {
+        "message": "Blackbox-ის ლოგების დამთვალიერებელი ჩაშენებულია ამ აპლიკაციაში. ფრენის ლოგების გასაანალიზებლად გახსენით <strong>Blackbox Viewer<\/strong> ჩანართი.<br \/><br \/>ჩვენი <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua სკრიპტების<\/a> კოლექცია ხელმისაწვდომია GitHub-ზე.<br \/><br \/>მიკროპროგრამის და ამ აპლიკაციის <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">საწყისი კოდი<\/a> შეგიძლიათ ჩამოტვირთოთ GitHub-იდან."
+    },
     "defaultContributingHead": {
         "message": "მონაწილეობის მიღება"
     },
@@ -1614,6 +1641,12 @@
     "featureRX_SPI": {
         "message": "SPI მიმღები (მაგ ჩაშენებული მიმღები)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC ტელემეტრიის სერიული პორტი"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART პორტი, საიდანაც იკითხება ESC ტელემეტრია. API 1.49 ვერსიიდან ყენდება თავად ESC სენსორზე; Ports ჩანართში მხოლოდ ჩანს."
+    },
     "featureESC_SENSOR": {
         "message": "გამოიყენეთ KISS\/BLHeli_32 ESC-ის ტელემეტრია <b> ცალკე სადენით<\/b>"
     },
@@ -1652,6 +1685,27 @@
     },
     "configurationTelemetry": {
         "message": "ტელემეტრია"
+    },
+    "telemetryInstanceTitle": {
+        "message": "ტელემეტრია $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "პროტოკოლი"
+    },
+    "telemetryInstancePort": {
+        "message": "სერიული პორტი"
+    },
+    "telemetryInstanceBaud": {
+        "message": "გადაცემის სიჩქარე"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "კამერის კონტროლი"
+    },
+    "rcdeviceSerialPort": {
+        "message": "სერიული პორტი"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია RunCam პროტოკოლის კამერა. API 1.49 ვერსიიდან ყენდება თავად მოწყობილობაზე; Ports ჩანართში მხოლოდ ჩანს."
     },
     "configurationTelemetryHelp": {
         "message": "მიმღებიდან გამომავალი ტელემტრია"
@@ -1698,6 +1752,18 @@
     },
     "configurationRangefinderType": {
         "message": "ტიპი"
+    },
+    "rangefinderSerialPort": {
+        "message": "მანძილმზომის სერიული პორტი"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია მანძილმზომი. API 1.49 ვერსიიდან ყენდება თავად მანძილმზომზე; Ports ჩანართში მხოლოდ ჩანს."
+    },
+    "opticalflowSerialPort": {
+        "message": "ოპტიკური ნაკადის სერიული პორტი"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია ოპტიკური ნაკადის სენსორი. მოდულს, რომელიც გადასცემს როგორც ნაკადის ისე მანძილის მონაცემებს, თითოეულის ცალ-ცალკე დაყენება სჭირდება."
     },
     "configurationOpticalflow": {
         "message": "ოპტიკური ნაკადის სენსორი",
@@ -2080,6 +2146,30 @@
     "configurationGPSubxSbas": {
         "message": "სახმელეთო დახმარების ტიპი"
     },
+    "gpsSerialPort": {
+        "message": "სერიული პორტი"
+    },
+    "gpsSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია GPS მოდული. მის შეცვლას გადატვირთვა სჭირდება."
+    },
+    "gpsSerialBaud": {
+        "message": "გამტარის სიჩქარე"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "სიჩქარე, რომელზეც GPS მოდულმა უნდა იმუშაოს. თუ დაკავშირება ვერ მოხერხდა, Betaflight სხვა სიჩქარეებსაც ცდის, ამიტომ ეს უფრო საწყისი წერტილია, ვიდრე მკაცრად განსაზღვრული პარამეტრი."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "GPS-ის სერიული პორტის დაყენება ვერ მოხერხდა, ამიტომ არაფერი შენახულა."
+    },
+    "gpsCanDevice": {
+        "message": "CAN Bus"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "CAN Bus, რომელზეც მიერთებულია DroneCAN მოდულები. ეს ეკუთვნის DroneCAN-ს მთლიანობაში, ამიტომ მისი შეცვლა გადაიყვანს ყველა DroneCAN მოწყობილობას და არა მხოლოდ GPS-ს. მის შეცვლას გადატვირთვა სჭირდება."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "CAN Bus დაყენება ვერ მოხერხდა, ამიტომ არაფერი შენახულა."
+    },
     "configurationGPSAutoBaud": {
         "message": "ავტომატურად დაკავშირება"
     },
@@ -2102,8 +2192,24 @@
         "message": "ჩართვის შემთხვევაში, საწყის წერტილად ჩაითვლება მხოლოდ ელემენტის მიერთების შემდგომი პირველივე შეიარაღება. თუ ეს ფუნქცია გამორთულია, საწყისი წერტილი განახლდება საფრენი აპარატის ყოველი ხელახალი შეიარაღებისას.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "ამ მიკროპროგრამის ბილდში GPS-ის მხარდაჭერა არ შედის. GPS-ის დასაკონფიგურირებლად და გამოსაყენებლად თავიდან ააწყვეთ მიკროპროგრამა GPS-ის ოფციის ჩართვით.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "სერიული მიმღების პროვაიდერი"
+    },
+    "portsPortNone": {
+        "message": "არცერთი"
+    },
+    "receiverSerialPort": {
+        "message": "სერიული პორტი"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია სერიული მიმღები. გადაცემის სიჩქარე პროვაიდერის მიხედვით განისაზღვრება, ამიტომ აქ დასაყენებელი არაფერია. პორტის შეცვლას გადატვირთვა სჭირდება."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "​მიმღების სერიული პორტის დაყენება ვერ მოხერხდა, ამიტომ არაფერი შენახულა."
     },
     "someRXTypesDisabled": {
         "message": "ზოგიერთი მიმღების პროვაიდერი არ არის მხარდაჭერილი მიმდინარე Build კონფიგურაციის მიერ."
@@ -2158,6 +2264,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>შენიშვნა:<\/strong> ნუ <span class=\"message-negative\">NOT<\/span> გამორთეთ MSP პირველ სერიულ პორტზე, თუ არ იცით რას აკეთებთ.  თქვენ შეიძლება დაგჭირდეთ ხელახლა გადატვირთვა და წაშლა თქვენი კონფიგურაციის თუ ამას აკეთებთ."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>შენიშვნა:<\/strong> ეს მიკროპროგრამა სერიულ პორტებს თითოეული ფუნქციის საკუთარ ჩანართში ანიჭებს, ამიტომ ეს ხედი მხოლოდ წაკითხვადია. ის აჩვენებს, რომელ პორტს იყენებს თითოეული ფუნქცია ამჟამად; მინიჭების შესაცვლელად გადადით შესაბამისი ფუნქციის ჩანართზე."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "პროგრამული უზრუნველყოფის განახლება <span class=\"message-negative\">საჭიროა<\/span>.  firmware &lt; 1.8.0-ის სერიული პორტის კონფიგურაციები არ არის მხარდაჭერილი."
@@ -2227,6 +2336,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "საკიდარი"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD მორგებული ტექსტი"
     },
     "pidTuningProfileOption": {
         "message": "პროფილი $1"
@@ -6100,6 +6215,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD პროტოკოლი"
+    },
+    "osdProtocolHelp": {
+        "message": "პროტოკოლი, რომლითაც გამოისახება OSD. MAX7456 და FrSky OSD მართავს ანალოგურ ჩიპს ან მოდულს; MSP აგზავნის OSD-ს ქვემოთ მოცემულ UART პორტზე, როგორც ამას DJI, HDZero და Walksnail-ის სათვალეები მოითხოვს."
+    },
+    "osdSerialPort": {
+        "message": "OSD სერიული პორტი"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მიერთებულია სერიული OSD. API 1.49 ვერსიიდან ყენდება თავად OSD-ზე; Ports ჩანართში მხოლოდ ჩანს."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "მორგებული ტექსტის სერიული პორტი"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART პორტი, საიდანაც მიიღება OSD მორგებული ტექსტი."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "მორგებული ტექსტის გადაცემის სიჩქარე"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "გადაცემის სიჩქარე OSD-ის მორგებული ტექსტის პორტისთვის."
+    },
     "osdSetupUnitsTitle": {
         "message": "ერთეულები"
     },
@@ -6184,6 +6323,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "ატვირთვა ვერ მოხერხდა"
+    },
+    "osdSetupSaveReboot": {
+        "message": "შენახვა და გადატვირთვა"
     },
     "osdSetupSave": {
         "message": "შენახვა"
@@ -6824,6 +6966,14 @@
     "osdDescElementLinkQuality": {
         "message": "ბმულის ხარისხის მაჩვენებელი, რომელიც ეფუძნება წარმატებით მიღებული არაკორუმპირებული მონაცემთა პაკეტების პროცენტს"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF რეჟიმი: კავშირის ხარისხი",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "მხოლოდ კავშირის ხარისხი",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "ფრენის მანძილი",
         "description": "One of the elements of the OSD"
@@ -7460,10 +7610,6 @@
         "message": "აქ შეგიძლიათ დააკონფიგურიროთ თქვენი ვიდეო გადამცემის (VTX) პარამეტრები. თქვენ შეგიძლიათ ნახოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX Tables, თუ ფრენის კონტროლერს და VTX-ს აქვთ ამის მხარდაჭერა.<br>თქვენი VTX-ის გასამართად მიყევით შემდეგ ნაბიჯებს:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">ამ<\/a> გვერდზე;<br>2. იპოვეთ თქვენი ქვეყნისა და VTX მოდელისთვის შესაბამისი VTX კონფიგურაციის ფაილი და ჩამოტვირთეთ ის;<br>3. დააწკაპუნეთ ქვემოთ მოცემულ '$t(vtxButtonLoadFile.message)' ღილაკს, აირჩიეთ VTX კონფიგურაციის ფაილი და ჩატვირთეთ;<br>4. გადაამოწმეთ, რომ პარამეტრები სწორია;<br>5. დააწკაპუნეთ '$t(vtxButtonSave.message)'-ს, რათა შეინახოთ VTX-ის პარამეტრები საფრენ კონტროლერში.<br>6. სურვილისამებრ, შეგიძლიათ დააწკაპუნოთ '$t(vtxButtonSaveLua.message)'-ს, რათა შეინახოთ lua კონფიგურაციის ფაილი, რომელიც შეგიძლიათ გამოიყენოთ betaflight lua სკრიპტებთან ერთად (იხილეთ მეტი <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">აქ<\/a>)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">ყურადღება:<\/span> თქვენი VTX არ არის კონფიგურირებული ან არ არის მხარდაჭერილი. ასე რომ, თქვენ არ შეგიძლიათ შეცვალოთ VTX მნიშვნელობები აქედან. ეს შესაძლებელი იქნება მხოლოდ იმ შემთხვევაში, თუ ფრენის კონტროლერი მიმაგრებულია VTX-ზე რაიმე პროტოკოლის გამოყენებით, როგორიცაა Tramp ან SmartAudio და სწორად არის კონფიგურირებული $t(tabPorts.message) ჩანართში, საჭიროების შემთხვევაში.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">ყურადღება:<\/span> თქვენ უნდა დააკონფიგურიროთ და შეინახოთ ჯერ VTX ცხრილი ბოლოში, სანამ გამოიყენებთ $t(vtxSelectedMode.message) ველებს.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7603,6 +7749,21 @@
     "vtxPitModeFrequencyHelp": {
         "message": "სიხშირე, რომლის დროსაც Pit რეჟიმი იცვლება ჩართვისას.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxProtocol": {
+        "message": "პროტოკოლი"
+    },
+    "vtxProtocolHelp": {
+        "message": "მართვის პროტოკოლი, რომელზეც მუშაობს VTX. SmartAudio და Tramp მუშაობს ქვემოთ მითითებულ UART-ზე; MSP მას უზიარებს MSP-ს, ისევე როგორც DJI, HDZero და Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "სერიული პორტი"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART პორტი, რომელზეც მუშაობს VTX-ის მართვის პროტოკოლი. API 1.49 ვერსიიდან ყენდება თავად VTX-ზე; Ports ჩანართში მხოლოდ ჩანს."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "MSP VTX პასუხობს იმავე MSP ბმულზე, რომელზეც გამოისახება სათვალის გამოსახულება, ამიტომ ის მიჰყვება OSD ჩანართში მითითებულ OSD Serial Port-ს და მისი აქ დაყენება შეუძლებელია."
     },
     "vtxLowPowerDisarm": {
         "message": "დაბალი სიმძლავრის განიარაღება",
@@ -7912,6 +8073,15 @@
     "magCalibrationSaveError": {
         "message": "კალიბრაციის მონაცემების შენახვა ვერ მოხერხდა"
     },
+    "magCalibrationFull": {
+        "message": "დაკალიბრება და განლაგების ამოცნობა"
+    },
+    "magCalibrationFullDesc": {
+        "message": "დაატრიალეთ საფრენი აპარატი ყველა მიმართულებით სენსორის დასაკალიბრებლად და მისი მონტაჟის ორიენტაციის ავტომატურად ამოსაცნობად."
+    },
+    "magCalibrationFullTitle": {
+        "message": "დაკალიბრება და განლაგების ამოცნობა"
+    },
     "magCalibrationFullInstruction": {
         "message": "მიჰყევით ქვემოთ მოცემულ ნაბიჯებს და სტაბილურად გეჭიროთ დრონი თითოეული სრული ბრუნისას. ახალი კუთხეების მიღწევასთან ერთად ზონების თვლა გაიზრდება — შეეცადეთ შეავსოთ 20."
     },
@@ -7945,6 +8115,12 @@
     "magCalibrationFullZones": {
         "message": "დაფარულია {{covered}} \/ {{total}} ზონა"
     },
+    "magCalibrationFullCompute": {
+        "message": "კალიბრაციის დასრულება"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "რაც მეტი ზონა დაიფარება, მით მეტია სიზუსტე — საუკეთესო კალიბრაციისა და განლაგების ამოსაცნობად მიზნად დაისახეთ 20 \/ 20."
+    },
     "magCalibrationFullCoverage": {
         "message": "დაფარვა:"
     },
@@ -7971,6 +8147,24 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "არ არის საკმარისი მონაცემები — დაატრიალეთ უფრო დიდხანს"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "არ არის GPS, ბრაუზერის ან IP ლოკაცია — გასაგრძელებლად შეიყვანეთ კოორდინატები ხელით"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "კალიბრაციისთვის საჭიროა ლოკაცია"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "შეიყვანეთ განედი და გრძედი ხელით Google Maps-იდან არჩევით. თქვენს დრონს არ აქვს GPS კავშირი და მოწყობილობამ ვერ მოგაწოდათ მდებარეობის მონაცემები. მდებარეობა საჭიროა მაგნიტომეტრის დასაკალიბრებლად."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "მაგ. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "კოორდინატების ფორმატი არასწორია. გთხოვთ, შეიყვანოთ შემდეგნაირად: განედი, გრძედი (მაგ. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "ამ კოორდინატებისთვის მაგნიტური საცნობარო მნიშვნელობის გამოთვლა ვერ მოხერხდა. გთხოვთ, გადაამოწმოთ ისინი და სცადოთ ხელახლა."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI-ის ბრძანებები დაკოპირდა გაცვლის ბუფერში"
@@ -8116,6 +8310,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "ბლექბოქსის აღრიცხვის მოწყობილობა"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "სერიული პორტი"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART პორტი, რომელიც გამოიყენება მაშინ, როდესაც ჩამწერი მოწყობილობა არის Serial. API 1.49 ვერსიიდან ყენდება თავად Blackbox-ზე; Ports ჩანართში მხოლოდ ჩანს."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "სერიული პორტის გადაცემის სიჩქარე"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "გადაცემის სიჩქარე სერიული ლოგირების პორტისთვის."
     },
     "onboardLoggingRateOfLogging": {
         "message": "შავი ყუთის შესვლის მაჩვენებელი"
