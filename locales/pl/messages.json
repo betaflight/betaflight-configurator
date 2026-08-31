@@ -6718,10 +6718,6 @@
     "osdButtonSaved": {
         "message": "Zapisano"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Uwaga:<\/span> Twój VTX nie jest skonfigurowany lub nie jest obsługiwany, więc nie możesz zmieniać jego wartości w tym miejscu. Modyfikacja będzie możliwa jedynie, jeśli kontroler lotu jest podłączony do VTX za pomocą protokołu, takiego jak Tramp lub SmartAudio, oraz odpowiednio skonfigurowany w zakładce $t(tabPorts.message), jeśli jest to wymagane.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Uwaga:<\/span> Musisz skonfigurować i zapisać PIERWSZĄ tabelę VTX (na dole) zanim będziesz mógł korzystać z ustawień z kategorii $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
