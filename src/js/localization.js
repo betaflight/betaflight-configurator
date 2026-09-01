@@ -147,7 +147,7 @@ i18n.isRtl = function (locale) {
 i18n.updatePageDirection = function () {
     const html = document.documentElement;
     html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
-    html.setAttribute("lang", i18n.getCurrentLocale());
+    html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
 };
 
 /**
