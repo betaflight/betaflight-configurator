@@ -376,11 +376,15 @@ describe("TauriSerial connect", () => {
         mockPresentPort();
         const serial = new TauriSerial();
         await serial.connect(PORT, { baudRate: 115200 });
-        const start = vi.spyOn(serial, "startDeviceMonitoring");
+        // The describe-level stub keeps _bootstrap() from subscribing; from here
+        // the real subscribe path is the behaviour under test.
+        TauriSerial.prototype.startDeviceMonitoring.mockRestore();
+        invoke.mockClear();
 
         await serial.disconnect();
 
-        expect(start).toHaveBeenCalled();
+        expect(commands()).toContain("plugin:serialplugin|watch_ports");
+        expect(serial.portListChannelId).toBe(1);
     });
 });
 
