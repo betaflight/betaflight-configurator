@@ -7505,10 +7505,6 @@
         "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">цю сторінку;<\/a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації Lua для роботи з lua скриптами Betaflight (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">тут<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Увага:<\/span> Ваш відеопередавач не налаштований або не підтримується. Тому ви не можете змінити значення відеопередавача звідси. Це буде можливо лише за умови, якщо польотний контролер під’єднано до відеопередавача за допомогою певного протоколу, як-от Tramp або SmartAudio, і його було правильно налаштовано на вкладці $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Увага:<\/span> Вам потрібно СПОЧАТКУ налаштувати та зберегти таблицю відеопередавача внизу, перш ніж ви зможете використовувати поля $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"

@@ -7568,10 +7568,6 @@
         "message": "Aqui pode configurar os valores para o seu transmissor de vídeo (VTX). Pode ver e alterar os valores de transmissão, incluindo as tabelas VTX, se a controladora de voo e o VTX o suportarem.<br>Para configurar o seu VTX use os seguintes passos:<br>1. Vá a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/VTX-tables\">esta<\/a> página;<br>2. Encontre o ficheiro apropriado de configuração do VTX para o seu país e modelo de VTX e faça download;<br>3. Clique '$t(vtxButtonLoadFile.message)' abaixo, selecione o ficheiro de configuração do VTX e carregue-o;<br>4. Verifique que as definições estão corretas;<br>5. Clique '$t(vtxButtonSave.message)' para guardar as definições do VTX na controladora de voo.<br>6. Opcionalmente clique '$t(vtxButtonSaveLua.message)' para guardar o ficheiro de configuração lua que pode usar com os scripts lua do Betaflight (Veja mais <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">aqui<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atenção:<\/span> O VTX não está configurado ou não é compatível. Portanto não é possível modificar os valores aqui. Isto só é possível se a controladora de voo estiver conectada ao VTX usando um protocolo como Tramp ou SmartAudio e estiver corretamente configurada na aba $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Atenção:<\/span> É necessário PRIMEIRO configurar e gravar a tabela do VTX abaixo antes de utilizar os campos de $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
