@@ -4223,6 +4223,9 @@
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
     },
+    "sensorsPitotTitle": {
+        "message": "Airspeed - cm/s"
+    },
     "sensorsDebugTitle": {
         "message": "Debug"
     },
