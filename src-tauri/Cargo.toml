@@ -27,7 +27,12 @@ tauri-plugin-dfu = { path = "plugins/dfu" }
 # USB serial is desktop + Android only. iOS has no USB serial API, and
 # tauri-plugin-serialplugin's iOS build path doesn't compile, so exclude it there.
 [target.'cfg(not(target_os = "ios"))'.dependencies]
-tauri-plugin-serialplugin = "3.0"
+# Pinned to a fork rather than 3.0 for its `raw` watch mode. Upstream's watch
+# routes every chunk through its AT line router, which decodes the bytes with
+# from_utf8_lossy, splits them on newlines and trims each line, so MSP loses its
+# non-UTF-8 bytes and its 0x09/0x0A/0x0D/0x20 payload bytes. Raw streams them
+# verbatim. Revisit once the change is upstream and released.
+tauri-plugin-serialplugin = { git = "https://github.com/blckmn/tauri-plugin-serialplugin", rev = "68a58a74fb5fa9cbf41b17c419f0136748d56a50" }
 
 # Window size/position/maximized persistence is a desktop-only concept.
 # Cargo can't evaluate tauri's `desktop` cfg here, so spell the platforms out.
