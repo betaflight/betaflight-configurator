@@ -83,6 +83,8 @@ function MspHelper() {
         LIDAR_TF: 15,
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18,
+        OSD_CUSTOM_TEXT: 19,
     };
 
     self.REBOOT_TYPES = {
@@ -1268,6 +1270,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
                     FC.ADVANCED_TUNING.dMaxGain = data.readU8();
                     FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
+                    // No Configurator UI for these; round-tripped as-is so saving other PID_ADVANCED
+                    // fields doesn't reset a value still active on firmware older than 2026.12.0.
                     FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                     FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 

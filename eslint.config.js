@@ -6,12 +6,9 @@ import globals from "globals";
 
 export default [
     {
-        // Vendored blackbox-log-viewer source and assets — keep upstream formatting, not linted
-        // against configurator rules to avoid churn and drift on re-vendor.
-        //
         // Build output has to be ignored globally rather than per-config: a `dist/` left in the
         // tree otherwise gets linted as source, and minified bundles produce thousands of errors.
-        ignores: ["src/blackbox-viewer/**", "src/js/webworkers/**", "dist/**", "src/dist/**"],
+        ignores: ["src/js/webworkers/**", "dist/**", "src/dist/**"],
     },
     {
         files: ["**/*.js", "**/*.vue"],
@@ -64,10 +61,53 @@ export default [
         ignores: ["dist/", "src/dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
     },
     {
+        // vendor.js pulls in Leaflet and its plugins for their side effects, and they register
+        // themselves on `window.L` rather than exporting anything. `chrome` is the Chrome Apps
+        // storage path, absent everywhere else, which is why pref_storage guards on it.
+        files: ["src/blackbox-viewer/**/*.js", "src/blackbox-viewer/**/*.vue"],
+        languageOptions: {
+            globals: {
+                L: "readonly",
+                chrome: "readonly",
+            },
+        },
+    },
+    {
         files: ["**/*.vue"],
         languageOptions: {
             parser: vueParser,
         },
         processor: "vue/vue",
+    },
+    {
+        // Build and release tooling: real Node scripts, not browser code. Without this
+        // block `.mjs` matches no `files` pattern and is linted with zero rules.
+        // The root config files are `.js` but equally Node-side; Vite bundles its config to
+        // CJS before executing it, so `__dirname` and friends are genuinely available there.
+        files: ["**/*.mjs", "*.config.js", "nuxt-ui.vite.js"],
+        languageOptions: {
+            ecmaVersion: "latest",
+            sourceType: "module",
+            globals: {
+                ...globals.node,
+            },
+        },
+        plugins: {
+            "unused-imports": unusedImportsPlugin,
+        },
+        rules: {
+            "no-unused-vars": "off",
+            "unused-imports/no-unused-imports": "error",
+            "unused-imports/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_",
+                },
+            ],
+            "no-undef": "error",
+        },
     },
 ];

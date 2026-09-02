@@ -22,20 +22,96 @@
                     <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                         <div class="mb-4">
                             <div class="text-sm font-bold text-[var(--color-primary-500)] mb-1">{{ craft }}</div>
-                            <UTable :data="groupBackups" :columns="columns" class="text-sm">
-                                <template #created-cell="{ row }">
-                                    {{ formatDate(row.original.created) }}
-                                </template>
-                                <template #description-cell="{ row }">
-                                    <span class="text-dimmed">{{ row.original.description || "" }}</span>
-                                </template>
-                                <template #actions-cell="{ row }">
-                                    <div class="flex gap-2">
+                            <!-- Table layout: md and up -->
+                            <div class="overflow-x-auto hidden md:block">
+                                <UTable :data="groupBackups" :columns="columns" class="text-sm">
+                                    <template #created-cell="{ row }">
+                                        {{ formatDate(row.original.created) }}
+                                    </template>
+                                    <template #name-cell="{ row }">
+                                        <span class="block w-[160px] truncate" :title="row.original.name || ''">
+                                            {{ row.original.name || "" }}
+                                        </span>
+                                    </template>
+                                    <template #description-cell="{ row }">
+                                        <span
+                                            class="text-dimmed block w-[240px] truncate"
+                                            :title="row.original.description || ''"
+                                        >
+                                            {{ row.original.description || "" }}
+                                        </span>
+                                    </template>
+                                    <template #actions-cell="{ row }">
+                                        <div class="flex gap-2 whitespace-nowrap shrink-0">
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                icon="i-lucide-download"
+                                                @click="downloadBackup(row.original)"
+                                            >
+                                                {{ $t("actionDownload") }}
+                                            </UButton>
+                                            <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
+                                                <span>
+                                                    <UButton
+                                                        size="xs"
+                                                        variant="soft"
+                                                        color="success"
+                                                        icon="i-lucide-upload"
+                                                        :disabled="!isConnected || isRestoreBusy"
+                                                        :class="{ 'pointer-events-none': !isConnected }"
+                                                        @click="restoreBackup(row.original)"
+                                                    >
+                                                        {{ $t("actionRestore") }}
+                                                    </UButton>
+                                                </span>
+                                            </UTooltip>
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                icon="i-lucide-pencil"
+                                                @click="startEdit(row.original)"
+                                            >
+                                                {{ $t("actionEdit") }}
+                                            </UButton>
+                                            <UButton
+                                                size="xs"
+                                                variant="soft"
+                                                color="error"
+                                                icon="i-lucide-trash-2"
+                                                @click="deleteBackup(row.original.id)"
+                                            >
+                                                {{ $t("actionDelete") }}
+                                            </UButton>
+                                        </div>
+                                    </template>
+                                </UTable>
+                            </div>
+
+                            <!-- Card layout: below md, so actions wrap instead of requiring horizontal scroll -->
+                            <div class="flex flex-col gap-2 md:hidden">
+                                <div
+                                    v-for="backup in groupBackups"
+                                    :key="backup.id"
+                                    class="border border-default rounded-lg p-3 flex flex-col gap-2"
+                                >
+                                    <div class="flex items-baseline justify-between gap-2">
+                                        <span class="min-w-0 flex-1 font-semibold break-words">{{
+                                            backup.name || ""
+                                        }}</span>
+                                        <span class="text-dimmed text-xs whitespace-nowrap">{{
+                                            formatDate(backup.created)
+                                        }}</span>
+                                    </div>
+                                    <p v-if="backup.description" class="text-dimmed text-sm break-words">
+                                        {{ backup.description }}
+                                    </p>
+                                    <div class="flex flex-wrap gap-2">
                                         <UButton
                                             size="xs"
                                             variant="soft"
                                             icon="i-lucide-download"
-                                            @click="downloadBackup(row.original)"
+                                            @click="downloadBackup(backup)"
                                         >
                                             {{ $t("actionDownload") }}
                                         </UButton>
@@ -48,7 +124,7 @@
                                                     icon="i-lucide-upload"
                                                     :disabled="!isConnected || isRestoreBusy"
                                                     :class="{ 'pointer-events-none': !isConnected }"
-                                                    @click="restoreBackup(row.original)"
+                                                    @click="restoreBackup(backup)"
                                                 >
                                                     {{ $t("actionRestore") }}
                                                 </UButton>
@@ -58,7 +134,7 @@
                                             size="xs"
                                             variant="soft"
                                             icon="i-lucide-pencil"
-                                            @click="startEdit(row.original)"
+                                            @click="startEdit(backup)"
                                         >
                                             {{ $t("actionEdit") }}
                                         </UButton>
@@ -67,13 +143,13 @@
                                             variant="soft"
                                             color="error"
                                             icon="i-lucide-trash-2"
-                                            @click="deleteBackup(row.original.id)"
+                                            @click="deleteBackup(backup.id)"
                                         >
                                             {{ $t("actionDelete") }}
                                         </UButton>
                                     </div>
-                                </template>
-                            </UTable>
+                                </div>
+                            </div>
                         </div>
                     </template>
                 </UiBox>

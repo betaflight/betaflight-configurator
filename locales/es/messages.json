@@ -298,9 +298,6 @@
     "configuratorUpdateHelp": {
         "message": "Cuando internet está disponible, la aplicación consultará automáticamente si hay actualizaciones disponibles."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir a la Web de Versiones"
-    },
     "rebootFlightController": {
         "message": "Reiniciando el controlador de vuelo, vuelve a conectar cuando disponible"
     },
@@ -952,9 +949,6 @@
     },
     "defaultSoftwareHead": {
         "message": "Software"
-    },
-    "defaultSoftwareText": {
-        "message": "Nuestro <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visor de Log de Blackbox<\/a> está disponible como una aplicación en línea.<br \/><br \/>Nuestra colección de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> están disponibles en GitHub.<br \/><br \/>Nuestro código fuente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> para el firmware, esta aplicación y el visor de blackbox se pueden descargar desde GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -7338,10 +7332,6 @@
         "message": "Aquí puedes configurar los valores para tu Transmisor de Video (VTX). Puedes ver y cambiar los valores para la transmisión, incluyendo las Tablas VTX, si el controlador de vuelo y el VTX lo soportan.<br>Para configurar tu VTX sigue los siguientes pasos:<br>1. Ve a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">esta página<\/a>;<br>2. Encuentra el archivo de configuración VTX apropiado para tu país y tu modelo de VTX y descárgalo;<br>3. Pulsa abajo en '$t(vtxButtonLoadFile.message)', selecciona el archivo de configuración VTX, cárgalo;<br>4. Verifica que los ajustes son correctos;<br>5. Pulsa '$t(vtxButtonSave.message)' para almacenar los valores VTX en el controlador de vuelo.<br>6. Opcionalmente, pulsa '$t(vtxButtonSaveLua.message)' para guardar un archivo lua de configuración que puedes usar con los scripts lua de Betaflight (más información <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atención:<\/span> Tu VTX no está configurado o no está soportado. Por lo tanto no puedes modificar los valores del VTX desde aquí. Esto sólo sería posible si el controlador de vuelo está conectado al VTX usando algún tipo de protocolo como Tramp o SmartAudio y está correctamente configurado en la pestaña $t(tabPorts.message) si fuera necesario.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Atención:<\/span> Necesitas configurar y guardar PRIMERO la Tabla VTX de abajo antes de que puedas hacer uso de los campos de $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7709,39 +7699,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinación es {{saved}}° pero el GPS detecta {{detected}}° para esta ubicación. Pulsa Actualizar para corregir."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} muestras"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "¡Inclina más!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Detección fallida — prueba con inclinación más variada."
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibración guiada"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Paso 1\/6 — Mantén plano, yaw 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Paso 2\/6 — Flip invertido, yaw 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Paso 3\/6 — Nariz hacia arriba, yaw 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Paso 4\/6 — Nariz hacia abajo, yaw 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Paso 5\/6 — Lateral izquierdo hacia arriba, yaw 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Paso 6\/6 - Lateral derecho hacia arriba, yaw 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Recopilación de datos completada — revisa y guarda"
-    },
     "magCalibrationCancel": {
         "message": "Cancelar"
     },
@@ -7771,9 +7728,6 @@
     },
     "magCalibrationSamples": {
         "message": "Muestras"
-    },
-    "magCalibrationQuality": {
-        "message": "Calidad"
     },
     "magCalibrationQualityGood": {
         "message": "Bueno"
@@ -7814,12 +7768,6 @@
     "magCalibrationSaveError": {
         "message": "Error al guardar los valores de calibración"
     },
-    "magCalibrationAccept": {
-        "message": "Guardar calibración"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Calibración completa"
-    },
     "magCalibrationFullStepCounter": {
         "message": "Paso {{n}} de {{total}}"
     },
@@ -7850,9 +7798,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} zonas cubiertas"
     },
-    "magCalibrationFullCompute": {
-        "message": "Calcular"
-    },
     "magCalibrationFullCoverage": {
         "message": "Cobertura:"
     },
@@ -7876,9 +7821,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "No hay suficientes muestras — girar más tiempo"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "No hay GPS ni ubicación IP - no se puede determinar la inclinación magnética"
     },
     "magCalibrationFullCliCopied": {
         "message": "Comandos CLI copiados al portapapeles"
@@ -7912,12 +7854,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nuevo"
-    },
-    "magAlignmentApply": {
-        "message": "Aplicar"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detectar"
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"

@@ -461,7 +461,7 @@ async function onApply() {
     th,
     td {
         padding: 5px 10px;
-        text-align: left;
+        text-align: start;
         border-bottom: 1px solid var(--surface-200);
         font-size: 12px;
     }

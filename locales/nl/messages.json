@@ -160,9 +160,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ga naar de Release Pagina"
-    },
     "deviceRebooting": {
         "message": "Apparaat - <span class=\"message-negative\">is aan het heropstarten<\/span>"
     },
@@ -4234,10 +4231,6 @@
     },
     "osdButtonSaved": {
         "message": "Opgeslagen"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Waarschuwing:<\/span> Uw VTX is niet geconfigureerd of wordt niet ondersteund. U kunt de VTX-waarden daardoor hier niet wijzigen. Dit is alleen mogelijk als uw vluchtcontroller is aangesloten op uw VTX met behulp van een protocol zoals Tramp of SmartAudio. En deze correct is geconfigureerd in het tabblad $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Waarschuwing:<\/span> U moet de VTX Tabel eerst configureren en daarna opslaan alvorens u gebruik kan maken van de $t(vtxSelectedMode.message) velden.",

@@ -84,19 +84,31 @@ export default defineComponent({
         border-top: 1px dotted var(--surface-500);
         padding-top: 5px;
         padding-bottom: 5px;
-        background-image: url(../../images/arrow.svg);
-        background-repeat: no-repeat;
-        background-position: 0 8px;
-        background-size: 12px;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: 0;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: url(../../images/arrow.svg) no-repeat;
+            background-size: 12px;
+        }
 
         span {
-            margin-left: 17px;
+            margin-inline-start: 17px;
             display: block;
 
             a {
                 color: var(--primary-500);
             }
         }
+    }
+
+    html[dir="rtl"] & li::before {
+        transform: scaleX(-1);
     }
 
     .subline {

@@ -177,9 +177,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ir a web de descargas"
-    },
     "deviceRebooting": {
         "message": "Dispositivo  - <span class=\"message-negative\">Reiniciando<\/span>"
     },
@@ -5600,10 +5597,6 @@
     },
     "osdButtonSaved": {
         "message": "Gardado"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atención:<\/span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Atención:<\/span> Debe configurar e gardar PRIMEIRO a táboa VTX na parte inferior antes de que poida facer uso dos campos $t(vtxSelectedMode.message).",

@@ -39,7 +39,7 @@
                 <div class="welcome-help">
                     <UIcon name="i-lucide-help-circle" class="welcome-help-icon" />
                     <ULink
-                        to="https://github.com/betaflight/betaflight/blob/master/docs/Blackbox.md"
+                        to="https://betaflight.com/docs/wiki/guides/current/Black-Box-logging-and-usage"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -54,12 +54,10 @@
 <script setup>
 import { computed, inject } from "vue";
 import { useLogStore } from "../stores/log.js";
-import { useAppStore } from "../stores/app.js";
 import LogFileInput from "./LogFileInput.vue";
 
-defineEmits(["files-selected"]);
+const emit = defineEmits(["files-selected", "download-from-fc"]);
 const logStore = useLogStore();
-const appStore = useAppStore();
 
 // Host-provided FC dataflash pull capability (null when not embedded / unavailable).
 // Its fields are refs nested in a plain object, so unwrap them via local computeds
@@ -69,16 +67,8 @@ const downloadAvailable = computed(() => !!dataflash?.available?.value);
 const pulling = computed(() => !!dataflash?.pulling?.value);
 const progress = computed(() => dataflash?.progress?.value ?? 0);
 
-async function onDownload() {
-    if (!dataflash || !downloadAvailable.value || dataflash.pulling.value) {
-        return;
-    }
-    try {
-        const buffer = await dataflash.pull();
-        appStore.loadLogBuffer?.(buffer, "FC dataflash.BBL");
-    } catch (e) {
-        alert(`Could not download the log from the flight controller:\n\n${e.message}`);
-    }
+function onDownload() {
+    emit("download-from-fc");
 }
 </script>
 

@@ -133,9 +133,6 @@
         "message": "聲納",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "打開版本發佈網站"
-    },
     "deviceRebooting": {
         "message": "設備 - <span class=\"message-negative\">重啟中<\/span>"
     },
@@ -3940,10 +3937,6 @@
     },
     "osdButtonSaved": {
         "message": "已儲存"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">注意:<\/span>您的圖傳未配置或不支援。所以您不能在此修改圖傳值。只有當圖傳使用Tramp或SmartAudio等協議，連接到飛行控制器，並在$t(tabPorts.message)頁面中正確配置後，才可以使用。",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">注意:<\/span>在使用$t(vtxSelectedMode.message)之前，必須先在下面配置並保存圖傳表",

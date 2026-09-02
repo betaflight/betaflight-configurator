@@ -1,4 +1,38 @@
 import FileSystem from "../js/FileSystem";
+import { loadHeaderLayout, saveHeaderLayout } from "./header_layout";
+
+const WORKSPACE_EXPORT_VERSION = 2;
+
+/** @param {unknown} value */
+function isHeaderLayout(value) {
+    if (value === undefined) {
+        return true;
+    }
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+        return false;
+    }
+    return ["hiddenGroups", "hiddenFields", "paneOrder"].every(
+        (key) => Object.hasOwn(value, key) && Array.isArray(value[key]),
+    );
+}
+
+/** @param {unknown} value */
+function isWorkspaceList(value) {
+    return (
+        Array.isArray(value) &&
+        value.every(
+            (workspace) =>
+                workspace === null ||
+                (typeof workspace === "object" && !Array.isArray(workspace) && Array.isArray(workspace.graphConfig)),
+        )
+    );
+}
+
+/** @param {unknown} error */
+function reportInvalidWorkspace(error) {
+    console.error("Failed to load workspace file:", error);
+    globalThis.alert("Invalid workspace file. No settings were changed.");
+}
 
 export function upgradeWorkspaceFormat(oldFormat) {
     if (!oldFormat.graphConfig) {
@@ -27,7 +61,7 @@ export function upgradeWorkspaceFormat(oldFormat) {
 }
 
 export async function saveWorkspaces(workspaceGraphConfigs, file) {
-    if (!workspaceGraphConfigs || typeof workspaceGraphConfigs !== "object") {
+    if (!isWorkspaceList(workspaceGraphConfigs)) {
         return;
     }
 
@@ -49,7 +83,15 @@ export async function saveWorkspaces(workspaceGraphConfigs, file) {
         return;
     }
 
-    const data = JSON.stringify(workspaceGraphConfigs, undefined, 4);
+    const data = JSON.stringify(
+        {
+            version: WORKSPACE_EXPORT_VERSION,
+            workspaces: workspaceGraphConfigs,
+            headerLayout: loadHeaderLayout(),
+        },
+        undefined,
+        4,
+    );
     try {
         await FileSystem.writeFile(handle, data);
     } catch (error) {
@@ -57,15 +99,54 @@ export async function saveWorkspaces(workspaceGraphConfigs, file) {
     }
 }
 
-export function loadWorkspaces(file, workspaceStore, onSwitchWorkspace) {
-    file.text().then((data) => {
-        let tmp = JSON.parse(data);
-        if (tmp.graphConfig) {
-            globalThis.alert("Old Workspace format. Upgrading...");
-            tmp = upgradeWorkspaceFormat(tmp);
+/**
+ * @param {{ text: () => Promise<string> }} file
+ * @param {{ workspaceGraphConfigs: unknown }} workspaceStore
+ * @param {(workspaces: unknown, id: number) => void} onSwitchWorkspace
+ */
+export async function loadWorkspaces(file, workspaceStore, onSwitchWorkspace) {
+    let tmp;
+    try {
+        tmp = JSON.parse(await file.text());
+    } catch (error) {
+        reportInvalidWorkspace(error);
+        return;
+    }
+
+    const isVersioned =
+        tmp !== null &&
+        typeof tmp === "object" &&
+        !Array.isArray(tmp) &&
+        (Object.hasOwn(tmp, "version") || Object.hasOwn(tmp, "workspaces"));
+    const isLegacy = tmp !== null && typeof tmp === "object" && !Array.isArray(tmp) && Array.isArray(tmp.graphConfig);
+    if (isVersioned && (tmp.version !== WORKSPACE_EXPORT_VERSION || !isWorkspaceList(tmp.workspaces))) {
+        reportInvalidWorkspace(new Error("Invalid workspace file structure"));
+        return;
+    }
+    if (isVersioned && !isHeaderLayout(tmp.headerLayout)) {
+        reportInvalidWorkspace(new Error("Invalid workspace header layout"));
+        return;
+    }
+    if (!isVersioned && !isLegacy && !isWorkspaceList(tmp)) {
+        reportInvalidWorkspace(new Error("Unsupported workspace file structure"));
+        return;
+    }
+    if (isLegacy && !tmp.graphConfig.every((graphConfig) => graphConfig === null || Array.isArray(graphConfig))) {
+        reportInvalidWorkspace(new Error("Invalid original workspace file structure"));
+        return;
+    }
+
+    if (isVersioned) {
+        if (tmp.headerLayout) {
+            saveHeaderLayout(tmp.headerLayout);
         }
-        workspaceStore.workspaceGraphConfigs = tmp;
-        onSwitchWorkspace(workspaceStore.workspaceGraphConfigs, 1);
-        globalThis.alert("Workspaces Loaded");
-    });
+        tmp = tmp.workspaces;
+    }
+    if (isLegacy) {
+        globalThis.alert("Old Workspace format. Upgrading...");
+        tmp = upgradeWorkspaceFormat(tmp);
+    }
+    workspaceStore.workspaceGraphConfigs = tmp;
+    onSwitchWorkspace(workspaceStore.workspaceGraphConfigs, 1);
+    globalThis.alert("Workspaces Loaded");
 }

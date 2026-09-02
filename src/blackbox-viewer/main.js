@@ -10,9 +10,10 @@ import supaflyWorkspace from "./ws_supafly.json";
 import { FlightLog } from "./flightlog.js";
 import { stringTimetoMsec, validate, mouseNotification } from "./tools.js";
 import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } from "./pen_adjustment.js";
-import { createKeydownHandler } from "./keyboard_handler.js";
+import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler.js";
 import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io.js";
 import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils.js";
+import { cancelActiveVideoExport } from "./video_export.js";
 import {
     syncLogToVideo,
     setVideoOffset,
@@ -108,6 +109,8 @@ export function bootstrapViewer() {
     logStore.hasVideo = false;
     logStore.flightLog = null;
     graphStore.graph = null;
+    // A fresh mount lands on the welcome page, which has no toolbar to leave fullscreen with.
+    graphStore.isFullscreen = false;
 
     graphStore.invalidateGraph = invalidateGraph;
     graphStore.updateCanvasSize = updateCanvasSize;
@@ -610,6 +613,16 @@ export function bootstrapViewer() {
         document.addEventListener("keydown", keydownHandler);
         cleanupFns.push(() => document.removeEventListener("keydown", keydownHandler));
 
+        // Runs in the capture phase so it can neutralise Space on a focused
+        // dropdown trigger before reka-ui's own keydown handler toggles the menu.
+        const dropdownSpaceGuard = createDropdownSpaceGuard({
+            appStore,
+            hasGraph: () => graph != null,
+            logPlayPause,
+        });
+        document.addEventListener("keydown", dropdownSpaceGuard, true);
+        cleanupFns.push(() => document.removeEventListener("keydown", dropdownSpaceGuard, true));
+
         video.addEventListener("loadedmetadata", updateCanvasSize);
         video.addEventListener("error", reportVideoError);
         video.addEventListener("loadeddata", videoLoaded);
@@ -739,9 +752,8 @@ export function bootstrapViewer() {
     };
     appStore.saveUserSettings = (newSettings) => {
         settingsStore.saveAll(newSettings);
-        if (newSettings.darkMode !== undefined) {
-            DarkTheme.setMode(newSettings.darkMode);
-        }
+        // Theme is owned by the host configurator (see setBlackboxViewerDark); the viewer no
+        // longer exposes or applies its own dark-mode setting, so nothing to do here for it.
         if (graph != null) {
             graph.refreshOptions(userSettings);
             graph.refreshLogo();
@@ -769,6 +781,8 @@ export function bootstrapViewer() {
 
     // Teardown: reverse every global side-effect so the tab can be re-mounted cleanly.
     return function teardown() {
+        // Stop the export loop before the shared grapher and canvases are released.
+        cancelActiveVideoExport();
         // Nulling the graph makes the requestAnimationFrame loop bail on its next tick.
         if (graph) {
             try {
