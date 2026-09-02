@@ -4199,6 +4199,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -8143,6 +8146,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometer"
+    },
+    "configurationPitotHardware": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetometer"
