@@ -324,19 +324,22 @@ body.mobile-app-shell {
             box-shadow: var(--shadow-chrome-floating);
         }
 
+        /* Pin the whole tab, not just the terminal: the narrow-layout rule below puts the
+           toolbar in normal flex flow, and pinning only the wrapper would leave the toolbar
+           as the sole in-flow child, parked at the top behind the terminal. */
         .tab-cli {
-            height: 100%;
-        }
-
-        .tab-cli .content_wrapper {
             position: fixed;
             top: calc(3rem + var(--bf-inset-top));
             left: 0.5rem;
             right: 0.5rem;
-            bottom: calc(5.75rem + var(--bf-inset-bottom));
+            /* Sit directly on top of the floating status bar. */
+            bottom: calc(2.5rem + var(--bf-inset-bottom));
             height: auto;
+        }
+
+        .tab-cli .content_wrapper {
             margin: 0;
-            padding: 0;
+            padding: 0 0 0.3rem;
         }
     }
 }

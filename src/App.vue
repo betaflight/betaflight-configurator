@@ -162,6 +162,15 @@ watch(isRevealed, (revealed) => {
     }
 });
 
+// Scrolling any tab sets the hidden flag, and the landing page may be too short to
+// scroll it back, so entering the landing tab has to reset it itself.
+watch(isLandingTab, (isLanding) => {
+    if (isLanding) {
+        topbarHidden.value = false;
+        lastScrollTop = 0;
+    }
+});
+
 const logoTooltip = computed(() => {
     const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
     const cfg = FC.value.CONFIG ?? {};
