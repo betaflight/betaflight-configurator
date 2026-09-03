@@ -27,3 +27,38 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
+
+  lockfile:
+    name: Lockfile in sync
+    runs-on: ubuntu-latest
+    # Dependabot resolves lockfiles with its own npm, which may predate the
+    # version pinned in .nvmrc. Its PRs are re-normalised on merge instead.
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - run: npm ci
+
+      # A plain install keeps every version the lockfile already satisfies, so
+      # this only reports a diff when the committed lockfile was not written by
+      # the npm that .nvmrc pins. Never use --package-lock-only here: it cannot
+      # see inside bundled dependencies and produces a different tree.
+      - name: Re-resolve the lockfile
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Fail if the lockfile drifted
+        run: |
+          if ! git diff --quiet -- package-lock.json; then
+            echo "::error::package-lock.json is not in sync with package.json."
+            echo "Run 'nvm use && npm install' and commit the result."
+            echo "npm in use: $(npm --version) (engines requires >=11.6.1)"
+            git --no-pager diff --stat -- package-lock.json
+            exit 1
+          fi
+          echo "package-lock.json is in sync."
