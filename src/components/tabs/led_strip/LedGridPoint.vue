@@ -219,18 +219,18 @@ const colorStyle = computed(() => {
     font-size: 12px;
     display: block;
     margin-inline-start: -1px;
-    margin-top: -21px;
-    width: 24px;
-    height: 24px;
+    margin-top: calc(2px - var(--led-cell, 23px));
+    width: calc(var(--led-cell, 23px) + 1px);
+    height: calc(var(--led-cell, 23px) + 1px);
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-    line-height: 24px;
+    line-height: calc(var(--led-cell, 23px) + 1px);
 }
 
 /* Direction indicators */
 .indicators {
     position: relative;
-    height: 24px;
+    height: calc(var(--led-cell, 23px) + 1px);
 }
 
 .indicators span {

@@ -1152,8 +1152,13 @@ watch(auxChannelValue, (newVal) => {
 
 @container main-wrapper (max-width: 575px) {
     .grid-container {
-        --led-cell: 20px;
         --led-cell-gap: 1px;
+        /* The content wrapper pads 1rem each side: fit 16 pitches plus the grid's 3px
+           allowance into what is left, and never grow past the 22px pitch tuned here.
+           Derived, not fixed, so a small phone or a raised UI scale shrinks the cells
+           instead of clipping the grid. */
+        --led-cell-pitch: min(22px, calc((100cqw - 2rem - 3px) / 16));
+        --led-cell: calc(var(--led-cell-pitch) - var(--led-cell-gap) * 2);
         margin-inline-end: 0;
     }
 }

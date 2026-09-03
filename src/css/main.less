@@ -1443,9 +1443,21 @@ each(range(12), {
         }
     });
     /* A col-span-N child would otherwise spawn a content-sized implicit column
-       in the collapsed single-column grid, pushing the row past the viewport. */
-    .grid-box [class^="col-span-"] {
+       in the collapsed single-column grid, pushing the row past the viewport.
+       Two attribute forms: ^= alone misses elements where col-span-N is not the
+       first class token. */
+    .grid-box [class^="col-span-"],
+    .grid-box [class*=" col-span-"] {
         grid-column: 1 / -1;
+    }
+    /* WebKit zooms the page whenever a focused control computes under 16px, and the
+       viewport meta no longer pins zoom to suppress it. !important and the :not()
+       match the base input rule above, whose font-size: unset !important would
+       otherwise take precedence; .small opts out deliberately. */
+    input:not(.small),
+    select:not(.small),
+    textarea {
+        font-size: 16px !important;
     }
 }
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
