@@ -24,7 +24,8 @@ const Features = function (config) {
         { bit: 17, group: "other", name: "DISPLAY", haveTip: true, dependsOn: "DASHBOARD" },
         { bit: 18, group: "other", name: "OSD", haveTip: true, dependsOn: "OSD" },
         { bit: 20, group: "other", name: "CHANNEL_FORWARDING", dependsOn: "SERVOS" },
-        { bit: 21, group: "other", name: "TRANSPONDER", haveTip: true, dependsOn: "TRANSPONDER" },
+        // USE_TRANSPONDER is target-defined but absent from the reportable build-option table.
+        { bit: 21, group: "other", name: "TRANSPONDER", haveTip: true },
         { bit: 22, group: "other", name: "AIRMODE", haveTip: true },
         { bit: 25, group: "rxMode", mode: "select", name: "RX_SPI" },
         { bit: 27, group: "escSensor", name: "ESC_SENSOR" },
