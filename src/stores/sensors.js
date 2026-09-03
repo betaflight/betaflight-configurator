@@ -39,6 +39,10 @@ export const useSensorsStore = defineStore("sensors", () => {
         const config = getConfig("sensors_tab");
         if (config) {
             if (config.checkboxes) {
+                // Saved checkbox array migration from previous version
+                if (config.checkboxes.length === 6) {
+                    config.checkboxes.splice(5, 0, false);
+                }
                 checkboxes.value = config.checkboxes;
             }
             if (config.rates) {
