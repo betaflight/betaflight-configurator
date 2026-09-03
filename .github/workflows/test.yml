@@ -31,11 +31,16 @@ jobs:
   lockfile:
     name: Lockfile in sync
     runs-on: ubuntu-latest
+    # Reading the tree is all this job does; it never pushes.
+    permissions:
+      contents: read
     # Dependabot resolves lockfiles with its own npm, which may predate the
     # version pinned in .nvmrc. Its PRs are re-normalised on merge instead.
     if: github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Install Node.js
         uses: actions/setup-node@v5
@@ -43,14 +48,19 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       # A plain install keeps every version the lockfile already satisfies, so
       # this only reports a diff when the committed lockfile was not written by
       # the npm that .nvmrc pins. Never use --package-lock-only here: it cannot
       # see inside bundled dependencies and produces a different tree.
+      #
+      # NOSONAR below is for S8543 ("lock resolved versions"): re-resolving is
+      # precisely what this job is for. The lockfile is committed and `npm ci`
+      # above already installed from it; this step only proves that npm agrees
+      # with what was committed. Pinning here would delete the check.
       - name: Re-resolve the lockfile
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: npm install --ignore-scripts --no-audit --no-fund # NOSONAR
 
       - name: Fail if the lockfile drifted
         run: |
