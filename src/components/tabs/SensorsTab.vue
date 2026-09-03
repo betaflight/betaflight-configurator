@@ -119,7 +119,9 @@
                                 v-if="pitotHardwareEnabled"
                                 v-model="sensorConfig.pitot_hardware"
                                 :items="
-                                    pitotTypesList.filter((_, i) => i > 0).map((label, i) => ({ label, value: i + 1 }))
+                                    pitotTypesList
+                                        .map((label, i) => ({ label, value: i }))
+                                        .filter((item) => item.value !== 1) // exclude PITOT_NONE
                                 "
                                 class="min-w-40"
                                 size="xs"
@@ -936,7 +938,7 @@ const magHardwareEnabled = computed({
 const pitotHardwareEnabled = computed({
     get: () => sensorConfig.pitot_hardware !== 1,
     set: (val) => {
-        sensorConfig.pitot_hardware = val ? 2 : 1;
+        sensorConfig.pitot_hardware = val ? 0 : 1;
     },
 });
 
