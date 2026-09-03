@@ -524,7 +524,10 @@ body.mobile-app-shell {
     }
 }
 
-#status-bar > * {
+/* Only the readout row: an `#status-bar > *` here would outrank the `display: none` on the tab
+   strip and the expand control by specificity, showing both outside the phone shell (desktop,
+   browser and installed PWA). */
+#status-bar > .status-bar__items {
     display: flex;
     align-items: center;
 }
