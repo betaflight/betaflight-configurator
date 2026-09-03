@@ -1,3 +1,4 @@
+mod mdns;
 mod tcp;
 
 // Native BLE covers the platforms whose webview has no Web Bluetooth: Apple (WKWebView) and
@@ -34,13 +35,29 @@ pub fn run() {
     // iOS: network (TCP/WebSocket) is the only transport, and a raw socket never raises the
     // Local Network permission prompt on its own. Request it at startup — before any connect —
     // so the user grants it up front instead of the first connect failing while it's pending.
+    // WebKit keeps the layout viewport inside the safe area despite `viewport-fit=cover`, so on
+    // a notched screen the page is laid out short and the strips above and below it are webview
+    // background no CSS can reach. The Swift side frees the layout and feeds the real insets back
+    // to the page.
+    #[cfg(target_os = "ios")]
+    unsafe extern "C" {
+        fn bf_use_full_screen_webview();
+    }
+
     #[cfg(target_os = "ios")]
     let builder = builder.setup(|_app| {
         tcp::trigger_local_network_permission();
+        // Safety: provided by the app's Swift side, linked into the same binary; it only
+        // schedules work on the main queue and returns.
+        unsafe {
+            bf_use_full_screen_webview();
+        }
         Ok(())
     });
 
-    let builder = builder.manage(tcp::TcpState::default());
+    let builder = builder
+        .manage(tcp::TcpState::default())
+        .manage(mdns::MdnsState::default());
 
     // Registering blec is what populates the handler its Rust API resolves, and what registers
     // the Android native plugin — the ble_* commands are dead without it.
@@ -52,6 +69,7 @@ pub fn run() {
             tcp::tcp_connect,
             tcp::tcp_send,
             tcp::tcp_disconnect,
+            mdns::mdns_browse,
             ble::ble_scan,
             ble::ble_connect,
             ble::ble_send,
@@ -61,7 +79,8 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         tcp::tcp_connect,
         tcp::tcp_send,
-        tcp::tcp_disconnect
+        tcp::tcp_disconnect,
+        mdns::mdns_browse
     ]);
 
     builder

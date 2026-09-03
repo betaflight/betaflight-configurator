@@ -76,6 +76,10 @@
         "message": "Disconnect (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Disconnect ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Disconnect (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -550,7 +554,28 @@
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
+    "autotuneCrossover": { "message": "Gain Crossover" },
     "autotunePhaseMargin": { "message": "Phase Margin" },
+    "autotuneTargetCrossover": { "message": "Crossover Limit" },
+    "autotuneMaxPhaseMargin": { "message": "Max Phase Margin" },
+    "autotunePredictedSensitivity": { "message": "Predicted Peak Sens." },
+    "autotuneLoopDelay": { "message": "Loop Delay" },
+    "autotuneTargetMargin": { "message": "Tuning target" },
+    "autotuneMarginAggressive": { "message": "Aggressive" },
+    "autotuneMarginNormal": { "message": "Normal" },
+    "autotuneMarginConservative": { "message": "Conservative" },
+    "autotuneTargetUnreachable": {
+        "message": "$1: this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: the measurement asks for a $2× gain change, but a single pass is limited to $3×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: peak sensitivity, not phase margin, set the gain here. The loop passes close to −1 above crossover, so the recommendation stops short of the margin target."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: no gain within one pass keeps peak sensitivity inside the robustness bound. The value proposed is the best available rather than a safe one — treat it as a starting point and re-measure."
+    },
     "autotuneResonantPeak": { "message": "Resonant Peak" },
     "autotuneCoherence": { "message": "Coherence" },
     "autotuneParameter": { "message": "Parameter" },

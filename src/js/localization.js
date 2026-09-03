@@ -144,10 +144,10 @@ i18n.isRtl = function (locale) {
     return i18next.dir(locale) === "rtl";
 };
 
-i18n.updatePageDirection = function () {
-    const html = document.documentElement;
+i18n.updatePageDirection = function (targetDocument = document) {
+    const html = targetDocument.documentElement;
     html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
-    html.setAttribute("lang", i18n.getCurrentLocale());
+    html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
 };
 
 /**
