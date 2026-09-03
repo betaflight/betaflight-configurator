@@ -6,6 +6,7 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 const i18n = {};
 
 const languagesAvailables = [
+    "ar",
     "ca",
     "da",
     "de",
@@ -59,8 +60,10 @@ i18n.init = function (cb) {
                     console.log("i18n system loaded");
                     const detectedLanguage = i18n.getMessage(`language_${getValidLocale("DEFAULT")}`);
                     i18n.addResources({ detectedLanguage: detectedLanguage });
+                    i18n.updatePageDirection();
                     i18next.on("languageChanged", function () {
                         i18n.localizePage(true);
+                        i18n.updatePageDirection();
                     });
                 }
                 if (cb !== undefined) {
@@ -135,6 +138,16 @@ i18n.getCurrentLocale = function () {
 
 i18n.existsMessage = function (key) {
     return i18next.exists(key);
+};
+
+i18n.isRtl = function (locale) {
+    return i18next.dir(locale) === "rtl";
+};
+
+i18n.updatePageDirection = function (targetDocument = document) {
+    const html = targetDocument.documentElement;
+    html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
+    html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
 };
 
 /**

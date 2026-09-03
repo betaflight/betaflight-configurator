@@ -5806,9 +5806,9 @@
     "osdButtonSaved": {
         "message": "已保存"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">注意:<\/span>您的图传未配置或不支持。所以您不能在此修改图传值。只有当图传使用Tramp或SmartAudio等协议，连接到飞行控制器，并在$t(tabPorts.message)页面中正确配置后，才可以使用。",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
+    "vtxHelp": {
+        "message": "这里可以定义图传 (VTX) 用到的值。如果飞控和图传支持，您可以查看和修改发射参数，包括图传表在内。<br>按以下步骤设置您的图传：<br>1. 打开<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX-Tables\">这个<\/a>页面；<br>2. 找到并下载适合您图传型号和所在地区的图传配置文件；<br>3. 点击下方「$t(vtxButtonLoadFile.message)」，选择并加载图传配置文件；<br>4. 确认设置项都正确；<br>5. 点击「$t(vtxButtonSave.message)」将图传设置保存到飞控。<br>6. （可选）点击「$t(vtxButtonSaveLua.message)」保存 Lua 配置文件供 Betaflight Lua 脚本使用。（在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">这里<\/a>查看更多。）",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">注意:<\/span>在使用$t(vtxSelectedMode.message)之前，必须先在下面配置并保存图传表",

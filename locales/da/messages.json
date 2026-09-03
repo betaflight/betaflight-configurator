@@ -1371,6 +1371,9 @@
     "featureRX_SPI": {
         "message": "SPI Rx (f.eks. indbygget Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC telemetri seriel port"
+    },
     "featureESC_SENSOR": {
         "message": "Brug KISS\/BLHeli_32 ESC telemetri <b>over en separat ledning<\/b>"
     },
@@ -1406,6 +1409,24 @@
     },
     "configurationTelemetry": {
         "message": "Telemetri"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetri $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protokol"
+    },
+    "telemetryInstancePort": {
+        "message": "Seriel port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud hastighed"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Kamera styring"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Seriel port"
     },
     "configurationTelemetryHelp": {
         "message": "Telemetri data transmitteres til sender"
@@ -1452,6 +1473,12 @@
     },
     "configurationRangefinderType": {
         "message": "Type"
+    },
+    "rangefinderSerialPort": {
+        "message": "Seriel port til afstand sensor"
+    },
+    "opticalflowSerialPort": {
+        "message": "Seriel port til optisk sensor"
     },
     "configurationOpticalflow": {
         "message": "$t(initialSetupSensorOpticalflow.message)",
@@ -1880,6 +1907,12 @@
     "configurationGPSubxSbas": {
         "message": "Type af jordbaserede referencestationer"
     },
+    "gpsSerialPort": {
+        "message": "Seriel port"
+    },
+    "gpsSerialBaud": {
+        "message": "Baud hastighed"
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
@@ -2034,6 +2067,9 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD brugerdefineret tekst"
     },
     "pidTuningProfileOption": {
         "message": "PID profil $1"
@@ -2712,15 +2748,15 @@
         "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 1. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 2. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 2. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
     "auxiliaryHelpMode_CAMSTAB": {
@@ -5574,6 +5610,15 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD protokol"
+    },
+    "osdSerialPort": {
+        "message": "OSD seriel port"
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Seriel port til brugerdefineret tekst"
+    },
     "osdSetupUnitsTitle": {
         "message": "Enheder"
     },
@@ -5655,6 +5700,12 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Uploadet alle {{length}} tegn til OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Overførsel mislykkedes"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Gem og genstart"
     },
     "osdSetupSave": {
         "message": "Gem"
@@ -6901,10 +6952,6 @@
         "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Bemærk:<\/span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7044,6 +7091,15 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Kanal, som anvendes i Pit tilstand",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX enhed"
+    },
+    "vtxProtocol": {
+        "message": "Protokol"
+    },
+    "vtxSerialPort": {
+        "message": "Seriel port"
     },
     "vtxLowPowerDisarm": {
         "message": "Lavt strømforbrug ved deaktivering",
@@ -7581,6 +7637,15 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logger til ..."
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Seriel port"
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Seriel Baud hastighed"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud hastighed for den serielle port til logning."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox lognings hastighed"

@@ -1649,6 +1649,12 @@
     "featureRX_SPI": {
         "message": "Rx SPI (par exemple, Rx intégrée)"
     },
+    "escSensorSerialPort": {
+        "message": "Port série de télémétrie ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "L'UART sur lequel le protocole de contrôle caméra RunCam est câblé. Définissez sur le périphérique lui-même à partir de l'API 1.49 ; l'onglet Ports ne l'affiche."
+    },
     "featureESC_SENSOR": {
         "message": "Utiliser la télémétrie ESC KISS\/BLHeli_32 <b>sur un fil séparé<\/b>"
     },
@@ -1687,6 +1693,27 @@
     },
     "configurationTelemetry": {
         "message": "Télémétrie"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Télémétrie $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocole"
+    },
+    "telemetryInstancePort": {
+        "message": "Port série"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Contrôle de la caméra"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Port série"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "L'UART sur lequel le protocole de contrôle caméra RunCam est câblé. Définissez sur le périphérique lui-même à partir de l'API 1.49 ; l'onglet Ports ne l'affiche."
     },
     "configurationTelemetryHelp": {
         "message": "Sortie de télémétrie depuis le récepteur"
@@ -1733,6 +1760,18 @@
     },
     "configurationRangefinderType": {
         "message": "Type"
+    },
+    "rangefinderSerialPort": {
+        "message": "Port série Rangefinder"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "L'UART sur lequel le protocole de contrôle caméra RunCam est câblé. Définissez sur le périphérique lui-même à partir de l'API 1.49 ; l'onglet Ports ne l'affiche."
+    },
+    "opticalflowSerialPort": {
+        "message": "Port série capteur optique"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "L'UART sur lequel le capteur de flux optique est câblé. Un module rapportant à la fois le flux et la plage a besoin de chaque ensemble séparément."
     },
     "configurationOpticalflow": {
         "message": "Flux Optique",
@@ -2127,6 +2166,30 @@
     "configurationGPSubxSbas": {
         "message": "Type d'Assistance au Sol"
     },
+    "gpsSerialPort": {
+        "message": "Port série"
+    },
+    "gpsSerialPortHelp": {
+        "message": "L'UART auquel le module GPS est branché. Le modifier nécessite un redémarrage."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "La fréquence à laquelle le module GPS devrait s'exécuter. Betaflight essaye également les autres fréquences quand il ne peut pas contacter celui-ci, il s'agit donc d'un point de départ plutôt que d'un paramètre fixe."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Impossible de définir le port série du récepteur, rien n'a donc été enregistré."
+    },
+    "gpsCanDevice": {
+        "message": "Bus CAN"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "Le bus CAN auquel les modules DroneCAN sont câblés. Cela appartient à DroneCAN dans son ensemble, donc le changement de déplacement de chaque périphérique DronePAN, pas seulement le GPS. Le changement nécessite un redémarrage."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Impossible de définir le bus CAN, rien n'a donc été enregistré."
+    },
     "configurationGPSAutoBaud": {
         "message": "Baud Auto"
     },
@@ -2293,6 +2356,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Texte personnalisé OSD"
     },
     "pidTuningProfileOption": {
         "message": "Profile $1"
@@ -6169,6 +6238,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "Protocole OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Le protocole avec lequel l'OSD est affiché. MAX7456 et FrSky OSD contrôlent une puce ou un module analogique ; MSP envoie l'OSD au-dessus de l'UART ci-dessous, comme pour le cas des lunettes DJI, HDZero et Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Port série OSD"
+    },
+    "osdSerialPortHelp": {
+        "message": "L'UART sur lequel le protocole de contrôle caméra RunCam est câblé. Définissez sur le périphérique lui-même à partir de l'API 1.49 ; l'onglet Ports ne l'affiche."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Port série texte personnalisé"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "L'UART qui reçoit le texte de l'OSD personnalisé."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Baud Rate du texte personnalisé"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Baud rate pour le port texte personnalisé de l'OSD."
+    },
     "osdSetupUnitsTitle": {
         "message": "Unités"
     },
@@ -6253,6 +6346,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Échec du chargement"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Sauvegarder et Redémarrer"
     },
     "osdSetupSave": {
         "message": "Sauvegarder"
@@ -7545,7 +7641,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attention :<\/span> Votre VTX n'est pas configuré ou non pris en charge. Vous ne pouvez donc pas modifier les valeurs VTX. Cela n'est possible que si le contrôleur de vol communique avec le VTX en utilisant un protocole comme Tramp ou SmartAudio et est correctement configuré dans l'onglet $t(tabPorts.message) si nécessaire.",
+        "message": "<span class=\"message-negative\">Attention :<\/span> Aucun VTX ne répond actuellement. Choisissez le protocole que le VTX utilise et l'UART auquel il est branché ci-dessous, puis sauvegardez ; les paramètres restants apparaissent une fois que l'appareil répond.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7687,6 +7783,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Fréquence à laquelle passe le mode Pit change une fois activé.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Périphérique VTX"
+    },
+    "vtxProtocol": {
+        "message": "Protocole"
+    },
+    "vtxProtocolHelp": {
+        "message": "Le protocole de communication du VTX. SmartAudio et Tramp fonctionnent sur l'UART ci-dessous ; MSP le partage avec MSP, comme le font DJI, HDZero et Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Port série"
+    },
+    "vtxSerialPortHelp": {
+        "message": "L'UART sur lequel fonctionne le protocole de contrôle VTX. Réglez sur le VTX lui-même à partir de l'API 1.49. Seul l'onglet Ports l'affiche."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Un VTX MSP répond sur le même lien MSP que les lunettes utilisent, donc il suit le port série OSD sur l'onglet OSD et ne peut pas être défini ici."
     },
     "vtxLowPowerDisarm": {
         "message": "Faible puissance d'émission lors du désarmement",
@@ -8233,6 +8347,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Stockage de la blackbox"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Port série"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART utilisé lorsque le périphérique de logging est réglé sur Serial. Réglez sur la blackbox elle-même à partir de l'API 1.49 ; seul l'onglet Ports l'affiche."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Baud Rate du port série"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud Rate pour le port série de logging."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Fréquence d'enregistrement de la Blackbox"
