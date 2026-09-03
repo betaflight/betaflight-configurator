@@ -113,12 +113,17 @@
                                 size="xs"
                             />
                         </SettingRow>
-                        <SettingRow v-if="showPitot" :label="pitotHwName ? '' : $t('configurationPitotHardware')">
-                            <template v-if="pitotHwName" #label>
-                                {{ $t("configurationPitotHardware") }}
-                                <span class="text-dimmed font-normal">&mdash; {{ pitotHwName }}</span>
-                            </template>
+                        <SettingRow v-if="showPitot" :label="$t('configurationPitot')">
                             <USwitch v-model="pitotHardwareEnabled" />
+                            <USelect
+                                v-if="pitotHardwareEnabled"
+                                v-model="sensorConfig.pitot_hardware"
+                                :items="
+                                    pitotTypesList.filter((_, i) => i > 0).map((label, i) => ({ label, value: i + 1 }))
+                                "
+                                class="min-w-40"
+                                size="xs"
+                            />
                         </SettingRow>
                         <!-- Board Alignment -->
                         <SettingRow :label="$t('configurationBoardAlignment')" fullWidth>
@@ -931,12 +936,13 @@ const magHardwareEnabled = computed({
 const pitotHardwareEnabled = computed({
     get: () => sensorConfig.pitot_hardware !== 1,
     set: (val) => {
-        sensorConfig.pitot_hardware = val ? 0 : 1;
+        sensorConfig.pitot_hardware = val ? 2 : 1;
     },
 });
 
 const sonarTypesList = ref([]);
 const opticalFlowTypesList = ref([]);
+const pitotTypesList = ref([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -1033,7 +1039,6 @@ const gyroHwName = ref("");
 const accHwName = ref("");
 const baroHwName = ref("");
 const magHwName = ref("");
-const pitotHwName = ref("");
 
 function resolveSensorNames() {
     const types = sensorTypesData.value;
@@ -1060,7 +1065,6 @@ function resolveSensorNames() {
     accHwName.value = resolve("acc_hardware", "acc");
     baroHwName.value = resolve("baro_hardware", "baro");
     magHwName.value = resolve("mag_hardware", "mag");
-    pitotHwName.value = resolve("pitot_hardware", "pitot");
 }
 
 const showGyroToUse = computed(() => {
@@ -2168,6 +2172,9 @@ function setupPeripherals() {
         showRangefinder.value = sonarTypesList.value.length > 0;
         opticalFlowTypesList.value = sensorTypesData.value?.opticalflow?.elements || [];
         showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
+    }
+    if (isApi149.value) {
+        pitotTypesList.value = sensorTypesData.value?.pitot?.elements || [];
     }
 }
 

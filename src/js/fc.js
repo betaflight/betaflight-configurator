@@ -565,6 +565,7 @@ const FC = {
             mag: [],
             sonar: [],
             opticalflow: [],
+            pitot: [],
         };
 
         this.RX_CONFIG = {

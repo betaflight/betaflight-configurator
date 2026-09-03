@@ -8150,7 +8150,7 @@
     "configurationBaroHardware": {
         "message": "Barometer"
     },
-    "configurationPitotHardware": {
+    "configurationPitot": {
         "message": "Pitot"
     },
     "configurationMagHardware": {
