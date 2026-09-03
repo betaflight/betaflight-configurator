@@ -103,6 +103,7 @@
     "@storybook/addon-links": "^10.5.2",
     "@storybook/vue3-vite": "^10.5.2",
     "@tauri-apps/cli": "~2.11.0",
+    "@vue/test-utils": "^2.5.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
