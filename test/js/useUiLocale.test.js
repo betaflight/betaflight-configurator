@@ -1,50 +1,64 @@
-import { describe, expect, it } from "vitest";
-import { computed, createApp, h } from "vue";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { computed, createApp, h, nextTick } from "vue";
+import i18nextBase from "i18next";
+import I18NextVue from "i18next-vue";
 import UApp from "@nuxt/ui/components/App.vue";
 import { useLocale } from "@nuxt/ui/composables";
-import { resolveUiLocale } from "../../src/composables/useUiLocale.js";
+import { useUiLocale } from "../../src/composables/useUiLocale";
 import { i18n } from "../../src/js/localization.js";
 
-describe("resolveUiLocale", () => {
+describe("i18n.getUiLocale", () => {
     it("maps every language the configurator offers onto its own Nuxt UI locale", () => {
         for (const language of i18n.getLanguagesAvailables()) {
             // A silent fallback to English would still yield a locale, so assert the exact
             // code: Nuxt UI writes dialects with a hyphen where the configurator uses "_".
-            expect(resolveUiLocale(language).code, `no Nuxt UI locale for "${language}"`).toBe(
+            expect(i18n.getUiLocale(language).code, `no Nuxt UI locale for "${language}"`).toBe(
                 language.replaceAll("_", "-"),
             );
         }
     });
 
     it("agrees with i18next about the text direction of every language", () => {
-        expect(resolveUiLocale("ar").dir).toBe("rtl");
+        expect(i18n.getUiLocale("ar").dir).toBe("rtl");
 
         for (const language of i18n.getLanguagesAvailables()) {
-            const isRtl = resolveUiLocale(language).dir === "rtl";
+            const isRtl = i18n.getUiLocale(language).dir === "rtl";
 
             expect(isRtl, `direction mismatch for "${language}"`).toBe(i18n.isRtl(language));
         }
     });
 
     it("accepts hyphenated dialects and falls back to the base language", () => {
-        expect(resolveUiLocale("zh-CN").code).toBe("zh-CN");
-        expect(resolveUiLocale("de_AT").code).toBe("de");
+        expect(i18n.getUiLocale("zh-CN").code).toBe("zh-CN");
+        expect(i18n.getUiLocale("de_AT").code).toBe("de");
     });
 
     it("falls back to English for unknown or missing codes", () => {
-        expect(resolveUiLocale("xx_YY").code).toBe("en");
-        expect(resolveUiLocale(undefined).code).toBe("en");
+        expect(i18n.getUiLocale("xx_YY").code).toBe("en");
+        expect(i18n.getUiLocale("").code).toBe("en");
     });
 });
 
 /**
- * Mounts a probe inside a real UApp to check that a locale handed to UApp reaches
- * `useLocale()`, which is how both HelpIcon components derive their tooltip side.
+ * Reka UI measures its popper anchors, which jsdom cannot do.
+ * Only the locale context is under test here, so an inert observer is enough.
  */
-function mountWithLocale(language) {
-    const Probe = {
+class InertResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+
+/**
+ * Drives the real chain the app uses — i18next language -> useUiLocale() -> UApp ->
+ * useLocale() — so that a useUiLocale() which failed to react to `languageChanged`, or a
+ * UApp that never received the locale, fails here rather than passing.
+ */
+function mountAppWithI18next(i18next) {
+    const probe = {
         setup() {
             const { dir } = useLocale();
+            // Same derivation as both HelpIcon components.
             const tooltipSide = computed(() => (dir.value === "rtl" ? "left" : "right"));
 
             return () => h("div", { "data-dir": dir.value, "data-side": tooltipSide.value });
@@ -56,30 +70,80 @@ function mountWithLocale(language) {
 
     const app = createApp({
         setup() {
-            return () => h(UApp, { locale: resolveUiLocale(language) }, { default: () => h(Probe) });
+            const uiLocale = useUiLocale();
+
+            return () => h(UApp, { locale: uiLocale.value }, { default: () => h(probe) });
         },
     });
+    app.use(I18NextVue, { i18next });
     app.mount(host);
 
-    const probe = host.querySelector("[data-dir]");
-    const observed = { dir: probe?.dataset.dir, side: probe?.dataset.side };
+    return {
+        read: () => {
+            const el = host.querySelector("[data-dir]");
 
-    app.unmount();
-    host.remove();
-
-    return observed;
+            return { dir: el?.dataset.dir, side: el?.dataset.side };
+        },
+        destroy: () => {
+            app.unmount();
+            host.remove();
+        },
+    };
 }
 
-describe("UApp locale propagation", () => {
-    it("flips direction and tooltip side for an RTL language", () => {
-        expect(mountWithLocale("ar")).toEqual({ dir: "rtl", side: "left" });
+/** i18next-vue invalidates its reactive marker inside nextTick, so the re-render lands a tick later. */
+async function flushLanguageChange() {
+    await nextTick();
+    await nextTick();
+}
+
+describe("useUiLocale", () => {
+    let originalResizeObserver;
+    let i18next;
+    let mounted;
+
+    beforeEach(async () => {
+        originalResizeObserver = globalThis.ResizeObserver;
+        globalThis.ResizeObserver = InertResizeObserver;
+
+        i18next = i18nextBase.createInstance();
+        await i18next.init({
+            lng: "en",
+            ns: ["messages"],
+            defaultNS: "messages",
+            resources: { en: { messages: {} }, ar: { messages: {} }, zh_CN: { messages: {} } },
+        });
     });
 
-    it("keeps LTR direction and tooltip side for an LTR language", () => {
-        expect(mountWithLocale("zh_CN")).toEqual({ dir: "ltr", side: "right" });
+    afterEach(() => {
+        mounted?.destroy();
+        mounted = undefined;
+        globalThis.ResizeObserver = originalResizeObserver;
     });
 
-    it("defaults to LTR when the language is unknown", () => {
-        expect(mountWithLocale("xx_YY")).toEqual({ dir: "ltr", side: "right" });
+    it("hands Nuxt UI the direction of the language it starts on", () => {
+        mounted = mountAppWithI18next(i18next);
+
+        expect(mounted.read()).toEqual({ dir: "ltr", side: "right" });
+    });
+
+    it("flips Nuxt UI to RTL when the language changes to Arabic", async () => {
+        mounted = mountAppWithI18next(i18next);
+
+        await i18next.changeLanguage("ar");
+        await flushLanguageChange();
+
+        expect(mounted.read()).toEqual({ dir: "rtl", side: "left" });
+    });
+
+    it("flips back to LTR when the language changes away from Arabic", async () => {
+        mounted = mountAppWithI18next(i18next);
+
+        await i18next.changeLanguage("ar");
+        await flushLanguageChange();
+        await i18next.changeLanguage("zh_CN");
+        await flushLanguageChange();
+
+        expect(mounted.read()).toEqual({ dir: "ltr", side: "right" });
     });
 });

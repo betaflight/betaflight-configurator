@@ -66,7 +66,7 @@ import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 import GUI from "./js/gui.js";
 import { i18n } from "./js/localization";
-import { useUiLocale } from "./composables/useUiLocale.js";
+import { useUiLocale } from "./composables/useUiLocale";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
