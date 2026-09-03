@@ -1,9 +1,12 @@
 import i18next from "i18next";
 import HttpBackend from "i18next-http-backend";
+import { ref } from "vue";
 import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
-const i18n = {};
+const i18n = {
+    direction: ref("ltr"),
+};
 
 const languagesAvailables = [
     "ar",
@@ -146,7 +149,11 @@ i18n.isRtl = function (locale) {
 
 i18n.updatePageDirection = function (targetDocument = document) {
     const html = targetDocument.documentElement;
-    html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
+    const direction = i18n.isRtl() ? "rtl" : "ltr";
+
+    i18n.direction.value = direction;
+
+    html.setAttribute("dir", direction);
     html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
 };
 

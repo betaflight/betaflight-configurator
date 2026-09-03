@@ -1,5 +1,5 @@
 <template>
-    <UApp :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
+    <UApp :dir="i18n.direction" :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
             <div id="background" v-if="isMobileSidebarOpen" aria-hidden="true" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
