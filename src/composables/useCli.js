@@ -142,7 +142,9 @@ export function useCli() {
 
     let outputHistory = "";
     let cliBuffer = "";
+    /** @type {boolean} */
     let cliEntrySawMarker = false;
+    /** @type {string} */
     let cliEntrySuffix = "";
     let outputSuppressed = false;
 
