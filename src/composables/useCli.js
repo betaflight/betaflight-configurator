@@ -27,7 +27,7 @@ const CLI_PROMPT = "# ";
 const CLI_ENTRY_PROMPT = `\r\n${CLI_PROMPT}`;
 
 function removePromptHash(promptText) {
-    return promptText.replace(/^# /, "");
+    return promptText.startsWith(CLI_PROMPT) ? promptText.slice(CLI_PROMPT.length) : promptText;
 }
 
 function cliBufferCharsToDelete(command, buffer) {
