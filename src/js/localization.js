@@ -77,12 +77,14 @@ const localesByCode = new Map(supportedLocales.map((locale) => [locale.code.toLo
  * BCP 47 tag from the browser, a legacy underscore code from a stored preference, or a
  * dialect we have no translation for. So "pt-BR", "pt_BR" and "pt-br" all land on the
  * same locale, and "de-AT" degrades to German rather than to nothing.
- * @param {string} [language] a language code in any of those forms
+ * @param {unknown} [language] a language code in any of those forms
  * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object } | undefined} the
- *     matching locale, or undefined when neither the code nor its base language matches
+ *     matching locale, or undefined when the input is not a code we recognise
  */
 function findLocale(language) {
-    if (!language) {
+    // Not just a falsiness check: a stored preference is whatever was serialised into
+    // localStorage, and a non-string would throw below rather than fall back.
+    if (typeof language !== "string" || language === "") {
         return undefined;
     }
 
@@ -268,7 +270,7 @@ function getStoredUserLocale(cb) {
     if (result.userLanguageSelect) {
         // A preference stored before the move to BCP 47 reads "zh_CN" where the pickers now
         // offer "zh-CN", so rewrite it rather than leave the picker with no selection. An
-        // unknown code, "DEFAULT" included, means follow the browser.
+        // unrecognised value, "DEFAULT" included, means follow the browser.
         userLanguage = findLocale(result.userLanguageSelect)?.code ?? "DEFAULT";
     }
     i18n.selectedLanguage = userLanguage;

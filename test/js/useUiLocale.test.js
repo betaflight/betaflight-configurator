@@ -42,6 +42,13 @@ describe("i18n.getUiLocale", () => {
         expect(i18n.getUiLocale("xx-YY").code).toBe("en");
         expect(i18n.getUiLocale("").code).toBe("en");
     });
+
+    it("falls back to English rather than throwing on a value that is not a code", () => {
+        // A stored preference is whatever localStorage happened to hold.
+        for (const notACode of [null, undefined, 42, true, {}, ["ar"]]) {
+            expect(i18n.getUiLocale(notACode).code, `threw or mismatched on ${typeof notACode}`).toBe("en");
+        }
+    });
 });
 
 /**
