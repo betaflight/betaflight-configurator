@@ -24,6 +24,8 @@ const languagesAvailables = [
     "pt_BR",
     "pl",
     "ru",
+    "sr",
+    "sr_Cyrl",
     "uk",
     "uz",
     "zh_CN",
