@@ -1,33 +1,81 @@
 import i18next from "i18next";
 import HttpBackend from "i18next-http-backend";
+// Named imports rather than a namespace import: `@nuxt/ui/locale` re-exports every locale
+// it ships, and `import * as` would defeat tree shaking for the ones we never use.
+import {
+    ar,
+    ca,
+    da,
+    de,
+    en,
+    es,
+    eu,
+    fr,
+    gl,
+    it,
+    ja,
+    ka,
+    ko,
+    nl,
+    pt,
+    pt_br,
+    pl,
+    ru,
+    uk,
+    uz,
+    zh_cn,
+    zh_tw,
+} from "@nuxt/ui/locale";
 import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
 
-const languagesAvailables = [
-    "ca",
-    "da",
-    "de",
-    "en",
-    "es",
-    "eu",
-    "fr",
-    "gl",
-    "it",
-    "ja",
-    "ka",
-    "ko",
-    "nl",
-    "pt",
-    "pt_BR",
-    "pl",
-    "ru",
-    "uk",
-    "uz",
-    "zh_CN",
-    "zh_TW",
+/**
+ * The single list of languages the configurator ships translations for, each entry being
+ * the matching Nuxt UI locale. Keeping the Nuxt UI locale here rather than in a second
+ * list means text direction, the language picker and Nuxt UI's own strings can never
+ * drift apart. Array order drives the pickers in LandingTab and OptionsDialog.
+ * @type {Array<{ name: string, code: string, dir: "ltr" | "rtl", messages: object }>}
+ */
+const supportedLocales = [
+    ar,
+    ca,
+    da,
+    de,
+    en,
+    es,
+    eu,
+    fr,
+    gl,
+    it,
+    ja,
+    ka,
+    ko,
+    nl,
+    pt,
+    pt_br,
+    pl,
+    ru,
+    uk,
+    uz,
+    zh_cn,
+    zh_tw,
 ];
+
+/**
+ * Nuxt UI writes dialects with a hyphen ("pt-BR"); the configurator and Crowdin use an
+ * underscore, because eventPage.js used Chrome's localization.
+ * @param {{ code: string }} locale a Nuxt UI locale
+ * @returns {string} the configurator's code for that locale, e.g. "pt_BR"
+ */
+function toLanguageCode(locale) {
+    return locale.code.replaceAll("-", "_");
+}
+
+const languagesAvailables = supportedLocales.map(toLanguageCode);
+
+const uiLocalesByLanguage = new Map(supportedLocales.map((locale) => [toLanguageCode(locale), locale]));
 
 const languageFallback = {
     pt: ["pt_BR", "en"],
@@ -59,8 +107,10 @@ i18n.init = function (cb) {
                     console.log("i18n system loaded");
                     const detectedLanguage = i18n.getMessage(`language_${getValidLocale("DEFAULT")}`);
                     i18n.addResources({ detectedLanguage: detectedLanguage });
+                    i18n.updatePageDirection();
                     i18next.on("languageChanged", function () {
                         i18n.localizePage(true);
+                        i18n.updatePageDirection();
                     });
                 }
                 if (cb !== undefined) {
@@ -135,6 +185,33 @@ i18n.getCurrentLocale = function () {
 
 i18n.existsMessage = function (key) {
     return i18next.exists(key);
+};
+
+i18n.isRtl = function (locale) {
+    return i18next.dir(locale) === "rtl";
+};
+
+/**
+ * Resolves a language code onto the Nuxt UI locale that `UApp` needs. Falls back to the
+ * base language and then to English, so an unknown code degrades to LTR English rather
+ * than leaving Nuxt UI with no locale at all.
+ * @param {string} [language] language code, e.g. "ar", "pt_BR" or "zh-CN"; defaults to the active one
+ * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object }} a Nuxt UI locale
+ */
+i18n.getUiLocale = function (language = i18n.getCurrentLocale()) {
+    if (!language) {
+        return en;
+    }
+
+    const normalized = language.replaceAll("-", "_");
+
+    return uiLocalesByLanguage.get(normalized) ?? uiLocalesByLanguage.get(normalized.split("_")[0]) ?? en;
+};
+
+i18n.updatePageDirection = function (targetDocument = document) {
+    const html = targetDocument.documentElement;
+    html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
+    html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
 };
 
 /**

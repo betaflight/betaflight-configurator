@@ -1649,6 +1649,12 @@
     "featureRX_SPI": {
         "message": "Rx SPI (es. Rx integrato)"
     },
+    "escSensorSerialPort": {
+        "message": "Porta Seriale Telemetria ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART dell'ESC dove è letta la telemetria. Impostare il sensore ESC stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
     "featureESC_SENSOR": {
         "message": "Usa la telemetria KISS\/BLHeli_32 ESC <b>su un filo separato<\/b>"
     },
@@ -1687,6 +1693,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetria"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetria $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocollo"
+    },
+    "telemetryInstancePort": {
+        "message": "Porta Seriale"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud Rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Controllo Camera"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART dove è cablata una telecamera con protocollo RunCam. Impostare sul dispositivo stesso da API 1.49; la scheda Porte lo mostra soltanto."
     },
     "configurationTelemetryHelp": {
         "message": "Uscita telemetria dalla ricevente"
@@ -1733,6 +1760,18 @@
     },
     "configurationRangefinderType": {
         "message": "Tipo"
+    },
+    "rangefinderSerialPort": {
+        "message": "Porta Seriale Rangefinder"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART dove è cablato il rangefinder. Impostare sul rangefinder stesso da API 1.49; la scheda Ports lo mostra soltanto."
+    },
+    "opticalflowSerialPort": {
+        "message": "Porta Seriale Optical Flow"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART dove è cablato il sensore optical flow. Un modulo che usa sia il flusso ottico che il rangefinder richiede un settaggio separato."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -2155,6 +2194,30 @@
     "configurationGPSubxSbas": {
         "message": "Tipo Assistenza di Terra"
     },
+    "gpsSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "gpsSerialPortHelp": {
+        "message": "L'UART dove è cablato il modulo GPS. Cambiarlo richiede un riavvio."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud Rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "Velocità di trasmissione del modulo GPS. Betaflight, quando non riesce a stabilire il contatto, prova anche altre velocità, quindi questa è un’impostazione di partenza piuttosto che un valore fisso."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Impossibile impostare la porta seriale GPS, quindi non è stato salvato nulla."
+    },
+    "gpsCanDevice": {
+        "message": "CAN Bus"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "Il bus CAN a cui sono collegati i moduli DroneCAN. Questa impostazione riguarda DroneCAN nel suo complesso, quindi modificarla sposta tutti i dispositivi DroneCAN, non solo il GPS. La modifica richiede un riavvio."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Impossibile impostare il bus CAN, quindi non è stato salvato nulla."
+    },
     "configurationGPSAutoBaud": {
         "message": "Baud Automatici"
     },
@@ -2325,6 +2388,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Testo Personalizzato Osd"
     },
     "pidTuningProfileOption": {
         "message": "Profilo $1"
@@ -6222,6 +6291,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "Protocollo OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocollo con cui viene generato l’OSD. MAX7456 e FrSky OSD pilotano un chip o modulo analogico; MSP invia l’OSD tramite la UART sottostante, come previsto dagli occhiali DJI, HDZero e Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Porta Seriale OSD"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART dove è cablato un OSD. Impostare l'OSD stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Porta Seriale Testo Personalizzato"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART dove si riceve il testo personalizzato OSD."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Velocità di trasmissione del Testo Personalizzato"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Velocità di trasmissione della porta OSD."
+    },
     "osdSetupUnitsTitle": {
         "message": "Unità"
     },
@@ -6306,6 +6399,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Upload fallito"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Salva e Riavvia"
     },
     "osdSetupSave": {
         "message": "Salva"
@@ -7591,7 +7687,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attenzione:<\/span> La tua VTX non è configurata o non è supportata, quindi non puoi modificare i valori VTX da qui. La modifica sarà possibile solo se il controllore del volo è collegato alla VTX utilizzando qualche protocollo come Tramp o SmartAudio ed è configurato correttamente nella scheda $t(tabPorts.message).",
+        "message": "<span class=\"message-negative\">Attenzione:<\/span> Nessuna VTX sta rispondendo. Seleziona qui sotto il protocollo utilizzato dalla VTX e la UART a cui è collegata, quindi salva; le impostazioni rimanenti appariranno quando il dispositivo risponderà.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7733,6 +7829,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Frequenza alla quale cambia la Modalità Pit quando abilitata.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Dispositivo VTX"
+    },
+    "vtxProtocol": {
+        "message": "Protocollo"
+    },
+    "vtxProtocolHelp": {
+        "message": "Protocollo di controllo utilizzato dal VTX. SmartAudio e Tramp usano la UART sottostante; MSP condivide la stessa UART, così come fanno DJI, HDZero e Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART dove è in uso il protocollo di controllo VTX. Impostare l'OSD stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Una VTX MSP risponde sullo stesso collegamento MSP su cui sono collegati gli occhiali, quindi segue la porta seriale OSD impostata nella scheda OSD e non può essere configurato qui."
     },
     "vtxLowPowerDisarm": {
         "message": "Bassa potenza quando disarmato",
@@ -8279,6 +8393,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Dispositivo di registrazione Blackbox"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART utilizzata quando il dispositivo di logging è di tipo Seriale. Viene impostata direttamente nel Blackbox a partire dall’API 1.49; la scheda Porte la mostra soltanto."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Velocità di trasmissione seriale (baud rate)"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Velocità di trasmissione della porta seriale per il log."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frequenza di registrazione della BlackBox"
