@@ -343,7 +343,7 @@
         "message": "Portugu\u00EAs",
         "description": "Don't translate!!!"
     },
-    "language_pt_BR": {
+    "language_pt-BR": {
         "message": "Portugu\u00EAs Brasileiro",
         "description": "Don't translate!!!"
     },
@@ -363,11 +363,11 @@
         "message": "O'zbekcha",
         "description": "Don't translate!!!"
     },
-    "language_zh_CN": {
+    "language_zh-CN": {
         "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
-    "language_zh_TW": {
+    "language_zh-TW": {
         "message": "\u7e41\u9ad4\u4e2d\u6587",
         "description": "Don't translate!!!"
     },

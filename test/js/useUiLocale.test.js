@@ -10,11 +10,8 @@ import { i18n } from "../../src/js/localization.js";
 describe("i18n.getUiLocale", () => {
     it("maps every language the configurator offers onto its own Nuxt UI locale", () => {
         for (const language of i18n.getLanguagesAvailables()) {
-            // A silent fallback to English would still yield a locale, so assert the exact
-            // code: Nuxt UI writes dialects with a hyphen where the configurator uses "_".
-            expect(i18n.getUiLocale(language).code, `no Nuxt UI locale for "${language}"`).toBe(
-                language.replaceAll("_", "-"),
-            );
+            // A silent fallback to English would still yield a locale, so assert the exact code.
+            expect(i18n.getUiLocale(language).code, `no Nuxt UI locale for "${language}"`).toBe(language);
         }
     });
 
@@ -28,13 +25,21 @@ describe("i18n.getUiLocale", () => {
         }
     });
 
-    it("accepts hyphenated dialects and falls back to the base language", () => {
-        expect(i18n.getUiLocale("zh-CN").code).toBe("zh-CN");
-        expect(i18n.getUiLocale("de_AT").code).toBe("de");
+    it("accepts legacy underscore codes stored by older versions", () => {
+        expect(i18n.getUiLocale("zh_CN").code).toBe("zh-CN");
+        expect(i18n.getUiLocale("pt_BR").code).toBe("pt-BR");
+    });
+
+    it("ignores the case of the region subtag", () => {
+        expect(i18n.getUiLocale("zh-cn").code).toBe("zh-CN");
+    });
+
+    it("falls back to the base language for a dialect we do not ship", () => {
+        expect(i18n.getUiLocale("de-AT").code).toBe("de");
     });
 
     it("falls back to English for unknown or missing codes", () => {
-        expect(i18n.getUiLocale("xx_YY").code).toBe("en");
+        expect(i18n.getUiLocale("xx-YY").code).toBe("en");
         expect(i18n.getUiLocale("").code).toBe("en");
     });
 });
@@ -111,7 +116,7 @@ describe("useUiLocale", () => {
             lng: "en",
             ns: ["messages"],
             defaultNS: "messages",
-            resources: { en: { messages: {} }, ar: { messages: {} }, zh_CN: { messages: {} } },
+            resources: { en: { messages: {} }, ar: { messages: {} }, "zh-CN": { messages: {} } },
         });
     });
 
@@ -141,7 +146,7 @@ describe("useUiLocale", () => {
 
         await i18next.changeLanguage("ar");
         await flushLanguageChange();
-        await i18next.changeLanguage("zh_CN");
+        await i18next.changeLanguage("zh-CN");
         await flushLanguageChange();
 
         expect(mounted.read()).toEqual({ dir: "ltr", side: "right" });
