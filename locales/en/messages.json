@@ -996,6 +996,14 @@
         "message": "Connection:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Show status details",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Hide status details",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
     },
