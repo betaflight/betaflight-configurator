@@ -22,7 +22,12 @@ files: [
   "translation" : "/locales/%two_letters_code%/%original_file_name%",
 
   #
-  # Often software projects have custom names for locale directories. crowdin-cli allows you to map your own languages to be understandable by Crowdin.
+  # %two_letters_code% is ISO 639-1, so it cannot tell dialects apart: Crowdin's "pt-BR" and
+  # "pt-PT" both resolve to "pt", and its "zh-CN" and "zh-TW" both to "zh". These three are
+  # therefore mapped onto the folder we ship, or Brazilian Portuguese would overwrite
+  # locales/pt and the two Chinese variants would fight over a locales/zh the app never
+  # loads. The keys are Crowdin language ids and the values are folder names, so now that
+  # the folders follow BCP 47 this reads as an identity mapping, but it is not one.
   #
   "languages_mapping" : {
     "two_letters_code" : {
