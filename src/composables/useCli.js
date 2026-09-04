@@ -23,7 +23,8 @@ const enterKeyCode = 13;
 const tabKeyCode = 9;
 const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
 const CLI_ENTRY_MARKER = "CLI";
-const CLI_ENTRY_PROMPT = "\r\n# ";
+const CLI_PROMPT = "# ";
+const CLI_ENTRY_PROMPT = `\r\n${CLI_PROMPT}`;
 
 function removePromptHash(promptText) {
     return promptText.replace(/^# /, "");
@@ -536,7 +537,7 @@ export function useCli() {
             CONFIGURATOR.cliValid = true;
             // begin output history with the prompt (last line of welcome message)
             // this is to match the content of the history with what the user sees on this tab
-            outputHistory = "# ";
+            outputHistory = CLI_PROMPT;
 
             return CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding();
         }
