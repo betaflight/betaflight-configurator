@@ -45,7 +45,7 @@ export function useAutotune() {
                 throw new Error("No log segments found in the file.");
             }
 
-            const result = tryParseLogs(data, logs, file.name, store);
+            const result = tryParseLogs(data, logs, file.name, store, store.targetPhaseMarginDeg);
             if (!result) {
                 throw new Error("No chirp data found in any log segment.");
             }
@@ -60,7 +60,26 @@ export function useAutotune() {
         }
     }
 
-    return { importAndAnalyze, applyGains };
+    /**
+     * Recompute the gain recommendation against a new phase-margin target.
+     *
+     * The transfer functions are already in the store, so this is a pure
+     * re-derivation — no file access, no re-parse.
+     *
+     * @param {number} targetPhaseMarginDeg
+     */
+    function recomputeGains(targetPhaseMarginDeg) {
+        const result = store.analysisResult;
+        if (!result?.axes) {
+            return;
+        }
+        for (const axis of Object.values(result.axes)) {
+            const rec = recommendGains(axis.transferFunction, result.currentSliders, targetPhaseMarginDeg);
+            axis.gains = buildGains(rec, axis.sensitivity, axis.stepResponse);
+        }
+    }
+
+    return { importAndAnalyze, applyGains, recomputeGains };
 }
 
 async function pickFileOrSetError(store) {
@@ -88,12 +107,12 @@ async function pickFileOrSetError(store) {
     }
 }
 
-function tryParseLogs(data, logs, filename, store) {
+function tryParseLogs(data, logs, filename, store, targetPhaseMarginDeg) {
     let lastError = null;
     for (let idx = 0; idx < logs.length; idx++) {
         store.progressMessage = `Parsing log ${idx + 1} of ${logs.length}...`;
         try {
-            const parsed = analyzeLog(data, logs[idx]);
+            const parsed = analyzeLog(data, logs[idx], targetPhaseMarginDeg);
             if (parsed) {
                 return { filename, ...parsed };
             }
@@ -107,7 +126,7 @@ function tryParseLogs(data, logs, filename, store) {
     return null;
 }
 
-function analyzeLog(data, log) {
+function analyzeLog(data, log, targetPhaseMarginDeg) {
     const { sysConfig, chirpData } = parseChirpLog(data, log.start, log.end);
     if (chirpData.sampleCount === 0 || chirpData.segments.length === 0) {
         return null;
@@ -124,7 +143,14 @@ function analyzeLog(data, log) {
                 "Log uses unsupported DEBUG_CHIRP axis encoding. " + "Use a log recorded with the companion firmware.",
             );
         }
-        const axisResult = computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSliders);
+        const axisResult = computeAxisResult(
+            seg,
+            chirpData,
+            sampleRate,
+            segmentSize,
+            currentSliders,
+            targetPhaseMarginDeg,
+        );
         if (axisResult) {
             axes[AXIS_NAMES[seg.axis]] = axisResult;
         }
@@ -138,6 +164,9 @@ function analyzeLog(data, log) {
         sampleRate: Math.round(sampleRate),
         axes,
         sysConfig,
+        // Kept so the gain recommendation can be recomputed against a different
+        // phase-margin target without re-importing the log.
+        currentSliders,
     };
 }
 
@@ -167,7 +196,35 @@ function extractCurrentSliders(sysConfig) {
     };
 }
 
-function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSliders) {
+function buildGains(rec, sensitivity, stepResponse) {
+    return {
+        proposed: rec.proposed,
+        bandwidth: rec.analysis.bandwidthHz,
+        crossover: rec.analysis.openLoopCrossoverHz,
+        phaseMargin: rec.analysis.phaseMarginDeg,
+        targetCrossover: rec.analysis.targetCrossoverHz,
+        maxPhaseMargin: rec.analysis.maxAchievablePhaseMarginDeg,
+        loopDelay: rec.analysis.loopDelayMs,
+        resonantPeak: rec.analysis.resonantPeakDb,
+        sensitivityPeak: sensitivity.peakDb,
+        predictedSensitivityPeak: rec.analysis.predictedSensitivityPeakDb,
+        // Which constraint limited the gain, and whether the recommendation
+        // could be delivered in full. The interface reports these so a figure it
+        // shows is never one the applied gain does not reach.
+        sensitivityBinds: rec.analysis.sensitivityBinds,
+        sensitivityUnreachable: rec.analysis.sensitivityUnreachable,
+        gainClamped: rec.analysis.gainClamped,
+        gainClampLimit: rec.analysis.gainClampLimit,
+        requestedGain: rec.analysis.requestedGain,
+        appliedGain: rec.analysis.piScale,
+        overshoot: stepResponse.overshootPct,
+        riseTime: stepResponse.riseTimeMs,
+        settlingTime: stepResponse.settlingTimeMs,
+        coherencePct: rec.analysis.meanCoherence * 100,
+    };
+}
+
+function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSliders, targetPhaseMarginDeg) {
     const len = seg.endIdx - seg.startIdx + 1;
     if (len < segmentSize) {
         return null;
@@ -175,7 +232,7 @@ function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSlide
     const input = chirpData.setpoint[seg.axis].subarray(seg.startIdx, seg.endIdx + 1);
     const output = chirpData.gyro[seg.axis].subarray(seg.startIdx, seg.endIdx + 1);
     const tf = welchTransferFunction(input, output, sampleRate, segmentSize, 0.5);
-    const rec = recommendGains(tf, currentSliders);
+    const rec = recommendGains(tf, currentSliders, targetPhaseMarginDeg);
     const sensitivity = computeSensitivity(tf);
     const stepResponse = computeStepResponse(tf, sampleRate, segmentSize);
     const spectrogram = computeSpectrogram(output, sampleRate);
@@ -184,17 +241,7 @@ function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSlide
         sensitivity,
         stepResponse,
         spectrogram,
-        gains: {
-            proposed: rec.proposed,
-            bandwidth: rec.analysis.bandwidthHz,
-            phaseMargin: rec.analysis.phaseMarginDeg,
-            resonantPeak: rec.analysis.resonantPeakDb,
-            sensitivityPeak: sensitivity.peakDb,
-            overshoot: stepResponse.overshootPct,
-            riseTime: stepResponse.riseTimeMs,
-            settlingTime: stepResponse.settlingTimeMs,
-            coherencePct: rec.analysis.meanCoherence * 100,
-        },
+        gains: buildGains(rec, sensitivity, stepResponse),
         sampleCount: len,
     };
 }

@@ -1532,6 +1532,7 @@ watch(auxChannelValue, (newVal) => {
     grid-template-columns: 30px 30px 30px 30px;
     grid-template-rows: 30px 30px 30px;
     gap: 4px;
+    direction: ltr;
     vertical-align: middle;
     margin-inline-end: 12px;
 }

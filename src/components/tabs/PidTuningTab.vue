@@ -930,7 +930,7 @@ onMounted(async () => {
 }
 .tab-pid_tuning .number {
     margin-bottom: 5px;
-    clear: left;
+    clear: inline-start;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--surface-500);
     width: 100%;

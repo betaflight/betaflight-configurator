@@ -58,6 +58,11 @@ targets:
         NSBonjourServices:
           - _betaflight._tcp
         NSBluetoothAlwaysUsageDescription: Betaflight connects to your flight controller over Bluetooth Low Energy.
+        # The dev server (tauri ios dev --host <ip>) is plain HTTP on the LAN. Without this,
+        # ATS blocks the webview from loading it and the app silently falls back to the
+        # embedded, possibly stale, frontend bundle.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
     entitlements:
       path: betaflight-app_iOS/betaflight-app_iOS.entitlements
     scheme:

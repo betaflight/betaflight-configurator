@@ -27,7 +27,14 @@ class TauriTcp extends EventTarget {
 
         this._unlisten = [];
 
+        // Bridges found via mDNS (see mdns.rs); kept so a failed browse keeps the last list.
+        this.devices = [];
+        this.deviceMonitorInterval = null;
+        this.deviceCheckInFlight = false;
+
         this.connect = this.connect.bind(this);
+
+        this.startDeviceMonitoring();
     }
 
     handleReceiveBytes(info) {
@@ -65,8 +72,65 @@ class TauriTcp extends EventTarget {
         return this._portInfo(this.address);
     }
 
+    /**
+     * @param {{name: string, addresses: string[], port: number}} bridge
+     * @returns {object|null} a port entry for the picker, or null when the bridge has no address yet
+     */
+    _bridgePort(bridge) {
+        const address = bridge.addresses[0];
+        if (!address) {
+            return null;
+        }
+        return { ...this._portInfo(`tcp://${bracketHost(address)}:${bridge.port}`), displayName: bridge.name };
+    }
+
+    /**
+     * Bridges currently announcing `_betaflight._tcp` on the local network.
+     * @returns {Promise<Array>} port entries, one per bridge
+     */
     async getDevices() {
-        return [];
+        try {
+            const bridges = await invoke("mdns_browse");
+            this.devices = bridges.map((bridge) => this._bridgePort(bridge)).filter(Boolean);
+        } catch (e) {
+            console.warn(`${this.logHead} mDNS browse failed:`, e);
+        }
+        return this.devices;
+    }
+
+    startDeviceMonitoring() {
+        if (this.deviceMonitorInterval) {
+            return;
+        }
+        this.deviceMonitorInterval = setInterval(async () => {
+            if (this.deviceCheckInFlight || this.connected) {
+                return;
+            }
+            this.deviceCheckInFlight = true;
+            try {
+                await this.checkDeviceChanges();
+            } finally {
+                this.deviceCheckInFlight = false;
+            }
+        }, 2000);
+    }
+
+    stopDeviceMonitoring() {
+        if (this.deviceMonitorInterval) {
+            clearInterval(this.deviceMonitorInterval);
+            this.deviceMonitorInterval = null;
+        }
+    }
+
+    async checkDeviceChanges() {
+        const previous = this.devices;
+        const current = await this.getDevices();
+        for (const removed of previous.filter((old) => !current.some((now) => now.path === old.path))) {
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+        }
+        for (const added of current.filter((now) => !previous.some((old) => old.path === now.path))) {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        }
     }
 
     async _teardownListeners() {
