@@ -1117,11 +1117,15 @@ watch(auxChannelValue, (newVal) => {
 
 /* Grid Container */
 .grid-container {
+    /* Pitch is the gPoint box plus its margins; LedGridPoint reads both. */
+    --led-cell: 23px;
+    --led-cell-gap: 3px;
+    --led-cell-pitch: calc(var(--led-cell) + var(--led-cell-gap) * 2);
     position: relative;
     float: inline-start;
     margin-inline-end: 30px;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
+    width: calc(var(--led-cell-pitch) * 16 + 3px);
+    height: calc(var(--led-cell-pitch) * 16 + 3px);
 }
 
 /* Grid Sections Overlay */
@@ -1130,8 +1134,8 @@ watch(auxChannelValue, (newVal) => {
     top: 0;
     inset-inline-start: 0;
     z-index: 0;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
+    width: calc(var(--led-cell-pitch) * 16 + 3px);
+    height: calc(var(--led-cell-pitch) * 16 + 3px);
     border: 1px solid var(--surface-500);
     border-radius: 3px;
     pointer-events: none;
@@ -1144,6 +1148,19 @@ watch(auxChannelValue, (newVal) => {
     float: inline-start;
     border: 1px solid var(--surface-500);
     box-sizing: border-box;
+}
+
+@container main-wrapper (max-width: 575px) {
+    .grid-container {
+        --led-cell-gap: 1px;
+        /* The content wrapper pads 1rem each side: fit 16 pitches plus the grid's 3px
+           allowance into what is left, and never grow past the 22px pitch tuned here.
+           Derived, not fixed, so a small phone or a raised UI scale shrinks the cells
+           instead of clipping the grid. */
+        --led-cell-pitch: min(22px, calc((100cqw - 2rem - 3px) / 16));
+        --led-cell: calc(var(--led-cell-pitch) - var(--led-cell-gap) * 2);
+        margin-inline-end: 0;
+    }
 }
 
 /* Controls Panel */
