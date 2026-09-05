@@ -179,6 +179,10 @@ const FRIENDLY_FIELD_NAMES = {
     gpsDistance: "GPS Home distance",
     gpsHomeAzimuth: "GPS Home azimuth",
     gpsTrajectoryTiltAngle: "GPS Traject. tilt angle",
+
+    "pitot[all]": "Pitot data",
+    "pitot[0]": "Airspeed",
+    "pitot[1]": "Diff. pressure",
 };
 
 FlightLogFieldPresenter.presentFlags = function (flags, flagNames) {
@@ -484,6 +488,11 @@ FlightLogFieldPresenter.decodeFieldToFriendly = function (flightLog, fieldName, 
         case "magADC[2]":
             return `${(value / 10).toFixed(1)} °`;
 
+        case "pitot[0]":
+            return `${(value / 100).toFixed(1)} m/s`;
+        case "pitot[1]":
+            return `${value.toFixed(1)} Pa`;
+
         case "debug[0]":
         case "debug[1]":
         case "debug[2]":
@@ -718,6 +727,9 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "magADC[1]":
         case "magADC[2]":
             return toFriendly ? value / 10 : value * 10;
+
+        case "pitot[0]":
+            return toFriendly ? value / 100 : value * 100;
 
         case "debug[0]":
         case "debug[1]":
