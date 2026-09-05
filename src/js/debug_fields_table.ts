@@ -1,0 +1,1179 @@
+/*
+ * WARNING: This is an auto-generated file, please do not edit directly!
+ *
+ * Generator    : `scripts/generate-debug-modes.mjs`
+ * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
+ * Firmware refs:
+ *   API 1.49.0  4873e1ef2a 2026-08-30  (485 annotated fields)
+ */
+
+/**
+ * What each `debug[n]` of each debug mode holds, per MSP API version, as the
+ * firmware itself records it at the DEBUG_SET() call site:
+ *
+ *   label - the field name to show, firmware's own wording.
+ *   unit  - unit symbol of the stored value, or null when it is a plain count,
+ *           flag or enumeration. `gyroADC`, `accADC`, `accADC/s`, `rcCommand`
+ *           and `eRPM` are device-native and need the FC's own scaling.
+ *   scale - what one LSB is worth in that unit, so `deg` with scale 0.1 means
+ *           the field holds decidegrees. Negative where the firmware stores
+ *           the magnitude of a negative quantity, as CRSF does with dBm.
+ *   flags  - present when the field holds bit flags: the name of each bit,
+ *           lowest first, null for a bit the field does not use.
+ *   values - present when the field holds an enumerator: the firmware enum's
+ *           own names, indexed by value.
+ *
+ * A field the firmware does not annotate is absent here.
+ */
+export interface FirmwareDebugField {
+    /** The field name to show, in the firmware's own wording. */
+    label: string;
+    /** Unit symbol of the stored value, or null for a count, flag or enumeration. */
+    unit: string | null;
+    /** What one LSB is worth in `unit`. */
+    scale: number;
+    /** Enumerator names indexed by value, null where the enum leaves a gap. */
+    values?: readonly (string | null)[];
+    /** Bit-flag names, lowest bit first, null for a bit the field does not use. */
+    flags?: readonly (string | null)[];
+}
+
+/** Keyed by MSP API version, then by mode name, then by `debug[n]` index. */
+export type FirmwareDebugFields = Readonly<
+    Record<string, Readonly<Record<string, Readonly<Record<string, FirmwareDebugField>>>>>
+>;
+
+/** One meaning of an index two subsystems write differently in the same build. */
+export interface FirmwareDebugFieldMeaning extends FirmwareDebugField {
+    /** The firmware call sites carrying this meaning, as path:line. */
+    sites: readonly string[];
+}
+
+/** An index that cannot be labelled, because a log records only the number. */
+export interface FirmwareDebugFieldConflict {
+    apiVersion: string;
+    mode: string;
+    index: number;
+    meanings: readonly FirmwareDebugFieldMeaning[];
+}
+
+export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
+    "1.49.0": Object.freeze({
+        ACCELEROMETER: Object.freeze({
+            0: Object.freeze({ label: "Raw Accel (dbg-axis)", unit: "accADC", scale: 1 }),
+            1: Object.freeze({ label: "Filtered Accel (dbg-axis)", unit: "accADC", scale: 1 }),
+            2: Object.freeze({ label: "Accel Magnitude", unit: "g", scale: 0.001 }),
+            3: Object.freeze({ label: "Jerk (dbg-axis)", unit: "accADC/s", scale: 100 }),
+            4: Object.freeze({ label: "Jerk Magnitude", unit: "g/s", scale: 0.001 }),
+        }),
+        ACRO_TRAINER: Object.freeze({
+            0: Object.freeze({ label: "Current Angle (dbg-axis)", unit: "deg", scale: 0.1 }),
+            1: Object.freeze({ label: "Axis State (dbg-axis)", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Setpoint Correction (dbg-axis)", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Projected Angle (dbg-axis)", unit: "deg", scale: 0.1 }),
+        }),
+        ADC_INTERNAL: Object.freeze({
+            0: Object.freeze({ label: "Core Temperature", unit: "degC", scale: 1 }),
+            1: Object.freeze({ label: "VRefInt Sample", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Temperature Sensor Sample", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "VRef", unit: "V", scale: 0.001 }),
+        }),
+        ALTITUDE: Object.freeze({
+            0: Object.freeze({ label: "Relative Rangefinder Altitude", unit: "cm", scale: 1 }),
+            1: Object.freeze({ label: "Relative Baro Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Relative GPS Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Estimated Altitude", unit: "cm", scale: 1 }),
+            4: Object.freeze({ label: "GPS Vertical Velocity", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({ label: "Estimated Vertical Velocity", unit: "cm/s", scale: 1 }),
+            6: Object.freeze({ label: "Vertical Acceleration", unit: "cm/s2", scale: 1 }),
+            7: Object.freeze({ label: "Estimated Vertical Acceleration", unit: "cm/s2", scale: 1 }),
+        }),
+        ANGLE_MODE: Object.freeze({
+            0: Object.freeze({ label: "Angle Target (roll)", unit: "deg", scale: 0.1 }),
+            1: Object.freeze({ label: "Angle Error Rate (roll)", unit: "dps", scale: 0.1 }),
+            2: Object.freeze({ label: "Angle Feedforward Rate (roll)", unit: "dps", scale: 0.1 }),
+            3: Object.freeze({ label: "Current Angle (roll)", unit: "deg", scale: 0.1 }),
+        }),
+        ANGLE_TARGET: Object.freeze({
+            0: Object.freeze({ label: "Angle Target (roll)", unit: "deg", scale: 0.1 }),
+            1: Object.freeze({ label: "Earth Reference Sine (roll)", unit: null, scale: 0.1 }),
+            2: Object.freeze({ label: "Attenuated Yaw Setpoint", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Current Angle (roll)", unit: "deg", scale: 0.1 }),
+        }),
+        ANGLERATE: Object.freeze({
+            0: Object.freeze({ label: "Setpoint Rate (roll)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Setpoint Rate (pitch)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Setpoint Rate (yaw)", unit: "dps", scale: 1 }),
+        }),
+        ANTI_GRAVITY: Object.freeze({
+            0: Object.freeze({ label: "Throttle Derivative", unit: null, scale: 0.01 }),
+            1: Object.freeze({ label: "Throttle Derivative Smoothed", unit: null, scale: 0.01 }),
+            2: Object.freeze({ label: "I Gain Multiplier (pitch)", unit: null, scale: 0.001 }),
+            3: Object.freeze({ label: "P Gain Multiplier (pitch)", unit: null, scale: 0.001 }),
+        }),
+        ATTITUDE: Object.freeze({
+            0: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
+            1: Object.freeze({ label: "GPS Heading Confidence", unit: null, scale: 0.01 }),
+            2: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            3: Object.freeze({ label: "Course Over Ground Error Sine", unit: null, scale: 0.01 }),
+            4: Object.freeze({ label: "GPS Heading Unusable", unit: null, scale: 1 }),
+            5: Object.freeze({
+                label: "Rescue Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_IDLE",
+                    "RESCUE_INITIALIZE",
+                    "RESCUE_ATTAIN_ALT",
+                    "RESCUE_PITCH_FORWARD",
+                    "RESCUE_ROTATE",
+                    "RESCUE_FLY_HOME",
+                    "RESCUE_DESCENT",
+                    "RESCUE_LANDING",
+                    "RESCUE_EMERG_DESCENT",
+                    "RESCUE_DO_NOTHING",
+                ]),
+            }),
+            6: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+        }),
+        AUTOPILOT_ALTITUDE: Object.freeze({
+            0: Object.freeze({ label: "Throttle Output", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Altitude P Term", unit: "us", scale: 1 }),
+            4: Object.freeze({ label: "Altitude I Term", unit: "us", scale: 1 }),
+            5: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
+            6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
+            7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
+        }),
+        AUTOPILOT_PID: Object.freeze({
+            0: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Distance Error (dbg-axis)", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "P Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "I Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            4: Object.freeze({ label: "D Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            5: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            6: Object.freeze({ label: "Feedforward Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+        }),
+        AUTOPILOT_STOP: Object.freeze({
+            0: Object.freeze({ label: "Velocity Error East", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Velocity Error North", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "PID Sum East", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "PID Sum North", unit: "deg", scale: 0.1 }),
+            4: Object.freeze({ label: "Roll Angle Command", unit: "deg", scale: 0.1 }),
+            5: Object.freeze({ label: "Pitch Angle Command", unit: "deg", scale: 0.1 }),
+            6: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+        }),
+        BARO: Object.freeze({
+            0: Object.freeze({
+                label: "Baro State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "BARO_STATE_TEMPERATURE_READ",
+                    "BARO_STATE_TEMPERATURE_SAMPLE",
+                    "BARO_STATE_PRESSURE_START",
+                    "BARO_STATE_PRESSURE_READ",
+                    "BARO_STATE_PRESSURE_SAMPLE",
+                    "BARO_STATE_TEMPERATURE_START",
+                    "BARO_STATE_COUNT",
+                ]),
+            }),
+            1: Object.freeze({ label: "Pressure", unit: "hPa", scale: 1 }),
+            2: Object.freeze({ label: "Temperature", unit: "degC", scale: 0.01 }),
+            3: Object.freeze({ label: "Baro Altitude", unit: "cm", scale: 1 }),
+        }),
+        BATTERY: Object.freeze({
+            0: Object.freeze({ label: "Battery Voltage Unfiltered", unit: "V", scale: 0.01 }),
+            1: Object.freeze({ label: "Battery Voltage", unit: "V", scale: 0.01 }),
+            2: Object.freeze({ label: "Sag Compensation Battery Goodness", unit: "%", scale: 1 }),
+            3: Object.freeze({ label: "Sag Compensation Attenuation / Voltage Stable Bits", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Voltage Is Stable", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Voltage Is From Battery", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Last Stable Battery Voltage", unit: "V", scale: 0.01 }),
+            7: Object.freeze({
+                label: "Battery Voltage State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "BATTERY_OK",
+                    "BATTERY_WARNING",
+                    "BATTERY_CRITICAL",
+                    "BATTERY_NOT_PRESENT",
+                    "BATTERY_INIT",
+                ]),
+            }),
+        }),
+        BLACKBOX_OUTPUT: Object.freeze({
+            0: Object.freeze({ label: "Output Rate", unit: "kbit/s", scale: 1 }),
+            1: Object.freeze({ label: "Peak Output Rate", unit: "kbit/s", scale: 1 }),
+            2: Object.freeze({ label: "Dropped Bytes", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Serial TX Bytes Free", unit: "bytes", scale: 1 }),
+        }),
+        CHIRP: Object.freeze({
+            0: Object.freeze({ label: "Chirp Phase", unit: "rad", scale: 0.0002 }),
+            1: Object.freeze({ label: "Chirp Axis", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Chirp Frequency", unit: "Hz", scale: 0.1 }),
+            3: Object.freeze({ label: "Chirp Excitation", unit: null, scale: 0.001 }),
+        }),
+        CRSF_LINK_STATISTICS_DOWN: Object.freeze({
+            0: Object.freeze({ label: "Downlink RSSI", unit: "dBm", scale: -1 }),
+            1: Object.freeze({ label: "Downlink Link Quality", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Downlink SNR", unit: "dB", scale: 1 }),
+        }),
+        CRSF_LINK_STATISTICS_PWR: Object.freeze({
+            0: Object.freeze({ label: "Active Antenna", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Uplink SNR", unit: "dB", scale: 1 }),
+            2: Object.freeze({ label: "Uplink TX Power Index", unit: null, scale: 1 }),
+        }),
+        CRSF_LINK_STATISTICS_UPLINK: Object.freeze({
+            0: Object.freeze({ label: "Uplink RSSI Antenna 1 / Uplink RSSI", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Uplink RSSI Antenna 2 / Uplink SNR", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
+            3: Object.freeze({ label: "RF Mode / Uplink RSSI", unit: null, scale: 1 }),
+        }),
+        CURRENT_ANGLE: Object.freeze({
+            0: Object.freeze({ label: "Current Angle (roll)", unit: "deg", scale: 0.1 }),
+            1: Object.freeze({ label: "Current Angle (pitch)", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Current Angle (yaw)", unit: "deg", scale: 0.1 }),
+        }),
+        CURRENT_SENSOR: Object.freeze({
+            0: Object.freeze({ label: "ADC Voltage", unit: "V", scale: 0.001 }),
+            1: Object.freeze({ label: "Current", unit: "A", scale: 0.01 }),
+            2: Object.freeze({ label: "Latest Amperage", unit: "A", scale: 0.01 }),
+            3: Object.freeze({ label: "Capacity Drawn", unit: "mAh", scale: 1 }),
+        }),
+        CYCLETIME: Object.freeze({
+            0: Object.freeze({ label: "Cycle Time", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "CPU Load", unit: "%", scale: 1 }),
+        }),
+        D_LPF: Object.freeze({
+            0: Object.freeze({ label: "Unfiltered D Delta (roll)", unit: "dps2", scale: 25 }),
+            1: Object.freeze({ label: "Unfiltered D Delta (pitch)", unit: "dps2", scale: 25 }),
+            2: Object.freeze({ label: "D Before TPA (roll)", unit: null, scale: 0.1 }),
+            3: Object.freeze({ label: "D Before TPA (pitch)", unit: null, scale: 0.1 }),
+        }),
+        D_MAX: Object.freeze({
+            0: Object.freeze({ label: "D Max Gyro Factor (dbg-axis)", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "D Max Setpoint Factor (dbg-axis)", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Boosted D (dbg-axis)", unit: null, scale: 0.1 }),
+            3: Object.freeze({ label: "D Max Multiplier (dbg-axis)", unit: "%", scale: 1 }),
+        }),
+        DSHOT_RPM_TELEMETRY: Object.freeze({
+            0: Object.freeze({ label: "Motor 1", unit: "eRPM", scale: 100 }),
+            1: Object.freeze({ label: "Motor 2", unit: "eRPM", scale: 100 }),
+            2: Object.freeze({ label: "Motor 3", unit: "eRPM", scale: 100 }),
+            3: Object.freeze({ label: "Motor 4", unit: "eRPM", scale: 100 }),
+            4: Object.freeze({ label: "Motor 5", unit: "eRPM", scale: 100 }),
+            5: Object.freeze({ label: "Motor 6", unit: "eRPM", scale: 100 }),
+            6: Object.freeze({ label: "Motor 7", unit: "eRPM", scale: 100 }),
+            7: Object.freeze({ label: "Motor 8", unit: "eRPM", scale: 100 }),
+        }),
+        DSHOT_TELEMETRY_COUNTS: Object.freeze({
+            3: Object.freeze({ label: "Preamble Skip", unit: null, scale: 1 }),
+        }),
+        DYN_IDLE: Object.freeze({
+            0: Object.freeze({ label: "Dyn Idle P", unit: null, scale: 0.0001 }),
+            1: Object.freeze({ label: "Dyn Idle I", unit: null, scale: 0.0001 }),
+            2: Object.freeze({ label: "Dyn Idle D", unit: null, scale: 0.0001 }),
+            3: Object.freeze({ label: "Minimum Motor Frequency", unit: "Hz", scale: 0.1 }),
+        }),
+        DYN_LPF: Object.freeze({
+            0: Object.freeze({ label: "Gyro Before Dyn Notch (dbg-axis)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Notch 1 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Lowpass Cutoff", unit: "Hz", scale: 1 }),
+            3: Object.freeze({ label: "Gyro After Dyn Notch (dbg-axis)", unit: "dps", scale: 1 }),
+        }),
+        ESC_SENSOR: Object.freeze({
+            0: Object.freeze({ label: "Motor Index", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Timeout Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "CRC Error Count", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Data Age", unit: null, scale: 1 }),
+        }),
+        ESC_SENSOR_RPM: Object.freeze({
+            0: Object.freeze({ label: "Motor 1 RPM", unit: "rpm", scale: 10 }),
+            1: Object.freeze({ label: "Motor 2 RPM", unit: "rpm", scale: 10 }),
+            2: Object.freeze({ label: "Motor 3 RPM", unit: "rpm", scale: 10 }),
+            3: Object.freeze({ label: "Motor 4 RPM", unit: "rpm", scale: 10 }),
+        }),
+        ESC_SENSOR_TMP: Object.freeze({
+            0: Object.freeze({ label: "Motor 1 Temperature", unit: "degC", scale: 1 }),
+            1: Object.freeze({ label: "Motor 2 Temperature", unit: "degC", scale: 1 }),
+            2: Object.freeze({ label: "Motor 3 Temperature", unit: "degC", scale: 1 }),
+            3: Object.freeze({ label: "Motor 4 Temperature", unit: "degC", scale: 1 }),
+        }),
+        EZLANDING: Object.freeze({
+            0: Object.freeze({ label: "EZ Land Factor", unit: null, scale: 0.0001 }),
+            1: Object.freeze({ label: "Adjusted Throttle", unit: null, scale: 0.0001 }),
+            2: Object.freeze({ label: "Upper Throttle Limit", unit: null, scale: 0.0001 }),
+            3: Object.freeze({ label: "EZ Land Limit", unit: null, scale: 0.0001 }),
+            4: Object.freeze({ label: "Stick Deflection Limit", unit: null, scale: 0.0001 }),
+            5: Object.freeze({ label: "Speed Limit", unit: null, scale: 0.0001 }),
+            6: Object.freeze({ label: "Max Stick Deflection", unit: "%", scale: 1 }),
+            7: Object.freeze({ label: "Jerk Magnitude", unit: "g/s", scale: 0.001 }),
+        }),
+        FAILSAFE: Object.freeze({
+            0: Object.freeze({ label: "Failsafe Switch Was On", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Rx Signal Received", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Receiving Rx Data", unit: null, scale: 1 }),
+            3: Object.freeze({
+                label: "Failsafe Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "FAILSAFE_IDLE",
+                    "FAILSAFE_RX_LOSS_DETECTED",
+                    "FAILSAFE_LANDING",
+                    "FAILSAFE_LANDED",
+                    "FAILSAFE_RX_LOSS_MONITORING",
+                    "FAILSAFE_RX_LOSS_RECOVERED",
+                    "FAILSAFE_GPS_RESCUE",
+                    "FAILSAFE_AUTOPILOT",
+                ]),
+            }),
+        }),
+        FEEDFORWARD: Object.freeze({
+            0: Object.freeze({ label: "Setpoint (dbg-axis)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Setpoint Speed (dbg-axis)", unit: "dps2", scale: 100 }),
+            2: Object.freeze({ label: "Feedforward Boost (dbg-axis)", unit: null, scale: 100 }),
+            3: Object.freeze({ label: "RC Command Delta (dbg-axis)", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Jitter Attenuator (dbg-axis)", unit: "%", scale: 1 }),
+            5: Object.freeze({ label: "Duplicate Packet (dbg-axis)", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Yaw Feedforward Without Hold", unit: null, scale: 100 }),
+            7: Object.freeze({ label: "Yaw Feedforward With Hold", unit: null, scale: 100 }),
+        }),
+        FEEDFORWARD_LIMIT: Object.freeze({
+            0: Object.freeze({ label: "Jitter Attenuation", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Max Setpoint Rate (dbg-axis)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Setpoint Unsmoothed (dbg-axis)", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Feedforward Unsmoothed (dbg-axis)", unit: null, scale: 100 }),
+            4: Object.freeze({ label: "Setpoint Speed Unsmoothed (dbg-axis)", unit: "dps2", scale: 100 }),
+            5: Object.freeze({ label: "Setpoint Speed Smoothed (dbg-axis)", unit: "dps2", scale: 100 }),
+            6: Object.freeze({ label: "Feedforward Filter Gain", unit: null, scale: 0.001 }),
+            7: Object.freeze({ label: "Smoothed RX Rate", unit: "Hz", scale: 1 }),
+        }),
+        FFT: Object.freeze({
+            0: Object.freeze({ label: "Gyro Before Dyn Notch (dbg-axis)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Gyro After Dyn Notch (dbg-axis)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Gyro Downsampled (dbg-axis)", unit: "dps", scale: 1 }),
+        }),
+        FFT_FREQ: Object.freeze({
+            0: Object.freeze({ label: "Gyro Before Dyn Notch (dbg-axis)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Notch 1 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Notch 2 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            3: Object.freeze({ label: "Notch 3 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            4: Object.freeze({ label: "Notch 4 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            5: Object.freeze({ label: "Notch 5 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            6: Object.freeze({ label: "Notch 6 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+            7: Object.freeze({ label: "Notch 7 Center Frequency (dbg-axis)", unit: "Hz", scale: 1 }),
+        }),
+        FFT_TIME: Object.freeze({
+            0: Object.freeze({
+                label: "Active Calculation Step",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "STEP_WINDOW",
+                    "STEP_DETECT_PEAKS",
+                    "STEP_CALC_FREQUENCIES",
+                    "STEP_UPDATE_FILTERS",
+                    "STEP_COUNT",
+                ]),
+            }),
+            1: Object.freeze({ label: "Step Duration", unit: "us", scale: 1 }),
+        }),
+        FLASH_TEST_PRBS: Object.freeze({
+            0: Object.freeze({ label: "Test State", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Checked Length", unit: "bytes", scale: 1 }),
+            6: Object.freeze({ label: "Pages In Check Length", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Error Count", unit: null, scale: 1 }),
+        }),
+        FPORT: Object.freeze({
+            0: Object.freeze({ label: "Frame Interval", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "Frame Error Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Last Frame Error Reason", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Telemetry Frame Interval", unit: "us", scale: 1 }),
+        }),
+        GHST: Object.freeze({
+            0: Object.freeze({ label: "CRC Error Count", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Unknown Frame Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Uplink RSSI", unit: "dBm", scale: 1 }),
+            3: Object.freeze({ label: "Link Quality", unit: "%", scale: 1 }),
+        }),
+        GHST_MSP: Object.freeze({
+            0: Object.freeze({ label: "MSP Requests Received", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "MSP Responses Sent", unit: null, scale: 1 }),
+        }),
+        GIMBAL: Object.freeze({
+            0: Object.freeze({ label: "Headtracker Roll", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Headtracker Pitch", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Headtracker Yaw", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Gimbal Roll", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Gimbal Pitch", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Gimbal Yaw", unit: null, scale: 1 }),
+        }),
+        GPS_CONNECTION: Object.freeze({
+            0: Object.freeze({ label: "GPS Model", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Nav Interval", unit: "ms", scale: 1 }),
+            2: Object.freeze({
+                label: "Baud Detect Progress, Else Nav Message Age In Milliseconds",
+                unit: null,
+                scale: 1,
+            }),
+            3: Object.freeze({ label: "Baud Rate / 100, Else Nav Message Age In Milliseconds", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "State And State Position", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Task Execute Time", unit: "us", scale: 1 }),
+            6: Object.freeze({
+                label: "Config Ack State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "UBLOX_ACK_IDLE",
+                    "UBLOX_ACK_WAITING",
+                    "UBLOX_ACK_GOT_ACK",
+                    "UBLOX_ACK_GOT_NACK",
+                ]),
+            }),
+            7: Object.freeze({ label: "Rx Bytes Waiting", unit: "bytes", scale: 1 }),
+        }),
+        GPS_DOP: Object.freeze({
+            0: Object.freeze({ label: "Satellite Count", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Positional DOP", unit: null, scale: 0.01 }),
+            2: Object.freeze({ label: "Horizontal DOP", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Vertical DOP", unit: null, scale: 0.01 }),
+        }),
+        GPS_RESCUE_HEADING: Object.freeze({
+            0: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "GPS Ground Course", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Yaw Attitude", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "Direction To Home", unit: "deg", scale: 0.1 }),
+            4: Object.freeze({ label: "Magnetic Heading", unit: "deg", scale: 0.1 }),
+            7: Object.freeze({ label: "Yaw Rate Correction", unit: "dps", scale: 1 }),
+        }),
+        GPS_RESCUE_TRACKING: Object.freeze({
+            0: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
+            4: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
+            5: Object.freeze({ label: "Bearing To Home", unit: "deg", scale: 1 }),
+        }),
+        GPS_RESCUE_VELOCITY: Object.freeze({
+            0: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Ground Speed / Rescue Phase", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Target Step East", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Target Step North", unit: "cm", scale: 1 }),
+        }),
+        GYRO_CALIBRATION: Object.freeze({
+            0: Object.freeze({ label: "Calibration Deviation (roll)", unit: "gyroADC", scale: 1 }),
+            1: Object.freeze({ label: "Calibration Deviation (pitch)", unit: "gyroADC", scale: 1 }),
+            2: Object.freeze({ label: "Calibration Deviation (yaw)", unit: "gyroADC", scale: 1 }),
+            3: Object.freeze({ label: "Calibration Cycles Remaining", unit: null, scale: 1 }),
+        }),
+        GYRO_FILTERED: Object.freeze({
+            0: Object.freeze({ label: "Gyro Filtered (roll)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Gyro Filtered (pitch)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Gyro Filtered (yaw)", unit: "dps", scale: 1 }),
+        }),
+        GYRO_RAW: Object.freeze({
+            0: Object.freeze({ label: "Gyro Raw (roll)", unit: "gyroADC", scale: 1 }),
+            1: Object.freeze({ label: "Gyro Raw (pitch)", unit: "gyroADC", scale: 1 }),
+            2: Object.freeze({ label: "Gyro Raw (yaw)", unit: "gyroADC", scale: 1 }),
+            3: Object.freeze({ label: "Calibration Deviation (roll)", unit: "gyroADC", scale: 1 }),
+        }),
+        GYRO_SAMPLE: Object.freeze({
+            0: Object.freeze({ label: "Gyro Before Downsampling (dbg-axis)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Gyro After Downsampling (dbg-axis)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Gyro After RPM Filter (dbg-axis)", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Gyro After Static Filters (dbg-axis)", unit: "dps", scale: 1 }),
+            4: Object.freeze({ label: "CPU Load", unit: "%", scale: 1 }),
+        }),
+        ITERM_RELAX: Object.freeze({
+            0: Object.freeze({ label: "Setpoint HPF (roll)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "I Relax Factor (roll)", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Relaxed I Error (roll)", unit: "dps", scale: 1 }),
+        }),
+        LIDAR_TF: Object.freeze({
+            0: Object.freeze({ label: "Distance", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Signal Strength / Confidence", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Frame Byte 4 / Optical Flow X", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Frame Byte 5 / Optical Flow Y", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Checksum Error Count / Laser Valid Status", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Integration Time", unit: "us", scale: 1 }),
+            6: Object.freeze({ label: "Reported Distance", unit: "cm", scale: 1 }),
+            7: Object.freeze({
+                label: "Frame Parser State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "UPT1_FRAME_WAIT_RESET",
+                    "UPT1_FRAME_STATE_WAIT_HEADER",
+                    "UPT1_FRAME_STATE_WAIT_LENGTH",
+                    "UPT1_FRAME_STATE_READING_DATA",
+                    "UPT1_FRAME_STATE_WAIT_CKSUM",
+                    "UPT1_FRAME_STATE_WAIT_FOOTER",
+                ]),
+            }),
+        }),
+        MAG_CALIB: Object.freeze({
+            0: Object.freeze({ label: "Mag X", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Mag Y", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Mag Z", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Mag Vector Length", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Estimated Mag Bias X", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Estimated Mag Bias Y", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Estimated Mag Bias Z", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Calibration Forgetting Factor", unit: null, scale: 1 }),
+        }),
+        MAG_TASK_RATE: Object.freeze({
+            0: Object.freeze({ label: "Task Rate", unit: "Hz", scale: 1 }),
+            1: Object.freeze({ label: "Actual Data Rate", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Data Interval", unit: "us", scale: 1 }),
+            3: Object.freeze({ label: "Task Execute Time", unit: "us", scale: 1 }),
+            4: Object.freeze({ label: "Bus Busy", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Read State", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Task Interval", unit: "us", scale: 1 }),
+        }),
+        MAVLINK_TELEMETRY: Object.freeze({
+            0: Object.freeze({ label: "Telemetry Due", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "TX Buffer Free", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "System Status TX Count", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "RC Channels TX Count", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "GPS Raw TX Count", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Attitude TX Count", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Heartbeat TX Count", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Battery Status TX Count", unit: null, scale: 1 }),
+        }),
+        MAX7456_SIGNAL: Object.freeze({
+            0: Object.freeze({ label: "Video Mode Register", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Video Sense", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Reinit Count", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Row Count", unit: null, scale: 1 }),
+        }),
+        MAX7456_SPICLOCK: Object.freeze({
+            0: Object.freeze({ label: "CPU Overclocked", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Device Type", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "SPI Clock Divisor", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "SPI Clock", unit: "MHz", scale: 0.01 }),
+        }),
+        MULTI_GYRO_DIFF: Object.freeze({
+            0: Object.freeze({ label: "Enabled Gyro 1 Roll Minus Fused", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Enabled Gyro 1 Pitch Minus Fused", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Enabled Gyro 2 Roll Minus Fused", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Enabled Gyro 2 Pitch Minus Fused", unit: "dps", scale: 1 }),
+            4: Object.freeze({ label: "Enabled Gyro 3 Roll Minus Fused", unit: "dps", scale: 1 }),
+            5: Object.freeze({ label: "Enabled Gyro 3 Pitch Minus Fused", unit: "dps", scale: 1 }),
+            6: Object.freeze({ label: "Enabled Gyro 4 Roll Minus Fused", unit: "dps", scale: 1 }),
+            7: Object.freeze({ label: "Enabled Gyro 4 Pitch Minus Fused", unit: "dps", scale: 1 }),
+        }),
+        MULTI_GYRO_RAW: Object.freeze({
+            0: Object.freeze({ label: "Enabled Gyro 1 Raw Roll", unit: "gyroADC", scale: 1 }),
+            1: Object.freeze({ label: "Enabled Gyro 1 Raw Pitch", unit: "gyroADC", scale: 1 }),
+            2: Object.freeze({ label: "Enabled Gyro 2 Raw Roll", unit: "gyroADC", scale: 1 }),
+            3: Object.freeze({ label: "Enabled Gyro 2 Raw Pitch", unit: "gyroADC", scale: 1 }),
+            4: Object.freeze({ label: "Enabled Gyro 3 Raw Roll", unit: "gyroADC", scale: 1 }),
+            5: Object.freeze({ label: "Enabled Gyro 3 Raw Pitch", unit: "gyroADC", scale: 1 }),
+            6: Object.freeze({ label: "Enabled Gyro 4 Raw Roll", unit: "gyroADC", scale: 1 }),
+            7: Object.freeze({ label: "Enabled Gyro 4 Raw Pitch", unit: "gyroADC", scale: 1 }),
+        }),
+        MULTI_GYRO_SCALED: Object.freeze({
+            0: Object.freeze({ label: "Enabled Gyro 1 Roll", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Enabled Gyro 1 Pitch", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Enabled Gyro 2 Roll", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Enabled Gyro 2 Pitch", unit: "dps", scale: 1 }),
+            4: Object.freeze({ label: "Enabled Gyro 3 Roll", unit: "dps", scale: 1 }),
+            5: Object.freeze({ label: "Enabled Gyro 3 Pitch", unit: "dps", scale: 1 }),
+            6: Object.freeze({ label: "Enabled Gyro 4 Roll", unit: "dps", scale: 1 }),
+            7: Object.freeze({ label: "Enabled Gyro 4 Pitch", unit: "dps", scale: 1 }),
+        }),
+        OPTICALFLOW: Object.freeze({
+            0: Object.freeze({ label: "Rotated Flow Rate X", unit: "rad/s", scale: 0.001 }),
+            1: Object.freeze({ label: "Rotated Flow Rate Y", unit: "rad/s", scale: 0.001 }),
+            2: Object.freeze({ label: "Gyro Compensation X", unit: "rad/s", scale: 0.001 }),
+            3: Object.freeze({ label: "Gyro Compensation Y", unit: "rad/s", scale: 0.001 }),
+            4: Object.freeze({ label: "Compensated Flow Rate X", unit: "rad/s", scale: 0.001 }),
+            5: Object.freeze({ label: "Compensated Flow Rate Y", unit: "rad/s", scale: 0.001 }),
+            6: Object.freeze({ label: "Filtered Flow Rate X", unit: "rad/s", scale: 0.001 }),
+            7: Object.freeze({ label: "Filtered Flow Rate Y", unit: "rad/s", scale: 0.001 }),
+        }),
+        PIDLOOP: Object.freeze({
+            0: Object.freeze({ label: "Gyro Update Time", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "PID Controller Time", unit: "us", scale: 1 }),
+            2: Object.freeze({ label: "Motor Update Time", unit: "us", scale: 1 }),
+            3: Object.freeze({ label: "PID Subprocess Time", unit: "us", scale: 1 }),
+        }),
+        PITOT: Object.freeze({
+            0: Object.freeze({ label: "Airspeed", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Differential Pressure", unit: "Pa", scale: 1 }),
+            2: Object.freeze({ label: "Differential Pressure Before Zero Offset", unit: "Pa", scale: 1 }),
+            3: Object.freeze({ label: "Temperature", unit: "degC", scale: 1 }),
+        }),
+        POSITION_EST: Object.freeze({
+            0: Object.freeze({ label: "Estimated Position (dbg-axis)", unit: "cm", scale: 1 }),
+            1: Object.freeze({ label: "Estimated Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Estimated Acceleration (dbg-axis)", unit: "cm/s2", scale: 1 }),
+            3: Object.freeze({ label: "Flow Velocity East", unit: "cm/s", scale: 1 }),
+            4: Object.freeze({ label: "Flow Velocity North", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({ label: "Linear Acceleration (dbg-axis)", unit: "cm/s2", scale: 1 }),
+            6: Object.freeze({ label: "GPS Position Measurement Noise", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "GPS Velocity Measurement Noise", unit: null, scale: 1 }),
+        }),
+        POSITION_NAV: Object.freeze({
+            0: Object.freeze({ label: "Target Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Velocity Error (dbg-axis)", unit: "cm/s", scale: 1 }),
+            3: Object.freeze({ label: "P Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            4: Object.freeze({ label: "I Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            5: Object.freeze({ label: "D Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            6: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
+            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+        }),
+        RANGEFINDER: Object.freeze({
+            1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Tilt Corrected Altitude", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Signal Quality", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Cosine Of Tilt Angle", unit: null, scale: 0.001 }),
+            5: Object.freeze({ label: "Max Usable Tilt Cosine", unit: null, scale: 0.001 }),
+        }),
+        RANGEFINDER_QUALITY: Object.freeze({
+            0: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
+            1: Object.freeze({ label: "Signal Quality Threshold Reached", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Dynamic Distance Threshold", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Surface Altitude Valid", unit: null, scale: 1 }),
+        }),
+        RC_INTERPOLATION: Object.freeze({
+            0: Object.freeze({ label: "Smoothing Input (roll)", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Smoothing Input (pitch)", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Smoothing Input (yaw)", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Smoothing Input (throttle)", unit: null, scale: 1 }),
+        }),
+        RC_SMOOTHING: Object.freeze({
+            0: Object.freeze({ label: "Current RX Rate", unit: "Hz", scale: 1 }),
+            1: Object.freeze({ label: "Smoothed RX Rate For Cutoffs", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Setpoint Cutoff", unit: "Hz", scale: 1 }),
+            3: Object.freeze({ label: "Throttle Cutoff", unit: "Hz", scale: 1 }),
+            4: Object.freeze({ label: "Feedforward Filter Gain", unit: null, scale: 0.001 }),
+            5: Object.freeze({ label: "Smoothed RX Rate", unit: "Hz", scale: 1 }),
+            6: Object.freeze({ label: "Outlier Count", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Valid Sample Count", unit: null, scale: 1 }),
+        }),
+        RC_SMOOTHING_RATE: Object.freeze({
+            0: Object.freeze({ label: "Frame Interval", unit: "ms", scale: 0.01 }),
+            2: Object.freeze({ label: "Smoothed RX Rate", unit: "Hz", scale: 1 }),
+            3: Object.freeze({ label: "Cutoffs Updated", unit: null, scale: 1 }),
+        }),
+        RC_STATS: Object.freeze({
+            0: Object.freeze({ label: "Average Throttle", unit: "%", scale: 1 }),
+        }),
+        RPM_LIMIT: Object.freeze({
+            0: Object.freeze({ label: "Average RPM", unit: "rpm", scale: 1 }),
+            1: Object.freeze({ label: "Throttle Scale Offset", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Throttle Scale", unit: "%", scale: 1 }),
+            3: Object.freeze({ label: "Limited Throttle", unit: "%", scale: 1 }),
+            4: Object.freeze({ label: "RPM Error", unit: "rpm", scale: 1 }),
+            5: Object.freeze({ label: "P Term", unit: "%", scale: 1 }),
+            6: Object.freeze({ label: "I Term", unit: "%", scale: 1 }),
+            7: Object.freeze({ label: "D Term", unit: "%", scale: 1 }),
+        }),
+        RTH: Object.freeze({
+            0: Object.freeze({ label: "Ground Speed", unit: "m/s", scale: 0.1 }),
+            1: Object.freeze({ label: "Displayed Altitude", unit: "cm", scale: 1 }),
+            2: Object.freeze({
+                label: "Rescue Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_IDLE",
+                    "RESCUE_INITIALIZE",
+                    "RESCUE_ATTAIN_ALT",
+                    "RESCUE_PITCH_FORWARD",
+                    "RESCUE_ROTATE",
+                    "RESCUE_FLY_HOME",
+                    "RESCUE_DESCENT",
+                    "RESCUE_LANDING",
+                    "RESCUE_EMERG_DESCENT",
+                    "RESCUE_DO_NOTHING",
+                ]),
+            }),
+            3: Object.freeze({
+                label: "Rescue Failure Code",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_HEALTHY",
+                    "RESCUE_FLYAWAY",
+                    "RESCUE_GPSLOST",
+                    "RESCUE_LOWSATS",
+                    "RESCUE_CRASHFLIP_DETECTED",
+                    "RESCUE_STALLED",
+                    "RESCUE_TOO_CLOSE",
+                    "RESCUE_NO_HOME_POINT",
+                    "RESCUE_NO_ALTITUDE",
+                    "RESCUE_NO_HEADING",
+                ]),
+            }),
+            4: Object.freeze({ label: "Seconds Failing", unit: "s", scale: 1 }),
+            5: Object.freeze({ label: "Target Step Scale / Seconds With Low Satellite Count", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Distance To Home", unit: "cm", scale: 1 }),
+            7: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+        }),
+        RUNAWAY_TAKEOFF: Object.freeze({
+            0: Object.freeze({ label: "Runaway Takeoff Enabled", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Activation Delay Running", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Deactivation Delay Running", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Accumulated Trigger Time", unit: "ms", scale: 1 }),
+        }),
+        RX_EXPRESSLRS_PHASELOCK: Object.freeze({
+            0: Object.freeze({ label: "Raw Phase Offset", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "Filtered Phase Offset", unit: "us", scale: 1 }),
+            2: Object.freeze({ label: "Timer Frequency Offset", unit: "ticks", scale: 1 }),
+            3: Object.freeze({ label: "Timer Phase Shift", unit: "us", scale: 1 }),
+        }),
+        RX_EXPRESSLRS_SPI: Object.freeze({
+            0: Object.freeze({ label: "Lost Connection Count", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Filtered RSSI", unit: "dBm", scale: 1 }),
+            2: Object.freeze({ label: "SNR", unit: "dB", scale: 1 }),
+            3: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
+        }),
+        RX_FRSKY_SPI: Object.freeze({
+            0: Object.freeze({ label: "Data Error Count / Loop Time", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Missing Packets / Bind Offset Min, Else RSSI Byte", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Packet Errors / Bind Offset Max, Else Missing Packets", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Protocol State", unit: null, scale: 1 }),
+        }),
+        RX_SFHSS_SPI: Object.freeze({
+            0: Object.freeze({ label: "Receiver State", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Missing Frame Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Bind Offset Max", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Bind Offset Min", unit: null, scale: 1 }),
+        }),
+        RX_SIGNAL_LOSS: Object.freeze({
+            0: Object.freeze({ label: "Rx Signal Received", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Frame Failsafe Flag", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Rx Task Interval", unit: "ms", scale: 0.1 }),
+            3: Object.freeze({ label: "Throttle Channel", unit: "us", scale: 1 }),
+        }),
+        RX_SPEKTRUM_SPI: Object.freeze({
+            0: Object.freeze({ label: "Missed Packets", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Receive Error", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Transmit IRQ Status", unit: null, scale: 1 }),
+        }),
+        RX_TIMING: Object.freeze({
+            0: Object.freeze({ label: "Frame Interval", unit: "ms", scale: 0.01 }),
+            1: Object.freeze({ label: "Frame Timestamp", unit: "ms", scale: 0.1 }),
+            2: Object.freeze({ label: "Frame Interval Within Limits", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Constrained Frame Interval", unit: "ms", scale: 0.01 }),
+            4: Object.freeze({ label: "Current RX Rate", unit: "Hz", scale: 1 }),
+            5: Object.freeze({ label: "Smoothed RX Rate", unit: "Hz", scale: 1 }),
+            6: Object.freeze({ label: "Link Quality", unit: "%", scale: 1 }),
+            7: Object.freeze({ label: "Receiving Signal", unit: null, scale: 1 }),
+        }),
+        S_TERM: Object.freeze({
+            0: Object.freeze({ label: "S-Term (roll)", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "S-Term After TPA (roll)", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "S-Term (pitch)", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "S-Term After TPA (pitch)", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "S-Term (yaw)", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "S-Term After TPA (yaw)", unit: null, scale: 1 }),
+        }),
+        SBUS: Object.freeze({
+            0: Object.freeze({
+                label: "Frame Flags",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Channel 17", "Channel 18", "Signal Loss", "Failsafe"]),
+            }),
+            2: Object.freeze({ label: "Frame Time", unit: "us", scale: 1 }),
+        }),
+        SCHEDULER: Object.freeze({
+            2: Object.freeze({ label: "Scheduler Overhead", unit: "us", scale: 1 }),
+        }),
+        SCHEDULER_DETERMINISM: Object.freeze({
+            0: Object.freeze({ label: "Gyro Cycle Time", unit: "us", scale: 0.1 }),
+            1: Object.freeze({ label: "Late Task ID", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Task Lateness", unit: "us", scale: 0.1 }),
+            3: Object.freeze({ label: "Gyro Skew", unit: "us", scale: 0.1 }),
+            4: Object.freeze({ label: "Min Gyro Period", unit: "us", scale: 0.01 }),
+            5: Object.freeze({ label: "Max Gyro Period", unit: "us", scale: 0.01 }),
+            6: Object.freeze({ label: "Gyro Period Range", unit: "us", scale: 0.01 }),
+            7: Object.freeze({ label: "Gyro Cycle Time Deviation", unit: "us", scale: 0.01 }),
+        }),
+        SMARTAUDIO: Object.freeze({
+            0: Object.freeze({ label: "Version And Mode", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Band And Channel Index", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Frequency", unit: "MHz", scale: 1 }),
+            3: Object.freeze({ label: "Power Table Index", unit: null, scale: 1 }),
+        }),
+        SPA: Object.freeze({
+            0: Object.freeze({ label: "Setpoint PID Attenuation (roll)", unit: null, scale: 0.001 }),
+            1: Object.freeze({ label: "Setpoint PID Attenuation (pitch)", unit: null, scale: 0.001 }),
+            2: Object.freeze({ label: "Setpoint PID Attenuation (yaw)", unit: null, scale: 0.001 }),
+        }),
+        STACK: Object.freeze({
+            0: Object.freeze({ label: "Stack High Address", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Stack Low Address", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Current Stack Pointer", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Lowest Untouched Address", unit: null, scale: 1 }),
+        }),
+        TASK: Object.freeze({
+            0: Object.freeze({ label: "Task ID", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Task Rate", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Max Execution Time", unit: "us", scale: 1 }),
+            3: Object.freeze({ label: "Average Execution Time", unit: "us", scale: 1 }),
+            4: Object.freeze({ label: "Estimated Execution Time", unit: "us", scale: 1 }),
+            5: Object.freeze({ label: "Actual Execution Time", unit: "us", scale: 1 }),
+            6: Object.freeze({ label: "Estimated Minus Actual", unit: "us", scale: 1 }),
+            7: Object.freeze({ label: "Late Count", unit: null, scale: 1 }),
+        }),
+        TIMING_ACCURACY: Object.freeze({
+            0: Object.freeze({ label: "CPU Load", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Late Tasks Per Second", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Total Task Lateness Per Second", unit: "us", scale: 0.1 }),
+            3: Object.freeze({ label: "Tasks Per Second", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Late Tasks", unit: "%", scale: 0.1 }),
+            7: Object.freeze({ label: "Gyro Cycle Time Deviation", unit: "us", scale: 0.01 }),
+        }),
+        TPA: Object.freeze({
+            0: Object.freeze({ label: "TPA Factor", unit: null, scale: 0.001 }),
+            1: Object.freeze({ label: "Attitude Roll", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Attitude Pitch", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "Wing Throttle", unit: null, scale: 0.001 }),
+            4: Object.freeze({ label: "Estimated Airspeed", unit: "m/s", scale: 0.1 }),
+            5: Object.freeze({ label: "TPA Argument", unit: null, scale: 0.001 }),
+        }),
+        USB: Object.freeze({
+            0: Object.freeze({ label: "USB Cable Inserted", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "USB VCP Connected", unit: null, scale: 1 }),
+        }),
+        VTX_MSP: Object.freeze({
+            0: Object.freeze({ label: "Packet Count", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Is CRSF Port", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Low Power Disarmed", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "MSP Port Descriptor", unit: null, scale: 1 }),
+        }),
+        VTX_TRAMP: Object.freeze({
+            0: Object.freeze({
+                label: "Tramp Status",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "TRAMP_STATUS_OFFLINE",
+                    "TRAMP_STATUS_INIT",
+                    "TRAMP_STATUS_ONLINE_MONITOR_FREQPWRPIT",
+                    "TRAMP_STATUS_ONLINE_MONITOR_TEMP",
+                    "TRAMP_STATUS_ONLINE_CONFIG",
+                ]),
+            }),
+            1: Object.freeze({ label: "Reply Code", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Packed Pit Modes, Power And Change Flags", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Retry Count", unit: null, scale: 1 }),
+        }),
+        WING_SETPOINT: Object.freeze({
+            0: Object.freeze({ label: "Setpoint (roll)", unit: "dps", scale: 1 }),
+            1: Object.freeze({ label: "Adjusted Setpoint (roll)", unit: "dps", scale: 1 }),
+            2: Object.freeze({ label: "Setpoint (pitch)", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Adjusted Setpoint (pitch)", unit: "dps", scale: 1 }),
+            4: Object.freeze({ label: "Setpoint (yaw)", unit: "dps", scale: 1 }),
+            5: Object.freeze({ label: "Adjusted Setpoint (yaw)", unit: "dps", scale: 1 }),
+        }),
+    }),
+});
+
+/**
+ * Indices two subsystems write with different meanings in the same build. A
+ * logged debug[n] records only the number, never which code wrote it, so such a
+ * field cannot be labelled: both meanings are kept here so the app can say so
+ * rather than pick one. Every entry is a firmware bug.
+ */
+export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "BATTERY",
+        index: 3,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Sag Compensation Attenuation",
+                unit: null,
+                scale: 0.001,
+                sites: Object.freeze(["src/main/flight/mixer.c:262"]),
+            }),
+            Object.freeze({
+                label: "Voltage Stable Bits",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/sensors/battery.c:179"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "CRSF_LINK_STATISTICS_UPLINK",
+        index: 0,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Uplink RSSI Antenna 1",
+                unit: "dBm",
+                scale: -1,
+                sites: Object.freeze(["src/main/rx/crsf.c:260"]),
+            }),
+            Object.freeze({
+                label: "Uplink RSSI",
+                unit: "dBm",
+                scale: -1,
+                sites: Object.freeze(["src/main/rx/crsf.c:300"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "CRSF_LINK_STATISTICS_UPLINK",
+        index: 1,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Uplink RSSI Antenna 2",
+                unit: "dBm",
+                scale: -1,
+                sites: Object.freeze(["src/main/rx/crsf.c:261"]),
+            }),
+            Object.freeze({
+                label: "Uplink SNR",
+                unit: "dB",
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/crsf.c:301"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "CRSF_LINK_STATISTICS_UPLINK",
+        index: 3,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "RF Mode",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/crsf.c:263"]),
+            }),
+            Object.freeze({
+                label: "Uplink RSSI",
+                unit: "%",
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/crsf.c:303"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "GPS_RESCUE_VELOCITY",
+        index: 1,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Ground Speed",
+                unit: "cm/s",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:223"]),
+            }),
+            Object.freeze({
+                label: "Rescue Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_IDLE",
+                    "RESCUE_INITIALIZE",
+                    "RESCUE_ATTAIN_ALT",
+                    "RESCUE_PITCH_FORWARD",
+                    "RESCUE_ROTATE",
+                    "RESCUE_FLY_HOME",
+                    "RESCUE_DESCENT",
+                    "RESCUE_LANDING",
+                    "RESCUE_EMERG_DESCENT",
+                    "RESCUE_DO_NOTHING",
+                ]),
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:689"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "LIDAR_TF",
+        index: 0,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Distance",
+                unit: "cm",
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:178"]),
+            }),
+            Object.freeze({
+                label: "Distance",
+                unit: "m",
+                scale: 0.001,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:228"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "LIDAR_TF",
+        index: 1,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Signal Strength",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:179"]),
+            }),
+            Object.freeze({
+                label: "Confidence",
+                unit: "%",
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:229"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "LIDAR_TF",
+        index: 2,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Frame Byte 4",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:180"]),
+            }),
+            Object.freeze({
+                label: "Optical Flow X",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:230"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "LIDAR_TF",
+        index: 3,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Frame Byte 5",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:181"]),
+            }),
+            Object.freeze({
+                label: "Optical Flow Y",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:231"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "LIDAR_TF",
+        index: 4,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Checksum Error Count",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_lidartf.c:259"]),
+            }),
+            Object.freeze({
+                label: "Laser Valid Status",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:232"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "RTH",
+        index: 5,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Target Step Scale",
+                unit: "%",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:275"]),
+            }),
+            Object.freeze({
+                label: "Seconds With Low Satellite Count",
+                unit: "s",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:344"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "RX_FRSKY_SPI",
+        index: 0,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Data Error Count",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/cc2500_frsky_d.c:186"]),
+            }),
+            Object.freeze({
+                label: "Loop Time",
+                unit: "us",
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/cc2500_redpine.c:485"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "RX_FRSKY_SPI",
+        index: 1,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Missing Packets",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/cc2500_frsky_x.c:512"]),
+            }),
+            Object.freeze({
+                label: "Bind Offset Min, Else RSSI Byte",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze([
+                    "src/main/rx/cc2500_redpine.c:277",
+                    "src/main/rx/cc2500_redpine.c:299",
+                    "src/main/rx/cc2500_redpine.c:304",
+                    "src/main/rx/cc2500_redpine.c:345",
+                    "src/main/rx/cc2500_redpine.c:486",
+                ]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "RX_FRSKY_SPI",
+        index: 2,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Packet Errors",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze(["src/main/rx/cc2500_frsky_x.c:440"]),
+            }),
+            Object.freeze({
+                label: "Bind Offset Max, Else Missing Packets",
+                unit: null,
+                scale: 1,
+                sites: Object.freeze([
+                    "src/main/rx/cc2500_redpine.c:310",
+                    "src/main/rx/cc2500_redpine.c:330",
+                    "src/main/rx/cc2500_redpine.c:492",
+                    "src/main/rx/cc2500_redpine.c:520",
+                ]),
+            }),
+        ]),
+    }),
+]);

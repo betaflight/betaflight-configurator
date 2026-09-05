@@ -8,7 +8,13 @@ import { getDebugModes } from "../../src/js/utils/debugModes.js";
 // instead of failing loudly. These tests pin the curves down instead.
 const LOGGED_RANGE = { min: -123, max: 456 };
 
-function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}) {
+// A real log records the debug fields the firmware wrote, and the annotated axes
+// ask which of them are present before putting a group of them on one axis. The
+// default says all eight were recorded, all with the same range, so grouping a
+// field with its neighbours cannot change what any existing case here asserts.
+const ALL_DEBUG_FIELDS = Object.fromEntries(Array.from({ length: 8 }, (_, index) => [`debug[${index}]`, LOGGED_RANGE]));
+
+function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}, loggedFields = ALL_DEBUG_FIELDS) {
     return {
         getSysConfig: () => ({
             apiVersion,
@@ -19,7 +25,8 @@ function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}) {
             motor_poles: 14,
             ...sysConfigOverrides,
         }),
-        getMinMaxForFieldDuringAllTime: () => ({ ...LOGGED_RANGE }),
+        getMinMaxForFieldDuringAllTime: (field) => ({ ...(loggedFields[field] ?? LOGGED_RANGE) }),
+        getMainFieldIndexByName: (name) => (loggedFields[name] === undefined ? undefined : 0),
         rcCommandRawToDegreesPerSecond: (value, axis) => value * (axis + 2) * 0.5,
         // The debug field unit conversions reach back into the flight log for hardware scaling.
         // Without these the conversion throws and the catch quietly hands back the fallback curve.
@@ -31,10 +38,13 @@ function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}) {
     };
 }
 
-function curveFor(apiVersion, debugModeName, fieldName, sysConfigOverrides) {
+function curveFor(apiVersion, debugModeName, fieldName, sysConfigOverrides, loggedFields) {
     const debugMode = getDebugModes(apiVersion).indexOf(debugModeName);
     expect(debugMode, `${debugModeName} is not a debug mode on API ${apiVersion}`).toBeGreaterThan(-1);
-    return GraphConfig.getDefaultCurveForField(flightLogFor(apiVersion, debugMode, sysConfigOverrides), fieldName);
+    return GraphConfig.getDefaultCurveForField(
+        flightLogFor(apiVersion, debugMode, sysConfigOverrides, loggedFields),
+        fieldName,
+    );
 }
 
 function rangeFor(...args) {
@@ -58,7 +68,9 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[1]")).toEqual({ min: 0, max: 100 });
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[4]")).toEqual({ min: 0, max: 2000 });
         expect(rangeFor("1.49.0", "BATTERY", "debug[0]")).toEqual({ min: 0, max: 4096 });
-        expect(rangeFor("1.49.0", "BATTERY", "debug[2]")).toEqual({ min: 0, max: 26 });
+        // debug[2] is a 0-100 goodness percentage, not a voltage: the firmware
+        // annotation gives it its own axis instead of the mode's volts default.
+        expect(rangeFor("1.49.0", "BATTERY", "debug[2]")).toEqual({ min: 0, max: 100 });
         // MAG_CALIB has no entry beyond debug[7], so debug[8] auto-scales to the logged range.
         expect(rangeFor("1.49.0", "MAG_CALIB", "debug[8]")).toEqual(LOGGED_RANGE);
         expect(rangeFor("1.49.0", "GPS_CONNECTION", "debug[2]")).toEqual({ min: -200, max: 200 });
@@ -121,6 +133,29 @@ describe("blackbox debug mode curves", () => {
         for (const debugModeName of ["AUTOPILOT_ALTITUDE", "AUTOPILOT_PID", "AUTOPILOT_STOP", "POSITION_NAV"]) {
             expect(rangeFor("1.48.0", debugModeName, "debug[0]"), debugModeName).toEqual(LOGGED_RANGE);
         }
+    });
+
+    it("puts the fields sharing an annotated unit on one axis", () => {
+        // ESC_SENSOR_TMP has no DEBUG_MODE_CURVES entry, so from API 1.49 the
+        // firmware annotation is what decides: the four ESC temperatures share a
+        // unit, so they share an axis and one hot motor stays readable against
+        // the others instead of each graph being scaled to its own spread.
+        const temperatures = {
+            "debug[0]": { min: -5, max: 10 },
+            "debug[1]": { min: -20, max: 30 },
+            "debug[2]": { min: -1, max: 4 },
+            "debug[3]": { min: -2, max: 8 },
+        };
+        expect(rangeFor("1.49.0", "ESC_SENSOR_TMP", "debug[0]", undefined, temperatures)).toEqual({
+            min: -20,
+            max: 30,
+        });
+
+        // A log that recorded only one of the group has nothing to share an axis
+        // with, so the field falls back to its own range.
+        expect(
+            rangeFor("1.49.0", "ESC_SENSOR_TMP", "debug[0]", undefined, { "debug[0]": { min: -5, max: 10 } }),
+        ).toEqual({ min: -5, max: 10 });
     });
 
     it("returns a usable curve for every debug field of every debug mode", () => {
