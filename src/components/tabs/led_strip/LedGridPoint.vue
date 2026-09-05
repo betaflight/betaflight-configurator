@@ -108,7 +108,7 @@ const colorStyle = computed(() => {
 <style scoped>
 /* Base gPoint styles */
 .gPoint {
-    float: left;
+    float: inline-start;
     border: solid 1px var(--surface-500);
     width: 23px;
     height: 23px;
@@ -218,7 +218,7 @@ const colorStyle = computed(() => {
     text-align: center;
     font-size: 12px;
     display: block;
-    margin-left: -1px;
+    margin-inline-start: -1px;
     margin-top: -21px;
     width: 24px;
     height: 24px;
@@ -244,34 +244,34 @@ const colorStyle = computed(() => {
 
 .indicators .north {
     top: -9px;
-    left: 5px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+    inset-inline-start: 5px;
+    border-inline-start: 7px solid transparent;
+    border-inline-end: 7px solid transparent;
     border-bottom: 7px solid rgba(0, 0, 0, 0.8);
 }
 
 .indicators .south {
     bottom: -8px;
-    left: 5px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+    inset-inline-start: 5px;
+    border-inline-start: 7px solid transparent;
+    border-inline-end: 7px solid transparent;
     border-top: 7px solid rgba(0, 0, 0, 0.8);
 }
 
 .indicators .east {
     bottom: 7px;
-    right: -9px;
+    inset-inline-end: -9px;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
-    border-left: 7px solid rgba(0, 0, 0, 0.8);
+    border-inline-start: 7px solid rgba(0, 0, 0, 0.8);
 }
 
 .indicators .west {
     bottom: 7px;
-    left: -9px;
+    inset-inline-start: -9px;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
-    border-right: 7px solid rgba(0, 0, 0, 0.8);
+    border-inline-end: 7px solid rgba(0, 0, 0, 0.8);
 }
 
 .indicators .up {
@@ -279,7 +279,7 @@ const colorStyle = computed(() => {
     width: auto;
     height: auto;
     top: 0px;
-    left: 2px;
+    inset-inline-start: 2px;
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
@@ -289,7 +289,7 @@ const colorStyle = computed(() => {
     width: auto;
     height: auto;
     bottom: 17px;
-    right: 10px;
+    inset-inline-end: 10px;
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
@@ -321,16 +321,16 @@ const colorStyle = computed(() => {
 
 /* Overlay indicators */
 .gPoint.function-w .overlay-w {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(1px at 8px 50%, red 0%, red 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
     margin-top: -30px;
-    margin-left: -9px;
+    margin-inline-start: -9px;
 }
 
 .gPoint.function-v .overlay-v {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -341,11 +341,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -6px;
-    margin-left: 4px;
+    margin-inline-start: 4px;
 }
 
 .gPoint.function-i .overlay-i {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -356,11 +356,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -30px;
-    margin-left: 16px;
+    margin-inline-start: 16px;
 }
 
 .gPoint.function-t .overlay-t {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -371,11 +371,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -6px;
-    margin-left: -9px;
+    margin-inline-start: -9px;
 }
 
 .gPoint.function-o .overlay-o {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -386,11 +386,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -6px;
-    margin-left: 16px;
+    margin-inline-start: 16px;
 }
 
 .gPoint.function-b .overlay-b {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -401,11 +401,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -18px;
-    margin-left: -9px;
+    margin-inline-start: -9px;
 }
 
 .gPoint.function-y .overlay-y {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -416,11 +416,11 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -30px;
-    margin-left: 4px;
+    margin-inline-start: 4px;
 }
 
 .gPoint.function-s .overlay-s {
-    float: left;
+    float: inline-start;
     height: 6px;
     width: 16px;
     background-image: radial-gradient(
@@ -431,7 +431,7 @@ const colorStyle = computed(() => {
         rgba(0, 0, 0, 0) 4px
     );
     margin-top: -6px;
-    margin-left: 16px;
+    margin-inline-start: 16px;
 }
 
 /* Color overlay for color function */
@@ -440,11 +440,11 @@ const colorStyle = computed(() => {
 .gPoint.function-b .overlay-color,
 .gPoint.function-u .overlay-color,
 .gPoint .overlay-color {
-    float: left;
+    float: inline-start;
     height: 15px;
     width: 15px;
     margin-top: -23px;
-    margin-left: 4px;
+    margin-inline-start: 4px;
     border-radius: 4px;
     display: block;
 }

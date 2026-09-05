@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
 /* The mobile top bar paints above the viewer, so keep the toolbar clear of it. */
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
     .blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
-        top: calc(3rem + env(safe-area-inset-top, 0px));
+        top: calc(3rem + var(--bf-inset-top));
     }
 }
 </style>

@@ -4232,10 +4232,6 @@
     "osdButtonSaved": {
         "message": "Opgeslagen"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Waarschuwing:<\/span> Uw VTX is niet geconfigureerd of wordt niet ondersteund. U kunt de VTX-waarden daardoor hier niet wijzigen. Dit is alleen mogelijk als uw vluchtcontroller is aangesloten op uw VTX met behulp van een protocol zoals Tramp of SmartAudio. En deze correct is geconfigureerd in het tabblad $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Waarschuwing:<\/span> U moet de VTX Tabel eerst configureren en daarna opslaan alvorens u gebruik kan maken van de $t(vtxSelectedMode.message) velden.",
         "description": "Message to show when the VTX is not supported in the VTX tab"

@@ -2355,7 +2355,7 @@ onMounted(() => {
         .instruments-right {
             position: absolute;
             bottom: 1rem;
-            right: 1rem;
+            inset-inline-end: 1rem;
             display: flex;
             flex-direction: row;
             gap: 0.5rem;
@@ -2366,7 +2366,7 @@ onMounted(() => {
     .attitude-overlay {
         position: absolute;
         top: 0.75rem;
-        left: 0.75rem;
+        inset-inline-start: 0.75rem;
         font-size: 0.8rem;
         color: var(--surface-950);
 
@@ -2385,7 +2385,7 @@ onMounted(() => {
     .yaw-reset-btn {
         position: absolute;
         top: 0.75rem;
-        right: 0.75rem;
+        inset-inline-end: 0.75rem;
     }
 
     .align-detect-inline {
@@ -2431,7 +2431,7 @@ onMounted(() => {
     .mag-viz-mode-selector {
         position: absolute;
         top: 6px;
-        left: 6px;
+        inset-inline-start: 6px;
         z-index: 10;
         display: flex;
         gap: 2px;
@@ -2480,7 +2480,7 @@ onMounted(() => {
     .mag-cal-stats-inline dd {
         margin: 0;
         font-weight: 600;
-        text-align: right;
+        text-align: end;
     }
 
     .status-ok {

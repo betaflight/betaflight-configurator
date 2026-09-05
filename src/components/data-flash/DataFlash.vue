@@ -109,8 +109,8 @@ const usageClass = computed(() => {
     flex-direction: row;
     flex-wrap: nowrap;
     border-radius: 3px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-inline-start: 5px;
+    margin-inline-end: 5px;
 }
 .dataflash-contents_global div {
     height: 5px;
@@ -136,9 +136,9 @@ const usageClass = computed(() => {
 .dataflash-contents_global div span {
     position: absolute;
     top: -18px;
-    left: 0;
+    inset-inline-start: 0;
     width: 120px;
-    text-align: left;
+    text-align: start;
     color: silver;
 }
 
@@ -193,7 +193,7 @@ const usageClass = computed(() => {
 
 .data-flash--compact .noflash_global {
     margin: 0;
-    text-align: left;
+    text-align: start;
     color: var(--text);
 }
 </style>

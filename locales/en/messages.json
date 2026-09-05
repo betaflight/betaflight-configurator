@@ -76,6 +76,10 @@
         "message": "Disconnect (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Disconnect ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Disconnect (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -279,6 +283,10 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ar": {
+        "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+        "description": "Don't translate!!!"
+    },
     "language_ca": {
         "message": "Catal\u00e0",
         "description": "Don't translate!!!"
@@ -335,7 +343,7 @@
         "message": "Portugu\u00EAs",
         "description": "Don't translate!!!"
     },
-    "language_pt_BR": {
+    "language_pt-BR": {
         "message": "Portugu\u00EAs Brasileiro",
         "description": "Don't translate!!!"
     },
@@ -355,11 +363,11 @@
         "message": "O'zbekcha",
         "description": "Don't translate!!!"
     },
-    "language_zh_CN": {
+    "language_zh-CN": {
         "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
-    "language_zh_TW": {
+    "language_zh-TW": {
         "message": "\u7e41\u9ad4\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
@@ -546,7 +554,28 @@
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
+    "autotuneCrossover": { "message": "Gain Crossover" },
     "autotunePhaseMargin": { "message": "Phase Margin" },
+    "autotuneTargetCrossover": { "message": "Crossover Limit" },
+    "autotuneMaxPhaseMargin": { "message": "Max Phase Margin" },
+    "autotunePredictedSensitivity": { "message": "Predicted Peak Sens." },
+    "autotuneLoopDelay": { "message": "Loop Delay" },
+    "autotuneTargetMargin": { "message": "Tuning target" },
+    "autotuneMarginAggressive": { "message": "Aggressive" },
+    "autotuneMarginNormal": { "message": "Normal" },
+    "autotuneMarginConservative": { "message": "Conservative" },
+    "autotuneTargetUnreachable": {
+        "message": "$1: this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: the measurement asks for a $2× gain change, but a single pass is limited to $3×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: peak sensitivity, not phase margin, set the gain here. The loop passes close to −1 above crossover, so the recommendation stops short of the margin target."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: no gain within one pass keeps peak sensitivity inside the robustness bound. The value proposed is the best available rather than a safe one — treat it as a starting point and re-measure."
+    },
     "autotuneResonantPeak": { "message": "Resonant Peak" },
     "autotuneCoherence": { "message": "Coherence" },
     "autotuneParameter": { "message": "Parameter" },
@@ -966,6 +995,14 @@
     "statusbar_connection_time": {
         "message": "Connection:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Show status details",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Hide status details",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
@@ -2321,6 +2358,102 @@
     },
     "portsReadOnlyHelp": {
         "message": "<strong>Note:</strong> this firmware assigns serial ports on each feature's own tab, so this view is read only.  It shows which port every feature currently uses; change an assignment from the tab that owns the feature."
+    },
+    "portsTilesHelp": {
+        "message": "This firmware assigns serial ports on each feature's own tab.  Each tile below shows what is attached to the board and which feature every port currently serves."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "This firmware does not report its peripherals inventory yet."
+    },
+    "portsSectionSerial": {
+        "message": "Serial ports"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Sensors"
+    },
+    "portsTileUnassigned": {
+        "message": "Unassigned"
+    },
+    "portsTileConfigure": {
+        "message": "Configure"
+    },
+    "portsTileCanNode": {
+        "message": "Node"
+    },
+    "portsClaimActiveHelp": {
+        "message": "The port is active for this feature"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Assigned but not active — it lost a port conflict or a reboot is pending"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inactive — enable the SOFTSERIAL feature on the Configuration tab"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inactive — no pins are assigned to this port"
+    },
+    "portsInactiveReason": {
+        "message": "Inactive — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inactive"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Serial Receiver"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox logging"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC telemetry"
+    },
+    "portsClaimRcdevice": {
+        "message": "Camera (RunCam device)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Video transmitter"
+    },
+    "portsClaimRangefinder": {
+        "message": "Rangefinder"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optical flow"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD custom text"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetry"
+    },
+    "portsSensorGyro": {
+        "message": "Gyro"
+    },
+    "portsSensorAcc": {
+        "message": "Accelerometer"
+    },
+    "portsSensorBaro": {
+        "message": "Barometer"
+    },
+    "portsSensorMag": {
+        "message": "Magnetometer"
+    },
+    "portsSensorNotDetected": {
+        "message": "Configured but not detected"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">required</span>.  Serial port configurations of firmware &lt; 1.8.0 is not supported."
@@ -7684,12 +7817,15 @@
     "osdButtonSaved": {
         "message": "Saved"
     },
+    "osdPitotAirSpeed": {
+        "message": "Airspeed"
+    },
     "vtxHelp": {
         "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attention:</span> Your VTX is not configured or not supported. So you can't modify the VTX values from here. This will only be possible if the flight controller is attached to the VTX using some protocol like Tramp or SmartAudio and is correctly configured in the $t(tabPorts.message) tab if needed.",
+        "message": "<span class=\"message-negative\">Attention:</span> No VTX is answering yet. Pick the protocol the VTX speaks and the UART it is wired to below, then save; the remaining settings appear once the device responds.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7831,6 +7967,9 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Frequency at which the Pit Mode changes when enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX Device"
     },
     "vtxProtocol": {
         "message": "Protocol"
