@@ -36,15 +36,22 @@
                 :label="$t('sensorsSonarSelect')"
                 @update:model-value="onCheckboxChange"
             />
+            <USwitch
+                v-model="checkboxes[5]"
+                :disabled="!hasPitot"
+                size="sm"
+                :label="$t('sensorsPitotSelect')"
+                @update:model-value="onCheckboxChange"
+            />
             <div class="flex items-center gap-2">
                 <USwitch
-                    v-model="checkboxes[5]"
+                    v-model="checkboxes[6]"
                     :disabled="!hasDebug"
                     size="sm"
                     :label="$t('sensorsDebugSelect')"
                     @update:model-value="onCheckboxChange"
                 />
-                <UInput v-show="checkboxes[5]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
+                <UInput v-show="checkboxes[6]" :model-value="debugModeName" size="xs" disabled class="w-40 font-mono" />
             </div>
 
             <div class="flex items-center gap-2 ml-auto text-[10px] [&_[data-slot=base]]:text-[10px]!">
@@ -75,7 +82,7 @@
             @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
         />
 
-        <div v-show="checkboxes[5]" class="flex flex-col gap-2.5">
+        <div v-show="checkboxes[6]" class="flex flex-col gap-2.5">
             <SensorGraph
                 v-for="i in debugColumns"
                 :key="i"
@@ -111,6 +118,7 @@ import {
     GYRO_SCALE_OPTIONS,
     ACCEL_SCALE_OPTIONS,
     MAG_SCALE_OPTIONS,
+    PITOT_SCALE_OPTIONS,
     DEBUG_SCALE_OPTIONS,
     REFRESH_RATE_OPTIONS,
 } from "./constants";
@@ -135,6 +143,7 @@ const {
     addMagSample,
     addAltitudeSample,
     addSonarSample,
+    addPitotSample,
     addDebugSample,
     incrementDebugCounter,
     updateScales: updateGraphScales,
@@ -149,6 +158,7 @@ const accelDisplay = reactive({ x: "0", y: "0", z: "0" });
 const magDisplay = reactive({ x: "0", y: "0", z: "0" });
 const altitudeDisplay = ref("0");
 const sonarDisplay = ref("0");
+const pitotDisplay = ref("0");
 const debugDisplay = ref(new Array(8).fill("0"));
 
 const sensorConfigs = [
@@ -191,6 +201,14 @@ const sensorConfigs = [
         hasScale: false,
         getDisplayValues: () => [sonarDisplay.value],
     },
+    {
+        type: "pitot",
+        checkboxIndex: 5,
+        titleKey: "sensorsPitotTitle",
+        hasScale: true,
+        scaleOptions: PITOT_SCALE_OPTIONS,
+        getDisplayValues: () => [pitotDisplay.value],
+    },
 ];
 
 // Sensor availability
@@ -204,6 +222,7 @@ const hasAltitude = computed(
         (have_sensor(fcStore.config.activeSensors, "baro") || have_sensor(fcStore.config.activeSensors, "gps")),
 );
 const hasSonar = computed(() => isFcBoard.value && have_sensor(fcStore.config.activeSensors, "sonar"));
+const hasPitot = computed(() => isFcBoard.value && have_sensor(fcStore.config.activeSensors, "pitot"));
 
 const hasDebug = computed(() => fcStore.pidAdvancedConfig.debugMode !== 0);
 const debugModeName = computed(() => debugStore.modes[fcStore.pidAdvancedConfig.debugMode] ?? "DISABLED");
@@ -268,6 +287,17 @@ function initializeTimers() {
 
     if (checkboxes.value[5]) {
         addInterval(
+            "pitot_pull",
+            () => {
+                MSP.send_message(MSPCodes.MSP_PITOT, false, false, update_pitot_graphs);
+            },
+            rates.value.pitot,
+            true,
+        );
+    }
+
+    if (checkboxes.value[6]) {
+        addInterval(
             "debug_pull",
             () => {
                 MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
@@ -317,6 +347,12 @@ function update_altitude_graph() {
 function update_sonar_graphs() {
     addSonarSample([fcStore.sensorData.sonar]);
     sonarDisplay.value = fcStore.sensorData.sonar.toFixed(2);
+    updateGraphs();
+}
+
+function update_pitot_graphs() {
+    addPitotSample([fcStore.sensorData.pitot.airspeed]);
+    pitotDisplay.value = fcStore.sensorData.pitot.airspeed;
     updateGraphs();
 }
 

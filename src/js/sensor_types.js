@@ -1,7 +1,7 @@
 import semver from "semver";
 import FC from "./fc";
 import MSP from "./msp";
-import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 // Map firmware sensor type names to configurator names
@@ -22,6 +22,7 @@ export async function fetchSensorNames() {
         mag: [],
         sonar: [],
         opticalflow: [],
+        pitot: [],
     };
 
     try {
@@ -195,7 +196,7 @@ export async function sensorTypes() {
             await fetchSensorNames();
         }
 
-        return {
+        const sensorTypeList = {
             acc: {
                 name: "Accelerometer",
                 elements: FC.SENSOR_NAMES.acc || [],
@@ -221,6 +222,15 @@ export async function sensorTypes() {
                 elements: FC.SENSOR_NAMES.opticalflow || [],
             },
         };
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+            sensorTypeList.pitot = {
+                name: "Pitot",
+                elements: FC.SENSOR_NAMES.pitot || [],
+            };
+        }
+
+        return sensorTypeList;
     } else {
         return sensorTypesLegacy();
     }
