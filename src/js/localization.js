@@ -63,23 +63,39 @@ const supportedLocales = [
     zh_tw,
 ];
 
+const languagesAvailables = supportedLocales.map((locale) => locale.code);
+
 /**
- * Nuxt UI writes dialects with a hyphen ("pt-BR"); the configurator and Crowdin use an
- * underscore, because eventPage.js used Chrome's localization.
- * @param {{ code: string }} locale a Nuxt UI locale
- * @returns {string} the configurator's code for that locale, e.g. "pt_BR"
+ * Keyed on the lowercased code so lookups can be case-insensitive: browsers are not
+ * consistent about the case of the region subtag, and preferences stored by older
+ * versions predate the move to BCP 47.
  */
-function toLanguageCode(locale) {
-    return locale.code.replaceAll("-", "_");
+const localesByCode = new Map(supportedLocales.map((locale) => [locale.code.toLowerCase(), locale]));
+
+/**
+ * Resolves any incoming language code onto a locale we ship translations for, be it a
+ * BCP 47 tag from the browser, a legacy underscore code from a stored preference, or a
+ * dialect we have no translation for. So "pt-BR", "pt_BR" and "pt-br" all land on the
+ * same locale, and "de-AT" degrades to German rather than to nothing.
+ * @param {unknown} [language] a language code in any of those forms
+ * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object } | undefined} the
+ *     matching locale, or undefined when the input is not a code we recognise
+ */
+function findLocale(language) {
+    // Not just a falsiness check: a stored preference is whatever was serialised into
+    // localStorage, and a non-string would throw below rather than fall back.
+    if (typeof language !== "string" || language === "") {
+        return undefined;
+    }
+
+    const normalized = language.replaceAll("_", "-").toLowerCase();
+
+    return localesByCode.get(normalized) ?? localesByCode.get(normalized.split("-")[0]);
 }
 
-const languagesAvailables = supportedLocales.map(toLanguageCode);
-
-const uiLocalesByLanguage = new Map(supportedLocales.map((locale) => [toLanguageCode(locale), locale]));
-
 const languageFallback = {
-    pt: ["pt_BR", "en"],
-    pt_BR: ["pt", "en"],
+    pt: ["pt-BR", "en"],
+    "pt-BR": ["pt", "en"],
     default: ["en"],
 };
 
@@ -91,6 +107,11 @@ i18n.init = function (cb) {
         i18next.use(HttpBackend).init(
             {
                 lng: userLanguage,
+                // BCP 47 codes let i18next strip the region on its own, which would have it
+                // request a `locales/zh/` that does not exist. `getValidLocale()` has already
+                // resolved the code to one we ship, so only that one needs loading; the
+                // pt/pt-BR pairing is handled by `fallbackLng` below.
+                load: "currentOnly",
                 debug: true,
                 ns: ["messages"],
                 defaultNS: ["messages"],
@@ -192,26 +213,19 @@ i18n.isRtl = function (locale) {
 };
 
 /**
- * Resolves a language code onto the Nuxt UI locale that `UApp` needs. Falls back to the
- * base language and then to English, so an unknown code degrades to LTR English rather
- * than leaving Nuxt UI with no locale at all.
- * @param {string} [language] language code, e.g. "ar", "pt_BR" or "zh-CN"; defaults to the active one
+ * Resolves a language code onto the Nuxt UI locale that `UApp` needs. An unknown code
+ * degrades to LTR English rather than leaving Nuxt UI with no locale at all.
+ * @param {string} [language] language code, e.g. "ar" or "zh-CN"; defaults to the active one
  * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object }} a Nuxt UI locale
  */
 i18n.getUiLocale = function (language = i18n.getCurrentLocale()) {
-    if (!language) {
-        return en;
-    }
-
-    const normalized = language.replaceAll("-", "_");
-
-    return uiLocalesByLanguage.get(normalized) ?? uiLocalesByLanguage.get(normalized.split("_")[0]) ?? en;
+    return findLocale(language) ?? en;
 };
 
 i18n.updatePageDirection = function (targetDocument = document) {
     const html = targetDocument.documentElement;
     html.setAttribute("dir", i18n.isRtl() ? "rtl" : "ltr");
-    html.setAttribute("lang", i18n.getCurrentLocale().replaceAll("_", "-"));
+    html.setAttribute("lang", i18n.getCurrentLocale());
 };
 
 /**
@@ -254,40 +268,28 @@ function getStoredUserLocale(cb) {
     let userLanguage = "DEFAULT";
     const result = getConfig("userLanguageSelect");
     if (result.userLanguageSelect) {
-        userLanguage = result.userLanguageSelect;
+        // A preference stored before the move to BCP 47 reads "zh_CN" where the pickers now
+        // offer "zh-CN", so rewrite it rather than leave the picker with no selection. An
+        // unrecognised value, "DEFAULT" included, means follow the browser.
+        userLanguage = findLocale(result.userLanguageSelect)?.code ?? "DEFAULT";
     }
     i18n.selectedLanguage = userLanguage;
-    userLanguage = getValidLocale(userLanguage);
-    cb(userLanguage);
+    cb(getValidLocale(userLanguage));
 }
 
+/**
+ * @param {string} userLocale a language code we ship, or "DEFAULT" to follow the browser
+ * @returns {string} the language code to translate into
+ */
 function getValidLocale(userLocale) {
-    let validUserLocale = userLocale;
-    if (validUserLocale === "DEFAULT") {
-        validUserLocale = window.navigator.userLanguage || window.navigator.language;
-        console.log(`Detected locale ${validUserLocale}`);
-
-        // The i18next can fallback automatically to the dialect, but needs to be used with hyphen and
-        // we use underscore because the eventPage.js uses Chrome localization that needs underscore.
-        // If at some moment we get rid of the Chrome localization we can remove all of this
-        validUserLocale = validUserLocale.replace("-", "_");
-        // Locale not found
-        if (languagesAvailables.indexOf(validUserLocale) === -1) {
-            // Is a composite locale?
-            const underscorePosition = validUserLocale.indexOf("_");
-            if (underscorePosition !== -1) {
-                validUserLocale = validUserLocale.substring(0, underscorePosition);
-                // Locale dialect fallback not found
-                if (languagesAvailables.indexOf(validUserLocale) === -1) {
-                    validUserLocale = "en"; // Fallback language
-                }
-            } else {
-                validUserLocale = "en";
-            }
-        }
+    if (userLocale !== "DEFAULT") {
+        return userLocale;
     }
 
-    return validUserLocale;
+    const detectedLocale = window.navigator.userLanguage || window.navigator.language;
+    console.log(`Detected locale ${detectedLocale}`);
+
+    return findLocale(detectedLocale)?.code ?? "en";
 }
 
 i18n.addResources = function (bundle) {
