@@ -2076,6 +2076,9 @@
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
     },
+    "configurationMotorKv": {
+        "message": "Motor KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"
     },
@@ -10180,5 +10183,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "Last fetched"
+    },
+    "pidTuningWingSettings": {
+        "message": "Wing Settings"
+    },
+    "pidTuningWingSterm": {
+        "message": "S term"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Mode"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "SPA mode for each axis"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Center"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "RPY setpoint at which PIDs are reduced to 50% (setpoint PID attenuation)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Width"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Width of smooth transition around spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "OFF"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I FREEZE"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I FREEZE"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Speed type"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Air speed estimation model type"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Basic"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Advanced"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Curve type"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "Hyperbolic is usually for wings. Classic is for multirotors and uses standard TPA."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Classic"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Hyperbolic"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Basic speed setup"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Advanced speed setup"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Delay"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Delay of air speed estimation from throttle in milliseconds (time of reaching 50% of terminal speed in horizontal flight at full throttle"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Gravity"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Gravity effect on air speed estimation in percents"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "Prop pitch"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "Prop pitch in inches * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Craft mass"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Craft mass in grams"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Drag K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "Craft drag coefficient"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Thrust"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "Stationary thrust in grams"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Max battery voltage"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Theoretical max voltage *100. Used for throttle scailing with voltage for air speed estimation"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Motor KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "Motor KV. Change this value on the Motors tab."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Pitch offset"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Pitch offset in degrees*10 for craft speed estimation"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "Hyperbolic curve settings"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Stall speed, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Speed at which PIDs should be maxed out (stall speed), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "Stall speed PIDs"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "PIDs multiplier at stall speed"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "Full speed PIDs"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "PIDs multiplier at full speed"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "How fast PIDs do transition as speed grows"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Hyperbolic curves chart"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Miscellaneous settings"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Yaw type"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Type of yaw (rudder or differential thrust)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Rudder"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Diff. Thrust"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Pitch offset"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Pitch offset for angle modes in decidegrees. Positive values tilting the wing down"
     }
 }

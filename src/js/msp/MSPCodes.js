@@ -128,6 +128,8 @@ const MSPCodes = {
     MSP_GPS_SV_INFO: 164,
     MSP_ATTITUDE_QUATERNION: 167,
 
+    MSP_WING: 169,
+
     MSP_DISPLAYPORT: 182,
 
     MSP_COPY_PROFILE: 183,
@@ -141,6 +143,7 @@ const MSPCodes = {
     MSP_SET_RAW_RC: 200,
     MSP_SET_RAW_GPS: 201, // Not used
     MSP_SET_PID: 202,
+    MSP_SET_WING: 203,
     //MSP_SET_BOX:                    203, // DEPRECATED
     MSP_SET_RC_TUNING: 204,
     MSP_ACC_CALIBRATION: 205,

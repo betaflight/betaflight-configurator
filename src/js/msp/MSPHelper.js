@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -557,6 +563,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.MOTOR_CONFIG.motor_poles = data.readU8();
                     FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
+
+                    // Introduced in 1.49
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.MOTOR_CONFIG.motor_kv = data.readU16();
+                    }
                     break;
                 case MSPCodes.MSP_COMPASS_CONFIG:
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -1796,6 +1807,42 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     break;
 
+                case MSPCodes.MSP_WING:
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.s_term[i] = data.readU8();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_center[i] = data.readU16();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_width[i] = data.readU16();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_mode[i] = data.readU8();
+                    }
+
+                    FC.WING_CONFIG.tpa_curve_type = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_expo = data.read8();
+                    FC.WING_CONFIG.tpa_speed_type = data.readU8();
+                    FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.read16();
+                    FC.WING_CONFIG.yaw_type = data.readU8();
+                    FC.WING_CONFIG.angle_pitch_offset = data.read16();
+
+                    break;
+
+                case MSPCodes.MSP_SET_WING:
+                    break;
+
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
@@ -1988,6 +2035,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             // Introduced in 1.42
             buffer.push8(FC.MOTOR_CONFIG.motor_poles);
             buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push16(FC.MOTOR_CONFIG.motor_kv);
+            }
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer
@@ -2517,6 +2569,39 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM:
             MspHelper.writeDtermFilterSliderSettings(buffer);
+
+            break;
+
+        case MSPCodes.MSP_SET_WING:
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(FC.WING_CONFIG.s_term[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(FC.WING_CONFIG.spa_center[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(FC.WING_CONFIG.spa_width[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(FC.WING_CONFIG.spa_mode[i]);
+            }
+            buffer
+                .push8(FC.WING_CONFIG.tpa_curve_type)
+                .push8(FC.WING_CONFIG.tpa_curve_stall_throttle)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr0)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr100)
+                .push8(FC.WING_CONFIG.tpa_curve_expo)
+                .push8(FC.WING_CONFIG.tpa_speed_type)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_delay)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_gravity)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_prop_pitch)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_mass)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_drag_k)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_thrust)
+                .push16(FC.WING_CONFIG.tpa_speed_max_voltage)
+                .push16(FC.WING_CONFIG.tpa_speed_pitch_offset)
+                .push8(FC.WING_CONFIG.yaw_type)
+                .push16(FC.WING_CONFIG.angle_pitch_offset);
 
             break;
 

@@ -213,6 +213,18 @@
                                     class="w-16"
                                 />
                             </SettingRow>
+                            <SettingRow v-if="isMotorKvSupported" :label="$t('configurationMotorKv')" fullWidth>
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_kv"
+                                    :min="1"
+                                    :max="40000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-16"
+                                />
+                            </SettingRow>
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
@@ -573,8 +585,7 @@ import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { useBuildOptions } from "@/composables/useBuildOptions";
-
-const API_VERSION_1_47 = "1.47.0";
+import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
@@ -1705,6 +1716,10 @@ const getTelemetryHtml = (index) => {
 
     return html;
 };
+
+const isMotorKvSupported = computed(
+    () => hasBuildOption("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
+);
 
 onMounted(() => {
     // Polling is handled by useMotorDataPolling()
