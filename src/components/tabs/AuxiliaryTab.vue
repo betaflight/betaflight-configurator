@@ -479,26 +479,20 @@ export default defineComponent({
         const { saveToEeprom } = useReboot();
 
         const saveModes = () =>
-            runSave(
-                async () => {
-                    const { modeRanges, modeRangesExtra } = buildModeRangePayload(
-                        modes,
-                        requiredModeRangeCount.value || 0,
-                    );
+            runSave(async () => {
+                const { modeRanges, modeRangesExtra } = buildModeRangePayload(modes, requiredModeRangeCount.value || 0);
 
-                    const savedSnapshot = takeSnapshot();
+                const savedSnapshot = takeSnapshot();
 
-                    fcStore.modeRanges = modeRanges;
-                    fcStore.modeRangesExtra = modeRangesExtra;
+                fcStore.modeRanges = modeRanges;
+                fcStore.modeRangesExtra = modeRangesExtra;
 
-                    await mspHelper.sendModeRanges();
-                    await saveToEeprom();
+                await mspHelper.sendModeRanges();
+                await saveToEeprom();
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    markClean(savedSnapshot);
-                },
-                { onError: (error) => console.error("Failed to save auxiliary modes", error) },
-            );
+                // Only after a successful persist: refresh the dirty baseline.
+                markClean(savedSnapshot);
+            });
 
         const loadData = async () => {
             try {
