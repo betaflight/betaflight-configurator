@@ -598,7 +598,7 @@ const {
     changed: escSensorPortChanged,
     load: loadEscSensorPort,
     write: writeEscSensorPort,
-} = useFeaturePort({ setting: "esc_sensor_uart", functionName: "ESC_SENSOR" });
+} = useFeaturePort({ setting: "esc_sensor_uart" });
 
 // Warning dialog
 const settingsChangedOpen = ref(false);

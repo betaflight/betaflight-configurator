@@ -448,7 +448,6 @@ export default defineComponent({
             write: writeBlackboxPort,
         } = useFeaturePort({
             setting: "blackbox_uart",
-            functionName: "BLACKBOX",
             baud: { setting: "blackbox_baud" },
         });
 

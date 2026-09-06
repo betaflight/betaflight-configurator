@@ -731,19 +731,7 @@ const {
     selectedIdentifier: rxPortIdentifier,
     load: loadRxPort,
     write: writeRxPort,
-} = useFeaturePort({ setting: "rx_uart", functionName: "RX_SERIAL" });
-
-// Every protocol a telemetry instance may claim in the synthesised mask. Which one it sets depends
-// on its configured protocol, and the three instances collapse into the same bits, so none of them
-// can be read back from the mask.
-const TELEMETRY_FUNCTIONS = [
-    "TELEMETRY_FRSKY",
-    "TELEMETRY_HOTT",
-    "TELEMETRY_LTM",
-    "TELEMETRY_SMARTPORT",
-    "TELEMETRY_MAVLINK",
-    "TELEMETRY_IBUS",
-];
+} = useFeaturePort({ setting: "rx_uart" });
 
 // MAX_TELEMETRY_PROVIDERS is a compile-time constant that never reaches the app, so each instance
 // is probed and only the ones this build has report themselves available. reactive() rather than a
@@ -752,7 +740,6 @@ const telemetryPorts = [1, 2, 3].map((instance) =>
     reactive(
         useFeaturePort({
             setting: `telemetry_${instance}_uart`,
-            functionName: TELEMETRY_FUNCTIONS,
             baud: { setting: `telemetry_${instance}_baud` },
             protocol: { setting: `telemetry_${instance}_protocol` },
         }),
@@ -782,7 +769,7 @@ const {
     selectedIdentifier: rcdevicePortIdentifier,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
-} = useFeaturePort({ setting: "rcdevice_uart", functionName: "RUNCAM_DEVICE_CONTROL" });
+} = useFeaturePort({ setting: "rcdevice_uart" });
 
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */

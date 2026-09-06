@@ -621,7 +621,6 @@ const {
     protocolOptions: osdProtocolOptions,
 } = useFeaturePort({
     setting: "osd_uart",
-    functionName: "FRSKY_OSD",
     protocol: { setting: "osd_displayport_device" },
 });
 
@@ -637,7 +636,6 @@ const {
     write: writeCustomTextPort,
 } = useFeaturePort({
     setting: "osd_custom_text_uart",
-    functionName: "OSD_CUSTOM_TEXT",
     baud: { setting: "osd_custom_text_baud" },
 });
 
