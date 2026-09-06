@@ -10,7 +10,7 @@ Standards for AI-assisted contributions to Betaflight Configurator. Adapted from
 ## Project context
 - **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 7, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
-- **TypeScript**: incremental adoption. New files as `.ts` or `<script setup lang="ts">`; JSDoc on touched legacy JS. Full strict-mode rollout is a future phase.
+- **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being rewritten.
 - **Naming**: `PascalCase` for both component names and `.vue` file names.
 
 ## Enforcement ledger
@@ -44,9 +44,9 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 
 | Rule | Status | Enforcement target |
 |---|---|---|
-| New files as `.ts` or `<script setup lang="ts">` | 🚧 | `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
+| New files as `.ts` or `<script setup lang="ts">` | 🔧 | `vue-tsc` checks what is TS; `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
 | Touched legacy JS gets JSDoc types | 🚧 | `eslint-plugin-jsdoc` on changed files (Phase 1) |
-| Strict mode in converted folders | 🚧 | `tsconfig` `"strict": true` via per-folder overrides (Phase 2) |
+| Strict mode in converted folders | 🔧 | `strict: true` applies to every `.ts` / `lang="ts"` file now; `checkJs` per folder is the Phase 2 ratchet |
 
 ### Always-on
 

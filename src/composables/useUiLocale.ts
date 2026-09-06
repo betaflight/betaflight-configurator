@@ -1,6 +1,6 @@
 import { computed, type ComputedRef } from "vue";
 import { useTranslation } from "i18next-vue";
-import type { Locale, Messages } from "@nuxt/ui/runtime/types/locale";
+import type { Locale, Messages } from "@nuxt/ui/runtime/types/locale.js";
 import { i18n } from "@/js/localization.js";
 
 /**

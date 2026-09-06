@@ -2,6 +2,7 @@ import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
+import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default [
@@ -11,7 +12,7 @@ export default [
         ignores: ["src/js/webworkers/**", "dist/**", "src/dist/**"],
     },
     {
-        files: ["**/*.js", "**/*.vue"],
+        files: ["**/*.js", "**/*.ts", "**/*.vue"],
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",
@@ -73,9 +74,27 @@ export default [
         },
     },
     {
+        // The compiler owns undefined names and types in TypeScript; ESLint's no-undef would only
+        // re-report them, and flags type-only names it cannot see.
+        files: ["**/*.ts"],
+        languageOptions: {
+            parser: tseslint.parser,
+        },
+        plugins: {
+            "@typescript-eslint": tseslint.plugin,
+        },
+        rules: {
+            ...tseslint.configs.recommended.at(-1).rules,
+            "no-undef": "off",
+        },
+    },
+    {
         files: ["**/*.vue"],
         languageOptions: {
             parser: vueParser,
+            parserOptions: {
+                parser: tseslint.parser,
+            },
         },
         processor: "vue/vue",
     },
