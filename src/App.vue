@@ -1,5 +1,5 @@
 <template>
-    <UApp :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
+    <UApp :locale="uiLocale" :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
             <div id="background" v-if="isMobileSidebarOpen" aria-hidden="true" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
@@ -66,6 +66,7 @@ import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 import GUI from "./js/gui.js";
 import { i18n } from "./js/localization";
+import { useUiLocale } from "./composables/useUiLocale";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
@@ -107,6 +108,10 @@ const FC = computed(() => currentVm()?.FC ?? FCModule);
 const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
+
+// Nuxt UI needs its own locale to pick up the text direction and translate its built-in
+// strings; without it every element renders LTR and in English (see issue #5482).
+const uiLocale = useUiLocale();
 
 const activeTabInstance = ref(null);
 
