@@ -276,6 +276,7 @@ const FC = {
             magnetometer: [0, 0, 0],
             altitude: 0,
             sonar: 0,
+            pitot: null,
             kinematics: [0.0, 0.0, 0.0],
             quaternion: null,
             debug: [0, 0, 0, 0, 0, 0, 0, 0],
@@ -542,6 +543,7 @@ const FC = {
             mag_hardware: 0,
             sonar_hardware: 0,
             opticalflow_hardware: 0,
+            pitot_hardware: 0,
         };
 
         this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
@@ -563,6 +565,7 @@ const FC = {
             mag: [],
             sonar: [],
             opticalflow: [],
+            pitot: [],
         };
 
         this.RX_CONFIG = {

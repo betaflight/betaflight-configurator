@@ -4232,6 +4232,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4252,6 +4255,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Airspeed - cm/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -8179,6 +8185,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometer"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetometer"
