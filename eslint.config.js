@@ -73,13 +73,27 @@ export default [
             },
         },
     },
-    ...tseslint.configs.recommended.map((config) => ({ ...config, files: ["**/*.ts"] })),
+    ...tseslint.configs.recommended.map((config) => ({ ...config, files: ["**/*.ts", "**/*.vue"] })),
     {
         // The compiler owns undefined names and types in TypeScript; ESLint's no-undef would only
-        // re-report them, and flags type-only names it cannot see.
+        // re-report them, and flags type-only names it cannot see. A .vue file may still be plain
+        // JavaScript, where a missing import only surfaces at runtime, so it keeps the rule.
         files: ["**/*.ts"],
         rules: {
             "no-undef": "off",
+        },
+    },
+    {
+        // unused-imports/no-unused-vars already covers both, with the project's `_` convention.
+        files: ["**/*.ts", "**/*.vue"],
+        rules: {
+            "@typescript-eslint/no-unused-vars": "off",
+        },
+    },
+    {
+        files: ["**/*.vue"],
+        rules: {
+            "no-undef": "error",
         },
     },
     {

@@ -8,7 +8,7 @@ applyTo: "**/*.vue, **/*.ts, **/*.js, **/*.scss, **/*.less"
 Standards for AI-assisted contributions to Betaflight Configurator. Adapted from the [awesome-copilot Vue 3 instructions](https://github.com/github/awesome-copilot/blob/main/instructions/vuejs3.instructions.md), with project-specific adjustments and an enforcement ledger that tracks which rules are tooled and which remain guidance.
 
 ## Project context
-- **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 7, Tauri 2 (desktop), Capacitor 8 (Android).
+- **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
 - **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being rewritten.
 - **Naming**: `PascalCase` for both component names and `.vue` file names.

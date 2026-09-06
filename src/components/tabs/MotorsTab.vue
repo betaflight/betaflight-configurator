@@ -768,7 +768,7 @@ const minSliderValue = computed(() => {
 
 const zeroThrottleValue = computed(() => {
     if (isFeatureEnabled("3D")) {
-        let neutral = fcStore.motor3dConfig.neutral;
+        const neutral = fcStore.motor3dConfig.neutral;
         // Sanity check from legacy
         return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
     }
@@ -974,7 +974,7 @@ let graphHelpers = null;
 let graphData = [];
 let samples = 0;
 let maxRead = [0, 0, 0];
-let accelOffset = [0, 0, 0];
+const accelOffset = [0, 0, 0];
 let accelOffsetEstablished = false;
 let imuPollingIntervalId = null;
 let powerPollingIntervalId = null;
