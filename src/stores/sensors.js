@@ -4,7 +4,7 @@ import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 
 export const useSensorsStore = defineStore("sensors", () => {
     // Sensor visibility checkboxes
-    const checkboxes = ref([false, false, false, false, false, false]);
+    const checkboxes = ref([false, false, false, false, false, false, false]);
 
     // Global refresh rate (ms). Setting it applies the same rate to every graph
     // so they stay in sync; individual graphs can still be tuned afterwards.
@@ -17,6 +17,7 @@ export const useSensorsStore = defineStore("sensors", () => {
         mag: 50,
         altitude: 100,
         sonar: 100,
+        pitot: 100,
         debug: 500,
     });
 
@@ -25,6 +26,7 @@ export const useSensorsStore = defineStore("sensors", () => {
         gyro: 2000,
         accel: 2,
         mag: 2000,
+        pitot: 100,
     });
 
     // Per-column debug scales (0 = Auto / dynamic). Indexed by debug column.
@@ -37,6 +39,10 @@ export const useSensorsStore = defineStore("sensors", () => {
         const config = getConfig("sensors_tab");
         if (config) {
             if (config.checkboxes) {
+                // Saved checkbox array migration from previous version
+                if (config.checkboxes.length === 6) {
+                    config.checkboxes.splice(5, 0, false);
+                }
                 checkboxes.value = config.checkboxes;
             }
             if (config.rates) {
