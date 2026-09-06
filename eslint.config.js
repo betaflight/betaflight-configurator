@@ -73,18 +73,12 @@ export default [
             },
         },
     },
+    ...tseslint.configs.recommended.map((config) => ({ ...config, files: ["**/*.ts"] })),
     {
         // The compiler owns undefined names and types in TypeScript; ESLint's no-undef would only
         // re-report them, and flags type-only names it cannot see.
         files: ["**/*.ts"],
-        languageOptions: {
-            parser: tseslint.parser,
-        },
-        plugins: {
-            "@typescript-eslint": tseslint.plugin,
-        },
         rules: {
-            ...tseslint.configs.recommended.at(-1).rules,
             "no-undef": "off",
         },
     },
