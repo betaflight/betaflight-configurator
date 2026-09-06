@@ -53,6 +53,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Rule | Status | Enforcement target |
 |---|---|---|
 | `.vue` filenames and component names: `PascalCase` | 🔧 | `eslint-plugin-unicorn/filename-case` (Phase 0) |
+| New source files start with the GPL header in `LICENSE_HEADER` (same text as the firmware) | 🚧 | `eslint-plugin-header` on files added after this row landed (Phase 0) |
 | Don't edit `dist/`, `node_modules/`, generated output | 🚧 | Pre-commit hook by path (Phase 0) |
 | i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 🚧 | Pre-commit hook rejecting non-`en` locale edits (Phase 0) |
 | Tests for non-trivial behaviour (Vitest, `npm run test`) | 📐 | Coverage gate is a proxy; review call |
