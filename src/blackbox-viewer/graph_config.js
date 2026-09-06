@@ -795,6 +795,22 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                     max: 90,
                 },
             };
+        } else if (fieldName === "pitot[0]") {
+            return {
+                power: 1,
+                MinMax: {
+                    min: 0,
+                    max: 100,
+                },
+            };
+        } else if (fieldName === "pitot[1]") {
+            return {
+                power: 1,
+                MinMax: {
+                    min: 0,
+                    max: 1000,
+                },
+            };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
             const curve = debugModeCurve(getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode]);
             if (curve) {

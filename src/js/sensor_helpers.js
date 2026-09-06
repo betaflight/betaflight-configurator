@@ -16,6 +16,8 @@ export function have_sensor(sensors_detected, sensor_code) {
             return bit_check(sensors_detected, 5);
         case "opticalflow":
             return bit_check(sensors_detected, 6);
+        case "pitot":
+            return bit_check(sensors_detected, 7);
     }
     return false;
 }
