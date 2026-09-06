@@ -11,8 +11,8 @@ import { parsePeripherals } from "./usePeripherals";
  * config does - a connect or disconnect resets both together - and is read once per connection
  * rather than once per select: a tab loads its feature ports in turn, and five identical CLI
  * round trips for one answer is what that would cost. A port assignment written from the app
- * drops it; anything else that moves a port (the CLI tab, a preset) ends in a reboot and a fresh
- * connection.
+ * refreshes it, since a save need not reboot and the tab keeps showing the same lists; anything
+ * else that moves a port (the CLI tab, a preset) ends in a reboot and a fresh connection.
  *
  * `undefined` is not read yet, `null` is a build without the command - a caller can then say
  * nothing about a port rather than call it free.
@@ -41,15 +41,19 @@ async function readClaims() {
 }
 
 /**
+ * @param {object} [options]
+ * @param {boolean} [options.refresh] ask the FC again even if the answer is already held
  * @returns {Promise<Record<string, string[]>|null>}
  */
-export function loadPortClaims() {
+export function loadPortClaims({ refresh = false } = {}) {
     const config = FC.SERIAL_CONFIG;
     if (!config) {
         return Promise.resolve(null);
     }
 
-    if (config.claims !== undefined) {
+    if (refresh) {
+        delete config.claims;
+    } else if (config.claims !== undefined) {
         return Promise.resolve(config.claims);
     }
 
@@ -70,10 +74,4 @@ export function loadPortClaims() {
         });
 
     return pending;
-}
-
-export function invalidatePortClaims() {
-    if (FC.SERIAL_CONFIG) {
-        delete FC.SERIAL_CONFIG.claims;
-    }
 }

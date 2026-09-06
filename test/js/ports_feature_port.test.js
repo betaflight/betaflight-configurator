@@ -238,13 +238,16 @@ describe("useFeaturePort", () => {
         expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimRx)");
     });
 
-    it("asks again once a port has been reassigned", async () => {
+    it("refreshes the labels as soon as a port has been reassigned, save or no save", async () => {
         await port.load();
+        replies.peripherals = ["serial VCP: msp_1*", "serial UART1: rx"];
         port.selectedIdentifier.value = 51;
+
         await port.write();
-        await port.load();
 
         expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(2);
+        expect(port.options.value.find((option) => option.value === 51).label).toBe("UART1 (portsClaimRx)");
+        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsPortFree)");
     });
 
     it("asks again on a new connection", async () => {
@@ -426,7 +429,10 @@ describe("useFeaturePort", () => {
         await expect(port.write()).rejects.toThrow(/ERROR/);
 
         // the port has to have gone out first, or the pending state below proves nothing
-        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_uart = UART1", "set gps_baud = 115200"]);
+        expect(sentCommands().filter((command) => command !== "peripherals")).toEqual([
+            "set gps_uart = UART1",
+            "set gps_baud = 115200",
+        ]);
         expect(port.changed.value).toBe(true);
     });
 
@@ -456,7 +462,7 @@ describe("useFeaturePort", () => {
 
         await port.write();
 
-        const sent = cliSend.mock.calls.map((call) => call[0]);
+        const sent = sentCommands().filter((command) => command !== "peripherals");
         expect(sent).toEqual(["set telemetry_1_protocol = MAVLINK", "set telemetry_1_uart = UART1"]);
     });
 

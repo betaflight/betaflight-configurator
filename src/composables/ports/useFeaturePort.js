@@ -20,7 +20,7 @@ import {
 } from "./portNames";
 import { unreportedSoftSerialIdentifiers } from "./softSerial";
 import { describeClaim } from "./portClaims";
-import { invalidatePortClaims, loadPortClaims } from "./usePortClaims";
+import { loadPortClaims } from "./usePortClaims";
 
 /**
  * Every port is labelled with what holds it, the caller's own claim included, or marked free.
@@ -254,7 +254,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
         if (portChanged.value) {
             await sendSetting(formatPortSetCommand(setting, selectedIdentifier.value));
             assignedIdentifier.value = selectedIdentifier.value;
-            invalidatePortClaims();
+            await loadPortClaims({ refresh: true });
         }
 
         if (baudChanged.value) {
