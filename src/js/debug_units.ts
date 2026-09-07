@@ -61,6 +61,16 @@ export const DEBUG_UNITS: Readonly<Record<string, DebugUnit>> = Object.freeze({
     "m/s": { suffix: "m/s" },
     "cm/s": { suffix: "m/s", factor: 0.01 },
     "cm/s2": { suffix: "m/s²", factor: 0.01 },
+    /*
+     * Left as stored, unlike the cm family above. These carry the Kalman filter's
+     * measurement variances - 160..1600 cm2 and 200..2000 cm2/s2 - so metres would
+     * read 0.016..0.16 and stop matching the firmware constants behind them
+     * (`R_GPS_POS_BASE 160.0f // cm^2`), which is what someone reading the trace
+     * is comparing against. A squared unit converts by the square of the factor,
+     * so the cm convention costs two orders of magnitude here, not one.
+     */
+    cm2: { suffix: "cm²" },
+    "cm2/s2": { suffix: "cm²/s²" },
     g: { suffix: "g" },
     "g/s": { suffix: "g/s" },
     V: { suffix: "V" },

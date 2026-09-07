@@ -119,6 +119,12 @@ describe("firmware debug field annotations", () => {
                 gyroADC: "°/s",
                 accADC: "g",
                 eRPM: "rpm",
+                // Deliberately not the cm convention: a squared unit converts by
+                // the square of the factor, so metres would put the estimator's
+                // variances two orders of magnitude away from the firmware
+                // constants they come from. See src/js/debug_units.ts.
+                cm2: "cm²",
+                "cm2/s2": "cm²/s²",
             });
         });
 
@@ -294,6 +300,14 @@ describe("firmware debug field annotations", () => {
 
         it("passes an unscaled field through unchanged", () => {
             expect(convertDebugFieldValue("BATTERY", "debug[4]", true, 1, ctx(ANNOTATED))).toBe(1);
+        });
+
+        it("leaves a variance in the unit firmware stores it in", () => {
+            // POSITION_EST[6] is R_GPS_POS in cm2, 160..1600 in the firmware
+            // constants. Converting it to m2 would read 0.016..0.16 and no longer
+            // match what the estimator's source says.
+            expect(convertDebugFieldValue("POSITION_EST", "debug[6]", true, 160, ctx(ANNOTATED))).toBe(160);
+            expect(decodeDebugFieldToFriendly("POSITION_EST", "debug[6]", 160, ctx(ANNOTATED))).toBe("160 cm²");
         });
     });
 

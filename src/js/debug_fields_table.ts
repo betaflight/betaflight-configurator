@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  7863ff631d 2026-09-07  (494 annotated fields)
+ *   API 1.49.0  d58d69e057 2026-09-07  (494 annotated fields)
  */
 
 /**
@@ -657,8 +657,8 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             3: Object.freeze({ label: "Flow Velocity East", unit: "cm/s", scale: 1 }),
             4: Object.freeze({ label: "Flow Velocity North", unit: "cm/s", scale: 1 }),
             5: Object.freeze({ label: "Linear Acceleration (dbg-axis)", unit: "cm/s2", scale: 1 }),
-            6: Object.freeze({ label: "GPS Position Measurement Noise", unit: null, scale: 1 }),
-            7: Object.freeze({ label: "GPS Velocity Measurement Noise", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "GPS Position Measurement Variance", unit: "cm2", scale: 1 }),
+            7: Object.freeze({ label: "GPS Velocity Measurement Variance", unit: "cm2/s2", scale: 1 }),
         }),
         POSITION_NAV: Object.freeze({
             0: Object.freeze({ label: "Target Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
