@@ -13,6 +13,7 @@ import {
     checkSerialSupport,
     checkUsbSupport,
     isAndroid,
+    isTauri,
     isTauriAndroid,
 } from "./utils/checkCompatibility.js";
 
@@ -39,6 +40,16 @@ const dfuProtocol = createDfuProtocol();
  * @param {Array<{path: string}>} b
  * @returns {boolean} true when both lists hold the same paths in the same order
  */
+function deviceTypeForPath(path) {
+    if (path.startsWith("bluetooth")) {
+        return "bluetooth";
+    }
+    if (path.startsWith("tcp://")) {
+        return "tcp";
+    }
+    return "serial";
+}
+
 function samePaths(a, b) {
     return a.length === b.length && a.every((device, index) => device.path === b[index].path);
 }
@@ -49,6 +60,7 @@ const DeviceHandler = new (function () {
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
+    this.currentTcpPorts = [];
 
     // "Reconnect in progress" is the connection state being in REBOOTING/RECONNECTING,
     // read in selectActivePort() via getConnectionState().isReconnecting; the
@@ -67,12 +79,14 @@ const DeviceHandler = new (function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
+    this.tcpAvailable = false;
 
     checkCompatibility();
 
     this.showBluetoothOption = checkBluetoothSupport();
     this.showSerialOption = checkSerialSupport();
     this.showUsbOption = checkUsbSupport();
+    this.showTcpOption = isTauri();
 
     console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
     console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
@@ -98,6 +112,8 @@ DeviceHandler.initialize = function () {
 
         if (detail?.path?.startsWith("bluetooth")) {
             this.handleDeviceAdded(detail, "bluetooth");
+        } else if (detail?.path?.startsWith("tcp://")) {
+            this.handleDeviceAdded(detail, "tcp");
         } else {
             this.handleDeviceAdded(detail, "serial");
         }
@@ -122,6 +138,7 @@ DeviceHandler.refreshAllDeviceLists = async function () {
         this.updateDeviceList("serial"),
         this.updateDeviceList("bluetooth"),
         this.updateDeviceList("usb"),
+        this.updateDeviceList("tcp"),
     ]).then(() => {
         this.selectActivePort();
     });
@@ -158,9 +175,7 @@ DeviceHandler.removedSerialDevice = function (device) {
     }
 
     // Update the appropriate ports list based on the device type
-    const updatePromise = devicePath.startsWith("bluetooth")
-        ? this.updateDeviceList("bluetooth")
-        : this.updateDeviceList("serial");
+    const updatePromise = this.updateDeviceList(deviceTypeForPath(devicePath));
 
     const wasSelectedPort = this.devicePicker.selectedDevice === devicePath;
 
@@ -294,8 +309,8 @@ DeviceHandler.isKnownDevicePath = function (path) {
         return false;
     }
 
-    return [this.currentSerialPorts, this.currentBluetoothPorts, this.currentUsbPorts].some((devices) =>
-        devices.some((device) => device.path === path),
+    return [this.currentSerialPorts, this.currentBluetoothPorts, this.currentUsbPorts, this.currentTcpPorts].some(
+        (devices) => devices.some((device) => device.path === path),
     );
 };
 
@@ -311,7 +326,8 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
     if (serial.connected) {
         selectedDevice =
             this.currentSerialPorts.find((device) => device.path === serial.connectionId) ||
-            this.currentBluetoothPorts.find((device) => device.path === serial.connectionId);
+            this.currentBluetoothPorts.find((device) => device.path === serial.connectionId) ||
+            this.currentTcpPorts.find((device) => device.path === serial.connectionId);
     }
 
     // Return the same that is connected to DFU
@@ -424,8 +440,7 @@ DeviceHandler.handleDeviceAdded = function (device, deviceType) {
     console.log(`${this.logHead} ${deviceType} device added:`, device);
 
     // Update the appropriate device list
-    const updatePromise =
-        deviceType === "bluetooth" ? this.updateDeviceList("bluetooth") : this.updateDeviceList("serial");
+    const updatePromise = this.updateDeviceList(deviceType);
 
     updatePromise.then(() => {
         const selectedDevice = this.selectActivePort(device);
@@ -461,6 +476,11 @@ DeviceHandler.updateDeviceList = async function (deviceType) {
                     ports = await serial.getDevices("serial");
                 }
                 break;
+            case "tcp":
+                if (this.showTcpOption) {
+                    ports = await serial.getDevices("tcp");
+                }
+                break;
             default:
                 console.warn(`${this.logHead} Unknown device type: ${deviceType}`);
                 return [];
@@ -491,6 +511,12 @@ DeviceHandler.updateDeviceList = async function (deviceType) {
                 label = "serial";
                 this.portAvailable = orderedPorts.length > 0;
                 this.currentSerialPorts = [...orderedPorts];
+                break;
+            case "tcp":
+                previousPorts = this.currentTcpPorts;
+                label = "bridge";
+                this.tcpAvailable = orderedPorts.length > 0;
+                this.currentTcpPorts = [...orderedPorts];
                 break;
             default:
                 console.warn(`${this.logHead} Unknown device type for updating ports: ${deviceType}`);

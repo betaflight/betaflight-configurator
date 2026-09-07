@@ -15,6 +15,7 @@ export const REFRESH_RATE_OPTIONS = [
 export const GYRO_SCALE_OPTIONS = [1, 2, 3, 4, 5, 10, 25, 50, 100, 200, 300, 400, 500, 1000, 2000];
 export const ACCEL_SCALE_OPTIONS = [0.5, 1, 2];
 export const MAG_SCALE_OPTIONS = [100, 200, 500, 1000, 2000, 5000, 10000];
+export const PITOT_SCALE_OPTIONS = [10, 100, 1000, 5000];
 
 // Debug scale options. A value of 0 means "Auto": the Y-axis follows the data
 // range (the 2025.12-maintenance behaviour). Any other value fixes the axis to

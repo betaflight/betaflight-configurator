@@ -153,6 +153,8 @@ function transmitChannels() {
 }
 
 onMounted(() => {
+    i18n?.updatePageDirection(document);
+
     document.title = t("receiverButtonSticks");
     globalThis.addEventListener("mousemove", onMouseMove);
     globalThis.addEventListener("mouseup", onMouseUp);
@@ -266,7 +268,7 @@ body {
     background-color: var(--primary-500);
     width: 20px;
     height: 20px;
-    margin-inline-start: -10px;
+    margin-left: -10px;
     margin-top: -10px;
     display: block;
     border-radius: 100%;

@@ -15,7 +15,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const invoke = vi.hoisted(() => vi.fn());
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke }));
+/** Every Channel the transport constructed, newest last. */
+const channels = vi.hoisted(() => []);
+
+vi.mock("@tauri-apps/api/core", () => ({
+    invoke,
+    Channel: class {
+        constructor() {
+            this.onmessage = () => {};
+            channels.push(this);
+        }
+    },
+}));
 
 vi.mock("../../src/js/protocols/devices", () => ({
     serialDevices: [{ vendorId: 0x0483, productId: 0x5740 }],
@@ -58,6 +69,28 @@ function connectedSerial() {
 
 const writeCalls = () => invoke.mock.calls.filter(([cmd]) => cmd === "plugin:serialplugin|write_binary");
 
+const commands = () => invoke.mock.calls.map(([cmd]) => cmd);
+const argsFor = (cmd) => invoke.mock.calls.find(([name]) => name === cmd)?.[1];
+
+/** The most recently constructed Channel — the one the call under test just handed the plugin. */
+const lastChannel = () => channels.at(-1);
+
+/**
+ * Resolve every command as if PORT were present and openable. `watch` and
+ * `watch_ports` resolve to channel ids, which the transport stores to unwatch.
+ */
+function mockPresentPort() {
+    invoke.mockImplementation((cmd) => {
+        if (cmd === "plugin:serialplugin|available_ports") {
+            return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
+        }
+        if (cmd === "plugin:serialplugin|watch" || cmd === "plugin:serialplugin|watch_ports") {
+            return Promise.resolve(1);
+        }
+        return Promise.resolve(undefined);
+    });
+}
+
 describe("TauriSerial write lock timeout", () => {
     // Fatal-error paths fire disconnect() un-awaited; its teardown settles a
     // real 50 ms timer before logging. Track the promises here so afterEach
@@ -70,8 +103,9 @@ describe("TauriSerial write lock timeout", () => {
     beforeEach(() => {
         pendingDisconnects = new Set();
         invoke.mockReset();
-        // _bootstrap() would start the 1 s device monitor asynchronously,
-        // leaking an interval into later tests; stub it out at the source.
+        channels.length = 0;
+        // _bootstrap() would subscribe to the port monitor asynchronously,
+        // leaking a subscription into later tests; stub it out at the source.
         vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "warn").mockImplementation(() => {});
         vi.spyOn(console, "error").mockImplementation(() => {});
@@ -195,6 +229,7 @@ describe("TauriSerial port enumeration", () => {
 
     beforeEach(() => {
         invoke.mockReset();
+        channels.length = 0;
         vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "log").mockImplementation(() => {});
     });
@@ -249,6 +284,7 @@ describe("TauriSerial port enumeration", () => {
 describe("TauriSerial connect", () => {
     beforeEach(() => {
         invoke.mockReset();
+        channels.length = 0;
         vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
         vi.spyOn(console, "log").mockImplementation(() => {});
     });
@@ -276,68 +312,311 @@ describe("TauriSerial connect", () => {
     });
 
     it("opens a path that is still present", async () => {
-        invoke.mockImplementation((cmd) => {
-            if (cmd === "plugin:serialplugin|available_ports") {
-                return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
-            }
-            if (cmd === "plugin:serialplugin|read_binary") {
-                return Promise.resolve([]);
-            }
-            return Promise.resolve(undefined);
-        });
+        mockPresentPort();
         const serial = new TauriSerial();
 
         const connected = await serial.connect(PORT, { baudRate: 115200 });
-        serial.reading = false;
 
         expect(connected).toBe(true);
-        expect(invoke.mock.calls.map(([cmd]) => cmd)).toContain("plugin:serialplugin|open");
+        expect(commands()).toContain("plugin:serialplugin|open");
     });
 
     it("does not call the inert set_timeout command", async () => {
         // set_timeout is a no-op on 3.x: the RX hub owns the fd and every
         // command re-applies its own timeout to the guard before each op.
-        invoke.mockImplementation((cmd) => {
-            if (cmd === "plugin:serialplugin|read_binary") {
-                return Promise.resolve([]);
-            }
-            if (cmd === "plugin:serialplugin|available_ports") {
-                return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
-            }
-            return Promise.resolve(undefined);
-        });
+        mockPresentPort();
         const serial = new TauriSerial();
 
         const connected = await serial.connect(PORT, { baudRate: 115200 });
-        serial.reading = false;
 
         expect(connected).toBe(true);
-        expect(invoke.mock.calls.map(([cmd]) => cmd)).not.toContain("plugin:serialplugin|set_timeout");
+        expect(commands()).not.toContain("plugin:serialplugin|set_timeout");
     });
 
-    it("polls for more bytes than the plugin's RX chunk can hold", async () => {
-        // The plugin's RX hub reads the port into a 1024-byte buffer and hands
-        // the whole chunk to the pending read slot, which keeps only what fits
-        // in the requested size and drops the remainder instead of buffering
-        // it. A request below one hub chunk therefore truncates every burst
-        // above it — MSP_BOXNAMES (~500 bytes) fails its CRC and the stream
-        // never resynchronises.
+    it("subscribes to the byte stream rather than polling for it", async () => {
+        mockPresentPort();
+        const serial = new TauriSerial();
+
+        await serial.connect(PORT, { baudRate: 115200 });
+
+        expect(commands()).not.toContain("plugin:serialplugin|read_binary");
+        expect(argsFor("plugin:serialplugin|watch")).toMatchObject({
+            path: PORT,
+            // raw keeps MSP out of the plugin's AT line router, which would
+            // decode the bytes as UTF-8 and trim them; a zero flush interval
+            // stops the hub holding a frame back for its batching window.
+            options: { raw: true, serialDataFlushIntervalMs: 0 },
+        });
+    });
+
+    it("fails the connection when the byte stream will not start", async () => {
+        // The port would otherwise be left open with nothing reading it, and the
+        // caller told the connection succeeded.
         invoke.mockImplementation((cmd) => {
-            if (cmd === "plugin:serialplugin|read_binary") {
-                return Promise.resolve([]);
-            }
             if (cmd === "plugin:serialplugin|available_ports") {
                 return Promise.resolve({ [PORT]: { type: "Usb", vid: "1155", pid: "22336" } });
+            }
+            if (cmd === "plugin:serialplugin|watch") {
+                return Promise.reject("watch already active");
+            }
+            return Promise.resolve(1);
+        });
+        const serial = new TauriSerial();
+        const outcomes = [];
+        serial.addEventListener("connect", (event) => outcomes.push(event.detail));
+
+        const connected = await serial.connect(PORT, { baudRate: 115200 });
+
+        expect(connected).toBe(false);
+        expect(outcomes).toEqual([false]);
+        expect(serial.connected).toBe(false);
+        expect(serial.connectionId).toBe(null);
+        expect(commands()).toContain("plugin:serialplugin|close");
+    });
+
+    it("suspends port enumeration for the life of the connection", async () => {
+        // available_ports crosses into Kotlin and queries the USB service on a
+        // single-threaded executor over the same bridge the reads and writes
+        // use. Leaving it running underneath a live session wedged the bridge.
+        mockPresentPort();
+        const serial = new TauriSerial();
+        const stop = vi.spyOn(serial, "stopDeviceMonitoring");
+
+        await serial.connect(PORT, { baudRate: 115200 });
+
+        expect(stop).toHaveBeenCalled();
+    });
+
+    it("resumes port enumeration after disconnecting", async () => {
+        // The snapshot the monitor sends on subscribe is what reports a device
+        // unplugged while the port was open, which the reconnect cycle waits on.
+        mockPresentPort();
+        const serial = new TauriSerial();
+        await serial.connect(PORT, { baudRate: 115200 });
+        // The describe-level stub keeps _bootstrap() from subscribing; from here
+        // the real subscribe path is the behaviour under test.
+        TauriSerial.prototype.startDeviceMonitoring.mockRestore();
+        invoke.mockClear();
+
+        await serial.disconnect();
+
+        expect(commands()).toContain("plugin:serialplugin|watch_ports");
+        expect(serial.portListChannelId).toBe(1);
+    });
+});
+
+describe("TauriSerial receive", () => {
+    beforeEach(() => {
+        invoke.mockReset();
+        channels.length = 0;
+        vi.spyOn(TauriSerial.prototype, "startDeviceMonitoring").mockImplementation(() => {});
+        vi.spyOn(console, "log").mockImplementation(() => {});
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    /** A connected TauriSerial plus the channel the plugin would push events on. */
+    async function watched() {
+        mockPresentPort();
+        const serial = new TauriSerial();
+        await serial.connect(PORT, { baudRate: 115200 });
+        return { serial, channel: lastChannel() };
+    }
+
+    it("dispatches the bytes verbatim", async () => {
+        // The bytes the plugin's text path would have eaten: a NUL, the
+        // whitespace its trim strips, and a pair that is not valid UTF-8.
+        const payload = [0x24, 0x4d, 0x3e, 0x00, 0x09, 0x0d, 0x0a, 0x20, 0xff, 0xfe];
+        const { serial, channel } = await watched();
+        const received = [];
+        serial.addEventListener("receive", (event) => received.push(event.detail));
+
+        channel.onmessage({ kind: "data", path: PORT, data: payload, size: payload.length });
+
+        expect(received).toHaveLength(1);
+        expect([...received[0]]).toEqual(payload);
+    });
+
+    it("counts the bytes it received", async () => {
+        const { serial, channel } = await watched();
+
+        channel.onmessage({ kind: "data", path: PORT, data: [1, 2, 3], size: 3 });
+
+        expect(serial.bytesReceived).toBe(3);
+    });
+
+    it("drops an event that arrives after the port closed", async () => {
+        // A channel still in flight when the port closed would otherwise inject
+        // its bytes into whatever session comes next.
+        const { serial, channel } = await watched();
+        const received = [];
+        serial.addEventListener("receive", (event) => received.push(event.detail));
+        await serial.disconnect();
+
+        channel.onmessage({ kind: "data", path: PORT, data: [1, 2, 3], size: 3 });
+
+        expect(received).toEqual([]);
+    });
+
+    it("tears the connection down on a disconnect event", async () => {
+        const { serial, channel } = await watched();
+
+        channel.onmessage({ kind: "disconnect", path: PORT, reason: "Serial port disconnected" });
+
+        // disconnect() is not awaited from the event handler, so the teardown
+        // lands over the following microtasks.
+        await vi.waitFor(() => expect(commands()).toContain("plugin:serialplugin|close"));
+        expect(serial.connected).toBe(false);
+    });
+
+    it("keeps the connection on a transient read error", async () => {
+        const { serial, channel } = await watched();
+
+        channel.onmessage({ kind: "error", path: PORT, message: "Serial read error: temporary" });
+
+        expect(serial.connected).toBe(true);
+    });
+
+    it("unwatches the stream when disconnecting", async () => {
+        const { serial } = await watched();
+        const channelId = serial.dataChannelId;
+
+        await serial.disconnect();
+
+        expect(argsFor("plugin:serialplugin|unwatch")).toEqual({ channelId });
+        expect(serial.dataChannelId).toBe(null);
+    });
+});
+
+describe("TauriSerial hotplug", () => {
+    const STM32 = { type: "Usb", vid: "1155", pid: "22336" };
+
+    beforeEach(() => {
+        invoke.mockReset();
+        channels.length = 0;
+        vi.spyOn(console, "log").mockImplementation(() => {});
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    /** A TauriSerial subscribed to the port monitor, with the events it emitted. */
+    async function monitored(initialPorts = {}) {
+        invoke.mockImplementation((cmd) =>
+            Promise.resolve(cmd === "plugin:serialplugin|available_ports" ? initialPorts : 7),
+        );
+        const serial = new TauriSerial();
+        await vi.waitFor(() => expect(serial.portListChannelId).toBe(7));
+
+        const events = [];
+        for (const name of ["addedDevice", "removedDevice"]) {
+            serial.addEventListener(name, (event) => events.push([name, event.detail.path]));
+        }
+        return { serial, channel: lastChannel(), events };
+    }
+
+    it("reports a device that appeared", async () => {
+        const { channel, events } = await monitored();
+
+        channel.onmessage({ kind: "added", path: PORT, info: STM32 });
+
+        expect(events).toEqual([["addedDevice", PORT]]);
+    });
+
+    it("reports a device that went away", async () => {
+        const { channel, events } = await monitored({ [PORT]: STM32 });
+
+        channel.onmessage({ kind: "removed", path: PORT });
+
+        expect(events).toEqual([["removedDevice", PORT]]);
+    });
+
+    it("reconciles a snapshot against the ports it knew about", async () => {
+        // The monitor sends a snapshot on every subscribe, and the transport
+        // resubscribes on disconnect. That snapshot is what reports a device
+        // unplugged while the port was open, which the reconnect cycle waits on.
+        const { channel, events } = await monitored({ [PORT]: STM32 });
+
+        channel.onmessage({ kind: "snapshot", ports: {} });
+
+        expect(events).toEqual([["removedDevice", PORT]]);
+    });
+
+    it("stays silent for a device it does not recognise", async () => {
+        const { channel, events } = await monitored();
+
+        channel.onmessage({ kind: "added", path: "/dev/ttyS0", info: { vid: "Unknown", pid: "Unknown" } });
+
+        expect(events).toEqual([]);
+    });
+
+    it("stays silent when a snapshot changes nothing", async () => {
+        const { channel, events } = await monitored({ [PORT]: STM32 });
+
+        channel.onmessage({ kind: "snapshot", ports: { [PORT]: STM32 } });
+
+        expect(events).toEqual([]);
+    });
+
+    it("does not list a port twice when told it was added twice", async () => {
+        const { serial, channel } = await monitored();
+
+        channel.onmessage({ kind: "added", path: PORT, info: STM32 });
+        channel.onmessage({ kind: "added", path: PORT, info: STM32 });
+
+        expect(serial.ports.map((port) => port.path)).toEqual([PORT]);
+    });
+
+    it("drops a port-list event that arrives after the monitor was torn down", async () => {
+        // connect() suspends the monitor. A channel still in flight would
+        // otherwise report a removal underneath the open port, which the
+        // reconnect cycle acts on.
+        const { serial, channel, events } = await monitored({ [PORT]: STM32 });
+
+        await serial.stopDeviceMonitoring();
+        channel.onmessage({ kind: "removed", path: PORT });
+
+        expect(events).toEqual([]);
+        expect(serial.ports.map((port) => port.path)).toEqual([PORT]);
+    });
+
+    it("ignores the previous subscription once the monitor has restarted", async () => {
+        const { serial, channel, events } = await monitored({ [PORT]: STM32 });
+
+        await serial.stopDeviceMonitoring();
+        await serial.startDeviceMonitoring();
+        channel.onmessage({ kind: "snapshot", ports: {} });
+
+        expect(events).toEqual([]);
+        expect(lastChannel()).not.toBe(channel);
+    });
+
+    it("waits for an in-flight subscribe before tearing the monitor down", async () => {
+        // Otherwise the subscribe stores its channel id after the teardown read
+        // it, and the monitor keeps enumerating for the whole connection.
+        let resolveWatch;
+        invoke.mockImplementation((cmd) => {
+            if (cmd === "plugin:serialplugin|watch_ports") {
+                return new Promise((resolve) => {
+                    resolveWatch = resolve;
+                });
             }
             return Promise.resolve(undefined);
         });
         const serial = new TauriSerial();
+        await vi.waitFor(() => expect(resolveWatch).toBeDefined());
 
-        await serial.connect(PORT, { baudRate: 115200 });
-        serial.reading = false;
+        const stopped = serial.stopDeviceMonitoring();
+        resolveWatch(7);
+        await stopped;
 
-        const read = invoke.mock.calls.find(([cmd]) => cmd === "plugin:serialplugin|read_binary");
-        expect(read).toBeDefined();
-        expect(read[1].size).toBeGreaterThan(1024);
+        expect(argsFor("plugin:serialplugin|unwatch_ports")).toEqual({ channelId: 7 });
+        expect(serial.portListChannelId).toBe(null);
     });
 });

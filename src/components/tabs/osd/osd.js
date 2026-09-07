@@ -1475,6 +1475,19 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "POSH RDY",
         },
+        PITOT_AIRSPEED: {
+            name: "PITOT_AIRSPEED",
+            text: "osdPitotAirSpeed",
+            desc: "osdPitotAirSpeed",
+            defaultPosition: -1,
+            draw_order: 675,
+            positionable: true,
+            preview(osdData) {
+                const UNIT_METRIC = OSD.constants.UNIT_TYPES.indexOf("METRIC");
+                const unit = FONT.symbol(osdData.unit_mode === UNIT_METRIC ? SYM.KPH : SYM.MPH);
+                return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
+            },
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1655,6 +1668,10 @@ OSD.chooseFields = function () {
 
         if (hasPositionHold) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
         }
     }
     // Choose statistic fields

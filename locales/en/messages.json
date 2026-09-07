@@ -76,6 +76,10 @@
         "message": "Disconnect (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Disconnect ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Disconnect (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -339,7 +343,7 @@
         "message": "Portugu\u00EAs",
         "description": "Don't translate!!!"
     },
-    "language_pt_BR": {
+    "language_pt-BR": {
         "message": "Portugu\u00EAs Brasileiro",
         "description": "Don't translate!!!"
     },
@@ -351,6 +355,14 @@
         "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
         "description": "Don't translate!!!"
     },
+    "language_sr": {
+        "message": "Srpski (latinica)",
+        "description": "Don't translate!!!"
+    },
+    "language_sr_Cyrl": {
+        "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
+        "description": "Don't translate!!!"
+    },
     "language_uk": {
         "message": "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
         "description": "Don't translate!!!"
@@ -359,11 +371,11 @@
         "message": "O'zbekcha",
         "description": "Don't translate!!!"
     },
-    "language_zh_CN": {
+    "language_zh-CN": {
         "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
-    "language_zh_TW": {
+    "language_zh-TW": {
         "message": "\u7e41\u9ad4\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
@@ -550,7 +562,28 @@
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
     "autotuneBandwidth": { "message": "Bandwidth" },
+    "autotuneCrossover": { "message": "Gain Crossover" },
     "autotunePhaseMargin": { "message": "Phase Margin" },
+    "autotuneTargetCrossover": { "message": "Crossover Limit" },
+    "autotuneMaxPhaseMargin": { "message": "Max Phase Margin" },
+    "autotunePredictedSensitivity": { "message": "Predicted Peak Sens." },
+    "autotuneLoopDelay": { "message": "Loop Delay" },
+    "autotuneTargetMargin": { "message": "Tuning target" },
+    "autotuneMarginAggressive": { "message": "Aggressive" },
+    "autotuneMarginNormal": { "message": "Normal" },
+    "autotuneMarginConservative": { "message": "Conservative" },
+    "autotuneTargetUnreachable": {
+        "message": "$1: this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: the measurement asks for a $2× gain change, but a single pass is limited to $3×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: peak sensitivity, not phase margin, set the gain here. The loop passes close to −1 above crossover, so the recommendation stops short of the margin target."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: no gain within one pass keeps peak sensitivity inside the robustness bound. The value proposed is the best available rather than a safe one — treat it as a starting point and re-measure."
+    },
     "autotuneResonantPeak": { "message": "Resonant Peak" },
     "autotuneCoherence": { "message": "Coherence" },
     "autotuneParameter": { "message": "Parameter" },
@@ -970,6 +1003,14 @@
     "statusbar_connection_time": {
         "message": "Connection:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Show status details",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Hide status details",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
@@ -4202,6 +4243,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4222,6 +4266,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Airspeed - cm/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -7787,6 +7834,9 @@
     "osdButtonSaved": {
         "message": "Saved"
     },
+    "osdPitotAirSpeed": {
+        "message": "Airspeed"
+    },
     "vtxHelp": {
         "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
@@ -8146,6 +8196,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometer"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetometer"

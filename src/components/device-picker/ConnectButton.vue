@@ -129,6 +129,8 @@ export default defineComponent({
         const isVirtualMode = computed(() => connectionStore.virtualMode);
         const connectedTo = computed(() => connectionStore.connectedTo);
 
+        const tcpPorts = computed(() => DeviceHandler.currentTcpPorts);
+
         const disconnectLabel = computed(() => {
             if (isVirtualMode.value) {
                 return i18n.getMessage("disconnectVirtual");
@@ -136,6 +138,10 @@ export default defineComponent({
             const path = connectedTo.value || "";
             if (path.startsWith("bluetooth")) {
                 return i18n.getMessage("disconnectBluetooth");
+            }
+            const bridge = tcpPorts.value.find((d) => d.path === path);
+            if (bridge) {
+                return i18n.getMessage("disconnectBridge", [bridge.displayName]);
             }
             if (/^(tcp|ws|wss):\/\//.test(path)) {
                 return i18n.getMessage("disconnectManual");
@@ -154,7 +160,7 @@ export default defineComponent({
             if (!path || path === "noselection") {
                 return null;
             }
-            const all = [...serialPorts.value, ...usbPorts.value, ...bluetoothPorts.value];
+            const all = [...serialPorts.value, ...usbPorts.value, ...bluetoothPorts.value, ...tcpPorts.value];
             return all.find((d) => d.path === path)?.displayName ?? null;
         });
 
@@ -211,6 +217,7 @@ export default defineComponent({
                 ...portItems(DeviceHandler.showSerialOption ? serialPorts.value : [], "i-lucide-usb"),
                 ...portItems(DeviceHandler.showUsbOption ? usbPorts.value : [], "i-lucide-cpu"),
                 ...portItems(DeviceHandler.showBluetoothOption ? bluetoothPorts.value : [], "i-lucide-bluetooth"),
+                ...portItems(DeviceHandler.showTcpOption ? tcpPorts.value : [], "i-lucide-wifi"),
                 ...(expertMode && DeviceHandler.showVirtualMode ? buildVirtualItems() : []),
                 ...(expertMode && DeviceHandler.showManualMode ? buildManualItems() : []),
             ];
