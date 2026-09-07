@@ -43,12 +43,14 @@
  *     still resolve for logs from firmware that used the old name.
  *
  * Usage:
- *   node scripts/generate-debug-modes.mjs [options]
+ *   npm run generate:debug-modes [-- <options>]
  *
- * No shebang: the npm scripts run this through `node`, and the file is not
- * executable, so it would be decoration - but Vite puts its own import ahead of
- * the first line, which a shebang then fails to parse, and the unit tests import
- * the parsing below.
+ * One entry point, and the options below select what it reads and whether it
+ * writes. The two that come up most:
+ *
+ *   npm run generate:debug-modes -- --pr 15596   regenerate against a firmware
+ *                                                pull request
+ *   npm run generate:debug-modes -- --check      report drift without writing
  *
  *   --repo <path>       Betaflight firmware git checkout. Defaults to
  *                       $BETAFLIGHT_REPO, then to sibling checkouts of this
@@ -59,7 +61,8 @@
  *                       debug annotations arrive that way long before they reach a
  *                       release, so this is how to see what a firmware change does
  *                       to the tables while it is still open, and how to regenerate
- *                       against the one that carries them.
+ *                       against the one that carries them. Written the way GitHub
+ *                       does - 15596, "#15596" or the pull request URL.
  *   --worktree          Read the newest API version from the firmware checkout as
  *                       it sits on disk - uncommitted edits and all - instead of
  *                       from a commit, so a firmware developer can preview the
@@ -76,6 +79,14 @@
  *                       upstream betaflight repository).
  *   --check             Do not write; exit 1 if the committed files are stale.
  *   --allow-rewrite     Permit non-append changes to an existing version.
+ *
+ * A firmware developer previewing their own uncommitted work wants both of the
+ * last two: `npm run generate:debug-modes -- --worktree --allow-rewrite`.
+ *
+ * No shebang: the npm script runs this through `node`, and the file is not
+ * executable, so it would be decoration - but Vite puts its own import ahead of
+ * the first line, which a shebang then fails to parse, and the unit tests import
+ * the parsing below.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -207,6 +218,23 @@ function gitShow(repo, ref, path) {
     } catch {
         throw new Error(`Cannot read ${path} at ${ref} in ${repo}`);
     }
+}
+
+/*
+ * Read a pull request number from however it was written.
+ *
+ * The number normally arrives pasted from GitHub, where it appears as #15596 in
+ * an issue and as a /pull/15596 URL in the browser, so all three forms are
+ * accepted. The result is interpolated into a git refspec, so nothing that is
+ * not a number survives this.
+ */
+function pullRequestNumber(value) {
+    const match = /^(?:#|\S*\/pull\/)?(\d+)\/?$/.exec(value.trim());
+    if (match === null) {
+        throw new Error(`--pr takes a pull request number, got: ${value}`);
+    }
+
+    return match[1];
 }
 
 /*
@@ -1959,13 +1987,10 @@ async function main() {
     const repoUrl = args["source-url"] ?? SOURCE_URL;
 
     if (args.pr !== undefined) {
-        // Interpolated into a git refspec, so accept nothing but a number.
-        if (!/^\d+$/.test(args.pr)) {
-            throw new Error(`--pr takes a pull request number, got: ${args.pr}`);
-        }
-        devRef = pullRequestHead(repo, args.pr, repoUrl);
-        devRefFlag = `--pr ${args.pr}`;
-        console.log(`generate-debug-modes: pull request #${args.pr} is at ${devRef}`);
+        const pr = pullRequestNumber(args.pr);
+        devRef = pullRequestHead(repo, pr, repoUrl);
+        devRefFlag = `--pr ${pr}`;
+        console.log(`generate-debug-modes: pull request #${pr} is at ${devRef}`);
     }
 
     const versions = buildVersionRefs(repo, devRef, minMinor);
@@ -2057,4 +2082,4 @@ if (invokedDirectly) {
     }
 }
 
-export { maskNonCode, parseAnnotation, parseEnumBlock, parseNamedEnums, resolveFieldIndex };
+export { maskNonCode, parseAnnotation, parseEnumBlock, parseNamedEnums, pullRequestNumber, resolveFieldIndex };

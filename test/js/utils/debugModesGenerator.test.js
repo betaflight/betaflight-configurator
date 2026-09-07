@@ -4,6 +4,7 @@ import {
     parseAnnotation,
     parseEnumBlock,
     parseNamedEnums,
+    pullRequestNumber,
     resolveFieldIndex,
 } from "../../../scripts/generate-debug-modes.mjs";
 
@@ -159,5 +160,21 @@ describe("resolveFieldIndex", () => {
         expect(resolveFieldIndex("DEBUG_SBUS_FRAME_FLAGS", constants)).toBe(0);
         expect(resolveFieldIndex("axis", constants)).toBeUndefined();
         expect(resolveFieldIndex("2 * axis + 1", constants)).toBeUndefined();
+    });
+});
+
+describe("pullRequestNumber", () => {
+    it("accepts a pull request written the three ways GitHub writes it", () => {
+        expect(pullRequestNumber("15596")).toBe("15596");
+        expect(pullRequestNumber("#15596")).toBe("15596");
+        expect(pullRequestNumber("https://github.com/betaflight/betaflight/pull/15596")).toBe("15596");
+    });
+
+    it("refuses anything else, since the number lands in a git refspec", () => {
+        // A refspec built from these would fetch something other than the pull
+        // request, or nothing at all.
+        for (const value of ["", "master", "15596 15597", "refs/heads/x", "../../etc", "15596:master"]) {
+            expect(() => pullRequestNumber(value)).toThrow(/pull request number/);
+        }
     });
 });
