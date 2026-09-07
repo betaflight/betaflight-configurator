@@ -22,7 +22,9 @@
                     class="flex-1 sm:flex-none min-w-0 sm:min-w-32 text-xs"
                     v-html="$t('pidTuningGyroFilterSlider')"
                 ></div>
-                <span class="min-w-10 text-center text-sm font-semibold">{{ gyroFilterMultiplier.toFixed(2) }}</span>
+                <span class="min-w-10 text-center text-sm font-semibold">{{
+                    formatSliderValue(gyroFilterMultiplier)
+                }}</span>
                 <div class="flex items-center gap-3 basis-full sm:basis-0 sm:flex-1">
                     <USlider
                         v-model="gyroFilterMultiplier"
@@ -43,7 +45,9 @@
                     class="flex-1 sm:flex-none min-w-0 sm:min-w-32 text-xs"
                     v-html="$t('pidTuningDTermFilterSlider')"
                 ></div>
-                <span class="min-w-10 text-center text-sm font-semibold">{{ dtermFilterMultiplier.toFixed(2) }}</span>
+                <span class="min-w-10 text-center text-sm font-semibold">{{
+                    formatSliderValue(dtermFilterMultiplier)
+                }}</span>
                 <div class="flex items-center gap-3 basis-full sm:basis-0 sm:flex-1">
                     <USlider
                         v-model="dtermFilterMultiplier"
@@ -670,6 +674,10 @@ const dtermSliderEnabled = computed({
 // Filter Sliders
 // Local refs for slider positions — decoupled from FC state so MSP responses
 // writing back to FC.TUNING_SLIDERS don't cause the slider to bounce.
+function formatSliderValue(value) {
+    return Number(value).toFixed(2);
+}
+
 const gyroFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100);
 const dtermFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100);
 
