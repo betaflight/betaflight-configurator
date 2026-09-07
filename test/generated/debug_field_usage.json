@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "4873e1ef2a915d8e48517ac7e85b4d41b2e4f125",
-            "date": "2026-08-30",
+            "commit": "7863ff631d0cd64266e4aa2743823169f46a693c",
+            "date": "2026-09-07",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1778,7 +1778,7 @@
                     "dynamic": false
                 },
                 "BARO": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4],
                     "dynamic": false
                 },
                 "BATTERY": {
@@ -1802,7 +1802,7 @@
                     "dynamic": false
                 },
                 "CRSF_LINK_STATISTICS_UPLINK": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "CURRENT_ANGLE": {
@@ -1914,11 +1914,11 @@
                     "dynamic": false
                 },
                 "GPS_RESCUE_TRACKING": {
-                    "fields": [0, 2, 3, 4, 5],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "GPS_RESCUE_VELOCITY": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4],
                     "dynamic": false
                 },
                 "GYRO_CALIBRATION": {

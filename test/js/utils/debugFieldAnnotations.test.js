@@ -134,15 +134,24 @@ describe("firmware debug field annotations", () => {
             ).toEqual(["cm", "m"]);
         });
 
-        it("reports the enum values of a conflicting meaning, which may be all that differs", () => {
-            const rescue = FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
-                (conflict) => conflict.mode === "GPS_RESCUE_VELOCITY" && conflict.index === 1,
-            );
-            // gps_rescue_multirotor.c writes the ground speed there in one place
-            // and the rescue phase in another; the phase names come from firmware.
-            expect(rescue.meanings.map((meaning) => meaning.label)).toEqual(["Ground Speed", "Rescue Phase"]);
-            expect(rescue.meanings[1].values).toContain("RESCUE_LANDING");
-            expect(rescue.meanings[0].values).toBeUndefined();
+        it("keeps every meaning whole, including the enum values that may be all that differs", () => {
+            // GPS_RESCUE_VELOCITY[1] used to be the example here - ground speed
+            // from one call site and the rescue phase, an enum, from another -
+            // until firmware gave the phase an index of its own. Nothing stops
+            // the next such field appearing, so the shape is asserted over
+            // whatever conflicts the firmware currently has.
+            for (const conflict of FIRMWARE_DEBUG_FIELD_CONFLICTS) {
+                const where = `${conflict.apiVersion} ${conflict.mode}[${conflict.index}]`;
+                expect(conflict.meanings.length, where).toBeGreaterThan(1);
+                for (const meaning of conflict.meanings) {
+                    expect(meaning.label, where).toBeTruthy();
+                    expect(meaning.sites.length, where).toBeGreaterThan(0);
+                    if (meaning.values !== undefined) {
+                        expect(meaning.values.length, where).toBeGreaterThan(0);
+                        expect(meaning.unit, where).toBeNull();
+                    }
+                }
+            }
         });
 
         it("drops the unit of a conflicting field, since it belongs to one meaning only", () => {

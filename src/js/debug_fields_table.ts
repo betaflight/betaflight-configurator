@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  4873e1ef2a 2026-08-30  (485 annotated fields)
+ *   API 1.49.0  7863ff631d 2026-09-07  (494 annotated fields)
  */
 
 /**
@@ -184,6 +184,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             1: Object.freeze({ label: "Pressure", unit: "hPa", scale: 1 }),
             2: Object.freeze({ label: "Temperature", unit: "degC", scale: 0.01 }),
             3: Object.freeze({ label: "Baro Altitude", unit: "cm", scale: 1 }),
+            4: Object.freeze({ label: "Baro Altitude Before Temperature Correction", unit: "cm", scale: 1 }),
         }),
         BATTERY: Object.freeze({
             0: Object.freeze({ label: "Battery Voltage Unfiltered", unit: "V", scale: 0.01 }),
@@ -229,10 +230,14 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             2: Object.freeze({ label: "Uplink TX Power Index", unit: null, scale: 1 }),
         }),
         CRSF_LINK_STATISTICS_UPLINK: Object.freeze({
-            0: Object.freeze({ label: "Uplink RSSI Antenna 1 / Uplink RSSI", unit: null, scale: 1 }),
-            1: Object.freeze({ label: "Uplink RSSI Antenna 2 / Uplink SNR", unit: null, scale: 1 }),
+            0: Object.freeze({ label: "Uplink RSSI Antenna 1", unit: "dBm", scale: -1 }),
+            1: Object.freeze({ label: "Uplink RSSI Antenna 2", unit: "dBm", scale: -1 }),
             2: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
-            3: Object.freeze({ label: "RF Mode / Uplink RSSI", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "RF Mode", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Uplink RSSI", unit: "dBm", scale: -1 }),
+            5: Object.freeze({ label: "Uplink SNR", unit: "dB", scale: 1 }),
+            6: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
+            7: Object.freeze({ label: "Uplink RSSI", unit: "%", scale: 1 }),
         }),
         CURRENT_ANGLE: Object.freeze({
             0: Object.freeze({ label: "Current Angle (roll)", unit: "deg", scale: 0.1 }),
@@ -454,16 +459,52 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
         }),
         GPS_RESCUE_TRACKING: Object.freeze({
             0: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
             2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
             3: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
             4: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
-            5: Object.freeze({ label: "Bearing To Home", unit: "deg", scale: 1 }),
+            5: Object.freeze({ label: "Heading Error", unit: "deg", scale: 1 }),
+            6: Object.freeze({ label: "Distance To Home", unit: "cm", scale: 1 }),
+            7: Object.freeze({
+                label: "Rescue Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_IDLE",
+                    "RESCUE_INITIALIZE",
+                    "RESCUE_ATTAIN_ALT",
+                    "RESCUE_PITCH_FORWARD",
+                    "RESCUE_ROTATE",
+                    "RESCUE_FLY_HOME",
+                    "RESCUE_DESCENT",
+                    "RESCUE_LANDING",
+                    "RESCUE_EMERG_DESCENT",
+                    "RESCUE_DO_NOTHING",
+                ]),
+            }),
         }),
         GPS_RESCUE_VELOCITY: Object.freeze({
             0: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
-            1: Object.freeze({ label: "Ground Speed / Rescue Phase", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
             2: Object.freeze({ label: "Target Step East", unit: "cm", scale: 1 }),
             3: Object.freeze({ label: "Target Step North", unit: "cm", scale: 1 }),
+            4: Object.freeze({
+                label: "Rescue Phase",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "RESCUE_IDLE",
+                    "RESCUE_INITIALIZE",
+                    "RESCUE_ATTAIN_ALT",
+                    "RESCUE_PITCH_FORWARD",
+                    "RESCUE_ROTATE",
+                    "RESCUE_FLY_HOME",
+                    "RESCUE_DESCENT",
+                    "RESCUE_LANDING",
+                    "RESCUE_EMERG_DESCENT",
+                    "RESCUE_DO_NOTHING",
+                ]),
+            }),
         }),
         GYRO_CALIBRATION: Object.freeze({
             0: Object.freeze({ label: "Calibration Deviation (roll)", unit: "gyroADC", scale: 1 }),
@@ -714,7 +755,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 ]),
             }),
             4: Object.freeze({ label: "Seconds Failing", unit: "s", scale: 1 }),
-            5: Object.freeze({ label: "Target Step Scale / Seconds With Low Satellite Count", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Seconds With Low Satellite Count", unit: "s", scale: 1 }),
             6: Object.freeze({ label: "Distance To Home", unit: "cm", scale: 1 }),
             7: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
         }),
@@ -908,94 +949,6 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
     }),
     Object.freeze({
         apiVersion: "1.49.0",
-        mode: "CRSF_LINK_STATISTICS_UPLINK",
-        index: 0,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Uplink RSSI Antenna 1",
-                unit: "dBm",
-                scale: -1,
-                sites: Object.freeze(["src/main/rx/crsf.c:260"]),
-            }),
-            Object.freeze({
-                label: "Uplink RSSI",
-                unit: "dBm",
-                scale: -1,
-                sites: Object.freeze(["src/main/rx/crsf.c:300"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "CRSF_LINK_STATISTICS_UPLINK",
-        index: 1,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Uplink RSSI Antenna 2",
-                unit: "dBm",
-                scale: -1,
-                sites: Object.freeze(["src/main/rx/crsf.c:261"]),
-            }),
-            Object.freeze({
-                label: "Uplink SNR",
-                unit: "dB",
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/crsf.c:301"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "CRSF_LINK_STATISTICS_UPLINK",
-        index: 3,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "RF Mode",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/crsf.c:263"]),
-            }),
-            Object.freeze({
-                label: "Uplink RSSI",
-                unit: "%",
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/crsf.c:303"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "GPS_RESCUE_VELOCITY",
-        index: 1,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Ground Speed",
-                unit: "cm/s",
-                scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:223"]),
-            }),
-            Object.freeze({
-                label: "Rescue Phase",
-                unit: null,
-                scale: 1,
-                values: Object.freeze([
-                    "RESCUE_IDLE",
-                    "RESCUE_INITIALIZE",
-                    "RESCUE_ATTAIN_ALT",
-                    "RESCUE_PITCH_FORWARD",
-                    "RESCUE_ROTATE",
-                    "RESCUE_FLY_HOME",
-                    "RESCUE_DESCENT",
-                    "RESCUE_LANDING",
-                    "RESCUE_EMERG_DESCENT",
-                    "RESCUE_DO_NOTHING",
-                ]),
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:689"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
         mode: "LIDAR_TF",
         index: 0,
         meanings: Object.freeze([
@@ -1086,25 +1039,6 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
                 unit: null,
                 scale: 1,
                 sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:232"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "RTH",
-        index: 5,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Target Step Scale",
-                unit: "%",
-                scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:275"]),
-            }),
-            Object.freeze({
-                label: "Seconds With Low Satellite Count",
-                unit: "s",
-                scale: 1,
-                sites: Object.freeze(["src/main/flight/gps_rescue_multirotor.c:344"]),
             }),
         ]),
     }),
