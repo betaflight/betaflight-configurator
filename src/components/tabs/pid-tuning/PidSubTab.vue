@@ -1493,14 +1493,18 @@ const masterChanged = computed(
 );
 
 // Computed display values to ensure reactivity
-const sliderDGainDisplay = computed(() => sliderDGain.value.toFixed(2));
-const sliderPIGainDisplay = computed(() => sliderPIGain.value.toFixed(2));
-const sliderFFGainDisplay = computed(() => sliderFeedforwardGain.value.toFixed(2));
-const sliderDMaxGainDisplay = computed(() => sliderDMaxGain.value.toFixed(2));
-const sliderIGainDisplay = computed(() => sliderIGain.value.toFixed(2));
-const sliderRPRatioDisplay = computed(() => sliderRollPitchRatio.value.toFixed(2));
-const sliderPitchPIDisplay = computed(() => sliderPitchPIGain.value.toFixed(2));
-const sliderMasterDisplay = computed(() => sliderMasterMultiplier.value.toFixed(2));
+function formatSliderValue(value) {
+    return Number(value).toFixed(2);
+}
+
+const sliderDGainDisplay = computed(() => formatSliderValue(sliderDGain.value));
+const sliderPIGainDisplay = computed(() => formatSliderValue(sliderPIGain.value));
+const sliderFFGainDisplay = computed(() => formatSliderValue(sliderFeedforwardGain.value));
+const sliderDMaxGainDisplay = computed(() => formatSliderValue(sliderDMaxGain.value));
+const sliderIGainDisplay = computed(() => formatSliderValue(sliderIGain.value));
+const sliderRPRatioDisplay = computed(() => formatSliderValue(sliderRollPitchRatio.value));
+const sliderPitchPIDisplay = computed(() => formatSliderValue(sliderPitchPIGain.value));
+const sliderMasterDisplay = computed(() => formatSliderValue(sliderMasterMultiplier.value));
 
 // Slider disabled states — matches original updateExpertModePidSlidersDisplay()
 // Disable when mode is OFF, or when slider is outside non-expert range and not in expert mode
