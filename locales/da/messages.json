@@ -73,6 +73,10 @@
         "message": "Afbryd (Manuel)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Afbryd ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Afbryd (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -980,6 +984,14 @@
         "message": "Forbindelse:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Vis status detaljer",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Skjul status detaljer",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_connect_message": {
         "message": "Benyt Brænd firmware for at tilgå DFU-enheder"
     },
@@ -1664,6 +1676,9 @@
     "escSensorSerialPort": {
         "message": "ESC telemetri seriel port"
     },
+    "escSensorSerialPortHelp": {
+        "message": "UART som ESC telemetri er forbundet til. Indstilles selv af ESC sensor fra API 1.49; fanen Porte viser kun for info."
+    },
     "featureESC_SENSOR": {
         "message": "Brug KISS\/BLHeli_32 ESC telemetri <b>over en separat ledning<\/b>"
     },
@@ -1721,6 +1736,9 @@
     "rcdeviceSerialPort": {
         "message": "Seriel port"
     },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART som RunCam protokol er forbundet til. Indstilles selv af enhed fra API 1.49; fanen Porte viser kun for info."
+    },
     "configurationTelemetryHelp": {
         "message": "Telemetri data transmitteres til sender"
     },
@@ -1770,8 +1788,14 @@
     "rangefinderSerialPort": {
         "message": "Seriel port til afstand sensor"
     },
+    "rangefinderSerialPortHelp": {
+        "message": "UART som afstand sensor er forbundet til. Indstilles selv af sensor fra API 1.49; fanen Porte viser kun for info."
+    },
     "opticalflowSerialPort": {
         "message": "Seriel port til optisk sensor"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART som optisk sensor er forbundet til. Indstilles selv af sensor fra API 1.49; fanen Porte viser kun for info."
     },
     "configurationOpticalflow": {
         "message": "Optisk sensor",
@@ -1809,7 +1833,7 @@
         "message": "FC justering guide"
     },
     "boardAlignmentWizard-Intro": {
-        "message": "Denne guide registrerer, hvordan din flycontroller er monteret ved at guide dig gennem fire enkle bevægelser. Placer faartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
+        "message": "Denne guide registrerer, hvordan din flycontroller er monteret på dronen ved at guide dig gennem fire enkle bevægelser. Placer fartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
     },
     "boardAlignmentWizard-Start": {
         "message": "Start"
@@ -2197,8 +2221,20 @@
     "gpsSerialPort": {
         "message": "Seriel port"
     },
+    "gpsSerialPortHelp": {
+        "message": "UART som GPS modul er forbundet til. Ændring af kræver en genstart af FC."
+    },
     "gpsSerialBaud": {
         "message": "Baud hastighed"
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Kunne ikke konfigurere seriel port for GPS, så intet blev gemt."
+    },
+    "gpsCanDevice": {
+        "message": "CAN databus"
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Kunne ikke konfigurere CAN databus, så intet blev gemt."
     },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
@@ -2233,6 +2269,9 @@
     },
     "receiverSerialPortHelp": {
         "message": "UART den serielle modtager er forbundet til. Baud-raten følger udbyderen, så der er intet at sætte her. Ændring af porten kræver en genstart."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Kunne ikke konfigurere seriel port til modtageren, så intet blev gemt."
     },
     "someRXTypesDisabled": {
         "message": "Nogle protokoller i den aktuelle konfiguration understøttes ikke."
@@ -2291,6 +2330,93 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan risikere at skulle brænde firmware image igen og så måske slette din konfiguration af FC."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Denne firmware rapporterer endnu vedrørende periferi udstyr."
+    },
+    "portsSectionSerial": {
+        "message": "Seriel port"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN databus"
+    },
+    "portsSectionSensors": {
+        "message": "Sensorer"
+    },
+    "portsTileUnassigned": {
+        "message": "Ikke tildelt"
+    },
+    "portsTileConfigure": {
+        "message": "Konfigurer"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Porten er aktiv til denne funktion"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Tildelt, men ikke aktiv — skyldes en port konflikt eller en afventende genstart"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inaktiv — aktiver SOFTSERIAL-funktionen på fanen Konfiguration"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inaktiv – ingen ben er tildelt denne port"
+    },
+    "portsInactiveReason": {
+        "message": "Inaktiv — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inaktiv"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS \/ Lokation"
+    },
+    "portsClaimRx": {
+        "message": "Seriel modtager"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox-logning"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC telemetri"
+    },
+    "portsClaimRcdevice": {
+        "message": "Kamera (RunCam-protokol)"
+    },
+    "portsClaimVtx": {
+        "message": "Video transmitter"
+    },
+    "portsClaimRangefinder": {
+        "message": "Afstand sensor"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optisk sensor"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD brugerdefineret tekst"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetri"
+    },
+    "portsSensorGyro": {
+        "message": "Gyro"
+    },
+    "portsSensorAcc": {
+        "message": "Accelerometer (hvis understøttet)"
+    },
+    "portsSensorBaro": {
+        "message": "Barometer \/ Højde"
+    },
+    "portsSensorMag": {
+        "message": "Kompas (hvis understøttet)"
+    },
+    "portsSensorNotDetected": {
+        "message": "Konfigureret, men ikke registreret"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware-opgradering <span class=\"message-negative\">nødvendig<\/span>.  Opsætningen af seriel port understøttes ikke af firmware &lt; 1.8.0."
@@ -4066,6 +4192,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot sensor"
+    },
     "sensorsDebugSelect": {
         "message": "Brugerstyret logning"
     },
@@ -4086,6 +4215,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Lufthastighed - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Logning"
@@ -6263,8 +6395,14 @@
     "osdProtocol": {
         "message": "OSD protokol"
     },
+    "osdProtocolHelp": {
+        "message": "Protokol for OSD. MAX7456 og FrSky OSD har en analog chip eller modul; MSP sender OSD over UART nedenfor, og anvendes af DJI, HDZero og Walksnail goggles."
+    },
     "osdSerialPort": {
         "message": "OSD seriel port"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART som seriel OSD er forbundet til. Indstilles selv af OSD fra API 1.49; fanen Porte viser kun for info."
     },
     "osdCustomTextSerialPort": {
         "message": "Seriel port til brugerdefineret tekst"
@@ -7628,6 +7766,9 @@
     "osdButtonSaved": {
         "message": "Gemt"
     },
+    "osdPitotAirSpeed": {
+        "message": "Lufthastighed"
+    },
     "vtxHelp": {
         "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
         "description": "Introduction message in the VTX tab"
@@ -7778,8 +7919,14 @@
     "vtxProtocol": {
         "message": "Protokol"
     },
+    "vtxProtocolHelp": {
+        "message": "Protokol for VTX. SmartAudio og Tramp er forbundet til UART angivet nedenfor; MSP deler med MSp, som også DJI, HDZero og Walksnail."
+    },
     "vtxSerialPort": {
         "message": "Seriel port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART som VTX kontrol protokol er forbundet til. Indstilles selv af VTX fra API 1.49; fanen Porte viser kun for info."
     },
     "vtxLowPowerDisarm": {
         "message": "Lavt strømforbrug ved deaktivering",
@@ -7975,6 +8122,9 @@
     "configurationBaroHardware": {
         "message": "Barometer \/ Højde"
     },
+    "configurationPitot": {
+        "message": "Pitot sensor (lufthastighed)"
+    },
     "configurationMagHardware": {
         "message": "Kompas (hvis understøttet)"
     },
@@ -8089,8 +8239,14 @@
     "magCalibrationSaveError": {
         "message": "Kunne ikke gemme kalibreringsværdier"
     },
+    "magCalibrationFull": {
+        "message": "Kalibrere og registrere orientering"
+    },
     "magCalibrationFullDesc": {
-        "message": "Roter fartøjet i alle retninger for at kalibrere sensor og automatisk registrer monteringsretning."
+        "message": "Roter fartøjet i alle retninger for at kalibrere sensor og automatisk registrere monteringsretning."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Kalibrere og registrere orientering"
     },
     "magCalibrationFullInstruction": {
         "message": "Følg nedenstående trin ved at holde fartøjet stabilt gennem hver bevægelse. i trinet tælles stigning, når du ændre til ny vinkel - mål at dække alle 20."
@@ -8160,6 +8316,9 @@
     },
     "magCalibrationFullNoGeo": {
         "message": "Ingen GPS, browser eller IP-placering — angiv koordinater manuelt for at fortsætte"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Lokation nødvendig for kalibrering"
     },
     "magCalibrationManualLocationPrompt": {
         "message": "Angiv manuelt breddegrad og længdegrad ved at vælge fra Google Maps. Din drone har ingen GPS-lås, og din enhed kunne derfor ikke give data for placering. Placering er nødvendig for kalibrering af kompas."
