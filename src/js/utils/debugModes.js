@@ -147,12 +147,12 @@ export function getDebugModes(apiVersion) {
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
         addArrayElement(result, "PITOT");
-        addArrayElement(result, "PSAS");
     }
 
     if (semver.gte(apiVersion, API_VERSION_1_49)) {
         addArrayElement(result, "PITOT");
         addArrayElement(result, "POSITION_EST");
+        addArrayElement(result, "PSAS");
     }
     return result;
 }
@@ -1155,8 +1155,8 @@ export function getDebugFieldNames(apiVersion) {
 
         result.PSAS = {
             "debug[all]": "Plane SAS",
-            "debug[0]": "Pitch Sum",
-            "debug[1]": "Pitch I",
+            "debug[0]": "Main speed curve",
+            "debug[1]": "Stick speed curve",
             "debug[2]": "Lift coefficient",
             "debug[3]": "Accel Z required",
             "debug[4]": "Accel Z delta",
@@ -1772,8 +1772,8 @@ const DEBUG_DECODE = {
     VELOCITY: () => "",
     DFILTER: () => "",
     PSAS: {
-        "debug[0]": (v) => `${(v / 10).toFixed(1)} %`,
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} %`,
+        "debug[0]": (v) => `${v.toFixed(1)} %`,
+        "debug[1]": (v) => `${v.toFixed(1)} %`,
         "debug[2]": (v) => `${(v / 100).toFixed(2)}`,
         "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
         "debug[4]": (v) => `${(v / 10).toFixed(1)}`,
@@ -2130,8 +2130,6 @@ const DEBUG_CONVERT = {
         "debug[6]": cScale(1000),
     },
     PSAS: {
-        "debug[0]": cScale10,
-        "debug[1]": cScale10,
         "debug[2]": cScale100,
         "debug[3]": cScale10,
         "debug[4]": cScale10,

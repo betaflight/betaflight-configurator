@@ -585,8 +585,8 @@ const DEBUG_MODE_CURVES = {
         7: [0, 1000], // GPS R vel
     },
     PSAS: gatedByApi149({
-        0: [-100, 100], // Pitch sum
-        1: [-100, 100], // Pitch I
+        0: [0, 200], // Main speed curve
+        1: [0, 200], // Stick speed curve
         2: [-2, 2], // Lift coefficient
         3: [-5, 5], // Accel Z required
         4: [-5, 5], // Accel Z delta
