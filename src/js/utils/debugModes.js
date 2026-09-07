@@ -146,7 +146,6 @@ export function getDebugModes(apiVersion) {
         addArrayElement(result, "AUTOPILOT_PID");
         addArrayElement(result, "POSITION_NAV");
         addArrayElement(result, "AUTOPILOT_STOP");
-        addArrayElement(result, "PITOT");
     }
 
     if (semver.gte(apiVersion, API_VERSION_1_49)) {
