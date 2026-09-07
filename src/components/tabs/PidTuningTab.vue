@@ -204,7 +204,7 @@ const subtabItems = computed(() => {
         { label: t("pidTuningSubTabRates"), value: "rates", icon: "i-lucide-gauge" },
         { label: t("pidTuningSubTabFilter"), value: "filter", icon: "i-lucide-filter" },
     ];
-    if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+    if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
         items.push({ label: t("pidTuningSubTabPsas"), value: "psas", icon: "i-lucide-sliders-horizontal" });
     }
 
@@ -283,7 +283,7 @@ async function loadData() {
                 await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
                 // Plane SAS
-                if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+                if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
                     await MSP.promise(MSPCodes.MSP_PSAS_CONFIG);
                 }
 
@@ -530,7 +530,7 @@ function save() {
             }
 
             // Save Plane SAS config to firmware
-            if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+            if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
                 await MSP.promise(MSPCodes.MSP_SET_PSAS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_PSAS_CONFIG));
             }
 

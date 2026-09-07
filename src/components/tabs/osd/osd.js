@@ -1675,7 +1675,7 @@ OSD.chooseFields = function () {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
         }
 
-        if (FC.CONFIG.buildOptions.includes("USE_AIRPLANE_SAS")) {
+        if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PSAS_AOA_LIMITER]);
         }
 
