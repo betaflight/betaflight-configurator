@@ -3,7 +3,9 @@ import {
     maskNonCode,
     parseAnnotation,
     parseEnumBlock,
+    parseDebugModeNames,
     parseNamedEnums,
+    propertyKey,
     pullRequestNumber,
     resolveFieldIndex,
 } from "../../../scripts/generate-debug-modes.mjs";
@@ -176,5 +178,64 @@ describe("pullRequestNumber", () => {
         for (const value of ["", "master", "15596 15597", "refs/heads/x", "../../etc", "15596:master"]) {
             expect(() => pullRequestNumber(value)).toThrow(/pull request number/);
         }
+    });
+});
+
+describe("parseAnnotation, unit factors", () => {
+    it("refuses a factor that overflows a double, which would scale every sample to Infinity", () => {
+        const huge = "9".repeat(400);
+        expect(parseAnnotation(`Cycle Time [unit:${huge}us]`).error).toMatch(/not a unit, enum or flags shape/);
+        expect(parseAnnotation("Cycle Time [unit:0us]").error).toMatch(/not a unit, enum or flags shape/);
+        expect(parseAnnotation("Cycle Time [unit:0.1us]").scale).toBe(0.1);
+    });
+});
+
+describe("parseDebugModeNames", () => {
+    const table = (body) => `const char * const debugModeNames[DEBUG_COUNT] = {\n${body}\n};`;
+
+    it("reads the positional and the designated form", () => {
+        expect(parseDebugModeNames(table('    "NONE",\n    "CYCLETIME",'), "ref").byPosition).toEqual([
+            "NONE",
+            "CYCLETIME",
+        ]);
+        const designated = parseDebugModeNames(
+            table('    [DEBUG_NONE] = "NONE",\n    [DEBUG_PITOT] = "PITOT",'),
+            "ref",
+        );
+        expect([...designated.byIdentifier]).toEqual([
+            ["DEBUG_NONE", "NONE"],
+            ["DEBUG_PITOT", "PITOT"],
+        ]);
+    });
+
+    it("refuses a positional entry that is not a string, rather than shifting the rest", () => {
+        // A skipped entry does not cost one name, it moves every later name an
+        // index early - which would re-map the fields of every log recorded with
+        // that firmware, and say nothing.
+        expect(() => parseDebugModeNames(table('    "NONE",\n    NULL,\n    "CYCLETIME",'), "ref")).toThrow(
+            /not string literals: "NULL"/,
+        );
+        expect(() => parseDebugModeNames(table('    "NONE",\n    DEBUG_NAME_MACRO,'), "ref")).toThrow(
+            /not string literals/,
+        );
+    });
+
+    it("still refuses the two forms mixed", () => {
+        expect(() => parseDebugModeNames(table('    "NONE",\n    [DEBUG_PITOT] = "PITOT",'), "ref")).toThrow(
+            /mixes designated and positional/,
+        );
+    });
+});
+
+describe("propertyKey", () => {
+    it("leaves a valid identifier bare and quotes what firmware could still name a mode", () => {
+        // A mode name is firmware text, and a reserved slot falls back to its enum
+        // identifier with DEBUG_ removed, which turns DEBUG_3D into 3D. Emitted
+        // bare, that produces a module that does not parse.
+        expect(propertyKey("CYCLETIME")).toBe("CYCLETIME");
+        expect(propertyKey("GPS_RESCUE_THROTTLE_PID")).toBe("GPS_RESCUE_THROTTLE_PID");
+        expect(propertyKey("3D")).toBe('"3D"');
+        expect(propertyKey("A-B")).toBe('"A-B"');
+        expect(propertyKey("A B")).toBe('"A B"');
     });
 });

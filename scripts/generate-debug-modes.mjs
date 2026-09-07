@@ -456,6 +456,26 @@ function parseDebugModeNames(source, ref) {
     const byIdentifier = new Map();
     const byPosition = [];
     const entry = /(?:\[\s*(DEBUG_[A-Z0-9_]+)\s*\]\s*=\s*)?"((?:[^"\\]|\\.)*)"/g;
+
+    /*
+     * Anything the scan below would not consume, so an entry that is not a string
+     * literal is refused rather than skipped. In the positional form a skipped
+     * entry does not lose one name, it shifts every later one an index early -
+     * the same reason the enum parse above refuses a value it cannot read, and
+     * the sort of quiet re-mapping this whole table exists to prevent.
+     */
+    const unconsumed = match[1]
+        .replaceAll(entry, "")
+        .split(",")
+        .map((piece) => piece.trim())
+        .filter(Boolean);
+    if (unconsumed.length > 0) {
+        throw new Error(
+            `debugModeNames[] at ${ref} holds ${unconsumed.length} entr${unconsumed.length === 1 ? "y" : "ies"} ` +
+                `that are not string literals: ${unconsumed.map((piece) => JSON.stringify(piece)).join(", ")}`,
+        );
+    }
+
     let parsed;
     while ((parsed = entry.exec(match[1])) !== null) {
         if (parsed[1]) {
@@ -834,8 +854,10 @@ function parseUnitShape(raw) {
         return undefined;
     }
     const scale = factor === undefined ? 1 : Number(factor);
-    if (scale === 0) {
-        // Would read every sample as zero, and its inverse would diverge.
+    if (scale === 0 || !Number.isFinite(scale)) {
+        // Zero would read every sample as zero and its inverse would diverge;
+        // a factor with enough digits to overflow a double converts to Infinity,
+        // which would carry through to every value the app displays.
         return undefined;
     }
 
@@ -1490,11 +1512,7 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
 
     const renameNote = new Map(renames.map((rename) => [rename.from, `${rename.fromApi} -> ${rename.toApi}`]));
     for (const [from, to] of Object.entries(aliases)) {
-        // The key is left bare: every mode name is DEBUG_[A-Z0-9_]+ or the enum
-        // parser refuses it, so it is always a valid identifier, and Prettier
-        // strips quotes it does not need - which would fail `prettier --check`
-        // on this generated file.
-        lines.push(`    ${from}: ${quote(to)}, // renamed in ${renameNote.get(from)}`);
+        lines.push(`    ${propertyKey(from)}: ${quote(to)}, // renamed in ${renameNote.get(from)}`);
     }
 
     lines.push("});", "");
@@ -1508,6 +1526,19 @@ function renderModule({ repoUrl, versions, aliases, renames }) {
  */
 function quote(text) {
     return JSON.stringify(text);
+}
+
+/*
+ * A mode name as an object key, quoted only where it has to be.
+ *
+ * A name is firmware text, not an identifier: it comes from `debugModeNames[]`,
+ * and a reserved slot falls back to its enum identifier with `DEBUG_` removed,
+ * which turns `DEBUG_3D` into `3D`. Emitted bare, a name like that produces a
+ * module that does not parse - and since Prettier strips quotes it does not
+ * need, quoting the ones it does keeps `prettier --check` happy either way.
+ */
+function propertyKey(name) {
+    return /^[A-Za-z_$][\w$]*$/.test(name) ? name : quote(name);
 }
 
 /*
@@ -1629,7 +1660,7 @@ function fieldsModuleHeader(repoUrl, annotated) {
  * distance, in cm and in mm, and "Distance / Distance" names nothing.
  */
 function renderModeFields(mode, fields, apiVersion, conflicts) {
-    const lines = [`        ${mode}: Object.freeze({`];
+    const lines = [`        ${propertyKey(mode)}: Object.freeze({`];
 
     for (const index of Object.keys(fields).sort((left, right) => Number(left) - Number(right))) {
         const variants = fields[index];
@@ -2082,4 +2113,13 @@ if (invokedDirectly) {
     }
 }
 
-export { maskNonCode, parseAnnotation, parseEnumBlock, parseNamedEnums, pullRequestNumber, resolveFieldIndex };
+export {
+    maskNonCode,
+    parseAnnotation,
+    parseDebugModeNames,
+    parseEnumBlock,
+    parseNamedEnums,
+    propertyKey,
+    pullRequestNumber,
+    resolveFieldIndex,
+};

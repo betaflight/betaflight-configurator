@@ -7,6 +7,7 @@ import {
     getDebugFieldAxis,
 } from "../../../src/js/utils/debugModes";
 import { FIRMWARE_DEBUG_FIELDS, FIRMWARE_DEBUG_FIELD_CONFLICTS } from "../../../src/js/debug_fields_table";
+import { DEBUG_UNITS } from "../../../src/js/debug_units";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage";
 
 /*
@@ -77,13 +78,66 @@ describe("firmware debug field annotations", () => {
             );
         });
 
-        it("shows every unit the firmware may use, with one suffix per unit", () => {
+        it("names the display suffix of every unit in the vocabulary", () => {
+            // Stated here rather than read from DEBUG_UNITS, so a change to what a
+            // unit displays as has to be made twice. Several are deliberately not
+            // the firmware symbol - centimetres are shown in metres, gyro ADC
+            // counts in °/s - and the squared units deliberately are not converted
+            // at all, because the square of the factor would put the estimator's
+            // variances two orders of magnitude from the firmware constants they
+            // come from. See src/js/debug_units.ts.
+            expect(Object.fromEntries(Object.entries(DEBUG_UNITS).map(([unit, { suffix }]) => [unit, suffix]))).toEqual(
+                {
+                    s: "s",
+                    ms: "ms",
+                    us: "μs",
+                    Hz: "Hz",
+                    kHz: "kHz",
+                    MHz: "MHz",
+                    "kbit/s": "kbit/s",
+                    rad: "rad",
+                    "rad/s": "rad/s",
+                    deg: "°",
+                    dps: "°/s",
+                    dps2: "°/s²",
+                    m: "m",
+                    cm: "m",
+                    "m/s": "m/s",
+                    "cm/s": "m/s",
+                    "cm/s2": "m/s²",
+                    cm2: "cm²",
+                    "cm2/s2": "cm²/s²",
+                    g: "g",
+                    "g/s": "g/s",
+                    V: "V",
+                    A: "A",
+                    mAh: "mAh",
+                    degC: "°C",
+                    Pa: "Pa",
+                    hPa: "hPa",
+                    rpm: "rpm",
+                    "%": "%",
+                    dB: "dB",
+                    dBm: "dBm",
+                    bytes: "bytes",
+                    ticks: "ticks",
+                    gyroADC: "°/s",
+                    accADC: "g",
+                    "accADC/s": "g/s",
+                    rcCommand: "%",
+                    eRPM: "rpm",
+                },
+            );
+        });
+
+        it("displays every unit the firmware uses with the suffix named above", () => {
             // The generator accepts a documented set of unit symbols; the app has
             // to display all of them. A symbol it does not know would fall back to
-            // no suffix, and the number would still look plausible. The suffix is
-            // not the firmware symbol - centimetres are shown in metres, gyro ADC
-            // counts in °/s - but it has to be the same one every time.
-            const suffixes = new Map();
+            // no suffix, and the number would still look plausible. Each field is
+            // checked against the vocabulary rather than against the first field
+            // that happened to use the unit, which would only prove the app
+            // consistent with itself.
+            const used = new Set();
 
             for (const [apiVersion, modes] of Object.entries(FIRMWARE_DEBUG_FIELDS)) {
                 const scaleContext = ctx(apiVersion);
@@ -93,39 +147,20 @@ describe("firmware debug field annotations", () => {
                             continue;
                         }
                         const where = `${apiVersion} ${mode}[${index}] (${field.unit})`;
+                        const expected = DEBUG_UNITS[field.unit];
+                        expect(expected, `${where}: unit is not in the vocabulary`).toBeDefined();
                         const decoded = decodeDebugFieldToFriendly(mode, `debug[${index}]`, 1, scaleContext);
                         const parsed = /^(-?[\d.]+) (\S+)$/.exec(decoded);
                         expect(parsed, `${where}: "${decoded}"`).not.toBeNull();
-                        const seen = suffixes.get(field.unit);
-                        if (seen === undefined) {
-                            suffixes.set(field.unit, parsed[2]);
-                        } else {
-                            expect(parsed[2], where).toBe(seen);
-                        }
+                        expect(parsed[2], where).toBe(expected.suffix);
+                        used.add(field.unit);
                     }
                 }
             }
 
-            // Spot-check the mappings that are not the identity, since those are
-            // the ones a display change could silently get wrong.
-            expect(Object.fromEntries(suffixes)).toMatchObject({
-                us: "μs",
-                cm: "m",
-                "cm/s": "m/s",
-                deg: "°",
-                dps: "°/s",
-                degC: "°C",
-                dBm: "dBm",
-                gyroADC: "°/s",
-                accADC: "g",
-                eRPM: "rpm",
-                // Deliberately not the cm convention: a squared unit converts by
-                // the square of the factor, so metres would put the estimator's
-                // variances two orders of magnitude away from the firmware
-                // constants they come from. See src/js/debug_units.ts.
-                cm2: "cm²",
-                "cm2/s2": "cm²/s²",
-            });
+            // A unit no generated field uses is unchecked above, so say which, to
+            // keep the count honest rather than let the loop look exhaustive.
+            expect([...Object.keys(DEBUG_UNITS)].filter((unit) => !used.has(unit))).toEqual(["kHz", "m", "rcCommand"]);
         });
 
         it("names both meanings only when they differ", () => {
