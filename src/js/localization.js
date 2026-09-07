@@ -12,6 +12,7 @@ import {
     eu,
     fr,
     gl,
+    hr,
     it,
     ja,
     ka,
@@ -30,6 +31,15 @@ import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
+
+// Nuxt UI does not currently ship Serbian locales; use its closely related Croatian
+// messages while keeping the application translation codes distinct.
+const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
+const sr_Cyrl = {
+    ...hr,
+    name: "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
+    code: "sr_Cyrl",
+};
 
 /**
  * The single list of languages the configurator ships translations for, each entry being
@@ -57,6 +67,8 @@ const supportedLocales = [
     pt_br,
     pl,
     ru,
+    sr,
+    sr_Cyrl,
     uk,
     uz,
     zh_cn,
@@ -70,7 +82,9 @@ const languagesAvailables = supportedLocales.map((locale) => locale.code);
  * consistent about the case of the region subtag, and preferences stored by older
  * versions predate the move to BCP 47.
  */
-const localesByCode = new Map(supportedLocales.map((locale) => [locale.code.toLowerCase(), locale]));
+const localesByCode = new Map(
+    supportedLocales.map((locale) => [locale.code.replaceAll("_", "-").toLowerCase(), locale]),
+);
 
 /**
  * Resolves any incoming language code onto a locale we ship translations for, be it a
