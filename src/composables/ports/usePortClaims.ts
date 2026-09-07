@@ -46,16 +46,20 @@ interface SerialConfigWithClaims {
 }
 
 // One read in flight per serial config, so a reconnect mid-read starts its own rather than
-// inheriting the old connection's answer.
+// inheriting the old connection's answer, and a refresh mid-read supersedes the read it overtook.
 const pendingByConfig = new WeakMap<SerialConfigWithClaims, Promise<PortClaims | null>>();
 
-async function readClaims(): Promise<PortClaims | null> {
+/**
+ * @returns the claims, `null` for a build that refuses the command, or `undefined` when the reply
+ *   never arrived - a busy FC times out - which is worth asking again next time
+ */
+async function readClaims(): Promise<PortClaims | null | undefined> {
     let lines: string[];
     try {
         lines = await cliSend("peripherals");
     } catch (error) {
         console.warn("Could not read the port claims over the CLI:", error);
-        return null;
+        return undefined;
     }
 
     if (findCliError(lines)) {
@@ -92,15 +96,20 @@ export function loadPortClaims({ refresh = false }: { refresh?: boolean } = {}):
 
     let pending = pendingByConfig.get(config);
     if (!pending) {
-        pending = readClaims()
+        const read: Promise<PortClaims | null> = readClaims()
             .then((claims) => {
-                config.claims = claims;
-                return claims;
+                if (claims !== undefined && pendingByConfig.get(config) === read) {
+                    config.claims = claims;
+                }
+                return claims ?? null;
             })
             .finally(() => {
-                pendingByConfig.delete(config);
+                if (pendingByConfig.get(config) === read) {
+                    pendingByConfig.delete(config);
+                }
             });
-        pendingByConfig.set(config, pending);
+        pendingByConfig.set(config, read);
+        pending = read;
     }
 
     return pending;

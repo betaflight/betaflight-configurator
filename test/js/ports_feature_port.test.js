@@ -8,6 +8,7 @@ import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
 import { GPS_BAUD_RATES } from "../../src/composables/ports/featureBaudRates";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
 import { buildBaudOptions, buildPortOptions, useFeaturePort } from "../../src/composables/ports/useFeaturePort";
+import { loadPortClaims } from "../../src/composables/ports/usePortClaims";
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
@@ -501,5 +502,72 @@ describe("buildBaudOptions", () => {
 
     it("copes with a feature that has no baud of its own", () => {
         expect(buildBaudOptions(undefined)).toEqual([]);
+    });
+});
+
+describe("loadPortClaims", () => {
+    function deferred() {
+        let resolve;
+        let reject;
+        const promise = new Promise((res, rej) => {
+            resolve = res;
+            reject = rej;
+        });
+        return { promise, resolve, reject };
+    }
+
+    beforeEach(() => {
+        FC.resetState();
+        FC.CONFIG.flightControllerVersion = "4.6.0";
+        FC.SERIAL_CONFIG = { ports: [...ports] };
+        cliSend.mockReset();
+    });
+
+    it("asks again after a reply that never arrived, rather than calling every port free", async () => {
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+        cliSend.mockRejectedValueOnce(new Error("Timed out")).mockResolvedValueOnce(["serial UART3: rx*"]);
+
+        expect(await loadPortClaims()).toBeNull();
+        expect(FC.SERIAL_CONFIG.claims).toBeUndefined();
+
+        expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
+        expect(cliSend).toHaveBeenCalledTimes(2);
+    });
+
+    it("remembers a build that refuses the command", async () => {
+        cliSend.mockResolvedValue(["###ERROR IN peripherals: UNKNOWN COMMAND###"]);
+
+        expect(await loadPortClaims()).toBeNull();
+        expect(await loadPortClaims()).toBeNull();
+        expect(cliSend).toHaveBeenCalledTimes(1);
+    });
+
+    it("lets a refresh overtake a read still in flight", async () => {
+        const first = deferred();
+        const second = deferred();
+        cliSend.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+
+        const stale = loadPortClaims();
+        const fresh = loadPortClaims({ refresh: true });
+        second.resolve(["serial UART3: rx*"]);
+        await fresh;
+        first.resolve(["serial UART1: vtx*"]);
+        await stale;
+
+        expect(FC.SERIAL_CONFIG.claims).toEqual({ UART3: ["rx"] });
+        expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
+        expect(cliSend).toHaveBeenCalledTimes(2);
+    });
+
+    it("shares one read between the features of a tab", async () => {
+        const read = deferred();
+        cliSend.mockReturnValueOnce(read.promise);
+
+        const a = loadPortClaims();
+        const b = loadPortClaims();
+        read.resolve(["serial UART3: rx*"]);
+
+        expect(await a).toBe(await b);
+        expect(cliSend).toHaveBeenCalledTimes(1);
     });
 });
