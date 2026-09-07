@@ -7532,10 +7532,6 @@
         "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">こちらのページ<\/a>に進みます。<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけ、ダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択してロードしてください。<br>4. 正しく設定されていることを確認してください。<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。<br>6. 必要に応じて『$t(vtxButtonSaveLua.message)』をクリックし、Betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">こちら<\/a>を参照)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">注目:<\/span> VTXが設定されていないかサポートされていません。フライトコントローラはTrampやSmartAudio等のプロトコルを使用してVTXと接続しており、必要に応じて、$t(tabPorts.message)タブで設定を修正する必要があります。",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">注目:<\/span> $t(vtxSelectedMode.message) フィールドを使用する前に一番下にあるVTXテーブルを設定し保存する必要があります。",
         "description": "Message to show when the VTX is not supported in the VTX tab"

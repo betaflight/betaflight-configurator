@@ -13,6 +13,7 @@ import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } 
 import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler.js";
 import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io.js";
 import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils.js";
+import { cancelActiveVideoExport } from "./video_export.js";
 import {
     syncLogToVideo,
     setVideoOffset,
@@ -780,6 +781,8 @@ export function bootstrapViewer() {
 
     // Teardown: reverse every global side-effect so the tab can be re-mounted cleanly.
     return function teardown() {
+        // Stop the export loop before the shared grapher and canvases are released.
+        cancelActiveVideoExport();
         // Nulling the graph makes the requestAnimationFrame loop bail on its next tick.
         if (graph) {
             try {

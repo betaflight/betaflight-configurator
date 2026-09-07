@@ -196,6 +196,7 @@
 import semver from "semver";
 import Sortable from "sortablejs";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout } from "../header_layout";
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
@@ -948,31 +949,6 @@ const expandedHeaderGroups = ref(new Set());
 const hiddenGroups = ref(new Set());
 const hiddenFields = ref(new Set());
 
-// Persist hidden groups/fields
-function loadHiddenPrefs() {
-    try {
-        const g = localStorage.getItem("bbv-hidden-groups");
-        const f = localStorage.getItem("bbv-hidden-fields");
-        if (g) {
-            hiddenGroups.value = new Set(JSON.parse(g));
-        }
-        if (f) {
-            hiddenFields.value = new Set(JSON.parse(f));
-        }
-    } catch {
-        // ignore
-    }
-}
-function saveHiddenPrefs() {
-    try {
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify([...hiddenGroups.value]));
-        localStorage.setItem("bbv-hidden-fields", JSON.stringify([...hiddenFields.value]));
-    } catch {
-        // ignore
-    }
-}
-loadHiddenPrefs();
-
 // Group order for display
 const GROUP_ORDER = [
     "PID Settings",
@@ -998,31 +974,30 @@ const DEFAULT_PANE_ORDER = [...GROUP_ORDER];
 
 const paneOrder = ref([...DEFAULT_PANE_ORDER]);
 
-function loadPaneOrder() {
-    try {
-        const saved = localStorage.getItem("bbv-pane-order");
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            const order = parsed.filter((id) => DEFAULT_PANE_ORDER.includes(id));
-            for (const id of DEFAULT_PANE_ORDER) {
-                if (!order.includes(id)) {
-                    order.push(id);
-                }
-            }
-            paneOrder.value = order;
+/** @param {import("../header_layout").HeaderLayout} layout */
+function applyHeaderLayout(layout) {
+    hiddenGroups.value = new Set(layout.hiddenGroups);
+    hiddenFields.value = new Set(layout.hiddenFields);
+
+    const order = [...layout.paneOrder];
+    for (const id of DEFAULT_PANE_ORDER) {
+        if (!order.includes(id)) {
+            order.push(id);
         }
-    } catch {
-        // ignore
     }
+    paneOrder.value = order;
 }
-function savePaneOrder() {
-    try {
-        localStorage.setItem("bbv-pane-order", JSON.stringify(paneOrder.value));
-    } catch {
-        // ignore
-    }
+
+function persistHeaderLayout() {
+    saveHeaderLayout({
+        hiddenGroups: [...hiddenGroups.value],
+        hiddenFields: [...hiddenFields.value],
+        paneOrder: paneOrder.value,
+    });
 }
-loadPaneOrder();
+
+applyHeaderLayout(loadHeaderLayout());
+const unsubscribeHeaderLayout = subscribeHeaderLayout(applyHeaderLayout);
 
 const groupParamMap = computed(() => ({
     "PID Sliders": pidSliderParams.value,
@@ -1109,12 +1084,13 @@ watch(gridEl, (el) => {
             const visibleSet = new Set(newVisible);
             const hidden = paneOrder.value.filter((g) => !visibleSet.has(g));
             paneOrder.value = [...newVisible, ...hidden];
-            savePaneOrder();
+            persistHeaderLayout();
         },
     });
 });
 
 onBeforeUnmount(() => {
+    unsubscribeHeaderLayout();
     if (sortable) {
         sortable.destroy();
     }
@@ -1128,7 +1104,7 @@ function toggleGroupVisibility(group) {
         s.add(group);
     }
     hiddenGroups.value = new Set(s);
-    saveHiddenPrefs();
+    persistHeaderLayout();
 }
 
 function toggleFieldVisibility(key) {
@@ -1139,7 +1115,7 @@ function toggleFieldVisibility(key) {
         s.add(key);
     }
     hiddenFields.value = new Set(s);
-    saveHiddenPrefs();
+    persistHeaderLayout();
 }
 
 function toggleGroupExpand(group) {

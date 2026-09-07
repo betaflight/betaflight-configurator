@@ -2,16 +2,18 @@
     <div id="blackbox-app">
         <!-- Teleported into legacy DOM layout -->
         <Teleport to="#vue-welcome">
-            <WelcomePage @files-selected="onFilesSelected" />
+            <WelcomePage @files-selected="onFilesSelected" @download-from-fc="onDownloadFromFc" />
         </Teleport>
         <Teleport to="#vue-navbar">
             <AppToolbar
                 @files-selected="onFilesSelected"
+                @download-from-fc="onDownloadFromFc"
                 @open-settings="onOpenSettings"
                 @open-keys="onOpenKeys"
                 @export-csv="onExportCsv"
                 @export-gpx="onExportGpx"
                 @export-workspaces="onExportWorkspaces"
+                @export-video="appStore.videoExportDialogOpen = true"
                 @toggle-fullscreen="onToggleFullscreen"
             />
         </Teleport>
@@ -95,6 +97,7 @@
         <!-- Dialogs -->
         <KeysDialog v-model:open="appStore.keysDialogOpen" />
         <UserSettingsDialog v-model:open="appStore.settingsDialogOpen" @save="onSaveSettings" />
+        <VideoExportDialog v-model:open="appStore.videoExportDialogOpen" />
         <GraphConfigDialog
             v-model:open="appStore.graphConfigDialogOpen"
             :flightLog="logStore.flightLog"
@@ -116,6 +119,7 @@ import { usePlaybackStore } from "./stores/playback.js";
 import { useSettingsStore } from "./stores/settings.js";
 import { useWorkspaceStore } from "./stores/workspace.js";
 import AppToolbar from "./components/AppToolbar.vue";
+import VideoExportDialog from "./components/VideoExportDialog.vue";
 import WelcomePage from "./components/WelcomePage.vue";
 import ViewControls from "./components/ViewControls.vue";
 import PlaybackControls from "./components/PlaybackControls.vue";
@@ -147,6 +151,11 @@ const workspaceStore = useWorkspaceStore();
 // they stay scoped to the viewer subtree and never leak onto the host configurator's <html>.
 // Embedded: a ref to the tab root, null until the tab mounts. Standalone: nothing injected.
 const injectedRoot = inject("bbvRoot", null);
+
+// FC dataflash pull capability, shared with WelcomePage.vue/AppToolbar.vue via injection so
+// the download control (and its available/pulling/progress state) works from either surface,
+// independent of whether a log is already loaded in the viewer.
+const dataflash = inject("bbvDataflash", null);
 
 // Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js
 watchEffect(() => {
@@ -191,6 +200,20 @@ const sysConfig = computed(() => {
 
 function onFilesSelected(files) {
     appStore.loadFiles?.(files);
+}
+
+// Pulling replaces the active viewer log the same way opening another local file does — it
+// does not depend on, and is not blocked by, logStore.hasLog (see #5415).
+async function onDownloadFromFc() {
+    if (!dataflash || !dataflash.available.value || dataflash.pulling.value) {
+        return;
+    }
+    try {
+        const buffer = await dataflash.pull();
+        appStore.loadLogBuffer?.(buffer, "FC dataflash.BBL");
+    } catch (e) {
+        alert(`Could not download the log from the flight controller:\n\n${e.message}`);
+    }
 }
 
 function onOpenSettings() {

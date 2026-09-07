@@ -423,7 +423,7 @@ onUnmounted(() => {
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid var(--surface-500);
-        margin-right: 20px;
+        margin-inline-end: 20px;
     }
 
     .profile-info {
@@ -437,7 +437,7 @@ onUnmounted(() => {
         .title {
             color: var(--color-primary-500);
             font-weight: 600;
-            margin-right: 5px;
+            margin-inline-end: 5px;
             min-width: 60px;
             display: inline-block;
         }
@@ -465,7 +465,7 @@ onUnmounted(() => {
             align-items: center;
         }
         .profile-photo {
-            margin-right: 0;
+            margin-inline-end: 0;
             margin-bottom: 20px;
         }
         .profile-info {

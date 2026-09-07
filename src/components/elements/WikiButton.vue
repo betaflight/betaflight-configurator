@@ -42,7 +42,7 @@ export default defineComponent({
 
 <style scoped>
 .wiki-btn-wrapper {
-    float: right;
+    float: inline-end;
     margin-top: -45px;
 }
 

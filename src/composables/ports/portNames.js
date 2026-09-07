@@ -16,8 +16,8 @@ const portCliNames = {
     8: "UART9",
     9: "UART10",
     20: "VCP",
-    30: "SOFTSERIAL1",
-    31: "SOFTSERIAL2",
+    30: "SOFT1",
+    31: "SOFT2",
     40: "LPUART1",
     50: "UART0",
     51: "UART1",
@@ -47,9 +47,25 @@ const portCliNames = {
     79: "PIOUART9",
 };
 
-// The configurator has always shown the USB port as "USB VCP"; the firmware CLI knows it as "VCP".
+// A build either has both soft serial ports or neither: USE_SOFTSERIAL turns on
+// SOFTSERIAL1 and SOFTSERIAL2 together (firmware target/serial_post.h), so the
+// board's capability bit is enough to offer the pair.
+export const SOFT_SERIAL_IDENTIFIERS = [30, 31];
+
+/**
+ * @param {number} identifier
+ * @returns {boolean}
+ */
+export function isSoftSerialIdentifier(identifier) {
+    return SOFT_SERIAL_IDENTIFIERS.includes(identifier);
+}
+
+// The configurator has always shown the USB port as "USB VCP" and soft serial in full; the
+// firmware CLI knows them as "VCP", "SOFT1" and "SOFT2".
 const portDisplayNames = {
     20: "USB VCP",
+    30: "SOFTSERIAL1",
+    31: "SOFTSERIAL2",
 };
 
 /**

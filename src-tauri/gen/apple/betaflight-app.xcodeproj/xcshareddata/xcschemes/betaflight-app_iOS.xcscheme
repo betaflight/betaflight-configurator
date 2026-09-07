@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C19F864C5DF6DF5CEBE2CE94"
-               BuildableName = "Betaflight App.app"
+               BuildableName = "Betaflight.app"
                BlueprintName = "betaflight-app_iOS"
                ReferencedContainer = "container:betaflight-app.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C19F864C5DF6DF5CEBE2CE94"
-            BuildableName = "Betaflight App.app"
+            BuildableName = "Betaflight.app"
             BlueprintName = "betaflight-app_iOS"
             ReferencedContainer = "container:betaflight-app.xcodeproj">
          </BuildableReference>
@@ -66,7 +66,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C19F864C5DF6DF5CEBE2CE94"
-            BuildableName = "Betaflight App.app"
+            BuildableName = "Betaflight.app"
             BlueprintName = "betaflight-app_iOS"
             ReferencedContainer = "container:betaflight-app.xcodeproj">
          </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C19F864C5DF6DF5CEBE2CE94"
-            BuildableName = "Betaflight App.app"
+            BuildableName = "Betaflight.app"
             BlueprintName = "betaflight-app_iOS"
             ReferencedContainer = "container:betaflight-app.xcodeproj">
          </BuildableReference>

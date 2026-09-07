@@ -1591,7 +1591,7 @@ onBeforeUnmount(() => {
 .mag-sphere-axis-legend {
     position: absolute;
     top: 6px;
-    right: 6px;
+    inset-inline-end: 6px;
     display: flex;
     gap: 8px;
     font-size: 0.75em;
@@ -1623,7 +1623,7 @@ onBeforeUnmount(() => {
 .mag-sphere-age-legend {
     position: absolute;
     top: 26px;
-    right: 6px;
+    inset-inline-end: 6px;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -1650,8 +1650,8 @@ onBeforeUnmount(() => {
 .mag-sphere-legend {
     position: absolute;
     bottom: 6px;
-    left: 6px;
-    right: 6px;
+    inset-inline-start: 6px;
+    inset-inline-end: 6px;
     font-size: 0.7em;
     color: rgba(255, 255, 255, 0.5);
     pointer-events: none;

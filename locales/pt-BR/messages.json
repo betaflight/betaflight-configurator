@@ -5779,10 +5779,6 @@
     "osdButtonSaved": {
         "message": "Salvo"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atenção:<\/span> O VTX não está configurado ou não é compatível. Não é possível modificar os valores por aqui. Isto somente é possível se o controlador de voo está conectado ao VTX utilizando um protocolo como Tramp ou SmartAudio e está corretamente configurado na aba $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Atenção:<\/span> É necessário PRIMEIRO configurar e salvar a tabela do VTX abaixo antes de utilizar os campos de $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"

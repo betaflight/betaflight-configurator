@@ -255,13 +255,13 @@ const handleDragEnd = (event) => {
 }
 
 .waypoint-item:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-start-start-radius: 8px;
+    border-start-end-radius: 8px;
 }
 
 .waypoint-item:last-child {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-end-start-radius: 8px;
+    border-end-end-radius: 8px;
     border-bottom: none;
 }
 
@@ -271,7 +271,7 @@ const handleDragEnd = (event) => {
 
 .waypoint-item.selected {
     background: var(--primary-500);
-    border-left: 3px solid var(--primary-700);
+    border-inline-start: 3px solid var(--primary-700);
 }
 
 .waypoint-item.selected .waypoint-order {
@@ -294,7 +294,7 @@ const handleDragEnd = (event) => {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    margin-right: 0.75rem;
+    margin-inline-end: 0.75rem;
     flex-shrink: 0;
 }
 

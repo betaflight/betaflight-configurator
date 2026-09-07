@@ -98,6 +98,12 @@ html {
     /* Elevation for floating panels (popovers, detached pickers). */
     --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.3);
 
+    /* The phone shell's chrome, in the order it stacks over the content: the top bar sits
+       on the page, the account and connect pills float over it, the status bar highest. */
+    --shadow-chrome-bar: 0 1px 3px rgba(0, 0, 0, 0.25);
+    --shadow-chrome-floating: 0 4px 14px rgba(0, 0, 0, 0.24);
+    --shadow-chrome-status: 0 6px 20px rgba(0, 0, 0, 0.28);
+
     --ui-radius: 0.35rem;
 }
 
@@ -127,6 +133,10 @@ html {
     /* --surface-50 is nearly black in dark mode, where a 0.3 alpha shadow all but
        disappears and floating panels lose their separation from the page. */
     --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.6);
+
+    --shadow-chrome-bar: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-chrome-floating: 0 4px 14px rgba(0, 0, 0, 0.5);
+    --shadow-chrome-status: 0 6px 20px rgba(0, 0, 0, 0.55);
 
     --text: hsl(0, 0%, 95%);
 }

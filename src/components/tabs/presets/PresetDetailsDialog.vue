@@ -363,8 +363,8 @@ function handleOptionsToggle(event) {
     content: "";
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+    border-inline-start: 5px solid transparent;
+    border-inline-end: 5px solid transparent;
     border-top: 6px solid var(--ui-text);
     justify-self: end;
     opacity: 0.65;
@@ -372,8 +372,8 @@ function handleOptionsToggle(event) {
 }
 
 details[open] > .preset-options-summary {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
 }
 
 details[open] > .preset-options-summary::after {
@@ -405,16 +405,16 @@ details[open] > .preset-options-summary::after {
 
 .preset-description-html ul,
 .preset-description-html ol {
-    padding-left: 25px;
+    padding-inline-start: 25px;
 }
 
 .preset-description-html ul li {
-    padding-left: 12px;
+    padding-inline-start: 12px;
     list-style-type: disclosure-closed;
 }
 
 .preset-description-html ol li {
-    padding-left: 12px;
+    padding-inline-start: 12px;
     list-style-type: decimal;
 }
 

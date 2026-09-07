@@ -7510,10 +7510,6 @@
         "message": "Bu yerda siz Video Uzatgichingiz (VTX) qiymatlarini sozlashingiz mumkin. Agar parvoz kontrolleri va VTX qo‘llab-quvvatlasa, uzatish qiymatlarini, jumladan VTX jadvallarini ko‘rish va o‘zgartirish mumkin.<br>VTX'ingizni sozlash uchun quyidagi qadamlarni bajaring:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">bu<\/a> sahifaga o‘ting;<br>2. o‘z mamlakatingiz va VTX modelingiz uchun mos VTX konfiguratsiya faylini toping va yuklab oling;<br>3. Quyida '$t(vtxButtonLoadFile.message)'ni bosing, VTX konfiguratsiya faylini tanlang, uni yuklang;<br>4. Sozlamalar to‘g‘ri ekanligini tekshiring;<br>5. VTX sozlamalarini parvoz kontrolleriga saqlash uchun '$t(vtxButtonSave.message)'ni bosing.<br>6. Ixtiyoriy ravishda, betaflight lua skriptlari bilan ishlatishingiz mumkin bo‘lgan lua konfiguratsiya faylini saqlash uchun '$t(vtxButtonSaveLua.message)'ni bosing (Batafsil <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">shu yerda<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Diqqat:<\/span> VTX'ingiz sozlanmagan yoki qo‘llab-quvvatlanmaydi. Shuning uchun bu yerdan VTX qiymatlarini o‘zgartirib bo‘lmaydi. Bu faqat parvoz kontrolleri Tramp yoki SmartAudio kabi protokol yordamida VTX'ga ulangan bo‘lsa va zarur bo‘lsa $t(tabPorts.message) bo‘limida to‘g‘ri sozlangan bo‘lsagina mumkin bo‘ladi.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Diqqat:<\/span> $t(vtxSelectedMode.message) maydonlaridan foydalanishdan oldin AVVAL pastdagi VTX jadvalini sozlash va saqlashingiz kerak.",
         "description": "Message to show when the VTX is not supported in the VTX tab"

@@ -284,7 +284,7 @@
         "message": "Polonès",
         "description": "Don't translate!!!"
     },
-    "language_zh_TW": {
+    "language_zh-TW": {
         "message": "繁體中文",
         "description": "Don't translate!!!"
     },
@@ -1665,6 +1665,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
     },
+    "escSensorSerialPort": {
+        "message": "Port sèrie de telemetria ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART, la telemetria de l'ESC es llegeix. Es configura al propi sensor de l'ESC des de l'API 1.49; la pestanya Ports només la mostra."
+    },
     "featureESC_SENSOR": {
         "message": "Utilitzeu la telemetria KISS \/ BLHeli_32 ESC <b>sobre un fil separat<\/b>"
     },
@@ -1703,6 +1709,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetria"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetria $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocol"
+    },
+    "telemetryInstancePort": {
+        "message": "Port Sèrie"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Velocitat de bauds"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Control de càmera"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART al qual està connectada una càmera amb protocol RunCam. Està configurat al mateix dispositiu des de l'API 1.49; la pestanya Ports només el mostra."
     },
     "configurationTelemetryHelp": {
         "message": "Sortida de Telemetria des de receptor"
@@ -1749,6 +1776,18 @@
     },
     "configurationRangefinderType": {
         "message": "Tipus"
+    },
+    "rangefinderSerialPort": {
+        "message": "Port sèrie del telèmetre"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART, la telemetria de l'ESC es llegeix. Es configura al propi sensor de l'ESC des de l'API 1.49; la pestanya Ports només la mostra."
+    },
+    "opticalflowSerialPort": {
+        "message": "Port sèrie de flux òptic"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART al qual està connectat el sensor de flux òptic. Un mòdul que informa tant del flux com de l'abast necessita cada conjunt per separat."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -2171,6 +2210,30 @@
     "configurationGPSubxSbas": {
         "message": "Tipus d'Assistència a Terra"
     },
+    "gpsSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "gpsSerialPortHelp": {
+        "message": "L'UART al qual està connectat el mòdul GPS. Per canviar-lo cal reiniciar."
+    },
+    "gpsSerialBaud": {
+        "message": "Velocitat de bauds"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "La velocitat a la qual s'espera que funcioni el mòdul GPS. Betaflight també prova les altres velocitats quan no pot establir contacte, per la qual cosa aquest és un punt de partida en lloc d'una configuració fixa."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "No s'ha pogut configurar el port sèrie del GPS, per tant no s'ha desat res."
+    },
+    "gpsCanDevice": {
+        "message": "Bus CAN"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "El bus CAN al qual estan connectats els mòduls DroneCAN. Això pertany a DroneCAN en conjunt, de manera que canviar-lo mou tots els dispositius DroneCAN, no només el GPS. Canviar-lo requereix un reinici."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "No s'ha pogut configurar el bus CAN, per tant no s'ha desat res."
+    },
     "configurationGPSAutoBaud": {
         "message": "Velocitat de transmissió automàtica"
     },
@@ -2341,6 +2404,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Text personalitzat OSD"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -6238,6 +6307,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "Protocol OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocol amb què es dibuixa l'OSD. El MAX7456 i l'OSD de FrSky controlen un xip o mòdul analògic; l'MSP envia l'OSD a través de l'UART següent, tal com esperen les ulleres DJI, HDZero i Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Port sèrie OSD"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART al qual es connecta un OSD sèrie. Es configura al mateix OSD des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Port sèrie de text personalitzat"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "Es rep el text OSD personalitzat d'UART."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Velocitat en bauds de text personalitzat"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Velocitat de transmissió en bauds per al port de text OSD personalitzat."
+    },
     "osdSetupUnitsTitle": {
         "message": "Unitats"
     },
@@ -6322,6 +6415,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Pujada fallida"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Desa i reinicia"
     },
     "osdSetupSave": {
         "message": "Desa"
@@ -7607,7 +7703,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atenció:<\/span> El vostre VTX no està configurat o no és compatible. Per tant, no podeu modificar els valors VTX d'aquí. Això només serà possible si el controlador de vol està unit a la VTX mitjançant algun protocol com Tramp o SmartAudio i està configurat correctament a la pestanya $t(tabPorts.message) si es necessita.",
+        "message": "<span class=\"message-negative\">Atenció:<\/span> Encara no hi ha cap VTX que respongui. Trieu el protocol que pronuncia el VTX i l'UART al qual està connectat a continuació i, a continuació, deseu-ho; la resta de configuracions apareixeran un cop el dispositiu respongui.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7749,6 +7845,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Freqüència a la qual es canvia el Pit Mode quan està activat.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Dispositiu VTX"
+    },
+    "vtxProtocol": {
+        "message": "Protocol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Protocol de control que parla el VTX. SmartAudio i Tramp s'executen a l'UART següent; MSP el comparteix amb MSP, igual que DJI, HDZero i Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART sobre el qual s'executa el protocol de control del VTX. Està configurat al mateix VTX des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Un VTX MSP respon al mateix enllaç MSP sobre el qual es dibuixen les ulleres, de manera que segueix el port sèrie OSD a la pestanya OSD i no es pot configurar aquí."
     },
     "vtxLowPowerDisarm": {
         "message": "Desarmat a baixa potència",
@@ -8295,6 +8409,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Dispositiu de registre Blackbox"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART utilitzat quan el dispositiu de registre és sèrie. Configurat a la mateixa caixa negra des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Velocitat de bauds en sèrie"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Velocitat en bauds per al port de registre sèrie."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Velocitat d'enregistrament de Blackbox"

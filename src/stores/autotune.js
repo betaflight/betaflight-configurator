@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
+import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
 
 /**
  * Pinia store for Autotune tab state.
@@ -7,6 +8,13 @@ import { ref, reactive } from "vue";
 export const useAutotuneStore = defineStore("autotune", () => {
     /** Analysis result object (per-axis transfer functions, gains, etc.) or null */
     const analysisResult = ref(null);
+
+    /**
+     * Target open-loop phase margin in degrees. Gains are recomputed from the
+     * stored transfer functions when this changes, so switching it does not
+     * require re-importing the log.
+     */
+    const targetPhaseMarginDeg = ref(PHASE_MARGIN_PRESETS.NORMAL);
 
     /** Which axes are visible on the chart / table: { roll: true, pitch: true, yaw: true } */
     const visibleAxes = reactive({ roll: true, pitch: true, yaw: true });
@@ -28,10 +36,12 @@ export const useAutotuneStore = defineStore("autotune", () => {
         analysisState.value = "idle";
         errorMessage.value = "";
         progressMessage.value = "";
+        targetPhaseMarginDeg.value = PHASE_MARGIN_PRESETS.NORMAL;
     }
 
     return {
         analysisResult,
+        targetPhaseMarginDeg,
         visibleAxes,
         analysisState,
         errorMessage,

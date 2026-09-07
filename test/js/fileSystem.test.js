@@ -55,6 +55,13 @@ describe("buildAcceptTypes", () => {
         });
     });
 
+    it("maps video extensions to their video MIME types", () => {
+        const [mp4] = buildAcceptTypes("video", ".mp4");
+        expect(mp4.accept).toEqual({ "video/mp4": [".mp4", ".MP4"] });
+        const [webm] = buildAcceptTypes("video", ["webm"]);
+        expect(webm.accept).toEqual({ "video/webm": [".webm", ".WEBM"] });
+    });
+
     it("falls back to application/octet-stream for unknown extensions (never */*)", () => {
         const [type] = buildAcceptTypes("custom", ".xyz");
         expect(type.accept).toEqual({ "application/octet-stream": [".xyz", ".XYZ"] });

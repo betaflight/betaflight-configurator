@@ -114,7 +114,11 @@ The next versions of the App will be a modern tool that based on PWA (Progressiv
 
 ### Prepare your environment
 
-1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
+1. Install [node.js](https://nodejs.org/) — use the exact version in [.nvmrc](./.nvmrc)
+   (`nvm use` if you have [nvm](https://github.com/nvm-sh/nvm)). The bundled npm must be
+   11.6.1 or newer: npm 11.6.0 and older write `package-lock.json` in a different shape, so
+   an older npm makes every commit rewrite the whole lockfile. `npm install` warns with
+   `EBADENGINE` if your toolchain is too old, and CI fails the *Lockfile in sync* check.
 
 ### PWA version
 

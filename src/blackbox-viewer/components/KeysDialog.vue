@@ -181,7 +181,7 @@ const layout = [
 .keys-kbd {
     display: inline-block;
     padding: 0.05rem 0.35rem;
-    margin-right: 0.15rem;
+    margin-inline-end: 0.15rem;
     font-family: ui-monospace, SFMono-Regular, monospace;
     font-size: 0.65rem;
     line-height: 1.5;

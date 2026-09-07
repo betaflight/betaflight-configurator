@@ -56,8 +56,8 @@ const setActiveLink = computed(() => performance.now() - props.lastReceivedTimes
     height: 31px;
     max-width: 105px;
     margin-top: 2px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-end-start-radius: 5px;
+    border-end-end-radius: 5px;
 }
 
 .bottomStatusIcons--compact {

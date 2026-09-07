@@ -14,7 +14,8 @@
             "csp": null,
             "capabilities": [
                 "default",
-                "android"
+                "android",
+                "ios"
             ]
         },
         "windows": [

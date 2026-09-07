@@ -329,13 +329,13 @@ const showRestoreButton = computed(() => {
 }
 
 .release_info_grid strong {
-    text-align: right;
+    text-align: end;
     white-space: nowrap;
 }
 
 .release_info_grid span,
 .release_info_grid a {
-    text-align: left;
+    text-align: start;
 }
 
 .release_info_grid .board_support {

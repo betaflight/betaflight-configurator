@@ -71,7 +71,7 @@ export default defineComponent({
     content: "";
     position: absolute;
     bottom: 20px;
-    left: 50%;
+    inset-inline-start: 50%;
     transform: translateX(-50%);
     width: 2px;
     height: 16px;

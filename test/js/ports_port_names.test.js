@@ -21,7 +21,9 @@ describe("port names", () => {
     });
 
     it("names the soft and PIO ports", () => {
-        expect(getPortCliName(30)).toBe("SOFTSERIAL1");
+        // The firmware CLI knows soft serial as SOFT1/SOFT2; only the display name spells it out.
+        expect(getPortCliName(30)).toBe("SOFT1");
+        expect(getPortDisplayName(30)).toBe("SOFTSERIAL1");
         expect(getPortCliName(40)).toBe("LPUART1");
         expect(getPortCliName(79)).toBe("PIOUART9");
     });
@@ -80,7 +82,7 @@ describe("findPortIdentifierByCliName", () => {
 
     it("resolves an unambiguous name the board did not report", () => {
         expect(findPortIdentifierByCliName([], "VCP")).toBe(20);
-        expect(findPortIdentifierByCliName([], "SOFTSERIAL2")).toBe(31);
+        expect(findPortIdentifierByCliName([], "SOFT2")).toBe(31);
     });
 
     it("reads an unreported ambiguous name as unassigned rather than guessing a block", () => {
