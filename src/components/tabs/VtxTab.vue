@@ -579,19 +579,12 @@ export default defineComponent({
         });
 
         const handleSave = () =>
-            runSave(
-                async () => {
-                    await saveVtx(writeVtxPort);
-                    await loadVtxConfig();
-                    await loadVtxPort();
-                    await loadOsdPort();
-                },
-                {
-                    onError: (error) => {
-                        console.error("Error saving VTX configuration:", error);
-                    },
-                },
-            );
+            runSave(async () => {
+                await saveVtx(writeVtxPort);
+                await loadVtxConfig();
+                await loadVtxPort();
+                await loadOsdPort();
+            });
 
         // --- VTX Table count setters (with change tracking) ---
 

@@ -507,9 +507,6 @@
     "sensorConfigSaved": {
         "message": "Sensor configuration saved"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Failed to save sensor configuration"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnetometer"
     },
@@ -2317,6 +2314,9 @@
     },
     "configurationSaved": {
         "message": "Configuration saved"
+    },
+    "configurationSaveFailed": {
+        "message": "Failed to save configuration"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
