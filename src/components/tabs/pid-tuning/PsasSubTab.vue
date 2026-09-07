@@ -481,7 +481,7 @@
                         </div>
                         <UInputNumber
                             v-model="psasAirDensity"
-                            :step="10"
+                            :step="1"
                             :min="800"
                             :max="1300"
                             size="xs"
