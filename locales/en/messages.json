@@ -355,6 +355,14 @@
         "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
         "description": "Don't translate!!!"
     },
+    "language_sr": {
+        "message": "Srpski (latinica)",
+        "description": "Don't translate!!!"
+    },
+    "language_sr_Cyrl": {
+        "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
+        "description": "Don't translate!!!"
+    },
     "language_uk": {
         "message": "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
         "description": "Don't translate!!!"

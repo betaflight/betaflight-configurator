@@ -135,7 +135,7 @@ jobs:
             --apiKey "$APPLE_API_KEY" --apiIssuer "$APPLE_API_ISSUER"
 
       - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: betaflight-app-ipa
           path: ${{ steps.ipa.outputs.path }}

@@ -2320,6 +2320,102 @@
     "portsReadOnlyHelp": {
         "message": "<strong>Nota:<\/strong> questo firmware assegna le porte seriali sulla scheda di ogni funzione, quindi questa vista è di sola lettura. Mostra quale porta ogni funzione usa attualmente; cambia l'impostazione dalla scheda che possiede la funzione."
     },
+    "portsTilesHelp": {
+        "message": "Questo firmware assegna le porte seriali nella scheda dedicata a ciascuna funzione. Ogni riquadro qui sotto mostra cosa è collegato alla scheda e quale funzione utilizza attualmente ciascuna porta."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Questo firmware non riporta ancora l’elenco delle periferiche."
+    },
+    "portsSectionSerial": {
+        "message": "Porte seriali"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Sensori"
+    },
+    "portsTileUnassigned": {
+        "message": "Non assegnato"
+    },
+    "portsTileConfigure": {
+        "message": "Configura"
+    },
+    "portsTileCanNode": {
+        "message": "Nodo"
+    },
+    "portsClaimActiveHelp": {
+        "message": "La porta è attiva per questa funzione"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Assegnata ma non attiva — ha un conflitto di porta o è in attesa di riavvio"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inattivo: abilita la funzione SOFTSERIAL nella scheda Configurazione"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inattivo — non ci sono pin assegnati a questa porta"
+    },
+    "portsInactiveReason": {
+        "message": "Inattivo — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inattivo"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Ricevitore Seriale"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox logging"
+    },
+    "portsClaimEscSensor": {
+        "message": "Telemetria ESC"
+    },
+    "portsClaimRcdevice": {
+        "message": "Camera (Protocollo RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Video Trasmettitore"
+    },
+    "portsClaimRangefinder": {
+        "message": "Rangefinder"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optical Flow"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Testo Personalizzato OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetria"
+    },
+    "portsSensorGyro": {
+        "message": "Giroscopio"
+    },
+    "portsSensorAcc": {
+        "message": "Accelerometro"
+    },
+    "portsSensorBaro": {
+        "message": "Barometro"
+    },
+    "portsSensorMag": {
+        "message": "Magnetometro"
+    },
+    "portsSensorNotDetected": {
+        "message": "Configurato ma non rilevato"
+    },
     "portsFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">È necessario<\/span> un aggiornamento del firmware. La configurazione delle porte seriali non è supportata per firmware &lt; di 1.8.0."
     },
