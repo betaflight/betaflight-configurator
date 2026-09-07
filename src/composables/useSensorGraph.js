@@ -14,6 +14,7 @@ export function useSensorGraph() {
     const mag_data = ref([]);
     const altitude_data = ref([]);
     const sonar_data = ref([]);
+    const pitot_data = ref([]);
     const debug_data = ref([]);
 
     // Sample counters and dirty flags
@@ -22,12 +23,14 @@ export function useSensorGraph() {
     let samples_mag_i = 0;
     let samples_altitude_i = 0;
     let samples_sonar_i = 0;
+    let samples_pitot_i = 0;
     let samples_debug_i = 0;
     let dirty_gyro = false;
     let dirty_accel = false;
     let dirty_mag = false;
     let dirty_altitude = false;
     let dirty_sonar = false;
+    let dirty_pitot = false;
     let dirty_debug = false;
 
     // Graph helpers storage
@@ -36,6 +39,7 @@ export function useSensorGraph() {
     let magHelpers = null;
     let altitudeHelpers = null;
     let sonarHelpers = null;
+    let pitotHelpers = null;
     let debugHelpers = [];
 
     function initDataArray(length) {
@@ -232,6 +236,7 @@ export function useSensorGraph() {
         mag_data.value = initDataArray(3);
         altitude_data.value = initDataArray(1);
         sonar_data.value = initDataArray(1);
+        pitot_data.value = initDataArray(1);
 
         // Initialize debug data - array of data arrays
         debug_data.value = [];
@@ -244,6 +249,7 @@ export function useSensorGraph() {
         magHelpers = initGraph("#mag", 3, ref(2000), mag_data.value);
         altitudeHelpers = initGraph("#altitude", 1, ref(5), altitude_data.value);
         sonarHelpers = initGraph("#sonar", 1, ref(400), sonar_data.value);
+        pitotHelpers = initGraph("#pitot", 1, ref(10), pitot_data.value);
 
         debugHelpers = [];
         for (let i = 0; i < debugColumns; i++) {
@@ -261,6 +267,9 @@ export function useSensorGraph() {
         }
         if (magHelpers) {
             magHelpers.scaleYMax.value = scales.mag;
+        }
+        if (pitotHelpers) {
+            pitotHelpers.scaleYMax.value = scales.pitot;
         }
     }
 
@@ -300,6 +309,9 @@ export function useSensorGraph() {
         if (dirty_sonar && drawIfDirty(sonarHelpers, samples_sonar_i)) {
             dirty_sonar = false;
         }
+        if (dirty_pitot && drawIfDirty(pitotHelpers, samples_pitot_i)) {
+            dirty_pitot = false;
+        }
         if (dirty_debug) {
             for (const helper of debugHelpers) {
                 drawGraph(helper, samples_debug_i);
@@ -333,6 +345,11 @@ export function useSensorGraph() {
         dirty_sonar = true;
     }
 
+    function addPitotSample(data) {
+        samples_pitot_i = addSampleToData(pitot_data.value, samples_pitot_i, data);
+        dirty_pitot = true;
+    }
+
     function addDebugSample(index, data) {
         if (!debug_data.value[index]) {
             return;
@@ -352,6 +369,7 @@ export function useSensorGraph() {
         mag_data,
         altitude_data,
         sonar_data,
+        pitot_data,
         debug_data,
         initializeGraphs,
         updateScales,
@@ -362,6 +380,7 @@ export function useSensorGraph() {
         addMagSample,
         addAltitudeSample,
         addSonarSample,
+        addPitotSample,
         addDebugSample,
         incrementDebugCounter,
     };

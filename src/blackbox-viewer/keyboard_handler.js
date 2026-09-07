@@ -1,5 +1,6 @@
 import { formatTime } from "./tools.js";
 import { GRAPH_MIN_ZOOM } from "./stores/graph.js";
+import { isExportInProgress } from "./playback_controls.js";
 
 /**
  * Create a keydown event handler for the document.
@@ -200,17 +201,17 @@ export function createKeydownHandler(ctx) {
     }
 
     const letterKeyHandlers = {
-        KeyI: handleKeyVideoIn,
-        KeyO: handleKeyVideoOut,
-        KeyM: handleKeyMarker,
-        KeyC: handleKeyConfig,
-        KeyA(e, shifted) {
+        i: handleKeyVideoIn,
+        o: handleKeyVideoOut,
+        m: handleKeyMarker,
+        c: handleKeyConfig,
+        a(e, shifted) {
             handleAnalyserKey(shifted);
             if (!shifted) {
                 e.preventDefault();
             }
         },
-        KeyH(e, shifted) {
+        h(e, shifted) {
             if (!shifted) {
                 if (!appStore.headerDialogOpen) {
                     showValueTable(false);
@@ -220,24 +221,34 @@ export function createKeydownHandler(ctx) {
                 e.preventDefault();
             }
         },
-        KeyT: handleKeyTable,
-        KeyW(e) {
+        t: handleKeyTable,
+        w(e) {
             if (e.shiftKey) {
                 workspaceStore.showDefaultMenu = true;
             }
         },
-        KeyZ: handleKeyZoom,
-        KeyS: handleKeySave,
-        KeyX(e, shifted) {
+        f(e, shifted) {
+            if (!shifted) {
+                graphStore.toggleFullscreen();
+                e.preventDefault();
+            }
+        },
+        z: handleKeyZoom,
+        s: handleKeySave,
+        x(e, shifted) {
             handleKeyOverride("graphExpoOverride", e, shifted);
         },
-        KeyG(e, shifted) {
+        g(e, shifted) {
             handleKeyOverride("graphGridOverride", e, shifted);
         },
     };
 
     function handleLetterKey(e, shifted) {
-        const handler = letterKeyHandlers[e.code];
+        // Use e.key.toLowerCase() instead of e.code to support non-QWERTY layouts.
+        // e.code reports physical key position (e.g., "KeyM" is always the M key position),
+        // but e.key reports the actual character produced based on the user's keyboard layout.
+        // On AZERTY, the physical M key produces e.key === "m" but e.code === "Semicolon".
+        const handler = letterKeyHandlers[e.key.toLowerCase()];
         if (!handler) {
             return false;
         }
@@ -276,6 +287,15 @@ export function createKeydownHandler(ctx) {
             case "End":
                 logJumpEnd();
                 break;
+            case "Escape":
+                // Leave fullscreen, unless Escape is already busy dismissing a dialog — that
+                // traps focus inside itself, so the target tells us. Open popups never get
+                // here; they are filtered out before dispatch.
+                if (!graphStore.isFullscreen || e.target.closest?.("[role='dialog']")) {
+                    return false;
+                }
+                graphStore.toggleFullscreen();
+                break;
             default:
                 return false;
         }
@@ -283,16 +303,22 @@ export function createKeydownHandler(ctx) {
         return true;
     }
 
+    // An open reka-ui dropdown menu or select owns the keyboard: it runs its own type-ahead
+    // and arrow navigation, which every shortcut below would otherwise double up on. Only the
+    // open popup is matched, never its trigger, so the shortcuts keep working while a closed
+    // trigger holds focus — the same distinction createDropdownSpaceGuard draws below.
+    const OPEN_POPUP = "[role='menu'],[role='listbox']";
+
     return function (e) {
         // Dormant behind other tabs (embedded): don't hijack keys the user means for the host.
-        if (!appStore.viewerActive) {
+        if (!appStore.viewerActive || isExportInProgress()) {
             return;
         }
         const shifted = e.altKey || e.shiftKey || e.ctrlKey || e.metaKey;
         if (e.key === "Enter" && e.target.type === "text" && !e.target.closest(".modal")) {
             e.target.blur();
         }
-        if (hasGraph() && e.target.type !== "text" && !e.target.closest(".modal")) {
+        if (hasGraph() && e.target.type !== "text" && !e.target.closest(".modal") && !e.target.closest?.(OPEN_POPUP)) {
             if (e.code.startsWith("Digit")) {
                 try {
                     handleDigitKey(e);
@@ -307,5 +333,51 @@ export function createKeydownHandler(ctx) {
             }
             handleNavigationKey(e);
         }
+    };
+}
+
+/**
+ * Create a capture-phase Space guard for dropdown/select triggers.
+ *
+ * The dropdown and select controls in the viewer (Nuxt UI / reka-ui
+ * `UDropdownMenu` and `USelect`) render a `<button>` trigger that reka returns
+ * focus to when its popup closes. While that trigger is focused it handles Space
+ * on its own keydown — toggling the popup — before the document-level handler's
+ * play/pause shortcut ever sees the event, leaving the button "stuck" on Space
+ * until focus moves elsewhere.
+ *
+ * Space is reserved for play/pause, so when such a trigger holds focus we
+ * intercept Space in the capture phase (before it reaches the trigger), run
+ * play/pause, and blur the trigger so it stops swallowing the shortcut. Only the
+ * trigger element is matched (menu button via `aria-haspopup="menu"`, select
+ * button via `role="combobox"`), so arrow-key navigation inside an open popup is
+ * untouched.
+ *
+ * @param {Object} ctx - Context object
+ * @param {Object} ctx.appStore - App Pinia store
+ * @param {Function} ctx.hasGraph - Returns true if a graph is loaded
+ * @param {Function} ctx.logPlayPause - Toggle play/pause
+ * @returns {Function} capture-phase keydown handler
+ */
+export function createDropdownSpaceGuard(ctx) {
+    const { appStore, hasGraph, logPlayPause } = ctx;
+
+    return function (e) {
+        if (e.code !== "Space" || !appStore.viewerActive || isExportInProgress() || !hasGraph()) {
+            return;
+        }
+        // Match a reka-ui dropdown-menu trigger (aria-haspopup="menu") or select
+        // trigger (role="combobox") only — never the items inside an open popup.
+        // Skip text-input comboboxes so typing a space there still works.
+        const trigger = e.target?.closest?.("[aria-haspopup='menu'], [role='combobox']");
+        if (!trigger || trigger.tagName === "INPUT" || e.target.type === "text") {
+            return;
+        }
+        // Stop the event from reaching the trigger's own keydown handler, drop
+        // focus so future presses go to the shortcut, then play/pause.
+        e.preventDefault();
+        e.stopPropagation();
+        trigger.blur();
+        logPlayPause();
     };
 }

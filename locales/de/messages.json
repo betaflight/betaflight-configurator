@@ -227,9 +227,6 @@
     "configuratorUpdateHelp": {
         "message": "Wenn Internet verfügbar ist, sollte die App automatisch nach verfügbaren Updates fragen."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Webseite mit Downloadversionen aufrufen"
-    },
     "deviceRebooting": {
         "message": "Gerät - <span class=\"message-negative\">startet neu<\/span>"
     },
@@ -5901,10 +5898,6 @@
     },
     "osdButtonSaved": {
         "message": "Gespeichert"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Achtung:<\/span> Dein VTX ist nicht konfiguriert oder nicht unterstützt. Dadurch kannst du die VTX-Werte von hier aus nicht ändern. Dies ist nur möglich, wenn der Flugcontroller mit einem Protokoll wie Tramp oder SmartAudio verbunden ist und in der Registerkarte $t(tabPorts.message) korrekt konfiguriert ist.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Achtung:<\/span> Du musst die VTX-Tabelle unten ZUERST konfigurieren und speichern, bevor du die $t(vtxSelectedMode.message) Felder verwenden kannst.",

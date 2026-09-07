@@ -545,7 +545,7 @@ async function handleCliErrorsDialogClose() {
     color: white;
     box-sizing: border-box;
     user-select: text;
-    float: left;
+    float: inline-start;
 }
 
 .presets_cli_wrapper {

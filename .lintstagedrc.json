@@ -1,7 +1,4 @@
 {
-    "**/*.{js,vue}": [
-        "prettier --write --ignore-unknown",
-        "eslint --fix --ext .js,.vue"
-    ],
+    "**/*.{js,vue,mjs}": ["prettier --write --ignore-unknown", "eslint --fix"],
     "**/*.{less,css}": ["prettier --write --ignore-unknown"]
 }

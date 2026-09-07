@@ -1951,30 +1951,30 @@ export default defineComponent({
         li {
             list-style: initial;
             list-style-type: circle;
-            margin-left: 30px;
+            margin-inline-start: 30px;
         }
     }
     .options {
         position: relative;
         line-height: 18px;
-        text-align: left;
+        text-align: start;
         label {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             input {
-                margin-right: 0;
+                margin-inline-end: 0;
             }
             .helpicon {
                 float: none;
-                margin-left: 3px;
+                margin-inline-start: 3px;
                 margin-top: 0;
                 display: inline-block;
                 align-self: center;
             }
         }
         #flash_manual_baud_rate {
-            margin-left: 0.5rem;
+            margin-inline-start: 0.5rem;
         }
     }
     .board-selection-grid {
@@ -2006,8 +2006,8 @@ export default defineComponent({
     .board-selection-grid .help-icon-cell {
         grid-column: 2;
         text-align: center;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
+        padding-inline-start: 0.5rem;
+        padding-inline-end: 0.5rem;
         width: 30px;
     }
 
@@ -2041,7 +2041,7 @@ export default defineComponent({
         position: relative;
         top: auto;
         height: auto;
-        right: auto;
+        inset-inline-end: auto;
         z-index: auto;
         pointer-events: all;
         display: flex;
@@ -2147,7 +2147,7 @@ export default defineComponent({
     .default_btn {
         width: fit-content;
         padding-top: 0.25rem;
-        padding-right: 0.25rem;
+        padding-inline-end: 0.25rem;
         a {
             padding: 0.15rem 0.5rem;
         }
@@ -2166,14 +2166,14 @@ export default defineComponent({
     }
 
     .release_info_grid strong {
-        text-align: right;
+        text-align: end;
         white-space: nowrap;
-        padding-right: 1rem;
+        padding-inline-end: 1rem;
     }
 
     .release_info_grid span,
     .release_info_grid a {
-        text-align: left;
+        text-align: start;
     }
 
     .release_info_grid .board_support {
@@ -2239,13 +2239,13 @@ export default defineComponent({
     }
 
     .cloud_build_grid strong {
-        text-align: right;
+        text-align: end;
         white-space: nowrap;
-        padding-right: 1rem;
+        padding-inline-end: 1rem;
     }
 
     .cloud_build_grid a {
-        text-align: left;
+        text-align: start;
     }
 
     .cloud_build_grid .status_wrapper {
@@ -2255,7 +2255,7 @@ export default defineComponent({
     }
 
     #cloudTargetStatus {
-        padding-left: 0.5rem;
+        padding-inline-start: 0.5rem;
     }
 
     .release_info_grid .btn {
@@ -2343,7 +2343,7 @@ export default defineComponent({
     justify-content: end;
     gap: 0.5rem;
     padding: 0.75rem 1rem 0.75rem 1rem;
-    border-top-left-radius: 1.5rem;
+    border-start-start-radius: 1.5rem;
     &::before {
         width: 1.5rem;
         aspect-ratio: 1;
@@ -2351,7 +2351,7 @@ export default defineComponent({
         mask: url(../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
-        left: -1.5rem;
+        inset-inline-start: -1.5rem;
         bottom: 0;
     }
     .btn {
@@ -2362,7 +2362,7 @@ export default defineComponent({
             border-radius: 3px;
             border: 1px solid var(--primary-600);
             color: #000;
-            float: right;
+            float: inline-end;
             font-weight: bold;
             font-size: 12px;
             display: block;
@@ -2382,7 +2382,7 @@ export default defineComponent({
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
             .helpicon {
-                margin-left: 5px;
+                margin-inline-start: 5px;
             }
         }
         a.disabled {
@@ -2404,7 +2404,7 @@ export default defineComponent({
         border-radius: 3px;
         border: 1px solid var(--primary-600);
         color: #000;
-        float: right;
+        float: inline-end;
         font-weight: bold;
         font-size: 12px;
         display: block;
@@ -2498,7 +2498,7 @@ export default defineComponent({
     max-height: 250px;
     overflow-y: auto;
     width: 100%;
-    left: 0;
+    inset-inline-start: 0;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
 }
 
@@ -2626,23 +2626,23 @@ export default defineComponent({
 /* List styling for recovery and warning text - using :deep to pierce scoped styles */
 :deep(.note-text-format ul) {
     list-style: none !important;
-    margin-left: 0.5rem !important;
+    margin-inline-start: 0.5rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
-    padding-left: 0 !important;
+    padding-inline-start: 0 !important;
 }
 
 :deep(.note-text-format li) {
     margin-bottom: 0.25rem !important;
-    margin-left: 0 !important;
-    padding-left: 1.5em !important; /* space for dash */
+    margin-inline-start: 0 !important;
+    padding-inline-start: 1.5em !important; /* space for dash */
     text-indent: -1.5em !important; /* hanging indent so wrapped lines align after dash */
     position: relative;
 }
 
 :deep(.note-text-format li::before) {
     content: "– " !important;
-    margin-right: 0.5rem !important;
+    margin-inline-end: 0.5rem !important;
     color: var(--text) !important;
 }
 
@@ -2653,7 +2653,7 @@ export default defineComponent({
 
         ul {
             margin: 0.5rem 0;
-            padding-left: 1.5rem;
+            padding-inline-start: 1.5rem;
             list-style-type: disc;
         }
 
@@ -2672,7 +2672,7 @@ export default defineComponent({
 /* Unstable firmware dialog list styling */
 #dialogUnstableFirmwareAcknowledgement {
     :deep(ul) {
-        margin-left: 1.5rem;
+        margin-inline-start: 1.5rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
@@ -2680,7 +2680,7 @@ export default defineComponent({
     :deep(li) {
         list-style: disc;
         margin-bottom: 0.25rem;
-        margin-left: 0.5rem;
+        margin-inline-start: 0.5rem;
     }
 }
 </style>

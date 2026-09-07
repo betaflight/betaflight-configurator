@@ -1,12 +1,18 @@
 {
     "$schema": "../gen/schemas/desktop-schema.json",
     "identifier": "default",
-    "description": "Default capability for all windows, allows core and shell open permissions.",
+    "description": "Default capability for all windows: core, shell open, USB serial and native file dialogs.",
     "platforms": ["linux", "windows", "macOS"],
     "windows": ["*"],
     "permissions": [
         "core:default",
         "shell:allow-open",
-        "serialplugin:default"
+        "serialplugin:default",
+        "dialog:allow-open",
+        "dialog:allow-save",
+        "fs:allow-read-file",
+        "fs:allow-read-text-file",
+        "fs:allow-write-file",
+        "fs:allow-write-text-file"
     ]
 }

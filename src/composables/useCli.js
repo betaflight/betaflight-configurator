@@ -22,9 +22,12 @@ const carriageReturnCode = 13;
 const enterKeyCode = 13;
 const tabKeyCode = 9;
 const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
+const CLI_ENTRY_MARKER = "CLI";
+const CLI_PROMPT = "# ";
+const CLI_ENTRY_PROMPT = `\r\n${CLI_PROMPT}`;
 
 function removePromptHash(promptText) {
-    return promptText.replace(/^# /, "");
+    return promptText.startsWith(CLI_PROMPT) ? promptText.slice(CLI_PROMPT.length) : promptText;
 }
 
 function cliBufferCharsToDelete(command, buffer) {
@@ -140,6 +143,11 @@ export function useCli() {
 
     let outputHistory = "";
     let cliBuffer = "";
+    /** @type {boolean} */
+    let cliEntrySawMarker = false;
+    /** @type {string} */
+    let cliEntrySuffix = "";
+    let outputSuppressed = false;
 
     // Refs for DOM elements
     const windowWrapperRef = ref(null);
@@ -207,9 +215,9 @@ export function useCli() {
     };
 
     const writeLineToOutput = (text) => {
-        if (CliAutoComplete.isBuilding()) {
-            CliAutoComplete.builderParseLine(text);
-            return; // suppress output if in building state
+        if (CliAutoComplete.isSuppressingOutput()) {
+            CliAutoComplete.parseSuppressedLine(text);
+            return; // suppress output while the cache builder owns the channel
         }
 
         if (text.startsWith("###ERROR")) {
@@ -519,21 +527,29 @@ export function useCli() {
         }
     };
 
-    const validateCliEntry = (validateText) => {
-        if (!CONFIGURATOR.cliValid && validateText.includes("CLI")) {
+    /**
+     * Complete CLI-entry validation after the marker and prompt have been observed.
+     * @returns {boolean} true when autocomplete should start after the current read.
+     */
+    const validateCliEntry = () => {
+        if (!CONFIGURATOR.cliValid && cliEntrySawMarker) {
             gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
             CONFIGURATOR.cliValid = true;
             // begin output history with the prompt (last line of welcome message)
             // this is to match the content of the history with what the user sees on this tab
-            const lastLine = validateText.split("\n").pop();
-            outputHistory = lastLine;
+            outputHistory = CLI_PROMPT;
 
-            if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                CliAutoComplete.builderStart();
-            }
+            return CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding();
         }
+
+        return false;
     };
 
+    /**
+     * Process bytes received from the serial port.
+     * @param {{ data: ArrayBuffer } | ArrayBuffer | Uint8Array} readInfo
+     * @returns {void}
+     */
     const read = (readInfo) => {
         /*  Some info about handling line feeds and carriage return
 
@@ -546,8 +562,8 @@ export function useCli() {
             Chrome OS currently unknown
         */
         const data = new Uint8Array(readInfo.data ?? readInfo);
-        let validateText = "";
         let sequenceCharsToSkip = 0;
+        let startAutocompleteAfterRead = false;
 
         for (let i = 0; i < data.length; i++) {
             const byte = data[i];
@@ -557,8 +573,14 @@ export function useCli() {
             if (!CONFIGURATOR.cliValid && (isCRLF || state.startProcessing)) {
                 // try to catch part of valid CLI enter message (firmware message starts with CRLF)
                 state.startProcessing = true;
-                validateText += currentChar;
+                cliEntrySuffix = `${cliEntrySuffix}${currentChar}`.slice(-CLI_ENTRY_PROMPT.length);
+                if (cliEntrySuffix.endsWith(CLI_ENTRY_MARKER)) {
+                    cliEntrySawMarker = true;
+                }
                 writeToOutput(escapeHtml(currentChar));
+                if (cliEntrySuffix === CLI_ENTRY_PROMPT) {
+                    startAutocompleteAfterRead = validateCliEntry();
+                }
                 continue;
             }
 
@@ -574,6 +596,16 @@ export function useCli() {
                 continue;
             }
 
+            // snapshot first: processing this character can end suppression, and the character that
+            // ends it still belongs to the builder
+            const suppressed = CliAutoComplete.isSuppressingOutput();
+
+            if (outputSuppressed && !suppressed) {
+                // drop whatever half of a builder line was already buffered
+                cliBuffer = "";
+            }
+            outputSuppressed = suppressed;
+
             if (CONFIGURATOR.cliValid) {
                 const shouldContinue = processCharacterInCliMode(byte, currentChar);
                 if (shouldContinue) {
@@ -581,8 +613,7 @@ export function useCli() {
                 }
             }
 
-            if (!CliAutoComplete.isBuilding()) {
-                // do not include the building dialog into the history
+            if (!suppressed) {
                 outputHistory += currentChar;
             }
 
@@ -591,10 +622,12 @@ export function useCli() {
 
         state.lastArrival = Date.now();
 
-        validateCliEntry(validateText);
+        if (startAutocompleteAfterRead) {
+            CliAutoComplete.builderStart();
+        }
 
         // fallback to native autocomplete
-        if (!CliAutoComplete.isEnabled()) {
+        if (!CliAutoComplete.isEnabled() && !CliAutoComplete.isSuppressingOutput()) {
             setPrompt(removePromptHash(cliBuffer));
         }
     };
@@ -602,6 +635,9 @@ export function useCli() {
     const initialize = async () => {
         outputHistory = "";
         cliBuffer = "";
+        cliEntrySawMarker = false;
+        cliEntrySuffix = "";
+        outputSuppressed = false;
         state.startProcessing = false;
 
         CONFIGURATOR.cliActive = true;

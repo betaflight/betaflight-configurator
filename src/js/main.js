@@ -17,6 +17,7 @@ import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 import { loadDeviceFilters } from "./protocols/devices.js";
+import { isAndroid, isTauriAndroid, isTauriIOS } from "./utils/checkCompatibility.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
 import { MspCancelledError } from "./msp/mspErrors.js";
@@ -181,6 +182,22 @@ async function startProcess() {
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
     switchTab("landing", { mode: "disconnected" });
+
+    // The phone/tablet shell only. A narrow desktop or browser window is still the desktop
+    // experience, so width alone must not opt anything in here.
+    document.body.classList.toggle("mobile-app-shell", isTauriIOS() || isTauriAndroid() || isAndroid());
+
+    // The on-screen keyboard leaves no room for the tab strip in the floating bar. Track focus
+    // rather than viewport height: the layout viewport shrinks with the keyboard, so measuring
+    // it cannot tell the two apart.
+    document.addEventListener("focusin", (event) => {
+        if (event.target?.matches?.("input, textarea, [contenteditable]")) {
+            document.body.classList.add("keyboard-visible");
+        }
+    });
+    document.addEventListener("focusout", () => {
+        document.body.classList.remove("keyboard-visible");
+    });
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",

@@ -137,6 +137,30 @@
         "message": "Inserire il percorso seriale o l'URL a cui connettersi.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Connessioni salvate",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nome:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nome per questa connessione",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Salva",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Aggiorna",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Rimuovi connessione salvata",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Connessione automatica"
     },
@@ -309,9 +333,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Quando internet è disponibile, l'app controlla automaticamente gli aggiornamenti disponibili."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Pagina web degli aggiornamenti"
     },
     "rebootFlightController": {
         "message": "Riavvio del controllore di volo, riconnettersi quando pronto"
@@ -978,7 +999,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Il <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualizzatore di Log Blackbox<\/a> è disponibile come app.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware, questa app e il visualizzatore di blackbox possono essere scaricati da GitHub.<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">."
+        "message": "Il nostro visualizzatore di log Blackbox è integrato in questa app. Apri la scheda <strong>Blackbox Viewer<\/strong> per analizzare i registri dei voli.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware e questa app può essere scaricata da GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
@@ -1628,6 +1649,12 @@
     "featureRX_SPI": {
         "message": "Rx SPI (es. Rx integrato)"
     },
+    "escSensorSerialPort": {
+        "message": "Porta Seriale Telemetria ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART dell'ESC dove è letta la telemetria. Impostare il sensore ESC stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
     "featureESC_SENSOR": {
         "message": "Usa la telemetria KISS\/BLHeli_32 ESC <b>su un filo separato<\/b>"
     },
@@ -1666,6 +1693,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetria"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetria $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocollo"
+    },
+    "telemetryInstancePort": {
+        "message": "Porta Seriale"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud Rate"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Controllo Camera"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART dove è cablata una telecamera con protocollo RunCam. Impostare sul dispositivo stesso da API 1.49; la scheda Porte lo mostra soltanto."
     },
     "configurationTelemetryHelp": {
         "message": "Uscita telemetria dalla ricevente"
@@ -1712,6 +1760,18 @@
     },
     "configurationRangefinderType": {
         "message": "Tipo"
+    },
+    "rangefinderSerialPort": {
+        "message": "Porta Seriale Rangefinder"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART dove è cablato il rangefinder. Impostare sul rangefinder stesso da API 1.49; la scheda Ports lo mostra soltanto."
+    },
+    "opticalflowSerialPort": {
+        "message": "Porta Seriale Optical Flow"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART dove è cablato il sensore optical flow. Un modulo che usa sia il flusso ottico che il rangefinder richiede un settaggio separato."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -2134,6 +2194,30 @@
     "configurationGPSubxSbas": {
         "message": "Tipo Assistenza di Terra"
     },
+    "gpsSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "gpsSerialPortHelp": {
+        "message": "L'UART dove è cablato il modulo GPS. Cambiarlo richiede un riavvio."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud Rate"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "Velocità di trasmissione del modulo GPS. Betaflight, quando non riesce a stabilire il contatto, prova anche altre velocità, quindi questa è un’impostazione di partenza piuttosto che un valore fisso."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Impossibile impostare la porta seriale GPS, quindi non è stato salvato nulla."
+    },
+    "gpsCanDevice": {
+        "message": "CAN Bus"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "Il bus CAN a cui sono collegati i moduli DroneCAN. Questa impostazione riguarda DroneCAN nel suo complesso, quindi modificarla sposta tutti i dispositivi DroneCAN, non solo il GPS. La modifica richiede un riavvio."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Impossibile impostare il bus CAN, quindi non è stato salvato nulla."
+    },
     "configurationGPSAutoBaud": {
         "message": "Baud Automatici"
     },
@@ -2156,8 +2240,24 @@
         "message": "Quando abilitato, solo il primo armamento dopo la connessione della batteria sarà usato come punto di partenza. Se non abilitato, ogni volta che il modello viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Il supporto GPS non è incluso in questa build del firmware. Ricaricare il firmware con l'opzione GPS per configurare e utilizzare il GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Protocollo ricevente seriale"
+    },
+    "portsPortNone": {
+        "message": "Nessuno"
+    },
+    "receiverSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART a cui è collegato il ricevitore seriale. Il baud rate segue il provider, quindi non c'è nulla da impostare qui. Cambiare la porta richiede un riavvio."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Impossibile impostare la porta seriale del ricevitore, quindi non è stato salvato nulla."
     },
     "someRXTypesDisabled": {
         "message": "Alcuni protocolli del ricevitore non sono supportati dalla configurazione della build."
@@ -2216,6 +2316,9 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NON<\/span> \n disabilitare mai MSP sulla prima porta seriale a meno che tu non sappia BENE cosa stai per fare. Potrebbe rendersi necessario riflashare e cancellare la tua configurazione se lo fai."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> questo firmware assegna le porte seriali sulla scheda di ogni funzione, quindi questa vista è di sola lettura. Mostra quale porta ogni funzione usa attualmente; cambia l'impostazione dalla scheda che possiede la funzione."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">È necessario<\/span> un aggiornamento del firmware. La configurazione delle porte seriali non è supportata per firmware &lt; di 1.8.0."
@@ -2285,6 +2388,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Testo Personalizzato Osd"
     },
     "pidTuningProfileOption": {
         "message": "Profilo $1"
@@ -6182,6 +6291,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "Protocollo OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocollo con cui viene generato l’OSD. MAX7456 e FrSky OSD pilotano un chip o modulo analogico; MSP invia l’OSD tramite la UART sottostante, come previsto dagli occhiali DJI, HDZero e Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Porta Seriale OSD"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART dove è cablato un OSD. Impostare l'OSD stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Porta Seriale Testo Personalizzato"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART dove si riceve il testo personalizzato OSD."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Velocità di trasmissione del Testo Personalizzato"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Velocità di trasmissione della porta OSD."
+    },
     "osdSetupUnitsTitle": {
         "message": "Unità"
     },
@@ -6266,6 +6399,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Upload fallito"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Salva e Riavvia"
     },
     "osdSetupSave": {
         "message": "Salva"
@@ -6906,6 +7042,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicatore di qualità del link basato sulla percentuale di pacchetti di dati non corrotti ricevuti con successo"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Modalità RF:Qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Solo qualità del collegamento",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distanza del volo",
         "description": "One of the elements of the OSD"
@@ -7543,7 +7687,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Attenzione:<\/span> La tua VTX non è configurata o non è supportata, quindi non puoi modificare i valori VTX da qui. La modifica sarà possibile solo se il controllore del volo è collegato alla VTX utilizzando qualche protocollo come Tramp o SmartAudio ed è configurato correttamente nella scheda $t(tabPorts.message).",
+        "message": "<span class=\"message-negative\">Attenzione:<\/span> Nessuna VTX sta rispondendo. Seleziona qui sotto il protocollo utilizzato dalla VTX e la UART a cui è collegata, quindi salva; le impostazioni rimanenti appariranno quando il dispositivo risponderà.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7685,6 +7829,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Frequenza alla quale cambia la Modalità Pit quando abilitata.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Dispositivo VTX"
+    },
+    "vtxProtocol": {
+        "message": "Protocollo"
+    },
+    "vtxProtocolHelp": {
+        "message": "Protocollo di controllo utilizzato dal VTX. SmartAudio e Tramp usano la UART sottostante; MSP condivide la stessa UART, così come fanno DJI, HDZero e Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART dove è in uso il protocollo di controllo VTX. Impostare l'OSD stesso da API 1.49; la scheda Porte lo mostra soltanto."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Una VTX MSP risponde sullo stesso collegamento MSP su cui sono collegati gli occhiali, quindi segue la porta seriale OSD impostata nella scheda OSD e non può essere configurato qui."
     },
     "vtxLowPowerDisarm": {
         "message": "Bassa potenza quando disarmato",
@@ -7913,45 +8075,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinazione è {{saved}}° ma il GPS rileva {{detected}}° per questa posizione. Fare clic su Aggiorna per correggere."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} esempi"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclinare di più!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Rilevamento fallito — prova con inclinazione più varia."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Cal Cliente (Guidato)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Calibrazione automatica 60s"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibrazione Guidata"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Passo 1\/6 — Tieni il velivolo orizzontale, ruota di 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Passo 2\/6 — Mettilo a testa in giù, ruota di 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Passo 3\/6 — Muso verso l’alto, ruota di 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Passo 4\/6 — Muso verso il basso, ruota di 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Passo 5\/6 — Lato sinistro in alto, ruota di 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Passo 6\/6 — Lato destro in alto, ruota di 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Raccolta dati completata — controlla e salva"
-    },
     "magCalibrationCancel": {
         "message": "Cancella"
     },
@@ -7982,12 +8105,6 @@
     "magCalibrationSamples": {
         "message": "Esempi"
     },
-    "magCalibrationQuality": {
-        "message": "Qualità"
-    },
-    "magCalibrationResidual": {
-        "message": "Adatta Residua"
-    },
     "magCalibrationQualityGood": {
         "message": "Buono"
     },
@@ -7999,9 +8116,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Offset firmware"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offset di adattamento sferico"
     },
     "magCalibrationUnguided": {
         "message": "Firmware Cal (Legacy)"
@@ -8017,18 +8131,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibrazione firmware completata!"
-    },
-    "magCalibrationGuided": {
-        "message": "Cal Cliente (Libera)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Ruota liberamente — il configuratore calcola le compensazioni (offset)"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibrazione Cliente"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Ruotare il veicolo in tutte le direzioni. Scopo è di creare una sfera completa di punti per circa uno o due minuti. Salva il risultato quando i valori di taratura si sono stabilizzati."
     },
     "magCalibrationCheck": {
         "message": "Controlla"
@@ -8054,17 +8156,14 @@
     "magCalibrationSaveError": {
         "message": "Impossibile salvare i valori di calibrazione"
     },
-    "magCalibrationAccept": {
-        "message": "Salva Calibrazione"
-    },
     "magCalibrationFull": {
-        "message": "Cal Completa (auto allineamento)"
+        "message": "Calibra e rileva l'allineamento"
     },
     "magCalibrationFullDesc": {
-        "message": "Una rotazione completa - calibra gli offset, il soft-iron e l'orientamento del magnetometro"
+        "message": "Ruotare il velivolo in tutte le direzioni per calibrare il sensore e rilevare automaticamente il suo orientamento di montaggio."
     },
     "magCalibrationFullTitle": {
-        "message": "Calibrazione Completa"
+        "message": "Calibra e Rileva l'allineamento"
     },
     "magCalibrationFullInstruction": {
         "message": "Segui i passaggi qui sotto, mantenendo il velivolo stabile durante ogni rotazione completa. Il conteggio delle zone aumenta man mano che raggiungi nuovi angoli: cerca di coprirle tutte e 20."
@@ -8100,7 +8199,10 @@
         "message": "{{covered}} \/ {{total}} zone coperte"
     },
     "magCalibrationFullCompute": {
-        "message": "Calcola"
+        "message": "Calibrazione Finale"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Più zone ricoperte danno maggiore precisione — puntare a 20 \/ 20 per la migliore calibrazione e rilevamento d' allineamento."
     },
     "magCalibrationFullCoverage": {
         "message": "Copertura:"
@@ -8130,7 +8232,22 @@
         "message": "Campioni non sufficienti — gira più lungo"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Nessuna posizione GPS o IP — non é possibile determinare l'inclinazione magnetica"
+        "message": "Nessun GPS, browser o indirizzo IP — inserisci le coordinate per continuare"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Posizione richiesta per la calibrazione"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Inserisci latitudine e longitudine scegliendo da Google Maps. Il drone non ha nessun aggancio GPS e il dispositivo non è riuscito a fornire i dati di posizione. La posizione è necessaria per la calibrazione del magnetometro."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.g. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Formato coordinate non valido. Inserisci come: latitudine, longitudine (es. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Impossibile calcolare un riferimento magnetico per queste coordinate. Si prega di controllarle e riprovare."
     },
     "magCalibrationFullCliCopied": {
         "message": "Comandi CLI copiati negli appunti"
@@ -8170,12 +8287,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nuovo"
-    },
-    "magAlignmentApply": {
-        "message": "Applica"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Rileva"
     },
     "configurationSmallAngle": {
         "message": "Angolo massimo di armamento [gradi]"
@@ -8282,6 +8393,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Dispositivo di registrazione Blackbox"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Porta Seriale"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART utilizzata quando il dispositivo di logging è di tipo Seriale. Viene impostata direttamente nel Blackbox a partire dall’API 1.49; la scheda Porte la mostra soltanto."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Velocità di trasmissione seriale (baud rate)"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Velocità di trasmissione della porta seriale per il log."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frequenza di registrazione della BlackBox"

@@ -12,7 +12,7 @@ import { reactive } from "vue";
 const CONFIGURATOR = reactive({
     // all versions are specified and compared using semantic versioning http://semver.org/
     API_VERSION_ACCEPTED: API_VERSION_1_44,
-    API_VERSION_MAX_SUPPORTED: API_VERSION_1_48,
+    API_VERSION_MAX_SUPPORTED: API_VERSION_1_49,
 
     connectionValid: false,
     connectionValidCliOnly: false,

@@ -584,8 +584,8 @@ defineExpose({
     display: block;
     width: 160px;
     height: 160px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
     margin-top: auto;
     margin-bottom: auto;
 }

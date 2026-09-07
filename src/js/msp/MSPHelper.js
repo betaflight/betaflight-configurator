@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -83,6 +89,8 @@ function MspHelper() {
         LIDAR_TF: 15,
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18,
+        OSD_CUSTOM_TEXT: 19,
     };
 
     self.REBOOT_TYPES = {
@@ -459,6 +467,12 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     break;
                 case MSPCodes.MSP_SONAR:
                     FC.SENSOR_DATA.sonar = data.read32();
+                    break;
+                case MSPCodes.MSP_PITOT:
+                    FC.SENSOR_DATA.pitot = {
+                        airspeed: data.read32(),
+                        diffPressure: data.read32(),
+                    };
                     break;
                 case MSPCodes.MSP_ANALOG:
                     FC.ANALOG.voltage = data.readU8() / 10.0;
@@ -1396,6 +1410,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG.opticalflow_hardware = data.readU8();
                     }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.SENSOR_CONFIG.pitot_hardware = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE:
                     FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
@@ -1407,6 +1424,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware = data.readU8();
+                    }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.SENSOR_CONFIG_ACTIVE.pitot_hardware = data.readU8();
                     }
                     break;
                 case MSPCodes.MSP2_MCU_INFO:
@@ -2427,6 +2447,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.SENSOR_CONFIG.sonar_hardware);
                 buffer.push8(FC.SENSOR_CONFIG.opticalflow_hardware);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.SENSOR_CONFIG.pitot_hardware);
             }
             break;
 

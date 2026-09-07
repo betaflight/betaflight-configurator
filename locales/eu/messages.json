@@ -136,9 +136,6 @@
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Bertsio agirien webgunera joan"
-    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Abiarazten<\/span>"
     },
@@ -4014,10 +4011,6 @@
     },
     "osdButtonSaved": {
         "message": "Gordeta"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> Zure VTX ez dago konfiguratuta edo ez da onartzen. Horretaz, ezin dituzu VTX balioak hemendik aldatu. Hau bakarrik izango litzateke hegaldi-kontroladorea VTX-rekin konektatuta badago, hala nola Tramp edo SmartAudio bezalako protokolo motaren bat erabiliz eta $t(tabPorts.message) fitxan behar bezala konfiguratuta badago.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Abisua:<\/span> Lehenik eta behin beheko VTX taula konfiguratu eta gorde behar duzu $t(vtxSelectedMode.message) eremuak erabili ahal izateko.",

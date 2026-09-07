@@ -42,6 +42,32 @@
                                     class="min-w-40"
                                 />
                             </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialPort')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxPortIdentifier"
+                                    :items="blackboxPortOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialBaud')"
+                                :help="$t('onboardLoggingSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxBaud"
+                                    :items="blackboxBaudOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
                                 <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
@@ -310,7 +336,9 @@ import { bit_check, bit_set } from "../../js/bit";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { runTabLoad } from "../../composables/useTabLoad";
+import { useDataflashErase } from "../../composables/useDataflashErase";
 
 const BLOCK_SIZE = 4096;
 
@@ -383,8 +411,6 @@ export default defineComponent({
         const debugFieldsEnabled = ref(debugStore.enableFields ? debugStore.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
-        const eraseCancelled = ref(false);
-        const isErasing = ref(false);
         const blockSize = ref(BLOCK_SIZE);
         const writeError = ref(false);
 
@@ -408,6 +434,23 @@ export default defineComponent({
             const index = types.gyro.elements.indexOf("VIRTUAL");
             virtualGyro.value = fcStore.sensorConfigActive?.gyro_hardware === index;
         };
+
+        // From API 1.49 the serial-logging port and its baud live on the blackbox parameter group
+        // rather than the shared port function mask, so they are assigned here.
+        const {
+            available: blackboxPortAvailable,
+            writable: blackboxPortWritable,
+            options: blackboxPortOptions,
+            selectedIdentifier: blackboxPortIdentifier,
+            baudOptions: blackboxBaudOptions,
+            selectedBaud: blackboxBaud,
+            load: loadBlackboxPort,
+            write: writeBlackboxPort,
+        } = useFeaturePort({
+            setting: "blackbox_uart",
+            functionName: "BLACKBOX",
+            baud: { setting: "blackbox_baud" },
+        });
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -550,9 +593,40 @@ export default defineComponent({
                 blackboxRate: blackboxRate.value,
                 debugMode: debugMode.value,
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
+                blackboxPortIdentifier: blackboxPortIdentifier.value,
+                blackboxBaud: blackboxBaud.value,
             });
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+
+        const {
+            isErasing,
+            start: startFlashErase,
+            cancel: cancelFlashErase,
+        } = useDataflashErase({
+            onComplete: () => {
+                if (
+                    getConfig("showNotifications").showNotifications &&
+                    NotificationManager.checkPermission() === "granted"
+                ) {
+                    NotificationManager.showNotification("Betaflight App", {
+                        body: i18n.getMessage("flashEraseDoneNotification"),
+                        icon: "/images/pwa/favicon.ico",
+                    });
+                }
+            },
+            onError: (error) => {
+                console.error("Dataflash erase failed", error);
+                gui_log(
+                    `<strong><span class="message-negative">${i18n.getMessage("error", {
+                        errorMessage: error,
+                    })}</span></strong>`,
+                );
+            },
+            onFinish: () => {
+                eraseOpen.value = false;
+            },
+        });
 
         function updateDebugField(index, value) {
             // Use splice to ensure Vue 3 reactivity
@@ -592,6 +666,10 @@ export default defineComponent({
                         mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
                     );
 
+                    // Between the parameter group write and the persist that serialises it, so a
+                    // refused port throws before anything reaches EEPROM.
+                    await writeBlackboxPort();
+
                     await saveAndReboot();
 
                     markClean(savedSnapshot);
@@ -604,79 +682,16 @@ export default defineComponent({
             if (dataflashUsedSize.value === 0) {
                 return;
             }
-            eraseCancelled.value = false;
             eraseOpen.value = true;
         }
 
-        async function flashErase() {
-            try {
-                connectionStore.pauseLiveData();
-                // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
-                // firing it unawaited would wipe the pollForEraseCompletion callback we register just
-                // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
-                // dialog stuck forever even though the FC does erase. Drain first, then register.
-                await connectionStore.clearMspQueue();
-                isErasing.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
-            } catch (error) {
-                // Startup failed before the erase poll could take over: restore the UI and
-                // live-data pump so the dialog doesn't strand, and surface the failure.
-                console.error("Failed to start dataflash erase", error);
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                gui_log(
-                    `<strong><span class="message-negative">${i18n.getMessage("error", {
-                        errorMessage: error,
-                    })}</span></strong>`,
-                );
-            }
+        function flashErase() {
+            return startFlashErase();
         }
 
         function flashEraseCancel() {
-            eraseCancelled.value = true;
-            isErasing.value = false;
             eraseOpen.value = false;
-            connectionStore.resumeLiveData();
-        }
-
-        async function pollForEraseCompletion() {
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            try {
-                // errorAware request so a timeout settles instead of stranding a legacy
-                // callback: the flash chip can stop answering MSP mid-erase, and we must
-                // keep polling rather than abandon the dialog on a single missed summary.
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-            } catch {
-                // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
-                // reading the stale cached ready flag — it still holds the pre-erase value and
-                // would otherwise close the dialog before the erase has actually finished.
-                if (connectionStore.connectionValid && !eraseCancelled.value) {
-                    setTimeout(pollForEraseCompletion, 500);
-                }
-                return;
-            }
-
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            if (fcStore.dataflash?.ready) {
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                if (getConfig("showNotifications").showNotifications) {
-                    NotificationManager.showNotification("Betaflight App", {
-                        body: i18n.getMessage("flashEraseDoneNotification"),
-                        icon: "/images/pwa/favicon.ico",
-                    });
-                }
-            } else {
-                setTimeout(pollForEraseCompletion, 500);
-            }
+            cancelFlashErase();
         }
 
         function flashUpdateSummary(onDone) {
@@ -742,11 +757,8 @@ export default defineComponent({
 
         function conditionallyEraseFlash(maxBytes, nextAddress) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
-                connectionStore.pauseLiveData();
-                eraseCancelled.value = false;
-                isErasing.value = true;
                 eraseOpen.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+                void startFlashErase({ clearQueue: false });
             } else {
                 gui_log(
                     i18n.getMessage("dataflashSaveIncompleteWarning") ||
@@ -949,6 +961,8 @@ export default defineComponent({
                         }
 
                         // Populate UI state
+                        await loadBlackboxPort();
+
                         blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
                         blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
                         debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
@@ -1001,6 +1015,12 @@ export default defineComponent({
             isExpertMode,
             virtualGyro,
             blackboxDeviceOptions,
+            blackboxPortAvailable,
+            blackboxPortWritable,
+            blackboxPortOptions,
+            blackboxPortIdentifier,
+            blackboxBaudOptions,
+            blackboxBaud,
             blackboxSupport,
             loggingRates,
             debugModes,
@@ -1056,7 +1076,7 @@ export default defineComponent({
             width: 100%;
             height: 26px;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             text-align: center;
             line-height: 24px;
             color: white;
@@ -1070,7 +1090,7 @@ export default defineComponent({
         }
         dd {
             display: block;
-            margin-left: 130px;
+            margin-inline-start: 130px;
             height: 20px;
             line-height: 20px;
         }
@@ -1125,8 +1145,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1151,8 +1171,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1192,7 +1212,7 @@ export default defineComponent({
         clear: left;
     }
     .blackboxDebugModeText {
-        margin-left: 7px !important;
+        margin-inline-start: 7px !important;
     }
     .sdcard-status {
         padding-top: 4px;

@@ -137,6 +137,30 @@
         "message": "For oprettelse af forbindelse, angiv seriel sti eller URL.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
     },
+    "connectBookmarks": {
+        "message": "Gemte forbindelser",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Navn:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Navn for denne forbindelse",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Gem",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Opdater",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Fjern gemt forbindelse",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
+    },
     "autoConnect": {
         "message": "Autotilslut"
     },
@@ -321,9 +345,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Åbn udgivelseswebsted"
     },
     "rebootFlightController": {
         "message": "Genstart FC, tilslut igen, når du er klar"
@@ -990,7 +1011,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
+        "message": "Vores Blackbox logviser er indbygget i denne app. Åbn fanen <strong>Blackbox Viewer<\/strong> for at analysere dine flylogs.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmwaren og denne app kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -1640,6 +1661,9 @@
     "featureRX_SPI": {
         "message": "SPI Rx (f.eks. indbygget Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC telemetri seriel port"
+    },
     "featureESC_SENSOR": {
         "message": "Brug KISS\/BLHeli_32 ESC telemetri <b>over en separat ledning<\/b>"
     },
@@ -1678,6 +1702,24 @@
     },
     "configurationTelemetry": {
         "message": "Telemetri"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetri $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protokol"
+    },
+    "telemetryInstancePort": {
+        "message": "Seriel port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud hastighed"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Kamera styring"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Seriel port"
     },
     "configurationTelemetryHelp": {
         "message": "Telemetri data transmitteres til sender"
@@ -1724,6 +1766,12 @@
     },
     "configurationRangefinderType": {
         "message": "Type"
+    },
+    "rangefinderSerialPort": {
+        "message": "Seriel port til afstand sensor"
+    },
+    "opticalflowSerialPort": {
+        "message": "Seriel port til optisk sensor"
     },
     "configurationOpticalflow": {
         "message": "Optisk sensor",
@@ -2146,6 +2194,12 @@
     "configurationGPSubxSbas": {
         "message": "Type af jordbaserede referencestationer"
     },
+    "gpsSerialPort": {
+        "message": "Seriel port"
+    },
+    "gpsSerialBaud": {
+        "message": "Baud hastighed"
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
@@ -2170,6 +2224,15 @@
     },
     "configurationSerialRX": {
         "message": "Protokol ved seriel konfiguration"
+    },
+    "portsPortNone": {
+        "message": "Ingen"
+    },
+    "receiverSerialPort": {
+        "message": "Seriel port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART den serielle modtager er forbundet til. Baud-raten følger udbyderen, så der er intet at sætte her. Ændring af porten kræver en genstart."
     },
     "someRXTypesDisabled": {
         "message": "Nogle protokoller i den aktuelle konfiguration understøttes ikke."
@@ -2297,6 +2360,9 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD brugerdefineret tekst"
     },
     "pidTuningProfileOption": {
         "message": "PID profil $1"
@@ -3000,15 +3066,15 @@
         "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 1. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 2. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 2. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
     "auxiliaryHelpMode_CAMSTAB": {
@@ -6194,6 +6260,15 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD protokol"
+    },
+    "osdSerialPort": {
+        "message": "OSD seriel port"
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Seriel port til brugerdefineret tekst"
+    },
     "osdSetupUnitsTitle": {
         "message": "Enhed"
     },
@@ -6278,6 +6353,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Overførsel mislykkedes"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Gem og genstart"
     },
     "osdSetupSave": {
         "message": "Gem"
@@ -7554,10 +7632,6 @@
         "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Bemærk:<\/span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7697,6 +7771,15 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Kanal, som anvendes i Pit tilstand",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX enhed"
+    },
+    "vtxProtocol": {
+        "message": "Protokol"
+    },
+    "vtxSerialPort": {
+        "message": "Seriel port"
     },
     "vtxLowPowerDisarm": {
         "message": "Lavt strømforbrug ved deaktivering",
@@ -7925,45 +8008,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Afvigelse\/deklination er {{saved}}° men GPS registrerer {{detected}}° for denne placering. Klik på Opdater for at korrigere."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} prøver"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Vip mere !"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Klient kalibring (Guidet)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Auto prompt i 60s kalibrering"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Kalibrering via guide"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Trin 1\/6 — Hold fladt, roter 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Trin 2\/6 — Vend omvendt, roter 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Trin 3\/6 — Næsen lige op, roter 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Trin 4\/6 — Næsen lige ned, roter 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Trin 5\/6 — Venstre side op, roter 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Trin 6\/6 — Højre side op, roter 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Dataindsamling færdig — kontroller og gem"
-    },
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
@@ -7994,12 +8038,6 @@
     "magCalibrationSamples": {
         "message": "Prøver"
     },
-    "magCalibrationQuality": {
-        "message": "Kvalitet"
-    },
-    "magCalibrationResidual": {
-        "message": "Tilpasningsfejl"
-    },
     "magCalibrationQualityGood": {
         "message": "God"
     },
@@ -8011,9 +8049,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offset"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offsetværdier fra kugletilpasning"
     },
     "magCalibrationUnguided": {
         "message": "Firmware kalibring (Klassisk)"
@@ -8029,18 +8064,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
-    },
-    "magCalibrationGuided": {
-        "message": "Klient kalibring (Gratis)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Roter frit — app beregner forskydninger"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Klient kalibrering"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Drej dit køretøj i alle retninger. Sigtet er at få en komplet kugle af prikker på omkring et eller to minutter. Gem resultatet, når kalibreringsværdierne er stabiliseret."
     },
     "magCalibrationCheck": {
         "message": "Kontroller"
@@ -8066,17 +8089,8 @@
     "magCalibrationSaveError": {
         "message": "Kunne ikke gemme kalibreringsværdier"
     },
-    "magCalibrationAccept": {
-        "message": "Gem kalibrering"
-    },
-    "magCalibrationFull": {
-        "message": "Fuld kalibring (Autojusteret)"
-    },
     "magCalibrationFullDesc": {
-        "message": "En rotation — fastsætter offset, soft-iron-korrektion og kompassets monteringsretning"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Fuld kalibrering"
+        "message": "Roter fartøjet i alle retninger for at kalibrere sensor og automatisk registrer monteringsretning."
     },
     "magCalibrationFullInstruction": {
         "message": "Følg nedenstående trin ved at holde fartøjet stabilt gennem hver bevægelse. i trinet tælles stigning, når du ændre til ny vinkel - mål at dække alle 20."
@@ -8112,7 +8126,10 @@
         "message": "{{covered}} \/ {{total}} områder dækket"
     },
     "magCalibrationFullCompute": {
-        "message": "Beregn"
+        "message": "Afslut kalibrering"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Flere overdækkede zoner giver højere nøjagtighed — mål er 20 \/ 20 for bedste kalibrering og justering."
     },
     "magCalibrationFullCoverage": {
         "message": "Dækning:"
@@ -8142,7 +8159,19 @@
         "message": "For få målinger — fortsæt rotationen"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Ingen GPS eller placering fra IP netværk — kan derfor ikke bestemme magnetisk hældning"
+        "message": "Ingen GPS, browser eller IP-placering — angiv koordinater manuelt for at fortsætte"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Angiv manuelt breddegrad og længdegrad ved at vælge fra Google Maps. Din drone har ingen GPS-lås, og din enhed kunne derfor ikke give data for placering. Placering er nødvendig for kalibrering af kompas."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "f.eks. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Ugyldigt koordinat format. Angiv som: breddegrad, længdegrad (f.eks. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Kunne ikke beregne en magnetisk reference for disse koordinater. Tjek dem og prøv igen."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI kommandoer kopieret til udklipsholder"
@@ -8182,12 +8211,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Ny"
-    },
-    "magAlignmentApply": {
-        "message": "Anvend"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Registrer"
     },
     "configurationSmallAngle": {
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
@@ -8294,6 +8317,15 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logger til ..."
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Seriel port"
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Seriel Baud hastighed"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud hastighed for den serielle port til logning."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox lognings hastighed"

@@ -118,6 +118,32 @@ function serveLocalesPlugin() {
     };
 }
 
+/**
+ * The radio-emulator popup is a secondary MPA entry, not an installable page.
+ * VitePWA injects `<link rel="manifest" href="./manifest.webmanifest">` into every
+ * HTML entry, which resolves relative to the popup's own directory and 404s.
+ * Strip it from everything except the main entry.
+ * Registered after VitePWA so its `post` hook runs last.
+ * @returns {import("vite").Plugin}
+ */
+function stripManifestFromSecondaryEntriesPlugin() {
+    return {
+        name: "strip-manifest-from-secondary-entries",
+        // `enforce`/`order` post so this runs after vite-plugin-pwa:build has injected the link.
+        enforce: "post",
+        apply: "build",
+        transformIndexHtml: {
+            order: "post",
+            handler(html, ctx) {
+                if (ctx.path === "/index.html") {
+                    return html;
+                }
+                return html.replace(/<link rel="manifest"[^>]*>/g, "");
+            },
+        },
+    };
+}
+
 export default defineConfig({
     base: "./", // Important for production APK asset paths
     define: {
@@ -151,12 +177,16 @@ export default defineConfig({
         // Vite root, matching the previous rollup-plugin-copy behaviour).
         // `src` globs are absolute because the Vite root is `src/`, so
         // repo-root-relative patterns would otherwise resolve under `src/`.
+        // Only assets that are fetched by URL at runtime belong here. Never add
+        // `src/components`: those files are bundled, and copying them raw runs on
+        // `writeBundle` — after the bundle is emitted — so the raw
+        // `receiver-msp/receiver_msp.html` would overwrite the built MPA entry and
+        // leave the popup loading an untransformed module (bare `vue` specifier).
         ...viteStaticCopy({
             targets: [
                 { src: normalizePath(path.resolve(__dirname, "locales")), dest: "." },
                 { src: normalizePath(path.resolve(__dirname, "resources")), dest: "." },
                 { src: normalizePath(path.resolve(__dirname, "src/images")), dest: "." },
-                { src: normalizePath(path.resolve(__dirname, "src/components")), dest: "." },
             ],
         }).filter((plugin) => plugin.name === "vite-plugin-static-copy:build"),
         VitePWA({
@@ -186,6 +216,7 @@ export default defineConfig({
                 ],
             },
         }),
+        stripManifestFromSecondaryEntriesPlugin(),
     ],
     // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
     // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.

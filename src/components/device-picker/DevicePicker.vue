@@ -113,7 +113,7 @@ export default defineComponent({
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-left: auto;
+    margin-inline-start: auto;
     align-items: start;
     gap: 0.5rem;
 }

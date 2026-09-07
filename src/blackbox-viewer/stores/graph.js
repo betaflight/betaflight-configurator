@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, shallowRef, computed } from "vue";
+import { ref, shallowRef, computed, nextTick } from "vue";
 import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log.js";
 import { PrefStorage } from "../pref_storage.js";
@@ -157,6 +157,17 @@ export const useGraphStore = defineStore("graph", () => {
         invalidateGraph.value?.();
     }
 
+    /**
+     * Grow the viewer over the host configurator's chrome (sidebar menu and status bar).
+     * The `is-fullscreen` class that drives the layout is applied by App.vue on the next
+     * flush, so the canvases can only be re-measured once that has landed and the browser
+     * has laid the enlarged viewer out.
+     */
+    function toggleFullscreen() {
+        isFullscreen.value = !isFullscreen.value;
+        nextTick(() => requestAnimationFrame(() => updateCanvasSize.value?.()));
+    }
+
     function toggleMap() {
         hasMap.value = !hasMap.value;
         prefs.set("hasMap", hasMap.value);
@@ -231,6 +242,7 @@ export const useGraphStore = defineStore("graph", () => {
         legendVisibilityChange,
         toggleAnalyser,
         toggleAnalyserFullscreen,
+        toggleFullscreen,
         toggleMap,
         setGraphZoom,
         quickZoomToggle,

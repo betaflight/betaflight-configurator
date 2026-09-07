@@ -202,6 +202,10 @@ const FRIENDLY_FIELD_NAMES = {
     "psasSum[0]": "PSAS Sum [roll]",
     "psasSum[1]": "PSAS Sum [pitch]",
     "psasSum[2]": "PSAS Sum [yaw]",
+
+    "pitot[all]": "Pitot data",
+    "pitot[0]": "Airspeed",
+    "pitot[1]": "Diff. pressure",
 };
 
 FlightLogFieldPresenter.presentFlags = function (flags, flagNames) {
@@ -523,6 +527,11 @@ FlightLogFieldPresenter.decodeFieldToFriendly = function (flightLog, fieldName, 
         case "psasSum[2]":
             return `${(value / 10).toFixed(1)} %`;
 
+        case "pitot[0]":
+            return `${(value / 100).toFixed(1)} m/s`;
+        case "pitot[1]":
+            return `${value.toFixed(1)} Pa`;
+
         case "debug[0]":
         case "debug[1]":
         case "debug[2]":
@@ -773,6 +782,9 @@ FlightLogFieldPresenter.ConvertFieldValue = function (flightLog, fieldName, toFr
         case "psasSum[1]":
         case "psasSum[2]":
             return toFriendly ? value / 10 : value * 10;
+
+        case "pitot[0]":
+            return toFriendly ? value / 100 : value * 100;
 
         case "debug[0]":
         case "debug[1]":

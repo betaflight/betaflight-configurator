@@ -96,7 +96,7 @@ export default defineComponent({
 .quad-status-contents {
     position: absolute;
     top: 10px;
-    left: 14px;
+    inset-inline-start: 14px;
     height: 10px;
     width: 31px;
 }
@@ -111,7 +111,7 @@ export default defineComponent({
     width: 60px;
     transition: none;
     margin-top: 4px;
-    margin-left: -4px;
+    margin-inline-start: -4px;
     background-repeat: no-repeat;
 }
 
@@ -150,14 +150,14 @@ export default defineComponent({
 
 .battery-icon--compact {
     margin-top: 0;
-    margin-left: 0;
+    margin-inline-start: 0;
     height: 24px;
     width: 48px;
 }
 
 .battery-icon--compact .quad-status-contents {
     top: 8px;
-    left: 11px;
+    inset-inline-start: 11px;
     width: 26px;
     height: 8px;
 }

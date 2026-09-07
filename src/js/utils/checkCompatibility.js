@@ -175,6 +175,14 @@ export function isTauriMacOS() {
 }
 
 /**
+ * @returns {boolean} Whether running inside a Tauri shell on a desktop OS
+ * (macOS, Linux or Windows) as opposed to Tauri's mobile targets.
+ */
+export function isTauriDesktop() {
+    return isTauri() && !isTauriIOS() && !isTauriAndroid();
+}
+
+/**
  * True only when running as a genuine web/PWA build, i.e. not inside a natively
  * packaged shell (Capacitor Android/iOS, Tauri desktop/iOS) and not an embedded
  * deployment identified by the WebSocket transport metadata. Use this to gate
