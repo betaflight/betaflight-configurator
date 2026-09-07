@@ -131,6 +131,13 @@ const FIRMWARE_SOURCE_DIR = "src/main";
 const ANNOTATION_MARKER = "//!<";
 const DEBUG_VALUE_COUNT = 8;
 
+/*
+ * Stands in for one `debugModeNames[]` entry while the shape around the entries
+ * is checked. A NUL cannot appear in the C source being read, so a slot holding
+ * anything but exactly one of these holds something the parse cannot read.
+ */
+const ENTRY_MARKER = "\u0000";
+
 // A debug field is an int16_t, so a flag list cannot name more bits than it holds.
 const DEBUG_VALUE_BITS = 15;
 
@@ -458,22 +465,31 @@ function parseDebugModeNames(source, ref) {
     const entry = /(?:\[\s*(DEBUG_[A-Z0-9_]+)\s*\]\s*=\s*)?"((?:[^"\\]|\\.)*)"/g;
 
     /*
-     * Anything the scan below would not consume, so an entry that is not a string
-     * literal is refused rather than skipped. In the positional form a skipped
-     * entry does not lose one name, it shifts every later one an index early -
-     * the same reason the enum parse above refuses a value it cannot read, and
-     * the sort of quiet re-mapping this whole table exists to prevent.
+     * The shape around the entries, checked before they are read, because the scan
+     * below finds string literals wherever they sit and would skip whatever it
+     * cannot read. In the positional form a skipped entry does not lose one name,
+     * it shifts every later one an index early - the same reason the enum parse
+     * above refuses a value it cannot read, and the sort of quiet re-mapping this
+     * whole table exists to prevent.
+     *
+     * Two shapes get past a scan for literals alone: an entry that is no literal
+     * at all (a NULL, a name behind a macro), and two literals with only
+     * whitespace between them, which C concatenates into one initialiser while
+     * the scan reads two names. So each entry is replaced by a marker, and every
+     * comma-separated slot has to hold exactly one.
      */
-    const unconsumed = match[1]
-        .replaceAll(entry, "")
+    const malformed = match[1]
+        .replaceAll(entry, ENTRY_MARKER)
         .split(",")
-        .map((piece) => piece.trim())
-        .filter(Boolean);
-    if (unconsumed.length > 0) {
-        throw new Error(
-            `debugModeNames[] at ${ref} holds ${unconsumed.length} entr${unconsumed.length === 1 ? "y" : "ies"} ` +
-                `that are not string literals: ${unconsumed.map((piece) => JSON.stringify(piece)).join(", ")}`,
-        );
+        .map((slot) => slot.trim())
+        .filter((slot) => slot !== "" && slot !== ENTRY_MARKER);
+    if (malformed.length > 0) {
+        const shown = malformed.map((slot) => JSON.stringify(slot.replaceAll(ENTRY_MARKER, "<string>"))).join(", ");
+        const problem =
+            malformed.length === 1
+                ? "an entry that is not one string literal"
+                : `${malformed.length} entries that are not one string literal each`;
+        throw new Error(`debugModeNames[] at ${ref} holds ${problem}: ${shown}`);
     }
 
     let parsed;

@@ -213,10 +213,21 @@ describe("parseDebugModeNames", () => {
         // index early - which would re-map the fields of every log recorded with
         // that firmware, and say nothing.
         expect(() => parseDebugModeNames(table('    "NONE",\n    NULL,\n    "CYCLETIME",'), "ref")).toThrow(
-            /not string literals: "NULL"/,
+            /not one string literal: "NULL"/,
         );
         expect(() => parseDebugModeNames(table('    "NONE",\n    DEBUG_NAME_MACRO,'), "ref")).toThrow(
-            /not string literals/,
+            /not one string literal/,
+        );
+    });
+
+    it("refuses two adjacent literals, which C reads as one name and a scan as two", () => {
+        // `"NONE" "CYCLETIME"` is one initialiser holding "NONECYCLETIME", so
+        // reading it as two names shifts every later mode an index early.
+        expect(() => parseDebugModeNames(table('    "NONE" "CYCLETIME",'), "ref")).toThrow(
+            /not one string literal: "<string> <string>"/,
+        );
+        expect(() => parseDebugModeNames(table('    "NONE",\n    "A" "B",\n    "PITOT",'), "ref")).toThrow(
+            /holds an entry that is not one string literal/,
         );
     });
 
