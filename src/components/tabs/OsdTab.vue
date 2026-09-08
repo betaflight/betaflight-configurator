@@ -576,7 +576,7 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
+                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -643,8 +643,12 @@ const {
 
 const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 
+// A UART assignment only takes effect at serial init, so a pending port change turns the primary
+// button into Save and Reboot instead of a plain Save.
+const portSettingsChanged = computed(() => osdPortChanged.value || customTextPortChanged.value);
+
 // A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
-const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
+const portsOrConfigDirty = computed(() => osdStore.dirty || portSettingsChanged.value);
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -690,7 +694,9 @@ const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() => i18n.getMessage("osdSetupSave"));
+const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() =>
+    i18n.getMessage(portSettingsChanged.value ? "osdSetupSaveReboot" : "osdSetupSave"),
+);
 const saveMenuItems = computed(() => [
     [
         {
@@ -1460,6 +1466,9 @@ const saveAndRebootConfig = async () => {
     await saveConfig();
     await reboot();
 };
+
+// The primary button does what its label says: with a port change pending it saves and reboots.
+const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
