@@ -47,7 +47,7 @@
                 <div>---</div>
 
                 <!-- PITCH -->
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
                     PITCH
                 </div>
                 <UInputNumber
@@ -81,7 +81,7 @@
                 />
 
                 <!-- YAW -->
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">YAW</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">YAW</div>
                 <UInputNumber
                     v-model="psasYawPilot"
                     :step="1"
@@ -127,7 +127,7 @@
                     <HelpIcon :text="$t('psasTuningMainAccelFiltersHelp')" />
                 </div>
 
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
                     PITCH
                 </div>
                 <UInputNumber
@@ -148,7 +148,7 @@
                     orientation="vertical"
                     class="w-full"
                 />
-                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">YAW</div>
+                <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">YAW</div>
                 <UInputNumber
                     v-model="psasYawGyroHPF"
                     :step="1"
@@ -189,12 +189,12 @@
                     </div>
                     <USwitch v-model="psasSpeedCurvesMainRollEnabled" size="sm" />
                     <USwitch v-model="psasSpeedCurvesPilotRollEnabled" size="sm" />
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
                         PITCH
                     </div>
                     <USwitch v-model="psasSpeedCurvesMainPitchEnabled" size="sm" />
                     <USwitch v-model="psasSpeedCurvesPilotPitchEnabled" size="sm" />
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">
                         YAW
                     </div>
                     <USwitch v-model="psasSpeedCurvesMainYawEnabled" size="sm" />
