@@ -638,44 +638,35 @@ export default defineComponent({
                 return;
             }
 
-            return runSave(
-                async () => {
-                    const savedSnapshot = takeSnapshot();
+            return runSave(async () => {
+                const savedSnapshot = takeSnapshot();
 
-                    fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
-                    fcStore.blackbox.blackboxPDenom = blackboxRate.value;
-                    fcStore.blackbox.blackboxDevice = blackboxDevice.value;
+                fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
+                fcStore.blackbox.blackboxPDenom = blackboxRate.value;
+                fcStore.blackbox.blackboxDevice = blackboxDevice.value;
 
-                    // Update disabled mask from checkboxes
-                    let mask = 0;
-                    debugFieldsEnabled.value.forEach((enabled, index) => {
-                        if (!enabled) {
-                            mask = bit_set(mask, index);
-                        }
-                    });
-                    fcStore.blackbox.blackboxDisabledMask = mask;
+                // Update disabled mask from checkboxes
+                let mask = 0;
+                debugFieldsEnabled.value.forEach((enabled, index) => {
+                    if (!enabled) {
+                        mask = bit_set(mask, index);
+                    }
+                });
+                fcStore.blackbox.blackboxDisabledMask = mask;
 
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_BLACKBOX_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG),
-                    );
+                await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
 
-                    fcStore.pidAdvancedConfig.debugMode = debugMode.value;
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
-                    );
+                fcStore.pidAdvancedConfig.debugMode = debugMode.value;
+                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
-                    // Between the parameter group write and the persist that serialises it, so a
-                    // refused port throws before anything reaches EEPROM.
-                    await writeBlackboxPort();
+                // Between the parameter group write and the persist that serialises it, so a
+                // refused port throws before anything reaches EEPROM.
+                await writeBlackboxPort();
 
-                    await saveAndReboot();
+                await saveAndReboot();
 
-                    markClean(savedSnapshot);
-                },
-                { onError: (e) => console.error("Failed to save onboard logging settings", e) },
-            );
+                markClean(savedSnapshot);
+            });
         }
 
         function askToEraseFlash() {

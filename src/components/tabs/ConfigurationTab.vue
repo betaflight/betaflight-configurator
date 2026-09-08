@@ -527,82 +527,65 @@ export default defineComponent({
         };
 
         const saveConfig = () =>
-            runSave(
-                async () => {
-                    const savedSnapshot = takeSnapshot();
+            runSave(async () => {
+                const savedSnapshot = takeSnapshot();
 
-                    fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
+                fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
-                    fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
+                fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        fcStore.config.craftName = craftName.value;
-                        fcStore.config.pilotName = pilotName.value;
-                    } else {
-                        fcStore.config.name = craftName.value;
-                    }
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    fcStore.config.craftName = craftName.value;
+                    fcStore.config.pilotName = pilotName.value;
+                } else {
+                    fcStore.config.name = craftName.value;
+                }
 
-                    if (fcStore.beepers) {
-                        fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
-                    }
+                if (fcStore.beepers) {
+                    fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
+                }
 
-                    fcStore.armingConfig.small_angle = armingConfig.small_angle;
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                        fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
-                    }
+                fcStore.armingConfig.small_angle = armingConfig.small_angle;
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                    fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                }
 
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                        fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
-                    }
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                    fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
+                }
 
-                    // Send MSP commands
+                // Send MSP commands
+                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+                if (fcStore.beepers) {
+                    await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
+                }
+
+                await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
+                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
+                } else {
                     await MSP.promise(
-                        MSPCodes.MSP_SET_FEATURE_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
                     );
-
-                    if (fcStore.beepers) {
-                        await MSP.promise(
-                            MSPCodes.MSP_SET_BEEPER_CONFIG,
-                            mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG),
-                        );
-                    }
-
-                    await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-
-                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
-                    } else {
-                        await MSP.promise(
-                            MSPCodes.MSP2_SET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
-                        );
-                        await MSP.promise(
-                            MSPCodes.MSP2_SET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
-                        );
-                    }
-
-                    await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
                     await MSP.promise(
-                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
                     );
+                }
 
-                    gui_log(i18n.getMessage("configurationSaved"));
+                await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
-                    // Save to EEPROM and Reboot
-                    await saveAndReboot();
+                gui_log(i18n.getMessage("configurationSaved"));
 
-                    markClean(savedSnapshot);
-                },
-                {
-                    onError: (e) => {
-                        console.error("Failed to save configuration", e);
-                        gui_log(i18n.getMessage("configurationSaveFailed"));
-                    },
-                },
-            );
+                // Save to EEPROM and Reboot
+                await saveAndReboot();
+
+                markClean(savedSnapshot);
+            });
 
         onMounted(() => {
             loadConfig();
