@@ -608,7 +608,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useReboot } from "@/composables/useReboot";
-import { useSaving } from "@/composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
@@ -1299,8 +1299,7 @@ const saveConfig = (withReboot = false) =>
                 await port.write();
             }
         } catch (error) {
-            gui_log(t("receiverSerialPortSaveFailed"));
-            throw error;
+            throw withSaveFailureMessage(error, t("receiverSerialPortSaveFailed"));
         }
 
         // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
