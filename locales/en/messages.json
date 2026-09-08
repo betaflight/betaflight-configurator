@@ -2413,6 +2413,9 @@
     "portsPortInactive": {
         "message": "inactive"
     },
+    "portsPortFree": {
+        "message": "free"
+    },
     "portsClaimMsp": {
         "message": "MSP"
     },

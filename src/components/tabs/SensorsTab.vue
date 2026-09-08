@@ -860,7 +860,7 @@ const {
     selectedIdentifier: rangefinderPortIdentifier,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
-} = useFeaturePort({ setting: "rangefinder_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
     available: opticalFlowPortAvailable,
@@ -869,7 +869,7 @@ const {
     selectedIdentifier: opticalFlowPortIdentifier,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
-} = useFeaturePort({ setting: "opticalflow_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
