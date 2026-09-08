@@ -498,17 +498,10 @@ export default defineComponent({
         const { isSaving, runSave } = useSaving();
 
         const handleSave = () =>
-            runSave(
-                async () => {
-                    await saveConfig();
-                    await loadData();
-                },
-                {
-                    onError: (error) => {
-                        console.error("Error saving power configuration:", error);
-                    },
-                },
-            );
+            runSave(async () => {
+                await saveConfig();
+                await loadData();
+            });
 
         const openCalibrationManager = () => {
             sourceschanged.value = false;

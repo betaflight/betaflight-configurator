@@ -1255,74 +1255,69 @@ async function loadConfig() {
 
 // Save configuration
 const saveConfig = (withReboot = false) =>
-    runSave(
-        async () => {
-            const savedSnapshot = takeSnapshot();
+    runSave(async () => {
+        const savedSnapshot = takeSnapshot();
 
-            // Update RC_MAP from channel map string
-            validateChannelMap();
+        // Update RC_MAP from channel map string
+        validateChannelMap();
 
-            // Handle ELRS binding phrase
-            if (elrsBindingPhraseEnabled.value) {
-                const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
-                if (elrsUidChars.length === 6) {
-                    fcStore.rxConfig.elrsUid = elrsUidChars;
-                    saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
-                } else {
-                    fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
-                }
-            }
-
-            // Set cutoffs to 0 for auto mode
-            if (setpointManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
-            }
-            if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
-            }
-            if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
-            }
-
-            // Save sequence
-            await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
-            await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
-            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-
-            // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
-            // and the persist below serialises that group, so this has to sit between the two.
-            // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
-            try {
-                await writeRxPort();
-                await writeRcdevicePort();
-                for (const port of telemetryPorts) {
-                    await port.write();
-                }
-            } catch (error) {
-                gui_log(t("receiverSerialPortSaveFailed"));
-                throw error;
-            }
-
-            // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
-            // to reach the FC whether or not the save also reboots.
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-            if (withReboot) {
-                await saveAndReboot();
+        // Handle ELRS binding phrase
+        if (elrsBindingPhraseEnabled.value) {
+            const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
+            if (elrsUidChars.length === 6) {
+                fcStore.rxConfig.elrsUid = elrsUidChars;
+                saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
             } else {
-                await saveToEeprom();
-                gui_log(t("receiverConfigSaved") || "Configuration saved");
+                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
             }
+        }
 
-            markClean(savedSnapshot);
+        // Set cutoffs to 0 for auto mode
+        if (setpointManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
+        }
+        if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
+        }
+        if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
+        }
 
-            needReboot.value = false;
-        },
-        {
-            onError: (e) => console.error("Failed to save configuration", e),
-        },
-    );
+        // Save sequence
+        await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
+        await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
+        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+
+        // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
+        // and the persist below serialises that group, so this has to sit between the two.
+        // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
+        try {
+            await writeRxPort();
+            await writeRcdevicePort();
+            for (const port of telemetryPorts) {
+                await port.write();
+            }
+        } catch (error) {
+            gui_log(t("receiverSerialPortSaveFailed"));
+            throw error;
+        }
+
+        // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
+        // to reach the FC whether or not the save also reboots.
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+        if (withReboot) {
+            await saveAndReboot();
+        } else {
+            await saveToEeprom();
+            gui_log(t("receiverConfigSaved") || "Configuration saved");
+        }
+
+        markClean(savedSnapshot);
+
+        needReboot.value = false;
+    });
 
 // Model preview
 function initModelPreview() {

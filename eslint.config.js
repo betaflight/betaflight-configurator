@@ -2,6 +2,7 @@ import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
+import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default [
@@ -11,7 +12,7 @@ export default [
         ignores: ["src/js/webworkers/**", "dist/**", "src/dist/**"],
     },
     {
-        files: ["**/*.js", "**/*.vue"],
+        files: ["**/*.js", "**/*.ts", "**/*.vue"],
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",
@@ -72,10 +73,36 @@ export default [
             },
         },
     },
+    ...tseslint.configs.recommended.map((config) => ({ ...config, files: ["**/*.ts", "**/*.vue"] })),
+    {
+        // The compiler owns undefined names and types in TypeScript; ESLint's no-undef would only
+        // re-report them, and flags type-only names it cannot see. A .vue file may still be plain
+        // JavaScript, where a missing import only surfaces at runtime, so it keeps the rule.
+        files: ["**/*.ts"],
+        rules: {
+            "no-undef": "off",
+        },
+    },
+    {
+        // unused-imports/no-unused-vars already covers both, with the project's `_` convention.
+        files: ["**/*.ts", "**/*.vue"],
+        rules: {
+            "@typescript-eslint/no-unused-vars": "off",
+        },
+    },
+    {
+        files: ["**/*.vue"],
+        rules: {
+            "no-undef": "error",
+        },
+    },
     {
         files: ["**/*.vue"],
         languageOptions: {
             parser: vueParser,
+            parserOptions: {
+                parser: tseslint.parser,
+            },
         },
         processor: "vue/vue",
     },

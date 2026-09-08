@@ -1433,35 +1433,27 @@ async function refreshConfig() {
 
 // Save OSD configuration to FC
 const saveConfig = () =>
-    runSave(
-        async () => {
-            // Sync store state to the shared OSD.data bridge used by legacy helpers.
-            osdStore.syncToLegacy();
+    runSave(async () => {
+        // Sync store state to the shared OSD.data bridge used by legacy helpers.
+        osdStore.syncToLegacy();
 
-            // Send all OSD config to FC and write EEPROM.
-            await osdStore.saveAllConfig(async () => {
-                await writeOsdPort();
-                await writeCustomTextPort();
-            });
+        // Send all OSD config to FC and write EEPROM.
+        await osdStore.saveAllConfig(async () => {
+            await writeOsdPort();
+            await writeCustomTextPort();
+        });
 
-            // Track analytics
-            const changes = analyticsChanges.value;
-            if (Object.keys(changes).length > 0) {
-                tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
-                analyticsChanges.value = {};
-            }
+        // Track analytics
+        const changes = analyticsChanges.value;
+        if (Object.keys(changes).length > 0) {
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+            analyticsChanges.value = {};
+        }
 
-            // Show success
-            gui_log(i18n.getMessage("osdSettingsSaved"));
-            flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
-        },
-        {
-            onError: (error) => {
-                console.error("Failed to save OSD configuration:", error);
-                gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
-            },
-        },
-    );
+        // Show success
+        gui_log(i18n.getMessage("osdSettingsSaved"));
+        flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+    });
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
 const saveAndRebootConfig = async () => {

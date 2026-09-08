@@ -13,9 +13,11 @@
     "review": "vite build && vite preview",
     "pretest": "npm run lint",
     "test": "vitest",
-    "lint": "eslint src scripts *.mjs",
+    "lint": "eslint src scripts *.mjs && npm run typecheck",
     "lint:fix": "eslint src scripts *.mjs --fix",
+    "typecheck": "vue-tsc --noEmit",
     "generate:build-options": "node scripts/generate-build-options.mjs",
+    "generate:debug-modes": "node scripts/generate-debug-modes.mjs",
     "android:dev": "node capacitor.config.generator.mjs --dev && npx cap run android",
     "android:open": "vite build && node capacitor.config.generator.mjs && npx cap open android",
     "android:run": "vite build && node capacitor.config.generator.mjs && npx cap run android",
@@ -105,6 +107,7 @@
     "@storybook/vue3-vite": "^10.5.2",
     "@tauri-apps/cli": "~2.11.0",
     "@vue/test-utils": "^2.5.0",
+    "@vue/tsconfig": "^0.9.1",
     "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
@@ -121,10 +124,13 @@
     "rollup": "^4.59.0",
     "run-script-os": "^1.1.6",
     "storybook": "^10.5.2",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.69.0",
     "vite": "^8.0.16",
     "vite-plugin-mkcert": "^1.17.9",
     "vite-plugin-static-copy": "^4.1.1",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "vue-tsc": "^3.3.11"
   },
   "overrides": {
     "xcode": {

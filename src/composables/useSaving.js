@@ -1,9 +1,12 @@
 import { ref } from "vue";
 import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { gui_log } from "../js/gui_log.js";
+import { i18n } from "../js/localization.js";
 
 /**
  * Shared save discipline for the config tabs: owns the `isSaving` flag, prevents concurrent
- * saves, and centrally swallows benign MSP cancellations so no tab has to reimplement it.
+ * saves, centrally swallows benign MSP cancellations and reports genuine failures to the user,
+ * so no tab has to reimplement any of it.
  * @returns {{ isSaving: import("vue").Ref<boolean>, runSave: (fn: () => Promise<void>, options?: { onError?: (error: unknown) => void }) => Promise<void> }}
  */
 export function useSaving() {
@@ -11,10 +14,12 @@ export function useSaving() {
 
     /**
      * Run one save operation while `isSaving` is held true. A benign MspCancelledError
-     * (queue cleared by a tab switch / reboot-disconnect) is swallowed silently; any other
-     * error is passed to `onError` (or `console.error` when none is given).
+     * (queue cleared by a tab switch / reboot-disconnect) is swallowed silently. Any other
+     * error is logged to the console and surfaced to the user as a uniform "save failed"
+     * message in the log toast; `onError` then runs for tab-specific follow-up (state
+     * rollback, re-enabling controls) — it does not need to log or notify again.
      * @param {() => Promise<void>} fn - the async save work (marshal + MSP writes + persist)
-     * @param {{ onError?: (error: unknown) => void }} [options] - genuine-failure handler
+     * @param {{ onError?: (error: unknown) => void }} [options] - optional tab-specific follow-up
      * @returns {Promise<void>}
      */
     async function runSave(fn, { onError } = {}) {
@@ -32,11 +37,11 @@ export function useSaving() {
             if (isMspCancelled(e)) {
                 return;
             }
-            if (onError) {
-                onError(e);
-            } else {
-                console.error(e);
-            }
+            // One user-visible failure path for every save flow (#5276): the console keeps the
+            // details, the log toast tells the user the configuration did not stick.
+            console.error("Save failed:", e);
+            gui_log(i18n.getMessage("configurationSaveFailed"));
+            onError?.(e);
         } finally {
             isSaving.value = false;
         }

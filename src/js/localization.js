@@ -233,7 +233,7 @@ i18n.isRtl = function (locale) {
  * Resolves a language code onto the Nuxt UI locale that `UApp` needs. An unknown code
  * degrades to LTR English rather than leaving Nuxt UI with no locale at all.
  * @param {string} [language] language code, e.g. "ar" or "zh-CN"; defaults to the active one
- * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object }} a Nuxt UI locale
+ * @returns {import("@nuxt/ui/runtime/types/locale.js").Locale<import("@nuxt/ui/runtime/types/locale.js").Messages>} a Nuxt UI locale
  */
 i18n.getUiLocale = function (language = i18n.getCurrentLocale()) {
     return findLocale(language) ?? en;
