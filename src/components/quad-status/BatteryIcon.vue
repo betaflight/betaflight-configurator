@@ -20,6 +20,10 @@ export default defineComponent({
             type: Number,
             default: 0,
         },
+        cellCount: {
+            type: Number,
+            default: 0,
+        },
         vbatmaxcellvoltage: {
             type: Number,
             default: 1,
@@ -34,7 +38,9 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const nbCells = computed(() => estimateCellCount(props.voltage, props.vbatmaxcellvoltage));
+        const nbCells = computed(() =>
+            props.cellCount > 0 ? props.cellCount : estimateCellCount(props.voltage, props.vbatmaxcellvoltage),
+        );
 
         const min = computed(() => {
             return props.vbatwarningcellvoltage * nbCells.value;
