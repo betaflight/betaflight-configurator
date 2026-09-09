@@ -42,11 +42,11 @@
         "message": "Heu d'actualitzar la pàgina per obtenir els darrers canvis. En actualitzar-lo ara, es tornarà a carregar la pàgina i perdràs els canvis no desats i avortarà qualsevol operació en curs.<br><br>Vols actualitzar-la ara? També podeu ignorar aquest missatge i actualitzar la pàgina manualment més tard.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "L'aplicació està preparada per utilitzar-se fora de línia",
+    "pwaOnOfflineReadyTitle": {
+        "message": "L'aplicació està llesta per utilitzar-se fora de línia",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Podeu instal·lar-lo com a aplicació autònoma al vostre dispositiu si voleu. Cerqueu l'opció a la barra d'adreces o al menú del vostre navegador.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -72,6 +72,10 @@
     "disconnectManual": {
         "message": "Desconnectar (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBridge": {
+        "message": "Desconnectar ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
     },
     "disconnectBluetooth": {
         "message": "Desconnectar (Bluetooth)",
@@ -136,6 +140,30 @@
     "connectManualDescription": {
         "message": "Introduïu el port sèrie o l'URL a la qual voleu connectar-vos.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Connexions desades",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Nom:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Nom per aquesta connexió",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Desa",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Actualitza",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Treu la connexió desada",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "Auto-Connectar"
@@ -252,16 +280,16 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ar": {
+        "message": "العربية",
+        "description": "Don't translate!!!"
+    },
     "language_ka": {
         "message": "ქართული",
         "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polonès",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_TW": {
-        "message": "繁體中文",
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
@@ -326,14 +354,14 @@
     "configuratorUpdateHelp": {
         "message": "Quan Internet está disponible la app pot preguntar sobre actualitzacions disponibles."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Ves a la pàgina de publicació"
-    },
     "rebootFlightController": {
         "message": "S'està reiniciant el controlador de vol, torneu a connectar-vos quan estigui llest"
     },
     "rebootFlightControllerReady": {
         "message": "La controladora de vol està llesta"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "El controlador de vol no s'ha reconnectat"
     },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant<\/span>"
@@ -459,8 +487,47 @@
     "autotuneBandwidth": {
         "message": "Amplada de banda"
     },
+    "autotuneCrossover": {
+        "message": "Guany creuat"
+    },
     "autotunePhaseMargin": {
         "message": "Marge de fase"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Límit d'encreuament"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Marge de fase màxim"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Sensibilitat màxima prevista."
+    },
+    "autotuneLoopDelay": {
+        "message": "Retard de bucle"
+    },
+    "autotuneTargetMargin": {
+        "message": "Afinant objectiu"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agressiu"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservador"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: aquesta nau no pot arribar a $2° de marge de fase (el seu límit és d'uns $3), de manera que el guany es manté en lloc d'endevinar-se. Trieu un objectiu més baix o afegiu D per augmentar el límit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: la mesura demana un canvi de guany de $2×, però una sola passada està limitada a $3×. No s'assoleix el límit de crossover que es mostra; apliqueu-ho, vola un altre tram i repetiu."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: sensibilitat màxima, no marge de fase, configureu el guany aquí. El bucle passa a prop de -1 per sobre del creuament, de manera que la recomanació s'atura abans de l'objectiu de marge."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: cap guany en una sola passada manté la sensibilitat màxima dins del límit de robustesa. El valor proposat és el millor disponible en lloc d'un valor segur; tracteu-lo com a punt de partida i torneu a mesurar."
     },
     "autotuneResonantPeak": {
         "message": "Pic ressonant"
@@ -673,6 +740,15 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">No s'ha pogut connectar<\/span> al port seleccionat. Comproveu que el dispositiu sigui accessible i que la configuració de connexió sigui correcta i, a continuació, torneu-ho a provar."
+    },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "A iOS, permeteu l'accés a la <strong>Xarxa local<\/strong> per a Betaflight a Configuració &rarr; Privacitat &amp; Seguretat &rarr; Xarxa local i, a continuació, torneu-ho a provar."
+    },
+    "connectionLostTitle": {
+        "message": "S'ha perdut la connexió"
+    },
+    "connectionLostUnresponsive": {
+        "message": "El controlador de vol <span class=\"message-negative\">ha deixat de respondre<\/span> i la connexió s'ha tancat. Torneu a connectar la placa i torneu-ho a intentar; si el problema persisteix, reinicieu el controlador de vol."
     },
     "serialPortClosedOk": {
         "message": "Port sèrie <span class=\"message-positive\">correctament<\/span> tancat"
@@ -951,6 +1027,14 @@
         "message": "Connexió:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Mostra els detalls de l'estat",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Amaga els detalls de l'estat",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_connect_message": {
         "message": "Si us plau, utilitza el Flashejador de Firmware per accedir als dispositius DFU"
     },
@@ -982,7 +1066,7 @@
         "message": "Programari"
     },
     "defaultSoftwareText": {
-        "message": "El nostre <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualitzador de registres de Blackbox<\/a> està disponible com a aplicació en línia.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scripts TX Lua<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware, aquesta aplicació i el visor de Blackbox es pot descarregar des de GitHub."
+        "message": "El nostre visor de registre Blackbox està integrat en aquesta aplicació. Obriu la pestanya <strong>Visualitzador Blackbox<\/strong> per analitzar els vostres registres de vol.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware i aquesta aplicació es pot descarregar des de GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1632,6 +1716,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
     },
+    "escSensorSerialPort": {
+        "message": "Port sèrie de telemetria ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART, la telemetria de l'ESC es llegeix. Es configura al propi sensor de l'ESC des de l'API 1.49; la pestanya Ports només la mostra."
+    },
     "featureESC_SENSOR": {
         "message": "Utilitzeu la telemetria KISS \/ BLHeli_32 ESC <b>sobre un fil separat<\/b>"
     },
@@ -1670,6 +1760,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetria"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetria $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protocol"
+    },
+    "telemetryInstancePort": {
+        "message": "Port Sèrie"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Velocitat de bauds"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Control de càmera"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART al qual està connectada una càmera amb protocol RunCam. Està configurat al mateix dispositiu des de l'API 1.49; la pestanya Ports només el mostra."
     },
     "configurationTelemetryHelp": {
         "message": "Sortida de Telemetria des de receptor"
@@ -1717,6 +1828,18 @@
     "configurationRangefinderType": {
         "message": "Tipus"
     },
+    "rangefinderSerialPort": {
+        "message": "Port sèrie del telèmetre"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART, la telemetria de l'ESC es llegeix. Es configura al propi sensor de l'ESC des de l'API 1.49; la pestanya Ports només la mostra."
+    },
+    "opticalflowSerialPort": {
+        "message": "Port sèrie de flux òptic"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART al qual està connectat el sensor de flux òptic. Un mòdul que informa tant del flux com de l'abast necessita cada conjunt per separat."
+    },
     "configurationOpticalflow": {
         "message": "Optical Flow",
         "description": "Don't translate!!!"
@@ -1747,7 +1870,7 @@
         "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Detecció automàtica de l'alineació de la placa..."
+        "message": "Detecció automàtica de l'alineació de la placa"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Assistent d'alineació de la placa"
@@ -1764,11 +1887,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Col·loca el dron pla amb la càmera mirant lluny a tu (cap a la pantalla)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Inclina el nas cap amunt uns 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Inclineu el morro cap avall uns 45°, de manera que la càmera apunti cap a terra."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Inclina el nas cap abaix uns 45°."
+        "message": "Inclineu el costat dret cap avall uns 45°, baixant els braços drets i aixecant l'esquerre."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Gireu el dron uns 45° en sentit horari (vist des de dalt)."
@@ -1840,10 +1963,13 @@
         "message": "L'acceleròmetre no llegeix la gravetat. Assegureu-vos que la controladora estigui connectada i no estigui en moviment."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap amunt encara més."
+        "message": "No s'ha detectat el gest de Pitch. Torna-ho a intentar i inclina el nas cap a baix encara més."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "No s'ha detectat el gest de Roll. Torna-ho a intentar i inclina el costat dret cap abaix encara més."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Un dels gestos d'inclinació ha anat en la direcció equivocada. Comprova les direccions de inclinació i balanceig i torna-ho a provar."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Pla"
@@ -2135,6 +2261,30 @@
     "configurationGPSubxSbas": {
         "message": "Tipus d'Assistència a Terra"
     },
+    "gpsSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "gpsSerialPortHelp": {
+        "message": "L'UART al qual està connectat el mòdul GPS. Per canviar-lo cal reiniciar."
+    },
+    "gpsSerialBaud": {
+        "message": "Velocitat de bauds"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "La velocitat a la qual s'espera que funcioni el mòdul GPS. Betaflight també prova les altres velocitats quan no pot establir contacte, per la qual cosa aquest és un punt de partida en lloc d'una configuració fixa."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "No s'ha pogut configurar el port sèrie del GPS, per tant no s'ha desat res."
+    },
+    "gpsCanDevice": {
+        "message": "Bus CAN"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "El bus CAN al qual estan connectats els mòduls DroneCAN. Això pertany a DroneCAN en conjunt, de manera que canviar-lo mou tots els dispositius DroneCAN, no només el GPS. Canviar-lo requereix un reinici."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "No s'ha pogut configurar el bus CAN, per tant no s'ha desat res."
+    },
     "configurationGPSAutoBaud": {
         "message": "Velocitat de transmissió automàtica"
     },
@@ -2157,8 +2307,24 @@
         "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el dron sigui armat s’actualitzarà el punt d’inici.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "La compatibilitat amb GPS no està inclosa en aquesta compilació del programari. Reconstrueix el programari amb l'opció de compilació GPS per configurar i utilitzar el GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Proveïdor del receptor sèrie"
+    },
+    "portsPortNone": {
+        "message": "Cap"
+    },
+    "receiverSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "receiverSerialPortHelp": {
+        "message": "L'UART al qual està connectat el receptor sèrie. La velocitat en bauds segueix el proveïdor, per tant no hi ha res a configurar aquí. Canviar el port requereix un reinici."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "No s'ha pogut configurar el port sèrie del receptor, per tant no s'ha desat res."
     },
     "someRXTypesDisabled": {
         "message": "Alguns proveïdors de receptors no són compatibles amb la configuració de compilació actual."
@@ -2217,6 +2383,105 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Nota:<\/strong> <span class=\"message-negative\">NO<\/span> deshabilitis MSP al primer port sèrie si no saps per què ho fas. D'altra forma potser has de reflashejar i esborrar la configuració."
+    },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Nota:<\/strong> aquest programari assigna ports sèrie a la pestanya de cada funció, de manera que aquesta vista és de només lectura. Mostra quin port utilitza actualment cada funció; canvieu una assignació de la pestanya propietària de la funció."
+    },
+    "portsTilesHelp": {
+        "message": "Aquest programari assigna ports sèrie a la pestanya de cada funció. Cada mosaic següent mostra què està connectat a la placa i quina funció serveix actualment cada port."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Aquest programari encara no informa del seu inventari de perifèrics."
+    },
+    "portsSectionSerial": {
+        "message": "Ports sèrie"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Sensors"
+    },
+    "portsTileUnassigned": {
+        "message": "No assignat"
+    },
+    "portsTileConfigure": {
+        "message": "Configura"
+    },
+    "portsTileCanNode": {
+        "message": "Node"
+    },
+    "portsClaimActiveHelp": {
+        "message": "El port està actiu per a aquesta funció"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Assignat però no actiu: ha perdut un conflicte de port o hi ha un reinici pendent"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inactiu: activeu la funció SOFTSERIAL a la pestanya Configuració"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inactiu: no hi ha pins assignats a aquest port"
+    },
+    "portsInactiveReason": {
+        "message": "Inactiu — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inactiu"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Receptor sèrie"
+    },
+    "portsClaimBlackbox": {
+        "message": "Enregistrament Blackbox"
+    },
+    "portsClaimEscSensor": {
+        "message": "Telemetria ESC"
+    },
+    "portsClaimRcdevice": {
+        "message": "Càmera (dispositiu RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Transmissor de vídeo"
+    },
+    "portsClaimRangefinder": {
+        "message": "Rangefinder"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optical Flow"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Text personalitzat OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetria"
+    },
+    "portsSensorGyro": {
+        "message": "Giro"
+    },
+    "portsSensorAcc": {
+        "message": "Acceleròmetre"
+    },
+    "portsSensorBaro": {
+        "message": "Baròmetre"
+    },
+    "portsSensorMag": {
+        "message": "Magnetòmetre"
+    },
+    "portsSensorNotDetected": {
+        "message": "Configurat però no detectat"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Actualització de firmware <span class=\"message-negative\">requerida<\/span>. La configuració dels port sèrie del firmware &lt; 1.8.0 no està suportada."
@@ -2286,6 +2551,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Gimbal"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Text personalitzat OSD"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -3989,6 +4260,9 @@
     "sensorsSonarSelect": {
         "message": "Sònar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4009,6 +4283,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sònar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Velocitat de l'aire - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -6183,6 +6460,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "Protocol OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Protocol amb què es dibuixa l'OSD. El MAX7456 i l'OSD de FrSky controlen un xip o mòdul analògic; l'MSP envia l'OSD a través de l'UART següent, tal com esperen les ulleres DJI, HDZero i Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Port sèrie OSD"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART al qual es connecta un OSD sèrie. Es configura al mateix OSD des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Port sèrie de text personalitzat"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "Es rep el text OSD personalitzat d'UART."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Velocitat en bauds de text personalitzat"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Velocitat de transmissió en bauds per al port de text OSD personalitzat."
+    },
     "osdSetupUnitsTitle": {
         "message": "Unitats"
     },
@@ -6267,6 +6568,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Pujada fallida"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Desa i reinicia"
     },
     "osdSetupSave": {
         "message": "Desa"
@@ -6907,6 +7211,14 @@
     "osdDescElementLinkQuality": {
         "message": "Indicador de qualitat d'enllaç basat en el percentatge de paquets de dades sense corrupció rebuts correctament"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Mode RF:Qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Només qualitat de l'enllaç",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Distància de vol",
         "description": "One of the elements of the OSD"
@@ -7539,12 +7851,15 @@
     "osdButtonSaved": {
         "message": "Desat"
     },
+    "osdPitotAirSpeed": {
+        "message": "Velocitat de l'aire"
+    },
     "vtxHelp": {
         "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">aquesta<\/a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a \"$t(vtxButtonLoadFile.message)\" a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a \"$t(vtxButtonSave.message)\" per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a \"$t(vtxButtonSaveLua.message)\" per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Atenció:<\/span> El vostre VTX no està configurat o no és compatible. Per tant, no podeu modificar els valors VTX d'aquí. Això només serà possible si el controlador de vol està unit a la VTX mitjançant algun protocol com Tramp o SmartAudio i està configurat correctament a la pestanya $t(tabPorts.message) si es necessita.",
+        "message": "<span class=\"message-negative\">Atenció:<\/span> Encara no hi ha cap VTX que respongui. Trieu el protocol que pronuncia el VTX i l'UART al qual està connectat a continuació i, a continuació, deseu-ho; la resta de configuracions apareixeran un cop el dispositiu respongui.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7686,6 +8001,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Freqüència a la qual es canvia el Pit Mode quan està activat.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Dispositiu VTX"
+    },
+    "vtxProtocol": {
+        "message": "Protocol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Protocol de control que parla el VTX. SmartAudio i Tramp s'executen a l'UART següent; MSP el comparteix amb MSP, igual que DJI, HDZero i Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART sobre el qual s'executa el protocol de control del VTX. Està configurat al mateix VTX des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Un VTX MSP respon al mateix enllaç MSP sobre el qual es dibuixen les ulleres, de manera que segueix el port sèrie OSD a la pestanya OSD i no es pot configurar aquí."
     },
     "vtxLowPowerDisarm": {
         "message": "Desarmat a baixa potència",
@@ -7881,6 +8214,9 @@
     "configurationBaroHardware": {
         "message": "Baròmetre"
     },
+    "configurationPitot": {
+        "message": "Pitot"
+    },
     "configurationMagHardware": {
         "message": "Magnetòmetre"
     },
@@ -7914,45 +8250,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "La declinació és de {{saved}}° però el GPS detecta {{detected}}° per a aquesta ubicació. Feu clic a Actualitza per corregir-la."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} mostres"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Inclina-ho més!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "La detecció ha fallat - intenta-ho amb una inclinació més variada."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Calibratge del client (guiat)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Calibratge automàtic de 60 segons"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Calibratge guiat"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Pas 1\/6 — Mantingueu la posició plana, gireu 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Pas 2\/6 — Gir cap enrere, girar 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Pas 3\/6 — Morro recte cap amunt, yaw de 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Pas 4\/6 — Morro recte cap avall, yaw de 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Pas 5\/6 — Costat esquerre cap amunt, gir de 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Pas 6\/6 — Costat dret cap amunt, gir de 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Recopilació de dades completada: reviseu-la i deseu-la"
-    },
     "magCalibrationCancel": {
         "message": "Canceŀlar"
     },
@@ -7983,12 +8280,6 @@
     "magCalibrationSamples": {
         "message": "Mostres"
     },
-    "magCalibrationQuality": {
-        "message": "Qualitat"
-    },
-    "magCalibrationResidual": {
-        "message": "Ajust residual"
-    },
     "magCalibrationQualityGood": {
         "message": "Bé"
     },
@@ -8000,9 +8291,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Òfsets del programari"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Desplaçaments d'ajust d'esfera"
     },
     "magCalibrationUnguided": {
         "message": "Calibració programari (Guiat)"
@@ -8018,18 +8306,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Calibratge del programari completat!"
-    },
-    "magCalibrationGuided": {
-        "message": "Calibratge del client (lliure)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Gira lliurement: el configurador calcula els desplaçaments"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Calibratge client"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Gira el vehicle en totes direccions. Intenta crear una esfera completa de punts en un o dos minuts aproximadament. Desa el resultat quan els valors de calibratge s'hagin estabilitzat."
     },
     "magCalibrationCheck": {
         "message": "Comprova"
@@ -8055,17 +8331,14 @@
     "magCalibrationSaveError": {
         "message": "No s'han pogut desar els valors de calibratge"
     },
-    "magCalibrationAccept": {
-        "message": "Desa el calibratge"
-    },
     "magCalibrationFull": {
-        "message": "Calibratge complet (alineació automàtica)"
+        "message": "Calibració i detecció d'alineació"
     },
     "magCalibrationFullDesc": {
-        "message": "Un gir: estableix els desplaçaments, el planxat i l'orientació de muntatge del magnetòmetre"
+        "message": "Gireu la nau en totes direccions per calibrar el sensor i detectar automàticament la seva orientació de muntatge."
     },
     "magCalibrationFullTitle": {
-        "message": "Calibratge complet"
+        "message": "Calibració i detecció d'alineació"
     },
     "magCalibrationFullInstruction": {
         "message": "Segueix els passos següents, mantenint la nau ferma durant cada gir complet. El recompte de zones puja a mesura que arribes a nous angles; intenta cobrir-los tots 20."
@@ -8101,7 +8374,10 @@
         "message": "{{covered}} \/ {{total}} zones cobertes"
     },
     "magCalibrationFullCompute": {
-        "message": "Calcula"
+        "message": "Finalitza el calibratge"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Més zones cobertes donen més precisió; intenta obtenir un valor de 20\/20 per obtenir la millor calibració i detecció d'alineació."
     },
     "magCalibrationFullCoverage": {
         "message": "Cobertura:"
@@ -8131,7 +8407,22 @@
         "message": "No hi ha prou mostres: girar més estona"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Sense localització GPS ni IP: no es pot determinar la inclinació magnètica"
+        "message": "Sense GPS, navegador ni ubicació IP; introduïu les coordenades manualment per continuar"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Ubicació necessària per a la calibració"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Introduïu manualment la latitud i la longitud seleccionant-les a Google Maps. El vostre dron no té bloqueig GPS i el dispositiu no ha pogut proporcionar dades d'ubicació. La ubicació és necessària per a la calibració del magnetòmetre."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "e.x. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Format de coordenades no vàlid. Si us plau, introduïu-ho com a: latitud, longitud (per exemple, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "No s'ha pogut calcular una referència magnètica per a aquestes coordenades. Si us plau, comproveu-les i torneu-ho a intentar."
     },
     "magCalibrationFullCliCopied": {
         "message": "Ordres de la CLI copiades al porta-retalls"
@@ -8171,12 +8462,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Nou"
-    },
-    "magAlignmentApply": {
-        "message": "Aplicar"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Detectar"
     },
     "configurationSmallAngle": {
         "message": "Angle máxim d'armat [graus]"
@@ -8283,6 +8568,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Dispositiu de registre Blackbox"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Port Sèrie"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART utilitzat quan el dispositiu de registre és sèrie. Configurat a la mateixa caixa negra des de l'API 1.49; la pestanya Ports només el mostra."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Velocitat de bauds en sèrie"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Velocitat en bauds per al port de registre sèrie."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Velocitat d'enregistrament de Blackbox"
@@ -8928,6 +9225,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Mostra el perfil actiu de la bataria o index"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Número de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Mostra el número de punt de referència actual\/total del pla de vol actiu"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Latitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Mostra la latitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Longitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Mostra la longitud del punt de referència actual"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Altitud del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Mostra l'altitud del punt de referència actual"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Distància de punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Mostra la distància del punt de referència actual"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Direcció del punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Mostra una fletxa de direcció que apunta al punt de referència actual"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Número del següent punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Mostra el número de punt de referència següent del pla de vol actiu"
+    },
+    "osdTextElementWpEta": {
+        "message": "Hora estimada d'arribada al punt de referència",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Mostra l'hora estimada d'arribada al punt de referència actual"
+    },
+    "osdTextElementNavMap": {
+        "message": "Mapa de navegació",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minimapa que mostra la destinació, el pla de vol i la trajectòria volada"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Manteniment de la posició a punt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Mostra si les condicions d'entrada de Position Hold es compleixen actualment, abans que s'activi el selector de mode"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",

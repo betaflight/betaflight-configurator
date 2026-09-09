@@ -16,7 +16,7 @@ const FIRMWARE_CLASS_MAP = {
 
 export const FIRMWARE_CLASSES = Object.values(FIRMWARE_CLASS_MAP);
 
-export const useLogStore = defineStore("log", () => {
+export const useLogStore = defineStore("blackboxLog", () => {
     const flightLog = ref(null);
     const flightLogDataArray = ref(null);
     const currentBlackboxTime = ref(0);

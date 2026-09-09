@@ -1,9 +1,9 @@
 <template>
-    <UiBox :title="$t('autotuneImportTitle')">
+    <UiBox :title="$t('autotuneImportTitle')" type="neutral" collapsible>
         <!-- Idle / ready to import -->
         <div v-if="store.analysisState === 'idle'" class="flex items-center justify-between gap-4">
             <p v-html="$t('autotuneImportDescription')"></p>
-            <UButton @click="importAndAnalyze" size="sm">
+            <UButton @click="importAndAnalyze" size="xs">
                 {{ $t("autotuneImportButton") }}
             </UButton>
         </div>
@@ -20,7 +20,7 @@
         <!-- Error -->
         <div v-if="store.analysisState === 'error'">
             <p class="text-red-500 font-bold mb-2">{{ store.errorMessage }}</p>
-            <UButton @click="importAndAnalyze" size="sm">
+            <UButton @click="importAndAnalyze" size="xs">
                 {{ $t("autotuneImportRetry") }}
             </UButton>
         </div>
@@ -44,7 +44,7 @@
                     <span class="font-bold">{{ detectedAxes }}</span>
                 </div>
             </div>
-            <UButton @click="importAndAnalyze" size="sm">
+            <UButton @click="importAndAnalyze" size="xs">
                 {{ $t("autotuneImportAnother") }}
             </UButton>
         </div>

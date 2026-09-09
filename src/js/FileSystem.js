@@ -1,4 +1,4 @@
-import { isAndroid } from "./utils/checkCompatibility";
+import { isAndroid, isTauriDesktop } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
 import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes.js";
 
@@ -18,6 +18,8 @@ const EXTENSION_MIME_MAP = {
     ".gpx": "application/gpx+xml",
     ".lua": "text/plain",
     ".csv": "text/csv",
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
 };
 
 function mimeForExtension(ext) {
@@ -83,17 +85,58 @@ export function buildAcceptTypes(description, extension) {
     return [{ description, accept }];
 }
 
+// Native dialogs (Tauri) take bare extensions ("csv"), not the dot-prefixed form
+// the File System Access API uses. GTK matches its filter patterns
+// case-sensitively, so open filters keep the upper-case variants that
+// `normalizeExtensions` adds; a save filter only supplies the suffix to append,
+// so it stays lower case.
+export function buildNativeFilters(description, extension, keepCaseVariants = true) {
+    const extensions = normalizeExtensions(extension)
+        .map((ext) => ext.slice(1))
+        .filter((ext) => keepCaseVariants || ext === ext.toLowerCase());
+    if (extensions.length === 0) {
+        return [];
+    }
+    return [{ name: description || "Files", extensions }];
+}
+
 // The File System Access API pickers are available in Chromium-based browsers
 // and WebView2 (Windows Tauri). They are missing in Firefox and in the
 // WebKit-based webviews used by the Tauri desktop build (macOS WKWebView,
 // Linux WebKitGTK), where we fall back to a classic <input> / <a download>
-// flow so file open/save still works.
+// flow so file open still works.
 function canUseOpenPicker() {
     return typeof globalThis.showOpenFilePicker === "function";
 }
 
 function canUseSavePicker() {
     return typeof globalThis.showSaveFilePicker === "function";
+}
+
+// The Tauri dialog and fs plugins, loaded on demand so that web and mobile
+// builds never pull them in. Desktop only — they are registered in
+// src-tauri/src/lib.rs behind `#[cfg(desktop)]`.
+let tauriPlugins = null;
+function loadTauriPlugins() {
+    tauriPlugins ??= Promise.all([import("@tauri-apps/plugin-dialog"), import("@tauri-apps/plugin-fs")]).then(
+        ([dialog, fs]) => ({ dialog, fs }),
+    );
+    return tauriPlugins;
+}
+
+// The rejection showOpenFilePicker/showSaveFilePicker produce on dismissal, which
+// callers of this module already recognize.
+function abortError() {
+    const error = new Error("The user aborted a request.");
+    error.name = "AbortError";
+    return error;
+}
+
+// Native dialogs hand back an absolute path; the descriptors this module returns
+// carry the bare file name, like the File System Access handles do.
+function baseName(path) {
+    const parts = String(path).split(/[/\\]/);
+    return parts[parts.length - 1] || String(path);
 }
 
 // Open a file via a hidden <input type=file> and resolve with the selected File
@@ -133,9 +176,7 @@ function pickFileViaInput(extension) {
         };
 
         const abort = () => {
-            const error = new Error("The user aborted a request.");
-            error.name = "AbortError";
-            settle(reject, error);
+            settle(reject, abortError());
         };
 
         // When focus returns to the window the dialog has closed. Give `change`
@@ -211,6 +252,10 @@ class FileSystem {
             return this._androidPickSaveFile(suggestedName, description, extension);
         }
 
+        if (isTauriDesktop()) {
+            return this._tauriPickSaveFile(suggestedName, description, extension);
+        }
+
         if (!canUseSavePicker()) {
             return this._fallbackPickSaveFile(suggestedName, extension);
         }
@@ -229,6 +274,23 @@ class FileSystem {
         if (await this.verifyPermission(file, true)) {
             return file;
         }
+    }
+
+    // The native save dialog. It only picks a path — nothing is created on disk
+    // until the data is written — so the descriptor carries the path alone.
+    async _tauriPickSaveFile(suggestedName, description, extension) {
+        const { dialog } = await loadTauriPlugins();
+
+        const path = await dialog.save({
+            defaultPath: ensureExtension(suggestedName, extension),
+            filters: buildNativeFilters(description, extension, false),
+        });
+
+        if (!path) {
+            throw abortError();
+        }
+
+        return { name: baseName(path), _tauriPath: path };
     }
 
     // Fallback save "handle": there is no OS save dialog without the File System
@@ -266,6 +328,10 @@ class FileSystem {
             return this._androidPickOpenFile(description, extension);
         }
 
+        if (isTauriDesktop()) {
+            return this._tauriPickOpenFile(description, extension);
+        }
+
         if (!canUseOpenPicker()) {
             return this._fallbackPickOpenFile(extension);
         }
@@ -280,6 +346,22 @@ class FileSystem {
         if (await this.verifyPermission(file, false)) {
             return file;
         }
+    }
+
+    async _tauriPickOpenFile(description, extension) {
+        const { dialog } = await loadTauriPlugins();
+
+        const path = await dialog.open({
+            multiple: false,
+            directory: false,
+            filters: buildNativeFilters(description, extension),
+        });
+
+        if (!path) {
+            throw abortError();
+        }
+
+        return { name: baseName(path), _tauriPath: path };
     }
 
     // Fallback open: read the File selected via a hidden <input>. The File is a
@@ -343,6 +425,10 @@ class FileSystem {
             return this._androidWriteFile(file, contents);
         }
 
+        if (file._tauriPath) {
+            return this._tauriWriteFile(file, contents);
+        }
+
         if (file._download) {
             downloadViaAnchor(file.name, contents);
             return;
@@ -353,6 +439,16 @@ class FileSystem {
         const writable = await fileHandle.createWritable();
         await writable.write(contents);
         await writable.close();
+    }
+
+    async _tauriWriteFile(file, contents) {
+        const { fs } = await loadTauriPlugins();
+
+        if (typeof contents === "string") {
+            await fs.writeTextFile(file._tauriPath, contents);
+        } else {
+            await fs.writeFile(file._tauriPath, await this._toUint8Array(contents));
+        }
     }
 
     async _androidWriteFile(file, contents) {
@@ -377,6 +473,11 @@ class FileSystem {
             return CapacitorFile.readFile(file._fileHandle);
         }
 
+        if (file._tauriPath) {
+            const { fs } = await loadTauriPlugins();
+            return await fs.readTextFile(file._tauriPath);
+        }
+
         if (file._blob) {
             return await file._blob.text();
         }
@@ -396,6 +497,10 @@ class FileSystem {
             return this._androidReadFileAsBlob(file);
         }
 
+        if (file._tauriPath) {
+            return this._tauriReadFileAsBlob(file);
+        }
+
         if (file._blob) {
             return file._blob;
         }
@@ -403,6 +508,14 @@ class FileSystem {
         const fileHandle = file._fileHandle;
 
         return await fileHandle.getFile();
+    }
+
+    async _tauriReadFileAsBlob(file) {
+        const { fs } = await loadTauriPlugins();
+        const bytes = await fs.readFile(file._tauriPath);
+
+        const ext = file.name ? `.${file.name.split(".").pop()}` : "";
+        return new Blob([bytes], { type: mimeForExtension(ext) });
     }
 
     async _androidReadFileAsBlob(file) {
@@ -427,6 +540,14 @@ class FileSystem {
             return file._fileHandle;
         }
 
+        if (file._tauriPath) {
+            // No file handle is held open: each chunk is appended in its own fs
+            // call, which ships the bytes as the raw IPC body. A held handle
+            // would have to send them as a JSON array of numbers instead, which
+            // is far too slow for multi-megabyte blackbox dumps.
+            return { _tauriPath: file._tauriPath, _appending: false };
+        }
+
         if (file._download) {
             // Fallback streaming: buffer chunks in memory; they are downloaded
             // as a single blob on closeFile. The token is the `_download` object.
@@ -449,12 +570,25 @@ class FileSystem {
             return this._androidWriteChunk(writable, chunk);
         }
 
+        if (writable?._tauriPath) {
+            return this._tauriWriteChunk(writable, chunk);
+        }
+
         if (Array.isArray(writable?.chunks)) {
             writable.chunks.push(chunk);
             return;
         }
 
         await writable.write(chunk);
+    }
+
+    async _tauriWriteChunk(writable, chunk) {
+        const { fs } = await loadTauriPlugins();
+        const bytes = await this._toUint8Array(chunk);
+
+        // The first chunk truncates whatever was at the path; the rest append.
+        await fs.writeFile(writable._tauriPath, bytes, { append: writable._appending, create: true });
+        writable._appending = true;
     }
 
     async _androidWriteChunk(fileId, chunk) {
@@ -472,6 +606,18 @@ class FileSystem {
     async closeFile(writable) {
         if (isAndroid()) {
             await CapacitorFile.closeFile(writable);
+            return;
+        }
+
+        if (writable?._tauriPath) {
+            if (!writable._appending) {
+                // Nothing was streamed. The File System Access API creates the
+                // file when the picker returns, so an aborted save still leaves
+                // an empty file behind; do the same here.
+                const { fs } = await loadTauriPlugins();
+                await fs.writeFile(writable._tauriPath, new Uint8Array(), { create: true });
+                writable._appending = true;
+            }
             return;
         }
 
@@ -493,6 +639,10 @@ class FileSystem {
         }
         if (data instanceof ArrayBuffer) {
             return new Uint8Array(data);
+        }
+        // DataView and the other typed arrays: view the same bytes, don't copy.
+        if (ArrayBuffer.isView(data)) {
+            return new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
         }
         if (data instanceof Blob) {
             const buffer = await data.arrayBuffer();

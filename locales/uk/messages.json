@@ -42,11 +42,11 @@
         "message": "Вам потрібно оновити сторінку для отримання останніх змін. Оновлення зараз перезавантажить сторінку, і ви втратите будь-які незбережені зміни, та скасує будь-яку операцію, яка триває.<br><br>Бажаєте оновити її зараз? Також ви можете відхилити це повідомлення і власноруч оновити сторінку пізніше.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "Застосунок готовий до використання без мережі",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Ви можете встановити це як автономний застосунок на вашому пристрої, якщо бажаєте. Шукайте таку функцію в адресному рядку браузера або в меню.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -305,9 +305,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Коли мережа доступна, застосунок має автоматично перевіряти наявність оновлень."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Перейти на сайт з Релізами"
     },
     "rebootFlightController": {
         "message": "Перезавантаження польотного контролера, перепідключення після готовності"
@@ -654,6 +651,15 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Не вдалося<\/span> під'єднатися до вибраного порту. Переконайтеся, що пристрій доступний, а параметри підключення налаштовано правильно, після чого повторіть спробу."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "На iOS дозвольте застосунку Betaflight доступ до <strong>локальної мережі<\/strong>: Параметри &rarr; Приватність і безпека &rarr; Локальна мережа, потім повторіть спробу."
+    },
+    "connectionLostTitle": {
+        "message": "З'єднання втрачено"
+    },
+    "connectionLostUnresponsive": {
+        "message": "Польотний контролер <span class=\"message-negative\">перестав відповідати<\/span> й з'єднання було закрите. Перепідключіть плату і спробуйте знову; якщо проблема лишилась, вимкніть та увімкніть польотний контролер."
+    },
     "serialPortClosedOk": {
         "message": "Послідовний порт <span class=\"message-positive\">успішно<\/span> закрито"
     },
@@ -960,9 +966,6 @@
     },
     "defaultSoftwareHead": {
         "message": "Програмне забезпечення"
-    },
-    "defaultSoftwareText": {
-        "message": "Наш <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">аналізатор журналів Blackbox<\/a> доступний як онлайн-програма.<br \/><br \/>Наша збірка <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lua скриптів для передавачів<\/a> є на GitHub.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Вихідні коди<\/a> прошивки, цієї програми, та аналізатора журналів можна також отримати на GitHub."
     },
     "defaultContributingHead": {
         "message": "Сприяння"
@@ -1723,7 +1726,7 @@
         "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Автовизначення орієнтації плати..."
+        "message": "Автовизначення орієнтації плати"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "Майстер орієнтації плати"
@@ -1740,11 +1743,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Розмістіть дрон рівно, камерою від вас (до екрана)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Підніміть ніс приблизно на 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Нахиліть ніс донизу приблизно на 45°, щоб камера була направлена донизу."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Нахиліть правий бік униз приблизно на 45°."
+        "message": "Нахиліть праву сторону донизу приблизно на 45°, опускаючи праві промені та піднявши ліві."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Прокрутіть дрон приблизно на 45° за годинниковою стрілкою (як видно зверху)."
@@ -1816,10 +1819,13 @@
         "message": "Акселерометр не зчитує гравітацію. Переконайтеся, що польотний контролер під'єднано та він нерухомий."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та нахиліть ніс вище."
+        "message": "Рух за віссю тангажу не виявлено. Повторіть спробу та опустіть ніс більше."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Рух за віссю крену не виявлено. Повторіть спробу та нахиліть правий бік нижче."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "Один із нахилів виконано в неправильному напрямку. Перевірте напрямки тангажу та крену і повторіть спробу."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Горизонтально"
@@ -7499,10 +7505,6 @@
         "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">цю сторінку;<\/a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації Lua для роботи з lua скриптами Betaflight (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">тут<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Увага:<\/span> Ваш відеопередавач не налаштований або не підтримується. Тому ви не можете змінити значення відеопередавача звідси. Це буде можливо лише за умови, якщо польотний контролер під’єднано до відеопередавача за допомогою певного протоколу, як-от Tramp або SmartAudio, і його було правильно налаштовано на вкладці $t(tabPorts.message).",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Увага:<\/span> Вам потрібно СПОЧАТКУ налаштувати та зберегти таблицю відеопередавача внизу, перш ніж ви зможете використовувати поля $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7870,45 +7872,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Схилення {{saved}}°, проте GPS визначає {{detected}}° для цього місця. Клацніть Оновити для корегування."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} зразків"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Нахиліть більше!"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Не вдалося визначити — спробуйте нахиляти апарат більш різноманітно."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Калібр. конфігуратором (покрокове)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Калібрування з покроковими підказками 60 с"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Покрокове калібрування"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Крок 1 із 6 —Тримайте горизонтально, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Крок 2 із 6 — Догори дном, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Крок 3 із 6 — Носом догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Крок 4 із 6 — Носом вниз, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Крок 5 із 6 — Лівою стороною догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Крок 6 із 6 — Правою стороною догори, поверніть навколо рискання на 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Збір даних завершено — переглянути та зберегти"
-    },
     "magCalibrationCancel": {
         "message": "Скасувати"
     },
@@ -7939,12 +7902,6 @@
     "magCalibrationSamples": {
         "message": "Зразки"
     },
-    "magCalibrationQuality": {
-        "message": "Якість"
-    },
-    "magCalibrationResidual": {
-        "message": "Залишок апроксимації"
-    },
     "magCalibrationQualityGood": {
         "message": "Добра"
     },
@@ -7956,9 +7913,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Зміщення з прошивки"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Зміщення зі сферичної апроксимації"
     },
     "magCalibrationUnguided": {
         "message": "Калібр. прошивкою (застаріле)"
@@ -7974,18 +7928,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Калібрування прошивки завершено!"
-    },
-    "magCalibrationGuided": {
-        "message": "Калібр. конфігуратором (вільне)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Обертайте вільно — конфігуратор обрахує зміщення"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Калібрування конфігуратором"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Обертайте апарат у всіх напрямках. Намагайтеся приблизно за одну або дві хвилини сформувати повну сферу з точок. Збережіть результат, коли значення калібрування стабілізуються."
     },
     "magCalibrationCheck": {
         "message": "Перевірити"
@@ -8010,18 +7952,6 @@
     },
     "magCalibrationSaveError": {
         "message": "Не вдалося зберегти значення калібрування"
-    },
-    "magCalibrationAccept": {
-        "message": "Зберегти калібрування"
-    },
-    "magCalibrationFull": {
-        "message": "Повне калібр. (автоорієнтування)"
-    },
-    "magCalibrationFullDesc": {
-        "message": "Одне обертання — задає зміщення, девіацію від м'якого заліза та орієнтації встановлення магнітометра"
-    },
-    "magCalibrationFullTitle": {
-        "message": "Повне калібрування"
     },
     "magCalibrationFullInstruction": {
         "message": "Виконайте наведені нижче кроки, утримуючи апарат нерухомо протягом кожного повного оберту. Лічильник зон зростає, коли ви досягаєте нових кутів — маєте охопити всі 20."
@@ -8056,9 +7986,6 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} \/ {{total}} зон охоплено"
     },
-    "magCalibrationFullCompute": {
-        "message": "Розрахувати"
-    },
     "magCalibrationFullCoverage": {
         "message": "Покриття:"
     },
@@ -8085,9 +8012,6 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Недостатньо даних — обертайте довше"
-    },
-    "magCalibrationFullNoGeo": {
-        "message": "Немає даних про розташування з GPS або IP — неможливо визначити магнітне нахилення"
     },
     "magCalibrationFullCliCopied": {
         "message": "Команди CLI скопійовано до буфера обміну"
@@ -8127,12 +8051,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Нові"
-    },
-    "magAlignmentApply": {
-        "message": "Застосувати"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Визначити"
     },
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"

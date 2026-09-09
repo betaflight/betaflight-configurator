@@ -42,11 +42,11 @@
         "message": "Opdatér siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og man mister alle ikke-gemte ændringer og iganværende operationer afbrydes.<br><br>Ønsker du at opdatere nu? Du kan også afvise beskeden og opdatere manuelt senere.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
+    "pwaOnOfflineReadyTitle": {
         "message": "Applikation er klar til brug offline",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaOnOffilenReadyText": {
+    "pwaOnOfflineReadyText": {
         "message": "Du kan installere Configurator som standalone program, hvis du vil. Søg efter indstillingen i din browser adresselinje eller menu.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
@@ -72,6 +72,10 @@
     "disconnectManual": {
         "message": "Afbryd (Manuel)",
         "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBridge": {
+        "message": "Afbryd ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
     },
     "disconnectBluetooth": {
         "message": "Afbryd (Bluetooth)",
@@ -136,6 +140,30 @@
     "connectManualDescription": {
         "message": "For oprettelse af forbindelse, angiv seriel sti eller URL.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Gemte forbindelser",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Navn:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Navn for denne forbindelse",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Gem",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Opdater",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Fjern gemt forbindelse",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "Autotilslut"
@@ -322,14 +350,14 @@
     "configuratorUpdateHelp": {
         "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
     },
-    "configuratorUpdateWebsite": {
-        "message": "Åbn udgivelseswebsted"
-    },
     "rebootFlightController": {
         "message": "Genstart FC, tilslut igen, når du er klar"
     },
     "rebootFlightControllerReady": {
         "message": "FC er klar"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "FC blev ikke tilsluttet automatisk"
     },
     "deviceRebooting": {
         "message": "Enhed - <span class=\"message-negative\">Genstarter<\/span>"
@@ -670,6 +698,15 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Mislykkedes<\/span> at oprette forbindelse til den valgte port. Undersøg om enheden er tilgængelig og at forbindelsesindstillingerne er opsat korrekt, prøv derefter igen."
     },
+    "connectionFailedLocalNetworkIOS": {
+        "message": "Under IOS giv Betaflight adgang til <strong>lokalt netværk<\/strong> under Indstillinger &rarr; Anonymitet &amp; Sikkerhed &rarr; Lokalt Netværk og prøv derefter igen."
+    },
+    "connectionLostTitle": {
+        "message": "Forbindelse mistet"
+    },
+    "connectionLostUnresponsive": {
+        "message": "FC <span class=\"message-negative\">svarer ikke længere<\/span>, og forbindelsen blev lukket. Genopret forbindelsen og prøv igen; hvis problemet fortsætter, sluk og tænd FC."
+    },
     "serialPortClosedOk": {
         "message": "Seriel port <span class=\"message-positive\">lukket<\/span>"
     },
@@ -947,6 +984,14 @@
         "message": "Forbindelse:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Vis status detaljer",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Skjul status detaljer",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_connect_message": {
         "message": "Benyt Brænd firmware for at tilgå DFU-enheder"
     },
@@ -978,7 +1023,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
+        "message": "Vores Blackbox logviser er indbygget i denne app. Åbn fanen <strong>Blackbox Viewer<\/strong> for at analysere dine flylogs.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmwaren og denne app kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -1628,6 +1673,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (f.eks. indbygget Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC telemetri seriel port"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART som ESC telemetri er forbundet til. Indstilles selv af ESC sensor fra API 1.49; fanen Porte viser kun for info."
+    },
     "featureESC_SENSOR": {
         "message": "Brug KISS\/BLHeli_32 ESC telemetri <b>over en separat ledning<\/b>"
     },
@@ -1638,7 +1689,7 @@
         "message": "Hvis dette er deaktiveret, kan 'ANTI GRAVITY' tilstanden bruges til at aktivere Anti Gravity med en switch."
     },
     "featureDYNAMIC_FILTER": {
-        "message": "Dynamisk gyro notch filtrering"
+        "message": "Dynamisk gyro spærre filter"
     },
     "configurationFeatureEnabled": {
         "message": "Aktiveret"
@@ -1666,6 +1717,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetri"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetri $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protokol"
+    },
+    "telemetryInstancePort": {
+        "message": "Seriel port"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Baud hastighed"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Kamera styring"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Seriel port"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART som RunCam protokol er forbundet til. Indstilles selv af enhed fra API 1.49; fanen Porte viser kun for info."
     },
     "configurationTelemetryHelp": {
         "message": "Telemetri data transmitteres til sender"
@@ -1713,6 +1785,18 @@
     "configurationRangefinderType": {
         "message": "Type"
     },
+    "rangefinderSerialPort": {
+        "message": "Seriel port til afstand sensor"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART som afstand sensor er forbundet til. Indstilles selv af sensor fra API 1.49; fanen Porte viser kun for info."
+    },
+    "opticalflowSerialPort": {
+        "message": "Seriel port til optisk sensor"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART som optisk sensor er forbundet til. Indstilles selv af sensor fra API 1.49; fanen Porte viser kun for info."
+    },
     "configurationOpticalflow": {
         "message": "Optisk sensor",
         "description": "Don't translate!!!"
@@ -1743,13 +1827,13 @@
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "boardAlignmentWizard-Launch": {
-        "message": "Auto registrer FC justering..."
+        "message": "Auto registrer FC justering"
     },
     "boardAlignmentWizard-DialogTitle": {
         "message": "FC justering guide"
     },
     "boardAlignmentWizard-Intro": {
-        "message": "Denne guide registrerer, hvordan din flycontroller er monteret ved at guide dig gennem fire enkle bevægelser. Placer faartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
+        "message": "Denne guide registrerer, hvordan din flycontroller er monteret på dronen ved at guide dig gennem fire enkle bevægelser. Placer fartøjet på en flad overflade med kameraet vendt væk fra dig (mod skærmen), og følg derefter anvisningerne."
     },
     "boardAlignmentWizard-Start": {
         "message": "Start"
@@ -1760,11 +1844,11 @@
     "boardAlignmentWizard-HintFlat": {
         "message": "Placer fartøj fladt med kameraet vendt væk fra dig (mod skærmen)."
     },
-    "boardAlignmentWizard-HintPitchUp": {
-        "message": "Vip næsen op til omkring 45°."
+    "boardAlignmentWizard-HintPitchDown": {
+        "message": "Vip næsen ned med omkring 45°, så kameraet peger mod jorden."
     },
     "boardAlignmentWizard-HintRollRight": {
-        "message": "Vip højre side ned til omkring 45°."
+        "message": "Vip højre side ned med omkring 45°, ved at sænke højre arme og hæve venstre."
     },
     "boardAlignmentWizard-HintYawCW": {
         "message": "Drej dronen omkring 45° med uret (som set fra oven)."
@@ -1836,10 +1920,13 @@
         "message": "Accelerometeret kan ikke bestemme tyngdekraften. Sørg for, at FC er tilsluttet og ikke er i bevægelse."
     },
     "boardAlignmentWizard-Error-no_pitch_tilt": {
-        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere op."
+        "message": "Højde vinkel blev ikke registreret. Prøv igen og vip næsen længere ned."
     },
     "boardAlignmentWizard-Error-no_roll_tilt": {
         "message": "Krængning vinkel blev ikke registreret. Prøv igen og vip højre side længere ned."
+    },
+    "boardAlignmentWizard-Error-gesture_direction_mismatch": {
+        "message": "En af vippe bevægelserne var den forkerte vej. Tjek højde og vippe retninger og prøv igen."
     },
     "boardAlignmentWizard-StepFlat": {
         "message": "Fladt"
@@ -2131,6 +2218,24 @@
     "configurationGPSubxSbas": {
         "message": "Type af jordbaserede referencestationer"
     },
+    "gpsSerialPort": {
+        "message": "Seriel port"
+    },
+    "gpsSerialPortHelp": {
+        "message": "UART som GPS modul er forbundet til. Ændring af kræver en genstart af FC."
+    },
+    "gpsSerialBaud": {
+        "message": "Baud hastighed"
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Kunne ikke konfigurere seriel port for GPS, så intet blev gemt."
+    },
+    "gpsCanDevice": {
+        "message": "CAN databus"
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "Kunne ikke konfigurere CAN databus, så intet blev gemt."
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },
@@ -2156,6 +2261,18 @@
     "configurationSerialRX": {
         "message": "Protokol ved seriel konfiguration"
     },
+    "portsPortNone": {
+        "message": "Ingen"
+    },
+    "receiverSerialPort": {
+        "message": "Seriel port"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART den serielle modtager er forbundet til. Baud-raten følger udbyderen, så der er intet at sætte her. Ændring af porten kræver en genstart."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Kunne ikke konfigurere seriel port til modtageren, så intet blev gemt."
+    },
     "someRXTypesDisabled": {
         "message": "Nogle protokoller i den aktuelle konfiguration understøttes ikke."
     },
@@ -2179,10 +2296,10 @@
         "message": "Luk"
     },
     "dialogDynFiltersChangeTitle": {
-        "message": "Ændring af Dynamiske Notch værdier"
+        "message": "Ændring af Dynamiske spærre værdier"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>ADVARSEL: Denne ændring vil aktivere\/deaktivere RPM-filtrering, øge\/nedsætte filter forsinkelse\/effektivitet.<\/b><\/span><br><br>Nulstil de dynamiske hak filtre til anbefalede værdier?"
+        "message": "<span class=\"message-negative\"><b>ADVARSEL: Denne ændring vil aktivere\/deaktivere RPM-filtrering, øge\/nedsætte filter forsinkelse\/effektivitet.<\/b><\/span><br><br>Nulstil de dynamiske spærre filtre til anbefalede værdier?"
     },
     "portsIdentifier": {
         "message": "Identifikator"
@@ -2213,6 +2330,93 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan risikere at skulle brænde firmware image igen og så måske slette din konfiguration af FC."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Denne firmware rapporterer endnu vedrørende periferi udstyr."
+    },
+    "portsSectionSerial": {
+        "message": "Seriel port"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN databus"
+    },
+    "portsSectionSensors": {
+        "message": "Sensorer"
+    },
+    "portsTileUnassigned": {
+        "message": "Ikke tildelt"
+    },
+    "portsTileConfigure": {
+        "message": "Konfigurer"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Porten er aktiv til denne funktion"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Tildelt, men ikke aktiv — skyldes en port konflikt eller en afventende genstart"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inaktiv — aktiver SOFTSERIAL-funktionen på fanen Konfiguration"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inaktiv – ingen ben er tildelt denne port"
+    },
+    "portsInactiveReason": {
+        "message": "Inaktiv — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inaktiv"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS \/ Lokation"
+    },
+    "portsClaimRx": {
+        "message": "Seriel modtager"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox-logning"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC telemetri"
+    },
+    "portsClaimRcdevice": {
+        "message": "Kamera (RunCam-protokol)"
+    },
+    "portsClaimVtx": {
+        "message": "Video transmitter"
+    },
+    "portsClaimRangefinder": {
+        "message": "Afstand sensor"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optisk sensor"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD brugerdefineret tekst"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetri"
+    },
+    "portsSensorGyro": {
+        "message": "Gyro"
+    },
+    "portsSensorAcc": {
+        "message": "Accelerometer (hvis understøttet)"
+    },
+    "portsSensorBaro": {
+        "message": "Barometer \/ Højde"
+    },
+    "portsSensorMag": {
+        "message": "Kompas (hvis understøttet)"
+    },
+    "portsSensorNotDetected": {
+        "message": "Konfigureret, men ikke registreret"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware-opgradering <span class=\"message-negative\">nødvendig<\/span>.  Opsætningen af seriel port understøttes ikke af firmware &lt; 1.8.0."
@@ -2282,6 +2486,9 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD brugerdefineret tekst"
     },
     "pidTuningProfileOption": {
         "message": "PID profil $1"
@@ -2985,15 +3192,15 @@
         "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 1. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 2. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 2. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
+        "message": "Skifter leverandør bestemt CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
     "auxiliaryHelpMode_CAMSTAB": {
@@ -3985,6 +4192,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot sensor"
+    },
     "sensorsDebugSelect": {
         "message": "Brugerstyret logning"
     },
@@ -4005,6 +4215,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Lufthastighed - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Logning"
@@ -5265,7 +5478,7 @@
         "message": "Gyro lavpassfilter 1"
     },
     "pidTuningGyroLowpassHelp": {
-        "message": "Den første af to Gyro lavpassfilter.<br \/><br \/>Brugen af Gyro lavpassfilter 1 i dynamisk tilstand var vigtig med den tidligere dynamiske notch kode. Gyro lavpassfilter 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj afskæring vil ske tidligere, som gas stiger, med højere Gyro lavpassfilter expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
+        "message": "Den første af to Gyro lavpassfilter.<br \/><br \/>Brugen af Gyro lavpassfilter 1 i dynamisk tilstand var vigtig med den tidligere dynamiske spærre kode. Gyro lavpassfilter 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj afskæring vil ske tidligere, som gas stiger, med højere Gyro lavpassfilter expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
         "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
@@ -5302,19 +5515,19 @@
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
-        "message": "Gyro Notch filter"
+        "message": "Gyro spærre filter"
     },
     "pidTuningGyroNotchFilter": {
-        "message": "Gyro Notch filter 1"
+        "message": "Gyro spærre filter 1"
     },
     "pidTuningGyroNotchFilterHelp": {
-        "message": "Gælder et statisk (konstant frekvens) hak filter for Gyro, ved den angivne centerfrekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante frekvens gentagelser, der påvirker både P og D. <br \/><br \/>For at være nyttig, skal resonansfrekvensen være konstant på tværs af gas området.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. Afskæring skal typisk indstilles mellem 10 % og 40 % under centerfrekvensen. Brug det tætteste filterområde, der styrer resonans. Undgå at indstille notch filtre under 100hz undtagen under særlige omstændigheder.<br \/><br \/>Statiske notch filtre er sjældent påkrævet i 4.3."
+        "message": "Gælder et statisk (konstant frekvens) spærre filter for Gyro, ved den angivne centerfrekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante frekvens gentagelser, der påvirker både P og D. <br \/><br \/>For at være nyttig, skal resonansfrekvensen være konstant på tværs af gas området.<br \/><br \/>Spærre bredde er indstillet af afskærings frekvens. Afskæring skal typisk indstilles mellem 10 % og 40 % under centerfrekvensen. Brug det tætteste filterområde, der styrer resonans. Undgå at indstille spærre filtre under 100hz undtagen under særlige omstændigheder.<br \/><br \/>Statiske spærre filtre er sjældent påkrævet i 4.3."
     },
     "pidTuningGyroNotchFilter2": {
-        "message": "Gyro Notch filter 2"
+        "message": "Gyro spærre filter 2"
     },
     "pidTuningGyroNotchFilter2Help": {
-        "message": "Giver et andet statisk (konstant frekvens) hak filter for Gyro.<br \/><br \/>Dette er sjældent påkrævet, og bør kun bruges som en sidste udvej til at bekæmpe en anden fast frekvens resonans, der ikke kan styres med andre midler."
+        "message": "Giver et andet statisk (konstant frekvens) spærre filter for Gyro.<br \/><br \/>Dette er sjældent påkrævet, og bør kun bruges som en sidste udvej til at bekæmpe en anden fast frekvens resonans, der ikke kan styres med andre midler."
     },
     "pidTuningCenterFrequency": {
         "message": "Midtpunkt frekvens [Hz]"
@@ -5323,26 +5536,26 @@
         "message": "Afskæringsfrekvens [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Et notch filter er et symmetrisk, smalt, high-cut filter, med midtpunkt og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en notch afskæring på 160 med en midtpunkt værdi på 260, returnerer et bredt notch med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
+        "message": "Et spærre filter er et symmetrisk, smalt, high-cut filter, med midtpunkt og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en spærre somgælder på 160 med en midtpunkt værdi på 260, returnerer en bred spærre med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
-        "message": "Dynamisk Notch filter"
+        "message": "Dynamisk spærre filter"
     },
     "pidTuningDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter sporer frekvens spidser fra motors støj og placerer notch filtre ved disse frekvenser, uafhængigt for hver akse."
+        "message": "Dynamic spærre filter sporer frekvens spidser fra motors støj og placerer et spærre filtre ved disse frekvenser, uafhængigt for hver akse."
     },
     "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter sporer frekvens spidser fra gyro og placerer 1 til 5 notch filtre med deres centrum på disse frekvenser på hver akse."
+        "message": "Dynamic spærre filter sporer frekvens spidser fra gyro og placerer 1 til 5 spærre filtre med deres centrum på disse frekvenser på hver akse."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Bemærk:<\/strong> Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du aktivere funktionen 'DYNAMIC_FILTER' i afsnittet '$t(configurationFeatures.message)' i fanen '$t(tabConfiguration.message). Sørg også for, at PID loop rate er mindst 2 kHz."
+        "message": "<strong>Bemærk:<\/strong> Det dynamiske spærre filter er slået fra. For at konfigurere og bruge det, skal du aktivere funktionen 'DYNAMIC_FILTER' i afsnittet '$t(configurationFeatures.message)' i fanen '$t(tabConfiguration.message). Sørg også for, at PID loop rate er mindst 2 kHz."
     },
     "pidTuningDynamicNotchFilterNyquistWarning": {
-        "message": "Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du sikre at PID loop frekvens er sat til mindst 2 kHz på fanen '$t(tabConfiguration.message)'."
+        "message": "Det dynamiske spærre filter er slået fra. For at konfigurere og bruge det, skal du sikre at PID loop frekvens er sat til mindst 2 kHz på fanen '$t(tabConfiguration.message)'."
     },
     "pidTuningDynamicNotchRange": {
-        "message": "Dynamisk Notch filter område"
+        "message": "Dynamisk spærre filter område"
     },
     "pidTuningDynamicNotchQ": {
         "message": "Q faktor (x100)"
@@ -5354,29 +5567,29 @@
         "message": "Max. frekvens [Hz]"
     },
     "pidTuningDynamicNotchCount": {
-        "message": "Antal Notch"
+        "message": "Antal spærringer"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Den dynamiske notch har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro dynamic lavpassfilter 1 max afskærings frekvens."
+        "message": "Den dynamiske spærre har tre frekvensområder: LOW(80-330hz) til større spændvidde fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget lillle spændvidde på 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro dynamic lavpassfilter 1 max afskærings frekvens."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "Q-faktoren justerer, hvor smalle eller brede de dynamiske notch-filtre er. Den gemte værdi er Q-faktor × 100 (f.eks. 300 = Q 3,0).<br><br>\nEn højere værdi gør filtrene smallere og mere præcise, mens en lavere værdi gør dem bredere.<br><br>\nEn meget lav værdi vil øge filterforsinkelsen betydeligt."
+        "message": "Q-faktoren justerer, hvor smalle eller brede de dynamiske spærre filtre er. Den gemte værdi er Q-faktor × 100 (f.eks. 300 = Q 3,0).<br><br>\nEn højere værdi gør filtrene smallere og mere præcise, mens en lavere værdi gør dem bredere.<br><br>\nEn meget lav værdi vil øge filterforsinkelsen betydeligt."
     },
     "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske notch."
+        "message": "Sæt denne til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af den dynamiske spærre."
     },
     "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "Sæt dette til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af det dynamiske notch."
+        "message": "Sæt dette til den laveste indgående støjfrekvens, der er nødvendig for at blive kontrolleret af den dynamiske spærre."
     },
     "pidTuningDynamicNotchCountHelp": {
-        "message": "Sætter antallet af dynamiske notch pr. akse. Med RPM filter aktiveret anbefales en værdi på 1 eller 2. Uden omdrejningstallet anbefales en værdi på 4 eller 5. Lavere tal vil reducere filterforsinkelsen, men det kan øge motorens temperatur."
+        "message": "Sætter antallet af dynamiske spærre pr. akse. Med RPM filter aktiveret anbefales en værdi på 1 eller 2. Uden omdrejningstallet anbefales en værdi på 4 eller 5. Lavere tal vil reducere filterforsinkelsen, men det kan øge motorens temperatur."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM filter",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtrering er en gruppe af notch filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br \/><br \/><b><span class=\"message-positive\">VIGTIGT<\/span>: <br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.<\/b>",
+        "message": "RPM filtrering er en gruppe af spærre filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br \/><br \/><b><span class=\"message-positive\">VIGTIGT<\/span>: <br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.<\/b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -5384,7 +5597,7 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
-        "message": "Antal overtoner pr. motor. En værdi på 3 (anbefales for de fleste fartøjer) vil generere 3 notch filtre, pr. motor for hver akse, i alt 36 notch. Et notch ved den grundlæggende motorfrekvens og to harmoniske ved multipla af denne base frekvens.",
+        "message": "Antal overtoner pr. motor. En værdi på 3 (anbefales for de fleste fartøjer) vil generere 3 spærre filtre en motors 3 akser, i alt 36 spærringer. En spærre ved den grundlæggende motorfrekvens og to harmoniske ved multipla af denne base frekvens.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
@@ -5404,7 +5617,7 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmQHelp": {
-        "message": "Q faktor justerer, hvor smalle eller brede RPM notch filtre er. Den lagrede værdi er Q faktor × 100, tilladt interval 250–3000 (Q 2,5 til Q 30.0), standard 500 (Q 5.0). Højere værdier gør hvert notch smallere og mere præcise, lavere værdier gør dem bredere. Meget lave værdier øger filterforsinkelsen væsentligt."
+        "message": "Q faktor justerer, hvor smalle eller brede RPM spærre filtre er. Den lagrede værdi er Q faktor × 100, tilladt interval 250–3000 (Q 2,5 til Q 30.0), standard 500 (Q 5.0). Højere værdier gør hvert spærre smallere og mere præcise, lavere værdier gør dem bredere. Meget lave værdier øger filterforsinkelsen væsentligt."
     },
     "pidTuningRpmWeight": {
         "message": "Vægt {{index}}",
@@ -5446,10 +5659,10 @@
         "message": "Dynamisk Kurve Expo"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term Notch filter"
+        "message": "D Term spærre filter"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Gælder et statisk (konstant frekvens) notch filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante gentagende frekvenser, der forstærkes af D.<br \/><br \/>Hold afskæring så tæt på centrum som muligt. Undgå at indstille notch filtre under 100 hz undtagen på enheder med lav RPM."
+        "message": "Gælder et statisk (konstant frekvens) spærre filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Spærre bredde er indstillet af afskærings frekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante gentagende frekvenser, der forstærkes af D.<br \/><br \/>Hold afskæring så tæt på centrum som muligt. Undgå at indstille spærre filtre under 100 hz undtagen på enheder med lav RPM."
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Sideror lavpassfilter"
@@ -6179,6 +6392,21 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD protokol"
+    },
+    "osdProtocolHelp": {
+        "message": "Protokol for OSD. MAX7456 og FrSky OSD har en analog chip eller modul; MSP sender OSD over UART nedenfor, og anvendes af DJI, HDZero og Walksnail goggles."
+    },
+    "osdSerialPort": {
+        "message": "OSD seriel port"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART som seriel OSD er forbundet til. Indstilles selv af OSD fra API 1.49; fanen Porte viser kun for info."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Seriel port til brugerdefineret tekst"
+    },
     "osdSetupUnitsTitle": {
         "message": "Enhed"
     },
@@ -6263,6 +6491,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Overførsel mislykkedes"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Gem og genstart"
     },
     "osdSetupSave": {
         "message": "Gem"
@@ -7535,13 +7766,12 @@
     "osdButtonSaved": {
         "message": "Gemt"
     },
+    "osdPitotAirSpeed": {
+        "message": "Lufthastighed"
+    },
     "vtxHelp": {
         "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
         "description": "Introduction message in the VTX tab"
-    },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Bemærk:<\/span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
@@ -7682,6 +7912,21 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Kanal, som anvendes i Pit tilstand",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX enhed"
+    },
+    "vtxProtocol": {
+        "message": "Protokol"
+    },
+    "vtxProtocolHelp": {
+        "message": "Protokol for VTX. SmartAudio og Tramp er forbundet til UART angivet nedenfor; MSP deler med MSp, som også DJI, HDZero og Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Seriel port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART som VTX kontrol protokol er forbundet til. Indstilles selv af VTX fra API 1.49; fanen Porte viser kun for info."
     },
     "vtxLowPowerDisarm": {
         "message": "Lavt strømforbrug ved deaktivering",
@@ -7877,6 +8122,9 @@
     "configurationBaroHardware": {
         "message": "Barometer \/ Højde"
     },
+    "configurationPitot": {
+        "message": "Pitot sensor (lufthastighed)"
+    },
     "configurationMagHardware": {
         "message": "Kompas (hvis understøttet)"
     },
@@ -7910,45 +8158,6 @@
     "sensorConfigDeclinationDrift": {
         "message": "Afvigelse\/deklination er {{saved}}° men GPS registrerer {{detected}}° for denne placering. Klik på Opdater for at korrigere."
     },
-    "sensorConfigAlignSamples": {
-        "message": "{{count}} prøver"
-    },
-    "sensorConfigAlignTiltMore": {
-        "message": "Vip mere !"
-    },
-    "sensorConfigAlignDetectFailed": {
-        "message": "Registrering mislykkedes — prøv med forskelige grader af vipning."
-    },
-    "magCalibrationGuidedFw": {
-        "message": "Klient kalibring (Guidet)"
-    },
-    "magCalibrationGuidedFwDesc": {
-        "message": "Auto prompt i 60s kalibrering"
-    },
-    "magCalibrationGuidedFwTitle": {
-        "message": "Kalibrering via guide"
-    },
-    "magCalibrationPrompt1": {
-        "message": "Trin 1\/6 — Hold fladt, roter 360°"
-    },
-    "magCalibrationPrompt2": {
-        "message": "Trin 2\/6 — Vend omvendt, roter 360°"
-    },
-    "magCalibrationPrompt3": {
-        "message": "Trin 3\/6 — Næsen lige op, roter 360°"
-    },
-    "magCalibrationPrompt4": {
-        "message": "Trin 4\/6 — Næsen lige ned, roter 360°"
-    },
-    "magCalibrationPrompt5": {
-        "message": "Trin 5\/6 — Venstre side op, roter 360°"
-    },
-    "magCalibrationPrompt6": {
-        "message": "Trin 6\/6 — Højre side op, roter 360°"
-    },
-    "magCalibrationGuidedDone": {
-        "message": "Dataindsamling færdig — kontroller og gem"
-    },
     "magCalibrationCancel": {
         "message": "Fortryd"
     },
@@ -7979,12 +8188,6 @@
     "magCalibrationSamples": {
         "message": "Prøver"
     },
-    "magCalibrationQuality": {
-        "message": "Kvalitet"
-    },
-    "magCalibrationResidual": {
-        "message": "Tilpasningsfejl"
-    },
     "magCalibrationQualityGood": {
         "message": "God"
     },
@@ -7996,9 +8199,6 @@
     },
     "magCalibrationFirmwareOffsets": {
         "message": "Firmware offset"
-    },
-    "magCalibrationSphereOffsets": {
-        "message": "Offsetværdier fra kugletilpasning"
     },
     "magCalibrationUnguided": {
         "message": "Firmware kalibring (Klassisk)"
@@ -8014,18 +8214,6 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
-    },
-    "magCalibrationGuided": {
-        "message": "Klient kalibring (Gratis)"
-    },
-    "magCalibrationGuidedDesc": {
-        "message": "Roter frit — app beregner forskydninger"
-    },
-    "magCalibrationGuidedTitle": {
-        "message": "Klient kalibrering"
-    },
-    "magCalibrationGuidedInstruction": {
-        "message": "Drej dit køretøj i alle retninger. Sigtet er at få en komplet kugle af prikker på omkring et eller to minutter. Gem resultatet, når kalibreringsværdierne er stabiliseret."
     },
     "magCalibrationCheck": {
         "message": "Kontroller"
@@ -8051,17 +8239,14 @@
     "magCalibrationSaveError": {
         "message": "Kunne ikke gemme kalibreringsværdier"
     },
-    "magCalibrationAccept": {
-        "message": "Gem kalibrering"
-    },
     "magCalibrationFull": {
-        "message": "Fuld kalibring (Autojusteret)"
+        "message": "Kalibrere og registrere orientering"
     },
     "magCalibrationFullDesc": {
-        "message": "En rotation — fastsætter offset, soft-iron-korrektion og kompassets monteringsretning"
+        "message": "Roter fartøjet i alle retninger for at kalibrere sensor og automatisk registrere monteringsretning."
     },
     "magCalibrationFullTitle": {
-        "message": "Fuld kalibrering"
+        "message": "Kalibrere og registrere orientering"
     },
     "magCalibrationFullInstruction": {
         "message": "Følg nedenstående trin ved at holde fartøjet stabilt gennem hver bevægelse. i trinet tælles stigning, når du ændre til ny vinkel - mål at dække alle 20."
@@ -8097,7 +8282,10 @@
         "message": "{{covered}} \/ {{total}} områder dækket"
     },
     "magCalibrationFullCompute": {
-        "message": "Beregn"
+        "message": "Afslut kalibrering"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Flere overdækkede zoner giver højere nøjagtighed — mål er 20 \/ 20 for bedste kalibrering og justering."
     },
     "magCalibrationFullCoverage": {
         "message": "Dækning:"
@@ -8127,7 +8315,22 @@
         "message": "For få målinger — fortsæt rotationen"
     },
     "magCalibrationFullNoGeo": {
-        "message": "Ingen GPS eller placering fra IP netværk — kan derfor ikke bestemme magnetisk hældning"
+        "message": "Ingen GPS, browser eller IP-placering — angiv koordinater manuelt for at fortsætte"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Lokation nødvendig for kalibrering"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Angiv manuelt breddegrad og længdegrad ved at vælge fra Google Maps. Din drone har ingen GPS-lås, og din enhed kunne derfor ikke give data for placering. Placering er nødvendig for kalibrering af kompas."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "f.eks. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Ugyldigt koordinat format. Angiv som: breddegrad, længdegrad (f.eks. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Kunne ikke beregne en magnetisk reference for disse koordinater. Tjek dem og prøv igen."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI kommandoer kopieret til udklipsholder"
@@ -8167,12 +8370,6 @@
     },
     "magVizAgeLegendNew": {
         "message": "Ny"
-    },
-    "magAlignmentApply": {
-        "message": "Anvend"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Registrer"
     },
     "configurationSmallAngle": {
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
@@ -8279,6 +8476,15 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Blackbox logger til ..."
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Seriel port"
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Seriel Baud hastighed"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Baud hastighed for den serielle port til logning."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox lognings hastighed"
@@ -8924,6 +9130,76 @@
     },
     "osdDescElementBatteryProfileName": {
         "message": "Viser profilnavn eller -indeks for aktiv batteri"
+    },
+    "osdTextElementWpNumber": {
+        "message": "Vejpunkt nummer",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Viser det næste vejpunkt nummer\/antal vejpunkter i den aktive flyveplan"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Vejpunkt breddegrad",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Viser breddegraden for det aktuelle vejpunkt"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Vejpunkt længdegrad",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Viser længdegraden for det aktuelle vejpunkt"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Vejpunkt højde",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Viser højden af det nuværende vejpunkt"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Afstand til vejpunkt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Viser afstanden til det aktuelle vejpunkt"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Vejpunkt retning",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Viser en retnings pil, som peger på det aktuelle vejpunkt"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Næste vejpunkt nummer",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Viser det næste vejpunkt nummer i den aktive flyveplan"
+    },
+    "osdTextElementWpEta": {
+        "message": "Vejpunkt ankomst",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Viser det estimerede tidspunkt for ankomsten til det aktuelle vejpunkt"
+    },
+    "osdTextElementNavMap": {
+        "message": "Navigation kort",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Minikort som viser hjem, flyveplanen og det fulgte rute"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Tilstand hvor position fastholdes",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Viser om Position fasthold forudsætninger er opfyldt, før tilstanden slåes til"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Lineal",

@@ -1,7 +1,7 @@
 [package]
 name = "betaflight-app"
-version = "2026.6.0"
-description = "Betaflight App"
+version = "2026.12.0"
+description = "Betaflight"
 authors = ["The Betaflight open source project."]
 license = "GPL-3.0"
 repository = "https://github.com/betaflight/betaflight-configurator"
@@ -19,11 +19,59 @@ tauri = { version = "2.11", features = [] }
 tauri-plugin-shell = "2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+# USB DFU flashing; only functional (and only registered) on Android, but kept
+# an unconditional direct dependency so every target compiles the crate and the
+# Tauri CLI can discover its Android library path.
+tauri-plugin-dfu = { path = "plugins/dfu" }
+
+# Browses the bridge's `_betaflight._tcp` mDNS service so bridges appear in the connect list
+# without typing an IP. Apple platforms go through mDNSResponder instead (src/mdns/apple.rs),
+# because iOS drops multicast from an app's own socket without a special entitlement.
+[target.'cfg(not(any(target_os = "ios", target_os = "macos")))'.dependencies]
+mdns-sd = "0.21"
+
+# poll(2) for the dns_sd resolve socket in src/mdns/apple.rs.
+[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
+libc = "0.2"
 
 # USB serial is desktop + Android only. iOS has no USB serial API, and
 # tauri-plugin-serialplugin's iOS build path doesn't compile, so exclude it there.
 [target.'cfg(not(target_os = "ios"))'.dependencies]
-tauri-plugin-serialplugin = "2.21"
+# Pinned to a fork rather than 3.0 for its `raw` watch mode. Upstream's watch
+# routes every chunk through its AT line router, which decodes the bytes with
+# from_utf8_lossy, splits them on newlines and trims each line, so MSP loses its
+# non-UTF-8 bytes and its 0x09/0x0A/0x0D/0x20 payload bytes. Raw streams them
+# verbatim. Revisit once the change is upstream and released.
+tauri-plugin-serialplugin = { git = "https://github.com/blckmn/tauri-plugin-serialplugin", rev = "68a58a74fb5fa9cbf41b17c419f0136748d56a50" }
+
+# Window size/position/maximized persistence is a desktop-only concept.
+# Cargo can't evaluate tauri's `desktop` cfg here, so spell the platforms out.
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-window-state = "2"
+
+# Native file open/save dialogs and the file IO behind them. The webviews on macOS
+# (WKWebView) and Linux (WebKitGTK) implement neither the File System Access API nor
+# `<a download>` blob downloads, so the frontend has no way to write a file without
+# these. Desktop only: mobile keeps the webview flow.
+#
+# `dialog` picks the path and grants `fs` a runtime scope entry for exactly that file,
+# so no static filesystem scope is configured in the capabilities.
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+
+# Native BLE for the platforms whose webview has no Web Bluetooth. blec uses a Kotlin
+# backend on Android and btleplug elsewhere; raw btleplug can't serve Android because its
+# droidplug JNI half needs gradle wiring Tauri regenerates, and R8 strips it on release.
+#
+# Not compiled on Linux/Windows: btleplug pulls dbus there, which would add libdbus-1-dev to
+# desktop builds and CI for a path the frontend doesn't use (they keep Web Bluetooth).
+#
+# Pinned to a commit rather than 0.12.0: that release drops every device from an Android scan
+# when the per-device is_bonded() IPC fails. Revisit once a fixed version is published.
+[target.'cfg(any(target_os = "ios", target_os = "macos", target_os = "android"))'.dependencies]
+tauri-plugin-blec = { git = "https://github.com/MnlPhlp/tauri-plugin-blec", rev = "fbade6ca37941b53d26c0cfebe39ccbf37ff8bc2" }
+uuid = "1"
+tokio = { version = "1", features = ["sync", "time"] }
 
 [features]
 default = ["custom-protocol"]

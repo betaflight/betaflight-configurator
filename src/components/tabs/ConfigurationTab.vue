@@ -1,198 +1,228 @@
 <template>
-    <div class="tab-configuration">
-        <div class="content_wrapper">
-            <div class="tab_title">{{ $t("tabConfiguration") }}</div>
-            <WikiButton docUrl="configuration" />
-            <UiBox highlight class="mb-3">
-                <p v-html="$t('configurationFeaturesHelp')"></p>
-            </UiBox>
+    <BaseTab tab-name="configuration">
+        <div class="tab-configuration">
+            <div class="content_wrapper">
+                <div class="tab_title">{{ $t("tabConfiguration") }}</div>
+                <WikiButton docUrl="configuration" />
+                <UiBox highlight class="mb-3">
+                    <p v-html="$t('configurationFeaturesHelp')"></p>
+                </UiBox>
 
-            <div class="grid-row grid-box col2">
-                <div class="col-span-1">
-                    <!-- SYSTEM CONFIGURATION -->
-                    <UiBox :title="$t('configurationSystem')">
-                        <UiBox highlight>
-                            <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <!-- SYSTEM CONFIGURATION -->
+                        <UiBox :title="$t('configurationSystem')" type="neutral" collapsible>
+                            <UiBox highlight>
+                                <p class="systemconfigNote" v-html="$t('configurationLoopTimeHelp')"></p>
+                            </UiBox>
+                            <SettingRow :label="$t('configurationGyroFrequency')">
+                                <UInput readonly disabled :value="gyroFrequencyDisplay" class="min-w-40" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationPidProcessDenom')"
+                                :help="$t('configurationPidProcessDenomHelp')"
+                            >
+                                <USelect
+                                    :items="pidDenomOptions"
+                                    v-model="pidAdvancedConfig.pid_process_denom"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                         </UiBox>
-                        <SettingRow :label="$t('configurationGyroFrequency')">
-                            <UInput readonly disabled :value="gyroFrequencyDisplay" class="min-w-40" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationPidProcessDenom')"
-                            :help="$t('configurationPidProcessDenomHelp')"
-                        >
-                            <USelect
-                                :items="pidDenomOptions"
-                                v-model="pidAdvancedConfig.pid_process_denom"
-                                class="min-w-40"
-                            />
-                        </SettingRow>
-                    </UiBox>
 
-                    <!-- PERSONALIZATION -->
-                    <UiBox :title="$t('configurationPersonalization')">
-                        <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
-                            <UInput v-model="craftName" maxlength="16" class="min-w-40" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationPilotName')"
-                            :help="$t('configurationPilotNameHelp')"
-                            v-if="showPilotName"
-                        >
-                            <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
-                        </SettingRow>
-                    </UiBox>
+                        <!-- PERSONALIZATION -->
+                        <UiBox :title="$t('configurationPersonalization')" type="neutral" collapsible>
+                            <SettingRow :label="$t('craftName')" :help="$t('configurationCraftNameHelp')">
+                                <UInput v-model="craftName" maxlength="16" class="min-w-40" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationPilotName')"
+                                :help="$t('configurationPilotNameHelp')"
+                                v-if="showPilotName"
+                            >
+                                <UInput v-model="pilotName" maxlength="16" class="min-w-40" />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- CAMERA -->
-                    <UiBox :title="$t('configurationCamera')" v-if="accHardwareEnabled">
-                        <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
-                            <UInputNumber
-                                v-model="fpvCamAngleDegrees"
-                                :step="1"
-                                :min="0"
-                                :max="90"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                    </UiBox>
+                        <!-- CAMERA -->
+                        <UiBox :title="$t('configurationCamera')" type="neutral" collapsible v-if="accHardwareEnabled">
+                            <SettingRow :label="$t('configurationFpvCamAngleDegrees')">
+                                <UInputNumber
+                                    v-model="fpvCamAngleDegrees"
+                                    :step="1"
+                                    :min="0"
+                                    :max="90"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- ARMING -->
-                    <UiBox
-                        :title="$t('configurationArming')"
-                        :help="$t('configurationArmingHelp')"
-                        v-if="accHardwareEnabled"
-                    >
-                        <SettingRow :label="$t('configurationSmallAngle')" :help="$t('configurationSmallAngleHelp')">
-                            <UInputNumber
-                                v-model="armingConfig.small_angle"
-                                :step="1"
-                                :min="0"
-                                :max="180"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationGyroCalOnFirstArm')"
-                            :help="$t('configurationGyroCalOnFirstArmHelp')"
-                            v-if="showGyroCalOnFirstArm"
+                        <!-- ARMING -->
+                        <UiBox
+                            :title="$t('configurationArming')"
+                            :help="$t('configurationArmingHelp')"
+                            type="neutral"
+                            collapsible
+                            v-if="accHardwareEnabled"
                         >
-                            <USwitch v-model="armingConfig.gyro_cal_on_first_arm_bool" />
-                        </SettingRow>
-                        <SettingRow
-                            :label="$t('configurationAutoDisarmDelay')"
-                            :help="$t('configurationAutoDisarmDelayHelp')"
-                            v-if="showAutoDisarmDelay"
-                        >
-                            <UInputNumber
-                                v-model="armingConfig.auto_disarm_delay"
-                                :step="1"
-                                :min="0"
-                                :max="60"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                    </UiBox>
+                            <SettingRow
+                                :label="$t('configurationSmallAngle')"
+                                :help="$t('configurationSmallAngleHelp')"
+                            >
+                                <UInputNumber
+                                    v-model="armingConfig.small_angle"
+                                    :step="1"
+                                    :min="0"
+                                    :max="180"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationGyroCalOnFirstArm')"
+                                :help="$t('configurationGyroCalOnFirstArmHelp')"
+                                v-if="showGyroCalOnFirstArm"
+                            >
+                                <USwitch v-model="armingConfig.gyro_cal_on_first_arm_bool" />
+                            </SettingRow>
+                            <SettingRow
+                                :label="$t('configurationAutoDisarmDelay')"
+                                :help="$t('configurationAutoDisarmDelayHelp')"
+                                v-if="showAutoDisarmDelay"
+                            >
+                                <UInputNumber
+                                    v-model="armingConfig.auto_disarm_delay"
+                                    :step="1"
+                                    :min="0"
+                                    :max="60"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- FEATURES -->
-                    <UiBox :title="$t('configurationFeatures')">
-                        <SettingRow
-                            v-for="feature in featuresList"
-                            :key="feature.bit"
-                            fullWidth
-                            :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
-                        >
-                            <USwitch
-                                :model-value="isFeatureEnabled(feature)"
-                                @update:model-value="(checked) => toggleFeature(feature, checked)"
-                            />
-                            <template #label>
-                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('feature' + feature.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
+                        <!-- FEATURES -->
+                        <UiBox :title="$t('configurationFeatures')" type="neutral" collapsible>
+                            <SettingRow
+                                v-for="feature in featuresList"
+                                :key="feature.bit"
+                                fullWidth
+                                :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
+                            >
+                                <USwitch
+                                    :model-value="isFeatureEnabled(feature)"
+                                    @update:model-value="(checked) => toggleFeature(feature, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('feature' + feature.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
 
-                    <!-- DSHOT BEACON -->
-                    <UiBox :title="$t('configurationDshotBeeper')" :help="$t('configurationDshotBeaconHelp')">
-                        <SettingRow
-                            :label="$t('configurationDshotBeaconTone')"
-                            :help="$t('configurationUseDshotBeeper')"
+                        <!-- DSHOT BEACON -->
+                        <UiBox
+                            :title="$t('configurationDshotBeeper')"
+                            :help="$t('configurationDshotBeaconHelp')"
+                            type="neutral"
+                            collapsible
                         >
-                            <USelect
-                                v-model="dshotBeaconTone"
-                                class="min-w-24"
-                                :items="[
-                                    { label: $t('portsTelemetryDisabled'), value: 0 },
-                                    ...[1, 2, 3, 4, 5].map((i) => ({ label: String(i), value: i })),
-                                ]"
-                            />
-                        </SettingRow>
-                        <div class="flex gap-2">
-                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllDshot" size="xs" />
-                            <UButton :label="$t('configurationBeeperDisableAll')" @click="disableAllDshot" size="xs" />
-                        </div>
-                        <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
-                            <USwitch
-                                :model-value="isDshotConditionEnabled(cond)"
-                                @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
-                            />
-                            <template #label>
-                                <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('beeper' + cond.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
-                </div>
+                            <SettingRow
+                                :label="$t('configurationDshotBeaconTone')"
+                                :help="$t('configurationUseDshotBeeper')"
+                            >
+                                <USelect
+                                    v-model="dshotBeaconTone"
+                                    class="min-w-24"
+                                    :items="[
+                                        { label: $t('portsTelemetryDisabled'), value: 0 },
+                                        ...[1, 2, 3, 4, 5].map((i) => ({ label: String(i), value: i })),
+                                    ]"
+                                />
+                            </SettingRow>
+                            <div class="flex gap-2">
+                                <UButton
+                                    :label="$t('configurationBeeperEnableAll')"
+                                    @click="enableAllDshot"
+                                    size="xs"
+                                />
+                                <UButton
+                                    :label="$t('configurationBeeperDisableAll')"
+                                    @click="disableAllDshot"
+                                    size="xs"
+                                />
+                            </div>
+                            <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
+                                <USwitch
+                                    :model-value="isDshotConditionEnabled(cond)"
+                                    @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('beeper' + cond.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
+                    </div>
 
-                <div class="col-span-1">
-                    <!-- BEEPER CONFIGURATION -->
-                    <UiBox :title="$t('configurationBeeper')">
-                        <div class="flex gap-2">
-                            <UButton :label="$t('configurationBeeperEnableAll')" @click="enableAllBeepers" size="xs" />
-                            <UButton
-                                :label="$t('configurationBeeperDisableAll')"
-                                @click="disableAllBeepers"
-                                size="xs"
-                            />
-                        </div>
-                        <SettingRow
-                            v-for="beeper in beepersList"
-                            :key="beeper.bit"
-                            v-show="beeper.visible !== false"
-                            fullWidth
-                        >
-                            <USwitch
-                                :model-value="isBeeperEnabled(beeper)"
-                                @update:model-value="(checked) => toggleBeeper(beeper, checked)"
-                            />
-                            <template #label>
-                                <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
-                                <span
-                                    class="min-w-0 flex-1 text-xs leading-snug"
-                                    v-html="$t('beeper' + beeper.name)"
-                                ></span>
-                            </template>
-                        </SettingRow>
-                    </UiBox>
+                    <div class="col-span-1">
+                        <!-- BEEPER CONFIGURATION -->
+                        <UiBox :title="$t('configurationBeeper')" type="neutral" collapsible>
+                            <div class="flex gap-2">
+                                <UButton
+                                    :label="$t('configurationBeeperEnableAll')"
+                                    @click="enableAllBeepers"
+                                    size="xs"
+                                />
+                                <UButton
+                                    :label="$t('configurationBeeperDisableAll')"
+                                    @click="disableAllBeepers"
+                                    size="xs"
+                                />
+                            </div>
+                            <SettingRow
+                                v-for="beeper in beepersList"
+                                :key="beeper.bit"
+                                v-show="beeper.visible !== false"
+                                fullWidth
+                            >
+                                <USwitch
+                                    :model-value="isBeeperEnabled(beeper)"
+                                    @update:model-value="(checked) => toggleBeeper(beeper, checked)"
+                                />
+                                <template #label>
+                                    <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
+                                    <span
+                                        class="min-w-0 flex-1 text-xs leading-snug"
+                                        v-html="$t('beeper' + beeper.name)"
+                                    ></span>
+                                </template>
+                            </SettingRow>
+                        </UiBox>
+                    </div>
                 </div>
             </div>
+            <div class="content_toolbar toolbar_fixed_bottom">
+                <UButton
+                    :label="$t('configurationButtonSave')"
+                    size="xs"
+                    :disabled="!dirty"
+                    :loading="isSaving"
+                    @click="saveConfig"
+                />
+            </div>
         </div>
-        <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" :loading="isSaving" @click="saveConfig" />
-        </div>
-    </div>
+    </BaseTab>
 </template>
 
 <script>
@@ -200,7 +230,9 @@ import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "v
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -208,8 +240,9 @@ import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { updateTabList } from "../../js/utils/updateTabList";
+import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -217,6 +250,7 @@ import SettingRow from "../elements/SettingRow.vue";
 export default defineComponent({
     name: "ConfigurationTab",
     components: {
+        BaseTab,
         WikiButton,
         UiBox,
         SettingRow,
@@ -354,50 +388,73 @@ export default defineComponent({
         const gyroFrequencyDisplay = ref("");
         const pidDenomOptions = ref([]);
 
+        // Features, beepers and DShot conditions are edited on the shared FC helpers rather than
+        // local copies, so their masks belong in the snapshot; both readers are side-effect free.
+        /** @returns {string} serialized tab state for dirty comparison */
+        const serializeConfigForDirtyCheck = () =>
+            JSON.stringify({
+                pidProcessDenom: pidAdvancedConfig.pid_process_denom,
+                fpvCamAngleDegrees: fpvCamAngleDegrees.value,
+                craftName: craftName.value,
+                pilotName: pilotName.value,
+                smallAngle: armingConfig.small_angle,
+                gyroCalOnFirstArm: armingConfig.gyro_cal_on_first_arm_bool,
+                autoDisarmDelay: armingConfig.auto_disarm_delay,
+                featureMask: fcStore.features?.features?.peekMask?.() ?? 0,
+                beeperDisabledMask: fcStore.beepers?.beepers?.getDisabledMask?.() ?? 0,
+                dshotBeaconConditionsMask: fcStore.beepers?.dshotBeaconConditions?.getDisabledMask?.() ?? 0,
+                dshotBeaconTone: dshotBeaconTone.value,
+            });
+
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
+
         // Loading Logic
         const loadConfig = async () => {
-            try {
-                if (!isMounted.value) return;
-                await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
-                await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-                await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+            await runTabLoad(
+                async () => {
+                    if (!isMounted.value) return;
+                    await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_NAME);
-                }
+                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(MSPCodes.MSP_NAME);
+                    }
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
-                    );
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(
+                            MSPCodes.MSP2_GET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                        );
+                    }
 
-                await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
 
-                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
-                    );
-                }
+                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                        await MSP.promise(
+                            MSPCodes.MSP2_GET_TEXT,
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
+                        );
+                    }
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                    await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
-                if (!isMounted.value) return;
+                    if (!isMounted.value) return;
 
-                await initializeUI();
-                await nextTick();
-                GUI.content_ready();
-            } catch (e) {
-                console.error("Failed to load configuration", e);
-                GUI.content_ready();
-            }
+                    await initializeUI();
+                    await nextTick();
+                    GUI.content_ready();
+                },
+                (e) => {
+                    console.error("Failed to load configuration", e);
+                    GUI.content_ready();
+                },
+            );
         };
 
         const initializeUI = async () => {
@@ -426,11 +483,16 @@ export default defineComponent({
             // Arming Config
             armingConfig.small_angle = fcStore.armingConfig.small_angle;
 
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = fcStore.armingConfig.gyro_cal_on_first_arm === 1;
+            }
+
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
             }
+
+            markClean();
         };
 
         const updateGyroDenom = (gyroFrequency) => {
@@ -465,75 +527,65 @@ export default defineComponent({
         };
 
         const saveConfig = () =>
-            runSave(
-                async () => {
-                    fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
+            runSave(async () => {
+                const savedSnapshot = takeSnapshot();
 
-                    fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
+                fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        fcStore.config.craftName = craftName.value;
-                        fcStore.config.pilotName = pilotName.value;
-                    } else {
-                        fcStore.config.name = craftName.value;
-                    }
+                fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
-                    if (fcStore.beepers) {
-                        fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
-                    }
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    fcStore.config.craftName = craftName.value;
+                    fcStore.config.pilotName = pilotName.value;
+                } else {
+                    fcStore.config.name = craftName.value;
+                }
 
-                    fcStore.armingConfig.small_angle = armingConfig.small_angle;
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                        fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
-                        fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
-                    }
+                if (fcStore.beepers) {
+                    fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
+                }
 
-                    // Send MSP commands
+                fcStore.armingConfig.small_angle = armingConfig.small_angle;
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                    fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                }
+
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+                    fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
+                }
+
+                // Send MSP commands
+                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+                if (fcStore.beepers) {
+                    await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
+                }
+
+                await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
+                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
+                } else {
                     await MSP.promise(
-                        MSPCodes.MSP_SET_FEATURE_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
                     );
-
-                    if (fcStore.beepers) {
-                        await MSP.promise(
-                            MSPCodes.MSP_SET_BEEPER_CONFIG,
-                            mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG),
-                        );
-                    }
-
-                    await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-
-                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
-                    } else {
-                        await MSP.promise(
-                            MSPCodes.MSP2_SET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
-                        );
-                        await MSP.promise(
-                            MSPCodes.MSP2_SET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
-                        );
-                    }
-
-                    await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
                     await MSP.promise(
-                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
+                        MSPCodes.MSP2_SET_TEXT,
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
                     );
+                }
 
-                    gui_log(i18n.getMessage("configurationSaved"));
+                await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
-                    // Save to EEPROM and Reboot
-                    await saveAndReboot();
-                },
-                {
-                    onError: (e) => {
-                        console.error("Failed to save configuration", e);
-                        gui_log(i18n.getMessage("configurationSaveFailed"));
-                    },
-                },
-            );
+                gui_log(i18n.getMessage("configurationSaved"));
+
+                // Save to EEPROM and Reboot
+                await saveAndReboot();
+
+                markClean(savedSnapshot);
+            });
 
         onMounted(() => {
             loadConfig();
@@ -566,6 +618,7 @@ export default defineComponent({
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,
             isSaving,
+            dirty,
             saveConfig,
         };
     },

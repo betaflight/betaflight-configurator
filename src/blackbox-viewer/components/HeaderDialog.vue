@@ -196,6 +196,7 @@
 import semver from "semver";
 import Sortable from "sortablejs";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout } from "../header_layout";
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
@@ -463,17 +464,17 @@ const pidControllerParams = computed(() => {
     const s = filteredSc.value;
     const gainDec = isBF.value && gte("3.1.0") && lte("4.3.9") ? 3 : 0;
 
+    const dMaxParams = [
+        param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
+        param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
+        param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
+        param("D Max Gain", fmtVal(s.d_max_gain, 0)),
+        param("D Max Advance", fmtVal(s.d_max_advance, 0)),
+    ];
+
     return [
         // D Max (BF 4.0+)
-        ...(isBF.value && gte("4.0.0")
-            ? [
-                  param("D Max Roll", fmtVal(s.d_max?.[0], 0)),
-                  param("D Max Pitch", fmtVal(s.d_max?.[1], 0)),
-                  param("D Max Yaw", fmtVal(s.d_max?.[2], 0)),
-                  param("D Max Gain", fmtVal(s.d_max_gain, 0)),
-                  param("D Max Advance", fmtVal(s.d_max_advance, 0)),
-              ]
-            : []),
+        ...(isBF.value && gte("4.0.0") ? dMaxParams : []),
         // Anti Gravity, TPA, PID limits & modifiers
         param("AG Mode", selectVal(s.anti_gravity_mode, ANTI_GRAVITY_MODE)),
         param("AG Gain", fmtVal(s.anti_gravity_gain, gainDec)),
@@ -492,7 +493,10 @@ const pidControllerParams = computed(() => {
         // abs_control_gain removed in BF 2026.6
         ...(isBF.value && lt("2026.6.0") ? [param("Abs Control Gain", fmtVal(s.abs_control_gain, 0))] : []),
         param("PID At Min Throttle", selectVal(s.pidAtMinThrottle, OFF_ON)),
-        param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON)),
+        // use_integrated_yaw removed in BF 2026.12
+        ...(isBF.value && lt("2026.12.0")
+            ? [param("Use Integrated Yaw", selectVal(s.use_integrated_yaw, OFF_ON))]
+            : []),
     ].filter((p) => !p.missing);
 });
 
@@ -681,10 +685,10 @@ const rpmFilterParams = computed(() => {
     }
     return [
         param("Harmonics", fmtVal(s.gyro_rpm_notch_harmonics, 0)),
+        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Q", fmtVal(s.gyro_rpm_notch_q, 0)),
         param("Min Hz", fmtVal(s.gyro_rpm_notch_min, 0)),
         param("Fade Range Hz", fmtVal(s.rpm_filter_fade_range_hz, 0)),
-        param("Weights", s.rpm_filter_weights ? String(s.rpm_filter_weights) : null),
         param("Notch LPF", fmtVal(s.rpm_notch_lpf, 0)),
         param("D-Term Harmonics", fmtVal(s.dterm_rpm_notch_harmonics, 0)),
         param("D-Term Q", fmtVal(s.dterm_rpm_notch_q, 0)),
@@ -945,31 +949,6 @@ const expandedHeaderGroups = ref(new Set());
 const hiddenGroups = ref(new Set());
 const hiddenFields = ref(new Set());
 
-// Persist hidden groups/fields
-function loadHiddenPrefs() {
-    try {
-        const g = localStorage.getItem("bbv-hidden-groups");
-        const f = localStorage.getItem("bbv-hidden-fields");
-        if (g) {
-            hiddenGroups.value = new Set(JSON.parse(g));
-        }
-        if (f) {
-            hiddenFields.value = new Set(JSON.parse(f));
-        }
-    } catch {
-        // ignore
-    }
-}
-function saveHiddenPrefs() {
-    try {
-        localStorage.setItem("bbv-hidden-groups", JSON.stringify([...hiddenGroups.value]));
-        localStorage.setItem("bbv-hidden-fields", JSON.stringify([...hiddenFields.value]));
-    } catch {
-        // ignore
-    }
-}
-loadHiddenPrefs();
-
 // Group order for display
 const GROUP_ORDER = [
     "PID Settings",
@@ -995,31 +974,30 @@ const DEFAULT_PANE_ORDER = [...GROUP_ORDER];
 
 const paneOrder = ref([...DEFAULT_PANE_ORDER]);
 
-function loadPaneOrder() {
-    try {
-        const saved = localStorage.getItem("bbv-pane-order");
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            const order = parsed.filter((id) => DEFAULT_PANE_ORDER.includes(id));
-            for (const id of DEFAULT_PANE_ORDER) {
-                if (!order.includes(id)) {
-                    order.push(id);
-                }
-            }
-            paneOrder.value = order;
+/** @param {import("../header_layout").HeaderLayout} layout */
+function applyHeaderLayout(layout) {
+    hiddenGroups.value = new Set(layout.hiddenGroups);
+    hiddenFields.value = new Set(layout.hiddenFields);
+
+    const order = [...layout.paneOrder];
+    for (const id of DEFAULT_PANE_ORDER) {
+        if (!order.includes(id)) {
+            order.push(id);
         }
-    } catch {
-        // ignore
     }
+    paneOrder.value = order;
 }
-function savePaneOrder() {
-    try {
-        localStorage.setItem("bbv-pane-order", JSON.stringify(paneOrder.value));
-    } catch {
-        // ignore
-    }
+
+function persistHeaderLayout() {
+    saveHeaderLayout({
+        hiddenGroups: [...hiddenGroups.value],
+        hiddenFields: [...hiddenFields.value],
+        paneOrder: paneOrder.value,
+    });
 }
-loadPaneOrder();
+
+applyHeaderLayout(loadHeaderLayout());
+const unsubscribeHeaderLayout = subscribeHeaderLayout(applyHeaderLayout);
 
 const groupParamMap = computed(() => ({
     "PID Sliders": pidSliderParams.value,
@@ -1106,12 +1084,13 @@ watch(gridEl, (el) => {
             const visibleSet = new Set(newVisible);
             const hidden = paneOrder.value.filter((g) => !visibleSet.has(g));
             paneOrder.value = [...newVisible, ...hidden];
-            savePaneOrder();
+            persistHeaderLayout();
         },
     });
 });
 
 onBeforeUnmount(() => {
+    unsubscribeHeaderLayout();
     if (sortable) {
         sortable.destroy();
     }
@@ -1125,7 +1104,7 @@ function toggleGroupVisibility(group) {
         s.add(group);
     }
     hiddenGroups.value = new Set(s);
-    saveHiddenPrefs();
+    persistHeaderLayout();
 }
 
 function toggleFieldVisibility(key) {
@@ -1136,7 +1115,7 @@ function toggleFieldVisibility(key) {
         s.add(key);
     }
     hiddenFields.value = new Set(s);
-    saveHiddenPrefs();
+    persistHeaderLayout();
 }
 
 function toggleGroupExpand(group) {

@@ -1,8 +1,40 @@
-import { invoke } from "@tauri-apps/api/core";
+import { Channel, invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
 import GUI from "../gui";
 
 const logHead = "[TAURI SERIAL]";
+
+/**
+ * Options handed to the plugin's `watch` command.
+ *
+ * `raw` is a correctness requirement, not a tuning knob. Without it the plugin
+ * routes every chunk through its AT line router, which decodes the bytes as
+ * UTF-8, splits them on newlines, trims each line and can reclassify one as an
+ * out-of-band `urc` event. MSP is binary: that path replaces every non-UTF-8
+ * byte, eats 0x09/0x0A/0x0D/0x20 payload bytes and silently drops whole frames.
+ *
+ * `serialDataFlushIntervalMs` of 0 makes the hub flush its batch buffer on every
+ * pass of its read loop, so a frame is dispatched as soon as the OS hands it
+ * over rather than waiting out a batching window.
+ *
+ * `size` is only the hub thread's read buffer. Unlike the `read_binary` path it
+ * cannot truncate: the watch route appends whole chunks, so a burst larger than
+ * this arrives as consecutive events instead of losing its tail.
+ */
+const WATCH_OPTIONS = {
+    size: 4096,
+    serialDataFlushIntervalMs: 0,
+    raw: true,
+};
+
+/**
+ * Poll interval for the plugin's port-list monitor, in milliseconds.
+ *
+ * The monitor runs on a Rust thread rather than over the webview bridge, so this
+ * is not a cost paid on the JavaScript thread. It matches the cadence of the
+ * hotplug poll it replaces.
+ */
+const PORT_LIST_POLL_INTERVAL_MS = 1000;
 
 /**
  * Extract a best-effort message string from an error value of unknown shape
@@ -30,14 +62,57 @@ function isBrokenPipeError(error) {
 }
 
 /**
- * Parse a vendor/product ID from the plugin response (may arrive as number or
- * string depending on OS backend).
+ * Detects the plugin having dropped the port from its registry, which it does
+ * as soon as the device leaves the bus.
+ *
+ * A flight controller re-enumerates on every reboot — "Save and Reboot", exiting
+ * the bootloader — and on Android the port path is the USB device node, so the
+ * old path is gone for good rather than reappearing. Treating this as fatal
+ * stops the read loop and the MSP queue from hammering a dead path for the
+ * second or so it takes the hotplug poll to notice.
+ * @param {unknown} error - Rejection value from the plugin (string, Error or object).
+ * @returns {boolean} Whether the port no longer exists.
+ */
+function isPortGoneError(error) {
+    return /not found|is not open|disconnected|detached/i.test(extractErrorMessage(error));
+}
+
+/**
+ * Detects a lost race for the port lock against the plugin's RX hub thread.
+ * The plugin returns this before touching the port, so no bytes reached the
+ * device and the chunk is safe to resend.
+ * @param {unknown} error - Rejection value from the plugin (string, Error or object).
+ * @returns {boolean} Whether the write failed on the port lock without transmitting.
+ */
+function isLockTimeoutError(error) {
+    return /lock timeout/i.test(extractErrorMessage(error));
+}
+
+/**
+ * Parse a vendor/product ID from the plugin response. The shape depends on the
+ * backend: the desktop serialport enumerator stringifies the numbers as decimal
+ * ("1155"), while the Android USB bridge formats them as hex ("0x0483"). Ports
+ * with no USB descriptor report the literal "Unknown".
+ * @param {unknown} value - Raw `vid`/`pid` field from `available_ports`.
+ * @returns {number|undefined} The numeric ID, or undefined when absent/unparseable.
  */
 function parseId(value) {
-    if (value === undefined || value === null) {
+    if (typeof value === "number") {
+        return value;
+    }
+    // Anything that is not a string cannot be an ID from either backend, and
+    // stringifying it would only produce "[object Object]" to fail on below.
+    if (typeof value !== "string") {
         return undefined;
     }
-    return typeof value === "number" ? value : Number.parseInt(value, 10);
+    const text = value.trim();
+    // Match the whole string, because parseInt stops at the first invalid
+    // character: "1155unknown" would otherwise read as 1155 and promote an
+    // unrecognised device into the known-device list.
+    if (!/^(?:0x[\da-f]+|\d+)$/i.test(text)) {
+        return undefined;
+    }
+    return Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
 }
 
 /**
@@ -64,7 +139,6 @@ class TauriSerial extends EventTarget {
 
         this.ports = [];
         this.connectionId = null;
-        this.reading = false;
 
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
@@ -73,11 +147,13 @@ class TauriSerial extends EventTarget {
         // macOS AT32 batch-write workaround flag (driver quirk).
         this.isNeedBatchWrite = false;
 
-        // Device hotplug monitoring — poll-based since the plugin doesn't
-        // expose a native event stream.
+        // Channel ids for the plugin's two push streams: received bytes for the
+        // open port, and port-list changes for hotplug.
+        this.dataChannelId = null;
+        this.portListChannelId = null;
+        this.portListChannel = null;
         this.monitoringDevices = false;
-        this.deviceMonitorInterval = null;
-        this.deviceCheckInFlight = false;
+        this.portListSubscription = null;
 
         // Fire-and-forget init; wrapped in a sync helper so the constructor
         // body contains no async operation (Sonar S7059). The promise
@@ -100,44 +176,133 @@ class TauriSerial extends EventTarget {
     }
 
     handleFatalSerialError() {
-        // On fatal errors (broken pipe, etc.) just disconnect cleanly.
-        // The monitor loop will surface the removal as a removedDevice event.
+        // On fatal errors (broken pipe, port gone) just disconnect cleanly. The
+        // monitor loop resumes once we are disconnected and surfaces the removal
+        // as a removedDevice event, which is what the reconnect cycle waits for.
         if (this.connected) {
             this.disconnect();
         }
     }
 
-    startDeviceMonitoring() {
+    /**
+     * Subscribe to the plugin's port-list monitor.
+     *
+     * The monitor enumerates on its own Rust thread and pushes only the changes,
+     * so unlike the `available_ports` poll this replaces, nothing is spent on the
+     * JavaScript thread between events.
+     */
+    async startDeviceMonitoring() {
         if (this.monitoringDevices) {
             return;
         }
 
         this.monitoringDevices = true;
-        // Reentrancy-guarded poll: skip the tick if the previous check hasn't
-        // returned yet, so overlapping runs can't race on `this.ports` and
-        // emit duplicate/missed hotplug events.
-        this.deviceMonitorInterval = setInterval(async () => {
-            if (this.deviceCheckInFlight) {
+        const channel = new Channel();
+        this.portListChannel = channel;
+        channel.onmessage = (event) => {
+            if (this.portListChannel !== channel) {
                 return;
             }
-            this.deviceCheckInFlight = true;
-            try {
-                await this.checkDeviceChanges();
-            } finally {
-                this.deviceCheckInFlight = false;
-            }
-        }, 1000);
+            this._handlePortListEvent(event);
+        };
 
-        console.log(`${logHead} Device monitoring started`);
+        this.portListSubscription = invoke("plugin:serialplugin|watch_ports", {
+            options: { pollIntervalMs: PORT_LIST_POLL_INTERVAL_MS },
+            channel,
+        })
+            .then((channelId) => {
+                this.portListChannelId = channelId;
+                console.log(`${logHead} Device monitoring started`);
+            })
+            .catch((error) => {
+                this.monitoringDevices = false;
+                this.portListChannel = null;
+                console.error(`${logHead} Could not start device monitoring:`, error);
+            });
+
+        await this.portListSubscription;
     }
 
-    stopDeviceMonitoring() {
-        if (this.deviceMonitorInterval) {
-            clearInterval(this.deviceMonitorInterval);
-            this.deviceMonitorInterval = null;
-        }
+    async stopDeviceMonitoring() {
+        // A subscribe still in flight would otherwise store its channel id after
+        // this teardown had read it, leaving the monitor running for the whole
+        // connection — the very thing connect() stops it to avoid.
+        await this.portListSubscription;
+
         this.monitoringDevices = false;
-        console.log(`${logHead} Device monitoring stopped`);
+        this.portListChannel = null;
+        const channelId = this.portListChannelId;
+        this.portListChannelId = null;
+        if (channelId === null) {
+            return;
+        }
+
+        try {
+            await invoke("plugin:serialplugin|unwatch_ports", { channelId });
+            console.log(`${logHead} Device monitoring stopped`);
+        } catch (error) {
+            console.warn(`${logHead} Error stopping device monitoring:`, error);
+        }
+    }
+
+    /**
+     * Apply one `PortListEvent` from the monitor.
+     *
+     * Only the current subscription's events are applied: a channel already in
+     * flight when `stopDeviceMonitoring` unsubscribed would otherwise report a
+     * device removal underneath an open port, which the reconnect cycle acts on.
+     *
+     * A `snapshot` is a full reconciliation, not just an initial state: the
+     * monitor sends one on every subscribe, and this transport unsubscribes for
+     * the duration of a connection, so the snapshot that arrives on reconnect is
+     * what reports a device that vanished while the port was open.
+     * @param {{kind: string, ports?: object, path?: string, info?: object}} event - Event from the monitor.
+     * @private
+     */
+    _handlePortListEvent(event) {
+        switch (event?.kind) {
+            case "snapshot":
+                this._reconcilePorts(this._filterToKnownDevices(this._convertPortsMapToArray(event.ports ?? {})));
+                break;
+            case "added":
+                this._reconcilePorts([
+                    ...this.ports.filter((port) => port.path !== event.path),
+                    ...this._filterToKnownDevices(this._convertPortsMapToArray({ [event.path]: event.info ?? {} })),
+                ]);
+                break;
+            case "removed":
+                this._reconcilePorts(this.ports.filter((port) => port.path !== event.path));
+                break;
+            default:
+                console.warn(`${logHead} Unknown port list event:`, event);
+        }
+    }
+
+    /**
+     * Diff `currentPorts` against the cached list and emit the difference.
+     *
+     * Kept as a diff rather than trusting each event verbatim so a duplicate
+     * `added` or a `removed` for a path already gone stays silent.
+     * @param {Array<object>} currentPorts - The known-device ports as they now stand.
+     * @private
+     */
+    _reconcilePorts(currentPorts) {
+        const removedPorts = this.ports.filter(
+            (oldPort) => !currentPorts.some((newPort) => newPort.path === oldPort.path),
+        );
+        const addedPorts = currentPorts.filter((newPort) => !this.ports.some((old) => old.path === newPort.path));
+
+        this.ports = currentPorts;
+
+        for (const removed of removedPorts) {
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+            console.log(`${logHead} Device removed: ${removed.path}`);
+        }
+
+        for (const added of addedPorts) {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+            console.log(`${logHead} Device added: ${added.path}`);
+        }
     }
 
     /**
@@ -173,35 +338,6 @@ class TauriSerial extends EventTarget {
         });
     }
 
-    async checkDeviceChanges() {
-        try {
-            const portsMap = await invoke("plugin:serialplugin|available_ports");
-            const allPorts = this._convertPortsMapToArray(portsMap);
-            const currentPorts = this._filterToKnownDevices(allPorts);
-
-            const removedPorts = this.ports.filter(
-                (oldPort) => !currentPorts.some((newPort) => newPort.path === oldPort.path),
-            );
-            const addedPorts = currentPorts.filter(
-                (newPort) => !this.ports.some((oldPort) => oldPort.path === newPort.path),
-            );
-
-            for (const removed of removedPorts) {
-                this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-                console.log(`${logHead} Device removed: ${removed.path}`);
-            }
-
-            for (const added of addedPorts) {
-                this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-                console.log(`${logHead} Device added: ${added.path}`);
-            }
-
-            this.ports = currentPorts;
-        } catch (error) {
-            console.warn(`${logHead} Error checking device changes:`, error);
-        }
-    }
-
     async loadDevices() {
         try {
             const portsMap = await invoke("plugin:serialplugin|available_ports");
@@ -213,6 +349,40 @@ class TauriSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
             return [];
+        }
+    }
+
+    /**
+     * Whether the transport still enumerates `path`, asked fresh rather than read
+     * from the cached list.
+     *
+     * Opening a path that has gone away is not a harmless failure on Android. The
+     * plugin's Kotlin bridge throws `device not found` for a vanished USB node,
+     * and its JNI wrapper leaks that exception: `with_env` only clears a pending
+     * exception after the call succeeds, so a throw returns early and leaves the
+     * exception set on the thread. Every later call over that bridge is then
+     * undefined — in practice the webview's JavaScript thread blocks inside
+     * `postMessage` and never comes back, which reads as the whole app freezing.
+     *
+     * This matters most straight after "Save and Reboot": the flight controller
+     * re-enumerates under a new device node, so the remembered path is dead while
+     * the reconnect cycle is retrying against it.
+     *
+     * Checked against the raw port map, not the known-device list, so this only
+     * ever answers "does this path exist".
+     * @param {string} path - Port path about to be opened.
+     * @returns {Promise<boolean>} Whether the transport still lists it.
+     * @private
+     */
+    async _portExists(path) {
+        try {
+            const portsMap = await invoke("plugin:serialplugin|available_ports");
+            return Object.hasOwn(portsMap ?? {}, path);
+        } catch (error) {
+            // An enumeration failure is not evidence the port is gone; let the
+            // open proceed and report the real error.
+            console.warn(`${logHead} Could not verify port ${path}:`, error);
+            return true;
         }
     }
 
@@ -232,6 +402,15 @@ class TauriSerial extends EventTarget {
 
         this.openRequested = true;
         this.openCanceled = false;
+
+        // Never hand the plugin a path it no longer enumerates — see _portExists.
+        if (!(await this._portExists(path))) {
+            console.log(`${logHead} Port ${path} is no longer present, not opening`);
+            this.openRequested = false;
+            this.openCanceled = false;
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return false;
+        }
 
         try {
             const openOptions = { path, baudRate };
@@ -261,19 +440,6 @@ class TauriSerial extends EventTarget {
                 return await this._abortOpen(path);
             }
 
-            try {
-                await invoke("plugin:serialplugin|set_timeout", {
-                    path,
-                    timeout: 100,
-                });
-            } catch (e) {
-                console.debug(`${logHead} Could not set timeout:`, e);
-            }
-
-            if (this.openCanceled) {
-                return await this._abortOpen(path);
-            }
-
             const activePort = this.ports.find((p) => p.path === path);
             this.connected = true;
             this.connectionId = path;
@@ -295,8 +461,19 @@ class TauriSerial extends EventTarget {
 
             this.addEventListener("receive", this.handleReceiveBytes);
 
-            this.reading = true;
-            this.readLoop();
+            // Enumeration has no job while a port is open, and on Android it is
+            // actively harmful: `available_ports` crosses into Kotlin and queries
+            // the USB service on a single-threaded executor with an unbounded
+            // wait. Running that underneath a live MSP session is what wedged the
+            // bridge and froze the app. Loss of the device is noticed by the read
+            // and write paths instead, which is both safe and quicker.
+            await this.stopDeviceMonitoring();
+
+            // Nothing reads the port without the watch, so a failure here is a
+            // failed connection rather than a degraded one.
+            if (!(await this._startWatch(path))) {
+                return await this._abortConnect(path);
+            }
 
             this.dispatchEvent(new CustomEvent("connect", { detail: true }));
             console.log(`${logHead} Connected to ${path}`);
@@ -328,6 +505,23 @@ class TauriSerial extends EventTarget {
         return false;
     }
 
+    /**
+     * Undo a connection whose port opened but whose byte stream would not start.
+     * Mirrors `_abortOpen`, plus the state `connect` had already committed.
+     * @param {string} path - The port to close again.
+     * @private
+     */
+    async _abortConnect(path) {
+        this.removeEventListener("receive", this.handleReceiveBytes);
+        this.connected = false;
+        this.connectionId = null;
+        this.connectionInfo = null;
+        this.bitrate = 0;
+        await this._abortOpen(path);
+        await this.startDeviceMonitoring();
+        return false;
+    }
+
     checkIsNeedBatchWrite() {
         const isMac = GUI.operating_system === "MacOS";
         const vendorId = this.connectionInfo?.vendorId;
@@ -350,52 +544,75 @@ class TauriSerial extends EventTarget {
     }
 
     /**
-     * Classify a read error as fatal (rethrow and tear the loop down) or
-     * transient (log + continue). Extracted from readLoop to keep its
-     * cognitive complexity under the Sonar limit.
+     * Subscribe to the open port's byte stream.
+     *
+     * The plugin's RX hub thread is the sole reader of the fd either way; this
+     * asks it to push what it reads instead of holding it in an idle buffer for
+     * the next poll to collect. A failure here is fatal to the connection: the
+     * port would be open with nothing reading it.
+     * @param {string} path - The open port's path.
      * @private
      */
-    _classifyReadError(error) {
-        const msg = extractErrorMessage(error).toLowerCase();
-        if (msg.includes("no data received")) {
-            return "continue";
+    async _startWatch(path) {
+        const channel = new Channel();
+        channel.onmessage = (event) => this._handleSerialEvent(event);
+
+        try {
+            this.dataChannelId = await invoke("plugin:serialplugin|watch", {
+                path,
+                options: WATCH_OPTIONS,
+                channel,
+            });
+            return true;
+        } catch (error) {
+            console.error(`${logHead} Could not watch ${path}:`, error);
+            return false;
         }
-        if (isBrokenPipeError(error)) {
-            console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
-            return "fatal";
-        }
-        console.warn(`${logHead} Poll error:`, error);
-        return "continue";
     }
 
-    async readLoop() {
+    async _stopWatch() {
+        const channelId = this.dataChannelId;
+        this.dataChannelId = null;
+        if (channelId === null) {
+            return;
+        }
+
         try {
-            while (this.reading) {
-                try {
-                    const result = await invoke("plugin:serialplugin|read_binary", {
-                        path: this.connectionId,
-                        size: 256,
-                        timeout: 10,
-                    });
-
-                    if (result && result.length > 0) {
-                        const bytes = new Uint8Array(result);
-                        this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
-                    }
-
-                    await new Promise((resolve) => setTimeout(resolve, 5));
-                } catch (error) {
-                    if (this._classifyReadError(error) === "fatal") {
-                        throw error;
-                    }
-                    await new Promise((resolve) => setTimeout(resolve, 5));
-                }
-            }
+            await invoke("plugin:serialplugin|unwatch", { channelId });
         } catch (error) {
-            console.error(`${logHead} Error in read loop:`, error);
-            this.handleFatalSerialError(error);
-        } finally {
-            console.log(`${logHead} Polling stopped for ${this.connectionId || "<no-port>"}`);
+            // `close` also drops every watch registered for the path, so losing
+            // the race with it leaves nothing to report.
+            console.debug(`${logHead} Unwatch failed:`, error);
+        }
+    }
+
+    /**
+     * Apply one `SerialEvent` from the open port.
+     *
+     * Late events are dropped rather than dispatched: a channel already in flight
+     * when the port closed would otherwise inject bytes into whatever session
+     * comes next.
+     * @param {{kind: string, data?: Array<number>, reason?: string, message?: string}} event - Event from the plugin.
+     * @private
+     */
+    _handleSerialEvent(event) {
+        if (!this.connected) {
+            return;
+        }
+
+        switch (event?.kind) {
+            case "data":
+                this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(event.data) }));
+                break;
+            case "disconnect":
+                console.error(`${logHead} Port ${this.connectionId} disconnected: ${event.reason}`);
+                this.handleFatalSerialError(event.reason);
+                break;
+            case "error":
+                console.warn(`${logHead} Read error on ${this.connectionId}: ${event.message}`);
+                break;
+            default:
+                console.warn(`${logHead} Unknown serial event:`, event);
         }
     }
 
@@ -425,10 +642,26 @@ class TauriSerial extends EventTarget {
             this.transmitting = true;
 
             const writeChunk = async (chunk) => {
-                await invoke("plugin:serialplugin|write_binary", {
-                    path: this.connectionId,
-                    value: Array.from(chunk),
-                });
+                const value = Array.from(chunk);
+                const path = this.connectionId;
+                const session = this.connectionInfo;
+                try {
+                    await invoke("plugin:serialplugin|write_binary", { path, value });
+                } catch (error) {
+                    if (!isLockTimeoutError(error)) {
+                        throw error;
+                    }
+                    // A disconnect (even one followed by a reconnect to the
+                    // same path) while the plugin held the write means this
+                    // chunk belongs to a dead session; resending would inject
+                    // it into the new one. connect() builds a fresh
+                    // connectionInfo per session, so identity is the check.
+                    if (this.connectionInfo !== session) {
+                        throw error;
+                    }
+                    console.warn(`${logHead} Write lock timeout, resending chunk`);
+                    await invoke("plugin:serialplugin|write_binary", { path, value });
+                }
             };
 
             if (this.isNeedBatchWrite) {
@@ -450,7 +683,7 @@ class TauriSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error sending data:`, error);
             this.transmitting = false;
-            if (isBrokenPipeError(error)) {
+            if (isBrokenPipeError(error) || isPortGoneError(error)) {
                 this.handleFatalSerialError(error);
             }
             const res = { bytesSent: 0 };
@@ -482,13 +715,11 @@ class TauriSerial extends EventTarget {
         this.closeRequested = true;
         this.connected = false;
         this.transmitting = false;
-        this.reading = false;
 
         try {
             this.removeEventListener("receive", this.handleReceiveBytes);
 
-            // Small delay to allow read loop to notice the state change.
-            await new Promise((resolve) => setTimeout(resolve, 50));
+            await this._stopWatch();
 
             if (this.connectionId) {
                 try {
@@ -503,6 +734,12 @@ class TauriSerial extends EventTarget {
             this.bitrate = 0;
             this.connectionInfo = null;
             this.closeRequested = false;
+
+            // Resume hotplug monitoring, which connect() suspended. The snapshot
+            // the monitor sends on subscribe is what reports a device that went
+            // away while the port was open, and the reconnect cycle waits on the
+            // removedDevice event that comes out of it.
+            await this.startDeviceMonitoring();
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
             return true;

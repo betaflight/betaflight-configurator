@@ -1,10 +1,7 @@
-import { createApp } from "vue";
-import ui from "@nuxt/ui/vue-plugin";
-import App from "./App.vue";
-import pinia from "./pinia_instance.js";
-import { getNuxtUiRouter } from "./nuxt_ui_router.js";
-import { bootstrapViewer } from "./main.js";
+import { pinia } from "@/js/pinia_instance.js";
 import { useAppStore } from "./stores/app.js";
+import { usePlaybackStore, GRAPH_STATE_PLAY, GRAPH_STATE_PAUSED } from "./stores/playback.js";
+import { setGraphState, updateCanvasSize } from "./playback_controls.js";
 import { DarkTheme } from "./dark_theme.js";
 import "./css/main.css";
 
@@ -19,52 +16,23 @@ export function setBlackboxViewerDark(enabled) {
     useAppStore(pinia).darkThemeEnabled = enabled;
 }
 
-// Single live instance — the viewer tab mounts at most once at a time.
-let current = null;
-
 /**
- * Mount the blackbox log viewer inside the given root element. The root must contain the
- * viewer scaffold (the teleport-target divs + canvases) and a `#vue-app` mount point.
- * Returns nothing; pair every call with destroyBlackboxViewer() on unmount.
+ * Track whether the viewer tab is the visible one. Kept alive across tab switches, the viewer
+ * must go dormant when hidden: its document-level handlers gate on appStore.viewerActive, its
+ * render loop is paused, and on return the canvases (detached while cached) are re-measured.
  */
-export function initBlackboxViewer(rootEl, options = {}) {
-    if (current) {
-        return;
+export function setViewerActive(active) {
+    const appStore = useAppStore(pinia);
+    appStore.viewerActive = active;
+
+    if (active) {
+        // Cached canvases lost their layout while detached; resize to the live box and repaint.
+        updateCanvasSize();
+    } else {
+        // Stop the background render loop rather than animate an off-screen graph.
+        const playbackStore = usePlaybackStore(pinia);
+        if (playbackStore.graphState === GRAPH_STATE_PLAY) {
+            setGraphState(GRAPH_STATE_PAUSED);
+        }
     }
-
-    const app = createApp(App);
-    // Provide the root so the viewer applies its state classes here instead of <html>.
-    app.provide("bbvRoot", rootEl);
-    // Provide the host-supplied FC dataflash pull capability (or null when unavailable).
-    app.provide("bbvDataflash", options.dataflash ?? null);
-    app.use(pinia);
-    app.use(getNuxtUiRouter());
-    app.use(ui);
-    app.mount(rootEl.querySelector("#vue-app"));
-
-    // Run the legacy imperative bootstrap (canvas wiring, store callbacks, listeners) and
-    // keep its teardown handle for clean unmount.
-    const teardown = bootstrapViewer();
-
-    current = { app, teardown };
-}
-
-/** Reverse initBlackboxViewer: tear down listeners/loops/instances and unmount the app. */
-export function destroyBlackboxViewer() {
-    if (!current) {
-        return;
-    }
-
-    const { app, teardown } = current;
-    try {
-        teardown?.();
-    } catch (e) {
-        console.error("blackbox-viewer: teardown failed", e);
-    }
-    try {
-        app.unmount();
-    } catch (e) {
-        console.error("blackbox-viewer: unmount failed", e);
-    }
-    current = null;
 }

@@ -28,24 +28,55 @@
 
                 <div class="grid-box col1">
                     <div class="require-blackbox-supported grid-box col1">
-                        <UiBox :title="$t('blackboxConfiguration')" v-show="blackboxConfigSupported">
+                        <UiBox
+                            :title="$t('blackboxConfiguration')"
+                            v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
+                        >
                             <SettingRow :label="$t('onboardLoggingBlackbox')">
                                 <USelect
                                     v-model="blackboxDevice"
                                     :items="blackboxDeviceOptions"
-                                    size="sm"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialPort')"
+                                :help="$t('onboardLoggingSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxPortIdentifier"
+                                    :items="blackboxPortOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="blackboxPortAvailable"
+                                :label="$t('onboardLoggingSerialBaud')"
+                                :help="$t('onboardLoggingSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="blackboxBaud"
+                                    :items="blackboxBaudOptions"
+                                    :disabled="!blackboxPortWritable"
+                                    size="xs"
                                     class="min-w-40"
                                 />
                             </SettingRow>
                             <SettingRow v-show="blackboxDevice !== 0" :label="$t('onboardLoggingRateOfLogging')">
-                                <USelect v-model="blackboxRate" :items="loggingRates" size="sm" class="min-w-40" />
+                                <USelect v-model="blackboxRate" :items="loggingRates" size="xs" class="min-w-40" />
                             </SettingRow>
                             <SettingRow :label="$t('onboardLoggingDebugMode')">
                                 <USelectMenu
                                     v-model="debugMode"
                                     value-key="value"
                                     :items="debugModes"
-                                    size="sm"
+                                    size="xs"
                                     leading-icon="i-lucide-bug"
                                     :search-input="{
                                         placeholder: $t('search'),
@@ -61,12 +92,14 @@
                             v-if="showDebugFields"
                             :title="$t('onboardLoggingDebugFields')"
                             v-show="blackboxConfigSupported"
+                            type="neutral"
+                            collapsible
                         >
                             <div class="blackboxDebugFieldsTable">
                                 <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
                                     <USwitch
                                         :model-value="debugFieldsEnabled[index]"
-                                        size="sm"
+                                        size="xs"
                                         @update:model-value="updateDebugField(index, $event)"
                                     />
                                     <span>{{ field }}</span>
@@ -74,11 +107,11 @@
                             </div>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingSerialLogger')">
+                        <UiBox :title="$t('onboardLoggingSerialLogger')" type="neutral" collapsible>
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingFlashLogger')">
+                        <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>
                             <div class="require-dataflash-supported">
                                 <p>{{ $t("dataflashNote") }}</p>
 
@@ -177,59 +210,42 @@
                                     </li>
                                 </ul>
 
-                                <div class="dataflash-buttons">
-                                    <a
-                                        class="regular-button erase-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="askToEraseFlash"
+                                <div class="dataflash-buttons flex flex-wrap items-center gap-2">
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonErase')"
+                                        @click="askToEraseFlash"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveAndErase')"
+                                        @click="flashSaveBegin(true)"
+                                    />
+                                    <UButton
+                                        size="xs"
+                                        :disabled="dataflashUsedSize === 0"
+                                        :label="$t('dataflashButtonSaveFile')"
+                                        @click="flashSaveBegin(false)"
                                     >
-                                        {{ $t("dataflashButtonErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        {{ $t("dataflashButtonSaveFile") }}
-                                    </a>
-                                    <a
-                                        v-if="isExpertMode"
-                                        class="regular-button require-msc-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        <span class="inline-flex items-center gap-1">
-                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                        <template #trailing>
                                             <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
-                                        </span>
-                                    </a>
-                                    <p v-html="$t('dataflashSavetoFileNote')"></p>
+                                        </template>
+                                    </UButton>
                                 </div>
+                                <p class="mt-2" v-html="$t('dataflashSavetoFileNote')"></p>
                             </div>
 
                             <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingOnboardSDCard')" class="require-sdcard-supported">
+                        <UiBox
+                            :title="$t('onboardLoggingOnboardSDCard')"
+                            class="require-sdcard-supported"
+                            type="neutral"
+                            collapsible
+                        >
                             <div class="sdcard">
                                 <div class="sdcard-icon"></div>
                                 <div class="sdcard-status" v-html="sdcardStatusText"></div>
@@ -261,18 +277,14 @@
                         </UiBox>
                     </div>
 
-                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported">
+                    <UiBox :title="$t('onboardLoggingMsc')" class="require-msc-supported" type="neutral" collapsible>
                         <div class="require-msc-supported">
-                            <div>
-                                <a
-                                    class="require-msc-ready regular-button onboardLoggingRebootMsc"
-                                    :class="{ disabled: !mscReady }"
-                                    href="#"
-                                    @click.prevent="rebootToMsc"
-                                >
-                                    {{ $t("onboardLoggingRebootMscText") }}
-                                </a>
-                            </div>
+                            <UButton
+                                size="xs"
+                                :disabled="!mscReady"
+                                :label="$t('onboardLoggingRebootMscText')"
+                                @click="rebootToMsc"
+                            />
                         </div>
                         <p v-html="$t('onboardLoggingMscNote')"></p>
                         <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>
@@ -283,7 +295,13 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('blackboxButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
+            <UButton
+                :label="$t('blackboxButtonSave')"
+                size="xs"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveSettings"
+            />
         </div>
     </BaseTab>
 </template>
@@ -311,11 +329,16 @@ import FileSystem from "../../js/FileSystem";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
+import { tracking } from "../../js/Analytics";
 import { sensorTypes } from "../../js/sensor_types";
 import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
+import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { runTabLoad } from "../../composables/useTabLoad";
+import { useDataflashErase } from "../../composables/useDataflashErase";
 
 const BLOCK_SIZE = 4096;
 
@@ -388,8 +411,6 @@ export default defineComponent({
         const debugFieldsEnabled = ref(debugStore.enableFields ? debugStore.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
-        const eraseCancelled = ref(false);
-        const isErasing = ref(false);
         const blockSize = ref(BLOCK_SIZE);
         const writeError = ref(false);
 
@@ -413,6 +434,22 @@ export default defineComponent({
             const index = types.gyro.elements.indexOf("VIRTUAL");
             virtualGyro.value = fcStore.sensorConfigActive?.gyro_hardware === index;
         };
+
+        // From API 1.49 the serial-logging port and its baud live on the blackbox parameter group
+        // rather than the shared port function mask, so they are assigned here.
+        const {
+            available: blackboxPortAvailable,
+            writable: blackboxPortWritable,
+            options: blackboxPortOptions,
+            selectedIdentifier: blackboxPortIdentifier,
+            baudOptions: blackboxBaudOptions,
+            selectedBaud: blackboxBaud,
+            load: loadBlackboxPort,
+            write: writeBlackboxPort,
+        } = useFeaturePort({
+            setting: "blackbox_uart",
+            baud: { setting: "blackbox_baud" },
+        });
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -548,22 +585,46 @@ export default defineComponent({
             );
         });
 
-        /** Baseline after MSP load or successful save; same pattern as Power / Auxiliary */
-        const onboardLoggingBaseline = ref("");
-
+        /** @returns {string} serialized tab state for dirty comparison */
         const serializeOnboardLoggingState = () =>
             JSON.stringify({
                 blackboxDevice: blackboxDevice.value,
                 blackboxRate: blackboxRate.value,
                 debugMode: debugMode.value,
                 debugFieldsEnabled: [...debugFieldsEnabled.value],
+                blackboxPortIdentifier: blackboxPortIdentifier.value,
+                blackboxBaud: blackboxBaud.value,
             });
 
-        const dirty = computed(() => {
-            if (!onboardLoggingBaseline.value) {
-                return false;
-            }
-            return onboardLoggingBaseline.value !== serializeOnboardLoggingState();
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+
+        const {
+            isErasing,
+            start: startFlashErase,
+            cancel: cancelFlashErase,
+        } = useDataflashErase({
+            onComplete: () => {
+                if (
+                    getConfig("showNotifications").showNotifications &&
+                    NotificationManager.checkPermission() === "granted"
+                ) {
+                    NotificationManager.showNotification("Betaflight App", {
+                        body: i18n.getMessage("flashEraseDoneNotification"),
+                        icon: "/images/pwa/favicon.ico",
+                    });
+                }
+            },
+            onError: (error) => {
+                console.error("Dataflash erase failed", error);
+                gui_log(
+                    `<strong><span class="message-negative">${i18n.getMessage("error", {
+                        errorMessage: error,
+                    })}</span></strong>`,
+                );
+            },
+            onFinish: () => {
+                eraseOpen.value = false;
+            },
         });
 
         function updateDebugField(index, value) {
@@ -576,118 +637,51 @@ export default defineComponent({
                 return;
             }
 
-            return runSave(
-                async () => {
-                    fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
-                    fcStore.blackbox.blackboxPDenom = blackboxRate.value;
-                    fcStore.blackbox.blackboxDevice = blackboxDevice.value;
+            return runSave(async () => {
+                const savedSnapshot = takeSnapshot();
 
-                    // Update disabled mask from checkboxes
-                    let mask = 0;
-                    debugFieldsEnabled.value.forEach((enabled, index) => {
-                        if (!enabled) {
-                            mask = bit_set(mask, index);
-                        }
-                    });
-                    fcStore.blackbox.blackboxDisabledMask = mask;
+                fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
+                fcStore.blackbox.blackboxPDenom = blackboxRate.value;
+                fcStore.blackbox.blackboxDevice = blackboxDevice.value;
 
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_BLACKBOX_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG),
-                    );
+                // Update disabled mask from checkboxes
+                let mask = 0;
+                debugFieldsEnabled.value.forEach((enabled, index) => {
+                    if (!enabled) {
+                        mask = bit_set(mask, index);
+                    }
+                });
+                fcStore.blackbox.blackboxDisabledMask = mask;
 
-                    fcStore.pidAdvancedConfig.debugMode = debugMode.value;
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_ADVANCED_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
-                    );
+                await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
 
-                    await saveAndReboot();
+                fcStore.pidAdvancedConfig.debugMode = debugMode.value;
+                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
-                    // Only after a successful persist: refresh the dirty baseline.
-                    onboardLoggingBaseline.value = serializeOnboardLoggingState();
-                },
-                { onError: (e) => console.error("Failed to save onboard logging settings", e) },
-            );
+                // Between the parameter group write and the persist that serialises it, so a
+                // refused port throws before anything reaches EEPROM.
+                await writeBlackboxPort();
+
+                await saveAndReboot();
+
+                markClean(savedSnapshot);
+            });
         }
 
         function askToEraseFlash() {
             if (dataflashUsedSize.value === 0) {
                 return;
             }
-            eraseCancelled.value = false;
             eraseOpen.value = true;
         }
 
-        async function flashErase() {
-            try {
-                connectionStore.pauseLiveData();
-                // Await the drain: clearMspQueue() resolves callbacks_cleanup() asynchronously, so
-                // firing it unawaited would wipe the pollForEraseCompletion callback we register just
-                // below (the erase send is non-errorAware and cleanup drops it silently) — leaving the
-                // dialog stuck forever even though the FC does erase. Drain first, then register.
-                await connectionStore.clearMspQueue();
-                isErasing.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
-            } catch (error) {
-                // Startup failed before the erase poll could take over: restore the UI and
-                // live-data pump so the dialog doesn't strand, and surface the failure.
-                console.error("Failed to start dataflash erase", error);
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                gui_log(
-                    `<strong><span class="message-negative">${i18n.getMessage("error", {
-                        errorMessage: error,
-                    })}</span></strong>`,
-                );
-            }
+        function flashErase() {
+            return startFlashErase();
         }
 
         function flashEraseCancel() {
-            eraseCancelled.value = true;
-            isErasing.value = false;
             eraseOpen.value = false;
-            connectionStore.resumeLiveData();
-        }
-
-        async function pollForEraseCompletion() {
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            try {
-                // errorAware request so a timeout settles instead of stranding a legacy
-                // callback: the flash chip can stop answering MSP mid-erase, and we must
-                // keep polling rather than abandon the dialog on a single missed summary.
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-            } catch {
-                // Summary timed out/cancelled (flash unresponsive mid-erase). Re-poll without
-                // reading the stale cached ready flag — it still holds the pre-erase value and
-                // would otherwise close the dialog before the erase has actually finished.
-                if (connectionStore.connectionValid && !eraseCancelled.value) {
-                    setTimeout(pollForEraseCompletion, 500);
-                }
-                return;
-            }
-
-            if (!connectionStore.connectionValid || eraseCancelled.value) {
-                return;
-            }
-
-            if (fcStore.dataflash?.ready) {
-                isErasing.value = false;
-                eraseOpen.value = false;
-                connectionStore.resumeLiveData();
-                if (getConfig("showNotifications").showNotifications) {
-                    NotificationManager.showNotification("Betaflight App", {
-                        body: i18n.getMessage("flashEraseDoneNotification"),
-                        icon: "/images/pwa/favicon.ico",
-                    });
-                }
-            } else {
-                setTimeout(pollForEraseCompletion, 500);
-            }
+            cancelFlashErase();
         }
 
         function flashUpdateSummary(onDone) {
@@ -753,11 +747,8 @@ export default defineComponent({
 
         function conditionallyEraseFlash(maxBytes, nextAddress) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
-                connectionStore.pauseLiveData();
-                eraseCancelled.value = false;
-                isErasing.value = true;
                 eraseOpen.value = true;
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
+                void startFlashErase({ clearQueue: false });
             } else {
                 gui_log(
                     i18n.getMessage("dataflashSaveIncompleteWarning") ||
@@ -925,7 +916,9 @@ export default defineComponent({
                 }
             }
 
-            if (typeof tracking !== "undefined") {
+            // `tracking` is null until createAnalytics(settings) has run, so it still needs a guard —
+            // but on the imported binding rather than the window global it used to rely on.
+            if (tracking) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
                     logSize: fcStore.dataflash?.usedSize || 0,
                     logStatus: loggingStatus,
@@ -935,44 +928,49 @@ export default defineComponent({
 
         async function loadData() {
             try {
-                await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-                await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
-                await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
-                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-                await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+                await runTabLoad(
+                    async () => {
+                        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
+                        await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
+                        await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                        await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
 
-                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
-                    );
-                } else {
-                    await MSP.promise(MSPCodes.MSP_NAME);
-                }
+                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                            await MSP.promise(
+                                MSPCodes.MSP2_GET_TEXT,
+                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                            );
+                        } else {
+                            await MSP.promise(MSPCodes.MSP_NAME);
+                        }
 
-                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                    await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-                }
+                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                            await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+                        }
 
-                // Populate UI state
-                blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
-                blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
-                debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
+                        // Populate UI state
+                        await loadBlackboxPort();
 
-                // Initialize debug fields checkboxes
-                if (showDebugFields.value) {
-                    const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
-                    debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                        return !bit_check(disabledMask, index);
-                    });
-                }
+                        blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                        blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                        debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
-                updateVirtualGyro();
-                onboardLoggingBaseline.value = serializeOnboardLoggingState();
-                updateHtml();
-            } catch (error) {
-                console.error("Failed to load onboard logging data", error);
+                        // Initialize debug fields checkboxes
+                        if (showDebugFields.value) {
+                            const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
+                            debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
+                                return !bit_check(disabledMask, index);
+                            });
+                        }
+
+                        updateVirtualGyro();
+                        markClean();
+                        updateHtml();
+                    },
+                    (error) => console.error("Failed to load onboard logging data", error),
+                );
             } finally {
                 GUI.content_ready();
             }
@@ -1007,6 +1005,12 @@ export default defineComponent({
             isExpertMode,
             virtualGyro,
             blackboxDeviceOptions,
+            blackboxPortAvailable,
+            blackboxPortWritable,
+            blackboxPortOptions,
+            blackboxPortIdentifier,
+            blackboxBaudOptions,
+            blackboxBaud,
             blackboxSupport,
             loggingRates,
             debugModes,
@@ -1062,7 +1066,7 @@ export default defineComponent({
             width: 100%;
             height: 26px;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             text-align: center;
             line-height: 24px;
             color: white;
@@ -1076,7 +1080,7 @@ export default defineComponent({
         }
         dd {
             display: block;
-            margin-left: 130px;
+            margin-inline-start: 130px;
             height: 20px;
             line-height: 20px;
         }
@@ -1131,8 +1135,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1157,8 +1161,8 @@ export default defineComponent({
                 top: 26px;
                 margin-top: 4px;
                 text-align: center;
-                left: 0;
-                right: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
                 white-space: nowrap;
             }
         }
@@ -1198,7 +1202,7 @@ export default defineComponent({
         clear: left;
     }
     .blackboxDebugModeText {
-        margin-left: 7px !important;
+        margin-inline-start: 7px !important;
     }
     .sdcard-status {
         padding-top: 4px;
@@ -1223,9 +1227,6 @@ export default defineComponent({
         display: none;
         border-radius: 5px;
     }
-}
-.dataflash-buttons {
-    display: inline-block;
 }
 .dataflash-confirm-erase.erasing {
     .dataflash-erase-progress {

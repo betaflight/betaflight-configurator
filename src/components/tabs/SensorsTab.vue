@@ -73,6 +73,19 @@
                                 size="xs"
                             />
                         </SettingRow>
+                        <SettingRow
+                            v-if="showRangefinder && sonarHardwareEnabled && rangefinderPortAvailable"
+                            :label="$t('rangefinderSerialPort')"
+                            :help="$t('rangefinderSerialPortHelp')"
+                        >
+                            <USelect
+                                v-model="rangefinderPortIdentifier"
+                                :items="rangefinderPortOptions"
+                                :disabled="!rangefinderPortWritable"
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
                         <SettingRow v-if="showOpticalFlow" :label="$t('configurationOpticalflow')" fullWidth>
                             <USwitch v-model="opticalFlowHardwareEnabled" />
                             <USelect
@@ -82,6 +95,33 @@
                                     opticalFlowTypesList
                                         .filter((_, i) => i > 0)
                                         .map((label, i) => ({ label, value: i + 1 }))
+                                "
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            v-if="showOpticalFlow && opticalFlowHardwareEnabled && opticalFlowPortAvailable"
+                            :label="$t('opticalflowSerialPort')"
+                            :help="$t('opticalflowSerialPortHelp')"
+                        >
+                            <USelect
+                                v-model="opticalFlowPortIdentifier"
+                                :items="opticalFlowPortOptions"
+                                :disabled="!opticalFlowPortWritable"
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
+                        <SettingRow v-if="showPitot" :label="$t('configurationPitot')">
+                            <USwitch v-model="pitotHardwareEnabled" />
+                            <USelect
+                                v-if="pitotHardwareEnabled"
+                                v-model="sensorConfig.pitot_hardware"
+                                :items="
+                                    pitotTypesList
+                                        .map((label, i) => ({ label, value: i }))
+                                        .filter((item) => item.value !== 1) // exclude PITOT_NONE
                                 "
                                 class="min-w-40"
                                 size="xs"
@@ -99,7 +139,7 @@
                             :step="1"
                         />
                         <UButton
-                            v-if="isApi148"
+                            v-if="isApi146"
                             :label="$t('boardAlignmentWizard-Launch')"
                             :disabled="!hasAccSensor || accNeedsCalibration"
                             size="xs"
@@ -250,14 +290,6 @@
                         :aria-label="$t('configurationMagAlignment')"
                         :ui="{ viewport: 'max-h-none' }"
                     />
-                    <UButton
-                        v-if="calGuidedAvailable"
-                        size="xs"
-                        variant="outline"
-                        :label="$t('configurationMagDetectAlignment')"
-                        :disabled="alignDetectPhase === 'collecting'"
-                        @click="startAlignDetection"
-                    />
                 </SettingRow>
 
                 <!-- Mag alignment custom angles -->
@@ -268,57 +300,6 @@
                     v-model:yaw="sensorAlignment.mag_align_yaw"
                     label-prefix="configurationMagAlignment"
                 />
-
-                <!-- Inline alignment detection (replaces dialog) -->
-                <div v-if="alignDetectPhase !== 'idle'" class="align-detect-inline">
-                    <!-- Collecting -->
-                    <div v-if="alignDetectPhase === 'collecting'" class="flex items-center gap-3 flex-wrap">
-                        <div class="flex-1 min-w-48">
-                            <UProgress :model-value="alignDetectProgress" :max="100" size="sm" />
-                        </div>
-                        <span class="text-xs text-[var(--surface-500)]">{{
-                            $t("sensorConfigAlignSamples", { count: alignDetectSampleCount })
-                        }}</span>
-                        <span
-                            v-if="
-                                alignDetectTiltPercent < ALIGN_TILT_WARN_PERCENT &&
-                                alignDetectSampleCount > ALIGN_TILT_WARN_MIN_SAMPLES
-                            "
-                            class="text-xs text-[var(--warning-500)]"
-                        >
-                            {{ $t("sensorConfigAlignTiltMore") }}
-                        </span>
-                        <UButton size="xs" variant="outline" :label="$t('cancel')" @click="cancelAlignDetection" />
-                    </div>
-                    <!-- Result -->
-                    <div v-else-if="alignDetectPhase === 'result'" class="flex items-center gap-3 flex-wrap">
-                        <span class="text-sm font-semibold text-[var(--primary-500)]">{{
-                            alignDetectResult.label
-                        }}</span>
-                        <span :class="'text-xs font-medium ' + statusClass(alignDetectConfidenceLevel)">
-                            {{ alignDetectResult.confidence }}x {{ alignDetectConfidenceLevel }}
-                        </span>
-                        <UButton size="xs" :label="$t('magAlignmentApply')" @click="applyAlignDetection" />
-                        <UButton
-                            size="xs"
-                            variant="outline"
-                            :label="$t('magCalibrationRetry')"
-                            @click="resetAlignDetection"
-                        />
-                    </div>
-                    <!-- Error -->
-                    <div v-else-if="alignDetectPhase === 'error'" class="flex items-center gap-3">
-                        <span class="text-xs text-[var(--error-500)] font-medium">{{
-                            $t("sensorConfigAlignDetectFailed")
-                        }}</span>
-                        <UButton
-                            size="xs"
-                            variant="outline"
-                            :label="$t('magCalibrationRetry')"
-                            @click="resetAlignDetection"
-                        />
-                    </div>
-                </div>
 
                 <!-- API >= 1.47: full mag cal UI (declination, cal editor, check, guided modes) -->
                 <template v-if="calGuidedAvailable">
@@ -436,9 +417,9 @@
                                     @click="startCheckMode()"
                                 />
                                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                                    <UButton size="xs" :label="$t('sensorConfigCalibrate')" @click="startGuidedCal()">
+                                    <UButton size="xs" :label="$t('magCalibrationFull')" @click="startFullCal()">
                                         <template #trailing>
-                                            <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
+                                            <HelpIcon :text="$t('magCalibrationFullDesc')" />
                                         </template>
                                     </UButton>
                                     <UDropdownMenu
@@ -461,25 +442,7 @@
                         <!-- Calibrating -->
                         <div v-else-if="calIsCalibrating" class="mag-cal-inline-layout">
                             <div class="mag-cal-inline-steps">
-                                <template v-if="calIsGuided">
-                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedFwTitle") }}</div>
-                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                        {{ $t(CAL_PROMPTS[calCurrentPrompt].i18n) }}
-                                    </p>
-                                    <p
-                                        v-if="guidedSecondsRemaining > 0"
-                                        class="text-lg font-bold text-center tabular-nums"
-                                    >
-                                        {{ guidedSecondsRemaining }}s
-                                    </p>
-                                    <p
-                                        v-if="guidedSecondsRemaining === 0"
-                                        class="text-xs font-semibold status-ok text-center"
-                                    >
-                                        {{ $t("magCalibrationGuidedDone") }}
-                                    </p>
-                                </template>
-                                <template v-else-if="cal.mode === 'full'">
+                                <template v-if="cal.mode === 'full'">
                                     <div class="mag-cal-step-counter">
                                         {{ $t("magCalibrationFullTitle") }} —
                                         {{
@@ -510,12 +473,6 @@
                                         {{ $t("magCalibrationCheckInstruction") }}
                                     </p>
                                 </template>
-                                <template v-else-if="cal.mode === 'guided'">
-                                    <div class="mag-cal-step-counter">{{ $t("magCalibrationGuidedTitle") }}</div>
-                                    <p class="text-sm text-[var(--surface-600)] text-center my-2">
-                                        {{ $t("magCalibrationGuidedInstruction") }}
-                                    </p>
-                                </template>
                                 <template v-else>
                                     <div class="mag-cal-step-counter">{{ $t("magCalibrationUnguidedTitle") }}</div>
                                     <p class="text-sm text-[var(--surface-600)] text-center my-2">
@@ -531,15 +488,6 @@
                                         {{ $t("magCalibrationUnguidedDone") }}
                                     </p>
                                 </template>
-                                <dl
-                                    v-if="cal.mode !== 'check' && cal.mode !== 'full' && cal.sphereFitResult"
-                                    class="mag-cal-stats-inline"
-                                >
-                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                    <dd>{{ calOffsetsText }}</dd>
-                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                    <dd>{{ calResidualText }}</dd>
-                                </dl>
                                 <UProgress
                                     v-if="cal.mode !== 'check'"
                                     :model-value="cal.progress"
@@ -566,18 +514,21 @@
                                         @click="clearMagCalSamples()"
                                     />
                                     <UButton
-                                        v-if="cal.mode === 'guided' || cal.mode === 'full'"
+                                        v-if="cal.mode === 'full'"
                                         size="xs"
                                         :loading="isAcceptingCal"
-                                        :disabled="cal.mode === 'full' ? !fullReady : !cal.quality"
-                                        :label="
-                                            cal.mode === 'full'
-                                                ? $t('magCalibrationFullCompute')
-                                                : $t('magCalibrationAccept')
-                                        "
-                                        @click="acceptGuidedMagCal()"
+                                        :disabled="!fullReady"
+                                        :color="finishButtonColor"
+                                        :label="$t('magCalibrationFullCompute')"
+                                        @click="acceptFullCal()"
                                     />
                                 </div>
+                                <p
+                                    v-if="cal.mode === 'full'"
+                                    class="text-xs text-[var(--surface-500)] text-center mt-1.5"
+                                >
+                                    {{ $t("magCalibrationFullCoverageHint") }}
+                                </p>
                                 <div class="mag-cal-live-inline">
                                     <span v-if="cal.mode !== 'check'"
                                         >{{ $t("magCalibrationSamples") }}: {{ cal.sampleCount }}</span
@@ -628,19 +579,8 @@
                                 <dl v-if="!calIsFull" class="mag-cal-stats-inline">
                                     <dt>{{ $t("magCalibrationFirmwareOffsets") }}</dt>
                                     <dd>{{ calFirmwareOffsetsText }}</dd>
-                                    <dt>{{ $t("magCalibrationSphereOffsets") }}</dt>
-                                    <dd>{{ calOffsetsText }}</dd>
                                     <dt>{{ $t("magCalibrationSamples") }}</dt>
                                     <dd>{{ cal.sampleCount }}</dd>
-                                    <dt>{{ $t("magCalibrationResidual") }}</dt>
-                                    <dd>{{ calResidualText }}</dd>
-                                    <dt>{{ $t("magCalibrationQuality") }}</dt>
-                                    <dd>
-                                        <span v-if="cal.quality" :class="statusClass(cal.quality)"
-                                            >{{ $t(CAL_QUALITY_KEY[cal.quality]) }} ({{ cal.qualityScore }}%)</span
-                                        >
-                                        <span v-else>&mdash;</span>
-                                    </dd>
                                 </dl>
                                 <template v-if="calIsFull">
                                     <dl
@@ -807,6 +747,50 @@
                     @click="saveConfig"
                 />
             </div>
+
+            <!-- MANUAL LOCATION FALLBACK DIALOG -->
+            <UModal
+                v-model:open="manualLocationModalOpen"
+                :title="$t('magCalibrationManualLocationTitle')"
+                :close="true"
+                :dismissible="true"
+            >
+                <template #body>
+                    <div class="flex flex-col gap-3">
+                        <p class="text-sm text-dimmed leading-relaxed">
+                            {{ $t("magCalibrationManualLocationPrompt") }}
+                        </p>
+                        <UInput
+                            v-model="manualCoordsInput"
+                            :aria-label="$t('magCalibrationManualLocationTitle')"
+                            :placeholder="$t('magCalibrationManualLocationPlaceholder')"
+                            autofocus
+                            @keydown.enter="submitManualLocation"
+                        />
+                        <p v-if="manualCoordsError" class="text-xs text-error" role="alert">
+                            {{ manualCoordsError }}
+                        </p>
+                    </div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end gap-2 w-full">
+                        <UButton
+                            color="neutral"
+                            variant="soft"
+                            :label="$t('magCalibrationCancel')"
+                            @click="manualLocationModalOpen = false"
+                        />
+                        <UButton
+                            :label="
+                                manualLocationAction === 'fullCal'
+                                    ? $t('magCalibrationFullCompute')
+                                    : $t('sensorConfigMagUpdate')
+                            "
+                            @click="submitManualLocation"
+                        />
+                    </div>
+                </template>
+            </UModal>
         </div>
     </BaseTab>
 </template>
@@ -817,19 +801,26 @@ import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
+import { useDirtyState } from "@/composables/useDirtyState";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
-import { useMagCalibration, computeDeclination, getGeoReference } from "../../composables/useMagCalibration";
+import {
+    useMagCalibration,
+    computeDeclination,
+    getGeoReference,
+    parseCoordinates,
+} from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
-import { detectAlignment } from "../../js/utils/magAlignment";
 import { degToRad } from "../../js/utils/common";
 import { useDialog } from "@/composables/useDialog";
 import {
@@ -859,6 +850,27 @@ import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 const fcStore = useFlightControllerStore();
 const { saveAndReboot } = useReboot();
 
+// From API 1.49 each of these owns its own UART. Both still set the same FUNCTION_LIDAR bit in the
+// synthesised mask, which is why neither can be read back from it — the setting is the only thing
+// that says which port belongs to which sensor.
+const {
+    available: rangefinderPortAvailable,
+    writable: rangefinderPortWritable,
+    options: rangefinderPortOptions,
+    selectedIdentifier: rangefinderPortIdentifier,
+    load: loadRangefinderPort,
+    write: writeRangefinderPort,
+} = useFeaturePort({ setting: "rangefinder_uart" });
+
+const {
+    available: opticalFlowPortAvailable,
+    writable: opticalFlowPortWritable,
+    options: opticalFlowPortOptions,
+    selectedIdentifier: opticalFlowPortIdentifier,
+    load: loadOpticalFlowPort,
+    write: writeOpticalFlowPort,
+} = useFeaturePort({ setting: "opticalflow_uart" });
+
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
 
@@ -867,15 +879,13 @@ const SENSOR_ALIGN_CUSTOM = 9;
 const GPS_COORD_SCALE = 1e7;
 const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
 const IP_GEOLOCATION_TIMEOUT_MS = 10000;
+const BROWSER_GEOLOCATION_TIMEOUT_MS = 15000;
 const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
-const CONFIDENCE_HIGH = 5;
-const CONFIDENCE_MEDIUM = 2;
-const ALIGN_TILT_WARN_PERCENT = 30;
-const ALIGN_TILT_WARN_MIN_SAMPLES = 20;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
+const isApi149 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
 const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_48));
 const isApi147 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 const isApi146 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
@@ -887,10 +897,6 @@ function roundOneDp(val) {
 onUnmounted(() => {
     removeAllIntervals();
     disposeModel();
-    alignDetectPhase.value = "idle";
-    cleanupAlignDetection();
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
     if (calIsCalibrating.value) {
         cal.cancelCalibration();
@@ -905,6 +911,7 @@ const sensorConfig = reactive({
     mag_hardware: 0,
     sonar_hardware: 0,
     opticalflow_hardware: 0,
+    pitot_hardware: 0,
 });
 
 const accHardwareEnabled = computed({
@@ -928,8 +935,16 @@ const magHardwareEnabled = computed({
     },
 });
 
+const pitotHardwareEnabled = computed({
+    get: () => sensorConfig.pitot_hardware !== 1,
+    set: (val) => {
+        sensorConfig.pitot_hardware = val ? 0 : 1;
+    },
+});
+
 const sonarTypesList = ref([]);
 const opticalFlowTypesList = ref([]);
+const pitotTypesList = ref([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -1018,6 +1033,7 @@ const showMultiGyro = ref(false);
 const showGyro1Align = ref(false);
 const showGyro2Align = ref(false);
 const showMagAlign = ref(false);
+const showPitot = ref(false);
 
 const sensorTypesData = ref(null);
 
@@ -1143,188 +1159,6 @@ const gyroAlignSelectItems = computed(() => {
     return items;
 });
 
-// --- Inline Alignment Detection (replaces dialog) ---
-
-const ALIGN_POLL_MS = 100;
-const ALIGN_TARGET_SAMPLES = 150;
-const ALIGN_TIMEOUT_MS = 15000;
-const ALIGN_MOVEMENT_THRESHOLD = 5;
-const ALIGN_TILT_THRESHOLD_DEG = 15;
-
-const alignDetectPhase = ref("idle"); // idle | collecting | result | error
-const alignDetectProgress = ref(0);
-const alignDetectSampleCount = ref(0);
-const alignDetectResult = ref(null);
-const alignDetectTiltPercent = ref(0);
-
-let alignSamples = [];
-let alignImuTimeout = null;
-let alignAttTimeout = null;
-let alignMovementInterval = null;
-let alignLastMag = null;
-let alignLastMovement = 0;
-let alignCurrentRoll = 0;
-let alignCurrentPitch = 0;
-let alignTiltedCount = 0;
-
-const alignDetectConfidenceLevel = computed(() => {
-    if (!alignDetectResult.value) {
-        return "none";
-    }
-    if (alignDetectResult.value.confidence >= CONFIDENCE_HIGH) {
-        return "high";
-    }
-    if (alignDetectResult.value.confidence > CONFIDENCE_MEDIUM) {
-        return "medium";
-    }
-    return "low";
-});
-
-function startAlignDetection() {
-    alignSamples = [];
-    alignDetectSampleCount.value = 0;
-    alignDetectProgress.value = 0;
-    alignDetectResult.value = null;
-    alignLastMag = null;
-    alignLastMovement = Date.now();
-    alignCurrentRoll = fcStore.sensorData.kinematics[0];
-    alignCurrentPitch = fcStore.sensorData.kinematics[1];
-    alignTiltedCount = 0;
-    alignDetectTiltPercent.value = 0;
-    alignDetectPhase.value = "collecting";
-
-    function pollAtt() {
-        if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-            return;
-        }
-        MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
-            if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-                return;
-            }
-            alignCurrentRoll = fcStore.sensorData.kinematics[0];
-            alignCurrentPitch = fcStore.sensorData.kinematics[1];
-            alignAttTimeout = setTimeout(pollAtt, ALIGN_POLL_MS);
-        });
-    }
-
-    function pollImu() {
-        if (!isMounted.value || alignDetectPhase.value !== "collecting") {
-            return;
-        }
-        MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, () => {
-            onAlignImuData();
-            if (isMounted.value && alignDetectPhase.value === "collecting") {
-                alignImuTimeout = setTimeout(pollImu, ALIGN_POLL_MS);
-            }
-        });
-    }
-
-    pollAtt();
-    pollImu();
-
-    alignMovementInterval = setInterval(() => {
-        if (Date.now() - alignLastMovement > ALIGN_TIMEOUT_MS) {
-            cleanupAlignDetection();
-            alignDetectPhase.value = "error";
-        }
-    }, 1000);
-}
-
-function onAlignImuData() {
-    if (alignDetectPhase.value !== "collecting") {
-        return;
-    }
-
-    const mx = fcStore.sensorData.magnetometer[0];
-    const my = fcStore.sensorData.magnetometer[1];
-    const mz = fcStore.sensorData.magnetometer[2];
-    if (mx === 0 && my === 0 && mz === 0) {
-        return;
-    }
-
-    if (
-        alignLastMag === null ||
-        Math.abs(mx - alignLastMag[0]) > ALIGN_MOVEMENT_THRESHOLD ||
-        Math.abs(my - alignLastMag[1]) > ALIGN_MOVEMENT_THRESHOLD ||
-        Math.abs(mz - alignLastMag[2]) > ALIGN_MOVEMENT_THRESHOLD
-    ) {
-        alignLastMovement = Date.now();
-    }
-    alignLastMag = [mx, my, mz];
-
-    alignSamples.push({ mag: [mx, my, mz], roll: alignCurrentRoll, pitch: alignCurrentPitch });
-    alignDetectSampleCount.value = alignSamples.length;
-
-    const tilt = Math.hypot(alignCurrentRoll, alignCurrentPitch);
-    if (tilt > ALIGN_TILT_THRESHOLD_DEG) {
-        alignTiltedCount++;
-    }
-    alignDetectTiltPercent.value =
-        alignSamples.length > 0 ? Math.round((alignTiltedCount / alignSamples.length) * 100) : 0;
-
-    alignDetectProgress.value = Math.min(100, Math.round((alignSamples.length / ALIGN_TARGET_SAMPLES) * 100));
-
-    if (alignSamples.length >= ALIGN_TARGET_SAMPLES) {
-        finishAlignDetection();
-    }
-}
-
-function finishAlignDetection() {
-    cleanupAlignDetection();
-
-    const customAngles =
-        sensorAlignment.align_mag === SENSOR_ALIGN_CUSTOM
-            ? {
-                roll: sensorAlignment.mag_align_roll,
-                pitch: sensorAlignment.mag_align_pitch,
-                yaw: sensorAlignment.mag_align_yaw,
-            }
-            : null;
-
-    const detection = detectAlignment(alignSamples, sensorAlignment.align_mag, customAngles);
-    if (detection.error) {
-        alignDetectPhase.value = "error";
-        return;
-    }
-
-    alignDetectResult.value = detection;
-    alignDetectPhase.value = "result";
-}
-
-function cancelAlignDetection() {
-    cleanupAlignDetection();
-    alignDetectPhase.value = "idle";
-}
-
-function applyAlignDetection() {
-    if (alignDetectResult.value) {
-        sensorAlignment.align_mag = alignDetectResult.value.alignment;
-    }
-    resetAlignDetection();
-}
-
-function resetAlignDetection() {
-    alignDetectPhase.value = "idle";
-    alignDetectResult.value = null;
-    alignDetectProgress.value = 0;
-    alignDetectSampleCount.value = 0;
-}
-
-function cleanupAlignDetection() {
-    if (alignImuTimeout !== null) {
-        clearTimeout(alignImuTimeout);
-        alignImuTimeout = null;
-    }
-    if (alignAttTimeout !== null) {
-        clearTimeout(alignAttTimeout);
-        alignAttTimeout = null;
-    }
-    if (alignMovementInterval !== null) {
-        clearInterval(alignMovementInterval);
-        alignMovementInterval = null;
-    }
-}
-
 // --- Magnetometer ---
 
 const magDeclination = ref(0);
@@ -1346,13 +1180,20 @@ function dismissDeclinationNote() {
 }
 
 /**
- * Acquire GPS coordinates from flight controller or IP geolocation.
- * @param {boolean} promptConsent - If true, prompt user for IP geolocation consent when no GPS fix.
+ * Acquire GPS coordinates from flight controller, browser geolocation, or IP geolocation.
+ * @param {boolean} promptConsent - If true, prompt user for location consent when no GPS fix exists.
  * @returns {Promise<{lat: number, lon: number}|null>}
  */
 async function acquireCoordinates(promptConsent) {
     const gps = await gpsCoordinates();
-    return gps ?? ipCoordinates(promptConsent);
+    if (gps) {
+        return gps;
+    }
+    const browser = await browserCoordinates(promptConsent);
+    if (browser) {
+        return browser;
+    }
+    return ipCoordinates(promptConsent);
 }
 
 // A live GPS fix from the flight controller, or null if there's no fix.
@@ -1369,6 +1210,61 @@ async function gpsCoordinates() {
         // GPS not available
     }
     return null;
+}
+
+/**
+ * Browser native geolocation (HTML5 Geolocation API).
+ *
+ * @param {boolean} [promptConsent=false] - When false, resolves null unless permission was
+ *   already granted, so background refreshes never raise a permission prompt. Pass true only
+ *   for user-initiated actions ("Finish calibration", "Detect").
+ * @returns {Promise<{lat: number, lon: number}|null>} null on denial, timeout, or when the
+ *   API is unavailable.
+ */
+async function browserCoordinates(promptConsent = false) {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+        return null;
+    }
+    if (!promptConsent) {
+        if (navigator.permissions?.query) {
+            try {
+                const status = await navigator.permissions.query({ name: "geolocation" });
+                if (status.state !== "granted") {
+                    return null;
+                }
+            } catch {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    return new Promise((resolve) => {
+        // The spec's `timeout` option bounds position acquisition only — time spent
+        // waiting for the user to answer the permission prompt is excluded. A stalled
+        // prompt would leave both callbacks unfired, so guard with our own deadline to
+        // guarantee this settles and the caller never hangs mid-calibration.
+        let settled = false;
+        const settle = (value) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(deadline);
+            resolve(value);
+        };
+        const deadline = setTimeout(() => settle(null), BROWSER_GEOLOCATION_TIMEOUT_MS);
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                settle(Number.isFinite(lat) && Number.isFinite(lon) ? { lat, lon } : null);
+            },
+            () => settle(null),
+            { timeout: 5000, maximumAge: 300000 },
+        );
+    });
 }
 
 // IP geolocation (consent-gated), or null. The caller decides when to attempt it,
@@ -1418,6 +1314,17 @@ function applyDetectedDeclination(detected) {
     }
 }
 
+function setDeclinationFrom(result) {
+    if (!result) {
+        return;
+    }
+    magDeclination.value = roundOneDp(result.declination);
+    magInclination.value = roundOneDp(result.inclination);
+    magFieldStrength.value = result.fieldStrength;
+    declinationWarning.value = "";
+    gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+}
+
 async function tryAutoGeoReference() {
     const coords = await acquireCoordinates(false);
     if (!coords) {
@@ -1433,17 +1340,21 @@ async function tryAutoGeoReference() {
     applyDetectedDeclination(roundOneDp(result.declination));
 }
 
-// Resolve the best geomagnetic reference (cached, else GPS, else IP) and reflect its
+// Resolve the best geomagnetic reference (cached, else GPS, else browser, else IP) and reflect its
 // inclination + field strength in the reactive panel state. The magSphere field-
-// direction arrow binds to magInclination, so this makes the arrow appear for BOTH
-// GPS and IP sources, consistently and live. Returns the reference or null.
+// direction arrow binds to magInclination, so the arrow appears for every source,
+// consistently and live. Returns the reference or null.
 async function resolveGeoReference(promptConsent) {
-    // No movement during capture, so a single fix suffices. Prefer a live GPS fix:
-    // it overwrites any earlier IP snapshot. Otherwise reuse the cached reference
-    // (last good value); fall back to IP geolocation only when there's nothing
-    // better — so IP is never fetched or prompted while GPS is available.
+    // Prefer a live GPS fix from the flight controller; otherwise reuse cached reference if available;
+    // fall back to browser geolocation, then IP geolocation, then manual fallback.
     const gps = await gpsCoordinates();
     let geo = gps ? computeDeclination(gps.lat, gps.lon) : getGeoReference();
+    if (!geo) {
+        const browser = await browserCoordinates(promptConsent);
+        if (browser) {
+            geo = computeDeclination(browser.lat, browser.lon);
+        }
+    }
     if (!geo) {
         const ip = await ipCoordinates(promptConsent);
         if (ip) {
@@ -1457,6 +1368,39 @@ async function resolveGeoReference(promptConsent) {
     return geo;
 }
 
+const manualLocationModalOpen = ref(false);
+const manualCoordsInput = ref("");
+const manualCoordsError = ref("");
+const manualLocationAction = ref("fullCal"); // "fullCal" | "declination"
+
+function openManualLocationModal(action = "fullCal") {
+    manualLocationAction.value = action;
+    manualCoordsInput.value = "";
+    manualCoordsError.value = "";
+    manualLocationModalOpen.value = true;
+}
+
+async function submitManualLocation() {
+    const coords = parseCoordinates(manualCoordsInput.value);
+    if (!coords) {
+        manualCoordsError.value = i18n.getMessage("magCalibrationManualLocationInvalid");
+        return;
+    }
+    const result = computeDeclination(coords.lat, coords.lon);
+    if (!result) {
+        manualCoordsError.value = i18n.getMessage("magCalibrationManualLocationFailed");
+        return;
+    }
+    manualCoordsError.value = "";
+    manualLocationModalOpen.value = false;
+
+    if (manualLocationAction.value === "fullCal") {
+        await acceptFullCal(result);
+    } else {
+        setDeclinationFrom(result);
+    }
+}
+
 async function autoSetDeclination() {
     if (isFetchingDeclination.value) {
         return;
@@ -1465,20 +1409,16 @@ async function autoSetDeclination() {
     try {
         const coords = await acquireCoordinates(true);
         if (!coords) {
-            gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+            openManualLocationModal("declination");
             return;
         }
 
         const result = computeDeclination(coords.lat, coords.lon);
         if (!result) {
-            gui_log(i18n.getMessage("configurationMagDeclinationNoGps"));
+            openManualLocationModal("declination");
             return;
         }
-        magDeclination.value = roundOneDp(result.declination);
-        magInclination.value = roundOneDp(result.inclination);
-        magFieldStrength.value = result.fieldStrength;
-        declinationWarning.value = "";
-        gui_log(i18n.getMessage("configurationMagDeclinationSet", { declination: magDeclination.value }));
+        setDeclinationFrom(result);
     } finally {
         isFetchingDeclination.value = false;
     }
@@ -1487,7 +1427,6 @@ async function autoSetDeclination() {
 // --- Inline Mag Calibration (replaces dialog) ---
 
 const cal = reactive(useMagCalibration());
-const calIsGuided = ref(false);
 const calIsFull = ref(false);
 const fullCalResult = ref(null);
 
@@ -1515,6 +1454,16 @@ const fullReady = computed(
     () => cal.sampleCount >= FULL_MIN_SAMPLES && (cal.coverage?.fraction ?? 0) >= FULL_READY_FRACTION,
 );
 
+const finishButtonColor = computed(() => {
+    if (!fullReady.value) {
+        return "neutral";
+    }
+    if ((cal.coverage?.covered ?? 0) >= (cal.coverage?.totalFaces ?? 20)) {
+        return "primary";
+    }
+    return "warning";
+});
+
 function startFullStepTimer() {
     clearFullStepTimer();
     fullCalStep.value = 0;
@@ -1533,23 +1482,8 @@ function clearFullStepTimer() {
         fullStepTimer = null;
     }
 }
-const calCurrentPrompt = ref(0);
-const guidedSecondsRemaining = ref(-1);
-let promptTimer = null;
-let guidedCountdownTimer = null;
 const calGeoRef = ref(null);
 let lastCalStarter = null;
-
-const GUIDED_DURATION_S = 60;
-const PROMPT_INTERVAL_S = 10;
-const CAL_PROMPTS = [
-    { i18n: "magCalibrationPrompt1" },
-    { i18n: "magCalibrationPrompt2" },
-    { i18n: "magCalibrationPrompt3" },
-    { i18n: "magCalibrationPrompt4" },
-    { i18n: "magCalibrationPrompt5" },
-    { i18n: "magCalibrationPrompt6" },
-];
 
 const CAL_QUALITY_KEY = {
     good: "magCalibrationQualityGood",
@@ -1572,22 +1506,6 @@ function statusClass(level) {
 
 const calIsCalibrating = computed(() => cal.phase === "waiting" || cal.phase === "collecting");
 
-const calOffsetsText = computed(() => {
-    const fit = cal.sphereFitResult;
-    if (!fit) {
-        return "\u2014";
-    }
-    return `${fit.center.x.toFixed(0)}, ${fit.center.y.toFixed(0)}, ${fit.center.z.toFixed(0)}`;
-});
-
-const calResidualText = computed(() => {
-    const fit = cal.sphereFitResult;
-    if (!fit) {
-        return "\u2014";
-    }
-    return fit.residual.toFixed(1);
-});
-
 const calFirmwareOffsetsText = computed(() => {
     const fw = cal.firmwareOffsets;
     if (!fw) {
@@ -1596,31 +1514,14 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
-async function startGuidedCal() {
-    if (!calGuidedAvailable.value) {
-        await startLegacyFirmwareCal();
-        return;
-    }
-    lastCalStarter = startGuidedCal;
-    calIsGuided.value = true;
-    calCurrentPrompt.value = 0;
-    calGeoRef.value = getGeoReference();
-    await cal.startCalibration("guided");
-    startPromptTimer();
-    startGuidedCountdown();
-}
-
 async function startLegacyFirmwareCal() {
     lastCalStarter = startLegacyFirmwareCal;
     calGeoRef.value = getGeoReference();
-    await cal.startCalibration();
+    await cal.startCalibration("quick");
 }
 
 function cancelMagCal() {
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
-    calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
     cal.cancelCalibration();
@@ -1637,34 +1538,16 @@ const magVizMode = ref("pointcloud");
 const calGuidedAvailable = computed(() => isApi147.value && isMspCliSupported());
 
 const calModeItems = computed(() => {
-    const items = [];
-    if (calGuidedAvailable.value) {
-        items.push({
-            label: i18n.getMessage("magCalibrationGuidedFw"),
-            description: i18n.getMessage("magCalibrationGuidedFwDesc"),
-            icon: "i-lucide-compass",
-            onSelect: () => startGuidedCal(),
-        });
-        items.push({
-            label: i18n.getMessage("magCalibrationGuided"),
-            description: i18n.getMessage("magCalibrationGuidedDesc"),
-            icon: "i-lucide-crosshair",
-            onSelect: () => startClientCal(),
-        });
-        items.push({
-            label: i18n.getMessage("magCalibrationFull"),
-            description: i18n.getMessage("magCalibrationFullDesc"),
-            icon: "i-lucide-sparkles",
-            onSelect: () => startFullCal(),
-        });
-    }
-    items.push({
-        label: i18n.getMessage("magCalibrationUnguided"),
-        description: i18n.getMessage("magCalibrationUnguidedDesc"),
-        icon: "i-lucide-shuffle",
-        onSelect: () => startLegacyFirmwareCal(),
-    });
-    return [items];
+    return [
+        [
+            {
+                label: i18n.getMessage("magCalibrationUnguided"),
+                description: i18n.getMessage("magCalibrationUnguidedDesc"),
+                icon: "i-lucide-shuffle",
+                onSelect: () => startLegacyFirmwareCal(),
+            },
+        ],
+    ];
 });
 
 async function startCheckMode() {
@@ -1673,21 +1556,13 @@ async function startCheckMode() {
     await cal.startCalibration("check");
 }
 
-async function startClientCal() {
-    lastCalStarter = startClientCal;
-    calGeoRef.value = getGeoReference();
-    await cal.startCalibration("guided");
-}
-
 async function startFullCal() {
     if (!calGuidedAvailable.value) {
         return;
     }
     lastCalStarter = startFullCal;
     calIsFull.value = true;
-    calIsGuided.value = false;
     fullCalResult.value = null;
-    calCurrentPrompt.value = 0;
 
     // The dip-angle alignment solve needs the WMM inclination. Resolve it up front
     // (best effort, no consent prompt) and reflect it in the panel + field arrow.
@@ -1699,65 +1574,55 @@ async function startFullCal() {
 
 const isAcceptingCal = ref(false);
 
-async function acceptGuidedMagCal() {
+async function acceptFullCal(manualGeoRef = null) {
     isAcceptingCal.value = true;
     try {
-        if (calIsFull.value) {
-            await acceptFullCal();
+        const samples = cal.samples;
+        if (samples.length < FULL_MIN_SAMPLES) {
+            gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
             return;
         }
-        const result = await cal.acceptCalibration();
-        if (result?.ok) {
-            magNeedsCalibration.value = false;
-        } else {
-            gui_log(i18n.getMessage("magCalibrationError"));
+
+        // Reference resolved by the manual modal, else live GPS, else browser, else IP.
+        const geoRef = manualGeoRef ?? (await resolveGeoReference(true));
+
+        if (!geoRef) {
+            gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
+            openManualLocationModal("fullCal");
+            return;
         }
+        calGeoRef.value = geoRef;
+
+        const align_mag = fcStore.sensorAlignment.align_mag || 0;
+        const customAngles =
+            align_mag === 9
+                ? {
+                    roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                    pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                    yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+                }
+                : null;
+        const R_cur = currentMatrixOf(align_mag, customAngles);
+
+        const result = characterizeTumble({
+            samples,
+            currentMatrix: R_cur,
+            inclinationRad: degToRad(geoRef.inclination),
+        });
+
+        if (!result.ok) {
+            gui_log(result.error || i18n.getMessage("magCalibrationError"));
+            return;
+        }
+
+        // Only now: an early return above leaves the user still collecting, and the step
+        // guidance has to keep advancing behind the manual-location modal.
+        clearFullStepTimer();
+        fullCalResult.value = result;
+        cal.completeCalibration();
     } finally {
         isAcceptingCal.value = false;
     }
-}
-
-async function acceptFullCal() {
-    clearFullStepTimer();
-    const samples = cal.samples;
-    if (samples.length < 40) {
-        gui_log(i18n.getMessage("magCalibrationFullInsufficientSamples"));
-        return;
-    }
-
-    // Resolve the reference (cached, else GPS, else IP — prompting for consent now
-    // rather than discarding the tumble). Also refreshes the panel + arrow inclination.
-    const geoRef = await resolveGeoReference(true);
-    if (!geoRef) {
-        gui_log(i18n.getMessage("magCalibrationFullNoGeo"));
-        return;
-    }
-    calGeoRef.value = geoRef;
-
-    const align_mag = fcStore.sensorAlignment.align_mag || 0;
-    const customAngles =
-        align_mag === 9
-            ? {
-                roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-            }
-            : null;
-    const R_cur = currentMatrixOf(align_mag, customAngles);
-
-    const result = characterizeTumble({
-        samples,
-        currentMatrix: R_cur,
-        inclinationRad: degToRad(geoRef.inclination),
-    });
-
-    if (!result.ok) {
-        gui_log(result.error || i18n.getMessage("magCalibrationError"));
-        return;
-    }
-
-    fullCalResult.value = result;
-    cal.completeCalibration();
 }
 
 const isSavingCal = ref(false);
@@ -1919,77 +1784,20 @@ function exportFullCalModel() {
 }
 
 function retryAndStartMagCal() {
-    const starter = lastCalStarter ?? startGuidedCal;
+    const starter = lastCalStarter ?? startFullCal;
     retryMagCal();
     starter();
 }
 
 function clearMagCalSamples() {
-    clearPromptTimer();
-    calCurrentPrompt.value = 0;
-    if (calIsGuided.value) {
-        startPromptTimer();
-        restartGuidedCountdown();
-    }
     cal.clearSamples();
 }
 
 function retryMagCal() {
-    clearPromptTimer();
-    clearGuidedCountdown();
     clearFullStepTimer();
-    calIsGuided.value = false;
     calIsFull.value = false;
     fullCalResult.value = null;
     cal.retry();
-}
-
-function startPromptTimer() {
-    clearPromptTimer();
-    calCurrentPrompt.value = 0;
-    promptTimer = setInterval(() => {
-        if (cal.phase === "error" || cal.phase === "complete") {
-            clearPromptTimer();
-            return;
-        }
-        if (calCurrentPrompt.value < CAL_PROMPTS.length - 1) {
-            calCurrentPrompt.value++;
-        }
-    }, PROMPT_INTERVAL_S * 1000);
-}
-
-function clearPromptTimer() {
-    if (promptTimer !== null) {
-        clearInterval(promptTimer);
-        promptTimer = null;
-    }
-}
-
-function startGuidedCountdown() {
-    clearGuidedCountdown();
-    const startTime = Date.now();
-    guidedSecondsRemaining.value = GUIDED_DURATION_S;
-    guidedCountdownTimer = setInterval(() => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        const remaining = Math.max(0, Math.ceil(GUIDED_DURATION_S - elapsed));
-        guidedSecondsRemaining.value = remaining;
-        if (remaining <= 0) {
-            clearGuidedCountdown();
-            playCalCompletionBeep();
-        }
-    }, 1000);
-}
-
-function restartGuidedCountdown() {
-    startGuidedCountdown();
-}
-
-function clearGuidedCountdown() {
-    if (guidedCountdownTimer !== null) {
-        clearInterval(guidedCountdownTimer);
-        guidedCountdownTimer = null;
-    }
-    guidedSecondsRemaining.value = -1;
 }
 
 const BEEP_NOTES = [
@@ -2023,22 +1831,9 @@ watch(
     () => cal.firmwareDone,
     (done) => {
         if (done && cal.mode === "quick") {
-            clearPromptTimer();
-            calIsGuided.value = false;
             cal.completeCalibration();
             magNeedsCalibration.value = false;
             playCalCompletionBeep();
-        }
-    },
-);
-
-watch(
-    () => cal.phase,
-    (phase) => {
-        if (phase === "error" || phase === "complete") {
-            clearPromptTimer();
-            clearGuidedCountdown();
-            calIsGuided.value = false;
         }
     },
 );
@@ -2234,8 +2029,6 @@ function disposeModel() {
 
 // --- Dirty Tracking ---
 
-const baseline = ref("");
-
 const snapshotSensorAlignment = () => ({
     gyro_to_use: sensorAlignment.gyro_to_use,
     gyro_1_align: sensorAlignment.gyro_1_align,
@@ -2257,6 +2050,7 @@ const snapshotSensorAlignment = () => ({
     mag_align_yaw: sensorAlignment.mag_align_yaw,
 });
 
+/** @returns {string} serialized tab state for dirty comparison */
 const serializeState = () =>
     JSON.stringify({
         sensorConfig: { ...sensorConfig },
@@ -2264,14 +2058,11 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        rangefinderPort: rangefinderPortIdentifier.value,
+        opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
-const dirty = computed(() => {
-    if (!baseline.value) {
-        return false;
-    }
-    return baseline.value !== serializeState();
-});
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
 
 // --- Load helpers ---
 
@@ -2281,6 +2072,7 @@ function hydrateSensorConfig() {
     sensorConfig.mag_hardware = fcStore.sensorConfig.mag_hardware;
     sensorConfig.sonar_hardware = fcStore.sensorConfig.sonar_hardware;
     sensorConfig.opticalflow_hardware = fcStore.sensorConfig.opticalflow_hardware;
+    sensorConfig.pitot_hardware = fcStore.sensorConfig.pitot_hardware;
 
     boardAlignment.roll = fcStore.boardAlignment.roll;
     boardAlignment.pitch = fcStore.boardAlignment.pitch;
@@ -2326,6 +2118,12 @@ function hydrateAlignment() {
         showGyro2Align.value = hasSecondGyro.value;
         showMultiGyro.value = false;
     }
+
+    if (isApi149.value) {
+        showPitot.value = true;
+    } else {
+        showPitot.value = false;
+    }
 }
 
 function setupMagSection() {
@@ -2341,15 +2139,6 @@ function setupMagSection() {
 
     if (isApi146.value) {
         magDeclination.value = fcStore.compassConfig.mag_declination;
-
-        const cached = getGeoReference();
-        if (cached) {
-            magInclination.value = roundOneDp(cached.inclination);
-            magFieldStrength.value = cached.fieldStrength;
-            applyDetectedDeclination(roundOneDp(cached.declination));
-        } else {
-            tryAutoGeoReference().catch(() => {});
-        }
     }
 
     cal.refreshFirmwareOffsets()
@@ -2361,6 +2150,24 @@ function setupMagSection() {
         .catch(() => {});
 }
 
+// Runs *after* the baseline is captured: an auto-set declination is a proposal the user still
+// has to save. Inside setupMagSection() the cached path landed inside the baseline, greying out
+// Save on the very change the note asked for.
+function suggestGeoDeclination() {
+    if (!hasMagSensor.value || !isApi146.value) {
+        return;
+    }
+
+    const cached = getGeoReference();
+    if (cached) {
+        magInclination.value = roundOneDp(cached.inclination);
+        magFieldStrength.value = cached.fieldStrength;
+        applyDetectedDeclination(roundOneDp(cached.declination));
+    } else {
+        tryAutoGeoReference().catch(() => {});
+    }
+}
+
 function setupPeripherals() {
     if (isApi147.value) {
         sonarTypesList.value = sensorTypesData.value?.sonar?.elements || [];
@@ -2368,149 +2175,166 @@ function setupPeripherals() {
         opticalFlowTypesList.value = sensorTypesData.value?.opticalflow?.elements || [];
         showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
     }
+    if (isApi149.value) {
+        pitotTypesList.value = sensorTypesData.value?.pitot?.elements || [];
+    }
 }
 
 // --- Load ---
 
 const loadConfig = async () => {
-    try {
-        if (!isMounted.value) {
-            return;
-        }
+    await runTabLoad(
+        async () => {
+            if (!isMounted.value) {
+                return;
+            }
 
-        await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
-        await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT);
-        await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
-        await MSP.promise(MSPCodes.MSP_ACC_TRIM);
-        await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+            await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+            await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT);
+            await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
+            await MSP.promise(MSPCodes.MSP_ACC_TRIM);
+            await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
+            // initModel() reads FC.MIXER_CONFIG.mixer; load it here (nothing else on this tab does),
+            // else mixer stays 0 and the loader fetches a non-existent `undefined.gltf`.
+            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
 
-        if (isApi146.value) {
-            await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
-        }
+            if (isApi146.value) {
+                await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
+            }
 
-        if (isApi147.value) {
-            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
-        }
+            if (isApi147.value) {
+                await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
+            }
 
-        if (!isMounted.value) {
-            return;
-        }
+            if (!isMounted.value) {
+                return;
+            }
 
-        try {
-            sensorTypesData.value = await sensorTypes();
-        } catch (error) {
-            sensorTypesData.value = null;
-            console.warn("Failed to load sensor types", error);
-        }
+            try {
+                sensorTypesData.value = await sensorTypes();
+            } catch (error) {
+                sensorTypesData.value = null;
+                console.warn("Failed to load sensor types", error);
+            }
 
-        hydrateSensorConfig();
-        hydrateAlignment();
-        resolveSensorNames();
-        setupMagSection();
-        setupPeripherals();
+            await loadRangefinderPort();
+            await loadOpticalFlowPort();
 
-        baseline.value = serializeState();
+            hydrateSensorConfig();
+            hydrateAlignment();
+            resolveSensorNames();
+            setupMagSection();
+            setupPeripherals();
 
-        await nextTick();
+            markClean();
 
-        if (!isMounted.value) {
-            return;
-        }
+            suggestGeoDeclination();
 
-        // Initialize 3D model, instruments, and start attitude polling
-        initModel();
-        initInstruments();
-        addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
+            await nextTick();
 
-        GUI.content_ready();
-    } catch (e) {
-        console.error("Failed to load sensor config", e);
-        GUI.content_ready();
-    }
+            if (!isMounted.value) {
+                return;
+            }
+
+            // Initialize 3D model, instruments, and start attitude polling
+            initModel();
+            initInstruments();
+            addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
+
+            GUI.content_ready();
+        },
+        (e) => {
+            console.error("Failed to load sensor config", e);
+            GUI.content_ready();
+        },
+    );
 };
 
 // --- Save ---
 
 const saveConfig = () =>
-    runSave(
-        async () => {
-            // Push sensor hardware to store
-            fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
-            fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
-            fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
+    runSave(async () => {
+        const savedSnapshot = takeSnapshot();
 
-            if (isApi147.value) {
-                fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
-                fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
-            }
+        // Push sensor hardware to store
+        fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
+        fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
+        fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
 
-            // Push board alignment to store
-            fcStore.boardAlignment.roll = boardAlignment.roll;
-            fcStore.boardAlignment.pitch = boardAlignment.pitch;
-            fcStore.boardAlignment.yaw = boardAlignment.yaw;
+        if (isApi147.value) {
+            fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
+            fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
+        }
 
-            // Push accel trims to store
-            fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
-            fcStore.config.accelerometerTrims[1] = accelTrims.roll;
+        if (isApi149.value) {
+            fcStore.sensorConfig.pitot_hardware = sensorConfig.pitot_hardware;
+        }
 
-            // Push sensor alignment to store
-            fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
-            fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
-            fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
-            fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
+        // Push board alignment to store
+        fcStore.boardAlignment.roll = boardAlignment.roll;
+        fcStore.boardAlignment.pitch = boardAlignment.pitch;
+        fcStore.boardAlignment.yaw = boardAlignment.yaw;
 
-            if (isApi147.value) {
-                fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
-                fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
-                fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
-                fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
-                fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
-            } else {
-                fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
-                fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
-                fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
-                fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
-                fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
-                fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
-            }
+        // Push accel trims to store
+        fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
+        fcStore.config.accelerometerTrims[1] = accelTrims.roll;
 
-            if (isApi147.value) {
-                fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
-                fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
-                fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
-            }
+        // Push sensor alignment to store
+        fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
+        fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
+        fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
+        fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
 
-            if (showMagSection.value) {
-                fcStore.compassConfig.mag_declination = magDeclination.value;
-            }
+        if (isApi147.value) {
+            fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+            fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
+            fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
+            fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+            fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+        } else {
+            fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+            fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+            fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+            fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+            fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+            fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+        }
 
-            // Send MSP commands
-            await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
-            await MSP.promise(
-                MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
-                mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
-            );
-            await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
+        if (isApi147.value) {
+            fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
+            fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
+            fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
+        }
 
-            if (isApi146.value) {
-                await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
-            }
+        if (showMagSection.value) {
+            fcStore.compassConfig.mag_declination = magDeclination.value;
+        }
 
-            gui_log(i18n.getMessage("sensorConfigSaved"));
+        // Send MSP commands
+        await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
+        await MSP.promise(
+            MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
+            mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
+        );
+        await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
 
-            baseline.value = serializeState();
+        if (isApi146.value) {
+            await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
+        }
 
-            // Save to EEPROM and reboot
-            await saveAndReboot();
-        },
-        {
-            onError: (e) => {
-                console.error("Failed to save sensor config", e);
-                gui_log(i18n.getMessage("sensorConfigSaveFailed"));
-            },
-        },
-    );
+        // Between the parameter group writes and the persist that serialises them, so a
+        // refused port throws before anything reaches EEPROM.
+        await writeRangefinderPort();
+        await writeOpticalFlowPort();
+
+        gui_log(i18n.getMessage("sensorConfigSaved"));
+
+        // Save to EEPROM and reboot
+        await saveAndReboot();
+
+        markClean(savedSnapshot);
+    });
 
 // --- Lifecycle ---
 
@@ -2562,7 +2386,7 @@ onMounted(() => {
         .instruments-right {
             position: absolute;
             bottom: 1rem;
-            right: 1rem;
+            inset-inline-end: 1rem;
             display: flex;
             flex-direction: row;
             gap: 0.5rem;
@@ -2573,7 +2397,7 @@ onMounted(() => {
     .attitude-overlay {
         position: absolute;
         top: 0.75rem;
-        left: 0.75rem;
+        inset-inline-start: 0.75rem;
         font-size: 0.8rem;
         color: var(--surface-950);
 
@@ -2592,7 +2416,7 @@ onMounted(() => {
     .yaw-reset-btn {
         position: absolute;
         top: 0.75rem;
-        right: 0.75rem;
+        inset-inline-end: 0.75rem;
     }
 
     .align-detect-inline {
@@ -2638,7 +2462,7 @@ onMounted(() => {
     .mag-viz-mode-selector {
         position: absolute;
         top: 6px;
-        left: 6px;
+        inset-inline-start: 6px;
         z-index: 10;
         display: flex;
         gap: 2px;
@@ -2687,7 +2511,7 @@ onMounted(() => {
     .mag-cal-stats-inline dd {
         margin: 0;
         font-weight: 600;
-        text-align: right;
+        text-align: end;
     }
 
     .status-ok {

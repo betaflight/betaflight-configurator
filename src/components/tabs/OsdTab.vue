@@ -34,7 +34,12 @@
                 <div class="grid-row grid-box col4">
                     <!-- Elements Column -->
                     <div class="col-span-1">
-                        <UiBox :title="$t('osdSetupElementsTitle')" :help="$t('osdSectionHelpElements')">
+                        <UiBox
+                            :title="$t('osdSetupElementsTitle')"
+                            type="neutral"
+                            collapsible
+                            :help="$t('osdSectionHelpElements')"
+                        >
                             <template #title>
                                 <HelpIcon :text="$t('osdSetupProfilesTitle')" />
                                 <span
@@ -49,7 +54,7 @@
                                 v-model="elementSearchQuery"
                                 :placeholder="$t('search') + '...'"
                                 icon="i-lucide-search"
-                                size="sm"
+                                size="xs"
                                 class="mb-2"
                             />
                             <!-- Element list -->
@@ -228,7 +233,7 @@
                     <!-- Settings Column -->
                     <div class="col-span-1">
                         <!-- Active Profile Selector -->
-                        <UiBox :title="$t('osdSetupSelectedProfileTitle')">
+                        <UiBox :title="$t('osdSetupSelectedProfileTitle')" type="neutral" collapsible>
                             <SettingRow :label="$t('osdSetupSelectedProfileTitle')">
                                 <USelect v-model="activeProfile" :items="profileOptions" size="xs" />
                             </SettingRow>
@@ -241,6 +246,8 @@
                         <UiBox
                             v-if="osdStore.state.haveMax7456Configured || osdStore.state.isMspDevice"
                             :title="$t('osdSetupVideoFormatTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpVideoMode')"
                         >
                             <SettingRow :label="$t('osdSetupVideoFormatTitle')">
@@ -256,12 +263,66 @@
                                     size="xs"
                                 />
                             </SettingRow>
+                            <SettingRow
+                                v-if="osdProtocolOptions.length"
+                                :label="$t('osdProtocol')"
+                                :help="$t('osdProtocolHelp')"
+                            >
+                                <USelect
+                                    v-model="osdProtocol"
+                                    :items="osdProtocolOptions"
+                                    :disabled="!osdPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="osdPortAvailable"
+                                :label="$t('osdSerialPort')"
+                                :help="$t('osdSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="osdPortIdentifier"
+                                    :items="osdPortOptions"
+                                    :disabled="!osdPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="customTextPortAvailable"
+                                :label="$t('osdCustomTextSerialPort')"
+                                :help="$t('osdCustomTextSerialPortHelp')"
+                            >
+                                <USelect
+                                    v-model="customTextPortIdentifier"
+                                    :items="customTextPortOptions"
+                                    :disabled="!customTextPortWritable"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="customTextPortAvailable"
+                                :label="$t('osdCustomTextSerialBaud')"
+                                :help="$t('osdCustomTextSerialBaudHelp')"
+                            >
+                                <USelect
+                                    v-model="customTextBaud"
+                                    :items="customTextBaudOptions"
+                                    :disabled="!customTextPortWritable || !customTextPortAssigned"
+                                    size="xs"
+                                    class="min-w-40"
+                                />
+                            </SettingRow>
                         </UiBox>
 
                         <!-- Units -->
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature"
                             :title="$t('osdSetupUnitsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpUnits')"
                         >
                             <SettingRow :label="$t('osdSetupUnitsTitle')">
@@ -283,6 +344,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && osdStore.timers.length > 0"
                             :title="$t('osdSetupTimersTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpTimers')"
                         >
                             <div
@@ -337,6 +400,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && alarmEntries.length > 0"
                             :title="$t('osdSetupAlarmsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpAlarms')"
                         >
                             <div
@@ -363,6 +428,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && sortedWarnings.length > 0"
                             :title="$t('osdSetupWarningsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpWarnings')"
                         >
                             <div
@@ -378,7 +445,7 @@
                                             onWarningChange();
                                         }
                                     "
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <span class="text-xs" :title="warning.desc ? $t(warning.desc) : undefined">{{
                                     $t(warning.text, warning.textParams)
@@ -390,6 +457,8 @@
                         <UiBox
                             v-if="osdStore.state.haveOsdFeature && sortedStatItems.length > 0"
                             :title="$t('osdSetupStatsTitle')"
+                            type="neutral"
+                            collapsible
                             :help="$t('osdSectionHelpStats')"
                         >
                             <div
@@ -405,7 +474,7 @@
                                             onStatChange(stat);
                                         }
                                     "
-                                    size="sm"
+                                    size="xs"
                                 />
                                 <span class="text-xs" :title="stat.desc ? $t(stat.desc) : undefined">{{
                                     $t(stat.text, stat.textParams)
@@ -440,14 +509,14 @@
                                 v-model="selectedFontPreset"
                                 :items="fontPresetSelectItems"
                                 :portal="false"
-                                size="sm"
+                                size="xs"
                                 class="min-w-40"
                             />
                             <span>{{ $t("osdSetupFontPresetsSelectorOr") }}</span>
-                            <UButton @click="loadCustomFontFile()" size="sm">
+                            <UButton @click="loadCustomFontFile()" size="xs">
                                 {{ $t("osdSetupOpenFont") }}
                             </UButton>
-                            <span class="text-sm opacity-60">(.mcm)</span>
+                            <span class="text-sm opacity-60"></span>
                         </div>
 
                         <!-- Logo customization -->
@@ -475,7 +544,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <UButton @click="replaceLogoImage()" size="sm">
+                            <UButton @click="replaceLogoImage()" size="xs">
                                 <span v-html="$t('osdSetupCustomLogoOpenImageButton')"></span>
                             </UButton>
                         </div>
@@ -487,7 +556,7 @@
                             </div>
                         </div>
 
-                        <UButton @click="flashFont()" color="success" size="sm">
+                        <UButton @click="flashFont()" color="success" size="xs">
                             {{ $t("osdSetupUploadFont") }}
                         </UButton>
                     </template>
@@ -502,18 +571,20 @@
                     :disabled="!osdStore.state.isMax7456FontDeviceDetected"
                     @click="openFontManager()"
                     variant="soft"
+                    size="xs"
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
-                <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!osdStore.dirty || isSaving">
+                <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                    <UButton @click="saveConfig()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
                         <UButton
-                            :disabled="!osdStore.dirty || isSaving"
+                            :disabled="!portsOrConfigDirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                             square
+                            size="xs"
                         />
                     </UDropdownMenu>
                 </UFieldGroup>
@@ -528,8 +599,51 @@ import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
+import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
+import { useReboot } from "@/composables/useReboot";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
+import { runTabLoad } from "@/composables/useTabLoad";
+
+// From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
+// mask follows the display port device, and on MSP DisplayPort it is the shared MSP bit, so the
+// setting is the only reliable read either way.
+const {
+    available: osdPortAvailable,
+    writable: osdPortWritable,
+    options: osdPortOptions,
+    selectedIdentifier: osdPortIdentifier,
+    changed: osdPortChanged,
+    load: loadOsdPort,
+    write: writeOsdPort,
+    selectedProtocol: osdProtocol,
+    protocolOptions: osdProtocolOptions,
+} = useFeaturePort({
+    setting: "osd_uart",
+    protocol: { setting: "osd_displayport_device" },
+});
+
+const {
+    available: customTextPortAvailable,
+    writable: customTextPortWritable,
+    options: customTextPortOptions,
+    selectedIdentifier: customTextPortIdentifier,
+    baudOptions: customTextBaudOptions,
+    selectedBaud: customTextBaud,
+    changed: customTextPortChanged,
+    load: loadCustomTextPort,
+    write: writeCustomTextPort,
+} = useFeaturePort({
+    setting: "osd_custom_text_uart",
+    baud: { setting: "osd_custom_text_baud" },
+});
+
+const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
+
+// A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
+const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -549,10 +663,11 @@ import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_48 } from "@/js/data_storage";
+import { API_VERSION_1_48 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
 const fcStore = useFlightControllerStore();
+const { hasBuildOption } = useBuildOptions();
 
 // Refs for DOM elements
 const previewContainer = ref(null);
@@ -573,6 +688,7 @@ const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const { isSaving, runSave } = useSaving();
+const { reboot } = useReboot();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
@@ -583,13 +699,19 @@ const saveMenuItems = computed(() => [
         {
             label: i18n.getMessage("osdSetupSave"),
             icon: "i-lucide-save",
-            disabled: !osdStore.dirty || isSaving.value,
+            disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
+        },
+        {
+            label: i18n.getMessage("osdSetupSaveReboot"),
+            icon: "i-lucide-rotate-cw",
+            disabled: !portsOrConfigDirty.value || isSaving.value,
+            onSelect: saveAndRebootConfig,
         },
         {
             label: i18n.getMessage("osdSetupRefresh"),
             icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value || (hasLoadedConfig.value && !osdStore.dirty),
+            disabled: isSaving.value || (hasLoadedConfig.value && !portsOrConfigDirty.value),
             onSelect: refreshConfig,
         },
     ],
@@ -653,20 +775,11 @@ const videoTypeOptions = computed(() => {
         NTSC: "osdSetupVideoFormatOptionNtsc",
         HD: "osdSetupVideoFormatOptionHd",
     };
-    const buildOptions = fcStore.config?.buildOptions || [];
-    const apiVersion = fcStore.config?.apiVersion;
-    const hasBuildOptionGating = apiVersion && semver.gte(apiVersion, API_VERSION_1_45) && buildOptions.length > 0;
+    const hasSdOsd = hasBuildOption("USE_OSD_SD");
+    const hasHdOsd = hasBuildOption("USE_OSD_HD");
 
     return types.map((type, value) => {
-        let disabled = false;
-        if (hasBuildOptionGating) {
-            if (type !== "HD" && !buildOptions.includes("USE_OSD_SD")) {
-                disabled = true;
-            }
-            if (type === "HD" && !buildOptions.includes("USE_OSD_HD")) {
-                disabled = true;
-            }
-        }
+        const disabled = type === "HD" ? !hasHdOsd : !hasSdOsd;
 
         return {
             type,
@@ -819,6 +932,7 @@ function toggleFieldVisibility(fieldIndex, profileIndex, event) {
 
 // Handle variant change
 function onVariantChange(field) {
+    osdStore.refreshDisplayItemPreview(field);
     trackChange("variant", field.name);
     updatePreview();
 }
@@ -1283,31 +1397,35 @@ function updatePreview() {
 
 // Load OSD configuration from FC
 async function loadConfig() {
-    try {
-        // Fetch OSD config via Store
-        await osdStore.fetchOsdConfig();
+    await runTabLoad(
+        async () => {
+            // Fetch OSD config via Store
+            await osdStore.fetchOsdConfig();
 
-        // Set initial profile from store state
-        previewProfile.value = osdStore.osdProfiles.selected || 0;
-        activeProfile.value = osdStore.osdProfiles.selected || 0;
+            await loadOsdPort();
+            await loadCustomTextPort();
 
-        // Sync font state from memory
-        if (FONT.data?.loaded_font_file) {
-            const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
-            if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
-                selectedFont.value = loadedIndex;
-                selectedFontPreset.value = loadedIndex;
-            } else if (loadedIndex === -1 && selectedFont.value !== -1) {
-                selectedFont.value = -1;
-                selectedFontPreset.value = -1;
+            // Set initial profile from store state
+            previewProfile.value = osdStore.osdProfiles.selected || 0;
+            activeProfile.value = osdStore.osdProfiles.selected || 0;
+
+            // Sync font state from memory
+            if (FONT.data?.loaded_font_file) {
+                const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
+                if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
+                    selectedFont.value = loadedIndex;
+                    selectedFontPreset.value = loadedIndex;
+                } else if (loadedIndex === -1 && selectedFont.value !== -1) {
+                    selectedFont.value = -1;
+                    selectedFontPreset.value = -1;
+                }
             }
-        }
 
-        updatePreview();
-        hasLoadedConfig.value = true;
-    } catch (error) {
-        console.error("Failed to load OSD configuration:", error);
-    }
+            updatePreview();
+            hasLoadedConfig.value = true;
+        },
+        (error) => console.error("Failed to load OSD configuration:", error),
+    );
 }
 
 async function refreshConfig() {
@@ -1320,32 +1438,33 @@ async function refreshConfig() {
 
 // Save OSD configuration to FC
 const saveConfig = () =>
-    runSave(
-        async () => {
-            // Sync store state to the shared OSD.data bridge used by legacy helpers.
-            osdStore.syncToLegacy();
+    runSave(async () => {
+        // Sync store state to the shared OSD.data bridge used by legacy helpers.
+        osdStore.syncToLegacy();
 
-            // Send all OSD config to FC and write EEPROM.
-            await osdStore.saveAllConfig();
+        // Send all OSD config to FC and write EEPROM.
+        await osdStore.saveAllConfig(async () => {
+            await writeOsdPort();
+            await writeCustomTextPort();
+        });
 
-            // Track analytics
-            const changes = analyticsChanges.value;
-            if (Object.keys(changes).length > 0) {
-                tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
-                analyticsChanges.value = {};
-            }
+        // Track analytics
+        const changes = analyticsChanges.value;
+        if (Object.keys(changes).length > 0) {
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+            analyticsChanges.value = {};
+        }
 
-            // Show success
-            gui_log(i18n.getMessage("osdSettingsSaved"));
-            flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
-        },
-        {
-            onError: (error) => {
-                console.error("Failed to save OSD configuration:", error);
-                gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
-            },
-        },
-    );
+        // Show success
+        gui_log(i18n.getMessage("osdSettingsSaved"));
+        flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+    });
+
+// A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
+const saveAndRebootConfig = async () => {
+    await saveConfig();
+    await reboot();
+};
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
@@ -1595,7 +1714,7 @@ onUnmounted(() => {
     background-size: cover;
     background-repeat: no-repeat;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-inline-start: 20px;
 }
 
 .tab-osd-char {
@@ -1629,7 +1748,7 @@ onUnmounted(() => {
     content: "";
     position: absolute;
     top: 50%;
-    left: 40%;
+    inset-inline-start: 40%;
     border-top: 0.3em dashed var(--gimbalCrosshair);
     width: 20%;
     transform: translateY(-50%);
@@ -1640,7 +1759,7 @@ onUnmounted(() => {
     content: "";
     position: absolute;
     top: 50%;
-    left: 40%;
+    inset-inline-start: 40%;
     border-top: 0.3em dashed var(--gimbalCrosshair);
     width: 20%;
     transform: translateY(-50%) rotate(90deg);
@@ -1668,7 +1787,7 @@ onUnmounted(() => {
     border-radius: 2px;
     font-size: 10px;
     line-height: 0;
-    margin-left: 4px;
+    margin-inline-start: 4px;
 }
 
 .tab-osd-preset-btn:hover {
@@ -1686,8 +1805,8 @@ onUnmounted(() => {
     display: inline-block;
     min-width: 140px;
     top: -5px;
-    left: 100%;
-    margin-left: 5px;
+    inset-inline-start: 100%;
+    margin-inline-start: 5px;
     padding: 2px;
     background-color: var(--surface-50);
     border: 1px solid var(--surface-500);
@@ -1723,9 +1842,9 @@ onUnmounted(() => {
 
 .tab-osd-context-menu-content {
     position: absolute;
-    left: 100%;
+    inset-inline-start: 100%;
     top: -5px;
-    margin-left: 5px;
+    margin-inline-start: 5px;
     display: none;
     opacity: 0;
     z-index: 10002;

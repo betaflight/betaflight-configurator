@@ -2,14 +2,19 @@
  * Board alignment detection.
  *
  * Determines how the flight controller is physically mounted relative to the
- * drone body by sampling gravity at three poses (flat, pitched up, rolled right)
+ * drone body by sampling gravity at three poses (flat, nose down, rolled right)
  * and integrating gyro during a yaw rotation as a sanity check.
+ *
+ * Throughout, the guiding rule is: the horizontal component of measured gravity
+ * points toward whichever end of the craft is RAISED. Elevating a body axis by θ
+ * gives world-up a `sin θ` component along that axis.
  *
  * The algorithm:
  *   1. At flat, the normalized accelerometer vector is world-up expressed in
  *      the FC frame (call it `upAxis`).
- *   2. When the user pitches up 45° (drone facing away), the horizontal accel
- *      component shifts toward the nose, so `forwardAxis = +normalize(h_pitch)`.
+ *   2. When the user pitches the nose down 45° (drone facing away), the tail is
+ *      the raised end, so the horizontal accel component points aft and
+ *      `forwardAxis = -normalize(h_pitch)`.
  *   3. For roll right (right wing down, = −Y side in Betaflight's Y=LEFT frame),
  *      the horizontal accel component shifts toward +Y (left/rising side).
  *      Betaflight uses a right-handed X=fwd, Y=left, Z=up body frame, so the
@@ -167,7 +172,7 @@ export function perpComponent(vec, axis) {
  *
  * Inputs:
  *   - flatAccel:  averaged accel 3-vector at the flat pose (g-units).
- *   - pitchAccel: averaged accel at the "pitched up ~45°" pose.
+ *   - pitchAccel: averaged accel at the "nose down ~45°" pose.
  *   - rollAccel:  averaged accel at the "rolled right ~45°" pose.
  *   - yawIntegral: gyro rotation integrated about `upAxis` during the yaw CW
  *     gesture, in degrees. Sign should be negative for a true CW (right-hand
@@ -178,7 +183,10 @@ export function perpComponent(vec, axis) {
  *
  * Returns: { roll, pitch, yaw, confidence } — angles snapped to multiples of 45°.
  *   `confidence` is one of "high" / "medium" / "low" based on residual orthogonality
- *   error and the yaw integral magnitude.
+ *   error and the yaw integral magnitude. `rightAgreement` is the raw measurement
+ *   agreement, before any correction.
+ *
+ *   On failure: { error } — see the `boardAlignmentWizard-Error-*` locale keys.
  */
 export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawIntegral, currentAlignment }) {
     if (!flatAccel || !pitchAccel || !rollAccel) {
@@ -190,16 +198,14 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
         return { error: "no_gravity" };
     }
 
-    // Derive world-forward in FC frame from the pitch-up gesture.
-    // Convention: drone nose faces AWAY from the user. When pitched up, the gravity
-    // horizontal component shifts toward the tail (toward user), so negating it gives
-    // the nose direction — but since nose = away from user = the direction the accel
-    // horizontal component moves TOWARD when nose tilts up, we take it directly.
+    // Derive world-forward in FC frame from the nose-down gesture.
+    // The instruction is nose-DOWN, so the tail is the raised end and gravity's
+    // horizontal component points aft. Negate to get the nose direction.
     const hPitch = perpComponent(pitchAccel, upAxis);
     if (Math.hypot(hPitch[0], hPitch[1], hPitch[2]) < 0.05) {
         return { error: "no_pitch_tilt" };
     }
-    const forwardRaw = normalize(hPitch);
+    const forwardRaw = normalize(scale(hPitch, -1));
 
     // Derive the body-Y axis from the roll-right gesture.
     // Betaflight uses a Y=LEFT body frame (X=forward, Y=left, Z=up — right-handed).
@@ -213,15 +219,17 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
     const rightRaw = normalize(hRoll);
 
     // Gram-Schmidt: keep upAxis, orthogonalize forward, derive right = up × forward.
-    let forwardAxis = normalize(perpComponent(forwardRaw, upAxis));
-    let rightAxis = cross(upAxis, forwardAxis);
+    const forwardAxis = normalize(perpComponent(forwardRaw, upAxis));
+    const rightAxis = cross(upAxis, forwardAxis);
 
-    // Cross-check: both rightAxis (cross product) and rightRaw (measured from roll gesture)
-    // should point in the same body-Y direction (+Y = left in Betaflight's frame).
-    // If they disagree, the user's roll gesture was the wrong direction.
-    if (dot(rightAxis, rightRaw) < 0) {
-        rightAxis = scale(rightAxis, -1);
-        forwardAxis = scale(forwardAxis, -1);
+    // Cross-check: rightAxis (derived from the pitch gesture) and rightRaw (measured
+    // from the roll gesture) should point in the same body-Y direction (+Y = left in
+    // Betaflight's frame). A negative dot product proves that exactly one of the two
+    // gestures was performed in the wrong direction, but not which one — so bail out
+    // and let the user redo both rather than silently picking an interpretation.
+    const rightAgreement = dot(rightAxis, rightRaw); // 1 = perfect, -1 = opposite
+    if (rightAgreement < 0) {
+        return { error: "gesture_direction_mismatch" };
     }
 
     // World basis vectors as rows form the matrix M such that M · v_fc = v_world.
@@ -258,8 +266,9 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
     };
 
     // Confidence: high if the measured right matches the derived right closely AND the
-    // yaw integral magnitude is plausible. Otherwise medium / low.
-    const rightAgreement = dot(rightAxis, rightRaw); // 1 = perfect, -1 = opposite
+    // yaw integral magnitude is plausible. Otherwise medium / low. Note this can only
+    // grade how orthogonal the gestures were — a pair of consistently reversed gestures
+    // is indistinguishable from a mount yawed 180°, so it scores as high as a clean run.
     const yawMagnitude = Math.abs(yawIntegral || 0);
     let confidence = "high";
     if (rightAgreement < 0.85 || yawMagnitude < 20) {

@@ -83,7 +83,7 @@
                             <USelect
                                 v-model.number="graph.height"
                                 :items="heightOptions"
-                                :ui="{ content: 'z-[300]' }"
+                                :ui="{ content: 'z-[3002]' }"
                                 size="xs"
                                 class="w-16"
                                 @change="emitUpdate()"
@@ -190,7 +190,12 @@
                                     <div style="display: contents" @contextmenu="(e) => onContextMenu(e, graph, field)">
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.min ?? -500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
+                                            :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
                                             size="xs"
@@ -214,7 +219,12 @@
                                         />
                                         <UInputNumber
                                             :model-value="field.curve?.MinMax?.max ?? 500"
-                                            :step="field.curve?.highPrecise ? smallMinMaxStep : normalMinMaxStep"
+                                            :step="
+                                                field.curve?.highPrecise
+                                                    ? FINE_MIN_MAX_STEP
+                                                    : coarseMinMaxStep(field.curve?.MinMax)
+                                            "
+                                            :step-snapping="false"
                                             :class="{ italic: field.curve?.highPrecise }"
                                             :format-options="noGrouping"
                                             size="xs"
@@ -279,6 +289,7 @@ import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
+import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step.js";
 
 const open = defineModel("open", { type: Boolean, default: false });
 
@@ -454,10 +465,6 @@ function buildExampleGraphs() {
     exampleGraphs.value = examples;
 }
 
-function cloneGraphs(graphs) {
-    return structuredClone(graphs);
-}
-
 // Convert internal graph config to the format expected by legacy code
 function convertToConfig() {
     return localGraphs.value.map((g) => ({
@@ -505,25 +512,6 @@ function getDefaults(fieldName) {
     const smoothing = GraphConfig.getDefaultSmoothingForField(props.flightLog, fieldName);
     const curve = GraphConfig.getDefaultCurveForField(props.flightLog, fieldName);
     return { smoothing, ...curve };
-}
-
-function formatSmoothing(field) {
-    return `${((field.smoothing ?? 0) / 100).toFixed(0)}%`;
-}
-
-function parseSmoothing(field, val) {
-    field.smoothing = Number.parseInt(val) * 100;
-}
-
-function formatExpo(field) {
-    return `${((field.curve?.power ?? 1) * 100).toFixed(0)}%`;
-}
-
-function parseExpo(field, val) {
-    if (!field.curve) {
-        field.curve = {};
-    }
-    field.curve.power = Number.parseInt(val) / 100;
 }
 
 function ensureCurveMinMax(field) {
@@ -582,19 +570,22 @@ function onFieldChange(graph, field) {
     } else {
         // Apply defaults for the selected field
         const defaults = getDefaults(field.name);
+        const minMax = { ...defaults.MinMax };
         field.smoothing = defaults.smoothing;
-        field.curve = { power: defaults.power, MinMax: { ...defaults.MinMax } };
+        field.curve = { power: defaults.power, MinMax: minMax, highPrecise: needsFineStep(minMax) };
     }
 }
 
 function makeField(name, existing, color) {
     const defaults = getDefaults(name);
+    const minMax = existing?.curve?.MinMax ? { ...existing.curve.MinMax } : { ...defaults.MinMax };
     return {
         name,
         smoothing: existing?.smoothing ?? defaults.smoothing,
         curve: {
             power: existing?.curve?.power ?? defaults.power,
-            MinMax: existing?.curve?.MinMax ? { ...existing.curve.MinMax } : { ...defaults.MinMax },
+            MinMax: minMax,
+            highPrecise: needsFineStep(minMax),
         },
         color: color || existing?.color || palette[0].color,
         lineWidth: existing?.lineWidth ?? 1,
@@ -698,19 +689,15 @@ watch(open, (val) => {
     }
 });
 
-// Set curves min-max values changes step. Switch between normal 10 or precesion 0.1 step by using Ctrl key.
-// The precesion value input has italic font.
-
-const normalMinMaxStep = 10;
-const smallMinMaxStep = 0.1;
+// The spinner step follows the size of the curve, see coarseMinMaxStep. Ctrl forces the fine step
+// for a field, and those inputs are shown in italics.
 
 function defineFieldsResolution() {
     for (const graph of localGraphs.value) {
         for (const field of graph.fields) {
-            const min = field?.curve?.MinMax?.min;
-            const max = field?.curve?.MinMax?.max;
-            if (min != null && max != null) {
-                field.curve.highPrecise = min % normalMinMaxStep !== 0 || max % normalMinMaxStep !== 0;
+            const minMax = field?.curve?.MinMax;
+            if (minMax?.min != null && minMax?.max != null) {
+                field.curve.highPrecise = needsFineStep(minMax);
             }
         }
     }
@@ -847,11 +834,11 @@ function setMinMaxSelectedZoom(zoom) {
     }
 }
 
-function setMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
+function setFieldsMinMaxToFullRange(setCheckedOnly, getMinMaxFunction) {
     if (currentState.value.graph?.fields && props.flightLog) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
             if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = props.flightLog.getMinMaxForFieldDuringAllTime(field.name);
+                const mm = getMinMaxFunction(props.flightLog, props.grapher, field.name);
                 if (mm?.min !== undefined && mm?.max !== undefined) {
                     setMin(field, mm.min);
                     setMax(field, mm.max);
@@ -862,53 +849,42 @@ function setMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
     }
 }
 
-function getMinMaxForFieldDuringWindowTimeInterval(setCheckedOnly) {
-    if (currentState.value.graph?.fields && props.flightLog && props.grapher) {
-        for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = GraphConfig.getMinMaxForFieldDuringWindowTimeInterval(
-                    props.flightLog,
-                    props.grapher,
-                    field.name,
-                );
-                if (mm?.min !== undefined && mm?.max !== undefined) {
-                    setMin(field, mm.min);
-                    setMax(field, mm.max);
-                }
-            }
-        }
-        emitUpdate();
-    }
+function setFieldsMinMaxToFullRangeDuringAllTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringAllTimeInterval);
 }
 
-function getMinMaxForFieldDuringMarkedInterval(setCheckedOnly) {
-    if (currentState.value.graph?.fields && props.flightLog && props.grapher) {
-        for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = GraphConfig.getMinMaxForFieldDuringMarkedInterval(
-                    props.flightLog,
-                    props.grapher,
-                    field.name,
-                );
-                if (mm?.min !== undefined && mm?.max !== undefined) {
-                    setMin(field, mm.min);
-                    setMax(field, mm.max);
-                }
-            }
-        }
-        emitUpdate();
-    }
+function setFieldsMinMaxToFullRangeDuringWindowTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
 }
 
-function setMinMaxSelectedToFullRangeDuringAllTime() {
+function setFieldsMinMaxToFullRangeDuringMarkedTime(setCheckedOnly) {
+    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringMarkedInterval);
+}
+
+function setSelectedFieldMinMaxToFullRange(getMinMaxFunction) {
     if (currentState.value.field?.name && props.flightLog) {
-        const mm = props.flightLog.getMinMaxForFieldDuringAllTime(currentState.value.field?.name);
+        const fieldName = currentState.value.field.name;
+        const mm = getMinMaxFunction(props.flightLog, props.grapher, fieldName);
         if (mm?.min !== undefined && mm?.max !== undefined) {
             setMin(currentState.value.field, mm.min);
             setMax(currentState.value.field, mm.max);
             emitUpdate();
         }
     }
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringAllTime() {
+    setSelectedFieldMinMaxToFullRange((flightLog, grapher, fieldName) =>
+        GraphConfig.getMinMaxForFieldDuringAllTimeInterval(flightLog, fieldName),
+    );
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringWindowTime() {
+    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
+}
+
+function setSelectedFieldMinMaxToFullRangeDuringMarkedTime() {
+    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringMarkedInterval);
 }
 
 const zoom = 1.1;
@@ -924,7 +900,7 @@ const simpleMenuItems = computed(() => [
         {
             label: "Full range",
             onSelect() {
-                setMinMaxToFullRangeDuringAllTime();
+                setFieldsMinMaxToFullRangeDuringAllTime();
             },
         },
         {
@@ -972,7 +948,7 @@ const simpleMenuItems = computed(() => [
                     {
                         label: "Full range",
                         onSelect() {
-                            setMinMaxSelectedToFullRangeDuringAllTime();
+                            setSelectedFieldMinMaxToFullRangeDuringAllTime();
                         },
                     },
                     {
@@ -1077,21 +1053,21 @@ const extendedMenuItems = computed(() => [
                     {
                         label: "At the all time",
                         onSelect(e) {
-                            setMinMaxToFullRangeDuringAllTime(true);
+                            setFieldsMinMaxToFullRangeDuringAllTime(true);
                             e.preventDefault();
                         },
                     },
                     {
                         label: "At the window time",
                         onSelect(e) {
-                            getMinMaxForFieldDuringWindowTimeInterval(true);
+                            setFieldsMinMaxToFullRangeDuringWindowTime(true);
                             e.preventDefault();
                         },
                     },
                     {
                         label: "At the markers time",
                         onSelect(e) {
-                            getMinMaxForFieldDuringMarkedInterval(true);
+                            setFieldsMinMaxToFullRangeDuringMarkedTime(true);
                             e.preventDefault();
                         },
                     },
@@ -1206,21 +1182,21 @@ const extendedMenuItems = computed(() => [
                                 {
                                     label: "At the all time",
                                     onSelect(e) {
-                                        setMinMaxSelectedToFullRangeDuringAllTime();
+                                        setSelectedFieldMinMaxToFullRangeDuringAllTime();
                                         e.preventDefault();
                                     },
                                 },
                                 {
                                     label: "At the window time",
-                                    disabled: true,
                                     onSelect(e) {
+                                        setSelectedFieldMinMaxToFullRangeDuringWindowTime();
                                         e.preventDefault();
                                     },
                                 },
                                 {
                                     label: "At the markers time",
-                                    disabled: true,
                                     onSelect(e) {
+                                        setSelectedFieldMinMaxToFullRangeDuringMarkedTime();
                                         e.preventDefault();
                                     },
                                 },

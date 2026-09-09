@@ -99,7 +99,12 @@ export function completeVueTabMount(componentInstance) {
  * Clear the active Vue tab so the root app can unmount it naturally.
  */
 export function unmountVueTab() {
+    // An unmount cancels whatever mount was in flight, and the callback dropped on the next
+    // line is the only thing that clears tab_switch_in_progress. Leaving that flag set makes
+    // every later switchTab() a silent no-op — blank content, no error — until something else
+    // happens to clear it, which is why the disconnect/connect dance appeared to fix it.
     pendingContentReadyCallback = null;
+    GUI.tab_switch_in_progress = false;
     clearTabAdapter(vueTabState.activeTabName ?? GUI.active_tab);
     vueTabState.activeTabName = null;
     vueTabState.activeTabKey += 1;

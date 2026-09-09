@@ -4,7 +4,10 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Betaflight downloads</title>
-        <meta name="description" content="Download Betaflight Configurator nightly builds, stable releases, and the web app." />
+        <meta
+            name="description"
+            content="Download the Betaflight app: nightly builds, stable releases, and the web app."
+        />
         <link rel="icon" type="image/png" href="favicon.png" />
         <style>
             :root {
@@ -161,10 +164,16 @@
                 margin-left: 0.5rem;
                 font-size: 0.875rem;
             }
+            details h4 {
+                margin: 0.5rem 0 0.1rem;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--text-dim);
+            }
             details ul {
                 list-style: none;
                 padding: 0;
-                margin: 0.5rem 0 0.25rem 1rem;
+                margin: 0.15rem 0 0.25rem 1rem;
             }
             details li {
                 padding: 0.15rem 0;
@@ -216,7 +225,8 @@
             <!--SECTIONS-->
         </main>
         <footer>
-            Generated <!--GENERATED_AT-->. Source:
+            Generated
+            <!--GENERATED_AT-->. Source:
             <a href="https://github.com/betaflight/betaflight-configurator">betaflight/betaflight-configurator</a>.
         </footer>
     </body>

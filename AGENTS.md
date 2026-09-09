@@ -8,9 +8,9 @@ applyTo: "**/*.vue, **/*.ts, **/*.js, **/*.scss, **/*.less"
 Standards for AI-assisted contributions to Betaflight Configurator. Adapted from the [awesome-copilot Vue 3 instructions](https://github.com/github/awesome-copilot/blob/main/instructions/vuejs3.instructions.md), with project-specific adjustments and an enforcement ledger that tracks which rules are tooled and which remain guidance.
 
 ## Project context
-- **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 7, Tauri 2 (desktop), Capacitor 8 (Android).
+- **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
-- **TypeScript**: incremental adoption. New files as `.ts` or `<script setup lang="ts">`; JSDoc on touched legacy JS. Full strict-mode rollout is a future phase.
+- **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being rewritten.
 - **Naming**: `PascalCase` for both component names and `.vue` file names.
 
 ## Enforcement ledger
@@ -44,20 +44,22 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 
 | Rule | Status | Enforcement target |
 |---|---|---|
-| New files as `.ts` or `<script setup lang="ts">` | 🚧 | `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
+| New files as `.ts` or `<script setup lang="ts">` | 🔧 | `vue-tsc` checks what is TS; `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
 | Touched legacy JS gets JSDoc types | 🚧 | `eslint-plugin-jsdoc` on changed files (Phase 1) |
-| Strict mode in converted folders | 🚧 | `tsconfig` `"strict": true` via per-folder overrides (Phase 2) |
+| Strict mode in converted folders | 🔧 | `strict: true` applies to every `.ts` / `lang="ts"` file now; `checkJs` per folder is the Phase 2 ratchet |
 
 ### Always-on
 
 | Rule | Status | Enforcement target |
 |---|---|---|
 | `.vue` filenames and component names: `PascalCase` | 🔧 | `eslint-plugin-unicorn/filename-case` (Phase 0) |
+| New source files start with the GPL header in `DEFAULT_LICENSE.md` (same text as the firmware) | 🚧 | `eslint-plugin-header` on files added after this row landed (Phase 0) |
 | Don't edit `dist/`, `node_modules/`, generated output | 🚧 | Pre-commit hook by path (Phase 0) |
 | i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 🚧 | Pre-commit hook rejecting non-`en` locale edits (Phase 0) |
 | Tests for non-trivial behaviour (Vitest, `npm run test`) | 📐 | Coverage gate is a proxy; review call |
 | Tests must catch bugs, not confirm the fix. A suite co-authored with the change is confirmation-biased — it passes while the code is still broken. Verify by driving the real behaviour (hardware/e2e), and write bug-hunting tests independently/adversarially, ideally blind to the implementation. | 📐 | Review call; separate adversarial pass |
 | One concern per PR (one tab, one store, one TS file) | 📐 | PR template / reviewer call |
+| Comments state non-obvious why (rationale) or what (functionality) concisely — no restating what well-named code shows, no personality/filler, skip it if removing wouldn't confuse a future reader. Before finishing, re-check new comments against this row | 📐 | Review call |
 
 ## Phase plan
 - **Phase 0** — land cheap tooling: MSP-from-components ban, filename-case, Stylelint colors, pre-commit hooks for locales and generated paths.

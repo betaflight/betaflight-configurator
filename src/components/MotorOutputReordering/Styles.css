@@ -1,6 +1,8 @@
+/* No `height: 100%` on the flex containers below: the dialog they live in is sized
+   `height: fit-content` (see main.less), and WebKit resolves a percentage height against
+   that intrinsic height as 0 instead of auto, collapsing the whole modal on macOS. */
 .motorOutputReorderComponent {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
@@ -10,13 +12,11 @@
 
 #dialogMotorOutputReorderMainContent {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
 #dialogMotorOutputReorderWarning {
     display: flex;
-    height: 100%;
     flex-flow: column;
 }
 
@@ -30,7 +30,7 @@
 }
 
 #dialogMotorOutputReorderSave {
-    margin-right: 0px;
+    margin-inline-end: 0px;
 }
 
 .motorsRemapToggleParentContainer {
@@ -45,7 +45,7 @@
 }
 
 .motorsRemapToggleNarrow {
-    margin-right: 12px;
+    margin-inline-end: 12px;
     display: flex;
     align-items: center;
 }
@@ -67,8 +67,8 @@
 #motorOutputReorderSaveStartOverButtonsPanel {
     position: absolute;
     bottom: 4px;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     padding: 0 10px;
     box-sizing: border-box;
 }

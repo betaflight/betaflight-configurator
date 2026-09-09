@@ -1,7 +1,5 @@
 {
-    "**/*.{js,vue}": [
-        "prettier --write --ignore-unknown",
-        "eslint --fix --ext .js,.vue"
-    ],
+    "**/*.{js,vue,mjs,ts}": ["prettier --write --ignore-unknown", "eslint --fix"],
+    "**/*.{ts,vue}": ["bash -c 'npm run typecheck'"],
     "**/*.{less,css}": ["prettier --write --ignore-unknown"]
 }

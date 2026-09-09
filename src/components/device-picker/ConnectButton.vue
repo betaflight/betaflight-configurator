@@ -56,6 +56,7 @@
 <script>
 import { defineComponent, computed, ref } from "vue";
 import { useConnectionStore } from "../../stores/connection";
+import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
 import DeviceHandler from "../../js/device_handler";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
@@ -68,15 +69,46 @@ function selectAndConnect(path) {
     connectDisconnect();
 }
 
+// A manual target (a serial path, or a tcp://ws:// address such as an ELRS Wi-Fi
+// module) connects through the "manual" pseudo-device, which reads portOverride.
+function connectManual(portOverride) {
+    DeviceHandler.devicePicker.portOverride = portOverride;
+    setConfig({ portOverride });
+    selectAndConnect("manual");
+}
+
+/**
+ * @param {Array<{displayName: string, path: string}>} devices - an enumerated device list
+ * @param {string} icon - the icon for that kind of device
+ * @returns {Array<object>} dropdown items connecting to each device
+ */
+function portItems(devices, icon) {
+    return devices.map((device) => ({
+        label: device.displayName,
+        icon,
+        onSelect: () => selectAndConnect(device.path),
+    }));
+}
+
+/**
+ * @param {Array<{name: string, url: string}>} bookmarks - the saved targets
+ * @returns {Array<object>} dropdown items connecting to each saved address
+ */
+function bookmarkItems(bookmarks) {
+    return bookmarks.map((bookmark) => ({
+        label: bookmark.name,
+        icon: "i-lucide-bookmark",
+        onSelect: () => connectManual(bookmark.url),
+    }));
+}
+
 function onDialogConfirm({ mode, version, portOverride }) {
     if (mode === "virtual") {
         DeviceHandler.devicePicker.virtualMspVersion = version;
         setConfig({ virtualMspVersion: version });
         selectAndConnect("virtual");
     } else {
-        DeviceHandler.devicePicker.portOverride = portOverride;
-        setConfig({ portOverride });
-        selectAndConnect("manual");
+        connectManual(portOverride);
     }
 }
 
@@ -90,11 +122,14 @@ export default defineComponent({
     components: { ConnectOptionsDialog },
     setup() {
         const connectionStore = useConnectionStore();
+        const bookmarksStore = useConnectionBookmarksStore();
 
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
         const isVirtualMode = computed(() => connectionStore.virtualMode);
         const connectedTo = computed(() => connectionStore.connectedTo);
+
+        const tcpPorts = computed(() => DeviceHandler.currentTcpPorts);
 
         const disconnectLabel = computed(() => {
             if (isVirtualMode.value) {
@@ -103,6 +138,10 @@ export default defineComponent({
             const path = connectedTo.value || "";
             if (path.startsWith("bluetooth")) {
                 return i18n.getMessage("disconnectBluetooth");
+            }
+            const bridge = tcpPorts.value.find((d) => d.path === path);
+            if (bridge) {
+                return i18n.getMessage("disconnectBridge", [bridge.displayName]);
             }
             if (/^(tcp|ws|wss):\/\//.test(path)) {
                 return i18n.getMessage("disconnectManual");
@@ -121,7 +160,7 @@ export default defineComponent({
             if (!path || path === "noselection") {
                 return null;
             }
-            const all = [...serialPorts.value, ...usbPorts.value, ...bluetoothPorts.value];
+            const all = [...serialPorts.value, ...usbPorts.value, ...bluetoothPorts.value, ...tcpPorts.value];
             return all.find((d) => d.path === path)?.displayName ?? null;
         });
 
@@ -131,6 +170,11 @@ export default defineComponent({
             }
             if (selectedDevice.value === "virtual") {
                 return i18n.getMessage("connectVirtual");
+            }
+            // "manual" is never in the device lists, so name it by its bookmark or address.
+            if (selectedDevice.value === "manual") {
+                const url = DeviceHandler.devicePicker.portOverride;
+                return bookmarksStore.find(url)?.name || url || i18n.getMessage("connect");
             }
             return selectedDisplayName.value ?? i18n.getMessage("connect");
         });
@@ -144,51 +188,39 @@ export default defineComponent({
             dialogOpen.value = true;
         }
 
-        function buildDeviceItems() {
-            const expertMode = isExpertModeEnabled();
-            const devices = [];
-            if (DeviceHandler.showSerialOption) {
-                for (const d of serialPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-usb",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (DeviceHandler.showUsbOption) {
-                for (const d of usbPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-cpu",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (DeviceHandler.showBluetoothOption) {
-                for (const d of bluetoothPorts.value) {
-                    devices.push({
-                        label: d.displayName,
-                        icon: "i-lucide-bluetooth",
-                        onSelect: () => selectAndConnect(d.path),
-                    });
-                }
-            }
-            if (expertMode && DeviceHandler.showVirtualMode) {
-                devices.push({
+        function buildVirtualItems() {
+            return [
+                {
                     label: i18n.getMessage("portsSelectVirtual"),
                     icon: "i-lucide-flask-conical",
                     onSelect: () => openConnectDialog("virtual"),
-                });
-            }
-            if (expertMode && DeviceHandler.showManualMode) {
-                devices.push({
+                },
+            ];
+        }
+
+        // Saved targets connect in one click; the dialog below them is where they are managed.
+        function buildManualItems() {
+            return [
+                ...bookmarkItems(bookmarksStore.bookmarks),
+                {
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
                     onSelect: () => openConnectDialog("manual"),
-                });
-            }
-            return devices;
+                },
+            ];
+        }
+
+        function buildDeviceItems() {
+            const expertMode = isExpertModeEnabled();
+
+            return [
+                ...portItems(DeviceHandler.showSerialOption ? serialPorts.value : [], "i-lucide-usb"),
+                ...portItems(DeviceHandler.showUsbOption ? usbPorts.value : [], "i-lucide-cpu"),
+                ...portItems(DeviceHandler.showBluetoothOption ? bluetoothPorts.value : [], "i-lucide-bluetooth"),
+                ...portItems(DeviceHandler.showTcpOption ? tcpPorts.value : [], "i-lucide-wifi"),
+                ...(expertMode && DeviceHandler.showVirtualMode ? buildVirtualItems() : []),
+                ...(expertMode && DeviceHandler.showManualMode ? buildManualItems() : []),
+            ];
         }
 
         function buildPermissionItems() {

@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories { google(); mavenCentral(); gradlePluginPortal() }
+    plugins {
+        id 'com.android.library' version '8.5.2'
+        id 'org.jetbrains.kotlin.android' version '1.9.24'
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories { mavenCentral(); google() }
+}
+rootProject.name = 'tauri-plugin-dfu-android'
+include ':tauri-android'
+project(':tauri-android').projectDir = new File('./.tauri/tauri-api')

@@ -1,14 +1,26 @@
+import groovy.json.JsonSlurper
+import java.time.Year
+
 apply plugin: 'com.android.application'
 
+def appVersion = new JsonSlurper().parseText(file("../../package.json").text).version
+def buildNumberEnv = System.getenv("ANDROID_BUILD_NUMBER")
+def buildNumber = buildNumberEnv?.isInteger() ? buildNumberEnv.toInteger() : 0
+
 android {
+    // namespace stays betaflight.app because the Java sources live in that
+    // package; only applicationId identifies the installed app.
     namespace = "betaflight.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "betaflight.app"
+        applicationId "com.betaflight.app.capacitor"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // Mirrors the Tauri Android scheme in src-tauri/gen/android/app/build.gradle.kts:
+        // <calendar year>000000 + CI build number, floored at 2026006000, so every
+        // build outranks the last. Valid until 2099 (< 2.1e9 cap).
+        versionCode Math.max(Year.now().value * 1000000, 2026006000) + buildNumber
+        versionName buildNumber > 0 ? "${appVersion}.${buildNumber}" : appVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

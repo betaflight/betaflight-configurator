@@ -38,8 +38,8 @@
 @media (max-width: 675px) {
     .app-main-pane,
     .blackbox-viewer-root.has-log div.log-seek-bar {
-        padding-left: 0;
-        padding-right: 0;
+        padding-inline-start: 0;
+        padding-inline-end: 0;
     }
 
     .app-main-pane .graph-row {
@@ -68,7 +68,7 @@
     }
 
     .video-top-controls .toolbar-panel {
-        margin-right: 2px;
+        margin-inline-end: 2px;
     }
 
     div.graph-row {
@@ -79,7 +79,7 @@
 /* With video */
 @media (max-width: 920px) {
     .blackbox-viewer-root.has-video .video-top-controls .toolbar-panel {
-        margin-right: 1px;
+        margin-inline-end: 1px;
     }
 }
 
@@ -89,10 +89,10 @@
     position: fixed;
     top: 15px;
     bottom: 100px;
-    left: 0;
-    right: 0;
-    padding-left: 15px;
-    padding-right: 15px;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    padding-inline-start: 15px;
+    padding-inline-end: 15px;
     display: none;
 }
 
@@ -125,7 +125,7 @@
     background-color: var(--surface-100);
     color: var(--text-secondary);
     padding: 0.75rem;
-    margin-left: 6px;
+    margin-inline-start: 6px;
     border-radius: 6px;
     border: 1px solid var(--border-color, #e5e5e5);
     min-width: 135px;
@@ -156,7 +156,7 @@
 #graphCanvas {
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     width: 100%;
     height: 100%;
     background-color: var(--graph-background);
@@ -168,7 +168,7 @@
 #stickCanvas {
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     display: none;
 }
 
@@ -183,9 +183,9 @@
     position: absolute;
     display: block;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
     bottom: 0;
-    left: 0;
+    inset-inline-start: 0;
     z-index: 9999;
     content: "";
     background-color: var(--surface-200, hsl(0, 0%, 50%));
@@ -196,9 +196,9 @@
     position: absolute;
     display: block;
     top: calc(30%);
-    right: 0;
+    inset-inline-end: 0;
     bottom: 0;
-    left: 0;
+    inset-inline-start: 0;
     z-index: 10001;
     content: "No GPS Data";
     text-align: center;
@@ -234,7 +234,7 @@
     overflow: hidden;
     opacity: 0;
     top: 0;
-    left: 340px;
+    inset-inline-start: 340px;
     z-index: 9;
     position: absolute;
 }
@@ -267,8 +267,8 @@
     height: 0;
     overflow: hidden;
     opacity: 0;
-    left: 5px;
-    float: left;
+    inset-inline-start: 5px;
+    float: inline-start;
     z-index: 9;
     position: absolute;
     min-width: 150px;
@@ -284,22 +284,22 @@
     height: 0;
     overflow: hidden;
     opacity: 0;
-    left: 170px;
-    float: left;
+    inset-inline-start: 170px;
+    float: inline-start;
     z-index: 9;
     position: absolute;
     min-width: 160px;
 }
 
 .analyser .analyser-slider-x {
-    left: 975px;
+    inset-inline-start: 975px;
     top: 5px;
     position: absolute;
     z-index: 9;
 }
 
 .analyser .analyser-slider-y {
-    left: 1085px;
+    inset-inline-start: 1085px;
     top: 30px;
     position: absolute;
     z-index: 9;
@@ -342,7 +342,7 @@
 #seekbarToolbar {
     position: absolute;
     top: 8px;
-    left: 20px;
+    inset-inline-start: 20px;
 }
 
 .log-seek-bar:hover .non-shift #seekbarType {
@@ -363,7 +363,7 @@
 .log-graph video {
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     width: 100%;
     height: 100%;
     display: block;
@@ -376,8 +376,8 @@
 .graph-legend-field {
     margin-bottom: 0.5em;
     cursor: pointer;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
+    padding-inline-start: 0.7em;
+    padding-inline-end: 0.7em;
 }
 
 .graph-legend-field-name:hover {
@@ -385,7 +385,7 @@
 }
 
 .graph-legend-field-value {
-    float: right;
+    float: inline-end;
 }
 
 .graph-legend-field-settings {
@@ -393,7 +393,7 @@
     color: var(--button-text);
     opacity: 0.8;
     font-weight: bold;
-    padding-left: 0.3em;
+    padding-inline-start: 0.3em;
 }
 
 .graph-legend-field.highlight > .graph-legend-field-settings {
@@ -407,8 +407,8 @@
 
 .graph-legend-field-visibility {
     cursor: pointer;
-    float: right;
-    margin-left: 0.7em;
+    float: inline-end;
+    margin-inline-start: 0.7em;
 }
 
 .blackbox-viewer-root.has-video .graph-row,
@@ -449,20 +449,20 @@
 
 .video-top-controls .toolbar-panel {
     display: inline-block;
-    margin-right: 12px;
-    padding-right: 12px;
+    margin-inline-end: 12px;
+    padding-inline-end: 12px;
     vertical-align: middle;
-    border-right: 1px solid var(--border-color, #e5e5e5);
+    border-inline-end: 1px solid var(--border-color, #e5e5e5);
 }
 
 .video-top-controls .toolbar-panel:last-child {
-    border-right: none;
-    margin-right: 0;
-    padding-right: 0;
+    border-inline-end: none;
+    margin-inline-end: 0;
+    padding-inline-end: 0;
 }
 
 .blackbox-viewer-root.dark .video-top-controls .toolbar-panel {
-    border-right-color: var(--surface-800, hsl(0, 0%, 25%));
+    border-inline-end-color: var(--surface-800, hsl(0, 0%, 25%));
 }
 
 .video-top-controls h4 {
@@ -501,8 +501,8 @@
     display: block;
     position: fixed;
     bottom: 32px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-inline-start: 15px;
+    padding-inline-end: 15px;
 }
 
 .log-workspace-panel {

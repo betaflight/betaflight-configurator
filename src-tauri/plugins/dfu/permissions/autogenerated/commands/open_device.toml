@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-open-device"
+description = "Enables the open_device command without any pre-configured scope."
+commands.allow = ["open_device"]
+
+[[permission]]
+identifier = "deny-open-device"
+description = "Denies the open_device command without any pre-configured scope."
+commands.deny = ["open_device"]

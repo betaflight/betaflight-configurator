@@ -56,6 +56,7 @@ const MSP = {
 
     callbacks: [],
     parked: new Map(), // errorAware requests parked behind an in-flight same-code request
+    onTimeout: null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
     packet_error: 0,
     unsupported: 0,
 
@@ -517,7 +518,17 @@ const MSP = {
         }
         return true;
     },
-    _transmit(code, data, callback_sent, callback_msp, errorAware) {
+    /**
+     * Transmit an MSP request and register its response callback.
+     * @param {number} code MSP command code
+     * @param {ArrayBuffer|Array<number>|false|undefined} data optional command payload
+     * @param {Function|false|undefined} callback_sent callback invoked after the bytes are sent
+     * @param {Function|false|undefined} callback_msp callback invoked with the MSP response
+     * @param {boolean} errorAware whether timeout and cancellation errors settle the request
+     * @param {boolean} [notifyTimeout=true] whether timeout exhaustion invokes MSP.onTimeout
+     * @returns {boolean} true when the request is queued
+     */
+    _transmit(code, data, callback_sent, callback_msp, errorAware, notifyTimeout = true) {
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
 
@@ -535,6 +546,7 @@ const MSP = {
                     callback: callback_msp,
                     callbackSent: callback_sent,
                     errorAware: true,
+                    notifyTimeout,
                 });
                 return true;
             }
@@ -548,6 +560,7 @@ const MSP = {
             callback: callback_msp,
             callbackSent: callback_sent,
             errorAware,
+            notifyTimeout,
             attempts: 1,
             start: performance.now(),
         };
@@ -574,22 +587,29 @@ const MSP = {
     _arm_timer(obj) {
         obj.timer = setTimeout(() => this._on_timeout(obj), this.TIMEOUT);
     },
+    /**
+     * Retry/timeout handler for a single queued MSP request.
+     *
+     * While retries remain it re-sends the request buffer and re-arms the timer. On exhaustion it
+     * clears the timer and, for errorAware requests, removes the queue entry, settles its awaiter
+     * with an {@link MspTimeoutError}, and releases any same-code requests parked behind it. Legacy
+     * (non-errorAware) requests are left queued so a late response can still resolve them.
+     *
+     * After an errorAware exhaustion it notifies {@link MSP.onTimeout}. The dead-versus-slow-link
+     * decision is deliberately made by that hook from the FC's actual traffic (see
+     * `handleConnectionTimeout` in serial_backend), not from this per-request failure — so a lone
+     * timeout on a high-latency transport does not tear down a healthy connection.
+     *
+     * @param {object} obj - the queued request entry (`code`, `requestBuffer`, `attempts`, `errorAware`, `callback`, `timer`, …).
+     * @returns {void}
+     */
     _on_timeout(obj) {
         if (obj.attempts < this.MAX_RETRIES) {
             obj.attempts++;
             console.warn(
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
-            serial.send(obj.requestBuffer, (_sendInfo) => {
-                obj.stop = performance.now();
-                const executionTime = Math.round(obj.stop - obj.start);
-                // We should probably give up connection if the request takes too long ?
-                if (executionTime > 5000) {
-                    console.warn(
-                        `MSP: data request took too long: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
-                    );
-                }
-            });
+            serial.send(obj.requestBuffer);
             this._arm_timer(obj);
             return;
         }
@@ -598,7 +618,7 @@ const MSP = {
         obj.timer = null;
 
         if (!obj.errorAware) {
-            // legacy: give up retrying but leave the entry queued so a late response still fires it
+            // Legacy path: stop retrying but keep the entry queued so a late response still resolves it.
             return;
         }
 
@@ -612,6 +632,13 @@ const MSP = {
             console.error("MSP callback threw on timeout:", callbackError);
         }
         this._release_parked(obj.code);
+
+        // Notify the liveness hook after a full errorAware exhaustion unless the caller expects
+        // the FC to be temporarily silent (for example while erasing dataflash). The request still
+        // rejects normally so that operation-specific retry or failure handling can proceed.
+        if (obj.notifyTimeout) {
+            this.onTimeout?.(obj.code);
+        }
     },
     _park(code, entry) {
         let queue = this.parked.get(code);
@@ -647,10 +674,14 @@ const MSP = {
         });
     },
     /**
-     * resolves: {command: code, data: data, length: message_length}
-     * rejects: MspTimeoutError, MspCancelledError or MspCrcError
+     * @param {number} code MSP command code
+     * @param {ArrayBuffer|Array<number>|false} data optional command payload
+     * @param {{notifyTimeout?: boolean}} options set notifyTimeout false when request silence is
+     * expected and must not trigger the connection-liveness watchdog
+     * @returns {Promise<object|undefined>} resolves with {command, data, length}; rejects with
+     * MspTimeoutError, MspCancelledError or MspCrcError
      */
-    async promise(code, data) {
+    async promise(code, data, { notifyTimeout = true } = {}) {
         if (code === undefined || CONFIGURATOR.virtualMode) {
             return undefined;
         }
@@ -672,6 +703,7 @@ const MSP = {
                     }
                 },
                 true,
+                notifyTimeout,
             );
         });
     },

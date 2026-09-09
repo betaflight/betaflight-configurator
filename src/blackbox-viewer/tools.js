@@ -217,12 +217,13 @@ export function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, m
         if (pid_process_denom != null) {
             returnString += `/${Number.parseFloat((1000 / (loopTime * pid_process_denom)).toFixed(3))}kHz`;
             if (unsynced_fast_pwm != null) {
-                returnString +=
-                    unsynced_fast_pwm === 0
-                        ? "/SYNCED"
-                        : motor_pwm_rate != null
-                          ? `/${Number.parseFloat((motor_pwm_rate / 1000).toFixed(3))}kHz`
-                          : "UNSYNCED";
+                if (unsynced_fast_pwm === 0) {
+                    returnString += "/SYNCED";
+                } else if (motor_pwm_rate != null) {
+                    returnString += `/${Number.parseFloat((motor_pwm_rate / 1000).toFixed(3))}kHz`;
+                } else {
+                    returnString += "UNSYNCED";
+                }
             }
         }
         returnString += ")";

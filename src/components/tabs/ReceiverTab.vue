@@ -10,7 +10,13 @@
             <div class="grid-row grid-box col5">
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
-                    <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
+                    <UiBox
+                        :title="$t('receiverModelPreview')"
+                        type="neutral"
+                        collapsible
+                        :padding="false"
+                        class="bg-muted"
+                    >
                         <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>
@@ -55,7 +61,7 @@
                 <div class="col-span-3">
                     <!-- Receiver Mode -->
                     <div class="receiver">
-                        <UiBox :title="$t('configurationReceiver')">
+                        <UiBox :title="$t('configurationReceiver')" type="neutral" collapsible>
                             <SettingRow :label="$t('configurationReceiverMode')">
                                 <USelect
                                     :items="rxModeOptions"
@@ -81,6 +87,19 @@
                                         }"
                                         class="min-w-52"
                                         :ui="{ content: 'max-h-72' }"
+                                    />
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="rxPortAvailable"
+                                    :label="$t('receiverSerialPort')"
+                                    :help="$t('receiverSerialPortHelp')"
+                                >
+                                    <USelect
+                                        v-model="rxPortIdentifier"
+                                        :items="rxPortOptions"
+                                        :disabled="!rxPortWritable"
+                                        class="min-w-52"
+                                        @update:model-value="onRxPortChange"
                                     />
                                 </SettingRow>
                                 <UiBox highlight v-if="showSomeRxTypesDisabled">
@@ -140,22 +159,14 @@
                     </div>
 
                     <div class="grid-box col6">
-                        <!-- Telemetry -->
-                        <UiBox
-                            :title="$t('configurationTelemetry')"
-                            :help="$t('configurationTelemetryHelp')"
-                            class="col-span-2"
-                        >
-                            <SettingRow :label="$t('featureTELEMETRY')">
-                                <USwitch
-                                    :model-value="isTelemetryEnabled"
-                                    @update:model-value="(checked) => toggleTelemetry(checked)"
-                                />
-                            </SettingRow>
-                        </UiBox>
-
                         <!-- RSSI -->
-                        <UiBox :title="$t('configurationRSSI')" :help="$t('configurationRSSIHelp')" class="col-span-3">
+                        <UiBox
+                            :title="$t('configurationRSSI')"
+                            :help="$t('configurationRSSIHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-3"
+                        >
                             <div class="flex justify-between gap-2 flex-wrap">
                                 <SettingRow :label="$t('featureRSSI_ADC')">
                                     <USwitch
@@ -180,7 +191,7 @@
                         </UiBox>
 
                         <!-- Channel Map -->
-                        <UiBox :title="$t('receiverChannelMap')" class="col-span-1">
+                        <UiBox :title="$t('receiverChannelMap')" type="neutral" collapsible class="col-span-1">
                             <SettingRow>
                                 <UFieldGroup>
                                     <UInput
@@ -203,8 +214,83 @@
                             </SettingRow>
                         </UiBox>
 
+                        <!-- Camera Control -->
+                        <UiBox
+                            v-if="rcdevicePortAvailable"
+                            :title="$t('rcdeviceSectionTitle')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-2"
+                        >
+                            <SettingRow :label="$t('rcdeviceSerialPort')" :help="$t('rcdeviceSerialPortHelp')">
+                                <USelect
+                                    v-model="rcdevicePortIdentifier"
+                                    :items="rcdevicePortOptions"
+                                    :disabled="!rcdevicePortWritable"
+                                    size="xs"
+                                    class="min-w-28"
+                                    @update:model-value="onSerialDeviceChange"
+                                />
+                            </SettingRow>
+                        </UiBox>
+
+                        <!-- Telemetry -->
+                        <UiBox
+                            :title="$t('configurationTelemetry')"
+                            :help="$t('configurationTelemetryHelp')"
+                            type="neutral"
+                            collapsible
+                            class="col-span-6"
+                        >
+                            <SettingRow :label="$t('featureTELEMETRY')">
+                                <USwitch
+                                    :model-value="isTelemetryEnabled"
+                                    @update:model-value="(checked) => toggleTelemetry(checked)"
+                                />
+                            </SettingRow>
+                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <UiBox
+                                    v-for="{ port, instance } in visibleTelemetryPorts"
+                                    :key="instance"
+                                    :title="$t('telemetryInstanceTitle', { 1: instance })"
+                                    type="neutral"
+                                >
+                                    <SettingRow :label="$t('telemetryInstanceProtocol')">
+                                        <USelect
+                                            v-model="port.selectedProtocol"
+                                            :items="port.protocolOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstancePort')">
+                                        <USelect
+                                            v-model="port.selectedIdentifier"
+                                            :items="port.options"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                    <SettingRow :label="$t('telemetryInstanceBaud')">
+                                        <USelect
+                                            v-model="port.selectedBaud"
+                                            :items="port.baudOptions"
+                                            :disabled="!port.writable"
+                                            size="xs"
+                                            class="min-w-40"
+                                            @update:model-value="onSerialDeviceChange"
+                                        />
+                                    </SettingRow>
+                                </UiBox>
+                            </div>
+                        </UiBox>
+
                         <!-- Stick settings -->
-                        <UiBox :title="$t('receiverStickRange')" class="col-span-6">
+                        <UiBox :title="$t('receiverStickRange')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverStickMin')"
@@ -258,7 +344,7 @@
                         </UiBox>
 
                         <!-- Deadband settings -->
-                        <UiBox :title="$t('receiverDeadband')" class="col-span-6">
+                        <UiBox :title="$t('receiverDeadband')" type="neutral" collapsible class="col-span-6">
                             <div class="grid grid-cols-3 gap-2">
                                 <SettingColumn
                                     :label="$t('receiverDeadband')"
@@ -310,7 +396,7 @@
                     </div>
 
                     <!-- RC Smoothing -->
-                    <UiBox :title="$t('receiverRcSmoothing')" class="col-span-6">
+                    <UiBox :title="$t('receiverRcSmoothing')" type="neutral" collapsible class="col-span-6">
                         <SettingRow :label="$t('receiverRcSmoothing')">
                             <USwitch
                                 :model-value="rxConfig.rcSmoothing === 1"
@@ -491,10 +577,17 @@
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
+                size="xs"
             />
-            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
-            <UFieldGroup size="sm" orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+            <UButton
+                :label="$t('receiverButtonBind')"
+                @click="sendBind"
+                v-if="showBindButton"
+                variant="soft"
+                size="xs"
+            />
+            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
                     {{ $t("receiverButtonSave") }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -510,11 +603,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving } from "@/composables/useSaving";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -537,6 +632,8 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
@@ -567,7 +664,7 @@ const selectedRxMode = ref(0);
 let model = null;
 let rateCurve = null;
 let currentRates = null;
-let clock = null;
+let timer = null;
 let keepRendering = true;
 let animationFrameId = null;
 
@@ -625,14 +722,69 @@ const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 // RX link, so the banner/tint warn that channel values are failsafe output.
 const failsafeActive = computed(() => fcStore.failsafeActive);
 
-// Dirty state tracking
-const savedSnapshot = ref("");
+// From API 1.49 the port lives on the RX parameter group rather than the shared port function
+// mask, so it is assigned here instead of on the (by then read-only) ports tab.
+const {
+    available: rxPortAvailable,
+    writable: rxPortWritable,
+    options: rxPortOptions,
+    selectedIdentifier: rxPortIdentifier,
+    load: loadRxPort,
+    write: writeRxPort,
+} = useFeaturePort({ setting: "rx_uart" });
 
-function takeSnapshot() {
+// MAX_TELEMETRY_PROVIDERS is a compile-time constant that never reaches the app, so each instance
+// is probed and only the ones this build has report themselves available. reactive() rather than a
+// destructure because the template iterates them.
+const telemetryPorts = [1, 2, 3].map((instance) =>
+    reactive(
+        useFeaturePort({
+            setting: `telemetry_${instance}_uart`,
+            baud: { setting: `telemetry_${instance}_baud` },
+            protocol: { setting: `telemetry_${instance}_protocol` },
+        }),
+    ),
+);
+
+const isTelemetryInstanceInUse = (port) =>
+    port.selectedIdentifier !== PORT_NONE || (port.selectedProtocol && port.selectedProtocol !== "NONE");
+
+// An unused instance is noise, so each one is revealed by the one before it filling in.
+const visibleTelemetryPorts = computed(() => {
+    const supported = telemetryPorts
+        .map((port, index) => ({ port, instance: index + 1 }))
+        .filter(({ port }) => port.available);
+    return supported.filter(
+        (entry, position) =>
+            position === 0 ||
+            isTelemetryInstanceInUse(supported[position - 1].port) ||
+            isTelemetryInstanceInUse(entry.port),
+    );
+});
+
+const {
+    available: rcdevicePortAvailable,
+    writable: rcdevicePortWritable,
+    options: rcdevicePortOptions,
+    selectedIdentifier: rcdevicePortIdentifier,
+    load: loadRcdevicePort,
+    write: writeRcdevicePort,
+} = useFeaturePort({ setting: "rcdevice_uart" });
+
+// Dirty state tracking
+/** @returns {string} serialized receiver state for dirty comparison */
+function serializeReceiverState() {
     return JSON.stringify({
         channelMap: channelMapString.value,
         rxMode: selectedRxMode.value,
         serialrxProvider: rxConfig.value?.serialrx_provider,
+        rxPortIdentifier: rxPortIdentifier.value,
+        rcdevicePortIdentifier: rcdevicePortIdentifier.value,
+        telemetryPorts: telemetryPorts.map((port) => [
+            port.selectedProtocol,
+            port.selectedIdentifier,
+            port.selectedBaud,
+        ]),
         rxSpiProtocol: rxConfig.value?.rxSpiProtocol,
         elrsModelId: rxConfig.value?.elrsModelId,
         stickMin: rxConfig.value?.stick_min,
@@ -657,9 +809,7 @@ function takeSnapshot() {
     });
 }
 
-const dirty = computed(() => {
-    return savedSnapshot.value !== "" && takeSnapshot() !== savedSnapshot.value;
-});
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
 const saveMenuItems = computed(() => [
     [
@@ -956,6 +1106,17 @@ function onRxModeChange() {
     }
 }
 
+// Deliberately a change handler rather than a watcher: seeding the selection during load would
+// trip a watcher and leave the tab asking for a reboot every time it is opened.
+function onRxPortChange() {
+    needReboot.value = true;
+}
+
+// A telemetry or camera port only takes effect once the firmware opens it.
+function onSerialDeviceChange() {
+    needReboot.value = true;
+}
+
 // Actions
 function resetRefreshRate() {
     refreshRate.value = 50;
@@ -967,8 +1128,11 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 370;
-    const windowHeight = 550;
+    const windowWidth = 420;
+    // Minimum that fits the initial state: gimbals + aux sliders + the expanded arming
+    // warning. Collapsing the warning or dismissing it leaves slack; resizing from there
+    // is left to the user rather than driven from the app.
+    const windowHeight = 600;
 
     const rxFunction = (channels) => {
         if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
@@ -978,13 +1142,22 @@ function openSticksWindow() {
         return false;
     };
 
+    // Resolve against the document base rather than the server root: the build uses
+    // `base: "./"`, so the app can be served from a sub-path (PR previews) or from a
+    // custom scheme (Tauri/Capacitor), where an absolute "/..." path would miss.
+    const stickWindowUrl = new URL("components/tabs/receiver-msp/receiver_msp.html", document.baseURI).href;
+
     const createdWindow = globalThis.open(
-        "/components/tabs/receiver-msp/receiver_msp.html",
+        stickWindowUrl,
         "receiver_msp",
         `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
     if (createdWindow) {
         createdWindow.setRawRx = rxFunction;
+        // The popup is a separate document with its own module graph, so it cannot import the
+        // initialised i18n instance — hand it over the same way as setRawRx above. This used to
+        // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
+        createdWindow.i18n = i18n;
         DarkTheme.isDarkThemeEnabled((isEnabled) => {
             windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
         });
@@ -996,115 +1169,142 @@ async function refreshTab() {
     gui_log(t("receiverDataRefreshed"));
 }
 
+// Find the rx mode bit for the currently enabled "select"/"rxMode" feature, or -1 if none is.
+function findSelectedRxMode(featuresApi) {
+    for (const feature of featuresApi.getFeatures()) {
+        if (feature.mode === "select" && feature.group === "rxMode" && featuresApi.isEnabled(feature.name)) {
+            return feature.bit;
+        }
+    }
+    return -1;
+}
+
+// Look up a stored ELRS binding phrase for the FC's current UID, if any.
+function findElrsBindingPhrase(elrsUid) {
+    if (!elrsUid) {
+        return null;
+    }
+    return lookupElrsBindingPhrase(elrsUid.join(","));
+}
+
 // Load configuration
 async function loadConfig() {
-    try {
-        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC);
-        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-        await MSP.promise(MSPCodes.MSP_RC_TUNING);
-        await MSP.promise(MSPCodes.MSP_RX_MAP);
-        await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
-
-        // Update local state from FC
-        updateChannelMapFromRcMap();
-
-        // Initialize selectedRxMode from feature mask
-        if (features.value?.features?.getFeatures?.()) {
-            let foundRxMode = -1;
-            for (const feature of features.value.features.getFeatures()) {
-                if (feature.mode === "select" && feature.group === "rxMode") {
-                    if (features.value.features.isEnabled(feature.name)) {
-                        foundRxMode = feature.bit;
-                        break;
-                    }
-                }
+    await runTabLoad(
+        async () => {
+            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+            await MSP.promise(MSPCodes.MSP_RC_TUNING);
+            await MSP.promise(MSPCodes.MSP_RX_MAP);
+            await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
+            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await loadRxPort();
+            await loadRcdevicePort();
+            for (const port of telemetryPorts) {
+                await port.load();
             }
-            selectedRxMode.value = foundRxMode;
-        }
 
-        // Load ELRS binding phrase if applicable
-        if (elrsBindingPhraseEnabled.value && rxConfig.value?.elrsUid) {
-            const uidString = rxConfig.value.elrsUid.join(",");
-            const storedPhrase = lookupElrsBindingPhrase(uidString);
+            // Update local state from FC
+            updateChannelMapFromRcMap();
+
+            // Initialize selectedRxMode from feature mask
+            if (features.value?.features?.getFeatures?.()) {
+                selectedRxMode.value = findSelectedRxMode(features.value.features);
+            }
+
+            // Load ELRS binding phrase if applicable
+            const storedPhrase = elrsBindingPhraseEnabled.value ? findElrsBindingPhrase(rxConfig.value?.elrsUid) : null;
             if (storedPhrase) {
                 elrsBindingPhrase.value = storedPhrase;
             }
-        }
 
-        // Set RC smoothing modes based on cutoff values
-        setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
-        if (showThrottleSmoothingOptions.value) {
-            throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
-        } else {
-            feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
-        }
+            // Set RC smoothing modes based on cutoff values
+            setpointManualMode.value = rxConfig.value?.rcSmoothingSetpointCutoff === 0 ? "0" : "1";
+            if (showThrottleSmoothingOptions.value) {
+                throttleManualMode.value = rxConfig.value?.rcSmoothingThrottleCutoff === 0 ? "0" : "1";
+            } else {
+                feedforwardManualMode.value = rxConfig.value?.rcSmoothingFeedforwardCutoff === 0 ? "0" : "1";
+            }
 
-        // Load saved refresh rate
-        const savedRate = getConfig("rx_refresh_rate");
-        if (savedRate?.rx_refresh_rate) {
-            refreshRate.value = savedRate.rx_refresh_rate;
-        }
+            // Load saved refresh rate
+            const savedRate = getConfig("rx_refresh_rate");
+            if (savedRate?.rx_refresh_rate) {
+                refreshRate.value = savedRate.rx_refresh_rate;
+            }
 
-        needReboot.value = false;
-        savedSnapshot.value = takeSnapshot();
-    } catch (e) {
-        console.error("Failed to load Receiver configuration", e);
-    }
+            needReboot.value = false;
+            markClean();
+        },
+        (e) => console.error("Failed to load Receiver configuration", e),
+    );
 }
 
 // Save configuration
 const saveConfig = (withReboot = false) =>
-    runSave(
-        async () => {
-            // Update RC_MAP from channel map string
-            validateChannelMap();
+    runSave(async () => {
+        const savedSnapshot = takeSnapshot();
 
-            // Handle ELRS binding phrase
-            if (elrsBindingPhraseEnabled.value) {
-                const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
-                if (elrsUidChars.length === 6) {
-                    fcStore.rxConfig.elrsUid = elrsUidChars;
-                    saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
-                } else {
-                    fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
-                }
-            }
+        // Update RC_MAP from channel map string
+        validateChannelMap();
 
-            // Set cutoffs to 0 for auto mode
-            if (setpointManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
-            }
-            if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
-            }
-            if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-                fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
-            }
-
-            // Save sequence
-            await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
-            await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
-            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-
-            if (withReboot) {
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-                await saveAndReboot();
+        // Handle ELRS binding phrase
+        if (elrsBindingPhraseEnabled.value) {
+            const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
+            if (elrsUidChars.length === 6) {
+                fcStore.rxConfig.elrsUid = elrsUidChars;
+                saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
             } else {
-                await saveToEeprom();
-                gui_log(t("receiverConfigSaved") || "Configuration saved");
-                savedSnapshot.value = takeSnapshot();
+                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
             }
+        }
 
-            needReboot.value = false;
-        },
-        {
-            onError: (e) => console.error("Failed to save configuration", e),
-        },
-    );
+        // Set cutoffs to 0 for auto mode
+        if (setpointManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
+        }
+        if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
+        }
+        if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
+            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
+        }
+
+        // Save sequence
+        await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
+        await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
+        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+
+        // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
+        // and the persist below serialises that group, so this has to sit between the two.
+        // Throwing skips the persist, so a refused port leaves nothing written to EEPROM.
+        try {
+            await writeRxPort();
+            await writeRcdevicePort();
+            for (const port of telemetryPorts) {
+                await port.write();
+            }
+        } catch (error) {
+            gui_log(t("receiverSerialPortSaveFailed"));
+            throw error;
+        }
+
+        // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
+        // to reach the FC whether or not the save also reboots.
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
+        if (withReboot) {
+            await saveAndReboot();
+        } else {
+            await saveToEeprom();
+            gui_log(t("receiverConfigSaved") || "Configuration saved");
+        }
+
+        markClean(savedSnapshot);
+
+        needReboot.value = false;
+    });
 
 // Model preview
 function initModelPreview() {
@@ -1121,17 +1321,19 @@ function handleModelResize() {
     }
 }
 
-function renderModel() {
+function renderModel(timestamp) {
     if (!keepRendering) return;
     animationFrameId = requestAnimationFrame(renderModel);
 
-    if (!clock) {
-        clock = new THREE.Clock();
+    if (!timer) {
+        timer = new THREE.Timer();
+        timer.connect(document);
     }
+    timer.update(timestamp);
 
     const channels = rc.value?.channels;
     if (channels?.[0] && channels?.[1] && channels?.[2] && model && rateCurve && currentRates) {
-        const delta = clock.getDelta();
+        const delta = timer.getDelta();
 
         const roll =
             delta *
@@ -1288,6 +1490,8 @@ onUnmounted(() => {
     if (model?.dispose) {
         model.dispose();
     }
+    timer?.dispose();
+    timer = null;
 });
 </script>
 
@@ -1387,7 +1591,7 @@ onUnmounted(() => {
     }
     .name {
         width: 5rem;
-        text-align: right;
+        text-align: end;
     }
     .meter {
         width: 100%;
@@ -1404,7 +1608,7 @@ onUnmounted(() => {
             position: absolute;
             width: 50px;
             text-align: center;
-            left: calc(50cqi - 25px);
+            inset-inline-start: calc(50cqi - 25px);
             color: var(--text);
         }
         .fill {
@@ -1435,8 +1639,8 @@ onUnmounted(() => {
 .plot_control {
     width: 14rem;
     margin: 0;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-start-end-radius: 3px;
+    border-end-end-radius: 3px;
     .value {
         padding: 4px;
         color: #fff;

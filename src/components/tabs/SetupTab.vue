@@ -18,10 +18,10 @@
                                 <dd class="roll">{{ state.attitude.roll }}</dd>
                             </dl>
                         </div>
-                        <div class="instruments-right">
-                            <span id="attitude"></span>
-                            <span id="heading"></span>
-                        </div>
+                    </div>
+                    <div class="instruments-right">
+                        <span id="attitude"></span>
+                        <span id="heading"></span>
                     </div>
                     <UButton
                         class="reset-zaxis"
@@ -36,7 +36,12 @@
 
             <!-- Info panels in responsive multi-column grid -->
             <div class="setup-info-grid">
-                <UiBox :title="$t('initialSetupInfoHead')" :help="$t('initialSetupInfoHeadHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupInfoHead')"
+                    :help="$t('initialSetupInfoHeadHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             {
@@ -102,7 +107,12 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupGPSHead')" :help="$t('initialSetupGPSHeadHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupGPSHead')"
+                    :help="$t('initialSetupGPSHeadHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
@@ -124,7 +134,12 @@
                         </template>
                     </InfoGrid>
                 </UiBox>
-                <UiBox :title="$t('initialSetupInfoBuild')" :help="$t('initialSetupInfoFirmwareHelp')" type="neutral">
+                <UiBox
+                    :title="$t('initialSetupInfoBuild')"
+                    :help="$t('initialSetupInfoFirmwareHelp')"
+                    type="neutral"
+                    collapsible
+                >
                     <InfoGrid
                         :items="[
                             {
@@ -206,6 +221,7 @@
                             :label="$t('initialSetupButtonReset')"
                             color="error"
                             class="w-full justify-center"
+                            size="xs"
                             @click="showConfirmReset"
                         >
                             <template #trailing>
@@ -216,6 +232,7 @@
                             :label="$t('initialSetupButtonRebootBootloader')"
                             color="primary"
                             class="w-full justify-center"
+                            size="xs"
                             @click="onRebootBootloader"
                         >
                             <template #trailing>
@@ -230,6 +247,7 @@
                     :title="$t('initialSetupSonarHead')"
                     :help="$t('initialSetupSonarHeadHelp')"
                     type="neutral"
+                    collapsible
                 >
                     <InfoGrid
                         :items="[
@@ -255,9 +273,10 @@
                         :label="$t('dialogConfirmResetClose')"
                         color="neutral"
                         variant="outline"
+                        size="xs"
                         @click="cancelConfirmReset"
                     />
-                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" @click="confirmReset" />
+                    <UButton :label="$t('dialogConfirmResetConfirm')" color="error" size="xs" @click="confirmReset" />
                 </div>
             </template>
         </UModal>
@@ -272,7 +291,7 @@
             </template>
             <template #footer>
                 <div class="flex justify-end gap-2 w-full">
-                    <UButton :label="$t('close')" color="neutral" variant="outline" @click="closeBuildInfo" />
+                    <UButton :label="$t('close')" color="neutral" variant="outline" size="xs" @click="closeBuildInfo" />
                 </div>
             </template>
         </UModal>
@@ -299,6 +318,7 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
+import { isMspCancelled } from "@/js/msp/mspErrors";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
@@ -514,7 +534,12 @@ async function initialize() {
         await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
         await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG, false);
     } catch (e) {
-        // preserve behavior but at least log unexpected errors
+        // Switching away mid-sequence clears the MSP queue and cancels these requests. The tab
+        // is being torn down, so there is nothing left to render and nothing to report — going
+        // on to process_html() would only warn that the canvas it wants is already gone.
+        if (isMspCancelled(e)) {
+            return;
+        }
         console.warn("Error during Setup initialize sequence:", e);
     }
 
@@ -652,7 +677,7 @@ function process_html() {
             const pidHz = Math.round(1000000 / cycleTime);
             const pidProcess = fcStore.pidAdvancedConfig?.pid_process_denom || 1;
             const gyroHz = pidHz * pidProcess;
-            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(0)}k` : `${hz}`);
+            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(1)}k` : `${hz}`);
             state.loopTime = `${fmt(gyroHz)} / ${fmt(pidHz)}`;
         } else {
             state.loopTime = "";
@@ -804,7 +829,7 @@ function openBuildOptionsDialog() {
         :deep(.reset-zaxis) {
             position: absolute;
             top: 0.75rem;
-            right: 0.75rem;
+            inset-inline-end: 0.75rem;
             z-index: 100;
         }
     }
@@ -816,7 +841,7 @@ function openBuildOptionsDialog() {
             height: 100%;
             max-height: 32rem;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             border-radius: 1rem;
         }
     }
@@ -839,6 +864,11 @@ function openBuildOptionsDialog() {
         .setup-info-grid {
             grid-template-columns: 1fr;
         }
+        .instruments-right {
+            position: static;
+            justify-content: center;
+            padding: 0.5rem 0 0.75rem;
+        }
     }
     .system_info {
         td {
@@ -854,7 +884,7 @@ function openBuildOptionsDialog() {
 .attitude_info {
     position: absolute;
     top: 1rem;
-    left: 1rem;
+    inset-inline-start: 1rem;
     margin: 0;
     font-weight: normal;
     color: var(--surface-950);
@@ -869,7 +899,7 @@ function openBuildOptionsDialog() {
 .instruments-right {
     position: absolute;
     bottom: 1rem;
-    right: 1rem;
+    inset-inline-end: 1rem;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
@@ -895,7 +925,7 @@ function openBuildOptionsDialog() {
     bottom: 20px;
 }
 .disarm-flag {
-    padding-right: 5px;
+    padding-inline-end: 5px;
     display: inline-block;
 }
 

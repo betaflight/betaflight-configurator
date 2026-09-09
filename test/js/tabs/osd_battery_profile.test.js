@@ -104,6 +104,16 @@ function buildAllDisplayFields() {
         // API 1.48
         "OSD_CUSTOM_SERIAL_TEXT",
         "BATTERY_PROFILE_NAME",
+        "WP_NUMBER",
+        "WP_CURRENT_LAT",
+        "WP_CURRENT_LON",
+        "WP_CURRENT_ALT",
+        "WP_DISTANCE",
+        "WP_DIRECTION",
+        "WP_NEXT_NUMBER",
+        "WP_ETA",
+        "NAV_MAP",
+        "POS_HOLD_READY",
     ];
 
     const fields = {};

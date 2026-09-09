@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { bracketHost, unbracketHost } from "../utils/host.js";
 
 /**
  * Raw TCP transport for the Tauri shell (desktop and Android).
@@ -26,7 +27,14 @@ class TauriTcp extends EventTarget {
 
         this._unlisten = [];
 
+        // Bridges found via mDNS (see mdns.rs); kept so a failed browse keeps the last list.
+        this.devices = [];
+        this.deviceMonitorInterval = null;
+        this.deviceCheckInFlight = false;
+
         this.connect = this.connect.bind(this);
+
+        this.startDeviceMonitoring();
     }
 
     handleReceiveBytes(info) {
@@ -41,6 +49,20 @@ class TauriTcp extends EventTarget {
         return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
     }
 
+    // Accept "tcp://host:port", "host:port" or a bare "host". The manual-entry box
+    // (and ELRS users) routinely omit the scheme, and `new URL` rejects a schemeless
+    // host, so prepend tcp:// before parsing. Defaults to the Betaflight bridge port.
+    /**
+     * @param {string} path - "tcp://host:port", "host:port" or a bare "host".
+     * @returns {{host: string, port: number}}
+     */
+    _parseAddress(path) {
+        const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(path) ? path : `tcp://${path}`;
+        const url = new URL(withScheme);
+        // The Rust side gives the host to to_socket_addrs(), which accepts a bare address only.
+        return { host: unbracketHost(url.hostname), port: Number.parseInt(url.port, 10) || 5761 };
+    }
+
     createPort(url) {
         this.address = url;
         return this._portInfo(url);
@@ -50,8 +72,65 @@ class TauriTcp extends EventTarget {
         return this._portInfo(this.address);
     }
 
+    /**
+     * @param {{name: string, addresses: string[], port: number}} bridge
+     * @returns {object|null} a port entry for the picker, or null when the bridge has no address yet
+     */
+    _bridgePort(bridge) {
+        const address = bridge.addresses[0];
+        if (!address) {
+            return null;
+        }
+        return { ...this._portInfo(`tcp://${bracketHost(address)}:${bridge.port}`), displayName: bridge.name };
+    }
+
+    /**
+     * Bridges currently announcing `_betaflight._tcp` on the local network.
+     * @returns {Promise<Array>} port entries, one per bridge
+     */
     async getDevices() {
-        return [];
+        try {
+            const bridges = await invoke("mdns_browse");
+            this.devices = bridges.map((bridge) => this._bridgePort(bridge)).filter(Boolean);
+        } catch (e) {
+            console.warn(`${this.logHead} mDNS browse failed:`, e);
+        }
+        return this.devices;
+    }
+
+    startDeviceMonitoring() {
+        if (this.deviceMonitorInterval) {
+            return;
+        }
+        this.deviceMonitorInterval = setInterval(async () => {
+            if (this.deviceCheckInFlight || this.connected) {
+                return;
+            }
+            this.deviceCheckInFlight = true;
+            try {
+                await this.checkDeviceChanges();
+            } finally {
+                this.deviceCheckInFlight = false;
+            }
+        }, 2000);
+    }
+
+    stopDeviceMonitoring() {
+        if (this.deviceMonitorInterval) {
+            clearInterval(this.deviceMonitorInterval);
+            this.deviceMonitorInterval = null;
+        }
+    }
+
+    async checkDeviceChanges() {
+        const previous = this.devices;
+        const current = await this.getDevices();
+        for (const removed of previous.filter((old) => !current.some((now) => now.path === old.path))) {
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+        }
+        for (const added of current.filter((now) => !previous.some((old) => old.path === now.path))) {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        }
     }
 
     async _teardownListeners() {
@@ -68,11 +147,9 @@ class TauriTcp extends EventTarget {
 
     async connect(path, _options) {
         try {
-            const url = new URL(path);
-            const host = url.hostname;
-            const port = Number.parseInt(url.port, 10) || 5761;
+            const { host, port } = this._parseAddress(path);
 
-            console.log(`${this.logHead} Connecting to ${url}`);
+            console.log(`${this.logHead} Connecting to ${host}:${port}`);
 
             // Drop any listeners left over from a previous connection before re-registering,
             // otherwise reconnects leak listeners and duplicate receive/disconnect handling.
@@ -91,7 +168,8 @@ class TauriTcp extends EventTarget {
             await invoke("tcp_connect", { ip: host, port });
 
             // Keep the canonical tcp:// URL so path-based protocol detection still matches.
-            this.address = `tcp://${host}:${port}`;
+            // An IPv6 host gets its brackets again, because a URL needs them.
+            this.address = `tcp://${bracketHost(host)}:${port}`;
             this.connected = true;
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
             return true;

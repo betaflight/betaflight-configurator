@@ -10,10 +10,12 @@ const DEG_TO_RAD = Math.PI / 180;
 //   - Betaflight body frame: X=forward, Y=left, Z=up (right-handed, Y=LEFT convention).
 //   - Drone nose faces AWAY from the user during calibration (+X = forward).
 //   - At flat, accel in body frame = (0, 0, 1) (gravity-opposite, normalized).
-//   - Pitch up 45° = drone nose tilts up = body rotates Ry(-45°).
-//     Accel = Ry(-45°)^T · (0,0,1) = Ry(+45°) · (0,0,1) = (sin45, 0, cos45).
+//   - Nose down 45° (the instructed pitch gesture) = body rotates Ry(+45°).
+//     Accel = Ry(+45°)^T · (0,0,1) = Ry(-45°) · (0,0,1) = (-sin45, 0, cos45).
+//     The horizontal component is aft (−X), toward the raised tail.
 //   - Roll right 45° (right wing = −Y side down) = body rotates Rx(+45°) in Y=LEFT frame.
 //     Accel = Rx(+45°)^T · (0,0,1) = Rx(-45°) · (0,0,1) = (0, sin45, cos45).
+//     The horizontal component is toward the raised left side (+Y).
 //   - Yaw CW 45° = -45° around world-Z (right-hand rule, thumb up gives CCW).
 //   - R_mount = rotation FC frame → world frame.
 //   - accel_fc = R_mount^T · (rotated gravity vector).
@@ -58,10 +60,20 @@ function matVec(m, v) {
  * Build the three synthetic accel samples for a given physical mount and current
  * configured alignment. Reproduces what the FC would report via MSP_RAW_IMU after
  * board-alignment correction.
+ *
+ * `reverse` lets a test simulate a user performing a gesture backwards:
+ * `{ pitch: true }` = nose up instead of down, `{ roll: true }` = left side down.
  */
 // mountYaw and currentAlignment.yaw use Betaflight's CW-positive convention (same as the wizard output).
 // eulerToMatrix uses CCW-positive (standard math), so we negate yaw when building the matrices.
-function makeSamples(mountRoll, mountPitch, mountYaw, currentAlignment = { roll: 0, pitch: 0, yaw: 0 }, noise = 0) {
+function makeSamples(
+    mountRoll,
+    mountPitch,
+    mountYaw,
+    currentAlignment = { roll: 0, pitch: 0, yaw: 0 },
+    noise = 0,
+    reverse = {},
+) {
     const rMount = eulerToMatrix(mountRoll, mountPitch, -mountYaw);
     const rCurrent = eulerToMatrix(currentAlignment.roll, currentAlignment.pitch, -currentAlignment.yaw);
 
@@ -69,16 +81,16 @@ function makeSamples(mountRoll, mountPitch, mountYaw, currentAlignment = { roll:
     // Post-alignment accel (what MSP_RAW_IMU returns) = R_current · raw_fc
     const post = (accelWorld) => matVec(rCurrent, matVec(transpose(rMount), accelWorld));
 
-    const pitchUp = 45 * DEG_TO_RAD;
-    const rollRight = 45 * DEG_TO_RAD;
+    const noseDown = (reverse.pitch ? -45 : 45) * DEG_TO_RAD;
+    const rollRight = (reverse.roll ? -45 : 45) * DEG_TO_RAD;
 
     // Gravity-opposite vector in drone body frame after each user gesture.
     // Betaflight uses Y=LEFT frame (X=fwd, Y=left, Z=up — right-handed).
     //   flat:        (0, 0, 1)
-    //   pitch up:    Ry(-45°) applied to body → world-up in body = Ry(+45°)·(0,0,1) = (sin45, 0, cos45)
+    //   nose down:   Ry(+45°) applied to body → world-up in body = Ry(-45°)·(0,0,1) = (-sin45, 0, cos45)
     //   roll right:  Right wing (−Y) down = Rx(+45°) applied to body → Rx(-45°)·(0,0,1) = (0, sin45, cos45)
     const accelFlatWorld = [0, 0, 1];
-    const accelPitchWorld = matVec(rotY(pitchUp), [0, 0, 1]);
+    const accelPitchWorld = matVec(rotY(-noseDown), [0, 0, 1]);
     const accelRollWorld = matVec(rotX(-rollRight), [0, 0, 1]);
 
     const jitter = () => (noise > 0 ? (Math.random() - 0.5) * 2 * noise : 0);
@@ -232,6 +244,49 @@ describe("detectBoardAlignment - delta from current alignment", () => {
                 expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
             }
         }
+    });
+});
+
+describe("detectBoardAlignment - gesture direction", () => {
+    const identity = { roll: 0, pitch: 0, yaw: 0 };
+
+    it("reports high confidence and a raw agreement of ~1 for correct gestures", () => {
+        const samples = makeSamples(0, 0, 0);
+        const result = detectBoardAlignment({ ...samples, currentAlignment: identity });
+        expect(result).toMatchObject({ roll: 0, pitch: 0, yaw: 0, confidence: "high" });
+        expect(result.rightAgreement).toBeCloseTo(1, 6);
+    });
+
+    it("errors instead of reporting yaw 180 when only the roll gesture is reversed", () => {
+        // Left side down instead of right. The old code flipped both axes back into a
+        // valid right-handed frame and returned yaw 180 at "high" confidence.
+        const samples = makeSamples(0, 0, 0, identity, 0, { roll: true });
+        const result = detectBoardAlignment({ ...samples, currentAlignment: identity });
+        expect(result.error).toBe("gesture_direction_mismatch");
+    });
+
+    it("errors when only the pitch gesture is reversed", () => {
+        const samples = makeSamples(0, 0, 0, identity, 0, { pitch: true });
+        const result = detectBoardAlignment({ ...samples, currentAlignment: identity });
+        expect(result.error).toBe("gesture_direction_mismatch");
+    });
+
+    it("cannot detect two consistently reversed gestures (documented limitation)", () => {
+        // Nose up + left side down produces exactly the sample set a correctly performed
+        // run on a board mounted CW 180° produces, so no algorithm can tell them apart
+        // from accel alone. The yaw integral does not help: rotation about a known
+        // up-axis carries no information about which horizontal direction is the nose.
+        const reversed = makeSamples(0, 0, 0, identity, 0, { pitch: true, roll: true });
+        const yawed180 = makeSamples(0, 0, 180);
+        for (const key of ["flatAccel", "pitchAccel", "rollAccel"]) {
+            for (let i = 0; i < 3; i++) {
+                expect(reversed[key][i]).toBeCloseTo(yawed180[key][i], 6);
+            }
+        }
+
+        const result = detectBoardAlignment({ ...reversed, currentAlignment: identity });
+        expect(result.error).toBeUndefined();
+        expect(result.yaw).toBe(180);
     });
 });
 

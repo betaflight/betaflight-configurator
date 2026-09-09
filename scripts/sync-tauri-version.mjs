@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Syncs the version from package.json into the Tauri bundle metadata
- * (src-tauri/tauri.conf.json and src-tauri/Cargo.toml).
+ * (src-tauri/tauri.conf.json, src-tauri/Cargo.toml and the crate's pinned
+ * version in src-tauri/Cargo.lock).
  *
  * Tauri requires a plain SemVer string (e.g. "2026.6.0"), so pre-release
  * suffixes like "-alpha" are stripped. The stripped version is still unique
@@ -9,7 +10,7 @@
  *
  * Runs automatically via `beforeBuildCommand` in tauri.conf.json.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,7 +21,9 @@ const pkg = JSON.parse(readFileSync(resolve(projectRoot, "package.json"), "utf8"
 const version = pkg.version.split("-", 1)[0];
 
 if (!/^\d+\.\d+\.\d+$/.test(version)) {
-    console.error(`sync-tauri-version: package.json version "${pkg.version}" did not produce a valid SemVer after stripping pre-release tag (got "${version}").`);
+    console.error(
+        `sync-tauri-version: package.json version "${pkg.version}" did not produce a valid SemVer after stripping pre-release tag (got "${version}").`,
+    );
     process.exit(1);
 }
 
@@ -47,4 +50,23 @@ const updated = cargo.replace(packageVersionRe, `$1${version}$3`);
 if (updated !== cargo) {
     writeFileSync(cargoPath, updated);
     console.log(`sync-tauri-version: Cargo.toml → ${version}`);
+}
+
+// Cargo.lock — keep the crate's pinned version in step so the lockfile does not
+// drift (cargo would otherwise rewrite it on the next unlocked build, and a
+// --locked build would fail). Scope the edit to the crate's own [[package]]
+// entry, matched by the name taken from Cargo.toml's [package] section.
+const nameMatch = cargo.match(/^\[package\][\s\S]*?^name\s*=\s*"([^"]+)"/m);
+const lockPath = resolve(projectRoot, "src-tauri/Cargo.lock");
+if (nameMatch && existsSync(lockPath)) {
+    const crateName = nameMatch[1];
+    const lock = readFileSync(lockPath, "utf8");
+    const lockVersionRe = new RegExp(
+        `(name = "${crateName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\nversion = ")([^"]+)(")`,
+    );
+    const lockUpdated = lock.replace(lockVersionRe, `$1${version}$3`);
+    if (lockUpdated !== lock) {
+        writeFileSync(lockPath, lockUpdated);
+        console.log(`sync-tauri-version: Cargo.lock → ${version}`);
+    }
 }

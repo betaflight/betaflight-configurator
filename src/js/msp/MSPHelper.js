@@ -8,7 +8,13 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -83,6 +89,8 @@ function MspHelper() {
         LIDAR_TF: 15,
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18,
+        OSD_CUSTOM_TEXT: 19,
     };
 
     self.REBOOT_TYPES = {
@@ -371,6 +379,12 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_SONAR:
                     FC.SENSOR_DATA.sonar = data.read32();
                     break;
+                case MSPCodes.MSP_PITOT:
+                    FC.SENSOR_DATA.pitot = {
+                        airspeed: data.read32(),
+                        diffPressure: data.read32(),
+                    };
+                    break;
                 case MSPCodes.MSP_ANALOG:
                     FC.ANALOG.voltage = data.readU8() / 10.0;
                     FC.ANALOG.mAhdrawn = data.readU16();
@@ -522,7 +536,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
                     data.readU8(); // was FC.ARMING_CONFIG.auto_disarm_kill_switch
                     FC.ARMING_CONFIG.small_angle = data.readU8();
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
                     }
                     break;
@@ -1268,6 +1282,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
                     FC.ADVANCED_TUNING.dMaxGain = data.readU8();
                     FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
+                    // No Configurator UI for these; round-tripped as-is so saving other PID_ADVANCED
+                    // fields doesn't reset a value still active on firmware older than 2026.12.0.
                     FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                     FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
@@ -1305,6 +1321,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG.opticalflow_hardware = data.readU8();
                     }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.SENSOR_CONFIG.pitot_hardware = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE:
                     FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
@@ -1316,6 +1335,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware = data.readU8();
+                    }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.SENSOR_CONFIG_ACTIVE.pitot_hardware = data.readU8();
                     }
                     break;
                 case MSPCodes.MSP2_MCU_INFO:
@@ -1949,7 +1971,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.ARMING_CONFIG.auto_disarm_delay)
                 .push8(0) // was disarm_kill_switch
                 .push8(FC.ARMING_CONFIG.small_angle);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm);
             }
             break;
@@ -2331,6 +2353,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.SENSOR_CONFIG.sonar_hardware);
                 buffer.push8(FC.SENSOR_CONFIG.opticalflow_hardware);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.SENSOR_CONFIG.pitot_hardware);
             }
             break;
 

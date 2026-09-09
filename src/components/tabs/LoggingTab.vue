@@ -7,14 +7,14 @@
                 <p v-html="$t('loggingNote')"></p>
             </UiBox>
 
-            <UiBox :title="$t('loggingPropertiesTitle')" class="mt-6">
+            <UiBox :title="$t('loggingPropertiesTitle')" type="neutral" collapsible class="mt-6">
                 <div class="flex flex-col gap-1.5">
                     <div v-for="prop in propertyOptions" :key="prop.code" class="flex items-center gap-3">
                         <USwitch
                             :model-value="selectedProperties.includes(prop.code)"
                             :disabled="isLogging || isBusy"
                             :label="prop.label"
-                            size="sm"
+                            size="xs"
                             class="w-44"
                             @update:model-value="toggleProperty(prop.code, $event)"
                         />
@@ -23,13 +23,13 @@
                 </div>
             </UiBox>
 
-            <SettingRow :label="$t('loggingSamplingInterval')" class="mt-4">
+            <SettingRow :label="$t('loggingSamplingInterval')" fullWidth class="mt-4">
                 <USelect
                     v-model="samplingInterval"
                     :items="speedItems"
                     :disabled="isLogging || isBusy"
                     class="w-28"
-                    size="sm"
+                    size="xs"
                 />
             </SettingRow>
 
@@ -51,6 +51,7 @@
             <UButton
                 :label="$t('loggingButtonLogFile')"
                 :disabled="isLogging || isBusy"
+                size="xs"
                 @click="selectLogFile"
                 variant="soft"
             />
@@ -58,6 +59,7 @@
                 :label="startStopLabel"
                 :disabled="!canToggle"
                 :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'primary'"
+                size="xs"
                 @click="toggleLogging"
             />
         </div>

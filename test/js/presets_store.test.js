@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import GUI from "../../src/js/gui";
 import FC from "../../src/js/fc";
 import { favoritePresets } from "../../src/components/tabs/presets/FavoritePresets";
 import { usePresetsStore } from "../../src/stores/presets";
@@ -97,7 +96,6 @@ describe("usePresetsStore", () => {
         vi.restoreAllMocks();
         vi.spyOn(console, "error").mockImplementation(() => {});
         vi.stubGlobal("fetch", mockFetchImplementation());
-        vi.spyOn(GUI, "showYesNoDialog").mockImplementation((settings) => settings.buttonYesCallback?.());
     });
 
     it("loads repositories, preselects firmware filters, and opens preset details", async () => {

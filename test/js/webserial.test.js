@@ -1,16 +1,16 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
-// WebSerial stable device identity.
+// WebSerial device identity.
 //
-// The browser reuses the same SerialPort object across an MCU-reboot USB
-// re-enumeration, so a stable id keyed off that object's identity is the
-// correct, reconnect-safe device path. These tests prove:
-//   (a) the same SerialPort object yields the same path across repeated
-//       createPort/loadDevices calls (stability),
-//   (b) two different SerialPort objects get distinct paths,
-//   (c) removing device A does not match/disconnect device B,
-//   (d) selectProtocol still routes the new "serial_N" id to WebSerial.
+// A path is the id of one SerialPort object. The id stays the same while the browser gives
+// back the same object. The id changes if the device disconnects and connects again, because
+// Chrome makes a new object. These tests show:
+//   (a) the same SerialPort object gives the same path for each
+//       createPort/loadDevices call (stability),
+//   (b) two different SerialPort objects get different paths,
+//   (c) the removal of device A does not disconnect device B,
+//   (d) selectProtocol sends the new "serial_N" id to WebSerial.
 //
 // `./devices` is mocked so WebSerial loads without its real import graph.
 // ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ describe("WebSerial stable device identity", () => {
         await ws.loadDevices();
         const pathAfterFirst = ws.ports[0].path;
 
-        // Simulate a re-enumeration: the browser hands back the SAME object.
+        // The browser gives back the same object.
         await ws.loadDevices();
         const pathAfterSecond = ws.ports[0].path;
 
@@ -135,6 +135,51 @@ describe("WebSerial stable device identity", () => {
         expect(removed).not.toContain(pathB);
         // B survives in the list with its own id.
         expect(ws.ports.map((p) => p.path)).toEqual([pathB]);
+    });
+
+    // A plug-in gives a burst of connect events, and loadDevices() keeps only the port that
+    // getPorts() reports. The other ports send a disconnect event later. The list does not hold
+    // them, so an event for them carries no device. Such an event makes the listeners refresh
+    // the list and warn for nothing.
+    it("sends no removedDevice event for a port that is not in the list", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+
+        const listed = makeFakePort();
+        ws.ports = [ws.createPort(listed)];
+
+        const removed = [];
+        ws.addEventListener("removedDevice", (e) => removed.push(e.detail));
+
+        ws.handleRemovedDevice(makeFakePort());
+
+        expect(removed).toEqual([]);
+        expect(ws.ports).toHaveLength(1);
+    });
+
+    // A burst of device events starts several refreshes at once. getPorts() gives no order
+    // guarantee, so an older call can finish last and put a list back that no longer applies.
+    it("does not let a slow refresh replace a newer device list", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const older = makeFakePort();
+        const newer = makeFakePort();
+        let resolveSlow;
+        navigator.serial.getPorts
+            .mockImplementationOnce(() => new Promise((resolve) => (resolveSlow = resolve)))
+            .mockImplementationOnce(async () => [newer]);
+
+        const slow = ws.loadDevices();
+        await ws.loadDevices();
+
+        expect(ws.ports.map((device) => device.port)).toEqual([newer]);
+
+        resolveSlow([older]);
+        await slow;
+
+        expect(ws.ports.map((device) => device.port)).toEqual([newer]);
     });
 
     it("connect() resolves the live SerialPort via the stable id and sets connectionId to it", async () => {

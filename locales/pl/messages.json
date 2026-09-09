@@ -42,14 +42,6 @@
         "message": "Musisz odświeżyć stronę, aby zobaczyć najnowsze zmiany. Odświeżenie jej teraz odświeży stronę i stracisz wszelkie niezapisane zmiany, oraz zostanie przerwana każda operacja w toku.<br><br>Czy chcesz odświeżyć teraz? Możesz również odrzucić tę wiadomość i odświeżyć stronę ręcznie później.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
-    "pwaOnOffilenReadyTitle": {
-        "message": "Aplikacja jest gotowa do użycia w trybie offline",
-        "description": "Title of the window that appears when the app is ready to be installed and used offline"
-    },
-    "pwaOnOffilenReadyText": {
-        "message": "Jeśli chcesz, możesz zainstalować ją jako samodzielną aplikację na swoim urządzeniu. Wyszukaj tę opcję w pasku adresu lub menu przeglądarki.",
-        "description": "Text of the window that appears when the app is ready to be installed and used offline"
-    },
     "operationNotSupported": {
         "message": "Nie można wykonać tej operacji na twoim urządzeniu."
     },
@@ -294,9 +286,6 @@
     },
     "configuratorUpdateHelp": {
         "message": "Gdy masz dostęp do internetu, aplikacja powinna automatycznie sprawdzić dostępne aktualizacje."
-    },
-    "configuratorUpdateWebsite": {
-        "message": "Idź do strony z aktualizacjami"
     },
     "rebootFlightController": {
         "message": "Ponowne uruchamianie kontrolera lotu, gdy będziesz gotowy podłącz się ponownie"
@@ -768,9 +757,6 @@
     },
     "defaultSoftwareHead": {
         "message": "Oprogramowanie"
-    },
-    "defaultSoftwareText": {
-        "message": "Nasz <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> jest dostępny jako aplikacja online.<br \/><br \/>Kolekcja naszych <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lua Scripts dla nadajników<\/a> znajduje się na GitHub.<br \/><br \/>Nasz <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kod źródłowy<\/a> oprogramowania układowego, tej aplikacji oraz Blackbox Log Viewera można pobrać z GitHub."
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
@@ -6732,10 +6718,6 @@
     "osdButtonSaved": {
         "message": "Zapisano"
     },
-    "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Uwaga:<\/span> Twój VTX nie jest skonfigurowany lub nie jest obsługiwany, więc nie możesz zmieniać jego wartości w tym miejscu. Modyfikacja będzie możliwa jedynie, jeśli kontroler lotu jest podłączony do VTX za pomocą protokołu, takiego jak Tramp lub SmartAudio, oraz odpowiednio skonfigurowany w zakładce $t(tabPorts.message), jeśli jest to wymagane.",
-        "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Uwaga:<\/span> Musisz skonfigurować i zapisać PIERWSZĄ tabelę VTX (na dole) zanim będziesz mógł korzystać z ustawień z kategorii $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7087,12 +7069,6 @@
     },
     "magCalibrationRetry": {
         "message": "Ponów"
-    },
-    "magAlignmentApply": {
-        "message": "Zastosuj"
-    },
-    "configurationMagDetectAlignment": {
-        "message": "Wykryj"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"

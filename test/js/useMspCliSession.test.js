@@ -3,6 +3,8 @@ import MSP from "../../src/js/msp";
 import FC from "../../src/js/fc";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
+    findCliSettingRange,
+    findCliSettingValue,
     isMspCliSupported,
     useMspCliSession,
     send,
@@ -207,5 +209,55 @@ describe("useMspCliSession", () => {
             FC.CONFIG.flightControllerVersion = "4.6.0";
             expect(isMspCliSupported()).toBe(true);
         });
+
+        it("supports vendor firmware versions with underscore prerelease identifiers", () => {
+            FC.CONFIG.flightControllerVersion = "2025.12.3-alpha.KAACK_V19";
+            expect(isMspCliSupported()).toBe(true);
+        });
+
+        it("returns false for an invalid firmware version without throwing", () => {
+            FC.CONFIG.flightControllerVersion = "not-a-version";
+            expect(() => isMspCliSupported()).not.toThrow();
+            expect(isMspCliSupported()).toBe(false);
+        });
+    });
+});
+
+describe("findCliSettingValue", () => {
+    // `get` matches on substring, so asking for one setting can return several.
+    const reply = [
+        "gps_baud = 115200",
+        "Allowed values: AUTO, 9600, 19200, 38400, 57600, 115200, 230400",
+        "Default value: 57600",
+    ];
+
+    it("reads the current value", () => {
+        expect(findCliSettingValue(reply, "gps_baud")).toBe("115200");
+    });
+
+    it("ignores a setting whose name merely contains the one asked for", () => {
+        expect(findCliSettingValue(["gps_baud_extra = 9600", "gps_baud = 57600"], "gps_baud")).toBe("57600");
+    });
+
+    it("reports nothing when the setting is absent", () => {
+        expect(findCliSettingValue(reply, "gps_uart")).toBeNull();
+        expect(findCliSettingValue(undefined, "gps_baud")).toBeNull();
+    });
+});
+
+describe("findCliSettingRange", () => {
+    it("reads the bounds a numeric setting prints", () => {
+        const reply = ["dronecan_device = 1", "Allowed range: 1 - 3", "Default value: 1"];
+
+        expect(findCliSettingRange(reply)).toEqual({ min: 1, max: 3 });
+    });
+
+    it("copes with a negative lower bound", () => {
+        expect(findCliSettingRange(["Allowed range: -5 - 5"])).toEqual({ min: -5, max: 5 });
+    });
+
+    it("reports nothing for a setting printed without a range", () => {
+        expect(findCliSettingRange(["gps_baud = 57600", "Allowed values: AUTO, 9600"])).toBeNull();
+        expect(findCliSettingRange(undefined)).toBeNull();
     });
 });

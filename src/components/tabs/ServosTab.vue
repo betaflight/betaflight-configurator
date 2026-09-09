@@ -2,12 +2,10 @@
     <BaseTab tab-name="servos">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabServos')"></div>
-            <div class="cf_doc_version_bt">
-                <WikiButton docUrl="servos" />
-            </div>
+            <WikiButton docUrl="servos" />
 
             <div v-if="isSupported" class="flex flex-col gap-4">
-                <UiBox :title="$t('servosChangeDirection')">
+                <UiBox :title="$t('servosChangeDirection')" type="neutral" collapsible>
                     <div class="overflow-x-auto">
                         <div
                             class="grid items-center gap-y-1 min-w-0"
@@ -90,13 +88,13 @@
                     </div>
 
                     <div class="flex items-center gap-2 mt-3">
-                        <USwitch v-model="liveMode" size="sm" />
+                        <USwitch v-model="liveMode" size="xs" />
                         <span class="text-sm">{{ $t("servosLiveMode") }}</span>
                     </div>
                 </UiBox>
 
                 <!-- Servo visualization bars -->
-                <UiBox :title="$t('servosText')" class="mt-4">
+                <UiBox :title="$t('servosText')" type="neutral" collapsible class="mt-4">
                     <ul class="grid grid-cols-8 gap-2 mb-1">
                         <li
                             v-for="i in 8"
@@ -144,6 +142,7 @@
                     :label="$t('servosButtonSave')"
                     :disabled="!configHasChanged"
                     :loading="isSaving"
+                    size="xs"
                     @click="saveServoConfig"
                 />
             </div>
@@ -262,17 +261,14 @@ function updateServos() {
 }
 
 const saveServoConfig = () =>
-    runSave(
-        async () => {
-            marshalServoConfigs();
-            await mspHelper.sendServoConfigurations();
-            await saveToEeprom();
-            // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
-            // resolved to the same string, so it's dropped here to avoid a duplicate.
-            originalConfigs.value = JSON.stringify(servoConfigs);
-        },
-        { onError: (e) => console.error("Failed to save servo configuration", e) },
-    );
+    runSave(async () => {
+        marshalServoConfigs();
+        await mspHelper.sendServoConfigurations();
+        await saveToEeprom();
+        // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
+        // resolved to the same string, so it's dropped here to avoid a duplicate.
+        originalConfigs.value = JSON.stringify(servoConfigs);
+    });
 
 function getServoData() {
     MSP.send_message(MSPCodes.MSP_SERVO, false, false, () => {

@@ -22,6 +22,7 @@ import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
 
 // Error constant used when an already-authorized DFU device isn't found
@@ -231,6 +232,12 @@ export class UsbDfuProtocol extends EventTarget {
             .catch((error) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
+                // A SecurityError from open() means the OS refused access to the device node.
+                // On Linux that is a missing udev rule for the bootloader's vendor ID, which the
+                // bare "failed to open" message gives no clue about.
+                if (error?.name === "SecurityError" && getOS() === "Linux") {
+                    gui_log(i18n.getMessage("usbDeviceUdevNotice"));
+                }
                 this.cleanup();
             });
     }
@@ -553,11 +560,20 @@ export class UsbDfuProtocol extends EventTarget {
     // CLRSTATUS issued outside dfuERROR, but the STM32C5 ROM correctly STALLs it, which
     // aborted the flash right at the start of the verify phase (device was in dfuDNLOAD_IDLE
     // after writing). Sending the spec-correct request fixes C5 and stays valid elsewhere.
+    //
+    // Exception: some H7 bootloaders (H743 Rev.V, e.g. KAKUTEH7) wedge in dfuDNBUSY after a
+    // page erase and never settle, so polling alone hangs. STM32CubeProgrammer unsticks them
+    // with an undocumented CLRSTATUS pair: the first answers errUNKNOWN/dfuERROR, the second
+    // OK/dfuIDLE. Only callers that have already waited out the reported poll timeout ask for
+    // that (busyIsStuck) — everyone else keeps polling, so a strict bootloader is never sent a
+    // CLRSTATUS it would STALL, and maxAttempts stays the backstop.
     /**
      * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
+     * @param {boolean} [busyIsStuck=false] - Caller already waited out the device-reported poll
+     *   timeout, so a dfuDNBUSY read means wedged rather than working.
      * @returns {void}
      */
-    clearStatus(callback) {
+    clearStatus(callback, busyIsStuck = false) {
         // Bound the retries so an unexpected/never-idling bootloader state surfaces as an
         // error instead of looping forever (a failed GETSTATUS returns an empty buffer, which
         // otherwise spins tightly since data[4] is undefined and the reported delay is 0).
@@ -583,13 +599,17 @@ export class UsbDfuProtocol extends EventTarget {
                         this.options?.flashMessageTypes?.INVALID,
                     );
                     this.cleanup();
-                } else if (state === this.state.dfuERROR) {
+                } else if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuUPLOAD_IDLE) {
+                    setTimeout(() => this.controlTransfer("out", this.request.ABORT, 0, 0, 0, 0, check_status), delay);
+                } else if (
+                    state === this.state.dfuERROR ||
+                    // Wedged: the first CLRSTATUS reports dfuERROR, which this then clears to dfuIDLE.
+                    (busyIsStuck && state === this.state.dfuDNBUSY)
+                ) {
                     setTimeout(
                         () => this.controlTransfer("out", this.request.CLRSTATUS, 0, 0, 0, 0, check_status),
                         delay,
                     );
-                } else if (state === this.state.dfuDNLOAD_IDLE || state === this.state.dfuUPLOAD_IDLE) {
-                    setTimeout(() => this.controlTransfer("out", this.request.ABORT, 0, 0, 0, 0, check_status), delay);
                 } else {
                     // Busy/sync/manifest state (or an empty/failed status read): wait and re-poll.
                     setTimeout(check_status, delay);
@@ -1026,14 +1046,9 @@ export class UsbDfuProtocol extends EventTarget {
                                 setTimeout(() => {
                                     this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                                         if (data[4] === this.state.dfuDNBUSY) {
-                                            //
-                                            // H743 Rev.V (probably other H7 Rev.Vs also) remains in dfuDNBUSY state after the specified delay time.
-                                            // STM32CubeProgrammer deals with behavior with an undocumented procedure as follows.
-                                            //     1. Issue DFU_CLRSTATUS, which ends up with (14,10) = (errUNKNOWN, dfuERROR)
-                                            //     2. Issue another DFU_CLRSTATUS which delivers (0,2) = (OK, dfuIDLE)
-                                            //     3. Treat the current erase successfully finished.
-                                            // Here, we call clarStatus to get to the dfuIDLE state.
-                                            //
+                                            // H743 Rev.V (probably other H7 Rev.Vs also) stays in
+                                            // dfuDNBUSY past the reported delay. clearStatus()
+                                            // unsticks it; the erase itself already completed.
                                             console.log(
                                                 `${this.logHead} erase_page: dfuDNBUSY after timeout, clearing`,
                                             );
@@ -1061,7 +1076,7 @@ export class UsbDfuProtocol extends EventTarget {
                                                         }
                                                     },
                                                 );
-                                            });
+                                            }, true);
                                         } else if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                             erase_page_next();
                                         } else {

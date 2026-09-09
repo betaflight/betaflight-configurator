@@ -1,7 +1,14 @@
 import { i18n } from "../../../js/localization";
 import { bit_check } from "../../../js/bit";
 import FC from "../../../js/fc";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../js/data_storage";
+import { configReportsBuildOption } from "../../../composables/useBuildOptions";
+import {
+    API_VERSION_1_45,
+    API_VERSION_1_46,
+    API_VERSION_1_47,
+    API_VERSION_1_48,
+    API_VERSION_1_49,
+} from "../../../js/data_storage";
 import semver from "semver";
 import { have_sensor } from "../../../js/sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
@@ -47,6 +54,17 @@ OSD.initData();
 
 OSD.getVariantForPreview = function (osdData, elementName) {
     return osdData.displayItems.find((element) => element.name === elementName).variant;
+};
+
+OSD.refreshDisplayItemPreview = function (osdData, displayItem) {
+    const displayField = OSD.constants.DISPLAY_FIELDS[displayItem.index] ?? OSD.ALL_DISPLAY_FIELDS[displayItem.name];
+    if (typeof displayField?.preview === "function") {
+        displayItem.preview = displayField.preview(osdData);
+    }
+};
+
+OSD.isCrsfReceiver = function () {
+    return FC.getSerialRxTypes().indexOf("CRSF") === FC.RX_CONFIG.serialrx_provider;
 };
 
 OSD.generateAltitudePreview = function (osdData) {
@@ -180,10 +198,9 @@ OSD.generateTemperaturePreview = function (osdData, temperature) {
     return preview;
 };
 
-OSD.generateLQPreview = function () {
-    const crsfIndex = FC.getSerialRxTypes().indexOf("CRSF");
-    const isXF = crsfIndex === FC.RX_CONFIG.serialrx_provider;
-    return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? "2:100" : "8");
+OSD.generateLQPreview = function (osdData) {
+    const variantSelected = OSD.getVariantForPreview(osdData, "LINK_QUALITY");
+    return FONT.symbol(SYM.LINK_QUALITY) + (OSD.isCrsfReceiver() ? (variantSelected === 0 ? "2:100" : "100") : "8");
 };
 
 OSD.generateCraftName = function () {
@@ -284,6 +301,30 @@ OSD.drawCameraFramePreview = function () {
     }
 
     return cameraFrame;
+};
+
+// Firmware's NAV_MAP grid is a fixed 14x8 (osd_nav_map.c). This preview
+// draws a bordered box at that size, not the live minimap content.
+/**
+ * @returns {Array<{x: number, y: number, sym: number}>} Border cells for the NAV_MAP preview grid.
+ */
+OSD.drawNavMapPreview = function () {
+    const NAV_MAP_COLS = 14;
+    const NAV_MAP_ROWS = 8;
+
+    const navMap = [];
+
+    for (let x = 0; x < NAV_MAP_COLS; x++) {
+        const sym = x === 0 || x === NAV_MAP_COLS - 1 ? SYM.STICK_OVERLAY_CENTER : SYM.STICK_OVERLAY_HORIZONTAL;
+        navMap.push({ x, y: 0, sym }, { x, y: NAV_MAP_ROWS - 1, sym });
+    }
+
+    for (let y = 1; y < NAV_MAP_ROWS - 1; y++) {
+        const sym = SYM.STICK_OVERLAY_VERTICAL;
+        navMap.push({ x: 0, y, sym }, { x: NAV_MAP_COLS - 1, y, sym });
+    }
+
+    return navMap;
 };
 
 OSD.formatPidsPreview = function (axis) {
@@ -1338,6 +1379,115 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "BAT1",
         },
+        WP_NUMBER: {
+            name: "WP_NUMBER",
+            text: "osdTextElementWpNumber",
+            desc: "osdDescElementWpNumber",
+            defaultPosition: -1,
+            draw_order: 625,
+            positionable: true,
+            preview: "WP1/12",
+        },
+        WP_CURRENT_LAT: {
+            name: "WP_CURRENT_LAT",
+            text: "osdTextElementWpCurrentLat",
+            desc: "osdDescElementWpCurrentLat",
+            defaultPosition: -1,
+            draw_order: 630,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.GPS_LAT)}-00.0000000`,
+        },
+        WP_CURRENT_LON: {
+            name: "WP_CURRENT_LON",
+            text: "osdTextElementWpCurrentLon",
+            desc: "osdDescElementWpCurrentLon",
+            defaultPosition: -1,
+            draw_order: 635,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.GPS_LON)}-000.0000000`,
+        },
+        WP_CURRENT_ALT: {
+            name: "WP_CURRENT_ALT",
+            text: "osdTextElementWpCurrentAlt",
+            desc: "osdDescElementWpCurrentAlt",
+            defaultPosition: -1,
+            draw_order: 640,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ALTITUDE)}88${unit}`;
+            },
+        },
+        WP_DISTANCE: {
+            name: "WP_DISTANCE",
+            text: "osdTextElementWpDistance",
+            desc: "osdDescElementWpDistance",
+            defaultPosition: -1,
+            draw_order: 645,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `120${unit}`;
+            },
+        },
+        WP_DIRECTION: {
+            name: "WP_DIRECTION",
+            text: "osdTextElementWpDirection",
+            desc: "osdDescElementWpDirection",
+            defaultPosition: -1,
+            draw_order: 650,
+            positionable: true,
+            preview: FONT.symbol(SYM.ARROW_SOUTH + 2),
+        },
+        WP_NEXT_NUMBER: {
+            name: "WP_NEXT_NUMBER",
+            text: "osdTextElementWpNextNumber",
+            desc: "osdDescElementWpNextNumber",
+            defaultPosition: -1,
+            draw_order: 655,
+            positionable: true,
+            preview: "NEXT4",
+        },
+        WP_ETA: {
+            name: "WP_ETA",
+            text: "osdTextElementWpEta",
+            desc: "osdDescElementWpEta",
+            defaultPosition: -1,
+            draw_order: 660,
+            positionable: true,
+            preview: "05:30",
+        },
+        NAV_MAP: {
+            name: "NAV_MAP",
+            text: "osdTextElementNavMap",
+            desc: "osdDescElementNavMap",
+            defaultPosition: -1,
+            draw_order: 665,
+            positionable: true,
+            preview: OSD.drawNavMapPreview,
+        },
+        POS_HOLD_READY: {
+            name: "POS_HOLD_READY",
+            text: "osdTextElementPosHoldReady",
+            desc: "osdDescElementPosHoldReady",
+            defaultPosition: -1,
+            draw_order: 670,
+            positionable: true,
+            preview: "POSH RDY",
+        },
+        PITOT_AIRSPEED: {
+            name: "PITOT_AIRSPEED",
+            text: "osdPitotAirSpeed",
+            desc: "osdPitotAirSpeed",
+            defaultPosition: -1,
+            draw_order: 675,
+            positionable: true,
+            preview(osdData) {
+                const UNIT_METRIC = OSD.constants.UNIT_TYPES.indexOf("METRIC");
+                const unit = FONT.symbol(osdData.unit_mode === UNIT_METRIC ? SYM.KPH : SYM.MPH);
+                return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
+            },
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1356,6 +1506,13 @@ OSD.loadDisplayFields = function () {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
         OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants.push("osdTextElementRtcDateTimeVariantTimeOnly");
     }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
+        OSD.ALL_DISPLAY_FIELDS.LINK_QUALITY.variants = [
+            "osdTextElementLinkQualityVariantRfMode",
+            "osdTextElementLinkQualityVariantQualityOnly",
+        ];
+    }
 };
 
 OSD.constants = OSD_CONSTANTS;
@@ -1364,6 +1521,9 @@ OSD.constants = OSD_CONSTANTS;
 OSD.chooseFields = function () {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
+    // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
+    // decode() maps wire position N to DISPLAY_FIELDS[N] positionally.
+    // Insert new entries at their matching firmware position, not the end.
     OSD.constants.DISPLAY_FIELDS = [
         F.RSSI_VALUE,
         F.MAIN_BATT_VOLTAGE,
@@ -1474,6 +1634,45 @@ OSD.chooseFields = function () {
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
         ]);
+
+        // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
+        // when their compile flags are present. Unconditional listing would
+        // misalign every later DISPLAY_FIELDS position on builds lacking them.
+        //
+        // This is the one place that must NOT use the fail-open rule the rest of
+        // the gating follows: an unreported option decides how the firmware's enum
+        // is laid out, not whether a control is shown, so guessing "present" would
+        // misread every later field.
+        const reports = (name) => configReportsBuildOption(FC.CONFIG, name);
+        const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
+        const hasNavMap =
+            hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
+        const hasPositionHold = reports("USE_POSITION_HOLD");
+
+        if (hasFlightPlanWaypoints) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.WP_NUMBER,
+                F.WP_CURRENT_LAT,
+                F.WP_CURRENT_LON,
+                F.WP_CURRENT_ALT,
+                F.WP_DISTANCE,
+                F.WP_DIRECTION,
+                F.WP_NEXT_NUMBER,
+                F.WP_ETA,
+            ]);
+        }
+
+        if (hasNavMap) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
+
+        if (hasPositionHold) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+        }
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
@@ -1661,11 +1860,9 @@ OSD.msp = {
             });
         }
 
-        // Generate OSD element previews and positionable that are defined by a function
+        // Generate OSD element previews defined by functions.
         for (const item of data.displayItems) {
-            if (typeof item.preview === "function") {
-                item.preview = item.preview(data);
-            }
+            OSD.refreshDisplayItemPreview(data, item);
         }
     },
     // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled

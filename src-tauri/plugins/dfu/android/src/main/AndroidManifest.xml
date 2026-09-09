@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The USB attach intent-filter and device_filter.xml come from the host
+         app (added by the serial plugin build; the app's curated filter already
+         lists every DFU bootloader VID/PID), so this library only declares the
+         hardware feature. -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+</manifest>

@@ -3,56 +3,42 @@ import { get as getConfig, set as setConfig } from "../ConfigStorage.js";
 
 const STORAGE_KEY = "device-filters";
 
+// A 16-bit Bluetooth SIG identifier expanded against the Base UUID.
+const bt16 = (id) => `0000${id}-0000-1000-8000-00805f9b34fb`;
+
+/**
+ * @param {string} name
+ * @param {[string, string, string]} uuids - service, write and read, in that order.
+ * @param {object} [extra] - additional per-profile flags.
+ */
+const profile = (name, [service, write, read], extra = {}) => ({
+    name,
+    serviceUuid: service,
+    writeCharacteristic: write,
+    readCharacteristic: read,
+    ...extra,
+});
+
+// Nordic UART is a vendor 128-bit service rather than a SIG identifier.
+const NORDIC_UART = [
+    "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+    "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+    "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+];
+
+// Order matters: a board exposing more than one of these services matches the first
+// entry that resolves, so the SpeedyBee variants are listed in the order the Android
+// native implementation prefers them.
 const defaultBluetoothDevices = [
-    {
-        name: "CC2541",
-        serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe2-0000-1000-8000-00805f9b34fb",
-        susceptibleToCrcCorruption: true,
-    },
-    {
-        name: "HC-05",
-        serviceUuid: "00001101-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-10",
-        serviceUuid: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-11",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "Nordic NRF",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "SpeedyBee V1",
-        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "SpeedyBee V2",
-        serviceUuid: "0000abf0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000abf1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "DroneBridge",
-        serviceUuid: "0000db32-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000db33-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000db34-0000-1000-8000-00805f9b34fb",
-    },
+    profile("CC2541", [bt16("ffe0"), bt16("ffe1"), bt16("ffe2")], { susceptibleToCrcCorruption: true }),
+    profile("HC-05", [bt16("1101"), bt16("1101"), bt16("1101")]),
+    profile("HM-10", [bt16("ffe1"), bt16("ffe1"), bt16("ffe1")]),
+    profile("HM-11", NORDIC_UART),
+    profile("Nordic NRF", NORDIC_UART),
+    profile("SpeedyBee FF00", [bt16("00ff"), bt16("ff01"), bt16("ff02")]),
+    profile("SpeedyBee V2", [bt16("abf0"), bt16("abf1"), bt16("abf2")]),
+    profile("SpeedyBee V1", [bt16("1000"), bt16("1001"), bt16("1002")]),
+    profile("DroneBridge", [bt16("db32"), bt16("db33"), bt16("db34")]),
 ];
 
 const defaultSerialDevices = [

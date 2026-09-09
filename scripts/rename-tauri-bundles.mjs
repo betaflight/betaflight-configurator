@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /*
  * Normalises Tauri bundle filenames in a directory so they use a consistent
- * kebab-cased form: "Betaflight App" collapses to "betaflight-app", spaces
- * and underscores become dashes, and the x86_64 architecture token is left
- * intact. Optionally rewrites the version segment for nightly builds.
+ * kebab-cased form: the leading product token collapses to "betaflight",
+ * spaces and underscores become dashes, and the x86_64 architecture token is
+ * left intact. Optionally rewrites the version segment for nightly builds.
  *
  * Usage:
  *   node rename-tauri-bundles.mjs --dir <path>
@@ -12,6 +12,10 @@
 import { readdirSync, renameSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+// Tauri derives bundle names from productName, whose casing (and any " App"
+// suffix) varies by bundle target; anchor the rewrite so only the leading
+// product token is touched and extensions such as .AppImage keep their case.
+const PRODUCT_TOKEN = /^betaflight(?:[ _-]app)?/i;
 const ARCH_TOKEN = "x86_64";
 const ARCH_PLACEHOLDER = "\u0000ARCH\u0000";
 const ALLOWED_FLAGS = new Set(["dir", "from-version", "to-version"]);
@@ -37,7 +41,7 @@ function parseArgs(argv) {
 }
 
 function normalise(name) {
-    let next = name.replaceAll("Betaflight App", "betaflight-app");
+    let next = name.replace(PRODUCT_TOKEN, "betaflight");
     next = next.replaceAll(ARCH_TOKEN, ARCH_PLACEHOLDER);
     next = next.replaceAll(" ", "-");
     next = next.replaceAll("_", "-");

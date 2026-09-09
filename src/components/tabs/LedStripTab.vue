@@ -2,7 +2,7 @@
     <BaseTab tab-name="led-strip" @mounted="onTabMounted">
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
-            <WikiButton doc-url="led-strip" />
+            <WikiButton docUrl="led-strip" />
 
             <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
@@ -39,7 +39,7 @@
                     <div class="clear-buttons-container">
                         <!-- Clear Buttons -->
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             :disabled="!hasSelection"
@@ -47,7 +47,7 @@
                             @click="clearSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             :label="$t('ledStripClearAllButton')"
@@ -63,7 +63,7 @@
                     <USelect
                         id="ledStripFunctionSelect"
                         :class="['functionSelect', 'min-w-48', selectedFunction]"
-                        size="sm"
+                        size="xs"
                         :items="functionItems"
                         v-model="selectedFunction"
                         @update:model-value="onFunctionChange"
@@ -77,7 +77,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="throttleHue"
-                            size="sm"
                             v-model="modifiers.throttleHue"
                             @update:model-value="onModifierChange('t')"
                             :label="$t('ledStripThrottleHue')"
@@ -85,7 +84,7 @@
                         <USelect
                             id="auxSelectThrottle"
                             class="auxSelect"
-                            size="sm"
+                            size="xs"
                             :items="auxChannelItems"
                             v-model="auxChannelValue"
                             :aria-label="$t('ledStripThrottleHueChannel')"
@@ -95,7 +94,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="larsonScanner"
-                            size="sm"
                             v-model="modifiers.larsonScanner"
                             @update:model-value="onModifierChange('o')"
                             :label="$t('ledStripLarsonOverlay')"
@@ -105,7 +103,6 @@
                     <div class="modifier-row">
                         <USwitch
                             id="blink"
-                            size="sm"
                             v-model="modifiers.blink"
                             @update:model-value="onModifierChange('b')"
                             :label="$t('ledStripBlinkAlwaysOverlay')"
@@ -115,7 +112,6 @@
                     <div class="modifier-row rainbowOverlay" v-show="showRainbow">
                         <USwitch
                             id="rainbow"
-                            size="sm"
                             v-model="modifiers.rainbow"
                             @update:model-value="onModifierChange('y')"
                             :label="$t('ledStripRainbowOverlay')"
@@ -143,7 +139,6 @@
                     <div class="modifier-row warningOverlay" v-show="showWarning">
                         <USwitch
                             id="warnings"
-                            size="sm"
                             v-model="overlayStates.warnings"
                             @update:model-value="onOverlayChange('w')"
                             :label="$t('ledStripWarningsOverlay')"
@@ -152,7 +147,6 @@
                     <div class="modifier-row indicatorOverlay">
                         <USwitch
                             id="indicator"
-                            size="sm"
                             v-model="overlayStates.indicator"
                             @update:model-value="onOverlayChange('i')"
                             :label="$t('ledStripIndecatorOverlay')"
@@ -161,7 +155,6 @@
                     <div class="modifier-row vtxOverlay" v-show="showVtx">
                         <USwitch
                             id="vtx"
-                            size="sm"
                             v-model="overlayStates.vtx"
                             @update:model-value="onOverlayChange('v')"
                             :label="$t('ledStripVtxOverlay')"
@@ -176,7 +169,7 @@
                     <USelect
                         id="ledStripModeColorsModeSelect"
                         class="modeSelect gps min-w-48"
-                        size="sm"
+                        size="xs"
                         :items="modeColorsModeItems"
                         v-model="modeColorsMode"
                     />
@@ -197,7 +190,7 @@
                     <UButton
                         v-for="dir in directions"
                         :key="dir"
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
                         :class="'dir-' + dir"
@@ -250,6 +243,7 @@
                             <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
                     </div>
+                    <!-- Color palette buttons (16 colored swatches) -->
                     <button
                         v-for="i in 16"
                         :key="`color-${i - 1}`"
@@ -293,8 +287,7 @@
                 <div class="section" v-html="$t('ledStripWiring')"></div>
                 <div class="wiring-container">
                     <UButton
-                        block
-                        size="sm"
+                        size="xs"
                         color="primary"
                         :variant="wireMode ? 'solid' : 'soft'"
                         :label="$t('ledStripWiringMode')"
@@ -302,7 +295,7 @@
                     />
                     <div class="wiringControls">
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="neutral"
                             variant="soft"
                             class="w50"
@@ -310,7 +303,7 @@
                             @click="clearWiresSelected"
                         />
                         <UButton
-                            size="sm"
+                            size="xs"
                             color="error"
                             variant="soft"
                             class="w50"
@@ -327,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="saveButtonText" :loading="isSaving" @click="save" />
+            <UButton size="xs" :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -340,7 +333,9 @@ import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
+import { useDirtyState } from "@/composables/useDirtyState";
 import { useTransientLabel } from "@/composables/useTransientLabel";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
 import GUI from "@/js/gui";
@@ -434,6 +429,28 @@ const isColorSlidersOpen = ref(false);
 const brightness = ref(50);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
+
+// Snapshot the grid, not FC.LED_STRIP: the strip is rebuilt from the grid on every edit, and
+// initializeGrid drops placeholder LEDs that the rebuild writes back differently, so a
+// strip-based snapshot would flag an edit that changed nothing. The brightness/rainbow sliders
+// go to the FC live but only reach EEPROM on Save, so they are unsaved work too.
+/** @returns {string} serialized tab state for dirty comparison */
+const serializeLedState = () =>
+    JSON.stringify({
+        grid: gridLeds.map((led) => ({
+            wireNumber: led.wireNumber,
+            functions: [...led.functions],
+            directions: [...led.directions],
+            colorIndex: led.colorIndex,
+        })),
+        colors: (ledColors.value || []).map(({ h, s, v }) => ({ h, s, v })),
+        modeColors: (FC.LED_MODE_COLORS || []).map(({ mode, direction, color }) => ({ mode, direction, color })),
+        brightness: brightness.value,
+        rainbowDelta: rainbowDelta.value,
+        rainbowFreq: rainbowFreq.value,
+    });
+
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeLedState);
 
 // Computed properties
 const wiresRemaining = computed(() => {
@@ -550,12 +567,17 @@ const specialColorButtons = computed(() => [
 // Lifecycle
 const onTabMounted = async () => {
     try {
-        await loadData();
-        initializeGrid();
-        loadConfigValues();
+        await runTabLoad(
+            async () => {
+                await loadData();
+                initializeGrid();
+                loadConfigValues();
+                markClean();
+            },
+            (error) => console.error("Failed to load LED strip data:", error),
+        );
+    } finally {
         GUI.content_ready();
-    } catch (error) {
-        console.error("Failed to load LED strip data:", error);
     }
 };
 
@@ -944,9 +966,7 @@ function getModeColorButtonClass(mode, direction) {
 
 function getModeColorButtonStyle(mode, direction) {
     const colorIndex = getModeColor(mode, direction);
-    return {
-        backgroundColor: getColorStyle(colorIndex),
-    };
+    return { backgroundColor: getColorStyle(colorIndex) };
 }
 
 function getModeColorButtonLabel(direction) {
@@ -997,20 +1017,16 @@ watch(isColorSlidersOpen, (newValue) => {
 
 // Save
 function save() {
-    runSave(
-        async () => {
-            await saveConfig();
+    runSave(async () => {
+        const savedSnapshot = takeSnapshot();
 
-            // Post-save UI runs only after the persist resolves.
-            flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
-            gui_log(i18n.getMessage("eeprom_saved_ok"));
-        },
-        {
-            onError: (error) => {
-                console.error("Save failed:", error);
-            },
-        },
-    );
+        await saveConfig();
+
+        // Post-save UI runs only after the persist resolves.
+        markClean(savedSnapshot);
+        flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
+        gui_log(i18n.getMessage("eeprom_saved_ok"));
+    });
 }
 
 // Helper functions
@@ -1082,7 +1098,7 @@ watch(auxChannelValue, (newVal) => {
     margin-bottom: 1.5rem;
     padding: 0.75rem;
     background: var(--surface-100);
-    border-left: 3px solid var(--primary-500);
+    border-inline-start: 3px solid var(--primary-500);
 }
 
 .section {
@@ -1095,8 +1111,8 @@ watch(auxChannelValue, (newVal) => {
 /* Grid Container */
 .grid-container {
     position: relative;
-    float: left;
-    margin-right: 30px;
+    float: inline-start;
+    margin-inline-end: 30px;
     width: calc(29px * 16 + 3px);
     height: calc(29px * 16 + 3px);
 }
@@ -1105,7 +1121,7 @@ watch(auxChannelValue, (newVal) => {
 .gridSections {
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     z-index: 0;
     width: calc(29px * 16 + 3px);
     height: calc(29px * 16 + 3px);
@@ -1118,7 +1134,7 @@ watch(auxChannelValue, (newVal) => {
 .gridSections .block {
     width: 25%;
     height: 25%;
-    float: left;
+    float: inline-start;
     border: 1px solid var(--surface-500);
     box-sizing: border-box;
 }
@@ -1126,7 +1142,7 @@ watch(auxChannelValue, (newVal) => {
 /* Controls Panel */
 .controls {
     position: relative;
-    float: left;
+    float: inline-start;
     width: 325px;
 }
 
@@ -1168,58 +1184,55 @@ watch(auxChannelValue, (newVal) => {
     color: var(--error-500);
 }
 
-/* Buttons */
-button {
+/* Swatch buttons (mode colors, special colors, colour palette).
+ * These stay plain <button> elements because their background is driven by the
+ * LED colour data, but they follow the same radius/typography as UButton so the
+ * tab matches the rest of the UI.  The selectors are deliberately scoped to the
+ * swatch containers — a bare `button` rule would also hit every UButton on the
+ * tab and undo its Nuxt UI styling. */
+.mode_colors > button,
+.colors > button {
     text-align: center;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1;
     border: 1px solid var(--primary-600);
     background-color: var(--primary-500);
-    border-radius: 3px;
-    padding: 7px 6px;
-    margin: 3px 0;
+    border-radius: var(--ui-radius);
+    padding: 7px 10px;
+    margin: 3px 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+/* Label contrast is chosen against the swatch background, not the theme: these
+ * buttons carry an inline background-color taken from the LED colour data (and
+ * --primary-500 until it loads), which does not follow light/dark mode.  var(--text)
+ * would turn the label white over a yellow or cyan swatch.  The palette swatches
+ * below pick their own literal per colour for the same reason. */
+.mode_colors > button {
     color: black;
 }
 
-/* Buttons within controls - add left/right padding */
-.controls button {
-    padding: 7px 10px;
-    margin: 3px 4px;
-}
-
-button:hover:not(:disabled) {
+.mode_colors > button:hover:not(:disabled),
+.colors > button:hover:not(:disabled) {
     background-color: var(--primary-600);
     border-color: var(--primary-700);
 }
 
-button:active:not(:disabled) {
+.mode_colors > button:active:not(:disabled),
+.colors > button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-/* Disabled button styles */
-button:disabled,
-button.disabled {
+/* Disabled swatch buttons */
+.mode_colors > button:disabled,
+.colors > button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--surface-300);
     border-color: var(--surface-500);
     color: white;
-}
-
-button:disabled:hover,
-button.disabled:hover {
-    background-color: var(--surface-300);
-    border-color: var(--surface-500);
-}
-
-button:disabled:active,
-button.disabled:active {
-    transform: none;
-}
-
-.save_btn {
-    min-width: 96px;
 }
 
 .w50 {
@@ -1250,7 +1263,7 @@ button.disabled:active {
 .select span {
     display: block;
     margin-bottom: 5px;
-    margin-left: 3px;
+    margin-inline-start: 3px;
 }
 
 /* Function-specific select backgrounds — reach USelect's trigger button */
@@ -1335,7 +1348,7 @@ button.disabled:active {
 
 .modifiers .sliders-group {
     margin-top: 5px;
-    margin-left: 20px;
+    margin-inline-start: 20px;
     width: 100%;
 }
 
@@ -1359,107 +1372,12 @@ button.disabled:active {
 
 .slider-value {
     min-width: 2.5rem;
-    text-align: right;
+    text-align: end;
     font-variant-numeric: tabular-nums;
     font-size: 12px;
     color: var(--text);
 }
 
-/* Color Define Sliders */
-.colorDefineSliders {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    background: var(--surface-50);
-    padding: 5px;
-    border: 2px solid var(--surface-600);
-    border-radius: 6px;
-    width: 167px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.colorDefineSliderContainer {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-}
-
-.colorDefineSliderLabel {
-    width: 15px;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.colorDefineSliderContainer input {
-    flex: 1;
-    margin: 0 5px;
-}
-
-.colorDefineSliderValue {
-    width: 30px;
-    display: inline-block;
-    text-align: right;
-}
-
-/* Directions */
-/* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
- *   Row 1:  .   N   .   U
- *   Row 2:  W   .   E   D
- *   Row 3:  .   S   .   .
- * :deep() is needed because UButton renders through ULink/ULinkBase, so
- * the rendered <button> sits outside this component's scoped selector. */
-.directions {
-    display: inline-grid;
-    grid-template-columns: 30px 30px 30px 30px;
-    grid-template-rows: 30px 30px 30px;
-    gap: 4px;
-    vertical-align: middle;
-    margin-right: 12px;
-}
-
-.directions :deep(button) {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    line-height: 1;
-}
-
-.directions :deep(.dir-n) {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.directions :deep(.dir-u) {
-    grid-column: 4;
-    grid-row: 1;
-}
-
-.directions :deep(.dir-w) {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.directions :deep(.dir-e) {
-    grid-column: 3;
-    grid-row: 2;
-}
-
-.directions :deep(.dir-d) {
-    grid-column: 4;
-    grid-row: 2;
-}
-
-.directions :deep(.dir-s) {
-    grid-column: 2;
-    grid-row: 3;
-}
-
-/* Colors */
 .colors {
     height: 130px;
     position: relative;
@@ -1471,10 +1389,12 @@ button.disabled:active {
     vertical-align: middle;
 }
 
+/* Colors button defaults */
 .colors > button {
     width: 100%;
     height: 100%;
     padding: 0;
+    margin: 0;
     color: white;
 }
 
@@ -1557,13 +1477,103 @@ button.disabled:active {
     background: black;
 }
 
-/* Mode Colors */
-.mode_colors button.btnOn {
-    border: 2px solid var(--text);
+/* Color Define Sliders */
+.colorDefineSliders {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    background: var(--surface-50);
+    padding: 5px;
+    border: 2px solid var(--surface-600);
+    border-radius: 6px;
+    width: 167px;
+    box-shadow: var(--shadow-popup);
 }
 
-/* Special Colors */
-.special_colors button.btnOn {
+.colorDefineSliderContainer {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.colorDefineSliderLabel {
+    width: 15px;
+    display: inline-block;
+    margin-inline-end: 5px;
+}
+
+.colorDefineSliderContainer input {
+    flex: 1;
+    margin: 0 5px;
+}
+
+.colorDefineSliderValue {
+    width: 30px;
+    display: inline-block;
+    text-align: end;
+}
+
+/* Directions */
+/* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
+ *   Row 1:  .   N   .   U
+ *   Row 2:  W   .   E   D
+ *   Row 3:  .   S   .   .
+ * :deep() is needed because UButton renders through ULink/ULinkBase, so
+ * the rendered <button> sits outside this component's scoped selector. */
+.directions {
+    display: inline-grid;
+    grid-template-columns: 30px 30px 30px 30px;
+    grid-template-rows: 30px 30px 30px;
+    gap: 4px;
+    direction: ltr;
+    vertical-align: middle;
+    margin-inline-end: 12px;
+}
+
+.directions :deep(button) {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.directions :deep(.dir-n) {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.directions :deep(.dir-u) {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.directions :deep(.dir-w) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.directions :deep(.dir-e) {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.directions :deep(.dir-d) {
+    grid-column: 4;
+    grid-row: 2;
+}
+
+.directions :deep(.dir-s) {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+/* Mode / Special Color Buttons */
+.mode_colors button.btnOn {
     border: 2px solid var(--text);
 }
 

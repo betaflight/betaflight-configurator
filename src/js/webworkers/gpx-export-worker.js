@@ -2,11 +2,11 @@ onmessage = function (event) {
     const header = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.topografix.com/GPX/gpx_style/0/2 http://www.topografix.com/GPX/gpx_style/0/2/gpx_style.xsd" xmlns:gpx_style="http://www.topografix.com/GPX/gpx_style/0/2" 
   version="1.1" 
-  creator="https://github.com/betaflight/blackbox-log-viewer">
+  creator="https://github.com/betaflight/betaflight-configurator">
   <metadata>
     <author>
-      <name>Betaflight Blackbox Explorer</name>
-      <link href="https://github.com/betaflight/blackbox-log-viewer"></link>
+      <name>Betaflight App</name>
+      <link href="https://github.com/betaflight/betaflight-configurator"></link>
     </author>
   </metadata>`;
 

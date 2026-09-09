@@ -131,22 +131,24 @@ const VirtualFC = {
         virtualFC.CONFIG.cpuTemp = 48;
 
         virtualFC.CONFIG.buildInfo = "now";
-        virtualFC.CONFIG.buildOptions = [
-            "USE_ESC_SENSOR",
+        /** @type {string[]} */
+        const buildOptions = [
             "USE_DASHBOARD",
             "USE_GPS",
             "USE_LED_STRIP",
-            "USE_OSD",
+            "USE_MAG",
+            "USE_OSD_SD",
+            "USE_OSD_HD",
             "USE_VTX",
             "USE_SOFTSERIAL",
-            "USE_SONAR",
-            "USE_TELEMETRY",
+            "USE_RANGEFINDER",
             "USE_SERVOS",
-            "USE_TRANSPONDER",
             "USE_SERIALRX_CRSF",
             "USE_SERIALRX_SBUS",
+            "USE_TELEMETRY_SMARTPORT",
             "USE_DSHOT",
         ];
+        virtualFC.CONFIG.buildOptions = buildOptions;
 
         virtualFC.CONFIG.craftName = "BetaFlight";
         virtualFC.CONFIG.pilotName = "BF pilot";
