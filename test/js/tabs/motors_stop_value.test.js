@@ -206,8 +206,8 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(call[1].motorConfig.motorStopValue).toBe(1500);
     });
 
-    it("passes the 3D neutral, not the DShot-disarmed floor, to the motor output reorder dialog", async () => {
-        const container = await mountReady({ enable3d: true, neutral: 1500 });
+    it("passes the DShot 3D stop value, not the configured neutral, to the motor output reorder dialog", async () => {
+        const container = await mountReady({ enable3d: true, neutral: 1460 });
 
         const button = [...container.querySelectorAll("button")].find((b) =>
             b.textContent.includes("motorOutputReorderDialogOpen"),
@@ -232,10 +232,10 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(call[1].motorConfig.motorStopValue).toBe(1000);
     });
 
-    it("stops motors at the 3D neutral (not the disarmed floor) before a config save", async () => {
+    it("stops motors at the DShot 3D stop value, not the configured neutral, before a config save", async () => {
         motorsTestingEnabled.value = true;
         configHasChanged.value = true;
-        await mountReady({ enable3d: true, neutral: 1500 });
+        await mountReady({ enable3d: true, neutral: 1460 });
 
         const saveButton = [...wrapper.container.querySelectorAll("button")].find((b) =>
             b.textContent.includes("configurationButtonSave"),
@@ -247,8 +247,8 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(stopAllMotors).toHaveBeenCalledWith(1500);
     });
 
-    it("stops motors at the 3D neutral (not the disarmed floor) when the tab unmounts mid-test", async () => {
-        await mountReady({ enable3d: true, neutral: 1500 });
+    it("stops motors at the DShot 3D stop value, not the configured neutral, when the tab unmounts mid-test", async () => {
+        await mountReady({ enable3d: true, neutral: 1460 });
         motorsTestingEnabled.value = true;
 
         wrapper.unmount();
