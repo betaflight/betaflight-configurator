@@ -451,6 +451,7 @@ onMounted(async () => {
         hasMag.value,
         hasAltitude.value,
         hasSonar.value,
+        hasPitot.value,
         hasDebug.value,
     ];
     for (let i = 0; i < sensorAvailability.length; i++) {
