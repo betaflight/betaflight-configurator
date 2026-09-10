@@ -201,7 +201,9 @@ FlightLogFieldPresenter.presentFlags = function (flags, flagNames) {
             result += flagNames[i];
         }
 
-        flags >>= 1;
+        // `>>>` and not `>>`: a signed shift coerces to int32, so a set bit 31
+        // would turn the value negative and end the loop, hiding the rest.
+        flags >>>= 1;
         i++;
     }
 

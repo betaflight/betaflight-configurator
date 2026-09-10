@@ -57,7 +57,7 @@
         "message": "Le périphérique de stockage n'est pas prêt. S'il s'agit d'une microSD, vérifiez qu'elle soit correctement reconnue par votre contrôleur de vol."
     },
     "connect": {
-        "message": "Connexion"
+        "message": "Connecter"
     },
     "connecting": {
         "message": "Connexion en cours"
@@ -72,6 +72,10 @@
     "disconnectManual": {
         "message": "Déconnexion (Manuelle)",
         "description": "Disconnect button label shown when connected via manual port override."
+    },
+    "disconnectBridge": {
+        "message": "Déconnecter ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
     },
     "disconnectBluetooth": {
         "message": "Déconnexion (Bluetooth)",
@@ -150,7 +154,7 @@
         "description": "Button that saves the entered address as a bookmark in the connect dialog."
     },
     "connectBookmarkUpdate": {
-        "message": "Réactualiser",
+        "message": "Actualiser",
         "description": "Button that renames the bookmark already pointing at the entered address."
     },
     "connectBookmarkRemove": {
@@ -174,7 +178,7 @@
         "message": "Annuler"
     },
     "submit": {
-        "message": "Envoyer"
+        "message": "Soumettre"
     },
     "delete": {
         "message": "Supprimer"
@@ -186,7 +190,7 @@
         "message": "Ajouter"
     },
     "update": {
-        "message": "Réactualiser"
+        "message": "Actualiser"
     },
     "save": {
         "message": "Enregistrer"
@@ -463,8 +467,47 @@
     "autotuneBandwidth": {
         "message": "Bande passante"
     },
+    "autotuneCrossover": {
+        "message": "Gain Crossover"
+    },
     "autotunePhaseMargin": {
         "message": "Marge de phase"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Crossover Limit"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Max Phase Margin"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Predicted Peak Sens."
+    },
+    "autotuneLoopDelay": {
+        "message": "Loop Delay"
+    },
+    "autotuneTargetMargin": {
+        "message": "Tuning target"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agressive"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservative"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1 : this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1 : the measurement asks for a $2× gain change, but a single pass is limited to $3×. The crossover limit shown is not reached — apply, fly another chirp, and repeat."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1 : peak sensitivity, not phase margin, set the gain here. The loop passes close to −1 above crossover, so the recommendation stops short of the margin target."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1 : no gain within one pass keeps peak sensitivity inside the robustness bound. The value proposed is the best available rather than a safe one — treat it as a starting point and re-measure."
     },
     "autotuneResonantPeak": {
         "message": "Pic résonnant"
@@ -963,6 +1006,14 @@
     "statusbar_connection_time": {
         "message": "Connexion:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Afficher les détails du statut",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Masquer les détails du statut",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "Veuillez utiliser le 'Firmware Flasheur' pour accéder aux dispositifs en DFU"
@@ -2263,6 +2314,102 @@
     },
     "portsReadOnlyHelp": {
         "message": "<strong>Note :<\/strong> ce firmware assigne des ports série sur chaque onglet de chaque fonctionnalité, donc cette vue est en lecture seule. Il montre quel port chaque fonctionnalité utilise actuellement ; modifiez une affectation depuis l'onglet qui est propriétaire de la fonctionnalité."
+    },
+    "portsTilesHelp": {
+        "message": "Ce firmware assigne des ports série dans chaque onglet de chaque fonctionnalité. Chaque tuile ci-dessous montre ce qui est attaché au tableau et qui contient tous les ports actuellement servis."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Ce firmware ne rapporte pas encore son inventaire de périphériques."
+    },
+    "portsSectionSerial": {
+        "message": "Ports série"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Capteurs"
+    },
+    "portsTileUnassigned": {
+        "message": "Non assigné"
+    },
+    "portsTileConfigure": {
+        "message": "Configurer"
+    },
+    "portsTileCanNode": {
+        "message": "Node"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Le port est actif pour cette fonctionnalité"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Assigné mais non actif — il a perdu un conflit de port ou un redémarrage est en attente"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inactif — activer la fonctionnalité SOFTSERIAL dans l'onglet Configuration"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inactif — aucun pin n'est assigné à ce port"
+    },
+    "portsInactiveReason": {
+        "message": "Inactif – {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inactif"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Récepteur série"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox log"
+    },
+    "portsClaimEscSensor": {
+        "message": "Télémétrie ESC"
+    },
+    "portsClaimRcdevice": {
+        "message": "Caméra (protocole RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Émetteur vidéo"
+    },
+    "portsClaimRangefinder": {
+        "message": "Rangefinder"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Capteur optique"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Texte personnalisé OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Télémétrie"
+    },
+    "portsSensorGyro": {
+        "message": "Gyro"
+    },
+    "portsSensorAcc": {
+        "message": "Accéléromètre"
+    },
+    "portsSensorBaro": {
+        "message": "Baromètre"
+    },
+    "portsSensorMag": {
+        "message": "Magnétomètre"
+    },
+    "portsSensorNotDetected": {
+        "message": "Configuré mais non détecté"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Mise à jour du firmware <span class=\"message-negative\">requise<\/span>. La configuration port série du firmware &lt; 1.8.0 n'est pas supportée."
@@ -4018,6 +4165,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4038,6 +4188,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Airspeed - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -7599,6 +7752,9 @@
     "osdButtonSaved": {
         "message": "Enregistré"
     },
+    "osdPitotAirSpeed": {
+        "message": "Vitesse de l'air"
+    },
     "vtxHelp": {
         "message": "Ici, vous pouvez configurer les valeurs de votre Transmetteur Vidéo (VTX). Vous pouvez voir et modifier les valeurs de transmission, y compris les tables VTX, si le contrôleur de vol et le VTX le supportent.<br>Pour configurer votre VTX utilisez les étapes suivantes :<br>1. Allez sur <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">cette<\/a> page ;<br>2. Trouvez le fichier de configuration VTX approprié pour votre pays et votre modèle VTX et téléchargez-le ;<br>3. Cliquez sur '$t(vtxButtonLoadFile.message)' ci-dessous, sélectionnez le fichier de configuration VTX, chargez-le ;<br>4. Vérifiez que les paramètres sont corrects ;<br>5. Cliquez sur '$t(vtxButtonSave.message)' pour stocker les paramètres VTX sur le contrôleur de vol.<br>6. Vous pouvez éventuellement cliquer sur '$t(vtxButtonSaveLua.message)' pour enregistrer un fichier de configuration de lua que vous pouvez utiliser avec les scripts de betaflight lua (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">ici<\/a>.)",
         "description": "Introduction message in the VTX tab"
@@ -7958,6 +8114,9 @@
     },
     "configurationBaroHardware": {
         "message": "Baromètre"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnétomètre"

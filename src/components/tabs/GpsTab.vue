@@ -447,7 +447,6 @@ export default defineComponent({
             write: writeGpsPort,
         } = useFeaturePort({
             setting: "gps_uart",
-            functionName: "GPS",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
@@ -858,49 +857,46 @@ export default defineComponent({
                 return undefined;
             }
 
-            return runSave(
-                async () => {
-                    const savedSnapshot = takeSnapshot();
+            return runSave(async () => {
+                const savedSnapshot = takeSnapshot();
 
-                    Object.assign(fcStore.gpsConfig, gpsConfig);
+                Object.assign(fcStore.gpsConfig, gpsConfig);
 
-                    // The CLI has its own queue, so the telemetry poll's MSP chain has to stop for
-                    // the port write below rather than run alongside it.
-                    pauseInterval("gps_pull");
+                // The CLI has its own queue, so the telemetry poll's MSP chain has to stop for
+                // the port write below rather than run alongside it.
+                pauseInterval("gps_pull");
+                try {
+                    await MSP.promise(
+                        MSPCodes.MSP_SET_FEATURE_CONFIG,
+                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                    );
+                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+
+                    // gps_uart and gps_baud share the parameter group MSP_SET_GPS_CONFIG just
+                    // wrote, and the persist below serialises that group, so this has to sit
+                    // between the two. Throwing skips the persist, so a refused port leaves
+                    // nothing written to EEPROM.
                     try {
-                        await MSP.promise(
-                            MSPCodes.MSP_SET_FEATURE_CONFIG,
-                            mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                        );
-                        await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
-
-                        // gps_uart and gps_baud share the parameter group MSP_SET_GPS_CONFIG just
-                        // wrote, and the persist below serialises that group, so this has to sit
-                        // between the two. Throwing skips the persist, so a refused port leaves
-                        // nothing written to EEPROM.
-                        try {
-                            await writeGpsPort();
-                        } catch (error) {
-                            gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
-                            throw error;
-                        }
-
-                        try {
-                            await writeCanDevice();
-                        } catch (error) {
-                            gui_log(i18n.getMessage("gpsCanDeviceSaveFailed"));
-                            throw error;
-                        }
-
-                        await saveAndReboot();
-                    } finally {
-                        resumeInterval("gps_pull");
+                        await writeGpsPort();
+                    } catch (error) {
+                        gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
+                        throw error;
                     }
 
-                    markClean(savedSnapshot);
-                },
-                { onError: (e) => console.error("Failed to save GPS configuration", e) },
-            );
+                    try {
+                        await writeCanDevice();
+                    } catch (error) {
+                        gui_log(i18n.getMessage("gpsCanDeviceSaveFailed"));
+                        throw error;
+                    }
+
+                    await saveAndReboot();
+                } finally {
+                    resumeInterval("gps_pull");
+                }
+
+                markClean(savedSnapshot);
+            });
         };
 
         const initializeMap = () => {

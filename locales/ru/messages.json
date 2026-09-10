@@ -73,6 +73,10 @@
         "message": "Отключиться (вручную)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Отключить ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Отключиться (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -465,6 +469,9 @@
     },
     "autotunePhaseMargin": {
         "message": "Запас по фазе"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Прогнозируемая пиковая чувствительность"
     },
     "autotuneResonantPeak": {
         "message": "Резонансный пик"

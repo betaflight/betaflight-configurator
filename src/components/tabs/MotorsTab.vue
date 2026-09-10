@@ -599,7 +599,7 @@ const {
     changed: escSensorPortChanged,
     load: loadEscSensorPort,
     write: writeEscSensorPort,
-} = useFeaturePort({ setting: "esc_sensor_uart", functionName: "ESC_SENSOR" });
+} = useFeaturePort({ setting: "esc_sensor_uart" });
 
 // Warning dialog
 const settingsChangedOpen = ref(false);
@@ -970,7 +970,7 @@ let graphHelpers = null;
 let graphData = [];
 let samples = 0;
 let maxRead = [0, 0, 0];
-let accelOffset = [0, 0, 0];
+const accelOffset = [0, 0, 0];
 let accelOffsetEstablished = false;
 let imuPollingIntervalId = null;
 let powerPollingIntervalId = null;
@@ -1423,57 +1423,54 @@ const handleSave = (reboot = true) => {
         return;
     }
 
-    return runSave(
-        async () => {
-            // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
-            // This prevents motors from spinning after reboot due to DShot beacon commands
-            if (motorsTestingEnabled.value) {
-                motorsTestingEnabled.value = false;
-                // Give a small delay for motor testing disable to complete
-                await new Promise((resolve) => setTimeout(resolve, 50));
-            }
+    return runSave(async () => {
+        // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
+        // This prevents motors from spinning after reboot due to DShot beacon commands
+        if (motorsTestingEnabled.value) {
+            motorsTestingEnabled.value = false;
+            // Give a small delay for motor testing disable to complete
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        }
 
-            // Explicitly stop all motors to ensure no spinning after reboot
-            stopAllMotors(zeroThrottleValue.value);
-            // Give time for motor stop command to be processed
-            await new Promise((resolve) => setTimeout(resolve, 100));
+        // Explicitly stop all motors to ensure no spinning after reboot
+        stopAllMotors(zeroThrottleValue.value);
+        // Give time for motor stop command to be processed
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-            // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+        // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
-            // Send all motor configuration changes in sequence
-            await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+        // Send all motor configuration changes in sequence
+        await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
-            // Between the parameter group writes and the persist that serialises them, so a
-            // refused port throws before anything reaches EEPROM.
-            await writeEscSensorPort();
+        // Between the parameter group writes and the persist that serialises them, so a
+        // refused port throws before anything reaches EEPROM.
+        await writeEscSensorPort();
 
-            // Persist to EEPROM, rebooting when requested.
-            if (reboot) {
-                await saveAndReboot();
-            } else {
-                await saveToEeprom();
-            }
+        // Persist to EEPROM, rebooting when requested.
+        if (reboot) {
+            await saveAndReboot();
+        } else {
+            await saveToEeprom();
+        }
 
-            // Only after a successful persist: record analytics and refresh the dirty baseline.
-            if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-                tracking.sendSaveAndChangeEvents(
-                    tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                    motorsState.analyticsChanges.value,
-                    "motors",
-                );
-            }
+        // Only after a successful persist: record analytics and refresh the dirty baseline.
+        if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
+            tracking.sendSaveAndChangeEvents(
+                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+                motorsState.analyticsChanges.value,
+                "motors",
+            );
+        }
 
-            // Reset state (clears changes and updates defaults)
-            resetChanges();
-        },
-        { onError: (error) => console.error("[Motors] Save failed:", error) },
-    );
+        // Reset state (clears changes and updates defaults)
+        resetChanges();
+    });
 };
 
 const stopMotors = () => {

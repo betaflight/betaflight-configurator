@@ -68,6 +68,7 @@ export default {
         select: {
             slots: {
                 base: "cursor-pointer",
+                content: "min-w-fit",
                 // data-[state=checked] is set by Reka UI on the selected item; itemTrailingIcon
                 // only renders inside SelectItemIndicator so colouring it never affects other icons.
                 item: "cursor-pointer data-[state=checked]:before:bg-primary/15 data-[state=checked]:text-highlighted data-[state=checked]:font-medium data-[state=checked]:data-highlighted:before:bg-primary/25",

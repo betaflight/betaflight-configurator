@@ -12,6 +12,7 @@ import {
     eu,
     fr,
     gl,
+    hr,
     it,
     ja,
     ka,
@@ -31,6 +32,17 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
 
+// Nuxt UI does not currently ship some languages
+// Create new locale for them extending the English locale as base
+// For Serbian locales, use its closely related Croatian
+const he = { ...en, name: "\u05E2\u05D1\u05E8\u05D9\u05EA", code: "he", dir: "rtl" };
+const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
+const sr_Cyrl = {
+    ...hr,
+    name: "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
+    code: "sr_Cyrl",
+};
+
 /**
  * The single list of languages the configurator ships translations for, each entry being
  * the matching Nuxt UI locale. Keeping the Nuxt UI locale here rather than in a second
@@ -48,6 +60,7 @@ const supportedLocales = [
     eu,
     fr,
     gl,
+    he,
     it,
     ja,
     ka,
@@ -57,6 +70,8 @@ const supportedLocales = [
     pt_br,
     pl,
     ru,
+    sr,
+    sr_Cyrl,
     uk,
     uz,
     zh_cn,
@@ -70,7 +85,9 @@ const languagesAvailables = supportedLocales.map((locale) => locale.code);
  * consistent about the case of the region subtag, and preferences stored by older
  * versions predate the move to BCP 47.
  */
-const localesByCode = new Map(supportedLocales.map((locale) => [locale.code.toLowerCase(), locale]));
+const localesByCode = new Map(
+    supportedLocales.map((locale) => [locale.code.replaceAll("_", "-").toLowerCase(), locale]),
+);
 
 /**
  * Resolves any incoming language code onto a locale we ship translations for, be it a
@@ -216,7 +233,7 @@ i18n.isRtl = function (locale) {
  * Resolves a language code onto the Nuxt UI locale that `UApp` needs. An unknown code
  * degrades to LTR English rather than leaving Nuxt UI with no locale at all.
  * @param {string} [language] language code, e.g. "ar" or "zh-CN"; defaults to the active one
- * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object }} a Nuxt UI locale
+ * @returns {import("@nuxt/ui/runtime/types/locale.js").Locale<import("@nuxt/ui/runtime/types/locale.js").Messages>} a Nuxt UI locale
  */
 i18n.getUiLocale = function (language = i18n.getCurrentLocale()) {
     return findLocale(language) ?? en;

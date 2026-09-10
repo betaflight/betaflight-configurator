@@ -73,6 +73,10 @@
         "message": "Desconectar (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Desconectar ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Desconectar (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -475,8 +479,35 @@
     "autotuneBandwidth": {
         "message": "Largura de banda"
     },
+    "autotuneCrossover": {
+        "message": "Ganho Crossover"
+    },
     "autotunePhaseMargin": {
         "message": "Margem de Fase"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Limite de Crossover"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Margem Máxima da Fase"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Pico Sens. Previsto"
+    },
+    "autotuneLoopDelay": {
+        "message": "Atraso do Loop"
+    },
+    "autotuneTargetMargin": {
+        "message": "Alvo do tuning"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agressivo"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservador"
     },
     "autotuneResonantPeak": {
         "message": "Pico Resonante"

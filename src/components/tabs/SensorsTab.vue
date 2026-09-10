@@ -113,6 +113,20 @@
                                 size="xs"
                             />
                         </SettingRow>
+                        <SettingRow v-if="showPitot" :label="$t('configurationPitot')">
+                            <USwitch v-model="pitotHardwareEnabled" />
+                            <USelect
+                                v-if="pitotHardwareEnabled"
+                                v-model="sensorConfig.pitot_hardware"
+                                :items="
+                                    pitotTypesList
+                                        .map((label, i) => ({ label, value: i }))
+                                        .filter((item) => item.value !== 1) // exclude PITOT_NONE
+                                "
+                                class="min-w-40"
+                                size="xs"
+                            />
+                        </SettingRow>
                         <!-- Board Alignment -->
                         <SettingRow :label="$t('configurationBoardAlignment')" fullWidth>
                             <HelpIcon :text="$t('configurationBoardAlignmentHelp')" />
@@ -796,7 +810,7 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
@@ -846,7 +860,7 @@ const {
     selectedIdentifier: rangefinderPortIdentifier,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
-} = useFeaturePort({ setting: "rangefinder_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
     available: opticalFlowPortAvailable,
@@ -855,7 +869,7 @@ const {
     selectedIdentifier: opticalFlowPortIdentifier,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
-} = useFeaturePort({ setting: "opticalflow_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -871,6 +885,7 @@ const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
+const isApi149 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
 const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_48));
 const isApi147 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 const isApi146 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
@@ -896,6 +911,7 @@ const sensorConfig = reactive({
     mag_hardware: 0,
     sonar_hardware: 0,
     opticalflow_hardware: 0,
+    pitot_hardware: 0,
 });
 
 const accHardwareEnabled = computed({
@@ -919,8 +935,16 @@ const magHardwareEnabled = computed({
     },
 });
 
+const pitotHardwareEnabled = computed({
+    get: () => sensorConfig.pitot_hardware !== 1,
+    set: (val) => {
+        sensorConfig.pitot_hardware = val ? 0 : 1;
+    },
+});
+
 const sonarTypesList = ref([]);
 const opticalFlowTypesList = ref([]);
+const pitotTypesList = ref([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -1009,6 +1033,7 @@ const showMultiGyro = ref(false);
 const showGyro1Align = ref(false);
 const showGyro2Align = ref(false);
 const showMagAlign = ref(false);
+const showPitot = ref(false);
 
 const sensorTypesData = ref(null);
 
@@ -2047,6 +2072,7 @@ function hydrateSensorConfig() {
     sensorConfig.mag_hardware = fcStore.sensorConfig.mag_hardware;
     sensorConfig.sonar_hardware = fcStore.sensorConfig.sonar_hardware;
     sensorConfig.opticalflow_hardware = fcStore.sensorConfig.opticalflow_hardware;
+    sensorConfig.pitot_hardware = fcStore.sensorConfig.pitot_hardware;
 
     boardAlignment.roll = fcStore.boardAlignment.roll;
     boardAlignment.pitch = fcStore.boardAlignment.pitch;
@@ -2091,6 +2117,12 @@ function hydrateAlignment() {
         showGyro1Align.value = true;
         showGyro2Align.value = hasSecondGyro.value;
         showMultiGyro.value = false;
+    }
+
+    if (isApi149.value) {
+        showPitot.value = true;
+    } else {
+        showPitot.value = false;
     }
 }
 
@@ -2142,6 +2174,9 @@ function setupPeripherals() {
         showRangefinder.value = sonarTypesList.value.length > 0;
         opticalFlowTypesList.value = sensorTypesData.value?.opticalflow?.elements || [];
         showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
+    }
+    if (isApi149.value) {
+        pitotTypesList.value = sensorTypesData.value?.pitot?.elements || [];
     }
 }
 
@@ -2218,92 +2253,88 @@ const loadConfig = async () => {
 // --- Save ---
 
 const saveConfig = () =>
-    runSave(
-        async () => {
-            const savedSnapshot = takeSnapshot();
+    runSave(async () => {
+        const savedSnapshot = takeSnapshot();
 
-            // Push sensor hardware to store
-            fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
-            fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
-            fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
+        // Push sensor hardware to store
+        fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
+        fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
+        fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
 
-            if (isApi147.value) {
-                fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
-                fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
-            }
+        if (isApi147.value) {
+            fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
+            fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
+        }
 
-            // Push board alignment to store
-            fcStore.boardAlignment.roll = boardAlignment.roll;
-            fcStore.boardAlignment.pitch = boardAlignment.pitch;
-            fcStore.boardAlignment.yaw = boardAlignment.yaw;
+        if (isApi149.value) {
+            fcStore.sensorConfig.pitot_hardware = sensorConfig.pitot_hardware;
+        }
 
-            // Push accel trims to store
-            fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
-            fcStore.config.accelerometerTrims[1] = accelTrims.roll;
+        // Push board alignment to store
+        fcStore.boardAlignment.roll = boardAlignment.roll;
+        fcStore.boardAlignment.pitch = boardAlignment.pitch;
+        fcStore.boardAlignment.yaw = boardAlignment.yaw;
 
-            // Push sensor alignment to store
-            fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
-            fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
-            fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
-            fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
+        // Push accel trims to store
+        fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
+        fcStore.config.accelerometerTrims[1] = accelTrims.roll;
 
-            if (isApi147.value) {
-                fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
-                fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
-                fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
-                fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
-                fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
-            } else {
-                fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
-                fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
-                fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
-                fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
-                fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
-                fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
-            }
+        // Push sensor alignment to store
+        fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
+        fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
+        fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
+        fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
 
-            if (isApi147.value) {
-                fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
-                fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
-                fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
-            }
+        if (isApi147.value) {
+            fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+            fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
+            fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
+            fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+            fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+        } else {
+            fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+            fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+            fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+            fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+            fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+            fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+        }
 
-            if (showMagSection.value) {
-                fcStore.compassConfig.mag_declination = magDeclination.value;
-            }
+        if (isApi147.value) {
+            fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
+            fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
+            fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
+        }
 
-            // Send MSP commands
-            await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
-            await MSP.promise(
-                MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
-                mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
-            );
-            await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
+        if (showMagSection.value) {
+            fcStore.compassConfig.mag_declination = magDeclination.value;
+        }
 
-            if (isApi146.value) {
-                await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
-            }
+        // Send MSP commands
+        await MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT));
+        await MSP.promise(
+            MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
+            mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
+        );
+        await MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM));
 
-            // Between the parameter group writes and the persist that serialises them, so a
-            // refused port throws before anything reaches EEPROM.
-            await writeRangefinderPort();
-            await writeOpticalFlowPort();
+        if (isApi146.value) {
+            await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
+        }
 
-            gui_log(i18n.getMessage("sensorConfigSaved"));
+        // Between the parameter group writes and the persist that serialises them, so a
+        // refused port throws before anything reaches EEPROM.
+        await writeRangefinderPort();
+        await writeOpticalFlowPort();
 
-            // Save to EEPROM and reboot
-            await saveAndReboot();
+        gui_log(i18n.getMessage("sensorConfigSaved"));
 
-            markClean(savedSnapshot);
-        },
-        {
-            onError: (e) => {
-                console.error("Failed to save sensor config", e);
-                gui_log(i18n.getMessage("sensorConfigSaveFailed"));
-            },
-        },
-    );
+        // Save to EEPROM and reboot
+        await saveAndReboot();
+
+        markClean(savedSnapshot);
+    });
 
 // --- Lifecycle ---
 

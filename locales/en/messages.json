@@ -319,6 +319,10 @@
         "message": "Galego",
         "description": "Don't translate!!!"
     },
+    "language_he": {
+        "message": "\u05E2\u05D1\u05E8\u05D9\u05EA",
+        "description": "Don't translate!!!"
+    },
     "language_it": {
         "message": "Italiano",
         "description": "Don't translate!!!"
@@ -353,6 +357,14 @@
     },
     "language_ru": {
         "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+        "description": "Don't translate!!!"
+    },
+    "language_sr": {
+        "message": "Srpski (latinica)",
+        "description": "Don't translate!!!"
+    },
+    "language_sr_Cyrl": {
+        "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
         "description": "Don't translate!!!"
     },
     "language_uk": {
@@ -498,9 +510,6 @@
     },
     "sensorConfigSaved": {
         "message": "Sensor configuration saved"
-    },
-    "sensorConfigSaveFailed": {
-        "message": "Failed to save sensor configuration"
     },
     "sensorConfigMagnetometer": {
         "message": "Magnetometer"
@@ -2310,6 +2319,9 @@
     "configurationSaved": {
         "message": "Configuration saved"
     },
+    "configurationSaveFailed": {
+        "message": "Failed to save configuration"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2400,6 +2412,9 @@
     },
     "portsPortInactive": {
         "message": "inactive"
+    },
+    "portsPortFree": {
+        "message": "free"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -4232,6 +4247,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4252,6 +4270,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Airspeed - cm/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -6306,6 +6327,9 @@
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Capacity for the active battery profile. Firmware uses this value for mAh remaining and OSD capacity warnings when battery profiles are available."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7741,7 +7765,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Warns when the consumed mAh exceeds the configured capacity limit"
+        "message": "Warns when the consumed mAh exceeds the active battery profile capacity, or the legacy OSD capacity alarm when no profile capacity is set"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -8179,6 +8203,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometer"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetometer"
