@@ -9,7 +9,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { getCssVar } from "./WingTpaCurvesData";
 
 const props = defineProps({
-    chartCurves: { type: Object, default: () => [] },
+    chartCurves: { type: Array, default: () => [] },
     showGrid: { type: Boolean, default: true },
 });
 
