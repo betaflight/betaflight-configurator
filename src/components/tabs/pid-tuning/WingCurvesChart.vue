@@ -6,7 +6,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
-import getCssVar from "./WingTpaCurvesData";
+import { getCssVar } from "./WingTpaCurvesData";
 
 const props = defineProps({
     chartCurves: { type: Object, default: undefined },
