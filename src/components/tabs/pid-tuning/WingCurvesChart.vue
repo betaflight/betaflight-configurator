@@ -5,16 +5,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick, computed } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
+import getCssVar from "./WingTpaCurvesData";
 
 const props = defineProps({
+    chartCurves: { type: Object, default: undefined },
     showGrid: { type: Boolean, default: true },
-    curveActive: { type: Boolean, default: true },
-    maximalSpeed: { type: Number, default: 50 },
-    curveExpo: { type: Number, default: 2 },
-    stallThrottle: { type: Number, default: 0.3 },
-    pidStallThrottle: { type: Number, default: 2 },
-    pidFullThrottle: { type: Number, default: 0.7 },
 });
 
 const containerRef = ref(null);
@@ -24,60 +20,6 @@ const canvasHeight = ref(0);
 const dpr = window.devicePixelRatio || 1;
 let resizeObserver = null;
 let themeObserver = null;
-
-function getCssVar(varName, fallback = "#000000") {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-    return value || fallback;
-}
-
-function scaleRange(value, fromMin, fromMax, toMin, toMax) {
-    if (fromMax - fromMin === 0) {
-        return toMin;
-    }
-    return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
-}
-
-// Hyperbolic curve definition
-function generateHyperbolicCurve() {
-    const steps = 100;
-    const data = [];
-
-    // Guard against edge cases
-    if (props.stallThrottle >= 1 || props.pidStallThrottle === props.pidFullThrottle) {
-        const multiplier = props.pidStallThrottle;
-        for (let i = 0; i <= steps; i++) {
-            const x = i / steps;
-            data.push({
-                speed: x * props.maximalSpeed,
-                multiplier: multiplier,
-            });
-        }
-        return data;
-    }
-
-    for (let i = 0; i <= steps; i++) {
-        const x = i / steps;
-        let curveValue;
-        if (x < props.stallThrottle) {
-            curveValue = props.pidStallThrottle;
-        } else {
-            const expoDivider = props.curveExpo - 1;
-            const expo = Math.abs(expoDivider) > 1e-3 ? 1 / expoDivider : 1e3;
-            const xShifted = scaleRange(x, props.stallThrottle, 1, 0, 1);
-            const base = 1 + (Math.pow(props.pidStallThrottle / props.pidFullThrottle, 1 / expo) - 1) * xShifted;
-            const divisor = Math.pow(base, expo);
-            curveValue = props.pidStallThrottle / divisor;
-        }
-        data.push({
-            speed: x * props.maximalSpeed,
-            multiplier: curveValue,
-        });
-    }
-    return data;
-}
-
-// Define curve and add it into chartCurves list in drawChart()
-const curveData = computed(() => generateHyperbolicCurve());
 
 function resizeCanvas() {
     const container = containerRef.value;
@@ -204,8 +146,8 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
 }
 
 // The curves drawing
-function drawCurves(ctx, chartCurves, xScale, yScale, colors) {
-    chartCurves.forEach((curve) => {
+function drawCurves(ctx, xScale, yScale, colors) {
+    props.chartCurves.forEach((curve) => {
         if (!curve.data) {
             return;
         }
@@ -229,7 +171,7 @@ function drawCurves(ctx, chartCurves, xScale, yScale, colors) {
 
 function drawChart() {
     const canvas = chartCanvas.value;
-    if (!canvas) {
+    if (!canvas || !props.chartCurves) {
         return;
     }
     const ctx = canvas.getContext("2d");
@@ -254,18 +196,9 @@ function drawChart() {
         return;
     }
 
-    // The list of charts curves
-    const chartCurves = [
-        {
-            data: curveData.value,
-            color: colors.curve,
-            active: props.curveActive,
-        },
-    ];
-
     // Collect Y values
     const allData = [];
-    for (const curve of chartCurves) {
+    for (const curve of props.chartCurves) {
         if (curve.data) {
             allData.push(...curve.data);
         }
@@ -294,7 +227,7 @@ function drawChart() {
     drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors);
 
     // The curves
-    drawCurves(ctx, chartCurves, xScale, yScale, colors);
+    drawCurves(ctx, xScale, yScale, colors);
 }
 
 function setupThemeObserver() {
@@ -337,7 +270,7 @@ onUnmounted(() => {
 });
 
 watch(
-    () => [props.maximalSpeed, props.curveExpo, props.stallThrottle, props.pidStallThrottle, props.pidFullThrottle],
+    () => [props.chartCurves],
     () => nextTick(() => drawChart()),
     { deep: true },
 );

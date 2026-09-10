@@ -1325,13 +1325,7 @@
                             class="relative bg-white dark:bg-neutral-900 border border-default p-1"
                             style="height: 362px; min-width: 200px"
                         >
-                            <HyperbolicChart
-                                :maximalSpeed="maximalSpeed"
-                                :curveExpo="wingConfig.tpa_curve_expo / 10"
-                                :stallThrottle="wingConfig.tpa_curve_stall_throttle / 100"
-                                :pidStallThrottle="wingConfig.tpa_curve_pid_thr0 / 100"
-                                :pidFullThrottle="wingConfig.tpa_curve_pid_thr100 / 100"
-                            />
+                            <WingCurvesChart :chartCurves="chartCurves" />
                         </div>
                     </details>
                 </UiBox>
@@ -1458,7 +1452,8 @@ import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
-import HyperbolicChart from "./HyperbolicChart.vue";
+import WingCurvesChart from "./WingCurvesChart.vue";
+import getTpaHyperbolicCurve from "./WingTpaCurvesData";
 
 const { t } = useTranslation();
 
@@ -2117,45 +2112,6 @@ const wingYawTypeItems = computed(() => [
     { value: 1, label: t("pidTuningWingYawTypeDiffThrust") },
 ]);
 
-// Compute Wings maximal speed to follow BF firmware formulas (pid_init.c)
-const maximalSpeed = computed(() => {
-    const G_ACCELERATION = 9.80665;
-    let maxSpeed;
-    if (wingConfig.value.tpa_speed_type == 1) {
-        if (wingConfig.value.tpa_speed_adv_mass === 0 || wingConfig.value.tpa_speed_adv_drag_k === 0) {
-            return 1;
-        }
-        const propPitch = wingConfig.value.tpa_speed_adv_prop_pitch / 100;
-        const craftMass = wingConfig.value.tpa_speed_adv_mass / 1000;
-        const dragCoef = wingConfig.value.tpa_speed_adv_drag_k / 10000;
-        const motorThrust = wingConfig.value.tpa_speed_adv_thrust / 1000;
-        const maxVoltage = wingConfig.value.tpa_speed_max_voltage / 100;
-
-        const maxFallSpeed = Math.sqrt((craftMass * G_ACCELERATION) / dragCoef);
-
-        const propMaxSpeed = (2.54 / 100 / 60) * propPitch * motorKv.value * maxVoltage;
-        const inversePropMaxSpeed = propMaxSpeed > 0 ? 1 / propMaxSpeed : 0;
-
-        const twr = motorThrust / craftMass;
-        const a = dragCoef;
-        const b = craftMass * twr * G_ACCELERATION * inversePropMaxSpeed;
-        const c = -craftMass * (twr + 1) * G_ACCELERATION;
-
-        const D = b * b - 4 * a * c;
-        const maxDiveSpeed = D >= 0 ? (-b + Math.sqrt(D)) / (2 * a) : 0;
-        maxSpeed = Math.max(maxFallSpeed, maxDiveSpeed);
-    } else {
-        if (wingConfig.value.tpa_speed_basic_gravity === 0) {
-            return 1;
-        }
-        const basicGravity = wingConfig.value.tpa_speed_basic_gravity / 100;
-        const basicDelay = wingConfig.value.tpa_speed_basic_delay / 1000;
-
-        const twr = 1 / (basicGravity * basicGravity);
-        const massDragRatio = (2 / Math.log(3)) * (2 / Math.log(3)) * twr * G_ACCELERATION * basicDelay * basicDelay;
-        maxSpeed = Math.sqrt(massDragRatio * twr * G_ACCELERATION + G_ACCELERATION);
-    }
-
-    return Math.max(maxSpeed, 1);
-});
+//
+const chartCurves = computed(() => getTpaHyperbolicCurve(wingConfig.value, motorKv.value));
 </script>
