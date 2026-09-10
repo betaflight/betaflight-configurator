@@ -768,7 +768,12 @@ const minSliderValue = computed(() => {
 });
 
 const zeroThrottleValue = computed(() =>
-    computeZeroThrottleValue(isFeatureEnabled("3D"), fcStore.motor3dConfig.neutral, minSliderValue.value),
+    computeZeroThrottleValue(
+        isFeatureEnabled("3D"),
+        digitalProtocolConfigured.value,
+        fcStore.motor3dConfig.neutral,
+        minSliderValue.value,
+    ),
 );
 
 // Initialize motor testing with safety features

@@ -194,7 +194,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(call[1].motorConfig.motorStopValue).not.toBe(1000);
     });
 
-    it("passes a non-default 3D neutral to the ESC direction dialog", async () => {
+    it("sends 1500 for DShot 3D even when the configured neutral is not 1500", async () => {
         const container = await mountReady({ enable3d: true, neutral: 1460 });
 
         const button = [...container.querySelectorAll("button")].find((b) =>
@@ -203,7 +203,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         button.click();
 
         const call = dialogOpen.mock.calls.find((c) => c[0] === "EscDshotDirectionDialog");
-        expect(call[1].motorConfig.motorStopValue).toBe(1460);
+        expect(call[1].motorConfig.motorStopValue).toBe(1500);
     });
 
     it("passes the 3D neutral, not the DShot-disarmed floor, to the motor output reorder dialog", async () => {
