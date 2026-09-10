@@ -1,12 +1,13 @@
-// DShot 3D: firmware stops the motor only at exactly 1500 (PWM_RANGE_MIDDLE), not at the configured 3D neutral.
-const DSHOT_3D_STOP = 1500;
+// betaflight firmware src/main/rx/rx.h: PWM_RANGE_MIDDLE = PWM_RANGE_MIN(1000) + PWM_RANGE(1000)/2.
+const PWM_RANGE_MIDDLE = 1500;
 
 export function computeZeroThrottleValue(is3dEnabled, isDigitalProtocol, motor3dNeutral, minSliderValue) {
     if (is3dEnabled) {
         if (isDigitalProtocol) {
-            return DSHOT_3D_STOP;
+            // dshotConvertFromExternal() (firmware src/main/drivers/dshot.c) stops the motor only at this exact value, never at motor3dConfig.neutral.
+            return PWM_RANGE_MIDDLE;
         }
-        return motor3dNeutral > 1575 || motor3dNeutral < 1425 ? 1500 : motor3dNeutral;
+        return motor3dNeutral > 1575 || motor3dNeutral < 1425 ? PWM_RANGE_MIDDLE : motor3dNeutral;
     }
     return minSliderValue;
 }
