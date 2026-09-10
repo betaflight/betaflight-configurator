@@ -109,8 +109,8 @@ export default [
     {
         // Build and release tooling: real Node scripts, not browser code. Without this
         // block `.mjs` matches no `files` pattern and is linted with zero rules.
-        // The root config files are `.js` but equally Node-side; Vite bundles its config to
-        // CJS before executing it, so `__dirname` and friends are genuinely available there.
+        // The root config files are `.js` but equally Node-side, so the Node globals apply
+        // there too.
         files: ["**/*.mjs", "*.config.js", "nuxt-ui.vite.js"],
         languageOptions: {
             ecmaVersion: "latest",
