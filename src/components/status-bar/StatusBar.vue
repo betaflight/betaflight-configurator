@@ -67,6 +67,7 @@
                 <BatteryIcon
                     compact
                     :voltage="analog.voltage ?? 0"
+                    :cell-count="batteryState.cellCount ?? 0"
                     :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
                     :vbatwarningcellvoltage="batteryConfig.vbatwarningcellvoltage ?? 1"
                     :battery-state="batteryState.batteryState"
@@ -74,6 +75,7 @@
                 <BatteryLegend
                     compact
                     :voltage="analog.voltage ?? 0"
+                    :cell-count="batteryState.cellCount ?? 0"
                     :vbatmaxcellvoltage="batteryConfig.vbatmaxcellvoltage ?? 1"
                 />
 

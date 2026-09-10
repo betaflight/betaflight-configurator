@@ -2,7 +2,7 @@ import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
-import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
@@ -122,6 +122,11 @@ const VirtualFC = {
         virtualFC.CONFIG.flightControllerVersion = "2025.12.0";
         virtualFC.CONFIG.flightControllerIdentifier = "BTFL";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
+        // Mirror MSP_STATUS_EX fields so virtual API 1.48 exposes battery profile UI.
+        if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            virtualFC.CONFIG.numberOfBatteryProfiles = 3;
+            virtualFC.CONFIG.batteryProfile = 0;
+        }
 
         virtualFC.CONFIG.cpuTemp = 48;
 

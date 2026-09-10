@@ -447,7 +447,6 @@ export default defineComponent({
             write: writeGpsPort,
         } = useFeaturePort({
             setting: "gps_uart",
-            functionName: "GPS",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
