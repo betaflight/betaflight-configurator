@@ -261,17 +261,14 @@ function updateServos() {
 }
 
 const saveServoConfig = () =>
-    runSave(
-        async () => {
-            marshalServoConfigs();
-            await mspHelper.sendServoConfigurations();
-            await saveToEeprom();
-            // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
-            // resolved to the same string, so it's dropped here to avoid a duplicate.
-            originalConfigs.value = JSON.stringify(servoConfigs);
-        },
-        { onError: (e) => console.error("Failed to save servo configuration", e) },
-    );
+    runSave(async () => {
+        marshalServoConfigs();
+        await mspHelper.sendServoConfigurations();
+        await saveToEeprom();
+        // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
+        // resolved to the same string, so it's dropped here to avoid a duplicate.
+        originalConfigs.value = JSON.stringify(servoConfigs);
+    });
 
 function getServoData() {
     MSP.send_message(MSPCodes.MSP_SERVO, false, false, () => {

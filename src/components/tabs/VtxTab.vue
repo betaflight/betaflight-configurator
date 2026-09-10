@@ -167,7 +167,7 @@
                                 @update:model-value="(v) => (vtxPortIdentifier = v)"
                                 :items="vtxPortOptions"
                                 :disabled="!vtxPortWritable || vtxPortFollowsOsd"
-                                class="w-36"
+                                class="min-w-40"
                             />
                         </SettingRow>
                     </div>
@@ -483,7 +483,6 @@ export default defineComponent({
             protocolOptions: vtxProtocolValues,
         } = useFeaturePort({
             setting: "vtx_uart",
-            functionName: ["TBS_SMARTAUDIO", "IRC_TRAMP", "VTX_MSP"],
             protocol: { setting: "vtx_type" },
         });
 
@@ -491,7 +490,6 @@ export default defineComponent({
         // firmware falls back to the OSD's UART and the row follows the OSD tab, read-only.
         const { selectedIdentifier: osdPortIdentifier, load: loadOsdPort } = useFeaturePort({
             setting: "osd_uart",
-            functionName: "FRSKY_OSD",
         });
 
         const mspVtx = computed(() => vtxProtocol.value === "MSP");
@@ -579,19 +577,12 @@ export default defineComponent({
         });
 
         const handleSave = () =>
-            runSave(
-                async () => {
-                    await saveVtx(writeVtxPort);
-                    await loadVtxConfig();
-                    await loadVtxPort();
-                    await loadOsdPort();
-                },
-                {
-                    onError: (error) => {
-                        console.error("Error saving VTX configuration:", error);
-                    },
-                },
-            );
+            runSave(async () => {
+                await saveVtx(writeVtxPort);
+                await loadVtxConfig();
+                await loadVtxPort();
+                await loadOsdPort();
+            });
 
         // --- VTX Table count setters (with change tracking) ---
 

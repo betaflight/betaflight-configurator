@@ -470,83 +470,80 @@ function save() {
         return;
     }
 
-    return runSave(
-        async () => {
-            // Normalize profile names before saving
-            pidProfileName.value = pidProfileName.value.trim();
-            rateProfileName.value = rateProfileName.value.trim();
+    return runSave(async () => {
+        // Normalize profile names before saving
+        pidProfileName.value = pidProfileName.value.trim();
+        rateProfileName.value = rateProfileName.value.trim();
 
-            // Save profile names to FC.CONFIG (API 1.45+)
+        // Save profile names to FC.CONFIG (API 1.45+)
+        if (FC.CONFIG.pidProfileNames) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
+        }
+        if (FC.CONFIG.rateProfileNames) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
+        }
+
+        // Pin what this save is about to write. The form stays live while the MSP writes are
+        // in flight, and an edit made in that window is not covered by them — baselining on
+        // the post-save state would silently swallow it.
+        const pending = pidTuningStore.takeEditsSnapshot();
+
+        // Save PIDs
+        await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
+
+        // Save advanced tuning
+        await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
+
+        // Save RC tuning
+        await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
+
+        // Save filter config
+        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
+
+        // Save simplified tuning (sliders)
+        await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
+
+        // Save profile names to firmware (API 1.45+)
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             if (FC.CONFIG.pidProfileNames) {
-                FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                );
             }
             if (FC.CONFIG.rateProfileNames) {
-                FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                );
             }
+        }
 
-            // Pin what this save is about to write. The form stays live while the MSP writes are
-            // in flight, and an edit made in that window is not covered by them — baselining on
-            // the post-save state would silently swallow it.
-            const pending = pidTuningStore.takeEditsSnapshot();
+        // Save Wing config (API 1.49+, WING build)
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
+            await MSP.promise(MSPCodes.MSP_SET_WING, mspHelper.crunch(MSPCodes.MSP_SET_WING));
+        }
 
-            // Save PIDs
-            await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
+        // Persist to EEPROM (no reboot)
+        await saveToEeprom();
 
-            // Save advanced tuning
-            await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
+        // Only after a successful persist: re-validate sliders, refresh the slider
+        // displays and update the dirty baseline.
+        await validateTuningSliders();
 
-            // Save RC tuning
-            await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
+        // Force Vue components to update slider displays
+        if (pidSubTab.value?.forceUpdateSliders) {
+            pidSubTab.value.forceUpdateSliders();
+        }
+        if (filterSubTab.value?.forceUpdateSliders) {
+            filterSubTab.value.forceUpdateSliders();
+        }
 
-            // Save filter config
-            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-            // Save simplified tuning (sliders)
-            await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
-
-            // Save profile names to firmware (API 1.45+)
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                if (FC.CONFIG.pidProfileNames) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
-                    );
-                }
-                if (FC.CONFIG.rateProfileNames) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
-                    );
-                }
-            }
-
-            // Save Wing config (API 1.49+, WING build)
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
-                await MSP.promise(MSPCodes.MSP_SET_WING, mspHelper.crunch(MSPCodes.MSP_SET_WING));
-            }
-
-            // Persist to EEPROM (no reboot)
-            await saveToEeprom();
-
-            // Only after a successful persist: re-validate sliders, refresh the slider
-            // displays and update the dirty baseline.
-            await validateTuningSliders();
-
-            // Force Vue components to update slider displays
-            if (pidSubTab.value?.forceUpdateSliders) {
-                pidSubTab.value.forceUpdateSliders();
-            }
-            if (filterSubTab.value?.forceUpdateSliders) {
-                filterSubTab.value.forceUpdateSliders();
-            }
-
-            // Update the baselines against what was actually written. The EEPROM write persisted
-            // the active profile selection, and any reset or copy, along with it.
-            pidTuningStore.markEditsClean(pending);
-            pidTuningStore.markProfileClean();
-        },
-        { onError: (e) => console.error("[PidTuning] Save failed:", e) },
-    );
+        // Update the baselines against what was actually written. The EEPROM write persisted
+        // the active profile selection, and any reset or copy, along with it.
+        pidTuningStore.markEditsClean(pending);
+        pidTuningStore.markProfileClean();
+    });
 }
 
 async function refresh() {

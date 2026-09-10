@@ -758,29 +758,24 @@ const gpsRescueAllowArmingWithoutFix = computed({
 // --- Save ---
 
 const saveConfig = () =>
-    runSave(
-        async () => {
-            await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-            await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
+    runSave(async () => {
+        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
 
-            await new Promise((resolve) => {
-                mspHelper.sendRxFailConfig(resolve);
-            });
+        await new Promise((resolve) => {
+            mspHelper.sendRxFailConfig(resolve);
+        });
 
-            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
-                await MSP.promise(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE));
-            }
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
+            await MSP.promise(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE));
+        }
 
-            initializeDefaults();
+        initializeDefaults();
 
-            await saveAndReboot();
-        },
-        {
-            onError: (e) => console.error("Failed to save configuration", e),
-        },
-    );
+        await saveAndReboot();
+    });
 
 onMounted(async () => {
     await loadConfig();

@@ -103,7 +103,9 @@ const FC = {
     COPY_PROFILE: null,
     CURRENT_METERS: null,
     CURRENT_METER_CONFIGS: null,
+    /** @type {{ ready: boolean, supported: boolean, sectors: number, totalSize: number, usedSize: number } | null} */
     DATAFLASH: null,
+    /** @type {Record<string, number>} filled in by resetState() before any tab reads it */
     DEFAULT: null,
     DEFAULT_PIDS: null,
     FAILSAFE_CONFIG: null,
