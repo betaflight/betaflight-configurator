@@ -71,7 +71,7 @@ function generateHyperbolicCurve(wingConfig, motorKv) {
     const data = [];
     const stallThrottle = wingConfig.tpa_curve_stall_throttle / 100;
     const pidStallThrottle = wingConfig.tpa_curve_pid_thr0 / 100;
-    const pidFullThrottle = Math.min(wingConfig.tpa_curve_pid_thr100, 1) / 100;
+    const pidFullThrottle = Math.max(wingConfig.tpa_curve_pid_thr100, 1) / 100;
     const curveExpo = wingConfig.tpa_curve_expo / 10;
     const maximalSpeed = computeMaximalSpeed(wingConfig, motorKv);
 
