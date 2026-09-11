@@ -603,14 +603,7 @@ class CanvasRenderer {
 
                 _color.multiply(_diffuseColor).add(_emissiveColor);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             } else if (
                 material.isMeshBasicMaterial ||
                 material.isMeshLambertMaterial ||
@@ -641,39 +634,18 @@ class CanvasRenderer {
                 } else {
                     _color.copy(material.color);
 
-                    material.wireframe === true
-                        ? strokePath(
-                            _color,
-                            material.wireframeLinewidth,
-                            material.wireframeLinecap,
-                            material.wireframeLinejoin,
-                        )
-                        : fillPath(_color);
+                    strokeOrFillPath(material, _color);
                 }
             } else if (material.isMeshNormalMaterial) {
                 _normal.copy(element.normalModel).applyMatrix3(_normalViewMatrix);
 
                 _color.setRGB(_normal.x, _normal.y, _normal.z).multiplyScalar(0.5).addScalar(0.5);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             } else {
                 _color.setRGB(1, 1, 1);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             }
         }
 
@@ -701,6 +673,14 @@ class CanvasRenderer {
         function fillPath(color) {
             setFillStyle(color.getStyle());
             _context.fill();
+        }
+
+        function strokeOrFillPath(material, color) {
+            if (material.wireframe === true) {
+                strokePath(color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin);
+            } else {
+                fillPath(color);
+            }
         }
 
         function textureToPattern(texture) {
