@@ -588,6 +588,16 @@ const DEBUG_MODE_CURVES = {
         6: [0, 1000], // GPS R pos
         7: [0, 1000], // GPS R vel
     },
+    PSAS: gatedByApi149({
+        0: [0, 200], // Main speed curve
+        1: [0, 200], // Stick speed curve
+        2: [-2, 2], // Lift coefficient
+        3: [-5, 5], // Accel Z required
+        4: [-5, 5], // Accel Z delta
+        5: [-100, 100], // Accel Z P
+        6: [-1, 1], // Lift coeff delta
+        7: [0, 1], // AoA limiter is on
+    }),
 };
 
 GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {

@@ -68,4 +68,6 @@ export const FIRMWARE_BUILD_OPTIONS = {
     USE_ONESHOT: 8233,
     USE_PROSHOT: 8234,
     USE_PWM_OUTPUT: 8235,
+
+    USE_PSAS: 16424, // TODO: Using of USE_WING code till. Set actual code from BF firmware after merging PSAS in the firmware!
 };
