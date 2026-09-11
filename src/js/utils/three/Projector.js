@@ -109,10 +109,7 @@ class Projector {
             _viewProjectionMatrix = new THREE.Matrix4(),
             _modelMatrix,
             _modelViewProjectionMatrix = new THREE.Matrix4(),
-            _normalMatrix = new THREE.Matrix3(),
-            _frustum = new THREE.Frustum(),
-            _clippedVertex1PositionScreen = new THREE.Vector4(),
-            _clippedVertex2PositionScreen = new THREE.Vector4();
+            _frustum = new THREE.Frustum();
 
         //
 
