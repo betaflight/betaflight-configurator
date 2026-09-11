@@ -8237,6 +8237,12 @@
     "sensorConfigMagUpdate": {
         "message": "Update"
     },
+    "sensorConfigMagTrust": {
+        "message": "Use Magnetometer as Heading Source"
+    },
+    "sensorConfigMagTrustHelp": {
+        "message": "Allow the flight controller to use the magnetometer to correct the heading estimate. Only enable this after the magnetometer has been calibrated and verified, otherwise a bad heading can degrade GPS Rescue and other navigation modes"
+    },
     "sensorConfigDeclinationAutoSet": {
         "message": "Magnetic declination auto-detected as {{value}}° for your location."
     },

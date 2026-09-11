@@ -579,6 +579,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
                     }
+
+                    // Introduced in 1.49
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.COMPASS_CONFIG.mag_trust = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP_GPS_CONFIG:
                     FC.GPS_CONFIG.provider = data.readU8();
@@ -2091,6 +2096,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 buffer.push16(Math.round(10.0 * parseFloat(FC.COMPASS_CONFIG.mag_declination)));
+            }
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push8(FC.COMPASS_CONFIG.mag_trust ? 1 : 0);
             }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:

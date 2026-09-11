@@ -376,6 +376,7 @@ const FC = {
 
         this.COMPASS_CONFIG = {
             mag_declination: 0,
+            mag_trust: 0,
         };
 
         this.RSSI_CONFIG = {

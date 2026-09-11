@@ -301,6 +301,16 @@
                     label-prefix="configurationMagAlignment"
                 />
 
+                <!-- Trust mag as heading source (API >= 1.49) -->
+                <SettingRow
+                    v-if="isApi149"
+                    :label="$t('sensorConfigMagTrust')"
+                    :help="$t('sensorConfigMagTrustHelp')"
+                    fullWidth
+                >
+                    <USwitch v-model="magTrust" :aria-label="$t('sensorConfigMagTrust')" />
+                </SettingRow>
+
                 <!-- API >= 1.47: full mag cal UI (declination, cal editor, check, guided modes) -->
                 <template v-if="calGuidedAvailable">
                     <!-- Declination auto-set note (API >= 1.46) -->
@@ -1162,6 +1172,7 @@ const gyroAlignSelectItems = computed(() => {
 // --- Magnetometer ---
 
 const magDeclination = ref(0);
+const magTrust = ref(false);
 const magInclination = ref(null);
 const magFieldStrength = ref(null);
 const showMagSection = ref(false);
@@ -2058,6 +2069,7 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        magTrust: magTrust.value,
         rangefinderPort: rangefinderPortIdentifier.value,
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
@@ -2139,6 +2151,10 @@ function setupMagSection() {
 
     if (isApi146.value) {
         magDeclination.value = fcStore.compassConfig.mag_declination;
+    }
+
+    if (isApi149.value) {
+        magTrust.value = fcStore.compassConfig.mag_trust !== 0;
     }
 
     cal.refreshFirmwareOffsets()
@@ -2308,6 +2324,10 @@ const saveConfig = () =>
 
         if (showMagSection.value) {
             fcStore.compassConfig.mag_declination = magDeclination.value;
+
+            if (isApi149.value) {
+                fcStore.compassConfig.mag_trust = magTrust.value ? 1 : 0;
+            }
         }
 
         // Send MSP commands
