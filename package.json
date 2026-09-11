@@ -111,7 +111,6 @@
     "cross-env": "^7.0.3",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.0.2",
-    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-unused-imports": "^4.1.4",
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.9.0",

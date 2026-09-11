@@ -1,5 +1,4 @@
 import vuePlugin from "eslint-plugin-vue";
-import prettierPlugin from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier/flat";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
@@ -32,7 +31,6 @@ export default [
         },
         plugins: {
             vue: vuePlugin,
-            prettier: prettierPlugin,
             "unused-imports": unusedImportsPlugin,
         },
         rules: {
