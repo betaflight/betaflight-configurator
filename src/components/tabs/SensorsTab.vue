@@ -2360,7 +2360,7 @@ onMounted(() => {
         gap: 1rem;
     }
 
-    .sensor-model-box :deep(> div:last-child) {
+    .sensor-model-box > div:last-child {
         height: 100%;
         min-height: 0;
     }

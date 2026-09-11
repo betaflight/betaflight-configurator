@@ -416,7 +416,7 @@ export default defineComponent({
     opacity: 0.75;
 }
 
-.dialog-input-code :deep(input) {
+.dialog-input-code input {
     text-align: center;
     letter-spacing: 0.15em;
 }

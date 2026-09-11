@@ -144,6 +144,20 @@ function stripManifestFromSecondaryEntriesPlugin() {
     };
 }
 
+// These modules are each imported dynamically in one place purely to break an import
+// cycle (see the comment at every call site), never to split them into their own chunk.
+// Rolldown reports INEFFECTIVE_DYNAMIC_IMPORT because they are also imported statically
+// elsewhere -- which is the intent -- so the chunking advice does not apply. Only these
+// are silenced, so a genuinely pointless dynamic import added later still warns.
+const CYCLE_BREAKING_DYNAMIC_IMPORTS = ["src/js/msp.js", "src/js/serial_backend.js", "src/js/tab_switch.js"];
+
+function isCycleBreakingImport(warning) {
+    // The message is prefixed with the (colourised) warning code, so match on the
+    // "<id> is dynamically imported by" phrase rather than the start of the string.
+    const message = warning.message ?? "";
+    return CYCLE_BREAKING_DYNAMIC_IMPORTS.some((id) => message.includes(`${id} is dynamically imported by`));
+}
+
 export default defineConfig({
     base: "./", // Important for production APK asset paths
     define: {
@@ -156,6 +170,12 @@ export default defineConfig({
             input: {
                 main: resolve(import.meta.dirname, "src/index.html"),
                 receiver_msp: resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+            },
+            onwarn(warning, defaultHandler) {
+                if (warning.code === "INEFFECTIVE_DYNAMIC_IMPORT" && isCycleBreakingImport(warning)) {
+                    return;
+                }
+                defaultHandler(warning);
             },
         },
     },
