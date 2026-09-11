@@ -31,7 +31,7 @@
     "tauri:ios:dev": "cross-env TAURI_DEV=1 tauri ios dev",
     "tauri:ios:build": "tauri ios build",
     "tauri:prebuild": "node scripts/sync-tauri-version.mjs && vite build",
-    "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
+    "format": "prettier --write \"**/*.{js,mjs,ts,vue,css,less}\"",
     "storybook": "storybook dev -p 6006",
     "prepare": "husky"
   },

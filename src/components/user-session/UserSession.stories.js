@@ -17,10 +17,10 @@ const withSessionState = (sessionArgs) => {
     const loggedIn = sessionArgs?.isLoggedIn ?? false;
     const profile = loggedIn
         ? {
-            name: sessionArgs?.userName || "",
-            email: sessionArgs?.userEmail || "",
-            avatar: sessionArgs?.avatar || "",
-        }
+              name: sessionArgs?.userName || "",
+              email: sessionArgs?.userEmail || "",
+              avatar: sessionArgs?.avatar || "",
+          }
         : null;
 
     loginManager.isUserLoggedIn = async () => loggedIn;

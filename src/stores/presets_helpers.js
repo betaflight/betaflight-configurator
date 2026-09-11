@@ -44,9 +44,9 @@ export function normalizeStoredSources(storedSources) {
     const secondaryOfficialSource = createSecondaryOfficialSource();
     let sources = Array.isArray(storedSources)
         ? storedSources.map((source) => ({
-            ...source,
-            id: source.id || createSourceId(),
-        }))
+              ...source,
+              id: source.id || createSourceId(),
+          }))
         : [officialSource, secondaryOfficialSource];
 
     if (sources.length === 0) {

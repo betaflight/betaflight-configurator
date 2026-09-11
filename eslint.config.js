@@ -1,5 +1,6 @@
 import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier/flat";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 import tseslint from "typescript-eslint";
@@ -40,14 +41,6 @@ export default [
             "no-undef": "error",
             "no-var": "error",
             "prefer-template": "error",
-            "comma-dangle": ["error", "always-multiline"],
-            indent: [
-                "error",
-                4,
-                {
-                    SwitchCase: 1,
-                },
-            ],
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
                 "warn",
@@ -137,4 +130,9 @@ export default [
             "no-undef": "error",
         },
     },
+    // Must stay last: turns off every core/plugin rule that overlaps with Prettier.
+    // The core `indent` rule in particular cannot express Prettier's extra offset for a
+    // call inside a ternary branch, so `eslint --fix` and `prettier --write` used to
+    // fight over the same lines and `prettier --check` failed on 20 files.
+    prettierConfig,
 ];
