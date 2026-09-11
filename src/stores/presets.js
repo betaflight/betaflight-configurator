@@ -113,8 +113,8 @@ export const usePresetsStore = defineStore("presets", () => {
     const failedRepositoriesMessage = computed(() =>
         failedRepositoryNames.value.length
             ? i18n.getMessage("presetsFailedToLoadRepositories", {
-                repos: failedRepositoryNames.value.join("; "),
-            })
+                  repos: failedRepositoryNames.value.join("; "),
+              })
             : "",
     );
 
@@ -319,11 +319,11 @@ export const usePresetsStore = defineStore("presets", () => {
         sources.value = sources.value.map((existingSource) =>
             existingSource.id === sourceId
                 ? {
-                    ...existingSource,
-                    ...source,
-                    gitHubBranch: source.gitHubBranch ?? "",
-                    official: false,
-                }
+                      ...existingSource,
+                      ...source,
+                      gitHubBranch: source.gitHubBranch ?? "",
+                      official: false,
+                  }
                 : existingSource,
         );
         saveSourceConfiguration();

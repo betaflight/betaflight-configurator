@@ -505,7 +505,15 @@ export async function runVideoExport(options) {
         const started = createVideoOutput({ options, target, probe });
         output = started.output;
         await startVideoOutput(options, output);
-        return await renderVideoFrames({ options, output, source: started.source, target, exportState, start, totalFrames });
+        return await renderVideoFrames({
+            options,
+            output,
+            source: started.source,
+            target,
+            exportState,
+            start,
+            totalFrames,
+        });
     } catch (error) {
         failed = true;
         await cancelFailedVideoOutput(output);

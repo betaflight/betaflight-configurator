@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue";
 import path from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
@@ -144,6 +144,20 @@ function stripManifestFromSecondaryEntriesPlugin() {
     };
 }
 
+// These modules are each imported dynamically in one place purely to break an import
+// cycle (see the comment at every call site), never to split them into their own chunk.
+// Rolldown reports INEFFECTIVE_DYNAMIC_IMPORT because they are also imported statically
+// elsewhere -- which is the intent -- so the chunking advice does not apply. Only these
+// are silenced, so a genuinely pointless dynamic import added later still warns.
+const CYCLE_BREAKING_DYNAMIC_IMPORTS = ["src/js/msp.js", "src/js/serial_backend.js", "src/js/tab_switch.js"];
+
+function isCycleBreakingImport(warning) {
+    // The message is prefixed with the (colourised) warning code, so match on the
+    // "<id> is dynamically imported by" phrase rather than the start of the string.
+    const message = warning.message ?? "";
+    return CYCLE_BREAKING_DYNAMIC_IMPORTS.some((id) => message.includes(`${id} is dynamically imported by`));
+}
+
 export default defineConfig({
     base: "./", // Important for production APK asset paths
     define: {
@@ -154,8 +168,14 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, "src/index.html"),
-                receiver_msp: resolve(__dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+                main: resolve(import.meta.dirname, "src/index.html"),
+                receiver_msp: resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+            },
+            onwarn(warning, defaultHandler) {
+                if (warning.code === "INEFFECTIVE_DYNAMIC_IMPORT" && isCycleBreakingImport(warning)) {
+                    return;
+                }
+                defaultHandler(warning);
             },
         },
     },
@@ -165,7 +185,7 @@ export default defineConfig({
         setupFiles: ["test/setup.js"],
         root: ".",
         alias: {
-            "/images/": `${path.resolve(__dirname, "src/images")}/`,
+            "/images/": `${path.resolve(import.meta.dirname, "src/images")}/`,
         },
     },
     plugins: [
@@ -184,9 +204,9 @@ export default defineConfig({
         // leave the popup loading an untransformed module (bare `vue` specifier).
         ...viteStaticCopy({
             targets: [
-                { src: normalizePath(path.resolve(__dirname, "locales")), dest: "." },
-                { src: normalizePath(path.resolve(__dirname, "resources")), dest: "." },
-                { src: normalizePath(path.resolve(__dirname, "src/images")), dest: "." },
+                { src: normalizePath(path.resolve(import.meta.dirname, "locales")), dest: "." },
+                { src: normalizePath(path.resolve(import.meta.dirname, "resources")), dest: "." },
+                { src: normalizePath(path.resolve(import.meta.dirname, "src/images")), dest: "." },
             ],
         }).filter((plugin) => plugin.name === "vite-plugin-static-copy:build"),
         VitePWA({
@@ -220,12 +240,12 @@ export default defineConfig({
     ],
     // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
     // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.
-    root: path.resolve(__dirname, "src"),
+    root: path.resolve(import.meta.dirname, "src"),
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, "src"),
+            "@": path.resolve(import.meta.dirname, "src"),
             "/src": path.resolve(process.cwd(), "src"),
-            vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
+            vue: path.resolve(import.meta.dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
         },
     },
     server: {
