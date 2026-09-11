@@ -387,6 +387,10 @@ export class UsbDfuProtocol extends EventTarget {
                 if (str === "@Option byte   /0x1FFFC000/01*512 g") {
                     str = "@Option bytes   /0x1FFFC000/01*512 g";
                 }
+                // GD32H7xx: Normalize "@InternalFlash" (no space) to "@Internal Flash"
+                if (str.startsWith("@InternalFlash")) {
+                    str = str.replace("@InternalFlash", "@Internal Flash");
+                }
                 // split main into [location, start_addr, sectors]
                 const tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
                 const tmp1 = tmp0.split("/");

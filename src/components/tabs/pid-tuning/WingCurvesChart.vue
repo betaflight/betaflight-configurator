@@ -1,0 +1,290 @@
+<template>
+    <div ref="containerRef" class="chart-container">
+        <canvas ref="chartCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+    </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
+import { getCssVar } from "./WingTpaCurvesData";
+
+const props = defineProps({
+    chartCurves: { type: Array, default: () => [] },
+    showGrid: { type: Boolean, default: true },
+});
+
+const containerRef = ref(null);
+const chartCanvas = ref(null);
+const canvasWidth = ref(0);
+const canvasHeight = ref(0);
+const dpr = window.devicePixelRatio || 1;
+let resizeObserver = null;
+let themeObserver = null;
+
+function resizeCanvas() {
+    const container = containerRef.value;
+    if (!container) {
+        return;
+    }
+    const rect = container.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) {
+        return;
+    }
+    canvasWidth.value = rect.width * dpr;
+    canvasHeight.value = rect.height * dpr;
+    const canvas = chartCanvas.value;
+    if (canvas) {
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+    }
+    drawChart();
+}
+
+const pad = { top: 20, right: 20, bottom: 30, left: 40 };
+
+// Draw axises
+function drawAxes(ctx, plotWidth, plotHeight, colors) {
+    ctx.strokeStyle = colors.axis;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, pad.top + plotHeight);
+    ctx.lineTo(pad.left + plotWidth, pad.top + plotHeight);
+    ctx.stroke();
+
+    // The axises labels
+    ctx.fillStyle = colors.axisLabel;
+    ctx.font = "10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("Speed (m/s)", pad.left + plotWidth / 2, pad.top + plotHeight + 12);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("Gain", pad.left - 5, pad.top + 10);
+}
+
+function getStepAxisX(maxSpeed) {
+    let step = 5;
+    if (maxSpeed <= 1) {
+        step = 0.2;
+    } else if (maxSpeed <= 10) {
+        step = 2;
+    }
+    return step;
+}
+
+// Draw axises ticks and grid
+function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors) {
+    const fontSize = 9;
+    ctx.font = `${fontSize}px sans-serif`;
+    ctx.fillStyle = colors.tick;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
+    // The axis X labels and ticks
+    const xStep = getStepAxisX(maxSpeed);
+    for (let v = 0; v <= maxSpeed; v += xStep) {
+        if (v === 0) {
+            continue;
+        }
+        const x = xScale(v);
+        if (x < pad.left || x > pad.left + plotWidth) {
+            continue;
+        }
+        ctx.fillText(v.toFixed(xStep < 1 ? 1 : 0), x, pad.top + plotHeight + 4);
+        // The small tick
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top + plotHeight);
+        ctx.lineTo(x, pad.top + plotHeight + 3);
+        ctx.strokeStyle = colors.axis;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // The vertical grid lines
+        if (props.showGrid) {
+            ctx.beginPath();
+            ctx.moveTo(x, pad.top);
+            ctx.lineTo(x, pad.top + plotHeight);
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([2, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+    }
+
+    // The axis Y labels and ticks
+    const yStep = 0.25;
+    for (let m = Math.ceil(minMult / yStep) * yStep; m <= maxMult; m += yStep) {
+        const y = yScale(m);
+        if (y < pad.top || y > pad.top + plotHeight) {
+            continue;
+        }
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(m.toFixed(2), pad.left - 4, y);
+        // The small tick
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left - 3, y);
+        ctx.strokeStyle = colors.axis;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // The horizontal grid lines
+        if (props.showGrid && m !== 0) {
+            ctx.beginPath();
+            ctx.moveTo(pad.left, y);
+            ctx.lineTo(pad.left + plotWidth, y);
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([2, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+    }
+}
+
+// The curves drawing
+function drawCurves(ctx, xScale, yScale, colors) {
+    props.chartCurves.forEach((curve) => {
+        if (!curve.data) {
+            return;
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = curve.color || colors.curve;
+        ctx.lineWidth = curve.active ? 2 : 1.5;
+        ctx.globalAlpha = curve.active ? 1.0 : 0.35;
+        curve.data.forEach((point, index) => {
+            const x = xScale(point.speed);
+            const y = yScale(point.multiplier);
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+    });
+}
+
+function drawChart() {
+    const canvas = chartCanvas.value;
+    if (!canvas || !props.chartCurves) {
+        return;
+    }
+    const ctx = canvas.getContext("2d");
+    const w = canvasWidth.value / dpr;
+    const h = canvasHeight.value / dpr;
+
+    const colors = {
+        axis: getCssVar("--chart-axis-color", "#555555"),
+        axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
+        tick: getCssVar("--chart-tick-color", "#888888"),
+        grid: getCssVar("--chart-grid-line-color", "#333333"),
+        curve: getCssVar("--chart-curve-color", "#e24761"),
+    };
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.scale(dpr, dpr);
+
+    const plotWidth = w - pad.left - pad.right;
+    const plotHeight = h - pad.top - pad.bottom;
+    if (plotWidth <= 0 || plotHeight <= 0) {
+        return;
+    }
+
+    // Collect Y values
+    const allData = [];
+    for (const curve of props.chartCurves) {
+        if (curve.data) {
+            allData.push(...curve.data);
+        }
+    }
+
+    if (allData.length === 0) {
+        return;
+    }
+
+    const maxMult = Math.max(...allData.map((d) => d.multiplier));
+    const minMult = 0;
+    const yRange = maxMult - minMult || 1;
+
+    const maxSpeed = Math.max(...allData.map((d) => d.speed));
+    if (maxSpeed <= 0) {
+        return;
+    }
+
+    const xScale = (speed) => pad.left + (speed / maxSpeed) * plotWidth;
+    const yScale = (mult) => pad.top + plotHeight - ((mult - minMult) / yRange) * plotHeight;
+
+    // The axises
+    drawAxes(ctx, plotWidth, plotHeight, colors);
+
+    // The ticks, grid and labels
+    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors);
+
+    // The curves
+    drawCurves(ctx, xScale, yScale, colors);
+}
+
+function setupThemeObserver() {
+    themeObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                drawChart();
+                break;
+            }
+        }
+    });
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+    });
+}
+
+onMounted(() => {
+    resizeCanvas();
+
+    resizeObserver = new ResizeObserver(() => resizeCanvas());
+    if (containerRef.value) {
+        resizeObserver.observe(containerRef.value);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    setupThemeObserver();
+});
+
+onUnmounted(() => {
+    if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+    }
+    window.removeEventListener("resize", resizeCanvas);
+    if (themeObserver) {
+        themeObserver.disconnect();
+        themeObserver = null;
+    }
+});
+
+watch(
+    () => [props.chartCurves],
+    () => nextTick(() => drawChart()),
+    { deep: true },
+);
+</script>
+
+<style scoped>
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.chart-container {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+}
+</style>
