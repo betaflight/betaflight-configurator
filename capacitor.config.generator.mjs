@@ -57,10 +57,9 @@ async function modifyDevCapacitorConfig(capacitorConfigBase) {
 const capacitorConfig = JSON.parse(fs.readFileSync("./capacitor.config.base.json", { encoding: "utf8", flag: "r" }));
 
 if (process.argv.length > 2 && process.argv[2] === "--dev") {
-    modifyDevCapacitorConfig(capacitorConfig).then((capacitorConfig) => {
-        console.log("Generating capacitor.config.json DEVELOPMENT with:\n", capacitorConfig);
-        fs.writeFileSync("capacitor.config.json", JSON.stringify(capacitorConfig));
-    });
+    const devConfig = await modifyDevCapacitorConfig(capacitorConfig);
+    console.log("Generating capacitor.config.json DEVELOPMENT with:\n", devConfig);
+    fs.writeFileSync("capacitor.config.json", JSON.stringify(devConfig));
 } else {
     console.log("Generating capacitor.config.json STANDARD with:\n", capacitorConfig);
     fs.writeFileSync("capacitor.config.json", JSON.stringify(capacitorConfig));
