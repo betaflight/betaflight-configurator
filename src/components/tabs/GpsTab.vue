@@ -665,8 +665,8 @@ export default defineComponent({
                         qualityValue >= 5
                             ? "bg-[var(--success-500)] text-white"
                             : qualityValue === 4
-                                ? "bg-[var(--warning-500)] text-black"
-                                : "bg-[var(--surface-500)] text-white";
+                              ? "bg-[var(--warning-500)] text-black"
+                              : "bg-[var(--surface-500)] text-white";
 
                     rows.push({
                         gnss: gnssArray[gnssId],

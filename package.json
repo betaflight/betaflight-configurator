@@ -31,7 +31,7 @@
     "tauri:ios:dev": "cross-env TAURI_DEV=1 tauri ios dev",
     "tauri:ios:build": "tauri ios build",
     "tauri:prebuild": "node scripts/sync-tauri-version.mjs && vite build",
-    "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
+    "format": "prettier --write \"**/*.{js,mjs,ts,vue,css,less}\"",
     "storybook": "storybook dev -p 6006",
     "prepare": "husky"
   },
@@ -49,8 +49,8 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "^24.12.0",
-    "npm": ">=11.6.1"
+    "node": "^24.21.0",
+    "npm": ">=11.19.0"
   },
   "dependencies": {
     "@capacitor/android": "8.3.4",
@@ -109,11 +109,10 @@
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
     "cross-env": "^7.0.3",
-    "eslint": "^9.21.0",
+    "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.0.2",
-    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "eslint-plugin-vue": "^9.32.0",
+    "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.9.0",
     "husky": "^9.1.7",
     "inquirer": "^12.4.2",
@@ -130,11 +129,15 @@
     "vite-plugin-mkcert": "^1.17.9",
     "vite-plugin-static-copy": "^4.1.1",
     "vitest": "^4.1.9",
+    "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.11"
   },
   "overrides": {
     "xcode": {
       "uuid": "^11.1.1"
+    },
+    "workbox-build": {
+      "glob": "^13.0.6"
     }
   }
 }

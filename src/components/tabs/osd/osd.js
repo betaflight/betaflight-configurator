@@ -1013,33 +1013,33 @@ OSD.loadDisplayFields = function () {
         },
         ...(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
-                DISPLAY_NAME: {
-                    name: "DISPLAY_NAME",
-                    text: "osdTextElementDisplayName",
-                    desc: "osdDescElementDisplayName",
-                    defaultPosition: -77,
-                    draw_order: 350,
-                    positionable: true,
-                    preview(osdData) {
-                        return OSD.generateDisplayName(osdData, 1);
-                    },
-                },
-            }
+                  DISPLAY_NAME: {
+                      name: "DISPLAY_NAME",
+                      text: "osdTextElementDisplayName",
+                      desc: "osdDescElementDisplayName",
+                      defaultPosition: -77,
+                      draw_order: 350,
+                      positionable: true,
+                      preview(osdData) {
+                          return OSD.generateDisplayName(osdData, 1);
+                      },
+                  },
+              }
             : {}),
         ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
-                PILOT_NAME: {
-                    name: "PILOT_NAME",
-                    text: "osdTextElementPilotName",
-                    desc: "osdDescElementPilotName",
-                    defaultPosition: -77,
-                    draw_order: 350,
-                    positionable: true,
-                    preview(osdData) {
-                        return OSD.generatePilotName(osdData, 1);
-                    },
-                },
-            }
+                  PILOT_NAME: {
+                      name: "PILOT_NAME",
+                      text: "osdTextElementPilotName",
+                      desc: "osdDescElementPilotName",
+                      defaultPosition: -77,
+                      draw_order: 350,
+                      positionable: true,
+                      preview(osdData) {
+                          return OSD.generatePilotName(osdData, 1);
+                      },
+                  },
+              }
             : {}),
         ESC_RPM_FREQ: {
             name: "ESC_RPM_FREQ",

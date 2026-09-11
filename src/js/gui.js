@@ -310,6 +310,8 @@ class GuiControl {
                 : "tab_setup";
         const tabKey = tabClass.substring(4);
 
+        // Dynamic import: tab_switch.js imports this module statically, so a static
+        // import back would cycle.
         import("./tab_switch.js").then(({ switchTab }) => {
             if (!switchTab(tabKey, { mode: "connected" })) {
                 switchTab("setup", { mode: "connected" });

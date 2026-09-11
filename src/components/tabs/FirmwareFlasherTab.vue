@@ -2348,7 +2348,7 @@ export default defineComponent({
         width: 1.5rem;
         aspect-ratio: 1;
         content: "";
-        mask: url(../images/corner.svg);
+        mask: url(../../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
         inset-inline-start: -1.5rem;

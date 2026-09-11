@@ -3,6 +3,11 @@ import { Projector, RenderableSprite, RenderableLine, RenderableFace } from "./P
 
 /**
  * @author mrdoob / http://mrdoob.com/
+ *
+ * Vendored copy of the legacy three.js CanvasRenderer, used as the 2D fallback
+ * when WebGL is unavailable. Ported off APIs three has since removed: the
+ * NoColors/FaceColors/VertexColors enum (r144, now a boolean `vertexColors`)
+ * and SphericalReflectionMapping (r131).
  */
 
 class SpriteCanvasMaterial extends THREE.Material {
@@ -76,12 +81,6 @@ class CanvasRenderer {
             _patterns = {},
             // Initialize UV coordinates
             _uvs = [],
-            _uv1x = 0,
-            _uv1y = 0,
-            _uv2x = 0,
-            _uv2y = 0,
-            _uv3x = 0,
-            _uv3y = 0,
             _clipBox = new THREE.Box2(),
             _clearBox = new THREE.Box2(),
             _elemBox = new THREE.Box2(),
@@ -533,7 +532,7 @@ class CanvasRenderer {
                 setLineCap(material.linecap);
                 setLineJoin(material.linejoin);
 
-                if (material.vertexColors !== THREE.VertexColors) {
+                if (material.vertexColors !== true) {
                     setStrokeStyle(material.color.getStyle());
                 } else {
                     let colorStyle1 = element.vertexColors[0].getStyle();
@@ -596,10 +595,6 @@ class CanvasRenderer {
                 _diffuseColor.copy(material.color);
                 _emissiveColor.copy(material.emissive);
 
-                if (material.vertexColors === THREE.FaceColors) {
-                    _diffuseColor.multiply(element.color);
-                }
-
                 _color.copy(_ambientLight);
 
                 _centroid.copy(v1.positionWorld).add(v2.positionWorld).add(v3.positionWorld).divideScalar(3);
@@ -608,14 +603,7 @@ class CanvasRenderer {
 
                 _color.multiply(_diffuseColor).add(_emissiveColor);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             } else if (
                 material.isMeshBasicMaterial ||
                 material.isMeshLambertMaterial ||
@@ -643,76 +631,21 @@ class CanvasRenderer {
                             material.map,
                         );
                     }
-                } else if (material.envMap !== null) {
-                    if (material.envMap.mapping === THREE.SphericalReflectionMapping) {
-                        _normal.copy(element.vertexNormalsModel[uv1]).applyMatrix3(_normalViewMatrix);
-                        _uv1x = 0.5 * _normal.x + 0.5;
-                        _uv1y = 0.5 * _normal.y + 0.5;
-
-                        _normal.copy(element.vertexNormalsModel[uv2]).applyMatrix3(_normalViewMatrix);
-                        _uv2x = 0.5 * _normal.x + 0.5;
-                        _uv2y = 0.5 * _normal.y + 0.5;
-
-                        _normal.copy(element.vertexNormalsModel[uv3]).applyMatrix3(_normalViewMatrix);
-                        _uv3x = 0.5 * _normal.x + 0.5;
-                        _uv3y = 0.5 * _normal.y + 0.5;
-
-                        patternPath(
-                            _v1x,
-                            _v1y,
-                            _v2x,
-                            _v2y,
-                            _v3x,
-                            _v3y,
-                            _uv1x,
-                            _uv1y,
-                            _uv2x,
-                            _uv2y,
-                            _uv3x,
-                            _uv3y,
-                            material.envMap,
-                        );
-                    }
                 } else {
                     _color.copy(material.color);
 
-                    if (material.vertexColors === THREE.FaceColors) {
-                        _color.multiply(element.color);
-                    }
-
-                    material.wireframe === true
-                        ? strokePath(
-                            _color,
-                            material.wireframeLinewidth,
-                            material.wireframeLinecap,
-                            material.wireframeLinejoin,
-                        )
-                        : fillPath(_color);
+                    strokeOrFillPath(material, _color);
                 }
             } else if (material.isMeshNormalMaterial) {
                 _normal.copy(element.normalModel).applyMatrix3(_normalViewMatrix);
 
                 _color.setRGB(_normal.x, _normal.y, _normal.z).multiplyScalar(0.5).addScalar(0.5);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             } else {
                 _color.setRGB(1, 1, 1);
 
-                material.wireframe === true
-                    ? strokePath(
-                        _color,
-                        material.wireframeLinewidth,
-                        material.wireframeLinecap,
-                        material.wireframeLinejoin,
-                    )
-                    : fillPath(_color);
+                strokeOrFillPath(material, _color);
             }
         }
 
@@ -740,6 +673,14 @@ class CanvasRenderer {
         function fillPath(color) {
             setFillStyle(color.getStyle());
             _context.fill();
+        }
+
+        function strokeOrFillPath(material, color) {
+            if (material.wireframe === true) {
+                strokePath(color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin);
+            } else {
+                fillPath(color);
+            }
         }
 
         function textureToPattern(texture) {
