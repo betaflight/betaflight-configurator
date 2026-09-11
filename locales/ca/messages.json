@@ -73,6 +73,10 @@
         "message": "Desconnectar (Manual)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Desconnectar ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Desconnectar (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -276,16 +280,16 @@
         "message": "$t(language_default.message)",
         "description": "Don't translate!!!"
     },
+    "language_ar": {
+        "message": "العربية",
+        "description": "Don't translate!!!"
+    },
     "language_ka": {
         "message": "ქართული",
         "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polonès",
-        "description": "Don't translate!!!"
-    },
-    "language_zh-TW": {
-        "message": "繁體中文",
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
@@ -483,8 +487,47 @@
     "autotuneBandwidth": {
         "message": "Amplada de banda"
     },
+    "autotuneCrossover": {
+        "message": "Guany creuat"
+    },
     "autotunePhaseMargin": {
         "message": "Marge de fase"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Límit d'encreuament"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Marge de fase màxim"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Sensibilitat màxima prevista."
+    },
+    "autotuneLoopDelay": {
+        "message": "Retard de bucle"
+    },
+    "autotuneTargetMargin": {
+        "message": "Afinant objectiu"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agressiu"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservador"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: aquesta nau no pot arribar a $2° de marge de fase (el seu límit és d'uns $3), de manera que el guany es manté en lloc d'endevinar-se. Trieu un objectiu més baix o afegiu D per augmentar el límit."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: la mesura demana un canvi de guany de $2×, però una sola passada està limitada a $3×. No s'assoleix el límit de crossover que es mostra; apliqueu-ho, vola un altre tram i repetiu."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: sensibilitat màxima, no marge de fase, configureu el guany aquí. El bucle passa a prop de -1 per sobre del creuament, de manera que la recomanació s'atura abans de l'objectiu de marge."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: cap guany en una sola passada manté la sensibilitat màxima dins del límit de robustesa. El valor proposat és el millor disponible en lloc d'un valor segur; tracteu-lo com a punt de partida i torneu a mesurar."
     },
     "autotuneResonantPeak": {
         "message": "Pic ressonant"
@@ -983,6 +1026,14 @@
     "statusbar_connection_time": {
         "message": "Connexió:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Mostra els detalls de l'estat",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Amaga els detalls de l'estat",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "Si us plau, utilitza el Flashejador de Firmware per accedir als dispositius DFU"
@@ -2335,6 +2386,102 @@
     },
     "portsReadOnlyHelp": {
         "message": "<strong>Nota:<\/strong> aquest programari assigna ports sèrie a la pestanya de cada funció, de manera que aquesta vista és de només lectura. Mostra quin port utilitza actualment cada funció; canvieu una assignació de la pestanya propietària de la funció."
+    },
+    "portsTilesHelp": {
+        "message": "Aquest programari assigna ports sèrie a la pestanya de cada funció. Cada mosaic següent mostra què està connectat a la placa i quina funció serveix actualment cada port."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Aquest programari encara no informa del seu inventari de perifèrics."
+    },
+    "portsSectionSerial": {
+        "message": "Ports sèrie"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Sensors"
+    },
+    "portsTileUnassigned": {
+        "message": "No assignat"
+    },
+    "portsTileConfigure": {
+        "message": "Configura"
+    },
+    "portsTileCanNode": {
+        "message": "Node"
+    },
+    "portsClaimActiveHelp": {
+        "message": "El port està actiu per a aquesta funció"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Assignat però no actiu: ha perdut un conflicte de port o hi ha un reinici pendent"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Inactiu: activeu la funció SOFTSERIAL a la pestanya Configuració"
+    },
+    "portsInactiveNoPins": {
+        "message": "Inactiu: no hi ha pins assignats a aquest port"
+    },
+    "portsInactiveReason": {
+        "message": "Inactiu — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "inactiu"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Receptor sèrie"
+    },
+    "portsClaimBlackbox": {
+        "message": "Enregistrament Blackbox"
+    },
+    "portsClaimEscSensor": {
+        "message": "Telemetria ESC"
+    },
+    "portsClaimRcdevice": {
+        "message": "Càmera (dispositiu RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Transmissor de vídeo"
+    },
+    "portsClaimRangefinder": {
+        "message": "Rangefinder"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optical Flow"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Text personalitzat OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetria"
+    },
+    "portsSensorGyro": {
+        "message": "Giro"
+    },
+    "portsSensorAcc": {
+        "message": "Acceleròmetre"
+    },
+    "portsSensorBaro": {
+        "message": "Baròmetre"
+    },
+    "portsSensorMag": {
+        "message": "Magnetòmetre"
+    },
+    "portsSensorNotDetected": {
+        "message": "Configurat però no detectat"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Actualització de firmware <span class=\"message-negative\">requerida<\/span>. La configuració dels port sèrie del firmware &lt; 1.8.0 no està suportada."
@@ -4113,6 +4260,9 @@
     "sensorsSonarSelect": {
         "message": "Sònar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4133,6 +4283,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sònar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Velocitat de l'aire - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -7698,6 +7851,9 @@
     "osdButtonSaved": {
         "message": "Desat"
     },
+    "osdPitotAirSpeed": {
+        "message": "Velocitat de l'aire"
+    },
     "vtxHelp": {
         "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-tables\">aquesta<\/a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a \"$t(vtxButtonLoadFile.message)\" a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a \"$t(vtxButtonSave.message)\" per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a \"$t(vtxButtonSaveLua.message)\" per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github. com\/betaflight\/betaflight-tx-lua-scripts\/\">aquí<\/a>.)",
         "description": "Introduction message in the VTX tab"
@@ -8057,6 +8213,9 @@
     },
     "configurationBaroHardware": {
         "message": "Baròmetre"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetòmetre"

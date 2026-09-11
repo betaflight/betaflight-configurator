@@ -90,7 +90,7 @@
                                 class="w-16"
                             />
                         </SettingRow>
-                        <SettingRow :label="$t('powerBatteryCapacity')">
+                        <SettingRow :label="$t('powerBatteryCapacity')" :help="$t('powerBatteryCapacityHelp')">
                             <UInputNumber
                                 id="capacity"
                                 name="capacity"
@@ -498,17 +498,10 @@ export default defineComponent({
         const { isSaving, runSave } = useSaving();
 
         const handleSave = () =>
-            runSave(
-                async () => {
-                    await saveConfig();
-                    await loadData();
-                },
-                {
-                    onError: (error) => {
-                        console.error("Error saving power configuration:", error);
-                    },
-                },
-            );
+            runSave(async () => {
+                await saveConfig();
+                await loadData();
+            });
 
         const openCalibrationManager = () => {
             sourceschanged.value = false;

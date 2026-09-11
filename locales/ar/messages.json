@@ -1122,7 +1122,7 @@
         "message": "إعادة تعيين محور Z، والإزاحة: $1 درجة"
     },
     "initialSetupHeading": {
-        "message": "**الاتجاه (Yaw)**:",
+        "message": "الاتجاه (Yaw):",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMagHeading": {
@@ -1133,7 +1133,7 @@
         "message": "نوع المازج"
     },
     "initialSetupThrottleHead": {
-        "message": "ضبط دفع المحرك"
+        "message": "ضبط دواسة الوقود"
     },
     "initialSetupMinimum": {
         "message": "الحد الأدنى:"
@@ -1304,7 +1304,7 @@
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "قناة دفع المحرك مرتفعة جدًا",
+        "message": "قناة دواسة الوقود مرتفعة جدًا",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
@@ -2921,7 +2921,7 @@
         "description": "Yaw label in signal graph"
     },
     "receiverRowContainerThrottle": {
-        "message": "دفع المحرك [T]:",
+        "message": "دواسة الوقود [T]:",
         "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
@@ -5015,7 +5015,7 @@
         "message": "YAW [R]"
     },
     "controlAxisThrottle": {
-        "message": "لون Throttle]"
+        "message": "Throttle [T]"
     },
     "controlAxisAux1": {
         "message": "إضافي 1"
@@ -6749,7 +6749,7 @@
         "message": "مكاسب PID لمحور ROLL"
     },
     "osdTextElementPIDPitch": {
-        "message": "PID لمحور OITCH\n",
+        "message": "PID لمحور PITCH\n",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {

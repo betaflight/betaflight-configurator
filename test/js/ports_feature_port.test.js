@@ -8,6 +8,7 @@ import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
 import { GPS_BAUD_RATES } from "../../src/composables/ports/featureBaudRates";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
 import { buildBaudOptions, buildPortOptions, useFeaturePort } from "../../src/composables/ports/useFeaturePort";
+import { loadPortClaims } from "../../src/composables/ports/usePortClaims";
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
@@ -20,61 +21,68 @@ vi.mock("../../src/composables/useMspCliSession", async (importOriginal) => ({
     send: cliSend,
 }));
 
-const ports = [
-    { identifier: 20, functions: ["MSP"] },
-    { identifier: 51, functions: [] },
-    { identifier: 53, functions: ["RX_SERIAL"] },
-];
+const ports = [{ identifier: 20 }, { identifier: 51 }, { identifier: 53 }];
+const claims = { VCP: ["msp_1"], UART3: ["rx"] };
 
 describe("buildPortOptions", () => {
-    const options = () => buildPortOptions(ports, { functionName: "RX_SERIAL", noneLabel: "None" });
+    const options = () => buildPortOptions(ports, { claims, noneLabel: "None", freeLabel: "free" });
 
     it("offers None first, then the FC's ports in order", () => {
         expect(options().map((option) => option.value)).toEqual([PORT_NONE, 20, 51, 53]);
         expect(options()[0].label).toBe("None");
     });
 
-    it("annotates a port another feature has claimed", () => {
-        expect(options().find((option) => option.value === 20).label).toBe("USB VCP (MSP)");
+    it("names what holds a port", () => {
+        expect(options().find((option) => option.value === 20).label).toBe("USB VCP (msp_1)");
     });
 
-    it("leaves the feature's own claim out of the annotation", () => {
-        expect(options().find((option) => option.value === 53).label).toBe("UART3");
-        expect(options().find((option) => option.value === 51).label).toBe("UART1");
+    it("names the caller's own claim too", () => {
+        expect(options().find((option) => option.value === 53).label).toBe("UART3 (rx)");
+    });
+
+    it("marks a port nothing has claimed as free", () => {
+        expect(options().find((option) => option.value === 51).label).toBe("UART1 (free)");
+    });
+
+    it("lists every claim on a shared port", () => {
+        const shared = buildPortOptions([{ identifier: 51 }], { claims: { UART1: ["vtx", "osd"] } });
+
+        expect(shared.find((option) => option.value === 51).label).toBe("UART1 (vtx, osd)");
     });
 
     it("runs the annotation through the caller's translator", () => {
-        const translated = buildPortOptions(ports, {
-            functionName: "RX_SERIAL",
-            describeFunction: (name) => name.toLowerCase(),
-        });
+        const translated = buildPortOptions(ports, { claims, describeClaim: (name) => name.toUpperCase() });
 
-        expect(translated.find((option) => option.value === 20).label).toBe("USB VCP (msp)");
+        expect(translated.find((option) => option.value === 20).label).toBe("USB VCP (MSP_1)");
+    });
+
+    it("claims nothing about a port when the build cannot say what holds it", () => {
+        const labels = buildPortOptions(ports, { claims: null, freeLabel: "free" }).map((option) => option.label);
+
+        expect(labels).toEqual(["None", "USB VCP", "UART1", "UART3"]);
     });
 
     it("keeps a current assignment the FC did not report, so the select never blanks", () => {
-        const withMissing = buildPortOptions(ports, { functionName: "RX_SERIAL", currentIdentifier: 57 });
+        const withMissing = buildPortOptions(ports, { claims, currentIdentifier: 57 });
 
         expect(withMissing.map((option) => option.value)).toContain(57);
         expect(withMissing.find((option) => option.value === 57).label).toBe("UART7");
     });
 
     it("does not duplicate a current assignment that is already listed", () => {
-        const values = buildPortOptions(ports, { functionName: "RX_SERIAL", currentIdentifier: 53 }).map(
-            (option) => option.value,
-        );
+        const values = buildPortOptions(ports, { currentIdentifier: 53 }).map((option) => option.value);
 
         expect(values.filter((value) => value === 53)).toHaveLength(1);
         expect(values.filter((value) => value === PORT_NONE)).toHaveLength(1);
     });
 
     it("copes with no ports at all", () => {
-        expect(buildPortOptions(undefined, { functionName: "RX_SERIAL" })).toHaveLength(1);
+        expect(buildPortOptions(undefined)).toHaveLength(1);
     });
 
     it("offers a port the board has but the FC cannot open, marked inactive", () => {
         const withSoftSerial = buildPortOptions(ports, {
-            functionName: "RX_SERIAL",
+            claims,
             inactiveIdentifiers: [30, 31],
             inactiveLabel: "inactive",
         });
@@ -83,9 +91,18 @@ describe("buildPortOptions", () => {
         expect(withSoftSerial.find((option) => option.value === 30).label).toBe("SOFTSERIAL1 (inactive)");
     });
 
+    it("keeps the claim on an inactive port beside its inactive mark", () => {
+        const withSoftSerial = buildPortOptions(ports, {
+            claims: { ...claims, SOFT1: ["vtx"] },
+            inactiveIdentifiers: [30],
+            inactiveLabel: "inactive",
+        });
+
+        expect(withSoftSerial.find((option) => option.value === 30).label).toBe("SOFTSERIAL1 (vtx, inactive)");
+    });
+
     it("does not repeat an inactive port the FC did report", () => {
         const values = buildPortOptions([...ports, { identifier: 30, functions: [] }], {
-            functionName: "RX_SERIAL",
             inactiveIdentifiers: [30],
         }).map((option) => option.value);
 
@@ -106,10 +123,16 @@ describe("useFeaturePort", () => {
         return command.startsWith("get ") ? ["###ERROR IN get: INVALID NAME###"] : [];
     }
 
-    function withFeature(options, apiVersion = API_VERSION_1_49) {
+    const sentCommands = () => cliSend.mock.calls.map((call) => call[0]);
+
+    // A new connection resets the serial config; keepConnection stands for another feature on
+    // the same tab, which sees the config the first one already filled in.
+    function withFeature(options, apiVersion = API_VERSION_1_49, { keepConnection = false } = {}) {
         FC.CONFIG.apiVersion = apiVersion;
         FC.CONFIG.flightControllerVersion = "4.6.0";
-        FC.SERIAL_CONFIG = { ports: [...ports] };
+        if (!keepConnection) {
+            FC.SERIAL_CONFIG = { ports: [...ports] };
+        }
 
         scope?.stop();
         scope = effectScope();
@@ -121,11 +144,14 @@ describe("useFeaturePort", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         FC.resetState();
-        replies = { "get rx_uart": ["rx_uart = UART3"] };
+        replies = {
+            "get rx_uart": ["rx_uart = UART3"],
+            peripherals: ["serial VCP: msp_1*", "serial UART3: rx*"],
+        };
         cliSend.mockReset();
         cliSend.mockImplementation((command) => Promise.resolve(reply(command)));
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
-        withFeature({ setting: "rx_uart", functionName: "RX_SERIAL" });
+        withFeature({ setting: "rx_uart" });
     });
 
     afterEach(() => {
@@ -135,7 +161,7 @@ describe("useFeaturePort", () => {
     });
 
     it("does nothing on firmware that still owns the port through the mask", async () => {
-        withFeature({ setting: "rx_uart", functionName: "RX_SERIAL" }, API_VERSION_1_48);
+        withFeature({ setting: "rx_uart" }, API_VERSION_1_48);
 
         expect(port.available.value).toBe(false);
 
@@ -192,6 +218,60 @@ describe("useFeaturePort", () => {
         expect(cliSend).toHaveBeenCalledWith("set rx_uart = SOFT1");
     });
 
+    it("labels the ports from what the FC says holds them", async () => {
+        await port.load();
+
+        expect(port.options.value.map((option) => option.label)).toEqual([
+            "portsPortNone",
+            "USB VCP (portsClaimMsp 1)",
+            "UART1 (portsPortFree)",
+            "UART3 (portsClaimRx)",
+        ]);
+    });
+
+    it("asks the FC what holds its ports once per connection, not once per feature", async () => {
+        await port.load();
+        withFeature({ setting: "rcdevice_uart" }, API_VERSION_1_49, { keepConnection: true });
+        replies["get rcdevice_uart"] = ["rcdevice_uart = NONE"];
+        await port.load();
+
+        expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(1);
+        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimRx)");
+    });
+
+    it("refreshes the labels as soon as a port has been reassigned, save or no save", async () => {
+        await port.load();
+        replies.peripherals = ["serial VCP: msp_1*", "serial UART1: rx"];
+        port.selectedIdentifier.value = 51;
+
+        await port.write();
+
+        expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(2);
+        expect(port.options.value.find((option) => option.value === 51).label).toBe("UART1 (portsClaimRx)");
+        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsPortFree)");
+    });
+
+    it("asks again on a new connection", async () => {
+        await port.load();
+        withFeature({ setting: "rx_uart" });
+        await port.load();
+
+        expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(2);
+    });
+
+    it("says nothing about the ports on a build without the peripherals command", async () => {
+        replies.peripherals = ["###ERROR IN peripherals: UNKNOWN COMMAND###"];
+
+        await port.load();
+
+        expect(port.options.value.map((option) => option.label)).toEqual([
+            "portsPortNone",
+            "USB VCP",
+            "UART1",
+            "UART3",
+        ]);
+    });
+
     it("reads an unassigned feature as no port", async () => {
         replies["get rx_uart"] = ["rx_uart = NONE"];
 
@@ -201,7 +281,7 @@ describe("useFeaturePort", () => {
     });
 
     it("reports itself unsupported when the build has no such setting", async () => {
-        withFeature({ setting: "msp_3_uart", functionName: "MSP" });
+        withFeature({ setting: "msp_3_uart" });
 
         await port.load();
 
@@ -211,7 +291,7 @@ describe("useFeaturePort", () => {
 
     it("writes nothing for an instance the build does not have", async () => {
         // a caller may write() a setting the build lacks, so an absent one has to be inert
-        withFeature({ setting: "msp_3_uart", functionName: "MSP", baud: { setting: "msp_3_baud" } });
+        withFeature({ setting: "msp_3_uart", baud: { setting: "msp_3_baud" } });
 
         await port.load();
         expect(port.supported.value).toBe(false);
@@ -284,7 +364,7 @@ describe("useFeaturePort", () => {
                 "Default value: AUTO",
             ],
         };
-        withFeature({ setting: "blackbox_uart", functionName: "BLACKBOX", baud: { setting: "blackbox_baud" } });
+        withFeature({ setting: "blackbox_uart", baud: { setting: "blackbox_baud" } });
 
         await port.load();
 
@@ -299,7 +379,6 @@ describe("useFeaturePort", () => {
         };
         withFeature({
             setting: "gps_uart",
-            functionName: "GPS",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
@@ -315,7 +394,6 @@ describe("useFeaturePort", () => {
         };
         withFeature({
             setting: "gps_uart",
-            functionName: "GPS",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
@@ -337,7 +415,6 @@ describe("useFeaturePort", () => {
         };
         withFeature({
             setting: "gps_uart",
-            functionName: "GPS",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
@@ -353,7 +430,10 @@ describe("useFeaturePort", () => {
         await expect(port.write()).rejects.toThrow(/ERROR/);
 
         // the port has to have gone out first, or the pending state below proves nothing
-        expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_uart = UART1", "set gps_baud = 115200"]);
+        expect(sentCommands().filter((command) => command !== "peripherals")).toEqual([
+            "set gps_uart = UART1",
+            "set gps_baud = 115200",
+        ]);
         expect(port.changed.value).toBe(true);
     });
 
@@ -368,7 +448,6 @@ describe("useFeaturePort", () => {
         };
         withFeature({
             setting: "telemetry_1_uart",
-            functionName: ["TELEMETRY_SMARTPORT", "TELEMETRY_MAVLINK"],
             baud: { setting: "telemetry_1_baud" },
             protocol: { setting: "telemetry_1_protocol" },
         });
@@ -384,16 +463,20 @@ describe("useFeaturePort", () => {
 
         await port.write();
 
-        const sent = cliSend.mock.calls.map((call) => call[0]);
+        const sent = sentCommands().filter((command) => command !== "peripherals");
         expect(sent).toEqual(["set telemetry_1_protocol = MAVLINK", "set telemetry_1_uart = UART1"]);
     });
 
-    it("leaves a shared bit off its own annotations for every protocol it may claim", async () => {
-        const labels = buildPortOptions([{ identifier: 53, functions: ["TELEMETRY_SMARTPORT"] }], {
-            functionName: ["TELEMETRY_SMARTPORT", "TELEMETRY_MAVLINK"],
-        }).map((option) => option.label);
+    it("shows a sibling instance's port as held by that instance", async () => {
+        replies = {
+            "get telemetry_2_uart": ["telemetry_2_uart = NONE"],
+            peripherals: ["serial UART3: telemetry_1*"],
+        };
+        withFeature({ setting: "telemetry_2_uart" });
 
-        expect(labels).toContain("UART3");
+        await port.load();
+
+        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimTelemetry 1)");
     });
 });
 
@@ -419,5 +502,72 @@ describe("buildBaudOptions", () => {
 
     it("copes with a feature that has no baud of its own", () => {
         expect(buildBaudOptions(undefined)).toEqual([]);
+    });
+});
+
+describe("loadPortClaims", () => {
+    function deferred() {
+        let resolve;
+        let reject;
+        const promise = new Promise((res, rej) => {
+            resolve = res;
+            reject = rej;
+        });
+        return { promise, resolve, reject };
+    }
+
+    beforeEach(() => {
+        FC.resetState();
+        FC.CONFIG.flightControllerVersion = "4.6.0";
+        FC.SERIAL_CONFIG = { ports: [...ports] };
+        cliSend.mockReset();
+    });
+
+    it("asks again after a reply that never arrived, rather than calling every port free", async () => {
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+        cliSend.mockRejectedValueOnce(new Error("Timed out")).mockResolvedValueOnce(["serial UART3: rx*"]);
+
+        expect(await loadPortClaims()).toBeNull();
+        expect(FC.SERIAL_CONFIG.claims).toBeUndefined();
+
+        expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
+        expect(cliSend).toHaveBeenCalledTimes(2);
+    });
+
+    it("remembers a build that refuses the command", async () => {
+        cliSend.mockResolvedValue(["###ERROR IN peripherals: UNKNOWN COMMAND###"]);
+
+        expect(await loadPortClaims()).toBeNull();
+        expect(await loadPortClaims()).toBeNull();
+        expect(cliSend).toHaveBeenCalledTimes(1);
+    });
+
+    it("lets a refresh overtake a read still in flight", async () => {
+        const first = deferred();
+        const second = deferred();
+        cliSend.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+
+        const stale = loadPortClaims();
+        const fresh = loadPortClaims({ refresh: true });
+        second.resolve(["serial UART3: rx*"]);
+        await fresh;
+        first.resolve(["serial UART1: vtx*"]);
+        await stale;
+
+        expect(FC.SERIAL_CONFIG.claims).toEqual({ UART3: ["rx"] });
+        expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
+        expect(cliSend).toHaveBeenCalledTimes(2);
+    });
+
+    it("shares one read between the features of a tab", async () => {
+        const read = deferred();
+        cliSend.mockReturnValueOnce(read.promise);
+
+        const a = loadPortClaims();
+        const b = loadPortClaims();
+        read.resolve(["serial UART3: rx*"]);
+
+        expect(await a).toBe(await b);
+        expect(cliSend).toHaveBeenCalledTimes(1);
     });
 });

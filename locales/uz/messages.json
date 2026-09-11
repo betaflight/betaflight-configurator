@@ -73,6 +73,10 @@
         "message": "Uzish (Qo‘lda)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Aloqani uzish ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Uzish (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -463,8 +467,47 @@
     "autotuneBandwidth": {
         "message": "o‘tkazish kengligi"
     },
+    "autotuneCrossover": {
+        "message": "Gain Crossover"
+    },
     "autotunePhaseMargin": {
         "message": "Faza zaxirasi"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Crossover Chegarasi"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Max Faza zaxirasi"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Prognoz qilingan max. sezgirlik"
+    },
+    "autotuneLoopDelay": {
+        "message": "Silk kechikishi"
+    },
+    "autotuneTargetMargin": {
+        "message": "Sozlash obyekti"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agressiv"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Konservativ"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: bu ushish qurilmasi $2° faza chegarasiga erisha olmaydi (uning chegarasi taxminan $3), shuning uchun Gain ushlab turiladi. Pastroq nishonni tanlang yoki limitni oshirish uchun D qo'shing."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: o'lchov $2× Gain o'zgarishni talab qiladi, lekin bitta o'tish $3× bilan cheklangan. Ko'rsatilgan krossover chegarasiga yetilmagan — qo'llang, yana bir chirp qiling va takrorlang."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: faza chegarasi emas, balki eng yuqori sezgirlik, bu yerda Gain o'rnating. Sikl krossoverdan −1 ga yaqin masofada o'tadi, shuning uchun tavsiya marja maqsadiga yetib bormaydi."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: bitta o'tishda hech qanday kuchaymaslik eng yuqori sezgirlikni mustahkamlik chegarasida saqlaydi. Taklif qilingan qiymat xavfsiz emas, balki mavjud bo'lgan eng yaxshi qiymatdir - uni boshlang'ich nuqta sifatida ko'rib chiqing va qayta o'lchang."
     },
     "autotuneResonantPeak": {
         "message": "Rezonans cho‘qqisi"
@@ -963,6 +1006,14 @@
     "statusbar_connection_time": {
         "message": "Ulanish:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Holat tafsilotlarini ko‘rsatish",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Holat tafsilotlarini yashirish",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "DFU qurilmalariga kirish uchun Proshivka yozgichdan foydalaning"
@@ -1637,6 +1688,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (masalan, o‘rnatilgan Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC Telemetriya Ketma-ket Porti"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "ESC telemetriyasi o‘qiladigan UART. API 1.49dan ESC sensorining o‘zida o‘rnatiladi; faqat Portlar yorlig‘i uni ko‘rsatadi."
+    },
     "featureESC_SENSOR": {
         "message": "KISS\/BLHeli_32 ESC telemetriyasidan <b>alohida sim orqali<\/b> foydalanish"
     },
@@ -1675,6 +1732,27 @@
     },
     "configurationTelemetry": {
         "message": "Telemetriya"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Telemetriya $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Protokol"
+    },
+    "telemetryInstancePort": {
+        "message": "Serial Porti"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Boud Tezligi"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Kamera Nazorati"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Serial Porti"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "RunCam protokol kamerasi ulangan UART. API 1.49 dan qurilma o'zida o'rnatiladi; Faqat Portlar yorlig'ida ko'rsatiladi."
     },
     "configurationTelemetryHelp": {
         "message": "Qabul qilgichdan telemetriya ma'lumotlari olish"
@@ -1721,6 +1799,18 @@
     },
     "configurationRangefinderType": {
         "message": "Turi"
+    },
+    "rangefinderSerialPort": {
+        "message": "Masofa o'lchagichi Ketma-ket Porti"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "Masofa o'lchagichiga ulangan UART. API 1.49 dan masofa o'lchagichning o'zida o'rnatiladi; Faqat Portlar yorlig'i uni ko'rsatadi."
+    },
+    "opticalflowSerialPort": {
+        "message": "Optik Oqim Ketma-Ket Port"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "Optik oqim sensori ulangan UART. Oqim va diapazonni bildiruvchi modul har bir to'plamni alohida-alohida o'rnatadi."
     },
     "configurationOpticalflow": {
         "message": "Optik oqim",
@@ -2103,6 +2193,30 @@
     "configurationGPSubxSbas": {
         "message": "Yer yordami turi"
     },
+    "gpsSerialPort": {
+        "message": "Ketma-ket port"
+    },
+    "gpsSerialPortHelp": {
+        "message": "GPS moduliga ulangan UART. Uni o'zgartirish qayta ishga tushirishni talab qiladi."
+    },
+    "gpsSerialBaud": {
+        "message": "Bod Tezligi"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "GPS modulining ishlash tezligi. Betaflight aloqa o'rnatolmasa, boshqa tezliklarni ham sinab ko'radi, shuning uchun bu qat'iy sozlama emas, balki boshlang'ich nuqtadir."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "GPS ketma-ket portini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
+    },
+    "gpsCanDevice": {
+        "message": "CAN shinasi"
+    },
+    "gpsCanDeviceHelp": {
+        "message": "DroneCAN modullari ulangan CAN shinasi. Bu DroneCAN-ga tegishli, shuning uchun uni o'zgartirish nafaqat GPS, balki har bir DroneCAN qurilmasini harakatga keltiradi. Uni o'zgartirish qayta ishga tushirishni talab qiladi."
+    },
+    "gpsCanDeviceSaveFailed": {
+        "message": "CAN shinasini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
+    },
     "configurationGPSAutoBaud": {
         "message": "Avto boud"
     },
@@ -2201,6 +2315,102 @@
     "portsReadOnlyHelp": {
         "message": "<strong>Eslatma:<\/strong> ushbu proshivka har bir funksiyaning alohida yorlig'ida ketma-ket portlarni tayinlaydi, shuning uchun bu ko'rinish faqat o'qish uchun. Unda har bir funksiya hozirda qaysi portdan foydalanayotganini ko'rsatiladi; funksiyaga egalik qiluvchi yorliqdan o'zgartiring."
     },
+    "portsTilesHelp": {
+        "message": "Ushbu proshivka har bir funksiyaning alohida yorlig‘ida ketma-ket portlarni tayinlaydi. Quyidagi har bir katak plataga nima ulanganligini va har bir port hozirda qaysi funksiyaga xizmat ko‘rsatayotganini ko‘rsatadi."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Ushbu proshivka hali o'zining tashqi qurilmalar inventarizatsiyasi haqida xabar bermadi."
+    },
+    "portsSectionSerial": {
+        "message": "Ketma-ket portlar"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Sensorlar"
+    },
+    "portsTileUnassigned": {
+        "message": "Tayinlanmagan"
+    },
+    "portsTileConfigure": {
+        "message": "Konfiguratsiya"
+    },
+    "portsTileCanNode": {
+        "message": "Tugun"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Mazkur port ushbu funksiya uchun faol"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Tayinlangan, ammo faol emas — port konflikti yo'qolishi yoki qayta ishga tushirish kutilmoqda"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Nofaol — Konfiguratsiya yorlig‘ida SOFTSERIAL funksiyasini yoqing"
+    },
+    "portsInactiveNoPins": {
+        "message": "Nofaol — bu portga hech qanday pin biriktirilmagan"
+    },
+    "portsInactiveReason": {
+        "message": "Nofaol — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "nofaol"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Ketma-ket qabul qilgich"
+    },
+    "portsClaimBlackbox": {
+        "message": "Qora quti jurnallash"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC telemetriyasi"
+    },
+    "portsClaimRcdevice": {
+        "message": "Kamera (RunCam qurilmasi)"
+    },
+    "portsClaimGimbal": {
+        "message": "Osma"
+    },
+    "portsClaimVtx": {
+        "message": "Video uzatgich"
+    },
+    "portsClaimRangefinder": {
+        "message": "Masofa o‘lchagich"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optik oqim"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD maxsus matni"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetriya"
+    },
+    "portsSensorGyro": {
+        "message": "Giroskop"
+    },
+    "portsSensorAcc": {
+        "message": "Akselerometr"
+    },
+    "portsSensorBaro": {
+        "message": "Barometr"
+    },
+    "portsSensorMag": {
+        "message": "Magnitometr"
+    },
+    "portsSensorNotDetected": {
+        "message": "Sozlangan, lekin aniqlanmadi"
+    },
     "portsFirmwareUpgradeRequired": {
         "message": "Proshivkani yangilash <span class=\"message-negative\">talab qilinadi<\/span>. 1.8.0'dan &lt; eski proshivkalarning serial port konfiguratsiyalari qo‘llab-quvvatlanmaydi."
     },
@@ -2269,6 +2479,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Osma"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD maxsus matni"
     },
     "pidTuningProfileOption": {
         "message": "Profil $1"
@@ -6142,6 +6358,30 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD protokoli"
+    },
+    "osdProtocolHelp": {
+        "message": "OSD moslangan protokol. MAX7456 va FrSky OSD analog chip yoki modulni boshqaradi; MSP OSDni DJI, HDZero va Walksnail ko'zoynaklari kutganidek, quyidagi UART orqali yuboradi."
+    },
+    "osdSerialPort": {
+        "message": "OSD ketma-ket porti"
+    },
+    "osdSerialPortHelp": {
+        "message": "OSD ulangan UART. API 1.49 dan OSDning o'zida o'rnatiladi; Portlar yorlig'i uni faqat ko'rsatadi."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Maxsus matnli ketma-ket porti"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "Maxsus OSD matni qabul qilinadigan UART."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Maxsus Matn Bod Tezligi"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Maxsus OSD matn porti uchun uzatish tezligi."
+    },
     "osdSetupUnitsTitle": {
         "message": "o‘lchov birliklari"
     },
@@ -6226,6 +6466,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Yuklash amalga oshmadi"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Saqlash va qayta yuklash"
     },
     "osdSetupSave": {
         "message": "Saqlash"
@@ -7506,9 +7749,16 @@
     "osdButtonSaved": {
         "message": "Saqlandi"
     },
+    "osdPitotAirSpeed": {
+        "message": "Havo tezligi"
+    },
     "vtxHelp": {
         "message": "Bu yerda siz Video Uzatgichingiz (VTX) qiymatlarini sozlashingiz mumkin. Agar parvoz kontrolleri va VTX qo‘llab-quvvatlasa, uzatish qiymatlarini, jumladan VTX jadvallarini ko‘rish va o‘zgartirish mumkin.<br>VTX'ingizni sozlash uchun quyidagi qadamlarni bajaring:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">bu<\/a> sahifaga o‘ting;<br>2. o‘z mamlakatingiz va VTX modelingiz uchun mos VTX konfiguratsiya faylini toping va yuklab oling;<br>3. Quyida '$t(vtxButtonLoadFile.message)'ni bosing, VTX konfiguratsiya faylini tanlang, uni yuklang;<br>4. Sozlamalar to‘g‘ri ekanligini tekshiring;<br>5. VTX sozlamalarini parvoz kontrolleriga saqlash uchun '$t(vtxButtonSave.message)'ni bosing.<br>6. Ixtiyoriy ravishda, betaflight lua skriptlari bilan ishlatishingiz mumkin bo‘lgan lua konfiguratsiya faylini saqlash uchun '$t(vtxButtonSaveLua.message)'ni bosing (Batafsil <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">shu yerda<\/a>.)",
         "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">Diqqat:<\/span> Hozircha VTX javob bermayapti. Quyida VTX muloqot qiladigan protokolni va u ulangan UARTni tanlang, so'ngra saqlang; qolgan sozlamalar qurilma javob bergandan so'ng paydo bo'ladi.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Diqqat:<\/span> $t(vtxSelectedMode.message) maydonlaridan foydalanishdan oldin AVVAL pastdagi VTX jadvalini sozlash va saqlashingiz kerak.",
@@ -7649,6 +7899,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Yoqilganda Pit rejimi o‘zgaradigan chastota.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX Qurilmasi"
+    },
+    "vtxProtocol": {
+        "message": "Protokol"
+    },
+    "vtxProtocolHelp": {
+        "message": "VTX muloqot qiladigan nazorat protokoli. SmartAudio va Tramp quyidagi UARTda ishlaydi; MSP uni DJI, HDZero va Walksnail kabi MSP bilan baham ko'radi."
+    },
+    "vtxSerialPort": {
+        "message": "Ketma-ket port"
+    },
+    "vtxSerialPortHelp": {
+        "message": "VTX boshqaruv protokoli ishlaydigan UART. API 1.49 dan VTX ning o'zida o'rnatiladi; Portlar yorlig'i uni faqat ko'rsatadi."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "MSP VTX ko'zoynaklar ulangan MSP bog‘lanishga javob beradi, shuning uchun u OSD yorlig'idagi OSD ketma-ket portiga ergashadi va uni bu yerga o‘rnatib bo‘lmaydi."
     },
     "vtxLowPowerDisarm": {
         "message": "Past quvvatli disarm",
@@ -8195,6 +8463,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Qora quti jurnallash qurilmasi"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Ketma-ket port"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART ro'yxatga olish qurilmasi ketma-ket bo'lganda ishlatiladi. API 1.49 dan qora qutining o'zida o'rnatiladi; Portlar yorlig'i uni faqat ko'rsatadi."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Ketma-ket port bod tezligi"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Ketma-ket kirish porti uchun uzatish tezligi."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Qora quti jurnallash tezligi"

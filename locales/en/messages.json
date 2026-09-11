@@ -319,6 +319,10 @@
         "message": "Galego",
         "description": "Don't translate!!!"
     },
+    "language_he": {
+        "message": "\u05E2\u05D1\u05E8\u05D9\u05EA",
+        "description": "Don't translate!!!"
+    },
     "language_it": {
         "message": "Italiano",
         "description": "Don't translate!!!"
@@ -506,9 +510,6 @@
     },
     "sensorConfigSaved": {
         "message": "Sensor configuration saved"
-    },
-    "sensorConfigSaveFailed": {
-        "message": "Failed to save sensor configuration"
     },
     "sensorConfigMagnetometer": {
         "message": "Magnetometer"
@@ -2318,6 +2319,9 @@
     "configurationSaved": {
         "message": "Configuration saved"
     },
+    "configurationSaveFailed": {
+        "message": "Failed to save configuration"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2408,6 +2412,9 @@
     },
     "portsPortInactive": {
         "message": "inactive"
+    },
+    "portsPortFree": {
+        "message": "free"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -6320,6 +6327,9 @@
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Capacity for the active battery profile. Firmware uses this value for mAh remaining and OSD capacity warnings when battery profiles are available."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7755,7 +7765,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Warns when the consumed mAh exceeds the configured capacity limit"
+        "message": "Warns when the consumed mAh exceeds the active battery profile capacity, or the legacy OSD capacity alarm when no profile capacity is set"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
