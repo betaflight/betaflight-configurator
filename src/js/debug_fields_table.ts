@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  d58d69e057 2026-09-07  (494 annotated fields)
+ *   API 1.49.0  f5fb2717b8 2026-09-12  (498 annotated fields)
  */
 
 /**
@@ -145,6 +145,12 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             5: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
             6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
             7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
+        }),
+        AUTOPILOT_HEADING: Object.freeze({
+            0: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 0.1 }),
+            1: Object.freeze({ label: "Target Heading", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Heading Error", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "Yaw Rate Setpoint", unit: "dps", scale: 0.1 }),
         }),
         AUTOPILOT_PID: Object.freeze({
             0: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
