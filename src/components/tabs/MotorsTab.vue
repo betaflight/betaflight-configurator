@@ -579,6 +579,7 @@ import { tracking } from "@/js/Analytics";
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
+import { computeZeroThrottleValue, computeIdleThrottleValue } from "@/composables/motors/useMotorStopValue";
 import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguration";
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
@@ -777,14 +778,14 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
-const zeroThrottleValue = computed(() => {
-    if (isFeatureEnabled("3D")) {
-        const neutral = fcStore.motor3dConfig.neutral;
-        // Sanity check from legacy
-        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
-    }
-    return minSliderValue.value;
-});
+const zeroThrottleValue = computed(() =>
+    computeZeroThrottleValue(
+        isFeatureEnabled("3D"),
+        digitalProtocolConfigured.value,
+        fcStore.motor3dConfig.neutral,
+        minSliderValue.value,
+    ),
+);
 
 // Initialize motor testing with safety features
 const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
@@ -1395,7 +1396,7 @@ const openMotorOutputReorderDialog = () => {
         "MotorOutputReorderingDialog",
         {
             droneConfiguration: mixerName,
-            motorStopValue: minSliderValue.value,
+            motorStopValue: zeroThrottleValue.value,
             motorSpinValue: idleThrottleValue.value,
         },
         {
@@ -1416,7 +1417,7 @@ const openEscDshotDirectionDialog = () => {
     const motorConfig = {
         escProtocolIsDshot: digitalProtocolConfigured.value,
         numberOfMotors: numberOfMotors,
-        motorStopValue: minSliderValue.value,
+        motorStopValue: zeroThrottleValue.value,
         motorSpinValue: idleThrottleValue.value,
     };
 
@@ -1448,7 +1449,7 @@ const handleSave = (reboot = true) => {
         }
 
         // Explicitly stop all motors to ensure no spinning after reboot
-        stopAllMotors(minSliderValue.value);
+        stopAllMotors(zeroThrottleValue.value);
         // Give time for motor stop command to be processed
         await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -1554,9 +1555,9 @@ const maxSliderValue = computed(() => {
     return fcStore.motorConfig.maxthrottle;
 });
 
-const idleThrottleValue = computed(() => {
-    return zeroThrottleValue.value + (fcStore.pidAdvancedConfig.motorIdle * 1000) / 100;
-});
+const idleThrottleValue = computed(() =>
+    computeIdleThrottleValue(zeroThrottleValue.value, fcStore.pidAdvancedConfig.motorIdle),
+);
 
 watch(zeroThrottleValue, (val) => {
     if (!motorsTestingEnabled.value) {
@@ -1730,7 +1731,7 @@ onUnmounted(() => {
     }
     // ensure disarmed safety - use proper stop values, not 0
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(new Array(8).fill(minSliderValue.value));
+        sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
     }
 });
 </script>
