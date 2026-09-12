@@ -760,7 +760,7 @@ export default defineComponent({
             },
         ];
 
-        let buildTypesToShow = reactive([]);
+        const buildTypesToShow = reactive([]);
 
         const buildBuildTypeOptionsList = () => {
             // Update state with build type options
@@ -888,7 +888,7 @@ export default defineComponent({
             };
 
             try {
-                let targetDetail = await buildApi.loadTarget(target, releaseStr);
+                const targetDetail = await buildApi.loadTarget(target, releaseStr);
                 await loadTargetDetail(targetDetail);
 
                 // Show release notes after loading target detail
@@ -904,13 +904,13 @@ export default defineComponent({
 
             try {
                 if (validateBuildKey()) {
-                    let options = await buildApi.loadOptionsByBuildKey(releaseStr, cloudBuild.state.cloudBuildKey);
+                    const options = await buildApi.loadOptionsByBuildKey(releaseStr, cloudBuild.state.cloudBuildKey);
                     if (options) {
                         buildOptions(options);
                         return;
                     }
                 }
-                let options = await buildApi.loadOptions(releaseStr);
+                const options = await buildApi.loadOptions(releaseStr);
                 buildOptions(options);
             } catch (error) {
                 console.error("Failed to load build options:", error);
@@ -2348,7 +2348,7 @@ export default defineComponent({
         width: 1.5rem;
         aspect-ratio: 1;
         content: "";
-        mask: url(../images/corner.svg);
+        mask: url(../../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
         inset-inline-start: -1.5rem;

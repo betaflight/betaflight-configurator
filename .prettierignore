@@ -30,3 +30,7 @@ nbproject/
 .project
 .settings/
 test-results-junit/
+
+# Vendored third-party libraries -- analytics.js is minified upstream output and
+# must not be reformatted.
+libraries/

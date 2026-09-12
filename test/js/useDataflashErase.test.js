@@ -73,11 +73,7 @@ describe("useDataflashErase", () => {
         eraseAcknowledgements[0]();
         await vi.advanceTimersByTimeAsync(DATAFLASH_ERASE_TIMEOUT_MS + 500);
 
-        expect(MSP.promise.mock.calls.at(-1)).toEqual([
-            MSPCodes.MSP_DATAFLASH_SUMMARY,
-            false,
-            { notifyTimeout: true },
-        ]);
+        expect(MSP.promise.mock.calls.at(-1)).toEqual([MSPCodes.MSP_DATAFLASH_SUMMARY, false, { notifyTimeout: true }]);
         expect(erase.isErasing.value).toBe(false);
         expect(connectionStore.liveDataPaused).toBe(false);
         expect(callbacks.onError).toHaveBeenCalledOnce();

@@ -860,7 +860,7 @@ const {
     selectedIdentifier: rangefinderPortIdentifier,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
-} = useFeaturePort({ setting: "rangefinder_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
     available: opticalFlowPortAvailable,
@@ -869,7 +869,7 @@ const {
     selectedIdentifier: opticalFlowPortIdentifier,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
-} = useFeaturePort({ setting: "opticalflow_uart", functionName: "LIDAR_TF" });
+} = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -1597,10 +1597,10 @@ async function acceptFullCal(manualGeoRef = null) {
         const customAngles =
             align_mag === 9
                 ? {
-                    roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                    pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                    yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-                }
+                      roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                      pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                      yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+                  }
                 : null;
         const R_cur = currentMatrixOf(align_mag, customAngles);
 
@@ -1745,10 +1745,10 @@ function exportFullCalModel() {
     const customAngles =
         align_mag === 9
             ? {
-                roll: fcStore.sensorAlignment.mag_align_roll || 0,
-                pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
-                yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
-            }
+                  roll: fcStore.sensorAlignment.mag_align_roll || 0,
+                  pitch: fcStore.sensorAlignment.mag_align_pitch || 0,
+                  yaw: fcStore.sensorAlignment.mag_align_yaw || 0,
+              }
             : null;
 
     const model = buildCharacterizationModel({
@@ -2360,7 +2360,7 @@ onMounted(() => {
         gap: 1rem;
     }
 
-    .sensor-model-box :deep(> div:last-child) {
+    .sensor-model-box > div:last-child {
         height: 100%;
         min-height: 0;
     }

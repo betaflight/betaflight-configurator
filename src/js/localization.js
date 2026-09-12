@@ -32,8 +32,10 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
 
-// Nuxt UI does not currently ship Serbian locales; use its closely related Croatian
-// messages while keeping the application translation codes distinct.
+// Nuxt UI does not currently ship some languages
+// Create new locale for them extending the English locale as base
+// For Serbian locales, use its closely related Croatian
+const he = { ...en, name: "\u05E2\u05D1\u05E8\u05D9\u05EA", code: "he", dir: "rtl" };
 const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
 const sr_Cyrl = {
     ...hr,
@@ -58,6 +60,7 @@ const supportedLocales = [
     eu,
     fr,
     gl,
+    he,
     it,
     ja,
     ka,
@@ -230,7 +233,7 @@ i18n.isRtl = function (locale) {
  * Resolves a language code onto the Nuxt UI locale that `UApp` needs. An unknown code
  * degrades to LTR English rather than leaving Nuxt UI with no locale at all.
  * @param {string} [language] language code, e.g. "ar" or "zh-CN"; defaults to the active one
- * @returns {{ name: string, code: string, dir: "ltr" | "rtl", messages: object }} a Nuxt UI locale
+ * @returns {import("@nuxt/ui/runtime/types/locale.js").Locale<import("@nuxt/ui/runtime/types/locale.js").Messages>} a Nuxt UI locale
  */
 i18n.getUiLocale = function (language = i18n.getCurrentLocale()) {
     return findLocale(language) ?? en;

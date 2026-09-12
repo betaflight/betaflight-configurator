@@ -3,6 +3,7 @@ import { ref, computed, reactive } from "vue";
 import { OSD } from "../components/tabs/osd/osd";
 import { FONT, SYM } from "../js/utils/osdFont";
 import MSP from "../js/msp";
+import VirtualFC from "../js/VirtualFC.js";
 import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
@@ -44,7 +45,6 @@ async function decodeOsdData(info) {
     OSD.chooseFields();
 
     if (CONFIGURATOR.virtualMode) {
-        const { default: VirtualFC } = await import("../js/VirtualFC.js");
         VirtualFC.setupVirtualOSD();
 
         if (OSD.msp.decodeVirtual) {

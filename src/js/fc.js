@@ -103,7 +103,9 @@ const FC = {
     COPY_PROFILE: null,
     CURRENT_METERS: null,
     CURRENT_METER_CONFIGS: null,
+    /** @type {{ ready: boolean, supported: boolean, sectors: number, totalSize: number, usedSize: number } | null} */
     DATAFLASH: null,
+    /** @type {Record<string, number>} filled in by resetState() before any tab reads it */
     DEFAULT: null,
     DEFAULT_PIDS: null,
     FAILSAFE_CONFIG: null,
@@ -159,6 +161,7 @@ const FC = {
     VTXTABLE_POWERLEVEL: null,
     VTX_CONFIG: null,
     VTX_DEVICE_STATUS: null,
+    WING_CONFIG: null,
 
     resetState() {
         // Using `Object.assign` instead of reassigning to
@@ -359,6 +362,7 @@ const FC = {
             motor_poles: 0,
             use_dshot_telemetry: false,
             use_esc_sensor: false,
+            motor_kv: 0,
         };
 
         this.GPS_CONFIG = {
@@ -741,6 +745,29 @@ const FC = {
             slider_pids_valid: 1,
             slider_gyro_valid: 1,
             slider_dterm_valid: 1,
+        };
+
+        this.WING_CONFIG = {
+            s_term: [0, 0, 0],
+            spa_center: [0, 0, 0],
+            spa_width: [0, 0, 0],
+            spa_mode: [0, 0, 0],
+            tpa_curve_type: 0,
+            tpa_curve_stall_throttle: 30,
+            tpa_curve_pid_thr0: 200,
+            tpa_curve_pid_thr100: 70,
+            tpa_curve_expo: 20,
+            tpa_speed_type: 0,
+            tpa_speed_basic_delay: 1000,
+            tpa_speed_basic_gravity: 50,
+            tpa_speed_adv_prop_pitch: 0,
+            tpa_speed_adv_mass: 1000,
+            tpa_speed_adv_drag_k: 1000,
+            tpa_speed_adv_thrust: 2000,
+            tpa_speed_max_voltage: 2520,
+            tpa_speed_pitch_offset: 0,
+            yaw_type: 0,
+            angle_pitch_offset: 0,
         };
     },
 

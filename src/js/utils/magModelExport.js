@@ -246,11 +246,11 @@ export function buildCharacterizationModel({
         captured_under: capturedUnder ?? null,
         ellipsoid_correction: ep
             ? {
-                center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
-                soft_iron: ep.W_inv,
-                radius: ep.radius,
-                residual_rms: ep.residual,
-            }
+                  center: { x: ep.center.x, y: ep.center.y, z: ep.center.z },
+                  soft_iron: ep.W_inv,
+                  radius: ep.radius,
+                  residual_rms: ep.residual,
+              }
             : null,
         geo_reference: {
             latitude_deg: gpsFix ? gpsLat / 10000000 : null,

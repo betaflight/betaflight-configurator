@@ -576,7 +576,7 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="saveConfig()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
+                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -596,6 +596,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
+import { useFlightControllerStore } from "@/stores/fc";
 import { useOsdPreview, clampStringPreviewPosition, clampArrayPreviewPosition } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
@@ -621,7 +622,6 @@ const {
     protocolOptions: osdProtocolOptions,
 } = useFeaturePort({
     setting: "osd_uart",
-    functionName: "FRSKY_OSD",
     protocol: { setting: "osd_displayport_device" },
 });
 
@@ -637,14 +637,17 @@ const {
     write: writeCustomTextPort,
 } = useFeaturePort({
     setting: "osd_custom_text_uart",
-    functionName: "OSD_CUSTOM_TEXT",
     baud: { setting: "osd_custom_text_baud" },
 });
 
 const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 
+// A UART assignment only takes effect at serial init, so a pending port change turns the primary
+// button into Save and Reboot instead of a plain Save.
+const portSettingsChanged = computed(() => osdPortChanged.value || customTextPortChanged.value);
+
 // A port-only change still has to enable Save; the OSD store's dirty state cannot see these.
-const portsOrConfigDirty = computed(() => osdStore.dirty || osdPortChanged.value || customTextPortChanged.value);
+const portsOrConfigDirty = computed(() => osdStore.dirty || portSettingsChanged.value);
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -654,6 +657,7 @@ import { i18n } from "@/js/localization";
 import { clamp } from "@/js/utils/common";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
+import { getVisibleAlarmEntries } from "./osd/osd_alarms";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
@@ -662,8 +666,11 @@ import MSP from "@/js/msp";
 import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
+import semver from "semver";
+import { API_VERSION_1_48 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
+const fcStore = useFlightControllerStore();
 const { hasBuildOption } = useBuildOptions();
 
 // Refs for DOM elements
@@ -690,7 +697,9 @@ const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() => i18n.getMessage("osdSetupSave"));
+const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() =>
+    i18n.getMessage(portSettingsChanged.value ? "osdSetupSaveReboot" : "osdSetupSave"),
+);
 const saveMenuItems = computed(() => [
     [
         {
@@ -730,12 +739,14 @@ const isDraggingGrid = ref(false);
 const effectiveShowRulers = computed(() => showRulers.value);
 
 // Convert alarms object to array for template iteration
+const hideCapacityAlarm = computed(
+    () =>
+        fcStore.config?.apiVersion &&
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_48) &&
+        (fcStore.config.numberOfBatteryProfiles || 0) > 0,
+);
 const alarmEntries = computed(() => {
-    const alarmsObj = osdStore.alarms;
-    if (!alarmsObj || typeof alarmsObj !== "object" || Array.isArray(alarmsObj)) {
-        return [];
-    }
-    return Object.entries(alarmsObj).map(([key, alarm]) => ({ key, alarm }));
+    return getVisibleAlarmEntries(osdStore.alarms, hideCapacityAlarm.value);
 });
 useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
 
@@ -1460,6 +1471,9 @@ const saveAndRebootConfig = async () => {
     await saveConfig();
     await reboot();
 };
+
+// The primary button does what its label says: with a port change pending it saves and reboots.
+const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
