@@ -385,6 +385,10 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
+                    // Only a user-initiated type change resets the rates to that type's defaults.
+                    // A type change coming from MSP (profile switch, reconnect) must keep the
+                    // values the FC just sent us.
+                    setDefaultsForRatesType(value);
                 },
                 cancel: () => {
                     dialog.close();
@@ -1662,33 +1666,36 @@ function renderModel(timestamp) {
     animationFrameId = requestAnimationFrame(renderModel);
 }
 
-// Watch for changes and redraw
-// Watch for changes and redraw
-watch([ratesType, rcRate, rcRatePitch, rcRateYaw, rollRate, pitchRate, yawRate, rcExpo, rcPitchExpo, rcYawExpo], () => {
-    nextTick(() => {
-        drawRateCurves();
-    });
-});
+// Watch for changes and redraw. The rate limits are read straight off FC.RC_TUNING because
+// they have no scaled computed, but they feed both the curve and the max-velocity labels.
+watch(
+    [
+        ratesType,
+        rcRate,
+        rcRatePitch,
+        rcRateYaw,
+        rollRate,
+        pitchRate,
+        yawRate,
+        rcExpo,
+        rcPitchExpo,
+        rcYawExpo,
+        () => FC.RC_TUNING.roll_rate_limit,
+        () => FC.RC_TUNING.pitch_rate_limit,
+        () => FC.RC_TUNING.yaw_rate_limit,
+    ],
+    () => {
+        nextTick(() => {
+            drawRateCurves();
+        });
+    },
+);
 
 watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimitPercent], () => {
     nextTick(() => {
         drawThrottleCurve();
     });
 });
-
-// Watch for FC.RC_TUNING to become available (initial data load)
-watch(
-    () => FC.RC_TUNING,
-    (newValue) => {
-        if (newValue && newValue.rates_type !== undefined) {
-            nextTick(() => {
-                drawRateCurves();
-                drawThrottleCurve();
-            });
-        }
-    },
-    { immediate: true },
-);
 
 onMounted(() => {
     // Initialize 3D Model for rates preview
@@ -1829,13 +1836,6 @@ const setDefaultsForRatesType = (type) => {
             break;
     }
 };
-
-// Watch for rates type changes and set default values (only on an actual user change, not on initial mount)
-watch(ratesType, (newType, oldType) => {
-    if (oldType !== undefined && newType !== oldType) {
-        setDefaultsForRatesType(newType);
-    }
-});
 
 onUnmounted(() => {
     // Stop rendering immediately
