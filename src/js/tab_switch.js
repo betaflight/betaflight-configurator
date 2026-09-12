@@ -35,6 +35,8 @@ function handleDisallowedTab(tabKey, tabLabel) {
     }
     if (GUI.connected_to || GUI.connecting_to) {
         GUI.pendingTab = "firmware_flasher";
+        // Dynamic import: serial_backend.js imports this module statically, so a static
+        // import back would cycle.
         import("./serial_backend.js").then(({ connectDisconnect }) => connectDisconnect());
     } else {
         switchTab("firmware_flasher", { mode: "disconnected", label: tabLabel });

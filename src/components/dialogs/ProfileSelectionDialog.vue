@@ -1,10 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
             <div class="flex flex-col gap-4">
                 <p>{{ message }}</p>

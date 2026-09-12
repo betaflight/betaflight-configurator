@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { useSaving } from "../../src/composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "../../src/composables/useSaving";
 import { MspCancelledError } from "../../src/js/msp/mspErrors.js";
 import { gui_log } from "../../src/js/gui_log.js";
 
@@ -90,5 +90,53 @@ describe("useSaving", () => {
         expect(gui_log).not.toHaveBeenCalled();
         expect(spy).not.toHaveBeenCalled();
         expect(isSaving.value).toBe(false);
+    });
+
+    describe("withSaveFailureMessage", () => {
+        it("shows the step's own message in place of the generic one, still exactly once", async () => {
+            const { runSave } = useSaving();
+            const error = new Error("port refused");
+            const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+            await runSave(() => Promise.reject(withSaveFailureMessage(error, "Could not set the port")));
+
+            expect(gui_log).toHaveBeenCalledTimes(1);
+            expect(gui_log).toHaveBeenCalledWith("Could not set the port");
+            expect(gui_log).not.toHaveBeenCalledWith("t:configurationSaveFailed");
+            expect(spy).toHaveBeenCalledWith("Save failed:", error);
+        });
+
+        it("keeps the innermost message when an outer step tags the same error again", () => {
+            const error = new Error("boom");
+
+            withSaveFailureMessage(error, "inner step");
+            withSaveFailureMessage(error, "outer step");
+
+            expect(error.saveFailureMessage).toBe("inner step");
+        });
+
+        it("tags the error in place, so a tagged cancellation is still recognised and stays silent", async () => {
+            const { runSave } = useSaving();
+            const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+            const cancelled = new MspCancelledError();
+
+            expect(withSaveFailureMessage(cancelled, "Could not set the port")).toBe(cancelled);
+            await runSave(() => Promise.reject(cancelled));
+
+            expect(gui_log).not.toHaveBeenCalled();
+            expect(spy).not.toHaveBeenCalled();
+        });
+
+        it("wraps a primitive throw so the message still reaches the user", async () => {
+            const { runSave } = useSaving();
+            vi.spyOn(console, "error").mockImplementation(() => {});
+
+            const tagged = withSaveFailureMessage("boom", "Could not set the port");
+            await runSave(() => Promise.reject(tagged));
+
+            expect(tagged).toBeInstanceOf(Error);
+            expect(tagged.cause).toBe("boom");
+            expect(gui_log).toHaveBeenCalledWith("Could not set the port");
+        });
     });
 });
