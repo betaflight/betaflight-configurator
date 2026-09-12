@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center gap-2">
         <slot name="default"></slot>
-        <div class="flex items-center" :class="{ 'flex-1': fullWidth }">
+        <div class="flex flex-wrap items-center gap-y-1 min-w-0" :class="{ 'flex-1': fullWidth }">
             <slot name="label"></slot>
             <span v-if="label" v-html="label"></span>
         </div>
