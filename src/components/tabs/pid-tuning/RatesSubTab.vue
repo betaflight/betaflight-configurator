@@ -1666,33 +1666,36 @@ function renderModel(timestamp) {
     animationFrameId = requestAnimationFrame(renderModel);
 }
 
-// Watch for changes and redraw
-// Watch for changes and redraw
-watch([ratesType, rcRate, rcRatePitch, rcRateYaw, rollRate, pitchRate, yawRate, rcExpo, rcPitchExpo, rcYawExpo], () => {
-    nextTick(() => {
-        drawRateCurves();
-    });
-});
+// Watch for changes and redraw. The rate limits are read straight off FC.RC_TUNING because
+// they have no scaled computed, but they feed both the curve and the max-velocity labels.
+watch(
+    [
+        ratesType,
+        rcRate,
+        rcRatePitch,
+        rcRateYaw,
+        rollRate,
+        pitchRate,
+        yawRate,
+        rcExpo,
+        rcPitchExpo,
+        rcYawExpo,
+        () => FC.RC_TUNING.roll_rate_limit,
+        () => FC.RC_TUNING.pitch_rate_limit,
+        () => FC.RC_TUNING.yaw_rate_limit,
+    ],
+    () => {
+        nextTick(() => {
+            drawRateCurves();
+        });
+    },
+);
 
 watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimitPercent], () => {
     nextTick(() => {
         drawThrottleCurve();
     });
 });
-
-// Watch for FC.RC_TUNING to become available (initial data load)
-watch(
-    () => FC.RC_TUNING,
-    (newValue) => {
-        if (newValue && newValue.rates_type !== undefined) {
-            nextTick(() => {
-                drawRateCurves();
-                drawThrottleCurve();
-            });
-        }
-    },
-    { immediate: true },
-);
 
 onMounted(() => {
     // Initialize 3D Model for rates preview
