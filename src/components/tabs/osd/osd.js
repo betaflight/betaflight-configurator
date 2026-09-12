@@ -33,6 +33,7 @@ OSD.initData = function () {
         displayItems: [],
         timers: [],
         osd_profiles: {},
+        canvas: null, // { cols, rows } as reported by MSP_OSD_CANVAS, if any
         VIDEO_COLS: {
             PAL: 30,
             NTSC: 30,
@@ -1769,6 +1770,29 @@ OSD.chooseFields = function () {
     }
 };
 
+// Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.
+OSD.applyCanvas = function (d) {
+    const canvas = d.canvas;
+    if (!canvas) {
+        return;
+    }
+
+    let videoType = "HD";
+    if (d.state.haveFbOsdConfigured) {
+        videoType = OSD.constants.VIDEO_TYPES[d.video_system];
+        if (videoType === "AUTO") {
+            videoType = "PAL";
+        }
+        if (!videoType) {
+            return;
+        }
+    }
+
+    d.VIDEO_COLS[videoType] = canvas.cols;
+    d.VIDEO_ROWS[videoType] = canvas.rows;
+    d.VIDEO_BUFFER_CHARS[videoType] = canvas.cols * canvas.rows;
+};
+
 OSD.updateDisplaySize = function () {
     let videoType = OSD.constants.VIDEO_TYPES[OSD.data.video_system];
     if (videoType === "AUTO") {
@@ -1906,7 +1930,9 @@ OSD.msp = {
 
         d.state = {};
         d.state.haveSomeOsd = d.flags !== 0;
-        d.state.haveMax7456Configured = bit_check(d.flags, 4);
+        d.state.haveFbOsdConfigured = bit_check(d.flags, 2);
+        // FB_OSD (framebuffer OSD on RP2350) is treated as MAX7456 for now; behaviour will be differentiated later.
+        d.state.haveMax7456Configured = bit_check(d.flags, 4) || d.state.haveFbOsdConfigured;
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
         d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
@@ -1914,6 +1940,9 @@ OSD.msp = {
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
         d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+
+        // Must run before element positions are decoded, as they depend on the column count.
+        OSD.applyCanvas(d);
 
         d.displayItems = [];
         d.statItems = [];

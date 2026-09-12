@@ -29,6 +29,7 @@ async function fetchOsdInfo(fcStore) {
         return undefined;
     }
 
+    OSD.data.canvas = null;
     if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
     }
@@ -89,6 +90,7 @@ export const useOsdStore = defineStore("osd", () => {
         haveSomeOsd: false,
         haveMax7456Video: false,
         haveMax7456Configured: false,
+        haveFbOsdConfigured: false,
         haveMax7456FontDeviceConfigured: false,
         isMax7456FontDeviceDetected: false,
         haveOsdFeature: false,
