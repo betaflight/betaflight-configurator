@@ -814,7 +814,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+    it("sends MSP_SET_REBOOT, forces connectionValid false, and does not drop the link during the flush", () => {
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
@@ -834,13 +834,95 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(CONFIGURATOR.connectionValid).toBe(false);
 
-            // A serial link that is still open after the flush means the FC did not reboot, or
-            // the OS has not noticed yet. Dropping it would tear down a working connection and
-            // throw the user off the tab they just opened — the CLI-tab exit path does exactly
-            // this. The transport owns that link; only driven targets are dropped here.
+            // A serial link that is still open right after the flush means the FC did not reboot
+            // yet, or the OS has not noticed the drop. We give it a short settle before touching
+            // it (a genuinely re-enumerating STM32 drops within this window and takes the normal
+            // reconnect path); the flush itself never drops a live serial link.
             vi.advanceTimersByTime(1500);
             expect(serial.disconnect).not.toHaveBeenCalled();
         } finally {
+            vi.advanceTimersByTime(30000); // drain the window
+            vi.useRealTimers();
+        }
+    });
+
+    // A soft-resetting ESP32 keeps its USB serial enumerated (USB-UART bridge or native
+    // USB-JTAG), so the link never drops and the transport-reconnect branch — gated on
+    // !isConnected() — never fires. The FC comes back and answers MSP, but connectionValid was
+    // forced false at reboot and nothing re-runs the handshake, so the window used to time out
+    // as FAILED. Once the link has stayed open past the settle, we drop it ONCE and the next
+    // tick reconnects it with a fresh handshake.
+    it("drops a link that survives the reboot once past the settle, then reconnects", () => {
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = true;
+            CONFIGURATOR.virtualMode = false;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            serial.disconnect.mockClear();
+            serial.connect.mockClear();
+
+            reinitializeConnection();
+
+            // Flush (1500) + first retry tick (1000) = 2500ms of window elapsed, at/after the
+            // 2500ms settle. The link is still open, so the loop forces a single drop.
+            vi.advanceTimersByTime(1500 + 1000);
+            expect(serial.disconnect).toHaveBeenCalledTimes(1);
+
+            // Next tick: the link is now closed, so the normal reconnect branch opens it again.
+            // The forced drop is one-shot.
+            vi.advanceTimersByTime(1000);
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // The reconnect must start a FRESH handshake, not merely open the transport. Drive
+            // the mocked open event and assert onOpen issues MSP_API_VERSION as its first request.
+            MSP.send_message.mockClear();
+            serialHandlers.connect({ detail: true });
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_API_VERSION, false, false, expect.any(Function));
+        } finally {
+            vi.advanceTimersByTime(30000); // drain the window
+            vi.useRealTimers();
+        }
+    });
+
+    // The reboot the user asked for must complete on a survived link even with Auto-Connect OFF:
+    // the link is the one we already own, not a device to auto-grab. Without this, the loop would
+    // conclude via waitedOut (Auto-Connect off + our device "back" because the link never dropped)
+    // and the dialog would report failure while the FC is up and answering — the ESP32-S3 case.
+    it("forces the relink on a survived link with Auto-Connect OFF, then reconnects", () => {
+        vi.useFakeTimers();
+        DeviceHandler.findDescribedDevice.mockReturnValue({ path: "serial_9" }); // our device stays listed
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
+            DeviceHandler.devicePicker.autoConnect = false; // Auto-Connect OFF (waitedOut would fire)
+            CONFIGURATOR.virtualMode = false;
+            CONFIGURATOR.connectionValid = true;
+            establishConnection();
+
+            serial.disconnect.mockClear();
+            serial.connect.mockClear();
+
+            reinitializeConnection();
+
+            // Past the settle: the survived link is dropped once even though Auto-Connect is off
+            // (waitedOut does not preempt it), and the reboot window stays open.
+            vi.advanceTimersByTime(1500 + 1000);
+            expect(serial.disconnect).toHaveBeenCalledTimes(1);
+            expect(getConnectionState().isRebootWindowOpen).toBe(true);
+
+            // The forced relink drives the reconnect itself, Auto-Connect notwithstanding.
+            vi.advanceTimersByTime(1000);
+            expect(serial.connect).toHaveBeenCalledTimes(1);
+
+            // And it runs a fresh handshake, not just a transport open: driving the mocked open
+            // event issues MSP_API_VERSION.
+            MSP.send_message.mockClear();
+            serialHandlers.connect({ detail: true });
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_API_VERSION, false, false, expect.any(Function));
+        } finally {
+            DeviceHandler.findDescribedDevice.mockReturnValue(undefined);
             vi.advanceTimersByTime(30000); // drain the window
             vi.useRealTimers();
         }
