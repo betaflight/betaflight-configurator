@@ -385,6 +385,10 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
+                    // Only a user-initiated type change resets the rates to that type's defaults.
+                    // A type change coming from MSP (profile switch, reconnect) must keep the
+                    // values the FC just sent us.
+                    setDefaultsForRatesType(value);
                 },
                 cancel: () => {
                     dialog.close();
@@ -1829,13 +1833,6 @@ const setDefaultsForRatesType = (type) => {
             break;
     }
 };
-
-// Watch for rates type changes and set default values (only on an actual user change, not on initial mount)
-watch(ratesType, (newType, oldType) => {
-    if (oldType !== undefined && newType !== oldType) {
-        setDefaultsForRatesType(newType);
-    }
-});
 
 onUnmounted(() => {
     // Stop rendering immediately
