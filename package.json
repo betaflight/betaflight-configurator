@@ -117,7 +117,7 @@
     "prettier": "^3.5.2",
     "run-script-os": "^1.1.6",
     "storybook": "^10.5.2",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.69.0",
     "vite": "^8.0.16",
     "vite-plugin-static-copy": "^4.1.1",
