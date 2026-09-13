@@ -53,8 +53,8 @@
     "npm": ">=11.19.0"
   },
   "dependencies": {
-    "@capacitor/android": "8.3.4",
-    "@capacitor/core": "8.3.4",
+    "@capacitor/android": "8.5.2",
+    "@capacitor/core": "8.5.2",
     "@iconify-json/lucide": "^1.2.101",
     "@nuxt/ui": "^4.11.1",
     "@simplewebauthn/browser": "^14.0.0",
@@ -96,7 +96,7 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.3.0",
+    "@capacitor/cli": "^8.5.2",
     "@storybook/addon-docs": "^10.5.2",
     "@storybook/addon-links": "^10.5.2",
     "@storybook/vue3-vite": "^10.5.2",
