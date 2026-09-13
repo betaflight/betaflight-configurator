@@ -168,6 +168,17 @@ function joinPath(dir, name) {
     return dir.endsWith(sep) ? `${dir}${name}` : `${dir}${sep}${name}`;
 }
 
+// The File System Access API's `id` option only accepts this shape and
+// throws `TypeError` otherwise; enforced here too so an invalid id fails the
+// same way on every platform instead of only in the browser.
+const PICKER_ID_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
+
+function assertValidPickerId(pickerId) {
+    if (pickerId && !PICKER_ID_PATTERN.test(pickerId)) {
+        throw new Error(`Invalid pickerId "${pickerId}": must be 1-32 ASCII letters, digits, "_" or "-".`);
+    }
+}
+
 // Per-pickerId last-used directory, for platforms (Tauri) whose native dialog
 // has no equivalent of the File System Access API's `id` option — that option
 // makes the browser itself remember the last folder per id, so only the
@@ -304,6 +315,8 @@ class FileSystem {
     // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
     // remembers its own last-used folder instead of sharing one.
     async pickSaveFile(suggestedName, description, extension, pickerId) {
+        assertValidPickerId(pickerId);
+
         if (isAndroid()) {
             return this._androidPickSaveFile(suggestedName, description, extension);
         }
@@ -386,6 +399,8 @@ class FileSystem {
     // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
     // remembers its own last-used folder instead of sharing one.
     async pickOpenFile(description, extension, pickerId) {
+        assertValidPickerId(pickerId);
+
         if (isAndroid()) {
             return this._androidPickOpenFile(description, extension);
         }

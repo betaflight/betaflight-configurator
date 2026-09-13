@@ -91,6 +91,38 @@ describe("buildNativeFilters", () => {
     });
 });
 
+// The File System Access API spec restricts `id` to ASCII alphanumeric, "_",
+// "-", max 32 chars, and throws TypeError outside that shape — enforced here
+// too, before any platform is reached, so a bad id fails the same way
+// everywhere instead of only in the browser path.
+describe("pickerId validation", () => {
+    it("rejects a pickerId with characters outside the spec's allowed set", async () => {
+        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
+        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
+    });
+
+    it("rejects a pickerId over the 32-character limit", async () => {
+        const tooLong = "a".repeat(33);
+        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toThrow(/Invalid pickerId/);
+    });
+
+    it("accepts a pickerId at exactly the 32-character limit", async () => {
+        const exactly32 = "a".repeat(32);
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", exactly32);
+        expect(file.name).toBe("x.txt");
+    });
+
+    it("accepts hyphens and underscores, the two allowed non-alphanumerics", async () => {
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "cli-file_2");
+        expect(file.name).toBe("x.txt");
+    });
+
+    it("treats an empty pickerId the same as an omitted one, not a validation failure", async () => {
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "");
+        expect(file.name).toBe("x.txt");
+    });
+});
+
 // The Tauri desktop build routes through the native dialog + fs plugins: its
 // WebKit webviews have neither the File System Access API nor working
 // `<a download>` blob downloads.
