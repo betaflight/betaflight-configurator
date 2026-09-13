@@ -97,12 +97,17 @@ describe("buildNativeFilters", () => {
 // everywhere instead of only in the browser path.
 describe("pickerId validation", () => {
     it("rejects a pickerId with characters outside the spec's allowed set", async () => {
+        // TypeError, matching what the File System Access API itself throws
+        // for an invalid `id` — the platform-independent error contract.
+        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toThrow(TypeError);
         await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
+        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toThrow(TypeError);
         await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
     });
 
     it("rejects a pickerId over the 32-character limit", async () => {
         const tooLong = "a".repeat(33);
+        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toThrow(TypeError);
         await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toThrow(/Invalid pickerId/);
     });
 

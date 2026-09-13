@@ -175,7 +175,7 @@ const PICKER_ID_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
 
 function assertValidPickerId(pickerId) {
     if (pickerId && !PICKER_ID_PATTERN.test(pickerId)) {
-        throw new Error(`Invalid pickerId "${pickerId}": must be 1-32 ASCII letters, digits, "_" or "-".`);
+        throw new TypeError(`Invalid pickerId "${pickerId}": must be 1-32 ASCII letters, digits, "_" or "-".`);
     }
 }
 
