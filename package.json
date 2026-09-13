@@ -71,7 +71,7 @@
     "i18next": "^24.2.2",
     "i18next-http-backend": "^3.0.5",
     "i18next-vue": "^5.2.0",
-    "inflection": "^1.13.4",
+    "inflection": "^3.0.2",
     "jsdom": "^29.0.0",
     "leaflet": "^1.9.3",
     "leaflet-marker-rotation": "^0.4.0",
