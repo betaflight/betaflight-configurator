@@ -57,7 +57,7 @@
     "@capacitor/core": "8.3.4",
     "@iconify-json/lucide": "^1.2.101",
     "@nuxt/ui": "^4.11.1",
-    "@simplewebauthn/browser": "^13.2.2",
+    "@simplewebauthn/browser": "^14.0.0",
     "@tauri-apps/api": "~2.11.0",
     "@tauri-apps/plugin-dialog": "^2.7.2",
     "@tauri-apps/plugin-fs": "^2.5.1",
