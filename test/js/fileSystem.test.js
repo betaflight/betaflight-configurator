@@ -101,6 +101,7 @@ describe("FileSystem on Tauri desktop", () => {
 
     afterEach(() => {
         delete globalThis.__TAURI_INTERNALS__;
+        localStorage.removeItem("fileSystemLastDir");
         vi.resetAllMocks();
     });
 
@@ -202,6 +203,107 @@ describe("FileSystem on Tauri desktop", () => {
         const blob = await FileSystem.readFileAsBlob(file);
         expect(blob.type).toBe("application/octet-stream");
         expect(blob.size).toBe(2);
+    });
+
+    // The native dialog has no "remember this folder" option of its own, so
+    // FileSystem persists the last directory per pickerId itself.
+    describe("pickerId remembers the last-used folder", () => {
+        it("starts the save dialog in the folder from a previous pick with the same id", async () => {
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/log.csv");
+            await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv", "cli-file");
+
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/notes.csv");
+            await FileSystem.pickSaveFile("notes.csv", "CSV file", ".csv", "cli-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "/home/pilot/Documents/notes.csv" }),
+            );
+        });
+
+        it("starts the open dialog in the folder from a previous pick with the same id", async () => {
+            tauriDialog.open.mockResolvedValueOnce("/home/pilot/firmware/target.hex");
+            await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
+
+            tauriDialog.open.mockResolvedValueOnce("/home/pilot/firmware/other.hex");
+            await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
+
+            expect(tauriDialog.open).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "/home/pilot/firmware" }),
+            );
+        });
+
+        it("keeps separate pickerIds from sharing a remembered folder", async () => {
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/firmware/build.hex");
+            await FileSystem.pickSaveFile("build.hex", "Firmware", ".hex", "firmware-file");
+
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/logs/cli.txt");
+            await FileSystem.pickSaveFile("cli.txt", "Text", ".txt", "cli-file");
+
+            // Second call is a fresh id: no remembered folder to prefix the name with.
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "cli.txt" }));
+        });
+
+        it("does not remember a folder when no pickerId is given", async () => {
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/log.csv");
+            await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv");
+
+            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/notes.csv");
+            await FileSystem.pickSaveFile("notes.csv", "CSV file", ".csv");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "notes.csv" }));
+        });
+    });
+});
+
+// Chromium's File System Access API remembers the last-used folder itself,
+// scoped per `id` passed to the picker — so pickerId only needs forwarding
+// as `id` here, with no directory bookkeeping of our own.
+describe("FileSystem picker id (File System Access API)", () => {
+    let showOpenFilePicker;
+    let showSaveFilePicker;
+
+    function mockHandle(name) {
+        return {
+            name,
+            queryPermission: vi.fn().mockResolvedValue("granted"),
+            requestPermission: vi.fn().mockResolvedValue("granted"),
+        };
+    }
+
+    beforeEach(() => {
+        showOpenFilePicker = vi.fn();
+        showSaveFilePicker = vi.fn();
+        globalThis.showOpenFilePicker = showOpenFilePicker;
+        globalThis.showSaveFilePicker = showSaveFilePicker;
+    });
+
+    afterEach(() => {
+        delete globalThis.showOpenFilePicker;
+        delete globalThis.showSaveFilePicker;
+    });
+
+    it("pickOpenFile forwards pickerId as the picker's remembered-folder id", async () => {
+        showOpenFilePicker.mockResolvedValue([mockHandle("target.hex")]);
+
+        await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
+
+        expect(showOpenFilePicker).toHaveBeenCalledWith(expect.objectContaining({ id: "firmware-file" }));
+    });
+
+    it("pickSaveFile forwards pickerId as the picker's remembered-folder id", async () => {
+        showSaveFilePicker.mockResolvedValue(mockHandle("cli.txt"));
+
+        await FileSystem.pickSaveFile("cli.txt", "Text", ".txt", "cli-file");
+
+        expect(showSaveFilePicker).toHaveBeenCalledWith(expect.objectContaining({ id: "cli-file" }));
+    });
+
+    it("omits id when no pickerId is given", async () => {
+        showOpenFilePicker.mockResolvedValue([mockHandle("dump.txt")]);
+
+        await FileSystem.pickOpenFile("Text", ".txt");
+
+        expect(showOpenFilePicker.mock.calls[0][0]).not.toHaveProperty("id");
     });
 });
 
