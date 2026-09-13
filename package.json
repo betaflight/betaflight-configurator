@@ -115,7 +115,7 @@
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.9.0",
     "husky": "^9.1.7",
-    "inquirer": "^12.4.2",
+    "inquirer": "^14.2.2",
     "less": "^4.2.2",
     "lint-staged": "^15.4.3",
     "postcss": "^8.5.26",
