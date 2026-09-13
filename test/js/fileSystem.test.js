@@ -252,6 +252,28 @@ describe("FileSystem on Tauri desktop", () => {
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "notes.csv" }));
         });
+
+        it("remembers a POSIX filesystem root", async () => {
+            tauriDialog.save.mockResolvedValueOnce("/target.hex");
+            await FileSystem.pickSaveFile("target.hex", "Firmware", ".hex", "firmware-file");
+
+            tauriDialog.save.mockResolvedValueOnce("/other.hex");
+            await FileSystem.pickSaveFile("other.hex", "Firmware", ".hex", "firmware-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "/other.hex" }));
+        });
+
+        it("remembers a Windows drive root", async () => {
+            tauriDialog.save.mockResolvedValueOnce("C:\\target.hex");
+            await FileSystem.pickSaveFile("target.hex", "Firmware", ".hex", "firmware-file");
+
+            tauriDialog.save.mockResolvedValueOnce("C:\\other.hex");
+            await FileSystem.pickSaveFile("other.hex", "Firmware", ".hex", "firmware-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "C:\\other.hex" }),
+            );
+        });
     });
 });
 

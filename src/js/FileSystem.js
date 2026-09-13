@@ -140,11 +140,22 @@ function baseName(path) {
     return parts[parts.length - 1] || String(path);
 }
 
-// Directory portion of a native path, in its original separator style.
+// Directory portion of a native path, in its original separator style. A
+// filesystem root ("/", "\", "C:\") must keep its trailing separator — dropping
+// it turns "C:\" into "C:", a drive-relative path rather than the drive root.
 function dirName(path) {
     const str = String(path);
     const cut = Math.max(str.lastIndexOf("/"), str.lastIndexOf("\\"));
-    return cut >= 0 ? str.slice(0, cut) : "";
+    if (cut < 0) {
+        return "";
+    }
+    if (cut === 0) {
+        return str[0];
+    }
+    if (cut === 2 && /^[A-Za-z]:[/\\]/.test(str)) {
+        return str.slice(0, 3);
+    }
+    return str.slice(0, cut);
 }
 
 // Append a file name to a remembered directory, keeping that directory's own
