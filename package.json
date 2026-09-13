@@ -108,7 +108,7 @@
     "@tauri-apps/cli": "~2.11.0",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.1.0",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-unused-imports": "^4.1.4",
