@@ -81,7 +81,7 @@
     "mediabunny": "^1.55.2",
     "multicast-dns": "^7.2.5",
     "ol": "^10.4.0",
-    "pinia": "^3.0.4",
+    "pinia": "^4.0.3",
     "semver": "^7.7.4",
     "short-unique-id": "^5.2.0",
     "sortablejs": "^1.15.7",
