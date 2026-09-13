@@ -96,19 +96,20 @@ describe("buildNativeFilters", () => {
 // too, before any platform is reached, so a bad id fails the same way
 // everywhere instead of only in the browser path.
 describe("pickerId validation", () => {
+    // TypeError, matching what the File System Access API itself throws for
+    // an invalid `id` — the platform-independent error contract.
+    const INVALID_PICKER_ID = { name: "TypeError", message: expect.stringContaining("Invalid pickerId") };
+
     it("rejects a pickerId with characters outside the spec's allowed set", async () => {
-        // TypeError, matching what the File System Access API itself throws
-        // for an invalid `id` — the platform-independent error contract.
-        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toThrow(TypeError);
-        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
-        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toThrow(TypeError);
-        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toThrow(/Invalid pickerId/);
+        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toMatchObject(INVALID_PICKER_ID);
+        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toMatchObject(
+            INVALID_PICKER_ID,
+        );
     });
 
     it("rejects a pickerId over the 32-character limit", async () => {
         const tooLong = "a".repeat(33);
-        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toThrow(TypeError);
-        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toThrow(/Invalid pickerId/);
+        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toMatchObject(INVALID_PICKER_ID);
     });
 
     it("accepts a pickerId at exactly the 32-character limit", async () => {
@@ -245,12 +246,23 @@ describe("FileSystem on Tauri desktop", () => {
     // The native dialog has no "remember this folder" option of its own, so
     // FileSystem persists the last directory per pickerId itself.
     describe("pickerId remembers the last-used folder", () => {
-        it("starts the save dialog in the folder from a previous pick with the same id", async () => {
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/log.csv");
-            await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv", "cli-file");
+        // Each test below only cares about the `defaultPath` a second
+        // pick is offered, given what the first pick resolved to — these
+        // two helpers carry the mock-then-call boilerplate that's
+        // otherwise identical across every case.
+        async function saveAs(name, resolvedPath, pickerId) {
+            tauriDialog.save.mockResolvedValueOnce(resolvedPath);
+            return FileSystem.pickSaveFile(name, "Files", ".txt", pickerId);
+        }
 
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/notes.csv");
-            await FileSystem.pickSaveFile("notes.csv", "CSV file", ".csv", "cli-file");
+        async function openAs(resolvedPath, pickerId) {
+            tauriDialog.open.mockResolvedValueOnce(resolvedPath);
+            return FileSystem.pickOpenFile("Files", ".txt", pickerId);
+        }
+
+        it("starts the save dialog in the folder from a previous pick with the same id", async () => {
+            await saveAs("log.csv", "/home/pilot/Documents/log.csv", "cli-file");
+            await saveAs("notes.csv", "/home/pilot/Documents/notes.csv", "cli-file");
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(
                 expect.objectContaining({ defaultPath: "/home/pilot/Documents/notes.csv" }),
@@ -258,11 +270,8 @@ describe("FileSystem on Tauri desktop", () => {
         });
 
         it("starts the open dialog in the folder from a previous pick with the same id", async () => {
-            tauriDialog.open.mockResolvedValueOnce("/home/pilot/firmware/target.hex");
-            await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
-
-            tauriDialog.open.mockResolvedValueOnce("/home/pilot/firmware/other.hex");
-            await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
+            await openAs("/home/pilot/firmware/target.hex", "firmware-file");
+            await openAs("/home/pilot/firmware/other.hex", "firmware-file");
 
             expect(tauriDialog.open).toHaveBeenLastCalledWith(
                 expect.objectContaining({ defaultPath: "/home/pilot/firmware" }),
@@ -270,42 +279,30 @@ describe("FileSystem on Tauri desktop", () => {
         });
 
         it("keeps separate pickerIds from sharing a remembered folder", async () => {
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/firmware/build.hex");
-            await FileSystem.pickSaveFile("build.hex", "Firmware", ".hex", "firmware-file");
-
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/logs/cli.txt");
-            await FileSystem.pickSaveFile("cli.txt", "Text", ".txt", "cli-file");
+            await saveAs("build.hex", "/home/pilot/firmware/build.hex", "firmware-file");
+            await saveAs("cli.txt", "/home/pilot/logs/cli.txt", "cli-file");
 
             // Second call is a fresh id: no remembered folder to prefix the name with.
             expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "cli.txt" }));
         });
 
         it("does not remember a folder when no pickerId is given", async () => {
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/log.csv");
-            await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv");
-
-            tauriDialog.save.mockResolvedValueOnce("/home/pilot/Documents/notes.csv");
-            await FileSystem.pickSaveFile("notes.csv", "CSV file", ".csv");
+            await saveAs("log.csv", "/home/pilot/Documents/log.csv");
+            await saveAs("notes.csv", "/home/pilot/Documents/notes.csv");
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "notes.csv" }));
         });
 
         it("remembers a POSIX filesystem root", async () => {
-            tauriDialog.save.mockResolvedValueOnce("/target.hex");
-            await FileSystem.pickSaveFile("target.hex", "Firmware", ".hex", "firmware-file");
-
-            tauriDialog.save.mockResolvedValueOnce("/other.hex");
-            await FileSystem.pickSaveFile("other.hex", "Firmware", ".hex", "firmware-file");
+            await saveAs("target.hex", "/target.hex", "firmware-file");
+            await saveAs("other.hex", "/other.hex", "firmware-file");
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "/other.hex" }));
         });
 
         it("remembers a Windows drive root", async () => {
-            tauriDialog.save.mockResolvedValueOnce("C:\\target.hex");
-            await FileSystem.pickSaveFile("target.hex", "Firmware", ".hex", "firmware-file");
-
-            tauriDialog.save.mockResolvedValueOnce("C:\\other.hex");
-            await FileSystem.pickSaveFile("other.hex", "Firmware", ".hex", "firmware-file");
+            await saveAs("target.hex", "C:\\target.hex", "firmware-file");
+            await saveAs("other.hex", "C:\\other.hex", "firmware-file");
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(
                 expect.objectContaining({ defaultPath: "C:\\other.hex" }),
