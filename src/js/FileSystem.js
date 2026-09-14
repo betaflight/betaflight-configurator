@@ -313,7 +313,9 @@ class FileSystem {
     // ---------------------------------------------------------------
 
     // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
-    // remembers its own last-used folder instead of sharing one.
+    // remembers its own last-used folder instead of sharing one. Android has
+    // no equivalent: the Capacitor SAF plugin exposes no last-directory
+    // option, so `pickerId` is validated but otherwise ignored on that platform.
     async pickSaveFile(suggestedName, description, extension, pickerId) {
         assertValidPickerId(pickerId);
 
@@ -397,7 +399,9 @@ class FileSystem {
     // ---------------------------------------------------------------
 
     // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
-    // remembers its own last-used folder instead of sharing one.
+    // remembers its own last-used folder instead of sharing one. Android has
+    // no equivalent: the Capacitor SAF plugin exposes no last-directory
+    // option, so `pickerId` is validated but otherwise ignored on that platform.
     async pickOpenFile(description, extension, pickerId) {
         assertValidPickerId(pickerId);
 
