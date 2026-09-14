@@ -1,6 +1,7 @@
 import { isAndroid, isTauriDesktop } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
 import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes.js";
+import { get as getConfig, set as setConfig } from "./ConfigStorage";
 
 const EXTENSION_MIME_MAP = {
     ".txt": "text/plain",
@@ -139,6 +140,70 @@ function baseName(path) {
     return parts[parts.length - 1] || String(path);
 }
 
+// Directory portion of a native path, in its original separator style. A
+// filesystem root ("/", "\", "C:\") must keep its trailing separator — dropping
+// it turns "C:\" into "C:", a drive-relative path rather than the drive root.
+function dirName(path) {
+    const str = String(path);
+    const cut = Math.max(str.lastIndexOf("/"), str.lastIndexOf("\\"));
+    if (cut < 0) {
+        return "";
+    }
+    if (cut === 0) {
+        return str[0];
+    }
+    if (cut === 2 && /^[A-Za-z]:[/\\]/.test(str)) {
+        return str.slice(0, 3);
+    }
+    return str.slice(0, cut);
+}
+
+// Append a file name to a remembered directory, keeping that directory's own
+// separator style (native paths on the same OS never mix "/" and "\").
+function joinPath(dir, name) {
+    if (!dir) {
+        return name;
+    }
+    const sep = dir.includes("\\") ? "\\" : "/";
+    return dir.endsWith(sep) ? `${dir}${name}` : `${dir}${sep}${name}`;
+}
+
+// The File System Access API's `id` option only accepts this shape and
+// throws `TypeError` otherwise; enforced here too so an invalid id fails the
+// same way on every platform instead of only in the browser.
+const PICKER_ID_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
+
+function assertValidPickerId(pickerId) {
+    if (pickerId && !PICKER_ID_PATTERN.test(pickerId)) {
+        throw new TypeError(`Invalid pickerId "${pickerId}": must be 1-32 ASCII letters, digits, "_" or "-".`);
+    }
+}
+
+// Per-pickerId last-used directory, for platforms (Tauri) whose native dialog
+// has no equivalent of the File System Access API's `id` option — that option
+// makes the browser itself remember the last folder per id, so only the
+// desktop dialog path needs this.
+const LAST_DIR_STORAGE_KEY = "fileSystemLastDir";
+
+function getLastDir(pickerId) {
+    if (!pickerId) {
+        return undefined;
+    }
+    return getConfig(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY]?.[pickerId];
+}
+
+function setLastDir(pickerId, path) {
+    if (!pickerId) {
+        return;
+    }
+    const dir = dirName(path);
+    if (!dir) {
+        return;
+    }
+    const dirs = getConfig(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY] || {};
+    setConfig({ [LAST_DIR_STORAGE_KEY]: { ...dirs, [pickerId]: dir } });
+}
+
 // Open a file via a hidden <input type=file> and resolve with the selected File
 // (or reject with an AbortError when the dialog is dismissed, mirroring
 // showOpenFilePicker).
@@ -247,13 +312,17 @@ class FileSystem {
     // pickSaveFile
     // ---------------------------------------------------------------
 
-    async pickSaveFile(suggestedName, description, extension) {
+    // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
+    // remembers its own last-used folder instead of sharing one.
+    async pickSaveFile(suggestedName, description, extension, pickerId) {
+        assertValidPickerId(pickerId);
+
         if (isAndroid()) {
             return this._androidPickSaveFile(suggestedName, description, extension);
         }
 
         if (isTauriDesktop()) {
-            return this._tauriPickSaveFile(suggestedName, description, extension);
+            return this._tauriPickSaveFile(suggestedName, description, extension, pickerId);
         }
 
         if (!canUseSavePicker()) {
@@ -263,6 +332,7 @@ class FileSystem {
         const fileHandle = await globalThis.showSaveFilePicker({
             suggestedName: suggestedName,
             types: buildAcceptTypes(description, extension),
+            ...(pickerId ? { id: pickerId } : {}),
         });
 
         if (!fileHandle) {
@@ -278,17 +348,20 @@ class FileSystem {
 
     // The native save dialog. It only picks a path — nothing is created on disk
     // until the data is written — so the descriptor carries the path alone.
-    async _tauriPickSaveFile(suggestedName, description, extension) {
+    async _tauriPickSaveFile(suggestedName, description, extension, pickerId) {
         const { dialog } = await loadTauriPlugins();
 
+        const name = ensureExtension(suggestedName, extension);
         const path = await dialog.save({
-            defaultPath: ensureExtension(suggestedName, extension),
+            defaultPath: joinPath(getLastDir(pickerId), name),
             filters: buildNativeFilters(description, extension, false),
         });
 
         if (!path) {
             throw abortError();
         }
+
+        setLastDir(pickerId, path);
 
         return { name: baseName(path), _tauriPath: path };
     }
@@ -323,13 +396,17 @@ class FileSystem {
     // pickOpenFile
     // ---------------------------------------------------------------
 
-    async pickOpenFile(description, extension) {
+    // `pickerId` groups related pickers (e.g. "firmware" vs "cli") so each
+    // remembers its own last-used folder instead of sharing one.
+    async pickOpenFile(description, extension, pickerId) {
+        assertValidPickerId(pickerId);
+
         if (isAndroid()) {
             return this._androidPickOpenFile(description, extension);
         }
 
         if (isTauriDesktop()) {
-            return this._tauriPickOpenFile(description, extension);
+            return this._tauriPickOpenFile(description, extension, pickerId);
         }
 
         if (!canUseOpenPicker()) {
@@ -339,6 +416,7 @@ class FileSystem {
         const fileHandle = await globalThis.showOpenFilePicker({
             multiple: false,
             types: buildAcceptTypes(description, extension),
+            ...(pickerId ? { id: pickerId } : {}),
         });
 
         const file = this._createFile(fileHandle[0]);
@@ -348,18 +426,22 @@ class FileSystem {
         }
     }
 
-    async _tauriPickOpenFile(description, extension) {
+    async _tauriPickOpenFile(description, extension, pickerId) {
         const { dialog } = await loadTauriPlugins();
 
+        const lastDir = getLastDir(pickerId);
         const path = await dialog.open({
             multiple: false,
             directory: false,
             filters: buildNativeFilters(description, extension),
+            ...(lastDir ? { defaultPath: lastDir } : {}),
         });
 
         if (!path) {
             throw abortError();
         }
+
+        setLastDir(pickerId, path);
 
         return { name: baseName(path), _tauriPath: path };
     }
