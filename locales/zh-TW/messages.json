@@ -3902,9 +3902,6 @@
         "message": "過放的電池容量",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
-    "osdWarningOverCap": {
-        "message": "當已消耗的毫安數超過配置的容量極限時發出警告"
-    },
     "osdWarningTextUnknown": {
         "message": "未知 $1"
     },

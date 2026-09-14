@@ -161,9 +161,6 @@
         "message": "הסר חיבור שמור",
         "description": "Button that deletes a saved manual connection in the connect dialog."
     },
-    "autoConnect": {
-        "message": "חיבור אוטומתי"
-    },
     "close": {
         "message": "סגור"
     },
@@ -199,7 +196,7 @@
         "message": "חיבור אוטומטי: מופעל - האפליקציה תנסה להתחבר אוטומטית כשיזוהה פורט חדש"
     },
     "autoConnectDisabled": {
-        "message": "חיבור אוטומתי מכובה - המשתמש יבחר יציאת תקשורת רלוונטית וילחץ \"התחבר\""
+        "message": "חיבור אוטומטי: כבוי - על המשתמש לבחור את הפורט הסריאלי הנכון וללחוץ על כפתור \"התחבר\" בעצמו"
     },
     "expertMode": {
         "message": "אפשר מצב מתקדם"
@@ -331,9 +328,6 @@
     "configuratorUpdateNotice": {
         "message": "אתה משתמש בגרסה מיושנת של <b>אפליקציית Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "כאשר יש חיבור לאינטרנט, האפליקציה אמורה לבקש אוטומטית עדכונים זמינים."
-    },
     "rebootFlightController": {
         "message": "מאתחל את בקר הטיסה (FC), התחבר מחדש כשתהיה מוכן"
     },
@@ -399,9 +393,6 @@
     },
     "sensorConfigSaved": {
         "message": "הגדרות החיישנים נשמרו"
-    },
-    "sensorConfigSaveFailed": {
-        "message": "שמירת הגדרות החיישן נכשלה"
     },
     "sensorConfigMagnetometer": {
         "message": "מצפן דיגיטלי"
@@ -864,12 +855,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>גרסת האפליקציה בשימוש ($1) אינה תומכת בקושחה $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>לא נבחר פרוטוקול פלט מנוע<\/strong>.<br>אנא בחר פרוטוקול פלט מנוע המתאים ל-ESC שלך ב-'$t(configurationEscFeatures.message)' בלשונית '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>מד התאוצה (Accelerometer) מופעל אך אינו מְכוּיָל<\/strong>.<br>אם בכוונתך להשתמש במד התאוצה, אנא פעל לפי ההוראות עבור '$t(initialSetupButtonCalibrateAccel.message)' בלשונית '$t(tabSetup.message)'. אם פונקציה כלשהי הדורשת את מד התאוצה (מצבי ייצוב, GPS Rescue וכו') מופעלת, חמוש (Arming) של כלי הטיס יושבת עד שמד התאוצה יכויל.<br>אם אינך מתכוון להשתמש במד התאוצה מומלץ שתשבית אותו ב-'$t(configurationSystem.message)' בלשונית '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -7668,9 +7653,6 @@
     "osdWarningTextOverCap": {
         "message": "צריכת יתר מסוללה (Over capacity)",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "מתריע כאשר כמות ה-mAh שנצרכה חורגת ממגבלת הקיבולת שהוגדרה"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
