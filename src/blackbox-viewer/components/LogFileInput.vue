@@ -46,7 +46,11 @@ async function openFilePicker() {
     }
 
     try {
-        const descriptor = await FileSystem.pickOpenFile("Blackbox log/config/workspace file", LOG_FILE_EXTENSIONS);
+        const descriptor = await FileSystem.pickOpenFile(
+            "Blackbox log/config/workspace file",
+            LOG_FILE_EXTENSIONS,
+            "blackbox-open-file",
+        );
         if (!descriptor) {
             // Cancelled.
             return;

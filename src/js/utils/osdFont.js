@@ -188,6 +188,7 @@ FONT.openFontFile = function () {
         FileSystem.pickOpenFile(
             i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
             `.${suffix}`,
+            "osd-font-file",
         )
             .then((file) => {
                 FONT.data.loaded_font_file = file.name;

@@ -342,6 +342,7 @@ async function saveConfigBackup() {
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
             ".txt",
+            "cli-backup-file",
         );
 
         if (!file) {
@@ -370,7 +371,11 @@ async function loadConfigBackup() {
     }
 
     try {
-        const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
+        const file = await FileSystem.pickOpenFile(
+            i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
+            ".txt",
+            "cli-backup-file",
+        );
 
         if (!file) {
             return;

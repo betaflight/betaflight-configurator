@@ -778,6 +778,7 @@ export default defineComponent({
                         filename,
                         i18n.getMessage("fileSystemPickerFiles", { typeof: suffix }),
                         `.${suffix}`,
+                        "blackbox-dump-file",
                     );
 
                     let nextAddress = 0;

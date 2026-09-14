@@ -260,14 +260,33 @@ describe("FileSystem on Tauri desktop", () => {
             return FileSystem.pickOpenFile("Files", ".txt", pickerId);
         }
 
-        it("starts the save dialog in the folder from a previous pick with the same id", async () => {
-            await saveAs("log.csv", "/home/pilot/Documents/log.csv", "cli-file");
-            await saveAs("notes.csv", "/home/pilot/Documents/notes.csv", "cli-file");
+        it.each([
+            [
+                "/home/pilot/Documents/log.csv",
+                "/home/pilot/Documents/notes.csv",
+                "cli-file",
+                "/home/pilot/Documents/notes.csv",
+            ],
+            [
+                "/home/pilot/firmware/build.hex",
+                "/home/pilot/firmware/other.hex",
+                "firmware-file",
+                "/home/pilot/firmware/other.hex",
+            ],
+            ["/target.hex", "/other.hex", "firmware-file", "/other.hex"],
+            ["C:\\target.hex", "C:\\other.hex", "firmware-file", "C:\\other.hex"],
+        ])(
+            "starts the save dialog in the folder from a previous pick with the same id (%s -> %s)",
+            async (firstPath, secondPath, pickerId, expectedDefaultPath) => {
+                const secondName = secondPath.split(/[/\\]/).pop();
+                await saveAs("first", firstPath, pickerId);
+                await saveAs(secondName, secondPath, pickerId);
 
-            expect(tauriDialog.save).toHaveBeenLastCalledWith(
-                expect.objectContaining({ defaultPath: "/home/pilot/Documents/notes.csv" }),
-            );
-        });
+                expect(tauriDialog.save).toHaveBeenLastCalledWith(
+                    expect.objectContaining({ defaultPath: expectedDefaultPath }),
+                );
+            },
+        );
 
         it("starts the open dialog in the folder from a previous pick with the same id", async () => {
             await openAs("/home/pilot/firmware/target.hex", "firmware-file");
@@ -291,22 +310,6 @@ describe("FileSystem on Tauri desktop", () => {
             await saveAs("notes.csv", "/home/pilot/Documents/notes.csv");
 
             expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "notes.csv" }));
-        });
-
-        it("remembers a POSIX filesystem root", async () => {
-            await saveAs("target.hex", "/target.hex", "firmware-file");
-            await saveAs("other.hex", "/other.hex", "firmware-file");
-
-            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "/other.hex" }));
-        });
-
-        it("remembers a Windows drive root", async () => {
-            await saveAs("target.hex", "C:\\target.hex", "firmware-file");
-            await saveAs("other.hex", "C:\\other.hex", "firmware-file");
-
-            expect(tauriDialog.save).toHaveBeenLastCalledWith(
-                expect.objectContaining({ defaultPath: "C:\\other.hex" }),
-            );
         });
     });
 });
