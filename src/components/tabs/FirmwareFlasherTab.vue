@@ -957,6 +957,7 @@ export default defineComponent({
                     state.filename,
                     $t("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
                     `.${fileType.toLowerCase()}`,
+                    "firmware-file",
                 );
                 if (!file) {
                     return false;
