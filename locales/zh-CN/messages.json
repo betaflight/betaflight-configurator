@@ -376,9 +376,6 @@
     "sensorConfigSaved": {
         "message": "传感器设置已保存"
     },
-    "sensorConfigSaveFailed": {
-        "message": "保存传感器设置失败"
-    },
     "sensorConfigMagnetometer": {
         "message": "磁力计"
     },
@@ -804,12 +801,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>当前应用版本（$1）不支持该固件 $2<\/strong><\/span>。<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>尚未选择任何电机输出协议<\/strong>。<br>请在「$t(tabMotorTesting.message)」选项页内的「$t(configurationEscFeatures.message)」中选择与您的电调适配的电机输出协议。<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度计已启用但尚未校准<\/strong>。<br>如果您准备使用加速度计，请按照「$t(tabSetup.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果您不打算使用加速度计，建议您在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
     },
     "infoVersionOs": {
         "message": "操作系统：<strong>{{operatingSystem}}<\/strong>",
@@ -7422,9 +7413,6 @@
     "osdWarningTextOverCap": {
         "message": "过放的电池容量",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "当已消耗的毫安数超过配置的容量极限时发出警告"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
