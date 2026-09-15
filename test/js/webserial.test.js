@@ -54,7 +54,6 @@ beforeEach(() => {
     getPortsResult = [];
     // Provide a navigator.serial so the WebSerial constructor proceeds past its
     // feature-detection guard.
-    globalThis.navigator = globalThis.navigator || {};
     Object.defineProperty(globalThis.navigator, "serial", {
         configurable: true,
         value: {

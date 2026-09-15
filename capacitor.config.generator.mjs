@@ -32,7 +32,7 @@ async function filterIpList(ipList) {
 
     const option = await inquirer.prompt([
         {
-            type: "list",
+            type: "select",
             name: "ip",
             message: "Select the IP address where the Vite server is running:",
             choices: ipList,
