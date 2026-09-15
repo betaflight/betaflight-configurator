@@ -3976,9 +3976,6 @@
         "message": "Bateriaren edukiera gainezka",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
-    "osdWarningOverCap": {
-        "message": "Abixua mAh-ak configuraturiko gehienezkoa gainditzen duenean"
-    },
     "osdWarningTextUnknown": {
         "message": "Ezezaguna $1"
     },

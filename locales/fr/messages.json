@@ -400,9 +400,6 @@
     "sensorConfigSaved": {
         "message": "Configuration des capteurs enregistrée"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Échec de l'enregistrement de la configuration du capteur"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnétomètre"
     },
@@ -867,12 +864,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>La version du configurateur utilisée ($1) ne supporte pas le firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné<\/strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré<\/strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS : <strong>{{operatingSystem}}<\/strong>",
@@ -2039,6 +2030,9 @@
     "configurationThrottleMaximum": {
         "message": "Gaz maximum (Valeur la plus élevée envoyée aux ESC machine armée)"
     },
+    "configurationMotorKv": {
+        "message": "KV moteur"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Valeur mini (valeur envoyée aux ESC machine désarmée)"
     },
@@ -2270,6 +2264,9 @@
     "configurationSaved": {
         "message": "Configuration enregistrée"
     },
+    "configurationSaveFailed": {
+        "message": "Échec de l'enregistrement de la configuration"
+    },
     "configurationButtonSave": {
         "message": "Sauvegarder et Redémarrer"
     },
@@ -2356,6 +2353,9 @@
     },
     "portsPortInactive": {
         "message": "inactif"
+    },
+    "portsPortFree": {
+        "message": "libre"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -6241,6 +6241,9 @@
     "powerBatteryCapacity": {
         "message": "Capacité (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Capacité pour le profil de batterie actif. Le firmware utilise cette valeur pour les alertes de mAh restantes et de capacité OSD lorsque les profils de batterie sont disponibles."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7676,7 +7679,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Alerte lorsque le mAh consommé dépasse la limite de capacité configurée"
+        "message": "Alerte lorsque le mAh consommé excède la capacité active du profil de batterie, ou lorsque la capacité de l'OSD n'est pas définie"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -10118,5 +10121,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "Dernière Info"
+    },
+    "pidTuningWingSettings": {
+        "message": "Paramètres de l'aile"
+    },
+    "pidTuningWingSterm": {
+        "message": "S term"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Mode"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "Mode SPA pour chaque axe"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Centre"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "Consigne RPY à partir duquel les PIDs sont réduits à 50% (atténuation de la consigne PID)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Largeur"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Largeur de la transition en douceur autour de spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "OFF"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I FREEZE"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I FREEZE"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Type de vitesse"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Type de modèle d'estimation de la vitesse de l'air"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Basic"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Avancé"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Type de courbe"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "L'hyperbolique est généralement utilisé pour les ailes. Le classique est pour les multirotors et utilise le TPA standard."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Classique"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Hyperbolique"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Configuration de la vitesse de base"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Réglage avancé de la vitesse"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Délai"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Délai de l'estimation de la vitesse de l'air à partir de l'accélérateur en millisecondes (temps passé à 50 % de la vitesse du terminal en vol horizontal à l'accélérateur plein"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Gravité"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Effet de gravité sur l'estimation de la vitesse de l'air en pourcents"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "Pas de l'hélice"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "Pas de l'hélice en pouces * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Masse de l'appareil"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Masse de l'appareil en grammes"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Drag K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "Coefficient de Drag de l'appareil"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Poussée"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "Poussée stationnaire en grammes"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Tension maximale de la batterie"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Tension théorique max *100. Utilisée pour l'ajustement des gaz avec la tension pour l'estimation de la vitesse de l'air"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "KV moteur"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "KV moteur. Changer cette valeur dans l'onglet Moteurs."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Décalage du pitch"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Décalage du pitch en degrés*10 pour l'estimation de la vitesse de fabrication"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "Paramètres de courbe hyperbolique"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Vitesse d'arrêt, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Vitesse à laquelle les PIDs devraient être maximisés (vitesse d'arrêt), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "PIDs de vitesse d'arrêt"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "Multiplicateur de PID à vitesse d'arrêt"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "PIDs à pleine vitesse"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "Multiplicateur de PID à vitesse d'arrêt"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "La vitesse de transition des PID à mesure que la vitesse augmente"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Graphique des courbes hyperboliques"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Paramètres divers"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Type de Yaw"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Type de yaw (gouvernail ou poussée différentielle)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Rudder"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Diff. poussée"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Décalage du pitch"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Décalage du pitch pour les modes d'angle en décidegrés. Valeurs positives inclinant l'aile vers le bas"
     }
 }

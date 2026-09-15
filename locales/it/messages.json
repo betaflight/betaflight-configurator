@@ -73,6 +73,10 @@
         "message": "Disconnetti (Manuale)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Disconnetti ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Disconnetti (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -400,9 +404,6 @@
     "sensorConfigSaved": {
         "message": "Configurazione sensore salvata"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Impossibile salvare la configurazione del sensore"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnetometro"
     },
@@ -467,8 +468,47 @@
     "autotuneBandwidth": {
         "message": "Larghezza di banda"
     },
+    "autotuneCrossover": {
+        "message": "Guadagno Crossover"
+    },
     "autotunePhaseMargin": {
         "message": "Margine Di Fase"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Limite Crossover"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Margine Massimo Di Fase"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Picco Predetto Sens."
+    },
+    "autotuneLoopDelay": {
+        "message": "Ritardo Del Loop"
+    },
+    "autotuneTargetMargin": {
+        "message": "Regolazione Dispositivo"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Aggressivo"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normale"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservativo"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: questo modello non può raggiungere $2° del margine di fase (il suo limite è di circa $3), quindi il guadagno è tenuto piuttosto che indovinato. Scegli un obiettivo più basso o aggiungi D per innalzare il limite."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: la misurazione richiede un cambio del guadagno a $2× guadagno, ma un singolo passaggio è limitato a $3×. Il limite di crossover mostrato non è raggiunto — applica, vola un altro chirp e ripeti."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: sensibilità del picco, non margine di fase, imposta qui il guadagno. Il loop passa vicino a -1 sopra il crossover, quindi la raccomandazione si ferma a corto del margine dell'obiettivo."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: nessun guadagno all'interno di un passo mantiene la sensibilità del picco all'interno del limite della robustezza. Il valore proposto è il migliore disponibile piuttosto che sicuro — usarlo come punto di partenza e rimisurare."
     },
     "autotuneResonantPeak": {
         "message": "Picco di Risonanza"
@@ -829,12 +869,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>La versione dell'app ($1) non supporta il firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Non è stato selezionato alcun protocollo di output dei motori<\/strong>.<br>Si prega di selezionare un protocollo di output dei motori appropriato per i tuoi ESC in '$t(configurationEscFeatures.message)' nella scheda $t(tabMotorTesting.message).<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>L'accelerometro è abilitato ma non è calibrato<\/strong>. <br>Se vuoi usare l'accelerometro segui le istruzioni e $t(initialSetupButtonCalibrateAccel.message) nella scheda $t(tabSetup.message). Se è attivata una qualsiasi funzione che richiede l'accelerometro (modalità stabilizzata, GPS rescue, ...), l'armamento dell'aeromobile sarà disattivato fin quando l'accelerometro non verrà calibrato. <br>Se non prevedi di utilizzare l'accelerometro è consigliabile disattivarlo in $t(configurationSystem.message) nella scheda $t(tabConfiguration.message)."
-    },
     "infoVersionOs": {
         "message": "SO: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -967,6 +1001,14 @@
     "statusbar_connection_time": {
         "message": "Connessione:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "Nascondi dettagli di stato",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Nascondi dettagli di stato",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "Per favore, usare il Firmware Flasher per accedere ai dispositivi DFU"
@@ -2040,6 +2082,9 @@
     "configurationThrottleMaximum": {
         "message": "Gas Massimo (Il più alto valore ESC quando armato)"
     },
+    "configurationMotorKv": {
+        "message": "KV Motore"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Comando minimo (valore dell'ESC quando disarmato)"
     },
@@ -2271,6 +2316,9 @@
     "configurationSaved": {
         "message": "Configurazione salvata"
     },
+    "configurationSaveFailed": {
+        "message": "Impossibile salvare la configurazione"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2361,6 +2409,9 @@
     },
     "portsPortInactive": {
         "message": "inattivo"
+    },
+    "portsPortFree": {
+        "message": "libero"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -4193,6 +4244,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4213,6 +4267,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Velocità Aria - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -6267,6 +6324,9 @@
     "powerBatteryCapacity": {
         "message": "Capacità (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Capacità per il profilo batteria attivo. Il firmware utilizza questo valore per mAh rimanenti e avvisi di capacità OSD quando i profili della batteria sono disponibili."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7702,7 +7762,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Avviso quando i mAh consumati superano il limite di capacità configurato"
+        "message": "Avverte quando il mAh consumato supera la capacità del profilo della batteria attiva, o l'allarme di capacità OSD precedente quando non è impostata alcuna capacità del profilo"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -7777,6 +7837,9 @@
     },
     "osdButtonSaved": {
         "message": "Salvato"
+    },
+    "osdPitotAirSpeed": {
+        "message": "Velocità Aria"
     },
     "vtxHelp": {
         "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX effettuare questi passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">questa<\/a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller di volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">qui<\/a>.)",
@@ -8137,6 +8200,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometro"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "Magnetometro"
@@ -10138,5 +10204,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "Ultimo recuperato"
+    },
+    "pidTuningWingSettings": {
+        "message": "Impostazioni Ala"
+    },
+    "pidTuningWingSterm": {
+        "message": "S term"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Modalità"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "Modalità SPA per ogni asse"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Centro"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "Impostazione RPY in cui i PID sono ridotti al 50% (attenuazione setpoint PID)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Larghezza"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Larghezza della transizione fluida attorno al centro spa"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "SPENTO"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I FREEZE"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I FREEZE"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Tipo di velocità"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Tipo di modello per la stima della velocità dell’aria"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Di base"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Avanzato"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Tipo di curva"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "Iperbolico è di solito per le ali. Classico è per i multirotori e utilizza standard TPA."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Classico"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Iperbolico"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Configurazione velocità di base"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Configurazione velocità avanzata"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Ritardo"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Ritardo della stima della velocità dell'aria dall'acceleratore in millisecondi (tempo per raggiungere il 50% della velocità terminale in volo orizzontale a pieno accelleratore"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Gravità"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Effetto di gravità sulla stima della velocità dell'aria in percentuale"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "Prop pitch"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "Prop pitch in pollici * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Massa del modello"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Massa del modello in grammi"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Trascina K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "Coefficiente di trascinamento del veicolo"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Spinta"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "Spinta stazionaria in grammi"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Tensione massima batteria"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Tensione massima teorica ×100. Utilizzata per rapportare l'accelleratore alla tensione nella stima della velocità dell’aria"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "KV Motore"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "KV Motore. Modificare questo valore nella scheda Motori."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Correzione del pitch"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Correzione del pitch in gradi * 10 per la stima della velocità del velivolo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "Impostazioni curva iperbolica"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Velocità di stallo, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Velocità alla quale i PID devono essere massimizzati (velocità di stallo), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "PID Velocità di stallo"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "Moltiplicatore dei PID alla velocità di stallo"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "PID a piena velocità"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "Moltiplicatore del PID a piena velocità"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "Quanto velocemente i PID cambiano man mano che la velocità cresce"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Grafico delle curve iperboliche"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Impostazioni varie"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Tipo d' imbardata"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Tipo di imbardata (timone o spinta differenziale)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Imbardata"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Spinta Diff"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Correzione del pitch"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Correzione del pitch per le modalità Angle, in decigradi. I valori positivi inclinano l’ala verso il basso."
     }
 }
