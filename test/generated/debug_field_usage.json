@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "d58d69e0576d77dbdc291f4bf2b56cc8827a3011",
-            "date": "2026-09-07",
+            "commit": "f5fb2717b84b7bf186091771dc0f0487db9aa691",
+            "date": "2026-09-12",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1767,6 +1767,10 @@
                 },
                 "AUTOPILOT_ALTITUDE": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_HEADING": {
+                    "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {
