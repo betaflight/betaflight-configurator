@@ -445,9 +445,6 @@
     "reportProblemsDialogHeader": {
         "message": "Os seguintes <strong>problemas com sua configuração<\/strong>foram detectados:"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Nenhum protocolo de saída para o motor foi selecionado<\/strong>.<br>Por favor selecione o protocolo do motor apropriado para o seu ESC no campo '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -5727,9 +5724,6 @@
     "osdWarningTextOverCap": {
         "message": "Capacidade da bateria excedida",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Alerta quando a quantidade de mAh consumido da bateria excede o limite configurado"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",

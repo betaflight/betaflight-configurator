@@ -396,9 +396,6 @@
     "sensorConfigSaved": {
         "message": "تم حفظ إعدادات المستشعرات"
     },
-    "sensorConfigSaveFailed": {
-        "message": "فشل حفظ إعدادات المستشعرات"
-    },
     "sensorConfigMagnetometer": {
         "message": "المقياس المغناطيسي"
     },
@@ -824,12 +821,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "النسخة الحالية من التطبيق (<strong>$1<\/strong>) لا تدعم إصدار الـ<strong>firmware $2<\/strong>.<br>$t(configuratorUpdateHelp.message)\n"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>لا يوجد بروتوكول إخراج للمحركات محدد<\/strong>.<br>يرجى اختيار بروتوكول إخراج محركات مناسب لوحدات ESCs الخاصة بك في ‎'$t(configurationEscFeatures.message)'‎ ضمن تبويب ‎'$t(tabMotorTesting.message)'‎.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>مقياس التسارع مفعل، لكنه غير معاير<\/strong>.<br>إذا كنت تريد استخدام مقياس التسارع، اتبع التعليمات الخاصة بـ '$t(initialSetupButtonCalibrateAccel.message)' في علامة التبويب '$t(tabSetup.message)'. إذا كان أي وظيفة تتطلب مقياس التسارع مفعلة (أوضاع المستوى التلقائي، إنقاذ GPS، ...)، سيتم تعطيل وضع الاستعداد للطيران حتى يتم معايرة مقياس التسارع.<br>إذا لم تكن تخطط لاستخدام مقياس التسارع، يوصى بتعطيله في \"$t(configurationSystem.message)\" في علامة التبويب \"$t(tabConfiguration.message)\"."
     },
     "infoVersionOs": {
         "message": "نظام التشغيل: <strong>{{operatingSystem}}<\/strong>",
@@ -5006,7 +4997,7 @@
         "message": "وردي غامق"
     },
     "controlAxisRoll": {
-        "message": "اللف [A]"
+        "message": "Roll [A]"
     },
     "controlAxisPitch": {
         "message": "PITCH [E]"
@@ -7548,9 +7539,6 @@
     "osdWarningTextOverCap": {
         "message": "تجاوز سعة البطارية",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "يعرض تحذيرًا عندما تتجاوز السعة المستهلكة بوحدة mAh حد السعة المحدد.\n"
     },
     "osdWarningTextRSNR": {
         "message": "نسبة الإشارة إلى الضوضاء عند المستقبِل.",

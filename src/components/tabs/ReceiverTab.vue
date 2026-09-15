@@ -608,7 +608,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useReboot } from "@/composables/useReboot";
-import { useSaving } from "@/composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
@@ -628,7 +628,7 @@ import { gui_log } from "@/js/gui_log";
 import DarkTheme from "@/js/DarkTheme";
 import windowWatcherUtil from "@/js/utils/window_watchers";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
-import CryptoES from "crypto-es";
+import { MD5 } from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
@@ -978,7 +978,7 @@ function elrsBindingPhraseToBytes(text) {
     let uidBytes = [0, 0, 0, 0, 0, 0];
     if (text) {
         const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
-        const hash = CryptoES.MD5(bindingPhraseFull).toString();
+        const hash = MD5(bindingPhraseFull).toString();
         const bytes = hash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16));
         const view = new DataView(new ArrayBuffer(6));
         for (let i = 0; i < 6; i++) {
@@ -1286,8 +1286,7 @@ const saveConfig = (withReboot = false) =>
                 await port.write();
             }
         } catch (error) {
-            gui_log(t("receiverSerialPortSaveFailed"));
-            throw error;
+            throw withSaveFailureMessage(error, t("receiverSerialPortSaveFailed"));
         }
 
         // Unconditional: the telemetry feature switch lives on this tab, and a mask change has

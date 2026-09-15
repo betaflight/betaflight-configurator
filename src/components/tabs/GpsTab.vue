@@ -317,7 +317,6 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
-import { gui_log } from "@/js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -325,7 +324,7 @@ import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
 import { useMapViewport } from "../../composables/useMapViewport";
 import { useDirtyState } from "../../composables/useDirtyState";
-import { useSaving } from "../../composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useBuildOptions } from "../../composables/useBuildOptions";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
@@ -879,15 +878,13 @@ export default defineComponent({
                     try {
                         await writeGpsPort();
                     } catch (error) {
-                        gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
-                        throw error;
+                        throw withSaveFailureMessage(error, i18n.getMessage("gpsSerialPortSaveFailed"));
                     }
 
                     try {
                         await writeCanDevice();
                     } catch (error) {
-                        gui_log(i18n.getMessage("gpsCanDeviceSaveFailed"));
-                        throw error;
+                        throw withSaveFailureMessage(error, i18n.getMessage("gpsCanDeviceSaveFailed"));
                     }
 
                     await saveAndReboot();

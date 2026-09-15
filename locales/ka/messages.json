@@ -400,9 +400,6 @@
     "sensorConfigSaved": {
         "message": "სენსორის კონფიგურაცია შენახულია"
     },
-    "sensorConfigSaveFailed": {
-        "message": "სენსორის კონფიგურაციის შენახვა ვერ მოხერხდა"
-    },
     "sensorConfigMagnetometer": {
         "message": "მაგნიტომეტრი"
     },
@@ -828,12 +825,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>აპლიკაციის გამოყენებულ ვერსიას ($1) არ აქვს პროპროგრამის მხარდაჭერა $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong> ძრავების მართვის პროტოკოლი არ არის არჩეული<\/strong>.<br> გთხოვთ აირჩიოთ ESC-ის შესაბამისი ძრავების მართვის პროტოკოლი$t(configurationEscFeatures.message)$t(tabMotorTesting.message) ჩანართში.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>აქსელომეტრი ჩართულია მაგრამ არ არის დაკალიბრირებული<strong>.<br>თუ თქვენ გეგმავთ რომ გამოიყენოთ აქსელომეტრი, გთხოვთ მიყვეთ ინსტრუქციას $t(initialSetupButtonCalibrateAccel.message) $t(tabSetup.message) ჩანართში. თუ რომელიმე ფუნქცია რომელიც მოითხოვს აქსელომეტრის ( ავტომატური სიმაღლის რეჟიმი, ჯპს დახმარება, ...) ჩართვას, ცადმფრენი არ ამოქმედდება სანამ აქსელომეტრი არ დაკალიბრდება <br> თუ არ გეგმავთ აქსელომეტრის გამოყენებას რეკომენდირებულია მისი გამორთვა $t(configurationSystem.message) -ში $t(tabConfiguration.message)\" ჩანართში."
     },
     "infoVersionOs": {
         "message": "ოპერაციული სისტემა: <strong>{{operatingSystem}}<\/strong>",
@@ -7528,9 +7519,6 @@
     "osdWarningTextOverCap": {
         "message": "ბატარეის მოცულობა გადაჭარბებულია",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "აფრთხილებს, როდესაც მოხმარებული mAh აჭარბებს კონფიგურირებულ სიმძლავრის ლიმიტს"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",

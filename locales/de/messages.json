@@ -462,9 +462,6 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihren Copter zu fliegen<\/span><\/strong>."
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt<\/strong>.<br>Bitte wähle ein für den ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabMotorTesting.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -5847,9 +5844,6 @@
     "osdWarningTextOverCap": {
         "message": "Batterieüberkapazität",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Warnt, wenn die verbrauchten mAh das konfigurierte Kapazitätslimit überschreitet"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
