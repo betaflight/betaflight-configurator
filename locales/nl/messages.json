@@ -388,9 +388,6 @@
     "reportProblemsDialogHeader": {
         "message": "De volgende <strong>problemen met uw configuratie<\/strong> zijn ontdekt:"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>er is geen motoruitgangsprotocol geselecteerd<\/strong>.<br> Selecteer een motoruitgangsprotocol dat geschikt is voor uw ESC's in '$t(configurationEscFeatures.message)' op het tabblad '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "infoVersionOs": {
         "message": "Besturingsysteem:<strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -4195,9 +4192,6 @@
     "osdWarningTextOverCap": {
         "message": "Te veel batterij capaciteit verbruikt",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Waarschuwt wanneer de verbruikte mAh de ingestelde capaciteitslimiet overschrijdt"
     },
     "osdWarningTextUnknown": {
         "message": "Onbekend $1"

@@ -420,9 +420,6 @@
     "sensorConfigSaved": {
         "message": "Configuració del sensor desada"
     },
-    "sensorConfigSaveFailed": {
-        "message": "No s'ha pogut desar la configuració del sensor"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnetòmetre"
     },
@@ -892,7 +889,7 @@
         "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat<\/strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>l’acceleròmetre està activat, però no està calibrat<\/strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSetup.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armat del quad fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
+        "message": "<strong>l’acceleròmetre està activat, però no està calibrat<\/strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSensorConfig.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armat del quad fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -2107,6 +2104,9 @@
     "configurationThrottleMaximum": {
         "message": "Throttle màxim (Valor màxim dels ESC quan està armat)"
     },
+    "configurationMotorKv": {
+        "message": "Motor KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (valors ESC quan està desarmat)"
     },
@@ -2338,6 +2338,9 @@
     "configurationSaved": {
         "message": "Configuració desada"
     },
+    "configurationSaveFailed": {
+        "message": "No s'ha pogut desar la configuració"
+    },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
@@ -2428,6 +2431,9 @@
     },
     "portsPortInactive": {
         "message": "inactiu"
+    },
+    "portsPortFree": {
+        "message": "lliure"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -6340,6 +6346,9 @@
     "powerBatteryCapacity": {
         "message": "Capacitat (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Capacitat per al perfil de bateria actiu. El microprogramari utilitza aquest valor per determinar els mAh restants i els avisos de capacitat a l'OSD quan hi ha perfils de bateria disponibles."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7775,7 +7784,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Adverteix quan els mAh consumits superan el límit de capacitat configurat"
+        "message": "Warns when the consumed mAh exceeds the active battery profile capacity, or the legacy OSD capacity alarm when no profile capacity is set"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -10217,5 +10226,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "Última recuperació"
+    },
+    "pidTuningWingSettings": {
+        "message": "Configuració de l'aleró"
+    },
+    "pidTuningWingSterm": {
+        "message": "S term"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Mode"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "Mode SPA per cada eix"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Centre"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "Valor de consigna de RPY al qual els PID es redueixen al 50 % (atenuació PID del valor de consigna)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Ample"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Amplada de la transició suau al voltant de spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "Desactivat"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I congelat"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I congelat"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Tipus de velocitat"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Tipus de model d'estimació de la velocitat de l'aire"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Bàsic"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Avançat"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Tipus de corba"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "L'opció «Hiperbòlic» s'utilitza habitualment per a ales. La «Clàssic» és per a multirotors i utilitza el TPA estàndard."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Clàssic"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Hiperbòlic"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Configuració bàsica de velocitat"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Configuració avançada de velocitat"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Retard"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Retard de l'estimació de la velocitat de l'aire des de l'accelerador en mil·lisegons (temps per assolir el 50% de la velocitat terminal en vol horitzontal a plena potència)"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Gravetat"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Efecte de la gravetat sobre l'estimació de la velocitat de l'aire en percentatges"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "Pas de l'hèlix"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "Pas de l'hèlix en polzades * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Massa de l'aeronau"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Massa de l'aeronau en grams"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Arrossegament K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "Coeficient d'arrossegament de l'aeronau"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Propulsió"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "Empenta estàtica en grams"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Voltatge màxim de bateria"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Tensió màxima teòrica × 100. S'utilitza per a l'escalat de l'accelerador segons la tensió per a l'estimació de la velocitat de l'aire"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Motor KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "KV del motor. Modifiqueu aquest valor a la pestanya Motors."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Desplaçament de pas"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Desplaçament de pas en graus*10 per a l'estimació de la velocitat de l'aeronau"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "Configuració de la corba hiperbòlica"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Velocitat de pèrdua, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Velocitat a la qual els PID haurien d'arribar al màxim (velocitat de pèrdua), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "PID de velocitat de pèrdua"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "Multiplicador dels PID a la velocitat de pèrdua"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "PID's a màxima velocitat"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "Multiplicador de PID a velocitat màxima"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "Com canvien els PID a mesura que augmenta la velocitat"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Gràfic de corbes hiperbòliques"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Configuració diversa"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Tipus de Yaw"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Tipus de guinyada (timó de direcció o empenta diferencial)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Timó"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Empenta diferencial"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Desplaçament de pas"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Desplaçament del pas (pitch offset) per als modes d'angle, en dècimes de grau. Els valors positius inclinen l'ala cap avall."
     }
 }

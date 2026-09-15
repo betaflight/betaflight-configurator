@@ -337,7 +337,6 @@ import { useDirtyState } from "@/composables/useDirtyState";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
-import { gui_log } from "@/js/gui_log";
 import GUI from "@/js/gui";
 import semver from "semver";
 import FC from "@/js/fc";
@@ -1025,7 +1024,9 @@ function save() {
         // Post-save UI runs only after the persist resolves.
         markClean(savedSnapshot);
         flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
-        gui_log(i18n.getMessage("eeprom_saved_ok"));
+        // saveConfig() ends in saveToEeprom(), which already emits the shared "EEPROM saved"
+        // toast; eeprom_saved_ok resolves to the same string, so it's dropped here to avoid
+        // showing the identical toast twice.
     });
 }
 

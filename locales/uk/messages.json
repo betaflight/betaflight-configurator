@@ -369,9 +369,6 @@
     "sensorConfigSaved": {
         "message": "Налаштування датчика збережено"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Не вдалося зберегти налаштування датчика"
-    },
     "sensorConfigMagnetometer": {
         "message": "Магнітометр"
     },
@@ -797,12 +794,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Використана версія застосунку ($1) не підтримує прошивку $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Протокол вихідного сигналу мотора не вибрано<\/strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>акселерометр увімкнено, але він не відкалібрований<\/strong>.<br>Якщо плануєте використовувати акселерометр, будь ласка, дотримуйтесь інструкцій для '$t(initialSetupButtonCalibrateAccel.message)' на вкладці$t(tabSetup.message)'. Якщо будь-яка функція, що потребує акселерометра (режим автоматичного вирівнювання, GPS порятунок, ...) увімкнена, взведення повітряного судна буде відключено, доки акселерометр не буде відкалібровано.<br>Якщо не плануєте використовувати акселерометр, рекомендується вимкнути його '$t(configurationSystem.message)' на вкладці '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "ОС: <strong>{{operatingSystem}}<\/strong>",
@@ -7423,9 +7414,6 @@
     "osdWarningTextOverCap": {
         "message": "Перевищення ємності акумулятора",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Попереджає, коли спожита енергія в мАг перевищує налаштований ліміт ємності"
     },
     "osdWarningTextRSNR": {
         "message": "Співвідношення сигнал\/шум",

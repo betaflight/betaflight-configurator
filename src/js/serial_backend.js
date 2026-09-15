@@ -19,7 +19,7 @@ import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from "semver";
-import CryptoES from "crypto-es";
+import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
@@ -200,7 +200,7 @@ async function sendConfigTracking() {
         flightControllerVersion: FC.CONFIG.flightControllerVersion,
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
-        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
+        deviceIdentifier: SHA1(FC.CONFIG.deviceIdentifier).toString(),
         buildKey: FC.CONFIG.buildKey,
     });
 }

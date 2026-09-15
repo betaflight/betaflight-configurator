@@ -64,7 +64,6 @@ function makeFakeDevice(id = "abc123", name = "Speedybee") {
 beforeEach(() => {
     // Provide a navigator.bluetooth so the WebBluetooth constructor proceeds past
     // its feature-detection guard.
-    globalThis.navigator = globalThis.navigator || {};
     Object.defineProperty(globalThis.navigator, "bluetooth", {
         configurable: true,
         value: {
