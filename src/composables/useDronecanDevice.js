@@ -73,6 +73,13 @@ export function useDronecanDevice() {
             return;
         }
 
+        // What the FC held before this attempt. A `set` reaches the running config immediately but
+        // only survives a reboot once the caller persists it, and the caller abandons that on any
+        // throw -- so a later failure has to put the earlier write back into the pending state
+        // rather than leave it reported as settled.
+        const enabledBefore = assignedEnabled.value;
+        let enabledWritten = false;
+
         if (selectedEnabled.value !== assignedEnabled.value) {
             try {
                 await setSetting(ENABLED_SETTING, selectedEnabled.value ? "ON" : "OFF");
@@ -81,6 +88,7 @@ export function useDronecanDevice() {
                 throw error;
             }
             assignedEnabled.value = selectedEnabled.value;
+            enabledWritten = true;
         }
 
         if (selectedDevice.value !== assignedDevice.value) {
@@ -88,6 +96,9 @@ export function useDronecanDevice() {
                 await setSetting(DEVICE_SETTING, selectedDevice.value);
             } catch (error) {
                 selectedDevice.value = assignedDevice.value;
+                if (enabledWritten) {
+                    assignedEnabled.value = enabledBefore;
+                }
                 throw error;
             }
             assignedDevice.value = selectedDevice.value;

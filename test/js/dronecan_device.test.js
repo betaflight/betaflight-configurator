@@ -163,6 +163,42 @@ describe("useDronecanDevice", () => {
         expect(bus.changed.value).toBe(false);
     });
 
+    // The enable reaches the running config the moment it is accepted, but only survives a reboot
+    // once the caller persists it -- and the caller abandons the persist on this throw. If the
+    // enable were left marked as assigned, the UI would report nothing pending while EEPROM still
+    // held the old value, and a reboot would silently lose it.
+    it("keeps the enable pending when the bus write fails after it succeeded", async () => {
+        withSettings({ device: "1", max: 3, enabled: "OFF" });
+        await bus.load();
+        bus.enabled.value = true;
+        bus.selectedDevice.value = 2;
+
+        setSetting.mockResolvedValueOnce("ON").mockRejectedValueOnce(new Error("refused"));
+
+        await expect(bus.write()).rejects.toThrow(/refused/);
+
+        expect(bus.enabled.value).toBe(true); // accepted by the FC, and still what the user wants
+        expect(bus.selectedDevice.value).toBe(1); // refused, so rolled back
+        expect(bus.changed.value).toBe(true); // so the next save re-applies the enable
+    });
+
+    it("re-applies the enable on a later save after a bus write failed", async () => {
+        withSettings({ device: "1", max: 3, enabled: "OFF" });
+        await bus.load();
+        bus.enabled.value = true;
+        bus.selectedDevice.value = 2;
+
+        setSetting.mockResolvedValueOnce("ON").mockRejectedValueOnce(new Error("refused"));
+        await expect(bus.write()).rejects.toThrow(/refused/);
+
+        setSetting.mockReset();
+        setSetting.mockResolvedValue("");
+        await bus.write();
+
+        expect(setSetting).toHaveBeenCalledWith("dronecan_enabled", "ON");
+        expect(bus.changed.value).toBe(false);
+    });
+
     it("leaves the bus alone when enabling it failed first", async () => {
         withSettings({ device: "1", max: 3, enabled: "OFF" });
         await bus.load();
