@@ -1,8 +1,59 @@
-import { computed, ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { computed, ref, type ComputedRef, type Ref } from "vue";
 import { getSetting, getSettingInfo, setSetting } from "./useMspSetting";
 
 const ENABLED_SETTING = "dronecan_enabled";
 const DEVICE_SETTING = "dronecan_device";
+
+/** One selectable CAN bus, as the bus dropdown renders it. */
+export interface CanDeviceOption {
+    value: number;
+    label: string;
+}
+
+export interface DronecanWriteOptions {
+    /**
+     * Whether this tab has a DroneCAN device selected. True turns the stack on if it is off. It
+     * never turns the stack off: a tab only knows about its own device, and another consumer — a
+     * compass, an airspeed sensor, ESC telemetry — may still need the bus. Turning it off stays a
+     * CLI decision, because only the user knows that.
+     */
+    enable?: boolean;
+}
+
+export interface DronecanDevice {
+    /** Whether this build has the DroneCAN stack at all. */
+    supported: Ref<boolean>;
+    /** Whether the stack is currently running, as last read from or written to the FC. */
+    enabled: Ref<boolean>;
+    deviceOptions: ComputedRef<CanDeviceOption[]>;
+    /** The bus the user has picked; 1-based to match the firmware setting. */
+    selectedDevice: Ref<number | null>;
+    /** Whether the picked bus differs from the one the FC holds. */
+    changed: ComputedRef<boolean>;
+    load: () => Promise<void>;
+    write: (options?: DronecanWriteOptions) => Promise<void>;
+}
 
 /**
  * The DroneCAN stack: whether it runs, and which CAN bus it is bound to.
@@ -21,23 +72,23 @@ const DEVICE_SETTING = "dronecan_device";
  * The bus does belong to the user, because it is a real choice: GPS, compass, airspeed and ESC
  * telemetry all ride whichever one this names.
  */
-export function useDronecanDevice() {
+export function useDronecanDevice(): DronecanDevice {
     const supported = ref(false);
     const enabled = ref(false);
-    const selectedDevice = ref(null);
-    const assignedDevice = ref(null);
+    const selectedDevice = ref<number | null>(null);
+    const assignedDevice = ref<number | null>(null);
     const deviceCount = ref(0);
 
     const changed = computed(() => supported.value && selectedDevice.value !== assignedDevice.value);
 
-    const deviceOptions = computed(() =>
+    const deviceOptions = computed<CanDeviceOption[]>(() =>
         Array.from({ length: deviceCount.value }, (_, index) => ({
             value: index + 1,
             label: `CAN${index + 1}`,
         })),
     );
 
-    async function load() {
+    async function load(): Promise<void> {
         supported.value = false;
         enabled.value = false;
         selectedDevice.value = null;
@@ -64,14 +115,9 @@ export function useDronecanDevice() {
     /**
      * Apply the stack settings this tab is responsible for.
      *
-     * @param {object} [options]
-     * @param {boolean} [options.enable] whether this tab has a DroneCAN device selected. True turns
-     *   the stack on if it is off. It never turns the stack off: a tab only knows about its own
-     *   device, and another consumer — a compass, an airspeed sensor, ESC telemetry — may still
-     *   need the bus. Turning it off stays a CLI decision, because only the user knows that.
-     * @throws {Error} when the firmware refuses a write; the caller then skips its persist.
+     * @throws when the firmware refuses a write; the caller then skips its persist.
      */
-    async function write({ enable = false } = {}) {
+    async function write({ enable = false }: DronecanWriteOptions = {}): Promise<void> {
         if (!supported.value) {
             return;
         }
@@ -89,9 +135,12 @@ export function useDronecanDevice() {
             enabledWritten = true;
         }
 
-        if (selectedDevice.value !== assignedDevice.value) {
+        // Narrowed rather than asserted: both are null until a successful load, and this is only
+        // reachable once `supported` is set, but the checker cannot see that across the refs.
+        const device = selectedDevice.value;
+        if (device !== null && device !== assignedDevice.value) {
             try {
-                await setSetting(DEVICE_SETTING, selectedDevice.value);
+                await setSetting(DEVICE_SETTING, device);
             } catch (error) {
                 selectedDevice.value = assignedDevice.value;
                 if (enabledWritten) {
@@ -99,7 +148,7 @@ export function useDronecanDevice() {
                 }
                 throw error;
             }
-            assignedDevice.value = selectedDevice.value;
+            assignedDevice.value = device;
         }
     }
 
