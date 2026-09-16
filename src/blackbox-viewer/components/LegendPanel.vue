@@ -37,7 +37,10 @@
             >
                 <h3
                     class="graph-legend-group"
+                    role="button"
+                    tabindex="0"
                     @click="onGraphClick($event, gi)"
+                    @keydown.enter.space.prevent="activateGraph(gi, $event.altKey)"
                     @mousedown.middle.prevent="onResetPen(gi, null)"
                     @wheel="onFieldWheel($event, gi, null)"
                 >
@@ -211,15 +214,19 @@ function onFieldClick(e, gi, fi, field) {
 }
 
 // --- Graph title click → zoom/expand ---
-function onGraphClick(e, gi) {
-    if (e.button !== 0) {
-        return;
-    }
-    if (e.altKey) {
+function activateGraph(gi, expand) {
+    if (expand) {
         graphStore.expandGraphConfig?.(gi);
     } else {
         graphStore.zoomGraphConfig?.(gi);
     }
+}
+
+function onGraphClick(e, gi) {
+    if (e.button !== 0) {
+        return;
+    }
+    activateGraph(gi, e.altKey);
     e.preventDefault();
 }
 
