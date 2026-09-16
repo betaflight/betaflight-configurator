@@ -9,12 +9,13 @@ import { NO_BATTERY_VOLTAGE_MAXIMUM, estimateCellCount } from "../../js/utils/ba
 
 const props = defineProps({
     voltage: { type: Number, default: 0 },
+    cellCount: { type: Number, default: 0 },
     vbatmaxcellvoltage: { type: Number, default: 1 },
     compact: { type: Boolean, default: false },
 });
 
 const reading = computed(() => {
-    const nbCells = estimateCellCount(props.voltage, props.vbatmaxcellvoltage);
+    const nbCells = props.cellCount > 0 ? props.cellCount : estimateCellCount(props.voltage, props.vbatmaxcellvoltage);
     const cellsText = props.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
     return `${props.voltage.toFixed(2)}V (${cellsText})`;
 });
