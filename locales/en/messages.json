@@ -2260,10 +2260,10 @@
     "gpsSerialPortSaveFailed": {
         "message": "Could not set the GPS serial port, so nothing was saved."
     },
-    "gpsCanDevice": {
+    "dronecanCanDevice": {
         "message": "CAN Bus"
     },
-    "gpsCanDeviceHelp": {
+    "dronecanCanDeviceHelp": {
         "message": "The CAN bus the DroneCAN modules are wired to. This belongs to DroneCAN as a whole, so changing it moves every DroneCAN device, not just the GPS. Changing it requires a reboot."
     },
     "dronecanSaveFailed": {

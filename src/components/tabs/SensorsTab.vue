@@ -61,6 +61,13 @@
                                 class="min-w-40"
                             />
                         </SettingRow>
+                        <SettingRow
+                            v-if="showCanDevice"
+                            :label="$t('dronecanCanDevice')"
+                            :help="$t('dronecanCanDeviceHelp')"
+                        >
+                            <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
+                        </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
                                 {{ $t("configurationBaroHardware") }}
@@ -749,7 +756,7 @@
             <div class="content_toolbar toolbar_fixed_bottom">
                 <UButton
                     :label="$t('configurationButtonSave')"
-                    :disabled="!dirty"
+                    :disabled="!canSave"
                     :loading="isSaving"
                     @click="saveConfig"
                 />
@@ -961,18 +968,35 @@ const magHardwareEnabled = computed({
 });
 
 const magTypesList = ref([]);
+const pitotTypesList = ref([]);
 
 // A DroneCAN compass is inert until the stack is running, and dronecan_enabled is off by default.
 // Choosing DRONECAN above is the request to run it, so saving turns it on; there is no separate
 // switch to miss.
-const { supported: dronecanSupported, load: loadDronecan, write: writeDronecan } = useDronecanDevice();
+const {
+    supported: dronecanSupported,
+    enabled: dronecanEnabled,
+    deviceOptions: canDeviceOptions,
+    selectedDevice: canDevice,
+    load: loadDronecan,
+    write: writeDronecan,
+} = useDronecanDevice();
 
 const magDronecanIndex = computed(() => magTypesList.value.indexOf("DRONECAN"));
+const pitotDronecanIndex = computed(() => pitotTypesList.value.indexOf("DRONECAN"));
 
-const dronecanMagSelected = computed(
+// Every DroneCAN device this tab can configure, not just the compass: the airspeed list carries
+// DRONECAN too, and picking it there has to bring the stack up just the same.
+const dronecanSelected = computed(
     () =>
-        dronecanSupported.value && magDronecanIndex.value >= 0 && sensorConfig.mag_hardware === magDronecanIndex.value,
+        dronecanSupported.value &&
+        ((magDronecanIndex.value >= 0 && sensorConfig.mag_hardware === magDronecanIndex.value) ||
+            (pitotDronecanIndex.value >= 0 && sensorConfig.pitot_hardware === pitotDronecanIndex.value)),
 );
+
+// The bus is a real choice and belongs wherever a DroneCAN device is set up -- a board with a
+// serial GPS and a DroneCAN compass never opens the GPS tab's copy of this row.
+const showCanDevice = computed(() => dronecanSelected.value && canDeviceOptions.value.length > 1);
 
 // AUTO plus every driver this firmware carries; NONE is the switch's job, so it is left out. The
 // names come from the FC's own table via `sensor_hardware`, which omits drivers that were not
@@ -990,7 +1014,6 @@ const pitotHardwareEnabled = computed({
 
 const sonarTypesList = ref([]);
 const opticalFlowTypesList = ref([]);
-const pitotTypesList = ref([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -2104,11 +2127,17 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        canDevice: canDevice.value,
         rangefinderPort: rangefinderPortIdentifier.value,
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+
+// A DroneCAN compass or airspeed sensor can already be stored on a board whose stack is off.
+// Nothing is dirty then, so Save would be disabled and the GUI could never turn the stack on.
+const dronecanNeedsEnable = computed(() => dronecanSelected.value && !dronecanEnabled.value);
+const canSave = computed(() => dirty.value || dronecanNeedsEnable.value);
 
 // --- Load helpers ---
 
@@ -2381,7 +2410,7 @@ const saveConfig = () =>
         await writeOpticalFlowPort();
 
         try {
-            await writeDronecan({ enable: dronecanMagSelected.value });
+            await writeDronecan({ enable: dronecanSelected.value });
         } catch (error) {
             throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
         }

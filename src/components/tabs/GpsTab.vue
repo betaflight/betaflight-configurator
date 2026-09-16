@@ -63,7 +63,11 @@
                             />
                         </SettingRow>
 
-                        <SettingRow v-if="showCanDevice" :label="$t('gpsCanDevice')" :help="$t('gpsCanDeviceHelp')">
+                        <SettingRow
+                            v-if="showCanDevice"
+                            :label="$t('dronecanCanDevice')"
+                            :help="$t('dronecanCanDeviceHelp')"
+                        >
                             <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
                         </SettingRow>
 
@@ -293,7 +297,7 @@
             <UButton
                 :label="$t('configurationButtonSave')"
                 size="xs"
-                :disabled="!dirty"
+                :disabled="!canSave"
                 :loading="isSaving"
                 @click="saveConfig"
             />
@@ -453,6 +457,7 @@ export default defineComponent({
         // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
         const {
             supported: dronecanSupported,
+            enabled: dronecanEnabled,
             deviceOptions: canDeviceOptions,
             selectedDevice: canDevice,
             load: loadDronecan,
@@ -505,6 +510,12 @@ export default defineComponent({
 
         // The bus is worth choosing only where there is more than one.
         const showCanDevice = computed(() => dronecanSelected.value && canDeviceOptions.value.length > 1);
+
+        // A DroneCAN provider can already be stored on a board whose stack is off -- exactly the
+        // state a CLI-configured board arrives in. Nothing is dirty then, so Save would be disabled
+        // and the GUI could never turn the stack on. Offer the save on its own merit.
+        const dronecanNeedsEnable = computed(() => dronecanSelected.value && !dronecanEnabled.value);
+        const canSave = computed(() => dirty.value || dronecanNeedsEnable.value);
 
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
@@ -970,6 +981,7 @@ export default defineComponent({
             showAutoBaud,
             showAutoConfig,
             showSerialPort,
+            canSave,
             showCanDevice,
             canDeviceOptions,
             canDevice,
