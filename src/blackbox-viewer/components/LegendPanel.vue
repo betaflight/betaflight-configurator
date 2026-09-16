@@ -35,17 +35,17 @@
                 @dragstart="onDragStart($event, gi)"
                 @dragend="onDragEnd"
             >
-                <h3
-                    class="graph-legend-group"
-                    role="button"
-                    tabindex="0"
-                    @click="onGraphClick($event, gi)"
-                    @keydown.enter.space.prevent="activateGraph(gi, $event.altKey)"
-                    @mousedown.middle.prevent="onResetPen(gi, null)"
-                    @wheel="onFieldWheel($event, gi, null)"
-                >
-                    <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
-                    {{ graph.label }}
+                <h3 class="graph-legend-group">
+                    <button
+                        type="button"
+                        class="block w-full text-start bg-transparent border-0 p-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-1"
+                        @click="onGraphClick($event, gi)"
+                        @mousedown.middle.prevent="onResetPen(gi, null)"
+                        @wheel="onFieldWheel($event, gi, null)"
+                    >
+                        <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
+                        {{ graph.label }}
+                    </button>
                 </h3>
 
                 <ul class="list-none pl-0 graph-legend-field-list">
@@ -214,19 +214,15 @@ function onFieldClick(e, gi, fi, field) {
 }
 
 // --- Graph title click → zoom/expand ---
-function activateGraph(gi, expand) {
-    if (expand) {
-        graphStore.expandGraphConfig?.(gi);
-    } else {
-        graphStore.zoomGraphConfig?.(gi);
-    }
-}
-
 function onGraphClick(e, gi) {
     if (e.button !== 0) {
         return;
     }
-    activateGraph(gi, e.altKey);
+    if (e.altKey) {
+        graphStore.expandGraphConfig?.(gi);
+    } else {
+        graphStore.zoomGraphConfig?.(gi);
+    }
     e.preventDefault();
 }
 
