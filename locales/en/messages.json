@@ -2266,12 +2266,6 @@
     "gpsCanDeviceHelp": {
         "message": "The CAN bus the DroneCAN modules are wired to. This belongs to DroneCAN as a whole, so changing it moves every DroneCAN device, not just the GPS. Changing it requires a reboot."
     },
-    "dronecanEnabled": {
-        "message": "DroneCAN"
-    },
-    "dronecanEnabledHelp": {
-        "message": "Runs the DroneCAN stack. It is off by default, and while it is off every DroneCAN device stays silent even when one is selected — a GPS, compass, airspeed sensor or ESC on the bus reports nothing. Changing it requires a reboot."
-    },
     "dronecanSaveFailed": {
         "message": "Could not change the DroneCAN settings, so nothing was saved."
     },

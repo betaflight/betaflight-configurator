@@ -63,14 +63,6 @@
                             />
                         </SettingRow>
 
-                        <SettingRow
-                            v-if="showDronecan"
-                            :label="$t('dronecanEnabled')"
-                            :help="$t('dronecanEnabledHelp')"
-                        >
-                            <USwitch v-model="dronecanEnabled" />
-                        </SettingRow>
-
                         <SettingRow v-if="showCanDevice" :label="$t('gpsCanDevice')" :help="$t('gpsCanDeviceHelp')">
                             <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
                         </SettingRow>
@@ -461,7 +453,6 @@ export default defineComponent({
         // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
         const {
             supported: dronecanSupported,
-            enabled: dronecanEnabled,
             deviceOptions: canDeviceOptions,
             selectedDevice: canDevice,
             load: loadDronecan,
@@ -480,7 +471,6 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
                 gpsPortIdentifier: gpsPortIdentifier.value,
                 gpsBaud: gpsBaud.value,
-                dronecanEnabled: dronecanEnabled.value,
                 canDevice: canDevice.value,
             });
 
@@ -507,12 +497,14 @@ export default defineComponent({
             () => gpsPortAvailable.value && providersUsingSerialPort.has(selectedProviderName.value),
         );
 
-        // Both rows belong to the DroneCAN stack rather than to the GPS, and are offered here only
-        // because this is where a DroneCAN GPS is set up; either one moves every DroneCAN sensor.
-        const showDronecan = computed(() => dronecanSupported.value && selectedProviderName.value === "DRONECAN");
+        // Selecting this provider is itself the request to run the stack, so there is no switch:
+        // saving turns it on. The bus belongs to the whole stack rather than to the GPS, and is
+        // offered here only because this is where a DroneCAN GPS is set up; changing it moves
+        // every DroneCAN sensor.
+        const dronecanSelected = computed(() => dronecanSupported.value && selectedProviderName.value === "DRONECAN");
 
         // The bus is worth choosing only where there is more than one.
-        const showCanDevice = computed(() => showDronecan.value && canDeviceOptions.value.length > 1);
+        const showCanDevice = computed(() => dronecanSelected.value && canDeviceOptions.value.length > 1);
 
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
@@ -891,7 +883,7 @@ export default defineComponent({
                     }
 
                     try {
-                        await writeDronecan();
+                        await writeDronecan({ enable: dronecanSelected.value });
                     } catch (error) {
                         throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
                     }
@@ -978,8 +970,6 @@ export default defineComponent({
             showAutoBaud,
             showAutoConfig,
             showSerialPort,
-            showDronecan,
-            dronecanEnabled,
             showCanDevice,
             canDeviceOptions,
             canDevice,

@@ -61,13 +61,6 @@
                                 class="min-w-40"
                             />
                         </SettingRow>
-                        <SettingRow
-                            v-if="showDronecanEnable"
-                            :label="$t('dronecanEnabled')"
-                            :help="$t('dronecanEnabledHelp')"
-                        >
-                            <USwitch v-model="dronecanEnabled" />
-                        </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
                                 {{ $t("configurationBaroHardware") }}
@@ -970,18 +963,13 @@ const magHardwareEnabled = computed({
 const magTypesList = ref([]);
 
 // A DroneCAN compass is inert until the stack is running, and dronecan_enabled is off by default.
-// Surfacing the flag here means selecting DRONECAN above is enough on its own; without it the
-// choice is accepted and then silently does nothing.
-const {
-    supported: dronecanSupported,
-    enabled: dronecanEnabled,
-    load: loadDronecan,
-    write: writeDronecan,
-} = useDronecanDevice();
+// Choosing DRONECAN above is the request to run it, so saving turns it on; there is no separate
+// switch to miss.
+const { supported: dronecanSupported, load: loadDronecan, write: writeDronecan } = useDronecanDevice();
 
 const magDronecanIndex = computed(() => magTypesList.value.indexOf("DRONECAN"));
 
-const showDronecanEnable = computed(
+const dronecanMagSelected = computed(
     () =>
         dronecanSupported.value && magDronecanIndex.value >= 0 && sensorConfig.mag_hardware === magDronecanIndex.value,
 );
@@ -2116,7 +2104,6 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
-        dronecanEnabled: dronecanEnabled.value,
         rangefinderPort: rangefinderPortIdentifier.value,
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
@@ -2394,7 +2381,7 @@ const saveConfig = () =>
         await writeOpticalFlowPort();
 
         try {
-            await writeDronecan();
+            await writeDronecan({ enable: dronecanMagSelected.value });
         } catch (error) {
             throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
         }
