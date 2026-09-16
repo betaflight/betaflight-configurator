@@ -144,8 +144,10 @@ function analyzeLog(data, log) {
 function computeSampleRate(sysConfig) {
     const looptimeUs = sysConfig.looptime || 125;
     const pidDenom = sysConfig.pid_process_denom || 1;
-    const bbRate = sysConfig.frameIntervalPDenom || 1;
-    return 1e6 / (looptimeUs * pidDenom * bbRate);
+    // P frames are logged at frameIntervalPNum/frameIntervalPDenom of the PID loop rate.
+    const bbNum = sysConfig.frameIntervalPNum || 1;
+    const bbDenom = sysConfig.frameIntervalPDenom || 1;
+    return (1e6 * bbNum) / (looptimeUs * pidDenom * bbDenom);
 }
 
 function chooseSegmentSize(sampleRate) {

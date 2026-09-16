@@ -203,6 +203,7 @@ function parseHeader(data, logStart, logEnd) {
         frameIntervalI: 32,
         frameIntervalPNum: 1,
         frameIntervalPDenom: 1,
+        frameIntervalPExplicit: false,
         minthrottle: 1070,
         vbatref: 4095,
         motorOutput: [0, 0],
@@ -394,26 +395,31 @@ function parseSpecialHeader(key, value, sysConfig) {
     }
 }
 
-function parsePIntervalHeader(value, sysConfig) {
+export function parsePIntervalHeader(value, sysConfig) {
     if (value.includes("/")) {
         const parts = value.split("/");
         sysConfig.frameIntervalPNum = Number.parseInt(parts[0], 10);
         sysConfig.frameIntervalPDenom = Number.parseInt(parts[1], 10);
     } else {
-        sysConfig.frameIntervalPNum = Number.parseInt(value, 10);
-        sysConfig.frameIntervalPDenom = 1;
+        // A bare integer is the divider, not the numerator: "P interval:2" logs P frames at
+        // half the PID loop rate. Matches flightlog_parser.js, the reference implementation.
+        sysConfig.frameIntervalPNum = 1;
+        sysConfig.frameIntervalPDenom = Number.parseInt(value, 10);
     }
+    sysConfig.frameIntervalPExplicit = true;
 }
 
-function parsePRatioHeader(value, sysConfig) {
+export function parsePRatioHeader(value, sysConfig) {
     // Alternative form — derive P interval from ratio (I interval / P interval).
-    // Use it only if P interval wasn't explicitly set.
-    if (sysConfig.frameIntervalPNum === 1 && sysConfig.frameIntervalPDenom === 1) {
-        const ratio = Number.parseInt(value, 10);
-        if (ratio > 0) {
-            sysConfig.frameIntervalPNum = 1;
-            sysConfig.frameIntervalPDenom = ratio;
-        }
+    // Use it only if P interval wasn't explicitly set. The flag is required rather than a
+    // 1/1 value check, because "P interval:1/1" is a legitimate explicit value.
+    if (sysConfig.frameIntervalPExplicit) {
+        return;
+    }
+    const ratio = Number.parseInt(value, 10);
+    if (ratio > 0) {
+        sysConfig.frameIntervalPNum = 1;
+        sysConfig.frameIntervalPDenom = ratio;
     }
 }
 
