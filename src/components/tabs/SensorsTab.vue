@@ -61,6 +61,13 @@
                                 class="min-w-40"
                             />
                         </SettingRow>
+                        <SettingRow
+                            v-if="showDronecanEnable"
+                            :label="$t('dronecanEnabled')"
+                            :help="$t('dronecanEnabledHelp')"
+                        >
+                            <USwitch v-model="dronecanEnabled" />
+                        </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
                                 {{ $t("configurationBaroHardware") }}
@@ -810,7 +817,7 @@ import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
-import { useSaving } from "@/composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -821,6 +828,7 @@ import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
+import { useDronecanDevice } from "@/composables/useDronecanDevice";
 import {
     useMagCalibration,
     computeDeclination,
@@ -960,6 +968,23 @@ const magHardwareEnabled = computed({
 });
 
 const magTypesList = ref([]);
+
+// A DroneCAN compass is inert until the stack is running, and dronecan_enabled is off by default.
+// Surfacing the flag here means selecting DRONECAN above is enough on its own; without it the
+// choice is accepted and then silently does nothing.
+const {
+    supported: dronecanSupported,
+    enabled: dronecanEnabled,
+    load: loadDronecan,
+    write: writeDronecan,
+} = useDronecanDevice();
+
+const magDronecanIndex = computed(() => magTypesList.value.indexOf("DRONECAN"));
+
+const showDronecanEnable = computed(
+    () =>
+        dronecanSupported.value && magDronecanIndex.value >= 0 && sensorConfig.mag_hardware === magDronecanIndex.value,
+);
 
 // AUTO plus every driver this firmware carries; NONE is the switch's job, so it is left out. The
 // names come from the FC's own table via `sensor_hardware`, which omits drivers that were not
@@ -2091,6 +2116,7 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        dronecanEnabled: dronecanEnabled.value,
         rangefinderPort: rangefinderPortIdentifier.value,
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
@@ -2257,6 +2283,7 @@ const loadConfig = async () => {
 
             await loadRangefinderPort();
             await loadOpticalFlowPort();
+            await loadDronecan();
 
             hydrateSensorConfig();
             hydrateAlignment();
@@ -2365,6 +2392,12 @@ const saveConfig = () =>
         // refused port throws before anything reaches EEPROM.
         await writeRangefinderPort();
         await writeOpticalFlowPort();
+
+        try {
+            await writeDronecan();
+        } catch (error) {
+            throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
+        }
 
         gui_log(i18n.getMessage("sensorConfigSaved"));
 

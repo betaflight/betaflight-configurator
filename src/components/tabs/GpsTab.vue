@@ -65,8 +65,8 @@
 
                         <SettingRow
                             v-if="showDronecan"
-                            :label="$t('gpsDronecanEnabled')"
-                            :help="$t('gpsDronecanEnabledHelp')"
+                            :label="$t('dronecanEnabled')"
+                            :help="$t('dronecanEnabledHelp')"
                         >
                             <USwitch v-model="dronecanEnabled" />
                         </SettingRow>
@@ -893,7 +893,7 @@ export default defineComponent({
                     try {
                         await writeDronecan();
                     } catch (error) {
-                        throw withSaveFailureMessage(error, i18n.getMessage("gpsDronecanSaveFailed"));
+                        throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
                     }
 
                     await saveAndReboot();
