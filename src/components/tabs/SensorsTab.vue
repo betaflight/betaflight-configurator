@@ -47,12 +47,19 @@
                             </template>
                             <USwitch v-model="accHardwareEnabled" />
                         </SettingRow>
-                        <SettingRow :label="magHwName ? '' : $t('configurationMagHardware')">
+                        <SettingRow :label="magHwName ? '' : $t('configurationMagHardware')" fullWidth>
                             <template v-if="magHwName" #label>
                                 {{ $t("configurationMagHardware") }}
                                 <span class="text-dimmed font-normal">&mdash; {{ magHwName }}</span>
                             </template>
                             <USwitch v-model="magHardwareEnabled" />
+                            <USelect
+                                v-if="magHardwareEnabled && magTypeItems.length > 1"
+                                v-model="sensorConfig.mag_hardware"
+                                :items="magTypeItems"
+                                size="xs"
+                                class="min-w-40"
+                            />
                         </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
@@ -928,12 +935,38 @@ const baroHardwareEnabled = computed({
     },
 });
 
+// mag_hardware is a firmware enum, not a boolean: 0 = AUTO, 1 = NONE, and the rest name a driver.
+// The switch owns only NONE. Which driver is a separate choice because AUTO does not probe every
+// one of them - DRONECAN is explicitly excluded from autodetection, so naming it is the only way
+// to reach it.
+const MAG_HARDWARE_AUTO = 0;
+const MAG_HARDWARE_NONE = 1;
+
+// Remembered so toggling the mag off and back on returns to the driver that was selected. Without
+// this, the switch wrote AUTO on every re-enable and silently discarded an explicit DRONECAN pick,
+// which AUTO then never detects.
+let lastMagHardware = MAG_HARDWARE_AUTO;
+
 const magHardwareEnabled = computed({
-    get: () => sensorConfig.mag_hardware !== 1,
+    get: () => sensorConfig.mag_hardware !== MAG_HARDWARE_NONE,
     set: (val) => {
-        sensorConfig.mag_hardware = val ? 0 : 1;
+        if (val) {
+            sensorConfig.mag_hardware = lastMagHardware;
+            return;
+        }
+        lastMagHardware = sensorConfig.mag_hardware;
+        sensorConfig.mag_hardware = MAG_HARDWARE_NONE;
     },
 });
+
+const magTypesList = ref([]);
+
+// AUTO plus every driver this firmware carries; NONE is the switch's job, so it is left out. The
+// names come from the FC's own table via `sensor_hardware`, which omits drivers that were not
+// compiled in - so DRONECAN is offered exactly when the board can actually use it.
+const magTypeItems = computed(() =>
+    magTypesList.value.map((label, value) => ({ label, value })).filter(({ value }) => value !== MAG_HARDWARE_NONE),
+);
 
 const pitotHardwareEnabled = computed({
     get: () => sensorConfig.pitot_hardware !== 1,
@@ -2070,6 +2103,9 @@ function hydrateSensorConfig() {
     sensorConfig.acc_hardware = fcStore.sensorConfig.acc_hardware;
     sensorConfig.baro_hardware = fcStore.sensorConfig.baro_hardware;
     sensorConfig.mag_hardware = fcStore.sensorConfig.mag_hardware;
+    if (sensorConfig.mag_hardware !== MAG_HARDWARE_NONE) {
+        lastMagHardware = sensorConfig.mag_hardware;
+    }
     sensorConfig.sonar_hardware = fcStore.sensorConfig.sonar_hardware;
     sensorConfig.opticalflow_hardware = fcStore.sensorConfig.opticalflow_hardware;
     sensorConfig.pitot_hardware = fcStore.sensorConfig.pitot_hardware;
@@ -2169,6 +2205,8 @@ function suggestGeoDeclination() {
 }
 
 function setupPeripherals() {
+    magTypesList.value = sensorTypesData.value?.mag?.elements || [];
+
     if (isApi147.value) {
         sonarTypesList.value = sensorTypesData.value?.sonar?.elements || [];
         showRangefinder.value = sonarTypesList.value.length > 0;

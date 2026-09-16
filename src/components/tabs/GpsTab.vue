@@ -63,6 +63,14 @@
                             />
                         </SettingRow>
 
+                        <SettingRow
+                            v-if="showDronecan"
+                            :label="$t('gpsDronecanEnabled')"
+                            :help="$t('gpsDronecanEnabledHelp')"
+                        >
+                            <USwitch v-model="dronecanEnabled" />
+                        </SettingRow>
+
                         <SettingRow v-if="showCanDevice" :label="$t('gpsCanDevice')" :help="$t('gpsCanDeviceHelp')">
                             <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
                         </SettingRow>
@@ -399,9 +407,10 @@ export default defineComponent({
             gpsProtocols.value = getGpsProtocols();
 
             // DRONECAN is last in the firmware's provider table and only present under
-            // ENABLE_DRONECAN, which no build option reports — the dronecan_device probe is what
-            // tells us this board has it. Appending is only safe once VIRTUAL is in the list
-            // (API 1.47), or the index would land on VIRTUAL instead.
+            // ENABLE_DRONECAN. The dronecan_device probe is what tells us this board has it: the
+            // USE_DRONECAN build option only reports that the stack was compiled in, not how many
+            // CAN buses it can bind to, and the probe answers both. Appending is only safe once
+            // VIRTUAL is in the list (API 1.47), or the index would land on VIRTUAL instead.
             if (dronecanSupported.value && gpsProtocols.value.includes("VIRTUAL")) {
                 addArrayElement(gpsProtocols.value, "DRONECAN");
             }
@@ -452,10 +461,11 @@ export default defineComponent({
         // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
         const {
             supported: dronecanSupported,
+            enabled: dronecanEnabled,
             deviceOptions: canDeviceOptions,
             selectedDevice: canDevice,
-            load: loadCanDevice,
-            write: writeCanDevice,
+            load: loadDronecan,
+            write: writeDronecan,
         } = useDronecanDevice();
 
         /** @returns {string} serialized tab state for dirty comparison */
@@ -470,6 +480,7 @@ export default defineComponent({
                 home_point_once: gpsConfig.home_point_once,
                 gpsPortIdentifier: gpsPortIdentifier.value,
                 gpsBaud: gpsBaud.value,
+                dronecanEnabled: dronecanEnabled.value,
                 canDevice: canDevice.value,
             });
 
@@ -496,14 +507,12 @@ export default defineComponent({
             () => gpsPortAvailable.value && providersUsingSerialPort.has(selectedProviderName.value),
         );
 
-        // The bus belongs to the DroneCAN stack rather than to the GPS, so it is offered here only
-        // because this is where a DroneCAN GPS is set up; changing it moves every DroneCAN sensor.
-        const showCanDevice = computed(
-            () =>
-                dronecanSupported.value &&
-                selectedProviderName.value === "DRONECAN" &&
-                canDeviceOptions.value.length > 1,
-        );
+        // Both rows belong to the DroneCAN stack rather than to the GPS, and are offered here only
+        // because this is where a DroneCAN GPS is set up; either one moves every DroneCAN sensor.
+        const showDronecan = computed(() => dronecanSupported.value && selectedProviderName.value === "DRONECAN");
+
+        // The bus is worth choosing only where there is more than one.
+        const showCanDevice = computed(() => showDronecan.value && canDeviceOptions.value.length > 1);
 
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
@@ -828,7 +837,7 @@ export default defineComponent({
 
                 // Probed before the protocol list is built, which offers DRONECAN only on a board
                 // that has it.
-                await loadCanDevice();
+                await loadDronecan();
                 await updateGpsProtocols();
                 await loadGpsPort();
 
@@ -882,9 +891,9 @@ export default defineComponent({
                     }
 
                     try {
-                        await writeCanDevice();
+                        await writeDronecan();
                     } catch (error) {
-                        throw withSaveFailureMessage(error, i18n.getMessage("gpsCanDeviceSaveFailed"));
+                        throw withSaveFailureMessage(error, i18n.getMessage("gpsDronecanSaveFailed"));
                     }
 
                     await saveAndReboot();
@@ -969,6 +978,8 @@ export default defineComponent({
             showAutoBaud,
             showAutoConfig,
             showSerialPort,
+            showDronecan,
+            dronecanEnabled,
             showCanDevice,
             canDeviceOptions,
             canDevice,
