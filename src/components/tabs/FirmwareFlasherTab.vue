@@ -1636,11 +1636,11 @@ export default defineComponent({
             state.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [
-                    ".hex",
-                    ".uf2",
-                    ".bin",
-                ]);
+                const file = await FileSystem.pickOpenFile(
+                    $t("fileSystemPickerFirmwareFiles"),
+                    [".hex", ".uf2", ".bin"],
+                    "firmware-file",
+                );
 
                 if (!file) {
                     enableLoadRemoteFileButton(true);

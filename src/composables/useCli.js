@@ -315,7 +315,11 @@ export function useCli() {
             snippetPreviewOpen.value = true;
         };
 
-        const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
+        const file = await FileSystem.pickOpenFile(
+            i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
+            ".txt",
+            "cli-file",
+        );
         const contents = await FileSystem.readFile(file);
         previewCommands(contents, file.name);
 
@@ -330,6 +334,7 @@ export function useCli() {
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }),
             ".txt",
+            "cli-file",
         );
         await FileSystem.writeFile(file, content);
     };
