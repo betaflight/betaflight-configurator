@@ -79,8 +79,11 @@ function decodeBody(response: MspResponse, skipBytes = 0): string {
 }
 
 // A refused request comes back through the decoder as `unsupported`, not as a rejected promise.
-function refused(response: MspResponse | undefined): response is undefined {
-    return !response || response.unsupported === 1;
+// Phrased as "the FC answered this" rather than "it refused", because only the positive form is a
+// true type predicate: a refusal can still carry a defined response, so `response is undefined`
+// would be a lie in exactly the case it is meant to describe.
+function accepted(response: MspResponse | undefined): response is MspResponse {
+    return !!response && response.unsupported !== 1;
 }
 
 // Replies are `name = value`, and `get` matches on substring, so the body can name several
@@ -134,7 +137,7 @@ function parseInfo(text: string): SettingInfo {
  */
 export async function getSetting(setting: string): Promise<string | null> {
     const response = (await MSP.promise(MSPCodes.MSP2_CLI_SETTING, encodeText(setting))) as MspResponse | undefined;
-    if (refused(response)) {
+    if (!accepted(response)) {
         return null;
     }
 
@@ -151,7 +154,7 @@ export async function getSetting(setting: string): Promise<string | null> {
 export async function setSetting(setting: string, value: string | number): Promise<string> {
     const response = (await MSP.promise(MSPCodes.MSP2_CLI_SETTING, encodeText(`${setting} = ${value}`))) as
         MspResponse | undefined;
-    if (refused(response)) {
+    if (!accepted(response)) {
         throw new Error(`The flight controller refused ${setting} = ${value}`);
     }
 
@@ -176,7 +179,7 @@ export async function getSettingInfo(setting: string): Promise<SettingInfo | nul
     do {
         const request = [...encodeText(setting), 0, offset & 0xff, (offset >> 8) & 0xff];
         const response = (await MSP.promise(MSPCodes.MSP2_CLI_SETTING_INFO, request)) as MspResponse | undefined;
-        if (refused(response)) {
+        if (!accepted(response)) {
             return null;
         }
 
@@ -196,5 +199,7 @@ export async function getSettingInfo(setting: string): Promise<SettingInfo | nul
         offset += received;
     } while (offset < total);
 
-    return parseInfo(text);
+    // A reply carrying only the header says nothing about the setting. Returning a SettingInfo of
+    // all-nulls there would be indistinguishable from a real one, so report it as unreadable.
+    return text ? parseInfo(text) : null;
 }

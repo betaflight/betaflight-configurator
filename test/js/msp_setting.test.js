@@ -135,6 +135,14 @@ describe("useMspSetting", () => {
             expect(second.slice(-2)).toEqual([split, 0]);
         });
 
+        // A reply carrying only the length header says nothing about the setting; that has to read
+        // as "unreadable" rather than as a setting whose bounds happen to be unknown.
+        it("returns null when the reply carries only the header", async () => {
+            promise.mockResolvedValue(infoReply("", { total: 0 }));
+
+            await expect(getSettingInfo("dronecan_device")).resolves.toBeNull();
+        });
+
         it("returns null when the firmware does not know the message", async () => {
             promise.mockResolvedValue(reply([], { unsupported: 1 }));
 
