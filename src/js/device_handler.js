@@ -13,12 +13,18 @@ import {
     checkSerialSupport,
     checkUsbSupport,
     isAndroid,
+    isNetworkOnlyBrowser,
     isTauri,
     isTauriAndroid,
 } from "./utils/checkCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
+// Where a network-only browser starts looking: the WebSocket endpoint SITL and the
+// Betaflight bridge both listen on. A serial path could never work there.
+const DEFAULT_NETWORK_TARGET = "ws://localhost:5761";
+
+const networkOnly = isNetworkOnlyBrowser();
 
 // Create the platform-appropriate DFU protocol instance.
 // On Android, use the native transport for the shell we run in (Tauri or
@@ -69,7 +75,7 @@ const DeviceHandler = new (function () {
     this.devicePicker = {
         selectedDevice: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
-        portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
+        portOverride: getConfig("portOverride", networkOnly ? DEFAULT_NETWORK_TARGET : "/dev/rfcomm0").portOverride,
         virtualMspVersion: getConfig("virtualMspVersion", "1.46.0").virtualMspVersion,
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };
@@ -93,7 +99,9 @@ const DeviceHandler = new (function () {
     console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
-    this.showManualMode = getConfig("showManualMode", false).showManualMode;
+    // Without serial, Bluetooth or USB the manual entry is the only way to reach a
+    // flight controller, so it stops being a development option there.
+    this.showManualMode = getConfig("showManualMode", false).showManualMode || networkOnly;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
 
     // Expose the DFU protocol instance for other modules
@@ -152,6 +160,16 @@ DeviceHandler.setShowVirtualMode = function (showVirtualMode) {
 DeviceHandler.setShowManualMode = function (showManualMode) {
     this.showManualMode = showManualMode;
     this.selectActivePort();
+};
+
+/**
+ * The manual entry is a development option behind expert mode, except on a network-only
+ * browser where it is the only transport the user has.
+ *
+ * @returns {boolean} Whether to offer manual/network targets in the UI.
+ */
+DeviceHandler.manualModeAvailable = function () {
+    return this.showManualMode && (isExpertModeEnabled() || networkOnly);
 };
 
 DeviceHandler.setShowAllSerialDevices = function (showAllSerialDevices) {
@@ -403,7 +421,7 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         selectedDevice = "virtual";
     }
 
-    if (!selectedDevice && !reconnectInProgress && expertMode && this.showManualMode) {
+    if (!selectedDevice && !reconnectInProgress && this.manualModeAvailable()) {
         selectedDevice = "manual";
     }
 

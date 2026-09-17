@@ -226,3 +226,73 @@ describe("checkBluetoothSupport", () => {
         expect(checkBluetoothSupport()).toBe(true);
     });
 });
+
+describe("isNetworkOnlyBrowser", () => {
+    // Safari and Firefox: no Web Serial, no Web Bluetooth, no WebUSB, no native shell.
+    it("claims a browser with none of serial, Bluetooth or USB", async () => {
+        setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+        const { isNetworkOnlyBrowser } = await loadCompatibility();
+        expect(isNetworkOnlyBrowser()).toBe(true);
+    });
+
+    it("leaves a browser alone once any one API is present", async () => {
+        setUserAgent(UA.linux, { platform: "Linux" });
+        const { isNetworkOnlyBrowser } = await loadCompatibility();
+
+        for (const api of ["serial", "bluetooth", "usb"]) {
+            stubNavigator(api, {});
+            expect(isNetworkOnlyBrowser()).toBe(false);
+            restoreNavigator();
+            setUserAgent(UA.linux, { platform: "Linux" });
+        }
+    });
+
+    it("is false inside a Tauri shell, which has its own transports", async () => {
+        globalThis[TAURI] = {};
+        setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+        const { isNetworkOnlyBrowser } = await loadCompatibility();
+        expect(isNetworkOnlyBrowser()).toBe(false);
+    });
+});
+
+describe("checkCompatibility", () => {
+    // The test-environment short circuit would make every assertion below vacuous.
+    const asProduction = async (run) => {
+        const previous = process.env.NODE_ENV;
+        process.env.NODE_ENV = "production";
+        try {
+            await run();
+        } finally {
+            process.env.NODE_ENV = previous;
+        }
+    };
+
+    it("passes a serial-less browser, which still has the network", async () => {
+        await asProduction(async () => {
+            setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+            const { checkCompatibility } = await loadCompatibility();
+            const body = document.body.innerHTML;
+
+            expect(checkCompatibility()).toBe(true);
+            // The error card replaces the whole body, so an untouched body means it ran.
+            expect(document.body.innerHTML).toBe(body);
+        });
+    });
+
+    it("still fails a runtime with no transport at all", async () => {
+        await asProduction(async () => {
+            setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+            const { checkCompatibility } = await loadCompatibility();
+            const websocket = globalThis.WebSocket;
+            delete globalThis.WebSocket;
+
+            try {
+                expect(() => checkCompatibility()).toThrow("No compatible browser found.");
+            } finally {
+                globalThis.WebSocket = websocket;
+                document.body.innerHTML = "";
+                document.body.removeAttribute("style");
+            }
+        });
+    });
+});

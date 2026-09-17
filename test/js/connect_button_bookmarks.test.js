@@ -9,7 +9,7 @@ import { effectScope } from "vue";
 // then what serial_backend opens — see serial_backend.test.js.
 // ---------------------------------------------------------------------------
 
-const { DeviceHandler, connectDisconnect, expertMode } = vi.hoisted(() => ({
+const { DeviceHandler, connectDisconnect, expertMode, networkOnly } = vi.hoisted(() => ({
     DeviceHandler: {
         devicePicker: { selectedDevice: "noselection", portOverride: "", autoConnect: false },
         devicePickerDisabled: false,
@@ -24,7 +24,12 @@ const { DeviceHandler, connectDisconnect, expertMode } = vi.hoisted(() => ({
     },
     connectDisconnect: vi.fn(),
     expertMode: { enabled: true },
+    networkOnly: { enabled: false },
 }));
+
+// Mirrors the real gate in device_handler.js: expert mode, or a browser with nothing
+// but the network.
+DeviceHandler.manualModeAvailable = () => DeviceHandler.showManualMode && (expertMode.enabled || networkOnly.enabled);
 
 vi.mock("../../src/js/device_handler", () => ({ __esModule: true, default: DeviceHandler }));
 vi.mock("../../src/js/serial_backend", () => ({ __esModule: true, connectDisconnect, disconnect: vi.fn() }));
@@ -32,6 +37,12 @@ vi.mock("../../src/js/localization", () => ({ __esModule: true, i18n: { getMessa
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({
     __esModule: true,
     isExpertModeEnabled: () => expertMode.enabled,
+}));
+vi.mock("../../src/js/utils/checkCompatibility", () => ({
+    __esModule: true,
+    isAndroid: () => false,
+    isTauri: () => false,
+    isNetworkOnlyBrowser: () => networkOnly.enabled,
 }));
 vi.mock("../../src/stores/connection", () => ({
     __esModule: true,
@@ -50,6 +61,7 @@ beforeEach(() => {
     setActivePinia(createPinia());
     connectDisconnect.mockClear();
     expertMode.enabled = true;
+    networkOnly.enabled = false;
     DeviceHandler.showManualMode = true;
     DeviceHandler.devicePicker.selectedDevice = "noselection";
     DeviceHandler.devicePicker.portOverride = "";
@@ -88,5 +100,16 @@ describe("connecting to a bookmark from the dropdown", () => {
         expertMode.enabled = true;
         DeviceHandler.showManualMode = false;
         expect(item(mountLogic(), "Wi-Fi quad")).toBeUndefined();
+    });
+
+    // Safari and Firefox have no serial, Bluetooth or USB, so the network target is all
+    // they have — expert mode must not be what stands between them and connecting.
+    it("offers bookmarks without expert mode on a network-only browser", () => {
+        useConnectionBookmarksStore().save("tcp://192.168.4.1:5761", "Wi-Fi quad");
+
+        expertMode.enabled = false;
+        networkOnly.enabled = true;
+
+        expect(item(mountLogic(), "Wi-Fi quad")).toBeDefined();
     });
 });
