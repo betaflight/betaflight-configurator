@@ -20,7 +20,7 @@ import { loadDeviceFilters } from "./protocols/devices.js";
 import { isAndroid, isTauriAndroid, isTauriIOS } from "./utils/checkCompatibility.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
-import { MspCancelledError } from "./msp/mspErrors.js";
+import { MspCancelledError } from "./msp/mspErrors";
 
 window.addEventListener("unhandledrejection", (event) => {
     if (event.reason instanceof MspCancelledError) {

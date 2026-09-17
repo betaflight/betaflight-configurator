@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import { vi } from "vitest";
-import { MspCancelledError } from "../src/js/msp/mspErrors.js";
+import { MspCancelledError } from "../src/js/msp/mspErrors";
 
 globalThis.addEventListener?.("unhandledrejection", (event) => {
     if (event.reason instanceof MspCancelledError) {
