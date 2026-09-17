@@ -247,6 +247,21 @@ describe("isNetworkOnlyBrowser", () => {
         }
     });
 
+    // The predicate promises a network transport, so a runtime without even WebSocket is
+    // not network-only — it is the no-transport case checkCompatibility() rejects.
+    it("is false when there is no WebSocket either", async () => {
+        setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
+        const { isNetworkOnlyBrowser } = await loadCompatibility();
+        const websocket = globalThis.WebSocket;
+        delete globalThis.WebSocket;
+
+        try {
+            expect(isNetworkOnlyBrowser()).toBe(false);
+        } finally {
+            globalThis.WebSocket = websocket;
+        }
+    });
+
     it("is false inside a Tauri shell, which has its own transports", async () => {
         globalThis[TAURI] = {};
         setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });

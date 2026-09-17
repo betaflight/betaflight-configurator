@@ -20,9 +20,10 @@ import {
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
-// Where a network-only browser starts looking: the WebSocket endpoint SITL and the
-// Betaflight bridge both listen on. A serial path could never work there.
-const DEFAULT_NETWORK_TARGET = "ws://localhost:5761";
+// Where a network-only browser starts looking. A browser has no raw sockets, so it reaches
+// SITL through the websockify proxy's own port rather than the raw 5761 — the same address
+// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.js.
+const DEFAULT_NETWORK_TARGET = "ws://127.0.0.1:6761";
 
 const networkOnly = isNetworkOnlyBrowser();
 
@@ -99,9 +100,7 @@ const DeviceHandler = new (function () {
     console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
-    // Without serial, Bluetooth or USB the manual entry is the only way to reach a
-    // flight controller, so it stops being a development option there.
-    this.showManualMode = getConfig("showManualMode", false).showManualMode || networkOnly;
+    this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
 
     // Expose the DFU protocol instance for other modules
@@ -164,12 +163,13 @@ DeviceHandler.setShowManualMode = function (showManualMode) {
 
 /**
  * The manual entry is a development option behind expert mode, except on a network-only
- * browser where it is the only transport the user has.
+ * browser. There it is the only way to reach a flight controller, so neither expert mode nor
+ * a development-option reset may take it away.
  *
  * @returns {boolean} Whether to offer manual/network targets in the UI.
  */
 DeviceHandler.manualModeAvailable = function () {
-    return this.showManualMode && (isExpertModeEnabled() || networkOnly);
+    return networkOnly || (this.showManualMode && isExpertModeEnabled());
 };
 
 DeviceHandler.setShowAllSerialDevices = function (showAllSerialDevices) {

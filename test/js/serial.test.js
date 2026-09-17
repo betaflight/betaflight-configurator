@@ -3,11 +3,16 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 // Force the Tauri shell so the protocol list registers both the Rust-backed raw-TCP
 // slot and the WebSocket slot — the case the ws/wss vs tcp routing fix is about.
 // Mutable so a second block can pin the Tauri Android slot table.
-const platform = vi.hoisted(() => ({ isTauriIOS: true, isTauriAndroid: false, isTauriMacOS: false }));
+const platform = vi.hoisted(() => ({
+    isTauri: true,
+    isTauriIOS: true,
+    isTauriAndroid: false,
+    isTauriMacOS: false,
+}));
 
 vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isAndroid: () => false,
-    isTauri: () => true,
+    isTauri: () => platform.isTauri,
     isTauriIOS: () => platform.isTauriIOS,
     isTauriAndroid: () => platform.isTauriAndroid,
     isTauriMacOS: () => platform.isTauriMacOS,
@@ -36,12 +41,14 @@ let serial;
 /**
  * Rebuilds the serial singleton on the given Tauri platform. It builds its slot table at
  * module load, so the registry has to be reset for a changed platform to take effect.
- * @param {{ios?: boolean, android?: boolean, macos?: boolean}} on - the platform to report;
- *   everything omitted is false, which is desktop Linux/Windows.
+ * @param {{ios?: boolean, android?: boolean, macos?: boolean, tauri?: boolean}} on - the
+ *   platform to report; everything omitted is false, which is desktop Linux/Windows, except
+ *   `tauri`, which defaults to true.
  * @returns {void}
  */
 function usePlatform(on = {}) {
     beforeEach(async () => {
+        platform.isTauri = on.tauri ?? true;
         platform.isTauriIOS = on.ios ?? false;
         platform.isTauriAndroid = on.android ?? false;
         platform.isTauriMacOS = on.macos ?? false;
@@ -136,5 +143,37 @@ describe("serial protocol slots — Tauri desktop (Linux/Windows)", () => {
 
     it("keeps the webview's Web Bluetooth", () => {
         expect(serial.selectProtocol("bluetooth_AA:BB:CC:DD:EE:FF").constructor.name).toBe("WebBluetooth");
+    });
+});
+
+describe("serial.canOpen — which manual targets a platform understands", () => {
+    describe("in a browser", () => {
+        usePlatform({ tauri: false });
+
+        // The web shell's "tcp" slot is a WebSocket, which rejects the scheme outright, so
+        // offering a saved tcp:// target would only ever produce a failed connection.
+        it("rejects a raw tcp:// target, whatever case it is written in", () => {
+            expect(serial.canOpen("tcp://192.168.4.1:5761")).toBe(false);
+            expect(serial.canOpen("TCP://192.168.4.1:5761")).toBe(false);
+        });
+
+        it("accepts ws://, wss:// and the addresses that route to serial", () => {
+            expect(serial.canOpen("ws://127.0.0.1:6761")).toBe(true);
+            expect(serial.canOpen("wss://quad.local")).toBe(true);
+            expect(serial.canOpen("/dev/ttyUSB0")).toBe(true);
+        });
+
+        it("treats a missing or non-string target as nothing to reject", () => {
+            expect(serial.canOpen("")).toBe(true);
+            expect(serial.canOpen(undefined)).toBe(true);
+        });
+    });
+
+    describe("in a Tauri shell", () => {
+        usePlatform();
+
+        it("accepts a raw tcp:// target, which has a real transport here", () => {
+            expect(serial.canOpen("tcp://192.168.4.1:5761")).toBe(true);
+        });
     });
 });

@@ -207,6 +207,10 @@ export function isNetworkOnlyBrowser() {
         return false;
     }
 
+    if (typeof WebSocket === "undefined") {
+        return false;
+    }
+
     return !checkSerialSupport() && !checkBluetoothSupport() && !checkUsbSupport();
 }
 

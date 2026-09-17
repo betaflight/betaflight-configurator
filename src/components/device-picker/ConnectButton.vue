@@ -58,6 +58,7 @@ import { defineComponent, computed, ref } from "vue";
 import { useConnectionStore } from "../../stores/connection";
 import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
 import DeviceHandler from "../../js/device_handler";
+import { serial } from "../../js/serial";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
 import { set as setConfig } from "../../js/ConfigStorage";
@@ -202,7 +203,7 @@ export default defineComponent({
         // Saved targets connect in one click; the dialog below them is where they are managed.
         function buildManualItems() {
             return [
-                ...bookmarkItems(bookmarksStore.bookmarks),
+                ...bookmarkItems(bookmarksStore.bookmarks.filter((bookmark) => serial.canOpen(bookmark.url))),
                 {
                     label: i18n.getMessage("portsSelectManual"),
                     icon: "i-lucide-keyboard",
