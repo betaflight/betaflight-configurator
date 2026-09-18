@@ -13,18 +13,18 @@ import { useSettingsStore } from "./stores/settings.js";
 import {
     getDebugModes,
     getDebugFieldNames,
+    debugContextFromSysConfig,
+    resolveDebugField,
     decodeDebugFieldToFriendly as sharedDecodeDebugFieldToFriendly,
     convertDebugFieldValue as sharedConvertDebugFieldValue,
 } from "../js/utils/debugModes";
 
 /**
- * Resolve the debug_mode name for a parsed log using the shared, API-version
- * keyed definitions (`getDebugModes`). The log's apiVersion is resolved once by
- * the parser (see firmwareToApiVersion) and stored on sysConfig.
+ * What the log itself says about its debug fields, falling back to the
+ * API-version keyed tables for a log recorded before firmware said so.
  */
-function debugModeNameForLog(flightLog) {
-    const sysConfig = flightLog.getSysConfig();
-    return getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
+function debugContextForLog(flightLog) {
+    return debugContextFromSysConfig(flightLog.getSysConfig());
 }
 
 /**
@@ -35,7 +35,7 @@ function debugModeNameForLog(flightLog) {
 function debugScaleContext(flightLog) {
     const sysConfig = flightLog.getSysConfig();
     return {
-        apiVersion: sysConfig.apiVersion,
+        ...debugContextFromSysConfig(sysConfig),
         motorPoles: sysConfig["motor_poles"],
         accRawToGs: (v) => flightLog.accRawToGs(v),
         gyroRawToDegreesPerSecond: (v) => flightLog.gyroRawToDegreesPerSecond(v),
@@ -515,19 +515,24 @@ FlightLogFieldPresenter.decodeDebugFieldToFriendly = function (flightLog, fieldN
         return value.toFixed(0);
     }
     return sharedDecodeDebugFieldToFriendly(
-        debugModeNameForLog(flightLog),
+        debugContextForLog(flightLog).modeName,
         fieldName,
         value,
         debugScaleContext(flightLog),
     );
 };
 
-FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, debugMode, apiVersion) {
-    if (debugMode) {
+FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, ctx) {
+    if (ctx?.modeIndex) {
         if (fieldName.includes("debug")) {
-            const modes = getDebugModes(apiVersion);
-            const fieldNames = getDebugFieldNames(apiVersion);
-            const debugModeName = modes[debugMode];
+            // The log's own annotation for the slot, where it carries one.
+            const logged = resolveDebugField(fieldName, ctx);
+            if (logged) {
+                return logged.label;
+            }
+
+            const fieldNames = getDebugFieldNames(ctx.apiVersion);
+            const debugModeName = ctx.modeName;
             let debugFields;
 
             if (debugModeName) {
@@ -536,9 +541,9 @@ FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, debugMode, ap
 
             if (!debugFields) {
                 if (fieldName === "debug[all]") {
-                    return `Debug (${debugModeName || debugMode})`;
+                    return `Debug (${debugModeName || ctx.modeIndex})`;
                 }
-                debugFields = fieldNames[modes[0]];
+                debugFields = fieldNames[getDebugModes(ctx.apiVersion)[0]];
             }
 
             return debugFields[fieldName] ?? fieldName;
@@ -761,7 +766,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
         return value;
     }
     return sharedConvertDebugFieldValue(
-        debugModeNameForLog(flightLog),
+        debugContextForLog(flightLog).modeName,
         fieldName,
         toFriendly,
         value,

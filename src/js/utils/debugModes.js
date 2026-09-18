@@ -1,7 +1,7 @@
 import semver from "semver";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
-import { FIRMWARE_DEBUG_FIELDS } from "../debug_fields_table";
+import { FIRMWARE_DEBUG_ENUMS, FIRMWARE_DEBUG_FIELDS } from "../debug_fields_table";
 import { DEBUG_UNITS } from "../debug_units";
 
 /*
@@ -106,6 +106,119 @@ function resolveFieldsVersion(apiVersion) {
 }
 
 /**
+ * Enumerator names of a firmware enum a log names by type, or undefined when this
+ * version of the app has never seen that enum.
+ *
+ * Keyed by the guessed API version, which is the one soft link left: a log names
+ * the type and the firmware does not log the names. An enum's names are far more
+ * stable than `debug_mode_e`'s ordering though, so the worst case is one
+ * unnamed enumerator rather than every field relabelled.
+ *
+ * @param {string} [enumTag]
+ * @param {string} [apiVersion]
+ * @returns {readonly (string|null)[]|undefined}
+ */
+function enumValues(enumTag, apiVersion) {
+    if (!enumTag) {
+        return undefined;
+    }
+    const version = resolveFieldsVersion(apiVersion);
+    return version === undefined ? undefined : FIRMWARE_DEBUG_ENUMS[version]?.[enumTag];
+}
+
+/**
+ * What a log says about its own debug fields.
+ *
+ * `debug_mode` is a bare index into an enum the app can only guess at, so a log
+ * from firmware this build has not seen mislabels every field. Firmware from
+ * 2026.12 on records the mode's own name and, where it has the flash for it, one
+ * annotation per slot. Both are preferred here over anything generated, because
+ * they came from the firmware that wrote the data.
+ *
+ * @param {object} [sysConfig] - a parsed log header.
+ * @returns {{apiVersion: string, modeIndex: number, modeName: string|undefined,
+ *            tableName: string|undefined, modeNameSource: string,
+ *            headerFields: object|undefined}}
+ */
+const DEBUG_CONTEXTS = new WeakMap();
+
+export function debugContextFromSysConfig(sysConfig) {
+    const memoised = sysConfig === undefined || sysConfig === null ? undefined : DEBUG_CONTEXTS.get(sysConfig);
+    if (memoised !== undefined) {
+        return memoised;
+    }
+
+    const context = buildDebugContext(sysConfig);
+    if (sysConfig !== undefined && sysConfig !== null) {
+        // The parser builds a fresh sysConfig per log, so this cannot outlive one.
+        DEBUG_CONTEXTS.set(sysConfig, context);
+    }
+    return context;
+}
+
+function buildDebugContext(sysConfig) {
+    const apiVersion = sysConfig?.apiVersion;
+    const modeIndex = sysConfig?.debug_mode;
+    const tableName = getDebugModes(apiVersion)[modeIndex];
+    const loggedName = sysConfig?.debug_mode_name ?? undefined;
+
+    return {
+        apiVersion,
+        modeIndex,
+        modeName: loggedName ?? tableName,
+        tableName,
+        modeNameSource: loggedName === undefined ? "table" : "header",
+        headerFields: sysConfig?.debugFields ?? undefined,
+    };
+}
+
+/*
+ * The callers below take a scope rather than a mode name and an API version, so
+ * that a log's own header travels with them. `decodeDebugFieldToFriendly` and
+ * `convertDebugFieldValue` are also called from the configurator, where there is
+ * no log at all and the mode name is passed positionally, so a scope is built
+ * from whichever of the two the caller has.
+ */
+function debugScope(ctx, fallbackModeName) {
+    return {
+        apiVersion: ctx?.apiVersion,
+        modeName: ctx?.modeName ?? fallbackModeName,
+        headerFields: ctx?.headerFields,
+    };
+}
+
+/**
+ * What one `debug[n]` holds: the log's own annotation for the slot when it
+ * carries one, otherwise the generated table for the resolved mode name.
+ *
+ * Resolution is per slot, not per log. A firmware built for a 512 kB target logs
+ * the mode name but no annotations, and a mode annotates only the slots it
+ * writes, so "some header lines present" never means "the header is complete".
+ *
+ * @param {string} fieldName - e.g. "debug[3]".
+ * @param {object} [scope] - from `debugContextFromSysConfig` or `debugScope`.
+ * @returns {{label: string, unit: string|null, scale: number}|undefined}
+ */
+export function resolveDebugField(fieldName, scope) {
+    const index = /^debug\[([0-7])\]$/.exec(fieldName)?.[1];
+    if (index === undefined) {
+        return undefined;
+    }
+
+    const logged = scope?.headerFields?.[index];
+    if (logged) {
+        // An enumerator field names its C type and stops there; the names are
+        // resolved separately, and stay absent when the app does not have them
+        // rather than being borrowed from a different enum.
+        return logged.enumTag === undefined
+            ? logged
+            : { ...logged, values: enumValues(logged.enumTag, scope.apiVersion) };
+    }
+
+    return generatedField(scope?.modeName, fieldName, scope?.apiVersion);
+}
+
+/**
  * The firmware annotation for one field: `{ label, unit, scale }`, or undefined
  * when this firmware does not annotate it.
  *
@@ -140,24 +253,36 @@ function generatedField(debugModeName, fieldName, apiVersion) {
  * A field with no unit is never grouped: a 0/1 flag sharing an axis with a 16-bit
  * word would be a flat line at the bottom of it.
  *
- * @param {string} [debugModeName]
  * @param {string} fieldName - e.g. "debug[3]".
- * @param {string} [apiVersion]
+ * @param {object} [scope]
  * @returns {string[]}
  */
-function generatedFieldGroup(debugModeName, fieldName, apiVersion) {
-    const field = generatedField(debugModeName, fieldName, apiVersion);
+function generatedFieldGroup(fieldName, scope) {
+    const field = resolveDebugField(fieldName, scope);
     if (field?.unit == null) {
         return [fieldName];
     }
 
-    const version = resolveFieldsVersion(apiVersion);
-    const modes = FIRMWARE_DEBUG_FIELDS[version];
-    const mode = modeNameCandidates(debugModeName).find((candidate) => modes[candidate] !== undefined);
+    // A log that describes its own fields describes the whole set it writes, so
+    // its header is the peer group; otherwise the generated mode entry is.
+    const peers = scope?.headerFields ?? generatedModeFields(scope);
+    if (peers === undefined) {
+        return [fieldName];
+    }
 
-    return Object.entries(modes[mode])
+    return Object.entries(peers)
         .filter(([, other]) => other.unit === field.unit && other.scale === field.scale)
         .map(([index]) => `debug[${index}]`);
+}
+
+/* The generated entry for the resolved mode, or undefined when there is none. */
+function generatedModeFields(scope) {
+    const modes = FIRMWARE_DEBUG_FIELDS[resolveFieldsVersion(scope?.apiVersion)];
+    if (modes === undefined) {
+        return undefined;
+    }
+    const mode = modeNameCandidates(scope?.modeName).find((candidate) => modes[candidate] !== undefined);
+    return mode === undefined ? undefined : modes[mode];
 }
 
 /**
@@ -174,13 +299,12 @@ function generatedFieldGroup(debugModeName, fieldName, apiVersion) {
  *   `{ fit }`      - the logged data should decide, over these field names
  *                    together, which is the common case.
  *
- * @param {string} [debugModeName]
  * @param {string} fieldName - e.g. "debug[3]".
- * @param {string} [apiVersion]
+ * @param {object} [scope]
  * @returns {{range?: {min: number, max: number}, dynamic?: string, fit?: string[]}|undefined}
  */
-export function getDebugFieldAxis(debugModeName, fieldName, apiVersion) {
-    const field = generatedField(debugModeName, fieldName, apiVersion);
+export function getDebugFieldAxis(fieldName, scope) {
+    const field = resolveDebugField(fieldName, scope);
     if (!field) {
         return undefined;
     }
@@ -200,7 +324,7 @@ export function getDebugFieldAxis(debugModeName, fieldName, apiVersion) {
         return { range: unitRange };
     }
 
-    return { fit: generatedFieldGroup(debugModeName, fieldName, apiVersion) };
+    return { fit: generatedFieldGroup(fieldName, scope) };
 }
 
 /*
@@ -247,14 +371,13 @@ function defaultDecimals(multiplier) {
  * field is not annotated. A field holding an enumerator carries `values` instead
  * of a scaling: the firmware's own enumerator names, indexed by value.
  *
- * @param {string} [debugModeName]
  * @param {string} fieldName
- * @param {string} [apiVersion]
+ * @param {object} [scope]
  * @returns {{suffix: string, decimals: number, toDisplay: (v:number, ctx:object)=>number,
  *            toRaw: (v:number, ctx:object)=>number}|undefined}
  */
-function generatedScaling(debugModeName, fieldName, apiVersion) {
-    const field = generatedField(debugModeName, fieldName, apiVersion);
+function generatedScaling(fieldName, scope) {
+    const field = resolveDebugField(fieldName, scope);
     if (!field) {
         return undefined;
     }
@@ -2066,7 +2189,8 @@ DEBUG_DECODE.BARO = DEBUG_DECODE.NONE;
  * @returns {string}
  */
 export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx) {
-    const scaling = generatedScaling(debugModeName, fieldName, ctx?.apiVersion);
+    const scope = debugScope(ctx, debugModeName);
+    const scaling = generatedScaling(fieldName, scope);
     if (scaling) {
         if (scaling.values) {
             return scaling.values[value] ?? value.toFixed(0);
@@ -2078,7 +2202,7 @@ export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx)
         return scaling.suffix === "" ? scaled : `${scaled} ${scaling.suffix}`;
     }
 
-    const entry = lookupByModeName(DEBUG_DECODE, debugModeName);
+    const entry = lookupByModeName(DEBUG_DECODE, scope.modeName);
     if (entry === undefined) {
         return value.toFixed(0);
     }
@@ -2427,12 +2551,13 @@ DEBUG_CONVERT.BARO = DEBUG_CONVERT.NONE;
  * @returns {number}
  */
 export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, value, ctx) {
-    const scaling = generatedScaling(debugModeName, fieldName, ctx?.apiVersion);
+    const scope = debugScope(ctx, debugModeName);
+    const scaling = generatedScaling(fieldName, scope);
     if (scaling) {
         return toFriendly ? scaling.toDisplay(value, ctx) : scaling.toRaw(value, ctx);
     }
 
-    const entry = lookupByModeName(DEBUG_CONVERT, debugModeName);
+    const entry = lookupByModeName(DEBUG_CONVERT, scope.modeName);
     if (entry === undefined) {
         return value;
     }
