@@ -1,4 +1,5 @@
 import semver from "semver";
+import { DEBUG_VALUE_COUNT, isDebugAnnotationError, parseDebugFieldHeader } from "../js/debug_annotation.ts";
 import {
     adjustFieldDefsList,
     FlightLogEvent,
@@ -368,6 +369,10 @@ export function FlightLogParser(logData) {
         gyro_soft_type: null, // Gyro soft filter type (PT1, BIQUAD, PT2, PT3)
         gyro_soft2_type: null, // Gyro soft filter 2 type (PT1, BIQUAD, PT2, PT3)
         debug_mode: null, // Selected Debug Mode
+        debug_mode_name: null, // The firmware's own name for it, when the log carries one
+        debugFields: null, // { [0..7]: DebugFieldAnnotation } from the log's own header
+        debugFieldsRaw: null, // { [0..7]: string } exactly as logged
+        debugFieldProblems: null, // [{ index, raw, error }] for a header that would not parse
         features: null, // Activated features (e.g. MOTORSTOP etc)
         Craft_name: null, // Craft Name
         motorOutput: [null, null], // Minimum and maximum outputs to motor's
@@ -446,7 +451,7 @@ export function FlightLogParser(logData) {
         chirp_frequency_start_deci_hz: null,
         chirp_frequency_end_deci_hz: null,
         chirp_time_seconds: null,
-        unknownHeaders: [], // Unknown Extra Headers
+        unknownHeaders: null, // Unknown Extra Headers
     };
     // Translation of the field values name to the sysConfig var where it must be stored
     // on the left are field names from the latest versions of blackbox.c
@@ -1071,6 +1076,37 @@ export function FlightLogParser(logData) {
     HEADER_HANDLERS["DeviceUID"] = (_fn, fv) => {
         this.sysConfig.deviceUID = fv;
     };
+
+    /*
+     * What the firmware says its own debug fields mean.
+     *
+     * Without these the mode is a bare integer and the app has to index its
+     * generated table by an API version guessed from the revision string, so
+     * firmware the app has not seen mislabels every field. A name and a
+     * per-slot annotation make the log answer for itself.
+     */
+    const DEBUG_MODE_NAME = /^[A-Z][A-Z0-9_]*$/;
+    HEADER_HANDLERS["debug_mode_name"] = (_fn, fv) => {
+        // Validated rather than stored as-is: this name keys every label, decode
+        // and axis lookup, so a garbled value must not become one of them.
+        const name = fv.trim();
+        this.sysConfig.debug_mode_name = DEBUG_MODE_NAME.test(name) ? name : null;
+    };
+
+    const debugFieldHandler = (fn, fv) => {
+        const index = Number(fn.slice("debug_field[".length, -1));
+        (this.sysConfig.debugFieldsRaw ??= {})[index] = fv;
+
+        const parsed = parseDebugFieldHeader(fv);
+        if (isDebugAnnotationError(parsed)) {
+            (this.sysConfig.debugFieldProblems ??= []).push({ index, raw: fv, error: parsed.error });
+            return;
+        }
+        (this.sysConfig.debugFields ??= {})[index] = parsed;
+    };
+    for (let index = 0; index < DEBUG_VALUE_COUNT; index++) {
+        HEADER_HANDLERS[`debug_field[${index}]`] = debugFieldHandler;
+    }
 
     const parseHeaderLine = () => {
         const COLON = ":".codePointAt(0);
