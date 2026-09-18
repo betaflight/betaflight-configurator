@@ -1095,14 +1095,19 @@ export function FlightLogParser(logData) {
 
     const debugFieldHandler = (fn, fv) => {
         const index = Number(fn.slice("debug_field[".length, -1));
-        (this.sysConfig.debugFieldsRaw ??= {})[index] = fv;
+
+        this.sysConfig.debugFieldsRaw ??= {};
+        this.sysConfig.debugFieldsRaw[index] = fv;
 
         const parsed = parseDebugFieldHeader(fv);
         if (isDebugAnnotationError(parsed)) {
-            (this.sysConfig.debugFieldProblems ??= []).push({ index, raw: fv, error: parsed.error });
+            this.sysConfig.debugFieldProblems ??= [];
+            this.sysConfig.debugFieldProblems.push({ index, raw: fv, error: parsed.error });
             return;
         }
-        (this.sysConfig.debugFields ??= {})[index] = parsed;
+
+        this.sysConfig.debugFields ??= {};
+        this.sysConfig.debugFields[index] = parsed;
     };
     for (let index = 0; index < DEBUG_VALUE_COUNT; index++) {
         HEADER_HANDLERS[`debug_field[${index}]`] = debugFieldHandler;

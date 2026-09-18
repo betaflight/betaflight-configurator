@@ -1521,6 +1521,7 @@ function renderConflict(conflict) {
             `                scale: ${variant.scale},`,
             // Two meanings can differ by their enum or their flag names alone, so
             // both are part of what distinguishes them and belong in the report.
+            ...(variant.enumTag === undefined ? [] : [`                enumTag: ${quote(variant.enumTag)},`]),
             ...(variant.values === undefined ? [] : renderFrozenList("                ", "values", variant.values)),
             ...(variant.flags === undefined ? [] : renderFrozenList("                ", "flags", variant.flags)),
             ...renderFrozenList("                ", "sites", variant.sites),

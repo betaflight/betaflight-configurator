@@ -522,32 +522,32 @@ FlightLogFieldPresenter.decodeDebugFieldToFriendly = function (flightLog, fieldN
     );
 };
 
+/* What to call one debug[n] under the mode the log was recorded in. */
+function debugFieldLabel(fieldName, ctx) {
+    // The log's own annotation for the slot, where it carries one.
+    const logged = resolveDebugField(fieldName, ctx);
+    if (logged) {
+        return logged.label;
+    }
+
+    const fieldNames = getDebugFieldNames(ctx.apiVersion);
+    const debugFields = ctx.modeName ? fieldNames[ctx.modeName] : undefined;
+    if (debugFields) {
+        return debugFields[fieldName] ?? fieldName;
+    }
+    if (fieldName === "debug[all]") {
+        return `Debug (${ctx.modeName || ctx.modeIndex})`;
+    }
+
+    // A mode with no table of its own still has the NONE names to fall back on.
+    return fieldNames[getDebugModes(ctx.apiVersion)[0]][fieldName] ?? fieldName;
+}
+
 FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, ctx) {
-    if (ctx?.modeIndex) {
-        if (fieldName.includes("debug")) {
-            // The log's own annotation for the slot, where it carries one.
-            const logged = resolveDebugField(fieldName, ctx);
-            if (logged) {
-                return logged.label;
-            }
-
-            const fieldNames = getDebugFieldNames(ctx.apiVersion);
-            const debugModeName = ctx.modeName;
-            let debugFields;
-
-            if (debugModeName) {
-                debugFields = fieldNames[debugModeName];
-            }
-
-            if (!debugFields) {
-                if (fieldName === "debug[all]") {
-                    return `Debug (${debugModeName || ctx.modeIndex})`;
-                }
-                debugFields = fieldNames[getDebugModes(ctx.apiVersion)[0]];
-            }
-
-            return debugFields[fieldName] ?? fieldName;
-        }
+    // Mode 0 is NONE, which has names of its own, so the index is compared
+    // against null rather than tested for truth.
+    if (ctx?.modeIndex != null && fieldName.includes("debug")) {
+        return debugFieldLabel(fieldName, ctx);
     }
     if (FRIENDLY_FIELD_NAMES[fieldName]) {
         return FRIENDLY_FIELD_NAMES[fieldName];

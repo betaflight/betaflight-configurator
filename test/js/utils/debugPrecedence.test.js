@@ -8,6 +8,7 @@ import {
     resolveDebugField,
 } from "../../../src/js/utils/debugModes";
 import { API_VERSION_1_46, API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage";
+import { FlightLogFieldPresenter } from "../../../src/blackbox-viewer/flightlog_fields_presenter.js";
 
 /*
  * Which source wins when the log and the app's tables disagree.
@@ -186,5 +187,51 @@ describe("a log with none of the new headers", () => {
 
         expect(resolveDebugField("debug[0]", context)).toBeUndefined();
         expect(getDebugFieldAxis("debug[0]", context)).toBeUndefined();
+    });
+});
+
+describe("a sparse header", () => {
+    /*
+     * A mode annotates only the slots it writes, so a log's header is routinely
+     * partial. The peer set a group is drawn from has to be the generated entry
+     * overlaid with the header, not the header alone, or the field being graphed
+     * drops out of its own group and the axis has nothing to fit to.
+     */
+    it("keeps the graphed field in its own group", () => {
+        const context = ctx({
+            debug_mode: 1,
+            debug_mode_name: "FFT_FREQ",
+            debugFields: { 0: { label: "Logged Slot", unit: "dps", scale: 1 } },
+        });
+
+        // Slot 0 is the only logged one; slots 1 to 6 are Hz in the generated table.
+        const axis = getDebugFieldAxis("debug[1]", context);
+
+        expect(axis.fit).toContain("debug[1]");
+        expect(axis.fit).not.toContain("debug[0]");
+    });
+
+    it("still prefers the logged slot for its own group", () => {
+        const context = ctx({
+            debug_mode: 1,
+            debug_mode_name: "FFT_FREQ",
+            debugFields: { 0: { label: "Logged Slot", unit: "dps", scale: 1 } },
+        });
+
+        expect(getDebugFieldAxis("debug[0]", context).fit).toEqual(["debug[0]"]);
+    });
+});
+
+describe("mode NONE", () => {
+    /*
+     * debug_mode is an array index, so 0 is a real mode with names of its own.
+     * Testing the index for truth rather than against null dropped every label
+     * in it back to the raw field name.
+     */
+    it("names its fields rather than falling back to the raw name", () => {
+        const context = ctx({ debug_mode: 0 });
+
+        expect(context.modeName).toBe("NONE");
+        expect(FlightLogFieldPresenter.fieldNameToFriendly("debug[0]", context)).toBe("Debug [0]");
     });
 });

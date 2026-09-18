@@ -263,12 +263,14 @@ function generatedFieldGroup(fieldName, scope) {
         return [fieldName];
     }
 
-    // A log that describes its own fields describes the whole set it writes, so
-    // its header is the peer group; otherwise the generated mode entry is.
-    const peers = scope?.headerFields ?? generatedModeFields(scope);
-    if (peers === undefined) {
-        return [fieldName];
-    }
+    /*
+     * Resolution is per slot, so the peer set has to be too: the generated entry
+     * overlaid with whatever the log described, which is the same precedence
+     * resolveDebugField applies. Taking the header alone would drop the graphed
+     * field itself out of its own group whenever the header is sparse, because a
+     * mode annotates only the slots it writes.
+     */
+    const peers = { ...generatedModeFields(scope), ...scope?.headerFields };
 
     return Object.entries(peers)
         .filter(([, other]) => other.unit === field.unit && other.scale === field.scale)

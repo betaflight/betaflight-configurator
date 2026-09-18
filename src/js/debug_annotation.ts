@@ -118,7 +118,7 @@ function parseShapeSpec(key: string, raw: string): DebugFieldShape | undefined {
 }
 
 function parseEnumShape(raw: string): DebugFieldShape | undefined {
-    const type = raw.trim().match(/^[A-Za-z_]\w*$/);
+    const type = /^[A-Za-z_]\w*$/.exec(raw.trim());
     // The field holds an enumerator, not a quantity: no unit scales it, and the
     // names come from the firmware's own enum.
     return type === null ? undefined : { unit: null, scale: 1, enumTag: type[0] };
@@ -163,7 +163,7 @@ function parseUnitShape(raw: string): DebugFieldShape | undefined {
  * when the group and the indices do not describe the same thing.
  */
 function expandLabel(label: string, indices: number[] | null): { labels: string[] | null } | DebugAnnotationError {
-    const expansion = label.match(EXPANSION);
+    const expansion = EXPANSION.exec(label);
     // Every brace has to belong to that one group, or the expansion would leave
     // some of them in the label it produces.
     const braces = label.match(BRACE)?.length ?? 0;
@@ -178,7 +178,7 @@ function expandLabel(label: string, indices: number[] | null): { labels: string[
     if (alternatives.some((alternative) => alternative.trim() === "")) {
         return { error: `"{${expansion[1]}}" has an empty alternative` };
     }
-    if (indices === null || alternatives.length !== indices.length) {
+    if (alternatives.length !== indices?.length) {
         const covered = indices === null ? "one implicit index" : `${indices.length} indices`;
         return {
             error: `"{${expansion[1]}}" spells out ${alternatives.length} labels, but the annotation covers ${covered}`,
@@ -197,7 +197,7 @@ function expandLabel(label: string, indices: number[] | null): { labels: string[
 
 /* The index spec, if the annotation opens with one, and the text after it. */
 function takeIndexSpec(raw: string): { indices: number[] | null; rest: string } | DebugAnnotationError {
-    const match = raw.match(INDEX_SPEC);
+    const match = INDEX_SPEC.exec(raw);
     if (!match) {
         return { indices: null, rest: raw };
     }
@@ -210,7 +210,7 @@ function takeIndexSpec(raw: string): { indices: number[] | null; rest: string } 
 
 /* The shape bracket, if the annotation ends with one, and the text before it. */
 function takeShapeSpec(raw: string): { shape: DebugFieldShape; rest: string } | DebugAnnotationError {
-    const match = raw.match(SHAPE_SPEC);
+    const match = SHAPE_SPEC.exec(raw);
     if (!match) {
         // Before the shapes were keyed, a bare `[us]` meant a unit. Refusing it
         // keeps one way to write an annotation, rather than two that drift.
