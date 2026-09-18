@@ -35,14 +35,17 @@
                 @dragstart="onDragStart($event, gi)"
                 @dragend="onDragEnd"
             >
-                <h3
-                    class="graph-legend-group"
-                    @click="onGraphClick($event, gi)"
-                    @mousedown.middle.prevent="onResetPen(gi, null)"
-                    @wheel="onFieldWheel($event, gi, null)"
-                >
-                    <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
-                    {{ graph.label }}
+                <h3 class="graph-legend-group">
+                    <button
+                        type="button"
+                        class="block w-full text-start bg-transparent border-0 p-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-1"
+                        @click="onGraphClick($event, gi)"
+                        @mousedown.middle.prevent="onResetPen(gi, null)"
+                        @wheel="onFieldWheel($event, gi, null)"
+                    >
+                        <UIcon name="i-lucide-trash-2" class="size-3.5 mr-1 inline-block align-middle" />
+                        {{ graph.label }}
+                    </button>
                 </h3>
 
                 <ul class="list-none pl-0 graph-legend-field-list">

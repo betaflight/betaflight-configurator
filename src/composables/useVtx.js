@@ -507,6 +507,7 @@ export function useVtx() {
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
             `.${suffix}`,
+            "vtx-file",
         )
             .then((file) => {
                 const vtxJsonConfig = createVtxConfigInfo();
@@ -533,6 +534,7 @@ export function useVtx() {
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
             `.${suffix}`,
+            "vtx-file",
         )
             .then((file) => {
                 const vtxJsonConfig = createVtxConfigInfo();
@@ -553,6 +555,7 @@ export function useVtx() {
             const file = await FileSystem.pickOpenFile(
                 i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
                 `.${suffix}`,
+                "vtx-file",
             );
             console.log("Reading VTX config from:", file.name);
             const text = await FileSystem.readFile(file);

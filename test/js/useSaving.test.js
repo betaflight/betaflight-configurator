@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useSaving, withSaveFailureMessage } from "../../src/composables/useSaving";
-import { MspCancelledError } from "../../src/js/msp/mspErrors.js";
+import { MspCancelledError } from "../../src/js/msp/mspErrors";
 import { gui_log } from "../../src/js/gui_log.js";
 
 vi.mock("../../src/js/gui_log.js", () => ({ gui_log: vi.fn() }));

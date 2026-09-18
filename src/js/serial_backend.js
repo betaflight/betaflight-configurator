@@ -31,7 +31,7 @@ import { unmountVueTab } from "./vue_tab_mounter";
 import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
-import { isMspCancelled } from "./msp/mspErrors.js";
+import { isMspCancelled } from "./msp/mspErrors";
 
 const logHead = "[SERIAL-BACKEND]";
 

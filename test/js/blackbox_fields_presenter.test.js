@@ -73,4 +73,25 @@ describe("presentFlags", () => {
             "ARM|FLIPOVERAFTERCRASH",
         );
     });
+
+    // 4.0 dropped BARO, GPSHOME and GPSHOLD from boxId_e, which pulls BOXPARALYZE
+    // down to boxId 31 for the whole 4.0-4.5 range. PARALYZE is a sticky mode
+    // (rc_modes.c puts it in stickyModes), so once the switch fires the bit latches
+    // until the next power cycle and the mode field carries it for the rest of the log.
+    it("names the real 4.0 bit 31 alongside ARM", () => {
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "4.0.0");
+        expect(FlightLogFieldPresenter.presentFlags(0x80000001, FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe("ARM|PARALYZE");
+    });
+
+    it("names the real 4.5 bit 31 alongside ARM", () => {
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "4.5.0");
+        expect(FlightLogFieldPresenter.presentFlags(0x80000001, FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe("ARM|PARALYZE");
+    });
+
+    // On 3.5 PARALYZE sits past boxId 31, outside the 32-bit field, so naming it
+    // must not disturb what bit 31 resolves to there.
+    it("leaves the 3.5 bit 31 as PREARM", () => {
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "3.5.0");
+        expect(FlightLogFieldPresenter.presentFlags(0x80000001, FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe("ARM|PREARM");
+    });
 });

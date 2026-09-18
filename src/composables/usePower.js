@@ -10,7 +10,7 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
-import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { isMspCancelled } from "../js/msp/mspErrors";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 

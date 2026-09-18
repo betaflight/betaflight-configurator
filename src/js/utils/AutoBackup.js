@@ -163,6 +163,7 @@ class AutoBackup {
                 filename,
                 i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
                 `.${suffix}`,
+                "auto-backup-file",
             );
 
             if (file) {
