@@ -244,7 +244,7 @@
 
                         <!-- Video Format (MAX7456 only) -->
                         <UiBox
-                            v-if="osdStore.state.haveMax7456Configured || osdStore.state.isMspDevice"
+                            v-if="osdStore.state.haveMax7456Configured || osdStore.state.haveFbOsdConfigured || osdStore.state.isMspDevice"
                             :title="$t('osdSetupVideoFormatTitle')"
                             type="neutral"
                             collapsible

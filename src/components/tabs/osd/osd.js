@@ -1931,10 +1931,9 @@ OSD.msp = {
         d.state = {};
         d.state.haveSomeOsd = d.flags !== 0;
         d.state.haveFbOsdConfigured = bit_check(d.flags, 2);
-        // FB_OSD (framebuffer OSD on RP2350) is treated as MAX7456 for now; behaviour will be differentiated later.
         d.state.haveMax7456Configured = bit_check(d.flags, 4) || d.state.haveFbOsdConfigured;
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
-        d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
+        d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveFbOsdConfigured;
         d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
