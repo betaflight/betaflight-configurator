@@ -1,8 +1,16 @@
 <template>
     <UTooltip :delayDuration="0" arrow :content="{ side: tooltipSide }">
-        <div class="p-0.5 rounded-full hover:bg-neutral-100/30 cursor-pointer duration-100 w-fit">
+        <UButton
+            type="button"
+            variant="ghost"
+            color="neutral"
+            :aria-label="$t('helpIconLabel')"
+            class="p-0.5 rounded-full hover:bg-neutral-100/30 duration-100 w-fit"
+            @click.stop
+            @keydown.enter.space.stop
+        >
             <UIcon name="i-lucide-circle-question-mark" class="size-4" />
-        </div>
+        </UButton>
         <template #content>
             <div v-html="text"></div>
         </template>

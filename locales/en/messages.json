@@ -498,6 +498,10 @@
     "tabOptions": {
         "message": "Options"
     },
+    "helpIconLabel": {
+        "message": "Show help",
+        "description": "Accessible label for the question-mark buttons that show help for a setting."
+    },
     "sidebarOpenOptions": {
         "message": "Options",
         "description": "Tooltip for the options icon button in the sidebar footer."
