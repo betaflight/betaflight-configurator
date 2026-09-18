@@ -4,7 +4,7 @@ import {
     uint8ArrayToBase64,
     hexStringToUint8Array,
     uint8ArrayToHexString,
-} from "../../src/js/utils/bytes.js";
+} from "../../src/js/utils/bytes";
 
 describe("bytes base64 helpers", () => {
     it("round-trips a representative byte array including 0 and 255", () => {
