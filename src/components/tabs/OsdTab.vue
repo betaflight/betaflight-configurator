@@ -509,6 +509,7 @@
                                 v-model="selectedFontPreset"
                                 :items="fontPresetSelectItems"
                                 :portal="false"
+                                :ui="{ content: 'z-10' }"
                                 size="xs"
                                 class="min-w-40"
                             />
@@ -824,7 +825,8 @@ const isFbOsdSmallFont = computed(() => Boolean(osdStore.state.haveFbOsdConfigur
 // Fonts flagged fbOsdSmallFont in FONT_TYPES are only usable in FB_OSD small font mode,
 // and the standard fonts are only usable outside it.
 function isFontUsable(font) {
-    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
+//    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
+    return Boolean(font); // TODO For testing, make all fonts available always (TBD)
 }
 
 function firstUsableFontIndex() {
