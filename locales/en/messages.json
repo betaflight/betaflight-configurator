@@ -2260,6 +2260,10 @@
     "gpsSerialPortSaveFailed": {
         "message": "Could not set the GPS serial port, so nothing was saved."
     },
+    "gpsProtocolUnknown": {
+        "message": "Unknown ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
     "dronecanCanDevice": {
         "message": "CAN Bus"
     },

@@ -412,9 +412,21 @@ export default defineComponent({
             }
         };
 
-        const gpsProtocolItems = computed(() =>
-            gpsProtocols.value.map((protocol, idx) => ({ label: protocol, value: idx })),
-        );
+        // The FC can hold a provider index this list does not cover: a board configured for
+        // DRONECAN whose probe failed, or firmware offering a provider this build predates.
+        // Without an entry the select falls back to rendering the bare number, which reads as a
+        // bug rather than as a state. Name it instead, and leave it selectable so switching away
+        // behaves like any other choice.
+        const gpsProtocolItems = computed(() => {
+            const items = gpsProtocols.value.map((protocol, idx) => ({ label: protocol, value: idx }));
+            const provider = gpsConfig.provider;
+
+            if (Number.isInteger(provider) && !items.some((item) => item.value === provider)) {
+                items.push({ label: i18n.getMessage("gpsProtocolUnknown", [provider]), value: provider });
+            }
+
+            return items;
+        });
 
         const gpsSbasItems = computed(() => gpsSbas.map((sbas, index) => ({ label: sbas, value: index })));
 
