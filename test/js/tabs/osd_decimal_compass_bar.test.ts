@@ -36,6 +36,40 @@ function selectFields(apiVersion: string) {
     return OSD.constants.DISPLAY_FIELDS.map((field: { name: string }) => field.name);
 }
 
+function decodePositions(positions: number[]) {
+    const bytes = [1, 1, 1, 20, 0x98, 0x08, 0, positions.length, 100, 0];
+    for (const position of positions) {
+        bytes.push(position & 0xff, position >> 8);
+    }
+    const statsCount = OSD.constants.STATISTIC_FIELDS.length;
+    bytes.push(statsCount, ...Array(statsCount).fill(0));
+    bytes.push(2, 0, 0, 1, 0); // Two timers.
+    bytes.push(0, 0, 0, 0, 0, 0, 0); // Obsolete warning flags, count and current flags.
+    bytes.push(3, 1, 0, 24, 11); // Profiles, overlay and camera frame.
+    bytes.push(75, 0, 0x9c, 0xff); // Link quality and signed RSSI alarms.
+    const data = new DataView(Uint8Array.from(bytes).buffer);
+    OSD.msp.decode({ data, length: data.byteLength });
+}
+
+const firmwareLayouts = [
+    { buildOptions: [], decimalWithoutPitot: 88 },
+    { buildOptions: ["USE_POSITION_HOLD"], decimalWithoutPitot: 89 },
+    {
+        buildOptions: ["USE_GPS", "USE_FLIGHT_PLAN", "USE_OSD_HD", "USE_POSITION_HOLD"],
+        decimalWithoutPitot: 98,
+    },
+    {
+        buildOptions: ["USE_GPS", "USE_FLIGHT_PLAN", "USE_WING", "USE_POSITION_HOLD"],
+        decimalWithoutPitot: 97,
+    },
+].flatMap(({ buildOptions, decimalWithoutPitot }) =>
+    [false, true].map((hasPitot) => ({
+        buildOptions,
+        hasPitot,
+        decimalIndex: decimalWithoutPitot + Number(hasPitot),
+    })),
+);
+
 describe("OSD decimal compass bar", () => {
     afterEach(() => vi.restoreAllMocks());
 
@@ -87,43 +121,67 @@ describe("OSD decimal compass bar", () => {
         ]);
     });
 
-    it("does not expose an appended element absent from the firmware response", () => {
+    it("does not manufacture elements beyond the firmware response", () => {
         selectFields("1.49.0");
-        OSD.msp.processOsdElements(OSD.data, Array(89).fill(0));
-        expect(OSD.data.displayItems).toHaveLength(89);
+        decodePositions(Array(88).fill(0));
+        expect(OSD.data.displayItems).toHaveLength(88);
         expect(OSD.data.displayItems.some((item: { name: string }) => item.name === "DECIMAL_COMPASS_BAR")).toBe(false);
     });
 
-    it("decodes and saves the decimal bar independently of the original compass", async () => {
+    it("reselects the layout when responses switch between pitot and no pitot", () => {
         selectFields("1.49.0");
-        const positions = Array(90).fill(0);
-        positions[34] = 0x0801;
-        positions[89] = 0x2825;
-        OSD.msp.processOsdElements(OSD.data, positions);
-
-        const compass = OSD.data.displayItems[34];
-        const decimal = OSD.data.displayItems[89];
-        expect(compass).toMatchObject({ name: "COMPASS_BAR", position: 1, isVisible: [true, false, false] });
-        expect(decimal).toMatchObject({
-            name: "DECIMAL_COMPASS_BAR",
-            position: 35,
-            isVisible: [true, false, true],
-            variant: 0,
-        });
-
-        const store = useOsdStore();
-        store.osdProfiles.number = 3;
-        store.videoSystem = 1;
-        store.updateDisplaySize();
-        store.displayItems = [compass, decimal];
-        const send = vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
-        await store.saveAllConfig();
-        expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [89, 0x25, 0x28]);
-
-        send.mockClear();
-        decimal.position = 67;
-        await store.saveAllConfig();
-        expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [89, 0x47, 0x28]);
-        expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [34, 1, 8]);
+        for (const decimalIndex of [88, 89, 88]) {
+            decodePositions(Array(decimalIndex + 1).fill(0));
+            expect(OSD.data.displayItems[decimalIndex].name).toBe("DECIMAL_COMPASS_BAR");
+            expect(OSD.constants.DISPLAY_FIELDS[decimalIndex].name).toBe("DECIMAL_COMPASS_BAR");
+        }
     });
+
+    it.each(firmwareLayouts)(
+        "decodes and saves with pitot=$hasPitot and $buildOptions",
+        async ({ buildOptions, hasPitot, decimalIndex }) => {
+            FC.CONFIG.buildOptions = buildOptions;
+            selectFields("1.49.0");
+            const positions = Array(decimalIndex + 1).fill(0);
+            positions[34] = 0x0801;
+            positions[decimalIndex] = 0x2825;
+            decodePositions(positions);
+
+            const compass = OSD.data.displayItems[34];
+            const decimal = OSD.data.displayItems[decimalIndex];
+            expect(OSD.data.displayItems.some((item: { name: string }) => item.name === "PITOT_AIRSPEED")).toBe(
+                hasPitot,
+            );
+            if (hasPitot) {
+                expect(OSD.data.displayItems[decimalIndex - 1].name).toBe("PITOT_AIRSPEED");
+            }
+            expect(OSD.data.alarms.rssi_dbm.value).toBe(-100);
+            expect(compass).toMatchObject({ name: "COMPASS_BAR", position: 1, isVisible: [true, false, false] });
+            expect(decimal).toMatchObject({
+                name: "DECIMAL_COMPASS_BAR",
+                index: decimalIndex,
+                position: 35,
+                isVisible: [true, false, true],
+                variant: 0,
+            });
+            expect(decimal.preview).toBe(OSD.ALL_DISPLAY_FIELDS.DECIMAL_COMPASS_BAR.preview());
+            OSD.refreshDisplayItemPreview(OSD.data, decimal);
+            expect(decimal.preview).toBe(OSD.ALL_DISPLAY_FIELDS.DECIMAL_COMPASS_BAR.preview());
+
+            const store = useOsdStore();
+            store.osdProfiles.number = 3;
+            store.videoSystem = 1;
+            store.updateDisplaySize();
+            store.displayItems = [compass, decimal];
+            const send = vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
+            await store.saveAllConfig();
+            expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [decimalIndex, 0x25, 0x28]);
+
+            send.mockClear();
+            decimal.position = 67;
+            await store.saveAllConfig();
+            expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [decimalIndex, 0x47, 0x28]);
+            expect(send).toHaveBeenCalledWith(MSPCodes.MSP_SET_OSD_CONFIG, [34, 1, 8]);
+        },
+    );
 });
