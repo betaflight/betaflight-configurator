@@ -1,5 +1,5 @@
 import { Capacitor } from "@capacitor/core";
-import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes.js";
+import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes";
 
 const logHead = "[CAPACITORSERIAL]";
 const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
