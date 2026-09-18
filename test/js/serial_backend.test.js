@@ -211,7 +211,7 @@ vi.mock("../../src/js/bit.js", () => ({ __esModule: true, bit_check: () => false
 vi.mock("../../src/js/sensor_helpers", () => ({ __esModule: true, have_sensor: () => false }));
 vi.mock("../../src/js/utils/updateTabList", () => ({ __esModule: true, updateTabList: vi.fn() }));
 vi.mock("../../src/js/utils/applyExpertMode", () => ({ __esModule: true, applyExpertMode: vi.fn() }));
-vi.mock("../../src/js/ConfigStorage", () => ({ __esModule: true, get: () => ({}) }));
+vi.mock("../../src/js/ConfigStorage", () => ({ __esModule: true, get: () => ({}), set: vi.fn() }));
 vi.mock("../../src/js/utils/connection", () => ({ __esModule: true, ispConnected: () => false }));
 vi.mock("../../src/components/eventBus", () => ({
     __esModule: true,
@@ -225,6 +225,7 @@ import {
     reinitializeConnection,
 } from "../../src/js/serial_backend";
 import DeviceHandler from "../../src/js/device_handler";
+import { set as setConfig } from "../../src/js/ConfigStorage";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
@@ -335,6 +336,62 @@ describe("serial_backend connectDisconnect — manual target", () => {
         expect(serial.connect).toHaveBeenCalledTimes(1);
         expect(serial.connect.mock.calls[0][0]).toBe("tcp://192.168.4.1:5761");
         expect(GUI.connecting_to).toBe("tcp://192.168.4.1:5761");
+    });
+});
+
+// A shared connect link opens the manual connection it names: the address arrives as a
+// `?connect=` query parameter, is persisted as portOverride and reaches the transport through
+// the "manual" pseudo-device. This drives the whole connectFromDeeplink flow via
+// initializeSerialBackend rather than poking selectedDevice/portOverride, so a regression
+// anywhere along parse -> persist -> select "manual" -> open is caught. Once connecting, the
+// picker must stay on "manual" even as device enumeration finishes and offers a serial port —
+// a deeplink target is not one of the enumerated devices.
+describe("serial_backend connect deeplink", () => {
+    const DEEPLINK_TARGET = "tcp://192.168.4.1:5761";
+
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        resetMocks();
+        DeviceHandler.devicePicker.selectedDevice = "noselection";
+        DeviceHandler.devicePicker.portOverride = "/dev/rfcomm0";
+        // Auto-Connect on is the adverse case: a discovered serial port would auto-select and
+        // connect if the deeplink attempt did not already own the connection.
+        DeviceHandler.devicePicker.autoConnect = true;
+        // Put the target in the URL exactly as a shared link would; connectFromDeeplink reads
+        // window.location.search and then strips the parameter via history.replaceState.
+        window.history.replaceState(null, "", `/?connect=${DEEPLINK_TARGET}`);
+    });
+
+    it("connects to the deeplink target through the manual pseudo-device and holds it through device discovery", async () => {
+        initializeSerialBackend();
+
+        // Persisted so the connect UI labels it and a manual reconnect can reuse it.
+        expect(setConfig).toHaveBeenCalledWith({ portOverride: DEEPLINK_TARGET });
+        // Opened via the "manual" pseudo-device: the picker holds "manual", the address rides portOverride.
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("manual");
+        expect(DeviceHandler.devicePicker.portOverride).toBe(DEEPLINK_TARGET);
+        // The transport is opened on the deeplink address, not the picker's device path.
+        expect(serial.connect).toHaveBeenCalledTimes(1);
+        expect(serial.connect.mock.calls[0][0]).toBe(DEEPLINK_TARGET);
+        expect(GUI.connecting_to).toBe(DEEPLINK_TARGET);
+        // Single-use: the parameter must not linger to reconnect on refresh.
+        expect(window.location.search).toBe("");
+
+        // Device enumeration is asynchronous; let it settle, then deliver the auto-select event it
+        // raises when it finds a serial port. The in-flight deeplink connect (GUI.connecting_to set)
+        // must make that listener stand down instead of stealing the connection.
+        await Promise.resolve();
+        const autoSelect = EventBus.$on.mock.calls.find(
+            (c) => c[0] === "device-handler:auto-select-serial-device",
+        )?.[1];
+        expect(autoSelect).toBeTypeOf("function");
+
+        serial.connect.mockClear();
+        autoSelect();
+
+        // No competing open, and the selection is still the manual deeplink target.
+        expect(serial.connect).not.toHaveBeenCalled();
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("manual");
     });
 });
 
