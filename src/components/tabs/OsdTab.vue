@@ -816,6 +816,33 @@ const timerSources = [
 // Font types from OSD constants
 const fontTypes = computed(() => OSD_CONSTANTS.FONT_TYPES || []);
 
+// FB_OSD (framebuffer OSD) in the PICO implementation has two modes and two font types: pixel / non-pixel, and standard / small font.
+// Typically, non-pixel uses standard fonts for MAX7456 compatibility, and pixel uses a new small font type
+// *** TODO: Initially assume FB_OSD => small font type (msp work TBC) ***
+const isFbOsdSmallFont = computed(() => Boolean(osdStore.state.haveFbOsdConfigured));
+
+// Fonts flagged fbOsdSmallFont in FONT_TYPES are only usable in FB_OSD small font mode,
+// and the standard fonts are only usable outside it.
+function isFontUsable(font) {
+    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
+}
+
+function firstUsableFontIndex() {
+    return fontTypes.value.findIndex(isFontUsable);
+}
+
+// Move the font selection to a usable font if the current one is not available in this mode.
+function ensureUsableFontSelected() {
+    const current = fontTypes.value[selectedFont.value];
+    if (current && !isFontUsable(current)) {
+        const usable = firstUsableFontIndex();
+        if (usable !== -1) {
+            selectedFont.value = usable;
+            selectedFontPreset.value = usable;
+        }
+    }
+}
+
 // USelect computed items
 const profileOptions = computed(() =>
     Array.from({ length: osdStore.numberOfProfiles }, (_, i) => ({
@@ -834,7 +861,7 @@ function buildFontItems(selectedValue) {
         });
     }
     fontTypes.value.forEach((font, idx) => {
-        items.push({ value: idx, label: i18n.getMessage(font.name) });
+        items.push({ value: idx, label: i18n.getMessage(font.name), disabled: !isFontUsable(font) });
     });
     return items;
 }
@@ -1426,6 +1453,7 @@ async function loadConfig() {
                     selectedFontPreset.value = -1;
                 }
             }
+            ensureUsableFontSelected();
 
             updatePreview();
             hasLoadedConfig.value = true;
@@ -1524,7 +1552,10 @@ async function openFontManager() {
 
     // Load selected/default preset on first open if no font is loaded yet.
     if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
-        const presetToLoad = Math.max(0, selectedFontPreset.value);
+        let presetToLoad = Math.max(0, selectedFontPreset.value);
+        if (!isFontUsable(fontTypes.value[presetToLoad])) {
+            presetToLoad = Math.max(0, firstUsableFontIndex());
+        }
         selectedFontPreset.value = presetToLoad;
         loadFontPreset(presetToLoad);
     } else {

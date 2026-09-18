@@ -6427,6 +6427,10 @@
         "message": "Impact Mini",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "FB Small One",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
         "description": "Check to select a bigger display of the OSD preview in small screens"
