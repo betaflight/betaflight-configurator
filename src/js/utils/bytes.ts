@@ -8,10 +8,10 @@
 /**
  * Decode a base64 string into a byte array.
  *
- * @param {string} b64 - The base64-encoded string. Falsy input yields an empty array.
- * @returns {Uint8Array} The decoded bytes.
+ * @param b64 - The base64-encoded string. Falsy input yields an empty array.
+ * @returns The decoded bytes.
  */
-export function base64ToUint8Array(b64) {
+export function base64ToUint8Array(b64: string | null | undefined): Uint8Array {
     if (!b64) {
         return new Uint8Array(0);
     }
@@ -21,7 +21,7 @@ export function base64ToUint8Array(b64) {
     for (let i = 0; i < len; i++) {
         // atob() returns a binary string: every code unit is a single byte (0–255),
         // so codePointAt(i) equals the byte value at i and never exceeds 255.
-        bytes[i] = binary.codePointAt(i);
+        bytes[i] = binary.codePointAt(i) as number;
     }
     return bytes;
 }
@@ -29,10 +29,10 @@ export function base64ToUint8Array(b64) {
 /**
  * Encode a byte array into a base64 string.
  *
- * @param {Uint8Array} bytes - The bytes to encode.
- * @returns {string} The base64-encoded string.
+ * @param bytes - The bytes to encode.
+ * @returns The base64-encoded string.
  */
-export function uint8ArrayToBase64(bytes) {
+export function uint8ArrayToBase64(bytes: Uint8Array): string {
     let binary = "";
     for (let i = 0; i < bytes.byteLength; i++) {
         // Each byte is 0–255, so fromCodePoint produces the matching single-byte binary-string char for btoa().
@@ -44,11 +44,11 @@ export function uint8ArrayToBase64(bytes) {
 /**
  * Parse a hex string into a byte array.
  *
- * @param {string} hexString - The hex string (two chars per byte). Empty/falsy input yields an empty array.
- * @returns {Uint8Array} The parsed bytes.
- * @throws {Error} If the hex string has an odd length.
+ * @param hexString - The hex string (two chars per byte). Empty/falsy input yields an empty array.
+ * @returns The parsed bytes.
+ * @throws If the hex string has an odd length.
  */
-export function hexStringToUint8Array(hexString) {
+export function hexStringToUint8Array(hexString: string | null | undefined): Uint8Array {
     if (!hexString || hexString.length === 0) {
         return new Uint8Array(0);
     }
@@ -67,10 +67,10 @@ export function hexStringToUint8Array(hexString) {
 /**
  * Format a byte array as a hex string.
  *
- * @param {Uint8Array} uint8Array - The bytes to format.
- * @returns {string} The hex string (two lowercase chars per byte).
+ * @param uint8Array - The bytes to format.
+ * @returns The hex string (two lowercase chars per byte).
  */
-export function uint8ArrayToHexString(uint8Array) {
+export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
     return Array.from(uint8Array)
         .map((byte) => byte.toString(16).padStart(2, "0"))
         .join("");

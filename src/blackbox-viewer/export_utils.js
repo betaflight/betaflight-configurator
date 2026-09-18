@@ -28,6 +28,7 @@ async function saveExport(fileExtension, suggested, dumpFn) {
             suggested,
             EXPORT_DESCRIPTIONS[fileExtension] || `${fileExtension.toUpperCase()} file`,
             `.${fileExtension}`,
+            "blackbox-export-file",
         );
     } catch (error) {
         if (error?.name === "AbortError") {

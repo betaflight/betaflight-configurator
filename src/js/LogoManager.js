@@ -239,6 +239,7 @@ LogoManager.openImage = function () {
             this.acceptFileTypes[0].extensions.map((ext) => {
                 return `.${ext}`;
             }),
+            "logo-file",
         )
             .then((file) => {
                 FileSystem.readFileAsBlob(file).then((data) => {

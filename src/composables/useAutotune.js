@@ -84,11 +84,11 @@ export function useAutotune() {
 
 async function pickFileOrSetError(store) {
     try {
-        const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "BBL" }), [
-            ".bbl",
-            ".bfl",
-            ".txt",
-        ]);
+        const file = await FileSystem.pickOpenFile(
+            i18n.getMessage("fileSystemPickerFiles", { typeof: "BBL" }),
+            [".bbl", ".bfl", ".txt"],
+            "autotune-file",
+        );
         if (!file) {
             store.analysisState = "idle";
             store.progressMessage = "";

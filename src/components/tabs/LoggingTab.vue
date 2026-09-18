@@ -272,6 +272,7 @@ async function selectLogFile() {
             filename,
             i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
             `.${suffix}`,
+            "telemetry-log-file",
         );
         fileEntry.value = file;
     } catch (error) {
