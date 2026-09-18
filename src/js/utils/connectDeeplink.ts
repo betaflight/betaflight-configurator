@@ -17,11 +17,11 @@ const MAX_LENGTH = 253;
  * The manual connection target named by a `?connect=` query parameter, if it is one the app
  * may open. Untrusted input — whatever a link contained — so anything that is not an allowed
  * network target is rejected rather than passed on.
- * @param {string} search - a URL query string, e.g. window.location.search ("?connect=wss://…").
- * @returns {?string} the target to connect to (e.g. "wss://192.168.4.1:5761"), or null.
+ * @param search - a URL query string, e.g. window.location.search ("?connect=wss://…").
+ * @returns the target to connect to (e.g. "wss://192.168.4.1:5761"), or null.
  */
-export function parseConnectDeeplink(search) {
-    let value;
+export function parseConnectDeeplink(search: string): string | null {
+    let value: string | null;
 
     try {
         value = new URLSearchParams(search).get("connect");
@@ -37,8 +37,10 @@ export function parseConnectDeeplink(search) {
 
     try {
         const url = new URL(target);
-        // A host is required: "wss://" alone, or a schemeless value, is not a connectable target
-        if (ALLOWED_SCHEMES.has(url.protocol) && url.hostname) {
+        // A host is required: "wss://" alone, or a schemeless value, is not a connectable target.
+        // A fragment is meaningless to a connection and is a favored place to smuggle extra data
+        // past a scheme/host check, so a target carrying one is rejected outright.
+        if (ALLOWED_SCHEMES.has(url.protocol) && url.hostname && !url.hash) {
             return target;
         }
     } catch {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { parseConnectDeeplink } from "../../src/js/utils/connectDeeplink.js";
+import { parseConnectDeeplink } from "../../src/js/utils/connectDeeplink";
 
 describe("parseConnectDeeplink", () => {
     it("accepts a wss:// target", () => {
@@ -13,7 +13,7 @@ describe("parseConnectDeeplink", () => {
     });
 
     it("trims surrounding whitespace", () => {
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("  wss://host:5761  ")}`)).toBe("wss://host:5761");
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("  wss://host:5761  ")}`)).toBe("wss://host:5761");
     });
 
     it("preserves a path on the target", () => {
@@ -30,7 +30,7 @@ describe("parseConnectDeeplink", () => {
     });
 
     it("rejects a serial device path — it names hardware on one machine only", () => {
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("/dev/ttyUSB0")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("/dev/ttyUSB0")}`)).toBeNull();
         expect(parseConnectDeeplink("?connect=COM3")).toBeNull();
     });
 
@@ -39,17 +39,22 @@ describe("parseConnectDeeplink", () => {
     });
 
     it("rejects disallowed schemes", () => {
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("http://host:5761")}`)).toBeNull();
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("javascript:alert(1)")}`)).toBeNull();
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("file:///etc/passwd")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("http://host:5761")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("javascript:alert(1)")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("file:///etc/passwd")}`)).toBeNull();
     });
 
     it("rejects a scheme with no host", () => {
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent("wss://")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("wss://")}`)).toBeNull();
+    });
+
+    it("rejects a target carrying a fragment — the parser drops it before connectFromDeeplink forwards the target", () => {
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("wss://host:5761#frag")}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent("wss://host:5761/mavlink#frag")}`)).toBeNull();
     });
 
     it("rejects an over-long value", () => {
         const target = `wss://${"a".repeat(300)}.local:5761`;
-        expect(parseConnectDeeplink(`?connect=${  encodeURIComponent(target)}`)).toBeNull();
+        expect(parseConnectDeeplink(`?connect=${encodeURIComponent(target)}`)).toBeNull();
     });
 });

@@ -17,7 +17,7 @@ import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
-import { parseConnectDeeplink } from "./utils/connectDeeplink.js";
+import { parseConnectDeeplink } from "./utils/connectDeeplink";
 import { tracking } from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
