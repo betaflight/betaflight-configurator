@@ -16,7 +16,8 @@ import { have_sensor } from "./sensor_helpers";
 import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
-import { get as getConfig } from "./ConfigStorage";
+import { get as getConfig, set as setConfig } from "./ConfigStorage";
+import { parseConnectDeeplink } from "./utils/connectDeeplink.js";
 import { tracking } from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
@@ -129,6 +130,42 @@ function disconnectHandler(event) {
     onClosed(event.detail);
 }
 
+/**
+ * Honor a `?connect=` deeplink by opening the manual connection it names. A shared link (QR
+ * code, bookmark, chat message) can point the configurator straight at a network target such
+ * as an ELRS Wi-Fi module or a SITL endpoint, so it connects on load without the address being
+ * typed. Only ws://, wss:// and tcp:// targets are accepted (see parseConnectDeeplink) — a
+ * serial path in a link means nothing on someone else's machine.
+ *
+ * The parameter is stripped from the URL first: a refresh must not reconnect on its own (the FC
+ * side may not be listening again), and the address should not linger in the bar to be re-shared
+ * by accident. Routed through the "manual" pseudo-device exactly as ConnectButton's own manual
+ * path is, so the target persists as portOverride and the connect UI labels it correctly.
+ */
+function connectFromDeeplink() {
+    const target = parseConnectDeeplink(window.location.search);
+
+    if (!target) {
+        return;
+    }
+
+    try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("connect");
+        window.history.replaceState(null, "", url);
+    } catch (error) {
+        console.warn(`${logHead} Could not strip connect deeplink from URL:`, error);
+    }
+
+    console.log(`${logHead} Connecting from deeplink: ${target}`);
+
+    DeviceHandler.devicePicker.portOverride = target;
+    setConfig({ portOverride: target });
+    DeviceHandler.devicePicker.selectedDevice = "manual";
+
+    connectDisconnect();
+}
+
 export function initializeSerialBackend() {
     // Exposed via EventBus so modules that can't import serial_backend directly
     // (notably gui.js, which is on the other side of an import cycle) can still
@@ -187,6 +224,10 @@ export function initializeSerialBackend() {
         closeRebootDialog();
         serial.forceClose();
     });
+
+    // After the transports are wired up: a manual/network target needs no device enumeration,
+    // so a shared connect link can open right away.
+    connectFromDeeplink();
 }
 
 async function sendConfigTracking() {
