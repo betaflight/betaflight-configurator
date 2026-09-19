@@ -33,7 +33,11 @@
                     </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
-                        <ul v-for="(channel, index) in channelBars" :key="index" :class="channel.isAux ? `aux-${channel.state}` : undefined">
+                        <ul
+                            v-for="(channel, index) in channelBars"
+                            :key="index"
+                            :class="channel.isAux ? `aux-${channel.state}` : undefined"
+                        >
                             <li class="name">{{ channel.name }}</li>
                             <div class="w-full relative">
                                 <UProgress
@@ -634,6 +638,7 @@ import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -730,6 +735,8 @@ const {
     writable: rxPortWritable,
     options: rxPortOptions,
     selectedIdentifier: rxPortIdentifier,
+    conflict: rxPortConflict,
+    selection: rxPortSelection,
     load: loadRxPort,
     write: writeRxPort,
 } = useFeaturePort({ setting: "rx_uart" });
@@ -768,9 +775,18 @@ const {
     writable: rcdevicePortWritable,
     options: rcdevicePortOptions,
     selectedIdentifier: rcdevicePortIdentifier,
+    conflict: rcdevicePortConflict,
+    selection: rcdevicePortSelection,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
 } = useFeaturePort({ setting: "rcdevice_uart" });
+
+// Every port this tab can assign, so a save can warn before taking one from another feature, or
+// before two of these features would land on the same port at once.
+const { confirmPortConflicts } = usePortConflicts(
+    () => [rxPortConflict, rcdevicePortConflict, ...telemetryPorts.map((port) => port.conflict)],
+    () => [rxPortSelection, rcdevicePortSelection, ...telemetryPorts.map((port) => port.selection)],
+);
 
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */
@@ -1284,6 +1300,12 @@ async function loadConfig() {
 // Save configuration
 const saveConfig = (withReboot = false) =>
     runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save untouched, before anything has been written to the FC.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         const savedSnapshot = takeSnapshot();
 
         // Update RC_MAP from channel map string
