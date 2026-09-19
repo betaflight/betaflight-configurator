@@ -9,9 +9,10 @@
 // and other surprises out of a value that ends up driving a connection.
 const ALLOWED_SCHEMES = new Set(["ws:", "wss:", "tcp:"]);
 
-// A generous cap: a real target is a short "wss://host:port", so this only guards against a
-// hand-crafted link stuffing an unbounded string into the connect field.
-const MAX_LENGTH = 253;
+// An arbitrary sanity bound on the whole "scheme://host:port" string — not a protocol limit.
+// A real target is short, so this exists only to reject a hand-crafted link that stuffs an
+// unbounded string into the connect field; the exact value is not significant.
+const MAX_TARGET_LENGTH = 512;
 
 /**
  * The manual connection target named by a `?connect=` query parameter, if it is one the app
@@ -31,7 +32,7 @@ export function parseConnectDeeplink(search: string): string | null {
 
     const target = (value ?? "").trim();
 
-    if (!target || target.length > MAX_LENGTH) {
+    if (!target || target.length > MAX_TARGET_LENGTH) {
         return null;
     }
 

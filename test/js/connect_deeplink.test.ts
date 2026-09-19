@@ -54,7 +54,7 @@ describe("parseConnectDeeplink", () => {
     });
 
     it("rejects an over-long value", () => {
-        const target = `wss://${"a".repeat(300)}.local:5761`;
+        const target = `wss://${"a".repeat(600)}.local:5761`;
         expect(parseConnectDeeplink(`?connect=${encodeURIComponent(target)}`)).toBeNull();
     });
 });
