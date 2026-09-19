@@ -337,6 +337,7 @@ import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { runTabLoad } from "../../composables/useTabLoad";
 import { useDataflashErase } from "../../composables/useDataflashErase";
 
@@ -444,12 +445,15 @@ export default defineComponent({
             selectedIdentifier: blackboxPortIdentifier,
             baudOptions: blackboxBaudOptions,
             selectedBaud: blackboxBaud,
+            conflict: blackboxPortConflict,
             load: loadBlackboxPort,
             write: writeBlackboxPort,
         } = useFeaturePort({
             setting: "blackbox_uart",
             baud: { setting: "blackbox_baud" },
         });
+
+        const { confirmPortConflicts } = usePortConflicts(() => [blackboxPortConflict]);
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -638,6 +642,12 @@ export default defineComponent({
             }
 
             return runSave(async () => {
+                // Warn before a pick that would take a port from another feature; a cancel here
+                // leaves the save untouched, before anything has been written to the FC.
+                if (!(await confirmPortConflicts())) {
+                    return;
+                }
+
                 const savedSnapshot = takeSnapshot();
 
                 fcStore.blackbox.blackboxSampleRate = blackboxRate.value;

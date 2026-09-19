@@ -2462,6 +2462,24 @@
     "portsClaimTelemetry": {
         "message": "Telemetry"
     },
+    "portsConflictTitle": {
+        "message": "Port already in use"
+    },
+    "portsConflictWarning": {
+        "message": "You are assigning a serial port that another feature is already using. Saving will reset all ports to their defaults (unconfigured state):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}</strong> is currently used by {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Do you want to save anyway?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Save anyway"
+    },
+    "portsConflictCancel": {
+        "message": "Cancel"
+    },
     "portsSensorGyro": {
         "message": "Gyro"
     },
