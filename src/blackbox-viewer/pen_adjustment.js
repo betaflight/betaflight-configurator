@@ -108,9 +108,13 @@ export function changePenSmoothing(graphs, group, field, delta) {
     return null;
 }
 
-function scaleMinMax(mimmax, scale) {
-    const middle = (mimmax.min + mimmax.max) / 2;
-    const halfRange = (mimmax.max - mimmax.min) / 2;
+/**
+ * @param {{min: number, max: number}} minmax
+ * @param {number} scale
+ */
+function scaleMinMax(minmax, scale) {
+    const middle = (minmax.min + minmax.max) / 2;
+    const halfRange = (minmax.max - minmax.min) / 2;
     return {
         min: middle - halfRange * scale,
         max: middle + halfRange * scale,

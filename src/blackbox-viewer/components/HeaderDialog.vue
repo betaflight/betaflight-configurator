@@ -1140,6 +1140,7 @@ const GROUP_ORDER = new Set([
     "Wing SPA",
     "Wing TPA",
     "Wing curve",
+    "PSAS",
     "Features",
     "Disabled Fields",
 ]);
@@ -1427,6 +1428,7 @@ const PREFIX_GROUPS = [
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
+    ["psas_", "PSAS"],
     ["tpa_speed_", "Wing TPA"],
     ["tpa_curve_", "Wing curve"],
     ["spa_", "Wing SPA"],

@@ -20,7 +20,8 @@
  */
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import getTpaHyperbolicCurve, { getCssVar } from "../../src/components/tabs/pid-tuning/WingTpaCurvesData";
+import getTpaHyperbolicCurve from "../../src/components/tabs/pid-tuning/WingTpaCurvesData";
+import { getCssVar } from "../../src/js/utils/common";
 import type { WingConfig } from "../../src/stores/fc.types";
 
 // Reference values were computed by running the JavaScript version of this module.
@@ -153,11 +154,11 @@ describe("getCssVar", () => {
         expect(getCssVar("--test-colour")).toBe("#000000");
     });
 
-    it("colours the TPA curve from --chart-curve-color", () => {
-        expect(getTpaHyperbolicCurve(wing(), 1000)[0].color).toBe("#e24761");
+    it("colours the TPA curve from --chart-curve-color-1", () => {
+        expect(getTpaHyperbolicCurve(wing(), 1000)[0].color).toBe("#d55e00");
 
-        document.documentElement.style.setProperty("--chart-curve-color", "#00ff00");
+        document.documentElement.style.setProperty("--chart-curve-color-1", "#00ff00");
         expect(getTpaHyperbolicCurve(wing(), 1000)[0].color).toBe("#00ff00");
-        document.documentElement.style.removeProperty("--chart-curve-color");
+        document.documentElement.style.removeProperty("--chart-curve-color-1");
     });
 });
