@@ -828,6 +828,20 @@ OSD.loadDisplayFields = function () {
                 );
             },
         },
+        DECIMAL_COMPASS_BAR: {
+            name: "DECIMAL_COMPASS_BAR",
+            text: "osdTextElementDecimalCompassBar",
+            desc: "osdDescElementDecimalCompassBar",
+            defaultPosition: -1,
+            draw_order: 315,
+            positionable: true,
+            /** @returns {string} North-facing nine-column bar, with edge labels clipped by the firmware. */
+            preview() {
+                const line = FONT.symbol(SYM.HEADING_LINE);
+                const dividedLine = FONT.symbol(SYM.HEADING_DIVIDED_LINE);
+                return `70${dividedLine}${line}0${line}${dividedLine}${line}9`;
+            },
+        },
         WARNINGS: {
             name: "WARNINGS",
             text: "osdTextElementWarnings",
@@ -1517,7 +1531,7 @@ OSD.loadDisplayFields = function () {
 
 OSD.constants = OSD_CONSTANTS;
 
-// Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
+/** @returns {void} Selects the positional MSP field layout for the connected firmware. */
 OSD.chooseFields = function () {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
@@ -1671,7 +1685,10 @@ OSD.chooseFields = function () {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.PITOT_AIRSPEED,
+                F.DECIMAL_COMPASS_BAR,
+            ]);
         }
     }
     // Choose statistic fields
