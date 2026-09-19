@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  f5fb2717b8 2026-09-12  (498 annotated fields)
+ *   API 1.49.0  616bb65094 2026-09-18  (528 annotated fields)
  */
 
 /**
@@ -114,7 +114,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
         ATTITUDE: Object.freeze({
             0: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
             1: Object.freeze({ label: "GPS Heading Confidence", unit: null, scale: 0.01 }),
-            2: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Current Velocity", unit: "cm/s", scale: 1 }),
             3: Object.freeze({ label: "Course Over Ground Error Sine", unit: null, scale: 0.01 }),
             4: Object.freeze({ label: "GPS Heading Unusable", unit: null, scale: 1 }),
             5: Object.freeze({
@@ -134,23 +134,26 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                     "RESCUE_DO_NOTHING",
                 ]),
             }),
-            6: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+            6: Object.freeze({ label: "Target Ground Speed", unit: "cm/s", scale: 1 }),
         }),
         AUTOPILOT_ALTITUDE: Object.freeze({
             0: Object.freeze({ label: "Throttle Output", unit: "us", scale: 1 }),
             1: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
-            3: Object.freeze({ label: "Altitude P Term", unit: "us", scale: 1 }),
-            4: Object.freeze({ label: "Altitude I Term", unit: "us", scale: 1 }),
-            5: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
-            6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
-            7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
+            3: Object.freeze({ label: "Altitude P Term", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Altitude I Term", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Altitude D Term", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Altitude A Term", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Altitude Feedforward Term", unit: null, scale: 1 }),
         }),
         AUTOPILOT_HEADING: Object.freeze({
-            0: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 0.1 }),
+            0: Object.freeze({ label: "Heading", unit: "deg", scale: 0.1 }),
             1: Object.freeze({ label: "Target Heading", unit: "deg", scale: 0.1 }),
             2: Object.freeze({ label: "Heading Error", unit: "deg", scale: 0.1 }),
-            3: Object.freeze({ label: "Yaw Rate Setpoint", unit: "dps", scale: 0.1 }),
+            3: Object.freeze({ label: "Yaw Rate", unit: "dps", scale: 0.1 }),
+            4: Object.freeze({ label: "Yaw P Term", unit: "dps", scale: 0.1 }),
+            6: Object.freeze({ label: "Position Hold Sensor Status", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Yaw Disable Reason", unit: null, scale: 1 }),
         }),
         AUTOPILOT_PID: Object.freeze({
             0: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
@@ -459,17 +462,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             0: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
             1: Object.freeze({ label: "GPS Ground Course", unit: "deg", scale: 0.1 }),
             2: Object.freeze({ label: "Yaw Attitude", unit: "deg", scale: 0.1 }),
-            3: Object.freeze({ label: "Direction To Home", unit: "deg", scale: 0.1 }),
-            4: Object.freeze({ label: "Magnetic Heading", unit: "deg", scale: 0.1 }),
-            7: Object.freeze({ label: "Yaw Rate Correction", unit: "dps", scale: 1 }),
+            3: Object.freeze({ label: "Direction To Home", unit: "deg", scale: 1 }),
+            4: Object.freeze({ label: "Aircraft Heading / Magnetic Heading", unit: null, scale: 1 }),
         }),
         GPS_RESCUE_TRACKING: Object.freeze({
-            0: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
+            0: Object.freeze({ label: "Ground Speed / Current Velocity", unit: null, scale: 1 }),
             1: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
             2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
             3: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
-            4: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
-            5: Object.freeze({ label: "Heading Error", unit: "deg", scale: 1 }),
+            4: Object.freeze({ label: "Target Heading", unit: "deg", scale: 1 }),
+            5: Object.freeze({ label: "Aircraft Heading", unit: "deg", scale: 1 }),
             6: Object.freeze({ label: "Distance To Home", unit: "cm", scale: 1 }),
             7: Object.freeze({
                 label: "Rescue Phase",
@@ -490,10 +492,10 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             }),
         }),
         GPS_RESCUE_VELOCITY: Object.freeze({
-            0: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+            0: Object.freeze({ label: "Target Ground Speed", unit: "cm/s", scale: 1 }),
             1: Object.freeze({ label: "Ground Speed", unit: "cm/s", scale: 1 }),
-            2: Object.freeze({ label: "Target Step East", unit: "cm", scale: 1 }),
-            3: Object.freeze({ label: "Target Step North", unit: "cm", scale: 1 }),
+            2: Object.freeze({ label: "Target East Velocity", unit: "cm/s", scale: 1 }),
+            3: Object.freeze({ label: "Target North Velocity", unit: "cm/s", scale: 1 }),
             4: Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
@@ -540,6 +542,36 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             0: Object.freeze({ label: "Setpoint HPF (roll)", unit: "dps", scale: 1 }),
             1: Object.freeze({ label: "I Relax Factor (roll)", unit: "%", scale: 1 }),
             2: Object.freeze({ label: "Relaxed I Error (roll)", unit: "dps", scale: 1 }),
+        }),
+        LAUNCH: Object.freeze({
+            0: Object.freeze({
+                label: "Launch State",
+                unit: null,
+                scale: 1,
+                values: Object.freeze([
+                    "LAUNCH_WING_IDLE",
+                    "LAUNCH_WING_WAIT_THROTTLE",
+                    "LAUNCH_WING_MOTOR_IDLE",
+                    "LAUNCH_WING_WAIT_DETECTION",
+                    "LAUNCH_WING_MOTOR_DELAY",
+                    "LAUNCH_WING_SPINUP",
+                    "LAUNCH_WING_IN_PROGRESS",
+                    "LAUNCH_WING_FINISH",
+                    "LAUNCH_WING_FLYING",
+                    "LAUNCH_WING_ABORTED",
+                ]),
+            }),
+            1: Object.freeze({ label: "Climb Angle Target", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Launch Throttle", unit: null, scale: 0.001 }),
+            3: Object.freeze({ label: "Forward Acceleration", unit: "g", scale: 0.01 }),
+            4: Object.freeze({ label: "Swing Speed", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({ label: "Pilot Handover", unit: null, scale: 0.001 }),
+            6: Object.freeze({
+                label: "Launch Detectors",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Bungee", "Swing", "Ground Speed"]),
+            }),
         }),
         LIDAR_TF: Object.freeze({
             0: Object.freeze({ label: "Distance", unit: null, scale: 1 }),
@@ -676,6 +708,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             6: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
         }),
+        PSAS: Object.freeze({
+            0: Object.freeze({ label: "Main speed curve", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Stick speed curve", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Lift coefficient", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Accel Z required", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Accel Z delta", unit: null, scale: 0.1 }),
+            5: Object.freeze({ label: "Accel Z P", unit: null, scale: 0.1 }),
+            6: Object.freeze({ label: "Lift coeff delta", unit: null, scale: 0.01 }),
+            7: Object.freeze({ label: "AoA limiter is on", unit: null, scale: 1 }),
+        }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "Tilt Corrected Altitude", unit: "cm", scale: 1 }),
@@ -713,6 +755,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
         RC_STATS: Object.freeze({
             0: Object.freeze({ label: "Average Throttle", unit: "%", scale: 1 }),
         }),
+        RPM_FILTER: Object.freeze({
+            0: Object.freeze({ label: "Motor 1 Frequency", unit: "Hz", scale: 1 }),
+            1: Object.freeze({ label: "Motor 2 Frequency", unit: "Hz", scale: 1 }),
+            2: Object.freeze({ label: "Motor 3 Frequency", unit: "Hz", scale: 1 }),
+            3: Object.freeze({ label: "Motor 4 Frequency", unit: "Hz", scale: 1 }),
+            4: Object.freeze({ label: "Motor 5 Frequency", unit: "Hz", scale: 1 }),
+            5: Object.freeze({ label: "Motor 6 Frequency", unit: "Hz", scale: 1 }),
+            6: Object.freeze({ label: "Motor 7 Frequency", unit: "Hz", scale: 1 }),
+            7: Object.freeze({ label: "Motor 8 Frequency", unit: "Hz", scale: 1 }),
+        }),
         RPM_LIMIT: Object.freeze({
             0: Object.freeze({ label: "Average RPM", unit: "rpm", scale: 1 }),
             1: Object.freeze({ label: "Throttle Scale Offset", unit: "%", scale: 1 }),
@@ -724,7 +776,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             7: Object.freeze({ label: "D Term", unit: "%", scale: 1 }),
         }),
         RTH: Object.freeze({
-            0: Object.freeze({ label: "Ground Speed", unit: "m/s", scale: 0.1 }),
+            0: Object.freeze({ label: "Current Velocity", unit: "cm/s", scale: 1 }),
             1: Object.freeze({ label: "Displayed Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({
                 label: "Rescue Phase",
@@ -763,7 +815,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             4: Object.freeze({ label: "Seconds Failing", unit: "s", scale: 1 }),
             5: Object.freeze({ label: "Seconds With Low Satellite Count", unit: "s", scale: 1 }),
             6: Object.freeze({ label: "Distance To Home", unit: "cm", scale: 1 }),
-            7: Object.freeze({ label: "Target Velocity", unit: "cm/s", scale: 1 }),
+            7: Object.freeze({ label: "Target Velocity", unit: "m/s", scale: 0.1 }),
         }),
         RUNAWAY_TAKEOFF: Object.freeze({
             0: Object.freeze({ label: "Runaway Takeoff Enabled", unit: null, scale: 1 }),
@@ -784,10 +836,17 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             3: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
         }),
         RX_FRSKY_SPI: Object.freeze({
-            0: Object.freeze({ label: "Data Error Count / Loop Time", unit: null, scale: 1 }),
-            1: Object.freeze({ label: "Missing Packets / Bind Offset Min, Else RSSI Byte", unit: null, scale: 1 }),
-            2: Object.freeze({ label: "Packet Errors / Bind Offset Max, Else Missing Packets", unit: null, scale: 1 }),
+            0: Object.freeze({ label: "Data Error Count", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "Missing Packets", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Packet Errors", unit: null, scale: 1 }),
+        }),
+        RX_REDPINE_SPI: Object.freeze({
+            0: Object.freeze({ label: "Loop Time", unit: "us", scale: 1 }),
+            1: Object.freeze({ label: "RSSI Byte", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Missing Packets", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Protocol State", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Bind Offset Min", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Bind Offset Max", unit: null, scale: 1 }),
         }),
         RX_SFHSS_SPI: Object.freeze({
             0: Object.freeze({ label: "Receiver State", unit: null, scale: 1 }),
@@ -943,13 +1002,51 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
                 label: "Sag Compensation Attenuation",
                 unit: null,
                 scale: 0.001,
-                sites: Object.freeze(["src/main/flight/mixer.c:262"]),
+                sites: Object.freeze(["src/main/flight/mixer.c:267"]),
             }),
             Object.freeze({
                 label: "Voltage Stable Bits",
                 unit: null,
                 scale: 1,
                 sites: Object.freeze(["src/main/sensors/battery.c:179"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "GPS_RESCUE_HEADING",
+        index: 4,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Aircraft Heading",
+                unit: "deg",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/autopilot_multirotor.c:824"]),
+            }),
+            Object.freeze({
+                label: "Magnetic Heading",
+                unit: "deg",
+                scale: 0.1,
+                sites: Object.freeze(["src/main/flight/imu.c:549"]),
+            }),
+        ]),
+    }),
+    Object.freeze({
+        apiVersion: "1.49.0",
+        mode: "GPS_RESCUE_TRACKING",
+        index: 0,
+        meanings: Object.freeze([
+            Object.freeze({
+                label: "Ground Speed",
+                unit: "cm/s",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/autopilot_multirotor.c:1098"]),
+            }),
+            Object.freeze({
+                label: "Current Velocity",
+                unit: "cm/s",
+                scale: 1,
+                sites: Object.freeze(["src/main/flight/autopilot_multirotor.c:1289"]),
             }),
         ]),
     }),
@@ -1045,74 +1142,6 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
                 unit: null,
                 scale: 1,
                 sites: Object.freeze(["src/main/drivers/rangefinder/rangefinder_upt1.c:232"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "RX_FRSKY_SPI",
-        index: 0,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Data Error Count",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/cc2500_frsky_d.c:186"]),
-            }),
-            Object.freeze({
-                label: "Loop Time",
-                unit: "us",
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/cc2500_redpine.c:485"]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "RX_FRSKY_SPI",
-        index: 1,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Missing Packets",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/cc2500_frsky_x.c:512"]),
-            }),
-            Object.freeze({
-                label: "Bind Offset Min, Else RSSI Byte",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze([
-                    "src/main/rx/cc2500_redpine.c:277",
-                    "src/main/rx/cc2500_redpine.c:299",
-                    "src/main/rx/cc2500_redpine.c:304",
-                    "src/main/rx/cc2500_redpine.c:345",
-                    "src/main/rx/cc2500_redpine.c:486",
-                ]),
-            }),
-        ]),
-    }),
-    Object.freeze({
-        apiVersion: "1.49.0",
-        mode: "RX_FRSKY_SPI",
-        index: 2,
-        meanings: Object.freeze([
-            Object.freeze({
-                label: "Packet Errors",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze(["src/main/rx/cc2500_frsky_x.c:440"]),
-            }),
-            Object.freeze({
-                label: "Bind Offset Max, Else Missing Packets",
-                unit: null,
-                scale: 1,
-                sites: Object.freeze([
-                    "src/main/rx/cc2500_redpine.c:310",
-                    "src/main/rx/cc2500_redpine.c:330",
-                    "src/main/rx/cc2500_redpine.c:492",
-                    "src/main/rx/cc2500_redpine.c:520",
-                ]),
             }),
         ]),
     }),

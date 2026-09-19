@@ -1,19 +1,15 @@
+import { getCssVar } from "../../../js/utils/common";
 export function getTpaHyperbolicCurve(wingConfig, motorKv) {
     // The list of charts curves
     const chartCurves = [
         {
             data: generateHyperbolicCurve(wingConfig, motorKv),
-            color: getCssVar("--chart-curve-color", "#e24761"),
+            color: getCssVar("--chart-curve-color-1", "#d55e00"),
             active: true,
         },
     ];
 
     return chartCurves;
-}
-
-export function getCssVar(varName, fallback = "#000000") {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-    return value || fallback;
 }
 
 // Compute Wings maximal speed to follow BF firmware formulas (pid_init.c)

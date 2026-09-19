@@ -55,7 +55,7 @@ describe("debugModes helper", () => {
             expect(modes.indexOf("OPTICALFLOW")).toBe(modes.indexOf("RANGEFINDER_QUALITY") + 1);
         });
 
-        it("appends AUTOPILOT_PID, POSITION_NAV, AUTOPILOT_STOP and drops AUTOPILOT_POSITION at API 1.48", () => {
+        it("appends AUTOPILOT_PID, POSITION_NAV, AUTOPILOT_STOP, PITOT and drops AUTOPILOT_POSITION at API 1.48", () => {
             const modes = getDebugModes(API_VERSION_1_48);
             // AUTOPILOT_POSITION was removed from the firmware enum in 1.48.
             expect(modes).not.toContain("AUTOPILOT_POSITION");
@@ -65,8 +65,21 @@ describe("debugModes helper", () => {
             expect(getDebugModeIndex("POSITION_NAV", API_VERSION_1_48)).toBe(100);
             expect(getDebugModeIndex("AUTOPILOT_STOP", API_VERSION_1_48)).toBe(101);
             expect(getDebugModeIndex("PITOT", API_VERSION_1_48)).toBe(102);
+
             // PITOT is the last entry.
             expect(modes.indexOf("PITOT")).toBe(modes.length - 1);
+        });
+
+        it("appends POSITION_EST, AUTOPILOT_HEADING, RX_REDPINE_SPI, LAUNCH, PSAS at API 1.49", () => {
+            const modes = getDebugModes(API_VERSION_1_49);
+            expect(getDebugModeIndex("POSITION_EST", API_VERSION_1_49)).toBe(103);
+            expect(getDebugModeIndex("AUTOPILOT_HEADING", API_VERSION_1_49)).toBe(104);
+            expect(getDebugModeIndex("RX_REDPINE_SPI", API_VERSION_1_49)).toBe(105);
+            expect(getDebugModeIndex("LAUNCH", API_VERSION_1_49)).toBe(106);
+            expect(getDebugModeIndex("PSAS", API_VERSION_1_49)).toBe(107);
+
+            // PSAS is the last entry.
+            expect(modes.indexOf("PSAS")).toBe(modes.length - 1);
         });
 
         it("resolves an API version newer than the generated table to the newest entry", () => {
@@ -96,6 +109,16 @@ describe("debugModes helper", () => {
             expect(modes).not.toContain("AUTOPILOT_PID");
             expect(modes).not.toContain("POSITION_NAV");
             expect(modes).not.toContain("AUTOPILOT_STOP");
+            expect(modes).not.toContain("PITOT");
+        });
+
+        it("does not expose the 1.49 modes on 1.48 firmware", () => {
+            const modes = getDebugModes(API_VERSION_1_48);
+            expect(modes).not.toContain("POSITION_EST");
+            expect(modes).not.toContain("AUTOPILOT_HEADING");
+            expect(modes).not.toContain("RX_REDPINE_SPI");
+            expect(modes).not.toContain("LAUNCH");
+            expect(modes).not.toContain("PSAS");
         });
 
         it("returns a fresh array each call (safe to mutate)", () => {
