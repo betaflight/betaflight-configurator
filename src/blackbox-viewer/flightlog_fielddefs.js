@@ -133,6 +133,7 @@ export const FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3 = makeReadOnly([
     "PREARM",
     "BEEPGPSCOUNT",
     "VTXPITMODE",
+    "PARALYZE",
     "USER1",
     "USER2",
     "USER3",
@@ -178,6 +179,7 @@ export const FLIGHT_LOG_FLIGHT_MODE_NAME_POST_4_5 = makeReadOnly([
     "PREARM",
     "BEEPGPSCOUNT",
     "VTXPITMODE",
+    "PARALYZE",
     "USER1",
     "USER2",
     "USER3",
@@ -418,6 +420,10 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         if (semver.gte(firmwareVersion, "2026.6.0")) {
             FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
+        }
+        if (semver.gte(firmwareVersion, "2026.6.12")) {
+            FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("AUTOPILOT") + 1, 0, "PSAS");
+            FLIGHT_LOG_FLIGHT_MODE_NAME.push();
         }
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);

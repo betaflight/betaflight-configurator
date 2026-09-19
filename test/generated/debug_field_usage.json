@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "d58d69e0576d77dbdc291f4bf2b56cc8827a3011",
-            "date": "2026-09-07",
+            "commit": "616bb650944555b54e4bd454313b06d6c74e37a2",
+            "date": "2026-09-18",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1767,6 +1767,10 @@
                 },
                 "AUTOPILOT_ALTITUDE": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_HEADING": {
+                    "fields": [0, 1, 2, 3, 4, 6, 7],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {
@@ -1910,7 +1914,7 @@
                     "dynamic": false
                 },
                 "GPS_RESCUE_HEADING": {
-                    "fields": [0, 1, 2, 3, 4, 7],
+                    "fields": [0, 1, 2, 3, 4],
                     "dynamic": false
                 },
                 "GPS_RESCUE_TRACKING": {
@@ -1939,6 +1943,10 @@
                 },
                 "ITERM_RELAX": {
                     "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "LAUNCH": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6],
                     "dynamic": false
                 },
                 "LIDAR_TF": {
@@ -1997,6 +2005,10 @@
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
+                "PSAS": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
                 "RANGEFINDER": {
                     "fields": [1, 2, 3, 4, 5],
                     "dynamic": false
@@ -2021,6 +2033,10 @@
                     "fields": [0],
                     "dynamic": false
                 },
+                "RPM_FILTER": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
                 "RPM_LIMIT": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
@@ -2042,7 +2058,11 @@
                     "dynamic": false
                 },
                 "RX_FRSKY_SPI": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "RX_REDPINE_SPI": {
+                    "fields": [0, 1, 2, 3, 4, 5],
                     "dynamic": false
                 },
                 "RX_SFHSS_SPI": {
