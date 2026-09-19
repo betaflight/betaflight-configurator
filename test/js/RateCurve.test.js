@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import RateCurve from "../../src/js/RateCurve.js";
+import RateCurve from "../../src/js/RateCurve";
 import FC from "../../src/js/fc.js";
 
 function makeRateCurve() {
