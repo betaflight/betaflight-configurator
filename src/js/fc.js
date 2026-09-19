@@ -78,6 +78,37 @@ const INITIAL_BATTERY_CONFIG = {
     currentMeterSource: 0,
 };
 
+const INITIAL_RC_TUNING = {
+    RC_RATE: 0,
+    RC_EXPO: 0,
+    roll_pitch_rate: 0, // pre 1.7 api only
+    roll_rate: 0,
+    pitch_rate: 0,
+    yaw_rate: 0,
+    dynamic_THR_PID: 0, // moved in 1.45 to ADVANCED_TUNING
+    throttle_MID: 0,
+    throttle_EXPO: 0,
+    dynamic_THR_breakpoint: 0, // moved in 1.45 to ADVANCED_TUNING
+    RC_YAW_EXPO: 0,
+    rcYawRate: 0,
+    rcPitchRate: 0,
+    RC_PITCH_EXPO: 0,
+    throttleLimitType: 0,
+    throttleLimitPercent: 100,
+    roll_rate_limit: 1998,
+    pitch_rate_limit: 1998,
+    yaw_rate_limit: 1998,
+    rates_type: 0,
+    throttle_HOVER: 0.5, // default for firmware before 1.47
+};
+
+const INITIAL_RC_DEADBAND_CONFIG = {
+    deadband: 0,
+    yaw_deadband: 0,
+    alt_hold_deadband: 0,
+    deadband3d_throttle: 0,
+};
+
 const FC = {
     // define all the global variables that are uses to hold FC state
     // the default state must be defined inside the resetState() method
@@ -139,8 +170,10 @@ const FC = {
     PID_NAMES: null,
     PIDS: null,
     RC: null,
+    /** @type {typeof INITIAL_RC_DEADBAND_CONFIG | null} */
     RC_DEADBAND_CONFIG: null,
     RC_MAP: null,
+    /** @type {typeof INITIAL_RC_TUNING | null} */
     RC_TUNING: null,
     RSSI_CONFIG: null,
     RXFAIL_CONFIG: null,
@@ -229,29 +262,7 @@ const FC = {
             channels: Array.from({ length: 32 }),
         };
 
-        this.RC_TUNING = {
-            RC_RATE: 0,
-            RC_EXPO: 0,
-            roll_pitch_rate: 0, // pre 1.7 api only
-            roll_rate: 0,
-            pitch_rate: 0,
-            yaw_rate: 0,
-            dynamic_THR_PID: 0, // moved in 1.45 to ADVANCED_TUNING
-            throttle_MID: 0,
-            throttle_EXPO: 0,
-            dynamic_THR_breakpoint: 0, // moved in 1.45 to ADVANCED_TUNING
-            RC_YAW_EXPO: 0,
-            rcYawRate: 0,
-            rcPitchRate: 0,
-            RC_PITCH_EXPO: 0,
-            throttleLimitType: 0,
-            throttleLimitPercent: 100,
-            roll_rate_limit: 1998,
-            pitch_rate_limit: 1998,
-            yaw_rate_limit: 1998,
-            rates_type: 0,
-            throttle_HOVER: 0.5, // default for firmware before 1.47
-        };
+        this.RC_TUNING = { ...INITIAL_RC_TUNING };
 
         this.AUX_CONFIG = [];
         this.AUX_CONFIG_IDS = [];
@@ -414,12 +425,7 @@ const FC = {
             blackboxDisabledMask: 0,
         };
 
-        this.RC_DEADBAND_CONFIG = {
-            deadband: 0,
-            yaw_deadband: 0,
-            alt_hold_deadband: 0,
-            deadband3d_throttle: 0,
-        };
+        this.RC_DEADBAND_CONFIG = { ...INITIAL_RC_DEADBAND_CONFIG };
 
         this.SENSOR_ALIGNMENT = {
             align_gyro: 0,

@@ -33,7 +33,11 @@
                     </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
-                        <ul v-for="(channel, index) in channelBars" :key="index" :class="channel.isAux ? `aux-${channel.state}` : undefined">
+                        <ul
+                            v-for="(channel, index) in channelBars"
+                            :key="index"
+                            :class="channel.isAux ? `aux-${channel.state}` : undefined"
+                        >
                             <li class="name">{{ channel.name }}</li>
                             <div class="w-full relative">
                                 <UProgress
@@ -620,7 +624,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import GUI from "@/js/gui";
 import Model from "@/js/model";
-import RateCurve from "@/js/RateCurve";
+import RateCurve, { axisRateCurveParams } from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
 import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
@@ -1376,38 +1380,11 @@ function renderModel(timestamp) {
         const delta = timer.getDelta();
 
         const roll =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[0],
-                currentRates.roll_rate,
-                currentRates.rc_rate,
-                currentRates.rc_expo,
-                currentRates.superexpo,
-                currentRates.deadband,
-                currentRates.roll_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[0], axisRateCurveParams(currentRates, "roll"));
         const pitch =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[1],
-                currentRates.pitch_rate,
-                currentRates.rc_rate_pitch,
-                currentRates.rc_pitch_expo,
-                currentRates.superexpo,
-                currentRates.deadband,
-                currentRates.pitch_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[1], axisRateCurveParams(currentRates, "pitch"));
         const yaw =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[2],
-                currentRates.yaw_rate,
-                currentRates.rc_rate_yaw,
-                currentRates.rc_yaw_expo,
-                currentRates.superexpo,
-                currentRates.yawDeadband,
-                currentRates.yaw_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[2], axisRateCurveParams(currentRates, "yaw"));
 
         model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
