@@ -618,6 +618,7 @@ const {
     selectedIdentifier: osdPortIdentifier,
     changed: osdPortChanged,
     conflict: osdPortConflict,
+    selection: osdPortSelection,
     load: loadOsdPort,
     write: writeOsdPort,
     selectedProtocol: osdProtocol,
@@ -636,6 +637,7 @@ const {
     selectedBaud: customTextBaud,
     changed: customTextPortChanged,
     conflict: customTextPortConflict,
+    selection: customTextPortSelection,
     load: loadCustomTextPort,
     write: writeCustomTextPort,
 } = useFeaturePort({
@@ -643,7 +645,10 @@ const {
     baud: { setting: "osd_custom_text_baud" },
 });
 
-const { confirmPortConflicts } = usePortConflicts(() => [osdPortConflict, customTextPortConflict]);
+const { confirmPortConflicts } = usePortConflicts(
+    () => [osdPortConflict, customTextPortConflict],
+    () => [osdPortSelection, customTextPortSelection],
+);
 
 const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 

@@ -736,6 +736,7 @@ const {
     options: rxPortOptions,
     selectedIdentifier: rxPortIdentifier,
     conflict: rxPortConflict,
+    selection: rxPortSelection,
     load: loadRxPort,
     write: writeRxPort,
 } = useFeaturePort({ setting: "rx_uart" });
@@ -775,16 +776,17 @@ const {
     options: rcdevicePortOptions,
     selectedIdentifier: rcdevicePortIdentifier,
     conflict: rcdevicePortConflict,
+    selection: rcdevicePortSelection,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
 } = useFeaturePort({ setting: "rcdevice_uart" });
 
-// Every port this tab can assign, so a save can warn before taking one from another feature.
-const { confirmPortConflicts } = usePortConflicts(() => [
-    rxPortConflict,
-    rcdevicePortConflict,
-    ...telemetryPorts.map((port) => port.conflict),
-]);
+// Every port this tab can assign, so a save can warn before taking one from another feature, or
+// before two of these features would land on the same port at once.
+const { confirmPortConflicts } = usePortConflicts(
+    () => [rxPortConflict, rcdevicePortConflict, ...telemetryPorts.map((port) => port.conflict)],
+    () => [rxPortSelection, rcdevicePortSelection, ...telemetryPorts.map((port) => port.selection)],
+);
 
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */

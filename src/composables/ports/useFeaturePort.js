@@ -219,6 +219,15 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
         return { port: getPortDisplayName(selectedIdentifier.value), heldBy };
     });
 
+    // The pending assignment this feature would write, so a tab can catch two of its features
+    // picking the same free port in one save — a clash the claim labels cannot show yet, since
+    // nothing holds the port until the save goes through.
+    const selection = computed(() => ({
+        identifier: selectedIdentifier.value,
+        changed: portChanged.value,
+        label: describeClaim(ownClaim).label,
+    }));
+
     async function load() {
         supported.value = true;
         selectedIdentifier.value = PORT_NONE;
@@ -304,6 +313,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
         selectedProtocol,
         changed,
         conflict,
+        selection,
         load,
         write,
     };

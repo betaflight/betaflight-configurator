@@ -875,6 +875,7 @@ const {
     options: rangefinderPortOptions,
     selectedIdentifier: rangefinderPortIdentifier,
     conflict: rangefinderPortConflict,
+    selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
 } = useFeaturePort({ setting: "rangefinder_uart" });
@@ -885,11 +886,15 @@ const {
     options: opticalFlowPortOptions,
     selectedIdentifier: opticalFlowPortIdentifier,
     conflict: opticalFlowPortConflict,
+    selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
-const { confirmPortConflicts } = usePortConflicts(() => [rangefinderPortConflict, opticalFlowPortConflict]);
+const { confirmPortConflicts } = usePortConflicts(
+    () => [rangefinderPortConflict, opticalFlowPortConflict],
+    () => [rangefinderPortSelection, opticalFlowPortSelection],
+);
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();

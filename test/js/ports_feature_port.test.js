@@ -535,6 +535,21 @@ describe("useFeaturePort", () => {
             expect(port.conflict.value).toEqual({ port: "UART1", heldBy: ["portsClaimVtx", "portsClaimOsd"] });
         });
     });
+
+    describe("selection", () => {
+        it("reports the pending assignment, unchanged after load", async () => {
+            await port.load();
+
+            expect(port.selection.value).toEqual({ identifier: 53, changed: false, label: "portsClaimRx" });
+        });
+
+        it("flags the assignment as changed once the user moves it", async () => {
+            await port.load();
+            port.selectedIdentifier.value = 51;
+
+            expect(port.selection.value).toEqual({ identifier: 51, changed: true, label: "portsClaimRx" });
+        });
+    });
 });
 
 describe("buildBaudOptions", () => {
