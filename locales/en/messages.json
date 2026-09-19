@@ -91,6 +91,23 @@
     "portsSelectManual": {
         "message": "Manual Selection"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Network connections only",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "This browser can only reach a flight controller over the network, such as a Wi-Fi bridge, an ELRS module, or SITL. For USB or Bluetooth, use Chrome or Edge, or install the Betaflight App on your desktop. Missing here:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web Serial is not available."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth is not available."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB is not available, so firmware flashing over DFU is disabled."
+    },
     "portsSelectNone": {
         "message": "No connection available"
     },
