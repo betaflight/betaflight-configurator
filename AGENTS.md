@@ -24,7 +24,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 
 | Rule | Status | Enforcement target |
 |---|---|---|
-| No MSP calls from Vue components — wrap in a store action or composable | 🚧 | ESLint `no-restricted-imports`: ban `src/js/msp/**` from `src/components/**` (Phase 0) |
+| No MSP calls from Vue components — wrap in a store action or composable | 🔧 | ESLint `no-restricted-imports` warns on `src/js/msp*` in `src/components/**` (20 files today). Static imports only — `await import()` is not caught (Phase 1) |
 | Only `src/stores/**` and `src/composables/**` may import `src/js/msp/**` | 🚧 | `eslint-plugin-boundaries`, scoped per converted domain (Phase 1) |
 | No new fields on `src/js/fc.js` — write to a Pinia store | 🚧 | Seal `fc.ts` interface once converted (Phase 2) |
 | Hydration from legacy is explicit: `store.hydrateFromLegacy(…)` | 🚧 | TS store interface forces the method (Phase 1, per domain) |
@@ -37,7 +37,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
 | No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🚧 | `eslint-plugin-vue` custom rule, scoped to converted tabs (Phase 1) |
-| No hard-coded colors — theme via CSS custom properties | 🚧 | Stylelint `color-no-hex` + disallowed-value list (Phase 0) |
+| No hard-coded colors — theme via CSS custom properties | 🔧 | Stylelint `color-no-hex` warns on SFCs via `npm run lint` (19 files today). The `theme.css` files define the palette, so they are out of scope. A disallowed-value list for `rgb()` and named colours is still open |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
 ### TypeScript migration (next phase)
@@ -52,17 +52,17 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 
 | Rule | Status | Enforcement target |
 |---|---|---|
-| `.vue` filenames and component names: `PascalCase` | 🔧 | `eslint-plugin-unicorn/filename-case` (Phase 0) |
+| `.vue` filenames and component names: `PascalCase` | 🔧 | Filenames enforced by `eslint-plugin-unicorn/filename-case`; directory names are deliberately not checked. Component names are still a review call |
 | New source files start with the GPL header in `DEFAULT_LICENSE.md` (same text as the firmware) | 🚧 | `eslint-plugin-header` on files added after this row landed (Phase 0) |
-| Don't edit `dist/`, `node_modules/`, generated output | 🚧 | Pre-commit hook by path (Phase 0) |
-| i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 🚧 | Pre-commit hook rejecting non-`en` locale edits (Phase 0) |
+| Don't edit `dist/`, `node_modules/`, generated output | 🚧 | `.gitignore` covers these; past that it is a review call |
+| i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 🚧 | README asks contributors not to open translation PRs; review call |
 | Tests for non-trivial behaviour (Vitest, `npm run test`) | 📐 | Coverage gate is a proxy; review call |
 | Tests must catch bugs, not confirm the fix. A suite co-authored with the change is confirmation-biased — it passes while the code is still broken. Verify by driving the real behaviour (hardware/e2e), and write bug-hunting tests independently/adversarially, ideally blind to the implementation. | 📐 | Review call; separate adversarial pass |
 | One concern per PR (one tab, one store, one TS file) | 📐 | PR template / reviewer call |
 | Comments state non-obvious why (rationale) or what (functionality) concisely — no restating what well-named code shows, no personality/filler, skip it if removing wouldn't confuse a future reader. Before finishing, re-check new comments against this row | 📐 | Review call |
 
 ## Phase plan
-- **Phase 0** — land cheap tooling: MSP-from-components ban, filename-case, Stylelint colors, pre-commit hooks for locales and generated paths.
+- **Phase 0** — cheap lint tooling, all landed: MSP-from-components ban, filename-case, Stylelint `color-no-hex`. The pre-commit hooks for locales and generated paths were dropped: `.gitignore` already covers `dist/` and `node_modules/`, the README already asks people not to open translation PRs, and a hook cannot run in CI anyway.
 - **Phase 1** — per-domain bundles: each TS or Nuxt UI conversion PR ships the boundary lint, scoped-style ban, JSDoc rule, and MSP CI script for that domain.
 - **Phase 2** — once enough is TS: seal `fc.ts`, flip `allowJs: false` on converted folders, ratchet `strict: true`.
 
