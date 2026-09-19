@@ -95,8 +95,9 @@ export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
-// A numeric setting is printed with its bounds, so the firmware tells us how many of a thing this
-// build has rather than the app having to guess (`CANDEV_COUNT`, for one).
+// A numeric setting is printed with its bounds, so the firmware can tell us the limits of a build
+// rather than the app having to guess. Prefer getSettingInfo() in useMspSetting where the FC is
+// new enough: it reports the same bounds as MSP rather than as prose to be scraped.
 export function findCliSettingRange(lines) {
     for (const line of lines ?? []) {
         const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());

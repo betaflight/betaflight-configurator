@@ -146,7 +146,12 @@ async function startExport() {
     const fileName = suggestedName(appStore.logFilename || "blackbox", selectedProbe.extension);
     let file;
     try {
-        file = await FileSystem.pickSaveFile(fileName, selectedProbe.description, `.${selectedProbe.extension}`);
+        file = await FileSystem.pickSaveFile(
+            fileName,
+            selectedProbe.description,
+            `.${selectedProbe.extension}`,
+            "blackbox-video-file",
+        );
         if (!file) {
             return;
         }

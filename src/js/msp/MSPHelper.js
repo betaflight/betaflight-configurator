@@ -1950,6 +1950,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                 case MSPCodes.MSP_SET_PSAS_CONFIG:
                     break;
+                
+                // Named settings, read straight off the raw response by useMspSetting rather than
+                // decoded into FC state here. Listed so the dispatcher stops reporting them as
+                // unknown codes on every probe.
+                case MSPCodes.MSP2_CLI_SETTING:
+                case MSPCodes.MSP2_CLI_SETTING_INFO:
+                    break;
 
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);

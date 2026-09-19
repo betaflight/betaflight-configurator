@@ -1770,7 +1770,7 @@
                     "dynamic": false
                 },
                 "AUTOPILOT_HEADING": {
-                    "fields": [0, 1, 2, 3, 4, 6, 7],
+                    "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {

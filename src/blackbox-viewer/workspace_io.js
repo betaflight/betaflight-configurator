@@ -70,7 +70,12 @@ export async function saveWorkspaces(workspaceGraphConfigs, file) {
     // is English-only for now, so the description is a plain string.
     let handle;
     try {
-        handle = await FileSystem.pickSaveFile(file || "workspaces.json", "Workspaces file", ".json");
+        handle = await FileSystem.pickSaveFile(
+            file || "workspaces.json",
+            "Workspaces file",
+            ".json",
+            "blackbox-workspace-file",
+        );
     } catch (error) {
         if (error?.name === "AbortError") {
             return; // user cancelled the dialog

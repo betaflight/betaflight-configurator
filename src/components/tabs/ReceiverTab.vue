@@ -33,7 +33,7 @@
                     </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
-                        <ul v-for="(channel, index) in channelBars" :key="index">
+                        <ul v-for="(channel, index) in channelBars" :key="index" :class="channel.isAux ? `aux-${channel.state}` : undefined">
                             <li class="name">{{ channel.name }}</li>
                             <div class="w-full relative">
                                 <UProgress
@@ -614,6 +614,7 @@ import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
+import { entriesFromModeRanges } from "@/js/utils/modeRanges";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -628,7 +629,7 @@ import { gui_log } from "@/js/gui_log";
 import DarkTheme from "@/js/DarkTheme";
 import windowWatcherUtil from "@/js/utils/window_watchers";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
-import CryptoES from "crypto-es";
+import { MD5 } from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
@@ -936,6 +937,36 @@ const rssiChannelOptions = computed(() => {
 });
 
 // Channel bars data
+const auxModeRanges = computed(() => {
+    const rangesByAux = new Map();
+
+    for (const { entry } of entriesFromModeRanges(fcStore.modeRanges ?? [], fcStore.modeRangesExtra ?? [])) {
+        if (entry.kind !== "range" || entry.auxChannelIndex < 0) {
+            continue;
+        }
+
+        const ranges = rangesByAux.get(entry.auxChannelIndex) ?? [];
+        ranges.push(entry.sliderRange);
+        rangesByAux.set(entry.auxChannelIndex, ranges);
+    }
+
+    return rangesByAux;
+});
+
+function getAuxVisualState(auxIndex, value) {
+    const ranges = auxModeRanges.value.get(auxIndex);
+
+    if (!ranges?.length) {
+        return "unused";
+    }
+
+    const channelValue = Math.max(900, Math.min(2099, value ?? 1500));
+
+    const active = ranges.some(([start, end]) => channelValue >= start && channelValue < end);
+
+    return active ? "active" : "used";
+}
+
 const channelBars = computed(() => {
     const bars = [];
     const barNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
@@ -946,14 +977,22 @@ const channelBars = computed(() => {
     let auxIndex = 1;
     for (let i = 0; i < numBars; i++) {
         let name;
+        let auxChannelIndex = null;
         if (i < barNames.length) {
             name = barNames[i];
         } else {
+            auxChannelIndex = auxIndex - 1;
             name = t(`controlAxisAux${auxIndex++}`);
         }
         const value = channels[i] || 1500;
         const width = Math.max(0, Math.min(100, ((value - meterScale.min) / (meterScale.max - meterScale.min)) * 100));
-        bars.push({ name, value, width });
+        bars.push({
+            name,
+            value,
+            width,
+            isAux: auxChannelIndex !== null,
+            state: auxChannelIndex !== null ? getAuxVisualState(auxChannelIndex, value) : null,
+        });
     }
     return bars;
 });
@@ -978,7 +1017,7 @@ function elrsBindingPhraseToBytes(text) {
     let uidBytes = [0, 0, 0, 0, 0, 0];
     if (text) {
         const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
-        const hash = CryptoES.MD5(bindingPhraseFull).toString();
+        const hash = MD5(bindingPhraseFull).toString();
         const bytes = hash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16));
         const view = new DataView(new ArrayBuffer(6));
         for (let i = 0; i < 6; i++) {
@@ -1193,6 +1232,8 @@ async function loadConfig() {
         async () => {
             await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
             await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_MODE_RANGES);
+            await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
             await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
             await MSP.promise(MSPCodes.MSP_RC_TUNING);
             await MSP.promise(MSPCodes.MSP_RX_MAP);
@@ -1588,6 +1629,25 @@ onUnmounted(() => {
             }
         }
     }
+    ul.aux-unused {
+        :deep([data-slot="indicator"]) {
+            background-color: #6b7280 !important;
+        }
+    }
+
+    ul.aux-used {
+        :deep([data-slot="indicator"]) {
+            background-color: #0891b2 !important;
+        }
+    }
+
+    ul.aux-active {
+        :deep([data-slot="indicator"]) {
+            background-color: #22d3ee !important;
+            box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
+        }
+    }
+
     .name {
         width: 5rem;
         text-align: end;
