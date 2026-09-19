@@ -13,18 +13,18 @@ import { useSettingsStore } from "./stores/settings.js";
 import {
     getDebugModes,
     getDebugFieldNames,
+    debugContextFromSysConfig,
+    resolveDebugField,
     decodeDebugFieldToFriendly as sharedDecodeDebugFieldToFriendly,
     convertDebugFieldValue as sharedConvertDebugFieldValue,
 } from "../js/utils/debugModes";
 
 /**
- * Resolve the debug_mode name for a parsed log using the shared, API-version
- * keyed definitions (`getDebugModes`). The log's apiVersion is resolved once by
- * the parser (see firmwareToApiVersion) and stored on sysConfig.
+ * What the log itself says about its debug fields, falling back to the
+ * API-version keyed tables for a log recorded before firmware said so.
  */
-function debugModeNameForLog(flightLog) {
-    const sysConfig = flightLog.getSysConfig();
-    return getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
+function debugContextForLog(flightLog) {
+    return debugContextFromSysConfig(flightLog.getSysConfig());
 }
 
 /**
@@ -35,7 +35,7 @@ function debugModeNameForLog(flightLog) {
 function debugScaleContext(flightLog) {
     const sysConfig = flightLog.getSysConfig();
     return {
-        apiVersion: sysConfig.apiVersion,
+        ...debugContextFromSysConfig(sysConfig),
         motorPoles: sysConfig["motor_poles"],
         accRawToGs: (v) => flightLog.accRawToGs(v),
         gyroRawToDegreesPerSecond: (v) => flightLog.gyroRawToDegreesPerSecond(v),
@@ -515,34 +515,39 @@ FlightLogFieldPresenter.decodeDebugFieldToFriendly = function (flightLog, fieldN
         return value.toFixed(0);
     }
     return sharedDecodeDebugFieldToFriendly(
-        debugModeNameForLog(flightLog),
+        debugContextForLog(flightLog).modeName,
         fieldName,
         value,
         debugScaleContext(flightLog),
     );
 };
 
-FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, debugMode, apiVersion) {
-    if (debugMode) {
-        if (fieldName.includes("debug")) {
-            const modes = getDebugModes(apiVersion);
-            const fieldNames = getDebugFieldNames(apiVersion);
-            const debugModeName = modes[debugMode];
-            let debugFields;
+/* What to call one debug[n] under the mode the log was recorded in. */
+function debugFieldLabel(fieldName, ctx) {
+    // The log's own annotation for the slot, where it carries one.
+    const logged = resolveDebugField(fieldName, ctx);
+    if (logged) {
+        return logged.label;
+    }
 
-            if (debugModeName) {
-                debugFields = fieldNames[debugModeName];
-            }
+    const fieldNames = getDebugFieldNames(ctx.apiVersion);
+    const debugFields = ctx.modeName ? fieldNames[ctx.modeName] : undefined;
+    if (debugFields) {
+        return debugFields[fieldName] ?? fieldName;
+    }
+    if (fieldName === "debug[all]") {
+        return `Debug (${ctx.modeName || ctx.modeIndex})`;
+    }
 
-            if (!debugFields) {
-                if (fieldName === "debug[all]") {
-                    return `Debug (${debugModeName || debugMode})`;
-                }
-                debugFields = fieldNames[modes[0]];
-            }
+    // A mode with no table of its own still has the NONE names to fall back on.
+    return fieldNames[getDebugModes(ctx.apiVersion)[0]][fieldName] ?? fieldName;
+}
 
-            return debugFields[fieldName] ?? fieldName;
-        }
+FlightLogFieldPresenter.fieldNameToFriendly = function (fieldName, ctx) {
+    // Mode 0 is NONE, which has names of its own, so the index is compared
+    // against null rather than tested for truth.
+    if (ctx?.modeIndex != null && fieldName.includes("debug")) {
+        return debugFieldLabel(fieldName, ctx);
     }
     if (FRIENDLY_FIELD_NAMES[fieldName]) {
         return FRIENDLY_FIELD_NAMES[fieldName];
@@ -761,7 +766,7 @@ FlightLogFieldPresenter.ConvertDebugFieldValue = function (flightLog, fieldName,
         return value;
     }
     return sharedConvertDebugFieldValue(
-        debugModeNameForLog(flightLog),
+        debugContextForLog(flightLog).modeName,
         fieldName,
         toFriendly,
         value,

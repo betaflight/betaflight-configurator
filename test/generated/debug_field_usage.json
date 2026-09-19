@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "f5fb2717b84b7bf186091771dc0f0487db9aa691",
-            "date": "2026-09-12",
+            "commit": "9d01e8aaaa52b8ee5a344157ebe0ddc4d432f43b",
+            "date": "2026-09-18",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1770,7 +1770,7 @@
                     "dynamic": false
                 },
                 "AUTOPILOT_HEADING": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4, 6, 7],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {
@@ -1914,7 +1914,7 @@
                     "dynamic": false
                 },
                 "GPS_RESCUE_HEADING": {
-                    "fields": [0, 1, 2, 3, 4, 7],
+                    "fields": [0, 1, 2, 3, 4],
                     "dynamic": false
                 },
                 "GPS_RESCUE_TRACKING": {
@@ -1943,6 +1943,10 @@
                 },
                 "ITERM_RELAX": {
                     "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "LAUNCH": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6],
                     "dynamic": false
                 },
                 "LIDAR_TF": {
@@ -2025,6 +2029,10 @@
                     "fields": [0],
                     "dynamic": false
                 },
+                "RPM_FILTER": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
                 "RPM_LIMIT": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
@@ -2046,7 +2054,11 @@
                     "dynamic": false
                 },
                 "RX_FRSKY_SPI": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2],
+                    "dynamic": false
+                },
+                "RX_REDPINE_SPI": {
+                    "fields": [0, 1, 2, 3, 4, 5],
                     "dynamic": false
                 },
                 "RX_SFHSS_SPI": {

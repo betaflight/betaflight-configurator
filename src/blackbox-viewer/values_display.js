@@ -1,6 +1,7 @@
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter.js";
 import { SimpleStats } from "./simple-stats.js";
 import { formatTime } from "./tools.js";
+import { debugContextFromSysConfig } from "../js/utils/debugModes";
 
 function isInteger(value) {
     return Math.trunc(value) === value;
@@ -51,14 +52,12 @@ export function updateValuesChart(logStore, graphStore, appStore, userSettings) 
     const currentFlightMode = frame[logStore.flightLog.getMainFieldIndexByName("flightModeFlags")];
 
     if (graphStore.hasTableOverlay) {
-        const sysConfig = logStore.flightLog.getSysConfig();
-        const debugMode = sysConfig.debug_mode;
-        const apiVersion = sysConfig.apiVersion;
+        const debugContext = debugContextFromSysConfig(logStore.flightLog.getSysConfig());
         const values = [];
 
         for (let i = 0; i < fieldNames.length; i++) {
             values.push({
-                name: FlightLogFieldPresenter.fieldNameToFriendly(fieldNames[i], debugMode, apiVersion),
+                name: FlightLogFieldPresenter.fieldNameToFriendly(fieldNames[i], debugContext),
                 raw: atMost2DecPlaces(frame[i]),
                 decoded: FlightLogFieldPresenter.decodeFieldToFriendly(
                     logStore.flightLog,
@@ -78,7 +77,7 @@ export function updateValuesChart(logStore, graphStore, appStore, userSettings) 
                 continue;
             }
             statRows.push({
-                name: FlightLogFieldPresenter.fieldNameToFriendly(stat.name, debugMode, apiVersion),
+                name: FlightLogFieldPresenter.fieldNameToFriendly(stat.name, debugContext),
                 min: `${FlightLogFieldPresenter.decodeFieldToFriendly(logStore.flightLog, stat.name, stat.min)} (${atMost2DecPlaces(stat.min)})`,
                 max: `${FlightLogFieldPresenter.decodeFieldToFriendly(logStore.flightLog, stat.name, stat.max)} (${atMost2DecPlaces(stat.max)})`,
                 mean: `${FlightLogFieldPresenter.decodeFieldToFriendly(logStore.flightLog, stat.name, stat.mean)} (${atMost2DecPlaces(stat.mean)})`,
