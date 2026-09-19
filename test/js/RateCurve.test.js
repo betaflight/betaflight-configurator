@@ -358,41 +358,140 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
 
     it("returns undefined when rate, rcRate or rcExpo is undefined", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, undefined, 1.0, 0, true, 0, 1000)).toBeUndefined();
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, 0.7, undefined, 0, true, 0, 1000)).toBeUndefined();
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, 0.7, 1.0, undefined, true, 0, 1000)).toBeUndefined();
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: undefined,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 1000,
+            }),
+        ).toBeUndefined();
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: 0.7,
+                rcRate: undefined,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 1000,
+            }),
+        ).toBeUndefined();
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: 0.7,
+                rcRate: 1.0,
+                rcExpo: undefined,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 1000,
+            }),
+        ).toBeUndefined();
     });
 
     it("dispatches to getBetaflightRates by default and applies the limit clamp", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, 0.7, 1.0, 0, true, 0, 1000)).toBeCloseTo(666.6666666666666, 9);
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, 1.0, 1.0, 0, true, 0, 670)).toBe(670);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: 0.7,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 1000,
+            }),
+        ).toBeCloseTo(666.6666666666666, 9);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: 1.0,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 670,
+            }),
+        ).toBe(670);
     });
 
     it("dispatches to getRaceflightRates and ignores the limit parameter entirely", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.RACEFLIGHT };
-        expect(rc.rcCommandRawToDegreesPerSecond(2000, 40, 500, 0, false, 0, 1)).toBe(700);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(2000, {
+                rate: 40,
+                rcRate: 500,
+                rcExpo: 0,
+                superExpoActive: false,
+                deadband: 0,
+                limit: 1,
+            }),
+        ).toBe(700);
     });
 
     it("dispatches to getKISSRates and ignores the limit parameter entirely", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.KISS };
-        expect(rc.rcCommandRawToDegreesPerSecond(1750, 0.3, 1.0, 0, false, 0, 1)).toBeCloseTo(117.64705882352942, 9);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(1750, {
+                rate: 0.3,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: false,
+                deadband: 0,
+                limit: 1,
+            }),
+        ).toBeCloseTo(117.64705882352942, 9);
     });
 
     it("dispatches to getActualRates and ignores the limit parameter entirely", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.ACTUAL };
-        expect(rc.rcCommandRawToDegreesPerSecond(1750, 400, 200, 0.5, false, 0, 1)).toBeCloseTo(126.5625, 9);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(1750, {
+                rate: 400,
+                rcRate: 200,
+                rcExpo: 0.5,
+                superExpoActive: false,
+                deadband: 0,
+                limit: 1,
+            }),
+        ).toBeCloseTo(126.5625, 9);
     });
 
     it("dispatches to getQuickRates and ignores the limit parameter entirely", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.QUICKRATES };
-        expect(rc.rcCommandRawToDegreesPerSecond(1750, 100, 1.3, 0, false, 0, 1)).toBeCloseTo(130, 9);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(1750, {
+                rate: 100,
+                rcRate: 1.3,
+                rcExpo: 0,
+                superExpoActive: false,
+                deadband: 0,
+                limit: 1,
+            }),
+        ).toBeCloseTo(130, 9);
     });
 
     it("subtracts the deadband before normalising rcCommandf", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
-        expect(rc.rcCommandRawToDegreesPerSecond(1520, 0.7, 1.0, 0, true, 20, 1000)).toBe(0);
-        expect(rc.rcCommandRawToDegreesPerSecond(1510, 0.7, 1.0, 0, true, 20, 1000)).toBe(0);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(1520, {
+                rate: 0.7,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 20,
+                limit: 1000,
+            }),
+        ).toBe(0);
+        expect(
+            rc.rcCommandRawToDegreesPerSecond(1510, {
+                rate: 0.7,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 20,
+                limit: 1000,
+            }),
+        ).toBe(0);
     });
 });
 
@@ -400,13 +499,24 @@ describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
     it("computes the degrees/sec at full deflection for the non-legacy curve", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const rc = makeRateCurve();
-        expect(rc.getMaxAngularVel(0.7, 1.0, 0, true, 0, 1000)).toBeCloseTo(666.6666666666666, 9);
+        expect(
+            rc.getMaxAngularVel({ rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 }),
+        ).toBeCloseTo(666.6666666666666, 9);
     });
 
     it("returns undefined for the legacy curve (no maxAngularVel axis is drawn)", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const legacyRc = new RateCurve(true);
-        expect(legacyRc.getMaxAngularVel(0.7, 1.0, 0, true, 0, 1000)).toBeUndefined();
+        expect(
+            legacyRc.getMaxAngularVel({
+                rate: 0.7,
+                rcRate: 1.0,
+                rcExpo: 0,
+                superExpoActive: true,
+                deadband: 0,
+                limit: 1000,
+            }),
+        ).toBeUndefined();
     });
 
     it("rounds up to the nearest 200", () => {
@@ -527,7 +637,12 @@ describe("RateCurve.drawStickPosition return value", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const rc = makeRateCurve();
         const context = makeContext(400);
-        const result = rc.drawStickPosition(1500, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+        const result = rc.drawStickPosition(
+            1500,
+            { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
+            700,
+            context,
+        );
         expect(result).toBe(0);
     });
 
@@ -535,7 +650,12 @@ describe("RateCurve.drawStickPosition return value", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const rc = makeRateCurve();
         const context = makeContext(400);
-        const result = rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+        const result = rc.drawStickPosition(
+            2000,
+            { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
+            700,
+            context,
+        );
         expect(result).toBe("667");
     });
 
@@ -544,7 +664,12 @@ describe("RateCurve.drawStickPosition return value", () => {
         const rc = makeRateCurve();
         const height = 400;
         const context = makeContext(height, { clientWidth: 800, clientHeight: 400 });
-        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+        rc.drawStickPosition(
+            2000,
+            { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
+            700,
+            context,
+        );
 
         expect(context.arcCalls).toHaveLength(0);
         expect(context.ellipseCalls).toHaveLength(1);
@@ -562,7 +687,12 @@ describe("RateCurve.drawStickPosition return value", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const rc = makeRateCurve();
         const context = makeContext(400); // no clientWidth/clientHeight
-        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+        rc.drawStickPosition(
+            2000,
+            { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
+            700,
+            context,
+        );
 
         expect(context.ellipseCalls).toHaveLength(1);
         const [, , radiusX, radiusY] = context.ellipseCalls[0];
@@ -573,7 +703,12 @@ describe("RateCurve.drawStickPosition return value", () => {
         FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
         const rc = makeRateCurve();
         const context = makeContext(400, { withEllipse: false, clientWidth: 800, clientHeight: 400 });
-        rc.drawStickPosition(2000, 0.7, 1.0, 0, true, 0, 1000, 700, context);
+        rc.drawStickPosition(
+            2000,
+            { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
+            700,
+            context,
+        );
 
         expect(context.ellipse).toBeUndefined();
         expect(context.arcCalls).toHaveLength(1);

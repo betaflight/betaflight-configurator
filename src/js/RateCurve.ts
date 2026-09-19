@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import FC from "./fc";
 
 const minRc = 1000;
@@ -20,6 +41,59 @@ export interface CurrentRates {
     roll_rate_limit: number;
     pitch_rate_limit: number;
     yaw_rate_limit: number;
+}
+
+/** The axis parameters that define one rate curve. They are always read and passed as a set. */
+export interface RateCurveParams {
+    rate: number;
+    rcRate: number;
+    rcExpo: number;
+    superExpoActive: boolean;
+    deadband: number;
+    limit: number;
+}
+
+/** The same set before MSP has delivered a rate profile, when the three rate fields may be absent. */
+export type MaybeRateCurveParams = Omit<RateCurveParams, "rate" | "rcRate" | "rcExpo"> &
+    Partial<Pick<RateCurveParams, "rate" | "rcRate" | "rcExpo">>;
+
+function hasRates(params: MaybeRateCurveParams): params is RateCurveParams {
+    return params.rate !== undefined && params.rcRate !== undefined && params.rcExpo !== undefined;
+}
+
+export type RateCurveAxis = "roll" | "pitch" | "yaw";
+
+/** Pick one axis out of a rates snapshot. Yaw is the odd one out: it has its own deadband. */
+export function axisRateCurveParams(rates: CurrentRates, axis: RateCurveAxis): RateCurveParams {
+    switch (axis) {
+        case "pitch":
+            return {
+                rate: rates.pitch_rate,
+                rcRate: rates.rc_rate_pitch,
+                rcExpo: rates.rc_pitch_expo,
+                superExpoActive: rates.superexpo,
+                deadband: rates.deadband,
+                limit: rates.pitch_rate_limit,
+            };
+        case "yaw":
+            return {
+                rate: rates.yaw_rate,
+                rcRate: rates.rc_rate_yaw,
+                rcExpo: rates.rc_yaw_expo,
+                superExpoActive: rates.superexpo,
+                deadband: rates.yawDeadband,
+                limit: rates.yaw_rate_limit,
+            };
+        default:
+            return {
+                rate: rates.roll_rate,
+                rcRate: rates.rc_rate,
+                rcExpo: rates.rc_expo,
+                superExpoActive: rates.superexpo,
+                deadband: rates.deadband,
+                limit: rates.roll_rate_limit,
+            };
+    }
 }
 
 export default class RateCurve {
@@ -46,18 +120,8 @@ export default class RateCurve {
         return result;
     }
 
-    drawRateCurve(
-        rate: number,
-        rcRate: number,
-        rcExpo: number,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-        maxAngularVel: number,
-        context: CanvasRenderingContext2D,
-        width: number,
-        height: number,
-    ): void {
+    drawRateCurve(params: RateCurveParams, maxAngularVel: number, context: CanvasRenderingContext2D): void {
+        const { width, height } = context.canvas;
         const canvasHeightScale = height / (2 * maxAngularVel);
 
         const stepWidth = context.lineWidth;
@@ -67,18 +131,10 @@ export default class RateCurve {
 
         context.beginPath();
         let rcData = minRc;
-        context.moveTo(
-            -500,
-            -canvasHeightScale *
-                this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit),
-        );
+        context.moveTo(-500, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, params));
         rcData = rcData + stepWidth;
         while (rcData <= maxRc) {
-            context.lineTo(
-                rcData - midRc,
-                -canvasHeightScale *
-                    this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit),
-            );
+            context.lineTo(rcData - midRc, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, params));
 
             rcData = rcData + stepWidth;
         }
@@ -87,14 +143,10 @@ export default class RateCurve {
         context.restore();
     }
 
-    drawLegacyRateCurve(
-        rate: number,
-        rcRate: number,
-        rcExpo: number,
-        context: CanvasRenderingContext2D,
-        width: number,
-        height: number,
-    ): void {
+    drawLegacyRateCurve(params: RateCurveParams, context: CanvasRenderingContext2D): void {
+        const { rate, rcRate, rcExpo } = params;
+        const { width, height } = context.canvas;
+
         // math magic by englishman
         let rateY = height * rcRate;
         rateY = rateY + 1 / (1 - (rateY / height) * rate);
@@ -108,12 +160,7 @@ export default class RateCurve {
 
     drawStickPosition(
         rcData: number,
-        rate: number,
-        rcRate: number,
-        rcExpo: number,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
+        params: RateCurveParams,
         maxAngularVel: number,
         context: CanvasRenderingContext2D,
         stickColor?: string,
@@ -121,15 +168,7 @@ export default class RateCurve {
         const DEFAULT_SIZE = 60; // canvas units, relative size of the stick indicator (larger value is smaller indicator)
         const rateScaling = context.canvas.height / 2 / maxAngularVel;
 
-        const currentValue = this.rcCommandRawToDegreesPerSecond(
-            rcData,
-            rate,
-            rcRate,
-            rcExpo,
-            superExpoActive,
-            deadband,
-            limit,
-        );
+        const currentValue = this.rcCommandRawToDegreesPerSecond(rcData, params);
 
         if (rcData != undefined) {
             context.save();
@@ -287,36 +326,14 @@ export default class RateCurve {
         return currentRates;
     }
 
-    rcCommandRawToDegreesPerSecond(
-        rcData: number,
-        rate: number,
-        rcRate: number,
-        rcExpo: number,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-    ): number;
-    rcCommandRawToDegreesPerSecond(
-        rcData: number,
-        rate: number | undefined,
-        rcRate: number | undefined,
-        rcExpo: number | undefined,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-    ): number | undefined;
-    rcCommandRawToDegreesPerSecond(
-        rcData: number,
-        rate: number | undefined,
-        rcRate: number | undefined,
-        rcExpo: number | undefined,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-    ): number | undefined {
+    rcCommandRawToDegreesPerSecond(rcData: number, params: RateCurveParams): number;
+    rcCommandRawToDegreesPerSecond(rcData: number, params: MaybeRateCurveParams): number | undefined;
+    rcCommandRawToDegreesPerSecond(rcData: number, params: MaybeRateCurveParams): number | undefined {
+        const { superExpoActive, deadband, limit } = params;
         let angleRate;
 
-        if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
+        if (hasRates(params)) {
+            const { rate, rcRate, rcExpo } = params;
             let rcCommandf = this.rcCommand(rcData, 1, deadband);
             rcCommandf /= 500 - deadband;
 
@@ -362,25 +379,10 @@ export default class RateCurve {
         return angleRate;
     }
 
-    getMaxAngularVel(
-        rate: number,
-        rcRate: number,
-        rcExpo: number,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-    ): number | undefined {
+    getMaxAngularVel(params: RateCurveParams): number | undefined {
         let maxAngularVel;
         if (!this.useLegacyCurve) {
-            maxAngularVel = this.rcCommandRawToDegreesPerSecond(
-                maxRc,
-                rate,
-                rcRate,
-                rcExpo,
-                superExpoActive,
-                deadband,
-                limit,
-            );
+            maxAngularVel = this.rcCommandRawToDegreesPerSecond(maxRc, params);
         }
 
         return maxAngularVel;
@@ -392,36 +394,15 @@ export default class RateCurve {
         return this.maxAngularVel;
     }
 
-    draw(
-        rate: number | undefined,
-        rcRate: number | undefined,
-        rcExpo: number | undefined,
-        superExpoActive: boolean,
-        deadband: number,
-        limit: number,
-        maxAngularVel: number,
-        context: CanvasRenderingContext2D,
-    ): void {
-        if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
-            const height = context.canvas.height;
-            const width = context.canvas.width;
+    draw(params: MaybeRateCurveParams, maxAngularVel: number, context: CanvasRenderingContext2D): void {
+        if (!hasRates(params)) {
+            return;
+        }
 
-            if (this.useLegacyCurve) {
-                this.drawLegacyRateCurve(rate, rcRate, rcExpo, context, width, height);
-            } else {
-                this.drawRateCurve(
-                    rate,
-                    rcRate,
-                    rcExpo,
-                    superExpoActive,
-                    deadband,
-                    limit,
-                    maxAngularVel,
-                    context,
-                    width,
-                    height,
-                );
-            }
+        if (this.useLegacyCurve) {
+            this.drawLegacyRateCurve(params, context);
+        } else {
+            this.drawRateCurve(params, maxAngularVel, context);
         }
     }
 }
