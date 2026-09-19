@@ -421,6 +421,10 @@ export function adjustFieldDefsList(firmwareType, firmwareVersion) {
         if (semver.gte(firmwareVersion, "2026.6.0")) {
             FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
         }
+        if (semver.gte(firmwareVersion, "2026.6.12")) {
+            FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("AUTOPILOT") + 1, 0, "PSAS");
+            FLIGHT_LOG_FLIGHT_MODE_NAME.push();
+        }
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
     } else {

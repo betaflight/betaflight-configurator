@@ -9,7 +9,7 @@
  *   API 1.46.0  5fd38528ba 2024-05-04  (90 modes)
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
- *   API 1.49.0  9d01e8aaaa 2026-09-18  (107 modes)
+ *   API 1.49.0  616bb65094 2026-09-18  (108 modes)
  */
 
 /**
@@ -586,6 +586,7 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "AUTOPILOT_HEADING", // 104
         "RX_REDPINE_SPI", // 105
         "LAUNCH", // 106
+        "PSAS", // 107
     ]),
 });
 

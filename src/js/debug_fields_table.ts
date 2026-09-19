@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  9d01e8aaaa 2026-09-18  (520 annotated fields)
+ *   API 1.49.0  616bb65094 2026-09-18  (528 annotated fields)
  */
 
 /**
@@ -32,8 +32,6 @@ export interface FirmwareDebugField {
     unit: string | null;
     /** What one LSB is worth in `unit`. */
     scale: number;
-    /** Names the firmware enum an enumerator field holds, for `FIRMWARE_DEBUG_ENUMS`. */
-    enumTag?: string;
     /** Enumerator names indexed by value, null where the enum leaves a gap. */
     values?: readonly (string | null)[];
     /** Bit-flag names, lowest bit first, null for a bit the field does not use. */
@@ -123,7 +121,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
                 scale: 1,
-                enumTag: "rescuePhase_e",
                 values: Object.freeze([
                     "RESCUE_IDLE",
                     "RESCUE_INITIALIZE",
@@ -143,11 +140,11 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             0: Object.freeze({ label: "Throttle Output", unit: "us", scale: 1 }),
             1: Object.freeze({ label: "Target Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "Current Altitude", unit: "cm", scale: 1 }),
-            3: Object.freeze({ label: "Altitude P Term", unit: "us", scale: 1 }),
-            4: Object.freeze({ label: "Altitude I Term", unit: "us", scale: 1 }),
-            5: Object.freeze({ label: "Altitude D Term", unit: "us", scale: 1 }),
-            6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
-            7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
+            3: Object.freeze({ label: "Altitude P Term", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Altitude I Term", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Altitude D Term", unit: null, scale: 1 }),
+            6: Object.freeze({ label: "Altitude A Term", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Altitude Feedforward Term", unit: null, scale: 1 }),
         }),
         AUTOPILOT_HEADING: Object.freeze({
             0: Object.freeze({ label: "Heading", unit: "deg", scale: 0.1 }),
@@ -183,7 +180,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Baro State",
                 unit: null,
                 scale: 1,
-                enumTag: "barometerState_e",
                 values: Object.freeze([
                     "BARO_STATE_TEMPERATURE_READ",
                     "BARO_STATE_TEMPERATURE_SAMPLE",
@@ -211,7 +207,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Battery Voltage State",
                 unit: null,
                 scale: 1,
-                enumTag: "batteryState_e",
                 values: Object.freeze([
                     "BATTERY_OK",
                     "BATTERY_WARNING",
@@ -341,7 +336,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Failsafe Phase",
                 unit: null,
                 scale: 1,
-                enumTag: "failsafePhase_e",
                 values: Object.freeze([
                     "FAILSAFE_IDLE",
                     "FAILSAFE_RX_LOSS_DETECTED",
@@ -394,7 +388,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Active Calculation Step",
                 unit: null,
                 scale: 1,
-                enumTag: "step_e",
                 values: Object.freeze([
                     "STEP_WINDOW",
                     "STEP_DETECT_PEAKS",
@@ -450,7 +443,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Config Ack State",
                 unit: null,
                 scale: 1,
-                enumTag: "ubloxAckState_e",
                 values: Object.freeze([
                     "UBLOX_ACK_IDLE",
                     "UBLOX_ACK_WAITING",
@@ -485,7 +477,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
                 scale: 1,
-                enumTag: "rescuePhase_e",
                 values: Object.freeze([
                     "RESCUE_IDLE",
                     "RESCUE_INITIALIZE",
@@ -509,7 +500,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
                 scale: 1,
-                enumTag: "rescuePhase_e",
                 values: Object.freeze([
                     "RESCUE_IDLE",
                     "RESCUE_INITIALIZE",
@@ -558,7 +548,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Launch State",
                 unit: null,
                 scale: 1,
-                enumTag: "launchWingState_e",
                 values: Object.freeze([
                     "LAUNCH_WING_IDLE",
                     "LAUNCH_WING_WAIT_THROTTLE",
@@ -596,7 +585,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Frame Parser State",
                 unit: null,
                 scale: 1,
-                enumTag: "upt1FrameState_e",
                 values: Object.freeze([
                     "UPT1_FRAME_WAIT_RESET",
                     "UPT1_FRAME_STATE_WAIT_HEADER",
@@ -720,6 +708,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             6: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
         }),
+        PSAS: Object.freeze({
+            0: Object.freeze({ label: "Main speed curve", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Stick speed curve", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Lift coefficient", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Accel Z required", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Accel Z delta", unit: null, scale: 0.1 }),
+            5: Object.freeze({ label: "Accel Z P", unit: null, scale: 0.1 }),
+            6: Object.freeze({ label: "Lift coeff delta", unit: null, scale: 0.01 }),
+            7: Object.freeze({ label: "AoA limiter is on", unit: null, scale: 1 }),
+        }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "Tilt Corrected Altitude", unit: "cm", scale: 1 }),
@@ -784,7 +782,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Rescue Phase",
                 unit: null,
                 scale: 1,
-                enumTag: "rescuePhase_e",
                 values: Object.freeze([
                     "RESCUE_IDLE",
                     "RESCUE_INITIALIZE",
@@ -802,7 +799,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Rescue Failure Code",
                 unit: null,
                 scale: 1,
-                enumTag: "rescueFailureState_e",
                 values: Object.freeze([
                     "RESCUE_HEALTHY",
                     "RESCUE_FLYAWAY",
@@ -967,7 +963,6 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 label: "Tramp Status",
                 unit: null,
                 scale: 1,
-                enumTag: "trampStatus_e",
                 values: Object.freeze([
                     "TRAMP_STATUS_OFFLINE",
                     "TRAMP_STATUS_INIT",
@@ -1007,7 +1002,7 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
                 label: "Sag Compensation Attenuation",
                 unit: null,
                 scale: 0.001,
-                sites: Object.freeze(["src/main/flight/mixer.c:263"]),
+                sites: Object.freeze(["src/main/flight/mixer.c:267"]),
             }),
             Object.freeze({
                 label: "Voltage Stable Bits",
@@ -1151,108 +1146,3 @@ export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict
         ]),
     }),
 ]);
-
-/**
- * Enumerator names of every firmware enum a `[enum:...]` annotation names,
- * keyed by API version and then by the enum's own type name.
- *
- * A blackbox log names the type and nothing more, so this is the only way to
- * turn a logged enumerator into a name. A type absent here is one this version
- * of the app has never seen: the reader shows the raw value and says so, rather
- * than borrowing names from a different enum.
- */
-export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<string, readonly (string | null)[]>>>> =
-    Object.freeze({
-        "1.49.0": Object.freeze({
-            barometerState_e: Object.freeze([
-                "BARO_STATE_TEMPERATURE_READ",
-                "BARO_STATE_TEMPERATURE_SAMPLE",
-                "BARO_STATE_PRESSURE_START",
-                "BARO_STATE_PRESSURE_READ",
-                "BARO_STATE_PRESSURE_SAMPLE",
-                "BARO_STATE_TEMPERATURE_START",
-                "BARO_STATE_COUNT",
-            ]),
-            batteryState_e: Object.freeze([
-                "BATTERY_OK",
-                "BATTERY_WARNING",
-                "BATTERY_CRITICAL",
-                "BATTERY_NOT_PRESENT",
-                "BATTERY_INIT",
-            ]),
-            failsafePhase_e: Object.freeze([
-                "FAILSAFE_IDLE",
-                "FAILSAFE_RX_LOSS_DETECTED",
-                "FAILSAFE_LANDING",
-                "FAILSAFE_LANDED",
-                "FAILSAFE_RX_LOSS_MONITORING",
-                "FAILSAFE_RX_LOSS_RECOVERED",
-                "FAILSAFE_GPS_RESCUE",
-                "FAILSAFE_AUTOPILOT",
-            ]),
-            launchWingState_e: Object.freeze([
-                "LAUNCH_WING_IDLE",
-                "LAUNCH_WING_WAIT_THROTTLE",
-                "LAUNCH_WING_MOTOR_IDLE",
-                "LAUNCH_WING_WAIT_DETECTION",
-                "LAUNCH_WING_MOTOR_DELAY",
-                "LAUNCH_WING_SPINUP",
-                "LAUNCH_WING_IN_PROGRESS",
-                "LAUNCH_WING_FINISH",
-                "LAUNCH_WING_FLYING",
-                "LAUNCH_WING_ABORTED",
-            ]),
-            rescueFailureState_e: Object.freeze([
-                "RESCUE_HEALTHY",
-                "RESCUE_FLYAWAY",
-                "RESCUE_GPSLOST",
-                "RESCUE_LOWSATS",
-                "RESCUE_CRASHFLIP_DETECTED",
-                "RESCUE_STALLED",
-                "RESCUE_TOO_CLOSE",
-                "RESCUE_NO_HOME_POINT",
-                "RESCUE_NO_ALTITUDE",
-                "RESCUE_NO_HEADING",
-            ]),
-            rescuePhase_e: Object.freeze([
-                "RESCUE_IDLE",
-                "RESCUE_INITIALIZE",
-                "RESCUE_ATTAIN_ALT",
-                "RESCUE_PITCH_FORWARD",
-                "RESCUE_ROTATE",
-                "RESCUE_FLY_HOME",
-                "RESCUE_DESCENT",
-                "RESCUE_LANDING",
-                "RESCUE_EMERG_DESCENT",
-                "RESCUE_DO_NOTHING",
-            ]),
-            step_e: Object.freeze([
-                "STEP_WINDOW",
-                "STEP_DETECT_PEAKS",
-                "STEP_CALC_FREQUENCIES",
-                "STEP_UPDATE_FILTERS",
-                "STEP_COUNT",
-            ]),
-            trampStatus_e: Object.freeze([
-                "TRAMP_STATUS_OFFLINE",
-                "TRAMP_STATUS_INIT",
-                "TRAMP_STATUS_ONLINE_MONITOR_FREQPWRPIT",
-                "TRAMP_STATUS_ONLINE_MONITOR_TEMP",
-                "TRAMP_STATUS_ONLINE_CONFIG",
-            ]),
-            ubloxAckState_e: Object.freeze([
-                "UBLOX_ACK_IDLE",
-                "UBLOX_ACK_WAITING",
-                "UBLOX_ACK_GOT_ACK",
-                "UBLOX_ACK_GOT_NACK",
-            ]),
-            upt1FrameState_e: Object.freeze([
-                "UPT1_FRAME_WAIT_RESET",
-                "UPT1_FRAME_STATE_WAIT_HEADER",
-                "UPT1_FRAME_STATE_WAIT_LENGTH",
-                "UPT1_FRAME_STATE_READING_DATA",
-                "UPT1_FRAME_STATE_WAIT_CKSUM",
-                "UPT1_FRAME_STATE_WAIT_FOOTER",
-            ]),
-        }),
-    });
