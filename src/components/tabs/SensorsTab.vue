@@ -817,6 +817,7 @@ import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
@@ -873,6 +874,7 @@ const {
     writable: rangefinderPortWritable,
     options: rangefinderPortOptions,
     selectedIdentifier: rangefinderPortIdentifier,
+    conflict: rangefinderPortConflict,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
 } = useFeaturePort({ setting: "rangefinder_uart" });
@@ -882,9 +884,12 @@ const {
     writable: opticalFlowPortWritable,
     options: opticalFlowPortOptions,
     selectedIdentifier: opticalFlowPortIdentifier,
+    conflict: opticalFlowPortConflict,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
 } = useFeaturePort({ setting: "opticalflow_uart" });
+
+const { confirmPortConflicts } = usePortConflicts(() => [rangefinderPortConflict, opticalFlowPortConflict]);
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -2335,6 +2340,12 @@ const loadConfig = async () => {
 
 const saveConfig = () =>
     runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save untouched, before anything has been written to the FC.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         const savedSnapshot = takeSnapshot();
 
         // Push sensor hardware to store

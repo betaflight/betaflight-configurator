@@ -156,6 +156,11 @@ async function sendSetting(command) {
 export function useFeaturePort({ setting, baud = null, protocol = null }) {
     const fcStore = useFlightControllerStore();
 
+    // The claim the `peripherals` command prints for this feature is the port setting minus its
+    // _uart suffix ("rx_uart" -> "rx", "telemetry_1_uart" -> "telemetry_1"), so a port held by
+    // this same feature reads as its own and not as a clash.
+    const ownClaim = setting.replace(/_uart$/, "");
+
     const apiSupported = computed(() => serialPortsAreReadOnly(fcStore.config.apiVersion));
     const supported = ref(true);
     const available = computed(() => apiSupported.value && supported.value);
@@ -189,6 +194,30 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
 
     const baudOptions = computed(() => buildBaudOptions(baudRates.value, selectedBaud.value));
     const protocolOptions = computed(() => (protocolValues.value ?? []).map((value) => ({ value, label: value })));
+
+    // The port the user has picked, when it is already held by another feature and the pick is a
+    // move onto it. Only a change is reported: leaving a port that a shared config already puts
+    // this feature beside another on is not the user creating a clash, so it must not warn on save.
+    // `null` when there is nothing to warn about, or the build cannot say what holds a port.
+    const conflict = computed(() => {
+        if (!portChanged.value || selectedIdentifier.value === PORT_NONE) {
+            return null;
+        }
+
+        const claims = fcStore.serialConfig?.claims;
+        if (!claims) {
+            return null;
+        }
+
+        const heldBy = (claims[getPortCliName(selectedIdentifier.value)] ?? [])
+            .filter((name) => name !== ownClaim)
+            .map((name) => describeClaim(name).label);
+        if (!heldBy.length) {
+            return null;
+        }
+
+        return { port: getPortDisplayName(selectedIdentifier.value), heldBy };
+    });
 
     async function load() {
         supported.value = true;
@@ -274,6 +303,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
         protocolOptions,
         selectedProtocol,
         changed,
+        conflict,
         load,
         write,
     };

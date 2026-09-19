@@ -332,6 +332,7 @@ import { useSaving, withSaveFailureMessage } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useBuildOptions } from "../../composables/useBuildOptions";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useDronecanDevice } from "@/composables/useDronecanDevice";
 import { GPS_BAUD_RATES } from "@/composables/ports/featureBaudRates";
 import { addArrayElement } from "../../js/utils/array";
@@ -459,12 +460,15 @@ export default defineComponent({
             selectedIdentifier: gpsPortIdentifier,
             baudOptions: gpsBaudOptions,
             selectedBaud: gpsBaud,
+            conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
         } = useFeaturePort({
             setting: "gps_uart",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
+
+        const { confirmPortConflicts } = usePortConflicts(() => [gpsPortConflict]);
 
         // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
         const {
@@ -881,6 +885,12 @@ export default defineComponent({
             }
 
             return runSave(async () => {
+                // Warn before a pick that would take a port from another feature; a cancel here
+                // leaves the save untouched, before anything has been written to the FC.
+                if (!(await confirmPortConflicts())) {
+                    return;
+                }
+
                 const savedSnapshot = takeSnapshot();
 
                 Object.assign(fcStore.gpsConfig, gpsConfig);

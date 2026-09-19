@@ -584,6 +584,7 @@ import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 
@@ -607,9 +608,12 @@ const {
     options: escSensorPortOptions,
     selectedIdentifier: escSensorPortIdentifier,
     changed: escSensorPortChanged,
+    conflict: escSensorPortConflict,
     load: loadEscSensorPort,
     write: writeEscSensorPort,
 } = useFeaturePort({ setting: "esc_sensor_uart" });
+
+const { confirmPortConflicts } = usePortConflicts(() => [escSensorPortConflict]);
 
 // Warning dialog
 const settingsChangedOpen = ref(false);
@@ -1439,6 +1443,12 @@ const handleSave = (reboot = true) => {
     }
 
     return runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save (and the running motor test state) untouched, before anything has been written.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
         // This prevents motors from spinning after reboot due to DShot beacon commands
         if (motorsTestingEnabled.value) {

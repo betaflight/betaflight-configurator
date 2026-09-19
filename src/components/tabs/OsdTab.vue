@@ -604,6 +604,7 @@ import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
 
@@ -616,6 +617,7 @@ const {
     options: osdPortOptions,
     selectedIdentifier: osdPortIdentifier,
     changed: osdPortChanged,
+    conflict: osdPortConflict,
     load: loadOsdPort,
     write: writeOsdPort,
     selectedProtocol: osdProtocol,
@@ -633,12 +635,15 @@ const {
     baudOptions: customTextBaudOptions,
     selectedBaud: customTextBaud,
     changed: customTextPortChanged,
+    conflict: customTextPortConflict,
     load: loadCustomTextPort,
     write: writeCustomTextPort,
 } = useFeaturePort({
     setting: "osd_custom_text_uart",
     baud: { setting: "osd_custom_text_baud" },
 });
+
+const { confirmPortConflicts } = usePortConflicts(() => [osdPortConflict, customTextPortConflict]);
 
 const customTextPortAssigned = computed(() => customTextPortIdentifier.value !== PORT_NONE);
 
@@ -1445,6 +1450,12 @@ async function refreshConfig() {
 // Save OSD configuration to FC
 const saveConfig = () =>
     runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save untouched, before anything has been written to the FC.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         // Sync store state to the shared OSD.data bridge used by legacy helpers.
         osdStore.syncToLegacy();
 
