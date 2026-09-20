@@ -93,6 +93,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
     isAndroid: () => false,
+    isNetworkOnlyBrowser: () => false,
     isTauri: () => true,
     isTauriAndroid: () => false,
 }));
@@ -392,6 +393,7 @@ describe("createDfuProtocol routing", () => {
             checkSerialSupport: () => true,
             checkUsbSupport: () => true,
             isAndroid: () => false,
+            isNetworkOnlyBrowser: () => false,
             isTauri: () => true,
             isTauriAndroid: () => true,
         }));

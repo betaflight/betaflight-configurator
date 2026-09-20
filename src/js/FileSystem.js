@@ -1,6 +1,6 @@
 import { isAndroid, isTauriDesktop } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
-import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes.js";
+import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 
 const EXTENSION_MIME_MAP = {

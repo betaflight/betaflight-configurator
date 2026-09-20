@@ -195,8 +195,31 @@ export function isPwaContext() {
 }
 
 /**
+ * A plain browser that exposes none of Web Serial, Web Bluetooth or WebUSB, so a
+ * network endpoint (a Wi-Fi bridge, an ELRS module, SITL) is the only way it can
+ * reach a flight controller. Safari and Firefox land here; the native shells and
+ * the bridge's own embedded deployment never do.
+ *
+ * @returns {boolean} Whether network is the only transport this runtime has.
+ */
+export function isNetworkOnlyBrowser() {
+    if (isEmbeddedDeployment() || Capacitor.isNativePlatform() || isTauri()) {
+        return false;
+    }
+
+    if (typeof WebSocket === "undefined") {
+        return false;
+    }
+
+    return !checkSerialSupport() && !checkBluetoothSupport() && !checkUsbSupport();
+}
+
+/**
  * Verify the runtime can talk to a flight controller and, when it cannot,
  * replace the page body with an error message.
+ *
+ * A browser without Serial/Bluetooth/USB is still compatible: it connects over the
+ * network instead, and isNetworkOnlyBrowser() drives the notice that says so.
  *
  * @returns {boolean} True when a compatible transport (or native/Tauri shell,
  * or test environment) is available.
@@ -211,7 +234,9 @@ export function checkCompatibility() {
     const hasSerialSupport = checkSerialSupport();
     const hasBluetoothSupport = checkBluetoothSupport();
     const hasUsbSupport = checkUsbSupport();
-    const hasWebTransport = hasSerialSupport || hasBluetoothSupport || hasUsbSupport;
+    // WebSocket is the floor: every browser has it, and it carries the network transport.
+    const hasNetworkSupport = typeof WebSocket !== "undefined";
+    const hasWebTransport = hasSerialSupport || hasBluetoothSupport || hasUsbSupport || hasNetworkSupport;
 
     const isNative = Capacitor.isNativePlatform();
     const isTauriShell = isTauri();
@@ -238,7 +263,7 @@ export function checkCompatibility() {
     }
 
     let errorMessage =
-        "Betaflight requires a browser with at least one of: Web Serial, Web Bluetooth, or Web USB.<br/>";
+        "Betaflight requires a browser with at least one of: Web Serial, Web Bluetooth, Web USB, or WebSocket.<br/>";
 
     if (!hasSerialSupport) {
         errorMessage += "<br/>- Serial API support is not available.";
@@ -250,6 +275,10 @@ export function checkCompatibility() {
 
     if (!hasUsbSupport) {
         errorMessage += "<br/>- USB API support is not available.";
+    }
+
+    if (!hasNetworkSupport) {
+        errorMessage += "<br/>- WebSocket API support is not available.";
     }
 
     const body = document.body;

@@ -1,6 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { bluetoothDevices } from "./devices";
-import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes.js";
+import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes";
 
 const logHead = "[CAPACITORBLE]";
 const plugin = Capacitor?.Plugins?.BetaflightBle;

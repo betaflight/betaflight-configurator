@@ -478,6 +478,78 @@ describe("useFeaturePort", () => {
 
         expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimTelemetry 1)");
     });
+
+    describe("conflict", () => {
+        it("reports nothing while the selection has not moved", async () => {
+            await port.load();
+
+            expect(port.conflict.value).toBeNull();
+        });
+
+        it("reports nothing for a move onto a port nothing else holds", async () => {
+            await port.load();
+            port.selectedIdentifier.value = 51; // UART1, free
+
+            expect(port.conflict.value).toBeNull();
+        });
+
+        it("names the feature already holding a port the user moves onto", async () => {
+            replies.peripherals = ["serial VCP: msp_1*", "serial UART1: gps*"];
+            await port.load();
+            port.selectedIdentifier.value = 51; // UART1, held by gps
+
+            expect(port.conflict.value).toEqual({ port: "UART1", heldBy: ["portsClaimGps"] });
+        });
+
+        it("does not flag a port already held by this same feature", async () => {
+            // UART3 is held by rx, which is this feature; moving away and back is not a clash.
+            replies.peripherals = ["serial UART3: rx*"];
+            await port.load();
+            port.selectedIdentifier.value = 51;
+            port.selectedIdentifier.value = 53;
+
+            expect(port.conflict.value).toBeNull();
+        });
+
+        it("reports nothing when clearing the port to NONE", async () => {
+            replies.peripherals = ["serial UART3: rx*", "serial UART1: gps*"];
+            await port.load();
+            port.selectedIdentifier.value = PORT_NONE;
+
+            expect(port.conflict.value).toBeNull();
+        });
+
+        it("says nothing on a build that cannot report what holds a port", async () => {
+            replies.peripherals = ["###ERROR IN peripherals: UNKNOWN COMMAND###"];
+            await port.load();
+            port.selectedIdentifier.value = 51;
+
+            expect(port.conflict.value).toBeNull();
+        });
+
+        it("lists every other feature sharing the port the user moves onto", async () => {
+            replies.peripherals = ["serial VCP: msp_1*", "serial UART1: vtx*, osd"];
+            await port.load();
+            port.selectedIdentifier.value = 51;
+
+            expect(port.conflict.value).toEqual({ port: "UART1", heldBy: ["portsClaimVtx", "portsClaimOsd"] });
+        });
+    });
+
+    describe("selection", () => {
+        it("reports the pending assignment, unchanged after load", async () => {
+            await port.load();
+
+            expect(port.selection.value).toEqual({ identifier: 53, changed: false, label: "portsClaimRx" });
+        });
+
+        it("flags the assignment as changed once the user moves it", async () => {
+            await port.load();
+            port.selectedIdentifier.value = 51;
+
+            expect(port.selection.value).toEqual({ identifier: 51, changed: true, label: "portsClaimRx" });
+        });
+    });
 });
 
 describe("buildBaudOptions", () => {
