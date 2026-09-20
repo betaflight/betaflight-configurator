@@ -1,4 +1,4 @@
-import { set as setConfig } from "../ConfigStorage.js";
+import { set as setConfig } from "../ConfigStorage";
 import DeviceHandler from "../device_handler.js";
 
 /**

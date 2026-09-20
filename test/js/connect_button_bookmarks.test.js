@@ -58,7 +58,7 @@ vi.mock("../../src/stores/connection", () => ({
 
 import ConnectButton from "../../src/components/device-picker/ConnectButton.vue";
 import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
-import { get as getConfig } from "../../src/js/ConfigStorage.js";
+import { get as getConfig } from "../../src/js/ConfigStorage";
 
 const mountLogic = () => effectScope().run(() => ConnectButton.setup({}, { emit: vi.fn() }));
 const item = (api, label) => api.menuItems.value.find((entry) => entry.label === label);
