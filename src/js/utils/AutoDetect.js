@@ -4,7 +4,7 @@ import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
-import MSPCodes from "../msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import { serial } from "../serial";
@@ -151,8 +151,11 @@ class AutoDetect {
 
     async getBuildInfo() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === "BTFL") {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
+            await MSP.promise(
+                MSPCodes.MSP2_GET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
+            );
             await MSP.promise(MSPCodes.MSP_BUILD_INFO);
 
             // store FC.CONFIG.buildKey locally if needed
