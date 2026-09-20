@@ -91,6 +91,23 @@
     "portsSelectManual": {
         "message": "Manual Selection"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Network connections only",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "This browser can only reach a flight controller over the network, such as a Wi-Fi bridge, an ELRS module, or SITL. For USB or Bluetooth, use Chrome or Edge, or install the Betaflight App on your desktop. Missing here:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web Serial is not available."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth is not available."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB is not available, so firmware flashing over DFU is disabled."
+    },
     "portsSelectNone": {
         "message": "No connection available"
     },
@@ -2260,14 +2277,18 @@
     "gpsSerialPortSaveFailed": {
         "message": "Could not set the GPS serial port, so nothing was saved."
     },
-    "gpsCanDevice": {
+    "gpsProtocolUnknown": {
+        "message": "Unknown ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
         "message": "CAN Bus"
     },
-    "gpsCanDeviceHelp": {
+    "dronecanCanDeviceHelp": {
         "message": "The CAN bus the DroneCAN modules are wired to. This belongs to DroneCAN as a whole, so changing it moves every DroneCAN device, not just the GPS. Changing it requires a reboot."
     },
-    "gpsCanDeviceSaveFailed": {
-        "message": "Could not set the CAN bus, so nothing was saved."
+    "dronecanSaveFailed": {
+        "message": "Could not change the DroneCAN settings, so nothing was saved."
     },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
@@ -2457,6 +2478,24 @@
     },
     "portsClaimTelemetry": {
         "message": "Telemetry"
+    },
+    "portsConflictTitle": {
+        "message": "Port already in use"
+    },
+    "portsConflictWarning": {
+        "message": "You are assigning a serial port that another feature is already using. Saving will reset all ports to their defaults (unconfigured state):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}</strong> is currently used by {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Do you want to save anyway?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Save anyway"
+    },
+    "portsConflictCancel": {
+        "message": "Cancel"
     },
     "portsSensorGyro": {
         "message": "Gyro"

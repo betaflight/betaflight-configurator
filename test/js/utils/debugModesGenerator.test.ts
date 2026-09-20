@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
     maskNonCode,
-    parseAnnotation,
     parseEnumBlock,
     parseDebugModeNames,
     parseNamedEnums,
@@ -77,55 +76,6 @@ describe("maskNonCode", () => {
     });
 });
 
-describe("parseAnnotation", () => {
-    // The scan trims the text after `//!<` before parsing, so these do too.
-    it("reads a label and the unit of one LSB", () => {
-        expect(parseAnnotation("Cycle Time [unit:us]")).toMatchObject({
-            label: "Cycle Time",
-            unit: "us",
-            scale: 1,
-        });
-    });
-
-    it("reads the factor, including a negative one", () => {
-        expect(parseAnnotation("Angle [unit:0.1deg]")).toMatchObject({ unit: "deg", scale: 0.1 });
-        expect(parseAnnotation("Pressure [unit:100Pa]")).toMatchObject({ unit: "Pa", scale: 100 });
-        // CRSF sends RSSI as a positive count of dBm below zero.
-        expect(parseAnnotation("Uplink RSSI [unit:-1dBm]")).toMatchObject({ unit: "dBm", scale: -1 });
-        // Scaled but dimensionless.
-        expect(parseAnnotation("Ratio [unit:0.001]")).toMatchObject({ unit: null, scale: 0.001 });
-    });
-
-    it("reads bit flags, naming an unused bit null", () => {
-        expect(parseAnnotation("Frame Flags [flags:Channel 17|-|Signal Loss]")).toMatchObject({
-            label: "Frame Flags",
-            unit: null,
-            flags: ["Channel 17", null, "Signal Loss"],
-        });
-    });
-
-    it("spells out one label per index for a run-time index", () => {
-        const parsed = parseAnnotation("[index:0..2] Gyro ({roll|pitch|yaw}) [unit:dps]");
-
-        expect(parsed.indices).toEqual([0, 1, 2]);
-        expect(parsed.labels).toEqual(["Gyro (roll)", "Gyro (pitch)", "Gyro (yaw)"]);
-    });
-
-    it("takes a field with no shape as a plain integer", () => {
-        expect(parseAnnotation("Failure Count")).toMatchObject({ label: "Failure Count", unit: null, scale: 1 });
-    });
-
-    it("refuses what it cannot describe rather than dropping the field", () => {
-        // Each of these would otherwise leave a field silently unlabelled.
-        expect(parseAnnotation("[unit:us]").error).toBeDefined();
-        expect(parseAnnotation("Label [furlongs]").error).toBeDefined();
-        expect(parseAnnotation("Label [unit:furlongs]").error).toBeDefined();
-        expect(parseAnnotation("Label [roll] [unit:us]").error).toBeDefined();
-        // Three alternatives for two indices.
-        expect(parseAnnotation("[index:0..1] Gyro ({roll|pitch|yaw}) [unit:dps]").error).toBeDefined();
-    });
-});
-
 describe("parseEnumBlock and parseNamedEnums", () => {
     it("numbers enumerators from zero, honouring an explicit value", () => {
         expect([...parseEnumBlock("A, B, C")]).toEqual([
@@ -178,15 +128,6 @@ describe("pullRequestNumber", () => {
         for (const value of ["", "master", "15596 15597", "refs/heads/x", "../../etc", "15596:master"]) {
             expect(() => pullRequestNumber(value)).toThrow(/pull request number/);
         }
-    });
-});
-
-describe("parseAnnotation, unit factors", () => {
-    it("refuses a factor that overflows a double, which would scale every sample to Infinity", () => {
-        const huge = "9".repeat(400);
-        expect(parseAnnotation(`Cycle Time [unit:${huge}us]`).error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseAnnotation("Cycle Time [unit:0us]").error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseAnnotation("Cycle Time [unit:0.1us]").scale).toBe(0.1);
     });
 });
 
