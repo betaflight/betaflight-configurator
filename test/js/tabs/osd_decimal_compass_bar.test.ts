@@ -137,6 +137,20 @@ describe("OSD decimal compass bar", () => {
         }
     });
 
+    it("keeps unrecognized elements unknown on API 1.48", () => {
+        selectFields("1.48.0");
+        decodePositions(Array(89).fill(0));
+        expect(OSD.data.displayItems[88].name).toBe("UNKNOWN");
+    });
+
+    it("preserves unknown elements following the pitot and decimal compass slots", () => {
+        selectFields("1.49.0");
+        decodePositions(Array(91).fill(0));
+        expect(OSD.data.displayItems[88].name).toBe("PITOT_AIRSPEED");
+        expect(OSD.data.displayItems[89].name).toBe("DECIMAL_COMPASS_BAR");
+        expect(OSD.data.displayItems[90].name).toBe("UNKNOWN");
+    });
+
     it.each(firmwareLayouts)(
         "decodes and saves with pitot=$hasPitot and $buildOptions",
         async ({ buildOptions, hasPitot, decimalIndex }) => {
