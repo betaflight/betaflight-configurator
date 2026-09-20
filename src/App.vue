@@ -63,7 +63,7 @@ import Sidebar from "./components/sidebar/Sidebar.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
 import PortUsageModule from "./js/port_usage.js";
-import CONFIGURATORModule from "./js/data_storage.js";
+import CONFIGURATORModule from "./js/data_storage";
 import GUI from "./js/gui.js";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";

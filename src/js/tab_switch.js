@@ -1,5 +1,5 @@
 import GUI from "./gui.js";
-import CONFIGURATOR from "./data_storage.js";
+import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization.js";
 import { gui_log } from "./gui_log.js";
 import { set as setConfig } from "./ConfigStorage.js";

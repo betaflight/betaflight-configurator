@@ -10,7 +10,7 @@ import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
 import DeviceHandler from "../js/device_handler.js";
 import PortUsage from "../js/port_usage.js";
-import CONFIGURATOR from "../js/data_storage.js";
+import CONFIGURATOR from "../js/data_storage";
 import { BetaflightComponents } from "../js/vue_components.js";
 import { getNuxtUiRouter } from "../js/nuxt_ui_router.js";
 import { pinia } from "../js/pinia_instance.js";
