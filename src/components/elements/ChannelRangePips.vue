@@ -1,12 +1,12 @@
 <template>
     <div class="pips-channel-range" :class="variant">
-        <div v-for="pip in pips" :key="pip" class="pip" :style="{ left: `${channelPercent(pip)}%` }">
+        <div v-for="pip in pips" :key="pip" class="pip" :style="{ insetInlineStart: `${channelPercent(pip)}%` }">
             {{ pip }}
         </div>
         <div
             v-if="variant === 'aux' && markerPercent !== null"
             class="pip-marker"
-            :style="{ left: `${markerPercent}%` }"
+            :style="{ insetInlineStart: `${markerPercent}%` }"
         ></div>
     </div>
 </template>
@@ -55,10 +55,16 @@ export default defineComponent({
     margin-top: 4px;
 }
 
+/* The slider these pips annotate mirrors in RTL, so the offsets are inline-relative; the
+   centering shift has to follow the same axis by hand because translateX is always physical. */
 .pip {
     position: absolute;
     transform: translateX(-50%);
     white-space: nowrap;
+}
+
+html[dir="rtl"] .pip {
+    transform: translateX(50%);
 }
 
 .pips-channel-range.aux .pip {
@@ -71,7 +77,7 @@ export default defineComponent({
     content: "";
     position: absolute;
     bottom: 20px;
-    inset-inline-start: 50%;
+    left: 50%;
     transform: translateX(-50%);
     width: 2px;
     height: 16px;
@@ -94,5 +100,9 @@ export default defineComponent({
     pointer-events: none;
     z-index: 10;
     border-radius: 9999px;
+}
+
+html[dir="rtl"] .pip-marker {
+    transform: translateX(50%);
 }
 </style>
