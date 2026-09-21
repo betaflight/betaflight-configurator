@@ -161,6 +161,9 @@
         "message": "הסר חיבור שמור",
         "description": "Button that deletes a saved manual connection in the connect dialog."
     },
+    "autoConnect": {
+        "message": "חיבור אוטומטי"
+    },
     "close": {
         "message": "סגור"
     },
@@ -328,6 +331,9 @@
     "configuratorUpdateNotice": {
         "message": "אתה משתמש בגרסה מיושנת של <b>אפליקציית Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "configuratorUpdateHelp": {
+        "message": "כאשר יש חיבור לאינטרנט, האפליקציה אמורה לבקש אוטומטית עדכונים זמינים."
+    },
     "rebootFlightController": {
         "message": "מאתחל את בקר הטיסה (FC), התחבר מחדש כשתהיה מוכן"
     },
@@ -484,6 +490,9 @@
     },
     "autotuneMarginNormal": {
         "message": "רגיל"
+    },
+    "autotuneMarginConservative": {
+        "message": "זהיר"
     },
     "autotuneTargetUnreachable": {
         "message": "$1: כלי זה אינו יכול להגיע ל-$2° של מרווח פאזה (המגבלה שלו היא בערך $3), ולכן ההגבר נשמר במקום להיות משוער. בחר יעד נמוך יותר, או הוסף D כדי להגביה את המגבלה."
@@ -856,6 +865,12 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>גרסת האפליקציה בשימוש ($1) אינה תומכת בקושחה $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>לא נבחר פרוטוקול פלט מנוע<\/strong>.<br>אנא בחר פרוטוקול פלט מנועים המתאים לבקרי המהירות שלך בלשונית '$t(configurationEscFeatures.message)' שבתוך לשונית '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>מד התאוצה מופעל אך אינו מכויל<\/strong>.<br>אם בכוונתך להשתמש במד התאוצה, אנא עקוב אחר ההוראות עבור '$t(initialSetupButtonCalibrateAccel.message)' בלשונית '$t(tabSensorConfig.message)'. אם פונקציה כלשהי הדורשת את מד התאוצה (מצבי איבוד עילוי, חילוץ GPS, ...) מופעלת, חימוש כלי הטיס מושבת עד שמד התאוצה יכויל.<br>אם אינך מתכנן להשתמש במד התאוצה, מומלץ להשבית אותו בלשונית '$t(configurationSystem.message)' שבתוך לשונית '$t(tabConfiguration.message)'."
+    },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -1080,7 +1095,7 @@
         "message": "תיעוד \/ חוברת הוראות"
     },
     "defaultDocumentation": {
-        "message": "תיעוד Betaflight זמין בהערות השחרור (Release notes) וב - wiki.<br \/><br \/>"
+        "message": "תיעוד Betaflight זמין בהערות השחרור וב - wiki.<br \/><br \/>"
     },
     "defaultDocumentation1": {
         "message": "ה - wiki של Betaflight הוא משאב נהדר למידע, ניתן למצוא אותו <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">כאן<\/a>."
@@ -2021,6 +2036,9 @@
     "configurationThrottleMaximum": {
         "message": "מקסימום מצערת (ערך ESC גבוה ביותר כשחמוש)"
     },
+    "configurationMotorKv": {
+        "message": "KV של המנוע"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "פקודת מינימום (Min Command) (ערך ESC כשלא חמוש)"
     },
@@ -2190,15 +2208,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "לא ניתן היה להגדיר את היציאה הטורית של ה-GPS, לכן שום דבר לא נשמר."
     },
-    "gpsCanDevice": {
-        "message": "CAN Bus"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "ה-CAN bus אליו מחוברים מודולי ה-DroneCAN. הגדרה זו שייכת ל-DroneCAN בכללותו, ולכן שינוי שלה ישפיע על כל התקן DroneCAN, ולא רק על ה-GPS. שינוי דורש הפעלה מחדש."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "לא ניתן היה להגדיר את ה-CAN bus, ולכן שום דבר לא נשמר."
-    },
     "configurationGPSAutoBaud": {
         "message": "קצב שידור אוטומטי (Auto Baud)"
     },
@@ -2251,6 +2260,9 @@
     },
     "configurationSaved": {
         "message": "ההגדרות נשמרו"
+    },
+    "configurationSaveFailed": {
+        "message": "שמירת התצורה נכשלה"
     },
     "configurationButtonSave": {
         "message": "שמור ואתחל (Save and Reboot)"
@@ -2338,6 +2350,9 @@
     },
     "portsPortInactive": {
         "message": "לא פעיל"
+    },
+    "portsPortFree": {
+        "message": "חופשי"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -4150,6 +4165,9 @@
     "sensorsSonarSelect": {
         "message": "סונאר (Sonar)"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "ניפוי באגים (Debug)"
     },
@@ -4170,6 +4188,9 @@
     },
     "sensorsSonarTitle": {
         "message": "סונאר - ס\"מ"
+    },
+    "sensorsPitotTitle": {
+        "message": "מהירות אוויר - ס\"מ\/שנייה"
     },
     "sensorsDebugTitle": {
         "message": "ניפוי באגים (Debug)"
@@ -4413,7 +4434,7 @@
         "message": "תאריך:"
     },
     "firmwareFlasherReleaseTarget": {
-        "message": "לוח יעד (Target):"
+        "message": "לוח יעד"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
         "message": "קבל מידע נוסף על לוח היעד (Target) ב - wiki של Betaflight",
@@ -4534,7 +4555,7 @@
         "message": "קצב שידור (Baud Rate)"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "הצג מועמדים לשחרור (Release candidates)"
+        "message": "הצג מועמדים לשחרור"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "הצג גרסאות 'מועמדות לשחרור' (RC) בנוסף לגרסאות יציבות (Stable releases)"
@@ -4585,7 +4606,7 @@
         "message": "חפש התקן DFU"
     },
     "firmwareFlasherFlashFirmware": {
-        "message": "צרוב קושחה (Flash Firmware)"
+        "message": "צרוב קושחה"
     },
     "firmwareFlasherFlashFirmwareOptions": {
         "message": "אפשרויות צריבת קושחה"
@@ -4622,7 +4643,7 @@
         "message": "אל תצרוב חומרה שאינה Betaflight. אל תנתק במהלך הצריבה. מנהל האתחול של STM32 נמצא ב-ROM ואינו יכול להפוך ל\"לבנה\". גבה תמיד את ההגדרות שלך לפני השדרוג."
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>שחזור \/ אובדן תקשורת<\/strong>"
+        "message": "שחזור \/ אובדן תקשורת"
     },
     "firmwareFlasherRecoveryText": {
         "message": "אם איבדת תקשורת עם הלוח שלך, פעל לפי השלבים הבאים לשחזור התקשורת: <ul><li>נתק ממקור כוח<\/li><li>הפעל את האפשרות 'ללא תהליך אתחול' (No reboot sequence), והפעל את 'מחיקת שבב מלאה' (Full chip erase).<\/li><li>קצר את פיני ה-BOOT או החזק את כפתור ה-BOOT לחוץ.<\/li><li>חבר את הלוח לחשמל \/ למחשב (נורית הפעילות לא אמורה להבהב אם הפעולה בוצעה נכון).<\/li><li>התקן את כל דרייברי ה-STM32 ואת התוכנה Zadig במידת הצורך (ראה פרק <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> במדריך של Betaflight).<\/li><li>סגור את האפליקציה, והפעל אותה מחדש.<\/li><li>שחרר את כפתור ה-BOOT אם קיים אחד בבקר הטיסה שלך.<\/li><li>צרוב את הקושחה המתאימה (תוך שימוש ב-Baud rate ידני אם כך צוין במדריך הבקר שלך).<\/li><li>נתק את החשמל \/ מחשב.<\/li><li>הסר את הגישור מפיני ה-BOOT.<\/li><li>חבר שוב לחשמל (נורית הפעילות אמורה עכשיו להבהב).<\/li><li>התחבר באופן רגיל.<\/li><\/ul>"
@@ -4770,7 +4791,7 @@
         "message": "המשך"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "זיהוי (Detect)"
+        "message": "זיהוי"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
         "message": "זיהוי אוטומטי עובד רק כשאתה לא במצב DFU ושתקשורת ה-MSP תקינה. לפעמים תצטרך לנסות כמה פעמים או אפילו לנתק ולחבר את ה-USB. נסה להתחבר כרגיל (Connect) קודם כל, כי יתכן ששכחת להחיל את הגדרות ברירת המחדל (Custom defaults). אנא בצע הפעלה מחדש (Reboot) לאחר הצריבה - נתק וחבר שוב את כבל ה-USB."
@@ -6220,6 +6241,9 @@
     "powerBatteryCapacity": {
         "message": "קיבולת (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "קיבולת עבור פרופיל הסוללה הפעיל. הקושחה משתמשת בערך זה עבור mAh שנותר ואזהרות קיבולת OSD כאשר פרופילי סוללה זמינים."
+    },
     "osdSetupTitle": {
         "message": "תצוגת מסך (OSD)"
     },
@@ -7043,7 +7067,7 @@
         "message": "מציג את הערך של טיימר 2"
     },
     "osdTextElementCoreTemperature": {
-        "message": "טמפרטורת ליבה (Core temperature)",
+        "message": "טמפרטורת ליבה",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCoreTemperature": {
@@ -7588,7 +7612,7 @@
         "message": "מציג רשימה של בקרי המהירות (ESCs) או מנועים שבהם יש שגיאה (הסל\"ד או הטמפרטורה שלהם חורגים מהסף שהוגדר)"
     },
     "osdWarningTextCoreTemperature": {
-        "message": "טמפרטורת ליבה (Core temperature)",
+        "message": "טמפרטורת ליבה",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCoreTemperature": {
@@ -7653,6 +7677,9 @@
     "osdWarningTextOverCap": {
         "message": "צריכת יתר מסוללה (Over capacity)",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningOverCap": {
+        "message": "מזהיר כאשר ה-mAh שנצרך עולה על קיבולת פרופיל הסוללה הפעיל, או אזעקת קיבולת ה-OSD הישנה כאשר לא מוגדרת קיבולת פרופיל"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -8090,6 +8117,9 @@
     },
     "configurationBaroHardware": {
         "message": "ברומטר (אם נתמך)"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "מגנומטר (אם נתמך)"
@@ -8950,7 +8980,7 @@
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "firmwareFlasherBuildConfigurationHead": {
-        "message": "הגדרות בנייה (Build Configuration)"
+        "message": "הגדרות בנייה"
     },
     "firmwareFlasherBuildOptions": {
         "message": "אפשרויות נוספות"
@@ -9026,7 +9056,7 @@
         "message": "המשך ללא פרוטוקול OSD"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "שותף מאומת (Verified Partner)"
+        "message": " ✅ שותף מאומת"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
         "message": "ספק \/ קהילה (Vendor \/ Community)"
@@ -9038,7 +9068,7 @@
         "message": "⚠️ יעד נתמך קהילה \/ יצרן - לא נתמך רשמית ⚠️"
     },
     "coreBuild": {
-        "message": "ליבה בלבד (Core Only)"
+        "message": "ליבה בלבד"
     },
     "coreBuildModeDescription": {
         "message": "אפשרות זו בונה קושחה המכילה את דרייברי החומרה (ומעט תכונות מוגבלות). היא זמינה כדי לסייע בזיהוי החומרה על בקר הטיסה, ומסופקת לנוחות זו בלבד. לא כל התכונות יהיו זמינות (רק חומרה) בשימוש באפשרות זו."
@@ -9194,8 +9224,17 @@
     "userPasskeyDeleteFailed": {
         "message": "מחיקת מפתח הגישה נכשלה"
     },
+    "userTokenDeleteSuccess": {
+        "message": "האסימון נמחק בהצלחה"
+    },
+    "userTokenDeleteFailed": {
+        "message": "מחיקת האסימון נכשלה"
+    },
     "userProfileLoadFailed": {
         "message": "טעינת פרופיל המשתמש נכשלה"
+    },
+    "userTokenLoadFailed": {
+        "message": "טעינת אסימוני המשתמש נכשלה"
     },
     "userPasskeyLoadFailed": {
         "message": "טעינת מפתחות הגישה של המשתמש נכשלה"
@@ -9251,6 +9290,9 @@
     "userPasskeyNoPasskeys": {
         "message": "אין מפתחות גישה זמינים"
     },
+    "userTokenNoTokens": {
+        "message": "אין אסימונים זמינים"
+    },
     "profileBackupSuccess": {
         "message": "הגיבוי הצליח"
     },
@@ -9268,6 +9310,12 @@
     },
     "labelSignOut": {
         "message": "התנתק"
+    },
+    "labelAvatarUrl": {
+        "message": "כתובת URL של האוואטר"
+    },
+    "placeholderAvatarUrl": {
+        "message": "הזן כתובת URL של תמונה עבור האוואטר שלך"
     },
     "labelCreatePasskey": {
         "message": "צור מפתח גישה"
@@ -9292,6 +9340,9 @@
     },
     "labelNoPasskeyPrompt": {
         "message": "אין לך מפתח גישה?"
+    },
+    "labelSetOnePasskeyUp": {
+        "message": "הגדר אחד"
     },
     "descriptionPasskeyLogin": {
         "message": "השתמש במפתח הגישה שלך כדי להתחבר"
@@ -9410,6 +9461,9 @@
     "itemBackup": {
         "message": "גיבוי"
     },
+    "itemToken": {
+        "message": "אסימון"
+    },
     "itemPasskey": {
         "message": "מפתח גישה"
     },
@@ -9428,6 +9482,9 @@
     },
     "backupMcuUnknown": {
         "message": "‏MCU לא ידוע"
+    },
+    "sectionUserTokens": {
+        "message": "אסימוני משתמש"
     },
     "sectionUserPasskeys": {
         "message": "מפתחות גישה של משתמשים"
@@ -9473,8 +9530,14 @@
     "preflightStatusGo": {
         "message": "התחל"
     },
+    "preflightStatusCaution": {
+        "message": "זהירות"
+    },
     "preflightStatusWarning": {
         "message": "אזהרה"
+    },
+    "preflightStatusNoGo": {
+        "message": "אל תמריא"
     },
     "preflightStatusNoData": {
         "message": "אין נתונים"
@@ -9484,6 +9547,9 @@
     },
     "preflightCheckVisibility": {
         "message": "ניראות"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "משקעים"
     },
     "preflightCheckSolar": {
         "message": "סולארי"
@@ -9518,6 +9584,12 @@
     "preflightWmoDenseDrizzle": {
         "message": "טפטוף כבד"
     },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "גשם קל מאוד"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "גשם קל"
+    },
     "preflightWmoSlightRain": {
         "message": "גשם קל"
     },
@@ -9526,6 +9598,12 @@
     },
     "preflightWmoHeavyRain": {
         "message": "גשם כבד"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "גשם לסירוגין"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "גשם חזק"
     },
     "preflightWmoSlightSnow": {
         "message": "שלג קל"
@@ -9538,6 +9616,21 @@
     },
     "preflightWmoSnowGrains": {
         "message": "פתיתי שלג"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "טפטופים"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "גשם מקומי"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "גשם שוטף"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "שלג קל"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "שלג כבד"
     },
     "preflightWmoThunderstorm": {
         "message": "סופת רעמים"
@@ -9583,6 +9676,9 @@
     },
     "preflightVisReduced": {
         "message": "מופחת"
+    },
+    "preflightVisPoor": {
+        "message": "ראות לקויה"
     },
     "preflightPrecipNone": {
         "message": "ללא"
@@ -9644,6 +9740,9 @@
     "preflightCheckDensityAlt": {
         "message": "גובה צפיפות"
     },
+    "preflightFeelsLike": {
+        "message": "מרגיש כמו"
+    },
     "preflightFogRisk": {
         "message": "סיכון לערפל"
     },
@@ -9668,8 +9767,17 @@
     "preflightDaNormal": {
         "message": "ביצועים תקינים"
     },
+    "preflightDaReduced": {
+        "message": "עילוי מופחת מעט"
+    },
     "preflightDaLow": {
         "message": "ירידה ניכרת בביצועים"
+    },
+    "preflightDaPoor": {
+        "message": "הפחתת עילוי משמעותית"
+    },
+    "preflightCivilTwilight": {
+        "message": "חלון דמדומים"
     },
     "preflightRefresh": {
         "message": "רענון"
@@ -9697,6 +9805,9 @@
     },
     "preflightPressure": {
         "message": "לחץ אוויר"
+    },
+    "preflightDewPoint": {
+        "message": "נקודת טל"
     },
     "preflightFlightWindow": {
         "message": "חלון טיסה"
@@ -9782,10 +9893,16 @@
     "preflightGNSSNote": {
         "message": "דיוק ה-GPS מושפע מתנאים סולאריים\/גיאומגנטיים. חבר את הכלי שלך לקבלת נתוני לוויין בזמן אמת בלשונית ה-GPS."
     },
+    "preflightKpEffect": {
+        "message": "השפעה יונוספירית"
+    },
     "preflightGPSRescue": {
         "message": "סטטוס GPS Rescue"
     },
     "preflightMagDeclination": {
+        "message": "נטייה מגנטית"
+    },
+    "preflightMagInclination": {
         "message": "נטייה מגנטית"
     },
     "preflightGNSSPlanner": {
@@ -9986,10 +10103,199 @@
     "preflightNotamTypeNotam": {
         "message": "NOTAM"
     },
+    "preflightNotamAltFrom": {
+        "message": "נמוך יותר"
+    },
+    "preflightNotamAltTo": {
+        "message": "גבוה יותר"
+    },
     "preflightNotamShowMore": {
         "message": "הצג עוד"
     },
     "preflightNotamShowLess": {
         "message": "הצג פחות"
+    },
+    "preflightNotamLastFetched": {
+        "message": "נשלף לאחרונה"
+    },
+    "pidTuningWingSettings": {
+        "message": "הגדרות כנף"
+    },
+    "pidTuningWingSterm": {
+        "message": "רכיב S"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "מצב"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "מצב SPA עבור כל ציר"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "מרכז"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "נקודת יעד RPY שבה ערכי ה-PID מופחתים ל-50% (ניחתת PID של נקודת היעד)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "רוחב"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "רוחב של מעבר חלק סביב spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "כבוי"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "הקפאת I"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "הקפאת PD ו-I"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "סוג מהירות"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "סוג מודל הערכת מהירות אוויר"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "בסיסי"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "מתקדם"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "סוג עקומה"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "היפרבולי משמש בדרך כלל עבור כנפיים. קלאסי מיועד למולטירוטורים ומשתמש ב-TPA סטנדרטי."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "קלאסי"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "היפרבולי"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "הגדרת מהירות בסיסית"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "הגדרת מהירות מתקדמת"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "השהייה"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "השהייה של אומדן מהירות אוויר מהמצערת במילי שניות (זמן הגעה ל-50% מהמהירות הסופית בטיסה אופקית במצערת מלאה)"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "כוח משיכה"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "השפעת כוח המשיכה על אומדן מהירות אוויר באחוזים"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "פסיעת פרופלור"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "פסיעת פרופלור באינצ'ים * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "מסת כלי הטיס"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "מסת כלי הטיס בגרמים"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Drag K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "מקדם גרר של כלי הטיס"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "דחף"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "דחף סטטי בגרמים"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "מתח סוללה מרבי"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "מתח מרבי תיאורטי * 100. משמש עבור התאמת מצערת לפי מתח עבור אומדן מהירות אוויר"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "KV של המנוע"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "KV של המנוע. שנה ערך זה בלשונית המנועים."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "היסט עלרוד"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "היסט עלרוד במעלות * 10 עבור אומדן מהירות כלי הטיס"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "הגדרות עקומה היפרבולית"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "מהירות איבוד עילוי, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "מהירות שבה ערכי ה-PID צריכים להגיע למקסימום (מהירות איבוד עילוי), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "ערכי PID במהירות איבוד עילוי"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "מכפיל PID במהירות איבוד עילוי"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "ערכי PID במהירות מלאה"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "מכפיל PID במהירות מלאה"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "כמה מהר ערכי ה-PID מבצעים מעבר ככל שהמהירות גדלה"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "תרשים עקומות היפרבוליות"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "הגדרות שונות"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "סוג סבסוב"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "סוג הסבסוב (הגה כיוון או דחף דיפרנציאלי)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "הגה כיוון"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "דחף דיפרנציאלי"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "היסט עלרוד"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "היסט עלרוד עבור מצבי זווית בעשיריות מעלה. ערכים חיוביים מטים את הכנף כלפי מטה"
     }
 }

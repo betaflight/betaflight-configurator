@@ -88,6 +88,23 @@
     "portsSelectManual": {
         "message": "Choisir un port"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Connexions réseau uniquement",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Ce navigateur ne peut atteindre un contrôleur de vol que sur le réseau, comme un pont Wi-Fi, un module ELRS ou un SITL. Pour USB ou Bluetooth, utilisez Chrome ou Edge, ou installez l'application Betaflight sur votre bureau. Manquant ici :",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Le Web Serial n'est pas disponible."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Le Web Bluetooth n'est pas disponible."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB n'est pas disponible, donc le flashage du microprogramme sur DFU est désactivé."
+    },
     "portsSelectNone": {
         "message": "Connexion indisponible"
     },
@@ -864,6 +881,12 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>La version du configurateur utilisée ($1) ne supporte pas le firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné<\/strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré<\/strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS : <strong>{{operatingSystem}}<\/strong>",
@@ -2202,13 +2225,17 @@
     "gpsSerialPortSaveFailed": {
         "message": "Impossible de définir le port série du récepteur, rien n'a donc été enregistré."
     },
-    "gpsCanDevice": {
+    "gpsProtocolUnknown": {
+        "message": "Inconnu {{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
         "message": "Bus CAN"
     },
-    "gpsCanDeviceHelp": {
+    "dronecanCanDeviceHelp": {
         "message": "Le bus CAN auquel les modules DroneCAN sont câblés. Cela appartient à DroneCAN dans son ensemble, donc le changement de déplacement de chaque périphérique DronePAN, pas seulement le GPS. Le changement nécessite un redémarrage."
     },
-    "gpsCanDeviceSaveFailed": {
+    "dronecanSaveFailed": {
         "message": "Impossible de définir le bus CAN, rien n'a donc été enregistré."
     },
     "configurationGPSAutoBaud": {
@@ -2395,6 +2422,24 @@
     },
     "portsClaimTelemetry": {
         "message": "Télémétrie"
+    },
+    "portsConflictTitle": {
+        "message": "Port déjà utilisé"
+    },
+    "portsConflictWarning": {
+        "message": "Vous assignez un port série qu'une autre fonctionnalité utilise déjà. L'enregistrement réinitialisera tous les ports par défaut (état non configuré) :"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}<\/strong> est actuellement utilisé par {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Voulez-vous enregistrer quand même ?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Enregistrer quand même"
+    },
+    "portsConflictCancel": {
+        "message": "Annuler"
     },
     "portsSensorGyro": {
         "message": "Gyro"

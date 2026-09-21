@@ -2199,15 +2199,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "Не удалось установить последовательный порт GPS, поэтому изменения не сохранены."
     },
-    "gpsCanDevice": {
-        "message": "CAN Bus"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "Шина CAN, к которой подключены модули DroneCAN. Эта настройка относится ко всей шине DroneCAN целиком, поэтому её изменение затронет все устройства DroneCAN, а не только GPS. Изменение требует перезагрузки."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "Не удалось установить шину CAN, поэтому изменения не сохранены."
-    },
     "configurationGPSAutoBaud": {
         "message": "Авто-скорость"
     },
