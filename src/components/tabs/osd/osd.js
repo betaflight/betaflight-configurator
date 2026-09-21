@@ -1772,6 +1772,7 @@ OSD.chooseFields = function () {
 
 // Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.
 OSD.applyCanvas = function (d) {
+    d.state.requiresFbSmallFont = false;
     const canvas = d.canvas;
     if (!canvas) {
         return;
@@ -1786,6 +1787,8 @@ OSD.applyCanvas = function (d) {
         if (!videoType) {
             return;
         }
+
+        d.state.requiresFbSmallFont = canvas.cols > 30; // 30 (or adjusted down) implies MAX7456 compatibility mode, not small font.
     }
 
     d.VIDEO_COLS[videoType] = canvas.cols;

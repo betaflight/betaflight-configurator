@@ -6563,6 +6563,14 @@
     "osdSetupUploadingFontFailed": {
         "message": "Upload failed"
     },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "The OSD is in small font mode, but the selected font is a standard size font. It will not display correctly. Upload anyway?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "The selected font is a small font for framebuffer OSDs, but this OSD uses standard size fonts. It will not display correctly. Upload anyway?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
+    },
     "osdSetupSaveReboot": {
         "message": "Save and Reboot"
     },

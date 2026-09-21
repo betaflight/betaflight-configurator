@@ -17,6 +17,7 @@ describe("OSD.applyCanvas", () => {
         expect(OSD.data.VIDEO_COLS.HD).toBe(53);
         expect(OSD.data.VIDEO_ROWS.HD).toBe(20);
         expect(OSD.data.VIDEO_BUFFER_CHARS.HD).toBe(1590);
+        expect(OSD.data.state.requiresFbSmallFont).toBe(false);
     });
 
     it("sizes the HD grid for non-FB_OSD devices, whatever the video system", () => {
@@ -30,6 +31,7 @@ describe("OSD.applyCanvas", () => {
         expect(OSD.data.VIDEO_BUFFER_CHARS.HD).toBe(1320);
         expect(OSD.data.VIDEO_COLS.PAL).toBe(30);
         expect(OSD.data.VIDEO_ROWS.PAL).toBe(16);
+        expect(OSD.data.state.requiresFbSmallFont).toBe(false);
     });
 
     it("sizes the selected SD grid for FB_OSD devices", () => {
@@ -44,6 +46,7 @@ describe("OSD.applyCanvas", () => {
         expect(OSD.data.VIDEO_BUFFER_CHARS.NTSC).toBe(966);
         expect(OSD.data.VIDEO_COLS.PAL).toBe(30);
         expect(OSD.data.VIDEO_COLS.HD).toBe(53);
+        expect(OSD.data.state.requiresFbSmallFont).toBe(true);
     });
 
     it("treats AUTO as PAL for FB_OSD devices", () => {
@@ -56,5 +59,19 @@ describe("OSD.applyCanvas", () => {
         expect(OSD.data.VIDEO_COLS.PAL).toBe(46);
         expect(OSD.data.VIDEO_ROWS.PAL).toBe(24);
         expect(OSD.data.VIDEO_COLS.NTSC).toBe(30);
+        expect(OSD.data.state.requiresFbSmallFont).toBe(true);
+    });
+
+    it("canvas cols 30 for FB_OSD device implies not small font", () => {
+        OSD.data.canvas = { cols: 30, rows: 16 };
+        OSD.data.video_system = VIDEO_SYSTEM.AUTO;
+        OSD.data.state.haveFbOsdConfigured = true;
+
+        OSD.applyCanvas(OSD.data);
+
+        expect(OSD.data.VIDEO_COLS.PAL).toBe(30);
+        expect(OSD.data.VIDEO_ROWS.PAL).toBe(16);
+        expect(OSD.data.VIDEO_COLS.NTSC).toBe(30);
+        expect(OSD.data.state.requiresFbSmallFont).toBe(false);
     });
 });

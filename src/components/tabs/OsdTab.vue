@@ -818,15 +818,13 @@ const timerSources = [
 const fontTypes = computed(() => OSD_CONSTANTS.FONT_TYPES || []);
 
 // FB_OSD (framebuffer OSD) in the PICO implementation has two modes and two font types: pixel / non-pixel, and standard / small font.
-// Typically, non-pixel uses standard fonts for MAX7456 compatibility, and pixel uses a new small font type
-// *** TODO: Initially assume FB_OSD => small font type (msp work TBC) ***
-const isFbOsdSmallFont = computed(() => Boolean(osdStore.state.haveFbOsdConfigured));
+// Typically, non-pixel uses standard fonts for MAX7456 compatibility, and pixel uses a new small font type.
+const isFbOsdSmallFont = computed(() => Boolean(osdStore.state.requiresFbSmallFont));
 
-// Fonts flagged fbOsdSmallFont in FONT_TYPES are only usable in FB_OSD small font mode,
-// and the standard fonts are only usable outside it.
+// Fonts flagged fbOsdSmallFont in FONT_TYPES are meant for FB_OSD small font mode, and the standard
+// fonts for everything else. Selection is left free so any font can be previewed; the upload is guarded.
 function isFontUsable(font) {
-//    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
-    return Boolean(font); // TODO For testing, make all fonts available always (TBD)
+    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
 }
 
 function firstUsableFontIndex() {
@@ -863,7 +861,7 @@ function buildFontItems(selectedValue) {
         });
     }
     fontTypes.value.forEach((font, idx) => {
-        items.push({ value: idx, label: i18n.getMessage(font.name), disabled: !isFontUsable(font) });
+        items.push({ value: idx, label: i18n.getMessage(font.name) });
     });
     return items;
 }
@@ -1640,6 +1638,18 @@ async function flashFont() {
     }
 
     GUI.connect_lock = true;
+
+    // Warn before uploading a built-in font that does not match the OSD's font mode.
+    const presetFont = fontTypes.value[selectedFontPreset.value];
+    if (presetFont && !isFontUsable(presetFont)) {
+        const warningKey = isFbOsdSmallFont.value
+            ? "osdSetupUploadFontWarningNeedSmallFont"
+            : "osdSetupUploadFontWarningNeedStandardFont";
+        if (!globalThis.confirm(i18n.getMessage(warningKey))) {
+            GUI.connect_lock = false;
+            return;
+        }
+    }
 
     // If "User supplied font" is selected but no custom font file has been loaded yet,
     // prompt the user to pick a file before proceeding to upload.

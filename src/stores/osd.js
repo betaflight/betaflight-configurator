@@ -96,6 +96,7 @@ export const useOsdStore = defineStore("osd", () => {
         haveOsdFeature: false,
         isMspDevice: false,
         haveAirbotTheiaOsdDevice: false,
+        requiresFbSmallFont: false,
     });
 
     // Display size based on video system
