@@ -3,6 +3,7 @@ import semver from "semver";
 import fieldUsage from "../../generated/debug_field_usage.json";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../../../src/js/debug_modes_table";
 import { FIRMWARE_DEBUG_FIELDS } from "../../../src/js/debug_fields_table";
+import { DEBUG_VALUE_COUNT } from "../../../src/js/debug_annotation";
 import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugModes";
 
 /*
@@ -108,10 +109,25 @@ type DebugFieldNames = Record<string, Record<string, string>>;
 
 const fieldNames = (apiVersion: string): DebugFieldNames => getDebugFieldNames(apiVersion) as DebugFieldNames;
 
+/** The mode-level summary label, which is not a slot. */
+const SUMMARY_KEY = "debug[all]";
+
+/** How `debugModes` keys a slot; the inverse is a lookup, not a parse. */
+const slotKey = (index: number) => `debug[${index}]`;
+
+const SLOT_INDICES = Array.from({ length: DEBUG_VALUE_COUNT }, (_, index) => index);
+
+/** Every key a label set is allowed to carry. */
+const VALID_KEYS = new Set([SUMMARY_KEY, ...SLOT_INDICES.map(slotKey)]);
+
+/*
+ * Which slots `labels` names. Asking `slotKey(index) in labels` for each known
+ * slot avoids digging an index back out of the key with a pattern of its own,
+ * which would be a second, silently divergent statement of the key format.
+ * Nothing is missed: "carries only keys the grammar allows" below pins the set.
+ */
 function labelledFieldIndices(labels: Record<string, string>) {
-    return Object.keys(labels)
-        .filter((key) => key !== "debug[all]")
-        .map((key) => Number(/\d+/.exec(key)?.[0] ?? NaN));
+    return SLOT_INDICES.filter((index) => slotKey(index) in labels);
 }
 
 function collectLabelGaps() {
@@ -252,13 +268,13 @@ describe("debug modes against the firmware source", () => {
             expect([...collectLabelGaps()].sort()).toEqual([...KNOWN_LABEL_GAPS].sort());
         });
 
-        it("never label a field outside debug[0]..debug[7]", () => {
+        it("carries only keys the grammar allows, so no label falls outside a slot", () => {
             for (const apiVersion of generatedVersions) {
-                const labels = fieldNames(apiVersion);
-                for (const modeLabels of Object.values(labels)) {
-                    for (const index of labelledFieldIndices(modeLabels)) {
-                        expect(index).toBeGreaterThanOrEqual(0);
-                        expect(index).toBeLessThan(8);
+                for (const [mode, modeLabels] of Object.entries(fieldNames(apiVersion))) {
+                    for (const key of Object.keys(modeLabels)) {
+                        // Catches an out-of-range slot and a malformed key alike,
+                        // either of which would otherwise be labelled and never shown.
+                        expect([...VALID_KEYS], `${apiVersion} ${mode}`).toContain(key);
                     }
                 }
             }
