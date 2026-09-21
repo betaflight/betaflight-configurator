@@ -1936,9 +1936,15 @@ OSD.msp = {
         d.state.haveFbOsdConfigured = bit_check(d.flags, 2);
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
-        d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveFbOsdConfigured;
+        d.state.haveMax7456FontDeviceConfigured =
+            d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveFbOsdConfigured;
         d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
-        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
+        const osdDeviceDetected = bit_check(d.flags, 5);
+        // FbOsd is immediately ready to receive font upload even if display is not yet synced.
+        d.state.isMax7456FontDeviceDetected =
+            ((d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveAirbotTheiaOsdDevice) &&
+                osdDeviceDetected) ||
+            d.state.haveFbOsdConfigured;
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
         d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
