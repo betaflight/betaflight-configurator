@@ -57,6 +57,9 @@
                         </span>
                     </span>
                 </UTooltip>
+                <UTooltip :text="`${$t('initialSetupCpuTemp')} ${cpuTemperature.toFixed(0)} ℃`">
+                    <span class="value">{{ cpuTemperature.toFixed(0) }} ℃</span>
+                </UTooltip>
 
                 <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
@@ -212,6 +215,10 @@ export default defineComponent({
             default: 0,
         },
         cpuLoad: {
+            type: Number,
+            default: 0,
+        },
+        cpuTemperature: {
             type: Number,
             default: 0,
         },

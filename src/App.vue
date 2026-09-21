@@ -39,6 +39,7 @@
                 :packet-error="MSP.packet_error"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
+                :cpu-temperature="FC.CONFIG.cpuTemp"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
                 :firmware-version="FC.CONFIG.flightControllerVersion"
                 :firmware-target="FC.CONFIG.hardwareName"
