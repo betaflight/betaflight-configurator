@@ -1,6 +1,6 @@
 {
     "yes": {
-        "message": "是\n",
+        "message": "是",
         "description": "General Yes message to be used across the application"
     },
     "no": {
@@ -960,7 +960,7 @@
         "message": "硬件"
     },
     "defaultHardwareText": {
-        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li>下载。最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li><b>下载。ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><\/ul>下载"
+        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><li>最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><li><b>ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><\/ul>"
     },
     "defaultSoftwareHead": {
         "message": "软件"

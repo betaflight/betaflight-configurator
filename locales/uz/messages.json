@@ -2199,15 +2199,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "GPS ketma-ket portini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
     },
-    "gpsCanDevice": {
-        "message": "CAN shinasi"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "DroneCAN modullari ulangan CAN shinasi. Bu DroneCAN-ga tegishli, shuning uchun uni o'zgartirish nafaqat GPS, balki har bir DroneCAN qurilmasini harakatga keltiradi. Uni o'zgartirish qayta ishga tushirishni talab qiladi."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN shinasini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
-    },
     "configurationGPSAutoBaud": {
         "message": "Avto boud"
     },

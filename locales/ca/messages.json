@@ -88,6 +88,23 @@
     "portsSelectManual": {
         "message": "Selecció Manual"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Només connexions de xarxa",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Aquest navegador només pot connectar-se a un controlador de vol a través de la xarxa (com ara un pont Wi-Fi, un mòdul ELRS o SITL). Per a connexions USB o Bluetooth, utilitza Chrome o Edge, o bé instal·la l'aplicació Betaflight a l'ordinador. Aquí falta:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "El web sèrie no està disponible."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth no està disponible."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB no està disponible; per tant, la gravació del firmware mitjançant DFU està desactivada."
+    },
     "portsSelectNone": {
         "message": "Connexió no disponible"
     },
@@ -2276,14 +2293,18 @@
     "gpsSerialPortSaveFailed": {
         "message": "No s'ha pogut configurar el port sèrie del GPS, per tant no s'ha desat res."
     },
-    "gpsCanDevice": {
+    "gpsProtocolUnknown": {
+        "message": "Desconegut ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
         "message": "Bus CAN"
     },
-    "gpsCanDeviceHelp": {
+    "dronecanCanDeviceHelp": {
         "message": "El bus CAN al qual estan connectats els mòduls DroneCAN. Això pertany a DroneCAN en conjunt, de manera que canviar-lo mou tots els dispositius DroneCAN, no només el GPS. Canviar-lo requereix un reinici."
     },
-    "gpsCanDeviceSaveFailed": {
-        "message": "No s'ha pogut configurar el bus CAN, per tant no s'ha desat res."
+    "dronecanSaveFailed": {
+        "message": "No s'ha pogut configurar el DroneCAN, per tant no s'ha desat res."
     },
     "configurationGPSAutoBaud": {
         "message": "Velocitat de transmissió automàtica"
@@ -2473,6 +2494,24 @@
     },
     "portsClaimTelemetry": {
         "message": "Telemetria"
+    },
+    "portsConflictTitle": {
+        "message": "El port ja està en ús"
+    },
+    "portsConflictWarning": {
+        "message": "Esteu assignant un port sèrie que ja està utilitzant una altra funcionalitat. En desar, tots els ports es restabliran a la configuració predeterminada (estat sense configurar):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}<\/strong> és utilitzat actualment per {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Vols desar-ho de totes maneres?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Desa de totes maneres"
+    },
+    "portsConflictCancel": {
+        "message": "Canceŀlar"
     },
     "portsSensorGyro": {
         "message": "Giro"
