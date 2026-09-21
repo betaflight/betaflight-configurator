@@ -96,6 +96,8 @@ FONT.initData = function () {
     FONT.data = {
         // default font file name
         loaded_font_file: "default",
+        // one of FONT.constants.FORMATS
+        format: "max7456",
         // array of array of image bytes ready to upload to fc
         characters_bytes: [],
         // array of array of image bits by character
@@ -107,6 +109,15 @@ FONT.initData = function () {
 
 FONT.constants = {
     MAX_CHAR_COUNT: 256,
+    FORMATS: {
+        MAX7456: "max7456",
+        FB_SMALL: "fbsmall",
+    },
+    /** Header line of an .mcm file, keyed by format **/
+    HEADERS: {
+        max7456: "MAX7456",
+        fbsmall: "FBOSD_SMALL",
+    },
     SIZES: {
         /** NVM ram size for one font char, actual character bytes **/
         MAX_NVM_FONT_CHAR_SIZE: 54,
@@ -115,6 +126,49 @@ FONT.constants = {
         CHAR_HEIGHT: 18,
         CHAR_WIDTH: 12,
     },
+    /**
+     * Small font for framebuffer OSD (FB_OSD) devices. The file keeps the .mcm layout of
+     * 64 bytes per character, but each glyph is stored as `bpc` bytes per row (4 pixels per byte) for
+     * `rows` rows, top left aligned. The size of each character is chosen from four modes by a 2 bit
+     * entry in a table held in the character 0 slot: byte ch >> 2, bits 2 * (ch & 3). Characters from
+     * LOGO_START up keep the 12x18 layout so the boot logo tiles are unchanged.
+     * See getCharMode() in the firmware's target/PICO/osd/osd_elements_pico.c.
+     */
+    SMALL_FONT: {
+        MODES: [
+            { bpc: 2, rows: 8 },
+            { bpc: 2, rows: 12 },
+            { bpc: 4, rows: 8 },
+            { bpc: 4, rows: 12 },
+        ],
+        LOGO_START: 0xa0,
+        /** Character grid cell in pixels; glyphs narrower or shorter than this are top left aligned **/
+        CELL_WIDTH: 8, // *** TODO use CELL_WIDTH, HEIGHT to help with drawing to canvas **
+        CELL_HEIGHT: 12,
+    },
+};
+
+FONT.isSmallFont = function () {
+    return FONT.data?.format === FONT.constants.FORMATS.FB_SMALL;
+};
+
+/**
+ * Pixel dimensions of one character's glyph, as stored in FONT.data.characters.
+ * @param {number} charAddress Character index into a FONT array.
+ * @returns {{width: number, height: number}}
+ */
+FONT.getCharGeometry = function (charAddress) {
+    const standard = { width: FONT.constants.SIZES.CHAR_WIDTH, height: FONT.constants.SIZES.CHAR_HEIGHT };
+    if (!FONT.isSmallFont() || charAddress >= FONT.constants.SMALL_FONT.LOGO_START) {
+        return standard;
+    }
+    const modeTable = FONT.data.characters_bytes[0];
+    if (!modeTable) {
+        return standard;
+    }
+    const modeIndex = (modeTable[charAddress >> 2] >> (2 * (charAddress & 3))) & 0x3;
+    const mode = FONT.constants.SMALL_FONT.MODES[modeIndex];
+    return { width: 4 * mode.bpc, height: mode.rows };
 };
 
 FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
@@ -128,12 +182,15 @@ FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
 };
 
 /**
- * Parses a MAX7456 `.mcm` font file into character bitmaps.
+ * Parses a `.mcm` font file into character bitmaps.
  *
  * MCM is the standard font format for MAX7456 analog OSD chips. Each file
  * starts with a "MAX7456" header line, followed by binary-encoded lines
  * (8 ASCII '0'/'1' chars per line) that define 256 font characters, each
  * 12×18 pixels with 2-bit colour depth (black, white, transparent).
+ *
+ * A small font for the FB OSD uses the same file layout with a
+ * different header line; see FONT.constants.SMALL_FONT for how its glyphs differ.
  *
  * @param {string} dataFontFile - Raw text contents of a `.mcm` file.
  * @returns {Array} Parsed character bitmap arrays.
@@ -146,11 +203,14 @@ FONT.parseMCMFontFile = function (dataFontFile) {
     FONT.data.character_image_urls.length = 0;
 
     // make sure the font file is valid
-    if (data.shift().trim() !== "MAX7456") {
-        const msg = "that font file doesnt have the MAX7456 header, giving up";
+    const header = data.shift().trim();
+    const format = Object.keys(FONT.constants.HEADERS).find((key) => FONT.constants.HEADERS[key] === header);
+    if (!format) {
+        const msg = "that font file doesnt have a valid header, giving up";
         console.debug(msg);
         throw new Error(msg);
     }
+    FONT.data.format = format;
     const characterBits = [];
     const characterBytes = [];
     // hexstring is for debugging
@@ -218,12 +278,17 @@ function characterBitmapDataUri(charAddress) {
     }
 
     // Create data URI prefix and SVG wrapper
-    const width = FONT.constants.SIZES.CHAR_WIDTH;
-    const height = FONT.constants.SIZES.CHAR_HEIGHT;
+    const { width, height } = FONT.getCharGeometry(charAddress);
     const lines = [
         "data:image/svg+xml;utf8,",
         `<svg width='${width}' height='${height}' xmlns='http://www.w3.org/2000/svg'>`,
     ];
+
+    // In a small font, character 0 holds the mode table rather than a glyph.
+    if (FONT.isSmallFont() && charAddress === 0) {
+        lines.push("</svg>");
+        return lines.join("");
+    }
 
     // Create a rect for each visible pixel
     for (let y = 0; y < height; y++) {
