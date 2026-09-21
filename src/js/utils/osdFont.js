@@ -290,6 +290,11 @@ function characterBitmapDataUri(charAddress) {
         return lines.join("");
     }
 
+    // Small font glyphs are essentially white only, so give them a grey background to be seen against.
+    if (FONT.isSmallFont()) {
+        lines.push(`<rect x='0' y='0' width='${width}' height='${height}' fill='grey'/>`);
+    }
+
     // Create a rect for each visible pixel
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
