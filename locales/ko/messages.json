@@ -73,6 +73,10 @@
         "message": "연결끊김 (수동)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "연결 끊기 ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "연결끊김 (블루투스)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -472,8 +476,47 @@
     "autotuneBandwidth": {
         "message": "대역폭"
     },
+    "autotuneCrossover": {
+        "message": "게인 크로스오버"
+    },
     "autotunePhaseMargin": {
         "message": "위상 마진"
+    },
+    "autotuneTargetCrossover": {
+        "message": "크로스오버 제한"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "최대 위상 여유"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "예측된 피크 감도."
+    },
+    "autotuneLoopDelay": {
+        "message": "루프 딜레이"
+    },
+    "autotuneTargetMargin": {
+        "message": "튜닝 목표"
+    },
+    "autotuneMarginAggressive": {
+        "message": "적극적인"
+    },
+    "autotuneMarginNormal": {
+        "message": "보통의"
+    },
+    "autotuneMarginConservative": {
+        "message": "보수적인"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: 이 공정은 위상 여유가 $2°에 도달할 수 없으며(한계는 약 $3), 따라서 게인을 추측하는 대신 고정합니다. 더 낮은 목표를 고르거나, D를 추가해 한계를 높이세요."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: 측정은 $2배 게인 변화를 요구하지만, 단일 패스는 $3배 게인으로 제한됩니다. 표시된 크로스오버 한계에 도달하지 않았습니다 — 적용하고, 또 다른 처프를 날린 후 반복하세요."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: 위상 여유가 아니라 피크 감도를 여기서 설정하세요. 루프가 크로스오버 위쪽 약 -1 근처를 지나기 때문에, 권장가는 마진 목표치 바로 위에서 멈춥니다."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: 한 번의 패스 내에서는 게인이 없으며, 최고 민감도는 한계 내에 유지됩니다. 제안된 값은 안전한 값이 아니라 현재 가능한 최선의 값이므로, 시작점으로 삼아 다시 측정하는 것이 좋습니다."
     },
     "autotuneResonantPeak": {
         "message": "공명 피크"

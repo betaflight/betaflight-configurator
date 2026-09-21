@@ -88,6 +88,23 @@
     "portsSelectManual": {
         "message": "Manuelt valg"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Kun netværksforbindelser",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Denne browser kan kun nå frem til en FC via netværket, såsom en Wi-Fi-bro, et ELRS-modul eller SITL. For at anvende USB eller Bluetooth, skal du bruge Chrome eller Edge, eller installere Betaflight App på dit skrivebord. Mangler her:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web seriel er ikke tilgængelig."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth er ikke tilgængelig."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB er ikke tilgængelig, så firmware DFU brændning er deaktiveret."
+    },
     "portsSelectNone": {
         "message": "Ingen tilgængelig forbindelse."
     },
@@ -862,6 +879,12 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Din app med version ($1) understøtter ikke den anvendte firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>accelerometeret er aktiveret, men er ikke kalibreret<\/strong>.<br>Hvis du planlægger at bruge accelerometer, så følg venligst instruktionerne for '$t(initialSetupButtonCalibrateAccel.message)' på fanen '$t(tabSensorConfig.message)'. Hvis en funktion, der kræver accelerometeret (automatisk niveau, GPS redning, . .) aktiveres, vil motor aktivering ikke aktiveres, før accelerometeret er kalibreret.<br>Hvis du ikke bruger accelerometeret anbefales det, at du deaktiverer det i '$t(configurationSystem.message)' på fanen '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -2076,6 +2099,9 @@
     "configurationThrottleMaximum": {
         "message": "Maksimal gas (højeste ESC-værdi, når aktiveret)"
     },
+    "configurationMotorKv": {
+        "message": "Motor KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimumskommando (ESC-værdi, når deaktiveret)"
     },
@@ -2245,13 +2271,17 @@
     "gpsSerialPortSaveFailed": {
         "message": "Kunne ikke konfigurere seriel port for GPS, så intet blev gemt."
     },
-    "gpsCanDevice": {
+    "gpsProtocolUnknown": {
+        "message": "Ukendt ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
         "message": "CAN databus"
     },
-    "gpsCanDeviceHelp": {
+    "dronecanCanDeviceHelp": {
         "message": "CAN databus som DroneCAN moduler er forbundet til. Dette tilhører DroneCAN som helhed, så en ændring påvirker alle DroneCAN enheder, ikke bare GPS. Ændring kræver en genstart."
     },
-    "gpsCanDeviceSaveFailed": {
+    "dronecanSaveFailed": {
         "message": "Kunne ikke konfigurere CAN databus, så intet blev gemt."
     },
     "configurationGPSAutoBaud": {
@@ -2436,6 +2466,21 @@
     },
     "portsClaimTelemetry": {
         "message": "Telemetri"
+    },
+    "portsConflictTitle": {
+        "message": "Port er allerede i brug"
+    },
+    "portsConflictWarning": {
+        "message": "Du tildeler en seriel port som en anden funktion allerede bruger. Når du gemmer vil alle porte blive sat til deres standardindstillinger (ukonfigureret tilstand):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}<\/strong> bruges i øjeblikket af {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Vil du gemme alligevel?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Gem alligevel"
     },
     "portsSensorGyro": {
         "message": "Gyro"
@@ -10193,6 +10238,9 @@
     "pidTuningWingSpaMode": {
         "message": "Tilstand"
     },
+    "pidTuningWingSpaWidth": {
+        "message": "Bredde"
+    },
     "pidTuningWingSpaModeOff": {
         "message": "FRA"
     },
@@ -10211,8 +10259,14 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Avanceret"
     },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "Hyperbolsk er normalt til vinge fartøjer. Klassisk er til multirotor og anvender som standard TPA."
+    },
     "pidTuningWingTpaCurveClassic": {
         "message": "Klassisk"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Hyperbolsk"
     },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "Grundlæggende hastigheds konfiguration"
@@ -10237,6 +10291,12 @@
     },
     "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
         "message": "Teoretisk maximal spænding *100. Bruges til gas skalering baseret på spænding til estimering af lufthastighed"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Motor KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "Motor KV. Værdien kan ændres på fanen Motor styring."
     },
     "pidTuningWingMiscSettings": {
         "message": "Diverse indstillinger"

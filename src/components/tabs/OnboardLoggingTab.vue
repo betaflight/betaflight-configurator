@@ -317,7 +317,7 @@ import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
@@ -951,7 +951,7 @@ export default defineComponent({
                         if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                             await MSP.promise(
                                 MSPCodes.MSP2_GET_TEXT,
-                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
                             );
                         } else {
                             await MSP.promise(MSPCodes.MSP_NAME);

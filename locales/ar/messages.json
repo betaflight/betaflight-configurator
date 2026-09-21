@@ -2172,15 +2172,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "تعذر تعيين منفذ GPS التسلسلي، لذلك لم يتم حفظ أي شيء."
     },
-    "gpsCanDevice": {
-        "message": "ناقل CAN"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "ناقل CAN الموصول به وحدات DroneCAN. يخص هذا الإعداد نظام DroneCAN بالكامل؛ لذلك سيؤدي تغييره إلى نقل جميع أجهزة DroneCAN، وليس جهاز GPS فقط. يتطلب تغيير هذا الإعداد إعادة التشغيل.\n"
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "تعذر تعيين منفذ GPS التسلسلي، لذلك لم يتم حفظ أي شيء."
-    },
     "configurationGPSAutoBaud": {
         "message": "الباود التلقائي"
     },

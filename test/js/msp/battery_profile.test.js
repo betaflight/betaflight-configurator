@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import MspHelper from "../../../src/js/msp/MSPHelper";
-import MSPCodes from "../../../src/js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
 import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
 import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
@@ -115,7 +115,7 @@ describe("Battery Profiles", () => {
             FC.CONFIG.batteryProfile = 1;
 
             const buffer = [];
-            buffer.push8(MSPCodes.BATTERY_PROFILE_NAME);
+            buffer.push8(MSP2TextType.BATTERY_PROFILE_NAME);
             const name = "Li-Ion";
             buffer.push8(name.length);
             for (let i = 0; i < name.length; i++) {
@@ -132,11 +132,11 @@ describe("Battery Profiles", () => {
             FC.CONFIG.batteryProfile = 0;
             FC.CONFIG.batteryProfileNames[0] = "LiPo";
 
-            const result = mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME);
+            const result = mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME);
             const view = new DataView(new Uint8Array(result).buffer);
             view.offset = 0;
 
-            expect(view.readU8()).toEqual(MSPCodes.BATTERY_PROFILE_NAME);
+            expect(view.readU8()).toEqual(MSP2TextType.BATTERY_PROFILE_NAME);
             expect(view.readU8()).toEqual(4); // length
 
             let name = "";

@@ -2255,15 +2255,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "Серијски порт за GPS није могао да се постави, па ништа није сачувано."
     },
-    "gpsCanDevice": {
-        "message": "CAN магистрала"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "CAN магистрала на коју су повезани DroneCAN модули. Она припада целом DroneCAN систему, па њена промена помера сваки DroneCAN уређај, не само GPS. Промена захтева рестарт."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN магистрала није могла да се постави, па ништа није сачувано."
-    },
     "configurationGPSAutoBaud": {
         "message": "Аутоматска брзина преноса"
     },
