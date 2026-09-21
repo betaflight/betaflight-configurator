@@ -113,12 +113,11 @@ describe("OSD decimal compass bar", () => {
         expect(names).toEqual([...previousNames, "PITOT_AIRSPEED", "DECIMAL_COMPASS_BAR"]);
     });
 
-    it("clips the north-facing degree labels to the firmware's nine columns", () => {
+    it("fits the complete north-facing degree labels into the firmware's nine columns", () => {
         selectFields("1.49.0");
         const preview = OSD.ALL_DISPLAY_FIELDS.DECIMAL_COMPASS_BAR.preview();
-        expect(Array.from(preview, (character: string) => character.charCodeAt(0))).toEqual([
-            55, 48, 0x1c, 0x1d, 48, 0x1d, 0x1c, 0x1d, 57,
-        ]);
+        expect(preview).toBe("270\x1d0\x1d\x1c90");
+        expect(preview).toHaveLength(9);
     });
 
     it("does not manufacture elements beyond the firmware response", () => {

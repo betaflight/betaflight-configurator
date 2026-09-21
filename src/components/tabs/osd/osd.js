@@ -835,11 +835,11 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 315,
             positionable: true,
-            /** @returns {string} North-facing nine-column bar, with edge labels clipped by the firmware. */
+            /** @returns {string} North-facing nine-column bar, with edge labels shifted inward. */
             preview() {
                 const line = FONT.symbol(SYM.HEADING_LINE);
                 const dividedLine = FONT.symbol(SYM.HEADING_DIVIDED_LINE);
-                return `70${dividedLine}${line}0${line}${dividedLine}${line}9`;
+                return `270${line}0${line}${dividedLine}90`;
             },
         },
         WARNINGS: {
