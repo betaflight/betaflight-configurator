@@ -10,7 +10,7 @@ Standards for AI-assisted contributions to Betaflight Configurator. Adapted from
 ## Project context
 - **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
-- **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being rewritten.
+- **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being re-architected, but file-format conversion is in scope and tracked in #5141.
 - **Naming**: `PascalCase` for both component names and `.vue` file names.
 
 ## Enforcement ledger
@@ -28,7 +28,7 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 | Only `src/stores/**` and `src/composables/**` may import `src/js/msp/**` | 🚧 | `eslint-plugin-boundaries`, scoped per converted domain (Phase 1) |
 | No new fields on `src/js/fc.js` — write to a Pinia store | 🚧 | Seal `fc.ts` interface once converted (Phase 2) |
 | Hydration from legacy is explicit: `store.hydrateFromLegacy(…)` | 🚧 | TS store interface forces the method (Phase 1, per domain) |
-| New MSP codes: `src/js/msp/MSPCodes.js` + encode/decode in `MSPHelper.js`, aligned with firmware `msp_protocol.h` | 🚧 | CI script diffing `MSPCodes.js` against `msp_protocol.h` (Phase 1) |
+| New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.js`, aligned with firmware `msp_protocol.h` | 🚧 | CI script diffing `MSPCodes.ts` against `msp_protocol.h` (Phase 1) |
 
 ### #4995 — Nuxt UI v4 + Tailwind conversion
 

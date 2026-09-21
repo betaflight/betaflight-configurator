@@ -7,7 +7,7 @@ import VirtualFC from "./VirtualFC";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import MSP from "./msp";
-import MSPCodes from "./msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
@@ -997,7 +997,7 @@ async function processBuildConfiguration() {
     if (buildOptionsSupported) {
         // get build key from firmware
         try {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
         } catch (error) {
             console.error("Failed to request build key:", error);
         }
@@ -1048,7 +1048,10 @@ async function processUid() {
 async function processCraftName() {
     try {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
+            await MSP.promise(
+                MSPCodes.MSP2_GET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
+            );
         } else {
             await MSP.promise(MSPCodes.MSP_NAME);
         }
@@ -1065,7 +1068,10 @@ async function processCraftName() {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         try {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
+            await MSP.promise(
+                MSPCodes.MSP2_GET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PILOT_NAME),
+            );
         } catch (error) {
             console.error("Failed to request pilot name:", error);
         }

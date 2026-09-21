@@ -99,6 +99,7 @@ vi.mock("../../src/js/msp/MSPHelper", () => ({
 vi.mock("../../src/js/msp/MSPCodes", () => ({
     __esModule: true,
     default: new Proxy({}, { get: (_t, p) => p }),
+    MSP2TextType: new Proxy({}, { get: (_t, p) => p }),
 }));
 
 vi.mock("../../src/js/port_usage", () => ({

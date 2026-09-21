@@ -133,7 +133,7 @@ import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "@/js/msp/MSPCodes";
 import FC from "@/js/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
@@ -256,11 +256,11 @@ async function loadData() {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PID_PROFILE_NAME),
                     );
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
                     );
                 }
 
@@ -508,13 +508,13 @@ function save() {
             if (FC.CONFIG.pidProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PID_PROFILE_NAME),
                 );
             }
             if (FC.CONFIG.rateProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
                 );
             }
         }
