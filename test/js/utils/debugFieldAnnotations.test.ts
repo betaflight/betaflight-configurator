@@ -19,15 +19,36 @@ import { API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage
  * hand-written tables, and firmware that predates the annotations is untouched.
  */
 
+/**
+ * Narrows away an `undefined`/`null` and says what was missing, so a test that
+ * loses its subject reports that rather than a property access on nothing.
+ */
+function expectPresent<T>(value: T | undefined | null, what: string): T {
+    if (value === undefined || value === null) {
+        throw new Error(`expected ${what} to be present`);
+    }
+    return value;
+}
+
+/*
+ * `src/js/utils/debugModes.js` is still JavaScript (#5542 tier 6), so its exports
+ * arrive typed as bare `object` and every lookup below would be an error. Naming
+ * the shape here keeps the assertions meaningful. Delete these two helpers when
+ * that module is converted and the real types come through.
+ */
+type DebugFieldNames = Record<string, Record<string, string>>;
+
+const fieldNames = (apiVersion: string): DebugFieldNames => getDebugFieldNames(apiVersion) as DebugFieldNames;
+
 // Enough context for the device-native units; the factors are arbitrary but
 // exact, so a double conversion is visible rather than plausible.
-const ctx = (apiVersion) => ({
+const ctx = (apiVersion: string) => ({
     apiVersion,
     motorPoles: 14,
-    accRawToGs: (value) => value / 2048,
-    gyroRawToDegreesPerSecond: (value) => value / 16,
-    rcCommandRawToThrottle: (value) => value / 10,
-    throttleToRcCommandRaw: (value) => value * 10,
+    accRawToGs: (value: number) => value / 2048,
+    gyroRawToDegreesPerSecond: (value: number) => value / 16,
+    rcCommandRawToThrottle: (value: number) => value / 10,
+    throttleToRcCommandRaw: (value: number) => value * 10,
     fftCalcSteps: ["STEP_WINDOW", "STEP_DETECT_PEAKS"],
 });
 
@@ -63,17 +84,17 @@ describe("firmware debug field annotations", () => {
         });
 
         it("names both meanings of a field two subsystems write differently", () => {
-            const battery = FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
-                (conflict) => conflict.mode === "BATTERY" && conflict.index === 3,
-            );
             // battery.c writes the stable-voltage bits there, mixer.c the sag
             // compensation attenuation - betaflight/betaflight#15594.
-            expect(battery).toBeDefined();
+            const battery = expectPresent(
+                FIRMWARE_DEBUG_FIELD_CONFLICTS.find((conflict) => conflict.mode === "BATTERY" && conflict.index === 3),
+                "the BATTERY debug[3] conflict",
+            );
             expect(battery.meanings.map((meaning) => meaning.label)).toEqual([
                 "Sag Compensation Attenuation",
                 "Voltage Stable Bits",
             ]);
-            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe(
+            expect(fieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe(
                 "Sag Compensation Attenuation / Voltage Stable Bits",
             );
         });
@@ -150,8 +171,10 @@ describe("firmware debug field annotations", () => {
                         const expected = DEBUG_UNITS[field.unit];
                         expect(expected, `${where}: unit is not in the vocabulary`).toBeDefined();
                         const decoded = decodeDebugFieldToFriendly(mode, `debug[${index}]`, 1, scaleContext);
-                        const parsed = /^(-?[\d.]+) (\S+)$/.exec(decoded);
-                        expect(parsed, `${where}: "${decoded}"`).not.toBeNull();
+                        const parsed = expectPresent(
+                            /^(-?[\d.]+) (\S+)$/.exec(decoded),
+                            `${where}: a "<value> <unit>" reading of "${decoded}"`,
+                        );
                         expect(parsed[2], where).toBe(expected.suffix);
                         used.add(field.unit);
                     }
@@ -167,10 +190,13 @@ describe("firmware debug field annotations", () => {
             // Two variants can disagree on the unit alone - the LIDAR-TF driver
             // reports centimetres where the UPT1 reports millimetres - and
             // "Distance / Distance" would name nothing.
-            expect(getDebugFieldNames(ANNOTATED).LIDAR_TF["debug[0]"]).toBe("Distance");
+            expect(fieldNames(ANNOTATED).LIDAR_TF["debug[0]"]).toBe("Distance");
             expect(
-                FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
-                    (conflict) => conflict.mode === "LIDAR_TF" && conflict.index === 0,
+                expectPresent(
+                    FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
+                        (conflict) => conflict.mode === "LIDAR_TF" && conflict.index === 0,
+                    ),
+                    "the LIDAR_TF debug[0] conflict",
                 ).meanings.map((meaning) => meaning.unit),
             ).toEqual(["cm", "m"]);
         });
@@ -206,24 +232,24 @@ describe("firmware debug field annotations", () => {
         it("replace a hand-written label the firmware disagrees with", () => {
             // debug[2] was labelled "Frame Jitter" long after firmware started
             // writing isRxRateValid there.
-            expect(getDebugFieldNames(API_VERSION_1_48).RX_TIMING["debug[2]"]).toBe("Frame Jitter");
-            expect(getDebugFieldNames(ANNOTATED).RX_TIMING["debug[2]"]).toBe("Frame Interval Within Limits");
+            expect(fieldNames(API_VERSION_1_48).RX_TIMING["debug[2]"]).toBe("Frame Jitter");
+            expect(fieldNames(ANNOTATED).RX_TIMING["debug[2]"]).toBe("Frame Interval Within Limits");
         });
 
         it("expand a per-axis annotation into one label per index", () => {
-            const labels = getDebugFieldNames(ANNOTATED).GYRO_FILTERED;
+            const labels = fieldNames(ANNOTATED).GYRO_FILTERED;
             expect(labels["debug[0]"]).toBe("Gyro Filtered (roll)");
             expect(labels["debug[1]"]).toBe("Gyro Filtered (pitch)");
             expect(labels["debug[2]"]).toBe("Gyro Filtered (yaw)");
         });
 
         it("keep the hand-written mode-level name, which firmware has no equivalent of", () => {
-            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[all]"]).toBe("Debug Battery");
+            expect(fieldNames(ANNOTATED).BATTERY["debug[all]"]).toBe("Debug Battery");
         });
 
         it("leave firmware that predates the annotations alone", () => {
-            expect(getDebugFieldNames(API_VERSION_1_48).BATTERY["debug[1]"]).toBe("Battery Volt");
-            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[1]"]).toBe("Battery Voltage");
+            expect(fieldNames(API_VERSION_1_48).BATTERY["debug[1]"]).toBe("Battery Volt");
+            expect(fieldNames(ANNOTATED).BATTERY["debug[1]"]).toBe("Battery Voltage");
         });
     });
 
@@ -377,15 +403,12 @@ describe("firmware debug field annotations", () => {
             expect(getDebugFieldAxis("debug[0]", { modeName: "FFT_FREQ", apiVersion: ANNOTATED })).toEqual({
                 fit: ["debug[0]"],
             });
-            expect(getDebugFieldAxis("debug[1]", { modeName: "FFT_FREQ", apiVersion: ANNOTATED }).fit).toEqual([
-                "debug[1]",
-                "debug[2]",
-                "debug[3]",
-                "debug[4]",
-                "debug[5]",
-                "debug[6]",
-                "debug[7]",
-            ]);
+            expect(
+                expectPresent(
+                    getDebugFieldAxis("debug[1]", { modeName: "FFT_FREQ", apiVersion: ANNOTATED }),
+                    "an axis grouping for FFT_FREQ debug[1]",
+                ).fit,
+            ).toEqual(["debug[1]", "debug[2]", "debug[3]", "debug[4]", "debug[5]", "debug[6]", "debug[7]"]);
         });
 
         it("never groups a field with no unit, whatever else the mode holds", () => {
