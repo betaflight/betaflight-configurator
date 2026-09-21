@@ -5,7 +5,7 @@ import GUI from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { initializeSerialBackend } from "./serial_backend.js";
-import CONFIGURATOR from "./data_storage.js";
+import CONFIGURATOR from "./data_storage";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { loadUiScale } from "./UiScale.js";
