@@ -1,5 +1,5 @@
 import BuildApi from "../BuildApi.js";
-import { get as getConfig, set as setConfig } from "../ConfigStorage.js";
+import { get as getConfig, set as setConfig } from "../ConfigStorage";
 
 const STORAGE_KEY = "device-filters";
 

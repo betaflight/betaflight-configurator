@@ -2,7 +2,7 @@ import "../components/init.js";
 import { gui_log } from "./gui_log.js";
 import { i18n } from "./localization.js";
 import GUI from "./gui.js";
-import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
+import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { initializeSerialBackend } from "./serial_backend.js";
 import CONFIGURATOR from "./data_storage";

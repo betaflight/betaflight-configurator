@@ -14,7 +14,7 @@ import CONFIGURATOR from "../js/data_storage";
 import { BetaflightComponents } from "../js/vue_components.js";
 import { getNuxtUiRouter } from "../js/nuxt_ui_router.js";
 import { pinia } from "../js/pinia_instance.js";
-import { get as getConfig } from "../js/ConfigStorage.js";
+import { get as getConfig } from "../js/ConfigStorage";
 
 // Connection tracking object
 const CONNECTION = reactive({
