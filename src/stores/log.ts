@@ -3,11 +3,19 @@ import { ref } from "vue";
 
 const MAX_ENTRIES = 1000;
 
-function pad(n) {
+export interface LogEntry {
+    id: number;
+    /** Local wall-clock time, formatted for display only. */
+    timestamp: string;
+    /** Rendered as HTML by LogDialog, so callers own any escaping. */
+    message: string;
+}
+
+function pad(n: number): string {
     return n < 10 ? `0${n}` : `${n}`;
 }
 
-function formatTimestamp(date) {
+function formatTimestamp(date: Date): string {
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1);
     const day = pad(date.getDate());
@@ -18,10 +26,10 @@ function formatTimestamp(date) {
 }
 
 export const useLogStore = defineStore("log", () => {
-    const entries = ref([]);
+    const entries = ref<LogEntry[]>([]);
 
-    function add(message) {
-        const entry = {
+    function add(message: string): void {
+        const entry: LogEntry = {
             id: entries.value.length ? entries.value[entries.value.length - 1].id + 1 : 1,
             timestamp: formatTimestamp(new Date()),
             message,
@@ -32,7 +40,7 @@ export const useLogStore = defineStore("log", () => {
         }
     }
 
-    function clear() {
+    function clear(): void {
         entries.value = [];
     }
 
