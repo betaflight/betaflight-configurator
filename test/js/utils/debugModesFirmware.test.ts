@@ -130,8 +130,8 @@ function labelledFieldIndices(labels: Record<string, string>) {
     return SLOT_INDICES.filter((index) => slotKey(index) in labels);
 }
 
-function collectLabelGaps() {
-    const gaps = [];
+function collectLabelGaps(): string[] {
+    const gaps: string[] = [];
 
     for (const [apiVersion, version] of Object.entries(usage.versions)) {
         const labels = fieldNames(apiVersion);
