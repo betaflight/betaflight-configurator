@@ -1,8 +1,10 @@
 import { useLogStore } from "../stores/log";
 
-let cachedStore = null;
+type LogStore = ReturnType<typeof useLogStore>;
 
-function getStore() {
+let cachedStore: LogStore | null = null;
+
+function getStore(): LogStore | null {
     if (cachedStore) {
         return cachedStore;
     }
@@ -15,7 +17,11 @@ function getStore() {
     return cachedStore;
 }
 
-export function gui_log(message) {
+/**
+ * Appends a message to the in-app log. The message is rendered as HTML by the log dialog, so
+ * callers that interpolate user- or device-supplied text are responsible for escaping it.
+ */
+export function gui_log(message: string): void {
     const store = getStore();
     store?.add(message);
 }
