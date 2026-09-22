@@ -33,7 +33,11 @@
                     </UiBox>
                     <!-- Channel Bars -->
                     <div class="bars">
-                        <ul v-for="(channel, index) in channelBars" :key="index">
+                        <ul
+                            v-for="(channel, index) in channelBars"
+                            :key="index"
+                            :class="channel.isAux ? `aux-${channel.state}` : undefined"
+                        >
                             <li class="name">{{ channel.name }}</li>
                             <div class="w-full relative">
                                 <UProgress
@@ -614,12 +618,13 @@ import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
+import { entriesFromModeRanges } from "@/js/utils/modeRanges";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import GUI from "@/js/gui";
 import Model from "@/js/model";
-import RateCurve from "@/js/RateCurve";
+import RateCurve, { axisRateCurveParams } from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
 import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
@@ -633,6 +638,7 @@ import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -729,6 +735,8 @@ const {
     writable: rxPortWritable,
     options: rxPortOptions,
     selectedIdentifier: rxPortIdentifier,
+    conflict: rxPortConflict,
+    selection: rxPortSelection,
     load: loadRxPort,
     write: writeRxPort,
 } = useFeaturePort({ setting: "rx_uart" });
@@ -767,9 +775,18 @@ const {
     writable: rcdevicePortWritable,
     options: rcdevicePortOptions,
     selectedIdentifier: rcdevicePortIdentifier,
+    conflict: rcdevicePortConflict,
+    selection: rcdevicePortSelection,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
 } = useFeaturePort({ setting: "rcdevice_uart" });
+
+// Every port this tab can assign, so a save can warn before taking one from another feature, or
+// before two of these features would land on the same port at once.
+const { confirmPortConflicts } = usePortConflicts(
+    () => [rxPortConflict, rcdevicePortConflict, ...telemetryPorts.map((port) => port.conflict)],
+    () => [rxPortSelection, rcdevicePortSelection, ...telemetryPorts.map((port) => port.selection)],
+);
 
 // Dirty state tracking
 /** @returns {string} serialized receiver state for dirty comparison */
@@ -936,6 +953,36 @@ const rssiChannelOptions = computed(() => {
 });
 
 // Channel bars data
+const auxModeRanges = computed(() => {
+    const rangesByAux = new Map();
+
+    for (const { entry } of entriesFromModeRanges(fcStore.modeRanges ?? [], fcStore.modeRangesExtra ?? [])) {
+        if (entry.kind !== "range" || entry.auxChannelIndex < 0) {
+            continue;
+        }
+
+        const ranges = rangesByAux.get(entry.auxChannelIndex) ?? [];
+        ranges.push(entry.sliderRange);
+        rangesByAux.set(entry.auxChannelIndex, ranges);
+    }
+
+    return rangesByAux;
+});
+
+function getAuxVisualState(auxIndex, value) {
+    const ranges = auxModeRanges.value.get(auxIndex);
+
+    if (!ranges?.length) {
+        return "unused";
+    }
+
+    const channelValue = Math.max(900, Math.min(2099, value ?? 1500));
+
+    const active = ranges.some(([start, end]) => channelValue >= start && channelValue < end);
+
+    return active ? "active" : "used";
+}
+
 const channelBars = computed(() => {
     const bars = [];
     const barNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
@@ -946,14 +993,22 @@ const channelBars = computed(() => {
     let auxIndex = 1;
     for (let i = 0; i < numBars; i++) {
         let name;
+        let auxChannelIndex = null;
         if (i < barNames.length) {
             name = barNames[i];
         } else {
+            auxChannelIndex = auxIndex - 1;
             name = t(`controlAxisAux${auxIndex++}`);
         }
         const value = channels[i] || 1500;
         const width = Math.max(0, Math.min(100, ((value - meterScale.min) / (meterScale.max - meterScale.min)) * 100));
-        bars.push({ name, value, width });
+        bars.push({
+            name,
+            value,
+            width,
+            isAux: auxChannelIndex !== null,
+            state: auxChannelIndex !== null ? getAuxVisualState(auxChannelIndex, value) : null,
+        });
     }
     return bars;
 });
@@ -1193,6 +1248,8 @@ async function loadConfig() {
         async () => {
             await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
             await MSP.promise(MSPCodes.MSP_RC);
+            await MSP.promise(MSPCodes.MSP_MODE_RANGES);
+            await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
             await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
             await MSP.promise(MSPCodes.MSP_RC_TUNING);
             await MSP.promise(MSPCodes.MSP_RX_MAP);
@@ -1243,6 +1300,12 @@ async function loadConfig() {
 // Save configuration
 const saveConfig = (withReboot = false) =>
     runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save untouched, before anything has been written to the FC.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         const savedSnapshot = takeSnapshot();
 
         // Update RC_MAP from channel map string
@@ -1335,38 +1398,11 @@ function renderModel(timestamp) {
         const delta = timer.getDelta();
 
         const roll =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[0],
-                currentRates.roll_rate,
-                currentRates.rc_rate,
-                currentRates.rc_expo,
-                currentRates.superexpo,
-                currentRates.deadband,
-                currentRates.roll_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[0], axisRateCurveParams(currentRates, "roll"));
         const pitch =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[1],
-                currentRates.pitch_rate,
-                currentRates.rc_rate_pitch,
-                currentRates.rc_pitch_expo,
-                currentRates.superexpo,
-                currentRates.deadband,
-                currentRates.pitch_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[1], axisRateCurveParams(currentRates, "pitch"));
         const yaw =
-            delta *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[2],
-                currentRates.yaw_rate,
-                currentRates.rc_rate_yaw,
-                currentRates.rc_yaw_expo,
-                currentRates.superexpo,
-                currentRates.yawDeadband,
-                currentRates.yaw_rate_limit,
-            );
+            delta * rateCurve.rcCommandRawToDegreesPerSecond(channels[2], axisRateCurveParams(currentRates, "yaw"));
 
         model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
@@ -1588,6 +1624,25 @@ onUnmounted(() => {
             }
         }
     }
+    ul.aux-unused {
+        :deep([data-slot="indicator"]) {
+            background-color: #6b7280 !important;
+        }
+    }
+
+    ul.aux-used {
+        :deep([data-slot="indicator"]) {
+            background-color: #0891b2 !important;
+        }
+    }
+
+    ul.aux-active {
+        :deep([data-slot="indicator"]) {
+            background-color: #22d3ee !important;
+            box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
+        }
+    }
+
     .name {
         width: 5rem;
         text-align: end;

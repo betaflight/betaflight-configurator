@@ -39,6 +39,10 @@ class Serial extends EventTarget {
 
         // Initialize protocols with metadata for easier lookup
 
+        // Whether the "tcp" slot speaks raw TCP. In a browser it is a WebSocket, which
+        // understands ws:// and wss:// only.
+        this._hasRawTcp = isAndroid() || isTauri();
+
         if (isAndroid()) {
             this._protocols = [
                 { name: "serial", instance: new CapacitorSerial() },
@@ -180,6 +184,17 @@ class Serial extends EventTarget {
             return this._instance("tcp");
         }
         return serialInstance;
+    }
+
+    /**
+     * Whether a manual target can be opened here, judged by its scheme. A browser has no raw
+     * sockets, so a tcp:// address (SITL, the Betaflight bridge) is unreachable from one
+     * however it is routed, and offering it only produces a connection that always fails.
+     * @param {string} target - a manual target (URL or bare host[:port])
+     * @returns {boolean} true when a transport on this platform understands it
+     */
+    canOpen(target) {
+        return !TCP_URL.test(typeof target === "string" ? target.trim() : "") || this._hasRawTcp;
     }
 
     /**

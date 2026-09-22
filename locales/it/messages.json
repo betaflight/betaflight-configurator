@@ -869,6 +869,12 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>La versione dell'app ($1) non supporta il firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Non è stato selezionato alcun protocollo di output dei motori<\/strong>.<br>Si prega di selezionare un protocollo di output dei motori appropriato per i tuoi ESC in $t(configurationEscFeatures.message)' on the '$t(tabMotorTesting.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>L'accelerometro è abilitato ma non è calibrato<\/strong>. <br>Se vuoi usare l'accelerometro segui le istruzioni e '$t(initialSetupButtonCalibrateAccel.message)'nella scheda '$t(tabSensorConfig.message)' . Se è attivata una qualsiasi funzione che richiede l'accelerometro (modalità stabilizzata, GPS rescue, ...), l'armamento dell'aeromobile sarà disattivato fin quando l'accelerometro non verrà calibrato. <br>Se non prevedi di utilizzare l'accelerometro è consigliabile disattivarlo in '$t(configurationSystem.message)' nella scheda '$t(tabConfiguration.message)' ."
+    },
     "infoVersionOs": {
         "message": "SO: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -2253,15 +2259,6 @@
     },
     "gpsSerialPortSaveFailed": {
         "message": "Impossibile impostare la porta seriale GPS, quindi non è stato salvato nulla."
-    },
-    "gpsCanDevice": {
-        "message": "CAN Bus"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "Il bus CAN a cui sono collegati i moduli DroneCAN. Questa impostazione riguarda DroneCAN nel suo complesso, quindi modificarla sposta tutti i dispositivi DroneCAN, non solo il GPS. La modifica richiede un riavvio."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "Impossibile impostare il bus CAN, quindi non è stato salvato nulla."
     },
     "configurationGPSAutoBaud": {
         "message": "Baud Automatici"

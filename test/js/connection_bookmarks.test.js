@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
-import { get as getConfig, set as setConfig } from "../../src/js/ConfigStorage.js";
+import { get as getConfig, set as setConfig } from "../../src/js/ConfigStorage";
 
 // jsdom is neither Tauri nor Capacitor, so the seeded SITL target is the websockify address.
 const SITL = { name: "Betaflight SITL", url: "ws://127.0.0.1:6761" };

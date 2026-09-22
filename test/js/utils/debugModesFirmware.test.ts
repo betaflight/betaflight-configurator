@@ -3,6 +3,7 @@ import semver from "semver";
 import fieldUsage from "../../generated/debug_field_usage.json";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../../../src/js/debug_modes_table";
 import { FIRMWARE_DEBUG_FIELDS } from "../../../src/js/debug_fields_table";
+import { DEBUG_VALUE_COUNT } from "../../../src/js/debug_annotation";
 import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugModes";
 
 /*
@@ -87,17 +88,53 @@ const KNOWN_LABEL_GAPS = [
 
 const generatedVersions = Object.keys(FIRMWARE_DEBUG_MODES);
 
-function labelledFieldIndices(labels) {
-    return Object.keys(labels)
-        .filter((key) => key !== "debug[all]")
-        .map((key) => Number(key.match(/\d+/)[0]));
+/** What each `DEBUG_SET()` call site writes, as the generated fixture records it. */
+interface ModeUsage {
+    fields: number[];
+    dynamic: boolean;
 }
 
-function collectLabelGaps() {
-    const gaps = [];
+/*
+ * The fixture and `debugModes.js` are both keyed by names only known at run time.
+ * The JSON import types every key as a literal and `debugModes.js` is still
+ * JavaScript (#5542 tier 6), so both come through un-indexable; naming the shapes
+ * here is what keeps the lookups below checked. Drop `fieldNames` when that module
+ * is converted.
+ */
+const usage = fieldUsage as unknown as {
+    versions: Record<string, { modes: Record<string, ModeUsage | undefined> }>;
+};
 
-    for (const [apiVersion, version] of Object.entries(fieldUsage.versions)) {
-        const labels = getDebugFieldNames(apiVersion);
+type DebugFieldNames = Record<string, Record<string, string>>;
+
+const fieldNames = (apiVersion: string): DebugFieldNames => getDebugFieldNames(apiVersion) as DebugFieldNames;
+
+/** The mode-level summary label, which is not a slot. */
+const SUMMARY_KEY = "debug[all]";
+
+/** How `debugModes` keys a slot; the inverse is a lookup, not a parse. */
+const slotKey = (index: number) => `debug[${index}]`;
+
+const SLOT_INDICES = Array.from({ length: DEBUG_VALUE_COUNT }, (_, index) => index);
+
+/** Every key a label set is allowed to carry. */
+const VALID_KEYS = new Set([SUMMARY_KEY, ...SLOT_INDICES.map(slotKey)]);
+
+/*
+ * Which slots `labels` names. Asking `slotKey(index) in labels` for each known
+ * slot avoids digging an index back out of the key with a pattern of its own,
+ * which would be a second, silently divergent statement of the key format.
+ * Nothing is missed: "carries only keys the grammar allows" below pins the set.
+ */
+function labelledFieldIndices(labels: Record<string, string>) {
+    return SLOT_INDICES.filter((index) => slotKey(index) in labels);
+}
+
+function collectLabelGaps(): string[] {
+    const gaps: string[] = [];
+
+    for (const [apiVersion, version] of Object.entries(usage.versions)) {
+        const labels = fieldNames(apiVersion);
 
         for (const mode of getDebugModes(apiVersion)) {
             const written = version.modes[mode];
@@ -167,7 +204,11 @@ describe("debug modes against the firmware source", () => {
 
     describe("rename aliases", () => {
         it("map a name an older firmware used onto one the newest firmware has", () => {
-            const newest = FIRMWARE_DEBUG_MODES[[...generatedVersions].sort(semver.compare).at(-1)];
+            const newestVersion = [...generatedVersions].sort(semver.compare).at(-1);
+            if (newestVersion === undefined) {
+                throw new Error("expected at least one generated API version");
+            }
+            const newest = FIRMWARE_DEBUG_MODES[newestVersion];
             for (const [legacyName, currentName] of Object.entries(DEBUG_MODE_ALIASES)) {
                 expect(newest).toContain(currentName);
                 expect(newest).not.toContain(legacyName);
@@ -181,7 +222,7 @@ describe("debug modes against the firmware source", () => {
             for (const [legacyName, currentName] of Object.entries(DEBUG_MODE_ALIASES)) {
                 for (const apiVersion of generatedVersions) {
                     const modes = FIRMWARE_DEBUG_MODES[apiVersion];
-                    const labels = getDebugFieldNames(apiVersion);
+                    const labels = fieldNames(apiVersion);
                     const name = modes.includes(legacyName) ? legacyName : currentName;
                     if (modes.includes(name) && (labels[legacyName] || labels[currentName])) {
                         expect(labels[name]).toBeDefined();
@@ -197,7 +238,7 @@ describe("debug modes against the firmware source", () => {
             expect(annotated.length).toBeGreaterThan(0);
 
             for (const apiVersion of annotated) {
-                const labels = getDebugFieldNames(apiVersion);
+                const labels = fieldNames(apiVersion);
                 for (const [mode, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[apiVersion])) {
                     // A generated mode with no labels means the overlay never ran
                     // for it, which is worth saying rather than reading undefined.
@@ -227,13 +268,13 @@ describe("debug modes against the firmware source", () => {
             expect([...collectLabelGaps()].sort()).toEqual([...KNOWN_LABEL_GAPS].sort());
         });
 
-        it("never label a field outside debug[0]..debug[7]", () => {
+        it("carries only keys the grammar allows, so no label falls outside a slot", () => {
             for (const apiVersion of generatedVersions) {
-                const labels = getDebugFieldNames(apiVersion);
-                for (const modeLabels of Object.values(labels)) {
-                    for (const index of labelledFieldIndices(modeLabels)) {
-                        expect(index).toBeGreaterThanOrEqual(0);
-                        expect(index).toBeLessThan(8);
+                for (const [mode, modeLabels] of Object.entries(fieldNames(apiVersion))) {
+                    for (const key of Object.keys(modeLabels)) {
+                        // Catches an out-of-range slot and a malformed key alike,
+                        // either of which would otherwise be labelled and never shown.
+                        expect([...VALID_KEYS], `${apiVersion} ${mode}`).toContain(key);
                     }
                 }
             }
@@ -241,7 +282,7 @@ describe("debug modes against the firmware source", () => {
 
         it("give every labelled mode a debug[all] summary label", () => {
             for (const apiVersion of generatedVersions) {
-                for (const [mode, modeLabels] of Object.entries(getDebugFieldNames(apiVersion))) {
+                for (const [mode, modeLabels] of Object.entries(fieldNames(apiVersion))) {
                     expect(modeLabels["debug[all]"], `${apiVersion} ${mode}`).toBeDefined();
                 }
             }

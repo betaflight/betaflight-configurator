@@ -14,7 +14,7 @@
 
 import { ArrayDataStream } from "./datastream.js";
 import "./decoders.js"; // side-effect: extends ArrayDataStream prototype
-import CONFIGURATOR from "../data_storage.js";
+import CONFIGURATOR from "../data_storage";
 import { getDebugModeIndex } from "../utils/debugModes.js";
 
 // ---------------------------------------------------------------------------

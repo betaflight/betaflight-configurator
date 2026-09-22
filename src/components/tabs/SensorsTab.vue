@@ -47,12 +47,26 @@
                             </template>
                             <USwitch v-model="accHardwareEnabled" />
                         </SettingRow>
-                        <SettingRow :label="magHwName ? '' : $t('configurationMagHardware')">
+                        <SettingRow :label="magHwName ? '' : $t('configurationMagHardware')" fullWidth>
                             <template v-if="magHwName" #label>
                                 {{ $t("configurationMagHardware") }}
                                 <span class="text-dimmed font-normal">&mdash; {{ magHwName }}</span>
                             </template>
                             <USwitch v-model="magHardwareEnabled" />
+                            <USelect
+                                v-if="magHardwareEnabled && magTypeItems.length > 1"
+                                v-model="sensorConfig.mag_hardware"
+                                :items="magTypeItems"
+                                size="xs"
+                                class="min-w-40"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            v-if="showCanDevice"
+                            :label="$t('dronecanCanDevice')"
+                            :help="$t('dronecanCanDeviceHelp')"
+                        >
+                            <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
                         </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
@@ -742,7 +756,7 @@
             <div class="content_toolbar toolbar_fixed_bottom">
                 <UButton
                     :label="$t('configurationButtonSave')"
-                    :disabled="!dirty"
+                    :disabled="!canSave"
                     :loading="isSaving"
                     @click="saveConfig"
                 />
@@ -803,7 +817,8 @@ import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
-import { useSaving } from "@/composables/useSaving";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
+import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -814,6 +829,7 @@ import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { sensorTypes } from "../../js/sensor_types";
+import { useDronecanDevice } from "@/composables/useDronecanDevice";
 import {
     useMagCalibration,
     computeDeclination,
@@ -858,6 +874,8 @@ const {
     writable: rangefinderPortWritable,
     options: rangefinderPortOptions,
     selectedIdentifier: rangefinderPortIdentifier,
+    conflict: rangefinderPortConflict,
+    selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
 } = useFeaturePort({ setting: "rangefinder_uart" });
@@ -867,9 +885,16 @@ const {
     writable: opticalFlowPortWritable,
     options: opticalFlowPortOptions,
     selectedIdentifier: opticalFlowPortIdentifier,
+    conflict: opticalFlowPortConflict,
+    selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
 } = useFeaturePort({ setting: "opticalflow_uart" });
+
+const { confirmPortConflicts } = usePortConflicts(
+    () => [rangefinderPortConflict, opticalFlowPortConflict],
+    () => [rangefinderPortSelection, opticalFlowPortSelection],
+);
 
 const { isSaving, runSave } = useSaving();
 const isMounted = useIsMounted();
@@ -928,12 +953,67 @@ const baroHardwareEnabled = computed({
     },
 });
 
+// mag_hardware is a firmware enum, not a boolean: 0 = AUTO, 1 = NONE, and the rest name a driver.
+// The switch owns only NONE. Which driver is a separate choice because AUTO does not probe every
+// one of them - DRONECAN is explicitly excluded from autodetection, so naming it is the only way
+// to reach it.
+const MAG_HARDWARE_AUTO = 0;
+const MAG_HARDWARE_NONE = 1;
+
+// Remembered so toggling the mag off and back on returns to the driver that was selected. Without
+// this, the switch wrote AUTO on every re-enable and silently discarded an explicit DRONECAN pick,
+// which AUTO then never detects.
+let lastMagHardware = MAG_HARDWARE_AUTO;
+
 const magHardwareEnabled = computed({
-    get: () => sensorConfig.mag_hardware !== 1,
+    get: () => sensorConfig.mag_hardware !== MAG_HARDWARE_NONE,
     set: (val) => {
-        sensorConfig.mag_hardware = val ? 0 : 1;
+        if (val) {
+            sensorConfig.mag_hardware = lastMagHardware;
+            return;
+        }
+        lastMagHardware = sensorConfig.mag_hardware;
+        sensorConfig.mag_hardware = MAG_HARDWARE_NONE;
     },
 });
+
+const magTypesList = ref([]);
+const pitotTypesList = ref([]);
+
+// A DroneCAN compass is inert until the stack is running, and dronecan_enabled is off by default.
+// Choosing DRONECAN above is the request to run it, so saving turns it on; there is no separate
+// switch to miss.
+const {
+    supported: dronecanSupported,
+    enabled: dronecanEnabled,
+    deviceOptions: canDeviceOptions,
+    selectedDevice: canDevice,
+    load: loadDronecan,
+    write: writeDronecan,
+} = useDronecanDevice();
+
+const magDronecanIndex = computed(() => magTypesList.value.indexOf("DRONECAN"));
+const pitotDronecanIndex = computed(() => pitotTypesList.value.indexOf("DRONECAN"));
+
+// Every DroneCAN device this tab can configure, not just the compass: the airspeed list carries
+// DRONECAN too, and picking it there has to bring the stack up just the same.
+const dronecanSelected = computed(
+    () =>
+        dronecanSupported.value &&
+        ((magDronecanIndex.value >= 0 && sensorConfig.mag_hardware === magDronecanIndex.value) ||
+            (pitotDronecanIndex.value >= 0 && sensorConfig.pitot_hardware === pitotDronecanIndex.value)),
+);
+
+// The bus is a real choice and belongs wherever a DroneCAN device is set up -- a board with a
+// serial GPS and a DroneCAN compass never opens the GPS tab's copy of this row.
+const showCanDevice = computed(() => dronecanSelected.value && canDeviceOptions.value.length > 1);
+
+// AUTO plus every driver this firmware carries; NONE is the switch's job, so it is left out. The
+// names come from the FC's own table via `sensor_hardware`, which omits drivers that were not
+// compiled in - so DRONECAN is offered exactly when the board can actually use it.
+const magTypeItems = computed(() =>
+    magTypesList.value.map((label, value) => ({ label, value })).filter(({ value }) => value !== MAG_HARDWARE_NONE),
+);
 
 const pitotHardwareEnabled = computed({
     get: () => sensorConfig.pitot_hardware !== 1,
@@ -944,7 +1024,6 @@ const pitotHardwareEnabled = computed({
 
 const sonarTypesList = ref([]);
 const opticalFlowTypesList = ref([]);
-const pitotTypesList = ref([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -2058,11 +2137,17 @@ const serializeState = () =>
         accelTrims: { ...accelTrims },
         sensorAlignment: snapshotSensorAlignment(),
         magDeclination: magDeclination.value,
+        canDevice: canDevice.value,
         rangefinderPort: rangefinderPortIdentifier.value,
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+
+// A DroneCAN compass or airspeed sensor can already be stored on a board whose stack is off.
+// Nothing is dirty then, so Save would be disabled and the GUI could never turn the stack on.
+const dronecanNeedsEnable = computed(() => dronecanSelected.value && !dronecanEnabled.value);
+const canSave = computed(() => dirty.value || dronecanNeedsEnable.value);
 
 // --- Load helpers ---
 
@@ -2070,6 +2155,9 @@ function hydrateSensorConfig() {
     sensorConfig.acc_hardware = fcStore.sensorConfig.acc_hardware;
     sensorConfig.baro_hardware = fcStore.sensorConfig.baro_hardware;
     sensorConfig.mag_hardware = fcStore.sensorConfig.mag_hardware;
+    if (sensorConfig.mag_hardware !== MAG_HARDWARE_NONE) {
+        lastMagHardware = sensorConfig.mag_hardware;
+    }
     sensorConfig.sonar_hardware = fcStore.sensorConfig.sonar_hardware;
     sensorConfig.opticalflow_hardware = fcStore.sensorConfig.opticalflow_hardware;
     sensorConfig.pitot_hardware = fcStore.sensorConfig.pitot_hardware;
@@ -2169,6 +2257,8 @@ function suggestGeoDeclination() {
 }
 
 function setupPeripherals() {
+    magTypesList.value = sensorTypesData.value?.mag?.elements || [];
+
     if (isApi147.value) {
         sonarTypesList.value = sensorTypesData.value?.sonar?.elements || [];
         showRangefinder.value = sonarTypesList.value.length > 0;
@@ -2219,6 +2309,7 @@ const loadConfig = async () => {
 
             await loadRangefinderPort();
             await loadOpticalFlowPort();
+            await loadDronecan();
 
             hydrateSensorConfig();
             hydrateAlignment();
@@ -2254,6 +2345,12 @@ const loadConfig = async () => {
 
 const saveConfig = () =>
     runSave(async () => {
+        // Warn before a pick that would take a port from another feature; a cancel here leaves the
+        // save untouched, before anything has been written to the FC.
+        if (!(await confirmPortConflicts())) {
+            return;
+        }
+
         const savedSnapshot = takeSnapshot();
 
         // Push sensor hardware to store
@@ -2327,6 +2424,12 @@ const saveConfig = () =>
         // refused port throws before anything reaches EEPROM.
         await writeRangefinderPort();
         await writeOpticalFlowPort();
+
+        try {
+            await writeDronecan({ enable: dronecanSelected.value });
+        } catch (error) {
+            throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
+        }
 
         gui_log(i18n.getMessage("sensorConfigSaved"));
 

@@ -317,7 +317,7 @@ import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
@@ -337,6 +337,7 @@ import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { runTabLoad } from "../../composables/useTabLoad";
 import { useDataflashErase } from "../../composables/useDataflashErase";
 
@@ -444,12 +445,15 @@ export default defineComponent({
             selectedIdentifier: blackboxPortIdentifier,
             baudOptions: blackboxBaudOptions,
             selectedBaud: blackboxBaud,
+            conflict: blackboxPortConflict,
             load: loadBlackboxPort,
             write: writeBlackboxPort,
         } = useFeaturePort({
             setting: "blackbox_uart",
             baud: { setting: "blackbox_baud" },
         });
+
+        const { confirmPortConflicts } = usePortConflicts(() => [blackboxPortConflict]);
 
         const blackboxDeviceOptions = computed(() => {
             const options = [{ label: i18n.getMessage("blackboxLoggingNone"), value: 0 }];
@@ -638,6 +642,12 @@ export default defineComponent({
             }
 
             return runSave(async () => {
+                // Warn before a pick that would take a port from another feature; a cancel here
+                // leaves the save untouched, before anything has been written to the FC.
+                if (!(await confirmPortConflicts())) {
+                    return;
+                }
+
                 const savedSnapshot = takeSnapshot();
 
                 fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
@@ -941,7 +951,7 @@ export default defineComponent({
                         if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                             await MSP.promise(
                                 MSPCodes.MSP2_GET_TEXT,
-                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
                             );
                         } else {
                             await MSP.promise(MSPCodes.MSP_NAME);
