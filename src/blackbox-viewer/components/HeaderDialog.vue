@@ -964,6 +964,7 @@ const GROUP_ORDER = [
     "RPM Filter",
     "D-Term Filters",
     "RC Smoothing",
+    "PSAS",
     "Features",
     "Disabled Fields",
 ];
@@ -1239,6 +1240,7 @@ const PREFIX_GROUPS = [
     ["dynamic_idle", "Motor / ESC"],
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
+    ["psas_", "PSAS"],
 ];
 
 function getHeaderGroup(key) {
