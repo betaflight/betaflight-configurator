@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
 
 export const useWorkspaceStore = defineStore("workspace", () => {
+    /** @type {import("vue").Ref<Array<{ title: string, [key: string]: unknown } | undefined>>} */
     const workspaceGraphConfigs = ref([]);
     const activeWorkspace = ref(1);
     const bookmarkTimes = ref([]);
@@ -19,6 +20,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     // Callbacks registered by main.js
     const switchWorkspace = shallowRef(null);
     const saveWorkspace = shallowRef(null);
+    /** @type {import("vue").ShallowRef<((id: number, title: string) => void) | null>} */
     const renameWorkspace = shallowRef(null);
     const applyDefaultWorkspace = shallowRef(null);
     const gotoBookmark = shallowRef(null);

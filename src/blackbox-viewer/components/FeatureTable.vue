@@ -9,8 +9,16 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
+
+interface FeatureRow {
+    enabled: boolean;
+    name: string;
+    description?: string;
+}
+
 defineProps({
-    data: { type: Array, required: true },
+    data: { type: Array as PropType<FeatureRow[]>, required: true },
 });
 </script>
