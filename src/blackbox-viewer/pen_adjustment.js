@@ -73,6 +73,8 @@ function smoothingStep(value) {
     return 100000;
 }
 
+// As in changePenExpo() and changePenZoom(), a truthy delta means "down":
+// LegendPanel maps a scroll up to delta = 1, which main.js passes on as increase = delta >= 0
 function nextSmoothing(current, delta) {
     const value = current ?? 0;
     const next = delta
