@@ -208,7 +208,7 @@ vi.mock("../../src/js/VirtualFC", () => ({
     default: { setVirtualConfig: vi.fn() },
 }));
 vi.mock("../../src/js/BuildApi", () => ({ __esModule: true, default: vi.fn() }));
-vi.mock("../../src/js/bit.js", () => ({ __esModule: true, bit_check: () => false }));
+vi.mock("../../src/js/bit", () => ({ __esModule: true, bit_check: () => false }));
 vi.mock("../../src/js/sensor_helpers", () => ({ __esModule: true, have_sensor: () => false }));
 vi.mock("../../src/js/utils/updateTabList", () => ({ __esModule: true, updateTabList: vi.fn() }));
 vi.mock("../../src/js/utils/applyExpertMode", () => ({ __esModule: true, applyExpertMode: vi.fn() }));
