@@ -493,7 +493,11 @@
                 >
                     <template #body>
                         <h1 class="text-lg font-bold mb-1">{{ $t("osdSetupFontPresets") }}</h1>
-                        <div class="flex flex-wrap gap-0 my-3" ref="fontPreviewContainer">
+                        <div
+                            class="flex flex-wrap gap-0 my-3"
+                            :class="{ 'bg-neutral-500': isSmallFontLoaded }"
+                            ref="fontPreviewContainer"
+                        >
                             <img
                                 v-for="(url, charIdx) in fontCharacterUrls"
                                 :key="charIdx"
@@ -1518,6 +1522,10 @@ const fontCharacterUrls = computed(() => {
 
 const fontDataVersion = ref(0);
 let lastFontPresetRequestId = 0;
+
+// Small font glyphs are essentially white only, so the font manager grid needs a grey background to show them.
+// FONT.data is not reactive; re-evaluate whenever a font is (re)loaded.
+const isSmallFontLoaded = computed(() => fontDataVersion.value >= 0 && FONT.isSmallFont());
 
 function closeFontManager() {
     fontManagerOpen.value = false;
