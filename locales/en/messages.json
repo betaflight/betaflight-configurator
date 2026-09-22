@@ -34,6 +34,18 @@
     "search": {
         "message": "Search"
     },
+    "settingsSearchTitle": {
+        "message": "Search settings",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Search settings...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "No settings found",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },

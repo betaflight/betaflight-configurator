@@ -2,7 +2,7 @@
 import { defineConfig, normalizePath } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "node:path";
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
 import * as child from "child_process";
@@ -158,6 +158,311 @@ function isCycleBreakingImport(warning) {
     return CYCLE_BREAKING_DYNAMIC_IMPORTS.some((id) => message.includes(`${id} is dynamically imported by`));
 }
 
+
+const SETTINGS_SEARCH_MODULE_ID = "virtual:settings-search-index";
+const RESOLVED_SETTINGS_SEARCH_MODULE_ID = `\0${SETTINGS_SEARCH_MODULE_ID}`;
+const settingsSearchTabsDir = path.resolve(import.meta.dirname, "src/components/tabs");
+const normalizedSettingsSearchTabsDir = normalizePath(settingsSearchTabsDir);
+const settingsSearchNestedViews = new Map(
+    [
+        ["pid-tuning/PidSubTab.vue", { tab: "pid_tuning", subtab: "pid" }],
+        ["pid-tuning/RatesSubTab.vue", { tab: "pid_tuning", subtab: "rates" }],
+        ["pid-tuning/FilterSubTab.vue", { tab: "pid_tuning", subtab: "filter" }],
+        ["firmware-flasher/FlasherBoardBuildTab.vue", { tab: "firmware_flasher", subtab: "board-build" }],
+        ["firmware-flasher/FlasherFlashTab.vue", { tab: "firmware_flasher", subtab: "flash" }],
+    ].map(([relativePath, view]) => [
+        normalizePath(path.resolve(settingsSearchTabsDir, relativePath)),
+        view,
+    ]),
+);
+
+const pidTuningParentSettingSubtabs = new Map([
+    ["pidTuningProfile", "pid"],
+    ["pidProfileName", "pid"],
+    ["pidTuningRateProfile", "rates"],
+    ["rateProfileName", "rates"],
+]);
+
+function getSettingsSearchView(filePath, source) {
+    const normalizedPath = normalizePath(filePath);
+    const nestedView = settingsSearchNestedViews.get(normalizedPath);
+
+    if (nestedView) {
+        return nestedView;
+    }
+
+    if (normalizePath(path.dirname(filePath)) !== normalizedSettingsSearchTabsDir) {
+        return null;
+    }
+
+    const tabMatch = source.match(/<BaseTab\b[^>]*tab-name="([^"]+)"/);
+    return tabMatch ? { tab: tabMatch[1], subtab: null } : null;
+}
+
+function findSettingsSearchTagEnd(source, start, limit = source.length) {
+    let quote = null;
+
+    for (let index = start + 1; index < limit; index += 1) {
+        const char = source[index];
+
+        if (quote) {
+            if (char === quote) {
+                quote = null;
+            }
+        } else if (char === '"' || char === "'") {
+            quote = char;
+        } else if (char === ">") {
+            return index;
+        }
+    }
+
+    return -1;
+}
+
+function findNextSettingsSearchTag(source, fromIndex, limit = source.length) {
+    let start = source.indexOf("<", fromIndex);
+
+    while (start !== -1 && start < limit) {
+        if (/[A-Za-z/!]/.test(source[start + 1] ?? "")) {
+            const end = findSettingsSearchTagEnd(source, start, limit);
+            if (end === -1) {
+                return null;
+            }
+
+            return { tag: source.slice(start, end + 1), index: start, end };
+        }
+
+        start = source.indexOf("<", start + 1);
+    }
+
+    return null;
+}
+
+function findSettingsSearchTemplateBounds(source) {
+    let rootTemplate = findNextSettingsSearchTag(source, 0);
+
+    while (rootTemplate && !/^<template(?:\s|>)/.test(rootTemplate.tag)) {
+        rootTemplate = findNextSettingsSearchTag(source, rootTemplate.end + 1);
+    }
+
+    if (!rootTemplate) {
+        return null;
+    }
+
+    let depth = 1;
+    let current = findNextSettingsSearchTag(source, rootTemplate.end + 1);
+
+    while (current) {
+        if (/^<template(?:\s|>)/.test(current.tag)) {
+            depth += 1;
+        } else if (current.tag === "</template>") {
+            depth -= 1;
+            if (depth === 0) {
+                return { start: rootTemplate.end + 1, end: current.index };
+            }
+        }
+
+        current = findNextSettingsSearchTag(source, current.end + 1);
+    }
+
+    return null;
+}
+
+function isSettingsSearchTag(tag) {
+    return (
+        tag === "</UiBox>" ||
+        tag.startsWith("<UiBox") ||
+        tag.startsWith("<SettingRow") ||
+        (tag[1] !== "/" && tag.includes("data-setting-search-key="))
+    );
+}
+
+function findSettingsSearchTags(source) {
+    const bounds = findSettingsSearchTemplateBounds(source);
+    if (!bounds) {
+        return [];
+    }
+
+    const tags = [];
+    let match = findNextSettingsSearchTag(source, bounds.start, bounds.end);
+
+    while (match) {
+        if (isSettingsSearchTag(match.tag)) {
+            tags.push({ 0: match.tag, index: match.index });
+        }
+
+        match = findNextSettingsSearchTag(source, match.end + 1, bounds.end);
+    }
+
+    return tags;
+}
+
+function updateSettingsSearchUiBoxStack(tag, uiBoxStack) {
+    if (tag.startsWith("<UiBox")) {
+        const sectionMatch = tag.match(/:title="\$t\('([^']+)'\)"/);
+        uiBoxStack.push({
+            sectionKey: sectionMatch?.[1] ?? null,
+            expert: /\bv-if="[^"]*expert/i.test(tag),
+        });
+        return true;
+    }
+
+    if (tag === "</UiBox>") {
+        uiBoxStack.pop();
+        return true;
+    }
+
+    return false;
+}
+
+function getSettingsSearchLabelKey(tag) {
+    const explicitLabelMatch = tag.match(/\bdata-setting-search-key="([^"]+)"/);
+    const settingRowLabelMatch = tag.match(/:label="[^"]*\$t\('([^']+)'\)[^"]*"/);
+    return explicitLabelMatch?.[1] ?? settingRowLabelMatch?.[1] ?? null;
+}
+
+function createSettingsSearchEntry(view, labelKey, occurrence, uiBoxStack) {
+    const sectionKey = [...uiBoxStack].reverse().find((uiBox) => uiBox.sectionKey)?.sectionKey ?? null;
+    const expert = uiBoxStack.some((uiBox) => uiBox.expert);
+    const subtab =
+        view.subtab ??
+        (view.tab === "pid_tuning" ? pidTuningParentSettingSubtabs.get(labelKey) ?? null : null);
+    const searchId = [view.tab, subtab ?? "", labelKey, occurrence].join(":");
+
+    return {
+        tab: view.tab,
+        ...(subtab ? { subtab } : {}),
+        searchId,
+        labelKey,
+        sectionKey,
+        ...(expert ? { expert: true } : {}),
+    };
+}
+
+function addSettingsSearchIdInsertion(match, tag, searchId, insertions) {
+    if (/\bdata-setting-search-id=/.test(tag)) {
+        return;
+    }
+
+    const insertionOffset = tag.endsWith("/>") ? tag.length - 2 : tag.length - 1;
+    insertions.push({
+        index: match.index + insertionOffset,
+        text: ` data-setting-search-id="${searchId}"`,
+    });
+}
+
+function applySettingsSearchInsertions(source, insertions) {
+    let transformedSource = source;
+
+    for (const insertion of insertions.reverse()) {
+        transformedSource =
+            transformedSource.slice(0, insertion.index) +
+            insertion.text +
+            transformedSource.slice(insertion.index);
+    }
+
+    return transformedSource;
+}
+
+function analyzeSettingsSearchSource(source, view, injectIds = false) {
+    const uiBoxStack = [];
+    const occurrences = new Map();
+    const settings = [];
+    const insertions = [];
+
+    for (const match of findSettingsSearchTags(source)) {
+        const tag = match[0];
+
+        if (updateSettingsSearchUiBoxStack(tag, uiBoxStack)) {
+            continue;
+        }
+
+        const labelKey = getSettingsSearchLabelKey(tag);
+        if (!labelKey) {
+            continue;
+        }
+
+        const occurrence = (occurrences.get(labelKey) ?? 0) + 1;
+        occurrences.set(labelKey, occurrence);
+
+        const setting = createSettingsSearchEntry(view, labelKey, occurrence, uiBoxStack);
+        settings.push(setting);
+
+        if (injectIds) {
+            addSettingsSearchIdInsertion(match, tag, setting.searchId, insertions);
+        }
+    }
+
+    return {
+        settings,
+        code: applySettingsSearchInsertions(source, insertions),
+    };
+}
+
+function buildSettingsSearchIndex() {
+    const rootFiles = readdirSync(settingsSearchTabsDir, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.endsWith("Tab.vue"))
+        .map((entry) => path.resolve(settingsSearchTabsDir, entry.name));
+    const sourceFiles = [...new Set([...rootFiles, ...settingsSearchNestedViews.keys()])];
+    const settings = [];
+
+    for (const filePath of sourceFiles) {
+        const source = readFileSync(filePath, "utf8");
+        const view = getSettingsSearchView(filePath, source);
+
+        if (view) {
+            settings.push(...analyzeSettingsSearchSource(source, view).settings);
+        }
+    }
+
+    return settings;
+}
+
+function settingsSearchIndexPlugin() {
+    return {
+        name: "settings-search-index",
+        enforce: "pre",
+        resolveId(id) {
+            return id === SETTINGS_SEARCH_MODULE_ID ? RESOLVED_SETTINGS_SEARCH_MODULE_ID : null;
+        },
+        load(id) {
+            if (id !== RESOLVED_SETTINGS_SEARCH_MODULE_ID) {
+                return null;
+            }
+
+            return `export const settingsSearchIndex = ${JSON.stringify(buildSettingsSearchIndex())};`;
+        },
+        transform(code, id) {
+            const filePath = id.split("?")[0];
+
+            if (!filePath.endsWith(".vue")) {
+                return null;
+            }
+
+            const view = getSettingsSearchView(filePath, code);
+            if (!view) {
+                return null;
+            }
+
+            const transformed = analyzeSettingsSearchSource(code, view, true).code;
+            return transformed === code ? null : { code: transformed, map: null };
+        },
+        handleHotUpdate(ctx) {
+            if (!normalizePath(ctx.file).startsWith(`${normalizedSettingsSearchTabsDir}/`)) {
+                return;
+            }
+
+            const virtualModule = ctx.server.moduleGraph.getModuleById(RESOLVED_SETTINGS_SEARCH_MODULE_ID);
+            if (!virtualModule) {
+                return;
+            }
+
+            ctx.server.moduleGraph.invalidateModule(virtualModule);
+            return [...ctx.modules, virtualModule];
+        },
+    };
+}
+
 export default defineConfig({
     base: "./", // Important for production APK asset paths
     define: {
@@ -189,6 +494,7 @@ export default defineConfig({
         },
     },
     plugins: [
+        settingsSearchIndexPlugin(),
         vue(),
         ui(nuxtUiViteOptions),
         serveLocalesPlugin(),

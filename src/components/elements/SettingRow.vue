@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2" tabindex="-1">
         <slot name="default"></slot>
         <div class="flex items-center" :class="{ 'flex-1': fullWidth }">
             <slot name="label"></slot>

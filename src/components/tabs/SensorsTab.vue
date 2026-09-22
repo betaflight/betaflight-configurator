@@ -211,6 +211,7 @@
                             <span>{{ $t("sensorConfigAccNeedsCalibration") }}</span>
                         </div>
                         <UButton
+                            data-setting-search-key="sensorConfigCalibrate"
                             :label="
                                 calibratingAccel ? $t('initialSetupButtonCalibratingText') : $t('sensorConfigCalibrate')
                             "
