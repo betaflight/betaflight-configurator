@@ -51,6 +51,32 @@ describe("ispConnected", () => {
         expect(ispConnected()).toBe(true);
     });
 
+    // Only a checkbox has ever written this preference, so a non-boolean means corrupt storage.
+    // It is read for truthiness rather than `=== true`, which resolves a corrupt value towards
+    // honouring the opt-out: spending data the user asked not to spend is the worse failure, and
+    // an unexpected offline state is visible and recoverable by toggling the switch.
+    it.each([
+        ["a truthy string", "false"],
+        ["a truthy number", 1],
+        ["a non-empty object", { on: true }],
+    ])("treats %s as metered rather than ignoring the opt-out", (_label, raw) => {
+        setOnline(true);
+        storeMetered(raw);
+
+        expect(ispConnected()).toBe(false);
+    });
+
+    it.each([
+        ["an explicit false", false],
+        ["a zero", 0],
+        ["an empty string", ""],
+    ])("treats %s as unmetered", (_label, raw) => {
+        setOnline(true);
+        storeMetered(raw);
+
+        expect(ispConnected()).toBe(true);
+    });
+
     // A malformed record is treated as absent by ConfigStorage, which leaves the read `undefined`
     // rather than throwing — the app stays usable instead of losing internet access on bad data.
     it.each([
