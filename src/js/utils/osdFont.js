@@ -159,9 +159,10 @@ FONT.isSmallFont = function () {
  */
 FONT.getCharGeometry = function (charAddress) {
     const standard = {
-        width: FONT.constants.SIZES.CHAR_WIDTH,
-        glyphHeight: FONT.constants.SIZES.CHAR_HEIGHT,
+        charWidth: FONT.constants.SIZES.CHAR_WIDTH,
         charHeight: FONT.constants.SIZES.CHAR_HEIGHT,
+        glyphWidth: FONT.constants.SIZES.CHAR_WIDTH,
+        glyphHeight: FONT.constants.SIZES.CHAR_HEIGHT,
     };
     if (!FONT.isSmallFont() || charAddress >= FONT.constants.SMALL_FONT.LOGO_START) {
         return standard;
@@ -172,9 +173,9 @@ FONT.getCharGeometry = function (charAddress) {
     }
     const modeIndex = (modeTable[charAddress >> 2] >> (2 * (charAddress & 3))) & 0x3;
     const mode = FONT.constants.SMALL_FONT.MODES[modeIndex];
-    //  char width fixed at 8 and  char height fixed at 12 for canvas purposes
-    // (compromise - font manager preview will truncate wide glyphs - TBC)
-    return { width: 8, glyphHeight: mode.rows, charHeight: 12 };
+    // char width, height fixed at 8, 12 for osd preview canvas purposes
+    // (compromise - font and osd previews will truncate wide glyphs for now)
+    return { charWidth: 8, charHeight: 12, glyphWidth: 4 * mode.bpc, glyphHeight: mode.rows };
 };
 
 FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
@@ -284,10 +285,10 @@ function characterBitmapDataUri(charAddress) {
     }
 
     // Create data URI prefix and SVG wrapper
-    const { width, glyphHeight, charHeight } = FONT.getCharGeometry(charAddress);
+    const { charWidth, charHeight, glyphWidth, glyphHeight } = FONT.getCharGeometry(charAddress);
     const lines = [
         "data:image/svg+xml;utf8,",
-        `<svg width='${width}' height='${charHeight}' xmlns='http://www.w3.org/2000/svg'>`,
+        `<svg width='${charWidth}' height='${charHeight}' xmlns='http://www.w3.org/2000/svg'>`,
     ];
 
     // In a small font, character 0 holds the mode table rather than a glyph.
@@ -298,8 +299,8 @@ function characterBitmapDataUri(charAddress) {
 
     // Create a rect for each visible pixel
     for (let y = 0; y < glyphHeight; y++) {
-        for (let x = 0; x < width; x++) {
-            const color = FONT.data.characters[charAddress][y * width + x];
+        for (let x = 0; x < glyphWidth; x++) {
+            const color = FONT.data.characters[charAddress][y * glyphWidth + x];
             let fill = null;
             if (color === 0) {
                 fill = "black";
