@@ -14,7 +14,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseTab from "./BaseTab.vue";
 import AutotuneImport from "./autotune/AutotuneImport.vue";
 import BodePlot from "./autotune/BodePlot.vue";

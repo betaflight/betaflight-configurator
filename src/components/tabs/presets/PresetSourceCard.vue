@@ -75,7 +75,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 import PresetSource from "./SourcesDialog/PresetSource";
 import checkIcon from "@/images/icons/cf_icon_check_orange.svg";
