@@ -83,20 +83,15 @@ describe("firmware debug field annotations", () => {
             }
         });
 
-        it("names both meanings of a field two subsystems write differently", () => {
-            // battery.c writes the stable-voltage bits there, mixer.c the sag
-            // compensation attenuation - betaflight/betaflight#15594.
-            const battery = expectPresent(
-                FIRMWARE_DEBUG_FIELD_CONFLICTS.find((conflict) => conflict.mode === "BATTERY" && conflict.index === 3),
-                "the BATTERY debug[3] conflict",
-            );
-            expect(battery.meanings.map((meaning) => meaning.label)).toEqual([
-                "Sag Compensation Attenuation",
-                "Voltage Stable Bits",
-            ]);
-            expect(fieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe(
-                "Sag Compensation Attenuation / Voltage Stable Bits",
-            );
+        it("labels the fields firmware split out of a shared mode", () => {
+            // battery.c wrote the stable-voltage bits to BATTERY debug[3] while
+            // mixer.c wrote the sag compensation attenuation there
+            // (betaflight/betaflight#15594), until #15727 gave sag compensation
+            // a mode of its own.
+            expect(fieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe("Voltage Stable Bits");
+            expect(fieldNames(ANNOTATED).SAG_COMPENSATION["debug[0]"]).toBe("Battery Goodness");
+            expect(fieldNames(ANNOTATED).SAG_COMPENSATION["debug[1]"]).toBe("Motor Range Attenuation");
+            expect(FIRMWARE_DEBUG_FIELD_CONFLICTS.filter((conflict) => conflict.mode === "BATTERY")).toEqual([]);
         });
 
         it("names the display suffix of every unit in the vocabulary", () => {
@@ -183,22 +178,16 @@ describe("firmware debug field annotations", () => {
 
             // A unit no generated field uses is unchecked above, so say which, to
             // keep the count honest rather than let the loop look exhaustive.
-            expect([...Object.keys(DEBUG_UNITS)].filter((unit) => !used.has(unit))).toEqual(["kHz", "m", "rcCommand"]);
+            expect([...Object.keys(DEBUG_UNITS)].filter((unit) => !used.has(unit))).toEqual(["kHz", "rcCommand"]);
         });
 
-        it("names both meanings only when they differ", () => {
-            // Two variants can disagree on the unit alone - the LIDAR-TF driver
-            // reports centimetres where the UPT1 reports millimetres - and
-            // "Distance / Distance" would name nothing.
-            expect(fieldNames(ANNOTATED).LIDAR_TF["debug[0]"]).toBe("Distance");
-            expect(
-                expectPresent(
-                    FIRMWARE_DEBUG_FIELD_CONFLICTS.find(
-                        (conflict) => conflict.mode === "LIDAR_TF" && conflict.index === 0,
-                    ),
-                    "the LIDAR_TF debug[0] conflict",
-                ).meanings.map((meaning) => meaning.unit),
-            ).toEqual(["cm", "m"]);
+        it("keeps each rangefinder's distance in its own unit", () => {
+            // LIDAR_TF debug[0] was centimetres from the LIDAR-TF driver and
+            // millimetres from the UPT1, until #15727 gave the UPT1 its own mode.
+            expect(FIRMWARE_DEBUG_FIELDS[ANNOTATED].LIDAR_TF[0].unit).toBe("cm");
+            expect(FIRMWARE_DEBUG_FIELDS[ANNOTATED].UPT1[0].unit).toBe("m");
+            expect(decodeDebugFieldToFriendly("LIDAR_TF", "debug[0]", 150, ctx(ANNOTATED))).toBe("1.50 m");
+            expect(decodeDebugFieldToFriendly("UPT1", "debug[0]", 1500, ctx(ANNOTATED))).toBe("1.500 m");
         });
 
         it("keeps every meaning whole, including the enum values that may be all that differs", () => {

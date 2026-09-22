@@ -6,6 +6,7 @@ import {
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderModeFields,
     resolveFieldIndex,
 } from "../../../scripts/generate-debug-modes.mjs";
 
@@ -189,5 +190,50 @@ describe("propertyKey", () => {
         expect(propertyKey("3D")).toBe('"3D"');
         expect(propertyKey("A-B")).toBe('"A-B"');
         expect(propertyKey("A B")).toBe('"A B"');
+    });
+});
+
+describe("renderModeFields", () => {
+    // Firmware carries no conflicting field since betaflight/betaflight#15727, so
+    // the generated table no longer exercises this; the shapes below are the two
+    // it used to hold.
+    const variant = (label: string, unit: string | null, scale = 1) => ({ label, unit, scale });
+
+    it("names both meanings of a field two subsystems write differently, and drops the unit", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "BATTERY",
+            { 3: [variant("Sag Compensation Attenuation", null, 0.001), variant("Voltage Stable Bits", null)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain(
+            '3: Object.freeze({ label: "Sag Compensation Attenuation / Voltage Stable Bits", unit: null, scale: 1 })',
+        );
+        expect(conflicts).toEqual([expect.objectContaining({ apiVersion: "1.49.0", mode: "BATTERY", index: 3 })]);
+    });
+
+    it("names both meanings only when they differ", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "LIDAR_TF",
+            { 0: [variant("Distance", "cm"), variant("Distance", "m", 0.001)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: null, scale: 1 })');
+        expect(conflicts).toHaveLength(1);
+    });
+
+    it("keeps the unit and scale of a field with one meaning", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields("UPT1", { 0: [variant("Distance", "m", 0.001)] }, "1.49.0", conflicts).join(
+            "\n",
+        );
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: "m", scale: 0.001 })');
+        expect(conflicts).toEqual([]);
     });
 });
