@@ -286,8 +286,10 @@ async function closeSourcesDialog() {
     await store.reloadRepositories();
 }
 
-function handleSaveSource(index: number, source: Record<string, unknown>) {
-    store.updateSource(index, source);
+// The name is the fix as much as the type: PresetSourcesDialog emits source.id and
+// store.updateSource() resolves it with getSourceIndexById(), so this was never an index.
+function handleSaveSource(sourceId: string, source: Record<string, unknown>) {
+    store.updateSource(sourceId, source);
 }
 
 function handleActivateSource(sourceId: string) {

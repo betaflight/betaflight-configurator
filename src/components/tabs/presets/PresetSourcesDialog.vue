@@ -57,14 +57,17 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits([
-    "close",
-    "add-source",
-    "save-source",
-    "delete-source",
-    "activate-source",
-    "deactivate-source",
-]);
+// Typed rather than a string array: the array form carries no payload types, so a handler
+// bound to one of these is checked against nothing. That is how a `sourceId: string` came to
+// be annotated as a numeric index in PresetsTab and typechecked clean anyway.
+const emit = defineEmits<{
+    close: [];
+    "add-source": [];
+    "save-source": [sourceId: string, source: Record<string, unknown>];
+    "delete-source": [sourceId: string];
+    "activate-source": [sourceId: string];
+    "deactivate-source": [sourceId: string];
+}>();
 
 const selectedSourceId = ref("");
 
