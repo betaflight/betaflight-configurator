@@ -1544,19 +1544,32 @@ async function openFontManager() {
     // Initialize LogoManager (caches DOM elements via querySelector)
     LogoManager.init(FONT, SYM.LOGO);
 
-    // Load selected/default preset on first open if no font is loaded yet.
-    if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
-        let presetToLoad = Math.max(0, selectedFontPreset.value);
-        if (!isFontUsable(fontTypes.value[presetToLoad])) {
-            presetToLoad = Math.max(0, firstUsableFontIndex());
-        }
+    // Load a preset if nothing is loaded yet, or if the selected preset is not usable with this OSD
+    const fontLoaded = FONT.data.character_image_urls.length > 0;
+
+    if (fontTypes.value.length === 0 || (fontLoaded && selectedFontPreset.value === -1)) {
+        // No presets available or keeping user supplied font file
+        refreshFontManagerPreviews();
+        return;
+    }
+
+    let presetToLoad = Math.max(0, selectedFontPreset.value);
+    if (!isFontUsable(fontTypes.value[presetToLoad])) {
+        presetToLoad = Math.max(0, firstUsableFontIndex());
+    }
+
+    if (!fontLoaded || presetToLoad !== selectedFontPreset.value) {
         selectedFontPreset.value = presetToLoad;
         loadFontPreset(presetToLoad);
     } else {
-        // Keep dialog previews in sync when font data was loaded earlier (e.g. during tab init).
-        LogoManager.drawPreview();
-        fontDataVersion.value++;
+        refreshFontManagerPreviews();
     }
+}
+
+// Keep dialog previews in sync with font data loaded earlier (e.g. during tab init).
+function refreshFontManagerPreviews() {
+    LogoManager.drawPreview();
+    fontDataVersion.value++;
 }
 
 function loadFontPreset(index) {
