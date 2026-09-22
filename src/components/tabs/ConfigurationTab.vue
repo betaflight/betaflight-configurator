@@ -235,7 +235,7 @@ import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
@@ -427,7 +427,7 @@ export default defineComponent({
                     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                         await MSP.promise(
                             MSPCodes.MSP2_GET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
                         );
                     }
 
@@ -436,7 +436,7 @@ export default defineComponent({
                     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                         await MSP.promise(
                             MSPCodes.MSP2_GET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
+                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PILOT_NAME),
                         );
                     }
 
@@ -568,11 +568,11 @@ export default defineComponent({
                 } else {
                     await MSP.promise(
                         MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.CRAFT_NAME),
                     );
                     await MSP.promise(
                         MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PILOT_NAME),
                     );
                 }
 

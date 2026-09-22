@@ -5,7 +5,7 @@ import { API_VERSION_1_49 } from "../js/data_storage";
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
-import { getDebugFieldAxis, getDebugModes } from "../js/utils/debugModes";
+import { debugContextFromSysConfig, getDebugFieldAxis } from "../js/utils/debugModes";
 
 export function GraphConfig(graphConfig) {
     const listeners = [];
@@ -54,7 +54,6 @@ export function GraphConfig(graphConfig) {
         const fields = [];
         const setupColor = field?.color === -1;
         const sysConfig = flightLog.getSysConfig();
-        const apiVersion = sysConfig.apiVersion;
         if (matches) {
             const nameRoot = matches[1],
                 nameRegex = new RegExp(String.raw`^${escapeRegExp(nameRoot)}\[[0-9]+\]$`);
@@ -74,8 +73,7 @@ export function GraphConfig(graphConfig) {
                                 name: fieldName,
                                 friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
                                     fieldName,
-                                    sysConfig.debug_mode,
-                                    apiVersion,
+                                    debugContextFromSysConfig(sysConfig),
                                 ),
                             },
                             forceNewCurve,
@@ -92,8 +90,7 @@ export function GraphConfig(graphConfig) {
                         curve: { ...field.curve },
                         friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
                             field.name,
-                            sysConfig.debug_mode,
-                            apiVersion,
+                            debugContextFromSysConfig(sysConfig),
                         ),
                     }),
                 );
@@ -826,12 +823,15 @@ GraphConfig.getDefaultCurveForField = function (flightLog, fieldName) {
                 },
             };
         } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
-            const debugModeName = getDebugModes(sysConfig.apiVersion)[sysConfig.debug_mode];
+            const debugContext = debugContextFromSysConfig(sysConfig);
+            const debugModeName = debugContext.modeName;
 
-            // Firmware from API 1.49 on annotates what each debug field holds, so the
-            // axis follows from the field's own shape and DEBUG_MODE_CURVES is never
-            // consulted. That table remains for logs recorded before the annotations.
-            const axis = getDebugFieldAxis(debugModeName, fieldName, sysConfig.apiVersion);
+            // Firmware annotates what each debug field holds - in the log's own
+            // header where it has the flash for it, otherwise through the generated
+            // table - so the axis follows from the field's own shape and
+            // DEBUG_MODE_CURVES is never consulted. That table remains for logs
+            // recorded before the annotations.
+            const axis = getDebugFieldAxis(fieldName, debugContext);
 
             // A bounded unit or a device-native one fixes the axis outright, and the
             // firmware is a better authority on that than any table here.

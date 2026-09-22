@@ -13,12 +13,19 @@ import {
     checkSerialSupport,
     checkUsbSupport,
     isAndroid,
+    isNetworkOnlyBrowser,
     isTauri,
     isTauriAndroid,
 } from "./utils/checkCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
+// Where a network-only browser starts looking. A browser has no raw sockets, so it reaches
+// SITL through the websockify proxy's own port rather than the raw 5761 — the same address
+// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.js.
+const DEFAULT_NETWORK_TARGET = "ws://127.0.0.1:6761";
+
+const networkOnly = isNetworkOnlyBrowser();
 
 // Create the platform-appropriate DFU protocol instance.
 // On Android, use the native transport for the shell we run in (Tauri or
@@ -69,7 +76,7 @@ const DeviceHandler = new (function () {
     this.devicePicker = {
         selectedDevice: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
-        portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
+        portOverride: getConfig("portOverride", networkOnly ? DEFAULT_NETWORK_TARGET : "/dev/rfcomm0").portOverride,
         virtualMspVersion: getConfig("virtualMspVersion", "1.46.0").virtualMspVersion,
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };
@@ -152,6 +159,17 @@ DeviceHandler.setShowVirtualMode = function (showVirtualMode) {
 DeviceHandler.setShowManualMode = function (showManualMode) {
     this.showManualMode = showManualMode;
     this.selectActivePort();
+};
+
+/**
+ * The manual entry is a development option behind expert mode, except on a network-only
+ * browser. There it is the only way to reach a flight controller, so neither expert mode nor
+ * a development-option reset may take it away.
+ *
+ * @returns {boolean} Whether to offer manual/network targets in the UI.
+ */
+DeviceHandler.manualModeAvailable = function () {
+    return networkOnly || (this.showManualMode && isExpertModeEnabled());
 };
 
 DeviceHandler.setShowAllSerialDevices = function (showAllSerialDevices) {
@@ -403,7 +421,7 @@ DeviceHandler.selectActivePort = function (suggestedDevice = false) {
         selectedDevice = "virtual";
     }
 
-    if (!selectedDevice && !reconnectInProgress && expertMode && this.showManualMode) {
+    if (!selectedDevice && !reconnectInProgress && this.manualModeAvailable()) {
         selectedDevice = "manual";
     }
 

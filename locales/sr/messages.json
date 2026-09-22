@@ -2255,15 +2255,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "Serijski port za GPS nije mogao da se postavi, pa ništa nije sačuvano."
     },
-    "gpsCanDevice": {
-        "message": "CAN magistrala"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "CAN magistrala na koju su povezani DroneCAN moduli. Ona pripada celom DroneCAN sistemu, pa njena promena pomera svaki DroneCAN uređaj, ne samo GPS. Promena zahteva restart."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN magistrala nije mogla da se postavi, pa ništa nije sačuvano."
-    },
     "configurationGPSAutoBaud": {
         "message": "Automatska brzina prenosa"
     },

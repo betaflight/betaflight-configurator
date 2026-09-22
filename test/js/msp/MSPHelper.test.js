@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import semver from "semver";
 import MspHelper from "../../../src/js/msp/MSPHelper";
-import MSPCodes from "../../../src/js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
 import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
 import { API_VERSION_1_47 } from "../../../src/js/data_storage";
@@ -208,6 +208,136 @@ describe("MspHelper", () => {
             expect(q.x).toBeCloseTo(-1, 3);
             expect(q.y).toBeCloseTo(0, 3);
             expect(q.z).toBeCloseTo(16384 / 32767, 3);
+        });
+    });
+
+    describe("MSP2 text types", () => {
+        /*
+         * MSPHelper.js is plain JavaScript and tsconfig sets `checkJs: false`, so neither
+         * ESLint nor vue-tsc looks at these switches. A stale member name -- the pre-split
+         * `MSP2TextType.BUILD_KEY`, say -- evaluates to `undefined`, its case silently stops
+         * matching a numeric type byte, and the field is never populated. These tests pin
+         * the type byte that goes on the wire and the FC.CONFIG field each type lands in.
+         */
+        function buildTextPayload(textType, text) {
+            const buffer = [];
+            buffer.push8(textType);
+            buffer.push8(text.length);
+            appendStringToArray(buffer, text);
+            return buffer;
+        }
+
+        function readBuffer(buffer) {
+            const view = new DataView(new Uint8Array(buffer).buffer);
+            view.offset = 0;
+            return view;
+        }
+
+        beforeEach(() => {
+            // Non-zero indices so the profile-indexed types cannot pass by hitting slot 0.
+            FC.CONFIG.profile = 2;
+            FC.CONFIG.rateProfile = 1;
+            FC.CONFIG.batteryProfile = 1;
+        });
+
+        it.each([
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME, () => FC.CONFIG.pilotName],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, () => FC.CONFIG.craftName],
+            ["PID_PROFILE_NAME", MSP2TextType.PID_PROFILE_NAME, () => FC.CONFIG.pidProfileNames[FC.CONFIG.profile]],
+            [
+                "RATE_PROFILE_NAME",
+                MSP2TextType.RATE_PROFILE_NAME,
+                () => FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile],
+            ],
+            ["BUILDKEY", MSP2TextType.BUILDKEY, () => FC.CONFIG.buildKey],
+            [
+                "BATTERY_PROFILE_NAME",
+                MSP2TextType.BATTERY_PROFILE_NAME,
+                () => FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile],
+            ],
+        ])("decodes MSP2_GET_TEXT %s into its FC.CONFIG field", (name, textType, read) => {
+            const text = `text-${name}`;
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP2_GET_TEXT,
+                dataView: new DataView(new Uint8Array(buildTextPayload(textType, text)).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(read()).toEqual(text);
+        });
+
+        it("ignores a text type the configurator does not handle", () => {
+            // RELEASENAME exists in the firmware header but has no case here yet.
+            mspHelper.process_data({
+                code: MSPCodes.MSP2_GET_TEXT,
+                dataView: new DataView(new Uint8Array(buildTextPayload(MSP2TextType.RELEASENAME, "4.6.0")).buffer),
+                crcError: false,
+                callbacks: [],
+            });
+
+            expect(FC.CONFIG.pilotName).toEqual("");
+            expect(FC.CONFIG.craftName).toEqual("");
+            expect(FC.CONFIG.buildKey).toEqual("");
+        });
+
+        it.each([
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME],
+            ["PID_PROFILE_NAME", MSP2TextType.PID_PROFILE_NAME],
+            ["RATE_PROFILE_NAME", MSP2TextType.RATE_PROFILE_NAME],
+            ["BUILDKEY", MSP2TextType.BUILDKEY],
+            ["BATTERY_PROFILE_NAME", MSP2TextType.BATTERY_PROFILE_NAME],
+        ])("crunches MSP2_GET_TEXT %s to the bare type byte", (name, textType) => {
+            expect(mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, textType)).toEqual([textType]);
+        });
+
+        it.each([
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME, 16, (value) => (FC.CONFIG.pilotName = value)],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, 16, (value) => (FC.CONFIG.craftName = value)],
+            [
+                "PID_PROFILE_NAME",
+                MSP2TextType.PID_PROFILE_NAME,
+                8,
+                (value) => (FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = value),
+            ],
+            [
+                "RATE_PROFILE_NAME",
+                MSP2TextType.RATE_PROFILE_NAME,
+                8,
+                (value) => (FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value),
+            ],
+            [
+                "BATTERY_PROFILE_NAME",
+                MSP2TextType.BATTERY_PROFILE_NAME,
+                8,
+                (value) => (FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = value),
+            ],
+        ])(
+            "crunches MSP2_SET_TEXT %s and truncates to the firmware field width",
+            (name, textType, maxLength, write) => {
+                const value = "0123456789abcdefghij"; // longer than every field width
+                write(value);
+
+                const view = readBuffer(mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, textType));
+
+                expect(view.readU8()).toEqual(textType);
+                expect(mspHelper.getText(view)).toEqual(value.slice(0, maxLength));
+            },
+        );
+
+        it("round-trips a craft name shorter than the field width", () => {
+            FC.CONFIG.craftName = "Twig";
+
+            const view = readBuffer(mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.CRAFT_NAME));
+
+            expect(view.readU8()).toEqual(MSP2TextType.CRAFT_NAME);
+            expect(mspHelper.getText(view)).toEqual("Twig");
+        });
+
+        it("emits no payload for a text type MSP2_SET_TEXT cannot serialize", () => {
+            expect(mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BUILDKEY)).toEqual([]);
         });
     });
 });

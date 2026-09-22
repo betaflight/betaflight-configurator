@@ -316,7 +316,7 @@ The debug tools auto-load when `msp_debug_tools.js` is imported. They detect the
 
 ```text
 src/js/msp/
-├── MSPCodes.js
+├── MSPCodes.ts
 ├── MSPConnector.js  
 ├── MSPHelper.js
 └── debug/

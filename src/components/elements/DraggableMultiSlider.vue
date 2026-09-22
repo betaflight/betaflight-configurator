@@ -49,6 +49,10 @@ const vRangeDrag = {
             step: binding.value?.step ?? 25,
         });
 
+        // The slider mirrors itself in RTL locales, so a pointer moving right walks the value
+        // down. Read the direction per drag: the language can change while the tab is mounted.
+        const getDirectionSign = () => (getComputedStyle(rangeEl).direction === "rtl" ? -1 : 1);
+
         const onPointerDown = (e) => {
             if (e.button !== 0) {
                 return;
@@ -65,6 +69,7 @@ const vRangeDrag = {
                 min,
                 max,
                 step,
+                directionSign: getDirectionSign(),
                 startX: e.clientX,
                 startValue: start,
                 rangeWidth: end - start,
@@ -83,7 +88,8 @@ const vRangeDrag = {
 
             e.stopPropagation();
 
-            const rawDelta = ((drag.max - drag.min) * (e.clientX - drag.startX)) / drag.trackWidth;
+            const pointerDelta = (e.clientX - drag.startX) * drag.directionSign;
+            const rawDelta = ((drag.max - drag.min) * pointerDelta) / drag.trackWidth;
             const delta = Math.round(rawDelta / drag.step) * drag.step;
             const nextStart = Math.max(drag.min, Math.min(drag.max - drag.rangeWidth, drag.startValue + delta));
             setRange([nextStart, nextStart + drag.rangeWidth]);

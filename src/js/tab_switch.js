@@ -1,8 +1,8 @@
 import GUI from "./gui.js";
-import CONFIGURATOR from "./data_storage.js";
+import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization.js";
 import { gui_log } from "./gui_log.js";
-import { set as setConfig } from "./ConfigStorage.js";
+import { set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { mountVueTab, vueTabState } from "./vue_tab_mounter.js";
 import { sidebarItems } from "../components/sidebar/sidebar_items.js";

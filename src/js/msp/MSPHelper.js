@@ -6,7 +6,7 @@ import FC from "../fc";
 import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
-import MSPCodes from "./MSPCodes";
+import MSPCodes, { MSP2TextType } from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
 import {
     API_VERSION_1_45,
@@ -965,22 +965,22 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     const textType = data.readU8();
 
                     switch (textType) {
-                        case MSPCodes.PILOT_NAME:
+                        case MSP2TextType.PILOT_NAME:
                             FC.CONFIG.pilotName = self.getText(data);
                             break;
-                        case MSPCodes.CRAFT_NAME:
+                        case MSP2TextType.CRAFT_NAME:
                             FC.CONFIG.craftName = self.getText(data);
                             break;
-                        case MSPCodes.PID_PROFILE_NAME:
+                        case MSP2TextType.PID_PROFILE_NAME:
                             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = self.getText(data);
                             break;
-                        case MSPCodes.RATE_PROFILE_NAME:
+                        case MSP2TextType.RATE_PROFILE_NAME:
                             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = self.getText(data);
                             break;
-                        case MSPCodes.BUILD_KEY:
+                        case MSP2TextType.BUILDKEY:
                             FC.CONFIG.buildKey = self.getText(data);
                             break;
-                        case MSPCodes.BATTERY_PROFILE_NAME:
+                        case MSP2TextType.BATTERY_PROFILE_NAME:
                             FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = self.getText(data);
                             break;
                         default:
@@ -1855,6 +1855,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_SET_WING:
                     break;
 
+                // Named settings, read straight off the raw response by useMspSetting rather than
+                // decoded into FC state here. Listed so the dispatcher stops reporting them as
+                // unknown codes on every probe.
+                case MSPCodes.MSP2_CLI_SETTING:
+                case MSPCodes.MSP2_CLI_SETTING_INFO:
+                    break;
+
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
@@ -2418,19 +2425,19 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
         case MSPCodes.MSP2_SET_TEXT:
             switch (modifierCode) {
-                case MSPCodes.PILOT_NAME:
+                case MSP2TextType.PILOT_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.pilotName, 16);
                     break;
-                case MSPCodes.CRAFT_NAME:
+                case MSP2TextType.CRAFT_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.craftName, 16);
                     break;
-                case MSPCodes.PID_PROFILE_NAME:
+                case MSP2TextType.PID_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.profile], 8);
                     break;
-                case MSPCodes.RATE_PROFILE_NAME:
+                case MSP2TextType.RATE_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
-                case MSPCodes.BATTERY_PROFILE_NAME:
+                case MSP2TextType.BATTERY_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
                     break;
                 default:
