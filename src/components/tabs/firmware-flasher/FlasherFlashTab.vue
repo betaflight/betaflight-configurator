@@ -235,8 +235,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import type { PropType } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
@@ -246,13 +247,13 @@ import { getLastBackupData } from "@/js/utils/AutoBackup";
 const props = defineProps({
     state: { type: Object, required: true },
     cloudBuild: { type: Object, required: true },
-    onSaveFirmware: { type: Function, required: true },
+    onSaveFirmware: { type: Function as PropType<(event: MouseEvent) => void>, required: true },
     flashRingColor: { type: String, required: true },
-    onNoRebootChange: { type: Function, required: true },
-    onEraseChipChange: { type: Function, required: true },
-    onFlashManualBaudChange: { type: Function, required: true },
-    onFlashManualBaudRateChange: { type: Function, required: true },
-    onRestoreBackup: { type: Function, required: true },
+    onNoRebootChange: { type: Function as PropType<(event: Event) => void>, required: true },
+    onEraseChipChange: { type: Function as PropType<(event: Event) => void>, required: true },
+    onFlashManualBaudChange: { type: Function as PropType<(event: Event) => void>, required: true },
+    onFlashManualBaudRateChange: { type: Function as PropType<(value: number) => void>, required: true },
+    onRestoreBackup: { type: Function as PropType<(event: MouseEvent) => void>, required: true },
 });
 
 // True while flash is actively running (progress updates flowing)

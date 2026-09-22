@@ -112,7 +112,7 @@
     </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "../../../js/gui";
@@ -128,7 +128,7 @@ const { isLoading, supported, serialPorts, canNodes, sensors, load } = usePeriph
 
 // Which tab configures each DroneCAN sensor, so a node tile can link to it the same way a serial
 // port tile links to the tab that claims it. This tab stays read-only: the link only navigates.
-const DRONECAN_SENSOR_TABS = {
+const DRONECAN_SENSOR_TABS: Record<string, string | undefined> = {
     GPS: "gps",
     MAG: "sensors",
     AIRSPEED: "sensors",
@@ -153,7 +153,7 @@ const serialTiles = computed(() =>
     })),
 );
 
-const sensorClassLabels = {
+const sensorClassLabels: Record<string, string | undefined> = {
     gyro: "portsSensorGyro",
     acc: "portsSensorAcc",
     baro: "portsSensorBaro",
@@ -168,7 +168,7 @@ const sensorTiles = computed(() =>
     }),
 );
 
-function healthBoxType(health) {
+function healthBoxType(health: string) {
     if (health === "OK") {
         return "neutral";
     }

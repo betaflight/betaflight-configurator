@@ -245,7 +245,8 @@
     </UiBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import SettingColumn from "@/components/elements/SettingColumn.vue";
@@ -253,19 +254,19 @@ import SettingColumn from "@/components/elements/SettingColumn.vue";
 defineProps({
     state: { type: Object, required: true },
     boardSelection: { type: Object, required: true },
-    onBuildTypeChange: { type: Function, required: true },
-    onBoardChange: { type: Function, required: true },
-    onDetectBoard: { type: Function, required: true },
-    onFirmwareVersionChange: { type: Function, required: true },
-    onExpertModeChange: { type: Function, required: true },
-    onShowDevelopmentReleasesChange: { type: Function, required: true },
-    onRadioProtocolChange: { type: Function, required: true },
-    onTelemetryProtocolChange: { type: Function, required: true },
-    onOsdProtocolChange: { type: Function, required: true },
-    onMotorProtocolChange: { type: Function, required: true },
-    onOptionsChange: { type: Function, required: true },
-    removeSelectedBuildOption: { type: Function, required: true },
-    onCommitChange: { type: Function, required: true },
-    onCommitCreate: { type: Function, required: true },
+    onBuildTypeChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onBoardChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onDetectBoard: { type: Function as PropType<(event: MouseEvent) => void>, required: true },
+    onFirmwareVersionChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onExpertModeChange: { type: Function as PropType<(event: Event) => void>, required: true },
+    onShowDevelopmentReleasesChange: { type: Function as PropType<(event: Event) => void>, required: true },
+    onRadioProtocolChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onTelemetryProtocolChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onOsdProtocolChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onMotorProtocolChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onOptionsChange: { type: Function as PropType<(value: unknown[]) => void>, required: true },
+    removeSelectedBuildOption: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onCommitChange: { type: Function as PropType<(value: unknown) => void>, required: true },
+    onCommitCreate: { type: Function as PropType<(item: string) => void>, required: true },
 });
 </script>

@@ -31,10 +31,16 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
+import type { PropType } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import PresetSourceCard from "./PresetSourceCard.vue";
+
+interface PresetSource {
+    id: string;
+    [key: string]: unknown;
+}
 
 const props = defineProps({
     open: {
@@ -42,11 +48,11 @@ const props = defineProps({
         default: false,
     },
     sources: {
-        type: Array,
+        type: Array as PropType<PresetSource[]>,
         default: () => [],
     },
     activeSourceIds: {
-        type: Array,
+        type: Array as PropType<string[]>,
         default: () => [],
     },
 });
@@ -85,7 +91,7 @@ watch(
     },
 );
 
-function onOpenChange(value) {
+function onOpenChange(value: boolean) {
     if (!value && props.open) {
         emit("close");
     }

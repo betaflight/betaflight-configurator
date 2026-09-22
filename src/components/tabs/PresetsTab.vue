@@ -210,7 +210,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -244,7 +244,7 @@ const dialog = useDialog();
 const cliSession = useMspCliSession();
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
 
-function reportProgress({ index, total }) {
+function reportProgress({ index, total }: { index: number; total: number }) {
     if (total <= 0) {
         store.updateApplyProgress(100);
         return;
@@ -286,15 +286,15 @@ async function closeSourcesDialog() {
     await store.reloadRepositories();
 }
 
-function handleSaveSource(index, source) {
+function handleSaveSource(index: number, source: Record<string, unknown>) {
     store.updateSource(index, source);
 }
 
-function handleActivateSource(sourceId) {
+function handleActivateSource(sourceId: string) {
     store.setSourceActive(sourceId, true);
 }
 
-function handleDeactivateSource(sourceId) {
+function handleDeactivateSource(sourceId: string) {
     store.setSourceActive(sourceId, false);
 }
 
@@ -321,8 +321,8 @@ async function ensureCliPresetActionSupported() {
     return true;
 }
 
-function isPickerAbortError(error) {
-    return error?.name === "AbortError";
+function isPickerAbortError(error: unknown) {
+    return error instanceof Error && error.name === "AbortError";
 }
 
 async function saveConfigBackup() {
@@ -335,7 +335,7 @@ async function saveConfigBackup() {
     try {
         const cliStrings = await cliSession.readDumpAll();
         const filename = generateFilename("cli_backup", "txt");
-        const hasDefaultsPrefix = cliStrings.some((line) => line.trim().toLowerCase() === "defaults nosave");
+        const hasDefaultsPrefix = cliStrings.some((line: string) => line.trim().toLowerCase() === "defaults nosave");
         const lines = hasDefaultsPrefix ? cliStrings : ["defaults nosave", "", ...cliStrings];
         const text = lines.join("\n");
         const file = await FileSystem.pickSaveFile(
@@ -397,14 +397,14 @@ async function loadConfigBackup() {
         console.error("Failed loading presets config:", error);
         await dialog.showInfo(
             i18n.getMessage("warningTitle"),
-            `${i18n.getMessage("userBackupsLoadFailed")}<br>${escapeHtml(String(error.message ?? ""))}`,
+            `${i18n.getMessage("userBackupsLoadFailed")}<br>${escapeHtml(error instanceof Error ? error.message : "")}`,
             { confirmText: i18n.getMessage("close") },
         );
     }
 }
 
-function isPresetCompatible(preset) {
-    return preset.firmware_version?.some((firmwareVersion) =>
+function isPresetCompatible(preset: { firmware_version?: string[] }) {
+    return preset.firmware_version?.some((firmwareVersion: string) =>
         FC.CONFIG.flightControllerVersion.startsWith(firmwareVersion),
     );
 }
