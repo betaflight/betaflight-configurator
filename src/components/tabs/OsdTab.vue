@@ -1523,7 +1523,6 @@ const fontCharacterUrls = computed(() => {
 const fontDataVersion = ref(0);
 let lastFontPresetRequestId = 0;
 
-// Small font glyphs are essentially white only, so the font manager grid needs a grey background to show them.
 // FONT.data is not reactive; re-evaluate whenever a font is (re)loaded.
 const isSmallFontLoaded = computed(() => fontDataVersion.value >= 0 && FONT.isSmallFont());
 

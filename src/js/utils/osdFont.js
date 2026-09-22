@@ -142,9 +142,6 @@ FONT.constants = {
             { bpc: 4, rows: 12 },
         ],
         LOGO_START: 0xa0,
-        /** Character grid cell in pixels; glyphs narrower or shorter than this are top left aligned **/
-        CELL_WIDTH: 8, // *** TODO use CELL_WIDTH, HEIGHT to help with drawing to canvas **
-        CELL_HEIGHT: 12,
     },
 };
 
@@ -155,7 +152,7 @@ FONT.isSmallFont = function () {
 /**
  * Pixel dimensions of one character's glyph, as stored in FONT.data.characters.
  * @param {number} charAddress Character index into a FONT array.
- * @returns {{width: number, glyphHeight: number, charHeight: number}}
+ * @returns {{charWidth: number, charHeight: number, glyphWidth: number, glyphHeight: number}}
  */
 FONT.getCharGeometry = function (charAddress) {
     const standard = {
