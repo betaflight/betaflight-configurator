@@ -5,8 +5,29 @@ import {
     parseDebugAnnotation,
     parseDebugFieldHeader,
 } from "../../../src/js/debug_annotation.ts";
+import type { DebugAnnotationError, ParsedDebugAnnotation } from "../../../src/js/debug_annotation.ts";
 import { DEBUG_UNITS } from "../../../src/js/debug_units.ts";
 import { FIRMWARE_DEBUG_FIELDS } from "../../../src/js/debug_fields_table.ts";
+import type { FirmwareDebugField } from "../../../src/js/debug_fields_table.ts";
+
+/*
+ * Both parsers return a result-or-error union. These narrow it and fail with what
+ * actually came back, so a test that gets the wrong branch says so instead of
+ * reporting `undefined` against the expected value.
+ */
+function expectParsed(result: ParsedDebugAnnotation | DebugAnnotationError): ParsedDebugAnnotation {
+    if (isDebugAnnotationError(result)) {
+        throw new Error(`expected a successful parse, got error: ${result.error}`);
+    }
+    return result;
+}
+
+function expectRefused<T extends object>(result: T | DebugAnnotationError): DebugAnnotationError {
+    if (!isDebugAnnotationError(result)) {
+        throw new Error(`expected a refusal, got: ${JSON.stringify(result)}`);
+    }
+    return result;
+}
 
 /*
  * The grammar of the firmware's `//!<` debug field annotations.
@@ -54,7 +75,7 @@ describe("parseDebugAnnotation", () => {
     });
 
     it("spells out one label per index for a run-time index", () => {
-        const parsed = parseDebugAnnotation("[index:0..2] Gyro ({roll|pitch|yaw}) [unit:dps]");
+        const parsed = expectParsed(parseDebugAnnotation("[index:0..2] Gyro ({roll|pitch|yaw}) [unit:dps]"));
 
         expect(parsed.indices).toEqual([0, 1, 2]);
         expect(parsed.labels).toEqual(["Gyro (roll)", "Gyro (pitch)", "Gyro (yaw)"]);
@@ -66,26 +87,32 @@ describe("parseDebugAnnotation", () => {
 
     it("refuses what it cannot describe rather than dropping the field", () => {
         // Each of these would otherwise leave a field silently unlabelled.
-        expect(parseDebugAnnotation("[unit:us]").error).toBeDefined();
-        expect(parseDebugAnnotation("Label [furlongs]").error).toBeDefined();
-        expect(parseDebugAnnotation("Label [unit:furlongs]").error).toBeDefined();
-        expect(parseDebugAnnotation("Label [roll] [unit:us]").error).toBeDefined();
+        expect(expectRefused(parseDebugAnnotation("[unit:us]")).error).toBeDefined();
+        expect(expectRefused(parseDebugAnnotation("Label [furlongs]")).error).toBeDefined();
+        expect(expectRefused(parseDebugAnnotation("Label [unit:furlongs]")).error).toBeDefined();
+        expect(expectRefused(parseDebugAnnotation("Label [roll] [unit:us]")).error).toBeDefined();
         // Three alternatives for two indices.
-        expect(parseDebugAnnotation("[index:0..1] Gyro ({roll|pitch|yaw}) [unit:dps]").error).toBeDefined();
+        expect(
+            expectRefused(parseDebugAnnotation("[index:0..1] Gyro ({roll|pitch|yaw}) [unit:dps]")).error,
+        ).toBeDefined();
     });
 
     it("refuses a flag list longer than the field has bits", () => {
         const bits = Array.from({ length: DEBUG_VALUE_BITS + 1 }, (_, bit) => `Bit ${bit}`).join("|");
-        expect(parseDebugAnnotation(`Flags [flags:${bits}]`).error).toBeDefined();
+        expect(expectRefused(parseDebugAnnotation(`Flags [flags:${bits}]`)).error).toBeDefined();
     });
 });
 
 describe("parseDebugAnnotation, unit factors", () => {
     it("refuses a factor that overflows a double, which would scale every sample to Infinity", () => {
         const huge = "9".repeat(400);
-        expect(parseDebugAnnotation(`Cycle Time [unit:${huge}us]`).error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseDebugAnnotation("Cycle Time [unit:0us]").error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseDebugAnnotation("Cycle Time [unit:0.1us]").scale).toBe(0.1);
+        expect(expectRefused(parseDebugAnnotation(`Cycle Time [unit:${huge}us]`)).error).toMatch(
+            /not a unit, enum or flags shape/,
+        );
+        expect(expectRefused(parseDebugAnnotation("Cycle Time [unit:0us]")).error).toMatch(
+            /not a unit, enum or flags shape/,
+        );
+        expect(expectParsed(parseDebugAnnotation("Cycle Time [unit:0.1us]")).scale).toBe(0.1);
     });
 });
 
@@ -118,8 +145,10 @@ describe("parseDebugFieldHeader", () => {
      * have. Reading them leniently would put slot 0's label on slot 3 in silence.
      */
     it("refuses an index spec or a label group, which a log must not carry", () => {
-        expect(parseDebugFieldHeader("[index:0..2] Gyro {roll|pitch|yaw} [unit:dps]").error).toMatch(/\[index:/);
-        expect(parseDebugFieldHeader("Gyro {roll|pitch|yaw} [unit:dps]").error).toBeDefined();
+        expect(expectRefused(parseDebugFieldHeader("[index:0..2] Gyro {roll|pitch|yaw} [unit:dps]")).error).toMatch(
+            /\[index:/,
+        );
+        expect(expectRefused(parseDebugFieldHeader("Gyro {roll|pitch|yaw} [unit:dps]")).error).toBeDefined();
     });
 
     it("reports a malformed header rather than throwing", () => {
@@ -137,7 +166,7 @@ describe("parseDebugFieldHeader", () => {
  * which is the whole failure this shared parser removes.
  */
 describe("the generated table round-trips through the grammar", () => {
-    const render = (field) => {
+    const render = (field: FirmwareDebugField) => {
         if (field.flags) {
             return `${field.label} [flags:${field.flags.map((name) => name ?? "-").join("|")}]`;
         }
@@ -147,8 +176,9 @@ describe("the generated table round-trips through the grammar", () => {
         return `${field.label} [unit:${field.scale === 1 ? "" : field.scale}${field.unit ?? ""}]`;
     };
 
-    const entries = Object.entries(FIRMWARE_DEBUG_FIELDS["1.49.0"]).flatMap(([mode, slots]) =>
-        Object.entries(slots).map(([index, field]) => [`${mode}[${index}]`, field]),
+    const entries: [string, FirmwareDebugField][] = Object.entries(FIRMWARE_DEBUG_FIELDS["1.49.0"]).flatMap(
+        ([mode, slots]) =>
+            Object.entries(slots).map(([index, field]): [string, FirmwareDebugField] => [`${mode}[${index}]`, field]),
     );
 
     it("has entries to check", () => {

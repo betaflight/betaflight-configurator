@@ -1,6 +1,6 @@
 {
     "extends": "@vue/tsconfig/tsconfig.dom.json",
-    "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts", "*.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts", "test/**/*.ts", "*.d.ts"],
     "exclude": ["src/dist", "dist", "node_modules"],
     "compilerOptions": {
         "strict": true,
