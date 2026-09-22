@@ -174,7 +174,7 @@ FONT.getCharGeometry = function (charAddress) {
     const mode = FONT.constants.SMALL_FONT.MODES[modeIndex];
     //  char width fixed at 8 and  char height fixed at 12 for canvas purposes
     // (compromise - font manager preview will truncate wide glyphs - TBC)
-    return { 8, glyphHeight: mode.rows, charHeight: 12 };
+    return { width: 8, glyphHeight: mode.rows, charHeight: 12 };
 };
 
 FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
