@@ -188,6 +188,7 @@ i18n.changeLanguage = function (languageSelected) {
     gui_log(i18n.getMessage("language_changed"));
 };
 
+/** @type {(messageID: string, parameters?: unknown) => string} */
 i18n.getMessage = function (messageID, parameters) {
     let parametersObject;
 

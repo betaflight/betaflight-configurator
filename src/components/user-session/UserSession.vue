@@ -214,8 +214,9 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
+import type { DropdownMenuItem } from "@nuxt/ui";
 import { useUserSession } from "./UserSession";
 import { switchTab } from "@/js/tab_switch.js";
 import { sidebarItems } from "@/components/sidebar/sidebar_items.js";
@@ -232,10 +233,10 @@ export default defineComponent({
     setup() {
         const session = useUserSession();
 
-        function getMenuItems() {
+        function getMenuItems(): DropdownMenuItem[] {
             const name = session.displayName.value || i18n.getMessage("tabUserProfile");
             const src = session.avatarUrl.value;
-            const leadingItems = [
+            const leadingItems: DropdownMenuItem[] = [
                 {
                     label: name,
                     avatar: {
@@ -247,7 +248,7 @@ export default defineComponent({
                 { type: "separator" },
             ];
             const tabKeys = ["backups", "user_profile"];
-            const trailingItems = [
+            const trailingItems: DropdownMenuItem[] = [
                 { type: "separator" },
                 {
                     label: i18n.getMessage("labelSignOut"),

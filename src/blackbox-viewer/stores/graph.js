@@ -69,6 +69,7 @@ export const useGraphStore = defineStore("graph", () => {
     const spectrumClear = shallowRef(null);
     const applyGraphZoom = shallowRef(null);
     const selectLogIndex = shallowRef(null);
+    /** @type {import("vue").ShallowRef<((mode: string) => void) | null>} */
     const setSeekBarMode = shallowRef(null);
 
     // --- Legend actions ---

@@ -29,7 +29,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed } from "vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
@@ -92,7 +92,7 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const isConnected = computed(() => connectionStore.connectionValid);
 
-        const updateModelValue = (key, value) => {
+        const updateModelValue = (key: string | null, value: unknown) => {
             if (key) {
                 emit("update:modelValue", { ...props.modelValue, [key]: value });
             } else {
