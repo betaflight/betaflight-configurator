@@ -835,18 +835,6 @@ function firstUsableFontIndex() {
     return fontTypes.value.findIndex(isFontUsable);
 }
 
-// Move the font selection to a usable font if the current one is not available in this mode.
-function ensureUsableFontSelected() {
-    const current = fontTypes.value[selectedFont.value];
-    if (current && !isFontUsable(current)) {
-        const usable = firstUsableFontIndex();
-        if (usable !== -1) {
-            selectedFont.value = usable;
-            selectedFontPreset.value = usable;
-        }
-    }
-}
-
 // USelect computed items
 const profileOptions = computed(() =>
     Array.from({ length: osdStore.numberOfProfiles }, (_, i) => ({
@@ -1457,7 +1445,6 @@ async function loadConfig() {
                     selectedFontPreset.value = -1;
                 }
             }
-            ensureUsableFontSelected();
 
             updatePreview();
             hasLoadedConfig.value = true;
