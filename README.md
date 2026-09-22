@@ -134,6 +134,7 @@ type. Search starts at two characters, matches any part of the displayed name, a
 ignores case and surrounding whitespace. Results keep the existing mode order and
 respect **Hide unused modes**. Clear the field or reduce it to one character to
 remove the text filter; mode ranges and links are preserved while hidden.
+The no-matches message appears only after mode data has loaded successfully.
 
 #### Run production version
 

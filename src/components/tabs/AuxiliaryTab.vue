@@ -22,7 +22,7 @@
                     />
                 </div>
 
-                <p v-if="!visibleModesWithState.length" role="status" class="text-muted py-4">
+                <p v-if="modesLoaded && !visibleModesWithState.length" role="status" class="text-muted py-4">
                     {{ $t("auxiliaryNoModesFound") }}
                 </p>
 
@@ -253,6 +253,7 @@ export default defineComponent({
 
         // Reactive State
         const modes = reactive([]);
+        const modesLoaded = ref(false);
         const hideUnused = ref(false);
         const searchQuery = ref("");
         const auxChannelCount = ref(0);
@@ -519,6 +520,7 @@ export default defineComponent({
                         auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
                         buildModesFromFC();
                         updateMarkers();
+                        modesLoaded.value = true;
                     },
                     (error) => console.error("Failed to load auxiliary data", error),
                 );
@@ -543,6 +545,7 @@ export default defineComponent({
 
         return {
             modes,
+            modesLoaded,
             hideUnused,
             searchQuery,
             visibleModesWithState,
