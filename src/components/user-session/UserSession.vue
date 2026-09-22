@@ -247,7 +247,7 @@ export default defineComponent({
                 },
                 { type: "separator" },
             ];
-            const tabKeys = ["backups", "user_profile"];
+            const tabKeys = new Set(["backups", "user_profile"]);
             const trailingItems: DropdownMenuItem[] = [
                 { type: "separator" },
                 {
@@ -260,7 +260,7 @@ export default defineComponent({
 
             return leadingItems.concat(
                 sidebarItems
-                    .filter((item) => tabKeys.includes(item.key))
+                    .filter((item) => tabKeys.has(item.key))
                     .map((item) => ({
                         label: i18n.getMessage(item.i18n),
                         icon: item.icon,
