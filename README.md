@@ -129,6 +129,12 @@ The next versions of the App will be a modern tool that based on PWA (Progressiv
 
 The web app will be available at http://localhost:8080 with full HMR.
 
+On the **Modes** tab, use the search field above the list to filter mode names as you
+type. Search starts at two characters, matches any part of the displayed name, and
+ignores case and surrounding whitespace. Results keep the existing mode order and
+respect **Hide unused modes**. Clear the field or reduce it to one character to
+remove the text filter; mode ranges and links are preserved while hidden.
+
 #### Run production version
 
 1. Change to project folder and run `npm install`.
