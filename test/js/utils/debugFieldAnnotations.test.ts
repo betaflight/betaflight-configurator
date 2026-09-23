@@ -94,6 +94,29 @@ describe("firmware debug field annotations", () => {
             expect(FIRMWARE_DEBUG_FIELD_CONFLICTS.filter((conflict) => conflict.mode === "BATTERY")).toEqual([]);
         });
 
+        it("labels the GPS rescue fields firmware gave a slot each", () => {
+            // GPS_RESCUE_HEADING debug[4] held the aircraft heading in degrees
+            // and the magnetic heading in decidegrees, and GPS_RESCUE_TRACKING
+            // debug[0] held ground speed and current velocity, until #15727
+            // moved the magnetic heading to debug[5] and dropped the duplicate.
+            const heading = FIRMWARE_DEBUG_FIELDS[ANNOTATED].GPS_RESCUE_HEADING;
+            expect(heading[4]).toEqual({ label: "Aircraft Heading", unit: "deg", scale: 1 });
+            expect(heading[5]).toEqual({ label: "Magnetic Heading", unit: "deg", scale: 0.1 });
+            expect(FIRMWARE_DEBUG_FIELDS[ANNOTATED].GPS_RESCUE_TRACKING[0]).toEqual({
+                label: "Ground Speed",
+                unit: "cm/s",
+                scale: 1,
+            });
+        });
+
+        it("has no conflicting fields left", () => {
+            // #15727 gave every field one meaning, and firmware's
+            // debug_annotations_unittest keeps it that way. The conflict tests
+            // below still run over whatever the table holds; the rendering of a
+            // conflict is covered with synthetic input in debugModesGenerator.
+            expect(FIRMWARE_DEBUG_FIELD_CONFLICTS).toEqual([]);
+        });
+
         it("names the display suffix of every unit in the vocabulary", () => {
             // Stated here rather than read from DEBUG_UNITS, so a change to what a
             // unit displays as has to be made twice. Several are deliberately not
