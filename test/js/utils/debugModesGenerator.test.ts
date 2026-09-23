@@ -20,7 +20,7 @@ import {
  * fields - and both are pinned below.
  */
 
-const DEBUG_SET_CALLS = (text) => [...text.matchAll(/DEBUG_SET\s*\(/g)].length;
+const DEBUG_SET_CALLS = (text: string) => [...text.matchAll(/DEBUG_SET\s*\(/g)].length;
 
 describe("maskNonCode", () => {
     it("keeps every offset, so line numbers and annotation positions still hold", () => {
@@ -78,12 +78,12 @@ describe("maskNonCode", () => {
 
 describe("parseEnumBlock and parseNamedEnums", () => {
     it("numbers enumerators from zero, honouring an explicit value", () => {
-        expect([...parseEnumBlock("A, B, C")]).toEqual([
+        expect([...(parseEnumBlock("A, B, C") ?? [])]).toEqual([
             ["A", 0],
             ["B", 1],
             ["C", 2],
         ]);
-        expect([...parseEnumBlock("A, B = 5, C")]).toEqual([
+        expect([...(parseEnumBlock("A, B = 5, C") ?? [])]).toEqual([
             ["A", 0],
             ["B", 5],
             ["C", 6],
@@ -132,7 +132,7 @@ describe("pullRequestNumber", () => {
 });
 
 describe("parseDebugModeNames", () => {
-    const table = (body) => `const char * const debugModeNames[DEBUG_COUNT] = {\n${body}\n};`;
+    const table = (body: string) => `const char * const debugModeNames[DEBUG_COUNT] = {\n${body}\n};`;
 
     it("reads the positional and the designated form", () => {
         expect(parseDebugModeNames(table('    "NONE",\n    "CYCLETIME",'), "ref").byPosition).toEqual([
