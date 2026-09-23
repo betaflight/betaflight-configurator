@@ -31,7 +31,7 @@
                 size="xs"
                 class="w-16 font-mono"
                 title="Enter a time offset"
-                @change="$emit('offset-change', $event.target.value)"
+                @change="$emit('offset-change', ($event.target as HTMLInputElement).value)"
             />
             <UButton
                 variant="ghost"
@@ -45,7 +45,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAppStore } from "../stores/app.js";
 
 defineEmits(["sync-back", "sync-forward", "sync-here", "smart-sync", "offset-change"]);

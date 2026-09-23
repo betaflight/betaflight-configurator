@@ -22,6 +22,9 @@ export const useNavigationStore = defineStore("navigation", () => {
     // Sidebar.vue consumes and resets this flag.
     const optionsDialogOpen = ref(false);
 
+    // Same contract for the log dialog.
+    const logDialogOpen = ref(false);
+
     function cleanup(callback) {
         GUI.tab_switch_cleanup(callback);
     }
@@ -31,6 +34,7 @@ export const useNavigationStore = defineStore("navigation", () => {
         tabSwitchInProgress,
         expertMode,
         optionsDialogOpen,
+        logDialogOpen,
         cleanup,
     };
 });

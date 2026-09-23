@@ -53,7 +53,7 @@
     </UApp>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { isAndroid, isTauriAndroid, isTauriIOS } from "@/js/utils/checkCompatibility.js";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { useMediaQuery } from "@vueuse/core";
@@ -77,7 +77,7 @@ import { VueTabComponents } from "./js/vue_tab_registry.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
-    window.vm = reactive({ expertMode: false });
+    window.vm = reactive({ expertMode: false }) as typeof window.vm;
 }
 
 // Stable fallback so computed() does not allocate a new reactive per evaluation when window.vm.CONNECTION is missing.
@@ -143,8 +143,8 @@ const topbarHidden = ref(false);
 let lastScrollTop = 0;
 const scrollThreshold = 6;
 
-function onContentScroll(event) {
-    const current = event.target.scrollTop;
+function onContentScroll(event: Event) {
+    const current = (event.target as HTMLElement).scrollTop;
     if (current <= 0) {
         topbarHidden.value = false;
         lastScrollTop = 0;

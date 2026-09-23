@@ -32,6 +32,12 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 
 const i18n = {};
 
+// Declared here rather than in the initializer above: TypeScript only collects expando
+// property assignments (i18n.getMessage = ..., etc.) onto an object that starts out empty,
+// so giving this literal any member at all would drop every other one from the type.
+/** @type {string | undefined} Active language code; set by changeLanguage(). */
+i18n.selectedLanguage = undefined;
+
 // Nuxt UI does not currently ship some languages
 // Create new locale for them extending the English locale as base
 // For Serbian locales, use its closely related Croatian
@@ -188,6 +194,7 @@ i18n.changeLanguage = function (languageSelected) {
     gui_log(i18n.getMessage("language_changed"));
 };
 
+/** @type {(messageID: string, parameters?: unknown) => string} */
 i18n.getMessage = function (messageID, parameters) {
     let parametersObject;
 

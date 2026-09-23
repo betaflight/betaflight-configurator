@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useDialogStore = defineStore("dialog", () => {
+    /** @type {import("vue").Ref<{ id: number, type: string, props: Record<string, unknown>, listeners: Record<string, unknown> } | null>} */
     const activeDialog = ref(null);
 
     /**

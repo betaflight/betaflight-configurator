@@ -38,16 +38,27 @@
     </UTable>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
+import type { PropType } from "vue";
+
+interface PidRow {
+    label: string;
+    p?: string | number;
+    i?: string | number;
+    d?: string | number;
+    dMax?: string | number;
+    f?: string | number;
+    missing?: boolean;
+}
 
 const props = defineProps({
-    rows: { type: Array, required: true },
+    rows: { type: Array as PropType<PidRow[]>, required: true },
     showDMax: { type: Boolean, default: false },
     srOnly: { type: Boolean, default: false },
 });
 
-function fmtPid(val) {
+function fmtPid(val: string | number | null | undefined) {
     if (val == null) {
         return "-";
     }

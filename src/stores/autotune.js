@@ -6,7 +6,10 @@ import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
  * Pinia store for Autotune tab state.
  */
 export const useAutotuneStore = defineStore("autotune", () => {
-    /** Analysis result object (per-axis transfer functions, gains, etc.) or null */
+    /**
+     * Analysis result object (per-axis transfer functions, gains, etc.) or null
+     * @type {import("vue").Ref<{ filename: string, sampleRate: number, axes: Record<string, Record<string, unknown>> } | null>}
+     */
     const analysisResult = ref(null);
 
     /**
