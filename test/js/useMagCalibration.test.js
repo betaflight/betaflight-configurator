@@ -184,20 +184,62 @@ describe("useMagCalibration", () => {
             expect(cal.samples.value.length).toBe(0);
         });
 
-        it("computes coverage using sample centroid when sphere fit returns null", async () => {
+        it("computes full-mode coverage from the plotted attitude directions", async () => {
             fitSphere.mockReturnValue(null);
             await cal.startCalibration("full");
+
+            const attitudes = [
+                { pitch: 0, heading: 0 },
+                { pitch: 30, heading: 90 },
+                { pitch: -45, heading: 180 },
+                { pitch: 60, heading: 270 },
+                { pitch: 15, heading: 45 },
+                { pitch: -20, heading: 135 },
+                { pitch: 35, heading: 225 },
+                { pitch: -55, heading: 315 },
+                { pitch: 75, heading: 10 },
+                { pitch: -70, heading: 190 },
+            ];
+
+            for (let i = 0; i < attitudes.length; i++) {
+                const { pitch, heading } = attitudes[i];
+                FC.SENSOR_DATA.kinematics = [0, pitch, heading];
+                FC.SENSOR_DATA.magnetometer = [100 + i * 10, 200, 300];
+                await vi.advanceTimersByTimeAsync(100);
+            }
+
+            expect(cal.coverage.value).toEqual({ covered: 16, totalFaces: 20, fraction: 0.8 });
+            const [directions, center] = computeDirectionalCoverage.mock.calls.at(-1);
+            expect(center).toEqual({ x: 0, y: 0, z: 0 });
+            expect(directions[0].x).toBeCloseTo(1);
+            expect(directions[0].y).toBeCloseTo(0);
+            expect(directions[0].z).toBeCloseTo(0);
+            expect(directions[1].x).toBeCloseTo(0);
+            expect(directions[1].y).toBeCloseTo(Math.cos(Math.PI / 6));
+            expect(directions[1].z).toBeCloseTo(Math.sin(Math.PI / 6));
+        });
+
+        it("keeps quick-mode coverage based on raw samples and their centroid", async () => {
+            fitSphere.mockReturnValue(null);
+            await cal.startCalibration("quick");
 
             for (let i = 0; i < 10; i++) {
                 FC.SENSOR_DATA.magnetometer = [100 + i * 10, 200, 300];
                 await vi.advanceTimersByTimeAsync(100);
             }
 
-            expect(computeDirectionalCoverage).toHaveBeenCalled();
-            const lastCallArgs = computeDirectionalCoverage.mock.calls.at(-1);
-            expect(lastCallArgs[1].x).toBeCloseTo(145, 0);
-            expect(lastCallArgs[1].y).toBeCloseTo(200, 0);
-            expect(lastCallArgs[1].z).toBeCloseTo(300, 0);
+            const [points, center] = computeDirectionalCoverage.mock.calls.at(-1);
+            expect(points[0]).toMatchObject({
+                x: 100,
+                y: 200,
+                z: 300,
+                roll: 0,
+                pitch: 0,
+                heading: 0,
+            });
+            expect(center.x).toBeCloseTo(145, 0);
+            expect(center.y).toBeCloseTo(200, 0);
+            expect(center.z).toBeCloseTo(300, 0);
         });
     });
 
