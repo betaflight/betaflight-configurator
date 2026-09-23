@@ -3193,6 +3193,13 @@
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
     },
+    "auxiliarySearch": {
+        "message": "Search modes",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "No modes match the current filters."
+    },
     "auxiliaryMin": {
         "message": "Min"
     },
