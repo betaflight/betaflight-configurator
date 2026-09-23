@@ -58,10 +58,32 @@ export function restorePenDefaults(graphs, group, field) {
     return null;
 }
 
-export function changePenSmoothing(graphs, group, field, delta) {
-    const range = { min: 0, max: 10000 };
-    const scroll = 1000;
+// Smoothing radius in microseconds, matching the range of the graph config dialog (0-10000%)
+const SMOOTHING_RANGE = { min: 0, max: 1000000 };
 
+// The scroll step grows with the value, so the whole range stays reachable without
+// losing fine control at the low end where most pens sit
+function smoothingStep(value) {
+    if (value < 10000) {
+        return 1000;
+    }
+    if (value < 100000) {
+        return 10000;
+    }
+    return 100000;
+}
+
+// As in changePenExpo() and changePenZoom(), a truthy delta means "down":
+// LegendPanel maps a scroll up to delta = 1, which main.js passes on as increase = delta >= 0
+function nextSmoothing(current, delta) {
+    const value = current ?? 0;
+    const next = delta
+        ? Math.ceil(value / smoothingStep(value - 1)) * smoothingStep(value - 1) - smoothingStep(value - 1)
+        : Math.floor(value / smoothingStep(value)) * smoothingStep(value) + smoothingStep(value);
+    return constrain(next, SMOOTHING_RANGE.min, SMOOTHING_RANGE.max);
+}
+
+export function changePenSmoothing(graphs, group, field, delta) {
     if (group == null && field == null) {
         return null;
     }
@@ -72,8 +94,7 @@ export function changePenSmoothing(graphs, group, field, delta) {
     if (group != null && field == null) {
         const gi = Number.parseInt(group, 10);
         for (const configField of graphs[gi].fields) {
-            configField.smoothing += delta ? -scroll : +scroll;
-            configField.smoothing = constrain(configField.smoothing, range.min, range.max);
+            configField.smoothing = nextSmoothing(configField.smoothing, delta);
             changedValue += `${configField.friendlyName} ${(configField.smoothing / 100).toFixed(2)}%\n`;
         }
         return changedValue;
@@ -81,8 +102,7 @@ export function changePenSmoothing(graphs, group, field, delta) {
     if (group != null && field != null) {
         const gi = Number.parseInt(group, 10);
         const fi = Number.parseInt(field, 10);
-        graphs[gi].fields[fi].smoothing += delta ? -scroll : +scroll;
-        graphs[gi].fields[fi].smoothing = constrain(graphs[gi].fields[fi].smoothing, range.min, range.max);
+        graphs[gi].fields[fi].smoothing = nextSmoothing(graphs[gi].fields[fi].smoothing, delta);
         return `${changedValue + graphs[gi].fields[fi].friendlyName} ${(graphs[gi].fields[fi].smoothing / 100).toFixed(2)}%\n`;
     }
     return null;

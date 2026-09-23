@@ -46,7 +46,7 @@
         </UTooltip>
         <UTooltip :text="$t('logActionShow')" :delay-duration="300">
             <UButton
-                :icon="sidebarItems.find((item) => item.key === 'log').icon"
+                :icon="sidebarItems.find((item) => item.key === 'log')?.icon"
                 variant="ghost"
                 color="neutral"
                 square
@@ -62,7 +62,7 @@
     <LogDialog v-model="logOpen" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import UserSession from "@/components/user-session/UserSession.vue";
@@ -74,7 +74,7 @@ import { switchTab } from "@/js/tab_switch.js";
 import DarkTheme, { setDarkTheme } from "@/js/DarkTheme.js";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { applyExpertMode } from "@/js/utils/applyExpertMode.js";
-import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled.js";
+import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus.js";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
 import LogDialog from "@/components/dialogs/LogDialog.vue";
@@ -97,7 +97,7 @@ const visibleItems = computed(() =>
         icon: item.icon,
         active: vueTabState.activeTabName === (item.tab ?? item.key),
         tooltip: { text: t(item.i18n) },
-        onSelect: (event) => {
+        onSelect: (event?: Event) => {
             event?.preventDefault?.();
             switchTab(item.tab ?? item.key, { mode: item.mode, label: t(item.i18n) });
             closeMobileSidebar();
@@ -154,7 +154,7 @@ function toggleDarkMode() {
 // Expert mode toggle — reactive via EventBus
 const expertModeOn = ref(isExpertModeEnabled());
 
-const onExpertModeChange = (enabled) => {
+const onExpertModeChange = (enabled: boolean) => {
     expertModeOn.value = enabled;
 };
 

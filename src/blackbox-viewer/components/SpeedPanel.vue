@@ -18,7 +18,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { usePlaybackStore } from "../stores/playback.js";
 
@@ -29,14 +29,14 @@ const playbackStore = usePlaybackStore();
 // Piecewise-linear mapping: slider midpoint (100) = 100% speed
 // Left half  (0–100)  → 10%–100%
 // Right half (100–200) → 100%–300%
-function posToRate(pos) {
+function posToRate(pos: number) {
     if (pos <= 100) {
         return Math.round(10 + pos * 0.9);
     }
     return Math.round(100 + (pos - 100) * 2);
 }
 
-function rateToPos(rate) {
+function rateToPos(rate: number) {
     if (rate <= 100) {
         return Math.round((rate - 10) / 0.9);
     }

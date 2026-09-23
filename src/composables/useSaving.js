@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { isMspCancelled } from "../js/msp/mspErrors";
-import { gui_log } from "../js/gui_log.js";
+import { gui_log } from "../js/gui_log";
 import { i18n } from "../js/localization.js";
 
 /**

@@ -11,7 +11,7 @@ import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
-import { bit_check } from "./bit.js";
+import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
 import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";

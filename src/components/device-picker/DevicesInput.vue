@@ -62,8 +62,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, watch } from "vue";
+import type { PropType } from "vue";
+
+export interface PickerDevice {
+    path: string;
+    displayName?: string;
+}
 import { set as setConfig } from "../../js/ConfigStorage";
 import { EventBus } from "../eventBus";
 
@@ -78,15 +84,15 @@ export default defineComponent({
             }),
         },
         connectedSerialDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             default: () => [],
         },
         connectedUsbDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             default: () => [],
         },
         connectedBluetoothDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             default: () => [],
         },
         disabled: {
