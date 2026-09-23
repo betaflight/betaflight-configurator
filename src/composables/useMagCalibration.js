@@ -18,7 +18,7 @@ const PROGRESS_TARGET_SAMPLES = 300;
 const MAG_CAL_MIN = -32768;
 const MAG_CAL_MAX = 32767;
 
-// Coverage quality thresholds based on icosahedral directional coverage (20 faces).
+// Full-mode quality thresholds use the 20 plotted attitude-direction zones.
 const FULL_COVERAGE_GOOD = 0.8;
 const FULL_COVERAGE_FAIR = 0.5;
 
@@ -43,6 +43,24 @@ function centroid(points) {
         sz += points[i].z;
     }
     return { x: sx / n, y: sy / n, z: sz / n };
+}
+
+function computeAttitudeCoverage(samples) {
+    // Match MagSphereView's plotted nose directions in the NED scene. Roll
+    // turns the aircraft around its nose, so only pitch and heading set this
+    // direction. The raw-mag 3D coverage check still runs before the solve.
+    const directions = samples.map((sample) => {
+        const pitch = (sample.pitch * Math.PI) / 180;
+        const heading = (sample.heading * Math.PI) / 180;
+        const cosPitch = Math.cos(pitch);
+        return {
+            x: cosPitch * Math.cos(heading),
+            y: cosPitch * Math.sin(heading),
+            z: Math.sin(pitch),
+        };
+    });
+
+    return computeDirectionalCoverage(directions, { x: 0, y: 0, z: 0 });
 }
 
 async function readFirmwareOffsets() {
@@ -117,7 +135,7 @@ export function useMagCalibration() {
     /**
      * Start a calibration session.
      * @param {'full' | 'quick' | 'check'} [calMode='full'] - Calibration mode:
-     *   'full' (default): reconstructs raw samples, tracks 20-zone directional coverage for 9-DOF solve.
+     *   'full' (default): reconstructs raw samples and tracks 20-zone coverage of the plotted attitude sweep.
      *   'quick': triggers the FC onboard 30s min/max routine (legacy).
      *   'check': real-time validation without altering calibration.
      */
@@ -320,8 +338,9 @@ export function useMagCalibration() {
         const fit = fitSphere(pts);
         const center = fit ? fit.center : centroid(pts);
 
-        // 20-zone icosahedral directional coverage
-        const cov = computeDirectionalCoverage(pts, center);
+        // Full-mode coverage describes the attitude directions shown in the
+        // sphere view. The solver separately validates raw magnetometer spread.
+        const cov = mode.value === "full" ? computeAttitudeCoverage(pts) : computeDirectionalCoverage(pts, center);
         coverage.value = cov;
 
         if (mode.value === "full") {
