@@ -1,6 +1,6 @@
 import { reactive, nextTick, onScopeDispose } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
-import { ispConnected } from "../js/utils/connection.js";
+import { ispConnected } from "../js/utils/connection";
 import GUI from "../js/gui";
 import AutoDetect from "../js/utils/AutoDetect.js";
 

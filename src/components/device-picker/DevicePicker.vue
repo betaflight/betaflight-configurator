@@ -29,8 +29,10 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed } from "vue";
+import type { PropType } from "vue";
+import type { PickerDevice } from "./DevicesInput.vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import DevicesInput from "./DevicesInput.vue";
@@ -49,15 +51,15 @@ export default defineComponent({
             required: true,
         },
         connectedBluetoothDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             default: () => [],
         },
         connectedSerialDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             required: true,
         },
         connectedUsbDevices: {
-            type: Array,
+            type: Array as PropType<PickerDevice[]>,
             default: () => [],
         },
         showVirtualOption: {
@@ -92,7 +94,7 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const isConnected = computed(() => connectionStore.connectionValid);
 
-        const updateModelValue = (key, value) => {
+        const updateModelValue = (key: string | null, value: unknown) => {
             if (key) {
                 emit("update:modelValue", { ...props.modelValue, [key]: value });
             } else {

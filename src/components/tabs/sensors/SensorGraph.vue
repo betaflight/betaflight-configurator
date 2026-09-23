@@ -107,8 +107,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
+import type { PropType } from "vue";
 import { DEBUG_SCALE_AUTO, REFRESH_RATE_OPTIONS } from "./constants";
 import { i18n } from "@/js/localization";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -125,7 +126,7 @@ const props = defineProps({
     showRefreshRate: { type: Boolean, default: true },
     rate: { type: Number, default: 50 },
     scale: { type: Number, default: null },
-    scaleOptions: { type: Array, default: null },
+    scaleOptions: { type: Array as PropType<number[]>, default: null },
     displayValues: { type: Array, required: true },
     isDebug: { type: Boolean, default: false },
 });

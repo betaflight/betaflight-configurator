@@ -29,10 +29,13 @@ export const useLogStore = defineStore("blackboxLog", () => {
     const videoURL = ref(null);
 
     // Field values table data (updated by updateValuesChart in main.js)
+    /** @type {import("vue").ShallowRef<{ name: string, raw: string, decoded: string }[]>} */
     const fieldValues = shallowRef([]);
+    /** @type {import("vue").ShallowRef<{ name: string, min: string, max: string, mean: string }[]>} */
     const fieldStats = shallowRef([]);
 
     // Log index picker (multiple logs in one file)
+    /** @type {import("vue").ShallowRef<{ label: string, value: number, disabled: boolean }[]>} */
     const logIndexEntries = shallowRef([]);
     // Each: { label, value, disabled }
     const activeLogIndex = ref(0);

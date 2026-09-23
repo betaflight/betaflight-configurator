@@ -6,7 +6,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { getConnectionState } from "@/js/connection_state";
 import { useDialogStore } from "@/stores/dialog";
@@ -41,14 +41,16 @@ const status = computed(() => {
     );
 });
 
-let lingerTimer = null;
+let lingerTimer: ReturnType<typeof setTimeout> | null = null;
 
 // The dialog store holds one activeDialog. A user disconnect closes this dialog through
 // serial_backend, unmounting the component — a linger timer left running would then close
 // whatever dialog took the slot in the meantime.
 function stopTimers() {
     clearInterval(ticker);
-    clearTimeout(lingerTimer);
+    if (lingerTimer !== null) {
+        clearTimeout(lingerTimer);
+    }
     lingerTimer = null;
 }
 

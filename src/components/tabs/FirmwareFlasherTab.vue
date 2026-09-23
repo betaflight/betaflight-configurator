@@ -144,7 +144,7 @@ import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/uti
 import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
-import { ispConnected } from "../../js/utils/connection.js";
+import { ispConnected } from "../../js/utils/connection";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";

@@ -138,7 +138,7 @@
                                     :model-value="(field.smoothing ?? 0) / 100"
                                     :step="1"
                                     :min="0"
-                                    :max="100"
+                                    :max="10000"
                                     :format-options="noGrouping"
                                     size="xs"
                                     orientation="vertical"
