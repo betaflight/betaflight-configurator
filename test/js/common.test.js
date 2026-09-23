@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getMixerImageSrc } from "../../src/js/utils/common.js";
+import { getMixerImageSrc } from "../../src/js/utils/common";
 import { mixerList } from "../../src/js/model.js";
 
 // FC.MIXER_CONFIG.mixer is 0 until MSP_MIXER_CONFIG arrives, and a tab can render before that
