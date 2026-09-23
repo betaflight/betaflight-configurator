@@ -74,7 +74,7 @@ export function getTextWidth(text: string): number {
     return Math.ceil(context.measureText(text).width);
 }
 
-export function getCssVar(varName, fallback = "#000000") {
+export function getCssVar(varName: string, fallback: string = "#000000") {
     const value = getComputedStyle(document.body).getPropertyValue(varName).trim();
     return value || fallback;
 }
