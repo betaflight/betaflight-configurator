@@ -10,7 +10,7 @@
     />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { isAndroid } from "../../js/utils/checkCompatibility";
 import FileSystem from "../../js/FileSystem";
@@ -34,7 +34,7 @@ defineProps({
 });
 
 const emit = defineEmits(["files-selected"]);
-const fileInput = ref(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 
 // Android WebView maps <input accept> extensions via MimeTypeMap, which lacks
 // .bbl/.bfl/.cfl/.log and greys them out (#5293). Route Android through the
@@ -60,18 +60,19 @@ async function openFilePicker() {
         const file = new File([blob], descriptor.name, { type: blob.type });
         emit("files-selected", [file]);
     } catch (error) {
-        if (error?.name !== "AbortError") {
+        if (!(error instanceof Error) || error.name !== "AbortError") {
             console.error("Failed to open blackbox file:", error);
         }
     }
 }
 
-function onFileChange(event) {
-    const files = event.target.files;
-    if (files.length > 0) {
+function onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (files && files.length > 0) {
         emit("files-selected", files);
     }
     // Reset so the same file re-triggers change.
-    event.target.value = "";
+    input.value = "";
 }
 </script>

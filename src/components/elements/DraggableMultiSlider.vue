@@ -4,7 +4,7 @@
             v-model="rangeValue"
             v-range-drag="{
                 getRange: () => rangeValue,
-                setRange: (nextRange) => {
+                setRange: (nextRange: number[]) => {
                     rangeValue = nextRange;
                 },
                 min,
@@ -25,24 +25,49 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from "vue";
+import type { DirectiveBinding, PropType } from "vue";
 
 const DEFAULT_RANGE = [1300, 1700];
 
+/** What the directive is bound to: the slider range plus its limits. */
+interface RangeDragBinding {
+    getRange?: () => number[];
+    setRange?: (next: number[]) => void;
+    min?: number;
+    max?: number;
+    step?: number;
+}
+
+/** Live state for one drag of the whole range, captured on pointerdown. */
+interface DragState {
+    min: number;
+    max: number;
+    step: number;
+    directionSign: number;
+    startX: number;
+    startValue: number;
+    rangeWidth: number;
+    trackWidth: number;
+}
+
+/** The cleanup hook the directive parks on the element between mounted and unmounted. */
+type RangeDragElement = HTMLElement & { __rangeDragCleanup?: () => void };
+
 const vRangeDrag = {
-    mounted(el, binding) {
-        const rangeEl = el.querySelector('[data-slot="range"]');
+    mounted(el: RangeDragElement, binding: DirectiveBinding<RangeDragBinding>) {
+        const rangeEl = el.querySelector<HTMLElement>('[data-slot="range"]');
         if (!rangeEl) {
             return;
         }
 
         rangeEl.style.touchAction = "none";
 
-        let drag = null;
+        let drag: DragState | null = null;
 
         const getRange = () => binding.value?.getRange?.() || DEFAULT_RANGE;
-        const setRange = (nextRange) => binding.value?.setRange?.(nextRange);
+        const setRange = (nextRange: number[]) => binding.value?.setRange?.(nextRange);
         const getLimits = () => ({
             min: binding.value?.min ?? 900,
             max: binding.value?.max ?? 2100,
@@ -53,7 +78,7 @@ const vRangeDrag = {
         // down. Read the direction per drag: the language can change while the tab is mounted.
         const getDirectionSign = () => (getComputedStyle(rangeEl).direction === "rtl" ? -1 : 1);
 
-        const onPointerDown = (e) => {
+        const onPointerDown = (e: PointerEvent) => {
             if (e.button !== 0) {
                 return;
             }
@@ -81,7 +106,7 @@ const vRangeDrag = {
             e.stopPropagation();
         };
 
-        const onPointerMove = (e) => {
+        const onPointerMove = (e: PointerEvent) => {
             if (!drag) {
                 return;
             }
@@ -113,7 +138,7 @@ const vRangeDrag = {
             rangeEl.removeEventListener("lostpointercapture", clearDrag);
         };
     },
-    unmounted(el) {
+    unmounted(el: RangeDragElement) {
         el.__rangeDragCleanup?.();
         delete el.__rangeDragCleanup;
     },
@@ -126,7 +151,7 @@ export default defineComponent({
     },
     props: {
         modelValue: {
-            type: Array,
+            type: Array as PropType<number[]>,
             required: true,
         },
         min: {
@@ -148,7 +173,7 @@ export default defineComponent({
     },
     emits: ["update:modelValue"],
     setup(props, { emit }) {
-        const clampChannel = (value) => {
+        const clampChannel = (value: number) => {
             if (value === undefined || value === null || Number.isNaN(value)) {
                 return (props.min + props.max) / 2;
             }
@@ -161,7 +186,7 @@ export default defineComponent({
             return value;
         };
 
-        const snapChannel = (value) => {
+        const snapChannel = (value: number) => {
             const numericValue = Number(value);
             if (Number.isNaN(numericValue)) {
                 return DEFAULT_RANGE[0];
@@ -169,7 +194,7 @@ export default defineComponent({
             return clampChannel(Math.round(numericValue / props.step) * props.step);
         };
 
-        const normalizeRangeValues = (values) => {
+        const normalizeRangeValues = (values: number[]) => {
             const [rawStart = DEFAULT_RANGE[0], rawEnd = DEFAULT_RANGE[1]] = Array.isArray(values) ? values : [];
             let start = snapChannel(rawStart);
             let end = snapChannel(rawEnd);

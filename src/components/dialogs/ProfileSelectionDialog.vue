@@ -15,13 +15,15 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import type { PropType } from "vue";
+import type { RadioGroupItem } from "@nuxt/ui";
 
 defineProps({
     title: String,
     message: String,
-    options: Array,
+    options: Array as PropType<RadioGroupItem[]>,
     cancelText: {
         type: String,
         default: "Cancel",

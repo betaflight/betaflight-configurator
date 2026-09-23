@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
@@ -38,7 +38,7 @@ export default defineComponent({
             },
         );
 
-        const updateValue = (value) => {
+        const updateValue = (value: string) => {
             emit("update:modelValue", value);
         };
 

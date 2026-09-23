@@ -7,7 +7,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, watch } from "vue";
 import { set as setConfig } from "../../js/ConfigStorage";
 
@@ -33,7 +33,7 @@ export default defineComponent({
             },
         );
 
-        const inputValueChanged = (newValue) => {
+        const inputValueChanged = (newValue: string) => {
             setConfig({ portOverride: newValue });
             emit("update:modelValue", newValue);
         };

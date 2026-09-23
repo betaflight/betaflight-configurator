@@ -38,7 +38,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import HelpIcon from "./HelpIcon.vue";
 
@@ -56,8 +56,8 @@ const props = defineProps({
         type: String,
         default: "default",
         required: false,
-        validator: (value) => {
-            return ["default", "success", "warning", "error", "neutral"].includes(value);
+        validator: (value: unknown) => {
+            return typeof value === "string" && ["default", "success", "warning", "error", "neutral"].includes(value);
         },
     },
     highlight: {

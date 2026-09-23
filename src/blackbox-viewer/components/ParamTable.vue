@@ -22,9 +22,17 @@
     </UTable>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
+
+interface ParamRow {
+    name: string;
+    value?: string | number | null;
+    missing?: boolean;
+}
+
 defineProps({
-    params: { type: Array, required: true },
+    params: { type: Array as PropType<ParamRow[]>, required: true },
 });
 
 const columns = [

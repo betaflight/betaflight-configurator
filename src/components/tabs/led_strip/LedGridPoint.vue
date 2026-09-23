@@ -25,12 +25,20 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
+import type { PropType } from "vue";
+
+interface GridLed {
+    functions: string[];
+    directions: string[];
+    colorIndex: number | null;
+    wireNumber: string;
+}
 
 const props = defineProps({
     led: {
-        type: Object,
+        type: Object as PropType<GridLed>,
         required: true,
     },
     index: {
@@ -98,10 +106,11 @@ const showColorOverlay = computed(() => {
 // Color style for overlay
 const colorStyle = computed(() => {
     const colors = props.ledColors;
-    if (!Array.isArray(colors) || !colors[props.led.colorIndex]) {
+    const index = props.led.colorIndex;
+    if (index === null || !Array.isArray(colors) || !colors[index]) {
         return "";
     }
-    return props.hsvToColor(colors[props.led.colorIndex]);
+    return props.hsvToColor(colors[index]);
 });
 </script>
 

@@ -8,9 +8,23 @@
                 <UiBox highlight>
                     <p v-html="$t('auxiliaryHelp')"></p>
                 </UiBox>
-                <SettingRow :label="$t('auxiliaryToggleUnused')" fullWidth>
-                    <USwitch v-model="hideUnused" />
-                </SettingRow>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <SettingRow :label="$t('auxiliaryToggleUnused')" fullWidth>
+                        <USwitch v-model="hideUnused" />
+                    </SettingRow>
+                    <UInput
+                        v-model="searchQuery"
+                        type="search"
+                        icon="i-lucide-search"
+                        :aria-label="$t('auxiliarySearch')"
+                        :placeholder="$t('auxiliarySearch')"
+                        class="w-full sm:w-72"
+                    />
+                </div>
+
+                <p v-if="modesLoaded && !visibleModesWithState.length" role="status" class="text-muted py-4">
+                    {{ $t("auxiliaryNoModesFound") }}
+                </p>
 
                 <div class="flex flex-col gap-2">
                     <div
@@ -180,6 +194,7 @@ import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
 import { i18n } from "../../js/localization";
 import { getTextWidth } from "../../js/utils/common";
 import { CHANNEL_MIN, CHANNEL_MAX, channelPercent } from "../../js/utils/rcChannel";
+import { filterModes } from "../../js/utils/modeFilter";
 import {
     CHANNEL_STEP,
     MIN_RANGE_GAP,
@@ -238,7 +253,9 @@ export default defineComponent({
 
         // Reactive State
         const modes = reactive([]);
+        const modesLoaded = ref(false);
         const hideUnused = ref(false);
+        const searchQuery = ref("");
         const auxChannelCount = ref(0);
         const requiredModeRangeCount = ref(0);
         const infoMinWidth = ref(0);
@@ -284,14 +301,7 @@ export default defineComponent({
                 disabled: opt.value === mode.id,
             }));
 
-        const anyUsedMode = computed(() => modes.some((mode) => mode.entries.length));
-
-        const visibleModes = computed(() => {
-            if (hideUnused.value && anyUsedMode.value) {
-                return modes.filter((mode) => mode.entries.length);
-            }
-            return modes;
-        });
+        const visibleModes = computed(() => filterModes(modes, searchQuery.value, hideUnused.value));
 
         const infoMinWidthStyle = computed(() => {
             return infoMinWidth.value ? { minWidth: `${infoMinWidth.value}px` } : {};
@@ -510,6 +520,7 @@ export default defineComponent({
                         auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
                         buildModesFromFC();
                         updateMarkers();
+                        modesLoaded.value = true;
                     },
                     (error) => console.error("Failed to load auxiliary data", error),
                 );
@@ -534,7 +545,9 @@ export default defineComponent({
 
         return {
             modes,
+            modesLoaded,
             hideUnused,
+            searchQuery,
             visibleModesWithState,
             logicOptions,
             channelOptions,

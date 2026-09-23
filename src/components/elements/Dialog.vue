@@ -11,7 +11,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
     modelValue: {
         type: Boolean,
@@ -29,7 +29,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "close"]);
 
-const onOpenChange = (open) => {
+const onOpenChange = (open: boolean) => {
     emit("update:modelValue", open);
     if (!open) {
         emit("close");

@@ -12,15 +12,20 @@
     </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
+import type { PropType } from "vue";
+
+interface AutocompleteItem {
+    html: string;
+}
 
 // NOTE: `item.html` is rendered with `v-html`. It must remain trusted
 // (highlighters only insert <b> tags). Do NOT change the HTML source
 // generation without auditing for XSS risks.
 
 const props = defineProps({
-    items: { type: Array, default: () => [] },
+    items: { type: Array as PropType<AutocompleteItem[]>, default: () => [] },
     visible: { type: Boolean, default: false },
     activeIndex: { type: Number, default: 0 },
     caretLeft: { type: Number, default: 0 },
@@ -28,7 +33,7 @@ const props = defineProps({
 
 defineEmits(["select", "hover"]);
 
-const dropdownRef = ref(null);
+const dropdownRef = ref<HTMLUListElement | null>(null);
 
 watch(
     () => props.activeIndex,
