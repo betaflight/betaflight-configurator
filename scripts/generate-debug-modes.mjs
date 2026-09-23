@@ -2012,6 +2012,7 @@ export {
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderFieldsModule,
     renderModeFields,
     resolveFieldIndex,
 };
