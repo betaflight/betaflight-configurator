@@ -27,7 +27,7 @@ import {
     zh_cn,
     zh_tw,
 } from "@nuxt/ui/locale";
-import { gui_log } from "./gui_log.js";
+import { gui_log } from "./gui_log";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 
 const i18n = {};

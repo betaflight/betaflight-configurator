@@ -1,5 +1,5 @@
 import "../components/init.js";
-import { gui_log } from "./gui_log.js";
+import { gui_log } from "./gui_log";
 import { i18n } from "./localization.js";
 import GUI from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
