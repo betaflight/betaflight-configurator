@@ -1639,6 +1639,13 @@ function replaceLogoImage() {
         .catch((error) => console.error(error));
 }
 
+function confirmFontUpload() {
+    const warningKey = isFbOsdSmallFont.value
+        ? "osdSetupUploadFontWarningNeedSmallFont"
+        : "osdSetupUploadFontWarningNeedStandardFont";
+    return globalThis.confirm(i18n.getMessage(warningKey));
+}
+
 async function flashFont() {
     if (GUI.connect_lock) {
         return;
@@ -1649,10 +1656,7 @@ async function flashFont() {
     // Warn before uploading a built-in font that does not match the OSD's font mode.
     const presetFont = fontTypes.value[selectedFontPreset.value];
     if (presetFont && !isFontUsable(presetFont)) {
-        const warningKey = isFbOsdSmallFont.value
-            ? "osdSetupUploadFontWarningNeedSmallFont"
-            : "osdSetupUploadFontWarningNeedStandardFont";
-        if (!globalThis.confirm(i18n.getMessage(warningKey))) {
+        if (!confirmFontUpload()) {
             GUI.connect_lock = false;
             return;
         }
@@ -1673,6 +1677,13 @@ async function flashFont() {
             console.error("User cancelled custom font selection or error occurred", err);
             GUI.connect_lock = false;
             return; // Cancel the upload process
+        }
+    }
+
+    if (selectedFontPreset.value === -1 && FONT.isSmallFont() !== isFbOsdSmallFont.value) {
+        if (!confirmFontUpload()) {
+            GUI.connect_lock = false;
+            return;
         }
     }
 

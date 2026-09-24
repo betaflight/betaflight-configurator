@@ -25,8 +25,13 @@ function charLines(bytes) {
     return lines;
 }
 
+// Build a complete font file: the parser requires all 256 character slots, so pad with blank characters.
 function buildFile(header, chars) {
-    return [header, ...chars.flatMap(charLines)].join("\n");
+    const allChars = [...chars];
+    while (allChars.length < FONT.constants.MAX_CHAR_COUNT) {
+        allChars.push([]);
+    }
+    return [header, ...allChars.flatMap(charLines)].join("\n");
 }
 
 // Count the coloured pixels in a rendered data URI.
@@ -62,6 +67,37 @@ describe("FONT small font parsing", () => {
 
     it("rejects an unknown header", () => {
         expect(() => FONT.parseMCMFontFile(buildFile("NOT_A_FONT", [[], []]))).toThrow();
+    });
+
+    it("rejects a file with missing character data", () => {
+        const file = [MAX7456_HEADER, ...charLines([])].join("\n");
+
+        expect(() => FONT.parseMCMFontFile(file)).toThrow();
+    });
+
+    it("rejects a line that is not eight binary digits", () => {
+        const file = buildFile(MAX7456_HEADER, [[], []]).replace("01010101", "0101010x");
+
+        expect(() => FONT.parseMCMFontFile(file)).toThrow();
+    });
+
+    it("keeps the previous font when a file is rejected", () => {
+        FONT.parseMCMFontFile(buildFile(SMALL_HEADER, [[0], [0b10010101]]));
+
+        expect(() => FONT.parseMCMFontFile(buildFile("NOT_A_FONT", [[], []]))).toThrow();
+
+        expect(FONT.data.format).toBe(FONT.constants.FORMATS.FB_SMALL);
+        expect(FONT.data.characters.length).toBe(FONT.constants.MAX_CHAR_COUNT);
+        expect(countRects(FONT.draw(1), "white")).toBe(1);
+    });
+
+    it("accepts Windows line endings", () => {
+        const file = buildFile(MAX7456_HEADER, [[], [0b10010101]]).replaceAll("\n", "\r\n");
+
+        FONT.parseMCMFontFile(file);
+
+        expect(FONT.data.characters.length).toBe(FONT.constants.MAX_CHAR_COUNT);
+        expect(countRects(FONT.draw(1), "white")).toBe(1);
     });
 
     it("sizes small font glyphs from the mode table in character 0", () => {

@@ -200,11 +200,7 @@ FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
  * @returns {Array} Parsed character bitmap arrays.
  */
 FONT.parseMCMFontFile = function (dataFontFile) {
-    const data = dataFontFile.trim().split("\n");
-    // clear local data
-    FONT.data.characters.length = 0;
-    FONT.data.characters_bytes.length = 0;
-    FONT.data.character_image_urls.length = 0;
+    const data = dataFontFile.trim().split(/\r?\n/);
 
     // make sure the font file is valid
     const header = data.shift().trim();
@@ -214,6 +210,14 @@ FONT.parseMCMFontFile = function (dataFontFile) {
         console.debug(msg);
         throw new Error(msg);
     }
+    const expectedRows = FONT.constants.MAX_CHAR_COUNT * FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE;
+    if (data.length !== expectedRows || data.some((line) => !/^[01]{8}$/.test(line))) {
+        throw new Error("that font file has invalid or incomplete character data, giving up");
+    }
+    // File validated, clear local data and load in new chars.
+    FONT.data.characters.length = 0;
+    FONT.data.characters_bytes.length = 0;
+    FONT.data.character_image_urls.length = 0;
     FONT.data.format = format;
     const characterBits = [];
     const characterBytes = [];
@@ -254,10 +258,10 @@ FONT.openFontFile = function () {
             `.${suffix}`,
         )
             .then((file) => {
-                FONT.data.loaded_font_file = file.name;
                 FileSystem.readFile(file)
                     .then((contents) => {
                         FONT.parseMCMFontFile(contents);
+                        FONT.data.loaded_font_file = file.name;
                         resolve();
                     })
                     .catch(reject);
