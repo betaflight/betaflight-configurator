@@ -189,185 +189,17 @@ const MSP = {
                 continue;
             }
 
-            switch (this.state) {
-                case this.decoder_states.CLI_COMMAND:
-                    switch (chunk) {
-                        case this.symbols.END_OF_TEXT:
-                            this.cli_output.push(this.cli_buffer.join(""));
-                            this.cli_buffer.length = 0;
-                            this.state = this.decoder_states.IDLE;
-                            if (this.cli_callback) {
-                                const response = this.cli_output;
-                                this.cli_callback(response);
-                            }
-                            break;
-                        case this.symbols.LINE_FEED:
-                            this.cli_output.push(this.cli_buffer.join(""));
-                            this.cli_buffer.length = 0;
-                            break;
-                        case this.symbols.CARRIAGE_RETURN:
-                            // ignore CRs
-                            break;
-                        default:
-                            this.cli_buffer.push(String.fromCodePoint(chunk));
-                            break;
-                    }
-                    break;
-                case this.decoder_states.IDLE: // sync char 1
-                    switch (chunk) {
-                        case this.symbols.BEGIN:
-                            this.state = this.decoder_states.PROTO_IDENTIFIER;
-                            break;
-                        case this.symbols.START_OF_TEXT:
-                            this.state = this.decoder_states.CLI_COMMAND;
-                            break;
-                    }
-                    break;
-                case this.decoder_states.PROTO_IDENTIFIER: // sync char 2
-                    switch (chunk) {
-                        case this.symbols.PROTO_V1:
-                            this.state = this.decoder_states.DIRECTION_V1;
-                            break;
-                        case this.symbols.PROTO_V2:
-                            this.state = this.decoder_states.DIRECTION_V2;
-                            break;
-                        default:
-                            console.log(`Unknown protocol char ${String.fromCodePoint(chunk)}`);
-                            this.state = this.decoder_states.IDLE;
-                    }
-                    break;
-                case this.decoder_states.DIRECTION_V1: // direction (should be >)
-                case this.decoder_states.DIRECTION_V2:
-                    this.unsupported = 0;
-                    switch (chunk) {
-                        case this.symbols.FROM_MWC:
-                            this.message_direction = 1;
-                            break;
-                        case this.symbols.TO_MWC:
-                            this.message_direction = 0;
-                            break;
-                        case this.symbols.UNSUPPORTED:
-                            this.unsupported = 1;
-                            break;
-                    }
-                    this.state =
-                        this.state === this.decoder_states.DIRECTION_V1
-                            ? this.decoder_states.PAYLOAD_LENGTH_V1
-                            : this.decoder_states.FLAG_V2;
-                    break;
-                case this.decoder_states.FLAG_V2:
-                    // Ignored for now
-                    this.state = this.decoder_states.CODE_V2_LOW;
-                    break;
-                case this.decoder_states.PAYLOAD_LENGTH_V1:
-                    this.message_length_expected = chunk;
-
-                    if (this.message_length_expected === this.constants.JUMBO_FRAME_MIN_SIZE) {
-                        this.state = this.decoder_states.CODE_JUMBO_V1;
-                    } else {
-                        this._initialize_read_buffer();
-                        this.state = this.decoder_states.CODE_V1;
-                    }
-
-                    break;
-                case this.decoder_states.PAYLOAD_LENGTH_V2_LOW:
-                    this.message_length_expected = chunk;
-                    this.state = this.decoder_states.PAYLOAD_LENGTH_V2_HIGH;
-                    break;
-                case this.decoder_states.PAYLOAD_LENGTH_V2_HIGH:
-                    this.message_length_expected |= chunk << 8;
-                    this._initialize_read_buffer();
-                    this.state =
-                        this.message_length_expected > 0
-                            ? this.decoder_states.PAYLOAD_V2
-                            : this.decoder_states.CHECKSUM_V2;
-                    break;
-                case this.decoder_states.CODE_V1:
-                case this.decoder_states.CODE_JUMBO_V1:
-                    this.code = chunk;
-                    if (this.message_length_expected > 0) {
-                        // process payload
-                        if (this.state === this.decoder_states.CODE_JUMBO_V1) {
-                            this.state = this.decoder_states.PAYLOAD_LENGTH_JUMBO_LOW;
-                        } else {
-                            this.state = this.decoder_states.PAYLOAD_V1;
-                        }
-                    } else {
-                        // no payload
-                        this.state = this.decoder_states.CHECKSUM_V1;
-                    }
-                    break;
-                case this.decoder_states.CODE_V2_LOW:
-                    this.code = chunk;
-                    this.state = this.decoder_states.CODE_V2_HIGH;
-                    break;
-                case this.decoder_states.CODE_V2_HIGH:
-                    this.code |= chunk << 8;
-                    this.state = this.decoder_states.PAYLOAD_LENGTH_V2_LOW;
-                    break;
-                case this.decoder_states.PAYLOAD_LENGTH_JUMBO_LOW:
-                    this.message_length_expected = chunk;
-                    this.state = this.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH;
-                    break;
-                case this.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH:
-                    this.message_length_expected |= chunk << 8;
-                    this._initialize_read_buffer();
-                    this.state = this.decoder_states.PAYLOAD_V1;
-                    break;
-                case this.decoder_states.PAYLOAD_V1:
-                case this.decoder_states.PAYLOAD_V2:
-                    this.message_buffer_uint8_view[this.message_length_received] = chunk;
-                    this.message_length_received++;
-
-                    if (this.message_length_received >= this.message_length_expected) {
-                        this.state =
-                            this.state === this.decoder_states.PAYLOAD_V1
-                                ? this.decoder_states.CHECKSUM_V1
-                                : this.decoder_states.CHECKSUM_V2;
-                    }
-                    break;
-                case this.decoder_states.CHECKSUM_V1:
-                    if (this.message_length_expected >= this.constants.JUMBO_FRAME_MIN_SIZE) {
-                        this.message_checksum = this.constants.JUMBO_FRAME_MIN_SIZE;
-                    } else {
-                        this.message_checksum = this.message_length_expected;
-                    }
-                    this.message_checksum ^= this.code;
-                    if (this.message_length_expected >= this.constants.JUMBO_FRAME_MIN_SIZE) {
-                        this.message_checksum ^= this.message_length_expected & 0xff;
-                        this.message_checksum ^= (this.message_length_expected & 0xff00) >> 8;
-                    }
-                    for (let ii = 0; ii < this.message_length_received; ii++) {
-                        this.message_checksum ^= this.message_buffer_uint8_view[ii];
-                    }
-                    this._dispatch_message(chunk);
-                    break;
-                case this.decoder_states.CHECKSUM_V2:
-                    this.message_checksum = 0;
-                    this.message_checksum = this.crc8_dvb_s2(this.message_checksum, 0); // flag
-                    this.message_checksum = this.crc8_dvb_s2(this.message_checksum, this.code & 0xff);
-                    this.message_checksum = this.crc8_dvb_s2(this.message_checksum, (this.code & 0xff00) >> 8);
-                    this.message_checksum = this.crc8_dvb_s2(
-                        this.message_checksum,
-                        this.message_length_expected & 0xff,
-                    );
-                    this.message_checksum = this.crc8_dvb_s2(
-                        this.message_checksum,
-                        (this.message_length_expected & 0xff00) >> 8,
-                    );
-                    for (let ii = 0; ii < this.message_length_received; ii++) {
-                        this.message_checksum = this.crc8_dvb_s2(
-                            this.message_checksum,
-                            this.message_buffer_uint8_view[ii],
-                        );
-                    }
-                    this._dispatch_message(chunk);
-                    break;
-                default:
-                    console.log(`Unknown state detected: ${this.state}`);
-            }
+            this._decode_byte(chunk);
         }
         this.last_received_timestamp = Date.now();
+    },
+    _decode_byte(chunk: number): void {
+        const handler = BYTE_HANDLERS[this.state];
+        if (handler) {
+            handler.call(this, chunk);
+        } else {
+            console.log(`Unknown state detected: ${this.state}`);
+        }
     },
     _initialize_read_buffer() {
         this.message_buffer = new ArrayBuffer(this.message_length_expected);
@@ -857,6 +689,191 @@ const MSP = {
         this._drain_cli_queue(closedError);
     },
 };
+
+// One handler per decoder state, fed a byte at a time by MSP.read().
+const BYTE_HANDLERS: Partial<Record<number, (this: typeof MSP, chunk: number) => void>> = {
+    [MSP.decoder_states.CLI_COMMAND](chunk) {
+        switch (chunk) {
+            case this.symbols.END_OF_TEXT:
+                this.cli_output.push(this.cli_buffer.join(""));
+                this.cli_buffer.length = 0;
+                this.state = this.decoder_states.IDLE;
+                if (this.cli_callback) {
+                    const response = this.cli_output;
+                    this.cli_callback(response);
+                }
+                break;
+            case this.symbols.LINE_FEED:
+                this.cli_output.push(this.cli_buffer.join(""));
+                this.cli_buffer.length = 0;
+                break;
+            case this.symbols.CARRIAGE_RETURN:
+                // ignore CRs
+                break;
+            default:
+                this.cli_buffer.push(String.fromCodePoint(chunk));
+                break;
+        }
+    },
+
+    [MSP.decoder_states.IDLE](chunk) {
+        // sync char 1
+        switch (chunk) {
+            case this.symbols.BEGIN:
+                this.state = this.decoder_states.PROTO_IDENTIFIER;
+                break;
+            case this.symbols.START_OF_TEXT:
+                this.state = this.decoder_states.CLI_COMMAND;
+                break;
+        }
+    },
+
+    [MSP.decoder_states.PROTO_IDENTIFIER](chunk) {
+        // sync char 2
+        switch (chunk) {
+            case this.symbols.PROTO_V1:
+                this.state = this.decoder_states.DIRECTION_V1;
+                break;
+            case this.symbols.PROTO_V2:
+                this.state = this.decoder_states.DIRECTION_V2;
+                break;
+            default:
+                console.log(`Unknown protocol char ${String.fromCodePoint(chunk)}`);
+                this.state = this.decoder_states.IDLE;
+        }
+    },
+
+    // direction (should be >)
+    [MSP.decoder_states.DIRECTION_V1](chunk) {
+        this.unsupported = 0;
+        switch (chunk) {
+            case this.symbols.FROM_MWC:
+                this.message_direction = 1;
+                break;
+            case this.symbols.TO_MWC:
+                this.message_direction = 0;
+                break;
+            case this.symbols.UNSUPPORTED:
+                this.unsupported = 1;
+                break;
+        }
+        this.state =
+            this.state === this.decoder_states.DIRECTION_V1
+                ? this.decoder_states.PAYLOAD_LENGTH_V1
+                : this.decoder_states.FLAG_V2;
+    },
+
+    [MSP.decoder_states.FLAG_V2]() {
+        // The flag byte is ignored for now
+        this.state = this.decoder_states.CODE_V2_LOW;
+    },
+
+    [MSP.decoder_states.PAYLOAD_LENGTH_V1](chunk) {
+        this.message_length_expected = chunk;
+
+        if (this.message_length_expected === this.constants.JUMBO_FRAME_MIN_SIZE) {
+            this.state = this.decoder_states.CODE_JUMBO_V1;
+        } else {
+            this._initialize_read_buffer();
+            this.state = this.decoder_states.CODE_V1;
+        }
+    },
+
+    [MSP.decoder_states.PAYLOAD_LENGTH_V2_LOW](chunk) {
+        this.message_length_expected = chunk;
+        this.state = this.decoder_states.PAYLOAD_LENGTH_V2_HIGH;
+    },
+
+    [MSP.decoder_states.PAYLOAD_LENGTH_V2_HIGH](chunk) {
+        this.message_length_expected |= chunk << 8;
+        this._initialize_read_buffer();
+        this.state =
+            this.message_length_expected > 0 ? this.decoder_states.PAYLOAD_V2 : this.decoder_states.CHECKSUM_V2;
+    },
+
+    [MSP.decoder_states.CODE_V1](chunk) {
+        this.code = chunk;
+        if (this.message_length_expected > 0) {
+            // process payload
+            if (this.state === this.decoder_states.CODE_JUMBO_V1) {
+                this.state = this.decoder_states.PAYLOAD_LENGTH_JUMBO_LOW;
+            } else {
+                this.state = this.decoder_states.PAYLOAD_V1;
+            }
+        } else {
+            // no payload
+            this.state = this.decoder_states.CHECKSUM_V1;
+        }
+    },
+
+    [MSP.decoder_states.CODE_V2_LOW](chunk) {
+        this.code = chunk;
+        this.state = this.decoder_states.CODE_V2_HIGH;
+    },
+
+    [MSP.decoder_states.CODE_V2_HIGH](chunk) {
+        this.code |= chunk << 8;
+        this.state = this.decoder_states.PAYLOAD_LENGTH_V2_LOW;
+    },
+
+    [MSP.decoder_states.PAYLOAD_LENGTH_JUMBO_LOW](chunk) {
+        this.message_length_expected = chunk;
+        this.state = this.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH;
+    },
+
+    [MSP.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH](chunk) {
+        this.message_length_expected |= chunk << 8;
+        this._initialize_read_buffer();
+        this.state = this.decoder_states.PAYLOAD_V1;
+    },
+
+    [MSP.decoder_states.PAYLOAD_V1](chunk) {
+        this.message_buffer_uint8_view[this.message_length_received] = chunk;
+        this.message_length_received++;
+
+        if (this.message_length_received >= this.message_length_expected) {
+            this.state =
+                this.state === this.decoder_states.PAYLOAD_V1
+                    ? this.decoder_states.CHECKSUM_V1
+                    : this.decoder_states.CHECKSUM_V2;
+        }
+    },
+
+    [MSP.decoder_states.CHECKSUM_V1](chunk) {
+        if (this.message_length_expected >= this.constants.JUMBO_FRAME_MIN_SIZE) {
+            this.message_checksum = this.constants.JUMBO_FRAME_MIN_SIZE;
+        } else {
+            this.message_checksum = this.message_length_expected;
+        }
+        this.message_checksum ^= this.code;
+        if (this.message_length_expected >= this.constants.JUMBO_FRAME_MIN_SIZE) {
+            this.message_checksum ^= this.message_length_expected & 0xff;
+            this.message_checksum ^= (this.message_length_expected & 0xff00) >> 8;
+        }
+        for (let ii = 0; ii < this.message_length_received; ii++) {
+            this.message_checksum ^= this.message_buffer_uint8_view[ii];
+        }
+        this._dispatch_message(chunk);
+    },
+
+    [MSP.decoder_states.CHECKSUM_V2](chunk) {
+        this.message_checksum = 0;
+        this.message_checksum = this.crc8_dvb_s2(this.message_checksum, 0); // flag
+        this.message_checksum = this.crc8_dvb_s2(this.message_checksum, this.code & 0xff);
+        this.message_checksum = this.crc8_dvb_s2(this.message_checksum, (this.code & 0xff00) >> 8);
+        this.message_checksum = this.crc8_dvb_s2(this.message_checksum, this.message_length_expected & 0xff);
+        this.message_checksum = this.crc8_dvb_s2(this.message_checksum, (this.message_length_expected & 0xff00) >> 8);
+        for (let ii = 0; ii < this.message_length_received; ii++) {
+            this.message_checksum = this.crc8_dvb_s2(this.message_checksum, this.message_buffer_uint8_view[ii]);
+        }
+        this._dispatch_message(chunk);
+    },
+};
+
+// The two protocol versions share these steps; each handler tells them apart by `this.state`.
+BYTE_HANDLERS[MSP.decoder_states.DIRECTION_V2] = BYTE_HANDLERS[MSP.decoder_states.DIRECTION_V1];
+BYTE_HANDLERS[MSP.decoder_states.CODE_JUMBO_V1] = BYTE_HANDLERS[MSP.decoder_states.CODE_V1];
+BYTE_HANDLERS[MSP.decoder_states.PAYLOAD_V2] = BYTE_HANDLERS[MSP.decoder_states.PAYLOAD_V1];
 
 declare global {
     interface Window {
