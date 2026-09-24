@@ -105,8 +105,6 @@ class STM32Protocol {
     readonly logHead = "[STM32]";
     baud: number | null = null;
     port!: string;
-    // Stays {}: connect() stores the caller's options in serialOptions/mspOptions, not here.
-    options: STM32FlashOptions = {};
     serialOptions!: STM32FlashOptions;
     mspOptions?: { no_reboot: boolean; reboot_baud: number | false | undefined; erase_chip: boolean };
     callback: (() => void) | null | undefined = null;
@@ -388,7 +386,7 @@ class STM32Protocol {
             this.mspOptions.erase_chip = true;
         }
 
-        if (this.options.no_reboot) {
+        if (this.mspOptions.no_reboot) {
             this.prepareSerialPort();
             // serial.js's JSDoc does not mark the callback optional.
             serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
@@ -818,7 +816,7 @@ class STM32Protocol {
             case 4: {
                 // erase memory
                 if (this.useExtendedErase) {
-                    if (this.options.erase_chip) {
+                    if (this.mspOptions?.erase_chip) {
                         console.log(`${this.logHead} Executing global chip erase (via extended erase)`);
                         TABS.firmware_flasher.flashingMessage(
                             i18n.getMessage("stm32GlobalEraseExtended"),
@@ -889,7 +887,7 @@ class STM32Protocol {
                     break;
                 }
 
-                if (this.options.erase_chip) {
+                if (this.mspOptions?.erase_chip) {
                     console.log(`${this.logHead} Executing global chip erase`);
                     TABS.firmware_flasher.flashingMessage(
                         i18n.getMessage("stm32GlobalErase"),
