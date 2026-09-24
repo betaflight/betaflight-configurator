@@ -1694,17 +1694,7 @@ export function getDebugFieldNames(apiVersion) {
             "RGpsVel",
         );
 
-        result.PSAS = {
-            "debug[all]": "Plane SAS",
-            "debug[0]": "Main speed curve",
-            "debug[1]": "Stick speed curve",
-            "debug[2]": "Lift coefficient",
-            "debug[3]": "Accel Z required",
-            "debug[4]": "Accel Z delta",
-            "debug[5]": "Accel Z P",
-            "debug[6]": "Lift coeff delta",
-            "debug[7]": "AoA limiter is on",
-        };
+        result.PSAS = debugFields("Plane SAS");
     }
 
     // Firmware labels win where the firmware carries them: the annotation sits on
