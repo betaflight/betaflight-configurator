@@ -24,20 +24,24 @@ describe("computeZeroThrottleValue", () => {
         expect(computeZeroThrottleValue(true, false, 1460, 1000)).toBe(1460);
     });
 
-    it("returns the configured neutral at the 3D Neutral field's upper bound (1600)", () => {
-        expect(computeZeroThrottleValue(true, false, 1600, 1000)).toBe(1600);
+    it("returns a CLI-configured neutral outside the 3D Neutral field's own slider range (1700)", () => {
+        expect(computeZeroThrottleValue(true, false, 1700, 1000)).toBe(1700);
     });
 
-    it("returns the configured neutral at the 3D Neutral field's lower bound (1400)", () => {
-        expect(computeZeroThrottleValue(true, false, 1400, 1000)).toBe(1400);
+    it("treats firmware's minimum valid 3d_neutral (750) as in-range", () => {
+        expect(computeZeroThrottleValue(true, false, 750, 1000)).toBe(750);
     });
 
-    it("clamps a neutral above the 3D Neutral field's range (1601) to 1500", () => {
-        expect(computeZeroThrottleValue(true, false, 1601, 1000)).toBe(1500);
+    it("treats firmware's maximum valid 3d_neutral (2250) as in-range", () => {
+        expect(computeZeroThrottleValue(true, false, 2250, 1000)).toBe(2250);
     });
 
-    it("clamps a neutral below the 3D Neutral field's range (1399) to 1500", () => {
-        expect(computeZeroThrottleValue(true, false, 1399, 1000)).toBe(1500);
+    it("clamps a neutral below firmware's valid range (749) to 1500", () => {
+        expect(computeZeroThrottleValue(true, false, 749, 1000)).toBe(1500);
+    });
+
+    it("clamps a neutral above firmware's valid range (2251) to 1500", () => {
+        expect(computeZeroThrottleValue(true, false, 2251, 1000)).toBe(1500);
     });
 
     it("clamps an unpopulated store neutral (0, before MSP_MOTOR_3D_CONFIG loads) to 1500", () => {
