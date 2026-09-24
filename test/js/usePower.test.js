@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import "../../src/js/injected_methods";
 import { usePower } from "../../src/composables/usePower";
 import CONFIGURATOR, { API_VERSION_1_48 } from "../../src/js/data_storage";
 import FC from "../../src/js/fc";

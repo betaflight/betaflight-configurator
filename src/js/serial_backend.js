@@ -320,13 +320,13 @@ function beginDisconnect() {
     // (disconnectForReboot is mid-reboot and deliberately does NOT conclude.)
     getConnectionState().concludeReboot(false);
 
-    mspHelper?.setArmingEnabled(true, false, function () {
+    mspHelper?.enableArming(function () {
         finishClose();
     });
 }
 
 // Disconnect when the FC is rebooting: identical to beginDisconnect but WITHOUT the
-// setArmingEnabled MSP round-trip, which would hang waiting for a response the rebooting
+// enableArming MSP round-trip, which would hang waiting for a response the rebooting
 // FC cannot send. Tears the (now-stale) connection down directly.
 function disconnectForReboot() {
     console.log(`${logHead} Dropping stale link for reboot (flush timeout)`);
@@ -623,7 +623,7 @@ function finishClose() {
 // Complete the teardown for an UNEXPECTED disconnect (cable unplug / FC reboot / BLE drop).
 // finishClose() is never reached on this path because the protocol only emits a "disconnect"
 // event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
-// mspHelper.setArmingEnabled — the link is already gone, so that MSP callback would never fire.
+// mspHelper.enableArming — the link is already gone, so that MSP callback would never fire.
 function finishUnexpectedDisconnect() {
     // Clear this connection's handshake watchdogs. GUI.timeout_add does NOT de-duplicate
     // names, so a stale timer left armed here would fire into a healthy successor connection.
@@ -1119,7 +1119,7 @@ async function processCraftName() {
     }
 
     FC.CONFIG.armingDisabled = false;
-    mspHelper.setArmingEnabled(false, false, setRtc);
+    mspHelper.disableArming(setRtc);
 }
 
 function setRtc() {
@@ -1354,7 +1354,7 @@ const DEAD_LINK_TIMEOUT = 5000;
  * A hung FC keeps the transport physically open, so no `disconnect` event fires on its own. When
  * the link is dead this mirrors the reboot teardown path: it flags the disconnect as intentional
  * (so {@link onClosed} skips unexpected-disconnect handling) and closes without the
- * `setArmingEnabled` round-trip, which would itself hang against the dead FC. Re-entrancy is
+ * `enableArming` round-trip, which would itself hang against the dead FC. Re-entrancy is
  * bounded by the `isConnected()` guard — teardown clears `MSP.onTimeout` and the connection-valid
  * flag before a subsequent timeout can re-enter.
  *

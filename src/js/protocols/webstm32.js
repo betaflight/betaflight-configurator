@@ -24,6 +24,7 @@ import { DFU_AUTH_REQUIRED } from "../protocols/usbdfu";
 import DeviceHandler from "../device_handler";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import { MspBuffer } from "../msp/mspBytes";
 
 function readSerialAdapter(event) {
     // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
@@ -179,7 +180,7 @@ class STM32Protocol {
     }
 
     reboot() {
-        const buffer = [];
+        const buffer = new MspBuffer();
         buffer.push8(this.rebootMode);
         setTimeout(() => {
             const disconnectFromMsp = () => {

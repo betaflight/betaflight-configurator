@@ -11,13 +11,14 @@ import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 import { bit_set } from "../js/bit";
 import { useDirtyState } from "../composables/useDirtyState";
+import { MspBuffer } from "../js/msp/mspBytes";
 
 function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     if (isVirtualMode && virtualMode) {
         virtualMode.statisticsState[statItem.index] = statItem.enabled;
     }
 
-    const buffer = [];
+    const buffer = new MspBuffer();
     buffer.push8(statItem.index);
     buffer.push16(statItem.enabled ? 1 : 0);
     buffer.push8(0);
@@ -299,7 +300,7 @@ export const useOsdStore = defineStore("osd", () => {
         const fcStore = useFlightControllerStore();
         const apiVersion = fcStore.config.apiVersion;
 
-        const result = [-1, videoSystem.value];
+        const result = MspBuffer.of(-1, videoSystem.value);
         if (state.haveOsdFeature) {
             result.push8(unitMode.value);
             pushAlarm8(result, "rssi");
@@ -346,7 +347,7 @@ export const useOsdStore = defineStore("osd", () => {
             OSD.virtualMode.itemPositions[displayItem.index] = helpers.pack.position(displayItem);
         }
 
-        const buffer = [];
+        const buffer = new MspBuffer();
         buffer.push8(displayItem.index);
         buffer.push16(helpers.pack.position(displayItem));
         return buffer;
@@ -362,7 +363,7 @@ export const useOsdStore = defineStore("osd", () => {
             OSD.virtualMode.timerData[timer.index].alarm = timer.alarm;
         }
 
-        const buffer = [-2, timer.index];
+        const buffer = MspBuffer.of(-2, timer.index);
         buffer.push16(helpers.pack.timer(timer));
         return buffer;
     }

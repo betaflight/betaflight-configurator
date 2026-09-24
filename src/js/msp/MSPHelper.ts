@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../injected_methods";
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
@@ -29,6 +28,7 @@ import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFact
 import MSP from "../msp";
 import MSPCodes, { MSP2TextType } from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
+import { MspBuffer, MspDataView } from "./mspBytes";
 import {
     API_VERSION_1_45,
     API_VERSION_1_46,
@@ -139,6 +139,11 @@ function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOff
     return mask;
 }
 
+interface ArmingState {
+    armingDisabled: boolean;
+    runawayTakeoffPreventionDisabled: boolean;
+}
+
 type SerialPortFunction = keyof MspHelper["SERIAL_PORT_FUNCTIONS"];
 
 class MspHelper {
@@ -201,7 +206,7 @@ class MspHelper {
 
     mspMultipleCache: number[] = [];
 
-    setText(buffer: number[], type: number, config: string, length: number) {
+    setText(buffer: MspBuffer, type: number, config: string, length: number) {
         // type byte
         buffer.push8(type);
 
@@ -214,7 +219,7 @@ class MspHelper {
         }
     }
 
-    getText(data: DataView): string {
+    getText(data: MspDataView): string {
         // length byte followed by the actual characters
         const size = data.readU8() || 0;
         let str = "";
@@ -226,7 +231,7 @@ class MspHelper {
         return str;
     }
 
-    static readPidSliderSettings(data: DataView) {
+    static readPidSliderSettings(data: MspDataView) {
         FC.TUNING_SLIDERS.slider_pids_mode = data.readU8();
         FC.TUNING_SLIDERS.slider_master_multiplier = data.readU8();
         FC.TUNING_SLIDERS.slider_roll_pitch_ratio = data.readU8();
@@ -240,7 +245,7 @@ class MspHelper {
         data.readU32(); // reserved for future use
     }
 
-    static writePidSliderSettings(buffer: number[]) {
+    static writePidSliderSettings(buffer: MspBuffer) {
         buffer
             .push8(FC.TUNING_SLIDERS.slider_pids_mode)
             .push8(FC.TUNING_SLIDERS.slider_master_multiplier)
@@ -255,7 +260,7 @@ class MspHelper {
             .push32(0); // reserved for future use
     }
 
-    static readDtermFilterSliderSettings(data: DataView) {
+    static readDtermFilterSliderSettings(data: MspDataView) {
         FC.TUNING_SLIDERS.slider_dterm_filter = data.readU8();
         FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = data.readU8();
         FC.FILTER_CONFIG.dterm_lowpass_hz = data.readU16();
@@ -266,7 +271,7 @@ class MspHelper {
         data.readU32(); // reserved for future use
     }
 
-    static writeDtermFilterSliderSettings(buffer: number[]) {
+    static writeDtermFilterSliderSettings(buffer: MspBuffer) {
         buffer
             .push8(FC.TUNING_SLIDERS.slider_dterm_filter)
             .push8(FC.TUNING_SLIDERS.slider_dterm_filter_multiplier)
@@ -278,7 +283,7 @@ class MspHelper {
             .push32(0); // reserved for future use
     }
 
-    static readGyroFilterSliderSettings(data: DataView) {
+    static readGyroFilterSliderSettings(data: MspDataView) {
         FC.TUNING_SLIDERS.slider_gyro_filter = data.readU8();
         FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = data.readU8();
         FC.FILTER_CONFIG.gyro_lowpass_hz = data.readU16();
@@ -289,7 +294,7 @@ class MspHelper {
         data.readU32(); // reserved for future use
     }
 
-    static writeGyroFilterSliderSettings(buffer: number[]) {
+    static writeGyroFilterSliderSettings(buffer: MspBuffer) {
         buffer
             .push8(FC.TUNING_SLIDERS.slider_gyro_filter)
             .push8(FC.TUNING_SLIDERS.slider_gyro_filter_multiplier)
@@ -1908,7 +1913,7 @@ class MspHelper {
                                 // crcError/unsupported were absent (undefined) here; false/0 read the same.
                                 const currentDataHandler: MspFrame = {
                                     code: command,
-                                    dataView: new DataView(data.buffer, data.offset, payloadSize),
+                                    dataView: new MspDataView(data.buffer, data.offset, payloadSize),
                                     crcError: false,
                                     unsupported: 0,
                                     callbacks: [],
@@ -1923,7 +1928,7 @@ class MspHelper {
                         if (hasReturnedSomeCommand) {
                             // Send again MSP messages missing, the buffer in the FC was too small
                             if (this.mspMultipleCache.length > 0) {
-                                const partialBuffer: number[] = [];
+                                const partialBuffer = new MspBuffer();
                                 for (const instance of this.mspMultipleCache) {
                                     partialBuffer.push8(instance);
                                 }
@@ -2061,7 +2066,7 @@ class MspHelper {
      * (e.g. 'MSPCodes.MSP2_GET_TEXT' and 'MSPCodes.MSP2_SET_TEXT')
      */
     crunch(code: number, modifierCode?: number): number[] {
-        const buffer: number[] = [];
+        const buffer = new MspBuffer();
 
         switch (code) {
             case MSPCodes.MSP_SET_FEATURE_CONFIG: {
@@ -2766,7 +2771,7 @@ class MspHelper {
      * Channels is an array of 16-bit unsigned integer channel values to be sent. 8 channels is probably the maximum.
      */
     setRawRx(channels: number[]) {
-        const buffer: number[] = [];
+        const buffer = new MspBuffer();
 
         for (const channel of channels) {
             buffer.push16(channel);
@@ -2803,7 +2808,7 @@ class MspHelper {
                      * figure out the reply format:
                      */
                     if (dataCompressionType == 0) {
-                        onDataCallback(address, new DataView(reply.buffer, reply.byteOffset + headerSize, dataSize));
+                        onDataCallback(address, new MspDataView(reply.buffer, reply.byteOffset + headerSize, dataSize));
                     } else if (dataCompressionType == 1) {
                         // Read compressed char count to avoid decoding stray bit sequences as bytes
                         const compressedCharCount = reply.readU16();
@@ -2821,7 +2826,7 @@ class MspHelper {
                             defaultHuffmanLenIndex,
                         );
 
-                        onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
+                        onDataCallback(address, new MspDataView(decompressedArray.buffer), dataSize);
                     } else {
                         console.error(`Unknown dataflash compression type ${dataCompressionType}`);
                         onDataCallback(
@@ -2853,7 +2858,7 @@ class MspHelper {
     async sendServoConfigurations() {
         for (let servoIndex = 0; servoIndex < FC.SERVO_CONFIG.length; servoIndex++) {
             const servoConfiguration = FC.SERVO_CONFIG[servoIndex];
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer
                 .push8(servoIndex)
@@ -2873,7 +2878,7 @@ class MspHelper {
     async sendModeRanges() {
         for (let modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
             const modeRange = FC.MODE_RANGES[modeRangeIndex];
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer
                 .push8(modeRangeIndex)
@@ -2893,7 +2898,7 @@ class MspHelper {
     async sendAdjustmentRanges() {
         for (let adjustmentRangeIndex = 0; adjustmentRangeIndex < FC.ADJUSTMENT_RANGES.length; adjustmentRangeIndex++) {
             const adjustmentRange = FC.ADJUSTMENT_RANGES[adjustmentRangeIndex];
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer
                 .push8(adjustmentRangeIndex)
@@ -2913,7 +2918,7 @@ class MspHelper {
 
     async sendVoltageConfig() {
         for (const config of FC.VOLTAGE_METER_CONFIGS) {
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer
                 .push8(config.id)
@@ -2927,7 +2932,7 @@ class MspHelper {
 
     async sendCurrentConfig() {
         for (const config of FC.CURRENT_METER_CONFIGS) {
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer.push8(config.id).push16(config.scale).push16(config.offset);
 
@@ -2942,7 +2947,7 @@ class MspHelper {
         const directionOffset = isNewLayout ? 26 : 22;
 
         for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer.push(ledIndex);
             buffer.push32(buildLedStripMask(FC.LED_STRIP[ledIndex], colorOffset, directionOffset));
@@ -2956,7 +2961,7 @@ class MspHelper {
             return;
         }
 
-        const buffer: number[] = [];
+        const buffer = new MspBuffer();
 
         for (const color of FC.LED_COLORS) {
             buffer.push16(color.h).push8(color.s).push8(color.v);
@@ -2967,7 +2972,7 @@ class MspHelper {
 
     async sendLedStripModeColors() {
         for (const modeColor of FC.LED_MODE_COLORS) {
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
 
             buffer.push8(modeColor.mode).push8(modeColor.direction).push8(modeColor.color);
 
@@ -2976,7 +2981,7 @@ class MspHelper {
     }
 
     sendLedStripConfigValues(onCompleteCallback?: () => void) {
-        const buffer: number[] = [];
+        const buffer = new MspBuffer();
         buffer.push8(FC.LED_CONFIG_VALUES.brightness ?? 0);
         buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta ?? 0);
         buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq ?? 0);
@@ -3023,7 +3028,7 @@ class MspHelper {
         function send_next_rxfail_config() {
             const rxFail = FC.RXFAIL_CONFIG[rxFailIndex];
 
-            const buffer: number[] = [];
+            const buffer = new MspBuffer();
             buffer.push8(rxFailIndex).push8(rxFail.mode).push16(rxFail.value);
 
             // prepare for next iteration
@@ -3035,38 +3040,50 @@ class MspHelper {
         }
     }
 
-    setArmingEnabled(doEnable: boolean, disableRunawayTakeoffPrevention: boolean, onCompleteCallback?: () => void) {
+    /** Stops the FC from arming, with runaway takeoff prevention on. */
+    disableArming(onCompleteCallback?: () => void) {
+        this.applyArmingState({ armingDisabled: true, runawayTakeoffPreventionDisabled: false }, onCompleteCallback);
+    }
+
+    /** Lets the FC arm again, with runaway takeoff prevention on. */
+    enableArming(onCompleteCallback?: () => void) {
+        this.applyArmingState({ armingDisabled: false, runawayTakeoffPreventionDisabled: false }, onCompleteCallback);
+    }
+
+    /** Lets the FC arm with runaway takeoff prevention off, which spinning motors on the bench needs. */
+    enableArmingForMotorTest(onCompleteCallback?: () => void) {
+        this.applyArmingState({ armingDisabled: false, runawayTakeoffPreventionDisabled: true }, onCompleteCallback);
+    }
+
+    // Sends MSP_ARMING_DISABLE only when the FC is not already in `target`.
+    private applyArmingState(target: ArmingState, onCompleteCallback?: () => void) {
         if (
-            FC.CONFIG.armingDisabled === doEnable ||
-            FC.CONFIG.runawayTakeoffPreventionDisabled !== disableRunawayTakeoffPrevention
+            FC.CONFIG.armingDisabled === target.armingDisabled &&
+            FC.CONFIG.runawayTakeoffPreventionDisabled === target.runawayTakeoffPreventionDisabled
         ) {
-            FC.CONFIG.armingDisabled = !doEnable;
-            FC.CONFIG.runawayTakeoffPreventionDisabled = disableRunawayTakeoffPrevention;
-
-            MSP.send_message(
-                MSPCodes.MSP_ARMING_DISABLE,
-                mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE),
-                false,
-                function () {
-                    if (doEnable) {
-                        gui_log(i18n.getMessage("armingEnabled"));
-                        if (disableRunawayTakeoffPrevention) {
-                            gui_log(i18n.getMessage("runawayTakeoffPreventionDisabled"));
-                        } else {
-                            gui_log(i18n.getMessage("runawayTakeoffPreventionEnabled"));
-                        }
-                    } else {
-                        gui_log(i18n.getMessage("armingDisabled"));
-                    }
-
-                    if (onCompleteCallback) {
-                        onCompleteCallback();
-                    }
-                },
-            );
-        } else if (onCompleteCallback) {
-            onCompleteCallback();
+            onCompleteCallback?.();
+            return;
         }
+
+        FC.CONFIG.armingDisabled = target.armingDisabled;
+        FC.CONFIG.runawayTakeoffPreventionDisabled = target.runawayTakeoffPreventionDisabled;
+
+        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, this.crunch(MSPCodes.MSP_ARMING_DISABLE), false, () => {
+            if (target.armingDisabled) {
+                gui_log(i18n.getMessage("armingDisabled"));
+            } else {
+                gui_log(i18n.getMessage("armingEnabled"));
+                gui_log(
+                    i18n.getMessage(
+                        target.runawayTakeoffPreventionDisabled
+                            ? "runawayTakeoffPreventionDisabled"
+                            : "runawayTakeoffPreventionEnabled",
+                    ),
+                );
+            }
+
+            onCompleteCallback?.();
+        });
     }
 
     loadSerialConfig(callback?: () => void) {
@@ -3082,7 +3099,7 @@ class MspHelper {
     writeConfiguration(reboot: boolean, callback?: () => void) {
         // We need some protection when testing motors on motors tab
         if (!FC.CONFIG.armingDisabled) {
-            this.setArmingEnabled(false, false);
+            this.disableArming();
         }
 
         setTimeout(function () {

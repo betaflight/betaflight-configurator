@@ -23,6 +23,7 @@ import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial.js";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
+import { MspDataView } from "./msp/mspBytes";
 
 /** A request payload: the encoders read `.length` and index it, so an array-like of bytes. */
 export type MspPayload = ArrayLike<number> | false | undefined;
@@ -30,7 +31,7 @@ export type MspPayload = ArrayLike<number> | false | undefined;
 /** What a request callback receives once the reply is decoded (built in MSPHelper.process_data). */
 export interface MspResponse {
     command: number;
-    data: DataView;
+    data: MspDataView;
     length: number;
     crcError: boolean;
     unsupported: number;
@@ -65,7 +66,7 @@ interface CliQueueEntry {
 /** The decoder state MSPHelper.process_data reads when a frame completes. */
 export interface MspFrame {
     code: number;
-    dataView: DataView;
+    dataView: MspDataView;
     crcError: boolean;
     unsupported: number;
     callbacks: MspRequest[];
@@ -129,7 +130,7 @@ const MSP = {
     message_direction: 1,
     code: 0,
     // Replaced by every dispatched frame; nothing reads it before the first one.
-    dataView: new DataView(new ArrayBuffer(0)),
+    dataView: new MspDataView(new ArrayBuffer(0)),
     message_length_expected: 0,
     message_length_received: 0,
     // Sized per frame by _initialize_read_buffer() before any payload byte is stored.
@@ -376,7 +377,7 @@ const MSP = {
     _dispatch_message(expectedChecksum: number) {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
-            this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
+            this.dataView = new MspDataView(this.message_buffer, 0, this.message_length_expected);
         } else if (
             (serial._protocol as { shouldBypassCrc?: (checksum: number) => boolean } | null)?.shouldBypassCrc?.(
                 expectedChecksum,
@@ -386,12 +387,12 @@ const MSP = {
             // for BT-11/CC2541 bridges that corrupt the MSP checksum to 0xff. Not gated
             // on serial.protocol — that getter returns the lowercased constructor name,
             // never "bluetooth".
-            this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
+            this.dataView = new MspDataView(this.message_buffer, 0, this.message_length_expected);
             this.crcError = false; // Override the CRC error for this specific case
         } else {
             this.packet_error++;
             this.crcError = true;
-            this.dataView = new DataView(new ArrayBuffer(0));
+            this.dataView = new MspDataView(new ArrayBuffer(0));
         }
         this.notify();
         // Reset variables

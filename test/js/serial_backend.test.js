@@ -56,7 +56,8 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
             updateProps: vi.fn(),
         },
         mspHelperInstance: {
-            setArmingEnabled: vi.fn(),
+            enableArming: vi.fn(),
+            disableArming: vi.fn(),
             process_data: vi.fn(),
             crunch: vi.fn(() => []),
             RESET_TYPES: { CUSTOM_DEFAULTS: 0 },
@@ -474,13 +475,16 @@ describe("serial_backend disconnect convergence", () => {
         expect(GUI.timeout_remove).toHaveBeenCalledWith("connectAttempt");
     });
 
-    it("UNEXPECTED disconnect does NOT call mspHelper.setArmingEnabled", () => {
+    it("UNEXPECTED disconnect does NOT change the arming state", () => {
         establishConnection();
-        mspHelperInstance.setArmingEnabled.mockClear();
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
 
         serialHandlers.disconnect({ detail: true });
 
-        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+        expect(mspHelperInstance.enableArming).not.toHaveBeenCalled();
+
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
     });
 
     it("after an UNEXPECTED disconnect, module isConnected is reset (next action takes connect branch)", () => {
@@ -503,16 +507,18 @@ describe("serial_backend disconnect convergence", () => {
 
         // User presses Disconnect -> exported disconnect() -> beginDisconnect()
         // sets intentionalDisconnect = true and (because mspHelper exists)
-        // invokes the setArmingEnabled callback synchronously in our mock?
+        // invokes the enableArming callback synchronously in our mock?
         // Our mock does NOT call the callback, so finishClose runs only when
         // the callback fires. To exercise the guard deterministically, invoke
-        // the setArmingEnabled callback ourselves to run finishClose once.
-        mspHelperInstance.setArmingEnabled.mockClear();
+        // the enableArming callback ourselves to run finishClose once.
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
         disconnect();
 
         // beginDisconnect should have requested arming-enable with a callback.
-        expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
-        const finishClose = mspHelperInstance.setArmingEnabled.mock.calls[0][2];
+        expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
+        const finishClose = mspHelperInstance.enableArming.mock.calls[0][0];
         expect(typeof finishClose).toBe("function");
 
         // Run the intentional teardown (finishClose) once.
@@ -773,9 +779,9 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             // User hits Disconnect before/while the reboot reconnect is pending — it must be
             // cancelled, not resurrect the connection on a later tick.
             disconnect();
-            // Complete the disconnect (the mocked setArmingEnabled doesn't auto-invoke its
+            // Complete the disconnect (the mocked enableArming doesn't auto-invoke its
             // callback) so module-private isConnected resets and doesn't leak into later tests.
-            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
+            mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.();
 
             serial.connect.mockClear();
             vi.advanceTimersByTime(15000); // cover flush + the full retry window
@@ -791,7 +797,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
 // initializeSerialBackend (serial.addEventListener("removedDevice", ...)). The
 // handler is captured in serialHandlers.removedDevice by the serial mock, so we
 // fire it directly and observe whether the disconnect branch of connectDisconnect
-// runs. beginDisconnect() calls mspHelper.setArmingEnabled exactly once, so that
+// runs. beginDisconnect() calls mspHelper.enableArming exactly once, so that
 // call is our proxy for "a disconnect was triggered".
 // ---------------------------------------------------------------------------
 describe("serial_backend removedDevice matching is device-specific", () => {
@@ -809,12 +815,15 @@ describe("serial_backend removedDevice matching is device-specific", () => {
     it("removing a DIFFERENT device does NOT disconnect the active connection", () => {
         establishConnection();
         GUI.connected_to = "serial_1"; // device B is the active connection
-        mspHelperInstance.setArmingEnabled.mockClear();
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
 
         expect(typeof serialHandlers.removedDevice).toBe("function");
         serialHandlers.removedDevice({ detail: { path: "serial_0" } });
 
-        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+        expect(mspHelperInstance.enableArming).not.toHaveBeenCalled();
+
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
 
         serialHandlers.disconnect({ detail: true }); // teardown
     });
@@ -822,27 +831,32 @@ describe("serial_backend removedDevice matching is device-specific", () => {
     it("removing the CONNECTED device DOES disconnect", () => {
         establishConnection();
         GUI.connected_to = "serial_1";
-        mspHelperInstance.setArmingEnabled.mockClear();
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
 
         serialHandlers.removedDevice({ detail: { path: "serial_1" } });
 
-        // beginDisconnect -> setArmingEnabled with the finishClose callback.
-        expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
+        // beginDisconnect -> enableArming with the finishClose callback.
+        expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
 
         // Run finishClose to complete the disconnect and reset module state.
-        mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
+        mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.();
     });
 
     it("a null/empty removal detail never triggers a disconnect", () => {
         establishConnection();
         GUI.connected_to = "serial_1";
-        mspHelperInstance.setArmingEnabled.mockClear();
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
 
         serialHandlers.removedDevice({ detail: undefined });
         serialHandlers.removedDevice({ detail: {} });
         serialHandlers.removedDevice({ detail: { path: "" } });
 
-        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+        expect(mspHelperInstance.enableArming).not.toHaveBeenCalled();
+
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
 
         serialHandlers.disconnect({ detail: true }); // teardown
     });
@@ -850,11 +864,14 @@ describe("serial_backend removedDevice matching is device-specific", () => {
     it("an empty removal path does not match connected_to === false", () => {
         establishConnection();
         GUI.connected_to = false; // guard against the pre-fix empty-path bug
-        mspHelperInstance.setArmingEnabled.mockClear();
+        mspHelperInstance.enableArming.mockClear();
+        mspHelperInstance.disableArming.mockClear();
 
         serialHandlers.removedDevice({ detail: { path: "" } });
 
-        expect(mspHelperInstance.setArmingEnabled).not.toHaveBeenCalled();
+        expect(mspHelperInstance.enableArming).not.toHaveBeenCalled();
+
+        expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
 
         serialHandlers.disconnect({ detail: true }); // teardown
     });
@@ -937,7 +954,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             reinitializeConnection();
             disconnect(); // user hits Disconnect mid-reboot
-            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.(); // complete the close
+            mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.(); // complete the close
             serial.connect.mockClear();
 
             vi.advanceTimersByTime(30000);
@@ -1021,15 +1038,17 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
 
             MSP.send_message.mockClear();
             serial.disconnect.mockClear();
-            mspHelperInstance.setArmingEnabled.mockClear();
+            mspHelperInstance.enableArming.mockClear();
+            mspHelperInstance.disableArming.mockClear();
 
             reinitializeConnection();
 
             // Virtual path just toggles the link — no reboot command.
             expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
-            expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
-            // Mocked setArmingEnabled doesn't auto-invoke its callback — drive it to finish the close.
-            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
+            expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
+            expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
+            // Mocked enableArming doesn't auto-invoke its callback — drive it to finish the close.
+            mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.();
             expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
             // A single follow-up toggle 500ms later (one-shot, not a retry loop).
@@ -1053,12 +1072,15 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
 
             serial.disconnect.mockClear();
             serial.connect.mockClear();
-            mspHelperInstance.setArmingEnabled.mockClear();
+            mspHelperInstance.enableArming.mockClear();
+            mspHelperInstance.disableArming.mockClear();
 
             reinitializeConnection();
 
-            expect(mspHelperInstance.setArmingEnabled).toHaveBeenCalledTimes(1);
-            mspHelperInstance.setArmingEnabled.mock.calls.at(-1)?.[2]?.();
+            expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
+
+            expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
+            mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.();
             expect(serial.disconnect).toHaveBeenCalledTimes(1);
 
             vi.advanceTimersByTime(20000);

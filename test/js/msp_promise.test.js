@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import "../../src/js/injected_methods";
 import MSP from "../../src/js/msp";
 import { serial } from "../../src/js/serial";
 import MspHelper from "../../src/js/msp/MSPHelper";

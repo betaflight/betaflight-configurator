@@ -1,22 +1,22 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
-import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
 import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 import VirtualFC from "../../../src/js/VirtualFC";
+import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
 
 function processMessage(mspHelper, code, buffer) {
     mspHelper.process_data({
         code,
-        dataView: new DataView(new Uint8Array(buffer).buffer),
+        dataView: new MspDataView(new Uint8Array(buffer).buffer),
         crcError: false,
         callbacks: [],
     });
 }
 
 function buildStatusExBuffer({ batteryProfiles, batteryProfile } = {}) {
-    const buffer = [];
+    const buffer = new MspBuffer();
     buffer.push16(500); // cycleTime
     buffer.push16(0); // i2cError
     buffer.push16(0); // activeSensors
@@ -114,7 +114,7 @@ describe("Battery Profiles", () => {
         it("handles MSP2_GET_TEXT with BATTERY_PROFILE_NAME", () => {
             FC.CONFIG.batteryProfile = 1;
 
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(MSP2TextType.BATTERY_PROFILE_NAME);
             const name = "Li-Ion";
             buffer.push8(name.length);
@@ -133,7 +133,7 @@ describe("Battery Profiles", () => {
             FC.CONFIG.batteryProfileNames[0] = "LiPo";
 
             const result = mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME);
-            const view = new DataView(new Uint8Array(result).buffer);
+            const view = new MspDataView(new Uint8Array(result).buffer);
             view.offset = 0;
 
             expect(view.readU8()).toEqual(MSP2TextType.BATTERY_PROFILE_NAME);

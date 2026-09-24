@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 import semver from "semver";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
-import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
 import { API_VERSION_1_47 } from "../../../src/js/data_storage";
+import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
 
 describe("MspHelper", () => {
     const mspHelper = new MspHelper();
@@ -24,7 +24,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_BOARD_INFO,
-                dataView: new DataView(new Uint8Array([]).buffer),
+                dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: true,
                 callbacks: [
                     {
@@ -41,7 +41,7 @@ describe("MspHelper", () => {
             const [mspProtocolVersion, apiVersionMajor, apiVersionMinor] = randomValues;
             mspHelper.process_data({
                 code: MSPCodes.MSP_API_VERSION,
-                dataView: new DataView(randomValues.buffer),
+                dataView: new MspDataView(randomValues.buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -55,7 +55,7 @@ describe("MspHelper", () => {
             // semver comparison throw "Invalid Version".
             mspHelper.process_data({
                 code: MSPCodes.MSP_API_VERSION,
-                dataView: new DataView(new Uint8Array([]).buffer),
+                dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -68,7 +68,7 @@ describe("MspHelper", () => {
             // Only the protocol-version byte present, major/minor missing -> "X.null.null".
             mspHelper.process_data({
                 code: MSPCodes.MSP_API_VERSION,
-                dataView: new DataView(new Uint8Array([42]).buffer),
+                dataView: new MspDataView(new Uint8Array([42]).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -80,7 +80,7 @@ describe("MspHelper", () => {
         it("does not let a corrupt MSP_API_VERSION throw in a downstream semver comparison", () => {
             mspHelper.process_data({
                 code: MSPCodes.MSP_API_VERSION,
-                dataView: new DataView(new Uint8Array([]).buffer),
+                dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -92,12 +92,12 @@ describe("MspHelper", () => {
             let pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
             let expectedNames = Array.from({ length: pidNamesCount }).map((_) => generateRandomString());
 
-            let lowLevelData = [];
+            let lowLevelData = new MspBuffer();
             appendStringToArray(lowLevelData, `${expectedNames.join(";")};`);
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_PIDNAMES,
-                dataView: new DataView(new Uint8Array(lowLevelData).buffer),
+                dataView: new MspDataView(new Uint8Array(lowLevelData).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -110,7 +110,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_MOTOR,
-                dataView: new DataView(new Uint16Array(motorBytes).buffer),
+                dataView: new MspDataView(new Uint16Array(motorBytes).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -119,7 +119,7 @@ describe("MspHelper", () => {
         });
         it("handles MSP_BOARD_INFO correctly for API version", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_47;
-            let infoBuffer = [];
+            let infoBuffer = new MspBuffer();
 
             const boardIdentifier = appendStringToArray(infoBuffer, generateRandomString(4)); // set board-identifier
 
@@ -140,7 +140,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_BOARD_INFO,
-                dataView: new DataView(new Uint8Array(infoBuffer).buffer),
+                dataView: new MspDataView(new Uint8Array(infoBuffer).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -167,7 +167,7 @@ describe("MspHelper", () => {
             const qz = 0;
 
             const buffer = new ArrayBuffer(8);
-            const view = new DataView(buffer);
+            const view = new MspDataView(buffer);
             view.setInt16(0, Math.round(qw * 32767), true);
             view.setInt16(2, Math.round(qx * 32767), true);
             view.setInt16(4, Math.round(qy * 32767), true);
@@ -175,7 +175,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_ATTITUDE_QUATERNION,
-                dataView: new DataView(buffer),
+                dataView: new MspDataView(buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -190,7 +190,7 @@ describe("MspHelper", () => {
         it("handles MSP_ATTITUDE_QUATERNION with extreme values", () => {
             // Mixed extreme values: w=1.0, x=-1.0, y=0.0, z≈0.5
             const buffer = new ArrayBuffer(8);
-            const view = new DataView(buffer);
+            const view = new MspDataView(buffer);
             view.setInt16(0, 32767, true); // w = 32767/32767 = 1.0
             view.setInt16(2, -32767, true); // x = -32767/32767 = -1.0
             view.setInt16(4, 0, true); // y = 0/32767 = 0.0
@@ -198,7 +198,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_ATTITUDE_QUATERNION,
-                dataView: new DataView(buffer),
+                dataView: new MspDataView(buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -220,7 +220,7 @@ describe("MspHelper", () => {
          * the type byte that goes on the wire and the FC.CONFIG field each type lands in.
          */
         function buildTextPayload(textType, text) {
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(textType);
             buffer.push8(text.length);
             appendStringToArray(buffer, text);
@@ -228,7 +228,7 @@ describe("MspHelper", () => {
         }
 
         function readBuffer(buffer) {
-            const view = new DataView(new Uint8Array(buffer).buffer);
+            const view = new MspDataView(new Uint8Array(buffer).buffer);
             view.offset = 0;
             return view;
         }
@@ -260,7 +260,7 @@ describe("MspHelper", () => {
 
             mspHelper.process_data({
                 code: MSPCodes.MSP2_GET_TEXT,
-                dataView: new DataView(new Uint8Array(buildTextPayload(textType, text)).buffer),
+                dataView: new MspDataView(new Uint8Array(buildTextPayload(textType, text)).buffer),
                 crcError: false,
                 callbacks: [],
             });
@@ -272,7 +272,7 @@ describe("MspHelper", () => {
             // RELEASENAME exists in the firmware header but has no case here yet.
             mspHelper.process_data({
                 code: MSPCodes.MSP2_GET_TEXT,
-                dataView: new DataView(new Uint8Array(buildTextPayload(MSP2TextType.RELEASENAME, "4.6.0")).buffer),
+                dataView: new MspDataView(new Uint8Array(buildTextPayload(MSP2TextType.RELEASENAME, "4.6.0")).buffer),
                 crcError: false,
                 callbacks: [],
             });

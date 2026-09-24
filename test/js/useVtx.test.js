@@ -8,7 +8,9 @@ vi.mock("../../src/js/msp/MSPHelper", () => ({
     __esModule: true,
     mspHelper: {
         crunch: vi.fn(() => false),
-        setArmingEnabled: vi.fn(),
+        enableArming: vi.fn(),
+        disableArming: vi.fn(),
+        enableArmingForMotorTest: vi.fn(),
     },
 }));
 

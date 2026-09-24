@@ -3,6 +3,7 @@ import DshotCommand from "../../js/utils/DshotCommand.js";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
+import { MspBuffer } from "../../js/msp/mspBytes";
 
 class EscDshotDirectionMotorDriver {
     constructor(motorConfig, motorDriverQueueIntervalMs, motorDriverStopMotorsPauseMs) {
@@ -100,7 +101,7 @@ class EscDshotDirectionMotorDriver {
     }
 
     _sendEscSpinDirection(motorIndex, direction) {
-        const buffer = [];
+        const buffer = new MspBuffer();
         buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
         buffer.push8(motorIndex);
         buffer.push8(2); // two commands
@@ -142,7 +143,7 @@ class EscDshotDirectionMotorDriver {
     }
 
     _sendState() {
-        const buffer = [];
+        const buffer = new MspBuffer();
 
         for (let i = 0; i < this._numberOfMotors; i++) {
             buffer.push16(this._state[i]);

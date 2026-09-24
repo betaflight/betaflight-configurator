@@ -12,6 +12,7 @@ import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
 import FC from "@/js/fc";
 import { bit_check } from "@/js/bit";
+import { MspBuffer } from "@/js/msp/mspBytes";
 
 export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
     const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
@@ -51,7 +52,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const enableMotorTesting = () => {
         // Only send DShot command for digital protocols
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
             buffer.push8(255); // Send to all ESCs
             buffer.push8(1); // 1 command
@@ -63,7 +64,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         document.addEventListener("keydown", disableMotorTest);
 
         // Enable arming during motor testing
-        mspHelper.setArmingEnabled(true, true);
+        mspHelper.enableArmingForMotorTest();
     };
 
     /**
@@ -78,11 +79,11 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         document.removeEventListener("keydown", disableMotorTest);
 
         // Disable arming
-        mspHelper.setArmingEnabled(false, false);
+        mspHelper.disableArming();
 
         // For digital protocols, send motor stop command to prevent spinning after reboot
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
             buffer.push8(DshotCommand.ALL_MOTORS); // Send to all ESCs
             buffer.push8(1); // 1 command

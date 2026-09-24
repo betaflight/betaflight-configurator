@@ -12,6 +12,7 @@ import { gui_log } from "../js/gui_log";
 import FileSystem from "../js/FileSystem";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
+import { MspBuffer } from "@/js/msp/mspBytes";
 
 const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
@@ -325,7 +326,7 @@ export function useVtx() {
     async function loadVtxTableBands() {
         bandList.length = 0;
         for (let i = 1; i <= FC.VTX_CONFIG.vtx_table_bands; i++) {
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(i);
             await sendMspPromise(MSPCodes.MSP_VTXTABLE_BAND, buffer);
             bandList.push({ ...FC.VTXTABLE_BAND });
@@ -335,7 +336,7 @@ export function useVtx() {
     async function loadVtxTablePowerLevels() {
         powerLevelList.length = 0;
         for (let i = 1; i <= FC.VTX_CONFIG.vtx_table_powerlevels; i++) {
-            const buffer = [];
+            const buffer = new MspBuffer();
             buffer.push8(i);
             await sendMspPromise(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer);
             powerLevelList.push({ ...FC.VTXTABLE_POWERLEVEL });

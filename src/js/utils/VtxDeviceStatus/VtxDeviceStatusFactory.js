@@ -1,3 +1,4 @@
+import { MspDataView } from "../../msp/mspBytes";
 import VtxDeviceStatus from "./VtxDeviceStatus";
 import VtxDeviceStatusSmartAudio from "./SmartAudioDeviceStatus";
 import VtxDeviceStatusTramp from "./TrampDeviceStatus";
@@ -13,7 +14,7 @@ const vtxDeviceStatusFactory = {
     },
 
     createVtxDeviceStatus: function (byteArray) {
-        const dataView = new DataView(byteArray.buffer);
+        const dataView = new MspDataView(byteArray.buffer);
 
         const vtxTypeIndex = dataView.readU8();
         const vtxDeviceStatusClass = this._getDeviceStatusClass(vtxTypeIndex);
