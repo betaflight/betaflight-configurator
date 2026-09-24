@@ -400,9 +400,6 @@
     "sensorConfigSaved": {
         "message": "Sensor konfiguratsiyasi saqlandi"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Sensor konfiguratsiyasini saqlab bo‘lmadi"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnitometr"
     },
@@ -867,12 +864,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Ishlatilayotgan ilova versiyasi ($1) $2 proshivkasini qo‘llab-quvvatlamaydi<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>motor chiqish protokoli tanlanmagan<\/strong>.<br>Iltimos, '$t(tabMotorTesting.message)' bo‘limidagi '$t(configurationEscFeatures.message)' da ESC'laringizga mos motor chiqish protokolini tanlang.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>akselerometr yoqilgan, ammo u kalibrlanmagan<\/strong>.<br>Agar akselerometrdan foydalanishni rejalashtirsangiz, '$t(tabSetup.message)' bo‘limidagi '$t(initialSetupButtonCalibrateAccel.message)' bo‘yicha ko‘rsatmalarga amal qiling. Agar akselerometrni talab qiladigan biror funksiya (avto tekislash rejimlari, GPS qutqaruv va h.k.) yoqilgan bo‘lsa, akselerometr kalibrlanmaguncha uchar qurilmani ishga tushirish o‘chiriladi.<br>Agar akselerometrdan foydalanishni rejalashtirmasangiz, uni '$t(tabConfiguration.message)' bo‘limidagi '$t(configurationSystem.message)' da o‘chirib qo‘yishingiz tavsiya etiladi."
     },
     "infoVersionOs": {
         "message": "Operatsion tizim: <strong>{{operatingSystem}}<\/strong>",
@@ -2207,15 +2198,6 @@
     },
     "gpsSerialPortSaveFailed": {
         "message": "GPS ketma-ket portini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
-    },
-    "gpsCanDevice": {
-        "message": "CAN shinasi"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "DroneCAN modullari ulangan CAN shinasi. Bu DroneCAN-ga tegishli, shuning uchun uni o'zgartirish nafaqat GPS, balki har bir DroneCAN qurilmasini harakatga keltiradi. Uni o'zgartirish qayta ishga tushirishni talab qiladi."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN shinasini o'rnatib bo'lmadi, shuning uchun hech narsa saqlanmadi."
     },
     "configurationGPSAutoBaud": {
         "message": "Avto boud"
@@ -7671,9 +7653,6 @@
     "osdWarningTextOverCap": {
         "message": "Batareya sig‘imdan oshgan",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Sarflangan mAh sozlangan sig‘im chegarasidan oshganda ogohlantiradi"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",

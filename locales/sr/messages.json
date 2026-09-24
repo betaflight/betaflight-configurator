@@ -73,6 +73,10 @@
         "message": "Prekini vezu (ručno)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Prekini vezu ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Prekini vezu (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -102,6 +106,10 @@
     "portsSelectPermissionDFU": {
         "message": "--- Ne mogu da pronađem svoj DFU uređaj ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "bluetoothConnected": {
         "message": "Povezano sa Bluetooth uređajem: $1"
@@ -268,6 +276,10 @@
     "language_default": {
         "message": "Podrazumevano sistemski"
     },
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "Nije pronađen <br>dataflash čip",
         "description": "Text of the dataflash image in the header of the page."
@@ -396,9 +408,6 @@
     "sensorConfigSaved": {
         "message": "Konfiguracija senzora sačuvana"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Čuvanje konfiguracije senzora nije uspelo"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnetometar"
     },
@@ -446,7 +455,7 @@
         "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
     "autotuneImportTitle": {
-        "message": "Blackbox analiza cvrkuta"
+        "message": "Blackbox CHIRP analiza"
     },
     "autotuneImportButton": {
         "message": "Uvezi Blackbox log"
@@ -458,13 +467,52 @@
         "message": "Odabir fajla..."
     },
     "autotuneAnalyzing": {
-        "message": "Analiziranje podataka cvrkuta..."
+        "message": "Analiziranje CHIRP podataka..."
     },
     "autotuneBandwidth": {
         "message": "Propusni opseg"
     },
+    "autotuneCrossover": {
+        "message": "Presek pojačanja"
+    },
     "autotunePhaseMargin": {
         "message": "Fazna margina"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Granica preseka"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Najveća fazna margina"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Predviđena najveća osetlj."
+    },
+    "autotuneLoopDelay": {
+        "message": "Kašnjenje petlje"
+    },
+    "autotuneTargetMargin": {
+        "message": "Cilj podešavanja"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Agresivno"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normalno"
+    },
+    "autotuneMarginConservative": {
+        "message": "Konzervativno"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: ova letelica ne može da dostigne $2° fazne margine (njena granica je oko $3), pa se pojačanje zadržava umesto da se nagađa. Izaberite niži cilj ili dodajte D da biste podigli granicu."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: merenje traži promenu pojačanja od $2×, a jedan prolaz je ograničen na $3×. Prikazana granica preseka nije dostignuta — primenite, odletite još jedan CHIRP i ponovite."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: pojačanje ovde određuje najveća osetljivost, a ne fazna margina. Petlja iznad preseka prolazi blizu −1, pa preporuka staje pre ciljne margine."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: nijedno pojačanje u jednom prolazu ne zadržava najveću osetljivost unutar granice robusnosti. Predložena vrednost je najbolja dostupna, a ne bezbedna — uzmite je kao polaznu tačku i ponovite merenje."
     },
     "autotuneResonantPeak": {
         "message": "Rezonantni vrh"
@@ -825,12 +873,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Verzija programa koju koristite ($3) ne podržava firmver $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>nije izabran protokol za izlaz motora<\/strong>.<br>Molimo Vas da izaberete protokol za izlaz motora odgovarajući za Vaše ESC-ove u '$t(configurationEscFeatures.message)' na kartici '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>akcelerometar je uključen, ali nije kalibrisan<\/strong>.<br>Ako planirate da koristite akcelerometar, molimo Vas da pratite uputstva za '$t(initialSetupButtonCalibrateAccel.message)' na kartici '$t(tabSetup.message)'. Ako je bilo koja funkcija koja zahteva akcelerometar (modovi automatskog nivelisanja, GPS rescue, ...) uključena, armovanje letelice će biti isključeno dok se akcelerometar ne kalibriše.<br>Ako ne planirate da koristite akcelerometar, preporučuje se da ga isključite u '$t(configurationSystem.message)' na kartici '$t(tabConfiguration.message)'."
-    },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -964,6 +1006,14 @@
         "message": "Trajanje veze:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Prikaži detalje stanja",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Sakrij detalje stanja",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_connect_message": {
         "message": "Koristite karticu za flešovanje firmvera za pristup DFU uređajima"
     },
@@ -989,13 +1039,13 @@
         "message": "Hardver"
     },
     "defaultHardwareText": {
-        "message": "Aplikacija podržava sav hardver koji može da pokrene Betaflight. Pogledajte karticu Flešovanje firmvera za kompletnu listu hardvera.<br \/><br \/>Korisni alatke i drajveri za hardver:<ul><li>Za stariji hardver koji koristi CP210x USB na serijski čip, najnovije <b>CP210x drajvere<\/b> možete preuzeti <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><li>Najnoviji <b>Zadig<\/b> za instalaciju USB drajvera na Windows-u možete preuzeti <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> možete preuzeti <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><\/ul>"
+        "message": "Aplikacija podržava sav hardver koji može da pokrene Betaflight. Pogledajte karticu Upis firmvera za kompletnu listu hardvera.<br \/><br \/>Korisni alatke i drajveri za hardver:<ul><li>Za stariji hardver koji koristi CP210x USB na serijski čip, najnovije <b>CP210x drajvere<\/b> možete preuzeti <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><li>Najnoviji <b>Zadig<\/b> za instalaciju USB drajvera na Windows-u možete preuzeti <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> možete preuzeti <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">ovde<\/a><\/li><\/ul>"
     },
     "defaultSoftwareHead": {
         "message": "Softver"
     },
     "defaultSoftwareText": {
-        "message": "Naš Blackbox pregledač dnevnika je ugrađen u ovu aplikaciju. Otvorite karticu <strong>Blackbox Viewer<\/strong> za analizu Vaših dnevnika letenja.<br \/><br \/>Naša kolekcija <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skripti<\/a> je dostupna na GitHub-u.<br \/><br \/>Naš <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">izvorni kod<\/a> za firmver i ovu aplikaciju možete preuzeti sa GitHub-a."
+        "message": "Naš Blackbox pregledač dnevnika je ugrađen u ovu aplikaciju. Otvorite karticu <strong>Blackbox pregledač<\/strong> za analizu Vaših dnevnika letenja.<br \/><br \/>Naša kolekcija <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua skripti<\/a> je dostupna na GitHub-u.<br \/><br \/>Naš <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">izvorni kod<\/a> za firmver i ovu aplikaciju možete preuzeti sa GitHub-a."
     },
     "defaultContributingHead": {
         "message": "Doprinos zajednici"
@@ -1512,6 +1562,10 @@
     "initialSetupSettingsRestored": {
         "message": "Podešavanja su vraćena na <strong>fabrička<\/strong>"
     },
+    "initialSetupEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "initialSetupNetworkInfo": {
         "message": "Mrežne informacije"
     },
@@ -1633,6 +1687,10 @@
     },
     "featureAIRMODE": {
         "message": "Trajno uključi Airmode"
+    },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (npr. ugrađeni Rx)"
@@ -1768,6 +1826,10 @@
     "configurationOpticalflowHelp": {
         "message": "Uključuje optički senzor kretanja."
     },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
         "message": "Board and Sensor Alignment"
     },
@@ -1902,6 +1964,42 @@
     },
     "boardAlignmentWizard-Confirmed": {
         "message": "Zabeleženo"
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorGyroToUse": {
         "message": "Žiroskop i akcelerometar"
@@ -2157,15 +2255,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "Serijski port za GPS nije mogao da se postavi, pa ništa nije sačuvano."
     },
-    "gpsCanDevice": {
-        "message": "CAN magistrala"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "CAN magistrala na koju su povezani DroneCAN moduli. Ona pripada celom DroneCAN sistemu, pa njena promena pomera svaki DroneCAN uređaj, ne samo GPS. Promena zahteva restart."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN magistrala nije mogla da se postavi, pa ništa nije sačuvano."
-    },
     "configurationGPSAutoBaud": {
         "message": "Automatska brzina prenosa"
     },
@@ -2219,6 +2308,10 @@
     "configurationSaved": {
         "message": "Podešavanja sačuvana"
     },
+    "configurationEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationButtonSave": {
         "message": "Sačuvaj i restartuj"
     },
@@ -2263,6 +2356,102 @@
     },
     "portsReadOnlyHelp": {
         "message": "<strong>Napomena:<\/strong> ovaj firmver dodeljuje serijske portove na sopstvenoj kartici svake funkcije, tako da je ovaj prikaz samo za čitanje. Prikazuje koji port trenutno koristi svaka funkcija; promenite dodelu na kartici koja sadrži tu funkciju."
+    },
+    "portsTilesHelp": {
+        "message": "Ovaj firmver dodeljuje serijske portove na kartici svake pojedinačne funkcije. Svako polje ispod prikazuje šta je povezano na pločicu i kojoj funkciji svaki port trenutno služi."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Ovaj firmver još ne prijavljuje spisak svojih periferija."
+    },
+    "portsSectionSerial": {
+        "message": "Serijski portovi"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Senzori"
+    },
+    "portsTileUnassigned": {
+        "message": "Nedodeljen"
+    },
+    "portsTileConfigure": {
+        "message": "Podesi"
+    },
+    "portsTileCanNode": {
+        "message": "Čvor"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Port je aktivan za ovu funkciju"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Dodeljen ali nije aktivan — izgubio je sukob oko porta ili se čeka ponovno pokretanje"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Neaktivan — uključite funkciju SOFTSERIAL na kartici Konfiguracija"
+    },
+    "portsInactiveNoPins": {
+        "message": "Neaktivan — ovom portu nisu dodeljeni pinovi"
+    },
+    "portsInactiveReason": {
+        "message": "Neaktivan — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "neaktivan"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Serijski prijemnik"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox snimanje"
+    },
+    "portsClaimEscSensor": {
+        "message": "Telemetrija regulatora"
+    },
+    "portsClaimRcdevice": {
+        "message": "Kamera (RunCam uređaj)"
+    },
+    "portsClaimGimbal": {
+        "message": "Gimbal"
+    },
+    "portsClaimVtx": {
+        "message": "Video-predajnik"
+    },
+    "portsClaimRangefinder": {
+        "message": "Merač visine"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Optički senzor kretanja"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD prilagođeni tekst"
+    },
+    "portsClaimTelemetry": {
+        "message": "Telemetrija"
+    },
+    "portsSensorGyro": {
+        "message": "Žiroskop"
+    },
+    "portsSensorAcc": {
+        "message": "Akcelerometar"
+    },
+    "portsSensorBaro": {
+        "message": "Barometar"
+    },
+    "portsSensorMag": {
+        "message": "Magnetometar"
+    },
+    "portsSensorNotDetected": {
+        "message": "Podešen ali nije otkriven"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Nadogradnja firmvera je <span class=\"message-negative\">obavezna<\/span>. Konfiguracija serijskih portova za firmver &lt; 1.8.0 nije podržana."
@@ -2777,6 +2966,10 @@
     "pidTuningDataRefreshed": {
         "message": "PID podaci su <strong>osveženi<\/strong>"
     },
+    "pidTuningEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "tuningHelp": {
         "message": "<b>Saveti za podešavanje<\/b><br \/><span class=\"message-negative\">VAŽNO:<\/span> Važno je proveriti temperaturu motora tokom prvih letova. Što je vrednost filtera veća, letelica može bolje leteti, ali ćete takođe uneti više šuma u motore. <br>Fabrička vrednost od 100Hz je optimalna, ali za bučnije sisteme možete pokušati sa smanjenjem Dterm filtera na 50Hz i eventualno žiroskopskog filtera."
     },
@@ -2921,6 +3114,10 @@
     },
     "receiverDataRefreshed": {
         "message": "Podaci o podešavanju komandi su <strong>osveženi<\/strong>"
+    },
+    "receiverEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Pregled"
@@ -3351,6 +3548,10 @@
     "adjustmentsSave": {
         "message": "Sačuvaj"
     },
+    "adjustmentsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "adjustmentsShowAll": {
         "message": "Prikaži sve slotove"
     },
@@ -3405,6 +3606,10 @@
     },
     "servosReverse": {
         "message": "Obrnuto"
+    },
+    "servosEepromSave": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "Opšte"
@@ -3703,13 +3908,13 @@
         "message": "Da li ste sigurni da želite da obrišete ovu tačku puta?"
     },
     "flightPlanDeleteWaypointTitle": {
-        "message": "Obriši tačku rute"
+        "message": "Obriši tačku puta"
     },
     "flightPlanDeleteWaypointConfirm": {
-        "message": "Da li ste sigurni da želite da obrišete ovu tačku rute? Ova radnja se ne može opozvati."
+        "message": "Da li ste sigurni da želite da obrišete ovu tačku puta? Ova radnja se ne može opozvati."
     },
     "flightPlanConfirmClear": {
-        "message": "Da li ste sigurni da želite da obrišete sve tačke rute? Ova radnja se ne može opozvati."
+        "message": "Da li ste sigurni da želite da obrišete sve tačke puta? Ova radnja se ne može opozvati."
     },
     "flightPlanClearTitle": {
         "message": "Obriši plan leta"
@@ -3739,7 +3944,7 @@
         "message": "Maks. visina"
     },
     "flightPlanNoWaypointsForProfile": {
-        "message": "Dodajte tačke rute da biste videli profil visine"
+        "message": "Dodajte tačke puta da biste videli profil visine"
     },
     "flightPlanGroundElev": {
         "message": "Visina terena"
@@ -3836,6 +4041,10 @@
     },
     "motorsResetMaximum": {
         "message": "Poništi najveću zabeleženu vrednost"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "akcelerometar"
@@ -4021,6 +4230,9 @@
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
+    "sensorsPitotSelect": {
+        "message": "Pito"
+    },
     "sensorsDebugSelect": {
         "message": "Debug"
     },
@@ -4041,6 +4253,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "Vazdušna brzina - cm\/s"
     },
     "sensorsDebugTitle": {
         "message": "Debug"
@@ -5549,6 +5764,10 @@
         "message": "Tip",
         "description": "Iterm Relax Type selection"
     },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
     },
@@ -6211,6 +6430,12 @@
         "message": "HD",
         "description": "Option for the video format in the OSD"
     },
+    "osdProtocol": {
+        "message": "OSD protokol"
+    },
+    "osdProtocolHelp": {
+        "message": "Protokol kojim se iscrtava OSD. MAX7456 i FrSky OSD upravljaju analognim čipom ili modulom; MSP šalje OSD preko UART-a ispod, kako to očekuju DJI, HDZero i Walksnail naočare."
+    },
     "osdSerialPort": {
         "message": "Serijski port za OSD"
     },
@@ -6313,6 +6538,9 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Slanje nije uspelo"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Sačuvaj i restartuj"
     },
     "osdSetupSave": {
         "message": "Sačuvaj"
@@ -7516,9 +7744,6 @@
         "message": "Baterija preko kapaciteta",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
-    "osdWarningOverCap": {
-        "message": "Upozorava kada potrošeni mAh premaši konfigurisano ograničenje kapaciteta"
-    },
     "osdWarningTextRSNR": {
         "message": "RSNR",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -7593,12 +7818,15 @@
     "osdButtonSaved": {
         "message": "Sačuvano"
     },
+    "osdPitotAirSpeed": {
+        "message": "Vazdušna brzina"
+    },
     "vtxHelp": {
         "message": "Ovde možete konfigurisati vrednosti za Vaš Video predajnik (VTX). Možete pregledati i promeniti vrednosti prenosa, uključujući VTX tabele, ako flight kontroler i VTX to podržavaju.<br>Da biste podesili Vaš VTX, koristite sledeće korake:<br>1. Idite na <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">ovu<\/a> stranicu;<br>2. Pronađite odgovarajuću VTX konfiguracionu fajl za Vašu zemlju i Vaš VTX model i preuzmite je;<br>3. Kliknite na '$t(vtxButtonLoadFile.message)' ispod, izaberite VTX konfiguracionu fajl, učitajte je;<br>4. Proverite da li su podešavanja tačna;<br>5. Kliknite na '$t(vtxButtonSave.message)' da biste sačuvali VTX podešavanja na flight kontroleru.<br>6. Opciono kliknite na '$t(vtxButtonSaveLua.message)' da biste sačuvali lua konfiguracionu fajl koju možete koristiti sa betaflight lua skriptama (Više pogledajte <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">ovde<\/a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Pažnja:<\/span> Vaš VTX nije konfigurisan ili nije podržan. Stoga ne možete menjati VTX vrednosti odavde. Ovo će biti moguće samo ako je flight kontroler povezan sa VTX-om koristeći neki protokol kao što su Tramp ili SmartAudio i ako je ispravno konfigurisan na kartici $t(tabPorts.message) ako je potrebno.",
+        "message": "<span class=\"message-negative\">Pažnja:<\/span> Nijedan video-predajnik se još ne javlja. Izaberite protokol koji video-predajnik koristi i UART na koji je povezan, pa sačuvajte; preostala podešavanja se pojavljuju kada uređaj odgovori.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -7741,6 +7969,9 @@
         "message": "Frekvencija na koju se prelazi kada je pit mod uključen.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxDeviceSetup": {
+        "message": "VTX uređaj"
+    },
     "vtxProtocol": {
         "message": "Protokol"
     },
@@ -7752,6 +7983,9 @@
     },
     "vtxSerialPortHelp": {
         "message": "UART na kom radi upravljački protokol VTX-a. Od API-ja 1.49 zadaje se na samom VTX-u; kartica Ports ga samo prikazuje."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "MSP video-predajnik odgovara na istoj MSP vezi preko koje se iscrtavaju naočare, pa prati OSD serijski port sa kartice OSD i ovde se ne može podesiti."
     },
     "vtxLowPowerDisarm": {
         "message": "Mala snaga dok je razoružan",
@@ -7946,6 +8180,9 @@
     },
     "configurationBaroHardware": {
         "message": "Barometar"
+    },
+    "configurationPitot": {
+        "message": "Pito"
     },
     "configurationMagHardware": {
         "message": "Magnetometar (ako je podržan)"
@@ -8381,7 +8618,7 @@
         "message": "Uključi tamnu temu"
     },
     "colorTheme": {
-        "message": "Tema boja",
+        "message": "Boja teme",
         "description": "Color theme settings"
     },
     "colorThemeYellow": {
@@ -8937,6 +9174,10 @@
     "osdTextElementLidar": {
         "message": "Sonar",
         "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     },
     "osdTextElementCustomSerialText": {
         "message": "Sopstveni tekst sa serijskog porta",

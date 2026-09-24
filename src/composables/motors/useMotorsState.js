@@ -52,6 +52,7 @@ export function useMotorsState() {
             motor_pwm_rate: fcStore.pidAdvancedConfig.motor_pwm_rate,
             motorIdle: fcStore.pidAdvancedConfig.motorIdle,
             idleMinRpm: fcStore.advancedTuning.idleMinRpm,
+            motor_kv: fcStore.motorConfig.motor_kv,
         };
 
         // Store previous values for comparison

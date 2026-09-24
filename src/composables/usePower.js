@@ -6,11 +6,11 @@ import { mspHelper } from "../js/msp/MSPHelper";
 import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
-import MSPCodes from "../js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
 import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
-import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { isMspCancelled } from "../js/msp/mspErrors";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 
@@ -167,7 +167,7 @@ export function usePower() {
 
         await MSP.promise(
             MSPCodes.MSP2_GET_TEXT,
-            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME),
         );
 
         activeBatteryProfile.value = FC.CONFIG.batteryProfile;
@@ -543,7 +543,7 @@ export function usePower() {
             FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
             await MSP.promise(
                 MSPCodes.MSP2_SET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME),
             );
         }
 

@@ -1,7 +1,7 @@
 import GUI from "./gui.js";
-import CONFIGURATOR from "./data_storage.js";
+import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial.js";
-import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors.js";
+import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 
 const MSP = {
     symbols: {

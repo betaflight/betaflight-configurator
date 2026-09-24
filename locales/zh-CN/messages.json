@@ -1,6 +1,6 @@
 {
     "yes": {
-        "message": "是\n",
+        "message": "是",
         "description": "General Yes message to be used across the application"
     },
     "no": {
@@ -375,9 +375,6 @@
     },
     "sensorConfigSaved": {
         "message": "传感器设置已保存"
-    },
-    "sensorConfigSaveFailed": {
-        "message": "保存传感器设置失败"
     },
     "sensorConfigMagnetometer": {
         "message": "磁力计"
@@ -805,12 +802,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>当前应用版本（$1）不支持该固件 $2<\/strong><\/span>。<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>尚未选择任何电机输出协议<\/strong>。<br>请在「$t(tabMotorTesting.message)」选项页内的「$t(configurationEscFeatures.message)」中选择与您的电调适配的电机输出协议。<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度计已启用但尚未校准<\/strong>。<br>如果您准备使用加速度计，请按照「$t(tabSetup.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果您不打算使用加速度计，建议您在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
-    },
     "infoVersionOs": {
         "message": "操作系统：<strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -969,7 +960,7 @@
         "message": "硬件"
     },
     "defaultHardwareText": {
-        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li>下载。最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><li><b>下载。ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a><\/li><\/ul>下载"
+        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。请检查固件烧写器标签以获取完整的硬件列表。<br \/><br \/>有用的硬件工具\/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器<\/b> 可以从 <a href=\"https:\/\/www.silabs.com\/software-and-tools\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><li>最新的 <b>Zadig<\/b> Windows USB 驱动安装程序可以从 <a href=\"https:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><li><b>ImpulseRC Driver Fixer<\/b> 可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a>。<\/li><\/ul>"
     },
     "defaultSoftwareHead": {
         "message": "软件"
@@ -7422,9 +7413,6 @@
     "osdWarningTextOverCap": {
         "message": "过放的电池容量",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "当已消耗的毫安数超过配置的容量极限时发出警告"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",

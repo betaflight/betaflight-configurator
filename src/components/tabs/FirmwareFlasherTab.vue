@@ -144,7 +144,7 @@ import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/uti
 import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
-import { ispConnected } from "../../js/utils/connection.js";
+import { ispConnected } from "../../js/utils/connection";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
@@ -957,6 +957,7 @@ export default defineComponent({
                     state.filename,
                     $t("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
                     `.${fileType.toLowerCase()}`,
+                    "firmware-file",
                 );
                 if (!file) {
                     return false;
@@ -1636,11 +1637,11 @@ export default defineComponent({
             state.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile($t("fileSystemPickerFirmwareFiles"), [
-                    ".hex",
-                    ".uf2",
-                    ".bin",
-                ]);
+                const file = await FileSystem.pickOpenFile(
+                    $t("fileSystemPickerFirmwareFiles"),
+                    [".hex", ".uf2", ".bin"],
+                    "firmware-file",
+                );
 
                 if (!file) {
                     enableLoadRemoteFileButton(true);
@@ -2348,7 +2349,7 @@ export default defineComponent({
         width: 1.5rem;
         aspect-ratio: 1;
         content: "";
-        mask: url(../images/corner.svg);
+        mask: url(../../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
         inset-inline-start: -1.5rem;

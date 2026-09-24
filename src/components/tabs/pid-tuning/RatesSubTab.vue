@@ -313,7 +313,7 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import RateCurve from "@/js/RateCurve";
+import RateCurve, { axisRateCurveParams } from "@/js/RateCurve";
 import Model from "@/js/model";
 import { degToRad } from "@/js/utils/common";
 import semver from "semver";
@@ -385,6 +385,10 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
+                    // Only a user-initiated type change resets the rates to that type's defaults.
+                    // A type change coming from MSP (profile switch, reconnect) must keep the
+                    // values the FC just sent us.
+                    setDefaultsForRatesType(value);
                 },
                 cancel: () => {
                     dialog.close();
@@ -759,14 +763,14 @@ const expoLimits = computed(() => {
 function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
     // Use provided deadband or fall back to generic deadband
     const db = deadband === undefined ? FC.RC_DEADBAND_CONFIG?.deadband || 0 : deadband;
-    const maxAngularVel = rateCurve.getMaxAngularVel(
+    const maxAngularVel = rateCurve.getMaxAngularVel({
         rate,
         rcRate,
         rcExpo,
-        true, // superexpo
-        db,
+        superExpoActive: true,
+        deadband: db,
         limit,
-    );
+    });
     return Math.round(maxAngularVel);
 }
 
@@ -793,30 +797,9 @@ function drawRateCurves() {
 
     // Calculate max angular velocity using scaled values
     const maxAngularVels = [
-        rateCurve.getMaxAngularVel(
-            rates.roll_rate,
-            rates.rc_rate,
-            rates.rc_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.roll_rate_limit,
-        ),
-        rateCurve.getMaxAngularVel(
-            rates.pitch_rate,
-            rates.rc_rate_pitch,
-            rates.rc_pitch_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.pitch_rate_limit,
-        ),
-        rateCurve.getMaxAngularVel(
-            rates.yaw_rate,
-            rates.rc_rate_yaw,
-            rates.rc_yaw_expo,
-            rates.superexpo,
-            rates.yawDeadband,
-            rates.yaw_rate_limit,
-        ),
+        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll")),
+        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch")),
+        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "yaw")),
     ];
     const maxAngularVel = rateCurve.setMaxAngularVel(Math.max(...maxAngularVels));
 
@@ -831,48 +814,21 @@ function drawRateCurves() {
     ctx.save();
     ctx.strokeStyle = "#ff0000";
     ctx.translate(0, 0);
-    rateCurve.draw(
-        rates.roll_rate,
-        rates.rc_rate,
-        rates.rc_expo,
-        rates.superexpo,
-        rates.deadband,
-        rates.roll_rate_limit,
-        maxAngularVel,
-        ctx,
-    );
+    rateCurve.draw(axisRateCurveParams(rates, "roll"), maxAngularVel, ctx);
     ctx.restore();
 
     // Draw Pitch curve (green)
     ctx.save();
     ctx.strokeStyle = "#00ff00";
     ctx.translate(0, -4);
-    rateCurve.draw(
-        rates.pitch_rate,
-        rates.rc_rate_pitch,
-        rates.rc_pitch_expo,
-        rates.superexpo,
-        rates.deadband,
-        rates.pitch_rate_limit,
-        maxAngularVel,
-        ctx,
-    );
+    rateCurve.draw(axisRateCurveParams(rates, "pitch"), maxAngularVel, ctx);
     ctx.restore();
 
     // Draw Yaw curve (blue)
     ctx.save();
     ctx.strokeStyle = "#0000ff";
     ctx.translate(0, 4);
-    rateCurve.draw(
-        rates.yaw_rate,
-        rates.rc_rate_yaw,
-        rates.rc_yaw_expo,
-        rates.superexpo,
-        rates.yawDeadband,
-        rates.yaw_rate_limit,
-        maxAngularVel,
-        ctx,
-    );
+    rateCurve.draw(axisRateCurveParams(rates, "yaw"), maxAngularVel, ctx);
     ctx.restore();
 
     // Update layer1 overlays immediately and in nextTick
@@ -920,30 +876,9 @@ function updateRatesLabels() {
 
     // Calculate max angular velocities
     const maxAngularVels = {
-        roll: rateCurve.getMaxAngularVel(
-            rates.roll_rate,
-            rates.rc_rate,
-            rates.rc_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.roll_rate_limit,
-        ),
-        pitch: rateCurve.getMaxAngularVel(
-            rates.pitch_rate,
-            rates.rc_rate_pitch,
-            rates.rc_pitch_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.pitch_rate_limit,
-        ),
-        yaw: rateCurve.getMaxAngularVel(
-            rates.yaw_rate,
-            rates.rc_rate_yaw,
-            rates.rc_yaw_expo,
-            rates.superexpo,
-            rates.yawDeadband,
-            rates.yaw_rate_limit,
-        ),
+        roll: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll")),
+        pitch: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch")),
+        yaw: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "yaw")),
     };
 
     const maxRate = Math.max(maxAngularVels.roll, maxAngularVels.pitch, maxAngularVels.yaw);
@@ -1051,12 +986,7 @@ function updateRatesLabels() {
         // Calculate current stick angular velocities
         const currentRollRate = rateCurve.drawStickPosition(
             FC.RC.channels[0],
-            rates.roll_rate,
-            rates.rc_rate,
-            rates.rc_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.roll_rate_limit,
+            axisRateCurveParams(rates, "roll"),
             maxRateRounded,
             ctx,
             "#FF8080",
@@ -1064,12 +994,7 @@ function updateRatesLabels() {
 
         const currentPitchRate = rateCurve.drawStickPosition(
             FC.RC.channels[1],
-            rates.pitch_rate,
-            rates.rc_rate_pitch,
-            rates.rc_pitch_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.pitch_rate_limit,
+            axisRateCurveParams(rates, "pitch"),
             maxRateRounded,
             ctx,
             "#80FF80",
@@ -1077,12 +1002,7 @@ function updateRatesLabels() {
 
         const currentYawRate = rateCurve.drawStickPosition(
             FC.RC.channels[2],
-            rates.yaw_rate,
-            rates.rc_rate_yaw,
-            rates.rc_yaw_expo,
-            rates.superexpo,
-            rates.yawDeadband,
-            rates.yaw_rate_limit,
+            axisRateCurveParams(rates, "yaw"),
             maxRateRounded,
             ctx,
             "#8080FF",
@@ -1264,22 +1184,8 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
 
         // Draw angle sensitivity ranges
         const angleLimit = FC.ADVANCED_TUNING?.levelAngleLimit || 60;
-        const maxAngVelRoll = rateCurve.getMaxAngularVel(
-            rates.roll_rate,
-            rates.rc_rate,
-            rates.rc_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.roll_rate_limit,
-        );
-        const maxAngVelPitch = rateCurve.getMaxAngularVel(
-            rates.pitch_rate,
-            rates.rc_rate_pitch,
-            rates.rc_pitch_expo,
-            rates.superexpo,
-            rates.deadband,
-            rates.pitch_rate_limit,
-        );
+        const maxAngVelRoll = rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll"));
+        const maxAngVelPitch = rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch"));
 
         const rcRate = rates.rc_rate;
         const rcRatePitch = rates.rc_rate_pitch;
@@ -1620,40 +1526,13 @@ function renderModel(timestamp) {
         const rates = getCurrentRatesSnapshot();
 
         const roll =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[0],
-                rates.roll_rate,
-                rates.rc_rate,
-                rates.rc_expo,
-                rates.superexpo,
-                rates.deadband,
-                rates.roll_rate_limit,
-            );
+            (delta / 1000) * rateCurve.rcCommandRawToDegreesPerSecond(channels[0], axisRateCurveParams(rates, "roll"));
 
         const pitch =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[1],
-                rates.pitch_rate,
-                rates.rc_rate_pitch,
-                rates.rc_pitch_expo,
-                rates.superexpo,
-                rates.deadband,
-                rates.pitch_rate_limit,
-            );
+            (delta / 1000) * rateCurve.rcCommandRawToDegreesPerSecond(channels[1], axisRateCurveParams(rates, "pitch"));
 
         const yaw =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                channels[2],
-                rates.yaw_rate,
-                rates.rc_rate_yaw,
-                rates.rc_yaw_expo,
-                rates.superexpo,
-                rates.yawDeadband,
-                rates.yaw_rate_limit,
-            );
+            (delta / 1000) * rateCurve.rcCommandRawToDegreesPerSecond(channels[2], axisRateCurveParams(rates, "yaw"));
 
         model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
@@ -1662,33 +1541,36 @@ function renderModel(timestamp) {
     animationFrameId = requestAnimationFrame(renderModel);
 }
 
-// Watch for changes and redraw
-// Watch for changes and redraw
-watch([ratesType, rcRate, rcRatePitch, rcRateYaw, rollRate, pitchRate, yawRate, rcExpo, rcPitchExpo, rcYawExpo], () => {
-    nextTick(() => {
-        drawRateCurves();
-    });
-});
+// Watch for changes and redraw. The rate limits are read straight off FC.RC_TUNING because
+// they have no scaled computed, but they feed both the curve and the max-velocity labels.
+watch(
+    [
+        ratesType,
+        rcRate,
+        rcRatePitch,
+        rcRateYaw,
+        rollRate,
+        pitchRate,
+        yawRate,
+        rcExpo,
+        rcPitchExpo,
+        rcYawExpo,
+        () => FC.RC_TUNING.roll_rate_limit,
+        () => FC.RC_TUNING.pitch_rate_limit,
+        () => FC.RC_TUNING.yaw_rate_limit,
+    ],
+    () => {
+        nextTick(() => {
+            drawRateCurves();
+        });
+    },
+);
 
 watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimitPercent], () => {
     nextTick(() => {
         drawThrottleCurve();
     });
 });
-
-// Watch for FC.RC_TUNING to become available (initial data load)
-watch(
-    () => FC.RC_TUNING,
-    (newValue) => {
-        if (newValue && newValue.rates_type !== undefined) {
-            nextTick(() => {
-                drawRateCurves();
-                drawThrottleCurve();
-            });
-        }
-    },
-    { immediate: true },
-);
 
 onMounted(() => {
     // Initialize 3D Model for rates preview
@@ -1829,13 +1711,6 @@ const setDefaultsForRatesType = (type) => {
             break;
     }
 };
-
-// Watch for rates type changes and set default values (only on an actual user change, not on initial mount)
-watch(ratesType, (newType, oldType) => {
-    if (oldType !== undefined && newType !== oldType) {
-        setDefaultsForRatesType(newType);
-    }
-});
 
 onUnmounted(() => {
     // Stop rendering immediately

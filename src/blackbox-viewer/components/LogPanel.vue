@@ -13,14 +13,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useLogStore } from "../stores/log.js";
 import { useGraphStore } from "../stores/graph.js";
 
 const logStore = useLogStore();
 const graphStore = useGraphStore();
 
-function onLogIndexChange(val) {
+function onLogIndexChange(val: number) {
     graphStore.selectLogIndex?.(val);
 }
 </script>

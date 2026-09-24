@@ -59,7 +59,7 @@
             <div class="text-sm font-semibold mt-4 mb-2">{{ $t("portsSectionDronecan") }}</div>
             <div class="grid grid-cols-[repeat(auto-fill,minmax(15rem,22rem))] gap-3">
                 <UiBox
-                    v-for="node in canNodes"
+                    v-for="node in canNodeTiles"
                     :key="node.nodeId"
                     :type="healthBoxType(node.health)"
                     :title="`${$t('portsTileCanNode')} ${node.nodeId}`"
@@ -75,8 +75,15 @@
                             >{{ node.health }}<template v-if="node.mode">, {{ node.mode }}</template></span
                         >
                     </div>
-                    <div v-if="node.sensors.length" class="text-xs text-dimmed">
-                        {{ node.sensors.map((sensor) => sensor.toUpperCase()).join(", ") }}
+                    <div v-for="sensor in node.sensorLinks" :key="sensor.name" class="flex items-center gap-2 text-xs">
+                        <span class="flex-1 text-dimmed">{{ sensor.name }}</span>
+                        <UButton
+                            v-if="sensor.tab"
+                            variant="link"
+                            size="xs"
+                            :label="$t('portsTileConfigure')"
+                            @click="switchTab(sensor.tab)"
+                        />
                     </div>
                 </UiBox>
             </div>
@@ -105,7 +112,7 @@
     </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "../../../js/gui";
@@ -119,6 +126,25 @@ const { t } = useTranslation();
 
 const { isLoading, supported, serialPorts, canNodes, sensors, load } = usePeripherals();
 
+// Which tab configures each DroneCAN sensor, so a node tile can link to it the same way a serial
+// port tile links to the tab that claims it. This tab stays read-only: the link only navigates.
+const DRONECAN_SENSOR_TABS: Record<string, string | undefined> = {
+    GPS: "gps",
+    MAG: "sensors",
+    AIRSPEED: "sensors",
+    ESC: "motors",
+};
+
+const canNodeTiles = computed(() =>
+    canNodes.value.map((node) => ({
+        ...node,
+        sensorLinks: node.sensors.map((sensor) => {
+            const name = sensor.toUpperCase();
+            return { name, tab: DRONECAN_SENSOR_TABS[name] ?? null };
+        }),
+    })),
+);
+
 const serialTiles = computed(() =>
     serialPorts.value.map((port) => ({
         ...port,
@@ -127,7 +153,7 @@ const serialTiles = computed(() =>
     })),
 );
 
-const sensorClassLabels = {
+const sensorClassLabels: Record<string, string | undefined> = {
     gyro: "portsSensorGyro",
     acc: "portsSensorAcc",
     baro: "portsSensorBaro",
@@ -142,7 +168,7 @@ const sensorTiles = computed(() =>
     }),
 );
 
-function healthBoxType(health) {
+function healthBoxType(health: string) {
     if (health === "OK") {
         return "neutral";
     }

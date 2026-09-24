@@ -138,7 +138,7 @@
                                     :model-value="(field.smoothing ?? 0) / 100"
                                     :step="1"
                                     :min="0"
-                                    :max="100"
+                                    :max="10000"
                                     :format-options="noGrouping"
                                     size="xs"
                                     orientation="vertical"
@@ -290,6 +290,7 @@ import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
 import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step.js";
+import { debugContextFromSysConfig } from "../../js/utils/debugModes";
 
 const open = defineModel("open", { type: Boolean, default: false });
 
@@ -497,11 +498,9 @@ function convertToConfig() {
 }
 
 function friendlyName(fieldName) {
-    const debugMode = props.flightLog?.getSysConfig()?.debug_mode;
     return FlightLogFieldPresenter.fieldNameToFriendly(
         fieldName,
-        debugMode,
-        props.flightLog?.getSysConfig()?.apiVersion,
+        debugContextFromSysConfig(props.flightLog?.getSysConfig()),
     );
 }
 

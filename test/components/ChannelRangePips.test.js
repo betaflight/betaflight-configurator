@@ -9,7 +9,7 @@ describe("ChannelRangePips", () => {
             props: { pips: [CHANNEL_MIN, 1500, CHANNEL_MAX] },
         });
 
-        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.left);
+        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.insetInlineStart);
 
         expect(positions).toEqual(["0%", "50%", "100%"]);
     });
@@ -19,7 +19,7 @@ describe("ChannelRangePips", () => {
             props: { pips: [CHANNEL_MIN - 500, CHANNEL_MAX + 500] },
         });
 
-        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.left);
+        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.insetInlineStart);
 
         expect(positions).toEqual(["0%", "100%"]);
     });
@@ -33,7 +33,7 @@ describe("ChannelRangePips", () => {
         });
 
         expect(aux.find(".pip-marker").exists()).toBe(true);
-        expect(aux.find(".pip-marker").element.style.left).toBe("25%");
+        expect(aux.find(".pip-marker").element.style.insetInlineStart).toBe("25%");
         expect(adjustments.find(".pip-marker").exists()).toBe(false);
     });
 

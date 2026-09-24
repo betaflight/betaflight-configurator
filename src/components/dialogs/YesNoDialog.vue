@@ -1,19 +1,18 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
-            <!-- Note: 'text' is rendered using v-html to support bolding/links in i18n messages.
-                 Ensure that only trusted content (e.g. from i18n) is passed to this prop. -->
             <div v-html="text"></div>
         </template>
         <template #footer>
             <div class="flex gap-2 justify-end w-full">
-                <UButton color="neutral" variant="soft" @click="$emit('no')">{{ noText }}</UButton>
-                <UButton @click="$emit('yes')">{{ yesText }}</UButton>
+                <UButton
+                    :color="destructive ? 'primary' : 'neutral'"
+                    :variant="destructive ? 'solid' : 'soft'"
+                    @click="$emit('no')"
+                >
+                    {{ noText }}
+                </UButton>
+                <UButton :color="destructive ? 'error' : 'primary'" @click="$emit('yes')">{{ yesText }}</UButton>
             </div>
         </template>
     </UModal>
@@ -27,6 +26,7 @@ defineProps({
     text: String,
     yesText: String,
     noText: String,
+    destructive: Boolean,
 });
 
 defineEmits(["yes", "no"]);

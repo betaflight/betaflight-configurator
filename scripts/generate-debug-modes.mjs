@@ -95,7 +95,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { format, resolveConfig } from "prettier";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { debugUnitSymbols } from "../src/js/debug_units.ts";
+import { DEBUG_VALUE_COUNT, isDebugAnnotationError, parseDebugAnnotation } from "../src/js/debug_annotation.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -129,7 +129,6 @@ const FIRMWARE_SOURCE_DIR = "src/main";
 // What opens a firmware field annotation, used both by the scanner below and
 // by the provenance query, which needs it before the scanner is defined.
 const ANNOTATION_MARKER = "//!<";
-const DEBUG_VALUE_COUNT = 8;
 
 /*
  * Stands in for one `debugModeNames[]` entry while the shape around the entries
@@ -137,9 +136,6 @@ const DEBUG_VALUE_COUNT = 8;
  * anything but exactly one of these holds something the parse cannot read.
  */
 const ENTRY_MARKER = "\u0000";
-
-// A debug field is an int16_t, so a flag list cannot name more bits than it holds.
-const DEBUG_VALUE_BITS = 15;
 
 // Prettier's default printWidth, which this repository keeps, so the generated
 // files come out already formatted.
@@ -774,210 +770,12 @@ function resolveFieldIndex(rawIndex, constants) {
 // `//!<` field annotations
 //
 // Firmware records what each debug[n] means in a trailing comment on the call
-// site; `src/main/build/debug.h` carries the grammar. This is the only place the
-// meaning of a field exists, so a malformed annotation is a hard error rather
-// than a field silently dropped back onto the hand-written table.
+// site; `src/main/build/debug.h` carries the grammar. The grammar itself lives
+// in `src/js/debug_annotation.ts`, shared with the blackbox log reader so the
+// two cannot drift; what stays here is finding an annotation in C source.
 // ---------------------------------------------------------------------------
 
-/*
- * Each of these is greedy and unambiguous, with the trimming and the structure of
- * an index spec left to the code below: a pattern that could match the same input
- * two ways is a pattern that backtracks (SonarCloud javascript:S8786).
- */
 const ANNOTATION = /\/\/!<(.*)$/;
-const INDEX_SPEC = /^\[index:([\d \t,.]+)\][ \t]*/;
-const SHAPE_SPEC = /\[([A-Za-z]+):([^[\]]+)\]$/;
-const EXPANSION = /\{([^{}]*)\}/;
-const BRACE = /[{}]/g;
-const INDEX_BOUND = /^\d+$/;
-const UNIT_FACTOR = /^-?\d+(?:\.\d+)?/;
-const UNKEYED_BRACKET = /\[[^[\]]+\]$/;
-
-// The accepted vocabulary is the shared unit table's keys, not a second copy of
-// it: a firmware unit with no display rule then fails generation here rather than
-// reaching the app as a bare number.
-const UNIT_SYMBOLS = new Set(debugUnitSymbols());
-
-// "0..2" -> [0, 1, 2], "0,2,4" -> [0, 2, 4], "3" -> [3]
-function parseIndexSpec(spec) {
-    const indices = [];
-
-    for (const part of spec.split(",")) {
-        const bounds = part.split("..").map((bound) => bound.trim());
-        if (bounds.length > 2 || !bounds.every((bound) => INDEX_BOUND.test(bound))) {
-            return undefined;
-        }
-        const [from, to] = bounds.length === 2 ? bounds.map(Number) : [Number(bounds[0]), Number(bounds[0])];
-        if (to >= DEBUG_VALUE_COUNT || to < from) {
-            return undefined;
-        }
-        for (let index = from; index <= to; index++) {
-            indices.push(index);
-        }
-    }
-
-    return indices.length === 0 ? undefined : [...new Set(indices)];
-}
-
-// "0.1deg" -> { unit: "deg", scale: 0.1 }, "%" -> { unit: "%", scale: 1 },
-// "0.001" -> { unit: null, scale: 0.001 }, "-1dBm" -> { unit: "dBm", scale: -1 }
-/*
- * One shape bracket, dispatched on its key. Every bracket in an annotation names
- * itself, so an unknown key is refused rather than guessed at - a field whose
- * shape the tooling cannot read would be shown as a bare integer, silently.
- */
-function parseShapeSpec(key, raw) {
-    switch (key) {
-        case "unit":
-            return parseUnitShape(raw);
-        case "enum":
-            return parseEnumShape(raw);
-        case "flags":
-            return parseFlagsShape(raw);
-        default:
-            return undefined;
-    }
-}
-
-function parseEnumShape(raw) {
-    const type = raw.trim().match(/^[A-Za-z_]\w*$/);
-    // The field holds an enumerator, not a quantity: no unit scales it, and the
-    // names come from the firmware's own enum.
-    return type === null ? undefined : { unit: null, scale: 1, enumTag: type[0] };
-}
-
-function parseFlagsShape(raw) {
-    // Bit flags, lowest bit first. The names are in the annotation rather than
-    // read from the source because flag bits are `#define`s rather than an enum.
-    // `-` marks a bit the field does not use.
-    const flags = raw.split("|").map((name) => name.trim());
-    if (flags.length > DEBUG_VALUE_BITS || flags.includes("")) {
-        return undefined;
-    }
-    return { unit: null, scale: 1, flags: flags.map((name) => (name === "-" ? null : name)) };
-}
-
-function parseUnitShape(raw) {
-    const trimmed = raw.trim();
-    const factor = UNIT_FACTOR.exec(trimmed)?.[0];
-    const symbol = trimmed.slice(factor?.length ?? 0).trim();
-    const unit = symbol === "" ? null : symbol;
-
-    if (unit !== null && !UNIT_SYMBOLS.has(unit)) {
-        return undefined;
-    }
-    if (factor === undefined && unit === null) {
-        return undefined;
-    }
-    const scale = factor === undefined ? 1 : Number(factor);
-    if (scale === 0 || !Number.isFinite(scale)) {
-        // Zero would read every sample as zero and its inverse would diverge;
-        // a factor with enough digits to overflow a double converts to Infinity,
-        // which would carry through to every value the app displays.
-        return undefined;
-    }
-
-    return { unit, scale };
-}
-
-/*
- * One annotation as {indices, labels, unit, scale}, with the `{a|b|c}` group
- * expanded into one label per index. `indices` is null when the annotation gave
- * no index spec, in which case the caller uses the index from the call itself.
- */
-/*
- * The `{a|b|c}` group of a label expanded into one label per index, or an error
- * when the group and the indices do not describe the same thing.
- */
-function expandLabel(label, indices) {
-    const expansion = label.match(EXPANSION);
-    // Every brace has to belong to that one group, or the expansion would leave
-    // some of them in the label it produces.
-    const braces = label.match(BRACE)?.length ?? 0;
-    if (braces !== (expansion ? 2 : 0)) {
-        return { error: `label "${label}" needs exactly one {a|b|c} group or none, with both braces` };
-    }
-    if (!expansion) {
-        return { labels: null };
-    }
-
-    const alternatives = expansion[1].split("|");
-    if (alternatives.some((alternative) => alternative.trim() === "")) {
-        return { error: `"{${expansion[1]}}" has an empty alternative` };
-    }
-    if (indices === null || alternatives.length !== indices.length) {
-        const covered = indices === null ? "one implicit index" : `${indices.length} indices`;
-        return {
-            error: `"{${expansion[1]}}" spells out ${alternatives.length} labels, but the annotation covers ${covered}`,
-        };
-    }
-
-    return {
-        labels: alternatives.map((alternative) =>
-            label
-                .replace(EXPANSION, alternative)
-                .replaceAll(/[ \t]+/g, " ")
-                .trim(),
-        ),
-    };
-}
-
-/* The index spec, if the annotation opens with one, and the text after it. */
-function takeIndexSpec(raw) {
-    const match = raw.match(INDEX_SPEC);
-    if (!match) {
-        return { indices: null, rest: raw };
-    }
-    const indices = parseIndexSpec(match[1]);
-    if (indices === undefined) {
-        return { error: `index spec "${match[1]}" is not 0..${DEBUG_VALUE_COUNT - 1}` };
-    }
-    return { indices, rest: raw.slice(match[0].length) };
-}
-
-/* The shape bracket, if the annotation ends with one, and the text before it. */
-function takeShapeSpec(raw) {
-    const match = raw.match(SHAPE_SPEC);
-    if (!match) {
-        // Before the shapes were keyed, a bare `[us]` meant a unit. Refusing it
-        // keeps one way to write an annotation, rather than two that drift.
-        return UNKEYED_BRACKET.test(raw)
-            ? { error: `bracket "${UNKEYED_BRACKET.exec(raw)[0]}" needs a key: unit:, enum: or flags:` }
-            : { shape: { unit: null, scale: 1 }, rest: raw };
-    }
-
-    const shape = parseShapeSpec(match[1], match[2]);
-    if (shape === undefined) {
-        return { error: `"[${match[1]}:${match[2]}]" is not a unit, enum or flags shape` };
-    }
-    return { shape, rest: raw.slice(0, raw.length - match[0].length) };
-}
-
-function parseAnnotation(raw) {
-    const index = takeIndexSpec(raw);
-    if (index.error) {
-        return index;
-    }
-    const shape = takeShapeSpec(index.rest);
-    if (shape.error) {
-        return shape;
-    }
-
-    const label = shape.rest.trim();
-    if (label === "") {
-        return { error: "no label" };
-    }
-    if (/[[\]]/.test(label)) {
-        return { error: `label "${label}" contains a bracket, which delimits the index spec and the shape` };
-    }
-
-    const expanded = expandLabel(label, index.indices);
-    if (expanded.error) {
-        return expanded;
-    }
-
-    return { indices: index.indices, labels: expanded.labels, label, ...shape.shape };
-}
 
 // ---------------------------------------------------------------------------
 // per-file scan
@@ -1072,8 +870,8 @@ function annotationAt(text, resolved, where, readScope, problems) {
         return null;
     }
 
-    const annotation = parseAnnotation(annotationText);
-    if (annotation.error) {
+    const annotation = parseDebugAnnotation(annotationText);
+    if (isDebugAnnotationError(annotation)) {
         problems.push(`${where}: ${annotation.error}`);
         return null;
     }
@@ -1249,6 +1047,7 @@ function foldCall(call, usage, fields) {
                 variant.label === label &&
                 variant.unit === annotation.unit &&
                 variant.scale === annotation.scale &&
+                variant.enumTag === annotation.enumTag &&
                 sameValues(variant.values, annotation.values) &&
                 sameValues(variant.flags, annotation.flags),
         );
@@ -1259,6 +1058,7 @@ function foldCall(call, usage, fields) {
                 label,
                 unit: annotation.unit,
                 scale: annotation.scale,
+                enumTag: annotation.enumTag,
                 values: annotation.values,
                 flags: annotation.flags,
                 sites: [call.where],
@@ -1576,11 +1376,12 @@ function renderFrozenList(indent, key, items) {
  * One field of the shipped table, as Prettier would print it: on one line when it
  * fits, one property per line when it does not.
  */
-function renderFieldEntry(index, { label, unit, scale, values, flags }) {
+function renderFieldEntry(index, { label, unit, scale, enumTag, values, flags }) {
     const unitSource = unit === null ? "null" : quote(unit);
     const listSource = (name, list) =>
         list === undefined ? "" : `, ${name}: Object.freeze([${list.map((entry) => quote(entry)).join(", ")}])`;
-    const tail = `${listSource("values", values)}${listSource("flags", flags)}`;
+    const tagSource = enumTag === undefined ? "" : `, enumTag: ${quote(enumTag)}`;
+    const tail = `${tagSource}${listSource("values", values)}${listSource("flags", flags)}`;
     const single = `            ${index}: Object.freeze({ label: ${quote(label)}, unit: ${unitSource}, scale: ${scale}${tail} }),`;
     if (single.length <= PRINT_WIDTH) {
         return [single];
@@ -1591,6 +1392,7 @@ function renderFieldEntry(index, { label, unit, scale, values, flags }) {
         `                label: ${quote(label)},`,
         `                unit: ${unitSource},`,
         `                scale: ${scale},`,
+        ...(enumTag === undefined ? [] : [`                enumTag: ${quote(enumTag)},`]),
         ...(values === undefined ? [] : renderFrozenList("                ", "values", values)),
         ...(flags === undefined ? [] : renderFrozenList("                ", "flags", flags)),
         "            }),",
@@ -1638,6 +1440,8 @@ function fieldsModuleHeader(repoUrl, annotated) {
         "    unit: string | null;",
         "    /** What one LSB is worth in `unit`. */",
         "    scale: number;",
+        "    /** Names the firmware enum an enumerator field holds, for `FIRMWARE_DEBUG_ENUMS`. */",
+        "    enumTag?: string;",
         "    /** Enumerator names indexed by value, null where the enum leaves a gap. */",
         "    values?: readonly (string | null)[];",
         "    /** Bit-flag names, lowest bit first, null for a bit the field does not use. */",
@@ -1672,8 +1476,9 @@ function fieldsModuleHeader(repoUrl, annotated) {
  * be labelled from one of them, so both names are kept and the unit dropped - it
  * belongs to one meaning only and would scale the other's samples wrongly - and
  * the disagreement is pushed onto `conflicts` for the caller to report. Identical
- * names are collapsed: the LIDAR-TF and UPT1 drivers both call debug[0] the
- * distance, in cm and in mm, and "Distance / Distance" names nothing.
+ * names are collapsed: two variants can disagree on the unit alone - as the
+ * LIDAR-TF and UPT1 drivers did, before betaflight/betaflight#15727 gave UPT1 a
+ * mode of its own - and "Distance / Distance" names nothing.
  */
 function renderModeFields(mode, fields, apiVersion, conflicts) {
     const lines = [`        ${propertyKey(mode)}: Object.freeze({`];
@@ -1686,6 +1491,7 @@ function renderModeFields(mode, fields, apiVersion, conflicts) {
                 label: [...new Set(variants.map((variant) => variant.label))].join(" / "),
                 unit: agreed ? variants[0].unit : null,
                 scale: agreed ? variants[0].scale : 1,
+                enumTag: agreed ? variants[0].enumTag : undefined,
                 values: agreed ? variants[0].values : undefined,
                 flags: agreed ? variants[0].flags : undefined,
             }),
@@ -1716,6 +1522,7 @@ function renderConflict(conflict) {
             `                scale: ${variant.scale},`,
             // Two meanings can differ by their enum or their flag names alone, so
             // both are part of what distinguishes them and belong in the report.
+            ...(variant.enumTag === undefined ? [] : [`                enumTag: ${quote(variant.enumTag)},`]),
             ...(variant.values === undefined ? [] : renderFrozenList("                ", "values", variant.values)),
             ...(variant.flags === undefined ? [] : renderFrozenList("                ", "flags", variant.flags)),
             ...renderFrozenList("                ", "sites", variant.sites),
@@ -1724,6 +1531,45 @@ function renderConflict(conflict) {
     }
 
     return [...lines, "        ]),", "    }),"];
+}
+
+/*
+ * Every `[enum:...]` type the annotations name, as tag -> enumerator names.
+ *
+ * A log's `H debug_field[n]:` header names the firmware enum by type and stops
+ * there - the names are not in the annotation and the firmware does not log
+ * them - so the reader needs them keyed by type rather than buried per mode and
+ * index. An enum seen through several headers can come back with different
+ * lengths; the longest is the one that names every enumerator.
+ */
+function collectEnums(fields) {
+    const enums = new Map();
+
+    for (const modeFields of Object.values(fields)) {
+        for (const variants of Object.values(modeFields)) {
+            for (const { enumTag, values } of variants) {
+                if (enumTag === undefined || values === undefined) {
+                    continue;
+                }
+                const known = enums.get(enumTag);
+                if (known === undefined || values.length > known.length) {
+                    enums.set(enumTag, values);
+                }
+            }
+        }
+    }
+
+    return enums;
+}
+
+function renderEnums(apiVersion, enums) {
+    const lines = [`    ${quote(apiVersion)}: Object.freeze({`];
+
+    for (const tag of [...enums.keys()].sort((left, right) => left.localeCompare(right))) {
+        lines.push(...renderFrozenList("        ", propertyKey(tag), enums.get(tag)));
+    }
+
+    return [...lines, "    }),"];
 }
 
 /*
@@ -1754,14 +1600,44 @@ function renderFieldsModule({ repoUrl, versions }) {
         " * field cannot be labelled: both meanings are kept here so the app can say so",
         " * rather than pick one. Every entry is a firmware bug.",
         " */",
-        "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([",
     );
 
-    for (const conflict of conflicts) {
-        lines.push(...renderConflict(conflict));
+    // Prettier keeps an empty array on the declaration's line, and the file has
+    // to match what it would write.
+    if (conflicts.length === 0) {
+        lines.push(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([]);",
+        );
+    } else {
+        lines.push(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([",
+        );
+        for (const conflict of conflicts) {
+            lines.push(...renderConflict(conflict));
+        }
+        lines.push("]);");
     }
 
-    lines.push("]);", "");
+    lines.push(
+        "",
+        "/**",
+        " * Enumerator names of every firmware enum a `[enum:...]` annotation names,",
+        " * keyed by API version and then by the enum's own type name.",
+        " *",
+        " * A blackbox log names the type and nothing more, so this is the only way to",
+        " * turn a logged enumerator into a name. A type absent here is one this version",
+        " * of the app has never seen: the reader shows the raw value and says so, rather",
+        " * than borrowing names from a different enum.",
+        " */",
+        "export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<string, readonly (string | null)[]>>>> =",
+        "    Object.freeze({",
+    );
+
+    for (const version of annotated) {
+        lines.push(...renderEnums(version.apiVersion, collectEnums(version.fields)).map((line) => `    ${line}`));
+    }
+
+    lines.push("    });", "");
 
     return { source: lines.join("\n"), conflicts };
 }
@@ -2131,11 +2007,12 @@ if (invokedDirectly) {
 
 export {
     maskNonCode,
-    parseAnnotation,
     parseDebugModeNames,
     parseEnumBlock,
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderFieldsModule,
+    renderModeFields,
     resolveFieldIndex,
 };

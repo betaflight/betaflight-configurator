@@ -1,10 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
             <div class="flex flex-col gap-4">
                 <p>{{ message }}</p>
@@ -20,13 +15,15 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import type { PropType } from "vue";
+import type { RadioGroupItem } from "@nuxt/ui";
 
 defineProps({
     title: String,
     message: String,
-    options: Array,
+    options: Array as PropType<RadioGroupItem[]>,
     cancelText: {
         type: String,
         default: "Cancel",

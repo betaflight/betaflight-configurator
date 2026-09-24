@@ -1,5 +1,5 @@
 import BuildApi from "../BuildApi.js";
-import { get as getConfig, set as setConfig } from "../ConfigStorage.js";
+import { get as getConfig, set as setConfig } from "../ConfigStorage";
 
 const STORAGE_KEY = "device-filters";
 
@@ -78,6 +78,7 @@ const defaultVendorIdNames = {
     12619: "Geehy Semiconductor",
     11914: "Raspberry Pi Pico",
     14743: "X-CORE LABS",
+    10473: "GDMicroelectronics",
 };
 
 export const bluetoothDevices = [...defaultBluetoothDevices];

@@ -9,7 +9,7 @@
  */
 
 import { ComplexFFT } from "./fft.js";
-import { clamp } from "../utils/common.js";
+import { clamp } from "../utils/common";
 
 // ---------------------------------------------------------------------------
 // Windowing

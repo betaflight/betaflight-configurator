@@ -73,6 +73,10 @@
         "message": "გათიშვა(ხელით)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "გათიშვა ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "გათიშვა(ბლუთუზ)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -400,9 +404,6 @@
     "sensorConfigSaved": {
         "message": "სენსორის კონფიგურაცია შენახულია"
     },
-    "sensorConfigSaveFailed": {
-        "message": "სენსორის კონფიგურაციის შენახვა ვერ მოხერხდა"
-    },
     "sensorConfigMagnetometer": {
         "message": "მაგნიტომეტრი"
     },
@@ -467,8 +468,47 @@
     "autotuneBandwidth": {
         "message": "გამტარობის ზოლი"
     },
+    "autotuneCrossover": {
+        "message": "გაძლიერების კროსოვერი"
+    },
     "autotunePhaseMargin": {
         "message": "ფაზის მარჟა"
+    },
+    "autotuneTargetCrossover": {
+        "message": "კროსოვერის ლიმიტი"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "მაქს. ფაზური მარაგი"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "პროგნოზ. პიკური მგრძნ."
+    },
+    "autotuneLoopDelay": {
+        "message": "მარყუჟის დაყოვნება"
+    },
+    "autotuneTargetMargin": {
+        "message": "ტიუნინგის მიზანი"
+    },
+    "autotuneMarginAggressive": {
+        "message": "აგრესიული"
+    },
+    "autotuneMarginNormal": {
+        "message": "ნორმალური"
+    },
+    "autotuneMarginConservative": {
+        "message": "კონსერვატიული"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: ეს აპარატი ვერ აღწევს $2° ფაზურ მარაგს (მისი ზღვარი დაახლოებით $3-ია), ამიტომ გაძლიერება უცვლელი რჩება და არ ხდება მისი გამოცნობა. აირჩიეთ უფრო დაბალი მიზანი, ან ზღვრის ასაწევად გაზარდეთ D."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: გაზომვა გაძლიერების $2×-ით ცვლილებას ითხოვს, მაგრამ ერთი გავლა $3×-ით არის შეზღუდული. ნაჩვენები კროსოვერის ლიმიტი ჯერ მიღწეული არ არის — გამოიყენეთ, შეასრულეთ კიდევ ერთი chirp ფრენა და გაიმეორეთ."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: აქ გაძლიერება პიკურმა მგრძნობელობამ განსაზღვრა და არა ფაზურმა მარაგმა. კროსოვერის ზემოთ მარყუჟი −1-თან ახლოს გადის, ამიტომ რეკომენდაცია მარაგის მიზნამდე ვერ აღწევს."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: ერთი გავლის ფარგლებში ვერც ერთი გაძლიერება ვერ ინარჩუნებს პიკურ მგრძნობელობას მდგრადობის ზღვარში. შემოთავაზებული მნიშვნელობა საუკეთესოა არსებულთაგან, მაგრამ უსაფრთხო არ არის — გამოიყენეთ საწყის წერტილად და ხელახლა გაზომეთ."
     },
     "autotuneResonantPeak": {
         "message": "რეზონანსული პიკი"
@@ -830,10 +870,10 @@
         "message": "<span class=\"message-negative\"><strong>აპლიკაციის გამოყენებულ ვერსიას ($1) არ აქვს პროპროგრამის მხარდაჭერა $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong> ძრავების მართვის პროტოკოლი არ არის არჩეული<\/strong>.<br> გთხოვთ აირჩიოთ ESC-ის შესაბამისი ძრავების მართვის პროტოკოლი$t(configurationEscFeatures.message)$t(tabMotorTesting.message) ჩანართში.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>ძრავის გამომავალი პროტოკოლი არჩეული არ არის<\/strong>.<br>გთხოვთ, '$t(tabMotorTesting.message)' ჩანართზე, '$t(configurationEscFeatures.message)'-ში აირჩიოთ თქვენი ESC-ებისთვის შესაფერისი ძრავის გამომავალი პროტოკოლი.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>აქსელომეტრი ჩართულია მაგრამ არ არის დაკალიბრირებული<strong>.<br>თუ თქვენ გეგმავთ რომ გამოიყენოთ აქსელომეტრი, გთხოვთ მიყვეთ ინსტრუქციას $t(initialSetupButtonCalibrateAccel.message) $t(tabSetup.message) ჩანართში. თუ რომელიმე ფუნქცია რომელიც მოითხოვს აქსელომეტრის ( ავტომატური სიმაღლის რეჟიმი, ჯპს დახმარება, ...) ჩართვას, ცადმფრენი არ ამოქმედდება სანამ აქსელომეტრი არ დაკალიბრდება <br> თუ არ გეგმავთ აქსელომეტრის გამოყენებას რეკომენდირებულია მისი გამორთვა $t(configurationSystem.message) -ში $t(tabConfiguration.message)\" ჩანართში."
+        "message": "<strong>აქსელერომეტრი ჩართულია, მაგრამ დაკალიბრებული არ არის<\/strong>.<br>თუ აქსელერომეტრის გამოყენებას გეგმავთ, მიჰყევით '$t(initialSetupButtonCalibrateAccel.message)'-ის ინსტრუქციებს '$t(tabSensorConfig.message)' ჩანართზე. თუ ჩართულია რომელიმე ფუნქცია, რომელსაც აქსელერომეტრი სჭირდება (ავტო-დონის რეჟიმები, GPS rescue, ...), აპარატის arming დაბლოკილი იქნება, სანამ აქსელერომეტრი არ დაკალიბრდება.<br>თუ აქსელერომეტრის გამოყენებას არ გეგმავთ, რეკომენდებულია მისი გამორთვა '$t(tabConfiguration.message)' ჩანართზე, '$t(configurationSystem.message)'-ში."
     },
     "infoVersionOs": {
         "message": "ოპერაციული სისტემა: <strong>{{operatingSystem}}<\/strong>",
@@ -967,6 +1007,14 @@
     "statusbar_connection_time": {
         "message": "კავშირი:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "სტატუსის დეტალების ჩვენება",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "სტატუსის დეტალების დამალვა",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
         "message": "გთხოვთ გამოიყენოთ პროგრამის გამშვები რომ მიიღოთ წვდომა DFU მოწყობილობებზე"
@@ -1992,6 +2040,9 @@
     "configurationThrottleMaximum": {
         "message": "მაქსიმალური გაზი (Maximum Throttle): ან მოტორების მაქსიმალური სიგნალი დაქოქილ მდგომარეობაში"
     },
+    "configurationMotorKv": {
+        "message": "ძრავის KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "მინიმალური ბრძანება (მოტორების სიგნალი დაუქოქავ მდგომარეობაში)"
     },
@@ -2161,15 +2212,6 @@
     "gpsSerialPortSaveFailed": {
         "message": "GPS-ის სერიული პორტის დაყენება ვერ მოხერხდა, ამიტომ არაფერი შენახულა."
     },
-    "gpsCanDevice": {
-        "message": "CAN Bus"
-    },
-    "gpsCanDeviceHelp": {
-        "message": "CAN Bus, რომელზეც მიერთებულია DroneCAN მოდულები. ეს ეკუთვნის DroneCAN-ს მთლიანობაში, ამიტომ მისი შეცვლა გადაიყვანს ყველა DroneCAN მოწყობილობას და არა მხოლოდ GPS-ს. მის შეცვლას გადატვირთვა სჭირდება."
-    },
-    "gpsCanDeviceSaveFailed": {
-        "message": "CAN Bus დაყენება ვერ მოხერხდა, ამიტომ არაფერი შენახულა."
-    },
     "configurationGPSAutoBaud": {
         "message": "ავტომატურად დაკავშირება"
     },
@@ -2223,6 +2265,9 @@
     "configurationSaved": {
         "message": "კონფიგურაცია შენახულია"
     },
+    "configurationSaveFailed": {
+        "message": "კონფიგურაციის შენახვა ვერ მოხერხდა"
+    },
     "configurationButtonSave": {
         "message": "შენახვა და გადატვირთვა"
     },
@@ -2267,6 +2312,105 @@
     },
     "portsReadOnlyHelp": {
         "message": "<strong>შენიშვნა:<\/strong> ეს მიკროპროგრამა სერიულ პორტებს თითოეული ფუნქციის საკუთარ ჩანართში ანიჭებს, ამიტომ ეს ხედი მხოლოდ წაკითხვადია. ის აჩვენებს, რომელ პორტს იყენებს თითოეული ფუნქცია ამჟამად; მინიჭების შესაცვლელად გადადით შესაბამისი ფუნქციის ჩანართზე."
+    },
+    "portsTilesHelp": {
+        "message": "ეს firmware სერიულ პორტებს თითოეული ფუნქციის საკუთარ ჩანართზე ანიჭებს. ქვემოთ თითოეული ფილა აჩვენებს, რა არის მიერთებული დაფაზე და ამჟამად რომელ ფუნქციას ემსახურება თითოეული პორტი."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "ეს firmware ჯერ არ გადმოსცემს ინფორმაციას თავისი პერიფერიული მოწყობილობების შესახებ."
+    },
+    "portsSectionSerial": {
+        "message": "სერიული პორტები"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "სენსორები"
+    },
+    "portsTileUnassigned": {
+        "message": "მიუნიჭებელი"
+    },
+    "portsTileConfigure": {
+        "message": "კონფიგურირება"
+    },
+    "portsTileCanNode": {
+        "message": "კვანძი"
+    },
+    "portsClaimActiveHelp": {
+        "message": "პორტი ამ ფუნქციისთვის აქტიურია"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "მინიჭებულია, მაგრამ აქტიური არ არის — პორტის კონფლიქტი წააგო, ან გადატვირთვაა საჭირო"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "არააქტიური — ჩართეთ SOFTSERIAL ფუნქცია კონფიგურაციის ჩანართზე"
+    },
+    "portsInactiveNoPins": {
+        "message": "არააქტიური — ამ პორტს პინები არ აქვს მინიჭებული"
+    },
+    "portsInactiveReason": {
+        "message": "არააქტიური — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "არააქტიური"
+    },
+    "portsPortFree": {
+        "message": "თავისუფალი"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "სერიული მიმღები"
+    },
+    "portsClaimBlackbox": {
+        "message": "Blackbox ჩაწერა"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC ტელემეტრია"
+    },
+    "portsClaimRcdevice": {
+        "message": "კამერა (RunCam მოწყობილობა)"
+    },
+    "portsClaimGimbal": {
+        "message": "გიმბალი"
+    },
+    "portsClaimVtx": {
+        "message": "ვიდეო გადამცემი"
+    },
+    "portsClaimRangefinder": {
+        "message": "მანძილმზომი"
+    },
+    "portsClaimOpticalflow": {
+        "message": "ოპტიკური ნაკადი"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD მორგებული ტექსტი"
+    },
+    "portsClaimTelemetry": {
+        "message": "ტელემეტრია"
+    },
+    "portsSensorGyro": {
+        "message": "გიროსკოპი"
+    },
+    "portsSensorAcc": {
+        "message": "აქსელერომეტრი"
+    },
+    "portsSensorBaro": {
+        "message": "ბარომეტრი"
+    },
+    "portsSensorMag": {
+        "message": "მაგნეტომეტრი"
+    },
+    "portsSensorNotDetected": {
+        "message": "კონფიგურირებულია, მაგრამ აღმოჩენილი არ არის"
     },
     "portsFirmwareUpgradeRequired": {
         "message": "პროგრამული უზრუნველყოფის განახლება <span class=\"message-negative\">საჭიროა<\/span>.  firmware &lt; 1.8.0-ის სერიული პორტის კონფიგურაციები არ არის მხარდაჭერილი."
@@ -4025,6 +4169,9 @@
     "sensorsSonarSelect": {
         "message": "სონარი"
     },
+    "sensorsPitotSelect": {
+        "message": "Pitot"
+    },
     "sensorsDebugSelect": {
         "message": "გასწორება"
     },
@@ -4045,6 +4192,9 @@
     },
     "sensorsSonarTitle": {
         "message": "სონარი - სმ"
+    },
+    "sensorsPitotTitle": {
+        "message": "ჰაერის სიჩქარე - სმ\/წმ"
     },
     "sensorsDebugTitle": {
         "message": "გასწორება"
@@ -6095,6 +6245,9 @@
     "powerBatteryCapacity": {
         "message": "მოცულობა (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "აქტიური ბატარეის პროფილის ტევადობა. Firmware ამ მნიშვნელობას იყენებს დარჩენილი mAh-ისა და OSD-ის ტევადობის გაფრთხილებებისთვის, როცა ბატარეის პროფილები ხელმისაწვდომია."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -7530,7 +7683,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "აფრთხილებს, როდესაც მოხმარებული mAh აჭარბებს კონფიგურირებულ სიმძლავრის ლიმიტს"
+        "message": "აფრთხილებს, როცა მოხმარებული mAh აღემატება აქტიური ბატარეის პროფილის ტევადობას, ან OSD-ის ძველი ტევადობის განგაშის მნიშვნელობას, როცა პროფილის ტევადობა მითითებული არ არის"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -7606,9 +7759,16 @@
     "osdButtonSaved": {
         "message": "შენახულია"
     },
+    "osdPitotAirSpeed": {
+        "message": "ჰაერის სიჩქარე"
+    },
     "vtxHelp": {
         "message": "აქ შეგიძლიათ დააკონფიგურიროთ თქვენი ვიდეო გადამცემის (VTX) პარამეტრები. თქვენ შეგიძლიათ ნახოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX Tables, თუ ფრენის კონტროლერს და VTX-ს აქვთ ამის მხარდაჭერა.<br>თქვენი VTX-ის გასამართად მიყევით შემდეგ ნაბიჯებს:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/VTX#vtx-tables\">ამ<\/a> გვერდზე;<br>2. იპოვეთ თქვენი ქვეყნისა და VTX მოდელისთვის შესაბამისი VTX კონფიგურაციის ფაილი და ჩამოტვირთეთ ის;<br>3. დააწკაპუნეთ ქვემოთ მოცემულ '$t(vtxButtonLoadFile.message)' ღილაკს, აირჩიეთ VTX კონფიგურაციის ფაილი და ჩატვირთეთ;<br>4. გადაამოწმეთ, რომ პარამეტრები სწორია;<br>5. დააწკაპუნეთ '$t(vtxButtonSave.message)'-ს, რათა შეინახოთ VTX-ის პარამეტრები საფრენ კონტროლერში.<br>6. სურვილისამებრ, შეგიძლიათ დააწკაპუნოთ '$t(vtxButtonSaveLua.message)'-ს, რათა შეინახოთ lua კონფიგურაციის ფაილი, რომელიც შეგიძლიათ გამოიყენოთ betaflight lua სკრიპტებთან ერთად (იხილეთ მეტი <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">აქ<\/a>)",
         "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">ყურადღება:<\/span> VTX ჯერ არ პასუხობს. ქვემოთ აირჩიეთ პროტოკოლი, რომლითაც VTX მუშაობს, და UART, რომელზეც ის არის მიერთებული, შემდეგ შეინახეთ; დანარჩენი პარამეტრები გამოჩნდება, როგორც კი მოწყობილობა უპასუხებს.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">ყურადღება:<\/span> თქვენ უნდა დააკონფიგურიროთ და შეინახოთ ჯერ VTX ცხრილი ბოლოში, სანამ გამოიყენებთ $t(vtxSelectedMode.message) ველებს.",
@@ -7749,6 +7909,9 @@
     "vtxPitModeFrequencyHelp": {
         "message": "სიხშირე, რომლის დროსაც Pit რეჟიმი იცვლება ჩართვისას.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX მოწყობილობა"
     },
     "vtxProtocol": {
         "message": "პროტოკოლი"
@@ -7958,6 +8121,9 @@
     },
     "configurationBaroHardware": {
         "message": "ბარომეტრი"
+    },
+    "configurationPitot": {
+        "message": "Pitot"
     },
     "configurationMagHardware": {
         "message": "მაგნიტომეტრი"
@@ -9955,5 +10121,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "ბოლოს განახლდა"
+    },
+    "pidTuningWingSettings": {
+        "message": "ფრთის პარამეტრები"
+    },
+    "pidTuningWingSterm": {
+        "message": "S წევრი"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "რეჟიმი"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "SPA რეჟიმი თითოეული ღერძისთვის"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "ცენტრი"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "RPY setpoint, რომელზეც PID-ები 50%-მდე მცირდება (setpoint PID attenuation)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "სიგანე"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "spa_center-ის გარშემო გლუვი გადასვლის სიგანე"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "OFF"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I FREEZE"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I FREEZE"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "სიჩქარის ტიპი"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "ჰაერის სიჩქარის შეფასების მოდელის ტიპი"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "ძირითადი"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "გაფართოებული"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "მრუდის ტიპი"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "ჰიპერბოლური, როგორც წესი, ფრთებისთვისაა. კლასიკური მულტიროტორებისთვისაა და სტანდარტულ TPA-ს იყენებს."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "კლასიკური"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "ჰიპერბოლური"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "სიჩქარის ძირითადი პარამეტრები"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "სიჩქარის გაფართოებული პარამეტრები"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "დაყოვნება"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "ჰაერის სიჩქარის შეფასების დაყოვნება throttle-ის მიმართ, მილიწამებში (დრო, რომელშიც ჰორიზონტალურ ფრენაში, სრულ throttle-ზე, მიიღწევა საბოლოო სიჩქარის 50%"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "გრავიტაცია"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "გრავიტაციის გავლენა ჰაერის სიჩქარის შეფასებაზე, პროცენტებში"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "პროპელერის ბიჯი"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "პროპელერის ბიჯი დიუმებში * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "აპარატის მასა"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "აპარატის მასა გრამებში"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Drag K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "აპარატის აეროდინამიკური წინაღობის კოეფიციენტი"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "ბიძგი"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "სტატიკური ბიძგი გრამებში"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "ბატარეის მაქს. ძაბვა"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "თეორიული მაქსიმალური ძაბვა *100. გამოიყენება throttle-ის ძაბვის მიხედვით მასშტაბირებისთვის ჰაერის სიჩქარის შეფასებისას"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "ძრავის KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "ძრავის KV. ეს მნიშვნელობა ძრავების ჩანართზე შეცვალეთ."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "ტანგაჟის წანაცვლება"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "ტანგაჟის წანაცვლება გრადუსებში*10, აპარატის სიჩქარის შესაფასებლად"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "ჰიპერბოლური მრუდის პარამეტრები"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Stall სიჩქარე, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "სიჩქარე, რომელზეც PID-ები მაქსიმუმს უნდა აღწევდეს (stall სიჩქარე), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "PID-ები stall სიჩქარეზე"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "PID-ების მამრავლი stall სიჩქარეზე"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "PID-ები სრულ სიჩქარეზე"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "PID-ების მამრავლი სრულ სიჩქარეზე"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "ექსპო"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "რამდენად სწრაფად იცვლება PID-ები სიჩქარის ზრდასთან ერთად"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "ჰიპერბოლური მრუდების გრაფიკი"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "სხვადასხვა პარამეტრები"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Yaw-ის ტიპი"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Yaw-ის ტიპი (საჭე ან დიფერენციალური ბიძგი)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "საჭე"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "დიფ. ბიძგი"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "ტანგაჟის წანაცვლება"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "ტანგაჟის წანაცვლება angle რეჟიმებისთვის, დეციგრადუსებში. დადებითი მნიშვნელობები ფრთას ქვემოთ ხრის"
     }
 }

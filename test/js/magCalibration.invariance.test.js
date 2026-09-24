@@ -165,10 +165,10 @@ describe("magCalibration invariance", () => {
             tiltResult.preset !== 9
                 ? ALIGNMENT_MATRICES[tiltResult.preset]
                 : eulerToMatrix(
-                    tiltResult.euler_zyx_deg.roll,
-                    tiltResult.euler_zyx_deg.pitch,
-                    tiltResult.euler_zyx_deg.yaw,
-                );
+                      tiltResult.euler_zyx_deg.roll,
+                      tiltResult.euler_zyx_deg.pitch,
+                      tiltResult.euler_zyx_deg.yaw,
+                  );
         const angleDeg = rotationAngleDeg(recoveredR, R_TRUE);
         expect(angleDeg).toBeLessThan(8);
     });

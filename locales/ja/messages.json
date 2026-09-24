@@ -396,9 +396,6 @@
     "sensorConfigSaved": {
         "message": "センサー設定を保存しました"
     },
-    "sensorConfigSaveFailed": {
-        "message": "センサー設定を保存できませんでした"
-    },
     "sensorConfigMagnetometer": {
         "message": "コンパス"
     },
@@ -824,12 +821,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($1) はファームウェア $2<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度センサーは有効になっていますが水平キャリブレーションされていません。<\/strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーの水平キャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -7450,9 +7441,6 @@
     "osdWarningTextOverCap": {
         "message": "バッテリー容量制限超過",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "消費されたmAhが設定された容量制限を超えると警告"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",

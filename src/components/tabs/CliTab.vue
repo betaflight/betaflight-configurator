@@ -124,7 +124,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import CliAutocompleteDropdown from "../cli/CliAutocompleteDropdown.vue";
@@ -145,7 +145,7 @@ export default defineComponent({
     setup() {
         const cli = useCli();
 
-        let snippetExecuteCallback = null;
+        let snippetExecuteCallback: (() => void) | null = null;
 
         const onBuildStart = () => {
             if (cli.commandInputRef.value) {
@@ -178,7 +178,7 @@ export default defineComponent({
                 TABS.cli = {};
             }
             TABS.cli.read = cli.read;
-            TABS.cli.cleanup = (callback) => {
+            TABS.cli.cleanup = (callback?: () => void) => {
                 // cli.cleanup() true => CLI exit rebooted the FC; skip the destination mount
                 // (reconnect lands on lastTab). Only mount when not rebooting.
                 if (!cli.cleanup() && callback) {
@@ -248,7 +248,7 @@ export default defineComponent({
             }
         };
 
-        const onAutocompleteSelect = (index) => {
+        const onAutocompleteSelect = (index: number) => {
             cli.autocomplete.selectItem(index);
             // Mouse click only applies the replacement, does not send the command.
             // Refocus the textarea so the user can continue typing.

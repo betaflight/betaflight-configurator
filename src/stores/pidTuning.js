@@ -33,7 +33,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         return positions;
     };
 
-    /** The editable set: the same five objects the tab writes back over MSP, plus the profile names. */
+    /** The editable set: the same six objects the tab writes back over MSP, plus the profile names. */
     const serializeEdits = () =>
         JSON.stringify({
             pids: FC.PIDS,
@@ -41,6 +41,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             rcTuning: FC.RC_TUNING,
             filterConfig: FC.FILTER_CONFIG,
             tuningSliders: sliderPositions(),
+            wingConfig: FC.WING_CONFIG,
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
             pidProfileName: FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] ?? "",

@@ -88,6 +88,23 @@
     "portsSelectManual": {
         "message": "Manuelt valg"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Kun netværksforbindelser",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Denne browser kan kun nå frem til en FC via netværket, såsom en Wi-Fi-bro, et ELRS-modul eller SITL. For at anvende USB eller Bluetooth, skal du bruge Chrome eller Edge, eller installere Betaflight App på dit skrivebord. Mangler her:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web seriel er ikke tilgængelig."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth er ikke tilgængelig."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB er ikke tilgængelig, så firmware DFU brændning er deaktiveret."
+    },
     "portsSelectNone": {
         "message": "Ingen tilgængelig forbindelse."
     },
@@ -416,9 +433,6 @@
     "sensorConfigSaved": {
         "message": "Sensor konfiguration gemt"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Kunne ikke gemme sensor konfiguration"
-    },
     "sensorConfigMagnetometer": {
         "message": "Kompas (hvis understøttet)"
     },
@@ -485,6 +499,27 @@
     },
     "autotunePhaseMargin": {
         "message": "Fasemargin"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Aggressiv"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Konservativ"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: denne FC kan ikke nå $2° fase margin (FC har en grænse omkring $3), så forstærkning fastholdes fremfor baseret på et gæt. Vælg et lavere mål, eller tilføj mere D for at hæve grænsen."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: målingen beder om en $2× forstærkning, men et enkelt gennemløb er begrænset til $3×. Den viste overkrydsningsgrænse er ikke nået - anvend, flyv og optag en anden CHRIP og gentag."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: følsomhed for spidser, ikke fase-margin, sæt forstærkningen her. Loop passerer tæt på −1 over crossover, så anbefalingen stopper kort før margin."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: Ingen forstærkning inden for et gennemløb holder følsomheds spidser indefor nederste grænse fdor orbusthed. Den foreslåede værdi er den bedst tilgængelige snarere end en sikker - behandl den som et udgangspunkt og re-foranstaltning."
     },
     "autotuneResonantPeak": {
         "message": "Resonans top"
@@ -846,10 +881,10 @@
         "message": "<span class=\"message-negative\"><strong>Din app med version ($1) understøtter ikke den anvendte firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>Der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>accelerometeret er aktiveret, men er ikke kalibreret<\/strong>.<br>Hvis du planlægger at bruge accelerometer, så følg venligst instruktionerne for '$t(initialSetupButtonCalibrateAccel.message)' på fanen 'Sensorer' . Hvis en funktion, der kræver accelerometeret (automatisk niveau, GPS redning, . .) aktiveres, vil motor aktivering ikke aktiveres, før accelerometeret er kalibreret.<br>Hvis du ikke bruger accelerometeret anbefales det, at du deaktiverer det i '$t(configurationSystem.message)' på fanen '$t(tabConfiguration.message)'."
+        "message": "<strong>accelerometeret er aktiveret, men er ikke kalibreret<\/strong>.<br>Hvis du planlægger at bruge accelerometer, så følg venligst instruktionerne for '$t(initialSetupButtonCalibrateAccel.message)' på fanen '$t(tabSensorConfig.message)'. Hvis en funktion, der kræver accelerometeret (automatisk niveau, GPS redning, . .) aktiveres, vil motor aktivering ikke aktiveres, før accelerometeret er kalibreret.<br>Hvis du ikke bruger accelerometeret anbefales det, at du deaktiverer det i '$t(configurationSystem.message)' på fanen '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -2064,6 +2099,9 @@
     "configurationThrottleMaximum": {
         "message": "Maksimal gas (højeste ESC-værdi, når aktiveret)"
     },
+    "configurationMotorKv": {
+        "message": "Motor KV"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimumskommando (ESC-værdi, når deaktiveret)"
     },
@@ -2227,13 +2265,23 @@
     "gpsSerialBaud": {
         "message": "Baud hastighed"
     },
+    "gpsSerialBaudHelp": {
+        "message": "Den hastighed, som GPS-modulet forventes at svare på. Hvis GPS enehd ikke svarer prøver Betaflight også andre hastigheder, så værdien er et udgangspunkt, ikke en fast indstilling."
+    },
     "gpsSerialPortSaveFailed": {
         "message": "Kunne ikke konfigurere seriel port for GPS, så intet blev gemt."
     },
-    "gpsCanDevice": {
+    "gpsProtocolUnknown": {
+        "message": "Ukendt ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
         "message": "CAN databus"
     },
-    "gpsCanDeviceSaveFailed": {
+    "dronecanCanDeviceHelp": {
+        "message": "CAN databus som DroneCAN moduler er forbundet til. Dette tilhører DroneCAN som helhed, så en ændring påvirker alle DroneCAN enheder, ikke bare GPS. Ændring kræver en genstart."
+    },
+    "dronecanSaveFailed": {
         "message": "Kunne ikke konfigurere CAN databus, så intet blev gemt."
     },
     "configurationGPSAutoBaud": {
@@ -2257,6 +2305,10 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som Hjem position. Hvis indstilling ikke er valgt, opdateres Hjem position, hver gang fartøj aktiveres.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSNotInBuild": {
+        "message": "GPS-understøttelse er ikke inkluderet i denne firmwarebygning. Genopbyg firmwaren med GPS tilvalgt, for at kunne konfigurere og bruge GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
     },
     "configurationSerialRX": {
         "message": "Protokol ved seriel konfiguration"
@@ -2284,6 +2336,9 @@
     },
     "configurationSaved": {
         "message": "Konfiguration gemt"
+    },
+    "configurationSaveFailed": {
+        "message": "Kunne ikke gemme sensor konfiguration"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -2331,6 +2386,12 @@
     "portsMSPHelp": {
         "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan risikere at skulle brænde firmware image igen og så måske slette din konfiguration af FC."
     },
+    "portsReadOnlyHelp": {
+        "message": "<strong>Bemærk:<\/strong> denne firmware tildeler serielle porte på Fane til en funktion, så visning her er kun til læsning. Det viser hvilken port hver funktion i øjeblikket bruger; Skal den serielle port ændres, skift på Fanen."
+    },
+    "portsTilesHelp": {
+        "message": "Denne firmware tildeler den serielle port på fanen for en funktion. Hver box nedenfor viser, hvilken funktion der er forbundet til hvilken port eller hvilken sensor som er aktiv."
+    },
     "portsPeripheralsUnsupported": {
         "message": "Denne firmware rapporterer endnu vedrørende periferi udstyr."
     },
@@ -2347,7 +2408,7 @@
         "message": "Ikke tildelt"
     },
     "portsTileConfigure": {
-        "message": "Konfigurer"
+        "message": "Konfigurere"
     },
     "portsClaimActiveHelp": {
         "message": "Porten er aktiv til denne funktion"
@@ -2366,6 +2427,9 @@
     },
     "portsPortInactive": {
         "message": "inaktiv"
+    },
+    "portsPortFree": {
+        "message": "fri"
     },
     "portsClaimMsp": {
         "message": "MSP"
@@ -2402,6 +2466,21 @@
     },
     "portsClaimTelemetry": {
         "message": "Telemetri"
+    },
+    "portsConflictTitle": {
+        "message": "Port er allerede i brug"
+    },
+    "portsConflictWarning": {
+        "message": "Du tildeler en seriel port som en anden funktion allerede bruger. Når du gemmer vil alle porte blive sat til deres standardindstillinger (ukonfigureret tilstand):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}<\/strong> bruges i øjeblikket af {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Vil du gemme alligevel?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Gem alligevel"
     },
     "portsSensorGyro": {
         "message": "Gyro"
@@ -4196,7 +4275,7 @@
         "message": "Pitot sensor"
     },
     "sensorsDebugSelect": {
-        "message": "Brugerstyret logning"
+        "message": "Brugerdefineret logning"
     },
     "sensorsGyroTitle": {
         "message": "Gyroskop - grad\/s"
@@ -6272,6 +6351,9 @@
     "powerBatteryCapacity": {
         "message": "Kapacitet (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Kapacitet for den aktive batteriprofil. Firmware bruger denne værdi til at advare om resterende mAh og angive kapacitet på OSD. Kræver at en batteriprofil er defiineret."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -6406,6 +6488,15 @@
     },
     "osdCustomTextSerialPort": {
         "message": "Seriel port til brugerdefineret tekst"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART som den brugerdefinerede port til OSD tekst er forbundet til."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Brugerdefineret tekst - Baud hastighed"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Baud rate for den brugerdefinerede port til OSD tekst."
     },
     "osdSetupUnitsTitle": {
         "message": "Enhed"
@@ -6876,11 +6967,11 @@
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
-        "message": "Brugerstyret logning",
+        "message": "Brugerdefineret logning",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
-        "message": "Brugerstyret logning til debug"
+        "message": "Brugerdefineret logning til debug"
     },
     "osdTextElementDebug2": {
         "message": "Debug2",
@@ -7133,6 +7224,14 @@
     },
     "osdDescElementLinkQuality": {
         "message": "Link kvalitet indikator baseret på procentdelen af modtagne ubeskadigede datapakker"
+    },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF tilstand: Link kvalitet",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Kun link kvalitet",
+        "description": "One of the variants of the Link Quality element of the OSD"
     },
     "osdTextElementFlightDist": {
         "message": "Tilbagelagt strækning i alt for alle flyvninger",
@@ -7690,7 +7789,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningOverCap": {
-        "message": "Advarer når den forbrugte mAh overskrider den konfigurerede kapacitet grænse"
+        "message": "Advarer når den forbrugte mAh overstiger kapacitet for den aktive batteriprofil,. Eller fortsat den oprindelige OSD kapacitet alarm, hvis der ikke er konfigureret en profil med kapacitet"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
@@ -7772,6 +7871,10 @@
     "vtxHelp": {
         "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/VTX-Tables\">VTX-tabeller<\/a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\">her<\/a>.)",
         "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">BEMÆRK:<\/span> VTX svarer ikke endnu. Vælg den rigtige VTX protokol og den UART som VTX er forbundet til, og tryk derefter gem; de resterende indstillinger vises, når enheden svarer.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
@@ -7927,6 +8030,9 @@
     },
     "vtxSerialPortHelp": {
         "message": "UART som VTX kontrol protokol er forbundet til. Indstilles selv af VTX fra API 1.49; fanen Porte viser kun for info."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "En MSP VTX anvender samme MSP link goggles anvender, så den følger seriel port for OSD på fanen OSD. Den vises kun som info."
     },
     "vtxLowPowerDisarm": {
         "message": "Lavt strømforbrug ved deaktivering",
@@ -8479,6 +8585,9 @@
     },
     "onboardLoggingSerialPort": {
         "message": "Seriel port"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART bruges når lognings enhed er via serial port. Indstilles selv af blackbox fra API 1.49; fanen Porte viser kun for info."
     },
     "onboardLoggingSerialBaud": {
         "message": "Seriel Baud hastighed"
@@ -10122,5 +10231,86 @@
     },
     "preflightNotamLastFetched": {
         "message": "Sidst hentet"
+    },
+    "pidTuningWingSettings": {
+        "message": "Vinge indstillinger"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Tilstand"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Bredde"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "FRA"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Hastighed type"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Lufthastighed estimerings type"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Grundlæggende"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Avanceret"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "Hyperbolsk er normalt til vinge fartøjer. Klassisk er til multirotor og anvender som standard TPA."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Klassisk"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Hyperbolsk"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Grundlæggende hastigheds konfiguration"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Avanceret hastigheds konfiguration"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Tyngdekraft"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Tyngdekrafts virkning på lufthastighed estimat i procent"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Masse af fartøj"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Masse af fartøj i gram"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Max batteri spænding"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Teoretisk maximal spænding *100. Bruges til gas skalering baseret på spænding til estimering af lufthastighed"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Motor KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "Motor KV. Værdien kan ændres på fanen Motor styring."
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Diverse indstillinger"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Sideror type"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Type af sideror (sideror eller differentialtræk)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Haleror"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Differentialtræk"
     }
 }

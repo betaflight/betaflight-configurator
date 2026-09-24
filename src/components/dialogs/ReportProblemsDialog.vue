@@ -20,12 +20,18 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import type { PropType } from "vue";
+
+// Rendered with v-html, so descriptions must stay trusted (they are built in-app).
+interface ReportedProblem {
+    description: string;
+}
 
 defineProps({
     problems: {
-        type: Array,
+        type: Array as PropType<ReportedProblem[]>,
         default: () => [],
     },
 });

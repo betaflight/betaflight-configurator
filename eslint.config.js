@@ -1,5 +1,5 @@
 import vuePlugin from "eslint-plugin-vue";
-import prettierPlugin from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier/flat";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 import tseslint from "typescript-eslint";
@@ -31,7 +31,6 @@ export default [
         },
         plugins: {
             vue: vuePlugin,
-            prettier: prettierPlugin,
             "unused-imports": unusedImportsPlugin,
         },
         rules: {
@@ -40,14 +39,6 @@ export default [
             "no-undef": "error",
             "no-var": "error",
             "prefer-template": "error",
-            "comma-dangle": ["error", "always-multiline"],
-            indent: [
-                "error",
-                4,
-                {
-                    SwitchCase: 1,
-                },
-            ],
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
                 "warn",
@@ -109,8 +100,8 @@ export default [
     {
         // Build and release tooling: real Node scripts, not browser code. Without this
         // block `.mjs` matches no `files` pattern and is linted with zero rules.
-        // The root config files are `.js` but equally Node-side; Vite bundles its config to
-        // CJS before executing it, so `__dirname` and friends are genuinely available there.
+        // The root config files are `.js` but equally Node-side, so the Node globals apply
+        // there too.
         files: ["**/*.mjs", "*.config.js", "nuxt-ui.vite.js"],
         languageOptions: {
             ecmaVersion: "latest",
@@ -137,4 +128,9 @@ export default [
             "no-undef": "error",
         },
     },
+    // Must stay last: turns off every core/plugin rule that overlaps with Prettier.
+    // The core `indent` rule in particular cannot express Prettier's extra offset for a
+    // call inside a ternary branch, so `eslint --fix` and `prettier --write` used to
+    // fight over the same lines and `prettier --check` failed on 20 files.
+    prettierConfig,
 ];

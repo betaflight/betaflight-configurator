@@ -91,6 +91,44 @@ describe("buildNativeFilters", () => {
     });
 });
 
+// The File System Access API spec restricts `id` to ASCII alphanumeric, "_",
+// "-", max 32 chars, and throws TypeError outside that shape — enforced here
+// too, before any platform is reached, so a bad id fails the same way
+// everywhere instead of only in the browser path.
+describe("pickerId validation", () => {
+    // TypeError, matching what the File System Access API itself throws for
+    // an invalid `id` — the platform-independent error contract.
+    const INVALID_PICKER_ID = { name: "TypeError", message: expect.stringContaining("Invalid pickerId") };
+
+    it("rejects a pickerId with characters outside the spec's allowed set", async () => {
+        await expect(FileSystem.pickOpenFile("Text", ".txt", "bad id!")).rejects.toMatchObject(INVALID_PICKER_ID);
+        await expect(FileSystem.pickSaveFile("x.txt", "Text", ".txt", "bad id!")).rejects.toMatchObject(
+            INVALID_PICKER_ID,
+        );
+    });
+
+    it("rejects a pickerId over the 32-character limit", async () => {
+        const tooLong = "a".repeat(33);
+        await expect(FileSystem.pickOpenFile("Text", ".txt", tooLong)).rejects.toMatchObject(INVALID_PICKER_ID);
+    });
+
+    it("accepts a pickerId at exactly the 32-character limit", async () => {
+        const exactly32 = "a".repeat(32);
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", exactly32);
+        expect(file.name).toBe("x.txt");
+    });
+
+    it("accepts hyphens and underscores, the two allowed non-alphanumerics", async () => {
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "cli-file_2");
+        expect(file.name).toBe("x.txt");
+    });
+
+    it("treats an empty pickerId the same as an omitted one, not a validation failure", async () => {
+        const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "");
+        expect(file.name).toBe("x.txt");
+    });
+});
+
 // The Tauri desktop build routes through the native dialog + fs plugins: its
 // WebKit webviews have neither the File System Access API nor working
 // `<a download>` blob downloads.
@@ -101,6 +139,7 @@ describe("FileSystem on Tauri desktop", () => {
 
     afterEach(() => {
         delete globalThis.__TAURI_INTERNALS__;
+        localStorage.removeItem("fileSystemLastDir");
         vi.resetAllMocks();
     });
 
@@ -202,6 +241,125 @@ describe("FileSystem on Tauri desktop", () => {
         const blob = await FileSystem.readFileAsBlob(file);
         expect(blob.type).toBe("application/octet-stream");
         expect(blob.size).toBe(2);
+    });
+
+    // The native dialog has no "remember this folder" option of its own, so
+    // FileSystem persists the last directory per pickerId itself.
+    describe("pickerId remembers the last-used folder", () => {
+        // Each test below only cares about the `defaultPath` a second
+        // pick is offered, given what the first pick resolved to — these
+        // two helpers carry the mock-then-call boilerplate that's
+        // otherwise identical across every case.
+        async function saveAs(name, resolvedPath, pickerId) {
+            tauriDialog.save.mockResolvedValueOnce(resolvedPath);
+            return FileSystem.pickSaveFile(name, "Files", ".txt", pickerId);
+        }
+
+        async function openAs(resolvedPath, pickerId) {
+            tauriDialog.open.mockResolvedValueOnce(resolvedPath);
+            return FileSystem.pickOpenFile("Files", ".txt", pickerId);
+        }
+
+        it("starts the save dialog in the folder from a previous pick with the same id", async () => {
+            await saveAs("log.csv", "/home/pilot/Documents/log.csv", "cli-file");
+            await saveAs("notes.csv", "/home/pilot/Documents/notes.csv", "cli-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "/home/pilot/Documents/notes.csv" }),
+            );
+        });
+
+        it("starts the open dialog in the folder from a previous pick with the same id", async () => {
+            await openAs("/home/pilot/firmware/target.hex", "firmware-file");
+            await openAs("/home/pilot/firmware/other.hex", "firmware-file");
+
+            expect(tauriDialog.open).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "/home/pilot/firmware" }),
+            );
+        });
+
+        it("keeps separate pickerIds from sharing a remembered folder", async () => {
+            await saveAs("build.hex", "/home/pilot/firmware/build.hex", "firmware-file");
+            await saveAs("cli.txt", "/home/pilot/logs/cli.txt", "cli-file");
+
+            // Second call is a fresh id: no remembered folder to prefix the name with.
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "cli.txt" }));
+        });
+
+        it("does not remember a folder when no pickerId is given", async () => {
+            await saveAs("log.csv", "/home/pilot/Documents/log.csv");
+            await saveAs("notes.csv", "/home/pilot/Documents/notes.csv");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "notes.csv" }));
+        });
+
+        it("remembers a POSIX filesystem root", async () => {
+            await saveAs("target.hex", "/target.hex", "firmware-file");
+            await saveAs("other.hex", "/other.hex", "firmware-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(expect.objectContaining({ defaultPath: "/other.hex" }));
+        });
+
+        it("remembers a Windows drive root", async () => {
+            await saveAs("target.hex", "C:\\target.hex", "firmware-file");
+            await saveAs("other.hex", "C:\\other.hex", "firmware-file");
+
+            expect(tauriDialog.save).toHaveBeenLastCalledWith(
+                expect.objectContaining({ defaultPath: "C:\\other.hex" }),
+            );
+        });
+    });
+});
+
+// Chromium's File System Access API remembers the last-used folder itself,
+// scoped per `id` passed to the picker — so pickerId only needs forwarding
+// as `id` here, with no directory bookkeeping of our own.
+describe("FileSystem picker id (File System Access API)", () => {
+    let showOpenFilePicker;
+    let showSaveFilePicker;
+
+    function mockHandle(name) {
+        return {
+            name,
+            queryPermission: vi.fn().mockResolvedValue("granted"),
+            requestPermission: vi.fn().mockResolvedValue("granted"),
+        };
+    }
+
+    beforeEach(() => {
+        showOpenFilePicker = vi.fn();
+        showSaveFilePicker = vi.fn();
+        globalThis.showOpenFilePicker = showOpenFilePicker;
+        globalThis.showSaveFilePicker = showSaveFilePicker;
+    });
+
+    afterEach(() => {
+        delete globalThis.showOpenFilePicker;
+        delete globalThis.showSaveFilePicker;
+    });
+
+    it("pickOpenFile forwards pickerId as the picker's remembered-folder id", async () => {
+        showOpenFilePicker.mockResolvedValue([mockHandle("target.hex")]);
+
+        await FileSystem.pickOpenFile("Firmware", ".hex", "firmware-file");
+
+        expect(showOpenFilePicker).toHaveBeenCalledWith(expect.objectContaining({ id: "firmware-file" }));
+    });
+
+    it("pickSaveFile forwards pickerId as the picker's remembered-folder id", async () => {
+        showSaveFilePicker.mockResolvedValue(mockHandle("cli.txt"));
+
+        await FileSystem.pickSaveFile("cli.txt", "Text", ".txt", "cli-file");
+
+        expect(showSaveFilePicker).toHaveBeenCalledWith(expect.objectContaining({ id: "cli-file" }));
+    });
+
+    it("omits id when no pickerId is given", async () => {
+        showOpenFilePicker.mockResolvedValue([mockHandle("dump.txt")]);
+
+        await FileSystem.pickOpenFile("Text", ".txt");
+
+        expect(showOpenFilePicker.mock.calls[0][0]).not.toHaveProperty("id");
     });
 });
 

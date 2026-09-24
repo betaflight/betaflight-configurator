@@ -1,4 +1,5 @@
 import semver from "semver";
+import { DEBUG_VALUE_COUNT, isDebugAnnotationError, parseDebugFieldHeader } from "../js/debug_annotation.ts";
 import {
     adjustFieldDefsList,
     FlightLogEvent,
@@ -368,6 +369,10 @@ export function FlightLogParser(logData) {
         gyro_soft_type: null, // Gyro soft filter type (PT1, BIQUAD, PT2, PT3)
         gyro_soft2_type: null, // Gyro soft filter 2 type (PT1, BIQUAD, PT2, PT3)
         debug_mode: null, // Selected Debug Mode
+        debug_mode_name: null, // The firmware's own name for it, when the log carries one
+        debugFields: null, // { [0..7]: DebugFieldAnnotation } from the log's own header
+        debugFieldsRaw: null, // { [0..7]: string } exactly as logged
+        debugFieldProblems: null, // [{ index, raw, error }] for a header that would not parse
         features: null, // Activated features (e.g. MOTORSTOP etc)
         Craft_name: null, // Craft Name
         motorOutput: [null, null], // Minimum and maximum outputs to motor's
@@ -446,7 +451,34 @@ export function FlightLogParser(logData) {
         chirp_frequency_start_deci_hz: null,
         chirp_frequency_end_deci_hz: null,
         chirp_time_seconds: null,
-        unknownHeaders: [], // Unknown Extra Headers
+        s_roll: null,
+        s_pitch: null,
+        s_yaw: null,
+        spa_roll_center: null,
+        spa_roll_width: null,
+        spa_roll_mode: null,
+        spa_pitch_center: null,
+        spa_pitch_width: null,
+        spa_pitch_mode: null,
+        spa_yaw_center: null,
+        spa_yaw_width: null,
+        spa_yaw_mode: null,
+        tpa_speed_type: null,
+        tpa_speed_basic_delay: null,
+        tpa_speed_basic_gravity: null,
+        tpa_speed_adv_prop_pitch: null,
+        tpa_speed_adv_mass: null,
+        tpa_speed_adv_drag_k: null,
+        tpa_speed_adv_thrust: null,
+        tpa_speed_max_voltage: null,
+        tpa_speed_pitch_offset: null,
+        tpa_curve_type: null,
+        tpa_curve_stall_throttle: null,
+        tpa_curve_pid_thr0: null,
+        tpa_curve_pid_thr100: null,
+        tpa_curve_expo: null,
+        yaw_type: null,
+        unknownHeaders: null, // Unknown Extra Headers
     };
     // Translation of the field values name to the sysConfig var where it must be stored
     // on the left are field names from the latest versions of blackbox.c
@@ -739,6 +771,33 @@ export function FlightLogParser(logData) {
         // Legacy firmware log headers
         "dterm_cut_hz",
         "acc_cut_hz",
+        "s_roll",
+        "s_pitch",
+        "s_yaw",
+        "spa_roll_center",
+        "spa_roll_width",
+        "spa_roll_mode",
+        "spa_pitch_center",
+        "spa_pitch_width",
+        "spa_pitch_mode",
+        "spa_yaw_center",
+        "spa_yaw_width",
+        "spa_yaw_mode",
+        "tpa_speed_type",
+        "tpa_speed_basic_delay",
+        "tpa_speed_basic_gravity",
+        "tpa_speed_adv_prop_pitch",
+        "tpa_speed_adv_mass",
+        "tpa_speed_adv_drag_k",
+        "tpa_speed_adv_thrust",
+        "tpa_speed_max_voltage",
+        "tpa_speed_pitch_offset",
+        "tpa_curve_type",
+        "tpa_curve_stall_throttle",
+        "tpa_curve_pid_thr0",
+        "tpa_curve_pid_thr100",
+        "tpa_curve_expo",
+        "yaw_type",
     ]);
 
     // Fields parsed as CSV and stored directly in sysConfig
@@ -1071,6 +1130,42 @@ export function FlightLogParser(logData) {
     HEADER_HANDLERS["DeviceUID"] = (_fn, fv) => {
         this.sysConfig.deviceUID = fv;
     };
+
+    /*
+     * What the firmware says its own debug fields mean.
+     *
+     * Without these the mode is a bare integer and the app has to index its
+     * generated table by an API version guessed from the revision string, so
+     * firmware the app has not seen mislabels every field. A name and a
+     * per-slot annotation make the log answer for itself.
+     */
+    const DEBUG_MODE_NAME = /^[A-Z][A-Z0-9_]*$/;
+    HEADER_HANDLERS["debug_mode_name"] = (_fn, fv) => {
+        // Validated rather than stored as-is: this name keys every label, decode
+        // and axis lookup, so a garbled value must not become one of them.
+        const name = fv.trim();
+        this.sysConfig.debug_mode_name = DEBUG_MODE_NAME.test(name) ? name : null;
+    };
+
+    const debugFieldHandler = (fn, fv) => {
+        const index = Number(fn.slice("debug_field[".length, -1));
+
+        this.sysConfig.debugFieldsRaw ??= {};
+        this.sysConfig.debugFieldsRaw[index] = fv;
+
+        const parsed = parseDebugFieldHeader(fv);
+        if (isDebugAnnotationError(parsed)) {
+            this.sysConfig.debugFieldProblems ??= [];
+            this.sysConfig.debugFieldProblems.push({ index, raw: fv, error: parsed.error });
+            return;
+        }
+
+        this.sysConfig.debugFields ??= {};
+        this.sysConfig.debugFields[index] = parsed;
+    };
+    for (let index = 0; index < DEBUG_VALUE_COUNT; index++) {
+        HEADER_HANDLERS[`debug_field[${index}]`] = debugFieldHandler;
+    }
 
     const parseHeaderLine = () => {
         const COLON = ":".codePointAt(0);

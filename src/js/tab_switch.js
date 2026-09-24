@@ -1,8 +1,8 @@
 import GUI from "./gui.js";
-import CONFIGURATOR from "./data_storage.js";
+import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization.js";
-import { gui_log } from "./gui_log.js";
-import { set as setConfig } from "./ConfigStorage.js";
+import { gui_log } from "./gui_log";
+import { set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { mountVueTab, vueTabState } from "./vue_tab_mounter.js";
 import { sidebarItems } from "../components/sidebar/sidebar_items.js";
@@ -35,6 +35,8 @@ function handleDisallowedTab(tabKey, tabLabel) {
     }
     if (GUI.connected_to || GUI.connecting_to) {
         GUI.pendingTab = "firmware_flasher";
+        // Dynamic import: serial_backend.js imports this module statically, so a static
+        // import back would cycle.
         import("./serial_backend.js").then(({ connectDisconnect }) => connectDisconnect());
     } else {
         switchTab("firmware_flasher", { mode: "disconnected", label: tabLabel });

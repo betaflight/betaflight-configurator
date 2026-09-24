@@ -133,13 +133,13 @@ import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
+import MSPCodes, { MSP2TextType } from "@/js/msp/MSPCodes";
 import FC from "@/js/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
@@ -256,11 +256,11 @@ async function loadData() {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PID_PROFILE_NAME),
                     );
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
                     );
                 }
 
@@ -272,6 +272,11 @@ async function loadData() {
                 await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
                 await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+
+                // Wing config (API 1.49+, WING build)
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
+                    await MSP.promise(MSPCodes.MSP_WING);
+                }
 
                 // Initialize profile names from FC.CONFIG
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -503,15 +508,20 @@ function save() {
             if (FC.CONFIG.pidProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PID_PROFILE_NAME),
                 );
             }
             if (FC.CONFIG.rateProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
                 );
             }
+        }
+
+        // Save Wing config (API 1.49+, WING build)
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
+            await MSP.promise(MSPCodes.MSP_SET_WING, mspHelper.crunch(MSPCodes.MSP_SET_WING));
         }
 
         // Persist to EEPROM (no reboot)

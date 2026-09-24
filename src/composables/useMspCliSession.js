@@ -95,8 +95,9 @@ export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
-// A numeric setting is printed with its bounds, so the firmware tells us how many of a thing this
-// build has rather than the app having to guess (`CANDEV_COUNT`, for one).
+// A numeric setting is printed with its bounds, so the firmware can tell us the limits of a build
+// rather than the app having to guess. Prefer getSettingInfo() in useMspSetting where the FC is
+// new enough: it reports the same bounds as MSP rather than as prose to be scraped.
 export function findCliSettingRange(lines) {
     for (const line of lines ?? []) {
         const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());
@@ -160,6 +161,14 @@ export function useMspCliSession() {
     const isBatchRunning = ref(false);
     let cancelRequested = false;
 
+    /**
+     * @param {string[]} commands
+     * @param {{
+     *   onProgress?: (p: { index: number, total: number, sent: number, errorCount: number }) => void,
+     *   onError?: (failure: { command: string, response: string[] }) => void,
+     *   commandTimeoutMs?: number,
+     * }} [options]
+     */
     async function runBatch(commands, { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
         cancelRequested = false;
         isBatchRunning.value = true;

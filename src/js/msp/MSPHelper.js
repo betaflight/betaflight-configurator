@@ -6,7 +6,7 @@ import FC from "../fc";
 import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
-import MSPCodes from "./MSPCodes";
+import MSPCodes, { MSP2TextType } from "./MSPCodes";
 import { MspCrcError } from "./mspErrors";
 import {
     API_VERSION_1_45,
@@ -569,6 +569,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.MOTOR_CONFIG.motor_poles = data.readU8();
                     FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
+
+                    // Introduced in 1.49
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                        FC.MOTOR_CONFIG.motor_kv = data.readU16();
+                    }
                     break;
                 case MSPCodes.MSP_COMPASS_CONFIG:
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -960,22 +965,22 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     const textType = data.readU8();
 
                     switch (textType) {
-                        case MSPCodes.PILOT_NAME:
+                        case MSP2TextType.PILOT_NAME:
                             FC.CONFIG.pilotName = self.getText(data);
                             break;
-                        case MSPCodes.CRAFT_NAME:
+                        case MSP2TextType.CRAFT_NAME:
                             FC.CONFIG.craftName = self.getText(data);
                             break;
-                        case MSPCodes.PID_PROFILE_NAME:
+                        case MSP2TextType.PID_PROFILE_NAME:
                             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = self.getText(data);
                             break;
-                        case MSPCodes.RATE_PROFILE_NAME:
+                        case MSP2TextType.RATE_PROFILE_NAME:
                             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = self.getText(data);
                             break;
-                        case MSPCodes.BUILD_KEY:
+                        case MSP2TextType.BUILDKEY:
                             FC.CONFIG.buildKey = self.getText(data);
                             break;
-                        case MSPCodes.BATTERY_PROFILE_NAME:
+                        case MSP2TextType.BATTERY_PROFILE_NAME:
                             FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = self.getText(data);
                             break;
                         default:
@@ -1813,6 +1818,49 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     break;
 
+                case MSPCodes.MSP_WING:
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.s_term[i] = data.readU8();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_center[i] = data.readU16();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_width[i] = data.readU16();
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        FC.WING_CONFIG.spa_mode[i] = data.readU8();
+                    }
+
+                    FC.WING_CONFIG.tpa_curve_type = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8();
+                    FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16();
+                    FC.WING_CONFIG.tpa_curve_expo = data.read8();
+                    FC.WING_CONFIG.tpa_speed_type = data.readU8();
+                    FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16();
+                    FC.WING_CONFIG.tpa_speed_pitch_offset = data.read16();
+                    FC.WING_CONFIG.yaw_type = data.readU8();
+                    FC.WING_CONFIG.angle_pitch_offset = data.read16();
+
+                    break;
+
+                case MSPCodes.MSP_SET_WING:
+                    break;
+
+                // Named settings, read straight off the raw response by useMspSetting rather than
+                // decoded into FC state here. Listed so the dispatcher stops reporting them as
+                // unknown codes on every probe.
+                case MSPCodes.MSP2_CLI_SETTING:
+                case MSPCodes.MSP2_CLI_SETTING_INFO:
+                    break;
+
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
@@ -2005,6 +2053,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             // Introduced in 1.42
             buffer.push8(FC.MOTOR_CONFIG.motor_poles);
             buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
+
+            // Introduced in 1.49
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+                buffer.push16(FC.MOTOR_CONFIG.motor_kv);
+            }
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer
@@ -2371,19 +2424,19 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
         case MSPCodes.MSP2_SET_TEXT:
             switch (modifierCode) {
-                case MSPCodes.PILOT_NAME:
+                case MSP2TextType.PILOT_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.pilotName, 16);
                     break;
-                case MSPCodes.CRAFT_NAME:
+                case MSP2TextType.CRAFT_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.craftName, 16);
                     break;
-                case MSPCodes.PID_PROFILE_NAME:
+                case MSP2TextType.PID_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.profile], 8);
                     break;
-                case MSPCodes.RATE_PROFILE_NAME:
+                case MSP2TextType.RATE_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
-                case MSPCodes.BATTERY_PROFILE_NAME:
+                case MSP2TextType.BATTERY_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
                     break;
                 default:
@@ -2537,6 +2590,39 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM:
             MspHelper.writeDtermFilterSliderSettings(buffer);
+
+            break;
+
+        case MSPCodes.MSP_SET_WING:
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(FC.WING_CONFIG.s_term[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(FC.WING_CONFIG.spa_center[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push16(FC.WING_CONFIG.spa_width[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                buffer.push8(FC.WING_CONFIG.spa_mode[i]);
+            }
+            buffer
+                .push8(FC.WING_CONFIG.tpa_curve_type)
+                .push8(FC.WING_CONFIG.tpa_curve_stall_throttle)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr0)
+                .push16(FC.WING_CONFIG.tpa_curve_pid_thr100)
+                .push8(FC.WING_CONFIG.tpa_curve_expo)
+                .push8(FC.WING_CONFIG.tpa_speed_type)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_delay)
+                .push16(FC.WING_CONFIG.tpa_speed_basic_gravity)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_prop_pitch)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_mass)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_drag_k)
+                .push16(FC.WING_CONFIG.tpa_speed_adv_thrust)
+                .push16(FC.WING_CONFIG.tpa_speed_max_voltage)
+                .push16(FC.WING_CONFIG.tpa_speed_pitch_offset)
+                .push8(FC.WING_CONFIG.yaw_type)
+                .push16(FC.WING_CONFIG.angle_pitch_offset);
 
             break;
 

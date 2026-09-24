@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
+import { format, resolveConfig } from "prettier";
 import {
     maskNonCode,
-    parseAnnotation,
     parseEnumBlock,
     parseDebugModeNames,
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderFieldsModule,
+    renderModeFields,
     resolveFieldIndex,
 } from "../../../scripts/generate-debug-modes.mjs";
 
@@ -21,7 +23,7 @@ import {
  * fields - and both are pinned below.
  */
 
-const DEBUG_SET_CALLS = (text) => [...text.matchAll(/DEBUG_SET\s*\(/g)].length;
+const DEBUG_SET_CALLS = (text: string) => [...text.matchAll(/DEBUG_SET\s*\(/g)].length;
 
 describe("maskNonCode", () => {
     it("keeps every offset, so line numbers and annotation positions still hold", () => {
@@ -77,63 +79,14 @@ describe("maskNonCode", () => {
     });
 });
 
-describe("parseAnnotation", () => {
-    // The scan trims the text after `//!<` before parsing, so these do too.
-    it("reads a label and the unit of one LSB", () => {
-        expect(parseAnnotation("Cycle Time [unit:us]")).toMatchObject({
-            label: "Cycle Time",
-            unit: "us",
-            scale: 1,
-        });
-    });
-
-    it("reads the factor, including a negative one", () => {
-        expect(parseAnnotation("Angle [unit:0.1deg]")).toMatchObject({ unit: "deg", scale: 0.1 });
-        expect(parseAnnotation("Pressure [unit:100Pa]")).toMatchObject({ unit: "Pa", scale: 100 });
-        // CRSF sends RSSI as a positive count of dBm below zero.
-        expect(parseAnnotation("Uplink RSSI [unit:-1dBm]")).toMatchObject({ unit: "dBm", scale: -1 });
-        // Scaled but dimensionless.
-        expect(parseAnnotation("Ratio [unit:0.001]")).toMatchObject({ unit: null, scale: 0.001 });
-    });
-
-    it("reads bit flags, naming an unused bit null", () => {
-        expect(parseAnnotation("Frame Flags [flags:Channel 17|-|Signal Loss]")).toMatchObject({
-            label: "Frame Flags",
-            unit: null,
-            flags: ["Channel 17", null, "Signal Loss"],
-        });
-    });
-
-    it("spells out one label per index for a run-time index", () => {
-        const parsed = parseAnnotation("[index:0..2] Gyro ({roll|pitch|yaw}) [unit:dps]");
-
-        expect(parsed.indices).toEqual([0, 1, 2]);
-        expect(parsed.labels).toEqual(["Gyro (roll)", "Gyro (pitch)", "Gyro (yaw)"]);
-    });
-
-    it("takes a field with no shape as a plain integer", () => {
-        expect(parseAnnotation("Failure Count")).toMatchObject({ label: "Failure Count", unit: null, scale: 1 });
-    });
-
-    it("refuses what it cannot describe rather than dropping the field", () => {
-        // Each of these would otherwise leave a field silently unlabelled.
-        expect(parseAnnotation("[unit:us]").error).toBeDefined();
-        expect(parseAnnotation("Label [furlongs]").error).toBeDefined();
-        expect(parseAnnotation("Label [unit:furlongs]").error).toBeDefined();
-        expect(parseAnnotation("Label [roll] [unit:us]").error).toBeDefined();
-        // Three alternatives for two indices.
-        expect(parseAnnotation("[index:0..1] Gyro ({roll|pitch|yaw}) [unit:dps]").error).toBeDefined();
-    });
-});
-
 describe("parseEnumBlock and parseNamedEnums", () => {
     it("numbers enumerators from zero, honouring an explicit value", () => {
-        expect([...parseEnumBlock("A, B, C")]).toEqual([
+        expect([...(parseEnumBlock("A, B, C") ?? [])]).toEqual([
             ["A", 0],
             ["B", 1],
             ["C", 2],
         ]);
-        expect([...parseEnumBlock("A, B = 5, C")]).toEqual([
+        expect([...(parseEnumBlock("A, B = 5, C") ?? [])]).toEqual([
             ["A", 0],
             ["B", 5],
             ["C", 6],
@@ -181,17 +134,8 @@ describe("pullRequestNumber", () => {
     });
 });
 
-describe("parseAnnotation, unit factors", () => {
-    it("refuses a factor that overflows a double, which would scale every sample to Infinity", () => {
-        const huge = "9".repeat(400);
-        expect(parseAnnotation(`Cycle Time [unit:${huge}us]`).error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseAnnotation("Cycle Time [unit:0us]").error).toMatch(/not a unit, enum or flags shape/);
-        expect(parseAnnotation("Cycle Time [unit:0.1us]").scale).toBe(0.1);
-    });
-});
-
 describe("parseDebugModeNames", () => {
-    const table = (body) => `const char * const debugModeNames[DEBUG_COUNT] = {\n${body}\n};`;
+    const table = (body: string) => `const char * const debugModeNames[DEBUG_COUNT] = {\n${body}\n};`;
 
     it("reads the positional and the designated form", () => {
         expect(parseDebugModeNames(table('    "NONE",\n    "CYCLETIME",'), "ref").byPosition).toEqual([
@@ -248,5 +192,108 @@ describe("propertyKey", () => {
         expect(propertyKey("3D")).toBe('"3D"');
         expect(propertyKey("A-B")).toBe('"A-B"');
         expect(propertyKey("A B")).toBe('"A B"');
+    });
+});
+
+describe("renderModeFields", () => {
+    // Firmware carries no conflicting field since betaflight/betaflight#15727, so
+    // the generated table no longer exercises this; the shapes below are the two
+    // it used to hold.
+    const variant = (label: string, unit: string | null, scale = 1) => ({ label, unit, scale });
+
+    it("names both meanings of a field two subsystems write differently, and drops the unit", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "BATTERY",
+            { 3: [variant("Sag Compensation Attenuation", null, 0.001), variant("Voltage Stable Bits", null)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain(
+            '3: Object.freeze({ label: "Sag Compensation Attenuation / Voltage Stable Bits", unit: null, scale: 1 })',
+        );
+        expect(conflicts).toEqual([expect.objectContaining({ apiVersion: "1.49.0", mode: "BATTERY", index: 3 })]);
+    });
+
+    it("names both meanings only when they differ", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "LIDAR_TF",
+            { 0: [variant("Distance", "cm"), variant("Distance", "m", 0.001)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: null, scale: 1 })');
+        expect(conflicts).toHaveLength(1);
+    });
+
+    it("keeps the unit and scale of a field with one meaning", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields("UPT1", { 0: [variant("Distance", "m", 0.001)] }, "1.49.0", conflicts).join(
+            "\n",
+        );
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: "m", scale: 0.001 })');
+        expect(conflicts).toEqual([]);
+    });
+});
+
+describe("renderFieldsModule", () => {
+    // `--check` compares the generated table with the committed one, which
+    // `npm run format` has been through, so the generator has to write exactly
+    // what Prettier would. An empty conflict list is the case that broke that:
+    // Prettier folds `Object.freeze([` and `]);` onto one line.
+    const TABLE_PATH = "src/js/debug_fields_table.ts";
+    const site = (label: string, unit: string | null, scale: number, sites: string[]) => ({
+        label,
+        unit,
+        scale,
+        sites,
+    });
+    // Every annotated firmware carries enum fields, and the enum table is rendered
+    // after the conflicts, so the fixture has one too.
+    const RESCUE_PHASE = {
+        ...site("Rescue Phase", null, 1, ["src/main/flight/gps_rescue.c:1"]),
+        enumTag: "rescuePhase_e",
+        values: ["RESCUE_IDLE", "RESCUE_INITIALIZE"],
+    };
+    const render = (fields: Record<string, Record<number, ReturnType<typeof site>[]>>) =>
+        renderFieldsModule({
+            repoUrl: "https://github.com/betaflight/betaflight",
+            versions: [{ apiVersion: "1.49.0", commit: "805313c231abcdef", date: "2026-09-22", ref: "master", fields }],
+        });
+    const prettierFormat = async (source: string) => {
+        const options = await resolveConfig(TABLE_PATH, { editorconfig: true });
+        return format(source, { ...options, filepath: TABLE_PATH });
+    };
+
+    it("writes an empty conflict list the way Prettier formats it", async () => {
+        const { source, conflicts } = render({
+            UPT1: { 0: [site("Distance", "m", 0.001, ["src/main/a.c:1"])] },
+            GPS_RESCUE_TRACKING: { 7: [RESCUE_PHASE] },
+        });
+
+        expect(conflicts).toEqual([]);
+        expect(source).toContain(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([]);",
+        );
+        expect(await prettierFormat(source)).toBe(source);
+    });
+
+    it("writes a conflict list the way Prettier formats it", async () => {
+        const { source, conflicts } = render({
+            GPS_RESCUE_TRACKING: { 7: [RESCUE_PHASE] },
+            BATTERY: {
+                3: [
+                    site("Sag Compensation Attenuation", null, 0.001, ["src/main/flight/mixer.c:1"]),
+                    site("Voltage Stable Bits", null, 1, ["src/main/sensors/battery.c:1"]),
+                ],
+            },
+        });
+
+        expect(conflicts).toHaveLength(1);
+        expect(await prettierFormat(source)).toBe(source);
     });
 });

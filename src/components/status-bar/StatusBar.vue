@@ -200,6 +200,7 @@ export default defineComponent({
             default: 0,
         },
         connectionTimestamp: {
+            /** @type {import("vue").PropType<number | null>} */
             type: Number,
             default: null,
         },

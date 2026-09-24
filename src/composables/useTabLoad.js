@@ -1,4 +1,4 @@
-import { isMspCancelled } from "../js/msp/mspErrors.js";
+import { isMspCancelled } from "../js/msp/mspErrors";
 
 /**
  * Shared tab-load guard: runs a tab's `loadConfig` MSP chain and swallows a benign

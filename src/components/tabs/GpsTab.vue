@@ -63,7 +63,11 @@
                             />
                         </SettingRow>
 
-                        <SettingRow v-if="showCanDevice" :label="$t('gpsCanDevice')" :help="$t('gpsCanDeviceHelp')">
+                        <SettingRow
+                            v-if="showCanDevice"
+                            :label="$t('dronecanCanDevice')"
+                            :help="$t('dronecanCanDeviceHelp')"
+                        >
                             <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
                         </SettingRow>
 
@@ -293,7 +297,7 @@
             <UButton
                 :label="$t('configurationButtonSave')"
                 size="xs"
-                :disabled="!dirty"
+                :disabled="!canSave"
                 :loading="isSaving"
                 @click="saveConfig"
             />
@@ -317,7 +321,6 @@ import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
-import { gui_log } from "@/js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
@@ -325,10 +328,11 @@ import { useDialogStore } from "@/stores/dialog";
 import { useInterval } from "../../composables/useInterval";
 import { useMapViewport } from "../../composables/useMapViewport";
 import { useDirtyState } from "../../composables/useDirtyState";
-import { useSaving } from "../../composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "../../composables/useSaving";
 import { useReboot } from "../../composables/useReboot";
 import { useBuildOptions } from "../../composables/useBuildOptions";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useDronecanDevice } from "@/composables/useDronecanDevice";
 import { GPS_BAUD_RATES } from "@/composables/ports/featureBaudRates";
 import { addArrayElement } from "../../js/utils/array";
@@ -400,17 +404,30 @@ export default defineComponent({
             gpsProtocols.value = getGpsProtocols();
 
             // DRONECAN is last in the firmware's provider table and only present under
-            // ENABLE_DRONECAN, which no build option reports — the dronecan_device probe is what
-            // tells us this board has it. Appending is only safe once VIRTUAL is in the list
-            // (API 1.47), or the index would land on VIRTUAL instead.
+            // ENABLE_DRONECAN. The dronecan_device probe is what tells us this board has it: the
+            // USE_DRONECAN build option only reports that the stack was compiled in, not how many
+            // CAN buses it can bind to, and the probe answers both. Appending is only safe once
+            // VIRTUAL is in the list (API 1.47), or the index would land on VIRTUAL instead.
             if (dronecanSupported.value && gpsProtocols.value.includes("VIRTUAL")) {
                 addArrayElement(gpsProtocols.value, "DRONECAN");
             }
         };
 
-        const gpsProtocolItems = computed(() =>
-            gpsProtocols.value.map((protocol, idx) => ({ label: protocol, value: idx })),
-        );
+        // The FC can hold a provider index this list does not cover: a board configured for
+        // DRONECAN whose probe failed, or firmware offering a provider this build predates.
+        // Without an entry the select falls back to rendering the bare number, which reads as a
+        // bug rather than as a state. Name it instead, and leave it selectable so switching away
+        // behaves like any other choice.
+        const gpsProtocolItems = computed(() => {
+            const items = gpsProtocols.value.map((protocol, idx) => ({ label: protocol, value: idx }));
+            const provider = gpsConfig.provider;
+
+            if (Number.isInteger(provider) && !items.some((item) => item.value === provider)) {
+                items.push({ label: i18n.getMessage("gpsProtocolUnknown", [provider]), value: provider });
+            }
+
+            return items;
+        });
 
         const gpsSbasItems = computed(() => gpsSbas.map((sbas, index) => ({ label: sbas, value: index })));
 
@@ -443,6 +460,7 @@ export default defineComponent({
             selectedIdentifier: gpsPortIdentifier,
             baudOptions: gpsBaudOptions,
             selectedBaud: gpsBaud,
+            conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
         } = useFeaturePort({
@@ -450,13 +468,16 @@ export default defineComponent({
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
         });
 
+        const { confirmPortConflicts } = usePortConflicts(() => [gpsPortConflict]);
+
         // A DroneCAN GPS has no UART; it is on a CAN bus, so that is what the tab has to show.
         const {
             supported: dronecanSupported,
+            enabled: dronecanEnabled,
             deviceOptions: canDeviceOptions,
             selectedDevice: canDevice,
-            load: loadCanDevice,
-            write: writeCanDevice,
+            load: loadDronecan,
+            write: writeDronecan,
         } = useDronecanDevice();
 
         /** @returns {string} serialized tab state for dirty comparison */
@@ -497,14 +518,20 @@ export default defineComponent({
             () => gpsPortAvailable.value && providersUsingSerialPort.has(selectedProviderName.value),
         );
 
-        // The bus belongs to the DroneCAN stack rather than to the GPS, so it is offered here only
-        // because this is where a DroneCAN GPS is set up; changing it moves every DroneCAN sensor.
-        const showCanDevice = computed(
-            () =>
-                dronecanSupported.value &&
-                selectedProviderName.value === "DRONECAN" &&
-                canDeviceOptions.value.length > 1,
-        );
+        // Selecting this provider is itself the request to run the stack, so there is no switch:
+        // saving turns it on. The bus belongs to the whole stack rather than to the GPS, and is
+        // offered here only because this is where a DroneCAN GPS is set up; changing it moves
+        // every DroneCAN sensor.
+        const dronecanSelected = computed(() => dronecanSupported.value && selectedProviderName.value === "DRONECAN");
+
+        // The bus is worth choosing only where there is more than one.
+        const showCanDevice = computed(() => dronecanSelected.value && canDeviceOptions.value.length > 1);
+
+        // A DroneCAN provider can already be stored on a board whose stack is off -- exactly the
+        // state a CLI-configured board arrives in. Nothing is dirty then, so Save would be disabled
+        // and the GUI could never turn the stack on. Offer the save on its own merit.
+        const dronecanNeedsEnable = computed(() => dronecanSelected.value && !dronecanEnabled.value);
+        const canSave = computed(() => dirty.value || dronecanNeedsEnable.value);
 
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
@@ -665,8 +692,8 @@ export default defineComponent({
                         qualityValue >= 5
                             ? "bg-[var(--success-500)] text-white"
                             : qualityValue === 4
-                                ? "bg-[var(--warning-500)] text-black"
-                                : "bg-[var(--surface-500)] text-white";
+                              ? "bg-[var(--warning-500)] text-black"
+                              : "bg-[var(--surface-500)] text-white";
 
                     rows.push({
                         gnss: gnssArray[gnssId],
@@ -829,7 +856,7 @@ export default defineComponent({
 
                 // Probed before the protocol list is built, which offers DRONECAN only on a board
                 // that has it.
-                await loadCanDevice();
+                await loadDronecan();
                 await updateGpsProtocols();
                 await loadGpsPort();
 
@@ -858,6 +885,12 @@ export default defineComponent({
             }
 
             return runSave(async () => {
+                // Warn before a pick that would take a port from another feature; a cancel here
+                // leaves the save untouched, before anything has been written to the FC.
+                if (!(await confirmPortConflicts())) {
+                    return;
+                }
+
                 const savedSnapshot = takeSnapshot();
 
                 Object.assign(fcStore.gpsConfig, gpsConfig);
@@ -879,15 +912,13 @@ export default defineComponent({
                     try {
                         await writeGpsPort();
                     } catch (error) {
-                        gui_log(i18n.getMessage("gpsSerialPortSaveFailed"));
-                        throw error;
+                        throw withSaveFailureMessage(error, i18n.getMessage("gpsSerialPortSaveFailed"));
                     }
 
                     try {
-                        await writeCanDevice();
+                        await writeDronecan({ enable: dronecanSelected.value });
                     } catch (error) {
-                        gui_log(i18n.getMessage("gpsCanDeviceSaveFailed"));
-                        throw error;
+                        throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
                     }
 
                     await saveAndReboot();
@@ -972,6 +1003,7 @@ export default defineComponent({
             showAutoBaud,
             showAutoConfig,
             showSerialPort,
+            canSave,
             showCanDevice,
             canDeviceOptions,
             canDevice,

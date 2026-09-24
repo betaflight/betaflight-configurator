@@ -8,6 +8,7 @@ import { useConnectionStore } from "../stores/connection";
 import { pinia } from "./pinia_instance";
 import { getLockManager } from "./lock_manager";
 
+/** @type {Record<string, Record<string, unknown> | undefined>} registered at runtime by each tab */
 const TABS = {};
 
 class GuiControl {
@@ -310,6 +311,8 @@ class GuiControl {
                 : "tab_setup";
         const tabKey = tabClass.substring(4);
 
+        // Dynamic import: tab_switch.js imports this module statically, so a static
+        // import back would cycle.
         import("./tab_switch.js").then(({ switchTab }) => {
             if (!switchTab(tabKey, { mode: "connected" })) {
                 switchTab("setup", { mode: "connected" });

@@ -1,10 +1,5 @@
 <template>
-    <UModal
-        :open="open"
-        :title="title"
-        :close="false"
-        :dismissible="false"
-    >
+    <UModal :open="open" :title="title" :close="false" :dismissible="false">
         <template #body>
             <div class="flex flex-col gap-4">
                 <div v-if="note" v-html="note"></div>
@@ -37,16 +32,22 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import type { PropType } from "vue";
 import { i18n } from "@/js/localization";
 import SettingRow from "../elements/SettingRow.vue";
+
+interface ProfileOption {
+    label: string;
+    value: number;
+}
 
 const props = defineProps({
     title: { type: String, default: "" },
     note: { type: String, default: "" },
-    profileOptions: { type: Array, default: () => [] },
-    rateOptions: { type: Array, default: () => [] },
+    profileOptions: { type: Array as PropType<ProfileOption[]>, default: () => [] },
+    rateOptions: { type: Array as PropType<ProfileOption[]>, default: () => [] },
     profileText: { type: String, default: () => i18n.getMessage("dialogCopyProfileText") },
     rateProfileText: { type: String, default: () => i18n.getMessage("dialogCopyRateProfileText") },
     confirmText: { type: String, default: () => i18n.getMessage("dialogCopyProfileConfirm") },
@@ -56,12 +57,12 @@ const props = defineProps({
 const emit = defineEmits(["confirm", "cancel"]);
 
 const open = ref(false);
-const selectedProfile = ref(null);
-const selectedRateProfile = ref(null);
+const selectedProfile = ref<number | undefined>(undefined);
+const selectedRateProfile = ref<number | undefined>(undefined);
 
 const show = () => {
-    selectedProfile.value = props.profileOptions?.length ? props.profileOptions[0].value : null;
-    selectedRateProfile.value = props.rateOptions?.length ? props.rateOptions[0].value : null;
+    selectedProfile.value = props.profileOptions?.length ? props.profileOptions[0].value : undefined;
+    selectedRateProfile.value = props.rateOptions?.length ? props.rateOptions[0].value : undefined;
     open.value = true;
 };
 
@@ -70,7 +71,8 @@ const close = () => {
 };
 
 const confirm = () => {
-    emit("confirm", { profile: selectedProfile.value, rateProfile: selectedRateProfile.value });
+    // null, not undefined, is the payload contract the consumers in useDialog.js see.
+    emit("confirm", { profile: selectedProfile.value ?? null, rateProfile: selectedRateProfile.value ?? null });
     close();
 };
 

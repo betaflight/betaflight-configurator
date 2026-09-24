@@ -1,6 +1,6 @@
 import { reactive, computed, ref } from "vue";
 import geomagnetism from "geomagnetism";
-import SunCalc from "suncalc";
+import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
 import { sortNotams, kmToNm } from "../js/notam/index.js";
@@ -898,7 +898,7 @@ function updateCivilTwilight() {
         civilTwilight.value = null;
         return;
     }
-    const times = SunCalc.getTimes(new Date(), location.latitude, location.longitude);
+    const times = getTimes(new Date(), location.latitude, location.longitude);
     if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
         civilTwilight.value = null;
         return;

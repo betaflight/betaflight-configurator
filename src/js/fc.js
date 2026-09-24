@@ -78,6 +78,37 @@ const INITIAL_BATTERY_CONFIG = {
     currentMeterSource: 0,
 };
 
+const INITIAL_RC_TUNING = {
+    RC_RATE: 0,
+    RC_EXPO: 0,
+    roll_pitch_rate: 0, // pre 1.7 api only
+    roll_rate: 0,
+    pitch_rate: 0,
+    yaw_rate: 0,
+    dynamic_THR_PID: 0, // moved in 1.45 to ADVANCED_TUNING
+    throttle_MID: 0,
+    throttle_EXPO: 0,
+    dynamic_THR_breakpoint: 0, // moved in 1.45 to ADVANCED_TUNING
+    RC_YAW_EXPO: 0,
+    rcYawRate: 0,
+    rcPitchRate: 0,
+    RC_PITCH_EXPO: 0,
+    throttleLimitType: 0,
+    throttleLimitPercent: 100,
+    roll_rate_limit: 1998,
+    pitch_rate_limit: 1998,
+    yaw_rate_limit: 1998,
+    rates_type: 0,
+    throttle_HOVER: 0.5, // default for firmware before 1.47
+};
+
+const INITIAL_RC_DEADBAND_CONFIG = {
+    deadband: 0,
+    yaw_deadband: 0,
+    alt_hold_deadband: 0,
+    deadband3d_throttle: 0,
+};
+
 const FC = {
     // define all the global variables that are uses to hold FC state
     // the default state must be defined inside the resetState() method
@@ -139,8 +170,10 @@ const FC = {
     PID_NAMES: null,
     PIDS: null,
     RC: null,
+    /** @type {typeof INITIAL_RC_DEADBAND_CONFIG | null} */
     RC_DEADBAND_CONFIG: null,
     RC_MAP: null,
+    /** @type {typeof INITIAL_RC_TUNING | null} */
     RC_TUNING: null,
     RSSI_CONFIG: null,
     RXFAIL_CONFIG: null,
@@ -161,6 +194,7 @@ const FC = {
     VTXTABLE_POWERLEVEL: null,
     VTX_CONFIG: null,
     VTX_DEVICE_STATUS: null,
+    WING_CONFIG: null,
 
     resetState() {
         // Using `Object.assign` instead of reassigning to
@@ -228,29 +262,7 @@ const FC = {
             channels: Array.from({ length: 32 }),
         };
 
-        this.RC_TUNING = {
-            RC_RATE: 0,
-            RC_EXPO: 0,
-            roll_pitch_rate: 0, // pre 1.7 api only
-            roll_rate: 0,
-            pitch_rate: 0,
-            yaw_rate: 0,
-            dynamic_THR_PID: 0, // moved in 1.45 to ADVANCED_TUNING
-            throttle_MID: 0,
-            throttle_EXPO: 0,
-            dynamic_THR_breakpoint: 0, // moved in 1.45 to ADVANCED_TUNING
-            RC_YAW_EXPO: 0,
-            rcYawRate: 0,
-            rcPitchRate: 0,
-            RC_PITCH_EXPO: 0,
-            throttleLimitType: 0,
-            throttleLimitPercent: 100,
-            roll_rate_limit: 1998,
-            pitch_rate_limit: 1998,
-            yaw_rate_limit: 1998,
-            rates_type: 0,
-            throttle_HOVER: 0.5, // default for firmware before 1.47
-        };
+        this.RC_TUNING = { ...INITIAL_RC_TUNING };
 
         this.AUX_CONFIG = [];
         this.AUX_CONFIG_IDS = [];
@@ -361,6 +373,7 @@ const FC = {
             motor_poles: 0,
             use_dshot_telemetry: false,
             use_esc_sensor: false,
+            motor_kv: 0,
         };
 
         this.GPS_CONFIG = {
@@ -412,12 +425,7 @@ const FC = {
             blackboxDisabledMask: 0,
         };
 
-        this.RC_DEADBAND_CONFIG = {
-            deadband: 0,
-            yaw_deadband: 0,
-            alt_hold_deadband: 0,
-            deadband3d_throttle: 0,
-        };
+        this.RC_DEADBAND_CONFIG = { ...INITIAL_RC_DEADBAND_CONFIG };
 
         this.SENSOR_ALIGNMENT = {
             align_gyro: 0,
@@ -743,6 +751,29 @@ const FC = {
             slider_pids_valid: 1,
             slider_gyro_valid: 1,
             slider_dterm_valid: 1,
+        };
+
+        this.WING_CONFIG = {
+            s_term: [0, 0, 0],
+            spa_center: [0, 0, 0],
+            spa_width: [0, 0, 0],
+            spa_mode: [0, 0, 0],
+            tpa_curve_type: 0,
+            tpa_curve_stall_throttle: 30,
+            tpa_curve_pid_thr0: 200,
+            tpa_curve_pid_thr100: 70,
+            tpa_curve_expo: 20,
+            tpa_speed_type: 0,
+            tpa_speed_basic_delay: 1000,
+            tpa_speed_basic_gravity: 50,
+            tpa_speed_adv_prop_pitch: 0,
+            tpa_speed_adv_mass: 1000,
+            tpa_speed_adv_drag_k: 1000,
+            tpa_speed_adv_thrust: 2000,
+            tpa_speed_max_voltage: 2520,
+            tpa_speed_pitch_offset: 0,
+            yaw_type: 0,
+            angle_pitch_offset: 0,
         };
     },
 

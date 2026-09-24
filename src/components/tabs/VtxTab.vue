@@ -418,6 +418,7 @@ import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
+import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
 
@@ -477,6 +478,7 @@ export default defineComponent({
             options: vtxPortOptions,
             selectedIdentifier: vtxPortIdentifier,
             changed: vtxPortChanged,
+            conflict: vtxPortConflict,
             load: loadVtxPort,
             write: writeVtxPort,
             selectedProtocol: vtxProtocol,
@@ -485,6 +487,8 @@ export default defineComponent({
             setting: "vtx_uart",
             protocol: { setting: "vtx_type" },
         });
+
+        const { confirmPortConflicts } = usePortConflicts(() => [vtxPortConflict]);
 
         // An MSP VTX answers on the goggles' MSP link rather than a port of its own, so the
         // firmware falls back to the OSD's UART and the row follows the OSD tab, read-only.
@@ -578,6 +582,12 @@ export default defineComponent({
 
         const handleSave = () =>
             runSave(async () => {
+                // Warn before a pick that would take a port from another feature; a cancel here
+                // leaves the save untouched, before anything has been written to the FC.
+                if (!(await confirmPortConflicts())) {
+                    return;
+                }
+
                 await saveVtx(writeVtxPort);
                 await loadVtxConfig();
                 await loadVtxPort();

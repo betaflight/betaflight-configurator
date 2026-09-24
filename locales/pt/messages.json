@@ -412,9 +412,6 @@
     "sensorConfigSaved": {
         "message": "Configuração de Sensor gravada"
     },
-    "sensorConfigSaveFailed": {
-        "message": "Falha a gravar configuração do sensor"
-    },
     "sensorConfigMagnetometer": {
         "message": "Magnetómetro"
     },
@@ -867,12 +864,6 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>A versão utilizada da App ($1) não suporta o firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>não há nenhum protocolo de saída do motor selecionado<\/strong>.<br>Por favor, selecione um protocolo de saída de motor apropriado para os seus ESCs em '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>o acelerómetro está ativado, mas não está calibrado<\/strong>. <br>Se pretende usar o acelerómetro, siga as instruções para '$t(initialSetupButtonCalibrateAccel.message)' na aba '$t(tabSetup.message)'. Se qualquer função que exija o acelerómetro (modos de nível automático, resgate por GPS, ...) estiver ativada, o armar do aparelho será desativado até o acelerómetro estar calibrado.<br>Se não pretende usar o acelerómetro, é recomendável desativá-lo em '$t(configurationSystem.message)' na aba '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "SO: <strong>{{operatingSystem}}<\/strong>",
@@ -7517,9 +7508,6 @@
     "osdWarningTextOverCap": {
         "message": "Bateria acima da capacidade",
         "description": "One of the warnings that can be selected to be shown in the OSD"
-    },
-    "osdWarningOverCap": {
-        "message": "Avisa quando o mAh consumido excede o limite de capacidade configurado"
     },
     "osdWarningTextRSNR": {
         "message": "RSNR",
