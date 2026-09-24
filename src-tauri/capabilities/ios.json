@@ -4,9 +4,5 @@
     "description": "Temporary local test capability: core APIs and BLE on iOS.",
     "platforms": ["iOS"],
     "windows": ["*"],
-    "permissions": [
-        "core:default",
-        "shell:allow-open",
-        "blec:allow-check-permissions"
-    ]
+    "permissions": ["core:default", "shell:allow-open", "blec:allow-check-permissions"]
 }
