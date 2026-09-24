@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import GUI, { TABS } from "./gui";
 import { i18n } from "./localization";
 // NOTE: this is a circular dependency, needs investigating
@@ -9,7 +30,7 @@ import FC from "./fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
-import DeviceHandler from "./device_handler";
+import DeviceHandlerModule from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
@@ -18,7 +39,7 @@ import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { parseConnectDeeplink } from "./utils/connectDeeplink";
-import { tracking } from "./Analytics";
+import * as Analytics from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
@@ -34,11 +55,47 @@ import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
 
+/** From device_handler's describeDevice(): the USB ids let a rebooted device be matched under a new path. */
+interface DeviceDescriptor {
+    path: string;
+    vendorId: unknown;
+    productId: unknown;
+}
+
+// device_handler.js builds its singleton with `new (function () {...})()` and attaches methods
+// afterwards, which TypeScript cannot see; these are the ones this module calls.
+const DeviceHandler = DeviceHandlerModule as typeof DeviceHandlerModule & {
+    initialize(): void;
+    describeDevice(path: string): DeviceDescriptor | null;
+    findDescribedDevice(target: DeviceDescriptor | null): object | undefined;
+    isKnownDevicePath(path: string): boolean;
+};
+
+// Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
+// tab_switch.js; configuration_loaded is only ever written.
+const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
+
+// Analytics.js declares `let tracking = null` and assigns it later, so the binding is implicit
+// any. Read through the namespace to keep the live binding; it is set up before any connection.
+interface AnalyticsTracker {
+    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
+    sendEvent(category: string, action: string, options: Record<string, unknown>): void;
+}
+
+type ReadInfo = Parameters<typeof MSP.read>[0];
+
+interface ReportedProblem {
+    name: string;
+    description: string;
+}
+
 const logHead = "[SERIAL-BACKEND]";
 
-let mspHelper;
-let connectionTimestamp = null;
-let liveDataRefreshTimerId = false;
+// Created per connection in onOpen/onOpenVirtual; everything after the first handshake
+// response (hence the non-null assertions below) runs with it set.
+let mspHelper: MspHelper | undefined;
+let connectionTimestamp: number | null = null;
+let liveDataRefreshTimerId: ReturnType<typeof setInterval> | false = false;
 // Re-entrancy guard for the live-data poller. update_live_status is async and awaits a
 // sequential MSP chain; the setInterval that drives it fires on a fixed cadence regardless
 // of whether the previous cycle finished. On a slow-responding FC (e.g. STM32H5/C5) a cycle
@@ -51,7 +108,7 @@ let connectionTimeoutPending = false;
 // Handle for the BLE/manual reboot flush-timeout / reconnect-retry chain (rebootReconnect).
 // Tracked so an intentional disconnect during the reboot window can cancel it — otherwise the
 // retry would resurrect a connection the user just cancelled.
-let rebootReconnectTimerId = false;
+let rebootReconnectTimerId: ReturnType<typeof setTimeout> | ReturnType<typeof setInterval> | false = false;
 
 // The transport-open flag formerly stored here as `isConnected` now lives in
 // the connection state — read via `getConnectionState().linkOpen`, mutated via setLinkOpen.
@@ -97,7 +154,7 @@ let rebootHandshakeSawTraffic = false;
  * @param {string} port - the selected port path
  * @returns {boolean}
  */
-function isDrivenRebootTarget(port) {
+function isDrivenRebootTarget(port: string): boolean {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
 }
 
@@ -117,17 +174,18 @@ function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
 }
 
-function connectHandler(event) {
+function connectHandler(event: Event) {
     // Before onOpen: its MSP handshake can abort synchronously, and abortConnection reads
     // this flag to decide whether the failure reaches the user.
-    if (event.detail) {
+    const { detail } = event as CustomEvent<unknown>;
+    if (detail) {
         getConnectionState().setLinkOpen(true);
     }
-    onOpen(event.detail);
+    onOpen(detail);
 }
 
-function disconnectHandler(event) {
-    onClosed(event.detail);
+function disconnectHandler(event: Event) {
+    onClosed((event as CustomEvent<unknown>).detail);
 }
 
 /**
@@ -199,11 +257,12 @@ export function initializeSerialBackend() {
     // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
     // TODO: use event gattserverdisconnected for save and reboot and device removal.
 
-    serial.addEventListener("removedDevice", (event) => {
+    serial.addEventListener("removedDevice", (event: Event) => {
+        const { detail } = event as CustomEvent<{ path?: string } | undefined>;
         // event.detail.path is now a stable per-device id (WebSerial: "serial_N"),
         // so this match is device-specific: removing device A no longer triggers a
         // disconnect when device B is the connected one.
-        if (event.detail?.path && event.detail.path === GUI.connected_to) {
+        if (detail?.path && detail.path === GUI.connected_to) {
             connectDisconnect();
         }
     });
@@ -231,6 +290,7 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
+    const tracking = Analytics.tracking as AnalyticsTracker;
     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,
@@ -241,7 +301,8 @@ async function sendConfigTracking() {
         flightControllerVersion: FC.CONFIG.flightControllerVersion,
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
-        deviceIdentifier: SHA1(FC.CONFIG.deviceIdentifier).toString(),
+        // Only reached after MSP_UID succeeded, which stores a hex string (the number is VirtualFC's).
+        deviceIdentifier: SHA1(FC.CONFIG.deviceIdentifier as string).toString(),
         buildKey: FC.CONFIG.buildKey,
     });
 }
@@ -301,7 +362,7 @@ function prepareDisconnect() {
     // mid-reboot disconnectForReboot() path (which must KEEP the REBOOTING/RECONNECTING phase so
     // the reconnect can continue). So the reconnect window is owned by those callers, not here.
 
-    GUI.configuration_loaded = false;
+    GuiState.configuration_loaded = false;
     GUI.timeout_kill_all();
     GUI.interval_kill_all();
     GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
@@ -398,7 +459,7 @@ export function disconnect() {
  * @param {string} selectedDevice - the selected device path
  * @returns {boolean} true when a connect attempt can start now
  */
-function canStartConnectionAction(selectedDevice) {
+function canStartConnectionAction(selectedDevice: string): boolean {
     return (
         !GUI.connect_lock && !GUI.connecting_to && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb")
     );
@@ -408,7 +469,7 @@ function canStartConnectionAction(selectedDevice) {
  * @param {string} selectedDevice - the selected device path, or "virtual"/"manual"
  * @param {boolean} automatic - the app started this attempt, not the user
  */
-function beginConnect(selectedDevice, automatic) {
+function beginConnect(selectedDevice: string, automatic: boolean) {
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
@@ -466,7 +527,7 @@ function beginConnect(selectedDevice, automatic) {
     console.log("Press Ctrl+I to open CLI panel");
 }
 
-function isCliHotkey(e) {
+function isCliHotkey(e: KeyboardEvent): boolean {
     return e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 }
 
@@ -500,7 +561,7 @@ export function connectDisconnect({ automatic = false } = {}) {
     }
 
     // GUI control overrides the user control
-    GUI.configuration_loaded = false;
+    GuiState.configuration_loaded = false;
 
     if (isConnected()) {
         beginDisconnect();
@@ -516,15 +577,15 @@ export function connectDisconnect({ automatic = false } = {}) {
 }
 
 // Helper to show/hide elements used across this module (extracted to avoid duplicate functions)
-function hide(sel) {
-    const el = document.querySelector(sel);
+function hide(sel: string) {
+    const el = document.querySelector<HTMLElement>(sel);
     if (el) {
         el.style.display = "none";
     }
 }
 
-function show(sel) {
-    const el = document.querySelector(sel);
+function show(sel: string) {
+    const el = document.querySelector<HTMLElement>(sel);
     if (!el) {
         return;
     }
@@ -535,8 +596,8 @@ function show(sel) {
     }
 }
 
-const tagDisplayCache = {};
-function defaultDisplayForTag(tag) {
+const tagDisplayCache: Record<string, string> = {};
+function defaultDisplayForTag(tag: string): string {
     if (tagDisplayCache[tag]) {
         return tagDisplayCache[tag];
     }
@@ -567,8 +628,8 @@ function teardownConnectionUi() {
 
     // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
     // or switchTab silently rejects the disconnected tab.
-    const pendingTab = GUI.pendingTab;
-    GUI.pendingTab = null;
+    const pendingTab = GuiState.pendingTab;
+    GuiState.pendingTab = null;
     const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
 
     // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
@@ -590,7 +651,7 @@ function finishClose() {
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
-        document.getElementById("dialogResetToCustomDefaults")?.close();
+        (document.getElementById("dialogResetToCustomDefaults") as HTMLDialogElement | null)?.close();
     }
 
     serial.disconnect();
@@ -735,7 +796,7 @@ function resetConnection() {
     DeviceHandler.devicePickerDisabled = false;
 }
 
-function abortConnection(messageKey) {
+function abortConnection(messageKey?: string) {
     GUI.timeout_remove("connecting"); // kill post-open connecting timer
     GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
 
@@ -788,7 +849,7 @@ function abortConnection(messageKey) {
 
 // Surface a connection failure to the user with a dismissible dialog, not just a log line
 // that is easy to miss. `text` may contain HTML markup (InformationDialog renders it).
-function showConnectionFailedDialog(text, title = i18n.getMessage("connectionFailedTitle")) {
+function showConnectionFailedDialog(text: string, title = i18n.getMessage("connectionFailedTitle")) {
     const dialogStore = useDialogStore();
     dialogStore.open(
         "InformationDialog",
@@ -804,7 +865,7 @@ function showConnectionFailedDialog(text, title = i18n.getMessage("connectionFai
 }
 
 // Centralized helper: show version mismatch warning and switch to CLI
-function showVersionMismatchAndCli(message) {
+function showVersionMismatchAndCli(message: string) {
     const dialogStore = useDialogStore();
     dialogStore.open(
         "InformationDialog",
@@ -825,12 +886,12 @@ function showVersionMismatchAndCli(message) {
  * purpose of this is to bridge the old and new api
  * when serial events are handled.
  */
-function read_serial_adapter(event) {
+function read_serial_adapter(event: Event) {
     rebootHandshakeSawTraffic = true;
-    read_serial(event.detail.data);
+    read_serial((event as CustomEvent<{ data: ReadInfo }>).detail.data);
 }
 
-function onOpen(openInfo) {
+function onOpen(openInfo: unknown) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
 
@@ -961,7 +1022,7 @@ function processCustomDefaults() {
                     dialogStore.close();
 
                     const buffer = [];
-                    buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
+                    buffer.push(mspHelper!.RESET_TYPES.CUSTOM_DEFAULTS);
                     MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
 
                     GUI.timeout_add(
@@ -997,7 +1058,10 @@ function processBoardInfo() {
     }
 }
 
-function checkReportProblem(problemName, problems) {
+function checkReportProblem(
+    problemName: keyof typeof FC.CONFIGURATION_PROBLEM_FLAGS,
+    problems: ReportedProblem[],
+): boolean {
     if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
         problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
         return true;
@@ -1013,7 +1077,7 @@ async function checkReportProblems() {
     }
 
     let needsProblemReportingDialog = false;
-    let problems = [];
+    const problems: ReportedProblem[] = [];
 
     // only check for more problems if we are not already aborting
     needsProblemReportingDialog =
@@ -1038,7 +1102,7 @@ async function processBuildConfiguration() {
     if (buildOptionsSupported) {
         // get build key from firmware
         try {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
         } catch (error) {
             console.error("Failed to request build key:", error);
         }
@@ -1091,7 +1155,7 @@ async function processCraftName() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
+                mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
             );
         } else {
             await MSP.promise(MSPCodes.MSP_NAME);
@@ -1111,7 +1175,7 @@ async function processCraftName() {
         try {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PILOT_NAME),
+                mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PILOT_NAME),
             );
         } catch (error) {
             console.error("Failed to request pilot name:", error);
@@ -1119,11 +1183,11 @@ async function processCraftName() {
     }
 
     FC.CONFIG.armingDisabled = false;
-    mspHelper.disableArming(setRtc);
+    mspHelper!.disableArming(setRtc);
 }
 
 function setRtc() {
-    MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
+    MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper!.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
 }
 
 function finishOpen() {
@@ -1192,7 +1256,7 @@ function onConnect() {
 
 // Update which tabs are visible based on `GUI.allowedTabs` and board type
 function updateTabVisibility() {
-    const connectedItems = document.querySelectorAll("#tabs ul.mode-connected li");
+    const connectedItems = document.querySelectorAll<HTMLElement>("#tabs ul.mode-connected li");
     for (const li of connectedItems) {
         const classes = new Set(li.className.split(/\s+/));
         let found = false;
@@ -1236,7 +1300,7 @@ function initFeaturesOnConnect() {
     }
 }
 
-function onClosed(result) {
+function onClosed(result: unknown) {
     // A "disconnect" that arrives while we are still in the connect phase (onOpen never ran, so
     // the link never became valid) is a *failed connection attempt*, not the loss of an
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
@@ -1301,11 +1365,12 @@ function onClosed(result) {
     }
 }
 
-export function read_serial(info) {
+export function read_serial(info: ReadInfo) {
     if (CONFIGURATOR.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
-        TABS.cli?.read?.(info);
+        // CliTab.vue registers useCli's read here while the CLI tab is mounted.
+        (TABS.cli?.read as ((readInfo: ReadInfo) => void) | undefined)?.(info);
     } else {
         MSP.read(info);
     }
@@ -1316,7 +1381,7 @@ export function read_serial(info) {
 // disconnect settles the in-flight request with MspCancelledError. That is an expected
 // lifecycle event for a background poller that outlives any single tab, so it is swallowed
 // silently; genuine failures (timeout, CRC) are still logged and the cycle continues.
-async function requestLiveData(code, name) {
+async function requestLiveData(code: number, name: string): Promise<boolean> {
     try {
         await MSP.promise(code);
         return true;

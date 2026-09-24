@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
-// serial_backend.js pulls in a very large import graph (MSP, MSPHelper, FC,
+// serial_backend pulls in a very large import graph (MSP, MSPHelper, FC,
 // localization, Analytics, BuildApi, crypto, ...). We mock every collaborator
 // so the module loads in isolation and we can drive the connect/disconnect
 // event handlers directly and observe the UI-teardown side effects.
@@ -11,22 +11,22 @@ import { createPinia, setActivePinia } from "pinia";
 // vi.mock factories are hoisted above all module-level declarations, so any
 // shared mutable objects they reference must be created with vi.hoisted().
 const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspHelperInstance } = vi.hoisted(() => {
-    const serialHandlers = {};
+    const serialHandlers: Record<string, (event: { detail: unknown }) => void> = {};
     return {
         // GUI default object — only the members serial_backend touches.
         GUI: {
             connect_lock: false,
-            connected_to: false,
-            connecting_to: false,
+            connected_to: false as string | false,
+            connecting_to: false as string | false,
             configuration_loaded: false,
             active_tab: "landing",
             tab_switch_in_progress: false,
-            allowedTabs: [],
+            allowedTabs: [] as string[],
             defaultAllowedTabsWhenDisconnected: ["landing", "firmware_flasher"],
             defaultAllowedFCTabsWhenConnected: [],
             defaultAllowedTabs: [],
             defaultCloudBuildTabOptions: [],
-            pendingTab: null,
+            pendingTab: null as string | null,
             timeout_kill_all: vi.fn(),
             interval_kill_all: vi.fn(),
             timeout_add: vi.fn(),
@@ -39,7 +39,7 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
         serialHandlers,
         serial: {
             connected: false,
-            addEventListener: vi.fn((type, handler) => {
+            addEventListener: vi.fn((type: string, handler: (event: { detail: unknown }) => void) => {
                 serialHandlers[type] = handler;
             }),
             removeEventListener: vi.fn(),
@@ -50,7 +50,7 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
         unmountVueTab: vi.fn(),
         switchTab: vi.fn(),
         dialogStore: {
-            activeDialog: null,
+            activeDialog: null as { type: string } | null,
             open: vi.fn(),
             close: vi.fn(),
             updateProps: vi.fn(),
@@ -193,7 +193,7 @@ vi.mock("../../src/js/Analytics", () => ({
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
-    i18n: { getMessage: (k) => k },
+    i18n: { getMessage: (k: string) => k },
 }));
 
 vi.mock("../../src/js/gui_log", () => ({
@@ -234,6 +234,13 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 import FC from "../../src/js/fc";
 import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
+
+// device_handler.js attaches these after constructing its singleton, so its type does not
+// carry them; the mock above defines them as vi.fn().
+const DeviceHandlerMock = DeviceHandler as typeof DeviceHandler & {
+    isKnownDevicePath: Mock<(path: string) => boolean>;
+    findDescribedDevice: Mock<(target: unknown) => object | undefined>;
+};
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -383,9 +390,9 @@ describe("serial_backend connect deeplink", () => {
         // raises when it finds a serial port. The in-flight deeplink connect (GUI.connecting_to set)
         // must make that listener stand down instead of stealing the connection.
         await Promise.resolve();
-        const autoSelect = EventBus.$on.mock.calls.find(
-            (c) => c[0] === "device-handler:auto-select-serial-device",
-        )?.[1];
+        const autoSelect = vi
+            .mocked(EventBus.$on)
+            .mock.calls.find((c) => c[0] === "device-handler:auto-select-serial-device")?.[1];
         expect(autoSelect).toBeTypeOf("function");
 
         serial.connect.mockClear();
@@ -614,7 +621,7 @@ describe("serial_backend connect-failure dialog", () => {
         const apiVersion = FC.CONFIG.apiVersion;
         try {
             FC.CONFIG.apiVersion = "0.0.0";
-            MSP.send_message.mock.calls.at(-1)?.[3]?.(); // MSP_API_VERSION callback -> abortConnection
+            (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback -> abortConnection
         } finally {
             FC.CONFIG.apiVersion = apiVersion;
         }
@@ -632,9 +639,11 @@ describe("serial_backend connect-failure dialog", () => {
             connectDisconnect({ automatic: true });
             dialogStore.open.mockClear();
 
-            MSP.send_message.mockImplementationOnce((_code, _data, _sent, callback) => {
+            vi.mocked(MSP.send_message).mockImplementationOnce((_code, _data, _sent, callback) => {
                 FC.CONFIG.apiVersion = "0.0.0";
-                callback?.();
+                (callback as (() => void) | undefined)?.();
+                // The real send_message returns false after calling back synchronously.
+                return false;
             });
 
             serialHandlers.connect({ detail: true });
@@ -664,9 +673,9 @@ describe("serial_backend connect-failure dialog", () => {
         // Why abortConnection() no longer tests autoConnect: with it off nothing connects on
         // the app's own initiative, so every failure left is a user's to see.
         initializeSerialBackend();
-        const autoSelect = EventBus.$on.mock.calls.find(
-            (c) => c[0] === "device-handler:auto-select-serial-device",
-        )?.[1];
+        const autoSelect = vi
+            .mocked(EventBus.$on)
+            .mock.calls.find((c) => c[0] === "device-handler:auto-select-serial-device")?.[1];
         expect(autoSelect).toBeTypeOf("function");
 
         DeviceHandler.devicePicker.autoConnect = false;
@@ -899,7 +908,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             CONFIGURATOR.connectionValid = true; // established before the reboot
             establishConnection();
 
-            MSP.send_message.mockClear();
+            vi.mocked(MSP.send_message).mockClear();
             serial.disconnect.mockClear();
             serial.connect.mockClear();
 
@@ -975,8 +984,8 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = false;
             DeviceHandler.portAvailable = true; // other serial ports are present throughout
-            DeviceHandler.isKnownDevicePath.mockReturnValue(true); // and one shares our path shape
-            DeviceHandler.findDescribedDevice.mockReturnValue(undefined); // but ours is away
+            DeviceHandlerMock.isKnownDevicePath.mockReturnValue(true); // and one shares our path shape
+            DeviceHandlerMock.findDescribedDevice.mockReturnValue(undefined); // but ours is away
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
@@ -987,14 +996,14 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             vi.advanceTimersByTime(1500 + 3000); // flush plus several ticks
             expect(getConnectionState().isRebootWindowOpen).toBe(true); // ours is gone: keep waiting
 
-            DeviceHandler.findDescribedDevice.mockReturnValue({ path: "serial_9" }); // back, new id
+            DeviceHandlerMock.findDescribedDevice.mockReturnValue({ path: "serial_9" }); // back, new id
             vi.advanceTimersByTime(1000);
             expect(getConnectionState().isRebootWindowOpen).toBe(false);
             expect(serial.connect).not.toHaveBeenCalled(); // nothing auto-reconnects
         } finally {
             DeviceHandler.portAvailable = false;
-            DeviceHandler.isKnownDevicePath.mockReturnValue(false);
-            DeviceHandler.findDescribedDevice.mockReturnValue(undefined);
+            DeviceHandlerMock.isKnownDevicePath.mockReturnValue(false);
+            DeviceHandlerMock.findDescribedDevice.mockReturnValue(undefined);
             vi.useRealTimers();
         }
     });
@@ -1036,7 +1045,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
             DeviceHandler.devicePicker.autoConnect = true;
             establishVirtualConnection();
 
-            MSP.send_message.mockClear();
+            vi.mocked(MSP.send_message).mockClear();
             serial.disconnect.mockClear();
             mspHelperInstance.enableArming.mockClear();
             mspHelperInstance.disableArming.mockClear();
@@ -1122,7 +1131,7 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         MSP.last_received_timestamp = Date.now() - 10_000;
 
         // MSP.onTimeout hook — fired after an errorAware request exhausts MAX_RETRIES.
-        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+        MSP.onTimeout!(MSPCodes.MSP_ANALOG);
 
         // Teardown runs via finishClose -> serial.disconnect, with no MSP round-trip to the dead FC.
         expect(serial.disconnect).toHaveBeenCalledTimes(1);
@@ -1146,7 +1155,7 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         // exhausted request is a latency spike, not a dead link.
         MSP.last_received_timestamp = Date.now();
 
-        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+        MSP.onTimeout!(MSPCodes.MSP_ANALOG);
 
         expect(serial.disconnect).not.toHaveBeenCalled();
     });
@@ -1156,7 +1165,7 @@ describe("serial_backend MSP unresponsive-FC teardown", () => {
         getConnectionState().setLinkOpen(false);
         serial.disconnect.mockClear();
 
-        MSP.onTimeout(MSPCodes.MSP_ANALOG);
+        MSP.onTimeout!(MSPCodes.MSP_ANALOG);
 
         expect(serial.disconnect).not.toHaveBeenCalled();
     });
