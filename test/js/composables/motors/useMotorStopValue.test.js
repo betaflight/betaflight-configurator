@@ -24,20 +24,24 @@ describe("computeZeroThrottleValue", () => {
         expect(computeZeroThrottleValue(true, false, 1460, 1000)).toBe(1460);
     });
 
-    it("clamps an analog 3D neutral above 1575 to 1500", () => {
-        expect(computeZeroThrottleValue(true, false, 1600, 1000)).toBe(1500);
+    it("returns the configured neutral at the 3D Neutral field's upper bound (1600)", () => {
+        expect(computeZeroThrottleValue(true, false, 1600, 1000)).toBe(1600);
     });
 
-    it("clamps an analog 3D neutral below 1425 to 1500", () => {
-        expect(computeZeroThrottleValue(true, false, 1400, 1000)).toBe(1500);
+    it("returns the configured neutral at the 3D Neutral field's lower bound (1400)", () => {
+        expect(computeZeroThrottleValue(true, false, 1400, 1000)).toBe(1400);
     });
 
-    it("treats analog 3D clamp boundary 1425 as in-range", () => {
-        expect(computeZeroThrottleValue(true, false, 1425, 1000)).toBe(1425);
+    it("clamps a neutral above the 3D Neutral field's range (1601) to 1500", () => {
+        expect(computeZeroThrottleValue(true, false, 1601, 1000)).toBe(1500);
     });
 
-    it("treats analog 3D clamp boundary 1575 as in-range", () => {
-        expect(computeZeroThrottleValue(true, false, 1575, 1000)).toBe(1575);
+    it("clamps a neutral below the 3D Neutral field's range (1399) to 1500", () => {
+        expect(computeZeroThrottleValue(true, false, 1399, 1000)).toBe(1500);
+    });
+
+    it("clamps an unpopulated store neutral (0, before MSP_MOTOR_3D_CONFIG loads) to 1500", () => {
+        expect(computeZeroThrottleValue(true, false, 0, 1000)).toBe(1500);
     });
 
     it("falls back to minSliderValue when 3D mode is disabled (DShot)", () => {
