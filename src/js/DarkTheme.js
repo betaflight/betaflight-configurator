@@ -1,7 +1,8 @@
-const DarkTheme = {
-    configSetting: undefined,
-    enabled: false,
-};
+const DarkTheme = {};
+
+/** @type {number | undefined} 0 = dark, 1 = light, 2 = follow the OS */
+DarkTheme.configSetting = undefined;
+DarkTheme.enabled = false;
 
 DarkTheme.isDarkThemeEnabled = function (callback) {
     if (this.configSetting === 0) {

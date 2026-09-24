@@ -15,10 +15,10 @@ const DRAIN_TIMEOUT_MS = 2 * BUILDER_TIMEOUT_MS;
  * The dropdown UI is handled by the Vue CliAutocompleteDropdown component
  * and the useCliAutocomplete composable.
  */
-const CliAutoComplete = {
-    configEnabled: false,
-    builder: { state: "reset", numFails: 0, draining: false },
-};
+const CliAutoComplete = {};
+
+CliAutoComplete.configEnabled = false;
+CliAutoComplete.builder = { state: "reset", numFails: 0, draining: false };
 
 CliAutoComplete.isEnabled = function () {
     return (

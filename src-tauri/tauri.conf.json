@@ -12,11 +12,7 @@
     "app": {
         "security": {
             "csp": null,
-            "capabilities": [
-                "default",
-                "android",
-                "ios"
-            ]
+            "capabilities": ["default", "android", "ios"]
         },
         "windows": [
             {
@@ -33,17 +29,8 @@
     },
     "bundle": {
         "active": true,
-        "targets": [
-            "deb",
-            "rpm",
-            "appimage",
-            "dmg",
-            "nsis"
-        ],
-        "icon": [
-            "icons/bf_icon_128.png",
-            "icons/icon.ico"
-        ],
+        "targets": ["deb", "rpm", "appimage", "dmg", "nsis"],
+        "icon": ["icons/bf_icon_128.png", "icons/icon.ico"],
         "category": "Utility",
         "copyright": "The Betaflight open source project.",
         "shortDescription": "Configuration and management application for Betaflight flight controllers.",

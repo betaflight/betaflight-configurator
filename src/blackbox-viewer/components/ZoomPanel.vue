@@ -18,7 +18,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useGraphStore } from "../stores/graph.js";
 
@@ -29,14 +29,14 @@ const graphStore = useGraphStore();
 // Piecewise-linear mapping: slider midpoint (100) = 100% zoom
 // Left half  (0–100)  → 1%–100%
 // Right half (100–200) → 100%–1000%
-function posToZoom(pos) {
+function posToZoom(pos: number) {
     if (pos <= 100) {
         return Math.round(1 + pos * 0.99);
     }
     return Math.round(100 + (pos - 100) * 9);
 }
 
-function zoomToPos(zoom) {
+function zoomToPos(zoom: number) {
     if (zoom <= 100) {
         return Math.round((zoom - 1) / 0.99);
     }

@@ -161,6 +161,14 @@ export function useMspCliSession() {
     const isBatchRunning = ref(false);
     let cancelRequested = false;
 
+    /**
+     * @param {string[]} commands
+     * @param {{
+     *   onProgress?: (p: { index: number, total: number, sent: number, errorCount: number }) => void,
+     *   onError?: (failure: { command: string, response: string[] }) => void,
+     *   commandTimeoutMs?: number,
+     * }} [options]
+     */
     async function runBatch(commands, { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
         cancelRequested = false;
         isBatchRunning.value = true;

@@ -15,7 +15,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed } from "vue";
 import { documentationLinks } from "@/config/documentationLinks";
 
@@ -32,7 +32,8 @@ export default defineComponent({
             if (props.docUrl.startsWith("https")) {
                 return props.docUrl;
             }
-            return documentationLinks[props.docUrl] || "#";
+            const links: Record<string, string | undefined> = documentationLinks;
+            return links[props.docUrl] || "#";
         });
 
         return { url };

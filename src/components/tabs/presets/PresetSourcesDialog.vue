@@ -31,10 +31,16 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
+import type { PropType } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import PresetSourceCard from "./PresetSourceCard.vue";
+
+interface PresetSource {
+    id: string;
+    [key: string]: unknown;
+}
 
 const props = defineProps({
     open: {
@@ -42,23 +48,26 @@ const props = defineProps({
         default: false,
     },
     sources: {
-        type: Array,
+        type: Array as PropType<PresetSource[]>,
         default: () => [],
     },
     activeSourceIds: {
-        type: Array,
+        type: Array as PropType<string[]>,
         default: () => [],
     },
 });
 
-const emit = defineEmits([
-    "close",
-    "add-source",
-    "save-source",
-    "delete-source",
-    "activate-source",
-    "deactivate-source",
-]);
+// Typed rather than a string array: the array form carries no payload types, so a handler
+// bound to one of these is checked against nothing. That is how a `sourceId: string` came to
+// be annotated as a numeric index in PresetsTab and typechecked clean anyway.
+const emit = defineEmits<{
+    close: [];
+    "add-source": [];
+    "save-source": [sourceId: string, source: Record<string, unknown>];
+    "delete-source": [sourceId: string];
+    "activate-source": [sourceId: string];
+    "deactivate-source": [sourceId: string];
+}>();
 
 const selectedSourceId = ref("");
 
@@ -85,7 +94,7 @@ watch(
     },
 );
 
-function onOpenChange(value) {
+function onOpenChange(value: boolean) {
     if (!value && props.open) {
         emit("close");
     }

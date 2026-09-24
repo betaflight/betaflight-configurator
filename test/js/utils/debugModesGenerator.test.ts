@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { format, resolveConfig } from "prettier";
 import {
     maskNonCode,
     parseEnumBlock,
@@ -6,6 +7,8 @@ import {
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderFieldsModule,
+    renderModeFields,
     resolveFieldIndex,
 } from "../../../scripts/generate-debug-modes.mjs";
 
@@ -189,5 +192,108 @@ describe("propertyKey", () => {
         expect(propertyKey("3D")).toBe('"3D"');
         expect(propertyKey("A-B")).toBe('"A-B"');
         expect(propertyKey("A B")).toBe('"A B"');
+    });
+});
+
+describe("renderModeFields", () => {
+    // Firmware carries no conflicting field since betaflight/betaflight#15727, so
+    // the generated table no longer exercises this; the shapes below are the two
+    // it used to hold.
+    const variant = (label: string, unit: string | null, scale = 1) => ({ label, unit, scale });
+
+    it("names both meanings of a field two subsystems write differently, and drops the unit", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "BATTERY",
+            { 3: [variant("Sag Compensation Attenuation", null, 0.001), variant("Voltage Stable Bits", null)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain(
+            '3: Object.freeze({ label: "Sag Compensation Attenuation / Voltage Stable Bits", unit: null, scale: 1 })',
+        );
+        expect(conflicts).toEqual([expect.objectContaining({ apiVersion: "1.49.0", mode: "BATTERY", index: 3 })]);
+    });
+
+    it("names both meanings only when they differ", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields(
+            "LIDAR_TF",
+            { 0: [variant("Distance", "cm"), variant("Distance", "m", 0.001)] },
+            "1.49.0",
+            conflicts,
+        ).join("\n");
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: null, scale: 1 })');
+        expect(conflicts).toHaveLength(1);
+    });
+
+    it("keeps the unit and scale of a field with one meaning", () => {
+        const conflicts: unknown[] = [];
+        const source = renderModeFields("UPT1", { 0: [variant("Distance", "m", 0.001)] }, "1.49.0", conflicts).join(
+            "\n",
+        );
+
+        expect(source).toContain('0: Object.freeze({ label: "Distance", unit: "m", scale: 0.001 })');
+        expect(conflicts).toEqual([]);
+    });
+});
+
+describe("renderFieldsModule", () => {
+    // `--check` compares the generated table with the committed one, which
+    // `npm run format` has been through, so the generator has to write exactly
+    // what Prettier would. An empty conflict list is the case that broke that:
+    // Prettier folds `Object.freeze([` and `]);` onto one line.
+    const TABLE_PATH = "src/js/debug_fields_table.ts";
+    const site = (label: string, unit: string | null, scale: number, sites: string[]) => ({
+        label,
+        unit,
+        scale,
+        sites,
+    });
+    // Every annotated firmware carries enum fields, and the enum table is rendered
+    // after the conflicts, so the fixture has one too.
+    const RESCUE_PHASE = {
+        ...site("Rescue Phase", null, 1, ["src/main/flight/gps_rescue.c:1"]),
+        enumTag: "rescuePhase_e",
+        values: ["RESCUE_IDLE", "RESCUE_INITIALIZE"],
+    };
+    const render = (fields: Record<string, Record<number, ReturnType<typeof site>[]>>) =>
+        renderFieldsModule({
+            repoUrl: "https://github.com/betaflight/betaflight",
+            versions: [{ apiVersion: "1.49.0", commit: "805313c231abcdef", date: "2026-09-22", ref: "master", fields }],
+        });
+    const prettierFormat = async (source: string) => {
+        const options = await resolveConfig(TABLE_PATH, { editorconfig: true });
+        return format(source, { ...options, filepath: TABLE_PATH });
+    };
+
+    it("writes an empty conflict list the way Prettier formats it", async () => {
+        const { source, conflicts } = render({
+            UPT1: { 0: [site("Distance", "m", 0.001, ["src/main/a.c:1"])] },
+            GPS_RESCUE_TRACKING: { 7: [RESCUE_PHASE] },
+        });
+
+        expect(conflicts).toEqual([]);
+        expect(source).toContain(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([]);",
+        );
+        expect(await prettierFormat(source)).toBe(source);
+    });
+
+    it("writes a conflict list the way Prettier formats it", async () => {
+        const { source, conflicts } = render({
+            GPS_RESCUE_TRACKING: { 7: [RESCUE_PHASE] },
+            BATTERY: {
+                3: [
+                    site("Sag Compensation Attenuation", null, 0.001, ["src/main/flight/mixer.c:1"]),
+                    site("Voltage Stable Bits", null, 1, ["src/main/sensors/battery.c:1"]),
+                ],
+            },
+        });
+
+        expect(conflicts).toHaveLength(1);
+        expect(await prettierFormat(source)).toBe(source);
     });
 });

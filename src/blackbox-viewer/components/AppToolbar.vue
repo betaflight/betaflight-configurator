@@ -105,8 +105,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, ref, watch } from "vue";
+import type { DataflashHost } from "../host_capabilities";
 import { useLogStore } from "../stores/log.js";
 import { useAppStore } from "../stores/app.js";
 import { useGraphStore } from "../stores/graph.js";
@@ -128,7 +129,8 @@ defineEmits([
 const logStore = useLogStore();
 const appStore = useAppStore();
 const graphStore = useGraphStore();
-const videoCapability = ref(null);
+/** Result of probing for video-encoding support; null until the probe resolves. */
+const videoCapability = ref<{ canEncode: boolean; reason?: string } | null>(null);
 let probeGeneration = 0;
 
 const videoExportDisabled = computed(() => !videoCapability.value?.canEncode);
@@ -154,7 +156,7 @@ watch(
         } catch (error) {
             result = {
                 canEncode: false,
-                reason: `Video capability detection failed: ${error?.message ?? String(error)}`,
+                reason: `Video capability detection failed: ${error instanceof Error ? error.message : String(error)}`,
             };
         }
         if (generation === probeGeneration) {
@@ -166,7 +168,7 @@ watch(
 
 // Host-provided FC dataflash pull capability (null when not embedded / unavailable). Shared
 // with WelcomePage.vue via the same injection so both surfaces reflect one source of truth.
-const dataflash = inject("bbvDataflash", null);
+const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 const downloadAvailable = computed(() => !!dataflash?.available?.value);
 const pulling = computed(() => !!dataflash?.pulling?.value);
 const progress = computed(() => dataflash?.progress?.value ?? 0);

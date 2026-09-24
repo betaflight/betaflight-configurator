@@ -68,9 +68,9 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[1]")).toEqual({ min: 0, max: 100 });
         expect(rangeFor("1.49.0", "CYCLETIME", "debug[4]")).toEqual({ min: 0, max: 2000 });
         expect(rangeFor("1.49.0", "BATTERY", "debug[0]")).toEqual({ min: 0, max: 4096 });
-        // debug[2] is a 0-100 goodness percentage, not a voltage: the firmware
-        // annotation gives it its own axis instead of the mode's volts default.
-        expect(rangeFor("1.49.0", "BATTERY", "debug[2]")).toEqual({ min: 0, max: 100 });
+        // Battery goodness is a 0-100 percentage with no per-mode default: the
+        // firmware annotation gives it its own axis.
+        expect(rangeFor("1.49.0", "SAG_COMPENSATION", "debug[0]")).toEqual({ min: 0, max: 100 });
         // MAG_CALIB has no entry beyond debug[7], so debug[8] auto-scales to the logged range.
         expect(rangeFor("1.49.0", "MAG_CALIB", "debug[8]")).toEqual(LOGGED_RANGE);
         expect(rangeFor("1.49.0", "GPS_CONNECTION", "debug[2]")).toEqual({ min: -200, max: 200 });

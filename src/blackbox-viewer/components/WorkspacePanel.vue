@@ -69,7 +69,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useWorkspaceStore } from "../stores/workspace.js";
 
@@ -92,10 +92,10 @@ watch(
 );
 
 const renameOpen = ref(false);
-const renameId = ref(null);
+const renameId = ref<number | null>(null);
 const renameTitle = ref("");
 
-function openRename(id, title) {
+function openRename(id: number, title: string) {
     renameId.value = id;
     // Offer an empty field rather than making the user clear the "Unnamed" placeholder.
     renameTitle.value = title === "Unnamed" ? "" : title;

@@ -86,6 +86,7 @@ export const usePresetsStore = defineStore("presets", () => {
         progressDialogOpen: false,
         cliErrorsDialogOpen: false,
         cliErrorsSavePressed: false,
+        /** @type {{ command: string, response: string[] }[]} */
         cliErrors: [],
     });
 
