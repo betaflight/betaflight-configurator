@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from "vue";
 import { i18n } from "../../js/localization";
 
