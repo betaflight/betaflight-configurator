@@ -8,6 +8,7 @@ import { useConnectionStore } from "../stores/connection";
 import { pinia } from "./pinia_instance";
 import { getLockManager } from "./lock_manager";
 
+/** @type {Record<string, Record<string, unknown> | undefined>} registered at runtime by each tab */
 const TABS = {};
 
 class GuiControl {

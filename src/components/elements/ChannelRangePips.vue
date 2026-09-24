@@ -11,15 +11,16 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
+import type { PropType } from "vue";
 import { channelPercent } from "../../js/utils/rcChannel";
 
 export default defineComponent({
     name: "ChannelRangePips",
     props: {
         pips: {
-            type: Array,
+            type: Array as PropType<number[]>,
             required: true,
         },
         markerPercent: {
@@ -29,7 +30,7 @@ export default defineComponent({
         variant: {
             type: String,
             default: "adjustments",
-            validator: (value) => ["aux", "adjustments"].includes(value),
+            validator: (value: unknown) => typeof value === "string" && ["aux", "adjustments"].includes(value),
         },
     },
     setup() {

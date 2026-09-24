@@ -51,7 +51,7 @@
     </UiBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import { useAutotune } from "@/composables/useAutotune";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bit_check, bit_set } from "../../../src/js/bit.js";
+import { bit_check, bit_set } from "../../../src/js/bit";
 import { isFailsafeActive, FAILSAFE_BIT, RX_FAILSAFE_BIT, BOXFAILSAFE_BIT } from "../../../src/stores/fc.js";
 
 // ---------------------------------------------------------------------------

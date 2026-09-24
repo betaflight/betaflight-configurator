@@ -18,7 +18,7 @@
  *
  * If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 import { type MaybeRef, unref } from "vue";
 import { i18n } from "../../js/localization";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";

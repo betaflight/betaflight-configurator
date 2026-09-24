@@ -12,6 +12,12 @@ export const useGraphStore = defineStore("graph", () => {
     const prefs = new PrefStorage();
 
     // Renderer instances — registered by main.js after creation
+    /**
+     * The GraphSpectrumPlot-backed grapher instance, installed by main.js once a log is open.
+     * Only the members consumers reach through the store are named; the rest stay on the
+     * instance until blackbox-viewer itself is converted (#5542 phase 6).
+     * @type {import("vue").ShallowRef<{ getAnalyser?: () => any } | null>}
+     */
     const graph = shallowRef(null);
     const mapGrapher = shallowRef(null);
     const seekBar = shallowRef(null);
@@ -37,6 +43,7 @@ export const useGraphStore = defineStore("graph", () => {
     const hasConfig = ref(false);
     const hasConfigOverlay = ref(false);
     const configFileName = ref("");
+    /** @type {import("vue").ShallowRef<string[]>} */
     const configLines = shallowRef([]);
 
     // Legend
@@ -64,11 +71,16 @@ export const useGraphStore = defineStore("graph", () => {
     const reorderGraphs = shallowRef(null);
     const resetPen = shallowRef(null);
     const fieldWheel = shallowRef(null);
+    /** @type {import("vue").ShallowRef<(() => void) | null>} */
     const spectrumExport = shallowRef(null);
+    /** @type {import("vue").ShallowRef<((files: FileList | null) => void) | null>} */
     const spectrumImport = shallowRef(null);
+    /** @type {import("vue").ShallowRef<(() => void) | null>} */
     const spectrumClear = shallowRef(null);
     const applyGraphZoom = shallowRef(null);
+    /** @type {import("vue").ShallowRef<((index: number) => void) | null>} */
     const selectLogIndex = shallowRef(null);
+    /** @type {import("vue").ShallowRef<((mode: string) => void) | null>} */
     const setSeekBarMode = shallowRef(null);
 
     // --- Legend actions ---
