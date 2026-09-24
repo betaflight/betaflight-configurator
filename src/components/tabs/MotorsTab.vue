@@ -782,11 +782,24 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
+// Snapshot of the flight controller's actually-applied 3D state, refreshed only after a
+// successful persist. isFeatureEnabled("3D") and fcStore.motor3dConfig.neutral are live,
+// pending UI state — using them directly here would let an unsaved edit (e.g. enabling 3D,
+// then saving before the write reaches the FC) compute a stop command under an interpretation
+// the FC isn't running yet, sending throttle instead of stop.
+const appliedIs3dEnabled = ref(false);
+const appliedMotor3dNeutral = ref(1500);
+
+const syncAppliedThreeDState = () => {
+    appliedIs3dEnabled.value = isFeatureEnabled("3D");
+    appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
+};
+
 const zeroThrottleValue = computed(() =>
     computeZeroThrottleValue(
-        isFeatureEnabled("3D"),
+        appliedIs3dEnabled.value,
         digitalProtocolConfigured.value,
-        fcStore.motor3dConfig.neutral,
+        appliedMotor3dNeutral.value,
         minSliderValue.value,
     ),
 );
@@ -850,6 +863,7 @@ onMounted(async () => {
         await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
     }
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
+    syncAppliedThreeDState();
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
@@ -1485,7 +1499,9 @@ const handleSave = (reboot = true) => {
             await saveToEeprom();
         }
 
-        // Only after a successful persist: record analytics and refresh the dirty baseline.
+        // Only after a successful persist: refresh the applied-state snapshot, record analytics,
+        // and refresh the dirty baseline.
+        syncAppliedThreeDState();
         if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
             tracking.sendSaveAndChangeEvents(
                 tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,

@@ -247,6 +247,29 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(stopAllMotors).toHaveBeenCalledWith(1500);
     });
 
+    it("stops motors at the previously-applied value, not a pending unsaved 3D-enable edit, on save", async () => {
+        configHasChanged.value = true;
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        // Simulate an unsaved edit: enable the 3D feature in the UI without saving yet.
+        const feature3dLabel = [...container.querySelectorAll("span")].find((el) => el.textContent === "feature3D");
+        const toggle = feature3dLabel.closest(".flex.items-center.gap-2").querySelector('button[role="switch"]');
+        toggle.click();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const saveButton = [...container.querySelectorAll("button")].find((b) =>
+            b.textContent.includes("configurationButtonSave"),
+        );
+        saveButton.click();
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        // The flight controller is still running non-3D at this instant (the feature push hasn't
+        // reached it yet), so the pre-save stop must use the applied non-3D interpretation (1000),
+        // not the pending 3D-enable edit (1500) — the FC would read 1500 as throttle, not stop.
+        expect(stopAllMotors).toHaveBeenCalledWith(1000);
+        expect(stopAllMotors).not.toHaveBeenCalledWith(1500);
+    });
+
     it("stops motors at the DShot 3D stop value, not the configured neutral, when the tab unmounts mid-test", async () => {
         await mountReady({ enable3d: true, neutral: 1460 });
         motorsTestingEnabled.value = true;
