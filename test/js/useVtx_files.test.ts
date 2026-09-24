@@ -95,13 +95,27 @@ describe("useVtx file export and import", () => {
         expect(gui_log).not.toHaveBeenCalled();
     });
 
-    it("reports a save that fails while writing", async () => {
+    it("reports a save that fails while writing, even when the write aborts", async () => {
         fileSystem.pickSaveFile.mockResolvedValue({ name: "vtx.json" });
-        fileSystem.writeFile.mockRejectedValue(new Error("disk full"));
+        for (const failure of [new Error("disk full"), abort()]) {
+            vi.mocked(gui_log).mockClear();
+            fileSystem.writeFile.mockRejectedValue(failure);
 
-        vtx.saveJsonFile();
-        await settle();
+            vtx.saveJsonFile();
+            vtx.saveLuaFile();
+            await settle();
 
-        expect(gui_log).toHaveBeenCalledWith("vtxSavedFileKo");
+            expect(gui_log).toHaveBeenCalledWith("vtxSavedFileKo");
+            expect(gui_log).toHaveBeenCalledWith("vtxSavedLuaFileKo");
+        }
+    });
+
+    it("reports a load that fails while reading, even when the read aborts", async () => {
+        fileSystem.pickOpenFile.mockResolvedValue({ name: "vtx.json" });
+        fileSystem.readFile.mockRejectedValue(abort());
+
+        await vtx.loadJsonFile();
+
+        expect(gui_log).toHaveBeenCalledWith("vtxLoadFileKo");
     });
 });

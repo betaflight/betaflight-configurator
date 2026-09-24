@@ -65,9 +65,18 @@ const MAX_BAND_VALUES = 8;
 const MAX_BAND_CHANNELS_VALUES = 8;
 
 // Cancelling a file picker resolves null on Android and the fallback picker, and rejects with an
-// AbortError from the browser's File System Access pickers; either way there is nothing to report.
-function isPickerCancel(error: unknown): boolean {
-    return error instanceof Error && error.name === "AbortError";
+// AbortError from the browser's File System Access pickers. This maps the second onto the first.
+// Only the picker call goes through it: writeFile can also reject with an AbortError (a failed
+// safe-browsing check), and that is a real failure.
+async function unlessCancelled<T>(picker: Promise<T | null>): Promise<T | null> {
+    try {
+        return await picker;
+    } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+            return null;
+        }
+        throw error;
+    }
 }
 
 function getVtxTypeString() {
@@ -562,11 +571,13 @@ export function useVtx() {
         const suffix = "json";
         const filename = generateFilename(suggestedName, suffix);
 
-        FileSystem.pickSaveFile(
-            filename,
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-            "vtx-file",
+        unlessCancelled(
+            FileSystem.pickSaveFile(
+                filename,
+                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                `.${suffix}`,
+                "vtx-file",
+            ),
         )
             .then((file) => {
                 if (!file) {
@@ -578,9 +589,6 @@ export function useVtx() {
                 return FileSystem.writeFile(file, text);
             })
             .catch((error) => {
-                if (isPickerCancel(error)) {
-                    return;
-                }
                 console.error("Failed to write VTX file:", error);
                 gui_log(i18n.getMessage("vtxSavedFileKo"));
             });
@@ -595,11 +603,13 @@ export function useVtx() {
 
         const filename = `${uid0}${uid1}${uid2}.${suffix}`;
 
-        FileSystem.pickSaveFile(
-            filename,
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-            "vtx-file",
+        unlessCancelled(
+            FileSystem.pickSaveFile(
+                filename,
+                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                `.${suffix}`,
+                "vtx-file",
+            ),
         )
             .then((file) => {
                 if (!file) {
@@ -611,9 +621,6 @@ export function useVtx() {
                 return FileSystem.writeFile(file, text);
             })
             .catch((error) => {
-                if (isPickerCancel(error)) {
-                    return;
-                }
                 console.error("Failed to write lua file:", error);
                 gui_log(i18n.getMessage("vtxSavedLuaFileKo"));
             });
@@ -623,10 +630,12 @@ export function useVtx() {
         const suffix = "json";
 
         try {
-            const file = await FileSystem.pickOpenFile(
-                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-                `.${suffix}`,
-                "vtx-file",
+            const file = await unlessCancelled(
+                FileSystem.pickOpenFile(
+                    i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                    `.${suffix}`,
+                    "vtx-file",
+                ),
             );
             if (!file) {
                 return;
@@ -645,9 +654,6 @@ export function useVtx() {
             console.log("Load VTX file end");
             gui_log(i18n.getMessage("vtxLoadFileOk"));
         } catch (error) {
-            if (isPickerCancel(error)) {
-                return;
-            }
             console.error("Failed loading VTX file config", error);
             gui_log(i18n.getMessage("vtxLoadFileKo"));
         }
