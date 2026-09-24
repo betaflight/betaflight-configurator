@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
@@ -176,7 +197,9 @@ const VirtualFC = {
             deadband3d_high: 1514,
             neutral: 1460,
         };
+        // Spread the reset values first so the virtual board reports every field a real one does.
         virtualFC.MOTOR_CONFIG = {
+            ...virtualFC.MOTOR_CONFIG,
             minthrottle: 1070,
             maxthrottle: 2000,
             mincommand: 1000,
@@ -220,23 +243,21 @@ const VirtualFC = {
 
         virtualFC.SERIAL_CONFIG.ports[0] = {
             identifier: 20,
-            auxChannelIndex: 0,
             functions: ["MSP"],
-            msp_baudrate: 115200,
-            gps_baudrate: 57600,
+            msp_baudrate: "115200",
+            gps_baudrate: "57600",
             telemetry_baudrate: "AUTO",
-            blackbox_baudrate: 115200,
+            blackbox_baudrate: "115200",
         };
 
         for (let i = 1; i < virtualFC.SERIAL_CONFIG.ports.length; i++) {
             virtualFC.SERIAL_CONFIG.ports[i] = {
                 identifier: i - 1,
-                auxChannelIndex: 0,
                 functions: [],
-                msp_baudrate: 115200,
-                gps_baudrate: 57600,
+                msp_baudrate: "115200",
+                gps_baudrate: "57600",
                 telemetry_baudrate: "AUTO",
-                blackbox_baudrate: 115200,
+                blackbox_baudrate: "115200",
             };
         }
 
@@ -254,6 +275,7 @@ const VirtualFC = {
         }
 
         virtualFC.ANALOG = {
+            ...virtualFC.ANALOG,
             voltage: 12,
             mAhdrawn: 1200,
             rssi: 100,
@@ -320,6 +342,7 @@ const VirtualFC = {
         };
 
         virtualFC.SDCARD = {
+            ...virtualFC.SDCARD,
             supported: true,
             state: 1,
             freeSizeKB: 1024,
@@ -415,6 +438,7 @@ const VirtualFC = {
         virtualFC.CONFIG.activeSensors = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47) ? 127 : 63;
 
         virtualFC.SENSOR_CONFIG_ACTIVE = {
+            ...virtualFC.SENSOR_CONFIG_ACTIVE,
             gyro_hardware: 2, // MPU6050
             acc_hardware: 3, // MPU6050
             baro_hardware: 4, // BMP280
@@ -442,7 +466,8 @@ const VirtualFC = {
     },
 
     setupVirtualOSD() {
-        const virtualOSD = OSD;
+        // osd.js assigns OSD.data and OSD.virtualMode inside functions, where TypeScript does not see them.
+        const virtualOSD = OSD as typeof OSD & { data: Record<string, unknown>; virtualMode: Record<string, unknown> };
 
         virtualOSD.data.video_system = 1; // PAL
         virtualOSD.data.unit_mode = 1; // METRIC
@@ -451,7 +476,8 @@ const VirtualFC = {
             itemPositions: Array.from({ length: 77 }),
             statisticsState: [],
             warningFlags: 0,
-            timerData: [],
+            // Three timers, shaped as the decoder unpacks them from a real FC's zeroed timer words.
+            timerData: Array.from({ length: 3 }, () => OSD.msp.helpers.unpack.timer(0)),
         };
 
         virtualOSD.data.state = {
@@ -464,6 +490,7 @@ const VirtualFC = {
         };
 
         virtualOSD.data.parameters = {
+            overlayRadioMode: 0,
             cameraFrameWidth: 30,
             cameraFrameHeight: 30,
         };
