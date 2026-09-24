@@ -380,17 +380,19 @@ class MspHelper {
     }
 
     process_data(dataHandler: MspFrame) {
-        this.decodeFrame(dataHandler);
-        this.settleCallbacks(dataHandler);
+        if (this.decodeFrame(dataHandler)) {
+            this.settleCallbacks(dataHandler);
+        }
         dataHandler._release_parked?.(dataHandler.code);
     }
 
-    private decodeFrame(dataHandler: MspFrame) {
+    // Returns false when the frame's requests must stay pending (see KEEP_PENDING).
+    private decodeFrame(dataHandler: MspFrame): boolean {
         const code = dataHandler.code;
 
         if (dataHandler.crcError) {
             console.warn(`code: ${code} (${getMSPCodeName(code)}) - crc failed`);
-            return;
+            return true;
         }
 
         if (dataHandler.unsupported) {
@@ -399,15 +401,15 @@ class MspHelper {
             if (code === MSPCodes.MSP_SET_REBOOT) {
                 (TABS.onboard_logging as { mscRebootFailedCallback: () => void }).mscRebootFailedCallback();
             }
-            return;
+            return true;
         }
 
         const decode = DECODERS[code];
-        if (decode) {
-            decode.call(this, dataHandler.dataView, dataHandler);
-        } else {
+        if (!decode) {
             console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
+            return true;
         }
+        return decode.call(this, dataHandler.dataView, dataHandler) !== KEEP_PENDING;
     }
 
     // Removes and settles every pending request for the frame's code. Iterates in reverse because
@@ -795,7 +797,10 @@ class MspHelper {
     }
 }
 
-type Decoder = (this: MspHelper, data: MspDataView, dataHandler: MspFrame) => void;
+// A decoder returns this when the frame only partly answers its requests, so they stay pending.
+const KEEP_PENDING = "keep-pending";
+
+type Decoder = (this: MspHelper, data: MspDataView, dataHandler: MspFrame) => void | typeof KEEP_PENDING;
 type Encoder = (this: MspHelper, buffer: MspBuffer, modifierCode: number | undefined) => void;
 
 // For codes whose reply or request carries nothing to decode or encode.
@@ -2393,16 +2398,17 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                     partialBuffer.push8(instance);
                 }
 
-                // Known bug, kept as found and tracked in #4800: this passes the request
-                // queue where a callback is expected, so it is never called, and the next
-                // line drops every pending request (timers still armed), not just this one.
-                MSP.send_message(
-                    MSPCodes.MSP_MULTIPLE_MSP,
-                    partialBuffer,
-                    false,
-                    dataHandler.callbacks as unknown as MspCallback,
-                );
-                dataHandler.callbacks = [];
+                MSP.send_message(MSPCodes.MSP_MULTIPLE_MSP, partialBuffer, false);
+
+                // The requests that asked for these are answered by the remainder, not by this
+                // partial reply; restart their timers so a retry does not re-send the full list.
+                for (const entry of dataHandler.callbacks) {
+                    if (entry.code === MSPCodes.MSP_MULTIPLE_MSP) {
+                        clearTimeout(entry.timer ?? undefined);
+                        MSP._arm_timer(entry);
+                    }
+                }
+                return KEEP_PENDING;
             }
         } else {
             console.log("MSP Multiple can't process the command");
