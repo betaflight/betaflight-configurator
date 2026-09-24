@@ -782,25 +782,37 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
-// Snapshot of the flight controller's actually-applied 3D state, refreshed only after a
-// successful persist. isFeatureEnabled("3D") and fcStore.motor3dConfig.neutral are live,
-// pending UI state — using them directly here would let an unsaved edit (e.g. enabling 3D,
-// then saving before the write reaches the FC) compute a stop command under an interpretation
-// the FC isn't running yet, sending throttle instead of stop.
+// Snapshot of the flight controller's actually-applied stop-relevant state, refreshed only
+// after a successful persist. isFeatureEnabled("3D"), fcStore.motor3dConfig.neutral,
+// digitalProtocolConfigured, and fcStore.motorConfig.mincommand are all live, pending UI
+// state — using them directly here would let an unsaved edit (enabling 3D, changing the ESC
+// protocol, then saving before the write reaches the FC) compute a stop command under an
+// interpretation the FC isn't running yet, sending throttle instead of stop.
 const appliedIs3dEnabled = ref(false);
 const appliedMotor3dNeutral = ref(1500);
+const appliedIsDigitalProtocol = ref(false);
+const appliedMotorMincommand = ref(1000);
 
-const syncAppliedThreeDState = () => {
+const syncAppliedMotorStopState = () => {
     appliedIs3dEnabled.value = isFeatureEnabled("3D");
     appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
+    appliedIsDigitalProtocol.value = digitalProtocolConfigured.value;
+    appliedMotorMincommand.value = fcStore.motorConfig.mincommand;
 };
+
+const appliedMinSliderValue = computed(() => {
+    if (appliedIsDigitalProtocol.value) {
+        return 1000; // DShot Disarmed
+    }
+    return appliedMotorMincommand.value;
+});
 
 const zeroThrottleValue = computed(() =>
     computeZeroThrottleValue(
         appliedIs3dEnabled.value,
-        digitalProtocolConfigured.value,
+        appliedIsDigitalProtocol.value,
         appliedMotor3dNeutral.value,
-        minSliderValue.value,
+        appliedMinSliderValue.value,
     ),
 );
 
@@ -863,7 +875,7 @@ onMounted(async () => {
         await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
     }
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
-    syncAppliedThreeDState();
+    syncAppliedMotorStopState();
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
@@ -1501,7 +1513,7 @@ const handleSave = (reboot = true) => {
 
         // Only after a successful persist: refresh the applied-state snapshot, record analytics,
         // and refresh the dirty baseline.
-        syncAppliedThreeDState();
+        syncAppliedMotorStopState();
         if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
             tracking.sendSaveAndChangeEvents(
                 tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
