@@ -985,19 +985,18 @@ class STM32Protocol {
                                     1,
                                     (_reply) => {
                                         if (this.verify_response(this.status.ACK, _reply)) {
-                                            // Previously Array.from(bytesToWrite + 2), which yields [], so the checksum write
-                                            // below lands on the last data byte rather than after it.
-                                            const arrayOut: number[] = []; // 2 byte overhead [N, ...., checksum]
-                                            arrayOut[0] = bytesToWrite - 1; // number of bytes to be written (to write 128 bytes, N must be 127, to write 256 bytes, N must be 255)
-
+                                            // WRITE MEMORY (AN3155): N = byte count - 1 (to write 256 bytes, N is 255), the
+                                            // data, then the XOR of N and every data byte, appended after the last one.
+                                            const arrayOut: number[] = [bytesToWrite - 1];
                                             let checksum = arrayOut[0];
                                             for (let ii = 0; ii < bytesToWrite; ii++) {
-                                                arrayOut[ii + 1] = this.hex!.data[flashing_block].data[bytes_flashed]; // + 1 because of the first byte offset
-                                                checksum ^= this.hex!.data[flashing_block].data[bytes_flashed];
+                                                const byte = this.hex!.data[flashing_block].data[bytes_flashed];
+                                                arrayOut.push(byte);
+                                                checksum ^= byte;
 
                                                 bytes_flashed++;
                                             }
-                                            arrayOut[arrayOut.length - 1] = checksum; // checksum (last byte in the arrayOut array)
+                                            arrayOut.push(checksum);
 
                                             address += bytesToWrite;
                                             bytes_flashed_total += bytesToWrite;
