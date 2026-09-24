@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
 import { useNavigationStore } from "@/stores/navigation";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -19,7 +40,7 @@ import { i18n } from "@/js/localization";
  * composable-local state — only module-level imports.
  * @returns {Promise<void>} resolves once the EEPROM write is acknowledged
  */
-async function saveToEeprom() {
+async function saveToEeprom(): Promise<void> {
     // Never persist while arming is possible (matches writeConfiguration).
     if (!FC.CONFIG.armingDisabled) {
         mspHelper.disableArming();
@@ -38,7 +59,7 @@ export function useReboot() {
 
     const navigationStore = useNavigationStore();
 
-    function cleanupAndReboot(resolve) {
+    function cleanupAndReboot(resolve: () => void): void {
         navigationStore.cleanup(() => {
             reboot();
             resolve();
@@ -50,8 +71,8 @@ export function useReboot() {
      * settling the connection state via the shared reboot flow.
      * @returns {Promise<void>} resolves once the reboot sequence has started
      */
-    function saveAndReboot() {
-        return new Promise((resolve) => {
+    function saveAndReboot(): Promise<void> {
+        return new Promise<void>((resolve) => {
             mspHelper.writeConfiguration(false, () => cleanupAndReboot(resolve));
         });
     }

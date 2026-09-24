@@ -1,10 +1,31 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Motor Testing Composable
  * Handles motor testing logic with safety features
  * Based on original motors.js motorsEnableTestMode handler
  */
 
-import { ref, computed, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onUnmounted, unref, type MaybeRef, type Ref } from "vue";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -14,11 +35,16 @@ import FC from "@/js/fc";
 import { bit_check } from "@/js/bit";
 import { MspBuffer } from "@/js/msp/mspBytes";
 
-export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
-    const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+export function useMotorTesting(
+    configHasChanged: Readonly<Ref<boolean>>,
+    showWarningDialog: (message: string) => void,
+    digitalProtocolConfigured?: MaybeRef<boolean>,
+    zeroThrottleValue?: MaybeRef<number>,
+) {
+    const getZeroThrottleValue = (): number => unref(zeroThrottleValue) ?? 1000;
 
     const motorsTestingEnabled = ref(false);
-    const motorValues = ref(new Array(8).fill(getZeroThrottleValue()));
+    const motorValues = ref<number[]>(new Array(8).fill(getZeroThrottleValue()));
     const masterValue = ref(getZeroThrottleValue());
 
     // Safety: Keys that don't trigger motor stop
@@ -37,7 +63,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     /**
      * Keyboard safety handler - stops motors on any key press
      */
-    const disableMotorTest = (e) => {
+    const disableMotorTest = (e: KeyboardEvent): void => {
         if (motorsTestingEnabled.value && !ignoreKeys.has(e.code)) {
             motorsTestingEnabled.value = false;
         }
@@ -49,9 +75,9 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * - Sets up keyboard listener
      * - Disables arming
      */
-    const enableMotorTesting = () => {
+    const enableMotorTesting = (): void => {
         // Only send DShot command for digital protocols
-        if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
+        if (unref(digitalProtocolConfigured)) {
             const buffer = new MspBuffer();
             buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
             buffer.push8(255); // Send to all ESCs
@@ -74,7 +100,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * - Sends DShot motor stop command for digital protocols
      * - Stops all motors
      */
-    const disableMotorTesting = () => {
+    const disableMotorTesting = (): void => {
         // Remove keyboard listener
         document.removeEventListener("keydown", disableMotorTest);
 
@@ -82,7 +108,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         mspHelper.disableArming();
 
         // For digital protocols, send motor stop command to prevent spinning after reboot
-        if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
+        if (unref(digitalProtocolConfigured)) {
             const buffer = new MspBuffer();
             buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
             buffer.push8(DshotCommand.ALL_MOTORS); // Send to all ESCs
@@ -135,8 +161,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * Send motor values to FC
      * `@param` {number[]} values - Motor values (length 8), each 1000-2000
      */
-    const sendMotorCommand = (values) => {
-        const buffer = [];
+    const sendMotorCommand = (values: number[]): void => {
+        const buffer: number[] = [];
         for (const value of values) {
             buffer.push(value & 0xff, (value >> 8) & 0xff);
         }
@@ -146,8 +172,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     /**
      * Stop all motors immediately
      */
-    const stopAllMotors = (stopValue = getZeroThrottleValue()) => {
-        const values = new Array(8).fill(stopValue);
+    const stopAllMotors = (stopValue: number = getZeroThrottleValue()): void => {
+        const values: number[] = new Array(8).fill(stopValue);
         sendMotorCommand(values);
         motorValues.value = values;
         masterValue.value = stopValue;

@@ -1,12 +1,51 @@
-import EscDshotCommandQueue from "./EscDshotCommandQueue.js";
-import DshotCommand from "../../js/utils/DshotCommand.js";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import EscDshotCommandQueue from "./EscDshotCommandQueue";
+import DshotCommand from "../../js/utils/DshotCommand";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { MspBuffer } from "../../js/msp/mspBytes";
 
+export interface EscDshotMotorConfig {
+    numberOfMotors: number;
+    motorStopValue: number;
+    motorSpinValue: number;
+}
+
 class EscDshotDirectionMotorDriver {
-    constructor(motorConfig, motorDriverQueueIntervalMs, motorDriverStopMotorsPauseMs) {
+    private _numberOfMotors: number;
+    private _motorStopValue: number;
+    private _motorSpinValue: number;
+    private _motorDriverStopMotorsPauseMs: number;
+    private _state: number[];
+    private _stateStack: number[][];
+    private _EscDshotCommandQueue: EscDshotCommandQueue;
+
+    constructor(
+        motorConfig: EscDshotMotorConfig,
+        motorDriverQueueIntervalMs: number,
+        motorDriverStopMotorsPauseMs: number,
+    ) {
         this._numberOfMotors = motorConfig.numberOfMotors;
         this._motorStopValue = motorConfig.motorStopValue;
         this._motorSpinValue = motorConfig.motorSpinValue;
@@ -23,36 +62,36 @@ class EscDshotDirectionMotorDriver {
         this._EscDshotCommandQueue = new EscDshotCommandQueue(motorDriverQueueIntervalMs);
     }
 
-    activate() {
+    activate(): void {
         this._EscDshotCommandQueue.start();
     }
 
-    deactivate() {
+    deactivate(): void {
         this._EscDshotCommandQueue.stopWhenEmpty();
     }
 
-    stopMotor(motorIndex) {
+    stopMotor(motorIndex: number): void {
         this._spinMotor(motorIndex, this._motorStopValue);
     }
 
-    spinMotor(motorIndex) {
+    spinMotor(motorIndex: number): void {
         this._spinMotor(motorIndex, this._motorSpinValue);
     }
 
-    spinAllMotors() {
+    spinAllMotors(): void {
         this._spinAllMotors(this._motorSpinValue);
     }
 
-    stopAllMotors() {
+    stopAllMotors(): void {
         this._spinAllMotors(this._motorStopValue);
     }
 
-    stopAllMotorsNow() {
+    stopAllMotorsNow(): void {
         this._EscDshotCommandQueue.clear();
         this._spinAllMotors(this._motorStopValue);
     }
 
-    setEscSpinDirection(motorIndex, direction) {
+    setEscSpinDirection(motorIndex: number, direction: number): void {
         let needStopMotor = false;
 
         if (DshotCommand.ALL_MOTORS === motorIndex) {
@@ -73,17 +112,18 @@ class EscDshotDirectionMotorDriver {
         }
     }
 
-    _pushState() {
+    private _pushState(): void {
         const state = [...this._state];
         this._stateStack.push(state);
     }
 
-    _popState() {
-        const state = this._stateStack.pop();
+    private _popState(): void {
+        // Only called straight after _pushState, so the stack is never empty here.
+        const state = this._stateStack.pop() as number[];
         this._state = [...state];
     }
 
-    _isAnythingSpinning() {
+    private _isAnythingSpinning(): boolean {
         let result = false;
 
         for (let i = 0; i < this._numberOfMotors; i++) {
@@ -96,11 +136,11 @@ class EscDshotDirectionMotorDriver {
         return result;
     }
 
-    _isMotorSpinning(motorIndex) {
+    private _isMotorSpinning(motorIndex: number): boolean {
         return this._motorStopValue !== this._state[motorIndex];
     }
 
-    _sendEscSpinDirection(motorIndex, direction) {
+    private _sendEscSpinDirection(motorIndex: number, direction: number): void {
         const buffer = new MspBuffer();
         buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
         buffer.push8(motorIndex);
@@ -125,7 +165,7 @@ class EscDshotDirectionMotorDriver {
         gui_log(logString);
     }
 
-    _spinMotor(motorIndex, value) {
+    private _spinMotor(motorIndex: number, value: number): void {
         if (DshotCommand.ALL_MOTORS === motorIndex) {
             this._spinAllMotors(value);
         } else {
@@ -134,7 +174,7 @@ class EscDshotDirectionMotorDriver {
         }
     }
 
-    _spinAllMotors(value) {
+    private _spinAllMotors(value: number): void {
         for (let i = 0; i < this._numberOfMotors; i++) {
             this._state[i] = value;
         }
@@ -142,7 +182,7 @@ class EscDshotDirectionMotorDriver {
         this._sendState();
     }
 
-    _sendState() {
+    private _sendState(): void {
         const buffer = new MspBuffer();
 
         for (let i = 0; i < this._numberOfMotors; i++) {

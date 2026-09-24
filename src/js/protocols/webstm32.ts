@@ -1,4 +1,25 @@
 /*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
     STM32 F103 serial bus seems to properly initialize with quite a huge auto-baud range
     From 921600 down to 1200, i don't recommend getting any lower then that
     Official "specs" are from 115200 to 1200
@@ -6,7 +27,7 @@
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
 import MSPConnectorImpl from "../msp/MSPConnector";
-import GUI, { TABS } from "../gui";
+import GUI, { TABS as GUI_TABS } from "../gui";
 import { i18n } from "../localization";
 import MSP from "../msp";
 import FC from "../fc";
@@ -26,10 +47,53 @@ import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { MspBuffer } from "../msp/mspBytes";
 
-function readSerialAdapter(event) {
+/** One contiguous block from the Intel HEX parser (`workers/hex_parser.js`). */
+interface HexBlock {
+    address: number;
+    bytes: number;
+    data: number[];
+}
+
+interface ParsedHex {
+    data: HexBlock[];
+    bytes_total: number;
+}
+
+/** The flashing options built by useFirmwareFlashing.flashHexFirmware; only the fields read here. */
+export interface STM32FlashOptions {
+    no_reboot?: boolean;
+    reboot_baud?: number;
+    erase_chip?: boolean;
+    selectedBoard?: string;
+    localFirmwareLoaded?: boolean;
+    showDialogVerifyBoard?: (
+        selectedBoard: string,
+        connectedBoard: string,
+        onAccept: () => void,
+        onAbort: () => void,
+    ) => void;
+}
+
+type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
+
+/** The part of `TABS.firmware_flasher` (registered by FirmwareFlasherTab.vue) that this protocol calls. */
+interface FirmwareFlasherTabApi {
+    flashingMessage(message: string | null, type: string): FirmwareFlasherTabApi;
+    flashProgress(value: number): FirmwareFlasherTabApi;
+    resetFlashingState(): void;
+    requestDfuPermission?: () => void;
+    // Not registered by FirmwareFlasherTab.vue, so onAbort() throws when it reaches this call.
+    refresh(): void;
+    FLASH_MESSAGE_TYPES: Record<FlashMessageType, string>;
+}
+
+// gui.js types every TABS entry as Record<string, unknown>; the tab registers the shape above.
+const TABS = GUI_TABS as unknown as { firmware_flasher: FirmwareFlasherTabApi };
+
+function readSerialAdapter(event: Event): void {
     // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
     // The serial facade wraps every receive as { data, protocolType }, so read .data.
-    MSP.read(event.detail.data);
+    MSP.read((event as CustomEvent<{ data: ArrayBuffer }>).detail.data);
 }
 
 function onMSPConnectionError() {
@@ -38,6 +102,46 @@ function onMSPConnectionError() {
 }
 
 class STM32Protocol {
+    logHead: string;
+    baud: number | null;
+    port!: string;
+    // Stays {}: connect() stores the caller's options in serialOptions/mspOptions, not here.
+    options: STM32FlashOptions;
+    serialOptions!: STM32FlashOptions;
+    mspOptions?: { no_reboot: boolean; reboot_baud: number | false | undefined; erase_chip: boolean };
+    callback: (() => void) | null | undefined;
+    // Set by connect() before any upload step reads it.
+    hex: ParsedHex | null;
+    verify_hex: number[][];
+    receive_buffer: number[];
+    bytesToRead: number;
+    read_callback: ((data: number[]) => void) | null;
+    upload_time_start: number;
+    upload_process_alive: boolean;
+    mspConnector: MSPConnectorImpl;
+    status: { ACK: number; NACK: number };
+    command: Record<
+        | "get"
+        | "get_ver_r_protect_s"
+        | "get_ID"
+        | "read_memory"
+        | "go"
+        | "write_memory"
+        | "erase"
+        | "extended_erase"
+        | "write_protect"
+        | "write_unprotect"
+        | "readout_protect"
+        | "readout_unprotect",
+        number
+    >;
+    available_flash_size: number;
+    page_size: number;
+    useExtendedErase: boolean;
+    rebootMode: number;
+    private _boundHandleConnect: (event: Event) => void;
+    private _boundHandleDisconnect: (event: Event) => void;
+
     constructor() {
         this.logHead = "[STM32]";
 
@@ -85,15 +189,15 @@ class STM32Protocol {
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
 
         // Bind event handlers once so they can be properly added/removed
-        this._boundHandleConnect = (event) => this.handleConnect(event.detail);
-        this._boundHandleDisconnect = (event) => this.handleDisconnect(event.detail);
+        this._boundHandleConnect = (event) => this.handleConnect((event as CustomEvent<unknown>).detail);
+        this._boundHandleDisconnect = (event) => this.handleDisconnect((event as CustomEvent<unknown>).detail);
     }
 
     /**
      * Centralized error handling method that resets UI state and releases connection lock
      * @param {boolean} resetRebootMode - Whether to reset the reboot mode
      */
-    handleError(resetRebootMode = true) {
+    handleError(resetRebootMode = true): void {
         GUI.connect_lock = false;
         // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
@@ -104,7 +208,7 @@ class STM32Protocol {
         TABS.firmware_flasher.resetFlashingState();
     }
 
-    handleConnect(connectionResult) {
+    handleConnect(connectionResult: unknown): void {
         console.log(`${this.logHead} Connected to serial port`, connectionResult);
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
@@ -119,7 +223,7 @@ class STM32Protocol {
         }
     }
 
-    async handleDisconnect(disconnectionResult) {
+    async handleDisconnect(disconnectionResult: unknown): Promise<void> {
         console.log(`${this.logHead} Waiting for DFU connection`);
 
         serial.removeEventListener("connect", this._boundHandleConnect);
@@ -133,7 +237,7 @@ class STM32Protocol {
                 const device = await DeviceHandler.dfuProtocol.waitForDfu(4000, 500);
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
-                if (e.code !== DFU_AUTH_REQUIRED) {
+                if ((e as { code?: unknown }).code !== DFU_AUTH_REQUIRED) {
                     console.error(`${this.logHead} waitForDfu error:`, e);
                     this.handleError();
                     return;
@@ -171,7 +275,7 @@ class STM32Protocol {
         }
     }
 
-    prepareSerialPort() {
+    prepareSerialPort(): void {
         serial.removeEventListener("connect", this._boundHandleConnect);
         serial.addEventListener("connect", this._boundHandleConnect, { once: true });
 
@@ -179,12 +283,12 @@ class STM32Protocol {
         serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
     }
 
-    reboot() {
+    reboot(): void {
         const buffer = new MspBuffer();
         buffer.push8(this.rebootMode);
         setTimeout(() => {
             const disconnectFromMsp = () => {
-                this.mspConnector.disconnect((disconnectionResult) => {
+                this.mspConnector.disconnect((disconnectionResult: unknown) => {
                     console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
                 });
             };
@@ -206,7 +310,7 @@ class STM32Protocol {
         }, 100);
     }
 
-    onAbort() {
+    onAbort(): void {
         GUI.connect_lock = false;
         getConnectionState().endFlashing();
         this.rebootMode = 0;
@@ -215,7 +319,7 @@ class STM32Protocol {
         TABS.firmware_flasher.refresh();
     }
 
-    lookingForCapabilitiesViaMSP() {
+    lookingForCapabilitiesViaMSP(): void {
         console.log(`${this.logHead} Looking for capabilities via MSP`);
 
         MSP.promise(MSPCodes.MSP_BOARD_INFO)
@@ -263,14 +367,20 @@ class STM32Protocol {
             });
     }
 
-    handleMSPConnect() {
+    handleMSPConnect(): void {
         gui_log(i18n.getMessage("apiVersionReceived", [FC.CONFIG.apiVersion]));
 
         this.lookingForCapabilitiesViaMSP();
     }
 
     // no input parameters
-    connect(port, baud, hex, options, callback) {
+    connect(
+        port: string,
+        baud: number,
+        hex: ParsedHex,
+        options: STM32FlashOptions,
+        callback?: (() => void) | null,
+    ): void {
         this.hex = hex;
         this.port = port;
         this.baud = baud;
@@ -297,7 +407,8 @@ class STM32Protocol {
         if (this.options.no_reboot) {
             // TODO: update to use web serial / USB API
             this.prepareSerialPort();
-            serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" });
+            // serial.js's JSDoc does not mark the callback optional.
+            serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
         } else {
             this.rebootMode = 0; // FIRMWARE
 
@@ -320,7 +431,7 @@ class STM32Protocol {
     }
 
     // initialize certain variables and start timers that oversee the communication
-    initialize() {
+    initialize(): void {
         // reset and set some variables before we start
         this.receive_buffer = [];
         this.verify_hex = [];
@@ -332,7 +443,7 @@ class STM32Protocol {
         TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
 
         // lock some UI elements TODO needs rework
-        const releaseSelect = document.querySelector('select[name="release"]');
+        const releaseSelect = document.querySelector<HTMLSelectElement>('select[name="release"]');
         if (releaseSelect) {
             releaseSelect.disabled = true;
         }
@@ -370,7 +481,7 @@ class STM32Protocol {
     }
     // no input parameters
     // this method should be executed every 1 ms via interval timer
-    read(readInfo) {
+    read(readInfo: { data: ArrayBuffer }): void {
         // routine that fills the buffer
         const data = new Uint8Array(readInfo.data);
 
@@ -385,11 +496,11 @@ class STM32Protocol {
 
             this.bytesToRead = 0; // reset trigger
 
-            this.read_callback(fetched);
+            this.read_callback!(fetched);
         }
     }
     // we should always try to consume all "proper" available data while using retrieve
-    retrieve(nBytes, callback) {
+    retrieve(nBytes: number, callback: (data: number[]) => void): void {
         if (this.receive_buffer.length >= nBytes) {
             // data that we need are there, process immediately
             const data = this.receive_buffer.slice(0, nBytes);
@@ -405,7 +516,7 @@ class STM32Protocol {
     // bytes_to_send = array of bytes that will be send over serial
     // bytesToRead = received bytes necessary to trigger read_callback
     // callback = function that will be executed after received bytes = bytesToRead
-    send(bytes_to_send, bytesToRead, callback) {
+    send(bytes_to_send: number[], bytesToRead: number, callback: (data: number[]) => void): void {
         // flip flag
         this.upload_process_alive = true;
 
@@ -428,7 +539,7 @@ class STM32Protocol {
     // val = single byte to be verified
     // data = response of n bytes from mcu (array)
     // result = true/false
-    verify_response(val, data) {
+    verify_response(val: number, data: number[]): boolean {
         if (val !== data[0]) {
             const message = `STM32 Communication failed, wrong response, expected: ${val} (0x${val.toString(
                 16,
@@ -449,7 +560,7 @@ class STM32Protocol {
     }
     // input = 16 bit value
     // result = true/false
-    verify_chip_signature(signature) {
+    verify_chip_signature(signature: number): boolean {
         switch (signature) {
             case 0x412: // not tested
                 console.log(`${this.logHead} Chip recognized as F1 Low-density`);
@@ -514,11 +625,11 @@ class STM32Protocol {
         }
 
         if (this.available_flash_size > 0) {
-            if (this.hex.bytes_total < this.available_flash_size) {
+            if (this.hex!.bytes_total < this.available_flash_size) {
                 return true;
             } else {
                 console.log(
-                    `${this.logHead} Supplied hex is bigger then flash available on the chip, HEX: ${this.hex.bytes_total} bytes, limit = ${this.available_flash_size} bytes`,
+                    `${this.logHead} Supplied hex is bigger then flash available on the chip, HEX: ${this.hex!.bytes_total} bytes, limit = ${this.available_flash_size} bytes`,
                 );
                 return false;
             }
@@ -531,7 +642,7 @@ class STM32Protocol {
     // firstArray = usually hex_to_flash array
     // secondArray = usually verify_hex array
     // result = true/false
-    verify_flash(firstArray, secondArray) {
+    verify_flash(firstArray: number[], secondArray: number[]): boolean {
         for (let i = 0; i < firstArray.length; i++) {
             if (firstArray[i] !== secondArray[i]) {
                 console.log(
@@ -548,7 +659,7 @@ class STM32Protocol {
         return true;
     }
     // step = value depending on current state of upload_procedure
-    upload_procedure(step) {
+    upload_procedure(step: number): void {
         switch (step) {
             case 1: {
                 // initialize serial interface on the MCU side, auto baud rate settings
@@ -675,8 +786,8 @@ class STM32Protocol {
                             if (this.verify_response(this.status.ACK, reply)) {
                                 // For reference: https://code.google.com/p/stm32flash/source/browse/stm32.c#723
                                 const maxAddress =
-                                    this.hex.data[this.hex.data.length - 1].address +
-                                    this.hex.data[this.hex.data.length - 1].bytes -
+                                    this.hex!.data[this.hex!.data.length - 1].address +
+                                    this.hex!.data[this.hex!.data.length - 1].bytes -
                                     0x8000000;
                                 const erasePagesN = Math.ceil(maxAddress / this.page_size);
                                 const buff = [];
@@ -749,8 +860,8 @@ class STM32Protocol {
                         if (this.verify_response(this.status.ACK, reply)) {
                             // the bootloader receives one byte that contains N, the number of pages to be erased – 1
                             const maxAddress =
-                                this.hex.data[this.hex.data.length - 1].address +
-                                this.hex.data[this.hex.data.length - 1].bytes -
+                                this.hex!.data[this.hex!.data.length - 1].address +
+                                this.hex!.data[this.hex!.data.length - 1].bytes -
                                 0x8000000;
                             const erasePagesN = Math.ceil(maxAddress / this.page_size);
                             const buff = [];
@@ -786,18 +897,18 @@ class STM32Protocol {
                     TABS.firmware_flasher.FLASH_MESSAGE_TYPES.FLASHING,
                 );
 
-                let blocks = this.hex.data.length - 1,
-                    flashing_block = 0,
-                    address = this.hex.data[flashing_block].address,
+                const blocks = this.hex!.data.length - 1;
+                let flashing_block = 0,
+                    address = this.hex!.data[flashing_block].address,
                     bytes_flashed = 0,
                     bytes_flashed_total = 0; // used for progress bar
 
                 const write = () => {
-                    if (bytes_flashed < this.hex.data[flashing_block].bytes) {
+                    if (bytes_flashed < this.hex!.data[flashing_block].bytes) {
                         const bytesToWrite =
-                            bytes_flashed + 256 <= this.hex.data[flashing_block].bytes
+                            bytes_flashed + 256 <= this.hex!.data[flashing_block].bytes
                                 ? 256
-                                : this.hex.data[flashing_block].bytes - bytes_flashed;
+                                : this.hex!.data[flashing_block].bytes - bytes_flashed;
 
                         // DEBUG - console.log('STM32 - Writing to: 0x' + address.toString(16) + ', ' + bytesToWrite + ' bytes');
                         this.send([this.command.write_memory, 0xce], 1, (reply) => {
@@ -818,13 +929,15 @@ class STM32Protocol {
                                     1,
                                     (_reply) => {
                                         if (this.verify_response(this.status.ACK, _reply)) {
-                                            const arrayOut = Array.from(bytesToWrite + 2); // 2 byte overhead [N, ...., checksum]
+                                            // Previously Array.from(bytesToWrite + 2), which yields [], so the checksum write
+                                            // below lands on the last data byte rather than after it.
+                                            const arrayOut: number[] = []; // 2 byte overhead [N, ...., checksum]
                                             arrayOut[0] = bytesToWrite - 1; // number of bytes to be written (to write 128 bytes, N must be 127, to write 256 bytes, N must be 255)
 
                                             let checksum = arrayOut[0];
                                             for (let ii = 0; ii < bytesToWrite; ii++) {
-                                                arrayOut[ii + 1] = this.hex.data[flashing_block].data[bytes_flashed]; // + 1 because of the first byte offset
-                                                checksum ^= this.hex.data[flashing_block].data[bytes_flashed];
+                                                arrayOut[ii + 1] = this.hex!.data[flashing_block].data[bytes_flashed]; // + 1 because of the first byte offset
+                                                checksum ^= this.hex!.data[flashing_block].data[bytes_flashed];
 
                                                 bytes_flashed++;
                                             }
@@ -842,7 +955,7 @@ class STM32Protocol {
 
                                             // update progress bar
                                             TABS.firmware_flasher.flashProgress(
-                                                Math.round((bytes_flashed_total / (this.hex.bytes_total * 2)) * 100),
+                                                Math.round((bytes_flashed_total / (this.hex!.bytes_total * 2)) * 100),
                                             );
                                         }
                                     },
@@ -853,7 +966,7 @@ class STM32Protocol {
                         // move to another block
                         flashing_block++;
 
-                        address = this.hex.data[flashing_block].address;
+                        address = this.hex!.data[flashing_block].address;
                         bytes_flashed = 0;
 
                         write();
@@ -879,9 +992,9 @@ class STM32Protocol {
                     TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VERIFYING,
                 );
 
-                const blocks = this.hex.data.length - 1;
+                const blocks = this.hex!.data.length - 1;
                 let readingBlock = 0;
-                let address = this.hex.data[readingBlock].address;
+                let address = this.hex!.data[readingBlock].address;
                 let bytesVerified = 0;
                 let bytesVerifiedTotal = 0; // used for progress bar
 
@@ -891,11 +1004,11 @@ class STM32Protocol {
                 }
 
                 const reading = () => {
-                    if (bytesVerified < this.hex.data[readingBlock].bytes) {
+                    if (bytesVerified < this.hex!.data[readingBlock].bytes) {
                         const bytesToRead =
-                            bytesVerified + 256 <= this.hex.data[readingBlock].bytes
+                            bytesVerified + 256 <= this.hex!.data[readingBlock].bytes
                                 ? 256
-                                : this.hex.data[readingBlock].bytes - bytesVerified;
+                                : this.hex!.data[readingBlock].bytes - bytesVerified;
 
                         // DEBUG console.log('STM32 - Reading from: 0x' + address.toString(16) + ', ' + bytesToRead + ' bytes');
                         this.send([this.command.read_memory, 0xee], 1, (reply) => {
@@ -937,8 +1050,8 @@ class STM32Protocol {
                                             // update progress bar
                                             TABS.firmware_flasher.flashProgress(
                                                 Math.round(
-                                                    ((this.hex.bytes_total + bytesVerifiedTotal) /
-                                                        (this.hex.bytes_total * 2)) *
+                                                    ((this.hex!.bytes_total + bytesVerifiedTotal) /
+                                                        (this.hex!.bytes_total * 2)) *
                                                         100,
                                                 ),
                                             );
@@ -951,7 +1064,7 @@ class STM32Protocol {
                         // move to another block
                         readingBlock++;
 
-                        address = this.hex.data[readingBlock].address;
+                        address = this.hex!.data[readingBlock].address;
                         bytesVerified = 0;
 
                         reading();
@@ -959,7 +1072,7 @@ class STM32Protocol {
                         // all blocks read, verify
                         let verify = true;
                         for (let i = 0; i <= blocks; i++) {
-                            verify = this.verify_flash(this.hex.data[i].data, this.verify_hex[i]);
+                            verify = this.verify_flash(this.hex!.data[i].data, this.verify_hex[i]);
 
                             if (!verify) {
                                 break;
@@ -1048,7 +1161,7 @@ class STM32Protocol {
             }
         }
     }
-    cleanup() {
+    cleanup(): void {
         PortUsage.reset();
 
         // unlocking connect button
@@ -1057,7 +1170,7 @@ class STM32Protocol {
         getConnectionState().endFlashing();
 
         // unlock some UI elements TODO needs rework
-        const releaseEl = document.querySelector('select[name="release"]');
+        const releaseEl = document.querySelector<HTMLSelectElement>('select[name="release"]');
         if (releaseEl) {
             releaseEl.disabled = false;
         }
