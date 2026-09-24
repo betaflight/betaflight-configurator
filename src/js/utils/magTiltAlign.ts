@@ -35,7 +35,7 @@
  */
 import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec } from "./magAlignment.js";
 import { snapToPreset, matrixToEuler } from "./magCharacterization.js";
-import { degToRad, radToDeg, clamp } from "./common.js";
+import { degToRad, radToDeg, clamp } from "./common";
 
 type Vec3 = [number, number, number];
 type Mat3 = number[][];
