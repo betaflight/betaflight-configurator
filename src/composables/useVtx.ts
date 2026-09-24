@@ -64,6 +64,12 @@ const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
 const MAX_BAND_CHANNELS_VALUES = 8;
 
+// Cancelling a file picker resolves null on Android and the fallback picker, and rejects with an
+// AbortError from the browser's File System Access pickers; either way there is nothing to report.
+function isPickerCancel(error: unknown): boolean {
+    return error instanceof Error && error.name === "AbortError";
+}
+
 function getVtxTypeString() {
     let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
     const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
@@ -90,7 +96,8 @@ function createLuaTables(vtxJsonConfig: VtxJsonConfig) {
     bandsString += " },\n";
     frequenciesString += "    },\n";
 
-    const freqBandsString = `frequenciesPerBand = ${bandsList[1].frequencies.length},\n`;
+    // Every band in a VTX table has the same number of channels.
+    const freqBandsString = `frequenciesPerBand = ${bandsList[0]?.frequencies.length ?? 0},\n`;
 
     const powerList = vtxJsonConfig.vtx_table.powerlevels_list;
     let powersString = "powerTable = { ";
@@ -562,13 +569,18 @@ export function useVtx() {
             "vtx-file",
         )
             .then((file) => {
+                if (!file) {
+                    return;
+                }
                 const vtxJsonConfig = createVtxConfigInfo();
                 const text = JSON.stringify(vtxJsonConfig, null, 4);
-                // A cancelled picker resolves null, and reading .name throws into the catch below.
-                console.log("Saving VTX to:", file!.name);
-                FileSystem.writeFile(file, text);
+                console.log("Saving VTX to:", file.name);
+                return FileSystem.writeFile(file, text);
             })
             .catch((error) => {
+                if (isPickerCancel(error)) {
+                    return;
+                }
                 console.error("Failed to write VTX file:", error);
                 gui_log(i18n.getMessage("vtxSavedFileKo"));
             });
@@ -590,13 +602,18 @@ export function useVtx() {
             "vtx-file",
         )
             .then((file) => {
+                if (!file) {
+                    return;
+                }
                 const vtxJsonConfig = createVtxConfigInfo();
                 const text = createLuaTables(vtxJsonConfig);
-                // A cancelled picker resolves null, and reading .name throws into the catch below.
-                console.log("Saving lua to:", file!.name);
-                FileSystem.writeFile(file, text);
+                console.log("Saving lua to:", file.name);
+                return FileSystem.writeFile(file, text);
             })
             .catch((error) => {
+                if (isPickerCancel(error)) {
+                    return;
+                }
                 console.error("Failed to write lua file:", error);
                 gui_log(i18n.getMessage("vtxSavedLuaFileKo"));
             });
@@ -611,8 +628,10 @@ export function useVtx() {
                 `.${suffix}`,
                 "vtx-file",
             );
-            // A cancelled picker resolves null, and reading .name throws into the catch below.
-            console.log("Reading VTX config from:", file!.name);
+            if (!file) {
+                return;
+            }
+            console.log("Reading VTX config from:", file.name);
             const text = await FileSystem.readFile(file);
             const vtxJsonConfig: VtxJsonConfig = JSON.parse(text);
 
@@ -621,11 +640,14 @@ export function useVtx() {
             savePending.value = true;
 
             analyticsChanges["VtxTableLoadFromClipboard"] = undefined;
-            analyticsChanges["VtxTableLoadFromFile"] = file!.name;
+            analyticsChanges["VtxTableLoadFromFile"] = file.name;
 
             console.log("Load VTX file end");
             gui_log(i18n.getMessage("vtxLoadFileOk"));
         } catch (error) {
+            if (isPickerCancel(error)) {
+                return;
+            }
             console.error("Failed loading VTX file config", error);
             gui_log(i18n.getMessage("vtxLoadFileKo"));
         }
