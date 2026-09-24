@@ -14,9 +14,14 @@ import {
     mat3transpose,
     ALIGNMENT_MATRICES,
 } from "../../src/js/utils/magAlignment.js";
-import { characterizeTumble } from "../../src/js/utils/magCharacterizationCompute.js";
+import { characterizeTumble, type TumbleSample } from "../../src/js/utils/magCharacterizationCompute";
 
-function mulberry32(seed) {
+type Mat3 = number[][];
+
+// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
+const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
+
+function mulberry32(seed: number): () => number {
     let s = seed >>> 0;
     return () => {
         s = (s + 0x6d2b79f5) >>> 0;
@@ -29,7 +34,7 @@ function mulberry32(seed) {
 
 const DEG = Math.PI / 180;
 
-function clamp(v, lo, hi) {
+function clamp(v: number, lo: number, hi: number): number {
     if (v < lo) {
         return lo;
     }
@@ -39,7 +44,7 @@ function clamp(v, lo, hi) {
     return v;
 }
 
-function det3(m) {
+function det3(m: Mat3): number {
     return (
         m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
         m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
@@ -47,7 +52,7 @@ function det3(m) {
     );
 }
 
-function rotationAngleDeg(A, B) {
+function rotationAngleDeg(A: Mat3, B: Mat3): number {
     const M = mat3mul(mat3transpose(A), B);
     const tr = M[0][0] + M[1][1] + M[2][2];
     return Math.acos(clamp((tr - 1) / 2, -1, 1)) / DEG;
@@ -60,12 +65,15 @@ function rotationAngleDeg(A, B) {
  * from the gravity vector (matching gravityInBody), and the sensor reads
  * raw = R_cur · (R_alignT · field_body) in current-alignment frame.
  */
-function generateTumble(rng, { R_plant, inclDeg, numSamples = 400 }) {
+function generateTumble(
+    rng: () => number,
+    { R_plant, inclDeg, numSamples = 400 }: { R_plant: Mat3; inclDeg: number; numSamples?: number },
+): TumbleSample[] {
     const I = inclDeg * DEG;
     const gWorld = [0, 0, -1];
     const fWorld = [Math.cos(I), 0, -Math.sin(I)];
     const R_plantT = mat3transpose(R_plant);
-    const samples = [];
+    const samples: TumbleSample[] = [];
 
     for (let i = 0; i < numSamples; i++) {
         // Random body orientation with tilt diversity
@@ -78,7 +86,7 @@ function generateTumble(rng, { R_plant, inclDeg, numSamples = 400 }) {
         const gBody = mat3mulVec(Ri, gWorld);
         let fBody = mat3mulVec(Ri, fWorld);
         // Small noise
-        fBody = fBody.map((c) => c + (rng() - 0.5) * 0.02);
+        fBody = fBody.map((c: number) => c + (rng() - 0.5) * 0.02);
 
         // Recover the roll/pitch that gravityInBody would produce
         const p = Math.asin(clamp(gBody[0], -1, 1)) / DEG;
@@ -127,13 +135,13 @@ describe("characterizeTumble — synthetic oracle", () => {
         expect(result.preset).toBeGreaterThanOrEqual(1);
         expect(result.preset).toBeLessThanOrEqual(9);
         expect(result.offsets).toBeDefined();
-        expect(Number.isFinite(result.offsets.x)).toBe(true);
+        expect(Number.isFinite(result.offsets!.x)).toBe(true);
 
         // Recovered alignment matrix
         const recovered =
             result.preset === 9
-                ? eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw)
-                : ALIGNMENT_MATRICES[result.preset];
+                ? eulerToMatrix(result.euler_zyx_deg!.roll, result.euler_zyx_deg!.pitch, result.euler_zyx_deg!.yaw)
+                : alignmentMatrices[result.preset!];
 
         // det = +1 (proper rotation)
         expect(Math.abs(det3(recovered) - 1)).toBeLessThan(0.01);
@@ -147,7 +155,7 @@ describe("characterizeTumble — synthetic oracle", () => {
         const I = 71 * DEG;
         const fWorld = [Math.cos(I), 0, -Math.sin(I)];
         const R_plantT = mat3transpose(R_plant);
-        const samples = [];
+        const samples: TumbleSample[] = [];
 
         // Level poses: roll=0, pitch=0, varying yaw only
         for (let i = 0; i < 200; i++) {
