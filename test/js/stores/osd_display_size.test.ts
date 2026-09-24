@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { OSD } from "../../../src/components/tabs/osd/osd";
-import { useOsdStore } from "../../../src/stores/osd.js";
+import { useOsdStore } from "../../../src/stores/osd";
 
 // Derive the video-system index map from the canonical VIDEO_TYPES ordering
 // so the test never drifts if that list is reordered or extended.
@@ -59,10 +59,12 @@ describe("osd store updateDisplaySize", () => {
     });
 
     it("honours the HD canvas size reported by the firmware via MSP_OSD_CANVAS", () => {
-        // Simulate the MSP_OSD_CANVAS handler (see MSPHelper.js) writing a custom
+        // Simulate the MSP_OSD_CANVAS handler (see MSPHelper.ts) writing a custom
         // canvas size, e.g. a DJI WTFOS / MSP-OSD device advertising 60 x 22.
-        OSD.data.VIDEO_COLS.HD = 60;
-        OSD.data.VIDEO_ROWS.HD = 22;
+        // osd.js assigns OSD.data inside initData(), so it is invisible to inference.
+        const data = (OSD as typeof OSD & { data: { VIDEO_COLS: { HD: number }; VIDEO_ROWS: { HD: number } } }).data;
+        data.VIDEO_COLS.HD = 60;
+        data.VIDEO_ROWS.HD = 22;
 
         const store = useOsdStore();
         store.videoSystem = VIDEO_SYSTEM.HD;

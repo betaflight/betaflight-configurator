@@ -6,16 +6,20 @@ import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/j
 import VirtualFC from "../../../src/js/VirtualFC";
 import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
 
-function processMessage(mspHelper, code, buffer) {
+function processMessage(mspHelper: MspHelper, code: number, buffer: number[]) {
     mspHelper.process_data({
         code,
         dataView: new MspDataView(new Uint8Array(buffer).buffer),
         crcError: false,
+        unsupported: 0,
         callbacks: [],
     });
 }
 
-function buildStatusExBuffer({ batteryProfiles, batteryProfile } = {}) {
+function buildStatusExBuffer({
+    batteryProfiles,
+    batteryProfile,
+}: { batteryProfiles?: number; batteryProfile?: number } = {}) {
     const buffer = new MspBuffer();
     buffer.push16(500); // cycleTime
     buffer.push16(0); // i2cError
@@ -119,7 +123,7 @@ describe("Battery Profiles", () => {
             const name = "Li-Ion";
             buffer.push8(name.length);
             for (let i = 0; i < name.length; i++) {
-                buffer.push8(name.codePointAt(i));
+                buffer.push8(name.codePointAt(i)!);
             }
 
             processMessage(mspHelper, MSPCodes.MSP2_GET_TEXT, buffer);

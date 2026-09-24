@@ -1,18 +1,64 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, ref, computed, toRaw } from "vue";
 import djv from "djv";
 import { i18n } from "../js/localization";
-import { tracking } from "../js/Analytics";
+import * as analytics from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
 import FC from "../js/fc";
-import MSP from "../js/msp";
+import MSP, { type MspPayload } from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { VtxDeviceTypes } from "../js/utils/VtxDeviceStatus/VtxDeviceStatus";
+import type VtxDeviceStatusSmartAudio from "../js/utils/VtxDeviceStatus/SmartAudioDeviceStatus";
 import { generateFilename } from "../js/utils/generate_filename";
 import { gui_log } from "../js/gui_log";
 import FileSystem from "../js/FileSystem";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 import { MspBuffer } from "@/js/msp/mspBytes";
+import type { VtxConfig, VtxTableBand, VtxTablePowerLevel } from "@/stores/fc.types";
+
+/** The VTX table file format (resources/jsonschema/vtxconfig_schema-*.json). */
+interface VtxJsonConfig {
+    description?: string;
+    version: string;
+    vtx_table: {
+        bands_list: { name: string; letter: string; is_factory_band: boolean; frequencies: number[] }[];
+        powerlevels_list: { value: number; label: string }[];
+    };
+}
+
+interface SelectOption {
+    value: number;
+    label: string;
+}
+
+type PowerRange = { min: number; max: number } | { min?: undefined; max?: undefined };
+
+// Analytics.js exports `let tracking = null`, which reaches TypeScript as an implicit any.
+interface Tracking {
+    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
+    sendSaveAndChangeEvents(category: string, changeList: object, tabName: string): void;
+}
 
 const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
@@ -22,12 +68,13 @@ function getVtxTypeString() {
     let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
     const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
     if (isSmartAudio && FC.VTX_DEVICE_STATUS !== null) {
-        result += ` ${FC.VTX_DEVICE_STATUS.smartAudioVersion}`;
+        // The status factory builds the SmartAudio subclass for a SmartAudio device.
+        result += ` ${(FC.VTX_DEVICE_STATUS as VtxDeviceStatusSmartAudio).smartAudioVersion}`;
     }
     return result;
 }
 
-function createLuaTables(vtxJsonConfig) {
+function createLuaTables(vtxJsonConfig: VtxJsonConfig) {
     let bandsString = 'bandTable = { [0]="U"';
     let frequenciesString = "frequencyTable = {\n";
 
@@ -55,7 +102,7 @@ function createLuaTables(vtxJsonConfig) {
     return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
 }
 
-function getPowerValues(vtxType, vtxTableAvailable, vtxTablePowerlevels) {
+function getPowerValues(vtxType: number, vtxTableAvailable: boolean, vtxTablePowerlevels: number): PowerRange {
     if (vtxTableAvailable) {
         return { min: 1, max: vtxTablePowerlevels };
     }
@@ -75,8 +122,8 @@ function getPowerValues(vtxType, vtxTableAvailable, vtxTablePowerlevels) {
     }
 }
 
-function buildPowerOptionsFromTable(powerLevelList, count) {
-    const options = [{ value: 0, label: i18n.getMessage("vtxPower_0") }];
+function buildPowerOptionsFromTable(powerLevelList: VtxTablePowerLevel[], count: number) {
+    const options: SelectOption[] = [{ value: 0, label: i18n.getMessage("vtxPower_0") }];
     for (let i = 0; i < count; i++) {
         if (powerLevelList[i]) {
             let label = powerLevelList[i].vtxtable_powerlevel_label;
@@ -89,14 +136,14 @@ function buildPowerOptionsFromTable(powerLevelList, count) {
     return options;
 }
 
-function sendMspPromise(code, buffer = false) {
+function sendMspPromise(code: number, buffer: MspPayload = false) {
     // Error-aware: a tab switch / disconnect that clears the MSP queue rejects with
     // MspCancelledError instead of dropping the callback and hanging.
     return MSP.promise(code, buffer);
 }
 
-function buildPowerOptionsFromRange(range) {
-    const options = [];
+function buildPowerOptionsFromRange(range: PowerRange) {
+    const options: SelectOption[] = [];
     if (range.min === undefined) {
         return options;
     }
@@ -118,10 +165,10 @@ export function useVtx() {
     const savePending = ref(false);
     const factoryBandsSupported = ref(false);
     const frequencyMode = ref(false);
-    const analyticsChanges = reactive({});
+    const analyticsChanges = reactive<Record<string, string | number | undefined>>({});
 
     // VTX config mirrors FC.VTX_CONFIG
-    const vtxConfig = reactive({
+    const vtxConfig = reactive<Omit<VtxConfig, "vtx_table_clear">>({
         vtx_type: 0,
         vtx_band: 0,
         vtx_channel: 0,
@@ -138,8 +185,8 @@ export function useVtx() {
     });
 
     // VTX table data
-    const bandList = reactive([]);
-    const powerLevelList = reactive([]);
+    const bandList = reactive<VtxTableBand[]>([]);
+    const powerLevelList = reactive<VtxTablePowerLevel[]>([]);
 
     // Device status
     const deviceReady = ref(false);
@@ -169,7 +216,7 @@ export function useVtx() {
 
     // Band select options
     const bandOptions = computed(() => {
-        const options = [{ value: 0, label: i18n.getMessage("vtxBand_0") }];
+        const options: SelectOption[] = [{ value: 0, label: i18n.getMessage("vtxBand_0") }];
         if (vtxConfig.vtx_table_available) {
             for (let i = 0; i < vtxConfig.vtx_table_bands; i++) {
                 if (bandList[i]) {
@@ -193,7 +240,7 @@ export function useVtx() {
 
     // Channel select options (depend on selected band)
     const channelOptions = computed(() => {
-        const options = [{ value: 0, label: i18n.getMessage("vtxChannel_0") }];
+        const options: SelectOption[] = [{ value: 0, label: i18n.getMessage("vtxChannel_0") }];
         if (vtxConfig.vtx_table_available) {
             const selectedBand = vtxConfig.vtx_band;
             if (bandList[selectedBand - 1]) {
@@ -300,25 +347,28 @@ export function useVtx() {
         vtxTypeString.value = getVtxTypeString();
     }
 
+    // parseInt stringifies its argument anyway; this is the original call, spelled out for the type.
+    const toInt = (value: number) => Number.parseInt(String(value));
+
     function syncStateToFC() {
         if (frequencyMode.value) {
-            FC.VTX_CONFIG.vtx_frequency = Number.parseInt(vtxConfig.vtx_frequency);
+            FC.VTX_CONFIG.vtx_frequency = toInt(vtxConfig.vtx_frequency);
             FC.VTX_CONFIG.vtx_band = 0;
             FC.VTX_CONFIG.vtx_channel = 0;
         } else {
-            FC.VTX_CONFIG.vtx_band = Number.parseInt(vtxConfig.vtx_band);
-            FC.VTX_CONFIG.vtx_channel = Number.parseInt(vtxConfig.vtx_channel);
+            FC.VTX_CONFIG.vtx_band = toInt(vtxConfig.vtx_band);
+            FC.VTX_CONFIG.vtx_channel = toInt(vtxConfig.vtx_channel);
             FC.VTX_CONFIG.vtx_frequency = 0;
         }
-        FC.VTX_CONFIG.vtx_power = Number.parseInt(vtxConfig.vtx_power);
+        FC.VTX_CONFIG.vtx_power = toInt(vtxConfig.vtx_power);
         FC.VTX_CONFIG.vtx_pit_mode = vtxConfig.vtx_pit_mode;
-        FC.VTX_CONFIG.vtx_pit_mode_frequency = Number.parseInt(vtxConfig.vtx_pit_mode_frequency);
-        FC.VTX_CONFIG.vtx_low_power_disarm = Number.parseInt(vtxConfig.vtx_low_power_disarm);
+        FC.VTX_CONFIG.vtx_pit_mode_frequency = toInt(vtxConfig.vtx_pit_mode_frequency);
+        FC.VTX_CONFIG.vtx_low_power_disarm = toInt(vtxConfig.vtx_low_power_disarm);
         FC.VTX_CONFIG.vtx_table_clear = true;
 
-        FC.VTX_CONFIG.vtx_table_powerlevels = Number.parseInt(vtxConfig.vtx_table_powerlevels);
-        FC.VTX_CONFIG.vtx_table_bands = Number.parseInt(vtxConfig.vtx_table_bands);
-        FC.VTX_CONFIG.vtx_table_channels = Number.parseInt(vtxConfig.vtx_table_channels);
+        FC.VTX_CONFIG.vtx_table_powerlevels = toInt(vtxConfig.vtx_table_powerlevels);
+        FC.VTX_CONFIG.vtx_table_bands = toInt(vtxConfig.vtx_table_bands);
+        FC.VTX_CONFIG.vtx_table_channels = toInt(vtxConfig.vtx_table_channels);
     }
 
     // --- MSP Communication ---
@@ -366,10 +416,10 @@ export function useVtx() {
     // (no reboot), matching the previous writeConfiguration(false) behavior. The exact set and
     // order of MSP_SET_VTX* writes is preserved: VTX config, then each power level, then each band.
     /**
-     * @param {() => Promise<void>} [beforePersist] runs after the parameter groups are written and
-     *   before the persist that serialises them, which is where a CLI `set` has to sit
+     * @param beforePersist runs after the parameter groups are written and before the persist that
+     *   serialises them, which is where a CLI `set` has to sit
      */
-    async function saveVtx(beforePersist) {
+    async function saveVtx(beforePersist?: () => Promise<void>) {
         const { saveToEeprom } = useReboot();
 
         syncStateToFC();
@@ -394,13 +444,14 @@ export function useVtx() {
         await saveToEeprom();
 
         // Only after a successful persist: record analytics and clear the verify-table warning.
+        const tracking = analytics.tracking as Tracking;
         tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "vtx");
         savePending.value = false;
     }
 
     // --- JSON Schema Validation ---
 
-    async function validateVtxJson(vtxJsonConfig) {
+    async function validateVtxJson(vtxJsonConfig: VtxJsonConfig) {
         if (!vtxJsonConfig.version) {
             console.error("Validation against schema failed, version missing");
             throw new Error("VTX config version missing");
@@ -426,7 +477,7 @@ export function useVtx() {
 
     // --- JSON Import from config object ---
 
-    function readVtxConfigJson(vtxJsonConfig) {
+    function readVtxConfigJson(vtxJsonConfig: VtxJsonConfig) {
         FC.VTX_CONFIG.vtx_table_bands = vtxJsonConfig.vtx_table.bands_list.length;
 
         let maxChannels = 0;
@@ -469,7 +520,7 @@ export function useVtx() {
     function createVtxConfigInfo() {
         syncStateToFC();
 
-        const vtxJsonConfig = {
+        const vtxJsonConfig: VtxJsonConfig = {
             description: "Betaflight VTX Config file",
             version: "1.0",
             vtx_table: {
@@ -513,7 +564,8 @@ export function useVtx() {
             .then((file) => {
                 const vtxJsonConfig = createVtxConfigInfo();
                 const text = JSON.stringify(vtxJsonConfig, null, 4);
-                console.log("Saving VTX to:", file.name);
+                // A cancelled picker resolves null, and reading .name throws into the catch below.
+                console.log("Saving VTX to:", file!.name);
                 FileSystem.writeFile(file, text);
             })
             .catch((error) => {
@@ -540,7 +592,8 @@ export function useVtx() {
             .then((file) => {
                 const vtxJsonConfig = createVtxConfigInfo();
                 const text = createLuaTables(vtxJsonConfig);
-                console.log("Saving lua to:", file.name);
+                // A cancelled picker resolves null, and reading .name throws into the catch below.
+                console.log("Saving lua to:", file!.name);
                 FileSystem.writeFile(file, text);
             })
             .catch((error) => {
@@ -558,16 +611,17 @@ export function useVtx() {
                 `.${suffix}`,
                 "vtx-file",
             );
-            console.log("Reading VTX config from:", file.name);
+            // A cancelled picker resolves null, and reading .name throws into the catch below.
+            console.log("Reading VTX config from:", file!.name);
             const text = await FileSystem.readFile(file);
-            const vtxJsonConfig = JSON.parse(text);
+            const vtxJsonConfig: VtxJsonConfig = JSON.parse(text);
 
             await validateVtxJson(vtxJsonConfig);
             readVtxConfigJson(vtxJsonConfig);
             savePending.value = true;
 
             analyticsChanges["VtxTableLoadFromClipboard"] = undefined;
-            analyticsChanges["VtxTableLoadFromFile"] = file.name;
+            analyticsChanges["VtxTableLoadFromFile"] = file!.name;
 
             console.log("Load VTX file end");
             gui_log(i18n.getMessage("vtxLoadFileOk"));
@@ -582,7 +636,7 @@ export function useVtx() {
             const text = await navigator.clipboard.readText();
             console.log("Pasted content: ", text);
 
-            const vtxJsonConfig = JSON.parse(text);
+            const vtxJsonConfig: VtxJsonConfig = JSON.parse(text);
 
             await validateVtxJson(vtxJsonConfig);
             readVtxConfigJson(vtxJsonConfig);

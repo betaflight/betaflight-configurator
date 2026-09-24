@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope } from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import { effectScope, type EffectScope } from "vue";
 import FC from "../../src/js/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
@@ -16,7 +16,7 @@ vi.mock("../../src/js/msp/MSPHelper", () => ({
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
-    i18n: { getMessage: (k) => k },
+    i18n: { getMessage: (k: string) => k },
 }));
 
 vi.mock("../../src/js/gui_log", () => ({
@@ -24,12 +24,16 @@ vi.mock("../../src/js/gui_log", () => ({
     gui_log: vi.fn(),
 }));
 
-vi.mock("../../src/js/Analytics", () => ({
-    __esModule: true,
-    tracking: {
+// Analytics.js exports its tracker as an untyped `let`, so the test holds the mock itself.
+const { trackingMock } = vi.hoisted(() => ({
+    trackingMock: {
         sendSaveAndChangeEvents: vi.fn(),
         EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "fc" },
     },
+}));
+vi.mock("../../src/js/Analytics", () => ({
+    __esModule: true,
+    tracking: trackingMock,
 }));
 
 // Persist is EEPROM-only; stub useReboot so the save path doesn't need Pinia/serial. The spy
@@ -41,28 +45,26 @@ vi.mock("../../src/composables/useReboot", () => ({
 }));
 
 import { useVtx } from "../../src/composables/useVtx";
-import { tracking } from "../../src/js/Analytics";
 
 describe("useVtx", () => {
-    let scope;
-    let vtx;
+    let scope: EffectScope;
+    let vtx: ReturnType<typeof useVtx>;
+    let promiseSpy: MockInstance<typeof MSP.promise>;
 
     beforeEach(async () => {
         FC.resetState();
         saveToEepromMock.mockClear();
-        tracking.sendSaveAndChangeEvents.mockClear();
+        trackingMock.sendSaveAndChangeEvents.mockClear();
 
         // Error-aware MSP requests: the save/load chains now use MSP.promise everywhere.
-        vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
+        promiseSpy = vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
 
         scope = effectScope();
-        scope.run(() => {
-            vtx = useVtx();
-        });
+        vtx = scope.run(() => useVtx())!;
 
         // Bring the composable out of its initial "updating" state and take the dirty baseline.
         await vtx.loadVtxConfig();
-        MSP.promise.mockClear();
+        promiseSpy.mockClear();
     });
 
     afterEach(() => {
@@ -76,7 +78,7 @@ describe("useVtx", () => {
 
         await vtx.saveVtx();
 
-        const codes = MSP.promise.mock.calls.map((call) => call[0]);
+        const codes = promiseSpy.mock.calls.map((call) => call[0]);
         expect(codes).toEqual([
             MSPCodes.MSP_SET_VTX_CONFIG,
             MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
@@ -96,19 +98,19 @@ describe("useVtx", () => {
         await vtx.saveVtx();
 
         expect(saveToEepromMock).toHaveBeenCalledTimes(1);
-        expect(tracking.sendSaveAndChangeEvents).toHaveBeenCalledTimes(1);
-        expect(tracking.sendSaveAndChangeEvents).toHaveBeenCalledWith("fc", expect.any(Object), "vtx");
+        expect(trackingMock.sendSaveAndChangeEvents).toHaveBeenCalledTimes(1);
+        expect(trackingMock.sendSaveAndChangeEvents).toHaveBeenCalledWith("fc", expect.any(Object), "vtx");
         expect(vtx.savePending.value).toBe(false);
     });
 
     it("does not run analytics or clear pending-verify when an MSP write rejects", async () => {
         vtx.savePending.value = true;
-        MSP.promise.mockRejectedValueOnce(new Error("boom"));
+        promiseSpy.mockRejectedValueOnce(new Error("boom"));
 
         await expect(vtx.saveVtx()).rejects.toThrow("boom");
 
         expect(saveToEepromMock).not.toHaveBeenCalled();
-        expect(tracking.sendSaveAndChangeEvents).not.toHaveBeenCalled();
+        expect(trackingMock.sendSaveAndChangeEvents).not.toHaveBeenCalled();
         expect(vtx.savePending.value).toBe(true);
     });
 });

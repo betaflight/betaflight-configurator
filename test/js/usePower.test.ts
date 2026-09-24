@@ -64,7 +64,7 @@ describe("usePower", () => {
                 return Promise.reject(profileNameError);
             }
 
-            return Promise.resolve();
+            return Promise.resolve(undefined);
         });
 
         const power = usePower();

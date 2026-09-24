@@ -5,6 +5,7 @@ import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
 import FC from "../../../src/js/fc";
 import { API_VERSION_1_47 } from "../../../src/js/data_storage";
 import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
+import type { MspRequest, MspResponse } from "../../../src/js/msp";
 
 describe("MspHelper", () => {
     const mspHelper = new MspHelper();
@@ -15,34 +16,37 @@ describe("MspHelper", () => {
         it("refuses to process data with crc-error", () => {
             let callbackCalled = false;
 
-            let callbackFunction = (item) => {
+            const callbackFunction = (item: MspResponse | null) => {
                 callbackCalled = true;
-                expect(item["crcError"]).toEqual(true);
-                expect(item["command"]).toEqual(MSPCodes.MSP_BOARD_INFO);
-                expect(item["length"]).toEqual(0);
+                expect(item!["crcError"]).toEqual(true);
+                expect(item!["command"]).toEqual(MSPCodes.MSP_BOARD_INFO);
+                expect(item!["length"]).toEqual(0);
             };
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_BOARD_INFO,
                 dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: true,
+                unsupported: 0,
                 callbacks: [
+                    // A legacy (non-errorAware) request; process_data reads only code and callback here.
                     {
                         callback: callbackFunction,
                         code: MSPCodes.MSP_BOARD_INFO,
-                    },
+                    } as Partial<MspRequest> as MspRequest,
                 ],
             });
 
             expect(callbackCalled).toEqual(true);
         });
         it("handles MSP_API_VERSION correctly", () => {
-            let randomValues = crypto.getRandomValues(new Uint8Array(3));
+            const randomValues = crypto.getRandomValues(new Uint8Array(3));
             const [mspProtocolVersion, apiVersionMajor, apiVersionMinor] = randomValues;
             mspHelper.process_data({
                 code: MSPCodes.MSP_API_VERSION,
                 dataView: new MspDataView(randomValues.buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -57,6 +61,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_API_VERSION,
                 dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -70,6 +75,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_API_VERSION,
                 dataView: new MspDataView(new Uint8Array([42]).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -82,6 +88,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_API_VERSION,
                 dataView: new MspDataView(new Uint8Array([]).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -89,29 +96,31 @@ describe("MspHelper", () => {
             expect(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)).not.toThrow();
         });
         it("handles MSP_PIDNAMES correctly", () => {
-            let pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
-            let expectedNames = Array.from({ length: pidNamesCount }).map((_) => generateRandomString());
+            const pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
+            const expectedNames = Array.from({ length: pidNamesCount }).map((_) => generateRandomString());
 
-            let lowLevelData = new MspBuffer();
+            const lowLevelData = new MspBuffer();
             appendStringToArray(lowLevelData, `${expectedNames.join(";")};`);
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_PIDNAMES,
                 dataView: new MspDataView(new Uint8Array(lowLevelData).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
             expect(FC.PID_NAMES).toEqual(expectedNames);
         });
         it("handles MSP_MOTOR correctly", () => {
-            let motorCount = crypto.getRandomValues(new Uint8Array(1))[0] % 8;
-            let motorBytes = crypto.getRandomValues(new Uint16Array(motorCount));
+            const motorCount = crypto.getRandomValues(new Uint8Array(1))[0] % 8;
+            const motorBytes = crypto.getRandomValues(new Uint16Array(motorCount));
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_MOTOR,
                 dataView: new MspDataView(new Uint16Array(motorBytes).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
             expect(new Uint16Array(FC.MOTOR_DATA).slice(0, motorCount)).toEqual(motorBytes);
@@ -119,7 +128,7 @@ describe("MspHelper", () => {
         });
         it("handles MSP_BOARD_INFO correctly for API version", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_47;
-            let infoBuffer = new MspBuffer();
+            const infoBuffer = new MspBuffer();
 
             const boardIdentifier = appendStringToArray(infoBuffer, generateRandomString(4)); // set board-identifier
 
@@ -142,6 +151,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_BOARD_INFO,
                 dataView: new MspDataView(new Uint8Array(infoBuffer).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -177,10 +187,11 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_ATTITUDE_QUATERNION,
                 dataView: new MspDataView(buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
-            const q = FC.SENSOR_DATA.quaternion;
+            const q = FC.SENSOR_DATA.quaternion!;
             expect(q).not.toBeNull();
             expect(q.w).toBeCloseTo(qw, 3);
             expect(q.x).toBeCloseTo(qx, 3);
@@ -200,10 +211,11 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP_ATTITUDE_QUATERNION,
                 dataView: new MspDataView(buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
-            const q = FC.SENSOR_DATA.quaternion;
+            const q = FC.SENSOR_DATA.quaternion!;
             expect(q.w).toBeCloseTo(1, 3);
             expect(q.x).toBeCloseTo(-1, 3);
             expect(q.y).toBeCloseTo(0, 3);
@@ -213,13 +225,11 @@ describe("MspHelper", () => {
 
     describe("MSP2 text types", () => {
         /*
-         * MSPHelper.js is plain JavaScript and tsconfig sets `checkJs: false`, so neither
-         * ESLint nor vue-tsc looks at these switches. A stale member name -- the pre-split
-         * `MSP2TextType.BUILD_KEY`, say -- evaluates to `undefined`, its case silently stops
-         * matching a numeric type byte, and the field is never populated. These tests pin
-         * the type byte that goes on the wire and the FC.CONFIG field each type lands in.
+         * These tests pin the type byte that goes on the wire and the FC.CONFIG field each type
+         * lands in. MSPHelper is TypeScript now, so a stale MSP2TextType member no longer
+         * compiles, but a case wired to the wrong member or the wrong field still would.
          */
-        function buildTextPayload(textType, text) {
+        function buildTextPayload(textType: number, text: string) {
             const buffer = new MspBuffer();
             buffer.push8(textType);
             buffer.push8(text.length);
@@ -227,7 +237,7 @@ describe("MspHelper", () => {
             return buffer;
         }
 
-        function readBuffer(buffer) {
+        function readBuffer(buffer: number[]) {
             const view = new MspDataView(new Uint8Array(buffer).buffer);
             view.offset = 0;
             return view;
@@ -262,6 +272,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP2_GET_TEXT,
                 dataView: new MspDataView(new Uint8Array(buildTextPayload(textType, text)).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -274,6 +285,7 @@ describe("MspHelper", () => {
                 code: MSPCodes.MSP2_GET_TEXT,
                 dataView: new MspDataView(new Uint8Array(buildTextPayload(MSP2TextType.RELEASENAME, "4.6.0")).buffer),
                 crcError: false,
+                unsupported: 0,
                 callbacks: [],
             });
 
@@ -294,25 +306,25 @@ describe("MspHelper", () => {
         });
 
         it.each([
-            ["PILOT_NAME", MSP2TextType.PILOT_NAME, 16, (value) => (FC.CONFIG.pilotName = value)],
-            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, 16, (value) => (FC.CONFIG.craftName = value)],
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME, 16, (value: string) => (FC.CONFIG.pilotName = value)],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, 16, (value: string) => (FC.CONFIG.craftName = value)],
             [
                 "PID_PROFILE_NAME",
                 MSP2TextType.PID_PROFILE_NAME,
                 8,
-                (value) => (FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = value),
+                (value: string) => (FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = value),
             ],
             [
                 "RATE_PROFILE_NAME",
                 MSP2TextType.RATE_PROFILE_NAME,
                 8,
-                (value) => (FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value),
+                (value: string) => (FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value),
             ],
             [
                 "BATTERY_PROFILE_NAME",
                 MSP2TextType.BATTERY_PROFILE_NAME,
                 8,
-                (value) => (FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = value),
+                (value: string) => (FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = value),
             ],
         ])(
             "crunches MSP2_SET_TEXT %s and truncates to the firmware field width",
@@ -349,7 +361,7 @@ describe("MspHelper", () => {
  * @param prefixWithLength should we prefix the string by its length in the array
  * @returns {*} string that was requested to be inserted to the array
  */
-function appendStringToArray(destination, source, prefixWithLength = false) {
+function appendStringToArray(destination: MspBuffer, source: string, prefixWithLength = false) {
     const size = source.length;
 
     if (prefixWithLength) {

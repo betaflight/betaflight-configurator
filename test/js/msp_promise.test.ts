@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 import MSP from "../../src/js/msp";
 import { serial } from "../../src/js/serial";
 import MspHelper from "../../src/js/msp/MSPHelper";
@@ -8,35 +8,40 @@ import { MspCancelledError, MspTimeoutError, MspCrcError } from "../../src/js/ms
 
 const EEPROM_WRITE_CODE = MSPCodes.MSP_EEPROM_WRITE;
 
-function xorChecksum(bytes) {
+function xorChecksum(bytes: number[]) {
     return bytes.reduce((acc, byte) => acc ^ byte, 0);
 }
 
-function v1ResponseFrame(code, payload = []) {
+function v1ResponseFrame(code: number, payload: number[] = []) {
     const length = payload.length;
     const checksum = xorChecksum([length, code, ...payload]);
     return [0x24, 0x4d, 0x3e, length, code, ...payload, checksum];
 }
 
-function v1CorruptResponseFrame(code, payload = []) {
+function v1CorruptResponseFrame(code: number, payload: number[] = []) {
     const length = payload.length;
     const checksum = xorChecksum([length, code, ...payload]) ^ 0xff;
     return [0x24, 0x4d, 0x3e, length, code, ...payload, checksum];
 }
 
-function readFrame(bytes) {
+function readFrame(bytes: number[]) {
     MSP.read({ data: new Uint8Array(bytes).buffer });
+}
+
+// serial.js is untyped JS; `connected` is the only protocol field serial.connected reads.
+function setProtocolConnected(connected: boolean) {
+    (serial as unknown as { _protocol: { connected: boolean } })._protocol = { connected };
 }
 
 describe("MSP promise semantics", () => {
     const mspHelper = new MspHelper();
-    let serialSendSpy;
-    let boundProcessData;
+    let serialSendSpy: MockInstance<typeof serial.send>;
+    let boundProcessData: typeof mspHelper.process_data;
 
     beforeEach(() => {
         vi.useFakeTimers();
-        serialSendSpy = vi.spyOn(serial, "send").mockImplementation(() => {});
-        serial._protocol = { connected: true };
+        serialSendSpy = vi.spyOn(serial, "send").mockImplementation(async () => {});
+        setProtocolConnected(true);
         CONFIGURATOR.virtualMode = false;
 
         MSP.callbacks = [];
@@ -165,7 +170,7 @@ describe("MSP promise semantics", () => {
 
     describe("send while disconnected / virtual mode", () => {
         it("rejects with MspCancelledError reason disconnected when serial is not connected", async () => {
-            serial._protocol = { connected: false };
+            setProtocolConnected(false);
 
             const promise = MSP.promise(EEPROM_WRITE_CODE);
             promise.catch(() => {});
@@ -208,7 +213,7 @@ describe("MSP promise semantics", () => {
             expect(MSP.parked.has(EEPROM_WRITE_CODE)).toBe(false);
 
             readFrame(v1ResponseFrame(EEPROM_WRITE_CODE, [2]));
-            const secondResult = await secondPromise;
+            const secondResult = (await secondPromise)!;
             expect(secondResult.command).toBe(EEPROM_WRITE_CODE);
             expect(secondResult.data.byteLength).toBe(1);
             expect(secondResult.data.getUint8(0)).toBe(2);

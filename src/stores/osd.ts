@@ -1,9 +1,30 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
 import { OSD } from "../components/tabs/osd/osd";
 import { FONT, SYM } from "../js/utils/osdFont";
 import MSP from "../js/msp";
-import VirtualFC from "../js/VirtualFC.js";
+import VirtualFC from "../js/VirtualFC";
 import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
@@ -12,8 +33,88 @@ import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } fr
 import { bit_set } from "../js/bit";
 import { useDirtyState } from "../composables/useDirtyState";
 import { MspBuffer } from "../js/msp/mspBytes";
+import type { MspResponse } from "../js/msp";
 
-function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
+/** An alarm threshold as `OSD.msp.decode` builds it; only `value` is written back. */
+export interface OsdAlarm {
+    display_name: string;
+    value: number;
+    min?: number;
+    max?: number;
+}
+
+// Each item type lists the fields this store reads; osd.js attaches more (name, text, preview, ...).
+export interface OsdStatItem {
+    index: number;
+    enabled: boolean;
+}
+
+export interface OsdWarning {
+    index: number;
+    enabled: boolean;
+}
+
+export interface OsdTimer {
+    index: number;
+    src: number;
+    precision: number;
+    alarm: number;
+}
+
+export interface OsdDisplayItem {
+    index: number;
+    position: number;
+    variant: number;
+    isVisible: boolean[];
+}
+
+export interface OsdParameters {
+    cameraFrameWidth: number;
+    cameraFrameHeight: number;
+    overlayRadioMode: number;
+}
+
+export interface OsdProfiles {
+    number: number;
+    selected: number;
+}
+
+/** Written by VirtualFC.setupVirtualOSD; stands in for the FC in virtual mode. */
+interface VirtualOsdMode {
+    itemPositions: (number | undefined)[];
+    statisticsState: boolean[];
+    warningFlags: number;
+    timerData: Partial<OsdTimer>[];
+}
+
+/** `OSD.data` as the decoder leaves it, which is the only point this store reads it. */
+interface LegacyOsdData {
+    video_system: number | null;
+    unit_mode: number | null;
+    alarms: Record<string, OsdAlarm>;
+    statItems: OsdStatItem[];
+    warnings: OsdWarning[];
+    displayItems: OsdDisplayItem[];
+    timers: OsdTimer[];
+    osd_profiles: OsdProfiles;
+    parameters?: OsdParameters;
+    state?: object;
+    displaySize?: object;
+    VIDEO_COLS: Record<string, number | undefined>;
+    VIDEO_ROWS: Record<string, number | undefined>;
+}
+
+// osd.js assigns OSD.data / OSD.virtualMode and FONT.data inside functions, so inference never sees them.
+const legacyOsd = OSD as typeof OSD & { data: LegacyOsdData; virtualMode?: VirtualOsdMode };
+const legacyFont = FONT as typeof FONT & { data?: { characters?: unknown[] } };
+
+type FlightControllerStore = ReturnType<typeof useFlightControllerStore>;
+
+function encodeStatisticsPayload(
+    statItem: OsdStatItem,
+    isVirtualMode: boolean,
+    virtualMode: VirtualOsdMode | undefined,
+) {
     if (isVirtualMode && virtualMode) {
         virtualMode.statisticsState[statItem.index] = statItem.enabled;
     }
@@ -25,7 +126,7 @@ function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     return buffer;
 }
 
-async function fetchOsdInfo(fcStore) {
+async function fetchOsdInfo(fcStore: FlightControllerStore) {
     if (CONFIGURATOR.virtualMode) {
         return undefined;
     }
@@ -37,7 +138,7 @@ async function fetchOsdInfo(fcStore) {
     return MSP.promise(MSPCodes.MSP_OSD_CONFIG);
 }
 
-async function decodeOsdData(info) {
+async function decodeOsdData(info: MspResponse | undefined) {
     if (!CONFIGURATOR.virtualMode) {
         await MSP.promise(MSPCodes.MSP_RX_CONFIG);
     }
@@ -48,17 +149,17 @@ async function decodeOsdData(info) {
     if (CONFIGURATOR.virtualMode) {
         VirtualFC.setupVirtualOSD();
 
-        if (OSD.msp.decodeVirtual) {
-            OSD.msp.decodeVirtual();
+        if (legacyOsd.msp.decodeVirtual) {
+            legacyOsd.msp.decodeVirtual();
         }
         return;
     }
 
-    OSD.msp.decode(info);
+    legacyOsd.msp.decode(info);
 }
 
 async function ensureDefaultFontLoaded() {
-    if (FONT.data?.characters?.length > 0) {
+    if ((legacyFont.data?.characters?.length ?? 0) > 0) {
         return;
     }
 
@@ -73,14 +174,14 @@ async function ensureDefaultFontLoaded() {
 
 export const useOsdStore = defineStore("osd", () => {
     // Core OSD data state
-    const videoSystem = ref(null);
-    const unitMode = ref(null);
-    const alarms = ref({});
-    const statItems = ref([]);
-    const warnings = ref([]);
-    const displayItems = ref([]);
-    const timers = ref([]);
-    const osdProfiles = ref({
+    const videoSystem = ref<number | null>(null);
+    const unitMode = ref<number | null>(null);
+    const alarms = ref<Record<string, OsdAlarm>>({});
+    const statItems = ref<OsdStatItem[]>([]);
+    const warnings = ref<OsdWarning[]>([]);
+    const displayItems = ref<OsdDisplayItem[]>([]);
+    const timers = ref<OsdTimer[]>([]);
+    const osdProfiles = ref<OsdProfiles>({
         number: 1,
         selected: 0,
     });
@@ -105,7 +206,7 @@ export const useOsdStore = defineStore("osd", () => {
     });
 
     // OSD parameters
-    const parameters = reactive({
+    const parameters = reactive<OsdParameters>({
         cameraFrameWidth: 24,
         cameraFrameHeight: 11,
         overlayRadioMode: 0,
@@ -115,8 +216,7 @@ export const useOsdStore = defineStore("osd", () => {
     const selectedPreviewProfile = ref(0);
 
     // Dirty state tracking
-    /** @returns {string} serialized OSD state for dirty comparison */
-    function serializeOsdState() {
+    function serializeOsdState(): string {
         return JSON.stringify({
             videoSystem: videoSystem.value,
             unitMode: unitMode.value,
@@ -166,7 +266,8 @@ export const useOsdStore = defineStore("osd", () => {
     }
 
     function updateDisplaySize() {
-        let videoType = OSD.constants.VIDEO_TYPES[videoSystem.value];
+        const videoTypes: readonly (string | undefined)[] = OSD.constants.VIDEO_TYPES;
+        let videoType = videoSystem.value === null ? undefined : videoTypes[videoSystem.value];
         if (videoType === "AUTO") {
             videoType = "PAL";
         }
@@ -174,67 +275,67 @@ export const useOsdStore = defineStore("osd", () => {
             // Read from OSD.data so the canvas size reported by the firmware via
             // MSP_OSD_CANVAS (e.g. DJI WTFOS/MSP-OSD custom sizes) is honoured,
             // rather than the built-in HD defaults.
-            displaySize.x = OSD.data.VIDEO_COLS[videoType] || 30;
-            displaySize.y = OSD.data.VIDEO_ROWS[videoType] || 16;
+            displaySize.x = legacyOsd.data.VIDEO_COLS[videoType] || 30;
+            displaySize.y = legacyOsd.data.VIDEO_ROWS[videoType] || 16;
             displaySize.total = displaySize.x * displaySize.y;
         }
     }
 
-    function setSelectedPreviewProfile(profile) {
+    function setSelectedPreviewProfile(profile: number) {
         selectedPreviewProfile.value = profile;
     }
 
     // Update display item visibility for a specific profile
-    function updateDisplayItemVisibility(itemIndex, profileIndex, visible) {
+    function updateDisplayItemVisibility(itemIndex: number, profileIndex: number, visible: boolean) {
         if (displayItems.value[itemIndex]) {
             displayItems.value[itemIndex].isVisible[profileIndex] = visible;
         }
     }
 
-    function refreshDisplayItemPreview(displayItem) {
+    function refreshDisplayItemPreview(displayItem: OsdDisplayItem) {
         syncToLegacy();
-        OSD.refreshDisplayItemPreview(OSD.data, displayItem);
+        OSD.refreshDisplayItemPreview(legacyOsd.data, displayItem);
     }
 
     // Sync state to legacy OSD.data object for compatibility
     function syncToLegacy() {
-        OSD.data.video_system = videoSystem.value;
-        OSD.data.unit_mode = unitMode.value;
-        OSD.data.alarms = alarms.value;
-        OSD.data.statItems = statItems.value;
-        OSD.data.warnings = warnings.value;
-        OSD.data.displayItems = displayItems.value;
-        OSD.data.timers = timers.value;
-        OSD.data.osd_profiles = osdProfiles.value;
-        OSD.data.displaySize = displaySize;
-        OSD.data.state = state;
-        OSD.data.parameters = parameters;
+        legacyOsd.data.video_system = videoSystem.value;
+        legacyOsd.data.unit_mode = unitMode.value;
+        legacyOsd.data.alarms = alarms.value;
+        legacyOsd.data.statItems = statItems.value;
+        legacyOsd.data.warnings = warnings.value;
+        legacyOsd.data.displayItems = displayItems.value;
+        legacyOsd.data.timers = timers.value;
+        legacyOsd.data.osd_profiles = osdProfiles.value;
+        legacyOsd.data.displaySize = displaySize;
+        legacyOsd.data.state = state;
+        legacyOsd.data.parameters = parameters;
     }
 
     function syncStoreFromDecodedOsdData() {
-        videoSystem.value = OSD.data.video_system;
-        unitMode.value = OSD.data.unit_mode;
-        alarms.value = OSD.data.alarms ? structuredClone(OSD.data.alarms) : {};
-        statItems.value = structuredClone(OSD.data.statItems);
-        warnings.value = structuredClone(OSD.data.warnings);
-        timers.value = structuredClone(OSD.data.timers);
-        displayItems.value = structuredClone(OSD.data.displayItems);
+        videoSystem.value = legacyOsd.data.video_system;
+        unitMode.value = legacyOsd.data.unit_mode;
+        alarms.value = legacyOsd.data.alarms ? structuredClone(legacyOsd.data.alarms) : {};
+        statItems.value = structuredClone(legacyOsd.data.statItems);
+        warnings.value = structuredClone(legacyOsd.data.warnings);
+        timers.value = structuredClone(legacyOsd.data.timers);
+        displayItems.value = structuredClone(legacyOsd.data.displayItems);
 
-        if (OSD.data.parameters) {
-            parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;
-            parameters.cameraFrameHeight = OSD.data.parameters.cameraFrameHeight;
-            parameters.overlayRadioMode = OSD.data.parameters.overlayRadioMode;
+        if (legacyOsd.data.parameters) {
+            parameters.cameraFrameWidth = legacyOsd.data.parameters.cameraFrameWidth;
+            parameters.cameraFrameHeight = legacyOsd.data.parameters.cameraFrameHeight;
+            parameters.overlayRadioMode = legacyOsd.data.parameters.overlayRadioMode;
         }
 
-        if (OSD.data.osd_profiles) {
+        if (legacyOsd.data.osd_profiles) {
             osdProfiles.value = {
-                number: OSD.data.osd_profiles.number,
-                selected: OSD.data.osd_profiles.selected,
+                number: legacyOsd.data.osd_profiles.number,
+                selected: legacyOsd.data.osd_profiles.selected,
             };
         }
 
-        if (OSD.data.state) {
-            Object.assign(state, OSD.data.state);
+        if (legacyOsd.data.state) {
+            Object.assign(state, legacyOsd.data.state);
         }
 
         updateDisplaySize();
@@ -261,7 +362,7 @@ export const useOsdStore = defineStore("osd", () => {
     // MSP Helper methods
     const helpers = {
         pack: {
-            position(displayItem) {
+            position(displayItem: OsdDisplayItem) {
                 const isVisible = displayItem.isVisible;
                 const position = displayItem.position;
                 const variant = displayItem.variant;
@@ -278,21 +379,21 @@ export const useOsdStore = defineStore("osd", () => {
                     packed_visible | variantSelected | ((ypos & 0x001f) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001f)
                 );
             },
-            timer(timer) {
+            timer(timer: OsdTimer) {
                 return (timer.src & 0x0f) | ((timer.precision & 0x0f) << 4) | ((timer.alarm & 0xff) << 8);
             },
         },
     };
 
-    function getAlarmValue(key) {
+    function getAlarmValue(key: string) {
         return alarms.value[key]?.value ?? 0;
     }
 
-    function pushAlarm8(result, key) {
+    function pushAlarm8(result: MspBuffer, key: string) {
         result.push8(getAlarmValue(key));
     }
 
-    function pushAlarm16(result, key) {
+    function pushAlarm16(result: MspBuffer, key: string) {
         result.push16(getAlarmValue(key));
     }
 
@@ -300,9 +401,11 @@ export const useOsdStore = defineStore("osd", () => {
         const fcStore = useFlightControllerStore();
         const apiVersion = fcStore.config.apiVersion;
 
-        const result = MspBuffer.of(-1, videoSystem.value);
+        // Array.of constructs through `this`, so this is an MspBuffer; TS types the inherited static as T[].
+        const result = MspBuffer.of(-1, videoSystem.value) as MspBuffer;
         if (state.haveOsdFeature) {
-            result.push8(unitMode.value);
+            // push8(null) already sent 0; spelled out for the type.
+            result.push8(unitMode.value ?? 0);
             pushAlarm8(result, "rssi");
             pushAlarm16(result, "cap");
 
@@ -317,8 +420,8 @@ export const useOsdStore = defineStore("osd", () => {
                 }
             }
 
-            if (CONFIGURATOR.virtualMode && OSD.virtualMode) {
-                OSD.virtualMode.warningFlags = warningFlags;
+            if (CONFIGURATOR.virtualMode && legacyOsd.virtualMode) {
+                legacyOsd.virtualMode.warningFlags = warningFlags;
             }
 
             result.push16(warningFlags);
@@ -342,9 +445,9 @@ export const useOsdStore = defineStore("osd", () => {
         return result;
     }
 
-    function encodeLayout(displayItem) {
-        if (CONFIGURATOR.virtualMode && OSD.virtualMode) {
-            OSD.virtualMode.itemPositions[displayItem.index] = helpers.pack.position(displayItem);
+    function encodeLayout(displayItem: OsdDisplayItem) {
+        if (CONFIGURATOR.virtualMode && legacyOsd.virtualMode) {
+            legacyOsd.virtualMode.itemPositions[displayItem.index] = helpers.pack.position(displayItem);
         }
 
         const buffer = new MspBuffer();
@@ -353,26 +456,27 @@ export const useOsdStore = defineStore("osd", () => {
         return buffer;
     }
 
-    function encodeTimer(timer) {
-        if (CONFIGURATOR.virtualMode && OSD.virtualMode) {
-            if (!OSD.virtualMode.timerData[timer.index]) {
-                OSD.virtualMode.timerData[timer.index] = {};
+    function encodeTimer(timer: OsdTimer) {
+        const virtualMode = legacyOsd.virtualMode;
+        if (CONFIGURATOR.virtualMode && virtualMode) {
+            if (!virtualMode.timerData[timer.index]) {
+                virtualMode.timerData[timer.index] = {};
             }
-            OSD.virtualMode.timerData[timer.index].src = timer.src;
-            OSD.virtualMode.timerData[timer.index].precision = timer.precision;
-            OSD.virtualMode.timerData[timer.index].alarm = timer.alarm;
+            virtualMode.timerData[timer.index].src = timer.src;
+            virtualMode.timerData[timer.index].precision = timer.precision;
+            virtualMode.timerData[timer.index].alarm = timer.alarm;
         }
 
-        const buffer = MspBuffer.of(-2, timer.index);
+        const buffer = MspBuffer.of(-2, timer.index) as MspBuffer;
         buffer.push16(helpers.pack.timer(timer));
         return buffer;
     }
 
     /**
-     * @param {() => Promise<void>} [beforePersist] runs after the config is written and before the
-     *   EEPROM write that serialises it, which is where a CLI `set` has to sit
+     * @param beforePersist runs after the config is written and before the EEPROM write that
+     *   serialises it, which is where a CLI `set` has to sit
      */
-    const saveAllConfig = async (beforePersist) => {
+    const saveAllConfig = async (beforePersist?: () => Promise<void>) => {
         const savedSnapshot = takeSnapshot();
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
@@ -388,7 +492,7 @@ export const useOsdStore = defineStore("osd", () => {
         for (const stat of statItems.value) {
             await MSP.promise(
                 MSPCodes.MSP_SET_OSD_CONFIG,
-                encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
+                encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, legacyOsd.virtualMode),
             );
         }
 
