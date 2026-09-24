@@ -1,6 +1,19 @@
 import { describe, expect, it } from "vitest";
 import RateCurve from "../../src/js/RateCurve";
-import FC from "../../src/js/fc.js";
+import FC from "../../src/js/fc";
+import type { RcDeadbandConfig, RcTuning } from "../../src/stores/fc.types";
+import type Features from "../../src/js/Features";
+
+// Fixtures set only the fields the code under test reads; the rest stay absent, as before.
+function rcTuning(fields: Partial<RcTuning>): RcTuning {
+    return fields as RcTuning;
+}
+
+function rcDeadband(fields: Partial<RcDeadbandConfig>): RcDeadbandConfig {
+    return fields as RcDeadbandConfig;
+}
+
+const featuresAllDisabled = { isEnabled: () => false } as unknown as Features;
 
 function makeRateCurve() {
     return new RateCurve(false);
@@ -74,11 +87,11 @@ describe("RateCurve.rcCommand", () => {
     });
 });
 
-function midRcPlus(offset) {
+function midRcPlus(offset: number) {
     return 1500 + offset;
 }
 
-function midRcMinus(offset) {
+function midRcMinus(offset: number) {
     return 1500 - offset;
 }
 
@@ -357,7 +370,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     const rc = makeRateCurve();
 
     it("returns undefined when rate, rcRate or rcExpo is undefined", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: undefined,
@@ -391,7 +404,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getBetaflightRates by default and applies the limit clamp", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: 0.7,
@@ -415,7 +428,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getRaceflightRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.RACEFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.RACEFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: 40,
@@ -429,7 +442,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getKISSRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.KISS };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.KISS });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 0.3,
@@ -443,7 +456,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getActualRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.ACTUAL };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.ACTUAL });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 400,
@@ -457,7 +470,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getQuickRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.QUICKRATES };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.QUICKRATES });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 100,
@@ -471,7 +484,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("subtracts the deadband before normalising rcCommandf", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1520, {
                 rate: 0.7,
@@ -497,7 +510,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
 
 describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
     it("computes the degrees/sec at full deflection for the non-legacy curve", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         expect(
             rc.getMaxAngularVel({ rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 }),
@@ -505,7 +518,7 @@ describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
     });
 
     it("returns undefined for the legacy curve (no maxAngularVel axis is drawn)", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const legacyRc = new RateCurve(true);
         expect(
             legacyRc.getMaxAngularVel({
@@ -537,8 +550,8 @@ describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
 });
 
 describe("RateCurve.getCurrentRates", () => {
-    function baseRcTuning(ratesType) {
-        return {
+    function baseRcTuning(ratesType: number): RcTuning {
+        return rcTuning({
             roll_rate: 0.7,
             pitch_rate: 0.7,
             yaw_rate: 0.7,
@@ -552,13 +565,13 @@ describe("RateCurve.getCurrentRates", () => {
             pitch_rate_limit: 1000,
             yaw_rate_limit: 1000,
             rates_type: ratesType,
-        };
+        });
     }
 
-    function setupFc(ratesType) {
+    function setupFc(ratesType: number) {
         FC.RC_TUNING = baseRcTuning(ratesType);
-        FC.FEATURE_CONFIG = { features: { isEnabled: () => false } };
-        FC.RC_DEADBAND_CONFIG = { deadband: 5, yaw_deadband: 3 };
+        FC.FEATURE_CONFIG = { features: featuresAllDisabled };
+        FC.RC_DEADBAND_CONFIG = rcDeadband({ deadband: 5, yaw_deadband: 3 });
     }
 
     it("leaves rates unscaled for BETAFLIGHT", () => {
@@ -607,60 +620,85 @@ describe("RateCurve.getCurrentRates", () => {
 
     it("always forces superexpo=true, overriding the SUPEREXPO_RATES feature flag", () => {
         setupFc(FC.RATES_TYPE.BETAFLIGHT);
-        FC.FEATURE_CONFIG = { features: { isEnabled: () => false } };
+        FC.FEATURE_CONFIG = { features: featuresAllDisabled };
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.superexpo).toBe(true);
     });
 });
 
 describe("RateCurve.drawStickPosition return value", () => {
-    function makeContext(height, { withEllipse = true, clientWidth, clientHeight } = {}) {
-        const context = {
+    interface ContextOptions {
+        withEllipse?: boolean;
+        clientWidth?: number;
+        clientHeight?: number;
+    }
+
+    // A recording stand-in for the few CanvasRenderingContext2D members drawStickPosition uses.
+    interface FakeContext {
+        save: () => void;
+        restore: () => void;
+        translate: () => void;
+        beginPath: () => void;
+        arcCalls: number[][];
+        ellipseCalls: number[][];
+        arc: (...args: number[]) => void;
+        ellipse?: (...args: number[]) => void;
+        fill: () => void;
+        fillStyle: string | undefined;
+        canvas: { width: number; height: number; clientWidth?: number; clientHeight?: number };
+    }
+
+    function makeContext(height: number, { withEllipse = true, clientWidth, clientHeight }: ContextOptions = {}) {
+        const context: FakeContext = {
             save: () => {},
             restore: () => {},
             translate: () => {},
             beginPath: () => {},
             arcCalls: [],
             ellipseCalls: [],
-            arc: (...args) => context.arcCalls.push(args),
+            arc: (...args) => {
+                context.arcCalls.push(args);
+            },
             fill: () => {},
             fillStyle: undefined,
             canvas: { width: 200, height, clientWidth, clientHeight },
         };
         if (withEllipse) {
-            context.ellipse = (...args) => context.ellipseCalls.push(args);
+            context.ellipse = (...args) => {
+                context.ellipseCalls.push(args);
+            };
         }
         return context;
     }
 
     it("snaps to 0 when the computed rate is below 0.5 deg/s in magnitude", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400);
         const result = rc.drawStickPosition(
             1500,
             { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
             700,
-            context,
+            context as unknown as CanvasRenderingContext2D,
         );
         expect(result).toBe(0);
     });
 
     it("returns the rounded degrees/sec as a string otherwise", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400);
         const result = rc.drawStickPosition(
             2000,
             { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
             700,
-            context,
+            context as unknown as CanvasRenderingContext2D,
         );
         expect(result).toBe("667");
     });
 
     it("draws an aspect-compensated ellipse when the context supports it", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const height = 400;
         const context = makeContext(height, { clientWidth: 800, clientHeight: 400 });
@@ -668,7 +706,7 @@ describe("RateCurve.drawStickPosition return value", () => {
             2000,
             { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
             700,
-            context,
+            context as unknown as CanvasRenderingContext2D,
         );
 
         expect(context.arcCalls).toHaveLength(0);
@@ -684,14 +722,14 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("uses a round ellipse when the display aspect ratio is unavailable", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400); // no clientWidth/clientHeight
         rc.drawStickPosition(
             2000,
             { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
             700,
-            context,
+            context as unknown as CanvasRenderingContext2D,
         );
 
         expect(context.ellipseCalls).toHaveLength(1);
@@ -700,14 +738,14 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("falls back to arc when the context has no ellipse method", () => {
-        FC.RC_TUNING = { rates_type: FC.RATES_TYPE.BETAFLIGHT };
+        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400, { withEllipse: false, clientWidth: 800, clientHeight: 400 });
         rc.drawStickPosition(
             2000,
             { rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 },
             700,
-            context,
+            context as unknown as CanvasRenderingContext2D,
         );
 
         expect(context.ellipse).toBeUndefined();

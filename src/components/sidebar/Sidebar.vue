@@ -67,7 +67,7 @@ import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import UserSession from "@/components/user-session/UserSession.vue";
 import { sidebarItems } from "./sidebar_items.js";
-import { useVisibleTabs } from "./useVisibleTabs.js";
+import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import FC from "../../../src/js/fc.js";
+import FC from "../../../src/js/fc";
 import { usePidTuningStore } from "../../../src/stores/pidTuning.js";
 
 describe("pidTuning store dirty tracking", () => {

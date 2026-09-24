@@ -19,14 +19,23 @@ vi.mock("../../src/js/vue_components.js", () => ({
     VueTabComponents: {},
 }));
 
-vi.mock("../../src/js/pinia_instance.js", () => ({
+// A real instance: modules that read FC at import time resolve the FC store through it.
+vi.mock("../../src/js/pinia_instance.js", async () => ({
     __esModule: true,
-    pinia: {},
+    pinia: (await import("pinia")).createPinia(),
 }));
 
 import { buildTabAdapter, unmountVueTab } from "../../src/js/vue_tab_mounter.js";
 import GUI, { TABS } from "../../src/js/gui.js";
 import { useNavigationStore } from "../../src/stores/navigation.js";
+
+// vue_tab_mounter.js is unchecked JS, so the adapter it returns carries no hook types.
+interface TabAdapter {
+    cleanup: (callback?: () => void) => void;
+    expertModeChanged: (enabled: boolean) => void;
+    read?: unknown;
+    _vueComponent?: unknown;
+}
 
 describe("unmountVueTab", () => {
     it("clears tab_switch_in_progress — an unmount cancels the mount that would have cleared it", () => {
@@ -41,7 +50,7 @@ describe("unmountVueTab", () => {
 });
 
 describe("buildTabAdapter", () => {
-    let navigationStore;
+    let navigationStore: ReturnType<typeof useNavigationStore>;
 
     beforeEach(() => {
         Object.keys(TABS).forEach((key) => delete TABS[key]);
@@ -59,7 +68,7 @@ describe("buildTabAdapter", () => {
             read: existingRead,
         };
 
-        const adapter = buildTabAdapter("presets", componentInstance, existingAdapter);
+        const adapter = buildTabAdapter("presets", componentInstance, existingAdapter) as unknown as TabAdapter;
 
         expect(adapter).toBe(existingAdapter);
         expect(adapter.read).toBe(existingRead);
@@ -77,7 +86,12 @@ describe("buildTabAdapter", () => {
             cleanup: componentCleanup,
         };
 
-        const adapter = buildTabAdapter("presets", componentInstance, null);
+        // null, not undefined: undefined would pick up the TABS[tabName] default instead.
+        const adapter = buildTabAdapter(
+            "presets",
+            componentInstance,
+            null as unknown as undefined,
+        ) as unknown as TabAdapter;
 
         adapter.cleanup(callback);
 

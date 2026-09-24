@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // This module is imported for its side effects: setting up i18next
 // and initializing the Vue app with plugins and global model.
 import "../js/localization.js";
@@ -6,8 +27,8 @@ import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
-import FC from "../js/fc.js";
-import MSP from "../js/msp.js";
+import FC from "../js/fc";
+import MSP from "../js/msp";
 import DeviceHandler from "../js/device_handler.js";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage";
@@ -18,7 +39,7 @@ import { get as getConfig } from "../js/ConfigStorage";
 
 // Connection tracking object
 const CONNECTION = reactive({
-    timestamp: null,
+    timestamp: null as number | null,
 });
 
 /*
@@ -42,6 +63,13 @@ const betaflightModel = reactive({
     // Load from ConfigStorage on init
     expertMode: !!getConfig("expertMode").expertMode,
 });
+
+export type BetaflightModel = typeof betaflightModel;
+
+declare global {
+    // Partial because App.vue installs a stand-in with only `expertMode` when it loads without this module.
+    var vm: Partial<BetaflightModel> | undefined;
+}
 
 // Keep the legacy global model available while the app finishes moving away from imperative globals.
 globalThis.vm = betaflightModel;

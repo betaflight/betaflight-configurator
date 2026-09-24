@@ -1,7 +1,89 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial.js";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
+
+/** A request payload: the encoders read `.length` and index it, so an array-like of bytes. */
+export type MspPayload = ArrayLike<number> | false | undefined;
+
+/** What a request callback receives once the reply is decoded (built in MSPHelper.process_data). */
+export interface MspResponse {
+    command: number;
+    data: DataView;
+    length: number;
+    crcError: boolean;
+    unsupported: number;
+}
+
+/**
+ * Legacy callbacks are called with the response only. errorAware callbacks (MSP.promise) get
+ * `(null, error)` on timeout, cancellation or CRC failure, else `(response, undefined)`.
+ */
+export type MspCallback = (response: MspResponse | null, error?: Error) => void;
+
+export interface MspRequest {
+    code: number;
+    requestBuffer: ArrayBuffer;
+    callback: MspCallback | false | undefined;
+    callbackSent: (() => void) | false | undefined;
+    errorAware: boolean;
+    notifyTimeout: boolean;
+    attempts?: number;
+    start?: number;
+    timer?: ReturnType<typeof setTimeout> | null;
+}
+
+export type CliCallback = (lines: string[], error?: Error | null) => void;
+
+interface CliQueueEntry {
+    command: string;
+    callback: CliCallback | undefined;
+    timeoutMs: number | undefined;
+}
+
+/** The decoder state MSPHelper.process_data reads when a frame completes. */
+export interface MspFrame {
+    code: number;
+    dataView: DataView;
+    crcError: boolean;
+    unsupported: number;
+    callbacks: MspRequest[];
+    _release_parked?: (code: number) => void;
+}
+
+export type MspListener = (frame: MspFrame) => void;
+
+/** Serial read events hand over either the raw bytes or a `{ data }` wrapper. */
+type MspReadInfo = ArrayBuffer | ArrayLike<number> | { data: ArrayBuffer | ArrayLike<number> };
+
+type Timer = ReturnType<typeof setTimeout>;
+
+// Only MSP.promise creates errorAware entries, and it always passes a function, so the
+// `false` a legacy send_message caller may pass never reaches the errorAware paths.
+function errorAwareCallback(entry: MspRequest): MspCallback | undefined {
+    return entry.callback as MspCallback | undefined;
+}
 
 const MSP = {
     symbols: {
@@ -46,47 +128,57 @@ const MSP = {
     state: 0,
     message_direction: 1,
     code: 0,
-    dataView: 0,
+    // Replaced by every dispatched frame; nothing reads it before the first one.
+    dataView: new DataView(new ArrayBuffer(0)),
     message_length_expected: 0,
     message_length_received: 0,
-    message_buffer: null,
-    message_buffer_uint8_view: null,
+    // Sized per frame by _initialize_read_buffer() before any payload byte is stored.
+    message_buffer: new ArrayBuffer(0),
+    message_buffer_uint8_view: new Uint8Array(0),
     message_checksum: 0,
     crcError: false,
 
-    callbacks: [],
-    parked: new Map(), // errorAware requests parked behind an in-flight same-code request
-    onTimeout: null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
+    callbacks: [] as MspRequest[],
+    parked: new Map<number, MspRequest[]>(), // errorAware requests parked behind an in-flight same-code request
+    onTimeout: null as ((code: number) => void) | null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
     packet_error: 0,
     unsupported: 0,
 
     TIMEOUT: 1000,
     MAX_RETRIES: 3,
 
-    last_received_timestamp: null,
-    listeners: [],
+    last_received_timestamp: null as number | null,
+    listeners: [] as MspListener[],
 
-    cli_buffer: [], // buffer for CLI character output
-    cli_output: [],
-    cli_callback: null,
-    cli_queue: [], // pending { command, callback, timeoutMs } entries
-    cli_in_flight: null,
-    cli_timer: null,
+    cli_buffer: [] as string[], // buffer for CLI character output
+    cli_output: [] as string[],
+    cli_callback: null as ((lines: string[]) => void) | null,
+    cli_queue: [] as CliQueueEntry[], // pending { command, callback, timeoutMs } entries
+    cli_in_flight: null as CliQueueEntry | null,
+    cli_timer: null as Timer | null,
     // When a CLI command times out, we don't know whether the firmware is
     // mid-response, about to respond, or silent. Enter a "draining" state
     // where every byte is dropped; the decoder clears the state on the
     // closing ETX (so any bookended late response is consumed in full)
     // or when the drain grace timer expires (a real hang).
     cli_discarding: false,
-    cli_drain_timer: null,
+    cli_drain_timer: null as Timer | null,
     cli_drain_grace_ms: 1000,
 
-    read(readInfo) {
+    SDCARD_STATE_NOT_PRESENT: 0,
+    SDCARD_STATE_FATAL: 1,
+    SDCARD_STATE_CARD_INIT: 2,
+    SDCARD_STATE_FS_INIT: 3,
+    SDCARD_STATE_READY: 4,
+
+    read(readInfo: MspReadInfo) {
         if (CONFIGURATOR.virtualMode) {
             return;
         }
 
-        const data = new Uint8Array(readInfo.data ?? readInfo);
+        const data = new Uint8Array(
+            (readInfo as { data?: ArrayBuffer | ArrayLike<number> }).data ?? (readInfo as ArrayBuffer),
+        );
 
         for (const chunk of data) {
             if (this.cli_discarding) {
@@ -281,11 +373,15 @@ const MSP = {
         this.message_buffer_uint8_view = new Uint8Array(this.message_buffer);
     },
 
-    _dispatch_message(expectedChecksum) {
+    _dispatch_message(expectedChecksum: number) {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
-        } else if (serial._protocol?.shouldBypassCrc?.(expectedChecksum)) {
+        } else if (
+            (serial._protocol as { shouldBypassCrc?: (checksum: number) => boolean } | null)?.shouldBypassCrc?.(
+                expectedChecksum,
+            )
+        ) {
             // Capability check: only the Bluetooth protocols implement shouldBypassCrc,
             // for BT-11/CC2541 bridges that corrupt the MSP checksum to 0xff. Not gated
             // on serial.protocol — that getter returns the lowercased constructor name,
@@ -308,7 +404,7 @@ const MSP = {
             listener(this);
         });
     },
-    listen(listener) {
+    listen(listener: MspListener) {
         if (this.listeners.indexOf(listener) === -1) {
             this.listeners.push(listener);
         }
@@ -316,7 +412,7 @@ const MSP = {
     clearListeners() {
         this.listeners = [];
     },
-    crc8_dvb_s2(crc, ch) {
+    crc8_dvb_s2(crc: number, ch: number): number {
         crc ^= ch;
         for (let ii = 0; ii < 8; ii++) {
             if (crc & 0x80) {
@@ -327,14 +423,14 @@ const MSP = {
         }
         return crc;
     },
-    crc8_dvb_s2_data(data, start, end) {
+    crc8_dvb_s2_data(data: ArrayLike<number>, start: number, end: number): number {
         let crc = 0;
         for (let ii = start; ii < end; ii++) {
             crc = this.crc8_dvb_s2(crc, data[ii]);
         }
         return crc;
     },
-    encode_message_v1(code, data) {
+    encode_message_v1(code: number, data: MspPayload): ArrayBuffer {
         const dataLength = data ? data.length : 0;
         // always reserve 6 bytes for protocol overhead !
         const bufferSize = dataLength + 6;
@@ -350,14 +446,14 @@ const MSP = {
         let checksum = bufView[3] ^ bufView[4];
 
         for (let i = 0; i < dataLength; i++) {
-            bufView[i + 5] = data[i];
+            bufView[i + 5] = (data as ArrayLike<number>)[i];
             checksum ^= bufView[i + 5];
         }
 
         bufView[5 + dataLength] = checksum;
         return bufferOut;
     },
-    encode_message_v2(code, data) {
+    encode_message_v2(code: number, data: MspPayload): ArrayBuffer {
         const dataLength = data ? data.length : 0;
         // 9 bytes for protocol overhead
         const bufferSize = dataLength + 9;
@@ -372,12 +468,12 @@ const MSP = {
         bufView[6] = dataLength & 0xff;
         bufView[7] = (dataLength >> 8) & 0xff;
         for (let ii = 0; ii < dataLength; ii++) {
-            bufView[8 + ii] = data[ii];
+            bufView[8 + ii] = (data as ArrayLike<number>)[ii];
         }
         bufView[bufferSize - 1] = this.crc8_dvb_s2_data(bufView, 3, bufferSize - 1);
         return bufferOut;
     },
-    encode_message_cli(str) {
+    encode_message_cli(str: string): ArrayBuffer {
         const data = Array.from(str, (c) => c.charCodeAt(0));
         const dataLength = data ? data.length : 0;
         const bufferSize = dataLength + 3; // 3 bytes for protocol overhead
@@ -391,7 +487,7 @@ const MSP = {
         bufView[bufferSize - 1] = this.symbols.END_OF_TEXT; // ETX
         return bufferOut;
     },
-    send_cli_command(str, callback, { timeoutMs } = {}) {
+    send_cli_command(str: string, callback?: CliCallback, { timeoutMs }: { timeoutMs?: number } = {}) {
         this.cli_queue.push({ command: str, callback, timeoutMs });
         this._process_cli_queue();
     },
@@ -400,7 +496,7 @@ const MSP = {
             return;
         }
 
-        const entry = this.cli_queue.shift();
+        const entry = this.cli_queue.shift()!;
         this.cli_in_flight = entry;
         this.cli_buffer.length = 0;
         this.cli_output.length = 0;
@@ -420,7 +516,7 @@ const MSP = {
 
         serial.send(this.encode_message_cli(entry.command));
     },
-    _finish_cli(lines, error) {
+    _finish_cli(lines: string[], error: Error | null) {
         const entry = this.cli_in_flight;
         if (!entry) {
             return;
@@ -467,7 +563,7 @@ const MSP = {
         this.state = this.decoder_states.IDLE;
         this._process_cli_queue();
     },
-    _drain_cli_queue(error) {
+    _drain_cli_queue(error: Error) {
         if (this.cli_timer) {
             clearTimeout(this.cli_timer);
             this.cli_timer = null;
@@ -496,17 +592,22 @@ const MSP = {
             }
         }
     },
-    send_message(code, data, callback_sent, callback_msp) {
+    send_message(
+        code: number | undefined,
+        data?: MspPayload,
+        callback_sent?: (() => void) | false,
+        callback_msp?: MspCallback | false,
+    ): boolean {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
-                callback_msp();
+                (callback_msp as () => void)();
             }
             return false;
         }
 
         return this._transmit(code, data, callback_sent, callback_msp, false);
     },
-    _buffer_matches(entry, view) {
+    _buffer_matches(entry: MspRequest, view: Uint8Array): boolean {
         if (entry.requestBuffer?.byteLength !== view.byteLength) {
             return false;
         }
@@ -528,7 +629,14 @@ const MSP = {
      * @param {boolean} [notifyTimeout=true] whether timeout exhaustion invokes MSP.onTimeout
      * @returns {boolean} true when the request is queued
      */
-    _transmit(code, data, callback_sent, callback_msp, errorAware, notifyTimeout = true) {
+    _transmit(
+        code: number,
+        data: MspPayload,
+        callback_sent: (() => void) | false | undefined,
+        callback_msp: MspCallback | false | undefined,
+        errorAware: boolean,
+        notifyTimeout = true,
+    ): boolean {
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
         const view = new Uint8Array(bufferOut);
 
@@ -554,7 +662,7 @@ const MSP = {
 
         const requestExists = this.callbacks.some((i) => i.code === code && this._buffer_matches(i, view));
 
-        const obj = {
+        const obj: MspRequest = {
             code,
             requestBuffer: bufferOut,
             callback: callback_msp,
@@ -575,7 +683,7 @@ const MSP = {
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
-            serial.send(bufferOut, (sendInfo) => {
+            serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
                     callback_sent();
                 }
@@ -584,7 +692,7 @@ const MSP = {
 
         return true;
     },
-    _arm_timer(obj) {
+    _arm_timer(obj: MspRequest) {
         obj.timer = setTimeout(() => this._on_timeout(obj), this.TIMEOUT);
     },
     /**
@@ -603,9 +711,9 @@ const MSP = {
      * @param {object} obj - the queued request entry (`code`, `requestBuffer`, `attempts`, `errorAware`, `callback`, `timer`, …).
      * @returns {void}
      */
-    _on_timeout(obj) {
-        if (obj.attempts < this.MAX_RETRIES) {
-            obj.attempts++;
+    _on_timeout(obj: MspRequest) {
+        if ((obj.attempts ?? 1) < this.MAX_RETRIES) {
+            obj.attempts = (obj.attempts ?? 1) + 1;
             console.warn(
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
@@ -614,7 +722,7 @@ const MSP = {
             return;
         }
 
-        clearTimeout(obj.timer);
+        clearTimeout(obj.timer ?? undefined);
         obj.timer = null;
 
         if (!obj.errorAware) {
@@ -627,7 +735,7 @@ const MSP = {
             this.callbacks.splice(index, 1);
         }
         try {
-            obj.callback?.(null, new MspTimeoutError(`MSP request timed out: ${obj.code}`, obj.code));
+            errorAwareCallback(obj)?.(null, new MspTimeoutError(`MSP request timed out: ${obj.code}`, obj.code));
         } catch (callbackError) {
             console.error("MSP callback threw on timeout:", callbackError);
         }
@@ -640,7 +748,7 @@ const MSP = {
             this.onTimeout?.(obj.code);
         }
     },
-    _park(code, entry) {
+    _park(code: number, entry: MspRequest) {
         let queue = this.parked.get(code);
         if (!queue) {
             queue = [];
@@ -648,7 +756,7 @@ const MSP = {
         }
         queue.push(entry);
     },
-    _release_parked(code) {
+    _release_parked(code: number) {
         const queue = this.parked.get(code);
         if (!queue || queue.length === 0) {
             return;
@@ -657,7 +765,7 @@ const MSP = {
             return;
         }
 
-        const entry = queue.shift();
+        const entry = queue.shift()!;
         if (queue.length === 0) {
             this.parked.delete(code);
         }
@@ -667,7 +775,7 @@ const MSP = {
         this._arm_timer(entry);
         this.callbacks.push(entry);
 
-        serial.send(entry.requestBuffer, (sendInfo) => {
+        serial.send(entry.requestBuffer, (sendInfo: { bytesSent: number }) => {
             if (sendInfo.bytesSent === entry.requestBuffer.byteLength && entry.callbackSent) {
                 entry.callbackSent();
             }
@@ -681,7 +789,11 @@ const MSP = {
      * @returns {Promise<object|undefined>} resolves with {command, data, length}; rejects with
      * MspTimeoutError, MspCancelledError or MspCrcError
      */
-    async promise(code, data, { notifyTimeout = true } = {}) {
+    async promise(
+        code: number | undefined,
+        data?: MspPayload,
+        { notifyTimeout = true }: { notifyTimeout?: boolean } = {},
+    ): Promise<MspResponse | undefined> {
         if (code === undefined || CONFIGURATOR.virtualMode) {
             return undefined;
         }
@@ -690,7 +802,7 @@ const MSP = {
             throw new MspCancelledError("MSP request while disconnected", code, "disconnected");
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise<MspResponse | undefined>((resolve, reject) => {
             this._transmit(
                 code,
                 data,
@@ -699,7 +811,7 @@ const MSP = {
                     if (error) {
                         reject(error);
                     } else {
-                        resolve(response);
+                        resolve(response ?? undefined);
                     }
                 },
                 true,
@@ -707,18 +819,18 @@ const MSP = {
             );
         });
     },
-    callbacks_cleanup(error = new MspCancelledError("MSP queue cleared", undefined, "cleanup")) {
+    callbacks_cleanup(error: Error = new MspCancelledError("MSP queue cleared", undefined, "cleanup")) {
         const pending = this.callbacks;
         this.callbacks = [];
 
-        const parked = [];
+        const parked: MspRequest[] = [];
         for (const queue of this.parked.values()) {
             parked.push(...queue);
         }
         this.parked.clear();
 
         for (const entry of pending) {
-            clearTimeout(entry.timer);
+            clearTimeout(entry.timer ?? undefined);
         }
 
         for (const entry of [...pending, ...parked]) {
@@ -726,7 +838,7 @@ const MSP = {
                 continue;
             }
             try {
-                entry.callback?.(null, error);
+                errorAwareCallback(entry)?.(null, error);
             } catch (callbackError) {
                 console.error("MSP callback threw during cleanup:", callbackError);
             }
@@ -740,17 +852,17 @@ const MSP = {
         // Tag the error so callers can distinguish an EXPECTED close-driven drain — a `save`/
         // `exit` reboots the FC, closing the port before it can reply — from a genuine command
         // failure. The save still succeeded; the board is just restarting.
-        const closedError = new Error("Serial connection closed");
-        closedError.connectionClosed = true;
+        const closedError = Object.assign(new Error("Serial connection closed"), { connectionClosed: true });
         this._drain_cli_queue(closedError);
     },
 };
 
-MSP.SDCARD_STATE_NOT_PRESENT = 0;
-MSP.SDCARD_STATE_FATAL = 1;
-MSP.SDCARD_STATE_CARD_INIT = 2;
-MSP.SDCARD_STATE_FS_INIT = 3;
-MSP.SDCARD_STATE_READY = 4;
+declare global {
+    interface Window {
+        // Read by the dev-only MSP debug tools in src/js/msp/debug/.
+        MSP: typeof MSP;
+    }
+}
 
 window.MSP = MSP;
 export default MSP;

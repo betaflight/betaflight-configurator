@@ -1,14 +1,49 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref, computed } from "vue";
-import FC from "@/js/fc.js";
+import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import { useReboot } from "@/composables/useReboot";
+import type { LedColor, LedConfigValues, LedStripEntry } from "@/stores/fc.types";
+
+/** One cell of the LED strip tab's 16x16 grid. `wireNumber` is "" when the cell is not wired. */
+export interface LedGridCell {
+    wireNumber: string;
+    functions: string[];
+    directions: string[];
+    colorIndex: number;
+}
+
+export interface LedModeColorSelection {
+    mode: number;
+    direction: number;
+}
 
 // Helper functions moved to outer scope
-function getGridPosition(index) {
+function getGridPosition(index: number) {
     const gridNumber = index + 1;
     const row = Math.ceil(gridNumber / 16) - 1;
     let col = ((gridNumber / 16) % 1) * 16 - 1;
@@ -18,8 +53,8 @@ function getGridPosition(index) {
     return { x: col, y: row };
 }
 
-function buildUsedWireNumbers(gridState) {
-    const usedWireNumbers = [];
+function buildUsedWireNumbers(gridState: LedGridCell[]) {
+    const usedWireNumbers: number[] = [];
     gridState.forEach((led) => {
         const wireNumber = Number.parseInt(led.wireNumber, 10);
         if (wireNumber >= 0 && !Number.isNaN(wireNumber)) {
@@ -30,7 +65,7 @@ function buildUsedWireNumbers(gridState) {
     return usedWireNumbers;
 }
 
-function hsvToColor(input) {
+function hsvToColor(input: LedColor | undefined) {
     if (!input) {
         return "";
     }
@@ -58,11 +93,11 @@ function hsvToColor(input) {
     return `hsl(${HSL.h},${HSL.s * 100}%,${HSL.l * 100}%)`;
 }
 
-function areModifiersActive(activeFunction) {
+function areModifiersActive(activeFunction: string) {
     return ["function-c", "function-a", "function-f"].includes(activeFunction);
 }
 
-function areOverlaysActive(activeFunction) {
+function areOverlaysActive(activeFunction: string) {
     const activeFunctions = [
         "",
         "function-c",
@@ -82,12 +117,12 @@ function areOverlaysActive(activeFunction) {
     return activeFunctions.includes(activeFunction);
 }
 
-function isWarningActive(activeFunction) {
+function isWarningActive(activeFunction: string) {
     const inactiveFunctions = ["function-l", "function-s", "function-g"];
     return !inactiveFunctions.includes(activeFunction);
 }
 
-function isVtxActive(activeFunction) {
+function isVtxActive(activeFunction: string) {
     const activeFunctions = ["function-v", "function-c", "function-a", "function-f"];
     return activeFunctions.includes(activeFunction);
 }
@@ -107,9 +142,9 @@ async function saveConfig() {
 
 export function useLedStrip() {
     const wireMode = ref(false);
-    const selectedColorIndex = ref(null);
-    const selectedModeColor = ref(null);
-    const selectedLeds = ref(new Set());
+    const selectedColorIndex = ref<number | null>(null);
+    const selectedModeColor = ref<LedModeColorSelection | null>(null);
+    const selectedLeds = ref(new Set<number>());
 
     const directions = ["n", "e", "s", "w", "u", "d"];
     const functions = ["i", "w", "f", "a", "t", "r", "c", "g", "s", "b", "l", "o", "y"];
@@ -129,12 +164,12 @@ export function useLedStrip() {
     // Load LED configuration data
     async function loadData() {
         try {
-            await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG);
-            await MSP.promise(MSPCodes.MSP_LED_COLORS);
-            await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR);
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG, false);
+            await MSP.promise(MSPCodes.MSP_LED_COLORS, false);
+            await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR, false);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
+                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES, false);
             }
         } catch (error) {
             console.error("Error loading LED strip data:", error);
@@ -142,7 +177,7 @@ export function useLedStrip() {
     }
 
     // Find LED at specific grid coordinates
-    function findLed(x, y) {
+    function findLed(x: number, y: number) {
         for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
             const led = FC.LED_STRIP[ledIndex];
             if (led.x === x && led.y === y) {
@@ -153,14 +188,14 @@ export function useLedStrip() {
     }
 
     // Build LED strip from grid state
-    function buildLedStripFromGrid(gridState) {
+    function buildLedStripFromGrid(gridState: LedGridCell[]) {
         const ledStripLength = FC.LED_STRIP.length;
-        const newLedStrip = [];
+        const newLedStrip: LedStripEntry[] = [];
 
         gridState.forEach((led, index) => {
             if (led.functions.length > 0 && led.wireNumber !== "") {
                 const { x, y } = getGridPosition(index);
-                newLedStrip[led.wireNumber] = {
+                newLedStrip[Number(led.wireNumber)] = {
                     x,
                     y,
                     directions: led.directions.join(""),
@@ -171,7 +206,7 @@ export function useLedStrip() {
         });
 
         // Fill empty slots with default LED
-        const defaultLed = {
+        const defaultLed: LedStripEntry = {
             x: 0,
             y: 0,
             directions: "",
@@ -189,7 +224,7 @@ export function useLedStrip() {
     }
 
     // Get next available wire number
-    function getNextWireNumber(gridState) {
+    function getNextWireNumber(gridState: LedGridCell[]) {
         const usedWireNumbers = buildUsedWireNumbers(gridState);
         let nextWireNumber = 0;
         for (; nextWireNumber < usedWireNumbers.length; nextWireNumber++) {
@@ -201,7 +236,7 @@ export function useLedStrip() {
     }
 
     // Get mode color
-    function getModeColor(mode, dir) {
+    function getModeColor(mode: number, dir: number) {
         for (const mc of FC.LED_MODE_COLORS) {
             if (mc.mode === mode && mc.direction === dir) {
                 return mc.color;
@@ -211,7 +246,7 @@ export function useLedStrip() {
     }
 
     // Set mode color
-    function setModeColor(mode, dir, color) {
+    function setModeColor(mode: number, dir: number, color: number) {
         for (const mc of FC.LED_MODE_COLORS) {
             if (mc.mode === mode && mc.direction === dir) {
                 mc.color = color;
@@ -222,7 +257,7 @@ export function useLedStrip() {
     }
 
     // Check if rainbow is active for function
-    function isRainbowActive(activeFunction) {
+    function isRainbowActive(activeFunction: string) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             return ["function-c", "function-a", "function-f"].includes(activeFunction);
         }
@@ -230,7 +265,7 @@ export function useLedStrip() {
     }
 
     // Update LED config values (brightness, rainbow delta/freq)
-    async function updateLedConfigValue(key, value) {
+    async function updateLedConfigValue(key: keyof LedConfigValues, value: number) {
         FC.LED_CONFIG_VALUES[key] = value;
         await mspHelper.sendLedStripConfigValues();
     }
