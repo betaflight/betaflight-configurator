@@ -964,6 +964,7 @@ const GROUP_ORDER = [
     "RPM Filter",
     "D-Term Filters",
     "RC Smoothing",
+    "Wing",
     "PSAS",
     "Features",
     "Disabled Fields",
@@ -1164,6 +1165,7 @@ const EXPLICIT_GROUPS = {
     d_max: "PID Controller",
     d_max_gain: "PID Controller",
     d_max_advance: "PID Controller",
+    tpa_mode: "PID Controller",
     tpa_rate: "PID Controller",
     tpa_breakpoint: "PID Controller",
     thrust_linear: "PID Controller",
@@ -1218,6 +1220,7 @@ const EXPLICIT_GROUPS = {
     serialrx_provider: "RC Smoothing",
     yaw_lpf_hz: "Gyro Filters",
     digitalIdleOffset: "Motor / ESC",
+    yaw_type: "Wing",
 };
 
 const PREFIX_GROUPS = [
@@ -1240,6 +1243,10 @@ const PREFIX_GROUPS = [
     ["dynamic_idle", "Motor / ESC"],
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
+    ["s_", "Wing"],
+    ["spa_", "Wing"],
+    ["tpa_speed_", "Wing"],
+    ["tpa_curve_", "Wing"],
     ["psas_", "PSAS"],
 ];
 
