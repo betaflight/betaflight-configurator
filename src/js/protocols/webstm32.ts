@@ -82,8 +82,6 @@ interface FirmwareFlasherTabApi {
     flashProgress(value: number): FirmwareFlasherTabApi;
     resetFlashingState(): void;
     requestDfuPermission?: () => void;
-    // Not registered by FirmwareFlasherTab.vue, so onAbort() throws when it reaches this call.
-    refresh(): void;
     FLASH_MESSAGE_TYPES: Record<FlashMessageType, string>;
 }
 
@@ -298,7 +296,7 @@ class STM32Protocol {
         this.rebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
         this.reboot();
-        TABS.firmware_flasher.refresh();
+        TABS.firmware_flasher.resetFlashingState();
     }
 
     lookingForCapabilitiesViaMSP(): void {
@@ -1128,7 +1126,7 @@ class STM32Protocol {
 
                 // close connection
                 if (serial.connectionId) {
-                    serial.disconnect(this.cleanup);
+                    serial.disconnect(() => this.cleanup());
                 } else {
                     this.cleanup();
                 }
