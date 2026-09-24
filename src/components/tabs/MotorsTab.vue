@@ -875,9 +875,11 @@ onMounted(async () => {
         await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
     }
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
-    syncAppliedMotorStopState();
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
+    // fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not MSP_PID_ADVANCED —
+    // sync only after this resolves, or the snapshot reads the analog-protocol default.
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+    syncAppliedMotorStopState();
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
 
