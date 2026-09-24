@@ -196,7 +196,7 @@ function drawChart() {
         axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
         tick: getCssVar("--chart-tick-color", "#888888"),
         grid: getCssVar("--chart-grid-line-color", "#333333"),
-        curve: getCssVar("--chart-curve-color-1", "#e24761"),
+        curve: getCssVar("--chart-curve-color-1", "#d55e00"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
