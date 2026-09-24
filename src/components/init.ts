@@ -48,9 +48,10 @@ const CONNECTION = reactive({
  but these instance would eventually have more children
  which would find the use for those extra properties.
 
- FIXME For some reason, some of them (like DeviceHandler and FC)
- need to be marked as reactive in it's own module, to detect
- changes in arrays so I added the `reactive` wrapper there too.
+ Members that their own module mutates (DeviceHandler, CONFIGURATOR, ...) are made
+ reactive in that module: the reactive() below only tracks writes made through this
+ proxy, not writes through the module's own reference. FC is the flightController
+ Pinia store, which is reactive already.
 */
 const betaflightModel = reactive({
     CONFIGURATOR,
@@ -91,8 +92,8 @@ i18next.on("initialized", function () {
         .mount("#main-wrapper");
 
     if (process.env.NODE_ENV === "development") {
-        console.log("Development mode enabled, installing Vue tools");
-        // TODO Vue.config.devtools = true;
+        // Vue 3 enables devtools in development builds on its own; this adds performance tracing.
+        console.log("Development mode enabled, enabling Vue performance tracing");
         app.config.performance = true;
     }
 });

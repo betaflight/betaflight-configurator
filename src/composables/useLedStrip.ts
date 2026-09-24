@@ -264,10 +264,11 @@ export function useLedStrip() {
         return false;
     }
 
-    // Update LED config values (brightness, rainbow delta/freq)
-    async function updateLedConfigValue(key: keyof LedConfigValues, value: number) {
+    // Update LED config values (brightness, rainbow delta/freq). Fire-and-forget: the send is
+    // callback-based, so there is no reply to wait for here.
+    function updateLedConfigValue(key: keyof LedConfigValues, value: number) {
         FC.LED_CONFIG_VALUES[key] = value;
-        await mspHelper.sendLedStripConfigValues();
+        mspHelper.sendLedStripConfigValues();
     }
 
     return {

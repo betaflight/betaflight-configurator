@@ -109,19 +109,19 @@ function getMSPCodeName(code: number) {
 function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOffset: number) {
     let mask = 0;
 
-    mask |= led.y << 0;
+    mask |= Math.trunc(led.y);
     mask |= led.x << 4;
 
-    for (let functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
-        const fnIndex = ledBaseFunctionLetters.indexOf(led.functions[functionLetterIndex]);
+    for (const functionLetter of led.functions) {
+        const fnIndex = ledBaseFunctionLetters.indexOf(functionLetter);
         if (fnIndex >= 0) {
             mask |= fnIndex << 8;
             break;
         }
     }
 
-    for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
-        const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
+    for (const overlayLetter of led.functions) {
+        const bitIndex = ledOverlayLetters.indexOf(overlayLetter);
         if (bitIndex >= 0) {
             mask |= bit_set(mask, bitIndex + 12);
         }
@@ -129,8 +129,8 @@ function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOff
 
     mask |= led.color << colorOffset;
 
-    for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
-        const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
+    for (const directionLetter of led.directions) {
+        const bitIndex = ledDirectionLetters.indexOf(directionLetter);
         if (bitIndex >= 0) {
             mask |= bit_set(mask, bitIndex + directionOffset);
         }
@@ -210,7 +210,7 @@ class MspHelper {
         buffer.push8(size);
 
         for (let i = 0; i < size; i++) {
-            buffer.push8(config.charCodeAt(i));
+            buffer.push8(config.codePointAt(i)!);
         }
     }
 
@@ -220,7 +220,7 @@ class MspHelper {
         let str = "";
 
         for (let i = 0; i < size; i++) {
-            str += String.fromCharCode(data.readU8());
+            str += String.fromCodePoint(data.readU8());
         }
 
         return str;
@@ -321,7 +321,7 @@ class MspHelper {
                         FC.CONFIG.profile = data.readU8();
 
                         break;
-                    case MSPCodes.MSP_STATUS_EX:
+                    case MSPCodes.MSP_STATUS_EX: {
                         FC.CONFIG.cycleTime = data.readU16();
                         FC.CONFIG.i2cError = data.readU16();
                         reportI2cErrors(FC.CONFIG.i2cError);
@@ -363,6 +363,7 @@ class MspHelper {
                             }
                         }
                         break;
+                    }
 
                     case MSPCodes.MSP_RAW_IMU:
                         // 2048 for mpu6050, 1024 for mma (times 4 since we don't scale in the firmware)
@@ -381,26 +382,29 @@ class MspHelper {
                         FC.SENSOR_DATA.magnetometer[1] = data.read16();
                         FC.SENSOR_DATA.magnetometer[2] = data.read16();
                         break;
-                    case MSPCodes.MSP_SERVO:
+                    case MSPCodes.MSP_SERVO: {
                         const servoCount = data.byteLength / 2;
                         for (let i = 0; i < servoCount; i++) {
                             FC.SERVO_DATA[i] = data.readU16();
                         }
                         break;
-                    case MSPCodes.MSP_MOTOR:
+                    }
+                    case MSPCodes.MSP_MOTOR: {
                         const motorCount = data.byteLength / 2;
                         for (let i = 0; i < motorCount; i++) {
                             FC.MOTOR_DATA[i] = data.readU16();
                         }
                         break;
-                    case MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING:
+                    }
+                    case MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING: {
                         FC.MOTOR_OUTPUT_ORDER = [];
                         const arraySize = data.read8();
                         for (let i = 0; i < arraySize; i++) {
                             FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
                         }
                         break;
-                    case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS:
+                    }
+                    case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS: {
                         FC.VTX_DEVICE_STATUS = null;
                         const dataLength = data.byteLength;
                         if (dataLength > 0) {
@@ -411,7 +415,8 @@ class MspHelper {
                             FC.VTX_DEVICE_STATUS = vtxDeviceStatusFactory.createVtxDeviceStatus(vtxDeviceStatusData);
                         }
                         break;
-                    case MSPCodes.MSP_MOTOR_TELEMETRY:
+                    }
+                    case MSPCodes.MSP_MOTOR_TELEMETRY: {
                         const telemMotorCount = data.readU8();
                         for (let i = 0; i < telemMotorCount; i++) {
                             FC.MOTOR_TELEMETRY_DATA.rpm[i] = data.readU32(); // RPM
@@ -422,6 +427,7 @@ class MspHelper {
                             FC.MOTOR_TELEMETRY_DATA.consumption[i] = data.readU16(); // mAh
                         }
                         break;
+                    }
                     case MSPCodes.MSP_RC:
                         FC.RC.active_channels = data.byteLength / 2;
                         for (let i = 0; i < FC.RC.active_channels; i++) {
@@ -459,7 +465,7 @@ class MspHelper {
                         };
                         break;
                     case MSPCodes.MSP_ALTITUDE:
-                        FC.SENSOR_DATA.altitude = parseFloat((data.read32() / 100.0).toFixed(2)); // correct scale factor
+                        FC.SENSOR_DATA.altitude = Number.parseFloat((data.read32() / 100.0).toFixed(2)); // correct scale factor
                         break;
                     case MSPCodes.MSP_SONAR:
                         FC.SENSOR_DATA.sonar = data.read32();
@@ -478,7 +484,7 @@ class MspHelper {
                         FC.ANALOG.voltage = data.readU16() / 100;
                         FC.ANALOG.last_received_timestamp = performance.now();
                         break;
-                    case MSPCodes.MSP_VOLTAGE_METERS:
+                    case MSPCodes.MSP_VOLTAGE_METERS: {
                         FC.VOLTAGE_METERS = [];
                         const voltageMeterLength = 2;
                         for (let i = 0; i < data.byteLength / voltageMeterLength; i++) {
@@ -490,7 +496,8 @@ class MspHelper {
                             FC.VOLTAGE_METERS.push(voltageMeter);
                         }
                         break;
-                    case MSPCodes.MSP_CURRENT_METERS:
+                    }
+                    case MSPCodes.MSP_CURRENT_METERS: {
                         FC.CURRENT_METERS = [];
                         const currentMeterLength = 5;
                         for (let i = 0; i < data.byteLength / currentMeterLength; i++) {
@@ -503,6 +510,7 @@ class MspHelper {
                             FC.CURRENT_METERS.push(currentMeter);
                         }
                         break;
+                    }
                     case MSPCodes.MSP_BATTERY_STATE:
                         FC.BATTERY_STATE.cellCount = data.readU8();
                         FC.BATTERY_STATE.capacity = data.readU16(); // mAh
@@ -514,7 +522,7 @@ class MspHelper {
                         FC.BATTERY_STATE.voltage = data.readU16() / 100;
                         break;
 
-                    case MSPCodes.MSP_VOLTAGE_METER_CONFIG:
+                    case MSPCodes.MSP_VOLTAGE_METER_CONFIG: {
                         FC.VOLTAGE_METER_CONFIGS = [];
                         const voltageMeterCount = data.readU8();
 
@@ -537,7 +545,8 @@ class MspHelper {
                             }
                         }
                         break;
-                    case MSPCodes.MSP_CURRENT_METER_CONFIG:
+                    }
+                    case MSPCodes.MSP_CURRENT_METER_CONFIG: {
                         FC.CURRENT_METER_CONFIGS = [];
                         const currentMeterCount = data.readU8();
                         for (let i = 0; i < currentMeterCount; i++) {
@@ -560,6 +569,7 @@ class MspHelper {
                             }
                         }
                         break;
+                    }
 
                     case MSPCodes.MSP_BATTERY_CONFIG:
                         FC.BATTERY_CONFIG.vbatmincellvoltage = data.readU8() / 10; // 10-50
@@ -576,28 +586,28 @@ class MspHelper {
                         console.log("Battery configuration saved");
                         break;
                     case MSPCodes.MSP_RC_TUNING:
-                        FC.RC_TUNING.RC_RATE = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.RC_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.RC_RATE = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.RC_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         FC.RC_TUNING.roll_pitch_rate = 0;
-                        FC.RC_TUNING.roll_rate = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.pitch_rate = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.yaw_rate = parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.roll_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.pitch_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.yaw_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                            FC.RC_TUNING.dynamic_THR_PID = parseFloat((data.readU8() / 100).toFixed(2));
+                            FC.RC_TUNING.dynamic_THR_PID = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         } else {
                             data.readU8();
                         }
-                        FC.RC_TUNING.throttle_MID = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.throttle_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.throttle_MID = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.throttle_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                             FC.RC_TUNING.dynamic_THR_breakpoint = data.readU16();
                         } else {
                             data.readU16();
                         }
-                        FC.RC_TUNING.RC_YAW_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.rcYawRate = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.rcPitchRate = parseFloat((data.readU8() / 100).toFixed(2));
-                        FC.RC_TUNING.RC_PITCH_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.RC_YAW_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.rcYawRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.rcPitchRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.RC_TUNING.RC_PITCH_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         FC.RC_TUNING.throttleLimitType = data.readU8();
                         FC.RC_TUNING.throttleLimitPercent = data.readU8();
                         FC.RC_TUNING.roll_rate_limit = data.readU16();
@@ -605,7 +615,7 @@ class MspHelper {
                         FC.RC_TUNING.yaw_rate_limit = data.readU16();
                         FC.RC_TUNING.rates_type = data.readU8();
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                            FC.RC_TUNING.throttle_HOVER = parseFloat((data.readU8() / 100).toFixed(2));
+                            FC.RC_TUNING.throttle_HOVER = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         }
                         break;
                     case MSPCodes.MSP_PID:
@@ -716,7 +726,7 @@ class MspHelper {
                             char = data.readU8();
                             if (char == 0x3b) {
                                 // ; (delimeter char)
-                                FC.AUX_CONFIG.push(String.fromCharCode.apply(null, buff)); // convert bytes into ASCII and save as strings
+                                FC.AUX_CONFIG.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
 
                                 // empty buffer
                                 buff = [];
@@ -733,7 +743,7 @@ class MspHelper {
                             char = data.readU8();
                             if (char == 0x3b) {
                                 // ; (delimeter char)
-                                FC.PID_NAMES.push(String.fromCharCode.apply(null, buff)); // convert bytes into ASCII and save as strings
+                                FC.PID_NAMES.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
 
                                 // empty buffer
                                 buff = [];
@@ -917,7 +927,7 @@ class MspHelper {
                         FC.BOARD_ALIGNMENT_CONFIG.yaw = data.read16(); // -180 - 360
                         break;
 
-                    case MSPCodes.MSP_SET_REBOOT:
+                    case MSPCodes.MSP_SET_REBOOT: {
                         const rebootType = data.read8();
                         if (rebootType === this.REBOOT_TYPES.MSC || rebootType === this.REBOOT_TYPES.MSC_UTC) {
                             if (data.read8() === 0) {
@@ -929,6 +939,7 @@ class MspHelper {
                         }
                         console.log("Reboot request accepted");
                         break;
+                    }
 
                     case MSPCodes.MSP_API_VERSION: {
                         // A truncated/corrupt payload makes readU8() return null, producing an
@@ -949,13 +960,14 @@ class MspHelper {
                         break;
                     }
 
-                    case MSPCodes.MSP_FC_VARIANT:
+                    case MSPCodes.MSP_FC_VARIANT: {
                         let fcVariantIdentifier = "";
                         for (let i = 0; i < 4; i++) {
-                            fcVariantIdentifier += String.fromCharCode(data.readU8());
+                            fcVariantIdentifier += String.fromCodePoint(data.readU8());
                         }
                         FC.CONFIG.flightControllerIdentifier = fcVariantIdentifier;
                         break;
+                    }
 
                     case MSPCodes.MSP_FC_VERSION: {
                         const major = data.readU8();
@@ -984,7 +996,7 @@ class MspHelper {
                         for (let i = 0; i < timeLength; i++) {
                             buff.push(data.readU8());
                         }
-                        FC.CONFIG.buildInfo = String.fromCharCode.apply(null, buff);
+                        FC.CONFIG.buildInfo = String.fromCodePoint(...buff);
 
                         const gitRevisionLength = 7;
                         buff = [];
@@ -992,7 +1004,7 @@ class MspHelper {
                             buff.push(data.readU8());
                         }
 
-                        FC.CONFIG.gitRevision = String.fromCharCode.apply(null, buff);
+                        FC.CONFIG.gitRevision = String.fromCodePoint(...buff);
                         console.log("Fw git rev:", FC.CONFIG.gitRevision);
 
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -1014,7 +1026,7 @@ class MspHelper {
                         FC.CONFIG.boardIdentifier = "";
 
                         for (let i = 0; i < 4; i++) {
-                            FC.CONFIG.boardIdentifier += String.fromCharCode(data.readU8());
+                            FC.CONFIG.boardIdentifier += String.fromCodePoint(data.readU8());
                         }
 
                         FC.CONFIG.boardVersion = data.readU16();
@@ -1047,11 +1059,11 @@ class MspHelper {
                     case MSPCodes.MSP_NAME:
                         FC.CONFIG.name = "";
                         while ((char = data.readU8()) !== null) {
-                            FC.CONFIG.name += String.fromCharCode(char);
+                            FC.CONFIG.name += String.fromCodePoint(char);
                         }
                         break;
 
-                    case MSPCodes.MSP2_GET_TEXT:
+                    case MSPCodes.MSP2_GET_TEXT: {
                         // type byte
                         const textType = data.readU8();
 
@@ -1080,6 +1092,7 @@ class MspHelper {
                         }
 
                         break;
+                    }
 
                     case MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES:
                         FC.LED_CONFIG_VALUES.brightness = data.readU8();
@@ -1087,7 +1100,7 @@ class MspHelper {
                         FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
                         break;
 
-                    case MSPCodes.MSP_CF_SERIAL_CONFIG:
+                    case MSPCodes.MSP_CF_SERIAL_CONFIG: {
                         FC.SERIAL_CONFIG.ports = [];
                         const bytesPerPort = 1 + 2 + 1 * 4;
 
@@ -1105,8 +1118,9 @@ class MspHelper {
                             FC.SERIAL_CONFIG.ports.push(serialPort);
                         }
                         break;
+                    }
 
-                    case MSPCodes.MSP2_COMMON_SERIAL_CONFIG:
+                    case MSPCodes.MSP2_COMMON_SERIAL_CONFIG: {
                         FC.SERIAL_CONFIG.ports = [];
                         const count = data.readU8();
                         const portConfigSize = data.remaining() / count;
@@ -1126,6 +1140,7 @@ class MspHelper {
                             }
                         }
                         break;
+                    }
 
                     case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
                         console.log("Serial config saved");
@@ -1135,7 +1150,7 @@ class MspHelper {
                         console.log("Serial config saved (MSPv2)");
                         break;
 
-                    case MSPCodes.MSP_MODE_RANGES:
+                    case MSPCodes.MSP_MODE_RANGES: {
                         FC.MODE_RANGES = []; // empty the array as new data is coming in
 
                         const modeRangeCount = data.byteLength / 4; // 4 bytes per item.
@@ -1152,8 +1167,9 @@ class MspHelper {
                             FC.MODE_RANGES.push(modeRange);
                         }
                         break;
+                    }
 
-                    case MSPCodes.MSP_MODE_RANGES_EXTRA:
+                    case MSPCodes.MSP_MODE_RANGES_EXTRA: {
                         FC.MODE_RANGES_EXTRA = []; // empty the array as new data is coming in
 
                         const modeRangeExtraCount = data.readU8();
@@ -1167,8 +1183,9 @@ class MspHelper {
                             FC.MODE_RANGES_EXTRA.push(modeRangeExtra);
                         }
                         break;
+                    }
 
-                    case MSPCodes.MSP_ADJUSTMENT_RANGES:
+                    case MSPCodes.MSP_ADJUSTMENT_RANGES: {
                         FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
                         const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
@@ -1194,6 +1211,7 @@ class MspHelper {
                             FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                         }
                         break;
+                    }
 
                     case MSPCodes.MSP_RX_CONFIG:
                         FC.RX_CONFIG.serialrx_provider = data.readU8();
@@ -1248,7 +1266,7 @@ class MspHelper {
                         FC.FAILSAFE_CONFIG.failsafe_procedure = data.readU8();
                         break;
 
-                    case MSPCodes.MSP_RXFAIL_CONFIG:
+                    case MSPCodes.MSP_RXFAIL_CONFIG: {
                         FC.RXFAIL_CONFIG = []; // empty the array as new data is coming in
 
                         const channelCount = data.byteLength / 3;
@@ -1260,6 +1278,7 @@ class MspHelper {
                             FC.RXFAIL_CONFIG.push(rxfailChannel);
                         }
                         break;
+                    }
 
                     case MSPCodes.MSP_ADVANCED_CONFIG:
                         FC.PID_ADVANCED_CONFIG.gyro_sync_denom = data.readU8();
@@ -1402,7 +1421,7 @@ class MspHelper {
 
                         // Introduced in 1.45
                         FC.ADVANCED_TUNING.tpaMode = data.readU8();
-                        FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
+                        FC.ADVANCED_TUNING.tpaRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
                         FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
 
                         FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
@@ -1453,7 +1472,7 @@ class MspHelper {
                         }
                         break;
 
-                    case MSPCodes.MSP_LED_STRIP_CONFIG:
+                    case MSPCodes.MSP_LED_STRIP_CONFIG: {
                         FC.LED_STRIP = [];
 
                         const ledCount = (data.byteLength - 2) / 4;
@@ -1573,10 +1592,11 @@ class MspHelper {
                             }
                         }
                         break;
+                    }
                     case MSPCodes.MSP_SET_LED_STRIP_CONFIG:
                         console.log("Led strip config saved");
                         break;
-                    case MSPCodes.MSP_LED_COLORS:
+                    case MSPCodes.MSP_LED_COLORS: {
                         FC.LED_COLORS = [];
 
                         const ledcolorCount = data.byteLength / 4;
@@ -1591,10 +1611,11 @@ class MspHelper {
                         }
 
                         break;
+                    }
                     case MSPCodes.MSP_SET_LED_COLORS:
                         console.log("Led strip colors saved");
                         break;
-                    case MSPCodes.MSP_LED_STRIP_MODECOLOR:
+                    case MSPCodes.MSP_LED_STRIP_MODECOLOR: {
                         FC.LED_MODE_COLORS = [];
 
                         const colorCount = data.byteLength / 3;
@@ -1608,6 +1629,7 @@ class MspHelper {
                             FC.LED_MODE_COLORS.push(modeColor);
                         }
                         break;
+                    }
                     case MSPCodes.MSP_SET_LED_STRIP_MODECOLOR:
                         console.log("Led strip mode colors saved");
                         break;
@@ -1686,16 +1708,16 @@ class MspHelper {
                         console.log("VTX config sent");
                         break;
 
-                    case MSPCodes.MSP_VTXTABLE_BAND:
+                    case MSPCodes.MSP_VTXTABLE_BAND: {
                         FC.VTXTABLE_BAND.vtxtable_band_number = data.readU8();
 
                         const bandNameLength = data.readU8();
                         FC.VTXTABLE_BAND.vtxtable_band_name = "";
                         for (let i = 0; i < bandNameLength; i++) {
-                            FC.VTXTABLE_BAND.vtxtable_band_name += String.fromCharCode(data.readU8());
+                            FC.VTXTABLE_BAND.vtxtable_band_name += String.fromCodePoint(data.readU8());
                         }
 
-                        FC.VTXTABLE_BAND.vtxtable_band_letter = String.fromCharCode(data.readU8());
+                        FC.VTXTABLE_BAND.vtxtable_band_letter = String.fromCodePoint(data.readU8());
                         FC.VTXTABLE_BAND.vtxtable_band_is_factory_band = data.readU8() != 0;
 
                         const bandFrequenciesLength = data.readU8();
@@ -1705,22 +1727,24 @@ class MspHelper {
                         }
 
                         break;
+                    }
 
                     case MSPCodes.MSP_SET_VTXTABLE_BAND:
                         console.log("VTX band sent");
                         break;
 
-                    case MSPCodes.MSP_VTXTABLE_POWERLEVEL:
+                    case MSPCodes.MSP_VTXTABLE_POWERLEVEL: {
                         FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_number = data.readU8();
                         FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_value = data.readU16();
 
                         const powerLabelLength = data.readU8();
                         FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label = "";
                         for (let i = 0; i < powerLabelLength; i++) {
-                            FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label += String.fromCharCode(data.readU8());
+                            FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label += String.fromCodePoint(data.readU8());
                         }
 
                         break;
+                    }
 
                     case MSPCodes.MSP_SET_SIMPLIFIED_TUNING:
                         console.log("Tuning Sliders sent");
@@ -1870,7 +1894,7 @@ class MspHelper {
                         console.log("DSHOT command sent");
                         break;
 
-                    case MSPCodes.MSP_MULTIPLE_MSP:
+                    case MSPCodes.MSP_MULTIPLE_MSP: {
                         let hasReturnedSomeCommand = false; // To avoid infinite loops
 
                         while (data.offset < data.byteLength) {
@@ -1904,9 +1928,9 @@ class MspHelper {
                                     partialBuffer.push8(instance);
                                 }
 
-                                // FIXME kept as found: this passes the request queue where a callback is
-                                // expected, so it is never called, and the next line drops every
-                                // pending request (timers still armed), not just this one.
+                                // Known bug, kept as found and tracked in #4800: this passes the request
+                                // queue where a callback is expected, so it is never called, and the next
+                                // line drops every pending request (timers still armed), not just this one.
                                 MSP.send_message(
                                     MSPCodes.MSP_MULTIPLE_MSP,
                                     partialBuffer,
@@ -1921,6 +1945,7 @@ class MspHelper {
                         }
 
                         break;
+                    }
 
                     case MSPCodes.MSP_WING:
                         for (let i = 0; i < 3; i++) {
@@ -2039,16 +2064,18 @@ class MspHelper {
         const buffer: number[] = [];
 
         switch (code) {
-            case MSPCodes.MSP_SET_FEATURE_CONFIG:
+            case MSPCodes.MSP_SET_FEATURE_CONFIG: {
                 const featureMask = features().getMask();
                 buffer.push32(featureMask);
                 break;
-            case MSPCodes.MSP_SET_BEEPER_CONFIG:
+            }
+            case MSPCodes.MSP_SET_BEEPER_CONFIG: {
                 const beeperDisabledMask = beepers("beepers").getDisabledMask();
                 buffer.push32(beeperDisabledMask);
                 buffer.push8(FC.BEEPER_CONFIG.dshotBeaconTone);
                 buffer.push32(beepers("dshotBeaconConditions").getDisabledMask());
                 break;
+            }
             case MSPCodes.MSP_SET_MIXER_CONFIG:
                 buffer.push8(FC.MIXER_CONFIG.mixer);
                 buffer.push8(FC.MIXER_CONFIG.reverseMotorDir);
@@ -2063,9 +2090,9 @@ class MspHelper {
                 buffer.push8(FC.PID.controller);
                 break;
             case MSPCodes.MSP_SET_PID:
-                for (let i = 0; i < FC.PIDS.length; i++) {
+                for (const pid of FC.PIDS) {
                     for (let j = 0; j < 3; j++) {
-                        buffer.push8(parseInt(String(FC.PIDS[i][j])));
+                        buffer.push8(Number.parseInt(String(pid[j])));
                     }
                 }
                 break;
@@ -2109,8 +2136,8 @@ class MspHelper {
                 }
                 break;
             case MSPCodes.MSP_SET_RX_MAP:
-                for (let i = 0; i < FC.RC_MAP.length; i++) {
-                    buffer.push8(FC.RC_MAP[i]);
+                for (const channel of FC.RC_MAP) {
+                    buffer.push8(channel);
                 }
                 break;
             case MSPCodes.MSP_SET_ACC_TRIM:
@@ -2199,7 +2226,7 @@ class MspHelper {
                 break;
             case MSPCodes.MSP_SET_COMPASS_CONFIG:
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    buffer.push16(Math.round(10.0 * parseFloat(String(FC.COMPASS_CONFIG.mag_declination))));
+                    buffer.push16(Math.round(10.0 * Number.parseFloat(String(FC.COMPASS_CONFIG.mag_declination))));
                 }
                 break;
             case MSPCodes.MSP_SET_RSSI_CONFIG:
@@ -2280,9 +2307,7 @@ class MspHelper {
                 break;
 
             case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
-                for (let i = 0; i < FC.SERIAL_CONFIG.ports.length; i++) {
-                    const serialPort = FC.SERIAL_CONFIG.ports[i];
-
+                for (const serialPort of FC.SERIAL_CONFIG.ports) {
                     buffer.push8(serialPort.identifier);
 
                     const functionMask = this.serialPortFunctionsToMask(serialPort.functions);
@@ -2298,9 +2323,7 @@ class MspHelper {
             case MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG:
                 buffer.push8(FC.SERIAL_CONFIG.ports.length);
 
-                for (let i = 0; i < FC.SERIAL_CONFIG.ports.length; i++) {
-                    const serialPort = FC.SERIAL_CONFIG.ports[i];
-
+                for (const serialPort of FC.SERIAL_CONFIG.ports) {
                     buffer.push8(serialPort.identifier);
 
                     const functionMask = this.serialPortFunctionsToMask(serialPort.functions);
@@ -2512,12 +2535,13 @@ class MspHelper {
                 }
                 break;
 
-            case MSPCodes.MSP_SET_NAME:
+            case MSPCodes.MSP_SET_NAME: {
                 const MSP_BUFFER_SIZE = 64;
                 for (let i = 0; i < FC.CONFIG.name.length && i < MSP_BUFFER_SIZE; i++) {
-                    buffer.push8(FC.CONFIG.name.charCodeAt(i));
+                    buffer.push8(FC.CONFIG.name.codePointAt(i)!);
                 }
                 break;
+            }
 
             case MSPCodes.MSP2_GET_TEXT:
                 buffer.push8(modifierCode ?? 0);
@@ -2570,7 +2594,7 @@ class MspHelper {
                 buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
                 break;
 
-            case MSPCodes.MSP_ARMING_DISABLE:
+            case MSPCodes.MSP_ARMING_DISABLE: {
                 let value;
                 if (FC.CONFIG.armingDisabled) {
                     value = 1;
@@ -2588,7 +2612,8 @@ class MspHelper {
                 buffer.push8(value);
 
                 break;
-            case MSPCodes.MSP_SET_RTC:
+            }
+            case MSPCodes.MSP_SET_RTC: {
                 const now = new Date();
 
                 const timestamp = now.getTime();
@@ -2598,6 +2623,7 @@ class MspHelper {
                 buffer.push16(millis);
 
                 break;
+            }
 
             case MSPCodes.MSP_SET_VTX_CONFIG:
                 buffer
@@ -2626,7 +2652,7 @@ class MspHelper {
                     .push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length);
 
                 for (let i = 0; i < FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length; i++) {
-                    buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.charCodeAt(i));
+                    buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.codePointAt(i)!);
                 }
 
                 break;
@@ -2636,19 +2662,19 @@ class MspHelper {
 
                 buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_name.length);
                 for (let i = 0; i < FC.VTXTABLE_BAND.vtxtable_band_name.length; i++) {
-                    buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_name.charCodeAt(i));
+                    buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_name.codePointAt(i)!);
                 }
 
                 if (FC.VTXTABLE_BAND.vtxtable_band_letter != "") {
-                    buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_letter.charCodeAt(0));
+                    buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_letter.codePointAt(0)!);
                 } else {
-                    buffer.push8(" ".charCodeAt(0));
+                    buffer.push8(" ".codePointAt(0)!);
                 }
                 buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_is_factory_band ? 1 : 0);
 
                 buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_frequencies.length);
-                for (let i = 0; i < FC.VTXTABLE_BAND.vtxtable_band_frequencies.length; i++) {
-                    buffer.push16(FC.VTXTABLE_BAND.vtxtable_band_frequencies[i]);
+                for (const frequency of FC.VTXTABLE_BAND.vtxtable_band_frequencies) {
+                    buffer.push16(frequency);
                 }
 
                 break;
@@ -2664,8 +2690,8 @@ class MspHelper {
 
             case MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING:
                 buffer.push8(FC.MOTOR_OUTPUT_ORDER.length);
-                for (let i = 0; i < FC.MOTOR_OUTPUT_ORDER.length; i++) {
-                    buffer.push8(FC.MOTOR_OUTPUT_ORDER[i]);
+                for (const motorIndex of FC.MOTOR_OUTPUT_ORDER) {
+                    buffer.push8(motorIndex);
                 }
 
                 break;
@@ -2742,8 +2768,8 @@ class MspHelper {
     setRawRx(channels: number[]) {
         const buffer: number[] = [];
 
-        for (let i = 0; i < channels.length; i++) {
-            buffer.push16(channels[i]);
+        for (const channel of channels) {
+            buffer.push16(channel);
         }
 
         MSP.send_message(MSPCodes.MSP_SET_RAW_RC, buffer, false);
@@ -2837,9 +2863,7 @@ class MspHelper {
                 .push8(servoConfiguration.rate);
 
             let out = servoConfiguration.indexOfChannelToForward;
-            if (out == undefined) {
-                out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
-            }
+            out ??= 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
             buffer.push8(out).push32(servoConfiguration.reversedInputSources);
 
             await MSP.promise(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer);
@@ -2975,8 +2999,7 @@ class MspHelper {
     serialPortFunctionsToMask(functions: string[]): number {
         let mask = 0;
 
-        for (let index = 0; index < functions.length; index++) {
-            const key = functions[index];
+        for (const key of functions) {
             const bitIndex = (this.SERIAL_PORT_FUNCTIONS as Record<string, number | undefined>)[key];
             if (bitIndex !== undefined && bitIndex >= 0) {
                 mask = bit_set(mask, bitIndex);
@@ -3041,10 +3064,8 @@ class MspHelper {
                     }
                 },
             );
-        } else {
-            if (onCompleteCallback) {
-                onCompleteCallback();
-            }
+        } else if (onCompleteCallback) {
+            onCompleteCallback();
         }
     }
 

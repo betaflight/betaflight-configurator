@@ -42,8 +42,8 @@ export const BOXFAILSAFE_BIT = 4; // ARMING_DISABLED_BOXFAILSAFE (failsafe aux s
 
 // Pure detector — true when failsafe/RX-loss is asserted by the FC. Exported so
 // it can be unit-tested directly against the same logic the store/getter uses.
-export function isFailsafeActive(armingDisableFlags: number | null | undefined): boolean {
-    const flags = armingDisableFlags ?? 0;
+// A null from unchecked JS reads as no flags too: bit_check(null, n) is false.
+export function isFailsafeActive(flags: number = 0): boolean {
     return bit_check(flags, FAILSAFE_BIT) || bit_check(flags, RX_FAILSAFE_BIT) || bit_check(flags, BOXFAILSAFE_BIT);
 }
 
@@ -135,7 +135,7 @@ const INITIAL_CONFIG: FcState["CONFIG"] = {
     hardwareName: "",
     batteryProfile: 0,
     numberOfBatteryProfiles: 0,
-    batteryProfileNames: Array(MAX_BATTERY_PROFILES).fill(""),
+    batteryProfileNames: new Array<string>(MAX_BATTERY_PROFILES).fill(""),
 };
 
 const INITIAL_ANALOG: FcState["ANALOG"] = {
@@ -699,6 +699,31 @@ export function createInitialState(): FcState {
     };
 }
 
+function getPidDefaults(): number[] {
+    // if defaults change they should go here
+    // Introduced in 1.44
+    const versionPidDefaults = [45, 80, 30, 40, 120, 47, 84, 34, 46, 125, 45, 80, 0, 0, 120];
+
+    return versionPidDefaults;
+}
+
+// Serial RX providers each firmware build option enables, in the order the Receiver tab lists them.
+const SERIAL_RX_TYPES_BY_BUILD_OPTION: [buildOption: string, rxTypes: string[]][] = [
+    ["USE_SERIALRX_TARGET_CUSTOM", ["TARGET_CUSTOM"]],
+    ["USE_SERIALRX_SPEKTRUM", ["SPEKTRUM1024", "SPEKTRUM2048", "SPEKTRUM2048/SRXL"]],
+    ["USE_SERIALRX_SBUS", ["SBUS"]],
+    ["USE_SERIALRX_SUMD", ["SUMD"]],
+    ["USE_SERIALRX_SUMH", ["SUMH"]],
+    ["USE_SERIALRX_XBUS", ["XBUS_MODE_B", "XBUS_MODE_B_RJ01"]],
+    ["USE_SERIALRX_IBUS", ["IBUS"]],
+    ["USE_SERIALRX_JETIEXBUS", ["JETIEXBUS"]],
+    ["USE_SERIALRX_CRSF", ["CRSF"]],
+    ["USE_SERIALRX_FPORT", ["FPORT"]],
+    ["USE_SERIALRX_SRXL2", ["SPEKTRUM SRXL2"]],
+    ["USE_SERIALRX_GHST", ["IRC GHOST"]],
+    ["USE_SERIALRX_MAVLINK", ["MAVLINK"]],
+];
+
 export interface ArmingFlag {
     name: string;
     visible: boolean;
@@ -847,55 +872,12 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     }
 
     function getSupportedSerialRxTypes(): string[] {
-        if (state.CONFIG.buildOptions?.length) {
-            const options = state.CONFIG.buildOptions;
-            const supportedRxTypes = ["NONE"];
-            if (options.includes("USE_SERIALRX_TARGET_CUSTOM")) {
-                supportedRxTypes.push("TARGET_CUSTOM");
-            }
-            if (options.includes("USE_SERIALRX_SPEKTRUM")) {
-                supportedRxTypes.push("SPEKTRUM1024");
-                supportedRxTypes.push("SPEKTRUM2048");
-                supportedRxTypes.push("SPEKTRUM2048/SRXL");
-            }
-            if (options.includes("USE_SERIALRX_SBUS")) {
-                supportedRxTypes.push("SBUS");
-            }
-            if (options.includes("USE_SERIALRX_SUMD")) {
-                supportedRxTypes.push("SUMD");
-            }
-            if (options.includes("USE_SERIALRX_SUMH")) {
-                supportedRxTypes.push("SUMH");
-            }
-            if (options.includes("USE_SERIALRX_XBUS")) {
-                supportedRxTypes.push("XBUS_MODE_B");
-                supportedRxTypes.push("XBUS_MODE_B_RJ01");
-            }
-            if (options.includes("USE_SERIALRX_IBUS")) {
-                supportedRxTypes.push("IBUS");
-            }
-            if (options.includes("USE_SERIALRX_JETIEXBUS")) {
-                supportedRxTypes.push("JETIEXBUS");
-            }
-            if (options.includes("USE_SERIALRX_CRSF")) {
-                supportedRxTypes.push("CRSF");
-            }
-            if (options.includes("USE_SERIALRX_FPORT")) {
-                supportedRxTypes.push("FPORT");
-            }
-            if (options.includes("USE_SERIALRX_SRXL2")) {
-                supportedRxTypes.push("SPEKTRUM SRXL2");
-            }
-            if (options.includes("USE_SERIALRX_GHST")) {
-                supportedRxTypes.push("IRC GHOST");
-            }
-            if (options.includes("USE_SERIALRX_MAVLINK")) {
-                supportedRxTypes.push("MAVLINK");
-            }
-            return supportedRxTypes;
+        const options = state.CONFIG.buildOptions;
+        if (!options?.length) {
+            return getSerialRxTypes();
         }
-
-        return getSerialRxTypes();
+        const built = SERIAL_RX_TYPES_BY_BUILD_OPTION.filter(([option]) => options.includes(option));
+        return ["NONE", ...built.flatMap(([, rxTypes]) => rxTypes)];
     }
 
     function checkBuildOption(option: string): boolean {
@@ -995,14 +977,6 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         }
 
         return versionFilterDefaults;
-    }
-
-    function getPidDefaults(): number[] {
-        // if defaults change they should go here
-        // Introduced in 1.44
-        const versionPidDefaults = [45, 80, 30, 40, 120, 47, 84, 34, 46, 125, 45, 80, 0, 0, 120];
-
-        return versionPidDefaults;
     }
 
     function getSliderDefaults(): FcState["DEFAULT_TUNING_SLIDERS"] {

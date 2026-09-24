@@ -87,12 +87,12 @@ function errorAwareCallback(entry: MspRequest): MspCallback | undefined {
 
 const MSP = {
     symbols: {
-        BEGIN: "$".charCodeAt(0),
-        PROTO_V1: "M".charCodeAt(0),
-        PROTO_V2: "X".charCodeAt(0),
-        FROM_MWC: ">".charCodeAt(0),
-        TO_MWC: "<".charCodeAt(0),
-        UNSUPPORTED: "!".charCodeAt(0),
+        BEGIN: 0x24, // "$"
+        PROTO_V1: 0x4d, // "M"
+        PROTO_V2: 0x58, // "X"
+        FROM_MWC: 0x3e, // ">"
+        TO_MWC: 0x3c, // "<"
+        UNSUPPORTED: 0x21, // "!"
         START_OF_TEXT: 0x02,
         END_OF_TEXT: 0x03,
         END_OF_TRANSMISSION: 0x04,
@@ -208,7 +208,7 @@ const MSP = {
                             // ignore CRs
                             break;
                         default:
-                            this.cli_buffer.push(String.fromCharCode(chunk));
+                            this.cli_buffer.push(String.fromCodePoint(chunk));
                             break;
                     }
                     break;
@@ -231,7 +231,7 @@ const MSP = {
                             this.state = this.decoder_states.DIRECTION_V2;
                             break;
                         default:
-                            console.log(`Unknown protocol char ${String.fromCharCode(chunk)}`);
+                            console.log(`Unknown protocol char ${String.fromCodePoint(chunk)}`);
                             this.state = this.decoder_states.IDLE;
                     }
                     break;
@@ -405,7 +405,7 @@ const MSP = {
         });
     },
     listen(listener: MspListener) {
-        if (this.listeners.indexOf(listener) === -1) {
+        if (!this.listeners.includes(listener)) {
             this.listeners.push(listener);
         }
     },
@@ -474,7 +474,7 @@ const MSP = {
         return bufferOut;
     },
     encode_message_cli(str: string): ArrayBuffer {
-        const data = Array.from(str, (c) => c.charCodeAt(0));
+        const data = Array.from(str, (c) => c.codePointAt(0)!);
         const dataLength = data ? data.length : 0;
         const bufferSize = dataLength + 3; // 3 bytes for protocol overhead
         const bufferOut = new ArrayBuffer(bufferSize);
