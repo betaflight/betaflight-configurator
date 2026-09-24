@@ -8,19 +8,37 @@ import EscProtocols from "../../src/js/utils/EscProtocols";
 
 const API_VERSION = "1.48.0";
 
+// The firmware identifies a protocol by its index into this list, so the order is a wire
+// contract, not an implementation detail: reordering it silently remaps every stored value.
+// Pinned explicitly here so such a change fails the suite instead of passing unnoticed.
+const EXPECTED_PROTOCOLS = [
+    "PWM_OUTPUT",
+    "ONESHOT125",
+    "ONESHOT42",
+    "MULTISHOT",
+    "BRUSHED",
+    "DSHOT150",
+    "DSHOT300",
+    "DSHOT600",
+    "PROSHOT1000",
+    "DISABLED",
+];
+
+describe("EscProtocols.GetAvailableProtocols", () => {
+    it("returns the protocols in the firmware's index order", () => {
+        expect(EscProtocols.GetAvailableProtocols(API_VERSION)).toEqual(EXPECTED_PROTOCOLS);
+    });
+});
+
 describe("EscProtocols.GetProtocolName", () => {
     it("maps an index to the protocol at that position", () => {
-        const protocols = EscProtocols.GetAvailableProtocols(API_VERSION);
-
-        for (let index = 0; index < protocols.length; index++) {
-            expect(EscProtocols.GetProtocolName(API_VERSION, index)).toBe(protocols[index]);
-        }
+        EXPECTED_PROTOCOLS.forEach((protocol, index) => {
+            expect(EscProtocols.GetProtocolName(API_VERSION, index)).toBe(protocol);
+        });
     });
 
     it("returns undefined for an index past the end", () => {
-        const length = EscProtocols.GetAvailableProtocols(API_VERSION).length;
-
-        expect(EscProtocols.GetProtocolName(API_VERSION, length)).toBeUndefined();
+        expect(EscProtocols.GetProtocolName(API_VERSION, EXPECTED_PROTOCOLS.length)).toBeUndefined();
     });
 });
 
