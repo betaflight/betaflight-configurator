@@ -463,7 +463,6 @@ export function FlightLogParser(logData) {
         spa_yaw_center: null,
         spa_yaw_width: null,
         spa_yaw_mode: null,
-        tpa_mode: null,
         tpa_speed_type: null,
         tpa_speed_basic_delay: null,
         tpa_speed_basic_gravity: null,
@@ -473,6 +472,11 @@ export function FlightLogParser(logData) {
         tpa_speed_adv_thrust: null,
         tpa_speed_max_voltage: null,
         tpa_speed_pitch_offset: null,
+        tpa_curve_type: null,
+        tpa_curve_stall_throttle: null,
+        tpa_curve_pid_thr0: null,
+        tpa_curve_pid_thr100: null,
+        tpa_curve_expo: null,
         yaw_type: null,
         unknownHeaders: null, // Unknown Extra Headers
     };
@@ -779,7 +783,6 @@ export function FlightLogParser(logData) {
         "spa_yaw_center",
         "spa_yaw_width",
         "spa_yaw_mode",
-        "tpa_mode",
         "tpa_speed_type",
         "tpa_speed_basic_delay",
         "tpa_speed_basic_gravity",
@@ -789,6 +792,11 @@ export function FlightLogParser(logData) {
         "tpa_speed_adv_thrust",
         "tpa_speed_max_voltage",
         "tpa_speed_pitch_offset",
+        "tpa_curve_type",
+        "tpa_curve_stall_throttle",
+        "tpa_curve_pid_thr0",
+        "tpa_curve_pid_thr100",
+        "tpa_curve_expo",
         "yaw_type",
     ]);
 

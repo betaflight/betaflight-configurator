@@ -1164,6 +1164,7 @@ const EXPLICIT_GROUPS = {
     d_max: "PID Controller",
     d_max_gain: "PID Controller",
     d_max_advance: "PID Controller",
+    tpa_mode: "PID Controller",
     tpa_rate: "PID Controller",
     tpa_breakpoint: "PID Controller",
     thrust_linear: "PID Controller",
@@ -1243,7 +1244,8 @@ const PREFIX_GROUPS = [
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
     ["spa_", "Wing"],
-    ["tpa_", "Wing"],
+    ["tpa_speed_", "Wing"],
+    ["tpa_curve_", "Wing"],
 ];
 
 function getHeaderGroup(key) {
