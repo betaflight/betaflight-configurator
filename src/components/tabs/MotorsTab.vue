@@ -482,7 +482,7 @@
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" fullWidth>
-                                <USwitch v-model="motorsTestingEnabled" size="xs" />
+                                <USwitch v-model="motorsTestingEnabled" :disabled="!appliedStateReady" size="xs" />
                             </SettingRow>
                         </div>
                     </div>
@@ -792,12 +792,15 @@ const appliedIs3dEnabled = ref(false);
 const appliedMotor3dNeutral = ref(1500);
 const appliedIsDigitalProtocol = ref(false);
 const appliedMotorMincommand = ref(1000);
+// Gates motor testing/reordering until the snapshot above reflects the FC, not ref defaults.
+const appliedStateReady = ref(false);
 
 const syncAppliedMotorStopState = () => {
     appliedIs3dEnabled.value = isFeatureEnabled("3D");
     appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
     appliedIsDigitalProtocol.value = digitalProtocolConfigured.value;
     appliedMotorMincommand.value = fcStore.motorConfig.mincommand;
+    appliedStateReady.value = true;
 };
 
 const appliedMinSliderValue = computed(() => {
@@ -830,7 +833,7 @@ useMotorDataPolling(motorsTestingEnabled);
 
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
-    toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
+    toolsDisabled: !appliedStateReady.value || configHasChanged.value || motorsTestingEnabled.value,
     saveDisabled: !configHasChanged.value && !escSensorPortChanged.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
