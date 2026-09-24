@@ -44,7 +44,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../../components/tabs/osd/osd";
 import { reinitializeConnection } from "../serial_backend";
-import type { MspCallback, MspFrame } from "../msp";
+import type { MspCallback, MspFrame, MspResponse } from "../msp";
 import type { CurrentMeterConfig, LedStripEntry } from "../../stores/fc.types";
 import type Features from "../Features";
 import type Beepers from "../Beepers";
@@ -145,6 +145,79 @@ interface ArmingState {
 }
 
 type SerialPortFunction = keyof MspHelper["SERIAL_PORT_FUNCTIONS"];
+
+// Where the fields of one LED's 32-bit mask sit; API 1.46 widened the overlays and dropped parameters.
+interface LedMaskLayout {
+    overlayMask: number;
+    colorShift: number;
+    directionShift: number;
+    hasParameters: boolean;
+}
+
+const LED_MASK_LAYOUT: LedMaskLayout = { overlayMask: 0x3ff, colorShift: 22, directionShift: 26, hasParameters: false };
+const LED_MASK_LAYOUT_PRE_1_46: LedMaskLayout = {
+    overlayMask: 0x3f,
+    colorShift: 18,
+    directionShift: 22,
+    hasParameters: true,
+};
+
+// The inverse of buildLedStripMask.
+function decodeLedMask(mask: number, layout: LedMaskLayout): LedStripEntry {
+    const functions: string[] = [];
+    const functionId = (mask >> 8) & 0xf;
+    if (functionId < ledBaseFunctionLetters.length) {
+        functions.push(ledBaseFunctionLetters[functionId]);
+    }
+
+    const overlayMask = (mask >> 12) & layout.overlayMask;
+    ledOverlayLetters.forEach((letter, index) => {
+        if (bit_check(overlayMask, index)) {
+            functions.push(letter);
+        }
+    });
+
+    const directionMask = (mask >> layout.directionShift) & 0x3f;
+    const directions = ledDirectionLetters.filter((_letter, index) => bit_check(directionMask, index));
+
+    const led: LedStripEntry = {
+        y: mask & 0xf,
+        x: (mask >> 4) & 0xf,
+        functions,
+        color: (mask >> layout.colorShift) & 0xf,
+        directions,
+    };
+    if (layout.hasParameters) {
+        led.parameters = (mask >> 28) & 0xf;
+    }
+    return led;
+}
+
+// Settles one pending request with the frame that answers it.
+function deliverResponse(callback: MspCallback, errorAware: boolean, frame: MspFrame) {
+    const { code, dataView: data, crcError } = frame;
+    const response: MspResponse = {
+        command: code,
+        data,
+        length: data ? data.byteLength : 0,
+        crcError,
+        unsupported: frame.unsupported,
+    };
+    // Legacy callbacks receive the original DataView with the crcError flag so they can choose
+    // how to handle CRC errors; errorAware callbacks reject on crcError and otherwise receive the
+    // response as the first argument.
+    try {
+        if (!errorAware) {
+            callback(response);
+        } else if (crcError) {
+            callback(null, new MspCrcError(`CRC error for MSP code ${code}`, code));
+        } else {
+            callback(response, undefined);
+        }
+    } catch (e) {
+        console.error(`callback for code ${code} threw:`, e);
+    }
+}
 
 class MspHelper {
     // 0 based index, must be identical to 'baudRates' in 'src/main/io/serial.c' in betaflight
@@ -307,78 +380,52 @@ class MspHelper {
     }
 
     process_data(dataHandler: MspFrame) {
-        const data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
+        this.decodeFrame(dataHandler);
+        this.settleCallbacks(dataHandler);
+        dataHandler._release_parked?.(dataHandler.code);
+    }
+
+    private decodeFrame(dataHandler: MspFrame) {
         const code = dataHandler.code;
-        const crcError = dataHandler.crcError;
 
-        if (!crcError) {
-            if (!dataHandler.unsupported) {
-                const decode = DECODERS[code];
-                if (decode) {
-                    decode.call(this, data, dataHandler);
-                } else {
-                    console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
-                }
-            } else {
-                console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
-
-                if (code === MSPCodes.MSP_SET_REBOOT) {
-                    (TABS.onboard_logging as { mscRebootFailedCallback: () => void }).mscRebootFailedCallback();
-                }
-            }
-        } else {
+        if (dataHandler.crcError) {
             console.warn(`code: ${code} (${getMSPCodeName(code)}) - crc failed`);
+            return;
         }
-        // trigger callbacks, cleanup/remove callback after trigger
+
+        if (dataHandler.unsupported) {
+            console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
+
+            if (code === MSPCodes.MSP_SET_REBOOT) {
+                (TABS.onboard_logging as { mscRebootFailedCallback: () => void }).mscRebootFailedCallback();
+            }
+            return;
+        }
+
+        const decode = DECODERS[code];
+        if (decode) {
+            decode.call(this, dataHandler.dataView, dataHandler);
+        } else {
+            console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
+        }
+    }
+
+    // Removes and settles every pending request for the frame's code. Iterates in reverse because
+    // it splices, and re-reads the queue each step because a callback may queue new requests.
+    private settleCallbacks(dataHandler: MspFrame) {
         for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) {
-            // iterating in reverse because we use .splice which modifies array length
-            if (dataHandler.callbacks[i]?.code === code) {
-                // save callback reference
-                const entry = dataHandler.callbacks[i];
-                const callback = entry.callback;
+            const entry = dataHandler.callbacks[i];
+            if (entry?.code !== dataHandler.code) {
+                continue;
+            }
 
-                // remove timeout
-                clearTimeout(entry.timer ?? undefined);
+            clearTimeout(entry.timer ?? undefined);
+            dataHandler.callbacks.splice(i, 1);
 
-                // remove object from array
-                dataHandler.callbacks.splice(i, 1);
-                // Legacy callbacks receive the original DataView with the crcError flag so
-                // they can choose how to handle CRC errors; errorAware callbacks reject on
-                // crcError and otherwise receive the response as the first argument.
-                if (typeof callback === "function") {
-                    try {
-                        if (entry.errorAware) {
-                            if (crcError) {
-                                callback(null, new MspCrcError(`CRC error for MSP code ${code}`, code));
-                            } else {
-                                callback(
-                                    {
-                                        command: code,
-                                        data: data,
-                                        length: data ? data.byteLength : 0,
-                                        crcError: crcError,
-                                        unsupported: dataHandler.unsupported,
-                                    },
-                                    undefined,
-                                );
-                            }
-                        } else {
-                            callback({
-                                command: code,
-                                data: data,
-                                length: data ? data.byteLength : 0,
-                                crcError: crcError,
-                                unsupported: dataHandler.unsupported,
-                            });
-                        }
-                    } catch (e) {
-                        console.error(`callback for code ${code} threw:`, e);
-                    }
-                }
+            if (typeof entry.callback === "function") {
+                deliverResponse(entry.callback, entry.errorAware, dataHandler);
             }
         }
-
-        dataHandler._release_parked?.(code);
     }
 
     /**
@@ -1972,99 +2019,13 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
         //Before API_VERSION_1_46 Parameters were 4 bit and Overlays 6 bit
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            for (let i = 0; i < ledCount; i++) {
-                const mask = data.readU32();
-
-                const functionId = (mask >> 8) & 0xf;
-                const functions = [];
-                for (
-                    let baseFunctionLetterIndex = 0;
-                    baseFunctionLetterIndex < ledBaseFunctionLetters.length;
-                    baseFunctionLetterIndex++
-                ) {
-                    if (functionId == baseFunctionLetterIndex) {
-                        functions.push(ledBaseFunctionLetters[baseFunctionLetterIndex]);
-                        break;
-                    }
-                }
-
-                const overlayMask = (mask >> 12) & 0x3ff;
-                for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
-                    if (bit_check(overlayMask, overlayLetterIndex)) {
-                        functions.push(ledOverlayLetters[overlayLetterIndex]);
-                    }
-                }
-
-                const directionMask = (mask >> 26) & 0x3f;
-                const directions = [];
-                for (
-                    let directionLetterIndex = 0;
-                    directionLetterIndex < ledDirectionLetters.length;
-                    directionLetterIndex++
-                ) {
-                    if (bit_check(directionMask, directionLetterIndex)) {
-                        directions.push(ledDirectionLetters[directionLetterIndex]);
-                    }
-                }
-                const led = {
-                    y: mask & 0xf,
-                    x: (mask >> 4) & 0xf,
-                    functions: functions,
-                    color: (mask >> 22) & 0xf,
-                    directions: directions,
-                };
-
-                FC.LED_STRIP.push(led);
-            }
-        } else {
+        const layout = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? LED_MASK_LAYOUT : LED_MASK_LAYOUT_PRE_1_46;
+        if (layout === LED_MASK_LAYOUT_PRE_1_46) {
             ledOverlayLetters = ledOverlayLetters.filter((x) => x !== "y"); //remove rainbow because it's only supported after API 1.46
+        }
 
-            for (let i = 0; i < ledCount; i++) {
-                const mask = data.readU32();
-
-                const functionId = (mask >> 8) & 0xf;
-                const functions = [];
-                for (
-                    let baseFunctionLetterIndex = 0;
-                    baseFunctionLetterIndex < ledBaseFunctionLetters.length;
-                    baseFunctionLetterIndex++
-                ) {
-                    if (functionId == baseFunctionLetterIndex) {
-                        functions.push(ledBaseFunctionLetters[baseFunctionLetterIndex]);
-                        break;
-                    }
-                }
-
-                const overlayMask = (mask >> 12) & 0x3f;
-                for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
-                    if (bit_check(overlayMask, overlayLetterIndex)) {
-                        functions.push(ledOverlayLetters[overlayLetterIndex]);
-                    }
-                }
-
-                const directionMask = (mask >> 22) & 0x3f;
-                const directions = [];
-                for (
-                    let directionLetterIndex = 0;
-                    directionLetterIndex < ledDirectionLetters.length;
-                    directionLetterIndex++
-                ) {
-                    if (bit_check(directionMask, directionLetterIndex)) {
-                        directions.push(ledDirectionLetters[directionLetterIndex]);
-                    }
-                }
-                const led = {
-                    y: mask & 0xf,
-                    x: (mask >> 4) & 0xf,
-                    functions: functions,
-                    color: (mask >> 18) & 0xf,
-                    directions: directions,
-                    parameters: (mask >> 28) & 0xf,
-                };
-
-                FC.LED_STRIP.push(led);
-            }
+        for (let i = 0; i < ledCount; i++) {
+            FC.LED_STRIP.push(decodeLedMask(data.readU32(), layout));
         }
     },
 

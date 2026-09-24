@@ -538,7 +538,7 @@ describe("serial_backend disconnect convergence", () => {
         // unexpected-disconnect teardown -> no ADDITIONAL switchTab call.
         serialHandlers.disconnect({ detail: true });
 
-        expect(switchTab.mock.calls.length).toBe(switchTabCallsAfterIntentional);
+        expect(switchTab.mock.calls).toHaveLength(switchTabCallsAfterIntentional);
     });
 
     it("a FAILED open does not mark the module connected (reconnect retries keep working)", () => {

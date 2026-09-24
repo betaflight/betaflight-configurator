@@ -253,9 +253,8 @@ export function initializeSerialBackend() {
         }
     });
 
-    // Using serial and bluetooth we don't know which event we need before we connect
-    // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
-    // TODO: use event gattserverdisconnected for save and reboot and device removal.
+    // Serial and Bluetooth share these handlers: WebBluetooth turns gattserverdisconnected into the
+    // same disconnect / removedDevice events, so save-and-reboot and removal need nothing BLE-specific.
 
     serial.addEventListener("removedDevice", (event: Event) => {
         const { detail } = event as CustomEvent<{ path?: string } | undefined>;

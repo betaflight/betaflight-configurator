@@ -33,13 +33,13 @@ export interface EscDshotMotorConfig {
 }
 
 class EscDshotDirectionMotorDriver {
-    private _numberOfMotors: number;
-    private _motorStopValue: number;
-    private _motorSpinValue: number;
-    private _motorDriverStopMotorsPauseMs: number;
+    private readonly _numberOfMotors: number;
+    private readonly _motorStopValue: number;
+    private readonly _motorSpinValue: number;
+    private readonly _motorDriverStopMotorsPauseMs: number;
     private _state: number[];
-    private _stateStack: number[][];
-    private _EscDshotCommandQueue: EscDshotCommandQueue;
+    private readonly _stateStack: number[][];
+    private readonly _EscDshotCommandQueue: EscDshotCommandQueue;
 
     constructor(
         motorConfig: EscDshotMotorConfig,

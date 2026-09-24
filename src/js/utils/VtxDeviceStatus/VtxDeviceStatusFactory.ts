@@ -50,15 +50,11 @@ const vtxDeviceStatusFactory = {
     },
 
     _getDeviceStatusClass: function (vtxTypeIndex: number): VtxDeviceStatusClass {
-        let result = this._vtxDeviceStatusClasses.find((vtxClass) => {
+        const registered = this._vtxDeviceStatusClasses.find((vtxClass) => {
             return vtxClass.staticDeviceStatusType === vtxTypeIndex;
         });
 
-        if (typeof result === "undefined") {
-            result = VtxDeviceStatus;
-        }
-
-        return result;
+        return registered ?? VtxDeviceStatus;
     },
 };
 

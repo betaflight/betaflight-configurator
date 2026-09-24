@@ -102,7 +102,7 @@ function onMSPConnectionError() {
 }
 
 class STM32Protocol {
-    logHead: string;
+    readonly logHead = "[STM32]";
     baud: number | null;
     port!: string;
     // Stays {}: connect() stores the caller's options in serialOptions/mspOptions, not here.
@@ -139,12 +139,10 @@ class STM32Protocol {
     page_size: number;
     useExtendedErase: boolean;
     rebootMode: number;
-    private _boundHandleConnect: (event: Event) => void;
-    private _boundHandleDisconnect: (event: Event) => void;
+    private readonly _boundHandleConnect: (event: Event) => void;
+    private readonly _boundHandleDisconnect: (event: Event) => void;
 
     constructor() {
-        this.logHead = "[STM32]";
-
         this.baud = null;
         this.options = {};
         this.callback = null;
@@ -190,7 +188,12 @@ class STM32Protocol {
 
         // Bind event handlers once so they can be properly added/removed
         this._boundHandleConnect = (event) => this.handleConnect((event as CustomEvent<unknown>).detail);
-        this._boundHandleDisconnect = (event) => this.handleDisconnect((event as CustomEvent<unknown>).detail);
+        this._boundHandleDisconnect = (event) => {
+            this.handleDisconnect((event as CustomEvent<unknown>).detail).catch((error: unknown) => {
+                console.error(`${this.logHead} DFU wait after disconnect failed:`, error);
+                this.handleError();
+            });
+        };
     }
 
     /**
@@ -229,49 +232,54 @@ class STM32Protocol {
         serial.removeEventListener("connect", this._boundHandleConnect);
         serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
-        if (disconnectionResult && this.rebootMode) {
-            try {
-                // Poll for an already-authorized DFU device (no user gesture needed).
-                // Keep timeout short (~4s) so the Flash button's transient user
-                // activation is still valid if we need to fall back to requestPermission.
-                const device = await DeviceHandler.dfuProtocol.waitForDfu(4000, 500);
-                console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
-            } catch (e) {
-                if ((e as { code?: unknown }).code !== DFU_AUTH_REQUIRED) {
-                    console.error(`${this.logHead} waitForDfu error:`, e);
-                    this.handleError();
-                    return;
-                }
-
-                // Device not previously authorized via WebUSB.
-                // Try requestPermission directly — browser may still honour the
-                // original user gesture from the Flash button click.
-                console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
-                gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-                GUI.connect_lock = false;
-
-                const device = await DeviceHandler.dfuProtocol.requestPermission();
-                if (device) {
-                    // Only WebUSB needs a manual dispatch here. The Android
-                    // Capacitor adapter already emits addedDevice from
-                    // requestPermission().
-                    if (!DeviceHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
-                        DeviceHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
-                    }
-                    return;
-                }
-
-                // requestPermission returned null — either the browser blocked it
-                // (no user gesture) or user cancelled. Show dialog as fallback.
-                console.warn(`${this.logHead} requestPermission failed, showing dialog`);
-                if (TABS.firmware_flasher.requestDfuPermission) {
-                    TABS.firmware_flasher.requestDfuPermission();
-                } else {
-                    this.handleError();
-                }
-            }
-        } else {
+        if (!disconnectionResult || !this.rebootMode) {
             this.handleError(false);
+            return;
+        }
+
+        try {
+            // Poll for an already-authorized DFU device (no user gesture needed).
+            // Keep timeout short (~4s) so the Flash button's transient user
+            // activation is still valid if we need to fall back to requestPermission.
+            const device = await DeviceHandler.dfuProtocol.waitForDfu(4000, 500);
+            console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
+        } catch (e) {
+            if ((e as { code?: unknown }).code !== DFU_AUTH_REQUIRED) {
+                console.error(`${this.logHead} waitForDfu error:`, e);
+                this.handleError();
+                return;
+            }
+            await this.requestDfuPermission();
+        }
+    }
+
+    // The rebooted board is in DFU but was never authorised for WebUSB: ask for it.
+    private async requestDfuPermission(): Promise<void> {
+        // Device not previously authorized via WebUSB.
+        // Try requestPermission directly — browser may still honour the
+        // original user gesture from the Flash button click.
+        console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
+        gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
+        GUI.connect_lock = false;
+
+        const device = await DeviceHandler.dfuProtocol.requestPermission();
+        if (device) {
+            // Only WebUSB needs a manual dispatch here. The Android
+            // Capacitor adapter already emits addedDevice from
+            // requestPermission().
+            if (!DeviceHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
+                DeviceHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+            }
+            return;
+        }
+
+        // requestPermission returned null — either the browser blocked it
+        // (no user gesture) or user cancelled. Show dialog as fallback.
+        console.warn(`${this.logHead} requestPermission failed, showing dialog`);
+        if (TABS.firmware_flasher.requestDfuPermission) {
+            TABS.firmware_flasher.requestDfuPermission();
+        } else {
+            this.handleError();
         }
     }
 
@@ -405,7 +413,6 @@ class STM32Protocol {
         }
 
         if (this.options.no_reboot) {
-            // TODO: update to use web serial / USB API
             this.prepareSerialPort();
             // serial.js's JSDoc does not mark the callback optional.
             serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
@@ -436,17 +443,11 @@ class STM32Protocol {
         this.receive_buffer = [];
         this.verify_hex = [];
 
-        this.upload_time_start = new Date().getTime();
+        this.upload_time_start = Date.now();
         this.upload_process_alive = false;
 
         // reset progress bar to initial state
         TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
-
-        // lock some UI elements TODO needs rework
-        const releaseSelect = document.querySelector<HTMLSelectElement>('select[name="release"]');
-        if (releaseSelect) {
-            releaseSelect.disabled = true;
-        }
 
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);
@@ -499,6 +500,89 @@ class STM32Protocol {
             this.read_callback!(fetched);
         }
     }
+    // READ MEMORY (AN3155): command, then the address, then the byte count; each must be ACKed.
+    // `onAddressAccepted` runs once the count is on its way, which is when the old inline chain
+    // updated the progress bar.
+    private readMemoryPage(
+        address: number,
+        bytesToRead: number,
+        onAddressAccepted: () => void,
+        onData: (data: number[]) => void,
+    ): void {
+        this.send([this.command.read_memory, 0xee], 1, (reply) => {
+            if (!this.verify_response(this.status.ACK, reply)) {
+                return;
+            }
+            const addressArray = [address >> 24, address >> 16, address >> 8, address];
+            const addressChecksum = addressArray[0] ^ addressArray[1] ^ addressArray[2] ^ addressArray[3];
+
+            this.send([...addressArray, addressChecksum], 1, (addressReply) => {
+                if (!this.verify_response(this.status.ACK, addressReply)) {
+                    return;
+                }
+                const bytesToReadN = bytesToRead - 1;
+                // bytes to be read + checksum XOR(complement of bytesToReadN)
+                this.send([bytesToReadN, ~bytesToReadN & 0xff], 1, (response) => {
+                    if (this.verify_response(this.status.ACK, response)) {
+                        this.retrieve(bytesToRead, onData);
+                    }
+                });
+
+                onAddressAccepted();
+            });
+        });
+    }
+
+    // All blocks read back: compare them with the hex and report the result.
+    private finishVerification(blocks: number): void {
+        let verify = true;
+        for (let i = 0; i <= blocks; i++) {
+            verify = this.verify_flash(this.hex!.data[i].data, this.verify_hex[i]);
+
+            if (!verify) {
+                break;
+            }
+        }
+
+        if (verify) {
+            console.log(`${this.logHead} Programming: SUCCESSFUL`);
+            // update progress bar
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32ProgrammingSuccessful"),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID,
+            );
+
+            // Show notification
+            if (getConfig("showNotifications").showNotifications) {
+                NotificationManager.showNotification("Betaflight App", {
+                    body: i18n.getMessage("programmingSuccessfulNotification"),
+                    icon: "/images/pwa/favicon.ico",
+                });
+            }
+
+            // proceed to next step
+            this.upload_procedure(7);
+        } else {
+            console.log(`${this.logHead} Programming: FAILED`);
+            // update progress bar
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32ProgrammingFailed"),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+            );
+
+            // Show notification
+            if (getConfig("showNotifications").showNotifications) {
+                NotificationManager.showNotification("Betaflight App", {
+                    body: i18n.getMessage("programmingFailedNotification"),
+                    icon: "/images/pwa/favicon.ico",
+                });
+            }
+
+            // disconnect
+            this.upload_procedure(99);
+        }
+    }
+
     // we should always try to consume all "proper" available data while using retrieve
     retrieve(nBytes: number, callback: (data: number[]) => void): void {
         if (this.receive_buffer.length >= nBytes) {
@@ -720,9 +804,9 @@ class STM32Protocol {
                     if (this.verify_response(this.status.ACK, data)) {
                         this.retrieve(data[1] + 1 + 1, (data) => {
                             console.log(
-                                `${this.logHead} Bootloader version: ${(parseInt(data[0].toString(16)) / 10).toFixed(
-                                    1,
-                                )}`,
+                                `${this.logHead} Bootloader version: ${(
+                                    Number.parseInt(data[0].toString(16)) / 10
+                                ).toFixed(1)}`,
                             ); // convert dec to hex, hex to dec and add floating point
 
                             this.useExtendedErase = data[7] === this.command.extended_erase;
@@ -786,9 +870,7 @@ class STM32Protocol {
                             if (this.verify_response(this.status.ACK, reply)) {
                                 // For reference: https://code.google.com/p/stm32flash/source/browse/stm32.c#723
                                 const maxAddress =
-                                    this.hex!.data[this.hex!.data.length - 1].address +
-                                    this.hex!.data[this.hex!.data.length - 1].bytes -
-                                    0x8000000;
+                                    this.hex!.data.at(-1)!.address + this.hex!.data.at(-1)!.bytes - 0x8000000;
                                 const erasePagesN = Math.ceil(maxAddress / this.page_size);
                                 const buff = [];
                                 let checksum = 0;
@@ -860,9 +942,7 @@ class STM32Protocol {
                         if (this.verify_response(this.status.ACK, reply)) {
                             // the bootloader receives one byte that contains N, the number of pages to be erased – 1
                             const maxAddress =
-                                this.hex!.data[this.hex!.data.length - 1].address +
-                                this.hex!.data[this.hex!.data.length - 1].bytes -
-                                0x8000000;
+                                this.hex!.data.at(-1)!.address + this.hex!.data.at(-1)!.bytes - 0x8000000;
                             const erasePagesN = Math.ceil(maxAddress / this.page_size);
                             const buff = [];
                             let checksum = erasePagesN - 1;
@@ -1003,6 +1083,12 @@ class STM32Protocol {
                     this.verify_hex.push([]);
                 }
 
+                // update progress bar
+                const updateProgress = () =>
+                    TABS.firmware_flasher.flashProgress(
+                        Math.round(((this.hex!.bytes_total + bytesVerifiedTotal) / (this.hex!.bytes_total * 2)) * 100),
+                    );
+
                 const reading = () => {
                     if (bytesVerified < this.hex!.data[readingBlock].bytes) {
                         const bytesToRead =
@@ -1011,54 +1097,17 @@ class STM32Protocol {
                                 : this.hex!.data[readingBlock].bytes - bytesVerified;
 
                         // DEBUG console.log('STM32 - Reading from: 0x' + address.toString(16) + ', ' + bytesToRead + ' bytes');
-                        this.send([this.command.read_memory, 0xee], 1, (reply) => {
-                            if (this.verify_response(this.status.ACK, reply)) {
-                                const addressArray = [address >> 24, address >> 16, address >> 8, address];
-                                const addressChecksum =
-                                    addressArray[0] ^ addressArray[1] ^ addressArray[2] ^ addressArray[3];
-
-                                this.send(
-                                    [
-                                        addressArray[0],
-                                        addressArray[1],
-                                        addressArray[2],
-                                        addressArray[3],
-                                        addressChecksum,
-                                    ],
-                                    1,
-                                    (_reply) => {
-                                        if (this.verify_response(this.status.ACK, _reply)) {
-                                            const bytesToReadN = bytesToRead - 1;
-                                            // bytes to be read + checksum XOR(complement of bytesToReadN)
-                                            this.send([bytesToReadN, ~bytesToReadN & 0xff], 1, (response) => {
-                                                if (this.verify_response(this.status.ACK, response)) {
-                                                    this.retrieve(bytesToRead, (data) => {
-                                                        for (const instance of data) {
-                                                            this.verify_hex[readingBlock].push(instance);
-                                                        }
-
-                                                        address += bytesToRead;
-                                                        bytesVerified += bytesToRead;
-                                                        bytesVerifiedTotal += bytesToRead;
-
-                                                        // verify another page
-                                                        reading();
-                                                    });
-                                                }
-                                            });
-
-                                            // update progress bar
-                                            TABS.firmware_flasher.flashProgress(
-                                                Math.round(
-                                                    ((this.hex!.bytes_total + bytesVerifiedTotal) /
-                                                        (this.hex!.bytes_total * 2)) *
-                                                        100,
-                                                ),
-                                            );
-                                        }
-                                    },
-                                );
+                        this.readMemoryPage(address, bytesToRead, updateProgress, (data) => {
+                            for (const instance of data) {
+                                this.verify_hex[readingBlock].push(instance);
                             }
+
+                            address += bytesToRead;
+                            bytesVerified += bytesToRead;
+                            bytesVerifiedTotal += bytesToRead;
+
+                            // verify another page
+                            reading();
                         });
                     } else if (readingBlock < blocks) {
                         // move to another block
@@ -1069,53 +1118,7 @@ class STM32Protocol {
 
                         reading();
                     } else {
-                        // all blocks read, verify
-                        let verify = true;
-                        for (let i = 0; i <= blocks; i++) {
-                            verify = this.verify_flash(this.hex!.data[i].data, this.verify_hex[i]);
-
-                            if (!verify) {
-                                break;
-                            }
-                        }
-
-                        if (verify) {
-                            console.log(`${this.logHead} Programming: SUCCESSFUL`);
-                            // update progress bar
-                            TABS.firmware_flasher.flashingMessage(
-                                i18n.getMessage("stm32ProgrammingSuccessful"),
-                                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID,
-                            );
-
-                            // Show notification
-                            if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
-                                    body: i18n.getMessage("programmingSuccessfulNotification"),
-                                    icon: "/images/pwa/favicon.ico",
-                                });
-                            }
-
-                            // proceed to next step
-                            this.upload_procedure(7);
-                        } else {
-                            console.log(`${this.logHead} Programming: FAILED`);
-                            // update progress bar
-                            TABS.firmware_flasher.flashingMessage(
-                                i18n.getMessage("stm32ProgrammingFailed"),
-                                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-                            );
-
-                            // Show notification
-                            if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
-                                    body: i18n.getMessage("programmingFailedNotification"),
-                                    icon: "/images/pwa/favicon.ico",
-                                });
-                            }
-
-                            // disconnect
-                            this.upload_procedure(99);
-                        }
+                        this.finishVerification(blocks);
                     }
                 };
 
@@ -1169,14 +1172,8 @@ class STM32Protocol {
         // Flash complete — leave FLASHING so normal connect/reboot resume.
         getConnectionState().endFlashing();
 
-        // unlock some UI elements TODO needs rework
-        const releaseEl = document.querySelector<HTMLSelectElement>('select[name="release"]');
-        if (releaseEl) {
-            releaseEl.disabled = false;
-        }
-
         // handle timing
-        const timeSpent = new Date().getTime() - this.upload_time_start;
+        const timeSpent = Date.now() - this.upload_time_start;
 
         console.log(`${this.logHead} Script finished after: ${timeSpent / 1000} seconds`);
 
