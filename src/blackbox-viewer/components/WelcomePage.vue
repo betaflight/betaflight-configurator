@@ -51,8 +51,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject } from "vue";
+import type { DataflashHost } from "../host_capabilities";
 import { useLogStore } from "../stores/log.js";
 import LogFileInput from "./LogFileInput.vue";
 
@@ -62,7 +63,7 @@ const logStore = useLogStore();
 // Host-provided FC dataflash pull capability (null when not embedded / unavailable).
 // Its fields are refs nested in a plain object, so unwrap them via local computeds
 // (nested refs are not auto-unwrapped in templates).
-const dataflash = inject("bbvDataflash", null);
+const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 const downloadAvailable = computed(() => !!dataflash?.available?.value);
 const pulling = computed(() => !!dataflash?.pulling?.value);
 const progress = computed(() => dataflash?.progress?.value ?? 0);

@@ -136,8 +136,34 @@ function loadSerialPortInventory() {
 export function usePeripherals() {
     const isLoading = ref(true);
     const supported = ref(false);
+    /**
+     * @typedef {object} SerialPortTile
+     * @property {number} identifier
+     * @property {string} displayName
+     * @property {string | null} inactiveReason
+     * @property {{ name: string, active: boolean, [key: string]: unknown }[]} claims
+     */
+    /**
+     * @typedef {object} CanNode
+     * @property {number} nodeId
+     * @property {string} name
+     * @property {string} health
+     * @property {string | null} mode
+     * @property {string[]} sensors
+     */
+    /**
+     * @typedef {object} DetectedSensor
+     * @property {string} key e.g. "gyro 0", "baro"
+     * @property {string} hardware
+     * @property {string | null} bus
+     * @property {boolean} detected
+     * @property {boolean} enabled
+     */
+    /** @type {import("vue").Ref<SerialPortTile[]>} */
     const serialPorts = ref([]);
+    /** @type {import("vue").Ref<CanNode[]>} */
     const canNodes = ref([]);
+    /** @type {import("vue").Ref<DetectedSensor[]>} */
     const sensors = ref([]);
 
     async function load() {

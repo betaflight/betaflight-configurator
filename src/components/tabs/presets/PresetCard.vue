@@ -102,7 +102,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue";
 import officialIcon from "@/images/icons/cf_icon_welcome_orange.svg";
 import starActive from "@/images/icons/star_orange.svg";
@@ -174,7 +174,7 @@ function handleOpen() {
     }
 }
 
-function handleCardKeydown(event) {
+function handleCardKeydown(event: KeyboardEvent) {
     if (!props.clickable || event.target !== event.currentTarget) {
         return;
     }

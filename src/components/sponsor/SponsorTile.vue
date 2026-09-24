@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import BuildApi from "../../js/BuildApi";
 import DarkTheme from "../../js/DarkTheme";
@@ -20,7 +20,7 @@ export default defineComponent({
         sponsorType: {
             type: String,
             required: true,
-            validator: (value) => ["landing", "flash"].includes(value),
+            validator: (value: unknown) => typeof value === "string" && ["landing", "flash"].includes(value),
         },
     },
     setup(props) {

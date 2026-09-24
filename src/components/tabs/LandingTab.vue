@@ -94,7 +94,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import SponsorTile from "../sponsor/SponsorTile.vue";
@@ -111,7 +111,7 @@ export default defineComponent({
         const availableLanguages = ref(["DEFAULT", ...i18n.getLanguagesAvailables()]);
         const selectedLanguage = ref(i18n.selectedLanguage);
 
-        function changeLanguage(lang) {
+        function changeLanguage(lang: string) {
             if (i18n.selectedLanguage !== lang) {
                 i18n.changeLanguage(lang);
                 selectedLanguage.value = lang;

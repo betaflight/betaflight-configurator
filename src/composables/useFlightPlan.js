@@ -58,7 +58,21 @@ const CLI_TO_PATTERN = {
 };
 
 // Shared state - singleton pattern ensures all components share the same state
+/**
+ * @typedef {object} Waypoint
+ * @property {string} uid
+ * @property {number} latitude
+ * @property {number} longitude
+ * @property {number} altitude
+ * @property {number} speed
+ * @property {string} type
+ * @property {number} duration
+ * @property {string} pattern
+ * @property {number} order
+ */
+
 const state = reactive({
+    /** @type {Waypoint[]} */
     waypoints: [],
     selectedWaypointUid: null,
     editingWaypointUid: null,

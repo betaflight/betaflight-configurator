@@ -49,7 +49,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { clamp } from "@/js/utils/common";
 
@@ -69,7 +69,7 @@ const props = defineProps({
     color: {
         type: String,
         default: "primary",
-        validator: (v) => ["primary", "success", "warning", "error"].includes(v),
+        validator: (v: unknown) => typeof v === "string" && ["primary", "success", "warning", "error"].includes(v),
     },
     size: {
         type: Number,
@@ -112,7 +112,10 @@ const colorMap = {
     error: "var(--error-500)",
 };
 
-const strokeColor = computed(() => colorMap[props.color] ?? colorMap.primary);
+const strokeColor = computed<string>(() => {
+    const colors: Record<string, string | undefined> = colorMap;
+    return colors[props.color] ?? colorMap.primary;
+});
 </script>
 
 <style scoped>

@@ -16,7 +16,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
     modelValue: { type: String, default: "0%" },
     label: { type: String, default: "Value" },
@@ -24,7 +24,7 @@ defineProps({
 
 defineEmits(["update:modelValue"]);
 
-function parseVal(v) {
+function parseVal(v: string) {
     return Number.parseInt(v) || 0;
 }
 </script>

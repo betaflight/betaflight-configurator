@@ -17,11 +17,11 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SettingColumn from "./SettingColumn.vue";
 
-const AXES = ["roll", "pitch", "yaw"];
-const SUFFIXES = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" };
+const AXES = ["roll", "pitch", "yaw"] as const;
+const SUFFIXES = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" } as const;
 
 const props = defineProps({
     roll: { type: Number, default: 0 },

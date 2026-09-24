@@ -152,6 +152,7 @@ export function useCli() {
     // Refs for DOM elements
     const windowWrapperRef = ref(null);
     const cliWindowRef = ref(null);
+    /** @type {import("vue").Ref<HTMLTextAreaElement | null>} */
     const commandInputRef = ref(null);
     const snippetPreviewOpen = ref(false);
     const supportWarningOpen = ref(false);
