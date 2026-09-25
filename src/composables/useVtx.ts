@@ -54,12 +54,6 @@ interface SelectOption {
 
 type PowerRange = { min: number; max: number } | { min?: undefined; max?: undefined };
 
-// Analytics.js exports `let tracking = null`, which reaches TypeScript as an implicit any.
-interface Tracking {
-    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
-    sendSaveAndChangeEvents(category: string, changeList: object, tabName: string): void;
-}
-
 const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
 const MAX_BAND_CHANNELS_VALUES = 8;
@@ -460,8 +454,8 @@ export function useVtx() {
         await saveToEeprom();
 
         // Only after a successful persist: record analytics and clear the verify-table warning.
-        const tracking = analytics.tracking as Tracking;
-        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "vtx");
+        const tracking = analytics.tracking;
+        tracking?.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "vtx");
         savePending.value = false;
     }
 

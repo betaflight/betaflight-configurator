@@ -75,13 +75,6 @@ const DeviceHandler = DeviceHandlerModule as typeof DeviceHandlerModule & {
 // tab_switch.js; configuration_loaded is only ever written.
 const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
 
-// Analytics.js declares `let tracking = null` and assigns it later, so the binding is implicit
-// any. Read through the namespace to keep the live binding; it is set up before any connection.
-interface AnalyticsTracker {
-    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
-    sendEvent(category: string, action: string, options: Record<string, unknown>): void;
-}
-
 type ReadInfo = Parameters<typeof MSP.read>[0];
 
 interface ReportedProblem {
@@ -289,8 +282,9 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
-    const tracking = Analytics.tracking as AnalyticsTracker;
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
+    // Read through the namespace to keep the live binding; it is set up before any connection.
+    const tracking = Analytics.tracking;
+    tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,
         boardName: FC.CONFIG.boardName,

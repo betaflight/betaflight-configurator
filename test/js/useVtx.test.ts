@@ -24,7 +24,7 @@ vi.mock("../../src/js/gui_log", () => ({
     gui_log: vi.fn(),
 }));
 
-// Analytics.js exports its tracker as an untyped `let`, so the test holds the mock itself.
+// The test holds the tracker mock itself, so it can assert on it directly.
 const { trackingMock } = vi.hoisted(() => ({
     trackingMock: {
         sendSaveAndChangeEvents: vi.fn(),

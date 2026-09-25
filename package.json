@@ -101,6 +101,7 @@
     "@storybook/addon-links": "^10.5.2",
     "@storybook/vue3-vite": "^10.5.2",
     "@tauri-apps/cli": "~2.11.0",
+    "@types/d3": "^7.4.3",
     "@types/semver": "^7.8.0",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",

@@ -1,16 +1,61 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import ShortUniqueId from "short-unique-id";
 import { set as setConfig, get as getConfig } from "./ConfigStorage";
 import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
 
-let tracking = null;
+export interface AnalyticsSettings {
+    sessionId: string;
+    userId: string;
+    appName: string;
+    appVersion: string;
+    gitRevision: string;
+    os: string | null;
+    checkForDebugVersions: boolean;
+    optOut: boolean;
+}
+
+interface AnalyticsConfig {
+    userId?: string;
+    analyticsOptOut?: unknown;
+    checkForConfiguratorUnstableVersions?: unknown;
+}
+
+declare global {
+    interface Window {
+        tracking: Analytics | null;
+    }
+}
+
+// null until checkSetupAnalytics() has run, which main.js does at startup.
+let tracking: Analytics | null = null;
 export { tracking };
 
-export function createAnalytics(settings) {
+export function createAnalytics(settings: AnalyticsSettings) {
     tracking = new Analytics(settings);
 }
 
-function setupAnalytics(result) {
+function setupAnalytics(result: AnalyticsConfig) {
     const uid = new ShortUniqueId();
 
     let userId;
@@ -33,14 +78,13 @@ function setupAnalytics(result) {
         os: GUI.operating_system,
         checkForDebugVersions: checkForDebugVersions,
         optOut: optOut,
-        buildType: GUI.Mode,
     };
 
     createAnalytics(settings);
     window.tracking = tracking;
 
-    function logException(exception) {
-        tracking.sendException(exception.stack);
+    function logException(exception: Error) {
+        tracking?.sendException(exception.stack);
     }
 
     if (typeof process === "object") {
@@ -48,9 +92,13 @@ function setupAnalytics(result) {
     }
 }
 
-export function checkSetupAnalytics(callback) {
+export function checkSetupAnalytics(callback?: (analyticsService: Analytics | null) => void) {
     if (!tracking) {
-        const result = getConfig(["userId", "analyticsOptOut", "checkForConfiguratorUnstableVersions"]);
+        const result: AnalyticsConfig = getConfig([
+            "userId",
+            "analyticsOptOut",
+            "checkForConfiguratorUnstableVersions",
+        ]);
         setupAnalytics(result);
     }
 
@@ -59,8 +107,13 @@ export function checkSetupAnalytics(callback) {
     }
 }
 
-class Analytics {
-    constructor(settings) {
+export class Analytics {
+    private _settings: AnalyticsSettings;
+    private _url: string;
+    private _optOut = false;
+    readonly EVENT_CATEGORIES: { APPLICATION: string; FLIGHT_CONTROLLER: string; FLASHING: string };
+
+    constructor(settings: AnalyticsSettings) {
         this.setOptOut(settings.optOut);
 
         this._settings = settings;
@@ -75,7 +128,7 @@ class Analytics {
         this.sendSettings();
     }
 
-    send(name, properties) {
+    send(name: string, properties: unknown) {
         if (this._optOut) {
             return;
         }
@@ -96,31 +149,31 @@ class Analytics {
         this.send("settings", this._settings);
     }
 
-    sendEvent(category, action, options) {
+    sendEvent(category: string, action: string, options?: unknown) {
         this.send("event", { category: category, action: action, options: options });
     }
 
-    sendChangeEvents(category, changeList) {
+    sendChangeEvents(category: string, changeList: unknown) {
         this.sendEvent(category, "Change", { changes: changeList });
     }
 
-    sendSaveAndChangeEvents(category, changeList, tabName) {
+    sendSaveAndChangeEvents(category: string, changeList: unknown, tabName: string) {
         this.sendEvent(category, "Save", { tab: tabName, changes: changeList });
     }
 
-    sendAppView(viewName) {
+    sendAppView(viewName: string) {
         this.send("view", viewName);
     }
 
-    sendTiming(category, timing, value) {
+    sendTiming(category: string, timing: string, value: number) {
         this.send("timing", { category: category, timing: timing, value: value });
     }
 
-    sendException(message) {
+    sendException(message: string | undefined) {
         this.send("exception", message);
     }
 
-    setOptOut(optOut) {
+    setOptOut(optOut: unknown) {
         this._optOut = !!optOut;
     }
 }
