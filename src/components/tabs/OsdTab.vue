@@ -1598,16 +1598,16 @@ function loadFontPreset(index) {
     }
 
     const fontVer = 2;
+    const requestId = ++lastFontPresetRequestId;
 
     // If this font is already loaded in memory, just trigger reactivity
     if (FONT.data?.loaded_font_file === font.file && FONT.data?.characters?.length > 0) {
+        fontPresetLoad = Promise.resolve();
         fontDataVersion.value++;
         LogoManager.drawPreview();
         updatePreviewBuffer();
         return;
     }
-
-    const requestId = ++lastFontPresetRequestId;
 
     fontPresetLoad = fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
         .then((res) => res.text())
