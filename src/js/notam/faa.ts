@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * NOTAM adapter for the FAA External NOTAM API.
  *
@@ -10,16 +31,37 @@
  * Docs:      https://api.faa.gov/
  */
 
-import { classifyFromQcode, parseNotamDate } from "./index.js";
+import { classifyFromQcode, parseNotamDate, type NotamItem } from "./index";
 
 const BASE_URL = "https://external-api.faa.gov/notamapi/v1/notams";
 
+/** The fields read from a feature's `coreNOTAMData.notam`; all optional in the API. */
+interface FaaCoreNotam {
+    number?: string | number;
+    id?: string | number;
+    location?: string;
+    affectedFIR?: string;
+    text?: string;
+    icaoMessage?: string;
+    selectionCode?: string;
+    qCode?: string;
+    effectiveStart?: string | null;
+    effectiveEnd?: string | null;
+    minimumFL?: string | number | null;
+    maximumFL?: string | number | null;
+}
+
+export interface FaaNotamProperties {
+    coreNOTAMData?: {
+        notam?: FaaCoreNotam;
+        notamTranslation?: { type?: string; simpleText?: string }[];
+    };
+}
+
 /**
  * Extract a NotamItem from the FAA API's nested properties structure.
- * @param {object} properties
- * @returns {object} NotamItem
  */
-export function extractNotam(properties) {
+export function extractNotam(properties: FaaNotamProperties | null | undefined): NotamItem {
     const core = properties?.coreNOTAMData?.notam ?? {};
     const translations = properties?.coreNOTAMData?.notamTranslation ?? [];
 
@@ -50,13 +92,10 @@ export function extractNotam(properties) {
 
 /**
  * Fetch NOTAMs from the FAA External NOTAM API.
- * @param {number} lat
- * @param {number} lon
- * @param {number} radiusNm  search radius in nautical miles
- * @param {string} apiKey    in format "client_id:client_secret"
- * @returns {Promise<object[]>} array of NotamItem
+ * @param radiusNm  search radius in nautical miles
+ * @param apiKey    in format "client_id:client_secret"
  */
-export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
+export async function fetchFromFaa(lat: number, lon: number, radiusNm: number, apiKey: unknown): Promise<NotamItem[]> {
     if (typeof apiKey !== "string" || !apiKey.trim()) {
         throw new Error("FAA API key must be in format client_id:client_secret");
     }
@@ -73,9 +112,9 @@ export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
     const params = new URLSearchParams({
         latitudeDeg: lat.toFixed(4),
         longitudeDeg: lon.toFixed(4),
-        radius: Math.max(1, Math.round(radiusNm)),
-        pageNum: 1,
-        pageSize: 100,
+        radius: String(Math.max(1, Math.round(radiusNm))),
+        pageNum: "1",
+        pageSize: "100",
     });
 
     const controller = new AbortController();
@@ -90,7 +129,7 @@ export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
             },
         });
     } catch (err) {
-        if (err.name === "AbortError") {
+        if (err instanceof Error && err.name === "AbortError") {
             throw new Error("FAA NOTAM API request timed out");
         }
         if (err instanceof TypeError) {
@@ -106,6 +145,6 @@ export async function fetchFromFaa(lat, lon, radiusNm, apiKey) {
         throw new Error(`FAA NOTAM API error: ${response.status}`);
     }
     const data = await response.json();
-    const items = data?.items ?? [];
+    const items: ({ properties?: FaaNotamProperties } | null)[] = data?.items ?? [];
     return items.map((item) => extractNotam(item?.properties ?? {}));
 }

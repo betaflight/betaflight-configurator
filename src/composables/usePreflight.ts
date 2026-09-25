@@ -1,12 +1,124 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, computed, ref } from "vue";
 import geomagnetism from "geomagnetism";
 import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
-import { sortNotams, kmToNm } from "../js/notam/index.js";
-import { fetchFromFaa } from "../js/notam/faa.js";
-import { fetchFromOpenAip } from "../js/notam/openaip.js";
+import { sortNotams, kmToNm, type NotamItem } from "../js/notam/index";
+import { fetchFromFaa } from "../js/notam/faa";
+import { fetchFromOpenAip } from "../js/notam/openaip";
 import { METERS_TO_FEET } from "../js/utils/common";
+
+export type StatusLevel = "unknown" | "good" | "moderate" | "warning" | "danger";
+type KnownLevel = Exclude<StatusLevel, "unknown">;
+
+export interface StatusResult {
+    level: StatusLevel;
+    label: string;
+    cssClass: string;
+}
+
+export interface LaunchCheck extends StatusResult {
+    nameKey: string;
+}
+
+export interface Coordinates {
+    latitude: number;
+    longitude: number;
+}
+
+export interface SavedLocation extends Coordinates {
+    label: string;
+}
+
+export type LocationSource = "" | "geolocation" | "ip" | "manual" | "saved";
+
+/** Open-Meteo `current`, renamed. */
+export interface CurrentWeather {
+    temperature: number;
+    humidity: number;
+    dewPoint: number;
+    apparentTemperature: number;
+    precipitation: number;
+    rain: number;
+    windSpeed: number;
+    windDirection: number;
+    windGusts: number;
+    cloudCover: number;
+    visibility: number;
+    weatherCode: number;
+    weatherDescription: string;
+    pressure: number;
+    isDay: number;
+}
+
+/** Today's entry of Open-Meteo `daily`; a missing or zero value is stored as null. */
+export interface DailyWeather {
+    sunrise: string | null;
+    sunset: string | null;
+    daylightDuration: number | null;
+    uvIndexMax: number | null;
+    temperatureMax: number | null;
+    temperatureMin: number | null;
+}
+
+export interface HourlyWeather {
+    time: string;
+    windSpeed10m: number;
+    windSpeed80m: number;
+    windSpeed120m: number;
+    windGusts: number;
+    precipitationProbability: number;
+    visibility: number;
+    cloudCover: number;
+    temperature: number;
+    dewPoint: number;
+}
+
+export interface ForecastDay {
+    date: string;
+    weatherCode: number | null;
+    weatherDescription: string;
+    tempMax: number | null;
+    tempMin: number | null;
+    windMax: number | null;
+    gustsMax: number | null;
+    precipProbability: number | null;
+    sunrise: string | null;
+    sunset: string | null;
+}
+
+export interface StormLevel {
+    geoStorm: string;
+    solarRadiation: string;
+    radioBlackout: string;
+}
+
+export type NotamProvider = "faa" | "openaip";
+
+function messageOf(err: unknown): string {
+    return err instanceof Error ? err.message : String(err);
+}
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
@@ -19,7 +131,7 @@ const NOTAM_RADIUS_UNIT_KEY = "preflight_notam_radius_unit";
 const MAX_SAVED_LOCATIONS = 5;
 const MAX_LABEL_LENGTH = 20;
 
-const WMO_CODES = {
+const WMO_CODES: Record<number, string | undefined> = {
     0: "preflightWmoClearSky",
     1: "preflightWmoMainlyClear",
     2: "preflightWmoPartlyCloudy",
@@ -69,14 +181,16 @@ const WIND_DIRECTION_LABELS = [
     "NNW",
 ];
 
-function getWindDirectionLabel(deg) {
+export type Reading = number | null | undefined;
+
+function getWindDirectionLabel(deg: Reading): string {
     if (deg === null || deg === undefined) {
         return "";
     }
     return WIND_DIRECTION_LABELS[Math.round(deg / 22.5) % 16];
 }
 
-function getKpStatus(kp) {
+function getKpStatus(kp: Reading): StatusResult {
     if (kp === null || kp === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -92,7 +206,7 @@ function getKpStatus(kp) {
     return { level: "danger", label: "preflightKpStorm", cssClass: "status-danger" };
 }
 
-function getWindStatus(windSpeed, gusts) {
+function getWindStatus(windSpeed: Reading, gusts: Reading): StatusResult {
     const maxWind = Math.max(windSpeed || 0, gusts || 0);
     if (maxWind < 5) {
         return { level: "good", label: "preflightWindCalm", cssClass: "status-good" };
@@ -109,7 +223,7 @@ function getWindStatus(windSpeed, gusts) {
     return { level: "danger", label: "preflightWindDangerous", cssClass: "status-danger" };
 }
 
-function getVisibilityStatus(vis) {
+function getVisibilityStatus(vis: Reading): StatusResult {
     if (vis === null || vis === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -125,7 +239,7 @@ function getVisibilityStatus(vis) {
     return { level: "danger", label: "preflightVisPoor", cssClass: "status-danger" };
 }
 
-function getPrecipitationStatus(precip) {
+function getPrecipitationStatus(precip: Reading): StatusResult {
     if (precip === null || precip === undefined || precip === 0) {
         return { level: "good", label: "preflightPrecipNone", cssClass: "status-good" };
     }
@@ -138,7 +252,7 @@ function getPrecipitationStatus(precip) {
     return { level: "danger", label: "preflightPrecipHeavy", cssClass: "status-danger" };
 }
 
-function getBatteryTempStatus(temp) {
+function getBatteryTempStatus(temp: Reading): StatusResult {
     if (temp === null || temp === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -157,7 +271,11 @@ function getBatteryTempStatus(temp) {
     return { level: "good", label: "preflightBatteryOk", cssClass: "status-good" };
 }
 
-function getDensityAltitude(elevationMeters, pressure, temp) {
+function getDensityAltitude(
+    elevationMeters: number | null,
+    pressure: number | null,
+    temp: number | null,
+): number | null {
     if (elevationMeters === null || pressure === null || temp === null) {
         return null;
     }
@@ -167,7 +285,7 @@ function getDensityAltitude(elevationMeters, pressure, temp) {
     return Math.round(pressureAltitudeFeet + 120 * (temp - isaTemp));
 }
 
-function getDensityAltitudeStatus(da) {
+function getDensityAltitudeStatus(da: Reading): StatusResult {
     if (da === null || da === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -183,7 +301,12 @@ function getDensityAltitudeStatus(da) {
     return { level: "danger", label: "preflightDaPoor", cssClass: "status-danger" };
 }
 
-function getFogRisk(temp, dewPoint, humidity, windSpeed) {
+function getFogRisk(
+    temp: number | null,
+    dewPoint: number | null,
+    humidity: number | null,
+    windSpeed: Reading,
+): StatusResult {
     if (temp === null || dewPoint === null || humidity === null) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -200,7 +323,7 @@ function getFogRisk(temp, dewPoint, humidity, windSpeed) {
     return { level: "good", label: "preflightFogUnlikely", cssClass: "status-good" };
 }
 
-function geolocateWithOptions(options) {
+function geolocateWithOptions(options: PositionOptions): Promise<Coordinates> {
     return new Promise((resolve, reject) => {
         // prettier-ignore
         navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for preflight location
@@ -216,7 +339,7 @@ function geolocateWithOptions(options) {
     });
 }
 
-async function browserGeolocation() {
+async function browserGeolocation(): Promise<Coordinates> {
     if (!navigator.geolocation) {
         throw new Error("Geolocation not supported");
     }
@@ -227,11 +350,11 @@ async function browserGeolocation() {
     }
 }
 
-function isValidCoordinate(lat, lon) {
+function isValidCoordinate(lat: number, lon: number): boolean {
     return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
 }
 
-async function ipGeolocation() {
+async function ipGeolocation(): Promise<Coordinates> {
     const response = await fetch("https://ipapi.co/json/");
     if (!response.ok) {
         throw new Error("IP geolocation request failed");
@@ -248,7 +371,7 @@ async function ipGeolocation() {
     return { latitude: lat, longitude: lon };
 }
 
-function getDewPointRisk(temp, dewPoint) {
+function getDewPointRisk(temp: Reading, dewPoint: Reading): StatusResult {
     if (temp === null || dewPoint === null || temp === undefined || dewPoint === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -265,7 +388,7 @@ function getDewPointRisk(temp, dewPoint) {
     return { level: "danger", label: "preflightDewFogExpected", cssClass: "status-danger" };
 }
 
-function getUvStatus(uv) {
+function getUvStatus(uv: Reading): StatusResult {
     if (uv === null || uv === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
@@ -281,7 +404,7 @@ function getUvStatus(uv) {
     return { level: "danger", label: "preflightUvVeryHigh", cssClass: "status-danger" };
 }
 
-function formatTime(isoString) {
+function formatTime(isoString: string | null | undefined): string {
     if (!isoString) {
         return "-";
     }
@@ -292,56 +415,57 @@ function formatTime(isoString) {
 // ── Module-scoped singleton state ──────────────────────────────────────────────
 
 const location = reactive({
-    latitude: null,
-    longitude: null,
-    elevation: null,
+    latitude: null as number | null,
+    longitude: null as number | null,
+    elevation: null as number | null,
     name: "",
-    source: "",
+    source: "" as LocationSource,
 });
 
 const weather = reactive({
     loading: false,
-    error: null,
-    current: null,
-    hourly: null,
-    daily: null,
-    forecast: null,
-    lastUpdated: null,
+    error: null as string | null,
+    current: null as CurrentWeather | null,
+    hourly: null as HourlyWeather[] | null,
+    daily: null as DailyWeather | null,
+    forecast: null as ForecastDay[] | null,
+    lastUpdated: null as Date | null,
 });
 
 const mag = reactive({
-    declination: null,
-    inclination: null,
+    declination: null as number | null,
+    inclination: null as number | null,
 });
 
 const solar = reactive({
     loading: false,
-    error: null,
-    kpIndex: null,
-    kpTimestamp: null,
-    stormLevel: null,
-    lastUpdated: null,
+    error: null as string | null,
+    kpIndex: null as number | null,
+    kpTimestamp: null as string | null,
+    stormLevel: null as StormLevel | null,
+    lastUpdated: null as Date | null,
 });
 
-const savedLocations = reactive([]);
+const savedLocations = reactive<SavedLocation[]>([]);
 
 const notamSettings = reactive({
-    provider: null, // "faa" | "openaip" | null
+    // A NotamProvider when set from the UI; loaded from storage unvalidated, as before.
+    provider: null as string | null,
     faaApiKey: "",
     openAipApiKey: "",
     radius: 25,
-    radiusUnit: "NM",
+    radiusUnit: "NM" as "NM" | "km",
 });
 
 const notams = reactive({
     loading: false,
-    error: null,
-    items: [],
-    lastFetched: null,
+    error: null as string | null,
+    items: [] as NotamItem[],
+    lastFetched: null as Date | null,
 });
 
 function loadNotamSettings() {
-    const stored = getConfig([
+    const stored = getConfig<string | undefined>([
         NOTAM_PROVIDER_KEY,
         NOTAM_FAA_API_KEY,
         NOTAM_OPENAIP_API_KEY,
@@ -357,7 +481,7 @@ function loadNotamSettings() {
 }
 
 function persistNotamSettings() {
-    const obj = {};
+    const obj: Record<string, unknown> = {};
     obj[NOTAM_PROVIDER_KEY] = notamSettings.provider;
     obj[NOTAM_FAA_API_KEY] = notamSettings.faaApiKey;
     obj[NOTAM_OPENAIP_API_KEY] = notamSettings.openAipApiKey;
@@ -396,12 +520,12 @@ function loadSavedLocations() {
 }
 
 function persistSavedLocations() {
-    const obj = {};
+    const obj: Record<string, unknown> = {};
     obj[SAVED_LOCATIONS_KEY] = [...savedLocations];
     setConfig(obj);
 }
 
-function saveCurrentLocation(label) {
+function saveCurrentLocation(label: string): boolean {
     if (location.latitude === null || location.longitude === null) {
         return false;
     }
@@ -421,7 +545,7 @@ function saveCurrentLocation(label) {
     return true;
 }
 
-function isActiveSavedLocation(entry) {
+function isActiveSavedLocation(entry: SavedLocation): boolean {
     return (
         location.source === "saved" &&
         location.latitude === entry.latitude &&
@@ -430,7 +554,7 @@ function isActiveSavedLocation(entry) {
     );
 }
 
-function renameSavedLocation(index, newLabel) {
+function renameSavedLocation(index: number, newLabel: string): boolean {
     if (index < 0 || index >= savedLocations.length) {
         return false;
     }
@@ -448,7 +572,7 @@ function renameSavedLocation(index, newLabel) {
     return true;
 }
 
-function deleteSavedLocation(index) {
+function deleteSavedLocation(index: number): void {
     if (index < 0 || index >= savedLocations.length) {
         return;
     }
@@ -462,7 +586,7 @@ function deleteSavedLocation(index) {
     persistSavedLocations();
 }
 
-function applySavedLocation(index) {
+function applySavedLocation(index: number): SavedLocation | null {
     if (index < 0 || index >= savedLocations.length) {
         return null;
     }
@@ -475,7 +599,7 @@ function applySavedLocation(index) {
 
 const isLoading = computed(() => weather.loading || solar.loading || notams.loading);
 
-async function fetchWeather(lat, lon) {
+async function fetchWeather(lat: number, lon: number): Promise<void> {
     const requestId = ++weatherRequestId;
     weather.loading = true;
     weather.error = null;
@@ -485,8 +609,8 @@ async function fetchWeather(lat, lon) {
     weather.forecast = null;
     try {
         const params = new URLSearchParams({
-            latitude: lat,
-            longitude: lon,
+            latitude: String(lat),
+            longitude: String(lon),
             current: [
                 "temperature_2m",
                 "relative_humidity_2m",
@@ -527,8 +651,8 @@ async function fetchWeather(lat, lon) {
                 "precipitation_probability_max",
             ].join(","),
             wind_speed_unit: "ms",
-            forecast_hours: 12,
-            forecast_days: 5,
+            forecast_hours: "12",
+            forecast_days: "5",
             timezone: "auto",
         });
 
@@ -606,7 +730,7 @@ async function fetchWeather(lat, lon) {
         weather.lastUpdated = new Date();
     } catch (err) {
         if (requestId === weatherRequestId) {
-            weather.error = err.message;
+            weather.error = messageOf(err);
         }
     } finally {
         if (requestId === weatherRequestId) {
@@ -655,7 +779,7 @@ async function fetchSolarActivity() {
                 }
             }
         } catch (e) {
-            console.warn("Storm scale fetch failed:", e.message);
+            console.warn("Storm scale fetch failed:", messageOf(e));
         }
 
         if (requestId === solarRequestId) {
@@ -663,7 +787,7 @@ async function fetchSolarActivity() {
         }
     } catch (err) {
         if (requestId === solarRequestId) {
-            solar.error = err.message;
+            solar.error = messageOf(err);
         }
     } finally {
         if (requestId === solarRequestId) {
@@ -672,18 +796,19 @@ async function fetchSolarActivity() {
     }
 }
 
-const launchStatus = computed(() => {
+const launchStatus = computed((): StatusResult & { checks: LaunchCheck[] } => {
     if (!weather.current && solar.kpIndex === null) {
         return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown", checks: [] };
     }
 
-    const LEVELS = { good: 0, moderate: 1, warning: 2, danger: 3 };
-    let worstLevel = "good";
-    const checks = [];
+    const LEVELS: Partial<Record<StatusLevel, number>> = { good: 0, moderate: 1, warning: 2, danger: 3 };
+    let worstLevel: KnownLevel = "good";
+    const checks: LaunchCheck[] = [];
 
-    const track = (nameKey, status) => {
+    const track = (nameKey: string, status: StatusResult) => {
         checks.push({ nameKey, level: status.level, label: status.label, cssClass: status.cssClass });
-        if ((LEVELS[status.level] || 0) > (LEVELS[worstLevel] || 0)) {
+        // "unknown" ranks 0, so it can never be worse than the starting "good".
+        if (status.level !== "unknown" && (LEVELS[status.level] || 0) > (LEVELS[worstLevel] || 0)) {
             worstLevel = status.level;
         }
     };
@@ -702,13 +827,13 @@ const launchStatus = computed(() => {
         track("preflightCheckSolar", getKpStatus(solar.kpIndex));
     }
 
-    const labels = {
+    const labels: Record<KnownLevel, string> = {
         good: "preflightStatusGo",
         moderate: "preflightStatusCaution",
         warning: "preflightStatusWarning",
         danger: "preflightStatusNoGo",
     };
-    const cssClasses = {
+    const cssClasses: Record<KnownLevel, string> = {
         good: "status-good",
         moderate: "status-moderate",
         warning: "status-warning",
@@ -722,16 +847,16 @@ const IP_CONSENT_NEEDED = "IP_CONSENT_NEEDED";
 
 const ipGeolocationConsent = ref(!!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY]);
 
-function setIpGeolocationConsent(value) {
+function setIpGeolocationConsent(value: boolean): void {
     ipGeolocationConsent.value = !!value;
-    const obj = {};
+    const obj: Record<string, unknown> = {};
     obj[IP_GEOLOCATION_CONSENT_KEY] = !!value;
     setConfig(obj);
 }
 
 async function useGeolocation() {
     let coords;
-    let source = "geolocation";
+    let source: LocationSource = "geolocation";
     try {
         coords = await browserGeolocation();
     } catch {
@@ -767,9 +892,9 @@ async function useIpGeolocationFallback() {
     location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
 }
 
-function setManualLocation(lat, lon) {
-    const parsedLat = Number.parseFloat(lat);
-    const parsedLon = Number.parseFloat(lon);
+function setManualLocation(lat: number, lon: number): void {
+    const parsedLat = Number.parseFloat(String(lat));
+    const parsedLon = Number.parseFloat(String(lon));
     location.latitude = parsedLat;
     location.longitude = parsedLon;
     location.elevation = null;
@@ -787,16 +912,16 @@ function updateMagneticDeclination() {
         mag.declination = info.decl;
         mag.inclination = info.incl;
     } catch (e) {
-        console.warn("Magnetic declination calculation failed:", e.message);
+        console.warn("Magnetic declination calculation failed:", messageOf(e));
         mag.declination = null;
         mag.inclination = null;
     }
 }
 
-async function fetchElevation(lat, lon) {
+async function fetchElevation(lat: number, lon: number): Promise<void> {
     const requestId = ++elevationRequestId;
     try {
-        const params = new URLSearchParams({ latitude: lat, longitude: lon });
+        const params = new URLSearchParams({ latitude: String(lat), longitude: String(lon) });
         const response = await fetch(`https://api.open-meteo.com/v1/elevation?${params}`);
         if (!response.ok) {
             throw new Error(`Elevation API error: ${response.status}`);
@@ -807,7 +932,7 @@ async function fetchElevation(lat, lon) {
         }
     } catch (e) {
         if (requestId === elevationRequestId) {
-            console.warn("Elevation fetch failed:", e.message);
+            console.warn("Elevation fetch failed:", messageOf(e));
             location.elevation = null;
         }
     }
@@ -824,7 +949,7 @@ function getNotamRadiusNm() {
     return notamSettings.radius;
 }
 
-async function fetchNotams(lat, lon) {
+async function fetchNotams(lat: number, lon: number): Promise<void> {
     if (!notamSettings.provider) {
         notams.items = [];
         notams.error = null;
@@ -848,7 +973,7 @@ async function fetchNotams(lat, lon) {
     notams.items = [];
     try {
         const radiusNm = getNotamRadiusNm();
-        let items = [];
+        let items: NotamItem[] = [];
         switch (notamSettings.provider) {
             case "faa":
                 items = await fetchFromFaa(lat, lon, radiusNm, notamSettings.faaApiKey);
@@ -866,7 +991,7 @@ async function fetchNotams(lat, lon) {
         notams.lastFetched = new Date();
     } catch (err) {
         if (requestId === notamRequestId) {
-            notams.error = err.message;
+            notams.error = messageOf(err);
         }
     } finally {
         if (requestId === notamRequestId) {
@@ -891,7 +1016,7 @@ async function refreshAll() {
     ]);
 }
 
-const civilTwilight = ref(null);
+const civilTwilight = ref<{ dawn: Date; dusk: Date } | null>(null);
 
 function updateCivilTwilight() {
     if (location.latitude === null || location.longitude === null) {

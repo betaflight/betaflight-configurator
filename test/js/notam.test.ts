@@ -6,9 +6,9 @@ import {
     parseNotamDate,
     nmToKm,
     kmToNm,
-} from "../../src/js/notam/index.js";
-import { extractNotam } from "../../src/js/notam/faa.js";
-import { normalise as normaliseOpenAip, formatAlt } from "../../src/js/notam/openaip.js";
+} from "../../src/js/notam/index";
+import { extractNotam } from "../../src/js/notam/faa";
+import { normalise as normaliseOpenAip, formatAlt } from "../../src/js/notam/openaip";
 
 describe("classifyFromQcode", () => {
     it("returns NOTAM for null or empty", () => {
@@ -60,19 +60,19 @@ describe("parseNotamDate", () => {
     it("parses ICAO YYMMDDHHMM format", () => {
         const d = parseNotamDate("2403151300");
         expect(d).toBeInstanceOf(Date);
-        expect(d.getUTCFullYear()).toBe(2024);
-        expect(d.getUTCMonth()).toBe(2); // March = 2 (zero-indexed)
-        expect(d.getUTCDate()).toBe(15);
-        expect(d.getUTCHours()).toBe(13);
-        expect(d.getUTCMinutes()).toBe(0);
+        expect(d?.getUTCFullYear()).toBe(2024);
+        expect(d?.getUTCMonth()).toBe(2); // March = 2 (zero-indexed)
+        expect(d?.getUTCDate()).toBe(15);
+        expect(d?.getUTCHours()).toBe(13);
+        expect(d?.getUTCMinutes()).toBe(0);
     });
 
     it("parses ISO 8601 format", () => {
         const d = parseNotamDate("2024-06-01T12:00:00Z");
         expect(d).toBeInstanceOf(Date);
-        expect(d.getUTCFullYear()).toBe(2024);
-        expect(d.getUTCMonth()).toBe(5); // June
-        expect(d.getUTCDate()).toBe(1);
+        expect(d?.getUTCFullYear()).toBe(2024);
+        expect(d?.getUTCMonth()).toBe(5); // June
+        expect(d?.getUTCDate()).toBe(1);
     });
 
     it("returns null for unparseable strings", () => {

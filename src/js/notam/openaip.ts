@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Airspace adapter for OpenAIP.
  *
@@ -12,7 +33,25 @@
  * These are mapped to NotamItem objects with type "SUA".
  */
 
-import { nmToKm } from "./index.js";
+import { nmToKm, type NotamItem } from "./index";
+
+/** An OpenAIP altitude limit. */
+export interface OpenAipAltitude {
+    value: number;
+    unit: number;
+    referenceDatum?: number;
+}
+
+/** The fields read from an OpenAIP airspace feature. */
+export interface OpenAipAirspace {
+    _id?: string;
+    id?: string;
+    name?: string;
+    country?: string;
+    type: number;
+    lowerLimit?: OpenAipAltitude | null;
+    upperLimit?: OpenAipAltitude | null;
+}
 
 const BASE_URL = "https://api.core.openaip.net/api/airspaces";
 
@@ -28,7 +67,7 @@ const SUA_TYPES = new Set([
     28, // Warning
 ]);
 
-const TYPE_LABELS = {
+const TYPE_LABELS: Record<number, string | undefined> = {
     2: "Restricted",
     3: "Danger",
     4: "Prohibited",
@@ -38,20 +77,18 @@ const TYPE_LABELS = {
     28: "Warning",
 };
 
-const UNIT_LABELS = { 1: "ft", 2: "m", 6: "FL" };
-const REF_LABELS = { 1: " MSL", 2: " AGL" };
+const UNIT_LABELS: Record<number, string | undefined> = { 1: "ft", 2: "m", 6: "FL" };
+const REF_LABELS: Record<number, string | undefined> = { 1: " MSL", 2: " AGL" };
 
 /**
  * Format an OpenAIP altitude object into a readable string.
- * @param {object | null} alt
- * @returns {string | null}
  */
-export function formatAlt(alt) {
+export function formatAlt(alt: OpenAipAltitude | null | undefined): string | null {
     if (!alt) {
         return null;
     }
     const unit = UNIT_LABELS[alt.unit] ?? "";
-    const ref = REF_LABELS[alt.referenceDatum] ?? "";
+    const ref = (alt.referenceDatum === undefined ? undefined : REF_LABELS[alt.referenceDatum]) ?? "";
     if (unit === "FL") {
         return `FL${alt.value}`;
     }
@@ -63,10 +100,8 @@ export function formatAlt(alt) {
 
 /**
  * Normalise a single OpenAIP airspace feature into a NotamItem.
- * @param {object} raw
- * @returns {object} NotamItem
  */
-export function normalise(raw) {
+export function normalise(raw: OpenAipAirspace): NotamItem {
     const typeLabel = TYPE_LABELS[raw.type] ?? "Airspace";
     const name = raw.name ?? "Unknown";
     const country = raw.country ?? "";
@@ -89,13 +124,14 @@ export function normalise(raw) {
 
 /**
  * Fetch airspace data from OpenAIP for a given location.
- * @param {number} lat
- * @param {number} lon
- * @param {number} radiusNm  search radius in nautical miles (converted to km for API)
- * @param {string} apiKey
- * @returns {Promise<object[]>} array of NotamItem
+ * @param radiusNm  search radius in nautical miles (converted to km for API)
  */
-export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
+export async function fetchFromOpenAip(
+    lat: number,
+    lon: number,
+    radiusNm: number,
+    apiKey: unknown,
+): Promise<NotamItem[]> {
     if (typeof apiKey !== "string" || !apiKey.trim()) {
         throw new Error("OpenAIP API key is required");
     }
@@ -107,8 +143,8 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
     // We use the pos (lat,lon) + dist (km) query pattern.
     const params = new URLSearchParams({
         pos: `${lat.toFixed(4)},${lon.toFixed(4)}`,
-        dist: Math.max(1, Math.round(radiusKm)),
-        limit: 100,
+        dist: String(Math.max(1, Math.round(radiusKm))),
+        limit: "100",
     });
 
     const controller = new AbortController();
@@ -122,7 +158,7 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
             },
         });
     } catch (err) {
-        if (err.name === "AbortError") {
+        if (err instanceof Error && err.name === "AbortError") {
             throw new Error("OpenAIP API request timed out");
         }
         if (err instanceof TypeError) {
@@ -138,7 +174,7 @@ export async function fetchFromOpenAip(lat, lon, radiusNm, apiKey) {
         throw new Error(`OpenAIP API error: ${response.status}`);
     }
     const data = await response.json();
-    const items = data?.items ?? (Array.isArray(data) ? data : []);
+    const items: OpenAipAirspace[] = data?.items ?? (Array.isArray(data) ? data : []);
 
     return items.filter((item) => SUA_TYPES.has(item.type)).map(normalise);
 }

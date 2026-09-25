@@ -1,24 +1,54 @@
-/**
- * Shared utilities for NOTAM data.
+/*
+ * This file is part of Betaflight.
  *
- * NotamItem shape:
- * {
- *   id:          string        NOTAM identifier, e.g. "0/2345"
- *   type:        "NOTAM" | "TFR" | "SUA" | "SNOWTAM" | "ASHTAM"
- *   location:    string        ICAO code or coordinate description
- *   startTime:   Date | null
- *   endTime:     Date | null   null means PERM
- *   isPermanent: boolean
- *   lowerAlt:    string | null e.g. "SFC", "1000FT MSL"
- *   upperAlt:    string | null e.g. "3000FT MSL", "UNL"
- *   body:        string        plain-text description (E-field or equivalent)
- *   rawText:     string | null original raw NOTAM text
- *   source:      string        "faa" | "openaip"
- * }
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Shared utilities for NOTAM data.
+ */
+
+export type NotamType = "NOTAM" | "TFR" | "SUA" | "SNOWTAM" | "ASHTAM";
+export type NotamStatus = "active" | "future" | "expired";
+
+export interface NotamItem {
+    /** NOTAM identifier, e.g. "0/2345" */
+    id: string;
+    type: NotamType;
+    /** ICAO code or coordinate description */
+    location: string;
+    startTime: Date | null;
+    /** null means PERM */
+    endTime: Date | null;
+    isPermanent: boolean;
+    /** e.g. "SFC", "1000FT MSL" */
+    lowerAlt: string | null;
+    /** e.g. "3000FT MSL", "UNL" */
+    upperAlt: string | null;
+    /** plain-text description (E-field or equivalent) */
+    body: string;
+    /** original raw NOTAM text */
+    rawText: string | null;
+    source: "faa" | "openaip";
+}
+
 // ICAO Q-code prefixes that map to specific airspace notice types
-const QCODE_TYPE_MAP = [
+const QCODE_TYPE_MAP: [string, NotamType][] = [
     ["QRTCA", "TFR"],
     ["QRTCL", "TFR"],
     ["QRTCS", "TFR"],
@@ -33,10 +63,8 @@ const QCODE_TYPE_MAP = [
 
 /**
  * Classify a NOTAM type from its Q-code.
- * @param {string | null | undefined} qcode
- * @returns {"NOTAM" | "TFR" | "SUA" | "SNOWTAM" | "ASHTAM"}
  */
-export function classifyFromQcode(qcode) {
+export function classifyFromQcode(qcode: string | null | undefined): NotamType {
     if (!qcode) return "NOTAM";
     const upper = String(qcode).toUpperCase();
     for (const [prefix, type] of QCODE_TYPE_MAP) {
@@ -47,12 +75,13 @@ export function classifyFromQcode(qcode) {
     return "NOTAM";
 }
 
+/** The fields that decide a NOTAM's status and sort order. */
+export type NotamTiming = Pick<NotamItem, "startTime" | "endTime" | "isPermanent">;
+
 /**
  * Get the display status of a NOTAM item.
- * @param {object} item NotamItem
- * @returns {"active" | "future" | "expired"}
  */
-export function getNotamStatus(item) {
+export function getNotamStatus(item: NotamTiming): NotamStatus {
     const now = new Date();
     if (item.isPermanent || item.endTime === null) {
         if (!item.startTime || item.startTime <= now) return "active";
@@ -66,11 +95,9 @@ export function getNotamStatus(item) {
 /**
  * Sort NOTAMs: active first, then future, then expired.
  * Within each group, sort by start time ascending.
- * @param {object[]} items
- * @returns {object[]}
  */
-export function sortNotams(items) {
-    const order = { active: 0, future: 1, expired: 2 };
+export function sortNotams<T extends NotamTiming>(items: T[]): T[] {
+    const order: Record<NotamStatus, number> = { active: 0, future: 1, expired: 2 };
     return [...items].sort((a, b) => {
         const sa = order[getNotamStatus(a)];
         const sb = order[getNotamStatus(b)];
@@ -82,21 +109,19 @@ export function sortNotams(items) {
 }
 
 /** Convert nautical miles to kilometres. */
-export function nmToKm(nm) {
+export function nmToKm(nm: number): number {
     return nm * 1.852;
 }
 
 /** Convert kilometres to nautical miles. */
-export function kmToNm(km) {
+export function kmToNm(km: number): number {
     return km / 1.852;
 }
 
 /**
  * Parse a date string from ICAO NOTAM format (YYMMDDHHMM) or ISO 8601.
- * @param {string | null | undefined} str
- * @returns {Date | null}
  */
-export function parseNotamDate(str) {
+export function parseNotamDate(str: string | null | undefined): Date | null {
     if (!str) return null;
     const s = String(str).trim();
     if (/PERM/i.test(s)) return null;
