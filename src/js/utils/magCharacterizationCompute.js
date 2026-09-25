@@ -11,7 +11,7 @@ import semver from "semver";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
 import { fitEllipsoid } from "./ellipsoidFit.js";
 import { check3DCoverage } from "./sphereFit.js";
-import { solveTiltAlignment } from "./magTiltAlign.js";
+import { solveTiltAlignment } from "./magTiltAlign";
 
 // ── Firmware version gate ───────────────────────────────────────────────────
 // "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release

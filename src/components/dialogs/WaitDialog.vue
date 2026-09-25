@@ -13,7 +13,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { i18n } from "@/js/localization";
 import ProgressRing from "../ProgressRing.vue";
