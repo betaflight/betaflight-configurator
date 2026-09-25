@@ -35,12 +35,6 @@ export interface AnalyticsSettings {
     optOut: boolean;
 }
 
-interface AnalyticsConfig {
-    userId?: string;
-    analyticsOptOut?: unknown;
-    checkForConfiguratorUnstableVersions?: unknown;
-}
-
 declare global {
     interface Window {
         tracking: Analytics | null;
@@ -55,11 +49,12 @@ export function createAnalytics(settings: AnalyticsSettings) {
     tracking = new Analytics(settings);
 }
 
-function setupAnalytics(result: AnalyticsConfig) {
+function setupAnalytics(result: Record<string, unknown>) {
     const uid = new ShortUniqueId();
 
-    let userId;
-    if (result.userId) {
+    // Stored by this function, so always a string; the empty string is regenerated as before.
+    let userId: string;
+    if (typeof result.userId === "string" && result.userId) {
         userId = result.userId;
     } else {
         userId = uid.randomUUID(13);
@@ -94,11 +89,7 @@ function setupAnalytics(result: AnalyticsConfig) {
 
 export function checkSetupAnalytics(callback?: (analyticsService: Analytics | null) => void) {
     if (!tracking) {
-        const result: AnalyticsConfig = getConfig([
-            "userId",
-            "analyticsOptOut",
-            "checkForConfiguratorUnstableVersions",
-        ]);
+        const result = getConfig(["userId", "analyticsOptOut", "checkForConfiguratorUnstableVersions"]);
         setupAnalytics(result);
     }
 
@@ -108,8 +99,8 @@ export function checkSetupAnalytics(callback?: (analyticsService: Analytics | nu
 }
 
 export class Analytics {
-    private _settings: AnalyticsSettings;
-    private _url: string;
+    private readonly _settings: AnalyticsSettings;
+    private readonly _url: string;
     private _optOut = false;
     readonly EVENT_CATEGORIES: { APPLICATION: string; FLIGHT_CONTROLLER: string; FLASHING: string };
 

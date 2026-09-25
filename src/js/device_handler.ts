@@ -90,6 +90,13 @@ function deviceTypeForPath(path: string): DeviceType {
     return "serial";
 }
 
+// Names of the USB-serial bridges and MCUs a flight controller usually enumerates as.
+const DEVICE_FILTER = ["AT32", "CP210", "SPR", "STM"];
+
+function firstRecognisedPath(ports: PortDevice[]): string | undefined {
+    return ports.find((device) => DEVICE_FILTER.some((filter) => device.displayName.includes(filter)))?.path;
+}
+
 /** True when both lists hold the same paths in the same order. */
 // The serial facade and the DFU protocol announce devices as CustomEvents carrying the device.
 function eventDetail<T>(event: Event): T {
@@ -381,105 +388,88 @@ class DeviceHandler {
         );
     }
 
-    selectActivePort(suggestedDevice: { path: string } | false | null | undefined = false): string | undefined {
-        const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
-        let selectedDevice;
+    /**
+     * The device a live connection is on. A DFU connection overrides the serial match, even when
+     * its device is not listed.
+     */
+    private connectedDevice(): PortDevice | undefined {
+        let device: PortDevice | undefined;
 
-        // First check for active connections. Match on the stable connectionId (which every
-        // serial/BLE transport sets to the device path on connect) rather than object identity —
-        // getConnectedDevice() returns transport-specific values (raw handles, strings) that never
-        // equal the wrapper objects held in the device lists. Search both the serial and Bluetooth
-        // lists so a BLE-connected device is selected too (BLE paths live in currentBluetoothPorts).
+        // Match on the stable connectionId (which every serial/BLE transport sets to the device
+        // path on connect) rather than object identity — getConnectedDevice() returns
+        // transport-specific values (raw handles, strings) that never equal the wrapper objects
+        // held in the device lists. Search both the serial and Bluetooth lists so a BLE-connected
+        // device is selected too (BLE paths live in currentBluetoothPorts).
         if (serial.connected) {
-            selectedDevice =
-                this.currentSerialPorts.find((device) => device.path === serial.connectionId) ||
-                this.currentBluetoothPorts.find((device) => device.path === serial.connectionId) ||
-                this.currentTcpPorts.find((device) => device.path === serial.connectionId);
+            device =
+                this.currentSerialPorts.find((port) => port.path === serial.connectionId) ||
+                this.currentBluetoothPorts.find((port) => port.path === serial.connectionId) ||
+                this.currentTcpPorts.find((port) => port.path === serial.connectionId);
         }
 
-        // Return the same that is connected to DFU
         if (dfuProtocol.usbDevice) {
             const connectedPortPath = dfuProtocol.getConnectedDevice();
-            selectedDevice = this.currentUsbPorts.find((device) => device.path === connectedPortPath);
+            device = this.currentUsbPorts.find((port) => port.path === connectedPortPath);
         }
 
-        // If there is a connection, return it
-        if (selectedDevice) {
-            console.log(`${this.logHead} Using connected device: ${selectedDevice.path}`);
-            selectedDevice = selectedDevice.path;
-            return selectedDevice;
-        }
+        return device;
+    }
 
-        // Mid-reboot, prefer the device that was rebooted. A plug-in raises a burst of events and
-        // another device can be added while the FC is away; without this the selection follows
-        // whichever event arrived last, and the reconnect aims at a device nobody asked for.
-        // A preference, not a restriction: if the rebooted device is not back, the rules below
-        // still apply, so a board that returns as something else is not locked out.
-        if (!selectedDevice) {
-            selectedDevice = this.findDescribedDevice(getConnectionState().rebootTarget)?.path;
-        }
+    /**
+     * The device to pick when nothing is connected, in order of preference. Falls back to the
+     * last rule's (falsy) result, exactly as the sequential checks did.
+     */
+    private fallbackDevicePath(suggestedDevice: { path: string } | false | null | undefined): string | undefined {
+        const recognised =
+            // Mid-reboot, prefer the device that was rebooted. A plug-in raises a burst of events
+            // and another device can be added while the FC is away; without this the selection
+            // follows whichever event arrived last, and the reconnect aims at a device nobody
+            // asked for. A preference, not a restriction: if the rebooted device is not back, the
+            // rules below still apply, so a board that returns as something else is not locked out.
+            this.findDescribedDevice(getConnectionState().rebootTarget)?.path ||
+            // The code reads suggestedDevice from an addedDevice event. updateDeviceList() reads
+            // the transport again after that. The device can be absent at this point. On Linux,
+            // udev and ModemManager remove a CDC-ACM node and add it again while they examine it.
+            // Auto-connect fails if the selection holds a path that the transport does not list.
+            (suggestedDevice && this.isKnownDevicePath(suggestedDevice.path) ? suggestedDevice.path : undefined) ||
+            // Otherwise some USB, then serial, then Bluetooth port that the filter recognises.
+            firstRecognisedPath(this.currentUsbPorts) ||
+            firstRecognisedPath(this.currentSerialPorts) ||
+            firstRecognisedPath(this.currentBluetoothPorts);
 
-        // The code reads suggestedDevice from an addedDevice event. updateDeviceList() reads the
-        // transport again after that. The device can be absent at this point. On Linux, udev and
-        // ModemManager remove a CDC-ACM node and add it again while they examine it. Auto-connect
-        // fails if the selection holds a path that the transport does not list.
-        if (!selectedDevice && suggestedDevice && this.isKnownDevicePath(suggestedDevice.path)) {
-            selectedDevice = suggestedDevice.path;
-        }
-
-        // Return some usb port that is recognized by the filter
-        if (!selectedDevice) {
-            selectedDevice = this.currentUsbPorts.find((device) =>
-                deviceFilter.some((filter) => device.displayName.includes(filter)),
-            );
-            if (selectedDevice) {
-                selectedDevice = selectedDevice.path;
-            }
-        }
-
-        // Return some serial port that is recognized by the filter
-        if (!selectedDevice) {
-            selectedDevice = this.currentSerialPorts.find((device) =>
-                deviceFilter.some((filter) => device.displayName.includes(filter)),
-            );
-            if (selectedDevice) {
-                selectedDevice = selectedDevice.path;
-            }
-        }
-
-        // Return some bluetooth port that is recognized by the filter
-        if (!selectedDevice) {
-            selectedDevice = this.currentBluetoothPorts.find((device) =>
-                deviceFilter.some((filter) => device.displayName.includes(filter)),
-            );
-            if (selectedDevice) {
-                selectedDevice = selectedDevice.path;
-            }
-        }
-
-        // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
-        // While a reboot/reconnect is in progress the rebooting device is only
-        // transiently absent from the lists — it will re-enumerate and re-select
-        // itself. Do NOT assign the virtual/manual fallback in that window, or it
-        // would hijack the selection mid-reboot and leave the configurator pointed at
-        // the wrong "device".
-        const expertMode = isExpertModeEnabled();
-        const reconnectInProgress = getConnectionState().isReconnecting;
-
-        if (!selectedDevice && !reconnectInProgress && expertMode && this.showVirtualMode) {
-            selectedDevice = "virtual";
-        }
-
-        if (!selectedDevice && !reconnectInProgress && this.manualModeAvailable()) {
-            selectedDevice = "manual";
+        if (recognised) {
+            return recognised;
         }
 
         // During a reconnect, keep the device from the last selection. Do not change it to
         // "noselection". The device is absent for a short time only. If it comes back with a new
-        // id, the addedDevice event selects it again. Do not use virtual or manual here.
-        if (!selectedDevice && reconnectInProgress) {
-            selectedDevice = this.devicePicker.selectedDevice;
+        // id, the addedDevice event selects it again. Do not use virtual or manual here: the
+        // rebooting device is only transiently absent, and a virtual/manual fallback would hijack
+        // the selection mid-reboot and leave the configurator pointed at the wrong "device".
+        if (getConnectionState().isReconnecting) {
+            return this.devicePicker.selectedDevice;
         }
+
+        // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
+        if (isExpertModeEnabled() && this.showVirtualMode) {
+            return "virtual";
+        }
+        if (this.manualModeAvailable()) {
+            return "manual";
+        }
+
+        return recognised;
+    }
+
+    selectActivePort(suggestedDevice: { path: string } | false | null | undefined = false): string | undefined {
+        // If there is a connection, return it
+        const connected = this.connectedDevice();
+        if (connected) {
+            console.log(`${this.logHead} Using connected device: ${connected.path}`);
+            return connected.path;
+        }
+
+        const selectedDevice = this.fallbackDevicePath(suggestedDevice);
 
         // Return the default port if no other port was selected
         const previousDevice = this.devicePicker.selectedDevice;
