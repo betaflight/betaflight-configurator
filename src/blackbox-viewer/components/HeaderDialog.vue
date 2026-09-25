@@ -381,9 +381,9 @@ function pidRow(label, data) {
 }
 
 const mainPids = computed(() => {
-    const rollPID = filteredSc.value.rollPID;
-    const pitchPID = filteredSc.value.pitchPID;
-    const yawPID = filteredSc.value.yawPID;
+    const rollPID = [...(filteredSc.value.rollPID ?? [])];
+    const pitchPID = [...(filteredSc.value.pitchPID ?? [])];
+    const yawPID = [...(filteredSc.value.yawPID ?? [])];
     // Add S term for Wings build
     if (filteredSc.value.s_roll !== undefined && filteredSc.value.s_roll !== null) {
         rollPID.push(filteredSc.value.s_roll);
