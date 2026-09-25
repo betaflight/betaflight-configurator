@@ -1,6 +1,57 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
+
+export interface SensorRates {
+    gyro: number;
+    accel: number;
+    mag: number;
+    altitude: number;
+    sonar: number;
+    pitot: number;
+    debug: number;
+}
+
+export interface SensorScales {
+    gyro: number;
+    accel: number;
+    mag: number;
+    pitot: number;
+}
+
+export type RatedSensor = keyof SensorRates;
+export type ScaledSensor = keyof SensorScales;
+
+/** What saveToConfig() writes; older saves may lack any field, or carry six checkboxes. */
+interface SavedSensorsTab {
+    checkboxes?: boolean[];
+    globalRate?: number;
+    rates?: Partial<SensorRates>;
+    scales?: Partial<SensorScales>;
+    debugScales?: number[];
+    debugColumns?: number;
+}
 
 export const useSensorsStore = defineStore("sensors", () => {
     // Sensor visibility checkboxes
@@ -11,7 +62,7 @@ export const useSensorsStore = defineStore("sensors", () => {
     const globalRate = ref(50);
 
     // Per-graph refresh rates (ms)
-    const rates = reactive({
+    const rates = reactive<SensorRates>({
         gyro: 50,
         accel: 50,
         mag: 50,
@@ -22,7 +73,7 @@ export const useSensorsStore = defineStore("sensors", () => {
     });
 
     // Scale values
-    const scales = reactive({
+    const scales = reactive<SensorScales>({
         gyro: 2000,
         accel: 2,
         mag: 2000,
@@ -30,14 +81,14 @@ export const useSensorsStore = defineStore("sensors", () => {
     });
 
     // Per-column debug scales (0 = Auto / dynamic). Indexed by debug column.
-    const debugScales = ref(new Array(8).fill(0));
+    const debugScales = ref<number[]>(new Array(8).fill(0));
 
     // Debug columns
     const debugColumns = ref(4);
 
     function loadFromConfig() {
         // ConfigStorage wraps each value under its own key: { sensors_tab: { ... } }.
-        const config = getConfig("sensors_tab").sensors_tab;
+        const config = getConfig<SavedSensorsTab | undefined>("sensors_tab").sensors_tab;
         if (config) {
             if (config.checkboxes) {
                 // Saved checkbox array migration from previous version
@@ -53,7 +104,7 @@ export const useSensorsStore = defineStore("sensors", () => {
                 globalRate.value = config.globalRate;
             } else if (config.rates) {
                 // Seed the global control from the fastest saved per-sensor rate.
-                const legacy = Object.values(config.rates).filter((v) => typeof v === "number");
+                const legacy = Object.values(config.rates).filter((v): v is number => typeof v === "number");
                 if (legacy.length) {
                     globalRate.value = Math.min(...legacy);
                 }
@@ -85,31 +136,31 @@ export const useSensorsStore = defineStore("sensors", () => {
         });
     }
 
-    function updateRate(sensor, value) {
+    function updateRate(sensor: RatedSensor, value: number) {
         rates[sensor] = value;
         saveToConfig();
     }
 
-    function updateGlobalRate(value) {
+    function updateGlobalRate(value: number) {
         globalRate.value = value;
         // Apply the global rate to every graph so they stay in sync.
-        for (const sensor of Object.keys(rates)) {
+        for (const sensor of Object.keys(rates) as RatedSensor[]) {
             rates[sensor] = value;
         }
         saveToConfig();
     }
 
-    function updateScale(sensor, value) {
+    function updateScale(sensor: ScaledSensor, value: number) {
         scales[sensor] = value;
         saveToConfig();
     }
 
-    function updateDebugScale(index, value) {
+    function updateDebugScale(index: number, value: number) {
         debugScales.value[index] = value;
         saveToConfig();
     }
 
-    function updateCheckbox(index, value) {
+    function updateCheckbox(index: number, value: boolean) {
         checkboxes.value[index] = value;
         saveToConfig();
     }

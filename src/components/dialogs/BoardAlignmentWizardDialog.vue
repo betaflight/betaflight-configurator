@@ -178,8 +178,8 @@
     </dialog>
 </template>
 
-<script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -192,19 +192,29 @@ import { eulerToMatrix } from "@/js/utils/magAlignment";
 
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 
+/** Board alignment in degrees, yaw in Betaflight's CW-positive convention. */
+interface Alignment {
+    roll: number;
+    pitch: number;
+    yaw: number;
+}
+
+type Vec = number[];
+type Mat3 = number[][];
+
 const props = defineProps({
     currentAlignment: {
-        type: Object,
+        type: Object as PropType<Alignment>,
         required: true,
     },
 });
 
-const emit = defineEmits(["apply", "close"]);
+const emit = defineEmits<{ apply: [alignment: Alignment]; close: [] }>();
 
 const fcStore = useFlightControllerStore();
-const dialogRef = ref(null);
-const modelWrapper = ref(null);
-const modelCanvas = ref(null);
+const dialogRef = ref<HTMLDialogElement | null>(null);
+const modelWrapper = ref<HTMLElement | null>(null);
+const modelCanvas = ref<HTMLCanvasElement | null>(null);
 
 // --- Constants ---
 const POLL_MS = 50;
@@ -245,10 +255,17 @@ const COLLECTING_PHASES = new Set([
     "await_level_3",
 ]);
 
-const CONFIRMED_PHASES = new Set(["confirmed_flat", "confirmed_pitch", "confirmed_roll", "confirmed_yaw"]);
+type ConfirmedPhase = "confirmed_flat" | "confirmed_pitch" | "confirmed_roll" | "confirmed_yaw";
+type LevelPhase = "await_level_1" | "await_level_2" | "await_level_3";
+
+const CONFIRMED_PHASES = new Set<string>(["confirmed_flat", "confirmed_pitch", "confirmed_roll", "confirmed_yaw"]);
+
+function isConfirmed(phaseName: string): phaseName is ConfirmedPhase {
+    return CONFIRMED_PHASES.has(phaseName);
+}
 
 // Maps each confirmed phase → the next collecting phase (or '__compute__').
-const CONFIRMED_NEXT = {
+const CONFIRMED_NEXT: Record<ConfirmedPhase, string> = {
     confirmed_flat: "await_pitch",
     confirmed_pitch: "await_roll",
     confirmed_roll: "await_yaw",
@@ -256,7 +273,7 @@ const CONFIRMED_NEXT = {
 };
 
 // Maps each return-to-level phase → the gesture it confirms once level is regained.
-const LEVEL_NEXT = {
+const LEVEL_NEXT: Record<LevelPhase, ConfirmedPhase> = {
     await_level_1: "confirmed_pitch",
     await_level_2: "confirmed_roll",
     await_level_3: "confirmed_yaw",
@@ -276,7 +293,7 @@ const errorMessage = ref("");
 const detected = reactive({ roll: 0, pitch: 0, yaw: 0 });
 const confidence = ref("high");
 
-const i18nMessage = (key) => i18n.getMessage(key);
+const i18nMessage = (key: string) => i18n.getMessage(key);
 const yawResetLabel = computed(() => i18n.getMessage("initialSetupButtonResetZaxisValue", [yawFix.value.toFixed(1)]));
 
 const hasAccSensor = computed(() => {
@@ -302,7 +319,7 @@ const isConfirmedPhase = computed(() => CONFIRMED_PHASES.has(phase.value));
 const showTimeline = computed(() => isCollectingPhase.value || isConfirmedPhase.value);
 
 // Visual state of each timeline step: 'pending' | 'active' | 'confirmed' | 'done'.
-const PHASE_STEP_STATES = {
+const PHASE_STEP_STATES: Record<string, string[] | undefined> = {
     await_flat: ["active", "pending", "pending", "pending"],
     confirmed_flat: ["confirmed", "pending", "pending", "pending"],
     await_pitch: ["done", "active", "pending", "pending"],
@@ -347,13 +364,19 @@ const phaseHintText = computed(() => {
 const phaseDetail = ref("");
 
 // --- Sample buffers ---
-let accelBuf = []; // rolling buffer of recent accel vectors
-let gyroBuf = []; // rolling buffer of recent gyro vectors
-let pollTimer = null;
+let accelBuf: Vec[] = []; // rolling buffer of recent accel vectors
+let gyroBuf: Vec[] = []; // rolling buffer of recent gyro vectors
+let pollTimer: ReturnType<typeof setTimeout> | null = null;
 let isPolling = false;
 
 // Captured pose averages
-const captured = {
+const captured: {
+    flatAccel: Vec | null;
+    pitchAccel: Vec | null;
+    rollAccel: Vec | null;
+    upAxis: Vec | null;
+    yawIntegralDeg: number;
+} = {
     flatAccel: null,
     pitchAccel: null,
     rollAccel: null,
@@ -362,11 +385,11 @@ const captured = {
 };
 
 // --- Model & animation ---
-let modelInstance = null;
-let animationFrameId = null;
+let modelInstance: Model | null = null;
+let animationFrameId: number | null = null;
 let animationStartTime = 0;
-let boundResize = null;
-let confirmTimer = null;
+let boundResize: (() => void) | null = null;
+let confirmTimer: ReturnType<typeof setTimeout> | null = null;
 
 function initModel() {
     if (!modelWrapper.value || !modelCanvas.value) {
@@ -399,7 +422,7 @@ function disposeModel() {
 // the user, which matches the physical setup the wizard expects.
 const MODEL_BASE_YAW_RAD = 0;
 
-function setModelRotation(rollDeg, pitchDeg, yawDeg) {
+function setModelRotation(rollDeg: number, pitchDeg: number, yawDeg: number) {
     if (!modelInstance) return;
     const x = pitchDeg * -DEG_TO_RAD;
     const y = yawDeg * DEG_TO_RAD + MODEL_BASE_YAW_RAD;
@@ -411,7 +434,7 @@ function setModelRotation(rollDeg, pitchDeg, yawDeg) {
  * Tilt the modelWrapper to give a top-down view of the drone. rotateTo() does not
  * touch wrapper.rotation.x, so setting it here persists across the yaw animation.
  */
-function setTopDownView(enabled) {
+function setTopDownView(enabled: boolean) {
     if (!modelInstance?.modelWrapper) return;
     modelInstance.modelWrapper.rotation.x = enabled ? Math.PI / 2 : 0;
 }
@@ -467,7 +490,7 @@ function startPhaseAnimation() {
 // Correction matrix pre-computed when entering the test phase:
 // R_new · R_old^T — transforms the old-alignment attitude into what the FC
 // would report with the new alignment applied.
-let testCorrectionMatrix = null;
+let testCorrectionMatrix: Mat3 | null = null;
 
 // Yaw reference offset so the model starts at a neutral heading in the test phase.
 const yawFix = ref(0);
@@ -535,7 +558,7 @@ function pollLoop() {
 }
 
 // Rolling tilt history (one number per IMU sample) used for accel-direction stability.
-let tiltHistory = [];
+let tiltHistory: number[] = [];
 let phaseEnteredAt = 0;
 
 function onImuSample() {
@@ -556,6 +579,8 @@ function onImuSample() {
     if (accelBuf.length < SAMPLE_BUFFER_LEN) return;
 
     const meanAccel = meanVec3(accelBuf);
+    // null only for an empty buffer, which the length check above rules out.
+    if (!meanAccel) return;
     const gyroMag = Math.hypot(gyro[0], gyro[1], gyro[2]);
     const dwellMs = Date.now() - phaseEnteredAt;
 
@@ -573,7 +598,7 @@ function onImuSample() {
         case "await_level_1":
         case "await_level_2":
         case "await_level_3":
-            handleLevel(meanAccel, dwellMs);
+            handleLevel(meanAccel, dwellMs, phase.value);
             break;
         case "await_roll":
             handleTilt(meanAccel, dwellMs, "roll");
@@ -586,7 +611,7 @@ function onImuSample() {
     }
 }
 
-function handleFlat(meanAccel, gyroMag, dwellMs) {
+function handleFlat(meanAccel: Vec, gyroMag: number, dwellMs: number) {
     // Require BOTH: very low gyro AND accel direction drifting < FLAT_DRIFT_DEG over
     // the rolling buffer. Both must hold continuously for FLAT_HOLD_MS — which also
     // gives the user time to read the instruction before the wizard auto-advances.
@@ -626,7 +651,7 @@ function handleFlat(meanAccel, gyroMag, dwellMs) {
     }
 }
 
-function handleTilt(meanAccel, dwellMs, kind) {
+function handleTilt(meanAccel: Vec, dwellMs: number, kind: "pitch" | "roll") {
     if (!captured.upAxis) return;
 
     const tilt = tiltAngleDeg(meanAccel, captured.upAxis);
@@ -664,7 +689,7 @@ function handleTilt(meanAccel, dwellMs, kind) {
     }
 }
 
-function handleLevel(meanAccel, dwellMs) {
+function handleLevel(meanAccel: Vec, dwellMs: number, levelPhase: LevelPhase) {
     if (!captured.upAxis) return;
 
     const tilt = tiltAngleDeg(meanAccel, captured.upAxis);
@@ -683,7 +708,7 @@ function handleLevel(meanAccel, dwellMs) {
     if (dwellMs < LEVEL_HOLD_MS) return;
 
     // Confirm the preceding gesture before advancing.
-    const next = LEVEL_NEXT[phase.value];
+    const next = LEVEL_NEXT[levelPhase];
     if (next === "confirmed_yaw") {
         // Last gesture — no more IMU samples are needed after this.
         stopPolling();
@@ -707,12 +732,14 @@ function handleYaw() {
  * if fewer than 2 valid samples remain, returns 0 so the gravity-magnitude guard in
  * handleFlat catches the bad-data case instead.
  */
-function accelDriftDeg(buf) {
+function accelDriftDeg(buf: Vec[]) {
     if (buf.length < 2) return 0;
     const valid = buf.filter((s) => Math.hypot(s[0], s[1], s[2]) > 0.01);
     if (valid.length < 2) return 0;
     const dirs = valid.map(normalize);
-    const mean = normalize(meanVec3(dirs));
+    const meanDir = meanVec3(dirs);
+    if (!meanDir) return 0;
+    const mean = normalize(meanDir);
     if (Math.hypot(mean[0], mean[1], mean[2]) < 0.5) return 0;
     let maxAngle = 0;
     for (const d of dirs) {
@@ -725,7 +752,7 @@ function accelDriftDeg(buf) {
 // --- Stability tracking ---
 let flatStableSince = 0;
 
-function advanceTo(nextPhase) {
+function advanceTo(nextPhase: string) {
     accelBuf = [];
     gyroBuf = [];
     tiltHistory = [];
@@ -734,7 +761,7 @@ function advanceTo(nextPhase) {
     phaseDetail.value = "";
     phase.value = nextPhase;
 
-    if (CONFIRMED_PHASES.has(nextPhase)) {
+    if (isConfirmed(nextPhase)) {
         // Freeze the model at its current position (don't snap to a new pose — the model
         // is already at level after the return-to-level phase, which is the natural state
         // to show during the confirmation flash).
@@ -765,7 +792,7 @@ function runComputation() {
             yawIntegral: captured.yawIntegralDeg,
             currentAlignment: props.currentAlignment,
         });
-        if (result.error) {
+        if (result.error !== undefined) {
             errorMessage.value = i18nMessage(`boardAlignmentWizard-Error-${result.error}`) || result.error;
             phase.value = "error";
             return;
@@ -823,7 +850,7 @@ function enterTestPhase() {
     startLiveAttitudeRender();
 }
 
-let attitudePollTimer = null;
+let attitudePollTimer: ReturnType<typeof setTimeout> | null = null;
 let attitudePolling = false;
 function startAttitudePolling() {
     if (attitudePolling) return;
@@ -908,21 +935,21 @@ function closeDialog() {
 }
 
 // --- Helpers ---
-function dot(a, b) {
+function dot(a: Vec, b: Vec) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
-function normalize(v) {
+function normalize(v: Vec): Vec {
     const m = Math.hypot(v[0], v[1], v[2]);
     return m > 1e-9 ? [v[0] / m, v[1] / m, v[2] / m] : [0, 0, 0];
 }
-function mat3Transpose(m) {
+function mat3Transpose(m: Mat3): Mat3 {
     return [
         [m[0][0], m[1][0], m[2][0]],
         [m[0][1], m[1][1], m[2][1]],
         [m[0][2], m[1][2], m[2][2]],
     ];
 }
-function mat3Mul(a, b) {
+function mat3Mul(a: Mat3, b: Mat3): Mat3 {
     const r = [
         [0, 0, 0],
         [0, 0, 0],
