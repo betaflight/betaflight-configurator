@@ -34,7 +34,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const open = defineModel("open", { type: Boolean, default: false });
 
 const columns = [
