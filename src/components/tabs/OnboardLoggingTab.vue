@@ -61,7 +61,8 @@
                                 :help="$t('onboardLoggingSerialBaudHelp')"
                             >
                                 <USelect
-                                    v-model="blackboxBaud"
+                                    :model-value="blackboxBaud ?? undefined"
+                                    @update:model-value="blackboxBaud = $event"
                                     :items="blackboxBaudOptions"
                                     :disabled="!blackboxPortWritable"
                                     size="xs"
@@ -306,7 +307,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
@@ -344,7 +345,7 @@ import { useDataflashErase } from "../../composables/useDataflashErase";
 const BLOCK_SIZE = 4096;
 
 // Helper function for GCD calculation
-function gcd(a, b) {
+function gcd(a: number, b: number): number {
     // Convert to integers and get absolute values
     a = Math.abs(Math.floor(a));
     b = Math.abs(Math.floor(b));
@@ -364,7 +365,7 @@ function gcd(a, b) {
     return gcd(b, a % b);
 }
 
-function formatKilobytes(kilobytes) {
+function formatKilobytes(kilobytes: number) {
     if (kilobytes < 1024) {
         return `${Math.round(kilobytes)}kB`;
     }
@@ -376,7 +377,7 @@ function formatKilobytes(kilobytes) {
     return `${gigabytes.toFixed(1)}GB`;
 }
 
-function formatBytes(bytes) {
+function formatBytes(bytes: number) {
     if (bytes < 1024) {
         return `${bytes}B`;
     }
@@ -415,7 +416,7 @@ export default defineComponent({
         const blockSize = ref(BLOCK_SIZE);
         const writeError = ref(false);
 
-        let sdcardTimer = null;
+        let sdcardTimer: ReturnType<typeof setTimeout> | null = null;
 
         // Computed
         const dataflashSupported = computed(() => fcStore.dataflash?.supported);
@@ -482,7 +483,7 @@ export default defineComponent({
         });
 
         const loggingRates = computed(() => {
-            const rates = [];
+            const rates: { value: number; label: string }[] = [];
 
             // Validate data is available before processing
             if (!fcStore.config?.sampleRateHz || !fcStore.pidAdvancedConfig?.pid_process_denom) {
@@ -631,7 +632,7 @@ export default defineComponent({
             },
         });
 
-        function updateDebugField(index, value) {
+        function updateDebugField(index: number, value: boolean) {
             // Use splice to ensure Vue 3 reactivity
             debugFieldsEnabled.value.splice(index, 1, value);
         }
@@ -694,7 +695,7 @@ export default defineComponent({
             cancelFlashErase();
         }
 
-        function flashUpdateSummary(onDone) {
+        function flashUpdateSummary(onDone?: () => void) {
             MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, () => {
                 if (onDone) {
                     onDone();
@@ -713,7 +714,7 @@ export default defineComponent({
             saveOpen.value = false;
         }
 
-        function logSaveStats(startTime, totalBytes, totalBytesCompressed) {
+        function logSaveStats(startTime: number, totalBytes: number, totalBytesCompressed: number | null) {
             const totalTime = (Date.now() - startTime) / 1000;
             console.log(
                 `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(
@@ -725,7 +726,7 @@ export default defineComponent({
                     "Compressed into",
                     totalBytesCompressed,
                     "bytes with mean compression factor of",
-                    totalBytes / totalBytesCompressed,
+                    totalBytes / Number(totalBytesCompressed),
                 );
             }
 
@@ -737,7 +738,13 @@ export default defineComponent({
             }
         }
 
-        function completeSave(startTime, nextAddress, totalBytesCompressed, maxBytes, alsoErase) {
+        function completeSave(
+            startTime: number,
+            nextAddress: number,
+            totalBytesCompressed: number | null,
+            maxBytes: number,
+            alsoErase: boolean,
+        ) {
             logSaveStats(startTime, nextAddress, totalBytesCompressed);
 
             if (alsoErase && !saveCancelled.value) {
@@ -755,7 +762,7 @@ export default defineComponent({
             saveCancelled.value = true;
         }
 
-        function conditionallyEraseFlash(maxBytes, nextAddress) {
+        function conditionallyEraseFlash(maxBytes: number, nextAddress: number) {
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
                 eraseOpen.value = true;
                 void startFlashErase({ clearQueue: false });
@@ -777,7 +784,7 @@ export default defineComponent({
             // Refresh the occupied size
             flashUpdateSummary(async () => {
                 const maxBytes = fcStore.dataflash?.usedSize || 0;
-                let openedFile;
+                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>> | undefined;
 
                 try {
                     const prefix = "BLACKBOX_LOG";
@@ -792,11 +799,17 @@ export default defineComponent({
                     );
 
                     let nextAddress = 0;
-                    let totalBytesCompressed = 0;
+                    // null once a chunk reports no compressed size
+                    let totalBytesCompressed: number | null = 0;
 
                     showSavingDialog();
 
-                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed, error) {
+                    function onChunkRead(
+                        _chunkAddress: number,
+                        chunkDataView: DataView | null,
+                        bytesCompressed?: number | null,
+                        error?: unknown,
+                    ) {
                         if (error) {
                             if (error instanceof MspCancelledError) {
                                 dismissSavingDialog();
@@ -819,14 +832,23 @@ export default defineComponent({
                                 if (Number.isNaN(bytesCompressed) || Number.isNaN(totalBytesCompressed)) {
                                     totalBytesCompressed = null;
                                 } else {
-                                    totalBytesCompressed += bytesCompressed;
+                                    // Number() spells out what `+=` did: null counts as 0, undefined as NaN
+                                    totalBytesCompressed = Number(totalBytesCompressed) + Number(bytesCompressed);
                                 }
 
                                 // Clamp: the final chunk can push nextAddress past the
                                 // reported usedSize, and UProgress rejects value > max (100).
                                 saveProgress.value = Math.min((nextAddress / maxBytes) * 100, 100);
 
-                                const blob = new Blob([chunkDataView]);
+                                // Copy into an ArrayBuffer-backed view: Blob does not take a view over
+                                // ArrayBufferLike. Same bytes, one extra copy per chunk.
+                                const blob = new Blob([
+                                    new Uint8Array(
+                                        chunkDataView.buffer,
+                                        chunkDataView.byteOffset,
+                                        chunkDataView.byteLength,
+                                    ).slice(),
+                                ]);
                                 FileSystem.writeChunck(openedFile, blob).then(() => {
                                     if (saveCancelled.value || nextAddress >= maxBytes) {
                                         FileSystem.closeFile(openedFile);
@@ -927,10 +949,10 @@ export default defineComponent({
                 }
             }
 
-            // `tracking` is null until createAnalytics(settings) has run, so it still needs a guard —
-            // but on the imported binding rather than the window global it used to rely on.
-            if (getTracking()) {
-                getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
+            // The tracker is null until createAnalytics(settings) has run, so it still needs a guard.
+            const tracking = getTracking();
+            if (tracking) {
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
                     logSize: fcStore.dataflash?.usedSize || 0,
                     logStatus: loggingStatus,
                 });
