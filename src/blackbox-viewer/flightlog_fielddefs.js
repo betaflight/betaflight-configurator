@@ -363,6 +363,9 @@ export const FLIGHT_LOG_DISARM_REASON = makeReadOnly([
     "RUNAWAY_TAKEOFF",
     "GPS_RESCUE",
     "SERIAL_IO",
+    "LANDING",
+    "CRASHFLIP",
+    "LAUNCH_ABORT",
 ]);
 
 export const RATES_TYPE = makeReadOnly(["BETAFLIGHT", "RACEFLIGHT", "KISS", "ACTUAL", "QUICK"]);
