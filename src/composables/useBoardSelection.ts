@@ -184,7 +184,8 @@ export function useBoardSelection(params: BoardSelectionParams) {
         const groupTargets: Record<string, TargetDescriptor[]> = {};
         for (const descriptor of targets) {
             const groupKey = descriptor.group ? descriptor.group : "unsupported";
-            (groupTargets[groupKey] ??= []).push(descriptor);
+            groupTargets[groupKey] ??= [];
+            groupTargets[groupKey].push(descriptor);
         }
 
         const groupSorted = Object.keys(groupTargets).sort((a, b) => {

@@ -146,40 +146,7 @@ import { vueTabState } from "../../js/vue_tab_mounter.js";
 import { switchTab } from "../../js/tab_switch.js";
 import FC from "../../js/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
-
-/**
- * Shorter target for the status bar when not in expert mode, e.g.
- * "MFGID/TARGETNAME(MCUNAME)" -> "TARGETNAME"
- */
-function shortenTargetDisplay(name: unknown): string {
-    if (!name || typeof name !== "string") {
-        return "";
-    }
-    let s = name.trim();
-    const i = s.indexOf("/");
-    if (i >= 0) {
-        s = s.slice(i + 1);
-    }
-    s = s.replace(/\([^)]*\)\s*$/, "").trim();
-    return s;
-}
-
-/**
- * Drop trailing (git/revision) segments from a display version string, e.g.
- * "25.1.0 (a1b2c3d)" or "4.5.0 (a1b2c3d)" for non–expert status text.
- */
-function stripVersionDisplay(version: unknown): string {
-    if (!version || typeof version !== "string") {
-        return "";
-    }
-    let s = version.trim();
-    let prev;
-    do {
-        prev = s;
-        s = s.replace(/\s+\([^)]*\)\s*$/, "").trim();
-    } while (s !== prev);
-    return s;
-}
+import { shortenTargetDisplay, stripVersionDisplay } from "./statusBarText";
 
 export default defineComponent({
     components: {
