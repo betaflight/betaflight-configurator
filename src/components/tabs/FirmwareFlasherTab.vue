@@ -12,8 +12,6 @@
             <div class="flasher-tab-area">
                 <FlasherBoardBuildTab
                     v-if="activeFlasherStep === 'board-build'"
-                    :state="state"
-                    :board-selection="boardSelection"
                     :on-build-type-change="onBuildTypeChange"
                     :on-board-change="onBoardChange"
                     :on-detect-board="handleDetectBoard"
@@ -31,7 +29,6 @@
                 />
                 <FlasherFlashTab
                     v-if="activeFlasherStep === 'flash'"
-                    :state="state"
                     :cloud-build="cloudBuild"
                     :on-save-firmware="saveFirmware"
                     :flash-ring-color="flashRingColor"
@@ -123,14 +120,14 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
+import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick, provide } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
 import { useCloudBuild } from "../../composables/useCloudBuild.js";
-import { useBoardSelection } from "../../composables/useBoardSelection.js";
+import { useBoardSelection } from "../../composables/useBoardSelection";
 import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing.js";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
@@ -149,6 +146,7 @@ import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
+import { BOARD_SELECTION, FLASHER_STATE, createFlasherState } from "./firmware-flasher/flasherState";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
 
@@ -170,89 +168,9 @@ export default defineComponent({
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
 
-        // Reactive state
-        const state = reactive({
-            localFirmwareLoaded: false,
-            selectedBuildType: 0,
-            selectedRadioProtocol: undefined,
-            selectedTelemetryProtocol: undefined,
-            selectedOsdProtocol: undefined,
-            selectedMotorProtocol: undefined,
-            selectedOptions: [],
-            /** Expert mode cloud build: custom compile defines as tags (split on space) */
-            customDefinesTags: [],
-            selectedCommit: undefined,
-            cloudBuildOptions: null,
-            isConfigLocal: false,
-            filename: null,
-            configFilename: null,
-            config: {},
-            developmentFirmwareLoaded: false,
-            preFlashingMessage: null,
-            preFlashingMessageType: null,
-            firmware_type: undefined,
-            targetDetail: null,
-            targetQualification: null,
-            // Select options
-            buildTypeOptions: [],
-            radioProtocolOptions: [],
-            telemetryProtocolOptions: [],
-            osdProtocolOptions: [],
-            motorProtocolOptions: [],
-            optionsListOptions: [],
-            commitOptions: [],
-            // UI State - Checkboxes
-            expertMode: false,
-            showDevelopmentReleases: false,
-            noRebootSequence: false,
-            flashOnConnect: false,
-            eraseChip: false,
-            flashManualBaud: false,
-            coreBuildMode: false,
-            // UI State - Button disabled flags
-            flashButtonDisabled: true,
-            loadRemoteButtonDisabled: true,
-            loadFileButtonDisabled: false,
-            dfuExitButtonDisabled: true,
-            telemetryProtocolDisabled: false,
-            // UI State - Visibility flags
-            flashOnConnectWrapperVisible: false,
-            manufacturerInfoVisible: false,
-            cloudTargetInfoVisible: false,
-            targetQualificationVisible: false,
-            expertOptionsVisible: false,
-            buildTypeRowVisible: false,
-            commitSelectionVisible: false,
-            // UI State - Text content
-            targetQualificationText: "",
-            // targetQualificationClass: "", // "gui_note" or "gui_warning"
-            targetSpanText: "",
-            releaseNameText: "",
-            releaseNameLink: "",
-            releaseDateText: "",
-            targetMCUText: "",
-            configFilenameText: "",
-            manufacturerSpanText: "",
-            targetSupportUrl: "https://betaflight.com/docs/wiki/boards/archive/Missing",
-            progressLabelText: "",
-            progressLabelClass: "", // "valid", "invalid", "actionRequired"
-            firmwareLoadedName: "",
-            firmwareLoadedSize: "",
-            firmwareLoadedIsLocal: false,
-            /** 0–100; drives firmware flash UProgress (replaces native progress element). */
-            flashProgressValue: 0,
-            osdProtocolNeedsAttention: false, // True if OSD protocol is empty (shows red)
-            // UI State - Input values
-            flashManualBaudRate: 256000,
-            // Dialog states
-            dialogUnstableFirmwareAcknowledgementCheckbox: false,
-            flashingInProgress: false,
-            lastFlashResultText: "",
-            lastFlashResultClass: "",
-            // Restore-backup lifecycle (post-flash)
-            restoreInProgress: false,
-            restoreCompleted: false,
-        });
+        // Reactive state, provided to the sub-tabs below
+        const state = createFlasherState();
+        provide(FLASHER_STATE, state);
 
         // Sponsor component ref
         const sponsorTile = ref(null);
@@ -932,7 +850,8 @@ export default defineComponent({
                             r.type === "Stable"
                         );
                     })
-                    .map((release) => ({
+                    // Drop `type`: USelect reads an item's `type` as label / separator / item.
+                    .map(({ type: _type, ...release }) => ({
                         ...release,
                         label: `${release.release} [${release.label}]`,
                     }));
@@ -1322,6 +1241,7 @@ export default defineComponent({
             getSelectedBuildType: () => Number.parseInt(state.selectedBuildType, 10),
             logHead,
         });
+        provide(BOARD_SELECTION, boardSelection);
 
         // Wrapper functions to handle state updates from composable
         const onBuildTypeChange = async () => {

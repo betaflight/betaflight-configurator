@@ -1,16 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope } from "vue";
+import { effectScope, type EffectScope } from "vue";
 import GUI from "../../src/js/gui";
 
-import { useBoardSelection } from "../../src/composables/useBoardSelection";
+import { useBoardSelection, type BoardSelectionParams } from "../../src/composables/useBoardSelection";
 
-function makeParams() {
+vi.mock("../../src/js/utils/connection", () => ({ ispConnected: () => true }));
+
+function makeParams(): BoardSelectionParams {
     return {
         buildApi: {
             loadTargets: vi.fn().mockResolvedValue([]),
             loadTargetReleases: vi.fn().mockResolvedValue({ releases: [] }),
         },
-        $t: (key) => key,
+        $t: (key: string) => key,
         updateTargetQualification: vi.fn(),
         getSupportUrlForTarget: vi.fn(),
         populateReleases: vi.fn(),
@@ -24,8 +26,8 @@ function makeParams() {
 }
 
 describe("useBoardSelection", () => {
-    let scope;
-    let boardSelection;
+    let scope: EffectScope;
+    let boardSelection: ReturnType<typeof useBoardSelection>;
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -69,5 +71,24 @@ describe("useBoardSelection", () => {
         await vi.advanceTimersByTimeAsync(2100);
 
         expect(boardSelection.state.detectingBoard).toBe(false);
+    });
+
+    it("groups boards by support level, supported first, ungrouped targets as community", async () => {
+        localStorage.clear();
+        await boardSelection.populateTargetList([
+            { target: "ZETA", group: "legacy" },
+            { target: "BETA" },
+            { target: "DELTA", group: "supported" },
+            { target: "ALPHA" },
+            { target: "GAMMA", group: "supported" },
+        ]);
+
+        expect(boardSelection.state.boardOptions.map((b) => [b.target, b.groupKey, b.group])).toEqual([
+            ["DELTA", "supported", "firmwareFlasherOptionLabelVerifiedPartner"],
+            ["GAMMA", "supported", "firmwareFlasherOptionLabelVerifiedPartner"],
+            ["ALPHA", "unsupported", "firmwareFlasherOptionLabelVendorCommunity"],
+            ["BETA", "unsupported", "firmwareFlasherOptionLabelVendorCommunity"],
+            ["ZETA", "legacy", "firmwareFlasherOptionLabelLegacy"],
+        ]);
     });
 });

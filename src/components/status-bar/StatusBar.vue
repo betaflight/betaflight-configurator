@@ -130,8 +130,8 @@
     </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import PortUtilization from "./PortUtilization.vue";
 import { useConnectionStore } from "../../stores/connection";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
@@ -151,7 +151,7 @@ import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
  * Shorter target for the status bar when not in expert mode, e.g.
  * "MFGID/TARGETNAME(MCUNAME)" -> "TARGETNAME"
  */
-function shortenTargetDisplay(name) {
+function shortenTargetDisplay(name: unknown): string {
     if (!name || typeof name !== "string") {
         return "";
     }
@@ -168,7 +168,7 @@ function shortenTargetDisplay(name) {
  * Drop trailing (git/revision) segments from a display version string, e.g.
  * "25.1.0 (a1b2c3d)" or "4.5.0 (a1b2c3d)" for non–expert status text.
  */
-function stripVersionDisplay(version) {
+function stripVersionDisplay(version: unknown): string {
     if (!version || typeof version !== "string") {
         return "";
     }
@@ -200,8 +200,7 @@ export default defineComponent({
             default: 0,
         },
         connectionTimestamp: {
-            /** @type {import("vue").PropType<number | null>} */
-            type: Number,
+            type: Number as PropType<number | null>,
             default: null,
         },
         packetError: {
@@ -253,12 +252,12 @@ export default defineComponent({
 
         const currentTime = ref(Date.now());
         const expertMode = ref(isExpertModeEnabled());
-        let interval = null;
+        let interval: ReturnType<typeof setInterval> | null = null;
         const connectionStore = useConnectionStore();
         const isVirtualMode = computed(() => connectionStore.virtualMode);
         const isConnectedToVirtual = computed(() => connectionStore.connectedTo === "virtual");
 
-        const onExpertModeChange = (enabled) => {
+        const onExpertModeChange = (enabled: boolean) => {
             expertMode.value = enabled;
         };
 

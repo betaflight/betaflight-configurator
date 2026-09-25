@@ -235,45 +235,46 @@
     </div>
 </template>
 
-<script setup>
-import { computed, ref, watch } from "vue";
+<script setup lang="ts">
+import { computed, ref, watch, type PropType } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { getLastBackupData } from "@/js/utils/AutoBackup";
+import type { useCloudBuild } from "@/composables/useCloudBuild.js";
+import { injectFlasherState } from "./flasherState";
 
-const props = defineProps({
-    state: { type: Object, required: true },
-    cloudBuild: { type: Object, required: true },
-    onSaveFirmware: { type: Function, required: true },
+defineProps({
+    cloudBuild: { type: Object as PropType<ReturnType<typeof useCloudBuild>>, required: true },
+    onSaveFirmware: { type: Function as PropType<() => void>, required: true },
     flashRingColor: { type: String, required: true },
-    onNoRebootChange: { type: Function, required: true },
-    onEraseChipChange: { type: Function, required: true },
-    onFlashManualBaudChange: { type: Function, required: true },
-    onFlashManualBaudRateChange: { type: Function, required: true },
-    onRestoreBackup: { type: Function, required: true },
+    onNoRebootChange: { type: Function as PropType<() => void>, required: true },
+    onEraseChipChange: { type: Function as PropType<() => void>, required: true },
+    onFlashManualBaudChange: { type: Function as PropType<() => void>, required: true },
+    onFlashManualBaudRateChange: { type: Function as PropType<() => void>, required: true },
+    onRestoreBackup: { type: Function as PropType<() => void>, required: true },
 });
 
+const state = injectFlasherState();
+
 // True while flash is actively running (progress updates flowing)
-const flashStatusLive = computed(() => props.state.flashingInProgress || props.state.flashProgressValue > 0);
+const flashStatusLive = computed(() => state.flashingInProgress || state.flashProgressValue > 0);
 
 // Show row if live OR if a saved result exists
-const flashStatusVisible = computed(() => flashStatusLive.value || !!props.state.lastFlashResultText);
+const flashStatusVisible = computed(() => flashStatusLive.value || !!state.lastFlashResultText);
 
 // Text: live progress text during flash, saved result after
-const flashStatusText = computed(() =>
-    flashStatusLive.value ? props.state.progressLabelText : props.state.lastFlashResultText,
-);
+const flashStatusText = computed(() => (flashStatusLive.value ? state.progressLabelText : state.lastFlashResultText));
 
 // Class: live class during flash, saved result class after
 const flashStatusClass = computed(() =>
-    flashStatusLive.value ? props.state.progressLabelClass : props.state.lastFlashResultClass,
+    flashStatusLive.value ? state.progressLabelClass : state.lastFlashResultClass,
 );
 
 // Ring color for saved result (mirrors flashRingColor logic)
 const flashResultRingColor = computed(() => {
-    switch (props.state.lastFlashResultClass) {
+    switch (state.lastFlashResultClass) {
         case "invalid":
         case "erasing":
             return "error";
@@ -295,19 +296,19 @@ watch(
 );
 
 // Restore progress busy flag (driven by the parent via shared state)
-const restoreInProgress = computed(() => props.state.restoreInProgress);
+const restoreInProgress = computed(() => state.restoreInProgress);
 
 // Show restore button only when flash succeeded, not flashing, restore not already
 // done, and backup data exists.
 // Note: No longer checking DeviceHandler.portAvailable as it's stale after flash
 const showRestoreButton = computed(() => {
-    if (props.state.flashingInProgress) {
+    if (state.flashingInProgress) {
         return false;
     }
-    if (props.state.lastFlashResultClass !== "valid" || !props.state.lastFlashResultText) {
+    if (state.lastFlashResultClass !== "valid" || !state.lastFlashResultText) {
         return false;
     }
-    if (props.state.restoreInProgress || props.state.restoreCompleted) {
+    if (state.restoreInProgress || state.restoreCompleted) {
         return false;
     }
     // Only show if we have a backup available (checking for null or empty string)

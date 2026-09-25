@@ -1,27 +1,82 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, nextTick, onScopeDispose } from "vue";
+import type { SelectMenuItem } from "@nuxt/ui";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
 import GUI from "../js/gui";
 import AutoDetect from "../js/utils/AutoDetect.js";
 
+/** A board as the build API's `/api/targets` lists it. */
+export interface TargetDescriptor {
+    target: string;
+    group?: string;
+    [key: string]: unknown;
+}
+
+/** A target descriptor relabelled for the board USelectMenu. */
+export interface BoardOption extends TargetDescriptor {
+    label: string;
+    groupKey: string;
+    group: string;
+}
+
+/** A release as the build API's `/api/targets/<target>` lists it. */
+export interface FirmwareRelease {
+    release: string;
+    label: string;
+    type: string;
+}
+
+/**
+ * A release as the version USelect lists it. `type` ("Stable", "Unstable", ...) is dropped:
+ * Nuxt UI reads an item's `type` as its kind, "label" / "separator" / "item".
+ */
+export type FirmwareVersionOption = Omit<FirmwareRelease, "type">;
+
+export interface BoardSelectionBuildApi {
+    loadTargets(): Promise<TargetDescriptor[] | null | undefined>;
+    loadTargetReleases(target: string): Promise<{ releases: FirmwareRelease[] }>;
+}
+
+export interface BoardSelectionParams {
+    buildApi: BoardSelectionBuildApi;
+    $t: (key: string, params?: unknown) => string;
+    updateTargetQualification: (targetName: string | null | undefined) => void;
+    getSupportUrlForTarget: (targetName: string | null | undefined) => string;
+    populateReleases: (target: { target: string; releases: FirmwareRelease[] }) => Promise<void>;
+    enableLoadRemoteFileButton: (enabled: boolean) => void;
+    flashingMessage: (message: string, type: string) => void;
+    flashProgress: (value: number) => void;
+    FLASH_MESSAGE_TYPES: Record<string, string>;
+    getSelectedBuildType: () => number;
+    logHead: string;
+}
+
 /**
  * A composable for handling board and firmware version selection.
  * Manages board/target lists, firmware version options, and related UI interactions.
- *
- * @param {Object} params - Configuration object
- * @param {Object} params.buildApi - BuildApi instance for making API calls
- * @param {Function} params.$t - Translation function
- * @param {Function} params.updateTargetQualification - Callback to update target qualification UI
- * @param {Function} params.getSupportUrlForTarget - Function to get support URL for a target
- * @param {Function} params.populateReleases - Callback to populate release options
- * @param {Function} params.enableLoadRemoteFileButton - Callback to enable/disable load remote button
- * @param {Function} params.flashingMessage - Callback to display flashing messages
- * @param {Function} params.flashProgress - Callback to update flash progress
- * @param {Object} params.FLASH_MESSAGE_TYPES - Flash message types enum
- * @param {Function} params.getSelectedBuildType - Function to get current build type
- * @param {string} params.logHead - Log prefix for console messages
  */
-export function useBoardSelection(params) {
+export function useBoardSelection(params: BoardSelectionParams) {
     const {
         buildApi,
         $t,
@@ -38,18 +93,18 @@ export function useBoardSelection(params) {
 
     // Reactive state for board selection
     const state = reactive({
-        targets: null,
-        boardOptions: [],
-        selectedBoard: undefined,
-        firmwareVersionOptions: [],
-        selectedFirmwareVersion: undefined,
-        cloudBuildOptions: [],
+        targets: null as TargetDescriptor[] | null,
+        boardOptions: [] as BoardOption[],
+        selectedBoard: undefined as string | null | undefined,
+        firmwareVersionOptions: [] as FirmwareVersionOption[],
+        selectedFirmwareVersion: undefined as string | undefined,
+        cloudBuildOptions: [] as string[],
         detectingBoard: false,
         /** Bound to USelectMenu search; used with ignore-filter to omit empty category headers */
         boardSelectSearchTerm: "",
     });
 
-    let detectBoardTimeout = null;
+    let detectBoardTimeout: ReturnType<typeof setTimeout> | null = null;
 
     /**
      * Get board options formatted for Nuxt UI SelectMenu with labeled group separations.
@@ -58,8 +113,8 @@ export function useBoardSelection(params) {
      * and labels/separators appear only for groups that still have matches.
      */
     const getSelectMenuItems = () => {
-        const grouped = {};
-        const groupOrder = { supported: 0, unsupported: 1, legacy: 2 };
+        const grouped: Record<string, { label: string; boards: BoardOption[] }> = {};
+        const groupOrder: Record<string, number | undefined> = { supported: 0, unsupported: 1, legacy: 2 };
         const q = (state.boardSelectSearchTerm || "").trim().toLowerCase();
 
         state.boardOptions.forEach((board) => {
@@ -82,7 +137,7 @@ export function useBoardSelection(params) {
                 return orderA - orderB;
             });
 
-        const items = [];
+        const items: SelectMenuItem[] = [];
         sortedGroups.forEach(([_key, data], index) => {
             if (index > 0) {
                 items.push({ type: "separator" });
@@ -104,7 +159,7 @@ export function useBoardSelection(params) {
     /**
      * Populate the target/board list from API response
      */
-    const populateTargetList = async (targets) => {
+    const populateTargetList = async (targets: TargetDescriptor[] | null | undefined) => {
         if (!targets || !ispConnected()) {
             updateTargetQualification(null);
             state.boardOptions = [];
@@ -113,21 +168,24 @@ export function useBoardSelection(params) {
         }
 
         // Build board options with optgroups
-        const groupOrder = {
+        const groupOrder: Record<string, number | undefined> = {
             supported: 0,
             unsupported: 1,
             legacy: 2,
         };
 
-        const groupLabels = {
+        const groupLabels: Record<string, string | undefined> = {
             supported: $t("firmwareFlasherOptionLabelVerifiedPartner"),
             unsupported: $t("firmwareFlasherOptionLabelVendorCommunity"),
             legacy: $t("firmwareFlasherOptionLabelLegacy"),
         };
 
-        const groupTargets = Object.groupBy(targets, (descriptor) =>
-            descriptor.group ? descriptor.group : "unsupported",
-        );
+        // Object.groupBy is ES2024, past the ES2022 target the build and tsconfig are pinned to.
+        const groupTargets: Record<string, TargetDescriptor[]> = {};
+        for (const descriptor of targets) {
+            const groupKey = descriptor.group ? descriptor.group : "unsupported";
+            (groupTargets[groupKey] ??= []).push(descriptor);
+        }
 
         const groupSorted = Object.keys(groupTargets).sort((a, b) => {
             const groupA = groupOrder[a] ?? 999;
@@ -136,7 +194,7 @@ export function useBoardSelection(params) {
         });
 
         // Create board options array
-        const boardOptionsArray = [];
+        const boardOptionsArray: BoardOption[] = [];
         groupSorted.forEach((groupKey) => {
             const groupItems = groupTargets[groupKey];
             const sortedTargets = [...groupItems].sort((a, b) => a.target.localeCompare(b.target));
@@ -154,7 +212,7 @@ export function useBoardSelection(params) {
         state.boardOptions = boardOptionsArray;
         state.targets = targets;
 
-        const result = getConfig("selected_board");
+        const result = getConfig<string | undefined>("selected_board");
         if (result.selected_board && state.boardOptions.some((b) => b.target === result.selected_board)) {
             state.selectedBoard = result.selected_board;
         }
@@ -252,7 +310,7 @@ export function useBoardSelection(params) {
             return;
         }
 
-        AutoDetect.verifyBoard(async (detectedBoardName) => {
+        AutoDetect.verifyBoard(async (detectedBoardName: string) => {
             let found = state.boardOptions.find((b) => b.target === detectedBoardName);
             if (!found) {
                 found = state.boardOptions.find(

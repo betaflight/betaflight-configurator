@@ -580,7 +580,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
@@ -982,7 +982,7 @@ const gyro_rpm_notch_q = computed({
 
 const gyro_rpm_notch_weights = computed(() => FC.FILTER_CONFIG.gyro_rpm_notch_weights ?? [0, 0, 0]);
 
-function setRpmWeight(index, value) {
+function setRpmWeight(index: number, value: number) {
     FC.FILTER_CONFIG.gyro_rpm_notch_weights[index] = value;
 }
 
