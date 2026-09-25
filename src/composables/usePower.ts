@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, ref, computed, watch } from "vue";
 import semver from "semver";
 import { i18n } from "../js/localization";
@@ -13,6 +34,7 @@ import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
+import type { CurrentMeter, CurrentMeterConfig, VoltageMeter, VoltageMeterConfig } from "../stores/fc.types";
 
 export function usePower() {
     const supported = computed(() => {
@@ -30,15 +52,15 @@ export function usePower() {
     // Guards for the TX-driven battery-profile sync (see watcher below).
     const isLoading = ref(false);
     let syncingFromFc = false;
-    const analyticsChanges = reactive({});
+    const analyticsChanges = reactive<Record<string, unknown>>({});
     const batteryState = reactive({
         cellCount: 0,
         voltage: 0,
         mAhDrawn: 0,
         amperage: 0,
     });
-    const voltageMeters = reactive([]);
-    const currentMeters = reactive([]);
+    const voltageMeters = reactive<VoltageMeter[]>([]);
+    const currentMeters = reactive<CurrentMeter[]>([]);
     const batteryConfig = reactive({
         voltageMeterSource: 0,
         currentMeterSource: 0,
@@ -47,8 +69,8 @@ export function usePower() {
         vbatwarningcellvoltage: 0,
         capacity: 0,
     });
-    const voltageConfigs = reactive([]);
-    const currentConfigs = reactive([]);
+    const voltageConfigs = reactive<VoltageMeterConfig[]>([]);
+    const currentConfigs = reactive<CurrentMeterConfig[]>([]);
 
     const buildPowerConfigSnapshot = () => ({
         voltageMeterSource: batteryConfig.voltageMeterSource,
@@ -69,8 +91,8 @@ export function usePower() {
         })),
     });
 
-    /** @returns {string} serialized tab state for dirty comparison */
-    const serializePowerConfig = () => JSON.stringify(buildPowerConfigSnapshot());
+    /** Serialized tab state for dirty comparison. */
+    const serializePowerConfig = (): string => JSON.stringify(buildPowerConfigSnapshot());
 
     const { dirty, markClean, takeSnapshot } = useDirtyState(serializePowerConfig);
 
@@ -133,17 +155,17 @@ export function usePower() {
     });
 
     // Get voltage meter label
-    const getVoltageMeterLabel = (id) => {
+    const getVoltageMeterLabel = (id: number) => {
         return i18n.getMessage(`powerVoltageId${id}`);
     };
 
     // Get amperage meter label
-    const getAmperageMeterLabel = (id) => {
+    const getAmperageMeterLabel = (id: number) => {
         return i18n.getMessage(`powerAmperageId${id}`);
     };
 
     // Check if voltage meter should be visible
-    const isVoltageMeterVisible = (meter) => {
+    const isVoltageMeterVisible = (meter: VoltageMeter) => {
         return (
             (batteryConfig.voltageMeterSource === 1 && meter.id === 10) ||
             (batteryConfig.voltageMeterSource === 2 && meter.id >= 50)
@@ -151,7 +173,7 @@ export function usePower() {
     };
 
     // Check if current meter should be visible
-    const isCurrentMeterVisible = (meter) => {
+    const isCurrentMeterVisible = (meter: CurrentMeter) => {
         return (
             (batteryConfig.currentMeterSource === 1 && meter.id === 10) ||
             (batteryConfig.currentMeterSource === 2 && meter.id === 80) ||
@@ -175,7 +197,7 @@ export function usePower() {
     };
 
     // Change active battery profile
-    const changeBatteryProfile = async (profileIndex) => {
+    const changeBatteryProfile = async (profileIndex: number) => {
         const connectionStore = useConnectionStore();
         const previousProfile = activeBatteryProfile.value;
         const previousProfileName = batteryProfileName.value;
@@ -263,12 +285,8 @@ export function usePower() {
         },
     );
 
-    // Load data from flight controller
-    /**
-     * Read the power configuration from the FC into reactive state.
-     * @returns {Promise<boolean>} true when the data actually arrived
-     */
-    const loadData = async () => {
+    /** Read the power configuration from the FC into reactive state; true when the data actually arrived. */
+    const loadData = async (): Promise<boolean> => {
         isLoading.value = true;
         try {
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
@@ -380,21 +398,21 @@ export function usePower() {
     };
 
     // Handle voltage meter source change
-    const onVoltageMeterSourceChange = (value) => {
-        batteryConfig.voltageMeterSource = Number.parseInt(value, 10);
+    const onVoltageMeterSourceChange = (value: string | number) => {
+        batteryConfig.voltageMeterSource = Number.parseInt(String(value), 10);
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         sourceschanged.value = true;
     };
 
     // Handle current meter source change
-    const onCurrentMeterSourceChange = (value) => {
-        batteryConfig.currentMeterSource = Number.parseInt(value, 10);
+    const onCurrentMeterSourceChange = (value: string | number) => {
+        batteryConfig.currentMeterSource = Number.parseInt(String(value), 10);
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
         sourceschanged.value = true;
     };
 
     // Handle voltage scale change
-    const onVoltageScaleChange = (index, value) => {
+    const onVoltageScaleChange = (index: number, value: number) => {
         const originalValue = FC.VOLTAGE_METER_CONFIGS[index].vbatscale;
         if (value !== originalValue) {
             analyticsChanges["PowerVBatUpdated"] = value;
@@ -402,7 +420,7 @@ export function usePower() {
     };
 
     // Handle amperage scale change
-    const onAmperageScaleChange = (index, value) => {
+    const onAmperageScaleChange = (index: number, value: number) => {
         const originalValue = FC.CURRENT_METER_CONFIGS[index].scale;
         if (value !== originalValue) {
             analyticsChanges["PowerAmperageUpdated"] = value;
@@ -434,7 +452,7 @@ export function usePower() {
             return false;
         }
 
-        const vbatcalibration = Number.parseFloat(vbatcalibrationValue.value);
+        const vbatcalibration = Number.parseFloat(String(vbatcalibrationValue.value));
         if (vbatcalibration === 0) {
             return false;
         }
@@ -457,7 +475,7 @@ export function usePower() {
             return false;
         }
 
-        const amperagecalibration = Number.parseFloat(amperagecalibrationValue.value);
+        const amperagecalibration = Number.parseFloat(String(amperagecalibrationValue.value));
         const amperageoffset = currentConfigs[ampsource - 1].offset / 1000;
 
         if (amperagecalibration === 0) {
@@ -553,11 +571,8 @@ export function usePower() {
         await saveToEeprom();
 
         // Only after a successful persist: record analytics and refresh the dirty baseline.
-        getTracking().sendSaveAndChangeEvents(
-            getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-            analyticsChanges,
-            "power",
-        );
+        const tracking = getTracking();
+        tracking?.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, analyticsChanges, "power");
         for (const key in analyticsChanges) {
             delete analyticsChanges[key];
         }

@@ -298,7 +298,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import { i18n } from "../../js/localization";
@@ -329,7 +329,16 @@ const { t } = useTranslation();
 
 const yaw_fix = ref(0);
 
-let modelInstance = null;
+let modelInstance: InstanceType<typeof Model> | null = null;
+// Set by initializeInstruments(), called from the fast data poll.
+let updateInstruments: (() => void) | null = null;
+
+interface BuildInfoButton {
+    type: string;
+    href: string;
+    title: string;
+    label: string;
+}
 // Local reactive state to replace jQuery DOM updates
 const state = reactive({
     batVoltage: "0 V",
@@ -352,16 +361,17 @@ const state = reactive({
     buildDate: "",
     buildType: "",
 
-    attitude: { roll: 0, pitch: 0, heading: 0 },
+    // Numeric until the first read, then the formatted label text.
+    attitude: { roll: 0, pitch: 0, heading: 0 } as Record<"roll" | "pitch" | "heading", number | string>,
     showSonarBox: true,
     buildInfoHtml: "",
-    buildInfoButtons: [],
+    buildInfoButtons: [] as BuildInfoButton[],
     buildOptionsValid: false,
     buildKeyValid: false,
     buildRoot: "",
-    buildOptionsArray: [],
+    buildOptionsArray: [] as string[],
     buildInfoDialogTitle: "",
-    sortedBuildOptions: [],
+    sortedBuildOptions: [] as string[],
 });
 
 const fcStore = useFlightControllerStore();
@@ -417,7 +427,7 @@ const prepareDisarmFlags = function () {
 
         // 1. Determine the raw name and whether it is a fallback numeric ID
         // We prioritize the "ARM_SWITCH" for the last bit, then known elements, then numeric fallback.
-        let rawName;
+        let rawName: string;
         let isFallback = false;
 
         if (isLastBit) {
@@ -430,7 +440,7 @@ const prepareDisarmFlags = function () {
         }
 
         // 2. Handle display name overrides (e.g., RX_FAILSAFE -> RXLOSS)
-        const nameMap = { RX_FAILSAFE: "RXLOSS", NOT_DISARMED: "BAD_RX_RECOVERY" };
+        const nameMap: Record<string, string | undefined> = { RX_FAILSAFE: "RXLOSS", NOT_DISARMED: "BAD_RX_RECOVERY" };
         const displayName = nameMap[rawName] || rawName;
 
         // 3. Construct tooltip, if it's a fallback, we use the base key; otherwise, we append the rawName.
@@ -475,7 +485,7 @@ if (fcStore.config.armingDisableCount > 0) {
 
 const { addInterval, removeAllIntervals } = useInterval();
 
-const updateExpertMode = (enabled) => {
+const updateExpertMode = (enabled: boolean) => {
     isExpert.value = enabled;
 };
 
@@ -522,7 +532,7 @@ function closeBuildInfo() {
 
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
-let boundModelResize = null;
+let boundModelResize: (() => void) | null = null;
 
 async function initialize() {
     cleanup();
@@ -667,7 +677,7 @@ function process_html() {
         }
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            state.mcu = fcStore.mcuInfo.name;
+            state.mcu = String(fcStore.mcuInfo.name);
         } else {
             state.mcu = "";
         }
@@ -679,7 +689,7 @@ function process_html() {
             const pidHz = Math.round(1000000 / cycleTime);
             const pidProcess = fcStore.pidAdvancedConfig?.pid_process_denom || 1;
             const gyroHz = pidHz * pidProcess;
-            const fmt = (hz) => (hz >= 1000 ? `${(hz / 1000).toFixed(1)}k` : `${hz}`);
+            const fmt = (hz: number) => (hz >= 1000 ? `${(hz / 1000).toFixed(1)}k` : `${hz}`);
             state.loopTime = `${fmt(gyroHz)} / ${fmt(pidHz)}`;
         } else {
             state.loopTime = "";
@@ -700,7 +710,7 @@ function process_html() {
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
             if (mountedFlag) {
-                const formatAttitude = (val) => {
+                const formatAttitude = (val: number) => {
                     const fixed = val.toFixed(1);
                     return Number.parseFloat(fixed) >= 0 ? ` ${fixed}` : fixed;
                 };
@@ -715,8 +725,7 @@ function process_html() {
                 });
 
                 renderModel();
-                // updateInstruments is defined in initializeInstruments
-                globalThis.updateInstruments();
+                updateInstruments?.();
             }
         });
 
@@ -741,8 +750,7 @@ function initializeInstruments() {
     const attitude = flightIndicator("#attitude", "attitude", options);
     const heading = flightIndicator("#heading", "heading", options);
 
-    // expose update function similar to legacy behavior
-    globalThis.updateInstruments = function () {
+    updateInstruments = function () {
         attitude.setRoll(fcStore.sensorData.kinematics[0]);
         attitude.setPitch(fcStore.sensorData.kinematics[1]);
         heading.setHeading(fcStore.sensorData.kinematics[2]);
@@ -772,7 +780,7 @@ function renderModel() {
     modelInstance.rotateTo(x, y, z);
 }
 
-function cleanup(callback) {
+function cleanup(callback?: () => void) {
     if (modelInstance) {
         if (boundModelResize) {
             window.removeEventListener("resize", boundModelResize);

@@ -183,18 +183,24 @@ interface UserProfile {
     avatar?: string;
 }
 
+/** The client a token or passkey was issued to; the tab shows its address. */
+interface UserClient {
+    address?: string;
+}
+
 interface UserToken {
     id: string | number;
     created?: string;
     expiry?: string;
     details?: string;
+    client?: UserClient;
 }
 
 interface UserPasskey {
     id: string | number;
     createdAtUtc?: string;
     updatedAtUtc?: string;
-    details?: string;
+    client?: UserClient;
 }
 
 const { t } = useTranslation();
