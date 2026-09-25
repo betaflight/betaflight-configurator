@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope } from "vue";
-import { useTransientLabel } from "../../src/composables/useTransientLabel";
+import { effectScope, type ComputedRef, type EffectScope } from "vue";
+import { useTransientLabel, type TransientLabel } from "../../src/composables/useTransientLabel";
 
 describe("useTransientLabel", () => {
-    let scope;
-    let label;
-    let flash;
+    let scope: EffectScope;
+    let label: ComputedRef<string>;
+    let flash: TransientLabel["flash"];
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -60,7 +60,7 @@ describe("useTransientLabel", () => {
     });
 
     it("accepts a getter as the base label", () => {
-        let dynamicLabel;
+        let dynamicLabel!: ComputedRef<string>;
         const getterScope = effectScope();
         getterScope.run(() => {
             let current = "First";
