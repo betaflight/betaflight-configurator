@@ -49,7 +49,7 @@ interface PidRow {
     d?: string | number;
     dMax?: string | number;
     f?: string | number;
-    s?: string | number | undefined;
+    s?: string | number;
     missing?: boolean;
 }
 
