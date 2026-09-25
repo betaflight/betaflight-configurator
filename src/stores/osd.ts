@@ -43,13 +43,36 @@ export interface OsdAlarm {
     max?: number;
 }
 
-// Each item type lists the fields this store reads; osd.js attaches more (name, text, preview, ...).
-export interface OsdStatItem {
+/** i18n parameters for an item's `text`; osd.js uses `{ 1: n }` to number unknown items. */
+export type OsdTextParams = Record<number, string | number>;
+
+/** The name / label / description triple osd.js gives every item, from its constants tables. */
+interface OsdLabelled {
+    name: string;
+    /** i18n key */
+    text: string;
+    textParams?: OsdTextParams;
+    /** i18n key */
+    desc: string;
+}
+
+/** One symbol of a multi-cell preview, relative to the element's position. */
+export interface OsdPreviewSymbol {
+    x: number;
+    y: number;
+    sym: number;
+}
+
+/** A display element preview: a string, a column of strings, or placed symbols. */
+export type OsdPreview = string | string[] | OsdPreviewSymbol[];
+
+// The fields OSD.msp.decode (osd.js) builds each item with.
+export interface OsdStatItem extends OsdLabelled {
     index: number;
     enabled: boolean;
 }
 
-export interface OsdWarning {
+export interface OsdWarning extends OsdLabelled {
     index: number;
     enabled: boolean;
 }
@@ -61,11 +84,20 @@ export interface OsdTimer {
     alarm: number;
 }
 
-export interface OsdDisplayItem {
+/** Built by OSD.processOsdElements (osd.js). */
+export interface OsdDisplayItem extends OsdLabelled {
     index: number;
     position: number;
     variant: number;
     isVisible: boolean[];
+    positionable: boolean;
+    draw_order: number;
+    /** Refreshed by OSD.refreshDisplayItemPreview for fields whose preview is a function. */
+    preview: OsdPreview;
+    /** i18n keys, one per variant; absent for elements with a single form. */
+    variants?: string[];
+    /** Set for elements the firmware reports beyond the configurator's field table. */
+    ignoreSize: boolean;
 }
 
 export interface OsdParameters {
@@ -106,9 +138,8 @@ interface LegacyOsdData {
     canvas?: { cols: number; rows: number } | null;
 }
 
-// osd.js assigns OSD.data / OSD.virtualMode and FONT.data inside functions, so inference never sees them.
+// osd.js assigns OSD.data / OSD.virtualMode inside functions, so inference never sees them.
 const legacyOsd = OSD as typeof OSD & { data: LegacyOsdData; virtualMode?: VirtualOsdMode };
-const legacyFont = FONT as typeof FONT & { data?: { characters?: unknown[] } };
 
 type FlightControllerStore = ReturnType<typeof useFlightControllerStore>;
 
@@ -162,7 +193,7 @@ async function decodeOsdData(info: MspResponse | undefined) {
 }
 
 async function ensureDefaultFontLoaded() {
-    if ((legacyFont.data?.characters?.length ?? 0) > 0) {
+    if ((FONT.data?.characters?.length ?? 0) > 0) {
         return;
     }
 

@@ -1,10 +1,66 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref, computed, watch } from "vue";
-import { useOsdStore } from "@/stores/osd";
+import { useOsdStore, type OsdDisplayItem, type OsdPreview, type OsdPreviewSymbol } from "@/stores/osd";
 import { FONT } from "@/js/utils/osdFont";
+
+/** The screen size in characters, as the OSD store keeps it. */
+export interface OsdDisplaySize {
+    x: number;
+    y: number;
+    total: number;
+}
+
+export interface PreviewLimits {
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+}
+
+/** One character cell of the preview grid. */
+export interface PreviewCell {
+    /** The display item drawn in this cell, or null for background. */
+    field: OsdDisplayItem | null;
+    charCode: number;
+    /** Offset of the cell within its element's preview; null for background. */
+    x: number | null;
+    y: number | null;
+    /** Data URI of the character image. */
+    img: string;
+}
+
+/** A character taken from Array.from(string) always has a code point. */
+function codePoint(char: string): number {
+    return char.codePointAt(0) ?? 0;
+}
+
+function isStringArray(preview: OsdPreview): preview is string[] {
+    return Array.isArray(preview) && preview.length > 0 && typeof preview[0] === "string";
+}
 
 // Helper: Search limits of an element (ported from legacy OSD.searchLimitsElement)
 // Moved to outer scope to reduce complexity
-function searchLimitsElement(arrayElements) {
+function searchLimitsElement(arrayElements: OsdPreview | null | undefined): PreviewLimits {
     const limits = {
         minX: 0,
         maxX: 0,
@@ -22,7 +78,7 @@ function searchLimitsElement(arrayElements) {
         limits.minX = 0;
         limits.maxX = arrayElements.length;
     } else if (Array.isArray(arrayElements)) {
-        if (arrayElements.length > 0 && typeof arrayElements[0] === "string") {
+        if (isStringArray(arrayElements)) {
             // Handle case where it might be an array of strings (though legacy code handles string primitive separately)
             // Legacy code: if (arrayElements[0].constructor === String)
             limits.maxY = arrayElements.length;
@@ -32,14 +88,15 @@ function searchLimitsElement(arrayElements) {
                 limits.maxX = Math.max(val.length, limits.maxX);
             });
         } else {
+            const symbols = arrayElements;
             // Array of objects {x, y, sym}. Seed the limits from the first cell so
             // elements whose cells all sit on one side of the anchor (e.g.
             // ARTIFICIAL_HORIZON spans y +1..+7) report their true extents.
-            limits.minX = arrayElements[0].x;
-            limits.maxX = arrayElements[0].x;
-            limits.minY = arrayElements[0].y;
-            limits.maxY = arrayElements[0].y;
-            arrayElements.forEach(function (val) {
+            limits.minX = symbols[0].x;
+            limits.maxX = symbols[0].x;
+            limits.minY = symbols[0].y;
+            limits.maxY = symbols[0].y;
+            symbols.forEach(function (val) {
                 limits.minX = Math.min(val.x, limits.minX);
                 limits.maxX = Math.max(val.x, limits.maxX);
                 limits.minY = Math.min(val.y, limits.minY);
@@ -52,7 +109,14 @@ function searchLimitsElement(arrayElements) {
 
 // Helper: Draw to buffer with Z-order check (ported from legacy OSD.drawByOrder)
 // Moved to outer scope
-function drawByOrder(buffer, selectedPosition, field, charCode, x, y) {
+function drawByOrder(
+    buffer: PreviewCell[],
+    selectedPosition: number,
+    field: OsdDisplayItem,
+    charCode: number,
+    x: number,
+    y: number,
+): void {
     // Check if position is within bounds
     if (selectedPosition < 0 || selectedPosition >= buffer.length) {
         return;
@@ -81,9 +145,9 @@ function drawByOrder(buffer, selectedPosition, field, charCode, x, y) {
     };
 }
 
-function createEmptyPreviewBuffer(displaySize) {
-    const buffer = new Array(displaySize.total);
-    const emptyChar = " ".codePointAt(0);
+function createEmptyPreviewBuffer(displaySize: OsdDisplaySize): PreviewCell[] {
+    const buffer = new Array<PreviewCell>(displaySize.total);
+    const emptyChar = codePoint(" ");
     const emptyImg = FONT.draw(emptyChar);
 
     for (let i = 0; i < displaySize.total; i++) {
@@ -99,61 +163,81 @@ function createEmptyPreviewBuffer(displaySize) {
     return buffer;
 }
 
-function normalizeSelectedPosition(position, totalSize) {
+function normalizeSelectedPosition(position: number, totalSize: number): number {
     return ((position % totalSize) + totalSize) % totalSize;
 }
 
-function drawStringPreview(buffer, field, selectedPosition) {
-    for (const [i, char] of Array.from(field.preview).entries()) {
-        const charCode = char.codePointAt(0);
-        drawByOrder(buffer, selectedPosition, field, charCode, i, 1);
+function drawStringPreview(
+    buffer: PreviewCell[],
+    field: OsdDisplayItem,
+    preview: string,
+    selectedPosition: number,
+): number {
+    for (const [i, char] of Array.from(preview).entries()) {
+        drawByOrder(buffer, selectedPosition, field, codePoint(char), i, 1);
         selectedPosition++;
     }
     return selectedPosition;
 }
 
-function drawStringArrayPreview(buffer, field, displaySize, selectedPosition) {
-    const arrayElements = field.preview;
+function drawStringArrayPreview(
+    buffer: PreviewCell[],
+    field: OsdDisplayItem,
+    arrayElements: string[],
+    displaySize: OsdDisplaySize,
+    selectedPosition: number,
+): void {
     for (let i = 0; i < arrayElements.length; i++) {
         const element = arrayElements[i];
         for (const [j, char] of Array.from(element).entries()) {
-            const charCode = char.codePointAt(0);
-            drawByOrder(buffer, selectedPosition, field, charCode, j, i);
+            drawByOrder(buffer, selectedPosition, field, codePoint(char), j, i);
             selectedPosition++;
         }
         selectedPosition = selectedPosition - Array.from(element).length + displaySize.x;
     }
 }
 
-function drawObjectArrayPreview(buffer, field, displaySize, selectedPosition) {
-    for (const element of field.preview) {
+function drawObjectArrayPreview(
+    buffer: PreviewCell[],
+    field: OsdDisplayItem,
+    symbols: OsdPreviewSymbol[],
+    displaySize: OsdDisplaySize,
+    selectedPosition: number,
+): void {
+    for (const element of symbols) {
         const charCode = element.sym;
         const pos = selectedPosition + element.x + element.y * displaySize.x;
         drawByOrder(buffer, pos, field, charCode, element.x, element.y);
     }
 }
 
-function drawFieldPreview(buffer, field, displaySize, selectedPosition) {
-    if (typeof field.preview === "string") {
-        drawStringPreview(buffer, field, selectedPosition);
+function drawFieldPreview(
+    buffer: PreviewCell[],
+    field: OsdDisplayItem,
+    displaySize: OsdDisplaySize,
+    selectedPosition: number,
+): void {
+    const preview = field.preview;
+    if (typeof preview === "string") {
+        drawStringPreview(buffer, field, preview, selectedPosition);
         return;
     }
 
-    if (!Array.isArray(field.preview)) {
+    if (!Array.isArray(preview)) {
         return;
     }
 
-    if (field.preview.length > 0 && typeof field.preview[0] === "string") {
-        drawStringArrayPreview(buffer, field, displaySize, selectedPosition);
+    if (isStringArray(preview)) {
+        drawStringArrayPreview(buffer, field, preview, displaySize, selectedPosition);
         return;
     }
 
-    drawObjectArrayPreview(buffer, field, displaySize, selectedPosition);
+    drawObjectArrayPreview(buffer, field, preview, displaySize, selectedPosition);
 }
 
 export function useOsdPreview() {
     const store = useOsdStore();
-    const previewBuffer = ref([]);
+    const previewBuffer = ref<PreviewCell[]>([]);
 
     // Main function to compute the preview buffer
     function updatePreviewBuffer() {
@@ -180,7 +264,7 @@ export function useOsdPreview() {
 
     // Computed property to return buffer as rows for easier rendering
     const previewRows = computed(() => {
-        const rows = [];
+        const rows: PreviewCell[][] = [];
         const width = store.displaySize.x;
         if (!width || previewBuffer.value.length === 0) {
             return rows;
@@ -224,23 +308,26 @@ export function useOsdPreview() {
 
 /**
  * Check if the element preview is an array of strings.
- * @param {any} preview - The preview property of the element.
- * @returns {boolean} True if the preview is an array of strings.
  */
-export function isStringArrayPreview(preview) {
+export function isStringArrayPreview(preview: unknown): preview is string[] {
     return Array.isArray(preview) && typeof preview[0] === "string";
 }
 
 /**
  * Clamp the position of a string OSD element (1D string) to screen bounds.
- * @param {object} displayItem - The display item.
- * @param {number} position - The proposed grid index.
- * @param {object} displaySize - The screen size {x, y, total}.
- * @param {number} cursorY - The row the user cursor is pointing to.
- * @returns {number} The clamped position grid index.
+ * @param position - The proposed grid index.
+ * @param cursorY - The row the user cursor is pointing to.
+ * @returns The clamped position grid index.
  */
-export function clampStringPreviewPosition(displayItem, position, displaySize, cursorY) {
-    const elementWidth = Array.from(displayItem.preview || "").length;
+export function clampStringPreviewPosition(
+    displayItem: Pick<OsdDisplayItem, "preview">,
+    position: number,
+    displaySize: OsdDisplaySize,
+    cursorY: number,
+): number {
+    const preview = displayItem.preview || "";
+    // Array.from counts a string's code points; on an array it is just its length.
+    const elementWidth = typeof preview === "string" ? Array.from(preview).length : preview.length;
     const maxX = Math.max(0, displaySize.x - elementWidth);
     const maxY = Math.max(0, displaySize.y - 1);
     const row = Math.min(Math.max(cursorY, 0), maxY);
@@ -253,13 +340,16 @@ export function clampStringPreviewPosition(displayItem, position, displaySize, c
 
 /**
  * Clamp the position of a string-array OSD element to screen bounds.
- * @param {number} position - The proposed grid index.
- * @param {object} displaySize - The screen size {x, y, total}.
- * @param {number} cursorX - The column the user cursor is pointing to.
- * @param {object} limits - The layout limits {minX, maxX, minY, maxY}.
- * @returns {number|null} The clamped position grid index or null if invalid.
+ * @param position - The proposed grid index.
+ * @param cursorX - The column the user cursor is pointing to.
+ * @returns The clamped position grid index or null if invalid.
  */
-export function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
+export function clampStringArrayPreviewPosition(
+    position: number,
+    displaySize: OsdDisplaySize,
+    cursorX: number,
+    limits: PreviewLimits,
+): number | null {
     const selectedPositionX = position % displaySize.x;
     let selectedPositionY = Math.trunc(position / displaySize.x);
 
@@ -283,12 +373,14 @@ export function clampStringArrayPreviewPosition(position, displaySize, cursorX, 
 
 /**
  * Clamp the position of an object-array OSD element to screen bounds.
- * @param {number} position - The proposed grid index.
- * @param {object} displaySize - The screen size {x, y, total}.
- * @param {object} limits - The layout limits {minX, maxX, minY, maxY}.
- * @returns {number} The clamped position grid index.
+ * @param position - The proposed grid index.
+ * @returns The clamped position grid index.
  */
-export function clampObjectArrayPreviewPosition(position, displaySize, limits) {
+export function clampObjectArrayPreviewPosition(
+    position: number,
+    displaySize: OsdDisplaySize,
+    limits: PreviewLimits,
+): number {
     const selectedPositionX = ((position % displaySize.x) + displaySize.x) % displaySize.x;
     const selectedPositionY = Math.floor(position / displaySize.x);
 
@@ -316,13 +408,16 @@ export function clampObjectArrayPreviewPosition(position, displaySize, limits) {
 
 /**
  * Clamp the position of any array OSD element (object array or string array) to screen bounds.
- * @param {object} displayItem - The display item.
- * @param {number} position - The proposed grid index.
- * @param {object} displaySize - The screen size {x, y, total}.
- * @param {number} cursorX - The column the user cursor is pointing to.
- * @returns {number|null} The clamped position grid index or null if invalid.
+ * @param position - The proposed grid index.
+ * @param cursorX - The column the user cursor is pointing to.
+ * @returns The clamped position grid index or null if invalid.
  */
-export function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
+export function clampArrayPreviewPosition(
+    displayItem: Pick<OsdDisplayItem, "preview">,
+    position: number,
+    displaySize: OsdDisplaySize,
+    cursorX: number,
+): number | null {
     const limits = searchLimitsElement(displayItem.preview);
     if (isStringArrayPreview(displayItem.preview)) {
         return clampStringArrayPreviewPosition(position, displaySize, cursorX, limits);

@@ -6,7 +6,7 @@ import {
     clampStringPreviewPosition,
     clampStringArrayPreviewPosition,
     clampArrayPreviewPosition,
-} from "../../src/composables/useOsdPreview.js";
+} from "../../src/composables/useOsdPreview";
 
 // Preview shaped like ARTIFICIAL_HORIZON (see src/components/tabs/osd/osd.js):
 // cells span x -4..+4 and y +1..+7, so every rendered cell sits below the

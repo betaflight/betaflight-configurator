@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Preset position configurations for OSD elements.
  * 15 positions arranged in a 3x5 grid (columns x rows).
@@ -8,7 +29,30 @@
  *  - grow: {x, y} direction to search for free space if target is occupied
  *  - gridPos: [col, row] position in the 3x5 selector grid
  */
-export const positionConfigs = {
+
+import type { OsdDisplaySize } from "@/composables/useOsdPreview";
+
+interface GridPoint {
+    x: number;
+    y: number;
+}
+
+export interface PositionConfig {
+    label: string;
+    coords(w: number, h: number, ds: OsdDisplaySize): GridPoint;
+    grow: GridPoint;
+    gridPos: [col: number, row: number];
+}
+
+export interface PresetGridCell {
+    col: number;
+    row: number;
+    /** Key into positionConfigs; null for an empty grid slot. */
+    key: string | null;
+    label: string;
+}
+
+export const positionConfigs: Record<string, PositionConfig | undefined> = {
     TL: {
         label: "Top Left",
         coords: (_w, _h, _ds) => ({ x: 1, y: 1 }),
@@ -147,18 +191,18 @@ export const positionConfigs = {
  * Build a flat list of grid cells for use in a 3×5 selector.
  * Returns array of { col, row, key, label } sorted by row then col.
  */
-export function getPresetGridCells() {
-    const cells = [];
+export function getPresetGridCells(): PresetGridCell[] {
+    const cells: PresetGridCell[] = [];
     for (let row = 0; row < 5; row++) {
         for (let col = 0; col < 3; col++) {
             const entry = Object.entries(positionConfigs).find(
-                ([, cfg]) => cfg.gridPos[0] === col && cfg.gridPos[1] === row,
+                ([, cfg]) => cfg?.gridPos[0] === col && cfg.gridPos[1] === row,
             );
             cells.push({
                 col,
                 row,
                 key: entry ? entry[0] : null,
-                label: entry ? entry[1].label : "",
+                label: entry?.[1]?.label ?? "",
             });
         }
     }
