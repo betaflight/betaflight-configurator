@@ -312,7 +312,7 @@ function copyToClipboard() {
             "PID Settings",
             allPids.value.map((r) => {
                 const dMax = showDMax.value ? ` DMax=${r.dMax}` : "";
-                const sTerm = r.s !== undefined ? `S=${r.s}` : "";
+                const sTerm = r.s !== undefined ? ` S=${r.s}` : "";
                 return { name: r.label, value: `P=${r.p} I=${r.i} D=${r.d}${dMax} FF=${r.f}${sTerm}` };
             }),
         ),
