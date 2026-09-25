@@ -39,10 +39,11 @@ export const mixerList = [
 /**
  * GLTF stem for the attitude/preview mesh.
  *
- * Built-in mixers map 1:1. Entries that still use `model: "custom"` (Custom /
- * Custom Airplane / Custom Tricopter, plus uncommon layouts) have no dedicated
- * mesh — pick a real craft by mixer kind and FC motor count so Setup does not
- * show the flat fallback block for a normal 4-motor custom (e.g. deadcat) mmix.
+ * Built-in mixers map 1:1. Custom Airplane / Custom Tricopter get their craft
+ * meshes explicitly. Only the generic Custom entry (pos 22) may infer a mesh
+ * from FC motor count — other `model: "custom"` layouts (Flying Wing, Hex H,
+ * octo variants, …) keep the fallback block so a coincidental motor count does
+ * not pick the wrong craft.
  *
  * @param {number} [mixerIndex] - FC.MIXER_CONFIG.mixer (1-based); defaults to live FC
  * @param {number} [motorCount] - FC.MOTOR_CONFIG.motor_count; defaults to live FC
@@ -67,6 +68,11 @@ export function resolveMixerModelFile(mixerIndex, motorCount) {
     }
     if (entry.pos === 23) {
         return "airplane";
+    }
+
+    // Motor-count inference is only for generic Custom (e.g. deadcat mmix).
+    if (entry.pos !== 22) {
+        return "fallback";
     }
 
     switch (motors) {
