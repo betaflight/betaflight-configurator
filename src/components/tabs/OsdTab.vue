@@ -1526,6 +1526,9 @@ const fontCharacterUrls = computed(() => {
 const fontDataVersion = ref(0);
 let lastFontPresetRequestId = 0;
 
+// Track when the most recently requested preset has finished loading (or failed).
+let fontPresetLoad = Promise.resolve();
+
 // FONT.data is not reactive; re-evaluate whenever a font is (re)loaded.
 const isSmallFontLoaded = computed(() => fontDataVersion.value >= 0 && FONT.isSmallFont());
 
@@ -1606,7 +1609,7 @@ function loadFontPreset(index) {
 
     const requestId = ++lastFontPresetRequestId;
 
-    fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
+    fontPresetLoad = fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
         .then((res) => res.text())
         .then((data) => {
             if (requestId !== lastFontPresetRequestId) {
@@ -1669,13 +1672,15 @@ async function flashFont() {
 
     GUI.connect_lock = true;
 
-    // Warn before uploading a built-in font that does not match the OSD's font mode.
+    // Wait for any background load (avoid uploading a partially replaced font).
+    // Give up if the selected preset is still not the loaded font.
+    await fontPresetLoad;
     const presetFont = fontTypes.value[selectedFontPreset.value];
-    if (presetFont && !isFontUsable(presetFont)) {
-        if (!confirmFontUpload()) {
-            GUI.connect_lock = false;
-            return;
-        }
+    if (presetFont && FONT.data.loaded_font_file !== presetFont.file) {
+        console.error(`Font preset ${presetFont.file} is not loaded, cannot upload`);
+        uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
+        GUI.connect_lock = false;
+        return;
     }
 
     // If "User supplied font" is selected but no custom font file has been loaded yet,
@@ -1696,7 +1701,8 @@ async function flashFont() {
         }
     }
 
-    if (selectedFontPreset.value === -1 && FONT.isSmallFont() !== isFbOsdSmallFont.value) {
+    // Warn before uploading a font (built-in or user supplied) that does not match the OSD's font mode.
+    if (FONT.isSmallFont() !== isFbOsdSmallFont.value) {
         if (!confirmFontUpload()) {
             GUI.connect_lock = false;
             return;

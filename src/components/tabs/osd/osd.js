@@ -22,6 +22,19 @@ OSD.getNumberOfProfiles = function () {
     return OSD.data.osd_profiles.number;
 };
 
+// Built-in grid size per video system. The canvas reported by the firmware overrides these for the
+// duration of a connection, see OSD.applyCanvas.
+const VIDEO_DEFAULTS = {
+    COLS: { PAL: 30, NTSC: 30, HD: 53 },
+    ROWS: { PAL: 16, NTSC: 13, HD: 20 },
+};
+
+// Restore the built-in grid sizes, so nothing reported by a previous connection carries over.
+OSD.resetVideoTables = function (d) {
+    d.VIDEO_COLS = { ...VIDEO_DEFAULTS.COLS };
+    d.VIDEO_ROWS = { ...VIDEO_DEFAULTS.ROWS };
+};
+
 // parsed fc output and output to fc, used by to OSD.msp.encode
 OSD.initData = function () {
     OSD.data = {
@@ -34,22 +47,8 @@ OSD.initData = function () {
         timers: [],
         osd_profiles: {},
         canvas: null, // { cols, rows } as reported by MSP_OSD_CANVAS, if any
-        VIDEO_COLS: {
-            PAL: 30,
-            NTSC: 30,
-            HD: 53,
-        },
-        VIDEO_ROWS: {
-            PAL: 16,
-            NTSC: 13,
-            HD: 20,
-        },
-        VIDEO_BUFFER_CHARS: {
-            PAL: 480,
-            NTSC: 390,
-            HD: 1590,
-        },
     };
+    OSD.resetVideoTables(OSD.data);
 };
 OSD.initData();
 
@@ -1773,6 +1772,7 @@ OSD.chooseFields = function () {
 // Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.
 OSD.applyCanvas = function (d) {
     d.state.requiresFbSmallFont = false;
+    OSD.resetVideoTables(d);
     const canvas = d.canvas;
     if (!canvas) {
         return;
@@ -1793,7 +1793,6 @@ OSD.applyCanvas = function (d) {
 
     d.VIDEO_COLS[videoType] = canvas.cols;
     d.VIDEO_ROWS[videoType] = canvas.rows;
-    d.VIDEO_BUFFER_CHARS[videoType] = canvas.cols * canvas.rows;
 };
 
 OSD.updateDisplaySize = function () {
@@ -2084,6 +2083,7 @@ OSD.msp = {
     decodeVirtual() {
         const d = OSD.data;
 
+        OSD.resetVideoTables(d);
         d.displayItems = [];
         d.statItems = [];
         d.warnings = [];
