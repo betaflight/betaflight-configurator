@@ -244,7 +244,11 @@
 
                         <!-- Video Format (MAX7456 only) -->
                         <UiBox
-                            v-if="osdStore.state.haveMax7456Configured || osdStore.state.haveFbOsdConfigured || osdStore.state.isMspDevice"
+                            v-if="
+                                osdStore.state.haveMax7456Configured ||
+                                osdStore.state.haveFbOsdConfigured ||
+                                osdStore.state.isMspDevice
+                            "
                             :title="$t('osdSetupVideoFormatTitle')"
                             type="neutral"
                             collapsible
@@ -680,7 +684,7 @@ import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
-import { tracking } from "@/js/Analytics";
+import { getTracking } from "@/js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_48 } from "@/js/data_storage";
 
@@ -1492,7 +1496,7 @@ const saveConfig = () =>
         // Track analytics
         const changes = analyticsChanges.value;
         if (Object.keys(changes).length > 0) {
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+            getTracking().sendSaveAndChangeEvents(getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
             analyticsChanges.value = {};
         }
 

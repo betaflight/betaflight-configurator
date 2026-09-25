@@ -132,7 +132,7 @@ import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/u
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
 import BuildApi from "../../js/BuildApi";
-import { tracking } from "../../js/Analytics";
+import { getTracking } from "../../js/Analytics";
 import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
@@ -388,7 +388,7 @@ export default defineComponent({
             enableFlashButton(true);
             activeFlasherStep.value = "flash";
 
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
+            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
                 firmwareSize: bytes,
                 firmwareName: filename,
                 firmwareSource: state.localFirmwareLoaded ? "file" : "http",

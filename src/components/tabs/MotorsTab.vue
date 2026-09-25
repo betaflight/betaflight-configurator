@@ -575,7 +575,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { tracking } from "@/js/Analytics";
+import { getTracking } from "@/js/Analytics";
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
@@ -1520,8 +1520,8 @@ const handleSave = (reboot = true) => {
         // and refresh the dirty baseline.
         syncAppliedMotorStopState();
         if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-            tracking.sendSaveAndChangeEvents(
-                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+            getTracking().sendSaveAndChangeEvents(
+                getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER,
                 motorsState.analyticsChanges.value,
                 "motors",
             );

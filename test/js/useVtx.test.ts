@@ -33,7 +33,7 @@ const { trackingMock } = vi.hoisted(() => ({
 }));
 vi.mock("../../src/js/Analytics", () => ({
     __esModule: true,
-    tracking: trackingMock,
+    getTracking: () => trackingMock,
 }));
 
 // Persist is EEPROM-only; stub useReboot so the save path doesn't need Pinia/serial. The spy

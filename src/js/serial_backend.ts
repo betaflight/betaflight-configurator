@@ -39,7 +39,7 @@ import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { parseConnectDeeplink } from "./utils/connectDeeplink";
-import * as Analytics from "./Analytics";
+import { getTracking } from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
@@ -266,8 +266,8 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
-    // Read through the namespace to keep the live binding; it is set up before any connection.
-    const tracking = Analytics.tracking;
+    // It is set up before any connection.
+    const tracking = getTracking();
     tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,

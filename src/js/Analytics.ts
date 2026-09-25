@@ -43,7 +43,11 @@ declare global {
 
 // null until checkSetupAnalytics() has run, which main.js does at startup.
 let tracking: Analytics | null = null;
-export { tracking };
+
+/** The tracker, or null before checkSetupAnalytics() has run. Read it at the call site, not at import. */
+export function getTracking(): Analytics | null {
+    return tracking;
+}
 
 export function createAnalytics(settings: AnalyticsSettings) {
     tracking = new Analytics(settings);

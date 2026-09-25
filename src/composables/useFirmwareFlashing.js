@@ -3,7 +3,7 @@ import { get as getConfig } from "../js/ConfigStorage";
 import { useDialog } from "./useDialog";
 import GUI from "../js/gui";
 import ConfigInserter from "../js/ConfigInserter";
-import { tracking } from "../js/Analytics";
+import { getTracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
 import STM32 from "../js/protocols/webstm32";
 import ESP32 from "../js/protocols/esp32";
@@ -295,7 +295,7 @@ export function useFirmwareFlashing(params = {}) {
         console.log(`${logHead} Selected port:`, port);
 
         if (isDFU) {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
+            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                 filename: filename || null,
             });
             DeviceHandler.dfuProtocol.connect(port, firmware, flashing_options);
@@ -311,7 +311,7 @@ export function useFirmwareFlashing(params = {}) {
                 baud = Number.parseInt(flashManualBaudRate) || 115200;
             }
 
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", {
+            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "Flashing", {
                 filename: filename || null,
             });
 
@@ -343,7 +343,7 @@ export function useFirmwareFlashing(params = {}) {
             return false;
         }
 
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
+        getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
             filename: filename || null,
         });
 
@@ -470,7 +470,7 @@ export function useFirmwareFlashing(params = {}) {
 
         // UF2 save-only flow
         if (firmwareType === "UF2") {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
+            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
                 filename: filename || null,
             });
 

@@ -22,7 +22,7 @@
 import { reactive, ref, computed, toRaw } from "vue";
 import djv from "djv";
 import { i18n } from "../js/localization";
-import * as analytics from "../js/Analytics";
+import { getTracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
 import FC from "../js/fc";
 import MSP, { type MspPayload } from "../js/msp";
@@ -454,7 +454,7 @@ export function useVtx() {
         await saveToEeprom();
 
         // Only after a successful persist: record analytics and clear the verify-table warning.
-        const tracking = analytics.tracking;
+        const tracking = getTracking();
         tracking?.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, toRaw(analyticsChanges), "vtx");
         savePending.value = false;
     }
