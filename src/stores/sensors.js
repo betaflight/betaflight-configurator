@@ -36,7 +36,8 @@ export const useSensorsStore = defineStore("sensors", () => {
     const debugColumns = ref(4);
 
     function loadFromConfig() {
-        const config = getConfig("sensors_tab");
+        // ConfigStorage wraps each value under its own key: { sensors_tab: { ... } }.
+        const config = getConfig("sensors_tab").sensors_tab;
         if (config) {
             if (config.checkboxes) {
                 // Saved checkbox array migration from previous version
@@ -72,13 +73,15 @@ export const useSensorsStore = defineStore("sensors", () => {
     }
 
     function saveToConfig() {
-        setConfig("sensors_tab", {
-            checkboxes: checkboxes.value,
-            globalRate: globalRate.value,
-            rates,
-            scales,
-            debugScales: debugScales.value,
-            debugColumns: debugColumns.value,
+        setConfig({
+            sensors_tab: {
+                checkboxes: checkboxes.value,
+                globalRate: globalRate.value,
+                rates,
+                scales,
+                debugScales: debugScales.value,
+                debugColumns: debugColumns.value,
+            },
         });
     }
 
