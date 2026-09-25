@@ -1256,6 +1256,7 @@ async function loadConfig() {
             await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
             await MSP.promise(MSPCodes.MSP_RX_CONFIG);
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
             await loadRxPort();
             await loadRcdevicePort();
             for (const port of telemetryPorts) {
