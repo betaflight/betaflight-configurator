@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive } from "vue";
 import { get as getConfig } from "../js/ConfigStorage";
 import { useDialog } from "./useDialog";
@@ -9,28 +30,110 @@ import STM32 from "../js/protocols/webstm32";
 import ESP32 from "../js/protocols/esp32";
 import DeviceHandler from "../js/device_handler";
 import { getConnectionState } from "../js/connection_state";
+import type { ParsedHex } from "../js/workers/hex_parser";
+import type { STM32FlashOptions } from "../js/protocols/webstm32";
+
+type Translate = (key: string, params?: Record<string, unknown>) => string;
+type FlashingMessage = (message: string | null, type: string) => unknown;
+type FlashProgress = (value: number) => unknown;
+
+export type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
+export type FlashMessageTypes = Record<FlashMessageType, string>;
+export type FirmwareType = "HEX" | "UF2" | "BIN";
+
+/** Raw firmware as it arrives: text for a local .hex, bytes or a Blob otherwise. */
+export type FirmwareData = string | ArrayBuffer | Uint8Array | Blob;
+
+export type ShowDialogVerifyBoard = NonNullable<STM32FlashOptions["showDialogVerifyBoard"]>;
+
+export interface FirmwareFlashingParams {
+    flashingMessage: FlashingMessage;
+    flashProgress: FlashProgress;
+    FLASH_MESSAGE_TYPES: FlashMessageTypes;
+    $t: Translate;
+    logHead?: string;
+}
+
+export interface ProcessFirmwareOptions {
+    enableFlashButton?: (enabled: boolean) => void;
+    enableLoadRemoteFileButton?: (enabled: boolean) => void;
+    showLoadedFirmware?: (filename: string, bytes: number) => void;
+    key: string;
+    isLocalFile?: boolean;
+}
+
+export type ProcessFirmwareResult =
+    | { intelHex: string; parsedHex: ParsedHex; firmwareType: "HEX" }
+    | { uf2Binary: Uint8Array; firmwareType: "UF2" }
+    | { espBinary: Uint8Array; firmwareType: "BIN" };
+
+interface HexFlashSettings {
+    eraseChip?: boolean;
+    noRebootSequence?: boolean;
+    flashManualBaud?: boolean;
+    flashManualBaudRate?: number;
+    filename?: string | null;
+    resetFlashingState?: () => void;
+    selectedBoard?: string;
+    localFirmwareLoaded?: boolean;
+    showDialogVerifyBoard?: ShowDialogVerifyBoard;
+}
+
+export interface StartFlashingOptions extends HexFlashSettings {
+    /** The board config text, or `{}` when none is loaded (FlasherState.config). */
+    config?: string | Record<string, never>;
+    clearBoardConfig?: () => void;
+    setFlashOnConnect?: (value: boolean) => void;
+}
+
+export interface FlashWorkflowOptions {
+    connectLock?: boolean;
+    firmwareType?: FirmwareType;
+    filename?: string | null;
+    flashOnConnect?: boolean;
+    portAvailable?: boolean;
+    dfuAvailable?: boolean;
+    preservePreFlashingState?: () => void;
+    pauseSponsorInterval?: () => void;
+    resumeSponsorInterval?: () => void;
+    enableFlashButton?: (enabled: boolean) => void;
+    enableDfuExitButton?: (enabled: boolean | undefined) => void;
+    enableLoadRemoteFileButton?: (enabled: boolean) => void;
+    enableLoadFileButton?: (enabled: boolean) => void;
+    saveFirmware?: () => Promise<boolean>;
+    startFlashing?: () => Promise<void>;
+    startBackup?: (callback: () => Promise<void>) => void;
+    initiateFlashing: () => Promise<void>;
+    progressCallback?: (progress: { stage: string; [key: string]: unknown }) => void;
+}
+
+export interface FlashingEventListenerOptions {
+    getFlashOnConnect: () => boolean;
+    onBoardChange: (board: string) => unknown;
+    clearBufferedFirmware?: () => void;
+    updateDfuExitButtonState?: () => void;
+    initiateFlashing?: () => unknown;
+    startFlashing?: () => unknown;
+}
+
+function errorMessageOf(error: unknown) {
+    return error instanceof Error ? error.message : undefined;
+}
 
 /**
  * A composable for managing firmware flashing operations.
  * Handles firmware state, parsing, and flashing workflows.
- *
- * @param {Object} params - Configuration object
- * @param {Function} params.flashingMessage - Callback to display flashing messages
- * @param {Function} params.flashProgress - Callback to update flash progress
- * @param {Object} params.FLASH_MESSAGE_TYPES - Flash message types enum
- * @param {Function} params.$t - Translation function
- * @param {string} params.logHead - Log prefix for console messages
  */
-export function useFirmwareFlashing(params = {}) {
+export function useFirmwareFlashing(params: FirmwareFlashingParams) {
     const { flashingMessage, flashProgress, FLASH_MESSAGE_TYPES, $t, logHead = "[FIRMWARE_FLASHER]" } = params;
     const dialog = useDialog();
 
     // Reactive firmware state
     const firmwareState = reactive({
-        parsedHex: null,
-        uf2Binary: null,
-        espBinary: null,
-        intelHex: null,
+        parsedHex: null as ParsedHex | null,
+        uf2Binary: null as Uint8Array | null,
+        espBinary: null as Uint8Array | null,
+        intelHex: null as string | null,
     });
 
     /**
@@ -46,14 +149,14 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Parse HEX string into structured firmware data
      */
-    const parseHex = (hexString) => {
+    const parseHex = (hexString: string) => {
         return read_hex_file(hexString);
     };
 
     /**
      * Convert data to bytes (Uint8Array)
      */
-    const convertToBytes = (data) => {
+    const convertToBytes = (data: FirmwareData) => {
         if (data instanceof Uint8Array) {
             return data;
         }
@@ -66,7 +169,10 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Convert HEX data to string format
      */
-    const convertHexDataToString = (data, options) => {
+    const convertHexDataToString = (
+        data: FirmwareData,
+        options: Pick<ProcessFirmwareOptions, "key" | "isLocalFile" | "enableLoadRemoteFileButton">,
+    ) => {
         const { key, isLocalFile, enableLoadRemoteFileButton } = options;
 
         // Handle string data directly (for local .hex files which are text)
@@ -94,7 +200,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Process HEX firmware data (from file or HTTP) and parse it
      */
-    const processHex = async (data, options) => {
+    const processHex = async (data: FirmwareData, options: ProcessFirmwareOptions) => {
         const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         console.log(`${logHead} processHex called with data type:`, typeof data);
@@ -118,7 +224,7 @@ export function useFirmwareFlashing(params = {}) {
                 firmwareState.parsedHex = parsedHexData;
                 firmwareState.intelHex = intelHex;
                 showLoadedFirmware?.(key, parsedHexData.bytes_total);
-                return { intelHex, parsedHex: parsedHexData, firmwareType: "HEX" };
+                return { intelHex, parsedHex: parsedHexData, firmwareType: "HEX" as const };
             } else {
                 flashingMessage?.($t?.("firmwareFlasherHexCorrupted"), FLASH_MESSAGE_TYPES?.INVALID);
                 enableFlashButton?.(false);
@@ -135,18 +241,18 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Process UF2 firmware binary data
      */
-    const processUf2 = async (data, options) => {
+    const processUf2 = async (data: FirmwareData, options: ProcessFirmwareOptions) => {
         const { enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
-        const toBytes = (buf) => {
+        const toBytes = (buf: string | ArrayBuffer | Uint8Array) => {
             if (buf instanceof Uint8Array) {
                 return buf;
             }
             if (buf instanceof ArrayBuffer) {
                 return new Uint8Array(buf);
             }
-            // Return as-is for any other type (shouldn't happen since Blob is handled separately)
-            return buf;
+            // A UF2 arrives as a Blob (local file) or bytes (download), never as text; treat text as unreadable.
+            return null;
         };
 
         let bytes;
@@ -169,13 +275,13 @@ export function useFirmwareFlashing(params = {}) {
 
         firmwareState.uf2Binary = bytes;
         showLoadedFirmware?.(key, bytes.byteLength);
-        return { uf2Binary: bytes, firmwareType: "UF2" };
+        return { uf2Binary: bytes, firmwareType: "UF2" as const };
     };
 
     /**
      * Process a raw ESP32 .bin firmware image (merged image flashed at offset 0x0)
      */
-    const processBin = async (data, options) => {
+    const processBin = async (data: FirmwareData, options: ProcessFirmwareOptions) => {
         const { enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         let bytes;
@@ -202,13 +308,17 @@ export function useFirmwareFlashing(params = {}) {
 
         firmwareState.espBinary = bytes;
         showLoadedFirmware?.(key, bytes.byteLength);
-        return { espBinary: bytes, firmwareType: "BIN" };
+        return { espBinary: bytes, firmwareType: "BIN" as const };
     };
 
     /**
      * Process firmware file (HEX, UF2 or ESP32 BIN) based on extension
      */
-    const processFirmware = async (data, extension, options) => {
+    const processFirmware = async (
+        data: FirmwareData | null | undefined,
+        extension: string | undefined,
+        options: ProcessFirmwareOptions,
+    ): Promise<ProcessFirmwareResult | null> => {
         const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         if (!data || !key) {
@@ -261,7 +371,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Flash HEX firmware via selected port (DFU or Serial)
      */
-    const flashHexFirmware = async (options = {}) => {
+    const flashHexFirmware = async (options: HexFlashSettings & { firmware: ParsedHex }) => {
         const {
             firmware,
             eraseChip,
@@ -275,7 +385,7 @@ export function useFirmwareFlashing(params = {}) {
             showDialogVerifyBoard,
         } = options;
 
-        const flashing_options = {
+        const flashing_options: STM32FlashOptions & Record<string, unknown> = {
             flashingMessage,
             flashProgress,
             flashMessageTypes: FLASH_MESSAGE_TYPES,
@@ -295,7 +405,8 @@ export function useFirmwareFlashing(params = {}) {
         console.log(`${logHead} Selected port:`, port);
 
         if (isDFU) {
-            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
+            const tracking = getTracking();
+            tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                 filename: filename || null,
             });
             DeviceHandler.dfuProtocol.connect(port, firmware, flashing_options);
@@ -308,10 +419,11 @@ export function useFirmwareFlashing(params = {}) {
 
             let baud = 115200;
             if (flashManualBaud) {
-                baud = Number.parseInt(flashManualBaudRate) || 115200;
+                baud = Number.parseInt(String(flashManualBaudRate)) || 115200;
             }
 
-            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "Flashing", {
+            const tracking = getTracking();
+            tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", {
                 filename: filename || null,
             });
 
@@ -334,7 +446,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Flash a raw ESP32 .bin image over the serial ROM bootloader (browser Web Serial only).
      */
-    const flashEspFirmware = async (options = {}) => {
+    const flashEspFirmware = async (options: { filename?: string | null } = {}) => {
         const { filename } = options;
 
         const image = firmwareState.espBinary;
@@ -343,7 +455,8 @@ export function useFirmwareFlashing(params = {}) {
             return false;
         }
 
-        getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
+        const tracking = getTracking();
+        tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ESP32 Flashing", {
             filename: filename || null,
         });
 
@@ -365,7 +478,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Executes the flashing sequence for HEX firmware, including optional config insertion
      */
-    const startFlashing = async (options = {}) => {
+    const startFlashing = async (options: StartFlashingOptions = {}) => {
         const {
             config,
             clearBoardConfig,
@@ -416,7 +529,7 @@ export function useFirmwareFlashing(params = {}) {
                 showDialogVerifyBoard,
             });
         } catch (e) {
-            console.log(`${logHead} Flashing failed: ${e.message}`);
+            console.log(`${logHead} Flashing failed: ${errorMessageOf(e)}`);
         }
 
         setFlashOnConnect?.(false);
@@ -425,7 +538,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Orchestrates the flash workflow triggered by the Flash Firmware button
      */
-    const runFlashWorkflow = async (options = {}) => {
+    const runFlashWorkflow = async (options: FlashWorkflowOptions) => {
         const {
             connectLock,
             firmwareType,
@@ -447,7 +560,7 @@ export function useFirmwareFlashing(params = {}) {
             progressCallback,
         } = options;
 
-        const report = (stage, extra = {}) => {
+        const report = (stage: string, extra: Record<string, unknown> = {}) => {
             if (progressCallback) {
                 progressCallback({ stage, ...extra });
             }
@@ -470,7 +583,8 @@ export function useFirmwareFlashing(params = {}) {
 
         // UF2 save-only flow
         if (firmwareType === "UF2") {
-            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
+            const tracking = getTracking();
+            tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
                 filename: filename || null,
             });
 
@@ -529,7 +643,7 @@ export function useFirmwareFlashing(params = {}) {
             return;
         }
 
-        const backupOnFlash = getConfig("backupOnFlash", 1).backupOnFlash;
+        const backupOnFlash = getConfig<number>("backupOnFlash", 1).backupOnFlash;
         report("backup-decision", { backupOnFlash });
 
         switch (backupOnFlash) {
@@ -559,7 +673,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Exit DFU mode
      */
-    const exitDfu = async (options = {}) => {
+    const exitDfu = async (options: { dfuExitButtonDisabled?: boolean; connectLock?: boolean } = {}) => {
         const { dfuExitButtonDisabled, connectLock } = options;
 
         if (!dfuExitButtonDisabled && !connectLock) {
@@ -577,7 +691,7 @@ export function useFirmwareFlashing(params = {}) {
                     console.log(`${logHead} No DFU device selected`);
                 }
             } catch (e) {
-                console.log(`${logHead} Exiting DFU failed: ${e.message}`);
+                console.log(`${logHead} Exiting DFU failed: ${errorMessageOf(e)}`);
             }
         }
     };
@@ -585,7 +699,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Setup EventBus listeners for device events
      */
-    const setupFlashingEventListeners = (options = {}) => {
+    const setupFlashingEventListeners = (options: FlashingEventListenerOptions) => {
         const {
             getFlashOnConnect,
             onBoardChange,
@@ -595,7 +709,7 @@ export function useFirmwareFlashing(params = {}) {
             startFlashing,
         } = options;
 
-        const detectedUsbDevice = (device) => {
+        const detectedUsbDevice = (device: unknown) => {
             const isFlashOnConnect = getFlashOnConnect();
 
             console.log(
@@ -634,7 +748,7 @@ export function useFirmwareFlashing(params = {}) {
             }
         };
 
-        const onDeviceRemoved = async (devicePath) => {
+        const onDeviceRemoved = async (devicePath: unknown) => {
             console.log(`${logHead} Device removed:`, devicePath);
 
             if (GUI.connect_lock || STM32.rebootMode) {
@@ -673,10 +787,18 @@ export function useFirmwareFlashing(params = {}) {
  * Clean unified config file by removing comments and handling special characters
  * This is a pure utility function that doesn't need to be part of the composable
  */
-export const cleanUnifiedConfigFile = (input, options) => {
+export const cleanUnifiedConfigFile = (
+    input: string,
+    options: {
+        flashingMessage?: FlashingMessage;
+        gui_log?: (message: string) => void;
+        t: Translate;
+        flashMessageTypes: FlashMessageTypes;
+    },
+) => {
     const { flashingMessage, gui_log, t, flashMessageTypes } = options;
 
-    let output = [];
+    const output: string[] = [];
     let inComment = false;
 
     for (let i = 0; i < input.length; i++) {
@@ -688,13 +810,15 @@ export const cleanUnifiedConfigFile = (input, options) => {
             inComment = true;
         }
 
-        if (!inComment && input.codePointAt(i) > 255) {
+        // i < input.length, so codePointAt always returns a number here.
+        const codePoint = input.codePointAt(i) ?? 0;
+        if (!inComment && codePoint > 255) {
             flashingMessage?.(t?.("firmwareFlasherConfigCorrupted"), flashMessageTypes?.INVALID);
             gui_log?.(t?.("firmwareFlasherConfigCorruptedLogMessage"));
             return null;
         }
 
-        if (input.codePointAt(i) > 255) {
+        if (codePoint > 255) {
             output.push("_");
         } else {
             output.push(input.charAt(i));

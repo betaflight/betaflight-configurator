@@ -68,7 +68,7 @@ export interface BoardSelectionBuildApi {
 
 export interface BoardSelectionParams {
     buildApi: BoardSelectionBuildApi;
-    $t: (key: string, params?: unknown) => string;
+    $t: (key: string, params?: Record<string, unknown>) => string;
     updateTargetQualification: (targetName: string | null | undefined) => void;
     getSupportUrlForTarget: (targetName: string | null | undefined) => string;
     populateReleases: (target: { target: string; releases: FirmwareRelease[] }) => Promise<void>;

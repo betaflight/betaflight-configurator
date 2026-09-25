@@ -242,7 +242,7 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { getLastBackupData } from "@/js/utils/AutoBackup";
-import type { useCloudBuild } from "@/composables/useCloudBuild.js";
+import type { useCloudBuild } from "@/composables/useCloudBuild";
 import { injectFlasherState } from "./flasherState";
 
 defineProps({

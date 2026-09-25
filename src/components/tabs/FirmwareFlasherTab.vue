@@ -119,16 +119,16 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick, provide } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
-import { useCloudBuild } from "../../composables/useCloudBuild.js";
+import { useCloudBuild } from "../../composables/useCloudBuild";
 import { useBoardSelection } from "../../composables/useBoardSelection";
-import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing.js";
+import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
 import BuildApi from "../../js/BuildApi";
@@ -137,7 +137,7 @@ import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
 import FileSystem from "../../js/FileSystem";
-import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup.js";
+import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup";
 import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
@@ -146,9 +146,28 @@ import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
-import { BOARD_SELECTION, FLASHER_STATE, createFlasherState } from "./firmware-flasher/flasherState";
+import {
+    BOARD_SELECTION,
+    FLASHER_STATE,
+    createFlasherState,
+    type ApiBuildOption,
+    type BuildOption,
+    type BuildOptionsResponse,
+    type CommitOption,
+    type TargetDetail,
+} from "./firmware-flasher/flasherState";
+import type { FirmwareRelease, FirmwareVersionOption } from "../../composables/useBoardSelection";
+import type { FirmwareData, FlashMessageTypes, ShowDialogVerifyBoard } from "../../composables/useFirmwareFlashing";
+import type { DropdownMenuItem } from "@nuxt/ui";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
+
+type Translate = (key: string, params?: Record<string, unknown>) => string;
+
+/** A picked file, as FileSystem.pickOpenFile returns it; only its name is read here. */
+interface PickedFile {
+    name: string;
+}
 
 // Module-scope ref so the active sub-tab persists across component remounts (tab switches).
 const activeFlasherStep = ref("board-build");
@@ -165,7 +184,7 @@ export default defineComponent({
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
-        const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
+        const $t = inject<Translate>("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
 
         // Reactive state, provided to the sub-tabs below
@@ -173,24 +192,24 @@ export default defineComponent({
         provide(FLASHER_STATE, state);
 
         // Sponsor component ref
-        const sponsorTile = ref(null);
+        const sponsorTile = ref<InstanceType<typeof SponsorTile> | null>(null);
 
         // Verify board dialog refs
         const verifyBoardOpen = ref(false);
         const verifyBoardContentHtml = ref("");
-        const verifyBoardOnAcceptCallback = ref(null);
-        const verifyBoardOnAbortCallback = ref(null);
+        const verifyBoardOnAcceptCallback = ref<(() => void) | null>(null);
+        const verifyBoardOnAbortCallback = ref<(() => void) | null>(null);
 
         // Unstable firmware dialog refs
         const unstableFirmwareOpen = ref(false);
-        const unstableFirmwareAcknowledgementCallback = ref(null);
+        const unstableFirmwareAcknowledgementCallback = ref<(() => void) | null>(null);
 
-        let dfuMonitorInterval = null;
+        let dfuMonitorInterval: ReturnType<typeof setInterval> | null = null;
 
         const buildApi = new BuildApi();
         const logHead = "[FIRMWARE_FLASHER]";
 
-        const FLASH_MESSAGE_TYPES = {
+        const FLASH_MESSAGE_TYPES: FlashMessageTypes = {
             NEUTRAL: "NEUTRAL",
             VALID: "VALID",
             INVALID: "INVALID",
@@ -201,7 +220,7 @@ export default defineComponent({
         };
 
         // Helper functions
-        const getExtension = (key) => {
+        const getExtension = (key: string | null | undefined) => {
             if (!key) {
                 return undefined;
             }
@@ -210,11 +229,11 @@ export default defineComponent({
         };
 
         // Flashing state control - update reactive state instead of DOM
-        const enableFlashButton = (enabled) => {
+        const enableFlashButton = (enabled: boolean) => {
             state.flashButtonDisabled = !enabled;
         };
 
-        const enableLoadRemoteFileButton = (enabled) => {
+        const enableLoadRemoteFileButton = (enabled: boolean) => {
             state.loadRemoteButtonDisabled = !enabled;
             // Resume sponsor when load buttons are re-enabled
             if (enabled) {
@@ -222,7 +241,7 @@ export default defineComponent({
             }
         };
 
-        const enableLoadFileButton = (enabled) => {
+        const enableLoadFileButton = (enabled: boolean) => {
             state.loadFileButtonDisabled = !enabled;
             // Resume sponsor when load buttons are re-enabled
             if (enabled) {
@@ -230,7 +249,7 @@ export default defineComponent({
             }
         };
 
-        const enableDfuExitButton = (enabled) => {
+        const enableDfuExitButton = (enabled: boolean | undefined) => {
             state.dfuExitButtonDisabled = !enabled;
         };
 
@@ -240,7 +259,7 @@ export default defineComponent({
             enableDfuExitButton(DeviceHandler.dfuAvailable || hasDfuPortSelected);
         };
 
-        const flashingMessage = (message, type) => {
+        const flashingMessage = (message: string | null, type: string) => {
             switch (type) {
                 case FLASH_MESSAGE_TYPES.VALID:
                     state.progressLabelClass = "valid";
@@ -283,7 +302,7 @@ export default defineComponent({
             return TABS.firmware_flasher;
         };
 
-        const flashProgress = (value) => {
+        const flashProgress = (value: number) => {
             const n = Number(value);
             if (!Number.isFinite(n)) {
                 return TABS.firmware_flasher;
@@ -340,7 +359,7 @@ export default defineComponent({
             state.configFilename = null;
         };
 
-        const setBoardConfig = (config, filename) => {
+        const setBoardConfig = (config: string[], filename?: string) => {
             state.config = config.join("\n");
             const hasFilename = filename !== undefined;
             state.isConfigLocal = hasFilename;
@@ -366,7 +385,7 @@ export default defineComponent({
             // The backup is reset when a new flash begins (handleFlashFirmware).
         };
 
-        const showLoadedFirmware = (filename, bytes) => {
+        const showLoadedFirmware = (filename: string, bytes: number) => {
             state.filename = filename;
             state.firmwareLoadedName = filename;
             state.lastFlashResultText = "";
@@ -388,7 +407,8 @@ export default defineComponent({
             enableFlashButton(true);
             activeFlasherStep.value = "flash";
 
-            getTracking().sendEvent(getTracking().EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
+            const tracking = getTracking();
+            tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
                 firmwareSize: bytes,
                 firmwareName: filename,
                 firmwareSource: state.localFirmwareLoaded ? "file" : "http",
@@ -397,7 +417,7 @@ export default defineComponent({
             });
         };
 
-        const cleanUnifiedConfigFileWrapper = (input) => {
+        const cleanUnifiedConfigFileWrapper = (input: string) => {
             return cleanUnifiedConfigFile(input, {
                 flashingMessage,
                 gui_log,
@@ -410,11 +430,11 @@ export default defineComponent({
             return cloudBuild.state.cloudBuildKey?.length === 32 && ispConnected();
         };
 
-        const findTargetDescriptor = (targetName) => {
+        const findTargetDescriptor = (targetName: string) => {
             return boardSelection.state.targets?.find((descriptor) => descriptor.target === targetName);
         };
 
-        const getSupportUrlForTarget = (targetName) => {
+        const getSupportUrlForTarget = (targetName: string | null | undefined) => {
             const baseBoardUrl = "https://betaflight.com/docs/wiki/boards/current";
             const fallbackUrl = "https://betaflight.com/docs/wiki/boards/archive/Missing";
 
@@ -425,7 +445,7 @@ export default defineComponent({
             return `${baseBoardUrl}/${encodeURIComponent(targetName)}`;
         };
 
-        const updateTargetQualification = (targetName) => {
+        const updateTargetQualification = (targetName: string | null | undefined) => {
             if (!targetName || targetName === "0") {
                 state.targetQualificationVisible = false;
                 return;
@@ -446,7 +466,7 @@ export default defineComponent({
             state.targetQualificationVisible = true;
         };
 
-        const showReleaseNotes = (summary) => {
+        const showReleaseNotes = (summary: TargetDetail | null | undefined) => {
             if (!summary) {
                 console.warn(`${logHead} showReleaseNotes called with null/undefined summary`);
                 return;
@@ -464,7 +484,8 @@ export default defineComponent({
             state.releaseNameLink = summary.releaseUrl || "#";
             state.releaseDateText = summary.date || "";
             state.targetMCUText = summary.mcu || "";
-            state.configFilenameText = state.isConfigLocal ? state.configFilename : "[default]";
+            // A null filename rendered as empty text before; `?? ""` keeps that.
+            state.configFilenameText = state.isConfigLocal ? (state.configFilename ?? "") : "[default]";
 
             state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
@@ -477,9 +498,12 @@ export default defineComponent({
             enableLoadRemoteFileButton(true);
         };
 
-        const normalizeSelectValue = (value) => (value === "" ? null : value);
+        const normalizeSelectValue = (value: string) => (value === "" ? null : value);
 
-        const buildOptionsList = (optionKey, options) => {
+        const buildOptionsList = (
+            optionKey: "radioProtocols" | "telemetryProtocols" | "osdProtocols" | "options" | "motorProtocols",
+            options: ApiBuildOption[],
+        ) => {
             // Updated for Vue-based selects - just update state
             if (optionKey === "radioProtocols") {
                 state.radioProtocolOptions = options.map((option) => ({
@@ -564,7 +588,7 @@ export default defineComponent({
         };
 
         const preselectRadioProtocolFromStorage = () => {
-            const storedRadioProtocol = getConfig("ffRadioProtocol").ffRadioProtocol;
+            const storedRadioProtocol = getConfig<string | undefined>("ffRadioProtocol").ffRadioProtocol;
             if (storedRadioProtocol) {
                 const valueExistsInSelect = state.radioProtocolOptions.some(
                     (option) => option.value === storedRadioProtocol,
@@ -575,56 +599,57 @@ export default defineComponent({
             }
         };
 
-        const buildOptions = (data) => {
+        const buildOptions = (data: BuildOptionsResponse | null | undefined) => {
             if (!data) {
                 return;
             }
 
             // extract osd protocols from general options and add to osdProtocols
-            state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            const cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            state.cloudBuildOptions = cloudBuildOptions;
 
             // Mark all options as default if they're in cloudBuildOptions
             data.radioProtocols = data.radioProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                option.default = option.default || cloudBuildOptions.includes(option.value);
                 return option;
             });
 
             data.telemetryProtocols = data.telemetryProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                option.default = option.default || cloudBuildOptions.includes(option.value);
                 return option;
             });
 
             data.motorProtocols = data.motorProtocols.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                option.default = option.default || cloudBuildOptions.includes(option.value);
                 return option;
             });
 
             data.generalOptions = data.generalOptions.map((option) => {
                 // If using autodetect (cloudBuildOptions set), only mark as default if present in cloudBuildOptions
                 option.default =
-                    state.cloudBuildOptions.length > 0
-                        ? state.cloudBuildOptions.includes(option.value)
-                        : option.default || false;
+                    cloudBuildOptions.length > 0 ? cloudBuildOptions.includes(option.value) : option.default || false;
                 return option;
             });
 
-            data.osdProtocols = data.generalOptions
+            const osdProtocols = data.generalOptions
                 .filter((option) => option.group === "OSD")
                 .map((option) => {
-                    option.name = option.groupedName;
-                    option.default = state.cloudBuildOptions?.includes(option.value);
+                    // The API sends groupedName on every OSD option; fall back to its name, not to undefined.
+                    option.name = option.groupedName ?? option.name;
+                    option.default = cloudBuildOptions.includes(option.value);
                     return option;
                 });
+            data.osdProtocols = osdProtocols;
 
             // add None option to osdProtocols as first option
-            data.osdProtocols.unshift({ name: "None", value: "" });
+            osdProtocols.unshift({ name: "None", value: "" });
 
             // remove osdProtocols from generalOptions
             data.generalOptions = data.generalOptions.filter((option) => !option.group);
 
             buildOptionsList("radioProtocols", data.radioProtocols);
             buildOptionsList("telemetryProtocols", data.telemetryProtocols);
-            buildOptionsList("osdProtocols", data.osdProtocols);
+            buildOptionsList("osdProtocols", osdProtocols);
             buildOptionsList("options", data.generalOptions);
             buildOptionsList("motorProtocols", data.motorProtocols);
 
@@ -644,7 +669,7 @@ export default defineComponent({
             }
 
             // Preselect OSD protocol with default === true
-            const defaultOsdProtocol = data.osdProtocols.find((option) => option.default === true);
+            const defaultOsdProtocol = osdProtocols.find((option) => option.default === true);
             if (defaultOsdProtocol) {
                 state.selectedOsdProtocol = normalizeSelectValue(defaultOsdProtocol.value);
             }
@@ -666,7 +691,7 @@ export default defineComponent({
         };
 
         // Build types configuration
-        const buildTypes = [
+        const buildTypes: { tag: string }[] = [
             {
                 tag: "firmwareFlasherOptionLabelBuildTypeRelease",
             },
@@ -678,24 +703,25 @@ export default defineComponent({
             },
         ];
 
-        const buildTypesToShow = reactive([]);
+        const buildTypesToShow = reactive<{ tag: string }[]>([]);
 
         const buildBuildTypeOptionsList = () => {
             // Update state with build type options
-            state.buildTypeOptions = buildTypesToShow.map(({ tag, title }, index) => ({
+            // Every build type has a tag; the old `title` fallback had no source.
+            state.buildTypeOptions = buildTypesToShow.map(({ tag }, index) => ({
                 value: index,
-                label: tag ? $t(tag) : title,
+                label: $t(tag),
             }));
         };
 
-        const sortReleases = (a, b) => {
+        const sortReleases = (a: FirmwareRelease, b: FirmwareRelease) => {
             return -semver.compareBuild(a.release, b.release);
         };
 
         // Initialize UI setup on mount
         const setupUIHandlers = async () => {
             // Setup expert mode toggle
-            const expertMode = getConfig("expertMode").expertMode;
+            const expertMode = getConfig<boolean>("expertMode").expertMode;
             state.expertMode = expertMode;
 
             // Initialize build types based on expert mode
@@ -707,31 +733,30 @@ export default defineComponent({
             buildBuildTypeOptionsList();
 
             // Setup erase chip setting
-            let result = getConfig("erase_chip");
+            let result = getConfig<boolean>("erase_chip");
             state.eraseChip = result.erase_chip;
 
             // Setup development releases
-            result = getConfig("show_development_releases");
+            result = getConfig<boolean>("show_development_releases");
             state.showDevelopmentReleases = result.show_development_releases;
             state.buildTypeRowVisible = state.showDevelopmentReleases;
 
             // Setup no reboot setting
-            result = getConfig("no_reboot_sequence");
+            result = getConfig<boolean>("no_reboot_sequence");
             state.noRebootSequence = result.no_reboot_sequence;
             state.flashOnConnectWrapperVisible = state.noRebootSequence;
 
             // Setup manual baud rate
-            result = getConfig("flash_manual_baud");
+            result = getConfig<boolean>("flash_manual_baud");
             state.flashManualBaud = result.flash_manual_baud;
 
-            result = getConfig("flash_manual_baud_rate");
-            state.flashManualBaudRate = result.flash_manual_baud_rate || 256000;
+            state.flashManualBaudRate = getConfig<number>("flash_manual_baud_rate").flash_manual_baud_rate || 256000;
 
             // Setup expert options visibility
             state.expertOptionsVisible = state.expertMode;
 
             // Restore selected build type and trigger initial load
-            const selectedBuildType = getConfig("selected_build_type").selected_build_type || 0;
+            const selectedBuildType = getConfig<number>("selected_build_type").selected_build_type || 0;
             state.selectedBuildType = selectedBuildType;
 
             flashingMessage($t("firmwareFlasherLoadFirmwareFile"), FLASH_MESSAGE_TYPES.NEUTRAL);
@@ -745,7 +770,7 @@ export default defineComponent({
             }
         };
 
-        const selectFirmware = async (release) => {
+        const selectFirmware = async (release: string | FirmwareVersionOption | undefined) => {
             // Extract release string from object if needed
             const releaseStr = typeof release === "string" ? release : release?.release;
 
@@ -753,7 +778,7 @@ export default defineComponent({
                 enableFlashButton(false);
                 clearLoadedFirmwareInfo();
                 flashingMessage($t("firmwareFlasherLoadFirmwareFile"), FLASH_MESSAGE_TYPES.NEUTRAL);
-                if (firmwareFlashing.getParsedHex() && firmwareFlashing.getParsedHex().bytes_total) {
+                if (firmwareFlashing.getParsedHex()?.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
                     firmwareFlashing.clearFirmwareState();
                 }
@@ -761,10 +786,10 @@ export default defineComponent({
 
             const target = boardSelection.state.selectedBoard;
 
-            const loadCommitsForUnstableRelease = async (detail) => {
+            const loadCommitsForUnstableRelease = async (detail: TargetDetail) => {
                 const commits = await buildApi.loadCommits(detail.release);
                 if (commits) {
-                    state.commitOptions = commits.map((commit) => ({
+                    state.commitOptions = commits.map((commit: { message: string; sha: string }) => ({
                         label: commit.message.split("\n")[0],
                         value: commit.sha,
                     }));
@@ -772,7 +797,7 @@ export default defineComponent({
                 state.commitSelectionVisible = true;
             };
 
-            const handleCloudBuildConfiguration = async (detail) => {
+            const handleCloudBuildConfiguration = async (detail: TargetDetail) => {
                 const expertMode = state.expertMode;
                 if (expertMode && detail.releaseType === "Unstable") {
                     await loadCommitsForUnstableRelease(detail);
@@ -785,7 +810,7 @@ export default defineComponent({
                 state.coreBuildMode = false;
             };
 
-            const loadTargetDetail = async (detail) => {
+            const loadTargetDetail = async (detail: TargetDetail | null | undefined) => {
                 if (!detail) {
                     enableLoadRemoteFileButton(false);
                     return;
@@ -836,7 +861,7 @@ export default defineComponent({
             }
         };
 
-        const populateReleases = async (target) => {
+        const populateReleases = async (target: { target: string; releases: FirmwareRelease[] }) => {
             const releases = target.releases;
             if (releases && releases.length > 0) {
                 const build_type = state.selectedBuildType || 0;
@@ -872,6 +897,10 @@ export default defineComponent({
         const saveFirmware = async () => {
             const fileType = state.firmware_type;
             try {
+                if (!fileType) {
+                    // Reading .toUpperCase() of undefined threw here before, into the same catch.
+                    throw new TypeError("No firmware loaded to save");
+                }
                 const file = await FileSystem.pickSaveFile(
                     state.filename,
                     $t("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
@@ -893,7 +922,7 @@ export default defineComponent({
             }
         };
 
-        let eventListenerRefs = null;
+        let eventListenerRefs: ReturnType<typeof firmwareFlashing.setupFlashingEventListeners> | null = null;
 
         const setupEventBusListeners = () => {
             const { detectedUsbDevice, onDeviceRemoved } = firmwareFlashing.setupFlashingEventListeners({
@@ -903,7 +932,6 @@ export default defineComponent({
                 updateDfuExitButtonState,
                 initiateFlashing,
                 startFlashing,
-                logHead,
             });
 
             EventBus.$on("device-handler:auto-select-usb-device", detectedUsbDevice);
@@ -984,7 +1012,7 @@ export default defineComponent({
             cloudBuild.cleanup();
         });
 
-        const cleanup = (callback) => {
+        const cleanup = (callback?: () => void) => {
             teardownEventBusListeners();
 
             if (callback) {
@@ -1044,25 +1072,20 @@ export default defineComponent({
                 filename: state.filename,
                 resetFlashingState,
                 // Board verification options
-                selectedBoard: selectedBoardTarget,
+                selectedBoard: selectedBoardTarget ?? undefined,
                 localFirmwareLoaded: state.localFirmwareLoaded,
                 showDialogVerifyBoard,
                 // UI callbacks
-                flashingMessage,
-                flashProgress,
-                t: $t,
-                flashMessageTypes: FLASH_MESSAGE_TYPES,
                 setFlashOnConnect: (value) => {
                     state.flashOnConnect = value;
                 },
-                logHead,
             });
         };
 
-        const startBackup = async (callback) => {
+        const startBackup = async (callback: () => void) => {
             GUI.connect_lock = true;
 
-            const aborted = function (message) {
+            const aborted = function (message: string) {
                 GUI.connect_lock = false;
                 state.flashingInProgress = false;
                 GUI.flashingInProgress = false;
@@ -1100,20 +1123,20 @@ export default defineComponent({
             const storageTag = "lastDevelopmentWarningTimestamp";
 
             function setAcknowledgementTimestamp() {
-                const storageObj = {};
+                const storageObj: Record<string, number> = {};
                 storageObj[storageTag] = Date.now();
                 setStorage(storageObj);
             }
 
-            const result = getStorage(storageTag);
-            if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
+            const lastWarning = getStorage<number>(storageTag)[storageTag];
+            if (!lastWarning || Date.now() - lastWarning > DAY_MS) {
                 await showAcknowledgementDialog(setAcknowledgementTimestamp);
             } else {
                 await startFlashing();
             }
         };
 
-        const showAcknowledgementDialog = async (acknowledgementCallback) => {
+        const showAcknowledgementDialog = async (acknowledgementCallback: () => void) => {
             unstableFirmwareAcknowledgementCallback.value = acknowledgementCallback;
             unstableFirmwareOpen.value = true;
         };
@@ -1162,7 +1185,7 @@ export default defineComponent({
             }
         };
 
-        const requestCloudBuild = async (targetDetail) => {
+        const requestCloudBuild = async (targetDetail: TargetDetail) => {
             const additionalParams = {
                 coreBuildMode: state.coreBuildMode,
                 selectedRadioProtocol: state.selectedRadioProtocol,
@@ -1178,12 +1201,13 @@ export default defineComponent({
 
             const response = await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
             if (response) {
-                state.targetDetail.file = response.file;
+                // The caller passes state.targetDetail itself, so this writes the same object.
+                targetDetail.file = response.file;
             }
         };
 
         const commitPendingCustomDefines = () => {
-            const input = document.querySelector("#customDefinesInfo input");
+            const input = document.querySelector<HTMLInputElement>("#customDefinesInfo input");
             const tags = input?.value?.trim().split(/\s+/).filter(Boolean) ?? [];
 
             if (tags.length > 0) {
@@ -1191,7 +1215,7 @@ export default defineComponent({
             }
         };
 
-        const processFile = async (data, key) => {
+        const processFile = async (data: FirmwareData, key: string) => {
             const ext = getExtension(key);
             const result = await firmwareFlashing.processFirmware(data, ext, {
                 enableFlashButton,
@@ -1238,7 +1262,7 @@ export default defineComponent({
             flashingMessage,
             flashProgress,
             FLASH_MESSAGE_TYPES,
-            getSelectedBuildType: () => Number.parseInt(state.selectedBuildType, 10),
+            getSelectedBuildType: () => Number.parseInt(String(state.selectedBuildType), 10),
             logHead,
         });
         provide(BOARD_SELECTION, boardSelection);
@@ -1263,7 +1287,7 @@ export default defineComponent({
             await selectFirmware(boardSelection.state.selectedFirmwareVersion);
         };
 
-        const onRadioProtocolChange = (value) => {
+        const onRadioProtocolChange = (value: string) => {
             state.selectedRadioProtocol = value;
             toggleTelemetryProtocolInfo();
             if (state.cloudBuildOptions) {
@@ -1271,34 +1295,34 @@ export default defineComponent({
             }
         };
 
-        const onTelemetryProtocolChange = (value) => {
+        const onTelemetryProtocolChange = (value: string | null) => {
             state.selectedTelemetryProtocol = value;
         };
 
-        const onOsdProtocolChange = (value) => {
+        const onOsdProtocolChange = (value: string | null) => {
             state.selectedOsdProtocol = value;
             updateOsdProtocolColor();
         };
 
-        const onMotorProtocolChange = (value) => {
+        const onMotorProtocolChange = (value: string | null) => {
             state.selectedMotorProtocol = value;
         };
 
-        const onOptionsChange = (value) => {
+        const onOptionsChange = (value: BuildOption[]) => {
             state.selectedOptions = Array.isArray(value) ? value : [];
         };
 
-        const removeSelectedBuildOption = (option) => {
+        const removeSelectedBuildOption = (option: BuildOption) => {
             const key = option?.value;
             state.selectedOptions = state.selectedOptions.filter((o) => o.value !== key);
         };
 
-        const onCommitChange = (value) => {
+        const onCommitChange = (value: CommitOption) => {
             state.selectedCommit = value;
         };
 
         /** USelectMenu @create: add PR #, commit SHA, or branch string not in the loaded list */
-        const onCommitCreate = (...args) => {
+        const onCommitCreate = (...args: unknown[]) => {
             const raw =
                 args.find((a) => typeof a === "string") ??
                 (typeof args[args.length - 1] === "string" ? args[args.length - 1] : "");
@@ -1308,7 +1332,7 @@ export default defineComponent({
             }
 
             const prMatch = formattedValue.match(/^#?(\d+)$/);
-            let newOption;
+            let newOption: CommitOption;
             if (prMatch) {
                 newOption = {
                     label: `PR #${prMatch[1]}`,
@@ -1387,7 +1411,7 @@ export default defineComponent({
         };
 
         const handleFlashManualBaudRateChange = () => {
-            const baud = Number.parseInt(state.flashManualBaudRate);
+            const baud = Number.parseInt(String(state.flashManualBaudRate));
             setConfig({ flash_manual_baud_rate: baud });
         };
 
@@ -1398,13 +1422,8 @@ export default defineComponent({
         // Click event handlers for buttons
         const handleExitDfu = async () => {
             await firmwareFlashing.exitDfu({
-                parsedHex: firmwareFlashing.getParsedHex(),
                 dfuExitButtonDisabled: state.dfuExitButtonDisabled,
                 connectLock: GUI.connect_lock,
-                flashingMessage,
-                flashProgress,
-                flashMessageTypes: FLASH_MESSAGE_TYPES,
-                logHead,
             });
         };
 
@@ -1438,14 +1457,10 @@ export default defineComponent({
                 enableDfuExitButton,
                 enableLoadRemoteFileButton,
                 enableLoadFileButton,
-                flashingMessage,
-                flashProgress,
                 saveFirmware,
                 startFlashing,
                 startBackup,
                 initiateFlashing,
-                flashMessageTypes: FLASH_MESSAGE_TYPES,
-                t: $t,
                 progressCallback: () => {
                     /* callback reserved for future use */
                 },
@@ -1498,17 +1513,13 @@ export default defineComponent({
             }
         };
 
-        const processFirmwareFile = async (file, extension, data) => {
+        const processFirmwareFile = async (file: PickedFile, extension: string, data: FirmwareData) => {
             state.localFirmwareLoaded = true;
             const result = await firmwareFlashing.processFirmware(data, extension, {
-                flashingMessage,
                 enableFlashButton,
                 enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
                 showLoadedFirmware,
-                t: $t,
-                flashMessageTypes: FLASH_MESSAGE_TYPES,
                 key: file.name,
-                logHead,
                 isLocalFile: true,
             });
             if (result) {
@@ -1517,7 +1528,7 @@ export default defineComponent({
             enableLoadFileButton(true);
         };
 
-        const processConfigFile = (file, data) => {
+        const processConfigFile = (file: PickedFile, data: string) => {
             clearBufferedFirmware();
             const config = cleanUnifiedConfigFileWrapper(data);
             if (config === null) {
@@ -1672,7 +1683,7 @@ export default defineComponent({
                     dialog.openWait($t("firmwareFlasherRestoreBackupTitle"), null);
 
                     // Execute restore
-                    AutoRestore.execute(cliLines, (result) => {
+                    AutoRestore.execute(cliLines, (result: { success: boolean; skipped?: number; errors?: string }) => {
                         dialog.close();
                         GUI.connect_lock = false;
                         state.restoreInProgress = false;
@@ -1680,7 +1691,7 @@ export default defineComponent({
                         if (result.success) {
                             // Hide the restore button — restore already applied and saved.
                             state.restoreCompleted = true;
-                            if (result.skipped > 0) {
+                            if ((result.skipped ?? 0) > 0) {
                                 gui_log($t("firmwareFlasherRestoreBackupSuccessSkipped", { count: result.skipped }));
                             } else {
                                 gui_log($t("firmwareFlasherRestoreBackupSuccess"));
@@ -1702,7 +1713,7 @@ export default defineComponent({
             );
         };
 
-        const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
+        const showDialogVerifyBoard: ShowDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
             verifyBoardContentHtml.value = $t("firmwareFlasherVerifyBoard", {
                 selected_board: selected,
                 verified_board: verified,
@@ -1733,7 +1744,7 @@ export default defineComponent({
         ]);
 
         const flashActionMenuItems = computed(() => {
-            const group = [
+            const group: DropdownMenuItem[] = [
                 {
                     label: $t("firmwareFlasherFlashFirmware"),
                     icon: "i-lucide-zap",

@@ -1,19 +1,93 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, onScopeDispose } from "vue";
+import type { TargetDetail } from "@/components/tabs/firmware-flasher/flasherState";
+import type { FlashMessageTypes } from "./useFirmwareFlashing";
+
+/** The build server's answer to a build request. */
+export interface BuildResponse {
+    key: string;
+    url: string;
+    file: string;
+}
+
+/** The build server's status for a requested build. */
+export interface BuildStatusResponse {
+    status: string;
+    timeOut?: number;
+    configuration?: string[];
+}
+
+export interface CloudBuildRequest {
+    target: string;
+    release: string;
+    /** Build option names; an option object with a null value contributes null, as it always has. */
+    options: (string | null)[];
+    commit?: string;
+}
+
+/** The part of BuildApi this composable calls. */
+export interface CloudBuildApi {
+    loadTargetFirmware(url: string): Promise<Uint8Array | null>;
+    requestBuild(request: CloudBuildRequest): Promise<BuildResponse | null>;
+    requestBuildStatus(key: string): Promise<BuildStatusResponse | null>;
+}
+
+/** A protocol selection: the option value, or (for older callers) the option itself. */
+type SelectedValue = string | { value: string | null } | null | undefined;
+
+export interface CloudBuildParams {
+    buildApi: CloudBuildApi;
+    $t: (key: string, params?: Record<string, unknown>) => string;
+    setBoardConfig: (config: string[], filename?: string) => void;
+    processFile: (data: Uint8Array, key: string) => unknown;
+    flashingMessage: (message: string | null, type: string) => unknown;
+    enableLoadRemoteFileButton: (enabled: boolean) => void;
+    FLASH_MESSAGE_TYPES: FlashMessageTypes;
+}
+
+export interface CloudBuildSelection {
+    coreBuildMode?: boolean;
+    selectedRadioProtocol?: SelectedValue;
+    selectedTelemetryProtocol?: SelectedValue;
+    selectedOptions?: SelectedValue[];
+    selectedOsdProtocol?: SelectedValue;
+    selectedMotorProtocol?: SelectedValue;
+    expertMode?: boolean;
+    selectedCommit?: string;
+    customDefinesTags?: string[];
+    isConfigLocal?: boolean;
+}
+
+/** The option value a selection names, as the build request wants it. */
+function selectionValue(selection: NonNullable<SelectedValue>) {
+    return typeof selection === "object" ? selection.value : selection;
+}
 
 /**
  * A composable for handling cloud build requests and polling.
  * Manages cloud build state, polling intervals, and status updates.
- *
- * @param {Object} params - Configuration object
- * @param {Object} params.buildApi - BuildApi instance for making API calls
- * @param {Function} params.$t - Translation function
- * @param {Function} params.setBoardConfig - Callback to set board configuration
- * @param {Function} params.processFile - Callback to process firmware file
- * @param {Function} params.flashingMessage - Callback to display flashing messages
- * @param {Function} params.enableLoadRemoteFileButton - Callback to enable/disable load remote button
- * @param {Object} params.FLASH_MESSAGE_TYPES - Flash message types enum
  */
-export function useCloudBuild(params) {
+export function useCloudBuild(params: CloudBuildParams) {
     const {
         buildApi,
         $t,
@@ -26,7 +100,7 @@ export function useCloudBuild(params) {
 
     // Reactive state for cloud build
     const state = reactive({
-        cloudBuildKey: null,
+        cloudBuildKey: null as string | null,
         cloudTargetStatusText: "pending",
         cloudTargetLogText: "",
         cloudTargetLogUrl: "",
@@ -36,12 +110,12 @@ export function useCloudBuild(params) {
     });
 
     // Polling timer reference
-    let pollingTimer = null;
+    let pollingTimer: ReturnType<typeof setInterval> | null = null;
 
     /**
      * Update cloud build status text and progress bar
      */
-    const updateCloudBuildStatus = (statusText, progressValue) => {
+    const updateCloudBuildStatus = (statusText: string, progressValue?: number) => {
         state.cloudTargetStatusText = statusText;
         if (progressValue !== undefined) {
             state.cloudBuildProgress = progressValue;
@@ -51,7 +125,7 @@ export function useCloudBuild(params) {
     /**
      * Set cloud build log link
      */
-    const setCloudBuildLogLink = (label, url) => {
+    const setCloudBuildLogLink = (label: string, url: string) => {
         state.cloudTargetLogText = label;
         state.cloudTargetLogUrl = url;
     };
@@ -59,7 +133,7 @@ export function useCloudBuild(params) {
     /**
      * Enable or disable cancel build button
      */
-    const enableCancelBuildButton = (enabled) => {
+    const enableCancelBuildButton = (enabled: boolean) => {
         state.cancelBuildButtonDisabled = !enabled;
         state.cancelBuild = false;
     };
@@ -87,7 +161,7 @@ export function useCloudBuild(params) {
     /**
      * Retry firmware download once after 4 seconds if the first attempt fails
      */
-    const loadFirmwareWithRetry = async (url, fileLabel) => {
+    const loadFirmwareWithRetry = async (url: string, fileLabel: string) => {
         const attemptDownload = async () => await buildApi.loadTargetFirmware(url);
 
         let firmware = await attemptDownload();
@@ -109,7 +183,12 @@ export function useCloudBuild(params) {
     /**
      * Process successful build response
      */
-    const processBuildSuccess = async (response, statusResponse, suffix, isConfigLocal) => {
+    const processBuildSuccess = async (
+        response: BuildResponse,
+        statusResponse: BuildStatusResponse,
+        suffix: string,
+        isConfigLocal: boolean | undefined,
+    ) => {
         if (statusResponse.status !== "success") {
             return;
         }
@@ -137,7 +216,7 @@ export function useCloudBuild(params) {
     /**
      * Build request configuration with selected options
      */
-    const buildRequestConfig = (targetDetail, additionalParams) => {
+    const buildRequestConfig = (targetDetail: TargetDetail, additionalParams: CloudBuildSelection) => {
         const {
             coreBuildMode,
             selectedRadioProtocol,
@@ -150,7 +229,7 @@ export function useCloudBuild(params) {
             customDefinesTags,
         } = additionalParams;
 
-        const request = {
+        const request: CloudBuildRequest = {
             target: targetDetail.target,
             release: targetDetail.release,
             options: [],
@@ -165,38 +244,20 @@ export function useCloudBuild(params) {
         request.options.push("CLOUD_BUILD");
 
         // Add selected protocol options
-        if (selectedRadioProtocol) {
-            request.options.push(
-                typeof selectedRadioProtocol === "object" && selectedRadioProtocol !== null
-                    ? selectedRadioProtocol.value
-                    : selectedRadioProtocol,
-            );
-        }
-        if (selectedTelemetryProtocol) {
-            request.options.push(
-                typeof selectedTelemetryProtocol === "object" && selectedTelemetryProtocol !== null
-                    ? selectedTelemetryProtocol.value
-                    : selectedTelemetryProtocol,
-            );
-        }
-        if (selectedOsdProtocol) {
-            request.options.push(
-                typeof selectedOsdProtocol === "object" && selectedOsdProtocol !== null
-                    ? selectedOsdProtocol.value
-                    : selectedOsdProtocol,
-            );
-        }
-        if (selectedMotorProtocol) {
-            request.options.push(
-                typeof selectedMotorProtocol === "object" && selectedMotorProtocol !== null
-                    ? selectedMotorProtocol.value
-                    : selectedMotorProtocol,
-            );
+        for (const selection of [
+            selectedRadioProtocol,
+            selectedTelemetryProtocol,
+            selectedOsdProtocol,
+            selectedMotorProtocol,
+        ]) {
+            if (selection) {
+                request.options.push(selectionValue(selection));
+            }
         }
 
         if (Array.isArray(selectedOptions)) {
             selectedOptions.forEach((option) => {
-                const v = typeof option === "object" && option !== null ? option.value : option;
+                const v = option !== null && option !== undefined ? selectionValue(option) : option;
                 if (v != null && v !== "") {
                     request.options.push(v);
                 }
@@ -224,7 +285,7 @@ export function useCloudBuild(params) {
     /**
      * Download firmware for non-cloud builds
      */
-    const downloadDirectFirmware = async (response) => {
+    const downloadDirectFirmware = async (response: BuildResponse) => {
         try {
             const firmware = await loadFirmwareWithRetry(response.url, response.file);
             if (firmware) {
@@ -238,7 +299,7 @@ export function useCloudBuild(params) {
     /**
      * Handle polling failure (timeout or cancellation)
      */
-    const handlePollingFailure = (response, retries, retryTotal) => {
+    const handlePollingFailure = (response: BuildResponse, retries: number, retryTotal: number) => {
         let suffix = "";
         if (retries > retryTotal) {
             suffix = "TimeOut";
@@ -256,7 +317,7 @@ export function useCloudBuild(params) {
     /**
      * Poll for cloud build status
      */
-    const pollCloudBuildStatus = async (response, isConfigLocal) => {
+    const pollCloudBuildStatus = async (response: BuildResponse, isConfigLocal: boolean | undefined) => {
         const retrySeconds = 5;
         let retries = 1;
         let processing = false;
@@ -311,7 +372,7 @@ export function useCloudBuild(params) {
     /**
      * Request a cloud build and poll for status
      */
-    const requestCloudBuild = async (targetDetail, additionalParams) => {
+    const requestCloudBuild = async (targetDetail: TargetDetail, additionalParams: CloudBuildSelection) => {
         const { isConfigLocal } = additionalParams;
         const request = buildRequestConfig(targetDetail, additionalParams);
 

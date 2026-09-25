@@ -1,12 +1,49 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 const TIME_LABEL = "HEX_PARSER - File parsed in";
+
+/** One contiguous run of data records. */
+export interface HexBlock {
+    address: number;
+    bytes: number;
+    data: number[];
+}
+
+export interface ParsedHex {
+    data: HexBlock[];
+    end_of_file: boolean;
+    bytes_total: number;
+    start_linear_address: number;
+    /** Set by useFirmwareFlashing once ConfigInserter has written the board config into the image. */
+    configInserted?: boolean;
+}
 
 // input = string
 // result = if hex file is valid, result is an object
-//          if hex file wasn't valid (crc check failed on any of the lines), result will be false
-export default async function read_hex_file(data) {
+//          if hex file wasn't valid (crc check failed on any of the lines), result will be null
+export default async function read_hex_file(input: string): Promise<ParsedHex | null> {
     console.time(TIME_LABEL);
 
-    data = data.split("\n");
+    const data = input.split("\n");
 
     // check if there is an empty line in the end of hex file, if there is, remove it
     if (data[data.length - 1] == "") {
@@ -15,7 +52,7 @@ export default async function read_hex_file(data) {
 
     let hexfile_valid = true; // if any of the crc checks failed, this variable flips to false
 
-    const result = {
+    const result: ParsedHex = {
         data: [],
         end_of_file: false,
         bytes_total: 0,

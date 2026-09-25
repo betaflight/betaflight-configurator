@@ -21,6 +21,28 @@
 
 import { inject, reactive, type InjectionKey } from "vue";
 import type { useBoardSelection } from "@/composables/useBoardSelection";
+import type { FirmwareType } from "@/composables/useFirmwareFlashing";
+
+/** A build option as the build API's options endpoint returns it. */
+export interface ApiBuildOption {
+    name: string;
+    value: string;
+    default?: boolean;
+    group?: string;
+    /** The label an OSD option takes once it is moved into its own list. */
+    groupedName?: string;
+    includesTelemetry?: boolean;
+}
+
+/** The build API's options for a release, split into the lists the build form shows. */
+export interface BuildOptionsResponse {
+    radioProtocols: ApiBuildOption[];
+    telemetryProtocols: ApiBuildOption[];
+    motorProtocols: ApiBuildOption[];
+    generalOptions: ApiBuildOption[];
+    /** Not sent: derived from the OSD group of generalOptions. */
+    osdProtocols?: ApiBuildOption[];
+}
 
 /** A build option as the build API returns it, relabelled for Nuxt UI selects. */
 export interface BuildOption {
@@ -29,6 +51,13 @@ export interface BuildOption {
     label: string;
     default?: boolean;
     group?: string;
+    includesTelemetry?: boolean;
+}
+
+/** A radio protocol option; it keeps only what the telemetry lock-out reads. */
+export interface RadioProtocolOption {
+    value: string;
+    label: string;
     includesTelemetry?: boolean;
 }
 
@@ -42,11 +71,19 @@ export interface CommitOption {
     value: string;
 }
 
+/** A target release as the build API's `/api/builds/<release>/<target>` describes it. */
 export interface TargetDetail {
     target: string;
     release: string;
     releaseType?: string;
+    releaseUrl?: string;
+    date?: string;
+    mcu?: string;
+    manufacturer?: string;
+    group?: string;
+    partnerApproved?: boolean;
     cloudBuild?: boolean;
+    configuration?: string[];
     file?: string;
     [key: string]: unknown;
 }
@@ -76,12 +113,12 @@ export function createFlasherState() {
         developmentFirmwareLoaded: false,
         preFlashingMessage: null as string | null,
         preFlashingMessageType: null as string | null,
-        firmware_type: undefined as string | undefined,
+        firmware_type: undefined as FirmwareType | undefined,
         targetDetail: null as TargetDetail | null,
         targetQualification: null as boolean | null,
         // Select options
         buildTypeOptions: [] as { value: number; label: string }[],
-        radioProtocolOptions: [] as BuildOption[],
+        radioProtocolOptions: [] as RadioProtocolOption[],
         telemetryProtocolOptions: [] as ProtocolOption[],
         osdProtocolOptions: [] as ProtocolOption[],
         motorProtocolOptions: [] as ProtocolOption[],

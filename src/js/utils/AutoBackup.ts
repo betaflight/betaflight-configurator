@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref } from "vue";
 import DeviceHandler from "../device_handler";
 import FileSystem from "../FileSystem";
@@ -17,13 +38,13 @@ import { serial } from "../serial";
  * Reactive so Vue computeds (e.g. the post-flash restore button) re-evaluate
  * when the backup is captured or reset.
  */
-const _lastBackupData = ref(null);
+const _lastBackupData = ref<string | null>(null);
 
 export function getLastBackupData() {
     return _lastBackupData.value;
 }
 
-export function setLastBackupData(data) {
+export function setLastBackupData(data: string | null) {
     _lastBackupData.value = data;
 }
 
@@ -32,12 +53,12 @@ export function resetLastBackupData() {
 }
 
 // CLI dumps are plain text: printable ASCII plus tab, CR and LF.
-function isPrintableCharCode(charCode) {
+function isPrintableCharCode(charCode: number) {
     return charCode === 9 || charCode === 10 || charCode === 13 || (charCode >= 32 && charCode <= 126);
 }
 
 // Count non-printable characters in a string (firmware-version-independent).
-function countNonPrintable(text) {
+function countNonPrintable(text: string) {
     let invalid = 0;
     for (let i = 0; i < text.length; i++) {
         if (!isPrintableCharCode(text.charCodeAt(i))) {
@@ -50,20 +71,21 @@ function countNonPrintable(text) {
 // A real diff/dump is non-empty, pure printable text, and contains at least one
 // CLI comment line (every diff/dump emits `#` header comments). This avoids
 // matching a brittle version banner string that changes between releases.
-export function isPlausibleCliDump(text) {
+export function isPlausibleCliDump(text: string) {
     return text.length > 0 && countNonPrintable(text) === 0 && text.split(/\r?\n/).some((line) => line.startsWith("#"));
 }
 
+type SerialListener = (event: Event) => void;
+
 class AutoBackup {
-    constructor() {
-        this.outputHistory = "";
-        this.invalidCharCount = 0;
-        this.callback = null;
-        // Store bound handler references to ensure proper removal
-        this.boundReadSerialAdapter = null;
-        this.boundHandleConnect = null;
-        this.boundHandleDisconnect = null;
-    }
+    outputHistory = "";
+    invalidCharCount = 0;
+    /** Told whether the backup succeeded, so the caller can go on to flash. */
+    callback: ((result: boolean) => void) | null = null;
+    // Store bound handler references to ensure proper removal
+    boundReadSerialAdapter: SerialListener | null = null;
+    boundHandleConnect: SerialListener | null = null;
+    boundHandleDisconnect: SerialListener | null = null;
 
     // Reset the receive buffer and its validation counters together.
     resetBuffer() {
@@ -81,7 +103,7 @@ class AutoBackup {
 
     // Centralised failure path: stop the interval, leave CLI, surface an error
     // to the user, and notify the caller that the backup did not succeed.
-    failBackup(intervalId, reason) {
+    failBackup(intervalId: ReturnType<typeof setInterval>, reason: string) {
         clearInterval(intervalId);
         console.error(`AutoBackup: Aborting - ${reason}`);
         gui_log(i18n.getMessage("firmwareFlasherBackupInvalidData"));
@@ -93,7 +115,7 @@ class AutoBackup {
         }
     }
 
-    handleConnect(openInfo) {
+    handleConnect(openInfo: Event) {
         console.log("Connected to serial port:", openInfo);
         if (openInfo) {
             // Ensure we have a fresh start
@@ -110,8 +132,10 @@ class AutoBackup {
         }
     }
 
-    handleDisconnect(event) {
-        gui_log(i18n.getMessage(event.detail ? "serialPortClosedOk" : "serialPortClosedFail"));
+    handleDisconnect(event: Event) {
+        gui_log(
+            i18n.getMessage((event as CustomEvent<boolean>).detail ? "serialPortClosedOk" : "serialPortClosedFail"),
+        );
         this.cleanupListeners();
     }
 
@@ -133,8 +157,9 @@ class AutoBackup {
         }
     }
 
-    readSerialAdapter(info) {
-        const data = new Uint8Array(info.detail.data);
+    readSerialAdapter(info: Event) {
+        // The serial facade wraps every receive as { data, protocolType }.
+        const data = new Uint8Array((info as CustomEvent<{ data: ArrayBuffer }>).detail.data);
 
         for (const charCode of data) {
             if (!isPrintableCharCode(charCode)) {
@@ -151,7 +176,7 @@ class AutoBackup {
         serial.disconnect();
     }
 
-    async save(data) {
+    async save(data: string) {
         console.log("Saving backup");
         const prefix = "cli_backup";
         const suffix = "txt";
@@ -187,7 +212,7 @@ class AutoBackup {
         this.waitForCommandCompletion("diff all");
     }
 
-    waitForCommandCompletion(command) {
+    waitForCommandCompletion(command: string) {
         // Clear previous output
         this.resetBuffer();
 
@@ -305,7 +330,7 @@ class AutoBackup {
     }
 
     async activateCliMode() {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
             const bufferOut = new ArrayBuffer(1);
             const bufView = new Uint8Array(bufferOut);
 
@@ -320,7 +345,7 @@ class AutoBackup {
         });
     }
 
-    async sendSerial(line, callback) {
+    async sendSerial(line: string, callback?: () => void) {
         const bufferOut = new ArrayBuffer(line.length);
         const bufView = new Uint8Array(bufferOut);
 
@@ -331,11 +356,11 @@ class AutoBackup {
         serial.send(bufferOut, callback);
     }
 
-    async sendCommand(line, callback) {
+    async sendCommand(line: string, callback?: () => void) {
         this.sendSerial(`${line}\n`, callback);
     }
 
-    execute(callback) {
+    execute(callback: (result: boolean) => void) {
         // Reset state at the beginning of a new run
         this.resetBuffer();
         this.callback = callback;
@@ -347,7 +372,7 @@ class AutoBackup {
         if (port.startsWith("serial")) {
             this.boundHandleConnect = this.handleConnect.bind(this);
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
-            serial.connect(port, { baudRate: baud });
+            serial.connect(port, { baudRate: baud }, undefined);
         } else if (port.startsWith("capacitor-")) {
             // Skip backup on Android (serial disconnect causes device loss), proceed with flashing
             console.log("AutoBackup: Skipping backup on Android capacitor port");
