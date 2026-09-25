@@ -103,6 +103,7 @@
     "@tauri-apps/cli": "~2.11.0",
     "@types/d3": "^7.4.3",
     "@types/semver": "^7.8.0",
+    "@types/three": "^0.186.0",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
     "cross-env": "^10.1.0",
