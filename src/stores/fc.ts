@@ -725,7 +725,9 @@ const SERIAL_RX_TYPES_BY_BUILD_OPTION: [buildOption: string, rxTypes: string[]][
 ];
 
 export interface ArmingFlag {
+    id: string;
     name: string;
+    tooltip: string;
     visible: boolean;
 }
 
