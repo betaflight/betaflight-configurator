@@ -55,11 +55,12 @@
 
                         <SettingRow v-if="showSerialPort" :label="$t('gpsSerialBaud')" :help="$t('gpsSerialBaudHelp')">
                             <USelect
-                                v-model="gpsBaud"
+                                :model-value="gpsBaud ?? undefined"
                                 :items="gpsBaudOptions"
                                 :disabled="!gpsPortWritable"
                                 size="xs"
                                 class="min-w-40"
+                                @update:model-value="gpsBaud = $event"
                             />
                         </SettingRow>
 
@@ -68,7 +69,14 @@
                             :label="$t('dronecanCanDevice')"
                             :help="$t('dronecanCanDeviceHelp')"
                         >
-                            <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
+                            <!-- USelect's model has no null; null and undefined both leave it unselected. -->
+                            <USelect
+                                :model-value="canDevice ?? undefined"
+                                :items="canDeviceOptions"
+                                size="xs"
+                                class="min-w-40"
+                                @update:model-value="canDevice = $event"
+                            />
                         </SettingRow>
 
                         <SettingRow v-if="showAutoBaud" :label="$t('configurationGPSAutoBaud')">
@@ -305,8 +313,9 @@
     </BaseTab>
 </template>
 
-<script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+<script lang="ts">
+import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick, watch, type Ref } from "vue";
+import type { FeatureDefinition } from "../../js/Features";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
@@ -342,6 +351,18 @@ import SettingRow from "../elements/SettingRow.vue";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
+/** One row of the satellite signal table. */
+interface SignalRow {
+    gnss: string;
+    /** "-" pads the table out to 32 rows; null marks a channel with no GNSS. */
+    satId: number | string | null;
+    satUsed: boolean;
+    cno: number;
+    /** A translated quality label, or the raw quality byte on pre-UBX-SV-INFO firmware. */
+    quality: string | number;
+    qualityClass: string;
+}
+
 export default defineComponent({
     name: "GpsTab",
     components: {
@@ -360,9 +381,11 @@ export default defineComponent({
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
 
-        const mapRef = ref(null);
-        const mapContainerRef = ref(null);
-        const mapInstance = ref(null);
+        const mapRef = ref<HTMLElement | null>(null);
+        const mapContainerRef = ref<HTMLElement | null>(null);
+        // Ref<T> rather than ref<T>()'s inferred type, which unwraps the OpenLayers classes
+        // into structural copies that no longer match OpenLayers' own signatures.
+        const mapInstance = ref(null) as Ref<ReturnType<typeof initMap> | null>;
         const {
             isFullscreen,
             toggleFullscreen,
@@ -385,12 +408,12 @@ export default defineComponent({
             longitude: 0,
             distToHome: 0,
             positionalDopDisplay: "",
-            magDeclination: null,
+            magDeclination: null as string | null,
         });
 
-        const signalRows = ref([]);
+        const signalRows = ref<SignalRow[]>([]);
 
-        const gpsProtocols = ref([]);
+        const gpsProtocols = ref<string[]>([]);
         const gpsSbas = [
             i18n.getMessage("gpsSbasAutoDetect"),
             i18n.getMessage("gpsSbasEuropeanEGNOS"),
@@ -582,7 +605,7 @@ export default defineComponent({
 
         // Returns the i18n key so the template resolves it with $t and stays
         // reactive to locale changes.
-        const featureHelpKey = (feature) => {
+        const featureHelpKey = (feature: FeatureDefinition) => {
             if (!hasGpsBuildOption.value) {
                 return "configurationGPSNotInBuild";
             }
@@ -592,11 +615,11 @@ export default defineComponent({
             return "featureGPSTip";
         };
 
-        const isFeatureEnabled = (feature) => {
+        const isFeatureEnabled = (feature: FeatureDefinition) => {
             return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
         };
 
-        const toggleFeature = (feature, checked) => {
+        const toggleFeature = (feature: FeatureDefinition, checked: boolean) => {
             const featuresHelper = fcStore.features?.features;
             if (!featuresHelper) {
                 return;
@@ -605,7 +628,7 @@ export default defineComponent({
             updateTabList(featuresHelper);
         };
 
-        const setLayer = (layerKey) => {
+        const setLayer = (layerKey: string) => {
             if (!mapInstance.value?.layers) return;
             Object.entries(mapInstance.value.layers).forEach(([key, layer]) => {
                 layer.setVisible(key === layerKey);
@@ -615,16 +638,18 @@ export default defineComponent({
         };
 
         const zoomIn = () => {
-            if (!mapInstance.value?.mapView) return;
-            mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() + 1);
+            const zoom = mapInstance.value?.mapView.getZoom();
+            if (zoom === undefined) return;
+            mapInstance.value?.mapView.setZoom(zoom + 1);
         };
 
         const zoomOut = () => {
-            if (!mapInstance.value?.mapView) return;
-            mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
+            const zoom = mapInstance.value?.mapView.getZoom();
+            if (zoom === undefined) return;
+            mapInstance.value?.mapView.setZoom(zoom - 1);
         };
 
-        const getPositionalDopQuality = (positionalDop) => {
+        const getPositionalDopQuality = (positionalDop: number) => {
             let qualityColor;
             let stars;
             if (positionalDop < 1) {
@@ -664,7 +689,7 @@ export default defineComponent({
 
         const updateSignalStrengths = () => {
             const hasGPS = hasGpsSensor.value;
-            const rows = [];
+            const rows: SignalRow[] = [];
 
             if (!hasGPS) {
                 signalRows.value = rows;
@@ -769,7 +794,8 @@ export default defineComponent({
                     const view = mapInstance.value?.mapView;
                     const geometry = mapInstance.value?.iconGeometry;
                     const feature = mapInstance.value?.iconFeature;
-                    const iconStyle = hasMag.value ? mapInstance.value.iconStyleMag : mapInstance.value.iconStyleGPS;
+                    // initializeMap() leaves no map when the container is not mounted yet.
+                    const iconStyle = hasMag.value ? mapInstance.value?.iconStyleMag : mapInstance.value?.iconStyleGPS;
 
                     const rerender = () => {
                         if (!mapObj || !mapObj.getTargetElement || !mapObj.getTargetElement()) return;
@@ -781,7 +807,7 @@ export default defineComponent({
                     };
 
                     if (iconStyle && feature && geometry && view && mapObj) {
-                        iconStyle.getImage().setRotation(imuHeadingRadians);
+                        iconStyle.getImage()?.setRotation(imuHeadingRadians);
                         feature.setStyle(iconStyle);
                         const center = fromLonLat([longitude, latitude]);
                         view.setCenter(center);
