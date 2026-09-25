@@ -244,7 +244,7 @@
 
                         <!-- Video Format (MAX7456 only) -->
                         <UiBox
-                            v-if="osdStore.state.haveMax7456Configured || osdStore.state.isMspDevice"
+                            v-if="osdStore.state.haveMax7456Configured || osdStore.state.haveFbOsdConfigured || osdStore.state.isMspDevice"
                             :title="$t('osdSetupVideoFormatTitle')"
                             type="neutral"
                             collapsible
@@ -493,7 +493,11 @@
                 >
                     <template #body>
                         <h1 class="text-lg font-bold mb-1">{{ $t("osdSetupFontPresets") }}</h1>
-                        <div class="flex flex-wrap gap-0 my-3" ref="fontPreviewContainer">
+                        <div
+                            class="flex flex-wrap gap-0 my-3"
+                            :class="{ 'bg-neutral-500': isSmallFontLoaded }"
+                            ref="fontPreviewContainer"
+                        >
                             <img
                                 v-for="(url, charIdx) in fontCharacterUrls"
                                 :key="charIdx"
@@ -509,6 +513,7 @@
                                 v-model="selectedFontPreset"
                                 :items="fontPresetSelectItems"
                                 :portal="false"
+                                :ui="{ content: 'z-10' }"
                                 size="xs"
                                 class="min-w-40"
                             />
@@ -825,6 +830,20 @@ const timerSources = [
 
 // Font types from OSD constants
 const fontTypes = computed(() => OSD_CONSTANTS.FONT_TYPES || []);
+
+// FB_OSD (framebuffer OSD) in the PICO implementation has two modes and two font types: pixel / non-pixel, and standard / small font.
+// Typically, non-pixel uses standard fonts for MAX7456 compatibility, and pixel uses a new small font type.
+const isFbOsdSmallFont = computed(() => Boolean(osdStore.state.requiresFbSmallFont));
+
+// Fonts flagged fbOsdSmallFont in FONT_TYPES are meant for FB_OSD small font mode, and the standard
+// fonts for everything else. Selection is left free so any font can be previewed; the upload is guarded.
+function isFontUsable(font) {
+    return Boolean(font) && Boolean(font.fbOsdSmallFont) === isFbOsdSmallFont.value;
+}
+
+function firstUsableFontIndex() {
+    return fontTypes.value.findIndex(isFontUsable);
+}
 
 // USelect computed items
 const profileOptions = computed(() =>
@@ -1507,6 +1526,12 @@ const fontCharacterUrls = computed(() => {
 const fontDataVersion = ref(0);
 let lastFontPresetRequestId = 0;
 
+// Track when the most recently requested preset has finished loading (or failed).
+let fontPresetLoad = Promise.resolve();
+
+// FONT.data is not reactive; re-evaluate whenever a font is (re)loaded.
+const isSmallFontLoaded = computed(() => fontDataVersion.value >= 0 && FONT.isSmallFont());
+
 function closeFontManager() {
     fontManagerOpen.value = false;
 }
@@ -1538,16 +1563,32 @@ async function openFontManager() {
     // Initialize LogoManager (caches DOM elements via querySelector)
     LogoManager.init(FONT, SYM.LOGO);
 
-    // Load selected/default preset on first open if no font is loaded yet.
-    if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
-        const presetToLoad = Math.max(0, selectedFontPreset.value);
+    // Load a preset if nothing is loaded yet, or if the selected preset is not usable with this OSD
+    const fontLoaded = FONT.data.character_image_urls.length > 0;
+
+    if (fontTypes.value.length === 0 || (fontLoaded && selectedFontPreset.value === -1)) {
+        // No presets available or keeping user supplied font file
+        refreshFontManagerPreviews();
+        return;
+    }
+
+    let presetToLoad = Math.max(0, selectedFontPreset.value);
+    if (!isFontUsable(fontTypes.value[presetToLoad])) {
+        presetToLoad = Math.max(0, firstUsableFontIndex());
+    }
+
+    if (!fontLoaded || presetToLoad !== selectedFontPreset.value) {
         selectedFontPreset.value = presetToLoad;
         loadFontPreset(presetToLoad);
     } else {
-        // Keep dialog previews in sync when font data was loaded earlier (e.g. during tab init).
-        LogoManager.drawPreview();
-        fontDataVersion.value++;
+        refreshFontManagerPreviews();
     }
+}
+
+// Keep dialog previews in sync with font data loaded earlier (e.g. during tab init).
+function refreshFontManagerPreviews() {
+    LogoManager.drawPreview();
+    fontDataVersion.value++;
 }
 
 function loadFontPreset(index) {
@@ -1557,18 +1598,18 @@ function loadFontPreset(index) {
     }
 
     const fontVer = 2;
+    const requestId = ++lastFontPresetRequestId;
 
     // If this font is already loaded in memory, just trigger reactivity
     if (FONT.data?.loaded_font_file === font.file && FONT.data?.characters?.length > 0) {
+        fontPresetLoad = Promise.resolve();
         fontDataVersion.value++;
         LogoManager.drawPreview();
         updatePreviewBuffer();
         return;
     }
 
-    const requestId = ++lastFontPresetRequestId;
-
-    fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
+    fontPresetLoad = fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
         .then((res) => res.text())
         .then((data) => {
             if (requestId !== lastFontPresetRequestId) {
@@ -1617,12 +1658,30 @@ function replaceLogoImage() {
         .catch((error) => console.error(error));
 }
 
+function confirmFontUpload() {
+    const warningKey = isFbOsdSmallFont.value
+        ? "osdSetupUploadFontWarningNeedSmallFont"
+        : "osdSetupUploadFontWarningNeedStandardFont";
+    return globalThis.confirm(i18n.getMessage(warningKey));
+}
+
 async function flashFont() {
     if (GUI.connect_lock) {
         return;
     }
 
     GUI.connect_lock = true;
+
+    // Wait for any background load (avoid uploading a partially replaced font).
+    // Give up if the selected preset is still not the loaded font.
+    await fontPresetLoad;
+    const presetFont = fontTypes.value[selectedFontPreset.value];
+    if (presetFont && FONT.data.loaded_font_file !== presetFont.file) {
+        console.error(`Font preset ${presetFont.file} is not loaded, cannot upload`);
+        uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
+        GUI.connect_lock = false;
+        return;
+    }
 
     // If "User supplied font" is selected but no custom font file has been loaded yet,
     // prompt the user to pick a file before proceeding to upload.
@@ -1639,6 +1698,14 @@ async function flashFont() {
             console.error("User cancelled custom font selection or error occurred", err);
             GUI.connect_lock = false;
             return; // Cancel the upload process
+        }
+    }
+
+    // Warn before uploading a font (built-in or user supplied) that does not match the OSD's font mode.
+    if (FONT.isSmallFont() !== isFbOsdSmallFont.value) {
+        if (!confirmFontUpload()) {
+            GUI.connect_lock = false;
+            return;
         }
     }
 

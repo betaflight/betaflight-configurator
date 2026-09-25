@@ -14,13 +14,18 @@ import {
     mat3transpose,
     ALIGNMENT_MATRICES,
 } from "../../src/js/utils/magAlignment.js";
-import { solveTiltAlignment } from "../../src/js/utils/magTiltAlign.js";
+import { solveTiltAlignment, type MagTiltSample, type TiltAlignmentResult } from "../../src/js/utils/magTiltAlign";
+
+type Mat3 = number[][];
+
+// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
+const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
 
 const DEG = Math.PI / 180;
-const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+const clamp = (v: number, lo: number, hi: number): number => (v < lo ? lo : v > hi ? hi : v);
 
 // Deterministic PRNG (mulberry32) — never Math.random in tests.
-function mulberry32(seed) {
+function mulberry32(seed: number): () => number {
     let s = seed >>> 0;
     return () => {
         s = (s + 0x6d2b79f5) >>> 0;
@@ -32,13 +37,13 @@ function mulberry32(seed) {
 }
 
 /** Geodesic angle between two rotation matrices, degrees. */
-function rotationAngleDeg(A, B) {
+function rotationAngleDeg(A: Mat3, B: Mat3): number {
     const M = mat3mul(mat3transpose(A), B);
     const tr = M[0][0] + M[1][1] + M[2][2];
     return Math.acos(clamp((tr - 1) / 2, -1, 1)) / DEG;
 }
 
-function det3(m) {
+function det3(m: Mat3): number {
     return (
         m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
         m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
@@ -53,12 +58,16 @@ function det3(m) {
  * into the body frame, recover roll/pitch from gravity (so they match gravityInBody),
  * and the sensor reads m_cal = R_alignᵀ · field_body.
  */
-function makeTumble(rAlign, inclDeg, { noise = 0, rng = null } = {}) {
+function makeTumble(
+    rAlign: Mat3,
+    inclDeg: number,
+    { noise = 0, rng = null }: { noise?: number; rng?: (() => number) | null } = {},
+): MagTiltSample[] {
     const I = inclDeg * DEG;
     const gWorld = [0, 0, -1];
     const fWorld = [Math.cos(I), 0, -Math.sin(I)];
     const rAlignT = mat3transpose(rAlign);
-    const samples = [];
+    const samples: MagTiltSample[] = [];
     const rolls = [-50, -25, 0, 25, 50];
     const pitches = [-50, -25, 0, 25, 50];
     const yaws = [0, 72, 144, 216, 288];
@@ -69,7 +78,7 @@ function makeTumble(rAlign, inclDeg, { noise = 0, rng = null } = {}) {
                 const gBody = mat3mulVec(Ri, gWorld);
                 let fBody = mat3mulVec(Ri, fWorld);
                 if (noise > 0 && rng) {
-                    fBody = fBody.map((c) => c + (rng() - 0.5) * 2 * noise);
+                    fBody = fBody.map((c: number) => c + (rng() - 0.5) * 2 * noise);
                 }
                 // Recover roll/pitch so gravityInBody(roll,pitch) === gBody.
                 const pitch = Math.asin(clamp(gBody[0], -1, 1)) / DEG;
@@ -82,9 +91,9 @@ function makeTumble(rAlign, inclDeg, { noise = 0, rng = null } = {}) {
     return samples;
 }
 
-function recoveredMatrix(result) {
+function recoveredMatrix(result: TiltAlignmentResult): Mat3 {
     return result.preset !== 9
-        ? ALIGNMENT_MATRICES[result.preset]
+        ? alignmentMatrices[result.preset]
         : eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw);
 }
 
@@ -93,16 +102,16 @@ describe("solveTiltAlignment — synthetic oracle", () => {
         const rAlign = eulerToMatrix(20, 10, 35);
         const result = solveTiltAlignment(makeTumble(rAlign, 71), 71 * DEG);
         expect(result).not.toBeNull();
-        expect(rotationAngleDeg(recoveredMatrix(result), rAlign)).toBeLessThan(5);
-        expect(result.quality.meanResidualDeg).toBeLessThan(2); // good fit on clean data
-        expect(det3(recoveredMatrix(result))).toBeCloseTo(1, 2);
+        expect(rotationAngleDeg(recoveredMatrix(result!), rAlign)).toBeLessThan(5);
+        expect(result!.quality.meanResidualDeg).toBeLessThan(2); // good fit on clean data
+        expect(det3(recoveredMatrix(result!))).toBeCloseTo(1, 2);
     });
 
     it("recovers at LOW inclination (20°) — proves the angle-space cost is latitude-independent", () => {
         const rAlign = eulerToMatrix(-15, 25, 80);
         const result = solveTiltAlignment(makeTumble(rAlign, 20), 20 * DEG);
         expect(result).not.toBeNull();
-        expect(rotationAngleDeg(recoveredMatrix(result), rAlign)).toBeLessThan(6);
+        expect(rotationAngleDeg(recoveredMatrix(result!), rAlign)).toBeLessThan(6);
     });
 
     it("recovers under measurement noise", () => {
@@ -110,14 +119,15 @@ describe("solveTiltAlignment — synthetic oracle", () => {
         const samples = makeTumble(rAlign, 71, { noise: 0.03, rng: mulberry32(0x1a2b3c4d) });
         const result = solveTiltAlignment(samples, 71 * DEG);
         expect(result).not.toBeNull();
-        expect(rotationAngleDeg(recoveredMatrix(result), rAlign)).toBeLessThan(8);
+        expect(rotationAngleDeg(recoveredMatrix(result!), rAlign)).toBeLessThan(8);
     });
 
     it("returns a proper rotation (det = +1)", () => {
         const rAlign = eulerToMatrix(0, 40, 200);
         const result = solveTiltAlignment(makeTumble(rAlign, 71), 71 * DEG);
-        expect(det3(recoveredMatrix(result))).toBeCloseTo(1, 2);
-        expect(rotationAngleDeg(recoveredMatrix(result), rAlign)).toBeLessThan(5);
+        expect(result).not.toBeNull();
+        expect(det3(recoveredMatrix(result!))).toBeCloseTo(1, 2);
+        expect(rotationAngleDeg(recoveredMatrix(result!), rAlign)).toBeLessThan(5);
     });
 
     it("returns null below the minimum sample count", () => {
