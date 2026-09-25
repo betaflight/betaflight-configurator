@@ -97,7 +97,7 @@
     </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onScopeDispose, ref } from "vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -118,22 +118,22 @@ const {
 } = useFlightPlan();
 
 const showDeleteDialog = ref(false);
-const waypointToDelete = ref(null);
+const waypointToDelete = ref<string | null>(null);
 
 // Drag and drop state
-const draggedUid = ref(null);
-const dragOverUid = ref(null);
-let dragStartTimeout = null;
+const draggedUid = ref<string | null>(null);
+const dragOverUid = ref<string | null>(null);
+let dragStartTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const handleAddWaypoint = () => {
     openAddWaypoint();
 };
 
-const handleEdit = (uid) => {
+const handleEdit = (uid: string) => {
     editWaypoint(uid);
 };
 
-const handleRemove = (uid) => {
+const handleRemove = (uid: string) => {
     waypointToDelete.value = uid;
     showDeleteDialog.value = true;
 };
@@ -146,8 +146,8 @@ const confirmDelete = () => {
     showDeleteDialog.value = false;
 };
 
-const getPatternLabel = (pattern) => {
-    const labels = {
+const getPatternLabel = (pattern: string) => {
+    const labels: Record<string, string | undefined> = {
         circle: i18n.getMessage("flightPlanPatternCircle"),
         figure8: i18n.getMessage("flightPlanPatternFigure8"),
         orbit: i18n.getMessage("flightPlanPatternOrbit"),
@@ -156,13 +156,15 @@ const getPatternLabel = (pattern) => {
 };
 
 // Drag and drop handlers
-const handleDragStart = (event, uid) => {
+const handleDragStart = (event: DragEvent, uid: string) => {
     draggedUid.value = uid;
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", uid);
+    if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", uid);
+    }
 
     // Capture element synchronously before setTimeout (event.currentTarget becomes null inside timeout)
-    const el = event.currentTarget;
+    const el = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
 
     // Add a slight delay to allow the drag to start before styling changes
     if (dragStartTimeout !== null) {
@@ -183,24 +185,27 @@ onScopeDispose(() => {
     }
 });
 
-const handleDragOver = (event, uid) => {
+const handleDragOver = (event: DragEvent, uid: string) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = "move";
+    }
 
     if (draggedUid.value !== uid) {
         dragOverUid.value = uid;
     }
 };
 
-const handleDragLeave = (event) => {
+const handleDragLeave = (event: DragEvent) => {
     // Only clear dragOver if we're leaving the waypoint item entirely
-    if (event.currentTarget.contains(event.relatedTarget)) {
+    const item = event.currentTarget;
+    if (item instanceof Node && event.relatedTarget instanceof Node && item.contains(event.relatedTarget)) {
         return;
     }
     dragOverUid.value = null;
 };
 
-const handleDrop = (event, targetUid) => {
+const handleDrop = (event: DragEvent, targetUid: string) => {
     event.preventDefault();
 
     if (draggedUid.value && draggedUid.value !== targetUid) {
@@ -212,8 +217,10 @@ const handleDrop = (event, targetUid) => {
     dragOverUid.value = null;
 };
 
-const handleDragEnd = (event) => {
-    event.currentTarget.classList.remove("dragging");
+const handleDragEnd = (event: DragEvent) => {
+    if (event.currentTarget instanceof HTMLElement) {
+        event.currentTarget.classList.remove("dragging");
+    }
     draggedUid.value = null;
     dragOverUid.value = null;
 };

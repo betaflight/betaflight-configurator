@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, computed } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { gui_log } from "../js/gui_log";
@@ -15,7 +36,7 @@ const KNOTS_TO_CMS = 51.4444;
 const MINUTES_TO_DECISECONDS = 600;
 
 // Type mapping (configurator → firmware)
-const TYPE_TO_CLI = {
+const TYPE_TO_CLI: Record<string, string | undefined> = {
     flyover: "FLYOVER",
     flyby: "FLYBY",
     hold: "HOLD",
@@ -27,7 +48,7 @@ const TYPE_TO_CLI = {
 };
 
 // Type mapping (firmware → configurator)
-const CLI_TO_TYPE = {
+const CLI_TO_TYPE: Record<string, string | undefined> = {
     FLYOVER: "flyover",
     FLYBY: "flyby",
     HOLD: "hold",
@@ -42,40 +63,53 @@ const CLI_TO_TYPE = {
 // then drain onto the next positional waypoint. Map/profile views skip these.
 const MODIFIER_TYPES = new Set(["alt_change", "delay", "yaw_rate"]);
 
-export const isModifierWaypointType = (type) => MODIFIER_TYPES.has(type);
+export const isModifierWaypointType = (type: string | undefined) => type !== undefined && MODIFIER_TYPES.has(type);
 
 // Pattern mapping (configurator → firmware)
-const PATTERN_TO_CLI = {
+const PATTERN_TO_CLI: Record<string, string | undefined> = {
     circle: "ORBIT",
     orbit: "ORBIT",
     figure8: "FIGURE8",
 };
 
 // Pattern mapping (firmware → configurator)
-const CLI_TO_PATTERN = {
+const CLI_TO_PATTERN: Record<string, string | undefined> = {
     ORBIT: "orbit",
     FIGURE8: "figure8",
 };
 
-// Shared state - singleton pattern ensures all components share the same state
-/**
- * @typedef {object} Waypoint
- * @property {string} uid
- * @property {number} latitude
- * @property {number} longitude
- * @property {number} altitude
- * @property {number} speed
- * @property {string} type
- * @property {number} duration
- * @property {string} pattern
- * @property {number} order
- */
+export interface Waypoint {
+    uid: string;
+    latitude: number;
+    longitude: number;
+    /** feet AMSL */
+    altitude: number;
+    /** knots; degrees/sec for yaw_rate */
+    speed: number;
+    type: string;
+    /** minutes */
+    duration: number;
+    pattern: string;
+    order: number;
+}
 
+/** What the editor and the map hand to addWaypoint / updateWaypoint; missing slots get defaults. */
+export type WaypointInput = Partial<Omit<Waypoint, "uid" | "order">>;
+
+interface StoredFlightPlans {
+    currentPlan?: {
+        name: string;
+        waypoints: Waypoint[];
+        createdAt: string;
+        updatedAt: string;
+    };
+}
+
+// Shared state - singleton pattern ensures all components share the same state
 const state = reactive({
-    /** @type {Waypoint[]} */
-    waypoints: [],
-    selectedWaypointUid: null,
-    editingWaypointUid: null,
+    waypoints: [] as Waypoint[],
+    selectedWaypointUid: null as string | null,
+    editingWaypointUid: null as string | null,
     showEditorDialog: false,
 });
 
@@ -100,37 +134,51 @@ const editingWaypoint = computed(() => {
 
 export function useFlightPlan() {
     // Validate waypoint data
-    const validateWaypoint = (waypointData) => {
+    const validateWaypoint = (waypointData: WaypointInput) => {
         // Modifier types carry no horizontal position — skip coord checks but
         // still validate the slot that's meaningful for each modifier type.
         if (isModifierWaypointType(waypointData.type)) {
             if (waypointData.type === "alt_change") {
-                if (!Number.isFinite(waypointData.altitude) || waypointData.altitude < 0) {
+                if (
+                    waypointData.altitude === undefined ||
+                    !Number.isFinite(waypointData.altitude) ||
+                    waypointData.altitude < 0
+                ) {
                     gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
                     return false;
                 }
             } else if (waypointData.type === "delay") {
-                if (!Number.isFinite(waypointData.duration) || waypointData.duration < 0) {
+                if (
+                    waypointData.duration === undefined ||
+                    !Number.isFinite(waypointData.duration) ||
+                    waypointData.duration < 0
+                ) {
                     gui_log(i18n.getMessage("flightPlanInvalidDuration") || "Duration must be positive");
                     return false;
                 }
             } else if (waypointData.type === "yaw_rate") {
-                if (!Number.isFinite(waypointData.speed) || waypointData.speed < 0) {
+                if (
+                    waypointData.speed === undefined ||
+                    !Number.isFinite(waypointData.speed) ||
+                    waypointData.speed < 0
+                ) {
                     gui_log(i18n.getMessage("flightPlanInvalidYawRate") || "Yaw rate must be positive");
                     return false;
                 }
             }
             return true;
         }
-        if (waypointData.latitude < -90 || waypointData.latitude > 90) {
+        // An absent slot falls back to a default in addWaypoint, and undefined fails every comparison.
+        const { latitude = Number.NaN, longitude = Number.NaN, altitude = Number.NaN } = waypointData;
+        if (latitude < -90 || latitude > 90) {
             gui_log(i18n.getMessage("flightPlanInvalidLatitude"));
             return false;
         }
-        if (waypointData.longitude < -180 || waypointData.longitude > 180) {
+        if (longitude < -180 || longitude > 180) {
             gui_log(i18n.getMessage("flightPlanInvalidLongitude"));
             return false;
         }
-        if (waypointData.altitude < 0) {
+        if (altitude < 0) {
             gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
             return false;
         }
@@ -140,9 +188,10 @@ export function useFlightPlan() {
     // Load flight plan from localStorage
     const loadPlan = () => {
         try {
-            const stored = getConfig(STORAGE_KEY);
-            if (stored?.flightPlans?.currentPlan?.waypoints) {
-                state.waypoints = stored.flightPlans.currentPlan.waypoints;
+            const stored = getConfig<StoredFlightPlans | undefined>(STORAGE_KEY);
+            const storedWaypoints = stored?.flightPlans?.currentPlan?.waypoints;
+            if (storedWaypoints) {
+                state.waypoints = storedWaypoints;
                 console.log(`Loaded ${state.waypoints.length} waypoints from localStorage`);
             } else {
                 state.waypoints = [];
@@ -159,7 +208,7 @@ export function useFlightPlan() {
     const savePlan = () => {
         try {
             // Read existing plan to preserve createdAt timestamp
-            const existing = getConfig(STORAGE_KEY);
+            const existing = getConfig<StoredFlightPlans | undefined>(STORAGE_KEY);
             const existingCreatedAt = existing?.flightPlans?.currentPlan?.createdAt;
 
             const planData = {
@@ -181,13 +230,13 @@ export function useFlightPlan() {
     };
 
     // Add waypoint
-    const addWaypoint = (waypointData) => {
+    const addWaypoint = (waypointData: WaypointInput) => {
         // Validate coordinates and altitude
         if (!validateWaypoint(waypointData)) {
             return false;
         }
 
-        const waypoint = {
+        const waypoint: Waypoint = {
             uid: crypto.randomUUID(),
             latitude: waypointData.latitude ?? 0,
             longitude: waypointData.longitude ?? 0,
@@ -206,7 +255,7 @@ export function useFlightPlan() {
     };
 
     // Add waypoint at map location (for click handler)
-    const addWaypointAtLocation = (latitude, longitude) => {
+    const addWaypointAtLocation = (latitude: number, longitude: number) => {
         return addWaypoint({
             latitude,
             longitude,
@@ -216,7 +265,7 @@ export function useFlightPlan() {
     };
 
     // Update waypoint
-    const updateWaypoint = (uid, updates) => {
+    const updateWaypoint = (uid: string | null, updates: WaypointInput) => {
         const waypoint = state.waypoints.find((wp) => wp.uid === uid);
         if (!waypoint) {
             console.error("Waypoint not found:", uid);
@@ -236,7 +285,7 @@ export function useFlightPlan() {
     };
 
     // Remove waypoint
-    const removeWaypoint = (uid) => {
+    const removeWaypoint = (uid: string) => {
         const index = state.waypoints.findIndex((wp) => wp.uid === uid);
         if (index === -1) {
             console.error("Waypoint not found:", uid);
@@ -264,7 +313,7 @@ export function useFlightPlan() {
     };
 
     // Reorder waypoints (for drag-and-drop)
-    const reorderWaypoints = (fromUid, toUid) => {
+    const reorderWaypoints = (fromUid: string, toUid: string) => {
         const fromIndex = state.waypoints.findIndex((wp) => wp.uid === fromUid);
         let toIndex = state.waypoints.findIndex((wp) => wp.uid === toUid);
 
@@ -305,13 +354,13 @@ export function useFlightPlan() {
     };
 
     // Select waypoint (for UI highlighting)
-    const selectWaypoint = (uid) => {
+    const selectWaypoint = (uid: string | null) => {
         state.selectedWaypointUid = uid;
         console.log("Selected waypoint:", uid);
     };
 
     // Start editing waypoint
-    const editWaypoint = (uid) => {
+    const editWaypoint = (uid: string) => {
         state.editingWaypointUid = uid;
         state.showEditorDialog = true;
         console.log("Editing waypoint:", uid);
@@ -331,8 +380,8 @@ export function useFlightPlan() {
     };
 
     // Send a CLI command and return the response lines as a Promise
-    const sendCliCommand = (cmd) => {
-        return new Promise((resolve, reject) => {
+    const sendCliCommand = (cmd: string) => {
+        return new Promise<string[]>((resolve, reject) => {
             MSP.send_cli_command(cmd, (data) => {
                 if (data && Array.isArray(data) && data.length > 0) {
                     resolve([...data]);
@@ -344,7 +393,7 @@ export function useFlightPlan() {
     };
 
     // Parse a "waypoint insert ..." CLI line into a waypoint object
-    const parseWaypointLine = (line) => {
+    const parseWaypointLine = (line: string): Waypoint | null => {
         const trimmed = line.trim();
         if (!trimmed.startsWith("waypoint insert ")) {
             return null;
@@ -378,7 +427,7 @@ export function useFlightPlan() {
     };
 
     // Convert a waypoint to a CLI insert command string
-    const waypointToCliCommand = (wp, index) => {
+    const waypointToCliCommand = (wp: Waypoint, index: number) => {
         const lat = wp.latitude.toFixed(7);
         const lon = wp.longitude.toFixed(7);
         const altCm = Math.round(wp.altitude * FEET_TO_CM);
@@ -395,7 +444,7 @@ export function useFlightPlan() {
         try {
             const response = await sendCliCommand("waypoint list");
 
-            const waypoints = [];
+            const waypoints: Waypoint[] = [];
             for (const line of response) {
                 const wp = parseWaypointLine(line);
                 if (wp) {
@@ -465,8 +514,8 @@ export function useFlightPlan() {
     };
 
     // Get waypoint type label for display
-    const getWaypointTypeLabel = (type) => {
-        const labels = {
+    const getWaypointTypeLabel = (type: string) => {
+        const labels: Record<string, string | undefined> = {
             flyover: i18n.getMessage("flightPlanTypeFlyover"),
             flyby: i18n.getMessage("flightPlanTypeFlyby"),
             hold: i18n.getMessage("flightPlanTypeHold"),
@@ -488,7 +537,7 @@ export function useFlightPlan() {
         editingWaypointUid: computed(() => state.editingWaypointUid),
         showEditorDialog: computed({
             get: () => state.showEditorDialog,
-            set: (value) => {
+            set: (value: boolean) => {
                 state.showEditorDialog = value;
             },
         }),

@@ -195,18 +195,74 @@
     </UiBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
-import { useFlightPlan } from "@/composables/useFlightPlan";
+import { useFlightPlan, type Waypoint } from "@/composables/useFlightPlan";
 import { METERS_TO_FEET } from "@/js/utils/common";
+
+interface LatLon {
+    lat: number;
+    lon: number;
+}
+
+/** A terrain sample along one segment, positioned relative to the segment start. */
+interface SegmentSample {
+    latitude: number;
+    longitude: number;
+    relativeDistance: number;
+    elevation: number;
+}
+
+/** A terrain sample positioned along the whole route. */
+interface TerrainSample {
+    latitude: number;
+    longitude: number;
+    distance: number;
+    elevation: number;
+}
+
+interface CachedSegment {
+    samples: SegmentSample[];
+    fromPos: LatLon;
+    toPos: LatLon;
+}
+
+interface SegmentToFetch {
+    key: string;
+    fromWp: Waypoint;
+    toWp: Waypoint;
+    segmentDistance: number;
+    startDistance: number;
+}
+
+type SampleToFetch = Omit<SegmentSample, "elevation">;
+
+interface SegmentSampleRange {
+    segment: SegmentToFetch;
+    startIdx: number;
+    endIdx: number;
+}
+
+interface ScaledProfilePoint {
+    uid: string;
+    order: number;
+    altitude: number;
+    distance: number;
+    latitude: number;
+    longitude: number;
+    x: number;
+    y: number;
+}
+
+type HoveredPoint = ScaledProfilePoint & { index: number; tooltipX: number; tooltipY: number };
 
 const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
 // Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
 const waypoints = positionalWaypoints;
 
-const chartSvg = ref(null);
-const hoveredPoint = ref(null);
+const chartSvg = ref<SVGSVGElement | null>(null);
+const hoveredPoint = ref<HoveredPoint | null>(null);
 
 // Chart dimensions (50% smaller)
 const chartWidth = 800;
@@ -220,26 +276,26 @@ const padding = {
 
 // Ground elevation in feet AMSL (fetched from API)
 const groundElevation = ref(0); // Average ground elevation for display
-const terrainSamples = ref([]); // Terrain samples with {distance, elevation, lat, lon}
+const terrainSamples = ref<TerrainSample[]>([]); // Terrain samples with {distance, elevation, lat, lon}
 const isFetchingElevation = ref(false);
 const elevationFetchSeq = ref(0); // Monotonic sequence to prevent race conditions
 
 // Segment-level caching for terrain data
 // Key: "uid1-uid2", Value: { samples: [...], fromPos: {lat, lon}, toPos: {lat, lon} }
-const segmentCache = ref(new Map());
+const segmentCache = ref(new Map<string, CachedSegment>());
 
 // Terrain sampling configuration
 const MIN_SAMPLE_INTERVAL_METERS = 50; // Minimum distance between samples (50m resolution)
 const MAX_SAMPLES_PER_SEGMENT = 50; // Maximum samples between waypoints
 
 // Generate cache key for a segment between two waypoints
-const getSegmentKey = (fromUid, toUid) => `${fromUid}-${toUid}`;
+const getSegmentKey = (fromUid: string, toUid: string) => `${fromUid}-${toUid}`;
 
 // Conversion constants
 const METERS_TO_NAUTICAL_MILES = 1 / 1852;
 
 // Calculate distance between two points using Haversine formula
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371000; // Earth's radius in meters
     const φ1 = (lat1 * Math.PI) / 180;
     const φ2 = (lat2 * Math.PI) / 180;
@@ -254,7 +310,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 // Interpolate a point along a great circle path
 // fraction is between 0 (start) and 1 (end)
-const interpolatePoint = (lat1, lon1, lat2, lon2, fraction) => {
+const interpolatePoint = (lat1: number, lon1: number, lat2: number, lon2: number, fraction: number) => {
     // Calculate distance first to check for zero/near-zero case
     const distance = calculateDistance(lat1, lon1, lat2, lon2);
 
@@ -291,7 +347,7 @@ const interpolatePoint = (lat1, lon1, lat2, lon2, fraction) => {
 };
 
 // Format distance for display (convert meters to nautical miles)
-const formatDistance = (meters) => {
+const formatDistance = (meters: number) => {
     const nauticalMiles = meters * METERS_TO_NAUTICAL_MILES;
     return `${nauticalMiles.toFixed(2)}nm`;
 };
@@ -418,13 +474,13 @@ const yAxisTicks = computed(() => {
 });
 
 // Scale functions
-const scaleX = (distance) => {
+const scaleX = (distance: number) => {
     const total = totalDistance.value || 1;
     const plotWidth = chartWidth - padding.left - padding.right;
     return padding.left + (distance / total) * plotWidth;
 };
 
-const scaleY = (altitude) => {
+const scaleY = (altitude: number) => {
     const min = 0; // Always start at sea level (0 ft AMSL)
     const max = combinedMax.value; // Use combined max to include terrain heights
     const range = max - min || 100; // Default range if all altitudes are the same
@@ -530,11 +586,11 @@ const terrainAreaPath = computed(() => {
 });
 
 // Event handlers
-const handleWaypointClick = (uid) => {
+const handleWaypointClick = (uid: string) => {
     selectWaypoint(uid);
 };
 
-const handleMarkerHover = (point, index) => {
+const handleMarkerHover = (point: ScaledProfilePoint, index: number) => {
     hoveredPoint.value = {
         ...point,
         index,
@@ -552,7 +608,7 @@ const handleMouseLeave = () => {
 };
 
 // Check if a segment's waypoints have moved (positions changed)
-const hasSegmentMoved = (segmentKey, fromPos, toPos) => {
+const hasSegmentMoved = (segmentKey: string, fromPos: LatLon, toPos: LatLon) => {
     const cached = segmentCache.value.get(segmentKey);
     if (!cached) {
         return true; // Not cached, needs fetching
@@ -571,8 +627,8 @@ const hasSegmentMoved = (segmentKey, fromPos, toPos) => {
 
 // Partition waypoint segments into cached and uncached
 const partitionSegments = () => {
-    const segmentsToFetch = [];
-    const cachedSamples = [];
+    const segmentsToFetch: SegmentToFetch[] = [];
+    const cachedSamples: TerrainSample[] = [];
     let cumulativeDistance = 0;
 
     for (let i = 1; i < waypoints.value.length; i++) {
@@ -592,9 +648,10 @@ const partitionSegments = () => {
                 startDistance: cumulativeDistance,
             });
         } else {
+            // hasSegmentMoved() returned false, so the segment is cached.
             const cached = segmentCache.value.get(segmentKey);
             cachedSamples.push(
-                ...cached.samples.map((s) => ({ ...s, distance: cumulativeDistance + s.relativeDistance })),
+                ...(cached?.samples ?? []).map((s) => ({ ...s, distance: cumulativeDistance + s.relativeDistance })),
             );
         }
 
@@ -605,9 +662,9 @@ const partitionSegments = () => {
 };
 
 // Generate sample points along segments that need elevation data
-const generateSegmentSamples = (segmentsToFetch) => {
-    const samplesToFetch = [];
-    const segmentSampleRanges = [];
+const generateSegmentSamples = (segmentsToFetch: SegmentToFetch[]) => {
+    const samplesToFetch: SampleToFetch[] = [];
+    const segmentSampleRanges: SegmentSampleRange[] = [];
 
     for (const segment of segmentsToFetch) {
         const startIdx = samplesToFetch.length;
@@ -650,8 +707,8 @@ const generateSegmentSamples = (segmentsToFetch) => {
 };
 
 // Fetch elevations from API in batches
-const fetchElevationBatches = async (samplesToFetch) => {
-    const allElevations = [];
+const fetchElevationBatches = async (samplesToFetch: SampleToFetch[]) => {
+    const allElevations: number[] = [];
     const batchSize = 100;
 
     for (let i = 0; i < samplesToFetch.length; i += batchSize) {
@@ -668,8 +725,8 @@ const fetchElevationBatches = async (samplesToFetch) => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-        if (data.results?.length > 0) {
+        const data: { results?: { elevation: number }[] } = await response.json();
+        if (data.results?.length) {
             allElevations.push(...data.results.map((result) => Math.round(result.elevation * METERS_TO_FEET)));
         }
 
@@ -682,11 +739,15 @@ const fetchElevationBatches = async (samplesToFetch) => {
 };
 
 // Cache fetched segments and produce absolute-distance samples
-const cacheAndMergeSamples = (segmentSampleRanges, samplesToFetch, allElevations) => {
-    const samples = [];
+const cacheAndMergeSamples = (
+    segmentSampleRanges: SegmentSampleRange[],
+    samplesToFetch: SampleToFetch[],
+    allElevations: number[],
+) => {
+    const samples: TerrainSample[] = [];
 
     for (const { segment, startIdx, endIdx } of segmentSampleRanges) {
-        const segmentSamples = [];
+        const segmentSamples: SegmentSample[] = [];
 
         for (let i = startIdx; i < endIdx; i++) {
             const sample = samplesToFetch[i];
