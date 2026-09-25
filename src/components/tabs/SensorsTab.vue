@@ -2284,9 +2284,9 @@ const loadConfig = async () => {
             await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
             await MSP.promise(MSPCodes.MSP_ACC_TRIM);
             await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-            // initModel() reads FC.MIXER_CONFIG.mixer; load it here (nothing else on this tab does),
-            // else mixer stays 0 and the loader fetches a non-existent `undefined.gltf`.
+            // initModel() reads mixer + motor_count (Custom mmix → craft mesh by motor count).
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+            await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
 
             if (isApi146.value) {
                 await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
