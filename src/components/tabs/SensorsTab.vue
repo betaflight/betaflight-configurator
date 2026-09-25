@@ -910,8 +910,8 @@ const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
-// Wizard builds Model from mixer + motor_count; keep the launch button off until both MSP
-// replies land so a mid-reload click cannot pair a fresh Custom mixer with a stale count.
+// Wizard needs mixer + motor_count for the craft mesh and hydrated boardAlignment
+// for its starting angles — keep the launch button off until loadConfig finishes both.
 const mixerMotorConfigReady = ref(false);
 
 const isApi149 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
@@ -2292,7 +2292,6 @@ const loadConfig = async () => {
             // initModel() / wizard Model read mixer + motor_count (Custom mmix → craft mesh).
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
             await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
-            mixerMotorConfigReady.value = true;
 
             if (isApi146.value) {
                 await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
@@ -2322,6 +2321,9 @@ const loadConfig = async () => {
             resolveSensorNames();
             setupMagSection();
             setupPeripherals();
+
+            // Enable the wizard only after alignment (and the rest) is hydrated into local state.
+            mixerMotorConfigReady.value = true;
 
             markClean();
 
