@@ -173,7 +173,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, ref, computed, onMounted, watch, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import { useFlightControllerStore } from "@/stores/fc";
@@ -203,6 +203,9 @@ import {
     entriesFromModeRanges,
     buildModeRangePayload,
     serializeModes,
+    type Mode,
+    type ModeEntry,
+    type RangeEntry,
 } from "../../js/utils/modeRanges";
 import inflection from "inflection";
 import UiBox from "../elements/UiBox.vue";
@@ -211,7 +214,18 @@ import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 import ChannelRangePips from "../elements/ChannelRangePips.vue";
 
-function getModeStateColors(state) {
+/** A mode entry as the tab edits it: `uid` keys it in v-for and removeEntry(). */
+type TabModeEntry = ModeEntry & { uid: number };
+
+interface TabMode extends Mode {
+    index: number;
+    name: string;
+    displayName: string;
+    helpKey: string;
+    entries: TabModeEntry[];
+}
+
+function getModeStateColors(state: string) {
     switch (state) {
         case "on":
             return {
@@ -252,15 +266,15 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
 
         // Reactive State
-        const modes = reactive([]);
+        const modes = reactive<TabMode[]>([]);
         const modesLoaded = ref(false);
         const hideUnused = ref(false);
         const searchQuery = ref("");
         const auxChannelCount = ref(0);
         const requiredModeRangeCount = ref(0);
         const infoMinWidth = ref(0);
-        const rcMarkers = reactive({});
-        let prevChannelsValues = null;
+        const rcMarkers = reactive<Record<number, number>>({});
+        let prevChannelsValues: number[] | null = null;
         let entryUid = 0;
 
         const logicOptions = computed(() => [
@@ -295,7 +309,7 @@ export default defineComponent({
             return [none, ...rest];
         });
 
-        const linkItemsForMode = (mode) =>
+        const linkItemsForMode = (mode: TabMode) =>
             linkOptions.value.map((opt) => ({
                 ...opt,
                 disabled: opt.value === mode.id,
@@ -312,14 +326,14 @@ export default defineComponent({
             infoMinWidth.value = Math.round(longestName * getTextWidth("A"));
         };
 
-        const markerPercentFor = (auxChannelIndex) => {
+        const markerPercentFor = (auxChannelIndex: number) => {
             const percent = rcMarkers[auxChannelIndex];
             return percent === undefined ? null : percent;
         };
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(() => serializeModes(modes));
 
-        const addRange = (mode, auxChannelIndex = -1, modeLogic = 0, range = DEFAULT_RANGE) => {
+        const addRange = (mode: TabMode, auxChannelIndex = -1, modeLogic = 0, range = DEFAULT_RANGE) => {
             const sliderRange = normalizeRangeValues([range.start, range.end]);
             mode.entries.push({
                 uid: ++entryUid,
@@ -330,7 +344,7 @@ export default defineComponent({
             });
         };
 
-        const addLink = (mode, modeLogic = 0, linkedTo = 0) => {
+        const addLink = (mode: TabMode, modeLogic = 0, linkedTo = 0) => {
             mode.entries.push({
                 uid: ++entryUid,
                 kind: "link",
@@ -339,7 +353,7 @@ export default defineComponent({
             });
         };
 
-        const removeEntry = (mode, uid) => {
+        const removeEntry = (mode: TabMode, uid: number) => {
             const index = mode.entries.findIndex((entry) => entry.uid === uid);
             if (index >= 0) {
                 mode.entries.splice(index, 1);
@@ -355,7 +369,7 @@ export default defineComponent({
             return (armingDisableFlags & armSwitchMask) > 0;
         };
 
-        const modeState = (mode) => {
+        const modeState = (mode: TabMode) => {
             if (!mode.entries.length) {
                 return "";
             }
@@ -384,7 +398,7 @@ export default defineComponent({
             modes.length = 0;
             entryUid = 0;
 
-            const modeMap = new Map();
+            const modeMap = new Map<number, TabMode>();
             for (let index = 0; index < fcStore.auxConfig.length; index++) {
                 const modeId = fcStore.auxConfigIds[index];
                 const rawName = fcStore.auxConfig[index];
@@ -419,8 +433,8 @@ export default defineComponent({
             markClean();
         };
 
-        const autoSelectChannel = (rcChannels, activeChannels, rssiChannel) => {
-            const autoRanges = [];
+        const autoSelectChannel = (rcChannels: number[], activeChannels: number, rssiChannel: number) => {
+            const autoRanges: RangeEntry[] = [];
             modes.forEach((mode) => {
                 mode.entries.forEach((entry) => {
                     if (entry.kind === "range" && entry.auxChannelIndex === -1) {
@@ -438,13 +452,12 @@ export default defineComponent({
                 prevChannelsValues = rcChannels.slice(0);
             };
 
-            if (!prevChannelsValues || !rcChannels.length) {
+            const prev = prevChannelsValues;
+            if (!prev || !rcChannels.length) {
                 return fillPrev();
             }
 
-            const diffs = rcChannels
-                .map((value, idx) => Math.abs(prevChannelsValues[idx] - value))
-                .slice(0, activeChannels);
+            const diffs = rcChannels.map((value, idx) => Math.abs(prev[idx] - value)).slice(0, activeChannels);
             const largest = diffs.reduce((x, y) => Math.max(x, y), 0);
             if (largest < 100) {
                 return fillPrev();
@@ -514,7 +527,7 @@ export default defineComponent({
                         await MSP.promise(MSPCodes.MSP_BOXIDS);
                         await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
                         await MSP.promise(MSPCodes.MSP_RC);
-                        await new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
+                        await new Promise<void>((resolve) => mspHelper.loadSerialConfig(resolve));
 
                         requiredModeRangeCount.value = fcStore.modeRanges.length;
                         auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);

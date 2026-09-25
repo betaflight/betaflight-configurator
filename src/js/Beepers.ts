@@ -1,10 +1,47 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { bit_check, bit_clear, bit_set } from "./bit";
 
-class Beepers {
-    constructor(config, supportedConditions) {
-        const self = this;
+export interface Beeper {
+    bit: number;
+    name: string;
+    visible: boolean;
+}
 
-        const beepers = [
+/** The checkbox shape updateData() reads; an HTMLInputElement satisfies it. */
+export interface BeeperCheckbox {
+    type?: string;
+    checked: boolean;
+    dataset?: { bit?: string };
+    getAttribute?(name: string): string | null;
+}
+
+class Beepers {
+    _beepers: Beeper[];
+    _beeperDisabledMask: number;
+
+    // The first argument is FC.CONFIG, accepted for the callers' sake and not read.
+    constructor(_config?: unknown, supportedConditions?: string[]) {
+        const beepers: Beeper[] = [
             { bit: 0, name: "GYRO_CALIBRATED", visible: true },
             { bit: 1, name: "RX_LOST", visible: true },
             { bit: 2, name: "RX_LOST_LANDING", visible: true },
@@ -30,39 +67,24 @@ class Beepers {
             { bit: 22, name: "RC_SMOOTHING_INIT_FAIL", visible: true },
         ];
 
-        if (supportedConditions) {
-            self._beepers = [];
-            beepers.forEach(function (beeper) {
-                if (
-                    supportedConditions.some(function (supportedCondition) {
-                        return supportedCondition === beeper.name;
-                    })
-                ) {
-                    self._beepers.push(beeper);
-                }
-            });
-        } else {
-            self._beepers = beepers.slice();
-        }
+        this._beepers = supportedConditions
+            ? beepers.filter((beeper) => supportedConditions.includes(beeper.name))
+            : beepers.slice();
 
-        self._beeperDisabledMask = 0;
+        this._beeperDisabledMask = 0;
     }
     getDisabledMask() {
-        const self = this;
-
-        return self._beeperDisabledMask;
+        return this._beeperDisabledMask;
     }
-    setDisabledMask(beeperDisabledMask) {
-        const self = this;
-
-        self._beeperDisabledMask = beeperDisabledMask;
+    setDisabledMask(beeperDisabledMask: number) {
+        this._beeperDisabledMask = beeperDisabledMask;
     }
-    isEnabled(beeperName) {
+    isEnabled(beeperName: string) {
         const beeper = this._beepers.find((b) => b.name === beeperName);
 
         return beeper ? !bit_check(this._beeperDisabledMask, beeper.bit) : false;
     }
-    setEnabled(beeperName, enabled) {
+    setEnabled(beeperName: string, enabled: boolean) {
         const beeper = this._beepers.find((b) => b.name === beeperName);
 
         if (beeper) {
@@ -73,10 +95,10 @@ class Beepers {
             }
         }
     }
-    generateElements(template, destination) {
+    generateElements(template: HTMLElement, destination: HTMLElement) {
         for (let i = 0; i < this._beepers.length; i++) {
             if (this._beepers[i].visible) {
-                const element = template.cloneNode(true);
+                const element = template.cloneNode(true) as HTMLElement;
                 destination.appendChild(element);
 
                 const inputElement = element.querySelector("input");
@@ -88,7 +110,7 @@ class Beepers {
                     inputElement.name = this._beepers[i].name;
                     inputElement.title = this._beepers[i].name;
                     inputElement.checked = !bit_check(this._beeperDisabledMask, this._beepers[i].bit);
-                    inputElement.dataset.bit = this._beepers[i].bit;
+                    inputElement.dataset.bit = String(this._beepers[i].bit);
                 }
 
                 if (labelElement) {
@@ -102,18 +124,19 @@ class Beepers {
             }
         }
     }
-    updateData(beeperElement) {
-        const self = this;
-
+    updateData(beeperElement: BeeperCheckbox) {
         const type = beeperElement.type ?? beeperElement.getAttribute?.("type");
 
         if (type === "checkbox") {
-            const bit = Number.parseInt(beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit"), 10);
+            const bit = Number.parseInt(
+                beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit") ?? "",
+                10,
+            );
 
             if (beeperElement.checked) {
-                self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, bit);
+                this._beeperDisabledMask = bit_clear(this._beeperDisabledMask, bit);
             } else {
-                self._beeperDisabledMask = bit_set(self._beeperDisabledMask, bit);
+                this._beeperDisabledMask = bit_set(this._beeperDisabledMask, bit);
             }
         }
     }
