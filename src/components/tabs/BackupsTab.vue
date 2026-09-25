@@ -246,7 +246,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
@@ -267,6 +267,31 @@ import {
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
 import FC from "@/js/fc";
+import type UserApi from "@/js/UserApi";
+
+/** A cloud backup as the user API's `/api/backups` lists it. */
+interface Backup {
+    id: number | string;
+    name?: string;
+    description?: string;
+    created?: string;
+    key?: string;
+}
+
+/** One failed command of a restore batch, as useMspCliSession's runBatch reports it. */
+interface RestoreFailure {
+    command: string;
+    response: string[];
+    errors: string[];
+}
+
+/** `error.message || error`, for an error of unknown shape. */
+function describeError(error: unknown) {
+    if (typeof error === "object" && error !== null && "message" in error) {
+        return error.message || error;
+    }
+    return error;
+}
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
@@ -274,18 +299,29 @@ const cliSession = useMspCliSession();
 const dialog = useDialog();
 
 const isLoading = ref(true);
-const backups = ref([]);
-const backupMessage = ref(null);
+const backups = ref<Backup[]>([]);
+const backupMessage = ref<string | null>(null);
 const isEditing = ref(false);
-const editForm = ref({ id: null, name: "", description: "", created: null });
+const editForm = ref<{
+    id: Backup["id"] | null;
+    name: string | undefined;
+    description: string;
+    created: string | null | undefined;
+}>({
+    id: null,
+    name: "",
+    description: "",
+    created: null,
+});
 const restoreProgress = ref(0);
 const restoreProgressOpen = ref(false);
-const restoreErrors = ref([]);
+const restoreErrors = ref<RestoreFailure[]>([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
-let userApi = null;
-let unsubscribeLogin = null;
-let unsubscribeLogout = null;
+let userApi: UserApi | null = null;
+// LoginManager documents these as a bare `Function`, so they are typed by what it returns.
+let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
+let unsubscribeLogout: ReturnType<typeof loginManager.onLogout> | null = null;
 
 const columns = computed(() => [
     { accessorKey: "created", header: t("labelDate") },
@@ -295,7 +331,7 @@ const columns = computed(() => [
 ]);
 
 const groupedBackups = computed(() => {
-    const grouped = {};
+    const grouped: Record<string, Backup[]> = {};
     for (const backup of backups.value) {
         const key = backup.key || "Unknown";
         if (!grouped[key]) {
@@ -371,11 +407,11 @@ async function createBackup() {
         gui_log(t("profileBackupApiSuccess"));
         await loadBackups();
     } catch (error) {
-        gui_log(`${t("profileBackupApiFail")}: ${error.message || error}`);
+        gui_log(`${t("profileBackupApiFail")}: ${describeError(error)}`);
     }
 }
 
-async function downloadBackup(backup) {
+async function downloadBackup(backup: Backup) {
     try {
         if (!userApi) {
             throw new Error(t("notLoggedIn"));
@@ -402,7 +438,7 @@ async function downloadBackup(backup) {
     }
 }
 
-function startEdit(backup) {
+function startEdit(backup: Backup) {
     editForm.value = {
         id: backup.id,
         name: backup.name,
@@ -431,7 +467,7 @@ async function saveBackupChanges() {
     }
 }
 
-async function restoreBackup(backup) {
+async function restoreBackup(backup: Backup) {
     if (!userApi) {
         gui_log(t("notLoggedIn"));
         return;
@@ -458,7 +494,7 @@ async function restoreBackup(backup) {
         return;
     }
 
-    let text;
+    let text: string;
     try {
         const response = await userApi.downloadBackupFile(backup.id);
         text = response.file;
@@ -466,7 +502,7 @@ async function restoreBackup(backup) {
             throw new Error(t("userBackupFileEmpty"));
         }
     } catch (error) {
-        gui_log(`${t("userBackupRestoreFailed")}: ${error.message || error}`);
+        gui_log(`${t("userBackupRestoreFailed")}: ${describeError(error)}`);
         return;
     }
 
@@ -505,7 +541,7 @@ async function restoreBackup(backup) {
     await saveAndReconnect();
 }
 
-function closeRestoreErrors(saveAnyway) {
+function closeRestoreErrors(saveAnyway: boolean) {
     restoreSavePressed.value = saveAnyway;
     restoreErrorsOpen.value = false;
     handleRestoreErrorsClose();
@@ -532,7 +568,7 @@ async function handleRestoreErrorsClose() {
     }
 }
 
-async function deleteBackup(backupId) {
+async function deleteBackup(backupId: Backup["id"]) {
     const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));
     if (!confirmed) {
         return;
@@ -552,7 +588,7 @@ async function deleteBackup(backupId) {
     }
 }
 
-function formatDate(dateString) {
+function formatDate(dateString: string | null | undefined) {
     if (!dateString) {
         return "";
     }

@@ -160,7 +160,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";

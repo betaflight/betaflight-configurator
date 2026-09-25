@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { reactive, ref, computed, nextTick, onMounted } from "vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -6,15 +27,35 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { useDirtyState } from "../useDirtyState";
 import { getPortDisplayName as getPortName } from "./portNames";
+import type { SerialPort } from "@/stores/fc.types";
+import type { PortFunctionGroup, PortFunctionRule } from "./usePortsRules";
 
-export function usePortsState(getRules) {
-    const ports = reactive([]);
-    const analyticsChanges = reactive({});
+/** One row of the legacy Ports view: an FC serial port with its functions split per column. */
+export interface PortRow {
+    identifier: number;
+    msp_baudrate: string;
+    telemetry_baudrate: string;
+    gps_baudrate: string;
+    blackbox_baudrate: string;
+    msp: boolean;
+    rxSerial: boolean;
+    /** Function names, or "" for none. */
+    telemetry: string;
+    sensor: string;
+    peripheral: string;
+}
+
+/** Function names per analytics key, reported when the configuration is saved. */
+export type PortAnalyticsChanges = Record<string, string>;
+
+export function usePortsState(getRules: (group: PortFunctionGroup) => PortFunctionRule[]) {
+    const ports = reactive<PortRow[]>([]);
+    const analyticsChanges = reactive<PortAnalyticsChanges>({});
     const isLoading = ref(true);
 
     const { dirty, markClean } = useDirtyState(() => JSON.stringify(ports));
 
-    const transformPortData = (fcPort) => {
+    const transformPortData = (fcPort: SerialPort): PortRow => {
         return {
             identifier: fcPort.identifier,
             msp_baudrate: fcPort.msp_baudrate,

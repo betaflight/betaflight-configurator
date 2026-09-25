@@ -1,9 +1,31 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref, reactive, computed } from "vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { API_VERSION_1_48 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 import { channelPercent } from "../../js/utils/rcChannel";
+import type { AdjustmentMode, AdjustmentSlot } from "./useAdjustmentsState";
 
 const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 
@@ -30,21 +52,21 @@ const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 //   33: BATTERY_PROFILE
 const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
 
-export function getAdjustmentMode(adjustmentFunction, adjustmentCenter) {
+export function getAdjustmentMode(adjustmentFunction: number, adjustmentCenter: number): AdjustmentMode {
     if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
         return "selection";
     }
     return adjustmentCenter > 0 ? "absolute" : "step";
 }
 
-export function useAdjustmentsData(adjustments, t) {
+export function useAdjustmentsData(adjustments: AdjustmentSlot[], t: (key: string) => string) {
     const fcStore = useFlightControllerStore();
 
     const auxChannelCount = ref(0);
     const pipValues = PIP_VALUES;
 
     const auxChannelOptions = computed(() => {
-        const options = [];
+        const options: { value: number; label: string }[] = [];
         for (let i = 0; i < auxChannelCount.value; i++) {
             options.push({ value: i, label: `AUX ${i + 1}` });
         }
@@ -56,7 +78,7 @@ export function useAdjustmentsData(adjustments, t) {
     });
 
     const functionOptions = computed(() => {
-        const options = [];
+        const options: { value: number; label: string }[] = [];
         for (let i = 0; i < adjustmentFunctionCount.value; i++) {
             options.push({
                 value: i,
@@ -73,12 +95,12 @@ export function useAdjustmentsData(adjustments, t) {
         return [first, ...rest];
     });
 
-    const stepModeOptions = computed(() => [
+    const stepModeOptions = computed((): { value: AdjustmentMode; label: string }[] => [
         { value: "step", label: t("adjustmentsModeStep") },
         { value: "absolute", label: t("adjustmentsModeAbsolute") },
     ]);
 
-    const onEnableChange = (adjustment) => {
+    const onEnableChange = (adjustment: AdjustmentSlot) => {
         if (adjustment.enabled) {
             if (adjustment.range.start === adjustment.range.end) {
                 adjustment.range.start = 1300;
@@ -90,7 +112,7 @@ export function useAdjustmentsData(adjustments, t) {
         }
     };
 
-    const onModeChange = (adjustment, newMode) => {
+    const onModeChange = (adjustment: AdjustmentSlot, newMode: AdjustmentMode) => {
         if (newMode === "step") {
             adjustment.adjustmentCenter = 0;
             adjustment.adjustmentScale = 0;
@@ -101,14 +123,14 @@ export function useAdjustmentsData(adjustments, t) {
         }
     };
 
-    const onFunctionChange = (adjustment) => {
+    const onFunctionChange = (adjustment: AdjustmentSlot) => {
         if (SELECT_MODE_FUNCTIONS.has(adjustment.adjustmentFunction)) {
             adjustment.adjustmentCenter = 0;
             adjustment.adjustmentScale = 0;
         }
     };
 
-    const sendMsp = (code) =>
+    const sendMsp = (code: number) =>
         new Promise((resolve) => {
             MSP.send_message(code, false, false, resolve);
         });
@@ -127,7 +149,7 @@ export function useAdjustmentsData(adjustments, t) {
 
         fcStore.adjustmentRanges.forEach((range) => {
             const isEnabled = range.range?.start !== range.range?.end;
-            const adj = reactive({
+            const adj: AdjustmentSlot = reactive({
                 slotIndex: range.slotIndex ?? 0,
                 auxChannelIndex: range.auxChannelIndex ?? 0,
                 range: {
@@ -145,7 +167,7 @@ export function useAdjustmentsData(adjustments, t) {
                 get rangeArray() {
                     return [this.range.start, this.range.end];
                 },
-                set rangeArray([start, end]) {
+                set rangeArray([start, end]: number[]) {
                     this.range.start = start;
                     this.range.end = end;
                 },
