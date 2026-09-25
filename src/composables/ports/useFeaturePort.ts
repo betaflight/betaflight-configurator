@@ -1,4 +1,25 @@
-import { computed, ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { computed, ref, type Ref } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -22,25 +43,39 @@ import { unreportedSoftSerialIdentifiers } from "./softSerial";
 import { describeClaim } from "./portClaims";
 import { loadPortClaims } from "./usePortClaims";
 
+export interface Option<T> {
+    value: T;
+    label: string;
+}
+
+/**
+ * Claim names for one port. A port with no CLI name cannot be claimed: `claims[null]` read the
+ * key "null", which `peripherals` never prints.
+ */
+function claimsOn(claims: Record<string, string[] | undefined>, identifier: number): string[] {
+    const cliName = getPortCliName(identifier);
+    return (cliName === null ? undefined : claims[cliName]) ?? [];
+}
+
+export interface PortOptionsSettings {
+    /** Claim names by port CLI name, as `peripherals` prints them; an absent port is unclaimed. */
+    claims?: Record<string, string[] | undefined> | null;
+    /** Kept in the list even if the FC did not report it. */
+    currentIdentifier?: number;
+    noneLabel?: string;
+    freeLabel?: string;
+    describeClaim?: (claim: string) => string;
+    /** Ports the board has but the FC cannot open yet, listed after the reported ones and marked with `inactiveLabel`. */
+    inactiveIdentifiers?: number[];
+    inactiveLabel?: string;
+}
+
 /**
  * Every port is labelled with what holds it, the caller's own claim included, or marked free.
  * Without `claims` (a build that cannot say) the names stand alone rather than claim anything.
- *
- * @param {Array<{identifier: number}>} ports
- * @param {object} options
- * @param {Record<string, string[]>|null} [options.claims] claim names by port CLI name, as
- *   `peripherals` prints them; a port that is absent is unclaimed
- * @param {number} [options.currentIdentifier] kept in the list even if the FC did not report it
- * @param {string} [options.noneLabel]
- * @param {string} [options.freeLabel]
- * @param {(claim: string) => string} [options.describeClaim]
- * @param {number[]} [options.inactiveIdentifiers] ports the board has but the FC cannot open yet,
- *   listed after the reported ones and marked with `inactiveLabel`
- * @param {string} [options.inactiveLabel]
- * @returns {Array<{value: number, label: string}>}
  */
 export function buildPortOptions(
-    ports,
+    ports: readonly { identifier: number }[] | null | undefined,
     {
         claims = null,
         currentIdentifier = PORT_NONE,
@@ -49,13 +84,13 @@ export function buildPortOptions(
         describeClaim = (name) => name,
         inactiveIdentifiers = [],
         inactiveLabel = "inactive",
-    } = {},
-) {
-    const options = [{ value: PORT_NONE, label: noneLabel }];
+    }: PortOptionsSettings = {},
+): Option<number>[] {
+    const options: Option<number>[] = [{ value: PORT_NONE, label: noneLabel }];
 
-    const label = (identifier, ...notes) => {
+    const label = (identifier: number, ...notes: string[]) => {
         const displayName = getPortDisplayName(identifier);
-        const held = claims ? (claims[getPortCliName(identifier)] ?? []).map(describeClaim) : [];
+        const held = claims ? claimsOn(claims, identifier).map(describeClaim) : [];
         if (claims && !held.length && !notes.length) {
             notes.push(freeLabel);
         }
@@ -81,11 +116,10 @@ export function buildPortOptions(
 }
 
 /**
- * @param {string[]} rates baud rate names the firmware accepts for this feature
- * @param {string|null} [current] kept in the list even when the feature no longer offers it
- * @returns {Array<{value: string, label: string}>}
+ * @param rates baud rate names the firmware accepts for this feature
+ * @param current kept in the list even when the feature no longer offers it
  */
-export function buildBaudOptions(rates, current = null) {
+export function buildBaudOptions(rates: string[] | null | undefined, current: string | null = null): Option<string>[] {
     const options = (rates ?? []).map((rate) => ({ value: rate, label: rate }));
 
     if (current && !options.some((option) => option.value === current)) {
@@ -102,10 +136,13 @@ export function buildBaudOptions(rates, current = null) {
  * no-op, so a reply we never saw cannot be mistaken for an unassigned port and written back as
  * NONE. Letting it throw would take the whole tab load down with it, and a busy FC times out.
  *
- * @returns {Promise<{value: string, allowed: string[]|null}|null>} null when the firmware does not
- *   have the setting, so a caller can tell an absent instance from one that is simply unassigned
+ * Resolves null when the firmware does not have the setting, so a caller can tell an absent
+ * instance from one that is simply unassigned.
  */
-async function readSetting(name, { discoverValues = false } = {}) {
+async function readSetting(
+    name: string,
+    { discoverValues = false }: { discoverValues?: boolean } = {},
+): Promise<{ value: string; allowed: string[] | null } | null> {
     let lines;
     try {
         lines = await cliSend(`get ${name}`);
@@ -126,7 +163,7 @@ async function readSetting(name, { discoverValues = false } = {}) {
     return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
 }
 
-async function sendSetting(command) {
+async function sendSetting(command: string) {
     const error = findCliError(await cliSend(command));
     if (error) {
         throw new Error(error);
@@ -145,15 +182,19 @@ async function sendSetting(command) {
  * firmware was not built with answers INVALID NAME, which is how the instance count for MSP and
  * telemetry reaches the app (MAX_MSP_PORT_COUNT and MAX_TELEMETRY_PROVIDERS never do).
  *
- * @param {object} options
- * @param {string} options.setting CLI setting name, e.g. "rx_uart"
- * @param {{setting: string, rates?: string[]}} [options.baud] omit for a feature with no baud of
- *   its own, such as a serial receiver, whose rate follows the protocol. Without `rates` the
- *   values the firmware prints for the setting are offered.
- * @param {{setting: string}} [options.protocol] a lookup setting the feature carries beside its
- *   port, as a telemetry instance carries its protocol
+ * - `setting`: CLI setting name, e.g. "rx_uart"
+ * - `baud`: omit for a feature with no baud of its own, such as a serial receiver, whose rate
+ *   follows the protocol. Without `rates` the values the firmware prints for the setting are offered.
+ * - `protocol`: a lookup setting the feature carries beside its port, as a telemetry instance
+ *   carries its protocol
  */
-export function useFeaturePort({ setting, baud = null, protocol = null }) {
+export interface FeaturePortSettings {
+    setting: string;
+    baud?: { setting: string; rates?: string[] } | null;
+    protocol?: { setting: string } | null;
+}
+
+export function useFeaturePort({ setting, baud = null, protocol = null }: FeaturePortSettings) {
     const fcStore = useFlightControllerStore();
 
     // The claim the `peripherals` command prints for this feature is the port setting minus its
@@ -168,12 +209,12 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
 
     const selectedIdentifier = ref(PORT_NONE);
     const assignedIdentifier = ref(PORT_NONE);
-    const selectedBaud = ref(null);
-    const assignedBaud = ref(null);
-    const baudRates = ref(baud?.rates ?? null);
-    const selectedProtocol = ref(null);
-    const assignedProtocol = ref(null);
-    const protocolValues = ref(null);
+    const selectedBaud: Ref<string | null> = ref(null);
+    const assignedBaud: Ref<string | null> = ref(null);
+    const baudRates: Ref<string[] | null> = ref(baud?.rates ?? null);
+    const selectedProtocol: Ref<string | null> = ref(null);
+    const assignedProtocol: Ref<string | null> = ref(null);
+    const protocolValues: Ref<string[] | null> = ref(null);
 
     const portChanged = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
     const baudChanged = computed(() => Boolean(baud) && selectedBaud.value !== assignedBaud.value);
@@ -209,7 +250,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
             return null;
         }
 
-        const heldBy = (claims[getPortCliName(selectedIdentifier.value)] ?? [])
+        const heldBy = claimsOn(claims, selectedIdentifier.value)
             .filter((name) => name !== ownClaim)
             .map((name) => describeClaim(name).label);
         if (!heldBy.length) {
@@ -284,7 +325,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
             return;
         }
 
-        if (protocolChanged.value) {
+        if (protocol && protocolChanged.value) {
             await sendSetting(`set ${protocol.setting} = ${selectedProtocol.value}`);
             assignedProtocol.value = selectedProtocol.value;
         }
@@ -295,7 +336,7 @@ export function useFeaturePort({ setting, baud = null, protocol = null }) {
             await loadPortClaims({ refresh: true });
         }
 
-        if (baudChanged.value) {
+        if (baud && baudChanged.value) {
             await sendSetting(`set ${baud.setting} = ${selectedBaud.value}`);
             assignedBaud.value = selectedBaud.value;
         }
