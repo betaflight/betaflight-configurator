@@ -365,7 +365,6 @@ const phaseDetail = ref("");
 
 // --- Sample buffers ---
 let accelBuf: Vec[] = []; // rolling buffer of recent accel vectors
-let gyroBuf: Vec[] = []; // rolling buffer of recent gyro vectors
 let pollTimer: ReturnType<typeof setTimeout> | null = null;
 let isPolling = false;
 
@@ -570,10 +569,8 @@ function onImuSample() {
     const gyro = [fcStore.sensorData.gyroscope[0], fcStore.sensorData.gyroscope[1], fcStore.sensorData.gyroscope[2]];
 
     accelBuf.push(accel);
-    gyroBuf.push(gyro);
     if (accelBuf.length > SAMPLE_BUFFER_LEN) {
         accelBuf.shift();
-        gyroBuf.shift();
     }
 
     if (accelBuf.length < SAMPLE_BUFFER_LEN) return;
@@ -754,7 +751,6 @@ let flatStableSince = 0;
 
 function advanceTo(nextPhase: string) {
     accelBuf = [];
-    gyroBuf = [];
     tiltHistory = [];
     flatStableSince = 0;
     phaseEnteredAt = Date.now();
@@ -907,7 +903,6 @@ function resetCaptured() {
     captured.upAxis = null;
     captured.yawIntegralDeg = 0;
     accelBuf = [];
-    gyroBuf = [];
     tiltHistory = [];
     flatStableSince = 0;
     phaseEnteredAt = 0;

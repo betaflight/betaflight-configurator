@@ -94,18 +94,30 @@ function getStepAxisX(maxSpeed: number) {
     return step;
 }
 
+interface AxisGridOptions {
+    ctx: CanvasRenderingContext2D;
+    plotWidth: number;
+    plotHeight: number;
+    xScale: Scale;
+    yScale: Scale;
+    maxSpeed: number;
+    minMult: number;
+    maxMult: number;
+    colors: ChartColors;
+}
+
 // Draw axises ticks and grid
-function drawAxisTicksAndGrid(
-    ctx: CanvasRenderingContext2D,
-    plotWidth: number,
-    plotHeight: number,
-    xScale: Scale,
-    yScale: Scale,
-    maxSpeed: number,
-    minMult: number,
-    maxMult: number,
-    colors: ChartColors,
-) {
+function drawAxisTicksAndGrid({
+    ctx,
+    plotWidth,
+    plotHeight,
+    xScale,
+    yScale,
+    maxSpeed,
+    minMult,
+    maxMult,
+    colors,
+}: AxisGridOptions) {
     const fontSize = 9;
     ctx.font = `${fontSize}px sans-serif`;
     ctx.fillStyle = colors.tick;
@@ -258,7 +270,7 @@ function drawChart() {
     drawAxes(ctx, plotWidth, plotHeight, colors);
 
     // The ticks, grid and labels
-    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors);
+    drawAxisTicksAndGrid({ ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors });
 
     // The curves
     drawCurves(ctx, xScale, yScale, colors);

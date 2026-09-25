@@ -584,40 +584,51 @@ function updateLiveMagOverlay() {
             noseLine.visible = !!showLive;
         }
         if (showLive) {
-            const totalField = Math.hypot(mag.x, mag.y, mag.z);
-            if (totalField > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
-                maxFieldStrength = totalField;
-                repositionCalOffsetMarker();
-            }
-            liveMarker.position.set(totalField * magScale(), 0, 0);
-
-            if (noseLine) {
-                noseLine.visible = true;
-                _tmpVec.set(1, 0, 0);
-                orientCylinder(noseLine, _tmpVec, totalField * magScale());
-                noseLine.position.set(0, 0, 0);
-            }
-
-            // Capture nose direction for dot placement — uses the same
-            // transform chain as the liveMarker so dots always match.
-            quadIcon?.updateWorldMatrix(true, false);
-            liveMarker.getWorldPosition(_worldPosVec);
-            const r = totalField * magScale();
-            if (r > 0) {
-                const invR = 1 / r;
-                const nx = _worldPosVec.x * invR;
-                const ny = _worldPosVec.y * invR;
-                const nz = _worldPosVec.z * invR;
-                const target = props.sampleCount;
-                const have = noseDirections.length / 3;
-                for (let i = have; i < target; i++) {
-                    noseDirections.push(nx, ny, nz);
-                }
-            }
+            placeLiveMarker(liveMarker, mag);
         }
     }
     if (vectorLines) {
         updateAxisCylinders(vectorLines, !!showLive, bx, by, bz);
+    }
+}
+
+// Put the live marker (and nose line) at the current field strength along the nose.
+function placeLiveMarker(marker: THREE.Mesh, mag: Vec3) {
+    const totalField = Math.hypot(mag.x, mag.y, mag.z);
+    if (totalField > maxFieldStrength * 1.02 || maxFieldStrength === 0) {
+        maxFieldStrength = totalField;
+        repositionCalOffsetMarker();
+    }
+    marker.position.set(totalField * magScale(), 0, 0);
+
+    if (noseLine) {
+        noseLine.visible = true;
+        _tmpVec.set(1, 0, 0);
+        orientCylinder(noseLine, _tmpVec, totalField * magScale());
+        noseLine.position.set(0, 0, 0);
+    }
+
+    recordNoseDirection(marker, totalField);
+}
+
+// Capture nose direction for dot placement — uses the same
+// transform chain as the liveMarker so dots always match.
+function recordNoseDirection(marker: THREE.Mesh, totalField: number) {
+    quadIcon?.updateWorldMatrix(true, false);
+    marker.getWorldPosition(_worldPosVec);
+    const r = totalField * magScale();
+    // NaN included: the original only recorded when r > 0.
+    if (Number.isNaN(r) || r <= 0) {
+        return;
+    }
+    const invR = 1 / r;
+    const nx = _worldPosVec.x * invR;
+    const ny = _worldPosVec.y * invR;
+    const nz = _worldPosVec.z * invR;
+    const target = props.sampleCount;
+    const have = noseDirections.length / 3;
+    for (let i = have; i < target; i++) {
+        noseDirections.push(nx, ny, nz);
     }
 }
 
@@ -649,9 +660,36 @@ function rebuildFieldReference() {
     // Always positioned at origin — the field line passes through 0,0,0
     fieldRefGroup.position.set(0, 0, 0);
 
-    // Orient shaft + cone — pull cone inward so its tip sits at the sphere surface
-    const shaft = fieldRefGroup.userData.shaft;
-    const cone = fieldRefGroup.userData.cone;
+    orientFieldArrows(fieldRefGroup, fdx, fdz, props.inclination);
+    disposeFieldLabels(fieldRefGroup);
+    addInclinationArc(fieldRefGroup, incl, radius, props.inclination);
+    addPoleLabels(fieldRefGroup, fdx, fdz, props.inclination);
+}
+
+// Orient shaft + cone — pull cone inward so its tip sits at the sphere surface
+// Small orange sprite label
+function makeFieldLabel(group: THREE.Group, text: string, x: number, z: number, size = 60) {
+    const cv = document.createElement("canvas");
+    cv.width = 128;
+    cv.height = 64;
+    const c = context2D(cv);
+    c.fillStyle = "#ff8800";
+    c.font = "bold 48px sans-serif";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(text, 64, 32);
+    const tex = new THREE.CanvasTexture(cv);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+    const s = new THREE.Sprite(mat);
+    s.position.set(x, 0, z);
+    s.scale.set(size, size * 0.5, 1);
+    group.add(s);
+    return s;
+}
+
+function orientFieldArrows(group: THREE.Group, fdx: number, fdz: number, inclination: number) {
+    const shaft = group.userData.shaft;
+    const cone = group.userData.cone;
     _tmpVec.set(fdx, 0, fdz);
     const len = _tmpVec.length();
     const coneHalfH = 12;
@@ -664,8 +702,8 @@ function rebuildFieldReference() {
         cone.quaternion.copy(_tmpQuat);
 
         // South pole: negate the field direction
-        const southShaft = fieldRefGroup.userData.southShaft;
-        const southCone = fieldRefGroup.userData.southCone;
+        const southShaft = group.userData.southShaft;
+        const southCone = group.userData.southCone;
         const sDir = dir.clone().negate();
         _tmpVec.set(-fdx, 0, -fdz);
         orientCylinder(southShaft, _tmpVec, len - coneHalfH);
@@ -676,8 +714,8 @@ function rebuildFieldReference() {
 
         // Hemisphere-aware thickness: dominant pole gets thicker shaft + larger cone
         // Must run after orientCylinder() which resets scale.x/z to 1
-        const dominantNorth = props.inclination > 0;
-        const dominantSouth = props.inclination < 0;
+        const dominantNorth = inclination > 0;
+        const dominantSouth = inclination < 0;
         const THICK = 5 / 3;
         const northScale = dominantNorth ? THICK : 1;
         const southScale = dominantSouth ? THICK : 1;
@@ -688,20 +726,24 @@ function rebuildFieldReference() {
         southShaft.scale.z = southScale;
         southCone.scale.setScalar(dominantSouth ? 1.3 : 1);
     }
+}
 
-    // Dispose old arc + labels
+// Dispose old arc + labels
+function disposeFieldLabels(group: THREE.Group) {
     for (const key of ["arc", "arcLabel", "magNorthLabel", "magSouthLabel", "inclLabel"]) {
-        const obj = fieldRefGroup.userData[key];
+        const obj = group.userData[key];
         if (!(obj instanceof THREE.Object3D)) {
             continue;
         }
-        fieldRefGroup.remove(obj);
+        group.remove(obj);
         geometryOf(obj)?.dispose();
         materialsOf(obj).forEach(disposeMaterial);
-        fieldRefGroup.userData[key] = null;
+        group.userData[key] = null;
     }
+}
 
-    // Inclination arc: curved line from horizontal (+X) down to field direction
+// Inclination arc: curved line from horizontal (+X) down to field direction, with its angle label
+function addInclinationArc(group: THREE.Group, incl: number, radius: number, inclination: number) {
     const arcRadius = radius * 0.35;
     const arcPoints = [];
     for (let i = 0; i <= 24; i++) {
@@ -710,8 +752,8 @@ function rebuildFieldReference() {
     }
     const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPoints);
     const arcMat = new THREE.LineBasicMaterial({ color: 0xff8800, opacity: 0.6, transparent: true });
-    fieldRefGroup.userData.arc = new THREE.Line(arcGeo, arcMat);
-    fieldRefGroup.add(fieldRefGroup.userData.arc);
+    group.userData.arc = new THREE.Line(arcGeo, arcMat);
+    group.add(group.userData.arc);
 
     // Angle label at arc midpoint
     const midAngle = -incl / 2;
@@ -723,46 +765,28 @@ function rebuildFieldReference() {
     ctx.font = "bold 28px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(`${Math.round(props.inclination)}°`, 64, 24);
+    ctx.fillText(`${Math.round(inclination)}°`, 64, 24);
     const labelTexture = new THREE.CanvasTexture(labelCanvas);
     const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
     const labelSprite = new THREE.Sprite(labelMat);
     labelSprite.position.set(Math.cos(midAngle) * arcRadius * 1.4, 0, -Math.sin(midAngle) * arcRadius * 1.4);
     labelSprite.scale.set(80, 30, 1);
-    fieldRefGroup.userData.arcLabel = labelSprite;
-    fieldRefGroup.add(labelSprite);
+    group.userData.arcLabel = labelSprite;
+    group.add(labelSprite);
+}
 
-    // Helper: small orange sprite label
-    function makeFieldLabel(group: THREE.Group, text: string, x: number, z: number, size = 60) {
-        const cv = document.createElement("canvas");
-        cv.width = 128;
-        cv.height = 64;
-        const c = context2D(cv);
-        c.fillStyle = "#ff8800";
-        c.font = "bold 48px sans-serif";
-        c.textAlign = "center";
-        c.textBaseline = "middle";
-        c.fillText(text, 64, 32);
-        const tex = new THREE.CanvasTexture(cv);
-        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
-        const s = new THREE.Sprite(mat);
-        s.position.set(x, 0, z);
-        s.scale.set(size, size * 0.5, 1);
-        group.add(s);
-        return s;
-    }
-
-    // Magnetic N/S labels just past the arrow tips
+// Magnetic N/S labels just past the arrow tips, and the inclination at the dominant pole end
+function addPoleLabels(group: THREE.Group, fdx: number, fdz: number, inclination: number) {
     // North pole = positive inclination end, South = negative
     const tipOffset = 1.15;
-    fieldRefGroup.userData.magNorthLabel = makeFieldLabel(fieldRefGroup, "N", fdx * tipOffset, fdz * tipOffset);
-    fieldRefGroup.userData.magSouthLabel = makeFieldLabel(fieldRefGroup, "S", -fdx * tipOffset, -fdz * tipOffset);
+    group.userData.magNorthLabel = makeFieldLabel(group, "N", fdx * tipOffset, fdz * tipOffset);
+    group.userData.magSouthLabel = makeFieldLabel(group, "S", -fdx * tipOffset, -fdz * tipOffset);
 
     // Inclination angle at the dominant pole end (just outside the sphere)
-    const sign = props.inclination >= 0 ? "+" : "";
-    const inclText = `${sign}${Math.round(props.inclination)}°`;
-    const inclPos = props.inclination >= 0 ? 1.25 : -1.25;
-    fieldRefGroup.userData.inclLabel = makeFieldLabel(fieldRefGroup, inclText, fdx * inclPos, fdz * inclPos, 80);
+    const sign = inclination >= 0 ? "+" : "";
+    const inclText = `${sign}${Math.round(inclination)}°`;
+    const inclPos = inclination >= 0 ? 1.25 : -1.25;
+    group.userData.inclLabel = makeFieldLabel(group, inclText, fdx * inclPos, fdz * inclPos, 80);
 }
 
 // --- Voxel Heatmap ---

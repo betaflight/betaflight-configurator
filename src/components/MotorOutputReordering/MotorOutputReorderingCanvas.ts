@@ -169,8 +169,7 @@ export default class MotorOutputReorderCanvas {
         const mouseHoverMotorIndex = this._getMouseHoverMotorIndex();
 
         if (-1 === this._motorIndexToSpinOnMouseDown) {
-            for (let i = 0; i < this.readyMotors.length; i++) {
-                const motorIndex = this.readyMotors[i];
+            for (const motorIndex of this.readyMotors) {
                 this._ctx.beginPath();
                 this._ctx.arc(
                     motors[motorIndex].x,

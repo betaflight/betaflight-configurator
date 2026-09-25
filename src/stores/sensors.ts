@@ -86,40 +86,54 @@ export const useSensorsStore = defineStore("sensors", () => {
     // Debug columns
     const debugColumns = ref(4);
 
+    function restoreCheckboxes(saved: boolean[]) {
+        // Saved checkbox array migration from previous version
+        if (saved.length === 6) {
+            saved.splice(5, 0, false);
+        }
+        checkboxes.value = saved;
+    }
+
+    function restoreRates(config: SavedSensorsTab) {
+        if (config.rates) {
+            Object.assign(rates, config.rates);
+        }
+        if (typeof config.globalRate === "number") {
+            globalRate.value = config.globalRate;
+        } else if (config.rates) {
+            // Seed the global control from the fastest saved per-sensor rate.
+            const legacy = Object.values(config.rates).filter((v): v is number => typeof v === "number");
+            if (legacy.length) {
+                globalRate.value = Math.min(...legacy);
+            }
+        }
+    }
+
+    function restoreDebugScales(saved: SavedSensorsTab["debugScales"]) {
+        if (!Array.isArray(saved)) {
+            return;
+        }
+        for (let i = 0; i < debugScales.value.length; i++) {
+            debugScales.value[i] = saved[i] ?? 0;
+        }
+    }
+
     function loadFromConfig() {
         // ConfigStorage wraps each value under its own key: { sensors_tab: { ... } }.
         const config = getConfig<SavedSensorsTab | undefined>("sensors_tab").sensors_tab;
-        if (config) {
-            if (config.checkboxes) {
-                // Saved checkbox array migration from previous version
-                if (config.checkboxes.length === 6) {
-                    config.checkboxes.splice(5, 0, false);
-                }
-                checkboxes.value = config.checkboxes;
-            }
-            if (config.rates) {
-                Object.assign(rates, config.rates);
-            }
-            if (typeof config.globalRate === "number") {
-                globalRate.value = config.globalRate;
-            } else if (config.rates) {
-                // Seed the global control from the fastest saved per-sensor rate.
-                const legacy = Object.values(config.rates).filter((v): v is number => typeof v === "number");
-                if (legacy.length) {
-                    globalRate.value = Math.min(...legacy);
-                }
-            }
-            if (config.scales) {
-                Object.assign(scales, config.scales);
-            }
-            if (Array.isArray(config.debugScales)) {
-                for (let i = 0; i < debugScales.value.length; i++) {
-                    debugScales.value[i] = config.debugScales[i] ?? 0;
-                }
-            }
-            if (config.debugColumns) {
-                debugColumns.value = config.debugColumns;
-            }
+        if (!config) {
+            return;
+        }
+        if (config.checkboxes) {
+            restoreCheckboxes(config.checkboxes);
+        }
+        restoreRates(config);
+        if (config.scales) {
+            Object.assign(scales, config.scales);
+        }
+        restoreDebugScales(config.debugScales);
+        if (config.debugColumns) {
+            debugColumns.value = config.debugColumns;
         }
     }
 

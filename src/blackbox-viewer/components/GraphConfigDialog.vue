@@ -753,10 +753,15 @@ const currentState = ref<{
     shiftKey: false,
 });
 
+// Whether a bulk min/max action applies to a field: every field, or only the checked ones.
+function isFieldIncluded(index: number, setCheckedOnly?: boolean) {
+    return !setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index];
+}
+
 function setMinMaxToDefault(setCheckedOnly?: boolean) {
     if (currentState.value.graph?.fields) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+            if (isFieldIncluded(index, setCheckedOnly)) {
                 resetMin(field);
                 resetMax(field);
             }
@@ -779,7 +784,7 @@ function setMinMaxLikeThis(setCheckedOnly?: boolean) {
         const min = mm.min;
         const max = mm.max;
         for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+            if (isFieldIncluded(index, setCheckedOnly)) {
                 setMin(field, min);
                 setMax(field, max);
             }
@@ -788,24 +793,27 @@ function setMinMaxLikeThis(setCheckedOnly?: boolean) {
     }
 }
 
-function setMinMaxOneScale(setCheckedOnly?: boolean) {
+// The combined min/max of the included fields' curves; min stays Number.MAX_VALUE when none has one.
+function includedRange(fields: EditorField[], setCheckedOnly?: boolean) {
     let max = -Number.MAX_VALUE;
     let min = Number.MAX_VALUE;
-
-    if (currentState.value.graph?.fields) {
-        for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
-                const mm = field?.curve?.MinMax;
-                if (mm?.min !== undefined && mm?.max !== undefined) {
-                    max = Math.max(max, mm.max);
-                    min = Math.min(min, mm.min);
-                }
-            }
+    for (const [index, field] of fields.entries()) {
+        const mm = isFieldIncluded(index, setCheckedOnly) ? field?.curve?.MinMax : undefined;
+        if (mm?.min !== undefined && mm?.max !== undefined) {
+            max = Math.max(max, mm.max);
+            min = Math.min(min, mm.min);
         }
+    }
+    return { min, max };
+}
+
+function setMinMaxOneScale(setCheckedOnly?: boolean) {
+    if (currentState.value.graph?.fields) {
+        const { min, max } = includedRange(currentState.value.graph.fields, setCheckedOnly);
 
         if (min !== Number.MAX_VALUE) {
             for (const [index, field] of currentState.value.graph.fields.entries()) {
-                if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+                if (isFieldIncluded(index, setCheckedOnly)) {
                     setMin(field, min);
                     setMax(field, max);
                 }
@@ -818,7 +826,7 @@ function setMinMaxOneScale(setCheckedOnly?: boolean) {
 function setMinMaxCentered(setCheckedOnly?: boolean) {
     if (currentState.value.graph?.fields) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+            if (isFieldIncluded(index, setCheckedOnly)) {
                 const mm = field?.curve?.MinMax;
                 if (mm?.min !== undefined && mm?.max !== undefined) {
                     let min = mm.min;
@@ -849,7 +857,7 @@ function setMinMaxSelectedCentered() {
 function setMinMaxZoom(zoom: number, setCheckedOnly?: boolean) {
     if (currentState.value.graph?.fields) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+            if (isFieldIncluded(index, setCheckedOnly)) {
                 const mm = field?.curve?.MinMax;
                 if (mm?.min !== undefined && mm?.max !== undefined) {
                     const middle = (mm.min + mm.max) / 2;
@@ -878,7 +886,7 @@ function setMinMaxSelectedZoom(zoom: number) {
 function setFieldsMinMaxToFullRange(setCheckedOnly: boolean | undefined, getMinMaxFunction: MinMaxFunction) {
     if (currentState.value.graph?.fields && props.flightLog) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
-            if (!setCheckedOnly || !currentState.value.isFieldChecked || currentState.value.isFieldChecked[index]) {
+            if (isFieldIncluded(index, setCheckedOnly)) {
                 const mm = getMinMaxFunction(props.flightLog, props.grapher, field.name);
                 if (mm?.min !== undefined && mm?.max !== undefined) {
                     setMin(field, mm.min);

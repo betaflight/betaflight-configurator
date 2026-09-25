@@ -316,6 +316,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick, watch, type Ref } from "vue";
 import type { FeatureDefinition } from "../../js/Features";
+import type { GpsData } from "../../stores/fc.types";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
@@ -687,66 +688,122 @@ export default defineComponent({
             "gnssQualityFullyLocked",
         ];
 
-        const updateSignalStrengths = () => {
-            const hasGPS = hasGpsSensor.value;
-            const rows: SignalRow[] = [];
+        const qualityClassFor = (qualityValue: number) => {
+            if (qualityValue >= 5) {
+                return "bg-[var(--success-500)] text-white";
+            }
+            if (qualityValue === 4) {
+                return "bg-[var(--warning-500)] text-black";
+            }
+            return "bg-[var(--surface-500)] text-white";
+        };
 
-            if (!hasGPS) {
-                signalRows.value = rows;
+        // Firmware reporting more than 16 channels sends UBX-NAV-SIG style GNSS ids and quality bits.
+        const gnssSignalRows = (gpsData: GpsData, channels: number): SignalRow[] => {
+            const rows: SignalRow[] = [];
+            const maxUIChannels = 32;
+            const channelCount = Math.min(maxUIChannels, channels) || 32;
+
+            for (let i = 0; i < channelCount; i++) {
+                const gnssId = gpsData.chn[i];
+                if (gnssId >= 7) {
+                    rows.push({ gnss: "-", satId: null, satUsed: false, cno: 0, quality: "", qualityClass: "" });
+                    continue;
+                }
+
+                const satUsed = (gpsData.quality[i] & 0x8) >> 3;
+                const qualityValue = gpsData.quality[i] & 0x7;
+                rows.push({
+                    gnss: gnssArray[gnssId],
+                    satId: gpsData.svid[i],
+                    satUsed: !!satUsed,
+                    cno: gpsData.cno[i],
+                    quality: i18n.getMessage(qualityArray[qualityValue]),
+                    qualityClass: qualityClassFor(qualityValue),
+                });
+            }
+            return rows;
+        };
+
+        // Older firmware: raw quality bytes, padded out to 32 rows.
+        const legacySignalRows = (gpsData: GpsData, channels: number): SignalRow[] => {
+            const rows: SignalRow[] = [];
+            for (let i = 0; i < channels; i++) {
+                rows.push({
+                    gnss: "-",
+                    satId: gpsData.svid[i],
+                    satUsed: false,
+                    cno: gpsData.cno[i],
+                    quality: gpsData.quality[i],
+                    qualityClass: "",
+                });
+            }
+
+            for (let i = channels; i < 32; i++) {
+                rows.push({ gnss: "-", satId: "-", satUsed: false, cno: 0, quality: "", qualityClass: "" });
+            }
+            return rows;
+        };
+
+        const updateSignalStrengths = () => {
+            if (!hasGpsSensor.value) {
+                signalRows.value = [];
                 return;
             }
 
             const gpsData = fcStore.gpsData || {};
             const channels = gpsData?.chn?.length || 0;
 
-            if (channels > 16) {
-                const maxUIChannels = 32;
-                const channelCount = Math.min(maxUIChannels, channels) || 32;
+            signalRows.value = channels > 16 ? gnssSignalRows(gpsData, channels) : legacySignalRows(gpsData, channels);
+        };
 
-                for (let i = 0; i < channelCount; i++) {
-                    const gnssId = gpsData.chn[i];
-                    if (gnssId >= 7) {
-                        rows.push({ gnss: "-", satId: null, satUsed: false, cno: 0, quality: "", qualityClass: "" });
-                        continue;
-                    }
-
-                    const satUsed = (gpsData.quality[i] & 0x8) >> 3;
-                    const qualityValue = gpsData.quality[i] & 0x7;
-                    const quality = i18n.getMessage(qualityArray[qualityValue]);
-                    const qualityColor =
-                        qualityValue >= 5
-                            ? "bg-[var(--success-500)] text-white"
-                            : qualityValue === 4
-                              ? "bg-[var(--warning-500)] text-black"
-                              : "bg-[var(--surface-500)] text-white";
-
-                    rows.push({
-                        gnss: gnssArray[gnssId],
-                        satId: gpsData.svid[i],
-                        satUsed: !!satUsed,
-                        cno: gpsData.cno[i],
-                        quality,
-                        qualityClass: qualityColor,
-                    });
+        // Put the aircraft icon on the map, or show the no-fix icon when there is no position yet.
+        const placeOnMap = (gpsFoundPosition: boolean, longitude: number, latitude: number, headingRadians: number) => {
+            if (!gpsFoundPosition) {
+                if (mapInstance.value) {
+                    mapInstance.value.iconFeature.setStyle(mapInstance.value.iconStyleNoFix);
                 }
-            } else {
-                for (let i = 0; i < channels; i++) {
-                    rows.push({
-                        gnss: "-",
-                        satId: gpsData.svid[i],
-                        satUsed: false,
-                        cno: gpsData.cno[i],
-                        quality: gpsData.quality[i],
-                        qualityClass: "",
-                    });
-                }
-
-                for (let i = channels; i < 32; i++) {
-                    rows.push({ gnss: "-", satId: "-", satUsed: false, cno: 0, quality: "", qualityClass: "" });
-                }
+                return;
             }
 
-            signalRows.value = rows;
+            initializeMap();
+            const mapObj = mapInstance.value?.map;
+            const view = mapInstance.value?.mapView;
+            const geometry = mapInstance.value?.iconGeometry;
+            const feature = mapInstance.value?.iconFeature;
+            // initializeMap() leaves no map when the container is not mounted yet.
+            const iconStyle = hasMag.value ? mapInstance.value?.iconStyleMag : mapInstance.value?.iconStyleGPS;
+
+            const rerender = () => {
+                if (!mapObj || !mapObj.getTargetElement || !mapObj.getTargetElement()) return;
+                mapObj.updateSize();
+                const renderer = mapObj.getRenderer && mapObj.getRenderer();
+                if (renderer) {
+                    mapObj.renderSync();
+                }
+            };
+
+            if (iconStyle && feature && geometry && view && mapObj) {
+                iconStyle.getImage()?.setRotation(headingRadians);
+                feature.setStyle(iconStyle);
+                const center = fromLonLat([longitude, latitude]);
+                view.setCenter(center);
+                geometry.setCoordinates(center);
+                requestAnimationFrame(rerender);
+                setTimeout(rerender, 50);
+            }
+        };
+
+        const updatePositionalDop = (positionalDopRaw: number | undefined, magDeclination: number | undefined) => {
+            if (!showPositionalDop.value) {
+                gpsInfo.positionalDopDisplay = "";
+                gpsInfo.magDeclination = null;
+                return;
+            }
+            const positionalDop = Number(((positionalDopRaw || 0) / 100).toFixed(2));
+            const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
+            gpsInfo.positionalDopDisplay = `${stars} <span class="px-1.5 py-0.5 rounded text-xs ${qualityColor}">${positionalDop}</span>`;
+            gpsInfo.magDeclination = hasMag.value ? (magDeclination || 0).toFixed(1) : null;
         };
 
         const updateUi = () => {
@@ -770,15 +827,7 @@ export default defineComponent({
             gpsInfo.longitude = longitude;
             gpsInfo.distToHome = gpsData?.distanceToHome || 0;
 
-            if (showPositionalDop.value) {
-                const positionalDop = Number(((gpsData?.positionalDop || 0) / 100).toFixed(2));
-                const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
-                gpsInfo.positionalDopDisplay = `${stars} <span class="px-1.5 py-0.5 rounded text-xs ${qualityColor}">${positionalDop}</span>`;
-                gpsInfo.magDeclination = hasMag.value ? (compassConfig?.mag_declination || 0).toFixed(1) : null;
-            } else {
-                gpsInfo.positionalDopDisplay = "";
-                gpsInfo.magDeclination = null;
-            }
+            updatePositionalDop(gpsData?.positionalDop, compassConfig?.mag_declination);
 
             updateSignalStrengths();
 
@@ -787,37 +836,7 @@ export default defineComponent({
             if (ispConnected()) {
                 isOnline.value = true;
                 gpsFoundPosition = !!(longitude && latitude);
-
-                if (gpsFoundPosition) {
-                    initializeMap();
-                    const mapObj = mapInstance.value?.map;
-                    const view = mapInstance.value?.mapView;
-                    const geometry = mapInstance.value?.iconGeometry;
-                    const feature = mapInstance.value?.iconFeature;
-                    // initializeMap() leaves no map when the container is not mounted yet.
-                    const iconStyle = hasMag.value ? mapInstance.value?.iconStyleMag : mapInstance.value?.iconStyleGPS;
-
-                    const rerender = () => {
-                        if (!mapObj || !mapObj.getTargetElement || !mapObj.getTargetElement()) return;
-                        mapObj.updateSize();
-                        const renderer = mapObj.getRenderer && mapObj.getRenderer();
-                        if (renderer) {
-                            mapObj.renderSync();
-                        }
-                    };
-
-                    if (iconStyle && feature && geometry && view && mapObj) {
-                        iconStyle.getImage()?.setRotation(imuHeadingRadians);
-                        feature.setStyle(iconStyle);
-                        const center = fromLonLat([longitude, latitude]);
-                        view.setCenter(center);
-                        geometry.setCoordinates(center);
-                        requestAnimationFrame(rerender);
-                        setTimeout(rerender, 50);
-                    }
-                } else if (mapInstance.value) {
-                    mapInstance.value.iconFeature.setStyle(mapInstance.value.iconStyleNoFix);
-                }
+                placeOnMap(gpsFoundPosition, longitude, latitude, imuHeadingRadians);
             } else {
                 isOnline.value = false;
             }

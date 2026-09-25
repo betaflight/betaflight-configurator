@@ -1137,14 +1137,8 @@ function initGraphHelpers(sampleNumber: number, heightDomain: [number, number] |
         // Grid lines only: blank tick labels.
         xGrid: d3.axisBottom(widthScale).tickFormat(() => ""),
         yGrid: d3.axisLeft(heightScale).tickFormat(() => ""),
-        xAxis: d3
-            .axisBottom(widthScale)
-            .ticks(5)
-            .tickFormat((d) => String(d)),
-        yAxis: d3
-            .axisLeft(heightScale)
-            .ticks(5)
-            .tickFormat((d) => String(d)),
+        xAxis: d3.axisBottom(widthScale).ticks(5).tickFormat(String),
+        yAxis: d3.axisLeft(heightScale).ticks(5).tickFormat(String),
         line: d3
             .line<GraphSample>()
             .x((d) => widthScale(d[0]))

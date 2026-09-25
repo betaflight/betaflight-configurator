@@ -422,7 +422,7 @@ export function openLoopResponse(tf: TransferFunction): OpenLoopResponse {
         const a = hReal[k];
         const b = hImag[k];
         const denominator = (1 - a) * (1 - a) + b * b;
-        if (!(denominator > 1e-12)) {
+        if (Number.isNaN(denominator) || denominator <= 1e-12) {
             continue;
         }
         const real = (a - a * a - b * b) / denominator;
@@ -482,7 +482,7 @@ function findTargetCrossover(tf: TransferFunction, openLoop: OpenLoopResponse, t
         if (openLoop.phase[k] <= wantedPhase && openLoop.phase[k - 1] > wantedPhase) {
             const frac = (wantedPhase - openLoop.phase[k - 1]) / (openLoop.phase[k] - openLoop.phase[k - 1]);
             const magnitudeAt = openLoop.magnitude[k - 1] + frac * (openLoop.magnitude[k] - openLoop.magnitude[k - 1]);
-            if (!(magnitudeAt > 1e-9)) {
+            if (Number.isNaN(magnitudeAt) || magnitudeAt <= 1e-9) {
                 return null;
             }
             return {
@@ -717,6 +717,52 @@ function computeMeanCoherence(frequencies: Float64Array, coherence: Float64Array
     return count > 0 ? sum / count : 0;
 }
 
+// Safety backoff for a resonant closed-loop peak: P/I/D and FF back off separately.
+function resonanceBackoffs(resonantPeakDb: number) {
+    if (resonantPeakDb > 6) {
+        return { resonanceBackoff: 0.75, ffResonanceBackoff: 0.8 };
+    }
+    if (resonantPeakDb > 3) {
+        return { resonanceBackoff: 0.9, ffResonanceBackoff: 1 };
+    }
+    return { resonanceBackoff: 1, ffResonanceBackoff: 1 };
+}
+
+// Which end of the per-pass range bit, or NaN when the clamp did not bite.
+function gainClampLimitOf(gainClamped: boolean, requestedGain: number) {
+    if (!gainClamped) {
+        return Number.NaN;
+    }
+    return requestedGain > GAIN_SCALE_MAX ? GAIN_SCALE_MAX : GAIN_SCALE_MIN;
+}
+
+// The highest admissible gain that keeps peak sensitivity within MAX_SENSITIVITY_PEAK.
+function robustGain(tf: TransferFunction, openLoop: OpenLoopResponse, admissibleMax: number) {
+    const peak = peakSensitivityAtGain(tf, openLoop, admissibleMax);
+    if (Number.isNaN(peak) || peak <= MAX_SENSITIVITY_PEAK) {
+        return { piScale: admissibleMax, sensitivityUnreachable: false };
+    }
+    const { withinBound, leastBad } = scanSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK, admissibleMax);
+    if (Number.isFinite(withinBound)) {
+        return { piScale: withinBound, sensitivityUnreachable: false };
+    }
+    // No admissible gain meets the bound. Take the one that comes
+    // closest and flag it, rather than silently applying a gain the
+    // robustness test rejects.
+    return { piScale: Number.isFinite(leastBad) ? leastBad : admissibleMax, sensitivityUnreachable: true };
+}
+
+// I: below 0 dB at low freq → increase, too high → decrease
+function integralScale(lowFreqErrorDb: number) {
+    if (lowFreqErrorDb < -1) {
+        return 1 + Math.abs(lowFreqErrorDb) * 0.1;
+    }
+    if (lowFreqErrorDb > 2) {
+        return 1 - lowFreqErrorDb * 0.05;
+    }
+    return 1;
+}
+
 function computeGainScales(metrics: GainMetrics, tf: TransferFunction, openLoop: OpenLoopResponse) {
     const { gainToTarget, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
 
@@ -747,14 +793,7 @@ function computeGainScales(metrics: GainMetrics, tf: TransferFunction, openLoop:
     // gain the search verifies is the gain that actually gets applied. Scaling
     // the result down after the fact could land back outside the bound the
     // search exists to enforce, Ms not being monotonic in gain.
-    let resonanceBackoff = 1;
-    let ffResonanceBackoff = 1;
-    if (resonantPeakDb > 6) {
-        resonanceBackoff = 0.75;
-        ffResonanceBackoff = 0.8;
-    } else if (resonantPeakDb > 3) {
-        resonanceBackoff = 0.9;
-    }
+    const { resonanceBackoff, ffResonanceBackoff } = resonanceBackoffs(resonantPeakDb);
 
     // The sliders cannot express more than a GAIN_SCALE_MAX change in one pass,
     // so nothing above that is admissible however much margin invites it.
@@ -772,27 +811,11 @@ function computeGainScales(metrics: GainMetrics, tf: TransferFunction, openLoop:
     // actually applied rather than assuming it was the upper one. A craft asking
     // for x0.19 is held by GAIN_SCALE_MIN, and telling it the pass is limited to
     // 2x would be nonsense.
-    let gainClampLimit = Number.NaN;
-    if (gainClamped) {
-        gainClampLimit = requestedGain > GAIN_SCALE_MAX ? GAIN_SCALE_MAX : GAIN_SCALE_MIN;
-    }
+    const gainClampLimit = gainClampLimitOf(gainClamped, requestedGain);
 
     // Common case: what the margin target asks for is already within the
     // robustness bound. Take it exactly, rather than off the scan grid.
-    let piScale = admissibleMax;
-    let sensitivityUnreachable = false;
-    if (peakSensitivityAtGain(tf, openLoop, admissibleMax) > MAX_SENSITIVITY_PEAK) {
-        const { withinBound, leastBad } = scanSensitivity(tf, openLoop, MAX_SENSITIVITY_PEAK, admissibleMax);
-        if (Number.isFinite(withinBound)) {
-            piScale = withinBound;
-        } else {
-            // No admissible gain meets the bound. Take the one that comes
-            // closest and flag it, rather than silently applying a gain the
-            // robustness test rejects.
-            sensitivityUnreachable = true;
-            piScale = Number.isFinite(leastBad) ? leastBad : admissibleMax;
-        }
-    }
+    const { piScale, sensitivityUnreachable } = robustGain(tf, openLoop, admissibleMax);
 
     // Which of the two conditions limited the gain, reported so it is visible
     // rather than implied. Judged against the admissible ceiling with a
@@ -822,13 +845,7 @@ function computeGainScales(metrics: GainMetrics, tf: TransferFunction, openLoop:
     // is a lever whose effect is computed exactly rather than estimated.
     const dScale = 1;
 
-    // I: below 0 dB at low freq → increase, too high → decrease
-    let iScale = 1;
-    if (lowFreqErrorDb < -1) {
-        iScale = 1 + Math.abs(lowFreqErrorDb) * 0.1;
-    } else if (lowFreqErrorDb > 2) {
-        iScale = 1 - lowFreqErrorDb * 0.05;
-    }
+    const iScale = integralScale(lowFreqErrorDb);
 
     // FF: approximates the P adjustment, carrying the same reduction where the
     // robustness search cut the gain back, but with FF's own resonance backoff.

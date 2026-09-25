@@ -551,42 +551,53 @@ const sanityCheckItems = computed(() => [
 
 // --- Channel fallback list ---
 
-const activeChannels = computed(() => {
-    const channels = [];
-    const channelNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
+type AuxAssignments = { label: string }[][];
 
-    let auxIndex = 1;
-    let auxAssignmentIndex = 0;
-
-    const auxAssignments: { label: string }[][] = [];
+function collectAuxAssignments(): AuxAssignments {
+    const auxAssignments: AuxAssignments = [];
     for (let i = 0; i < rc.value.active_channels - 4; i++) {
         auxAssignments.push([]);
     }
 
-    if (rssiConfig.value && typeof rssiConfig.value.channel !== "undefined") {
-        const index = rssiConfig.value.channel - 5;
+    const rssiChannel = rssiConfig.value?.channel;
+    if (rssiChannel !== undefined) {
+        const index = rssiChannel - 5;
         if (index >= 0 && index < auxAssignments.length) {
             auxAssignments[index].push({ label: "RSSI" });
         }
     }
 
     for (let modeIndex = 0; modeIndex < auxConfig.value.length; modeIndex++) {
-        const modeId = auxConfigIds.value[modeIndex];
+        addModeAssignments(auxAssignments, modeIndex);
+    }
+    return auxAssignments;
+}
 
-        for (let modeRangeIndex = 0; modeRangeIndex < modeRanges.value.length; modeRangeIndex++) {
-            const modeRange = modeRanges.value[modeRangeIndex];
-            if (modeRange.id !== modeId) continue;
+// Every channel range that enables this mode labels its aux channel with the mode's name.
+function addModeAssignments(auxAssignments: AuxAssignments, modeIndex: number) {
+    const modeId = auxConfigIds.value[modeIndex];
 
-            const range = modeRange.range;
-            if (range.start >= range.end) continue;
+    for (const modeRange of modeRanges.value) {
+        if (modeRange.id !== modeId) continue;
 
-            const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
+        const range = modeRange.range;
+        if (range.start >= range.end) continue;
 
-            if (modeRange.auxChannelIndex < auxAssignments.length) {
-                auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
-            }
+        const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
+
+        if (modeRange.auxChannelIndex < auxAssignments.length) {
+            auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
         }
     }
+}
+
+const activeChannels = computed(() => {
+    const channels = [];
+    const channelNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
+    const auxAssignments = collectAuxAssignments();
+
+    let auxIndex = 1;
+    let auxAssignmentIndex = 0;
 
     for (let i = 0; i < rxFailConfig.value.length; i++) {
         if (i < 4) {

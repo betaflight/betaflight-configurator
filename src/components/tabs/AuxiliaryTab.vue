@@ -232,17 +232,12 @@ function getModeStateColors(state: string) {
                 color: "primary",
                 solid: "bg-primary/80",
             };
-        case "off":
-            return {
-                color: "neutral",
-                solid: "bg-accented",
-            };
         case "disabled":
             return {
                 color: "error",
                 solid: "bg-error/20",
             };
-        default:
+        default: // "off" and any unknown state
             return {
                 color: "neutral",
                 solid: "bg-accented",

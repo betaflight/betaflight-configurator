@@ -1045,7 +1045,7 @@ function elrsBindingPhraseToBytes(text: string) {
         const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
         const hash = MD5(bindingPhraseFull).toString();
         // An MD5 hex digest always splits into 16 pairs.
-        const bytes = (hash.match(/.{1,2}/g) ?? []).map((byte) => parseInt(byte, 16));
+        const bytes = (hash.match(/.{1,2}/g) ?? []).map((byte) => Number.parseInt(byte, 16));
         const view = new DataView(new ArrayBuffer(6));
         for (let i = 0; i < 6; i++) {
             view.setUint8(i, bytes[i]);
@@ -1450,8 +1450,8 @@ function updateRxPlot() {
 
         // Remove old data
         while (rxPlotData[0]?.length > 300) {
-            for (let i = 0; i < rxPlotData.length; i++) {
-                rxPlotData[i].shift();
+            for (const series of rxPlotData) {
+                series.shift();
             }
         }
     }

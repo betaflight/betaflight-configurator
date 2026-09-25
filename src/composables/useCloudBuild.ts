@@ -53,7 +53,7 @@ export interface CloudBuildApi {
 }
 
 /** A protocol selection: the option value, or (for older callers) the option itself. */
-type SelectedValue = string | { value: string | null } | null | undefined;
+type SelectedValue = string | { value: string | null } | null;
 
 export interface CloudBuildParams {
     buildApi: CloudBuildApi;

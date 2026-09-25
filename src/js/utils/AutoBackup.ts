@@ -61,7 +61,8 @@ function isPrintableCharCode(charCode: number) {
 function countNonPrintable(text: string) {
     let invalid = 0;
     for (let i = 0; i < text.length; i++) {
-        if (!isPrintableCharCode(text.charCodeAt(i))) {
+        // Per UTF-16 unit, as before: both halves of a surrogate pair count as non-printable.
+        if (!isPrintableCharCode(text.codePointAt(i) ?? Number.NaN)) {
             invalid++;
         }
     }
@@ -76,6 +77,20 @@ export function isPlausibleCliDump(text: string) {
 }
 
 type SerialListener = (event: Event) => void;
+
+// Add debug mode for troubleshooting
+const DEBUG = true;
+
+// More robust prompt detection with multiple patterns
+function hasPromptAtEnd(output: string) {
+    return (
+        output.endsWith("# ") ||
+        output.endsWith("#\r") ||
+        output.endsWith("#\n") ||
+        output.endsWith("#\r\n") ||
+        /\r?\n# ?$/.exec(output) !== null
+    );
+}
 
 class AutoBackup {
     outputHistory = "";
@@ -165,7 +180,7 @@ class AutoBackup {
             if (!isPrintableCharCode(charCode)) {
                 this.invalidCharCount++;
             }
-            const currentChar = String.fromCharCode(charCode);
+            const currentChar = String.fromCodePoint(charCode);
             this.outputHistory += currentChar;
         }
     }
@@ -216,9 +231,6 @@ class AutoBackup {
         // Clear previous output
         this.resetBuffer();
 
-        // Add debug mode for troubleshooting
-        const DEBUG = true;
-
         // Send the command
         this.sendCommand(command);
 
@@ -232,16 +244,7 @@ class AutoBackup {
         const intervalId = setInterval(() => {
             elapsedTime += checkInterval;
 
-            if (DEBUG && elapsedTime % 1000 === 0) {
-                console.log(
-                    `AutoBackup: Waiting for ${elapsedTime / 1000}s, buffer length: ${this.outputHistory.length} chars`,
-                );
-                if (this.outputHistory.length > 0) {
-                    // Show last 30 chars for debugging
-                    const lastChars = this.outputHistory.slice(-30).replace(/\r/g, "\\r").replace(/\n/g, "\\n");
-                    console.log(`AutoBackup: Last chars: "${lastChars}"`);
-                }
-            }
+            this.logWaitProgress(elapsedTime);
 
             // Early bail-out: a single non-printable byte means the device is not
             // producing a valid CLI dump (e.g. it is still in MSP/binary mode).
@@ -256,77 +259,97 @@ class AutoBackup {
                 return;
             }
 
-            // More robust prompt detection with multiple patterns
-            const hasPrompt =
-                this.outputHistory.endsWith("# ") ||
-                this.outputHistory.endsWith("#\r") ||
-                this.outputHistory.endsWith("#\n") ||
-                this.outputHistory.endsWith("#\r\n") ||
-                this.outputHistory.match(/\r?\n# ?$/);
-
-            if (hasPrompt) {
-                clearInterval(intervalId);
-
-                if (DEBUG) console.log("AutoBackup: Prompt detected, processing output");
-
-                // Process and save the output - more robust parsing
-                let lines = this.outputHistory.split(/\r?\n/);
-
-                // Log line count for debugging
-                if (DEBUG) console.log(`AutoBackup: Received ${lines.length} lines of output`);
-
-                // Check if first line contains the command
-                if (lines[0].includes(command)) {
-                    lines = lines.slice(1);
-                    if (DEBUG) console.log("AutoBackup: Removed command line from output");
-                }
-
-                // Check if last line is a prompt
-                if (
-                    lines.length > 0 &&
-                    (lines[lines.length - 1].trim() === "#" || lines[lines.length - 1].trim() === "")
-                ) {
-                    lines = lines.slice(0, -1);
-                    if (DEBUG) console.log("AutoBackup: Removed prompt line from output");
-                }
-
-                const data = lines.join("\n");
-
-                if (DEBUG) console.log(`AutoBackup: Final data length: ${data.length} chars`);
-
-                // Hold the captured backup in memory immediately so it is available
-                // for restore regardless of whether the file-save picker succeeds.
-                setLastBackupData(data);
-
-                this.sendCommand("exit", this.onClose.bind(this));
-                this.save(data);
+            if (hasPromptAtEnd(this.outputHistory)) {
+                this.finishBackup(intervalId, command);
             }
             // Check if we've waited too long
             else if (elapsedTime >= maxWaitTime) {
-                console.error(`AutoBackup: Timeout waiting for command completion after ${maxWaitTime / 1000}s`);
-
-                const lines = this.outputHistory.split(/\r?\n/);
-                // Remove first line if it contains the command
-                const filteredLines = lines[0].includes(command) ? lines.slice(1) : lines;
-                const data = filteredLines.join("\n");
-
-                // Hold partial backup data in memory as well — better than nothing.
-                setLastBackupData(data);
-                // Only persist partial data if it actually looks like a CLI dump.
-                // Writing a truncated-but-valid backup beats nothing, but writing
-                // binary/garbage that merely never reached the prompt is worse.
-                if (!isPlausibleCliDump(data)) {
-                    this.failBackup(intervalId, "timed out without receiving a valid CLI dump.");
-                    return;
-                }
-
-                clearInterval(intervalId);
-                if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
-
-                this.sendCommand("exit", this.onClose.bind(this));
-                this.save(data);
+                this.saveAfterTimeout(intervalId, command, maxWaitTime);
             }
         }, checkInterval);
+    }
+
+    private logWaitProgress(elapsedTime: number) {
+        if (!DEBUG || elapsedTime % 1000 !== 0) {
+            return;
+        }
+        console.log(
+            `AutoBackup: Waiting for ${elapsedTime / 1000}s, buffer length: ${this.outputHistory.length} chars`,
+        );
+        if (this.outputHistory.length > 0) {
+            // Show last 30 chars for debugging
+            const lastChars = this.outputHistory
+                .slice(-30)
+                .replaceAll("\r", String.raw`\r`)
+                .replaceAll("\n", String.raw`\n`);
+            console.log(`AutoBackup: Last chars: "${lastChars}"`);
+        }
+    }
+
+    // The CLI output up to the prompt, without the echoed command and the prompt line.
+    private completedDump(command: string) {
+        // Process and save the output - more robust parsing
+        let lines = this.outputHistory.split(/\r?\n/);
+
+        // Log line count for debugging
+        if (DEBUG) console.log(`AutoBackup: Received ${lines.length} lines of output`);
+
+        // Check if first line contains the command
+        if (lines[0].includes(command)) {
+            lines = lines.slice(1);
+            if (DEBUG) console.log("AutoBackup: Removed command line from output");
+        }
+
+        // Check if last line is a prompt
+        const last = lines.at(-1);
+        if (last !== undefined && (last.trim() === "#" || last.trim() === "")) {
+            lines = lines.slice(0, -1);
+            if (DEBUG) console.log("AutoBackup: Removed prompt line from output");
+        }
+
+        return lines.join("\n");
+    }
+
+    private finishBackup(intervalId: ReturnType<typeof setInterval>, command: string) {
+        clearInterval(intervalId);
+
+        if (DEBUG) console.log("AutoBackup: Prompt detected, processing output");
+
+        const data = this.completedDump(command);
+
+        if (DEBUG) console.log(`AutoBackup: Final data length: ${data.length} chars`);
+
+        // Hold the captured backup in memory immediately so it is available
+        // for restore regardless of whether the file-save picker succeeds.
+        setLastBackupData(data);
+
+        this.sendCommand("exit", this.onClose.bind(this));
+        this.save(data);
+    }
+
+    private saveAfterTimeout(intervalId: ReturnType<typeof setInterval>, command: string, maxWaitTime: number) {
+        console.error(`AutoBackup: Timeout waiting for command completion after ${maxWaitTime / 1000}s`);
+
+        const lines = this.outputHistory.split(/\r?\n/);
+        // Remove first line if it contains the command
+        const filteredLines = lines[0].includes(command) ? lines.slice(1) : lines;
+        const data = filteredLines.join("\n");
+
+        // Hold partial backup data in memory as well — better than nothing.
+        setLastBackupData(data);
+        // Only persist partial data if it actually looks like a CLI dump.
+        // Writing a truncated-but-valid backup beats nothing, but writing
+        // binary/garbage that merely never reached the prompt is worse.
+        if (!isPlausibleCliDump(data)) {
+            this.failBackup(intervalId, "timed out without receiving a valid CLI dump.");
+            return;
+        }
+
+        clearInterval(intervalId);
+        if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
+
+        this.sendCommand("exit", this.onClose.bind(this));
+        this.save(data);
     }
 
     async activateCliMode() {
@@ -350,6 +373,8 @@ class AutoBackup {
         const bufView = new Uint8Array(bufferOut);
 
         for (let cKey = 0; cKey < line.length; cKey++) {
+            // charCodeAt, not codePointAt: the byte is the UTF-16 unit truncated to 8 bits, and
+            // codePointAt would change it for a surrogate pair.
             bufView[cKey] = line.charCodeAt(cKey);
         }
 

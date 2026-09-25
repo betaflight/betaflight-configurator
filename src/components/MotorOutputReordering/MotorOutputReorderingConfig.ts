@@ -36,32 +36,23 @@ export interface FrameConfig {
 
 /** Drawing geometry for the motor output reordering canvas, scaled to `screenSize` pixels. */
 export default class MotorOutputReorderConfig {
-    FrameColor: string;
-    PropEdgeColor: string;
-    PropColor: string;
-    PropEdgeLineWidth: number;
+    FrameColor = "rgb(186, 186, 186)";
+    PropEdgeColor = "rgb(255, 187, 0)";
+    PropColor = "rgb(186, 186, 186, 0.4)";
+    PropEdgeLineWidth = 3;
     MotorNumberTextFont: string;
-    MotorNumberTextColor: string;
-    MotorMouseHoverColor: string;
-    MotorSpinningColor: string;
-    MotorReadyColor: string;
-    ArrowColor: string;
+    MotorNumberTextColor = "rgb(0, 0, 0)";
+    MotorMouseHoverColor = "rgba(255, 187, 0, 0.4)";
+    MotorSpinningColor = "rgba(255, 0, 0, 0.4)";
+    MotorReadyColor = "rgba(0,128,0,0.4)";
+    ArrowColor = "rgb(182,67,67)";
     DirectionArrowPoints: { x: number; y: number }[];
     /** Keyed by the mixer name MotorsTab passes as the drone configuration, e.g. "Quad X". */
     frames: Record<string, FrameConfig> = {};
 
     constructor(screenSize: number) {
-        this.FrameColor = "rgb(186, 186, 186)";
-        this.PropEdgeColor = "rgb(255, 187, 0)";
-        this.PropColor = "rgb(186, 186, 186, 0.4)";
-        this.PropEdgeLineWidth = 3;
         this.MotorNumberTextFont = `${screenSize * 0.1}px 'Open Sans', 'Segoe UI', Tahoma, sans-serif`;
-        this.MotorNumberTextColor = "rgb(0, 0, 0)";
-        this.MotorMouseHoverColor = "rgba(255, 187, 0, 0.4)";
-        this.MotorSpinningColor = "rgba(255, 0, 0, 0.4)";
-        this.MotorReadyColor = "rgba(0,128,0,0.4)";
 
-        this.ArrowColor = "rgb(182,67,67)";
         this.DirectionArrowPoints = [
             { x: -0.03 * screenSize, y: 0.11 * screenSize },
             { x: -0.03 * screenSize, y: -0.01 * screenSize },

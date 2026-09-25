@@ -454,7 +454,7 @@ function parseHeaderLine(line: string, sysConfig: SysConfig, frameDefs: FrameDef
 }
 
 function parseFieldDef(key: string, value: string, frameDefs: FrameDefs) {
-    const fieldMatch = key.match(/^Field ([IPS]) (\w+)$/);
+    const fieldMatch = /^Field ([IPS]) (\w+)$/.exec(key);
     if (!fieldMatch) {
         return false;
     }
@@ -1389,10 +1389,8 @@ function updateSegments(
  * Close the most recent segment by setting its endIdx.
  */
 function closeSegment(segments: ChirpSegment[], endIdx: number, axis: number) {
-    if (segments.length > 0) {
-        const last = segments[segments.length - 1];
-        if (last.axis === axis) {
-            last.endIdx = endIdx;
-        }
+    const last = segments.at(-1);
+    if (last?.axis === axis) {
+        last.endIdx = endIdx;
     }
 }

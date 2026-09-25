@@ -117,12 +117,40 @@ function validateImage(img: HTMLImageElement): Promise<void> {
                 LogoManager.showConstraintSatisfied(constraint);
             } else {
                 LogoManager.showConstraintNotSatisfied(constraint);
-                rejectValidateImage("Boot logo image constraint violation");
+                rejectValidateImage(new Error("Boot logo image constraint violation"));
                 return;
             }
         }
         resolveValidateImage();
     });
+}
+
+function asError(reason: unknown): Error {
+    return reason instanceof Error ? reason : new Error(String(reason));
+}
+
+/**
+ * Load a picked image file and validate it. The object URL is released once the image has
+ * loaded or failed; the decoded image stays usable.
+ */
+function loadImageFromBlob(
+    data: Blob,
+    resolve: (img: HTMLImageElement) => void,
+    reject: (reason: Error) => void,
+): void {
+    const img = new Image();
+    const blobUrl = URL.createObjectURL(data);
+    img.onload = () => {
+        URL.revokeObjectURL(blobUrl);
+        validateImage(img)
+            .then(() => resolve(img))
+            .catch((error) => reject(asError(error)));
+    };
+    img.onerror = (event) => {
+        URL.revokeObjectURL(blobUrl);
+        reject(asError(event));
+    };
+    img.src = blobUrl;
 }
 
 const LogoManager = {
@@ -279,25 +307,13 @@ const LogoManager = {
                 }),
                 "logo-file",
             )
-                .then((file) => {
-                    // A cancelled picker yields no file; the promise stays pending, as it did
-                    // when readFileAsBlob rejected on it unobserved.
-                    if (!file) {
-                        return;
+                // A cancelled picker yields no file; the promise stays pending, as it did
+                // when readFileAsBlob rejected on it unobserved.
+                .then((file) => (file ? FileSystem.readFileAsBlob(file) : undefined))
+                .then((data?: Blob) => {
+                    if (data) {
+                        loadImageFromBlob(data, resolveOpenImage, rejectOpenImage);
                     }
-                    FileSystem.readFileAsBlob(file).then((data: Blob) => {
-                        // load and validate selected image
-                        const img = new Image();
-                        img.onload = () => {
-                            validateImage(img)
-                                .then(() => resolveOpenImage(img))
-                                .catch((error) => rejectOpenImage(error));
-                        };
-                        img.onerror = (error) => rejectOpenImage(error);
-
-                        const blobUrl = URL.createObjectURL(data);
-                        img.src = blobUrl;
-                    });
                 })
                 .catch((error) => {
                     console.error("could not load logo file:", error);

@@ -132,57 +132,55 @@ const editingWaypoint = computed(() => {
     return state.waypoints.find((wp) => wp.uid === state.editingWaypointUid);
 });
 
+// The one slot each modifier type needs, and the message when it is missing or negative.
+const MODIFIER_SLOTS: Partial<
+    Record<string, { slot: "altitude" | "duration" | "speed"; key: string; fallback: string }>
+> = {
+    alt_change: { slot: "altitude", key: "flightPlanInvalidAltitude", fallback: "Altitude must be positive" },
+    delay: { slot: "duration", key: "flightPlanInvalidDuration", fallback: "Duration must be positive" },
+    yaw_rate: { slot: "speed", key: "flightPlanInvalidYawRate", fallback: "Yaw rate must be positive" },
+};
+
+function validateModifierWaypoint(waypointData: WaypointInput): boolean {
+    const rule = waypointData.type === undefined ? undefined : MODIFIER_SLOTS[waypointData.type];
+    if (!rule) {
+        return true;
+    }
+    const value = waypointData[rule.slot];
+    if (value === undefined || !Number.isFinite(value) || value < 0) {
+        gui_log(i18n.getMessage(rule.key) || rule.fallback);
+        return false;
+    }
+    return true;
+}
+
+function validatePositionalWaypoint(waypointData: WaypointInput): boolean {
+    // An absent slot falls back to a default in addWaypoint, and undefined fails every comparison.
+    const { latitude = Number.NaN, longitude = Number.NaN, altitude = Number.NaN } = waypointData;
+    if (latitude < -90 || latitude > 90) {
+        gui_log(i18n.getMessage("flightPlanInvalidLatitude"));
+        return false;
+    }
+    if (longitude < -180 || longitude > 180) {
+        gui_log(i18n.getMessage("flightPlanInvalidLongitude"));
+        return false;
+    }
+    if (altitude < 0) {
+        gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
+        return false;
+    }
+    return true;
+}
+
 export function useFlightPlan() {
     // Validate waypoint data
     const validateWaypoint = (waypointData: WaypointInput) => {
         // Modifier types carry no horizontal position — skip coord checks but
         // still validate the slot that's meaningful for each modifier type.
         if (isModifierWaypointType(waypointData.type)) {
-            if (waypointData.type === "alt_change") {
-                if (
-                    waypointData.altitude === undefined ||
-                    !Number.isFinite(waypointData.altitude) ||
-                    waypointData.altitude < 0
-                ) {
-                    gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
-                    return false;
-                }
-            } else if (waypointData.type === "delay") {
-                if (
-                    waypointData.duration === undefined ||
-                    !Number.isFinite(waypointData.duration) ||
-                    waypointData.duration < 0
-                ) {
-                    gui_log(i18n.getMessage("flightPlanInvalidDuration") || "Duration must be positive");
-                    return false;
-                }
-            } else if (waypointData.type === "yaw_rate") {
-                if (
-                    waypointData.speed === undefined ||
-                    !Number.isFinite(waypointData.speed) ||
-                    waypointData.speed < 0
-                ) {
-                    gui_log(i18n.getMessage("flightPlanInvalidYawRate") || "Yaw rate must be positive");
-                    return false;
-                }
-            }
-            return true;
+            return validateModifierWaypoint(waypointData);
         }
-        // An absent slot falls back to a default in addWaypoint, and undefined fails every comparison.
-        const { latitude = Number.NaN, longitude = Number.NaN, altitude = Number.NaN } = waypointData;
-        if (latitude < -90 || latitude > 90) {
-            gui_log(i18n.getMessage("flightPlanInvalidLatitude"));
-            return false;
-        }
-        if (longitude < -180 || longitude > 180) {
-            gui_log(i18n.getMessage("flightPlanInvalidLongitude"));
-            return false;
-        }
-        if (altitude < 0) {
-            gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
-            return false;
-        }
-        return true;
+        return validatePositionalWaypoint(waypointData);
     };
 
     // Load flight plan from localStorage

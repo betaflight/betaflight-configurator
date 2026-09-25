@@ -960,8 +960,8 @@ const expandedHeaderGroups = ref(new Set<string>());
 const hiddenGroups = ref(new Set<string>());
 const hiddenFields = ref(new Set<string>());
 
-// Group order for display
-const GROUP_ORDER = [
+// Group order for display (a Set keeps insertion order)
+const GROUP_ORDER = new Set([
     "PID Settings",
     "PID Sliders",
     "PID Controller",
@@ -978,7 +978,7 @@ const GROUP_ORDER = [
     "Wing",
     "Features",
     "Disabled Fields",
-];
+]);
 
 // --- Pane ordering and drag-and-drop ---
 
@@ -1354,7 +1354,7 @@ const groupedHeaders = computed(() => {
     }
     // Any groups not in GROUP_ORDER
     for (const name of Object.keys(groups)) {
-        if (GROUP_ORDER.includes(name)) {
+        if (GROUP_ORDER.has(name)) {
             continue;
         }
         const fields = filterAndSort(groups[name], q, headerSortAlpha.value);

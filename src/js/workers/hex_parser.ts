@@ -37,6 +37,54 @@ export interface ParsedHex {
     configInserted?: boolean;
 }
 
+/** The fields of one ":LLAAAATT<data>CC" record line; each byte is two hex chars. */
+interface HexRecord {
+    byteCount: number;
+    address: number;
+    recordType: number;
+    /** The data field, still in hex string form. */
+    content: string;
+    /** 2's complement of the record's byte sum. */
+    checksum: number;
+}
+
+function hexByte(text: string, start: number) {
+    return Number.parseInt(text.slice(start, start + 2), 16);
+}
+
+function readRecord(line: string): HexRecord {
+    const byteCount = hexByte(line, 1);
+    return {
+        byteCount,
+        address: Number.parseInt(line.slice(3, 7), 16),
+        recordType: hexByte(line, 7),
+        content: line.slice(9, 9 + byteCount * 2),
+        checksum: hexByte(line, 9 + byteCount * 2),
+    };
+}
+
+/** Appends a data record's bytes to the last block; returns whether its checksum matches. */
+function appendData(result: ParsedHex, line: string, record: HexRecord) {
+    // Always present: the first data record opens a block (next_address starts at 0).
+    const block = result.data.at(-1);
+    let crc = record.byteCount + hexByte(line, 3) + hexByte(line, 5) + record.recordType;
+    for (let needle = 0; needle < record.byteCount * 2; needle += 2) {
+        const num = hexByte(record.content, needle); // get one byte in hex and convert it to decimal
+
+        block?.data.push(num);
+        if (block) {
+            block.bytes++;
+        }
+
+        crc += num;
+        result.bytes_total++;
+    }
+
+    // change crc to 2's complement
+    crc = (~crc + 1) & 0xff;
+    return crc == record.checksum;
+}
+
 // input = string
 // result = if hex file is valid, result is an object
 //          if hex file wasn't valid (crc check failed on any of the lines), result will be null
@@ -46,7 +94,7 @@ export default async function read_hex_file(input: string): Promise<ParsedHex | 
     const data = input.split("\n");
 
     // check if there is an empty line in the end of hex file, if there is, remove it
-    if (data[data.length - 1] == "") {
+    if (data.at(-1) == "") {
         data.pop();
     }
 
@@ -63,16 +111,11 @@ export default async function read_hex_file(input: string): Promise<ParsedHex | 
     let next_address = 0;
 
     for (let i = 0; i < data.length && hexfile_valid; i++) {
-        // each byte is represnted by two chars
-        const byte_count = parseInt(data[i].substr(1, 2), 16);
-        const address = parseInt(data[i].substr(3, 4), 16);
-        const record_type = parseInt(data[i].substr(7, 2), 16);
-        const content = data[i].substr(9, byte_count * 2); // still in string format
-        const checksum = parseInt(data[i].substr(9 + byte_count * 2, 2), 16); // (this is a 2's complement value)
+        const record = readRecord(data[i]);
+        const { byteCount: byte_count, address, recordType: record_type, content } = record;
 
         switch (record_type) {
-            case 0x00: {
-                // data record
+            case 0x00: // data record
                 if (address !== next_address || next_address === 0) {
                     result.data.push({ address: extended_linear_address + address, bytes: 0, data: [] });
                 }
@@ -80,54 +123,31 @@ export default async function read_hex_file(input: string): Promise<ParsedHex | 
                 // store address for next comparison
                 next_address = address + byte_count;
 
-                // process data
-                let crc =
-                    byte_count + parseInt(data[i].substr(3, 2), 16) + parseInt(data[i].substr(5, 2), 16) + record_type;
-                for (let needle = 0; needle < byte_count * 2; needle += 2) {
-                    // * 2 because of 2 hex chars per 1 byte
-                    const num = parseInt(content.substr(needle, 2), 16); // get one byte in hex and convert it to decimal
-                    const data_block = result.data.length - 1;
-
-                    result.data[data_block].data.push(num);
-                    result.data[data_block].bytes++;
-
-                    crc += num;
-                    result.bytes_total++;
-                }
-
-                // change crc to 2's complement
-                crc = (~crc + 1) & 0xff;
-
-                // verify
-                if (crc != checksum) {
-                    hexfile_valid = false;
-                }
+                hexfile_valid = appendData(result, data[i], record);
                 break;
-            }
             case 0x01: // end of file record
                 result.end_of_file = true;
                 break;
             case 0x02: // extended segment address record
                 // not implemented
-                if (parseInt(content, 16) != 0) {
+                if (Number.parseInt(content, 16) != 0) {
                     // ignore if segment is 0
                     console.log("extended segment address record found - NOT IMPLEMENTED !!!");
                 }
                 break;
             case 0x03: // start segment address record
                 // not implemented
-                if (parseInt(content, 16) != 0) {
+                if (Number.parseInt(content, 16) != 0) {
                     // ignore if segment is 0
                     console.log("start segment address record found - NOT IMPLEMENTED !!!");
                 }
                 break;
             case 0x04: // extended linear address record
                 // input address is UNSIGNED
-                extended_linear_address =
-                    ((parseInt(content.substr(0, 2), 16) << 24) | (parseInt(content.substr(2, 2), 16) << 16)) >>> 0;
+                extended_linear_address = ((hexByte(content, 0) << 24) | (hexByte(content, 2) << 16)) >>> 0;
                 break;
             case 0x05: // start linear address record
-                result.start_linear_address = parseInt(content, 16);
+                result.start_linear_address = Number.parseInt(content, 16);
                 break;
         }
     }

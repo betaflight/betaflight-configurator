@@ -122,6 +122,26 @@ function toggleAutoConnect(value: boolean) {
     setConfig({ autoConnect: value });
 }
 
+// Reads only module state, so it lives outside setup.
+function buildPermissionItems() {
+    const items: DropdownMenuItem[] = [];
+    if (DeviceHandler.showSerialOption) {
+        items.push({
+            label: i18n.getMessage("portsSelectPermission"),
+            icon: "i-lucide-plug-zap",
+            onSelect: () => DeviceHandler.requestDevicePermission("serial"),
+        });
+    }
+    if (DeviceHandler.showBluetoothOption) {
+        items.push({
+            label: i18n.getMessage("portsSelectPermissionBluetooth"),
+            icon: "i-lucide-bluetooth",
+            onSelect: () => DeviceHandler.requestDevicePermission("bluetooth"),
+        });
+    }
+    return items;
+}
+
 export default defineComponent({
     name: "ConnectButton",
     components: { ConnectOptionsDialog },
@@ -226,25 +246,6 @@ export default defineComponent({
                 ...(expertMode && DeviceHandler.showVirtualMode ? buildVirtualItems() : []),
                 ...(DeviceHandler.manualModeAvailable() ? buildManualItems() : []),
             ];
-        }
-
-        function buildPermissionItems() {
-            const items: DropdownMenuItem[] = [];
-            if (DeviceHandler.showSerialOption) {
-                items.push({
-                    label: i18n.getMessage("portsSelectPermission"),
-                    icon: "i-lucide-plug-zap",
-                    onSelect: () => DeviceHandler.requestDevicePermission("serial"),
-                });
-            }
-            if (DeviceHandler.showBluetoothOption) {
-                items.push({
-                    label: i18n.getMessage("portsSelectPermissionBluetooth"),
-                    icon: "i-lucide-bluetooth",
-                    onSelect: () => DeviceHandler.requestDevicePermission("bluetooth"),
-                });
-            }
-            return items;
         }
 
         const menuItems = computed(() => {
