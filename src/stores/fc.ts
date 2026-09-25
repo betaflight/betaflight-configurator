@@ -253,12 +253,12 @@ export function createInitialState(): FcState {
             srcProfile: 0,
         },
         FEATURE_CONFIG: {
-            features: 0,
+            features: null,
         },
         BEEPER_CONFIG: {
-            beepers: 0,
+            beepers: null,
             dshotBeaconTone: 0,
-            dshotBeaconConditions: 0,
+            dshotBeaconConditions: null,
         },
         MIXER_CONFIG: {
             mixer: 0,
