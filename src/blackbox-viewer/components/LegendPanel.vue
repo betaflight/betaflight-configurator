@@ -178,11 +178,13 @@
 import { ref, computed, watch } from "vue";
 import { useGraphStore } from "../stores/graph";
 import { useAppStore } from "../stores/app";
+import { useLogStore } from "../stores/log";
 import { useSettingsStore } from "../stores/settings.js";
 import type { LegendField } from "../stores/graph";
 
 const graphStore = useGraphStore();
 const appStore = useAppStore();
+const logStore = useLogStore();
 const settingsStore = useSettingsStore();
 const { userSettings } = settingsStore;
 const legendContainer = ref<HTMLElement | null>(null);
@@ -338,6 +340,10 @@ function toggleGrid() {
 }
 
 function openGraphConfig() {
+    // With no log there is nothing to configure: the dialog would open onto empty field lists.
+    if (!logStore.flightLog || !graphStore.activeGraphConfig) {
+        return;
+    }
     appStore.graphConfigDialogOpen = true;
 }
 </script>
