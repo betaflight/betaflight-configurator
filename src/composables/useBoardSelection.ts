@@ -53,6 +53,14 @@ export interface FirmwareRelease {
  */
 export type FirmwareVersionOption = Omit<FirmwareRelease, "type">;
 
+/**
+ * A table value for `key` only if the table itself defines it: group names come from the build
+ * API, and a group called "constructor" must not read Object.prototype.constructor.
+ */
+function ownValue<T>(table: Record<string, T>, key: string): T | undefined {
+    return Object.hasOwn(table, key) ? table[key] : undefined;
+}
+
 export interface BoardSelectionBuildApi {
     loadTargets(): Promise<TargetDescriptor[] | null | undefined>;
     loadTargetReleases(target: string): Promise<{ releases: FirmwareRelease[] }>;
@@ -113,7 +121,8 @@ export function useBoardSelection(params: BoardSelectionParams) {
      * and labels/separators appear only for groups that still have matches.
      */
     const getSelectMenuItems = () => {
-        const grouped: Record<string, { label: string; boards: BoardOption[] }> = {};
+        // Prototype-free, so any group name is an own key.
+        const grouped: Record<string, { label: string; boards: BoardOption[] }> = Object.create(null);
         const groupOrder: Record<string, number | undefined> = { supported: 0, unsupported: 1, legacy: 2 };
         const q = (state.boardSelectSearchTerm || "").trim().toLowerCase();
 
@@ -132,8 +141,8 @@ export function useBoardSelection(params: BoardSelectionParams) {
         const sortedGroups = Object.entries(grouped)
             .filter(([_key, data]) => data.boards.length > 0)
             .sort(([a], [b]) => {
-                const orderA = groupOrder[a] ?? 999;
-                const orderB = groupOrder[b] ?? 999;
+                const orderA = ownValue(groupOrder, a) ?? 999;
+                const orderB = ownValue(groupOrder, b) ?? 999;
                 return orderA - orderB;
             });
 
@@ -181,7 +190,8 @@ export function useBoardSelection(params: BoardSelectionParams) {
         };
 
         // Object.groupBy is ES2024, past the ES2022 target the build and tsconfig are pinned to.
-        const groupTargets: Record<string, TargetDescriptor[]> = {};
+        // Prototype-free like its result, so any group name is an own key.
+        const groupTargets: Record<string, TargetDescriptor[]> = Object.create(null);
         for (const descriptor of targets) {
             const groupKey = descriptor.group ? descriptor.group : "unsupported";
             groupTargets[groupKey] ??= [];
@@ -189,8 +199,8 @@ export function useBoardSelection(params: BoardSelectionParams) {
         }
 
         const groupSorted = Object.keys(groupTargets).sort((a, b) => {
-            const groupA = groupOrder[a] ?? 999;
-            const groupB = groupOrder[b] ?? 999;
+            const groupA = ownValue(groupOrder, a) ?? 999;
+            const groupB = ownValue(groupOrder, b) ?? 999;
             return groupA - groupB;
         });
 
@@ -205,7 +215,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
                     target: descriptor.target,
                     label: descriptor.target,
                     groupKey: groupKey,
-                    group: groupLabels[groupKey] || groupKey,
+                    group: ownValue(groupLabels, groupKey) || groupKey,
                 });
             });
         });

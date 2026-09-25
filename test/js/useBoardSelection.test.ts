@@ -91,4 +91,24 @@ describe("useBoardSelection", () => {
             ["ZETA", "legacy", "firmwareFlasherOptionLabelLegacy"],
         ]);
     });
+
+    it("treats group names like constructor and __proto__ as ordinary groups", async () => {
+        localStorage.clear();
+        await boardSelection.populateTargetList([
+            { target: "BETA", group: "constructor" },
+            { target: "ALPHA", group: "__proto__" },
+            { target: "GAMMA", group: "supported" },
+        ]);
+
+        expect(boardSelection.state.boardOptions.map((b) => [b.target, b.groupKey, b.group])).toEqual([
+            ["GAMMA", "supported", "firmwareFlasherOptionLabelVerifiedPartner"],
+            ["BETA", "constructor", "constructor"],
+            ["ALPHA", "__proto__", "__proto__"],
+        ]);
+
+        const labels = boardSelection
+            .getSelectMenuItems()
+            .flatMap((item) => (typeof item === "object" && item?.type === "label" ? [item.label] : []));
+        expect(labels).toEqual(["firmwareFlasherOptionLabelVerifiedPartner", "constructor", "__proto__"]);
+    });
 });
