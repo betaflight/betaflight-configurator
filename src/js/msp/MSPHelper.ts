@@ -60,7 +60,7 @@ function beepers(which: "beepers" | "dshotBeaconConditions"): Beepers {
 }
 
 // osd.js assigns OSD.data inside a function, where TypeScript does not see it.
-function osdData(): Record<"VIDEO_COLS" | "VIDEO_ROWS" | "VIDEO_BUFFER_CHARS", Record<string, number>> {
+function osdData(): { canvas?: { cols: number; rows: number } } {
     return (OSD as unknown as { data: ReturnType<typeof osdData> }).data;
 }
 
@@ -2302,10 +2302,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_OSD_CANVAS](data) {
-        osdData().VIDEO_COLS["HD"] = data.readU8();
-        osdData().VIDEO_ROWS["HD"] = data.readU8();
-        osdData().VIDEO_BUFFER_CHARS["HD"] = osdData().VIDEO_COLS["HD"] * osdData().VIDEO_ROWS["HD"];
-        console.log(`Canvas ${osdData().VIDEO_COLS["HD"]} x ${osdData().VIDEO_ROWS["HD"]}`);
+        // Applied to the grid size tables by OSD.applyCanvas after MSP_OSD_CONFIG has shown which OSD device, video system in use.
+        const cols = data.readU8();
+        const rows = data.readU8();
+        if (cols > 0 && rows > 0) {
+            osdData().canvas = { cols, rows };
+            console.log(`Canvas ${cols} x ${rows}`);
+        } else {
+            console.log("OSD canvas not reported");
+        }
     },
 
     [MSPCodes.MSP_SET_OSD_CANVAS]() {

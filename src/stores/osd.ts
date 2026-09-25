@@ -102,6 +102,8 @@ interface LegacyOsdData {
     displaySize?: object;
     VIDEO_COLS: Record<string, number | undefined>;
     VIDEO_ROWS: Record<string, number | undefined>;
+    // Set by MSP_OSD_CANVAS when the FC reports a canvas size; OSD.applyCanvas reads it.
+    canvas?: { cols: number; rows: number } | null;
 }
 
 // osd.js assigns OSD.data / OSD.virtualMode and FONT.data inside functions, so inference never sees them.
@@ -131,6 +133,7 @@ async function fetchOsdInfo(fcStore: FlightControllerStore) {
         return undefined;
     }
 
+    legacyOsd.data.canvas = null;
     if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
     }
@@ -191,11 +194,13 @@ export const useOsdStore = defineStore("osd", () => {
         haveSomeOsd: false,
         haveMax7456Video: false,
         haveMax7456Configured: false,
+        haveFbOsdConfigured: false,
         haveMax7456FontDeviceConfigured: false,
         isMax7456FontDeviceDetected: false,
         haveOsdFeature: false,
         isMspDevice: false,
         haveAirbotTheiaOsdDevice: false,
+        requiresFbSmallFont: false,
     });
 
     // Display size based on video system

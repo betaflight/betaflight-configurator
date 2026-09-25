@@ -486,6 +486,7 @@ const VirtualFC = {
             haveOsdFeature: true,
             haveMax7456FontDeviceConfigured: true,
             isMax7456FontDeviceDetected: true,
+            requiresFbSmallFont: false,
             haveSomeOsd: true,
         };
 
