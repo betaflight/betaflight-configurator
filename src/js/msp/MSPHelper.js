@@ -1727,12 +1727,18 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_SET_FAILSAFE_CONFIG:
                     console.log("Failsafe config saved");
                     break;
-                case MSPCodes.MSP_OSD_CANVAS:
-                    OSD.data.VIDEO_COLS["HD"] = data.readU8();
-                    OSD.data.VIDEO_ROWS["HD"] = data.readU8();
-                    OSD.data.VIDEO_BUFFER_CHARS["HD"] = OSD.data.VIDEO_COLS["HD"] * OSD.data.VIDEO_ROWS["HD"];
-                    console.log(`Canvas ${OSD.data.VIDEO_COLS["HD"]} x ${OSD.data.VIDEO_ROWS["HD"]}`);
+                case MSPCodes.MSP_OSD_CANVAS: {
+                    // Applied to the grid size tables by OSD.applyCanvas after MSP_OSD_CONFIG has shown which OSD device, video system in use.
+                    const cols = data.readU8();
+                    const rows = data.readU8();
+                    if (cols > 0 && rows > 0) {
+                        OSD.data.canvas = { cols, rows };
+                        console.log(`Canvas ${cols} x ${rows}`);
+                    } else {
+                        console.log("OSD canvas not reported");
+                    }
                     break;
+                }
                 case MSPCodes.MSP_SET_OSD_CANVAS:
                     console.log("OSD Canvas config set");
                     break;
