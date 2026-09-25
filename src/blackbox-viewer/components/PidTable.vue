@@ -86,9 +86,7 @@ const columns = computed(() => {
     return cols;
 });
 
-const showWingSterm = computed(
-    () => props.rows[0].s !== undefined || props.rows[1].s !== undefined || props.rows[2].s !== undefined,
-);
+const showWingSterm = computed(() => props.rows.slice(0, 3).some((row) => row.s !== undefined));
 
 const data = computed(() =>
     props.rows.map((row) => {
