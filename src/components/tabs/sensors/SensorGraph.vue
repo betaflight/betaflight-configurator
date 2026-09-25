@@ -31,7 +31,7 @@
                     <div v-if="scaleOptions" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
-                            :model-value="scale"
+                            :model-value="scale ?? undefined"
                             :items="scaleItems"
                             @update:model-value="$emit('update:scale', Number($event))"
                             class="min-w-24"
@@ -88,7 +88,7 @@
                     <div v-if="scaleOptions" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
-                            :model-value="scale"
+                            :model-value="scale ?? undefined"
                             :items="scaleItems"
                             @update:model-value="$emit('update:scale', Number($event))"
                             class="min-w-24"
