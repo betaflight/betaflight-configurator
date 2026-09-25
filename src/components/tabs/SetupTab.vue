@@ -531,6 +531,8 @@ async function initialize() {
         await MSP.promise(MSPCodes.MSP_STATUS_EX, false);
         await MSP.promise(MSPCodes.MSP2_MCU_INFO, false);
         await MSP.promise(MSPCodes.MSP_MIXER_CONFIG, false);
+        // motor_count drives resolveMixerModelFile() for Custom mmix (e.g. 4 → quad_x).
+        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG, false);
         await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
         await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG, false);
     } catch (e) {
