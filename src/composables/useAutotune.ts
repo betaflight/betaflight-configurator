@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { useAutotuneStore } from "@/stores/autotune";
 import FileSystem from "@/js/FileSystem";
 import { i18n } from "@/js/localization";
@@ -5,17 +26,49 @@ import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { findLogBoundaries, parseChirpLog } from "@/js/blackbox/chirp_bbl_parser";
+import {
+    findLogBoundaries,
+    parseChirpLog,
+    type ChirpData,
+    type ChirpSegment,
+    type LogBoundary,
+    type SysConfig,
+} from "@/js/blackbox/chirp_bbl_parser";
 import {
     welchTransferFunction,
     recommendGains,
     computeSensitivity,
     computeStepResponse,
     computeSpectrogram,
+    type CurrentSliders,
+    type GainRecommendation,
+    type Sensitivity,
+    type StepResponse,
 } from "@/js/blackbox/spectral_analysis";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 
-const AXIS_NAMES = ["roll", "pitch", "yaw"];
+export type AxisName = "roll" | "pitch" | "yaw";
+
+const AXIS_NAMES: AxisName[] = ["roll", "pitch", "yaw"];
+
+/** One axis of an analysed log: the measured responses and the recommended gains. */
+export type AxisResult = NonNullable<ReturnType<typeof computeAxisResult>>;
+
+/** A whole analysed log, as the autotune store holds it. */
+export type AnalysisResult = { filename: string } & NonNullable<ReturnType<typeof analyzeLog>>;
+
+export type ProposedSliders = GainRecommendation["proposed"];
+
+type AutotuneStore = ReturnType<typeof useAutotuneStore>;
+
+// `err?.name` / `err?.message` for a caught value of unknown type.
+function errorField(err: unknown, field: "name" | "message"): string | undefined {
+    if (typeof err !== "object" || err === null) {
+        return undefined;
+    }
+    const value: unknown = Reflect.get(err, field);
+    return typeof value === "string" ? value : undefined;
+}
 
 /**
  * Composable providing autotune import and gain-apply logic.
@@ -55,7 +108,7 @@ export function useAutotune() {
             store.progressMessage = "";
         } catch (err) {
             store.analysisState = "error";
-            store.errorMessage = err.message || "Analysis failed.";
+            store.errorMessage = errorField(err, "message") || "Analysis failed.";
             store.progressMessage = "";
         }
     }
@@ -66,14 +119,16 @@ export function useAutotune() {
      * The transfer functions are already in the store, so this is a pure
      * re-derivation — no file access, no re-parse.
      *
-     * @param {number} targetPhaseMarginDeg
      */
-    function recomputeGains(targetPhaseMarginDeg) {
+    function recomputeGains(targetPhaseMarginDeg: number) {
         const result = store.analysisResult;
         if (!result?.axes) {
             return;
         }
         for (const axis of Object.values(result.axes)) {
+            if (!axis) {
+                continue;
+            }
             const rec = recommendGains(axis.transferFunction, result.currentSliders, targetPhaseMarginDeg);
             axis.gains = buildGains(rec, axis.sensitivity, axis.stepResponse);
         }
@@ -82,7 +137,7 @@ export function useAutotune() {
     return { importAndAnalyze, applyGains, recomputeGains };
 }
 
-async function pickFileOrSetError(store) {
+async function pickFileOrSetError(store: AutotuneStore) {
     try {
         const file = await FileSystem.pickOpenFile(
             i18n.getMessage("fileSystemPickerFiles", { typeof: "BBL" }),
@@ -95,20 +150,26 @@ async function pickFileOrSetError(store) {
         }
         return file;
     } catch (err) {
-        if (err?.name === "AbortError" || err?.message === "cancelled") {
+        if (errorField(err, "name") === "AbortError" || errorField(err, "message") === "cancelled") {
             store.analysisState = "idle";
             store.progressMessage = "";
             return null;
         }
         store.analysisState = "error";
-        store.errorMessage = err?.message || "Failed to open file picker.";
+        store.errorMessage = errorField(err, "message") || "Failed to open file picker.";
         store.progressMessage = "";
         return null;
     }
 }
 
-function tryParseLogs(data, logs, filename, store, targetPhaseMarginDeg) {
-    let lastError = null;
+function tryParseLogs(
+    data: Uint8Array,
+    logs: LogBoundary[],
+    filename: string,
+    store: AutotuneStore,
+    targetPhaseMarginDeg: number,
+): AnalysisResult | null {
+    let lastError: unknown = null;
     for (let idx = 0; idx < logs.length; idx++) {
         store.progressMessage = `Parsing log ${idx + 1} of ${logs.length}...`;
         try {
@@ -126,7 +187,7 @@ function tryParseLogs(data, logs, filename, store, targetPhaseMarginDeg) {
     return null;
 }
 
-function analyzeLog(data, log, targetPhaseMarginDeg) {
+function analyzeLog(data: Uint8Array, log: LogBoundary, targetPhaseMarginDeg: number) {
     const { sysConfig, chirpData } = parseChirpLog(data, log.start, log.end);
     if (chirpData.sampleCount === 0 || chirpData.segments.length === 0) {
         return null;
@@ -136,7 +197,7 @@ function analyzeLog(data, log, targetPhaseMarginDeg) {
     const segmentSize = chooseSegmentSize(sampleRate);
     const currentSliders = extractCurrentSliders(sysConfig);
 
-    const axes = {};
+    const axes: Partial<Record<AxisName, AxisResult>> = {};
     for (const seg of chirpData.segments) {
         if (!Number.isInteger(seg.axis) || seg.axis < 0 || seg.axis > 2) {
             throw new Error(
@@ -170,14 +231,14 @@ function analyzeLog(data, log, targetPhaseMarginDeg) {
     };
 }
 
-function computeSampleRate(sysConfig) {
+function computeSampleRate(sysConfig: SysConfig) {
     const looptimeUs = sysConfig.looptime || 125;
     const pidDenom = sysConfig.pid_process_denom || 1;
     const bbRate = sysConfig.frameIntervalPDenom || 1;
     return 1e6 / (looptimeUs * pidDenom * bbRate);
 }
 
-function chooseSegmentSize(sampleRate) {
+function chooseSegmentSize(sampleRate: number) {
     let segmentSize = 256;
     while (segmentSize < sampleRate * 0.5) {
         segmentSize <<= 1;
@@ -185,7 +246,7 @@ function chooseSegmentSize(sampleRate) {
     return Math.min(segmentSize, 4096);
 }
 
-function extractCurrentSliders(sysConfig) {
+function extractCurrentSliders(sysConfig: SysConfig): Required<CurrentSliders> {
     return {
         masterMultiplier: (sysConfig.simplified_master_multiplier || 100) / 100,
         piGain: (sysConfig.simplified_pi_gain || 100) / 100,
@@ -196,7 +257,7 @@ function extractCurrentSliders(sysConfig) {
     };
 }
 
-function buildGains(rec, sensitivity, stepResponse) {
+function buildGains(rec: GainRecommendation, sensitivity: Sensitivity, stepResponse: StepResponse) {
     return {
         proposed: rec.proposed,
         bandwidth: rec.analysis.bandwidthHz,
@@ -224,7 +285,14 @@ function buildGains(rec, sensitivity, stepResponse) {
     };
 }
 
-function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSliders, targetPhaseMarginDeg) {
+function computeAxisResult(
+    seg: ChirpSegment,
+    chirpData: ChirpData,
+    sampleRate: number,
+    segmentSize: number,
+    currentSliders: CurrentSliders,
+    targetPhaseMarginDeg: number,
+) {
     const len = seg.endIdx - seg.startIdx + 1;
     if (len < segmentSize) {
         return null;
@@ -246,10 +314,11 @@ function computeAxisResult(seg, chirpData, sampleRate, segmentSize, currentSlide
     };
 }
 
-async function applyGains(proposed) {
-    for (const [key, value] of Object.entries(proposed)) {
+async function applyGains(proposed: ProposedSliders) {
+    // Object.keys widens to string[]; the keys are the proposal's own.
+    for (const key of Object.keys(proposed) as (keyof ProposedSliders)[]) {
         if (key in FC.TUNING_SLIDERS) {
-            FC.TUNING_SLIDERS[key] = value;
+            FC.TUNING_SLIDERS[key] = proposed[key];
         }
     }
 

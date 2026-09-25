@@ -15,17 +15,25 @@
     </UiBox>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, onUnmounted, nextTick, type ComponentPublicInstance } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import UiBox from "../../elements/UiBox.vue";
 import * as d3 from "d3";
+import type { AxisName } from "@/composables/useAutotune";
+import type { Spectrogram } from "@/js/blackbox/spectral_analysis";
+
+interface AxisDef {
+    key: AxisName;
+    labelKey: string;
+    color: string;
+}
 
 const store = useAutotuneStore();
-const container = ref(null);
-const canvasRefs = {};
+const container = ref<HTMLElement | null>(null);
+const canvasRefs: Partial<Record<AxisName, HTMLCanvasElement>> = {};
 
-const AXIS_DEFS = [
+const AXIS_DEFS: AxisDef[] = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761" },
     { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747" },
     { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7" },
@@ -42,7 +50,8 @@ const COLOR_LUT = buildColorLUT();
 function buildColorLUT() {
     const lut = new Uint8Array(LUT_STEPS * 3);
     for (let i = 0; i < LUT_STEPS; i++) {
-        const c = d3.color(d3.interpolateInferno(i / (LUT_STEPS - 1)));
+        // interpolateInferno yields "#rrggbb"; d3.rgb parses it exactly as d3.color does.
+        const c = d3.rgb(d3.interpolateInferno(i / (LUT_STEPS - 1)));
         lut[i * 3] = c.r;
         lut[i * 3 + 1] = c.g;
         lut[i * 3 + 2] = c.b;
@@ -50,17 +59,17 @@ function buildColorLUT() {
     return lut;
 }
 
-const visibleAxes = ref([]);
+const visibleAxes = ref<AxisDef[]>([]);
 
-function setCanvasRef(key, el) {
-    if (el) {
+function setCanvasRef(key: AxisName, el: Element | ComponentPublicInstance | null) {
+    if (el instanceof HTMLCanvasElement) {
         canvasRefs[key] = el;
     } else {
         delete canvasRefs[key];
     }
 }
 
-let resizeObserver = null;
+let resizeObserver: ResizeObserver | null = null;
 
 onMounted(() => {
     resizeObserver = new ResizeObserver(() => drawAll());
@@ -99,7 +108,7 @@ function drawAll() {
     }
 }
 
-function drawSpectrogram(canvas, spec, axisColor) {
+function drawSpectrogram(canvas: HTMLCanvasElement, spec: Spectrogram, axisColor: string) {
     const containerWidth = container.value?.clientWidth || 700;
     const totalHeight = PLOT_HEIGHT;
     const dpr = window.devicePixelRatio || 1;
@@ -110,6 +119,9 @@ function drawSpectrogram(canvas, spec, axisColor) {
     canvas.height = totalHeight * dpr;
 
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        return;
+    }
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, containerWidth, totalHeight);
 
@@ -128,7 +140,7 @@ function drawSpectrogram(canvas, spec, axisColor) {
     drawAxes(ctx, spec, maxFreq, plotW, plotH);
 }
 
-function powerRange(spec, maxBin) {
+function powerRange(spec: Spectrogram, maxBin: number) {
     let pMin = Infinity;
     let pMax = -Infinity;
     for (let s = 0; s < spec.numSegments; s++) {
@@ -146,7 +158,15 @@ function powerRange(spec, maxBin) {
     return { pMin, pMax: pMax > pMin ? pMax : pMin + 1 };
 }
 
-function renderHeatmap(ctx, spec, maxBin, pMin, pMax, plotW, plotH) {
+function renderHeatmap(
+    ctx: CanvasRenderingContext2D,
+    spec: Spectrogram,
+    maxBin: number,
+    pMin: number,
+    pMax: number,
+    plotW: number,
+    plotH: number,
+) {
     const heatW = spec.numSegments;
     const heatH = maxBin;
     const imgData = new ImageData(heatW, heatH);
@@ -167,12 +187,22 @@ function renderHeatmap(ctx, spec, maxBin, pMin, pMax, plotW, plotH) {
     }
 
     const offscreen = new OffscreenCanvas(heatW, heatH);
-    offscreen.getContext("2d").putImageData(imgData, 0, 0);
+    const offscreenCtx = offscreen.getContext("2d");
+    if (!offscreenCtx) {
+        return;
+    }
+    offscreenCtx.putImageData(imgData, 0, 0);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(offscreen, MARGIN.left, MARGIN.top, plotW, plotH);
 }
 
-function drawChirpMarkers(ctx, maxFreq, plotW, plotH, axisColor) {
+function drawChirpMarkers(
+    ctx: CanvasRenderingContext2D,
+    maxFreq: number,
+    plotW: number,
+    plotH: number,
+    axisColor: string,
+) {
     const sc = store.analysisResult?.sysConfig;
     if (!sc) {
         return;
@@ -194,7 +224,7 @@ function drawChirpMarkers(ctx, maxFreq, plotW, plotH, axisColor) {
     ctx.setLineDash([]);
 }
 
-function drawAxes(ctx, spec, maxFreq, plotW, plotH) {
+function drawAxes(ctx: CanvasRenderingContext2D, spec: Spectrogram, maxFreq: number, plotW: number, plotH: number) {
     const style = getComputedStyle(document.documentElement);
     const textColor = style.getPropertyValue("--surface-600").trim() || "#888";
     const lineColor = style.getPropertyValue("--surface-400").trim() || "#ccc";
@@ -261,7 +291,7 @@ function drawAxes(ctx, spec, maxFreq, plotW, plotH) {
     ctx.restore();
 }
 
-function findBinForFreq(freqHz, numBins, freq) {
+function findBinForFreq(freqHz: Float64Array, numBins: number, freq: number) {
     for (let k = 0; k < numBins; k++) {
         if (freqHz[k] >= freq) {
             return k;
@@ -270,11 +300,11 @@ function findBinForFreq(freqHz, numBins, freq) {
     return numBins - 1;
 }
 
-function formatTickMs(ms) {
+function formatTickMs(ms: number) {
     return (ms / 1000).toFixed(1);
 }
 
-function niceTicksLinear(min, max, count) {
+function niceTicksLinear(min: number, max: number, count: number) {
     const range = max - min;
     if (range <= 0) {
         return [min];
@@ -289,7 +319,7 @@ function niceTicksLinear(min, max, count) {
     } else if (rawStep / mag > 1) {
         step = mag * 2;
     }
-    const ticks = [];
+    const ticks: number[] = [];
     let t = Math.ceil(min / step) * step;
     while (t <= max) {
         ticks.push(t);

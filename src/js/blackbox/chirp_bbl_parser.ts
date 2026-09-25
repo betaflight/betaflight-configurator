@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Focused blackbox log parser for chirp/autotune frequency response analysis.
  *
@@ -12,10 +33,111 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { ArrayDataStream } from "./datastream.js";
-import "./decoders.js"; // side-effect: extends ArrayDataStream prototype
+import { ArrayDataStream } from "./datastream";
+import "./decoders"; // side-effect: extends ArrayDataStream prototype
 import CONFIGURATOR from "../data_storage";
-import { getDebugModeIndex } from "../utils/debugModes.js";
+import { getDebugModeIndex } from "../utils/debugModes";
+
+/**
+ * ArrayDataStream as this parser uses it. datastream.js defines the base reader and
+ * decoders.js patches the tag readers onto its prototype at import time, which
+ * TypeScript cannot follow; this is the combined surface.
+ */
+interface ChirpDataStream {
+    pos: number;
+    end: number;
+    eof: boolean;
+    readChar(): string;
+    readByte(): number;
+    unreadChar(): void;
+    readUnsignedVB(): number;
+    readSignedVB(): number;
+    readTag2_3S32(values: number[]): void;
+    readTag2_3SVariable(values: number[]): void;
+    readTag8_4S16_v1(values: number[]): void;
+    readTag8_4S16_v2(values: number[]): void;
+    readTag8_8SVB(values: number[], valueCount: number): void;
+}
+
+function openStream(data: Uint8Array, start: number, end: number): ChirpDataStream {
+    return new ArrayDataStream(data, start, end) as ArrayDataStream & ChirpDataStream;
+}
+
+/** Field definitions of one frame type, from the `Field X ...` header lines. */
+interface FrameDef {
+    name: string[];
+    signed: number[];
+    predictor: number[];
+    encoding: number[];
+    count: number;
+}
+
+type FrameDefs = {
+    I: FrameDef;
+    P: FrameDef;
+    S: FrameDef;
+};
+
+/** Field name (and `name0`-style alias) to its index in the I-frame. */
+type FieldIndices = Record<string, number | undefined>;
+
+/** Log header values the parser and the autotune analysis read. */
+export type SysConfig = {
+    dataVersion: number;
+    looptime: number;
+    pid_process_denom: number;
+    debug_mode: number;
+    blackbox_high_resolution: number;
+    frameIntervalI: number;
+    frameIntervalPNum: number;
+    frameIntervalPDenom: number;
+    minthrottle: number;
+    maxthrottle?: number;
+    vbatref: number;
+    motorOutput: number[];
+    rollPID: number[];
+    pitchPID: number[];
+    yawPID: number[];
+    chirp_lag_freq_hz: number;
+    chirp_lead_freq_hz: number;
+    chirp_amplitude_roll: number;
+    chirp_amplitude_pitch: number;
+    chirp_amplitude_yaw: number;
+    chirp_frequency_start_deci_hz: number;
+    chirp_frequency_end_deci_hz: number;
+    chirp_time_seconds: number;
+    simplified_master_multiplier: number;
+    simplified_pi_gain: number;
+    simplified_i_gain: number;
+    simplified_d_gain: number;
+    simplified_feedforward_gain: number;
+    simplified_dterm_filter_multiplier: number;
+    firmwareApiVersion?: string;
+    firmwareRevision?: string;
+    fieldIndices: FieldIndices;
+};
+
+/** A run of samples during which the chirp excited one axis (0 roll, 1 pitch, 2 yaw). */
+export interface ChirpSegment {
+    axis: number;
+    startIdx: number;
+    endIdx: number;
+}
+
+export interface ChirpData {
+    setpoint: Float32Array[];
+    gyro: Float32Array[];
+    debug: Float32Array[];
+    segments: ChirpSegment[];
+    sampleCount: number;
+    totalFrames: number;
+    corruptFrames: number;
+}
+
+export interface LogBoundary {
+    start: number;
+    end: number;
+}
 
 // ---------------------------------------------------------------------------
 // Constants — encoding types (match FLIGHT_LOG_FIELD_ENCODING_*)
@@ -74,7 +196,7 @@ const LOG_BOUNDARY = "H Product:Blackbox flight data recorder by Nicholas Sherlo
 // Helpers
 // ---------------------------------------------------------------------------
 
-function signExtend14Bit(word) {
+function signExtend14Bit(word: number) {
     return word & 0x2000 ? word | 0xffffc000 : word;
 }
 
@@ -89,7 +211,7 @@ function signExtend14Bit(word) {
  * length when reading. Returning 0 here signals the caller to compute the
  * run length from the surrounding frame definition.
  */
-function encodingGroupSize(encoding) {
+function encodingGroupSize(encoding: number) {
     switch (encoding) {
         case ENCODING_TAG2_3S32:
             return 3;
@@ -108,7 +230,7 @@ function encodingGroupSize(encoding) {
  * Count how many consecutive fields starting at index `i` share the same
  * encoding. Used to determine the variable group size for TAG8_8SVB runs.
  */
-function consecutiveEncodingRun(frameDef, i, encoding) {
+function consecutiveEncodingRun(frameDef: FrameDef, i: number, encoding: number) {
     let n = 0;
     while (i + n < frameDef.count && frameDef.encoding[i + n] === encoding) {
         n++;
@@ -121,10 +243,10 @@ function consecutiveEncodingRun(frameDef, i, encoding) {
  * flight log. Returns byte offsets of the 'H' at the start of each
  * "H Product:..." line.
  */
-function findString(data, str, startFrom) {
+function findString(data: Uint8Array, str: string, startFrom: number) {
     const needle = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i++) {
-        needle[i] = str.codePointAt(i);
+        needle[i] = str.codePointAt(i) ?? 0;
     }
     for (let i = startFrom; i <= data.length - needle.length; i++) {
         if (data[i] === needle[0]) {
@@ -151,11 +273,10 @@ function findString(data, str, startFrom) {
  * Scan a BBL file (as Uint8Array) and return the byte ranges for each
  * individual flight log it contains.
  *
- * @param {Uint8Array} data  The raw BBL file bytes.
- * @returns {Array<{start: number, end: number}>}
+ * @param data  The raw BBL file bytes.
  */
-export function findLogBoundaries(data) {
-    const boundaries = [];
+export function findLogBoundaries(data: Uint8Array): LogBoundary[] {
+    const boundaries: LogBoundary[] = [];
     let offset = 0;
 
     while (offset < data.length) {
@@ -183,18 +304,18 @@ export function findLogBoundaries(data) {
  * Parse the text header section of a single flight log.
  * Returns a sysConfig object plus field definitions for I, P, and S frames.
  */
-function parseHeader(data, logStart, logEnd) {
-    const stream = new ArrayDataStream(data, logStart, logEnd);
+function parseHeader(data: Uint8Array, logStart: number, logEnd: number) {
+    const stream = openStream(data, logStart, logEnd);
 
     // Frame definitions keyed by type letter.  For I/P frames the field name
     // arrays are shared (P-frame names = I-frame names).
-    const frameDefs = {
+    const frameDefs: FrameDefs = {
         I: { name: [], signed: [], predictor: [], encoding: [], count: 0 },
         P: { name: [], signed: [], predictor: [], encoding: [], count: 0 },
         S: { name: [], signed: [], predictor: [], encoding: [], count: 0 },
     };
 
-    const sysConfig = {
+    const sysConfig: SysConfig = {
         dataVersion: 2,
         looptime: 125,
         pid_process_denom: 1,
@@ -223,6 +344,8 @@ function parseHeader(data, logStart, logEnd) {
         simplified_d_gain: 100,
         simplified_feedforward_gain: 100,
         simplified_dterm_filter_multiplier: 100,
+        // Filled in once the field definitions are read, below.
+        fieldIndices: {},
     };
 
     // Read header lines one at a time until we hit a non-header byte
@@ -300,7 +423,7 @@ const INT_HEADER_KEYS = new Set([
 ]);
 
 // Header keys that store in sysConfig under a different name than the header key.
-const RENAMED_INT_HEADERS = {
+const RENAMED_INT_HEADERS: Record<string, string | undefined> = {
     "Data version": "dataVersion",
     "I interval": "frameIntervalI",
 };
@@ -312,7 +435,7 @@ const CSV_NUMBER_HEADERS = new Set(["rollPID", "pitchPID", "yawPID"]);
  * Parse a single header line (without the "H " prefix) and update
  * sysConfig / frameDefs accordingly.
  */
-function parseHeaderLine(line, sysConfig, frameDefs) {
+function parseHeaderLine(line: string, sysConfig: SysConfig, frameDefs: FrameDefs) {
     const colonIdx = line.indexOf(":");
     if (colonIdx === -1) {
         return;
@@ -330,26 +453,28 @@ function parseHeaderLine(line, sysConfig, frameDefs) {
     parseSpecialHeader(key, value, sysConfig);
 }
 
-function parseFieldDef(key, value, frameDefs) {
+function parseFieldDef(key: string, value: string, frameDefs: FrameDefs) {
     const fieldMatch = key.match(/^Field ([IPS]) (\w+)$/);
     if (!fieldMatch) {
         return false;
     }
     const [, frameChar, property] = fieldMatch;
     const parts = value.split(",");
-    if (!frameDefs[frameChar]) {
+    const byChar: Record<string, FrameDef | undefined> = frameDefs;
+    const frameDef = byChar[frameChar];
+    if (!frameDef) {
         return true;
     }
     if (property === "name") {
-        frameDefs[frameChar].name = parts;
-        frameDefs[frameChar].count = parts.length;
+        frameDef.name = parts;
+        frameDef.count = parts.length;
     } else if (property === "signed" || property === "predictor" || property === "encoding") {
-        frameDefs[frameChar][property] = parts.map(Number);
+        frameDef[property] = parts.map(Number);
     }
     return true;
 }
 
-function parseIntHeader(key, value, sysConfig) {
+function parseIntHeader(key: string, value: string, sysConfig: SysConfig) {
     if (key === "I interval") {
         sysConfig.frameIntervalI = Number.parseInt(value, 10);
         return true;
@@ -359,13 +484,14 @@ function parseIntHeader(key, value, sysConfig) {
         return true;
     }
     if (INT_HEADER_KEYS.has(key) && !RENAMED_INT_HEADERS[key]) {
-        sysConfig[key] = Number.parseInt(value, 10);
+        const fields: Record<string, unknown> = sysConfig;
+        fields[key] = Number.parseInt(value, 10);
         return true;
     }
     return false;
 }
 
-function parseSpecialHeader(key, value, sysConfig) {
+function parseSpecialHeader(key: string, value: string, sysConfig: SysConfig) {
     if (key === "P interval") {
         parsePIntervalHeader(value, sysConfig);
         return;
@@ -390,11 +516,12 @@ function parseSpecialHeader(key, value, sysConfig) {
         return;
     }
     if (CSV_NUMBER_HEADERS.has(key)) {
-        sysConfig[key] = value.split(",").map(Number);
+        const fields: Record<string, unknown> = sysConfig;
+        fields[key] = value.split(",").map(Number);
     }
 }
 
-function parsePIntervalHeader(value, sysConfig) {
+function parsePIntervalHeader(value: string, sysConfig: SysConfig) {
     if (value.includes("/")) {
         const parts = value.split("/");
         sysConfig.frameIntervalPNum = Number.parseInt(parts[0], 10);
@@ -405,7 +532,7 @@ function parsePIntervalHeader(value, sysConfig) {
     }
 }
 
-function parsePRatioHeader(value, sysConfig) {
+function parsePRatioHeader(value: string, sysConfig: SysConfig) {
     // Alternative form — derive P interval from ratio (I interval / P interval).
     // Use it only if P interval wasn't explicitly set.
     if (sysConfig.frameIntervalPNum === 1 && sysConfig.frameIntervalPDenom === 1) {
@@ -422,8 +549,8 @@ function parsePRatioHeader(value, sysConfig) {
  * field array.  Field names in the header look like "setpoint[0]",
  * "gyroADC[1]", "debug[3]", etc.
  */
-function buildFieldIndices(names) {
-    const indices = {};
+function buildFieldIndices(names: string[]): FieldIndices {
+    const indices: FieldIndices = {};
     for (let i = 0; i < names.length; i++) {
         const name = names[i];
         // Map both the raw name (e.g. "setpoint[0]") and a friendlier alias
@@ -450,15 +577,19 @@ function buildFieldIndices(names) {
  * returns the first one.  The caller must advance its field index by the
  * group size.
  *
- * @param {ArrayDataStream} stream
- * @param {number} encoding
- * @param {number} dataVersion  — 1 or 2 (affects TAG8_4S16 version)
- * @param {number[]} groupValues — reusable scratch array (length >= 8)
- * @param {number} groupCount   — how many fields remain in the frame
+ * @param dataVersion  — 1 or 2 (affects TAG8_4S16 version)
+ * @param groupValues — reusable scratch array (length >= 8)
+ * @param groupCount   — how many fields remain in the frame
  *                                 (caps TAG8_8SVB to actual remaining)
- * @returns {number} The first (or only) decoded value.
+ * @returns The first (or only) decoded value.
  */
-function readFieldValue(stream, encoding, dataVersion, groupValues, groupCount) {
+function readFieldValue(
+    stream: ChirpDataStream,
+    encoding: number,
+    dataVersion: number,
+    groupValues: number[],
+    groupCount: number,
+): number {
     switch (encoding) {
         case ENCODING_SIGNED_VB:
             return stream.readSignedVB();
@@ -503,30 +634,25 @@ function readFieldValue(stream, encoding, dataVersion, groupValues, groupCount) 
  * Apply a predictor to convert a raw (delta/residual) value to the actual
  * field value.
  *
- * @param {number} fieldIndex
- * @param {number} predictor    — predictor type
- * @param {number} raw          — raw decoded value
- * @param {Int32Array} current  — the frame being built (partially filled)
- * @param {Int32Array|null} previous  — preceding frame
- * @param {Int32Array|null} previous2 — frame before that
- * @param {number} skippedFrames
- * @param {object} sysConfig
- * @param {number} motor0Index  — index of motor[0] in the field array
- * @param {number} lastMainFrameTime
- * @returns {number}
+ * @param predictor    — predictor type
+ * @param raw          — raw decoded value
+ * @param current  — the frame being built (partially filled)
+ * @param previous  — preceding frame
+ * @param previous2 — frame before that
+ * @param motor0Index  — index of motor[0] in the field array
  */
 function applyPrediction( // NOSONAR S107,S3776 — ported predictor from blackbox-log-viewer; signature fixed by encoding spec
-    fieldIndex,
-    predictor,
-    raw,
-    current,
-    previous,
-    previous2,
-    skippedFrames,
-    sysConfig,
-    motor0Index,
-    lastMainFrameTime,
-) {
+    fieldIndex: number,
+    predictor: number,
+    raw: number,
+    current: Int32Array,
+    previous: Int32Array | null,
+    previous2: Int32Array | null,
+    skippedFrames: number,
+    sysConfig: SysConfig,
+    motor0Index: number,
+    lastMainFrameTime: number,
+): number {
     switch (predictor) {
         case PREDICTOR_0:
             // Value is absolute
@@ -587,32 +713,25 @@ function applyPrediction( // NOSONAR S107,S3776 — ported predictor from blackb
  *
  * Populates `current` with the decoded field values.
  *
- * @param {ArrayDataStream} stream
- * @param {object} frameDef        — { name, signed, predictor, encoding, count }
- * @param {Int32Array} current     — output array (length >= frameDef.count)
- * @param {Int32Array|null} previous
- * @param {Int32Array|null} previous2
- * @param {number} skippedFrames
- * @param {object} sysConfig
- * @param {number} motor0Index
- * @param {number} lastMainFrameTime
- * @returns {boolean} true if the frame was parsed successfully
+ * @param frameDef        — { name, signed, predictor, encoding, count }
+ * @param current     — output array (length >= frameDef.count)
+ * @returns true if the frame was parsed successfully
  */
 // Scratch buffer for grouped encodings, reused across parseFrame calls to
 // avoid allocating a new array for every frame in the hot decode loop.
-const GROUP_VALUES_SCRATCH = new Array(8);
+const GROUP_VALUES_SCRATCH: number[] = new Array(8);
 
 function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature fixed by encoding spec
-    stream,
-    frameDef,
-    current,
-    previous,
-    previous2,
-    skippedFrames,
-    sysConfig,
-    motor0Index,
-    lastMainFrameTime,
-) {
+    stream: ChirpDataStream,
+    frameDef: FrameDef,
+    current: Int32Array,
+    previous: Int32Array | null,
+    previous2: Int32Array | null,
+    skippedFrames: number,
+    sysConfig: SysConfig,
+    motor0Index: number,
+    lastMainFrameTime: number,
+): boolean {
     const groupValues = GROUP_VALUES_SCRATCH;
     let i = 0;
     const count = frameDef.count;
@@ -712,7 +831,7 @@ function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature f
  * Try to skip an event frame. Returns true if we consumed a recognized
  * event, false if we had to scan for the next frame marker.
  */
-function parseEventFrame(stream, _sysConfig) {
+function parseEventFrame(stream: ChirpDataStream, _sysConfig: SysConfig): ParsedEvent | null {
     const eventType = stream.readByte();
 
     switch (eventType) {
@@ -769,7 +888,7 @@ function parseEventFrame(stream, _sysConfig) {
 /**
  * Is this byte a valid frame-start character?
  */
-function isFrameMarker(byte) {
+function isFrameMarker(byte: number) {
     return (
         byte === FRAME_TYPE_I ||
         byte === FRAME_TYPE_P ||
@@ -786,7 +905,7 @@ function isFrameMarker(byte) {
  * by at least one plausible data byte (i.e. we skip at most a few hundred
  * bytes of junk).
  */
-function skipToNextFrame(stream) {
+function skipToNextFrame(stream: ChirpDataStream) {
     const maxScan = 4096;
     for (let n = 0; n < maxScan && !stream.eof; n++) {
         const b = stream.readByte();
@@ -824,7 +943,7 @@ function skipToNextFrame(stream) {
  * 1.48+, which rejected every valid chirp log from 2026.6+ firmware with
  * "Log debug_mode is 96, expected 97".
  */
-function validateDebugModeIsChirp(sysConfig, apiVersion) {
+function validateDebugModeIsChirp(sysConfig: SysConfig, apiVersion: string | undefined) {
     const logApiVersion = sysConfig.firmwareApiVersion;
     const hasLogApiVersion = logApiVersion && logApiVersion !== "0.0.0";
     const hasApiVersion = apiVersion && apiVersion !== "0.0.0";
@@ -854,17 +973,21 @@ function validateDebugModeIsChirp(sysConfig, apiVersion) {
 /**
  * Parse a single flight log from a BBL file and extract chirp analysis data.
  *
- * @param {Uint8Array} data       The full BBL file as a Uint8Array.
- * @param {number}     logStart   Byte offset of the log start (from findLogBoundaries).
- * @param {number}     logEnd     Byte offset of the log end.
- * @param {string}     [apiVersion]  API version of the firmware that produced
+ * @param data       The full BBL file as a Uint8Array.
+ * @param logStart   Byte offset of the log start (from findLogBoundaries).
+ * @param logEnd     Byte offset of the log end.
+ * @param [apiVersion]  API version of the firmware that produced
  *   the log (e.g. "1.47.0"). Used to look up the numeric CHIRP debug_mode
  *   value, which is firmware-version dependent. Defaults to the minimum
  *   version that supports chirp (API 1.47).
- * @returns {{ sysConfig: object, chirpData: object }}
  * @throws {Error} if the log is not a chirp/debug_mode=CHIRP log.
  */
-export function parseChirpLog(data, logStart, logEnd, apiVersion) {
+export function parseChirpLog(
+    data: Uint8Array,
+    logStart: number,
+    logEnd: number,
+    apiVersion?: string,
+): { sysConfig: SysConfig; chirpData: ChirpData } {
     // 1. Parse the text header
     const { sysConfig, frameDefs, dataStart } = parseHeader(data, logStart, logEnd);
 
@@ -909,19 +1032,18 @@ export function parseChirpLog(data, logStart, logEnd, apiVersion) {
 
     // 5. Collect samples during chirp-active periods
     // We accumulate into regular arrays, then convert to Float32Array at the end.
-    const rawSetpoint = [[], [], []];
-    const rawGyro = [[], [], []];
-    const rawDebug = [[], [], [], []];
+    const rawSetpoint: number[][] = [[], [], []];
+    const rawGyro: number[][] = [[], [], []];
+    const rawDebug: number[][] = [[], [], [], []];
     const sampleIndices = { setpointIdx, gyroIdx, debugIdx };
     const sampleBuffers = { rawSetpoint, rawGyro, rawDebug };
-    /** @type {Array<{axis: number, startIdx: number, endIdx: number}>} */
-    const segments = [];
+    const segments: ChirpSegment[] = [];
 
     // 6. Parse binary frames
-    const stream = new ArrayDataStream(data, dataStart, logEnd);
+    const stream = openStream(data, dataStart, logEnd);
     const maxCorrupt = 500; // bail out if too many corrupt frames
 
-    const state = {
+    const state: ParserState = {
         current: new Int32Array(fieldCount),
         previous: null,
         previous2: null,
@@ -933,7 +1055,7 @@ export function parseChirpLog(data, logStart, logEnd, apiVersion) {
         frameCount: 0,
         corruptFrameCount: 0,
     };
-    const ctx = {
+    const ctx: ParseContext = {
         stream,
         frameDefs,
         sysConfig,
@@ -966,7 +1088,7 @@ export function parseChirpLog(data, logStart, logEnd, apiVersion) {
 
     // 7. Convert accumulated arrays to Float32Arrays
     const sampleCount = rawSetpoint[0].length;
-    const chirpData = {
+    const chirpData: ChirpData = {
         setpoint: [
             new Float32Array(rawSetpoint[0]),
             new Float32Array(rawSetpoint[1]),
@@ -992,7 +1114,59 @@ export function parseChirpLog(data, logStart, logEnd, apiVersion) {
 // Frame-type dispatch helpers
 // ---------------------------------------------------------------------------
 
-function dispatchFrame(frameType, state, ctx) {
+type ParsedEvent =
+    | { type: typeof EVENT_LOGGING_RESUME; logIteration: number; currentTime: number }
+    | {
+          type:
+              | typeof EVENT_LOG_END
+              | typeof EVENT_SYNC_BEEP
+              | typeof EVENT_INFLIGHT_ADJ
+              | typeof EVENT_DISARM
+              | typeof EVENT_FLIGHTMODE;
+      };
+
+interface ParserState {
+    current: Int32Array;
+    previous: Int32Array | null;
+    previous2: Int32Array | null;
+    lastIFrame: Int32Array | null;
+    sFrameCurrent: Int32Array;
+    chirpActive: boolean;
+    lastMainFrameTime: number;
+    currentAxis: number;
+    frameCount: number;
+    corruptFrameCount: number;
+}
+
+interface SampleIndices {
+    setpointIdx: number[];
+    gyroIdx: number[];
+    debugIdx: number[];
+}
+
+interface SampleBuffers {
+    rawSetpoint: number[][];
+    rawGyro: number[][];
+    rawDebug: number[][];
+}
+
+interface ParseContext {
+    stream: ChirpDataStream;
+    frameDefs: FrameDefs;
+    sysConfig: SysConfig;
+    motor0Index: number;
+    fi: FieldIndices;
+    fieldCount: number;
+    sFrameFlightModeFlagsIdx: number;
+    debugIdx: number[];
+    segments: ChirpSegment[];
+    rawSetpoint: number[][];
+    sampleIndices: SampleIndices;
+    sampleBuffers: SampleBuffers;
+    hiResScale: number;
+}
+
+function dispatchFrame(frameType: number, state: ParserState, ctx: ParseContext) {
     switch (frameType) {
         case FRAME_TYPE_I:
             handleIFrame(state, ctx);
@@ -1019,13 +1193,13 @@ function dispatchFrame(frameType, state, ctx) {
     }
 }
 
-function skipOrEnd(stream) {
+function skipOrEnd(stream: ChirpDataStream) {
     if (!skipToNextFrame(stream)) {
         stream.pos = stream.end;
     }
 }
 
-function handleIFrame(state, ctx) {
+function handleIFrame(state: ParserState, ctx: ParseContext) {
     const saved = ctx.stream.pos;
     const ok = parseFrame(
         ctx.stream,
@@ -1057,7 +1231,7 @@ function handleIFrame(state, ctx) {
     state.frameCount++;
 }
 
-function handlePFrame(state, ctx) {
+function handlePFrame(state: ParserState, ctx: ParseContext) {
     if (!state.previous) {
         skipOrEnd(ctx.stream);
         return;
@@ -1092,8 +1266,9 @@ function handlePFrame(state, ctx) {
     state.frameCount++;
 }
 
-function collectIfActive(state, ctx) {
-    if (!state.chirpActive) {
+function collectIfActive(state: ParserState, ctx: ParseContext) {
+    // The frame handlers call this right after decoding into state.previous.
+    if (!state.chirpActive || !state.previous) {
         return;
     }
     // Firmware only ever writes -1/0/1/2 to debug[1] (the chirp axis: -1 while
@@ -1112,7 +1287,7 @@ function collectIfActive(state, ctx) {
     state.currentAxis = axis;
 }
 
-function handleSFrame(state, ctx) {
+function handleSFrame(state: ParserState, ctx: ParseContext) {
     const saved = ctx.stream.pos;
     const ok = parseFrame(ctx.stream, ctx.frameDefs.S, state.sFrameCurrent, null, null, 0, ctx.sysConfig, -1, 0);
     if (!ok) {
@@ -1137,7 +1312,7 @@ function handleSFrame(state, ctx) {
     }
 }
 
-function handleEventFrame(state, ctx) {
+function handleEventFrame(state: ParserState, ctx: ParseContext) {
     const event = parseEventFrame(ctx.stream, ctx.sysConfig);
 
     if (!event) {
@@ -1165,7 +1340,7 @@ function handleEventFrame(state, ctx) {
  * Extract the setpoint, gyro, and debug values from a decoded frame and
  * append them to the accumulation arrays.
  */
-function collectSample(frame, indices, buffers, hiResScale) {
+function collectSample(frame: Int32Array, indices: SampleIndices, buffers: SampleBuffers, hiResScale: number) {
     const { setpointIdx, gyroIdx, debugIdx } = indices;
     const { rawSetpoint, rawGyro, rawDebug } = buffers;
     for (let axis = 0; axis < 3; axis++) {
@@ -1184,7 +1359,13 @@ function collectSample(frame, indices, buffers, hiResScale) {
  * When the axis changes (or first appears), close the old segment and
  * start a new one.
  */
-function updateSegments(frame, debugIdx, segments, sampleIdx, prevAxis) {
+function updateSegments(
+    frame: Int32Array,
+    debugIdx: number[],
+    segments: ChirpSegment[],
+    sampleIdx: number,
+    prevAxis: number,
+) {
     const axis = frame[debugIdx[1]];
 
     if (axis < 0) {
@@ -1207,7 +1388,7 @@ function updateSegments(frame, debugIdx, segments, sampleIdx, prevAxis) {
 /**
  * Close the most recent segment by setting its endIdx.
  */
-function closeSegment(segments, endIdx, axis) {
+function closeSegment(segments: ChirpSegment[], endIdx: number, axis: number) {
     if (segments.length > 0) {
         const last = segments[segments.length - 1];
         if (last.axis === axis) {

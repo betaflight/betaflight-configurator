@@ -302,7 +302,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useTranslation } from "i18next-vue";
 import { i18n } from "@/js/localization";
@@ -313,7 +313,7 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import RateCurve, { axisRateCurveParams } from "@/js/RateCurve";
+import RateCurve, { axisRateCurveParams, type CurrentRates, type RateCurveParams } from "@/js/RateCurve";
 import Model from "@/js/model";
 import { degToRad } from "@/js/utils/common";
 import semver from "semver";
@@ -325,6 +325,40 @@ import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
 const { t } = useTranslation();
+
+type BalloonAlign = "left" | "right" | "none";
+
+interface BalloonColors {
+    color: string;
+    border: string;
+    text: string;
+}
+
+/** Screen area already taken by a drawn balloon, so the next one can move clear of it. */
+interface BalloonBounds {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+}
+
+interface Balloon {
+    value: number;
+    draw: () => void;
+}
+
+interface Point {
+    x: number;
+    y: number;
+}
+
+interface ThrottlePosition {
+    thrPercent: number;
+    thrX: number;
+    mid: number;
+}
+
+type CurveParams = ReturnType<typeof computeCurveParams>;
 
 // USelect item arrays
 const ratesTypeItems = [
@@ -342,19 +376,19 @@ const throttleLimitTypeItems = computed(() => [
 ]);
 
 // Canvas refs
-const rateCurveLayer0 = ref(null);
-const rateCurveLayer1 = ref(null);
-const throttleCurveCanvas = ref(null);
-const ratesPreviewCanvas = ref(null);
-const ratesPreviewContainer = ref(null);
+const rateCurveLayer0 = ref<HTMLCanvasElement | null>(null);
+const rateCurveLayer1 = ref<HTMLCanvasElement | null>(null);
+const throttleCurveCanvas = ref<HTMLCanvasElement | null>(null);
+const ratesPreviewCanvas = ref<HTMLCanvasElement | null>(null);
+const ratesPreviewContainer = ref<HTMLElement | null>(null);
 
 // 3D Model
-let model = null;
-let rcUpdateInterval = null; // For setInterval RC updates
-let initModelTimeoutId = null; // For setTimeout initModel retries
-let modelInitTimeout = null; // For setTimeout after model creation
-let initTimeout = null; // For setTimeout initial draw delay
-let animationFrameId = null;
+let model: Model | null = null;
+let rcUpdateInterval: ReturnType<typeof setInterval> | null = null; // For setInterval RC updates
+let initModelTimeoutId: ReturnType<typeof setTimeout> | null = null; // For setTimeout initModel retries
+let modelInitTimeout: ReturnType<typeof setTimeout> | null = null; // For setTimeout after model creation
+let initTimeout: ReturnType<typeof setTimeout> | null = null; // For setTimeout initial draw delay
+let animationFrameId: number | null = null;
 let lastTimestamp = 0;
 let keepRendering = true;
 
@@ -612,22 +646,22 @@ const throttleLimitType = computed({
 
 const throttleLimitPercent = computed({
     get: () => FC.RC_TUNING.throttleLimitPercent,
-    set: (value) => (FC.RC_TUNING.throttleLimitPercent = Number.parseFloat(value)),
+    set: (value) => (FC.RC_TUNING.throttleLimitPercent = Number.parseFloat(String(value))),
 });
 
 const throttleMid = computed({
     get: () => FC.RC_TUNING.throttle_MID ?? 0,
-    set: (value) => (FC.RC_TUNING.throttle_MID = Number.parseFloat(value)),
+    set: (value) => (FC.RC_TUNING.throttle_MID = Number.parseFloat(String(value))),
 });
 
 const throttleHover = computed({
     get: () => FC.RC_TUNING.throttle_HOVER ?? 0.5,
-    set: (value) => (FC.RC_TUNING.throttle_HOVER = Number.parseFloat(value)),
+    set: (value) => (FC.RC_TUNING.throttle_HOVER = Number.parseFloat(String(value))),
 });
 
 const throttleExpo = computed({
     get: () => FC.RC_TUNING.throttle_EXPO ?? 0,
-    set: (value) => (FC.RC_TUNING.throttle_EXPO = Number.parseFloat(value)),
+    set: (value) => (FC.RC_TUNING.throttle_EXPO = Number.parseFloat(String(value))),
 });
 
 // Rate Curve Helper
@@ -636,14 +670,19 @@ const rateCurve = new RateCurve(false);
 // Get current rates with proper scaling based on rates type - always returns fresh data
 const getCurrentRatesSnapshot = () => rateCurve.getCurrentRates();
 
+// Only the legacy curve has no max angular velocity, and rateCurve is built non-legacy.
+function maxAngularVelOf(params: RateCurveParams): number {
+    return rateCurve.getMaxAngularVel(params) ?? Number.NaN;
+}
+
 // Helper functions for rate calculations
 const RC_RATE_INCREMENTAL = 14.54;
 
-function getRcRateModified(rate) {
+function getRcRateModified(rate: number) {
     return rate > 2 ? (rate - 2) * RC_RATE_INCREMENTAL + 2 : rate;
 }
 
-function getAcroSensitivityFraction(exponent, rate) {
+function getAcroSensitivityFraction(exponent: number, rate: number) {
     return ((1 - exponent) * getRcRateModified(rate) * 200).toFixed(0);
 }
 
@@ -760,10 +799,10 @@ const expoLimits = computed(() => {
     return ratesType.value === RatesType.RACEFLIGHT ? { max: 100, min: 0, step: 1 } : { max: 1, min: 0, step: 0.01 };
 });
 
-function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
+function calculateMaxAngularVel(rate: number, rcRate: number, rcExpo: number, limit: number, deadband?: number) {
     // Use provided deadband or fall back to generic deadband
     const db = deadband === undefined ? FC.RC_DEADBAND_CONFIG?.deadband || 0 : deadband;
-    const maxAngularVel = rateCurve.getMaxAngularVel({
+    const maxAngularVel = maxAngularVelOf({
         rate,
         rcRate,
         rcExpo,
@@ -782,24 +821,22 @@ function drawRateCurves() {
 
     const canvas = rateCurveLayer0.value;
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        return;
+    }
 
     canvas.width = 1000;
     canvas.height = 1000;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Ensure we have valid rate data
-    // if (!FC.RC_TUNING || rcRate.value === undefined) {
-    //     return;
-    // }
 
     // Get scaled rates for drawing
     const rates = getCurrentRatesSnapshot();
 
     // Calculate max angular velocity using scaled values
     const maxAngularVels = [
-        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll")),
-        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch")),
-        rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "yaw")),
+        maxAngularVelOf(axisRateCurveParams(rates, "roll")),
+        maxAngularVelOf(axisRateCurveParams(rates, "pitch")),
+        maxAngularVelOf(axisRateCurveParams(rates, "yaw")),
     ];
     const maxAngularVel = rateCurve.setMaxAngularVel(Math.max(...maxAngularVels));
 
@@ -837,7 +874,7 @@ function drawRateCurves() {
 }
 
 // Balloon label configuration — RGB axis palette (Roll=#e24761, Pitch=#49c747, Yaw=#477ac7)
-const BALLOON_COLORS = {
+const BALLOON_COLORS: Record<"roll" | "pitch" | "yaw", BalloonColors> = {
     roll: {
         color: "rgba(226,71,97,0.4)",
         border: "rgba(226,71,97,0.6)",
@@ -862,6 +899,9 @@ function updateRatesLabels() {
 
     const canvas = rateCurveLayer1.value;
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        return;
+    }
 
     canvas.width = 1000;
     canvas.height = 1000;
@@ -876,9 +916,9 @@ function updateRatesLabels() {
 
     // Calculate max angular velocities
     const maxAngularVels = {
-        roll: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll")),
-        pitch: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch")),
-        yaw: rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "yaw")),
+        roll: maxAngularVelOf(axisRateCurveParams(rates, "roll")),
+        pitch: maxAngularVelOf(axisRateCurveParams(rates, "pitch")),
+        yaw: maxAngularVelOf(axisRateCurveParams(rates, "yaw")),
     };
 
     const maxRate = Math.max(maxAngularVels.roll, maxAngularVels.pitch, maxAngularVels.yaw);
@@ -921,7 +961,7 @@ function updateRatesLabels() {
     );
 
     // Track drawn balloon positions to prevent overlaps
-    const balloonsDirty = [];
+    const balloonsDirty: BalloonBounds[] = [];
 
     // Draw balloon labels at the curve positions (like master)
     const maxAngularVelRoll = `${maxAngularVels.roll.toFixed(0)} deg/s`;
@@ -929,7 +969,7 @@ function updateRatesLabels() {
     const maxAngularVelYaw = `${maxAngularVels.yaw.toFixed(0)} deg/s`;
 
     // Create an array of balloons to draw (like master)
-    const balloons = [
+    const balloons: Balloon[] = [
         {
             value: maxAngularVels.roll,
             draw: () => {
@@ -1017,7 +1057,7 @@ function updateRatesLabels() {
         // This prevents them from being reordered
         balloons.push(
             {
-                value: Number.parseInt(currentRollRate),
+                value: Number.parseInt(String(currentRollRate)),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1031,7 +1071,7 @@ function updateRatesLabels() {
                 },
             },
             {
-                value: Number.parseInt(currentPitchRate),
+                value: Number.parseInt(String(currentPitchRate)),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1045,7 +1085,7 @@ function updateRatesLabels() {
                 },
             },
             {
-                value: Number.parseInt(currentYawRate),
+                value: Number.parseInt(String(currentYawRate)),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1078,13 +1118,20 @@ function updateRatesLabels() {
     ctx.restore();
 }
 
-function drawAxisLabel(ctx, text, x, y, align, color) {
+function drawAxisLabel(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    align?: CanvasRenderingContext2D["textAlign"],
+    color?: string,
+) {
     ctx.fillStyle = color || "#888888";
     ctx.textAlign = align || "center";
     ctx.fillText(text, x, y);
 }
 
-function resolveBalloonOverlap(x, y, width, height, balloonsDirty) {
+function resolveBalloonOverlap(x: number, y: number, width: number, height: number, balloonsDirty: BalloonBounds[]) {
     for (const balloon of balloonsDirty) {
         const overlapsH =
             (x >= balloon.left && x <= balloon.right) || (x + width >= balloon.left && x + width <= balloon.right);
@@ -1102,7 +1149,12 @@ function resolveBalloonOverlap(x, y, width, height, balloonsDirty) {
     return y;
 }
 
-function drawBalloonPath(ctx, bounds, pointer, style) {
+function drawBalloonPath(
+    ctx: CanvasRenderingContext2D,
+    bounds: { x: number; y: number; width: number; height: number },
+    pointer: { pointerY: number },
+    style: { align: BalloonAlign; radius: number; offset: number },
+) {
     const { x, y, width, height } = bounds;
     const { pointerY } = pointer;
     const { align, radius, offset } = style;
@@ -1137,7 +1189,15 @@ function drawBalloonPath(ctx, bounds, pointer, style) {
     ctx.stroke();
 }
 
-function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
+function drawBalloonLabel(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    align: BalloonAlign,
+    colors: BalloonColors,
+    balloonsDirty: BalloonBounds[],
+) {
     const DEFAULT_OFFSET = 125;
     const DEFAULT_MARGIN = 5;
     const DEFAULT_RADIUS = 10;
@@ -1174,7 +1234,12 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
     ctx.fillText(text, x + width / 2, y + (height + fontSize) / 2 - 4);
 }
 
-function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
+function drawAngleModeLabels(
+    ctx: CanvasRenderingContext2D,
+    canvas: HTMLCanvasElement,
+    rates: CurrentRates,
+    balloonsDirty: BalloonBounds[],
+) {
     const textScale = ctx.canvas.clientHeight / ctx.canvas.clientWidth;
 
     // Draw "Angle Mode" label at the bottom right (like master)
@@ -1184,8 +1249,8 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
 
         // Draw angle sensitivity ranges
         const angleLimit = FC.ADVANCED_TUNING?.levelAngleLimit || 60;
-        const maxAngVelRoll = rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "roll"));
-        const maxAngVelPitch = rateCurve.getMaxAngularVel(axisRateCurveParams(rates, "pitch"));
+        const maxAngVelRoll = maxAngularVelOf(axisRateCurveParams(rates, "roll"));
+        const maxAngVelPitch = maxAngularVelOf(axisRateCurveParams(rates, "pitch"));
 
         const rcRate = rates.rc_rate;
         const rcRatePitch = rates.rc_rate_pitch;
@@ -1197,7 +1262,7 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
         const angleCenterSensPitchText = `${angleCenterSensPitch}...${angleLimit}`;
 
         // Calculate offset for balloon placement
-        const getOffsetForBalloon = (value) => {
+        const getOffsetForBalloon = (value: string) => {
             const offset =
                 Math.ceil(ctx.measureText(value).width) / (ctx.canvas.clientWidth / ctx.canvas.clientHeight) + 40;
             return (canvas.width - offset) / textScale;
@@ -1229,7 +1294,7 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
     }
 }
 
-function drawAxes(ctx, width, height) {
+function drawAxes(ctx: CanvasRenderingContext2D, width: number, height: number) {
     ctx.strokeStyle = "#888888";
     ctx.lineWidth = 4;
 
@@ -1247,19 +1312,27 @@ function drawAxes(ctx, width, height) {
 }
 
 // Bezier math helpers extracted for reuse and reduced complexity
-function getQBezierValue(t, p1, p2, p3) {
+function getQBezierValue(t: number, p1: number, p2: number, p3: number) {
     const iT = 1 - t;
     return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
 }
 
-function getQuadraticCurvePoint(startX, startY, cpX, cpY, endX, endY, position) {
+function getQuadraticCurvePoint(
+    startX: number,
+    startY: number,
+    cpX: number,
+    cpY: number,
+    endX: number,
+    endY: number,
+    position: number,
+): Point {
     return {
         x: getQBezierValue(position, startX, cpX, endX),
         y: getQBezierValue(position, startY, cpY, endY),
     };
 }
 
-function getTfromYBezier(y, startY, cpY, endY) {
+function getTfromYBezier(y: number, startY: number, cpY: number, endY: number) {
     const A = startY - 2 * cpY + endY;
     const B = 2 * (cpY - startY);
     const C = startY - y;
@@ -1284,7 +1357,7 @@ function getTfromYBezier(y, startY, cpY, endY) {
     return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
 }
 
-function getTfromXBezier(x, x0, cx, x1) {
+function getTfromXBezier(x: number, x0: number, cx: number, x1: number) {
     const a = x0 + x1 - 2 * cx;
     const b = 2 * (cx - x0);
     const c = x0 - x;
@@ -1313,7 +1386,12 @@ function getTfromXBezier(x, x0, cx, x1) {
 
 const THROTTLE_LIMIT_TYPES = { OFF: 0, SCALE: 1, CLIP: 2 };
 
-function drawClipModeCurve(context, curve, canvas, throttle) {
+function drawClipModeCurve(
+    context: CanvasRenderingContext2D,
+    curve: CurveParams,
+    canvas: { limitPercent: number; width: number; height: number },
+    throttle: ThrottlePosition,
+): Point {
     const { limitPercent, width: canvasWidth, height: canvasHeight } = canvas;
     const { thrPercent, thrX, mid } = throttle;
     const throttleClipY = canvasHeight * (1 - limitPercent);
@@ -1366,7 +1444,12 @@ function drawClipModeCurve(context, curve, canvas, throttle) {
     return { x: originalThrpos.x, y: Math.max(throttleClipY, originalThrpos.y) };
 }
 
-function drawScaleModeCurve(context, curve, canvas, throttle) {
+function drawScaleModeCurve(
+    context: CanvasRenderingContext2D,
+    curve: CurveParams,
+    canvas: { width: number; height: number },
+    throttle: ThrottlePosition,
+): Point {
     const { width: canvasWidth, height: canvasHeight } = canvas;
     const { thrPercent, thrX, mid } = throttle;
 
@@ -1384,7 +1467,13 @@ function drawScaleModeCurve(context, curve, canvas, throttle) {
     return getQuadraticCurvePoint(curve.midX, curve.midY, curve.midXr, curve.midYr, canvasWidth, curve.topY, t);
 }
 
-function drawThrottlePositionIndicator(context, thrpos, thrPercent, canvasWidth, canvasHeight) {
+function drawThrottlePositionIndicator(
+    context: CanvasRenderingContext2D,
+    thrpos: Point,
+    thrPercent: number,
+    canvasWidth: number,
+    canvasHeight: number,
+) {
     thrpos.x = Math.max(0, Math.min(canvasWidth, thrpos.x));
     thrpos.y = Math.max(0, Math.min(canvasHeight, thrpos.y));
 
@@ -1406,7 +1495,14 @@ function drawThrottlePositionIndicator(context, thrpos, thrPercent, canvasWidth,
     context.restore();
 }
 
-function computeCurveParams(canvasWidth, canvasHeight, mid, hover, expo, scaleFactor) {
+function computeCurveParams(
+    canvasWidth: number,
+    canvasHeight: number,
+    mid: number,
+    hover: number,
+    expo: number,
+    scaleFactor: number,
+) {
     const topY = canvasHeight * (1 - scaleFactor);
     const midX = canvasWidth * mid;
     const midY = canvasHeight * (1 - scaleFactor * hover);
@@ -1429,6 +1525,9 @@ function drawThrottleCurve() {
 
     const canvas = throttleCurveCanvas.value;
     const context = canvas.getContext("2d");
+    if (!context) {
+        return;
+    }
 
     const rect = canvas.getBoundingClientRect();
     if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) {
@@ -1505,13 +1604,14 @@ function handleModelResize() {
     });
 }
 
-function renderModel(timestamp) {
+function renderModel(timestamp: number) {
     if (!model || !keepRendering) {
         return;
     }
 
-    // Early return if model geometry isn't loaded yet
-    if (!model.model) {
+    // Early return if model geometry isn't loaded yet. model.js assigns `model` in its
+    // loader callback, where TypeScript does not see it, hence the `in` check.
+    if (!("model" in model) || !model.model) {
         animationFrameId = requestAnimationFrame(renderModel);
         return;
     }
@@ -1662,7 +1762,7 @@ onMounted(() => {
 });
 
 // Set defaults for rates type
-const setDefaultsForRatesType = (type) => {
+const setDefaultsForRatesType = (type: number) => {
     switch (type) {
         case RatesType.RACEFLIGHT:
             FC.RC_TUNING.RC_RATE = 0.37;

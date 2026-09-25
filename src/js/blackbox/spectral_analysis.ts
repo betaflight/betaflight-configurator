@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Spectral analysis for chirp-based autotune.
  *
@@ -8,8 +29,47 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { ComplexFFT } from "./fft.js";
+import { ComplexFFT } from "./fft";
 import { clamp } from "../utils/common";
+
+/** A time-domain signal: a typed array or a subarray of one. */
+export type Signal = ArrayLike<number>;
+
+/** Closed-loop transfer function, as welchTransferFunction() returns it. */
+export interface TransferFunction {
+    frequencies: Float64Array;
+    /** dB */
+    magnitude: Float64Array;
+    /** degrees */
+    phase: Float64Array;
+    coherence: Float64Array;
+    hReal: Float64Array;
+    hImag: Float64Array;
+    numSegments: number;
+}
+
+interface Spectra {
+    Sxx: Float64Array;
+    Syy: Float64Array;
+    SxyRe: Float64Array;
+    SxyIm: Float64Array;
+}
+
+export interface OpenLoopResponse {
+    magnitude: Float64Array;
+    phase: Float64Array;
+    startIndex: number;
+}
+
+/** Current simplified tuning slider values as decimals (1.0 = 100). */
+export interface CurrentSliders {
+    masterMultiplier?: number;
+    piGain?: number;
+    iGain?: number;
+    dGain?: number;
+    feedforwardGain?: number;
+    dtermFilterMultiplier?: number;
+}
 
 // ---------------------------------------------------------------------------
 // Windowing
@@ -17,10 +77,8 @@ import { clamp } from "../utils/common";
 
 /**
  * Generate a Hanning window of the given size.
- * @param {number} size
- * @returns {Float64Array}
  */
-export function hanningWindow(size) {
+export function hanningWindow(size: number): Float64Array {
     const w = new Float64Array(size);
     for (let i = 0; i < size; i++) {
         w[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (size - 1)));
@@ -35,14 +93,19 @@ export function hanningWindow(size) {
 /**
  * Compute the transfer function H(f) = Sxy / Sxx using Welch's method.
  *
- * @param {Float32Array} input  - Input signal (e.g. setpoint for one axis)
- * @param {Float32Array} output - Output signal (e.g. gyro for same axis)
- * @param {number} sampleRate   - Samples per second (Hz)
- * @param {number} [segmentSize=1024] - FFT segment size (power of 2 recommended)
- * @param {number} [overlap=0.5] - Overlap fraction between segments
- * @returns {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array }}
+ * @param input  - Input signal (e.g. setpoint for one axis)
+ * @param output - Output signal (e.g. gyro for same axis)
+ * @param sampleRate   - Samples per second (Hz)
+ * @param [segmentSize=1024] - FFT segment size (power of 2 recommended)
+ * @param [overlap=0.5] - Overlap fraction between segments
  */
-export function welchTransferFunction(input, output, sampleRate, segmentSize = 1024, overlap = 0.5) {
+export function welchTransferFunction(
+    input: Signal,
+    output: Signal,
+    sampleRate: number,
+    segmentSize = 1024,
+    overlap = 0.5,
+): TransferFunction {
     const N = input.length;
     if (N !== output.length) {
         throw new Error("Input and output arrays must be the same length");
@@ -62,7 +125,7 @@ export function welchTransferFunction(input, output, sampleRate, segmentSize = 1
     return buildTransferFunction(spectra, sampleRate, segmentSize, numBins, numSegments);
 }
 
-function clampSegmentSize(segmentSize, N) {
+function clampSegmentSize(segmentSize: number, N: number) {
     if (segmentSize <= N) {
         return segmentSize;
     }
@@ -74,7 +137,15 @@ function clampSegmentSize(segmentSize, N) {
     return Math.max(fit, 4);
 }
 
-function accumulateSpectra(input, output, window, segmentSize, numSegments, numBins, hopSize) {
+function accumulateSpectra(
+    input: Signal,
+    output: Signal,
+    window: Float64Array,
+    segmentSize: number,
+    numSegments: number,
+    numBins: number,
+    hopSize: number,
+): Spectra {
     const Sxx = new Float64Array(numBins);
     const Syy = new Float64Array(numBins);
     const SxyRe = new Float64Array(numBins);
@@ -115,7 +186,13 @@ function accumulateSpectra(input, output, window, segmentSize, numSegments, numB
     return { Sxx, Syy, SxyRe, SxyIm };
 }
 
-function buildTransferFunction(spectra, sampleRate, segmentSize, numBins, numSegments) {
+function buildTransferFunction(
+    spectra: Spectra,
+    sampleRate: number,
+    segmentSize: number,
+    numBins: number,
+    numSegments: number,
+): TransferFunction {
     const { Sxx, Syy, SxyRe, SxyIm } = spectra;
     const frequencies = new Float64Array(numBins);
     const magnitude = new Float64Array(numBins);
@@ -232,12 +309,14 @@ export const PHASE_MARGIN_PRESETS = {
  *
  * All outputs are slider multiplier values (1.0 = default, stored as ×100 integers).
  *
- * @param {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array, hReal: Float64Array, hImag: Float64Array }} tf
- * @param {object} currentSliders - Current simplified tuning slider values as decimals (1.0 = 100)
- * @param {number} [targetPhaseMarginDeg] - Desired open-loop phase margin in degrees
- * @returns {{ proposed: object, analysis: object }}
+ * @param currentSliders - Current simplified tuning slider values as decimals (1.0 = 100)
+ * @param [targetPhaseMarginDeg] - Desired open-loop phase margin in degrees
  */
-export function recommendGains(tf, currentSliders, targetPhaseMarginDeg = PHASE_MARGIN_PRESETS.NORMAL) {
+export function recommendGains(
+    tf: TransferFunction,
+    currentSliders: CurrentSliders,
+    targetPhaseMarginDeg = PHASE_MARGIN_PRESETS.NORMAL,
+) {
     const openLoop = openLoopResponse(tf);
     const metrics = extractMetrics(tf, openLoop, targetPhaseMarginDeg);
     const scales = computeGainScales(metrics, tf, openLoop);
@@ -246,7 +325,7 @@ export function recommendGains(tf, currentSliders, targetPhaseMarginDeg = PHASE_
     return { proposed, analysis };
 }
 
-function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
+function extractMetrics(tf: TransferFunction, openLoop: OpenLoopResponse, targetPhaseMarginDeg: number) {
     const { frequencies, magnitude, coherence } = tf;
     const bandwidthHz = findBandwidth(frequencies, magnitude, coherence);
     const { resonantPeakDb, resonantFreqHz } = findResonantPeak(frequencies, magnitude, coherence);
@@ -287,6 +366,9 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
     };
 }
 
+type GainMetrics = ReturnType<typeof extractMetrics>;
+type GainScales = ReturnType<typeof computeGainScales>;
+
 // ---------------------------------------------------------------------------
 // Open loop recovered from the measured closed loop
 // ---------------------------------------------------------------------------
@@ -315,10 +397,9 @@ function extractMetrics(tf, openLoop, targetPhaseMarginDeg) {
  * between consecutive accepted bins, which is harmless while the true phase
  * change across the gap stays under 180 deg — a few bins of a rate loop.
  *
- * @param {object} tf - transfer function from welchTransferFunction()
- * @returns {{ magnitude: Float64Array, phase: Float64Array, startIndex: number }}
+ * @param tf - transfer function from welchTransferFunction()
  */
-export function openLoopResponse(tf) {
+export function openLoopResponse(tf: TransferFunction): OpenLoopResponse {
     const { frequencies, hReal, hImag, coherence } = tf;
     const n = frequencies.length;
     const magnitude = new Float64Array(n).fill(Number.NaN);
@@ -333,7 +414,7 @@ export function openLoopResponse(tf) {
     }
 
     let offset = 0;
-    let previousRaw = null;
+    let previousRaw: number | null = null;
     for (let k = startIndex; k < n; k++) {
         if (coherence[k] < CROSSOVER_COHERENCE_MIN) {
             continue;
@@ -365,7 +446,7 @@ export function openLoopResponse(tf) {
 }
 
 // Present crossover: where |L| = 1, and the phase margin measured there.
-function findOpenLoopCrossover(tf, openLoop) {
+function findOpenLoopCrossover(tf: TransferFunction, openLoop: OpenLoopResponse) {
     const { frequencies, coherence } = tf;
     for (let k = openLoop.startIndex + 1; k < frequencies.length; k++) {
         if (Number.isNaN(openLoop.magnitude[k]) || Number.isNaN(openLoop.magnitude[k - 1])) {
@@ -388,7 +469,7 @@ function findOpenLoopCrossover(tf, openLoop) {
 // Highest crossover placeable while retaining the target margin: the frequency
 // where open-loop phase falls to -(180 - targetPhaseMarginDeg). The loop-gain
 // change needed to put crossover there is 1/|L| at that frequency.
-function findTargetCrossover(tf, openLoop, targetPhaseMarginDeg) {
+function findTargetCrossover(tf: TransferFunction, openLoop: OpenLoopResponse, targetPhaseMarginDeg: number) {
     const { frequencies, coherence } = tf;
     const wantedPhase = -(180 - targetPhaseMarginDeg);
     for (let k = openLoop.startIndex + 1; k < frequencies.length; k++) {
@@ -425,7 +506,7 @@ function findTargetCrossover(tf, openLoop, targetPhaseMarginDeg) {
  * yet small. Scaling gain lifts the curve there too, at a frequency the phase
  * margin test never looks at.
  */
-function peakSensitivityAtGain(tf, openLoop, gainScale) {
+function peakSensitivityAtGain(tf: TransferFunction, openLoop: OpenLoopResponse, gainScale: number) {
     let peak = 0;
     for (let k = openLoop.startIndex; k < tf.frequencies.length; k++) {
         if (Number.isNaN(openLoop.magnitude[k]) || tf.coherence[k] < CROSSOVER_COHERENCE_MIN) {
@@ -468,7 +549,7 @@ function peakSensitivityAtGain(tf, openLoop, gainScale) {
  * reason they cannot be reasoned about separately: there is no safe direction to
  * assume, so the grid has to be measured either way.
  */
-function scanSensitivity(tf, openLoop, limit, maxGain = GAIN_SCALE_MAX) {
+function scanSensitivity(tf: TransferFunction, openLoop: OpenLoopResponse, limit: number, maxGain = GAIN_SCALE_MAX) {
     let withinBound = Number.NaN;
     let leastBad = Number.NaN;
     let bestPeak = Infinity;
@@ -497,7 +578,7 @@ function scanSensitivity(tf, openLoop, limit, maxGain = GAIN_SCALE_MAX) {
 // gain can place crossover at a margin higher than 180 + that peak. Targets
 // above it are unreachable, which is why the UI reports this rather than
 // silently holding the gain.
-function findMaxAchievablePhaseMargin(tf, openLoop) {
+function findMaxAchievablePhaseMargin(tf: TransferFunction, openLoop: OpenLoopResponse) {
     const { frequencies, coherence } = tf;
     let peakPhase = -Infinity;
     for (let k = openLoop.startIndex; k < frequencies.length; k++) {
@@ -523,7 +604,7 @@ function findMaxAchievablePhaseMargin(tf, openLoop) {
 // are already filtered individually on coherence, so a band that stops short of
 // fHiHz simply contributes fewer of them; the 5-bin floor is only reached when
 // coherence is poor across the whole window, where Number.NaN is the right answer.
-function estimateLoopDelayMs(tf, openLoop, fLoHz = 20, fHiHz = 140) {
+function estimateLoopDelayMs(tf: TransferFunction, openLoop: OpenLoopResponse, fLoHz = 20, fHiHz = 140) {
     const { frequencies, coherence } = tf;
     let n = 0;
     let sumX = 0;
@@ -560,7 +641,7 @@ function estimateLoopDelayMs(tf, openLoop, fLoHz = 20, fHiHz = 140) {
 // gain and heavy phase lag stays magnitude-flat well past the point where it
 // has any stability margin left, which is why yaw can measure a far higher
 // bandwidth than roll or pitch on the same craft while having less margin.
-function findBandwidth(frequencies, magnitude, coherence) {
+function findBandwidth(frequencies: Float64Array, magnitude: Float64Array, coherence: Float64Array) {
     for (let k = 1; k < frequencies.length; k++) {
         if (coherence[k - 1] < 0.3 || coherence[k] < 0.3) {
             continue;
@@ -574,7 +655,7 @@ function findBandwidth(frequencies, magnitude, coherence) {
 }
 
 // 2. Resonant peak: max magnitude overshoot (indicates underdamping)
-function findResonantPeak(frequencies, magnitude, coherence) {
+function findResonantPeak(frequencies: Float64Array, magnitude: Float64Array, coherence: Float64Array) {
     let resonantPeakDb = -Infinity;
     let resonantFreqHz = 0;
     for (let k = 1; k < frequencies.length; k++) {
@@ -590,7 +671,7 @@ function findResonantPeak(frequencies, magnitude, coherence) {
 }
 
 // 3. Low-frequency gain error: average magnitude deviation from 0 dB in 2-10 Hz
-function computeLowFreqError(frequencies, magnitude, coherence) {
+function computeLowFreqError(frequencies: Float64Array, magnitude: Float64Array, coherence: Float64Array) {
     let sum = 0;
     let count = 0;
     for (let k = 0; k < frequencies.length; k++) {
@@ -610,7 +691,7 @@ function computeLowFreqError(frequencies, magnitude, coherence) {
 // and drives the D-term filter recommendation straight into its tightest clamp —
 // a clamp reported as a measurement, on a sweep that measured nothing. Number.NaN
 // says there is no floor to find, only noise.
-function findNoiseFloor(frequencies, coherence) {
+function findNoiseFloor(frequencies: Float64Array, coherence: Float64Array) {
     let everCoherent = false;
     for (let k = 1; k < frequencies.length; k++) {
         if (coherence[k] >= 0.5) {
@@ -619,11 +700,12 @@ function findNoiseFloor(frequencies, coherence) {
             return frequencies[k];
         }
     }
-    return everCoherent ? frequencies.at(-1) : Number.NaN;
+    // everCoherent implies the loop ran, so the array is not empty.
+    return everCoherent ? (frequencies.at(-1) ?? Number.NaN) : Number.NaN;
 }
 
 // 7. Overall coherence (measurement quality) in 5-100 Hz
-function computeMeanCoherence(frequencies, coherence) {
+function computeMeanCoherence(frequencies: Float64Array, coherence: Float64Array) {
     let sum = 0;
     let count = 0;
     for (let k = 0; k < frequencies.length; k++) {
@@ -635,7 +717,7 @@ function computeMeanCoherence(frequencies, coherence) {
     return count > 0 ? sum / count : 0;
 }
 
-function computeGainScales(metrics, tf, openLoop) {
+function computeGainScales(metrics: GainMetrics, tf: TransferFunction, openLoop: OpenLoopResponse) {
     const { gainToTarget, lowFreqErrorDb, noiseFloorHz, resonantPeakDb } = metrics;
 
     // P (via pi_gain) is bounded by two independent conditions.
@@ -795,7 +877,7 @@ function computeGainScales(metrics, tf, openLoop) {
     };
 }
 
-function buildProposedSliders(currentSliders, scales) {
+function buildProposedSliders(currentSliders: CurrentSliders, scales: GainScales) {
     const cur = currentSliders;
     const { piScale, iScale, dScale, ffScale, filterScale } = scales;
     return {
@@ -814,15 +896,17 @@ function buildProposedSliders(currentSliders, scales) {
 // Sensitivity function  S = 1 - T
 // ---------------------------------------------------------------------------
 
+export type GainRecommendation = ReturnType<typeof recommendGains>;
+export type Sensitivity = ReturnType<typeof computeSensitivity>;
+export type StepResponse = ReturnType<typeof computeStepResponse>;
+export type Spectrogram = ReturnType<typeof computeSpectrogram>;
+
 /**
  * Compute the sensitivity function S(f) = 1 - T(f) from the measured
  * closed-loop transfer function.  Peak |S| indicates robustness:
  * > 6 dB means the tune is fragile.
- *
- * @param {{ frequencies: Float64Array, hReal: Float64Array, hImag: Float64Array, coherence: Float64Array }} tf
- * @returns {{ frequencies: Float64Array, magnitude: Float64Array, phase: Float64Array, coherence: Float64Array, peakDb: number }}
  */
-export function computeSensitivity(tf) {
+export function computeSensitivity(tf: TransferFunction) {
     const { frequencies, hReal, hImag, coherence } = tf;
     const n = frequencies.length;
     const magnitude = new Float64Array(n);
@@ -852,12 +936,9 @@ export function computeSensitivity(tf) {
  * function.  Returns a time-domain trace (0 – 100 ms) plus key metrics:
  * overshoot %, rise time, and settling time.
  *
- * @param {{ hReal: Float64Array, hImag: Float64Array }} tf
- * @param {number} sampleRate
- * @param {number} segmentSize - FFT size used to compute the transfer function
- * @returns {{ timeMs: Float64Array, response: Float64Array, overshootPct: number, riseTimeMs: number, settlingTimeMs: number }}
+ * @param segmentSize - FFT size used to compute the transfer function
  */
-export function computeStepResponse(tf, sampleRate, segmentSize) {
+export function computeStepResponse(tf: TransferFunction, sampleRate: number, segmentSize: number) {
     const { hReal, hImag } = tf;
     const numBins = hReal.length;
     const N = segmentSize;
@@ -917,7 +998,7 @@ export function computeStepResponse(tf, sampleRate, segmentSize) {
     return { timeMs, response, ...stepMetrics(timeMs, response, displayLen) };
 }
 
-function stepMetrics(timeMs, response, len) {
+function stepMetrics(timeMs: Float64Array, response: Float64Array, len: number) {
     if (len < 2) {
         return { overshootPct: 0, riseTimeMs: 0, settlingTimeMs: 0 };
     }
@@ -937,7 +1018,7 @@ function stepMetrics(timeMs, response, len) {
     };
 }
 
-function steadyState(response, len) {
+function steadyState(response: Float64Array, len: number) {
     const tailStart = Math.max(1, Math.floor(len * 0.9));
     let sum = 0;
     for (let i = tailStart; i < len; i++) {
@@ -946,7 +1027,7 @@ function steadyState(response, len) {
     return sum / (len - tailStart);
 }
 
-function peakValue(response, len) {
+function peakValue(response: Float64Array, len: number) {
     let peak = -Infinity;
     for (let i = 0; i < len; i++) {
         if (response[i] > peak) {
@@ -956,8 +1037,8 @@ function peakValue(response, len) {
     return peak;
 }
 
-function riseTime(timeMs, response, len, ss) {
-    let start = null;
+function riseTime(timeMs: Float64Array, response: Float64Array, len: number, ss: number) {
+    let start: number | null = null;
     for (let i = 0; i < len; i++) {
         if (start === null && response[i] >= 0.1 * ss) {
             start = timeMs[i];
@@ -969,7 +1050,7 @@ function riseTime(timeMs, response, len, ss) {
     return 0;
 }
 
-function settlingTime(timeMs, response, len, ss) {
+function settlingTime(timeMs: Float64Array, response: Float64Array, len: number, ss: number) {
     const band = 0.02 * Math.abs(ss);
     for (let i = len - 1; i >= 0; i--) {
         if (Math.abs(response[i] - ss) > band) {
@@ -988,13 +1069,10 @@ function settlingTime(timeMs, response, len, ss) {
  * Each cell stores the PSD in dB.  The result is a flat Float64Array
  * indexed as `power[seg * numBins + bin]`.
  *
- * @param {Float32Array} signal     - Time-domain signal (e.g. gyro for one axis)
- * @param {number}       sampleRate - Hz
- * @param {number}       [windowSize=256]
- * @param {number}       [overlap=0.75]
- * @returns {{ timeMs: Float64Array, freqHz: Float64Array, power: Float64Array, numSegments: number, numBins: number }}
+ * @param signal     - Time-domain signal (e.g. gyro for one axis)
+ * @param sampleRate - Hz
  */
-export function computeSpectrogram(signal, sampleRate, windowSize = 256, overlap = 0.75) {
+export function computeSpectrogram(signal: Signal, sampleRate: number, windowSize = 256, overlap = 0.75) {
     const N = signal.length;
     if (N < 4) {
         return {
@@ -1049,7 +1127,7 @@ export function computeSpectrogram(signal, sampleRate, windowSize = 256, overlap
 // Helpers
 // ---------------------------------------------------------------------------
 
-function nextPow2(n) {
+function nextPow2(n: number) {
     let p = 1;
     while (p < n) {
         p <<= 1;
