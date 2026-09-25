@@ -1726,7 +1726,7 @@
             }
         },
         "1.49.0": {
-            "commit": "805313c231e479f226689bfa27e2609580543418",
+            "commit": "85ba08287000875557f16744a5f5655e4cef8e83",
             "date": "2026-09-22",
             "modes": {
                 "ACCELEROMETER": {
@@ -2006,6 +2006,10 @@
                     "dynamic": false
                 },
                 "POSITION_NAV": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "PSAS": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },

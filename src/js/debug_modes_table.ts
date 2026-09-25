@@ -9,7 +9,7 @@
  *   API 1.46.0  5fd38528ba 2024-05-04  (90 modes)
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
- *   API 1.49.0  805313c231 2026-09-22  (110 modes)
+ *   API 1.49.0  85ba082870 2026-09-22  (111 modes)
  */
 
 /**
@@ -589,6 +589,7 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "VELOCITY_EST", // 107
         "SAG_COMPENSATION", // 108
         "UPT1", // 109
+        "PSAS", // 110
     ]),
 });
 

@@ -1325,7 +1325,7 @@
                             class="relative bg-white dark:bg-neutral-900 border border-default p-1"
                             style="height: 362px; min-width: 200px"
                         >
-                            <WingCurvesChart :chartCurves="chartCurves" />
+                            <WingCurvesChart :chartCurves="chartCurves" :showLegend="false" />
                         </div>
                     </details>
                 </UiBox>
