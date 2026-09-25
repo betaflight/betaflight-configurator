@@ -558,7 +558,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -620,7 +620,7 @@ const { confirmPortConflicts } = usePortConflicts(() => [escSensorPortConflict])
 const settingsChangedOpen = ref(false);
 const warningMessage = ref("");
 
-const showWarningDialog = (message) => {
+const showWarningDialog = (message: string) => {
     warningMessage.value = message;
     settingsChangedOpen.value = true;
 };
@@ -633,8 +633,9 @@ const closeWarningDialog = () => {
 const dialogDynFiltersOpen = ref(false);
 const previousDshotBidir = ref(false);
 const dshotBidirInitialized = ref(false);
-const previousFilterDynQ = ref(null);
-const previousFilterDynCount = ref(null);
+// Captured from the FC once MSP data has loaded; see dshotBidirInitialized.
+const previousFilterDynQ = ref<number | null>(null);
+const previousFilterDynCount = ref<number | null>(null);
 
 const showDynFiltersDialog = () => {
     dialogDynFiltersOpen.value = true;
@@ -693,7 +694,7 @@ const escProtocolItems = computed(() =>
     })),
 );
 
-const isProtocolDisabled = (escProtocolName) => {
+const isProtocolDisabled = (escProtocolName: string) => {
     const requiredOption = EscProtocols.GetBuildOption(escProtocolName);
     if (!requiredOption) {
         return false;
@@ -770,8 +771,8 @@ const useUnsyncedPwm = computed({
 });
 
 // Feature helper (needed by zeroThrottleValue below)
-const isFeatureEnabled = (featureName) => {
-    return fcStore.features.features.isEnabled(featureName);
+const isFeatureEnabled = (featureName: string) => {
+    return fcStore.features.features?.isEnabled(featureName) ?? false;
 };
 
 // Slider range values (needed by zeroThrottleValue below)
@@ -849,9 +850,14 @@ const useDshotTelemetry = computed({
 watch(
     () => fcStore.motorConfig.use_dshot_telemetry,
     (newValue) => {
-        if (!dshotBidirInitialized.value) {
+        // Skip until MSP data is loaded; the previous filter values are captured with it.
+        if (
+            !dshotBidirInitialized.value ||
+            previousFilterDynCount.value === null ||
+            previousFilterDynQ.value === null
+        ) {
             return;
-        } // Skip until MSP data is loaded
+        }
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
@@ -903,21 +909,25 @@ onMounted(async () => {
     updateMixerPreview();
 
     // Initialize graph state from config
-    const storedSettings = getConfig([
+    const sensorSettings = getConfig<{ sensor: string } | undefined>(
         "motors_tab_sensor_settings",
+    ).motors_tab_sensor_settings;
+    const gyroSettings = getConfig<GraphSensorSettings | undefined>(
         "motors_tab_gyro_settings",
+    ).motors_tab_gyro_settings;
+    const accelSettings = getConfig<GraphSensorSettings | undefined>(
         "motors_tab_accel_settings",
-    ]);
-    if (storedSettings.motors_tab_sensor_settings) {
-        sensorType.value = storedSettings.motors_tab_sensor_settings.sensor;
+    ).motors_tab_accel_settings;
+    if (sensorSettings) {
+        sensorType.value = sensorSettings.sensor;
     }
-    if (storedSettings.motors_tab_gyro_settings) {
-        sensorGyroRate.value = storedSettings.motors_tab_gyro_settings.rate;
-        sensorGyroScale.value = storedSettings.motors_tab_gyro_settings.scale;
+    if (gyroSettings) {
+        sensorGyroRate.value = gyroSettings.rate;
+        sensorGyroScale.value = gyroSettings.scale;
     }
-    if (storedSettings.motors_tab_accel_settings) {
-        sensorAccelRate.value = storedSettings.motors_tab_accel_settings.rate;
-        sensorAccelScale.value = storedSettings.motors_tab_accel_settings.scale;
+    if (accelSettings) {
+        sensorAccelRate.value = accelSettings.rate;
+        sensorAccelScale.value = accelSettings.scale;
     }
 
     // Start graph
@@ -925,7 +935,30 @@ onMounted(async () => {
 });
 
 // Sensor Graph Logic
-const graphSvg = ref(null);
+/** A graph sample: [sample number, value]. */
+type GraphSample = [number, number];
+/** One axis of samples, with the running extremes used for a dynamic height domain. */
+type GraphSeries = GraphSample[] & { min: number; max: number };
+
+interface GraphSensorSettings {
+    rate: number;
+    scale: number;
+}
+
+interface GraphHelpers {
+    dynamicHeightDomain: boolean;
+    width: number;
+    height: number;
+    widthScale: d3.ScaleLinear<number, number>;
+    heightScale: d3.ScaleLinear<number, number>;
+    xGrid: d3.Axis<d3.NumberValue>;
+    yGrid: d3.Axis<d3.NumberValue>;
+    xAxis: d3.Axis<d3.NumberValue>;
+    yAxis: d3.Axis<d3.NumberValue>;
+    line: d3.Line<GraphSample>;
+}
+
+const graphSvg = ref<SVGSVGElement | null>(null);
 const sensorType = ref("gyro");
 const sensorGyroRate = ref(20);
 const sensorGyroScale = ref(2000);
@@ -1017,17 +1050,22 @@ watch(sensorType, (val) => {
 // never hardcode them in the SVG template, or the horizontal scale drifts off the
 // bottom of the plot as soon as the SVG is a different height than assumed.
 const margin = { top: 10, right: 10, bottom: 20, left: 40 };
-let graphHelpers = null;
-let graphData = [];
+let graphHelpers: GraphHelpers | null = null;
+let graphData: GraphSeries[] = [];
 let samples = 0;
 let maxRead = [0, 0, 0];
 const accelOffset = [0, 0, 0];
 let accelOffsetEstablished = false;
-let imuPollingIntervalId = null;
-let powerPollingIntervalId = null;
+let imuPollingIntervalId: ReturnType<typeof setInterval> | null = null;
+let powerPollingIntervalId: ReturnType<typeof setInterval> | null = null;
 
 const rawDataDisplay = ref({ x: "0", y: "0", z: "0", rms: "0" });
-const powerValues = ref({ voltage: "0.00", amperage: "0.00", mAhDrawn: "0" });
+// mAhDrawn is rendered as the FC reports it, a number, after the "0" placeholder.
+const powerValues = ref<{ voltage: string; amperage: string; mAhDrawn: string | number }>({
+    voltage: "0.00",
+    amperage: "0.00",
+    mAhDrawn: "0",
+});
 
 const resetMaxValues = () => {
     maxRead = [0, 0, 0];
@@ -1035,29 +1073,22 @@ const resetMaxValues = () => {
 
     // Clear graph visual
     if (graphData && graphHelpers) {
-        for (let i = 0; i < graphData.length; i++) {
-            graphData[i] = [];
-        }
+        // Fresh series, extremes included: a bare `[]` used to drop min/max.
+        graphData = initDataArray(graphData.length);
         samples = 0;
         drawGraph(graphHelpers, graphData, samples);
     }
 };
 
 // D3 Helpers
-function initDataArray(length) {
-    const data = Array.from({ length: length });
-    for (let i = 0; i < length; i++) {
-        data[i] = [];
-        data[i].min = -1;
-        data[i].max = 1;
-    }
-    return data;
+function initDataArray(length: number): GraphSeries[] {
+    return Array.from({ length }, () => Object.assign([] as GraphSample[], { min: -1, max: 1 }));
 }
 
 // Place the axis, grid and data groups for the measured plot area: the y groups at
 // the top-left corner of the plot, the x groups on its baseline so the horizontal
 // scale always sits directly below the vertical one.
-function applyGraphTransforms(svg, helpers) {
+function applyGraphTransforms(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, helpers: GraphHelpers) {
     const topLeft = `translate(${margin.left}, ${margin.top})`;
     const baseline = `translate(${margin.left}, ${margin.top + helpers.height})`;
 
@@ -1068,7 +1099,7 @@ function applyGraphTransforms(svg, helpers) {
     svg.select(".x.axis").attr("transform", baseline);
 }
 
-function updateGraphHelperSize(helpers) {
+function updateGraphHelperSize(helpers: GraphHelpers) {
     // Typically we would get clientWidth of container, but let's assume fixed or check ref
     const element = graphSvg.value;
     const clientWidth = element ? element.clientWidth || 450 : 450;
@@ -1080,52 +1111,48 @@ function updateGraphHelperSize(helpers) {
     helpers.widthScale.range([0, helpers.width]);
     helpers.heightScale.range([helpers.height, 0]);
 
-    helpers.xGrid.tickSize(-helpers.height, 0, 0);
-    helpers.yGrid.tickSize(-helpers.width, 0, 0);
+    helpers.xGrid.tickSize(-helpers.height);
+    helpers.yGrid.tickSize(-helpers.width);
 }
 
-function initGraphHelpers(sampleNumber, heightDomain) {
-    const helpers = { dynamicHeightDomain: !heightDomain };
-
-    helpers.widthScale = d3
+function initGraphHelpers(sampleNumber: number, heightDomain: [number, number] | null): GraphHelpers {
+    // The ranges are fallbacks until updateGraphHelperSize measures the SVG.
+    const widthScale = d3
         .scaleLinear()
         .clamp(true)
-        .domain([sampleNumber - 299, sampleNumber]);
-    helpers.heightScale = d3
+        .domain([sampleNumber - 299, sampleNumber])
+        .range([0, 400]);
+    const heightScale = d3
         .scaleLinear()
         .clamp(true)
-        .domain(heightDomain || [1, -1]);
+        .domain(heightDomain || [1, -1])
+        .range([200, 0]);
 
-    helpers.xGrid = d3.axisBottom();
-    helpers.yGrid = d3.axisLeft();
-
-    // Deferred sizing update until mounted/drawing
-    helpers.widthScale.range([0, 400]); // fallback
-    helpers.heightScale.range([200, 0]); // fallback
-
-    helpers.xGrid.scale(helpers.widthScale).tickFormat("");
-    helpers.yGrid.scale(helpers.heightScale).tickFormat("");
-
-    helpers.xAxis = d3
-        .axisBottom()
-        .scale(helpers.widthScale)
-        .ticks(5)
-        .tickFormat((d) => d);
-    helpers.yAxis = d3
-        .axisLeft()
-        .scale(helpers.heightScale)
-        .ticks(5)
-        .tickFormat((d) => d);
-
-    helpers.line = d3
-        .line()
-        .x((d) => helpers.widthScale(d[0]))
-        .y((d) => helpers.heightScale(d[1]));
-
-    return helpers;
+    return {
+        dynamicHeightDomain: !heightDomain,
+        width: 0,
+        height: 0,
+        widthScale,
+        heightScale,
+        // Grid lines only: blank tick labels.
+        xGrid: d3.axisBottom(widthScale).tickFormat(() => ""),
+        yGrid: d3.axisLeft(heightScale).tickFormat(() => ""),
+        xAxis: d3
+            .axisBottom(widthScale)
+            .ticks(5)
+            .tickFormat((d) => String(d)),
+        yAxis: d3
+            .axisLeft(heightScale)
+            .ticks(5)
+            .tickFormat((d) => String(d)),
+        line: d3
+            .line<GraphSample>()
+            .x((d) => widthScale(d[0]))
+            .y((d) => heightScale(d[1])),
+    };
 }
 
-function drawGraph(helpers, data, sampleNumber) {
+function drawGraph(helpers: GraphHelpers, data: GraphSeries[], sampleNumber: number) {
     if (!graphSvg.value) {
         return;
     }
@@ -1136,28 +1163,29 @@ function drawGraph(helpers, data, sampleNumber) {
 
     helpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
     if (helpers.dynamicHeightDomain) {
-        const allValues = data.flatMap((datum) => [datum.min, datum.max]);
-        helpers.heightScale.domain(d3.extent(allValues));
-    } else {
-        // Domain set in init
+        const [low, high] = d3.extent(data.flatMap((datum) => [datum.min, datum.max]));
+        if (low !== undefined && high !== undefined) {
+            helpers.heightScale.domain([low, high]);
+        }
     }
+    // Otherwise the domain was set in initGraphHelpers.
 
     helpers.xGrid.tickValues(helpers.widthScale.ticks(5).concat(helpers.widthScale.domain()));
     helpers.yGrid.tickValues(helpers.heightScale.ticks(5).concat(helpers.heightScale.domain()));
 
-    svg.select(".x.grid").call(helpers.xGrid);
-    svg.select(".y.grid").call(helpers.yGrid);
-    svg.select(".x.axis").call(helpers.xAxis);
-    svg.select(".y.axis").call(helpers.yAxis);
+    svg.select<SVGGElement>(".x.grid").call(helpers.xGrid);
+    svg.select<SVGGElement>(".y.grid").call(helpers.yGrid);
+    svg.select<SVGGElement>(".x.axis").call(helpers.xAxis);
+    svg.select<SVGGElement>(".y.axis").call(helpers.yAxis);
 
-    const group = svg.select("g.data");
-    const lines = group.selectAll("path").data(data, (d, i) => i);
+    const group = svg.select<SVGGElement>("g.data");
+    const lines = group.selectAll<SVGPathElement, GraphSeries>("path").data(data, (_d, i) => i);
 
     lines.enter().append("path").attr("class", "line");
     lines.attr("d", helpers.line);
 }
 
-function addSampleToData(data, sampleNumber, sensorData) {
+function addSampleToData(data: GraphSeries[], sampleNumber: number, sensorData: number[]) {
     for (let i = 0; i < data.length; i++) {
         const dataPoint = sensorData[i];
         data[i].push([sampleNumber, dataPoint]);
@@ -1177,7 +1205,7 @@ function addSampleToData(data, sampleNumber, sensorData) {
     return sampleNumber + 1;
 }
 
-function computeAndUpdateDisplay(sensor_data) {
+function computeAndUpdateDisplay(sensor_data: number[]) {
     // Assuming 3 axes
     // RMS over the buffer is cleaner, but motors.js does RMS of current window?
     // motors.js:
@@ -1210,7 +1238,9 @@ const updateGyroGraph = () => {
     const gyro = [fcStore.sensorData.gyroscope[0], fcStore.sensorData.gyroscope[1], fcStore.sensorData.gyroscope[2]];
 
     samples = addSampleToData(graphData, samples, gyro);
-    drawGraph(graphHelpers, graphData, samples);
+    if (graphHelpers) {
+        drawGraph(graphHelpers, graphData, samples);
+    }
 
     for (let i = 0; i < 3; i++) {
         if (Math.abs(gyro[i]) > Math.abs(maxRead[i])) {
@@ -1235,7 +1265,9 @@ const updateAccelGraph = () => {
     ];
 
     samples = addSampleToData(graphData, samples, accelWithOffset);
-    drawGraph(graphHelpers, graphData, samples);
+    if (graphHelpers) {
+        drawGraph(graphHelpers, graphData, samples);
+    }
 
     for (let i = 0; i < 3; i++) {
         if (Math.abs(accelWithOffset[i]) > Math.abs(maxRead[i])) {
@@ -1259,7 +1291,7 @@ const setupGraph = () => {
     // Reset data
     samples = 0;
     graphData = initDataArray(3);
-    const domain = [-sensorScale.value, sensorScale.value];
+    const domain: [number, number] = [-sensorScale.value, sensorScale.value];
     graphHelpers = initGraphHelpers(samples, domain);
     updateGraphHelperSize(graphHelpers);
 
@@ -1328,14 +1360,13 @@ const sortedMixerListItems = computed(() =>
     sortedMixerList.value.map((m) => ({
         label: m.name.toUpperCase(),
         value: m.pos + 1,
-        disabled: m.disabled,
     })),
 );
 
 const mixerPreviewSvg = ref("");
 
 const updateMixerPreview = async () => {
-    const imgSrc = getMixerImageSrc(fcStore.mixerConfig.mixer, fcStore.mixerConfig.reverseMotorDir);
+    const imgSrc = getMixerImageSrc(fcStore.mixerConfig.mixer, Boolean(fcStore.mixerConfig.reverseMotorDir));
 
     // No mixer yet: the watcher below runs immediately, and with "Reopen last tab on connect"
     // this tab mounts before MSP_MIXER_CONFIG arrives. It re-runs when the real id lands.
@@ -1520,8 +1551,9 @@ const handleSave = (reboot = true) => {
         // and refresh the dirty baseline.
         syncAppliedMotorStopState();
         if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-            getTracking().sendSaveAndChangeEvents(
-                getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+            const tracking = getTracking();
+            tracking?.sendSaveAndChangeEvents(
+                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
                 motorsState.analyticsChanges.value,
                 "motors",
             );
@@ -1539,18 +1571,13 @@ const stopMotors = () => {
 
 // Feature Logic
 
-const toggleFeature = (featureName, checked) => {
-    // We need to update the bitmask in fcStore.features.featureMask
-    // The `features` object in store might be the whole `FEATURE_CONFIG` object which has `features` property which is `Features` instance.
-    // `fcStore.features` returns `FC.FEATURE_CONFIG`.
-    // `FC.FEATURE_CONFIG.features` is the Features helper instance.
-    // `features.isEnabled` works.
-    // `features.enable(name)` / `features.disable(name)`.
+// `fcStore.features` is FC.FEATURE_CONFIG; its `features` is the Features helper, null until connect.
+const toggleFeature = (featureName: string, checked: boolean) => {
     const featuresHelper = fcStore.features.features;
     if (checked) {
-        featuresHelper.enable(featureName);
+        featuresHelper?.enable(featureName);
     } else {
-        featuresHelper.disable(featureName);
+        featuresHelper?.disable(featureName);
     }
     // Change tracking is handled by watchers in useMotorConfiguration
 };
@@ -1575,7 +1602,7 @@ const numberOfValidOutputs = computed(() => {
 });
 
 // Helper function to extract motor count logic
-const getActualMotorCount = (expectedMotorCount) => {
+const getActualMotorCount = (expectedMotorCount: number) => {
     // Check if motor data is available
     if (!fcStore.motorData || fcStore.motorData.length === 0) {
         return expectedMotorCount;
@@ -1610,14 +1637,16 @@ watch(zeroThrottleValue, (val) => {
 });
 
 // Buffering for motor commands to prevent MSP queue overflow
-let bufferingSetMotor = [];
-let bufferDelay = null;
+let bufferingSetMotor: number[][] = [];
+let bufferDelay: ReturnType<typeof setTimeout> | null = null;
 
 const sendBufferedMotorCommand = () => {
     if (bufferingSetMotor.length > 0) {
         // Only send the last buffered values
         const values = bufferingSetMotor.pop();
-        sendMotorCommand(values);
+        if (values) {
+            sendMotorCommand(values);
+        }
         bufferingSetMotor = [];
     }
     bufferDelay = null;
@@ -1645,12 +1674,18 @@ const onMasterSliderChange = () => {
     }
 };
 
-const onMotorValueUpdate = (index, val) => {
+const onMotorValueUpdate = (index: number, val: number | undefined) => {
+    if (val === undefined) {
+        return;
+    }
     motorValues.value[index] = val;
     onMotorSliderChange();
 };
 
-const onMasterValueUpdate = (val) => {
+const onMasterValueUpdate = (val: number | undefined) => {
+    if (val === undefined) {
+        return;
+    }
     masterValue.value = val;
     onMasterSliderChange();
 };
@@ -1658,13 +1693,13 @@ const onMasterValueUpdate = (val) => {
 // Swallow wheel events over the motor test controls while testing is armed, so the
 // page cannot scroll out from under the pointer while the motors can spin.  When
 // testing is off the sliders are inert and normal page scrolling is left alone.
-const onMotorTestWheel = (event) => {
+const onMotorTestWheel = (event: WheelEvent) => {
     if (motorsTestingEnabled.value) {
         event.preventDefault();
     }
 };
 
-const onSliderWheel = (index, event) => {
+const onSliderWheel = (index: number, event: WheelEvent) => {
     if (!motorsTestingEnabled.value) {
         return;
     }
@@ -1708,7 +1743,7 @@ watch(motorsTestingEnabled, (enabled) => {
 });
 
 // Telemetry Logic
-const getMotorValue = (index) => {
+const getMotorValue = (index: number) => {
     // Match original getMotorOutputs: show FC-reported motor data during testing,
     // zero throttle otherwise. This ensures bars reflect actual motor output whether
     // controlled via sliders (MSP_SET_MOTOR) or via RC input.
@@ -1718,7 +1753,7 @@ const getMotorValue = (index) => {
     return zeroThrottleValue.value;
 };
 
-const getMotorBarHeight = (index) => {
+const getMotorBarHeight = (index: number) => {
     const val = getMotorValue(index);
     const min = minSliderValue.value;
     const max = maxSliderValue.value;
@@ -1729,7 +1764,7 @@ const getMotorBarHeight = (index) => {
     return Math.max(0, Math.min(100, ((val - min) / range) * 100));
 };
 
-const getTelemetryHtml = (index) => {
+const getTelemetryHtml = (index: number) => {
     if (!fcStore.motorConfig.use_dshot_telemetry && !isFeatureEnabled("ESC_SENSOR")) {
         return "&nbsp;";
     }
@@ -1738,7 +1773,7 @@ const getTelemetryHtml = (index) => {
     }
 
     const rpm = fcStore.motorTelemetryData.rpm[index];
-    let rpmText = rpm;
+    let rpmText: number | string = rpm;
     if (rpm > 999999) {
         rpmText = `${(rpm / 1000000).toFixed(2)}M`;
     }
