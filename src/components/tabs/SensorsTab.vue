@@ -155,7 +155,7 @@
                         <UButton
                             v-if="isApi146"
                             :label="$t('boardAlignmentWizard-Launch')"
-                            :disabled="!hasAccSensor || accNeedsCalibration"
+                            :disabled="!hasAccSensor || accNeedsCalibration || !mixerMotorConfigReady"
                             size="xs"
                             class="w-fit"
                             @click="openBoardAlignmentWizard"
@@ -909,6 +909,10 @@ const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
 const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
+
+// Wizard builds Model from mixer + motor_count; keep the launch button off until both MSP
+// replies land so a mid-reload click cannot pair a fresh Custom mixer with a stale count.
+const mixerMotorConfigReady = ref(false);
 
 const isApi149 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
 const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_48));
@@ -2273,6 +2277,7 @@ function setupPeripherals() {
 // --- Load ---
 
 const loadConfig = async () => {
+    mixerMotorConfigReady.value = false;
     await runTabLoad(
         async () => {
             if (!isMounted.value) {
@@ -2284,9 +2289,10 @@ const loadConfig = async () => {
             await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
             await MSP.promise(MSPCodes.MSP_ACC_TRIM);
             await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-            // initModel() reads mixer + motor_count (Custom mmix → craft mesh by motor count).
+            // initModel() / wizard Model read mixer + motor_count (Custom mmix → craft mesh).
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
             await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+            mixerMotorConfigReady.value = true;
 
             if (isApi146.value) {
                 await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
