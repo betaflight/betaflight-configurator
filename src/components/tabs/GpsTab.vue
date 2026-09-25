@@ -1060,6 +1060,11 @@ export default defineComponent({
     }
 
     .map-container {
+        /* Stay in normal flow so UiBox grows with the map (global .map-container
+           from other tabs must not pull this out via position:absolute). */
+        position: relative;
+        overflow: hidden;
+
         &:fullscreen {
             .fullscreen-map-styles();
         }
