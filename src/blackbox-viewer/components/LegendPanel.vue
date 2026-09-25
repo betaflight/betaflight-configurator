@@ -174,25 +174,26 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { useGraphStore } from "../stores/graph.js";
-import { useAppStore } from "../stores/app.js";
+import { useGraphStore } from "../stores/graph";
+import { useAppStore } from "../stores/app";
 import { useSettingsStore } from "../stores/settings.js";
+import type { LegendField } from "../stores/graph";
 
 const graphStore = useGraphStore();
 const appStore = useAppStore();
 const settingsStore = useSettingsStore();
 const { userSettings } = settingsStore;
-const legendContainer = ref(null);
+const legendContainer = ref<HTMLElement | null>(null);
 
 const legendValues = computed(() => graphStore.legendValues);
 
 // --- Highlight ---
-const highlightGi = ref(null);
-const highlightFi = ref(null);
+const highlightGi = ref<number | null>(null);
+const highlightFi = ref<number | null>(null);
 
-function onFieldHover(gi, fi) {
+function onFieldHover(gi: number, fi: number) {
     highlightGi.value = gi;
     highlightFi.value = fi;
     graphStore.highlightLegendField(gi, fi);
@@ -205,7 +206,7 @@ function onFieldLeave() {
 }
 
 // --- Field click → analyser selection ---
-function onFieldClick(e, gi, fi, field) {
+function onFieldClick(e: MouseEvent, gi: number, fi: number, field: LegendField) {
     if (e.button !== 0 || e.altKey) {
         return;
     }
@@ -214,7 +215,7 @@ function onFieldClick(e, gi, fi, field) {
 }
 
 // --- Graph title click → zoom/expand ---
-function onGraphClick(e, gi) {
+function onGraphClick(e: MouseEvent, gi: number) {
     if (e.button !== 0) {
         return;
     }
@@ -227,7 +228,7 @@ function onGraphClick(e, gi) {
 }
 
 // --- Visibility toggle ---
-function onToggleVisibility(gi, fi) {
+function onToggleVisibility(gi: number, fi: number) {
     graphStore.toggleLegendField(gi, fi);
 }
 
@@ -243,18 +244,24 @@ function hideLegend() {
 }
 
 // --- Drag & drop for graph reorder ---
-function onDragStart(e, gi) {
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", String(gi));
-    e.target.classList.add("dragging");
+function onDragStart(e: DragEvent, gi: number) {
+    if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", String(gi));
+    }
+    if (e.target instanceof Element) {
+        e.target.classList.add("dragging");
+    }
 }
 
-function onDragEnd(e) {
-    e.target.classList.remove("dragging");
+function onDragEnd(e: DragEvent) {
+    if (e.target instanceof Element) {
+        e.target.classList.remove("dragging");
+    }
 }
 
 // Dragover/drop on the container
-function setupDragContainer(el) {
+function setupDragContainer(el: HTMLElement) {
     if (!el) {
         return;
     }
@@ -273,16 +280,16 @@ function setupDragContainer(el) {
     });
     el.addEventListener("drop", (e) => {
         e.preventDefault();
-        const newOrder = Array.from(el.querySelectorAll(".graph-legend")).map((div) =>
-            Number.parseInt(div.dataset.index),
+        const newOrder = Array.from(el.querySelectorAll<HTMLElement>(".graph-legend")).map((div) =>
+            Number.parseInt(div.dataset.index ?? ""),
         );
         graphStore.reorderGraphs?.(newOrder);
     });
 }
 
-function getDragAfterElement(container, y) {
+function getDragAfterElement(container: HTMLElement, y: number): Element | undefined {
     const draggables = [...container.querySelectorAll(".graph-legend:not(.dragging)")];
-    return draggables.reduce(
+    return draggables.reduce<{ offset: number; element?: Element }>(
         (closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
@@ -303,11 +310,11 @@ watch(legendContainer, (el) => {
 });
 
 // --- Pen reset (middle-click) and field wheel adjustments ---
-function onResetPen(gi, fi) {
+function onResetPen(gi: number, fi: number | null) {
     graphStore.resetPen?.(gi, fi);
 }
 
-function onFieldWheel(e, gi, fi) {
+function onFieldWheel(e: WheelEvent, gi: number, fi: number | null) {
     // Without a modifier key the wheel scrolls the legend list natively.
     if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
         return;

@@ -44,11 +44,11 @@ import type { PropType } from "vue";
 
 interface PidRow {
     label: string;
-    p?: string | number;
-    i?: string | number;
-    d?: string | number;
-    dMax?: string | number;
-    f?: string | number;
+    p?: string | number | null;
+    i?: string | number | null;
+    d?: string | number | null;
+    dMax?: string | number | null;
+    f?: string | number | null;
     missing?: boolean;
 }
 

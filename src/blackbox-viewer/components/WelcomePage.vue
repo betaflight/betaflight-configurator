@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { computed, inject } from "vue";
 import type { DataflashHost } from "../host_capabilities";
-import { useLogStore } from "../stores/log.js";
+import { useLogStore } from "../stores/log";
 import LogFileInput from "./LogFileInput.vue";
 
 const emit = defineEmits(["files-selected", "download-from-fc"]);

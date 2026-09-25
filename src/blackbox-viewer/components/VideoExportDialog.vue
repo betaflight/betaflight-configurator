@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onUnmounted, ref, toRaw, watch } from "vue";
 import FileSystem from "@/js/FileSystem.js";
-import { useLogStore } from "../stores/log.js";
-import { usePlaybackStore } from "../stores/playback.js";
-import { useAppStore } from "../stores/app.js";
-import { useGraphStore } from "../stores/graph.js";
+import { useLogStore } from "../stores/log";
+import { usePlaybackStore } from "../stores/playback";
+import { useAppStore } from "../stores/app";
+import { useGraphStore } from "../stores/graph";
 import { useSettingsStore } from "../stores/settings.js";
 import { PrefStorage } from "../pref_storage.js";
 import {
@@ -15,6 +15,30 @@ import {
     runVideoExport,
     suggestedName,
 } from "../video_export.js";
+
+/** What probeVideoExport() reports for one resolution. */
+interface VideoExportProbe {
+    canEncode: boolean;
+    reason?: string;
+    codec?: string;
+    extension?: string;
+    description?: string;
+    saveMode?: string;
+    androidBridge?: boolean;
+}
+
+type VideoExportOutcome = Awaited<ReturnType<typeof runVideoExport>> & { name: string };
+
+function describeError(error: unknown): string {
+    if (typeof error === "object" && error !== null && "message" in error && error.message != null) {
+        return String(error.message);
+    }
+    return String(error);
+}
+
+function isAbortError(error: unknown): boolean {
+    return typeof error === "object" && error !== null && "name" in error && error.name === "AbortError";
+}
 
 const FRAMERATE_OPTIONS = [30, 50, 60];
 const ALLOWED_FRAMERATES = new Set(FRAMERATE_OPTIONS);
@@ -35,10 +59,10 @@ const mode = ref("settings");
 const phase = ref("rendering");
 const frameRate = ref(30);
 const resolutionValue = ref(RESOLUTIONS[0].value);
-const probes = ref({});
+const probes = ref<Record<string, VideoExportProbe | undefined>>({});
 const probesLoading = ref(false);
 const progress = ref({ frame: 0, totalFrames: 0, bytesWritten: 0, etaSecs: 0 });
-const resultInfo = ref(null);
+const resultInfo = ref<VideoExportOutcome | null>(null);
 const errorMessage = ref("");
 let cancelRequested = false;
 
@@ -80,9 +104,9 @@ async function warmAllProbes() {
         );
         probes.value = Object.fromEntries(results);
     } catch (error) {
-        const failure = {
+        const failure: VideoExportProbe = {
             canEncode: false,
-            reason: `Video capability detection failed: ${error?.message ?? String(error)}`,
+            reason: `Video capability detection failed: ${describeError(error)}`,
         };
         probes.value = Object.fromEntries(RESOLUTIONS.map((item) => [item.value, failure]));
     } finally {
@@ -123,7 +147,7 @@ watch(
     },
 );
 
-function humanSize(bytes) {
+function humanSize(bytes: number | undefined) {
     if (!bytes) {
         return "0 MB";
     }
@@ -131,7 +155,7 @@ function humanSize(bytes) {
     return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
 }
 
-function humanTime(seconds) {
+function humanTime(seconds: number) {
     const total = Math.max(0, Math.ceil(seconds || 0));
     const minutes = Math.floor(total / 60);
     return `${minutes}:${String(total % 60).padStart(2, "0")}`;
@@ -143,6 +167,9 @@ async function startExport() {
     }
 
     const selectedProbe = probeResult.value;
+    if (!selectedProbe) {
+        return;
+    }
     const fileName = suggestedName(appStore.logFilename || "blackbox", selectedProbe.extension);
     let file;
     try {
@@ -156,10 +183,10 @@ async function startExport() {
             return;
         }
     } catch (error) {
-        if (error?.name === "AbortError") {
+        if (isAbortError(error)) {
             return;
         }
-        errorMessage.value = error?.message ?? String(error);
+        errorMessage.value = describeError(error);
         mode.value = "error";
         return;
     }
@@ -179,18 +206,23 @@ async function startExport() {
     progress.value = { frame: 0, totalFrames: estimatedFrames.value, bytesWritten: 0, etaSecs: 0 };
 
     try {
+        const { canvasRefs, graph } = graphStore;
+        const log = logStore.flightLog;
+        if (!canvasRefs || !graph || !log) {
+            throw new Error("No log is loaded");
+        }
         const outcome = await runVideoExport({
             canvas: exportCanvas,
-            canvasRefs: graphStore.canvasRefs,
-            graph: graphStore.graph,
-            log: logStore.flightLog,
+            canvasRefs,
+            graph,
+            log,
             userSettings: toRaw(settingsStore.userSettings),
             includeSticks: graphStore.hasSticks,
             includeCraft: graphStore.hasCraft,
             includeAnalyser: graphStore.hasAnalyser,
             getAnalyserLayout: () => graphStore.analyserLayout,
-            restoreCanvasSize: graphStore.updateCanvasSize,
-            invalidateGraph: graphStore.invalidateGraph,
+            restoreCanvasSize: graphStore.updateCanvasSize ?? undefined,
+            invalidateGraph: graphStore.invalidateGraph ?? undefined,
             inTime: playbackStore.videoExportInTime,
             outTime: playbackStore.videoExportOutTime,
             frameRate: frameRate.value,
@@ -209,7 +241,7 @@ async function startExport() {
         resultInfo.value = { ...outcome, name: fileName };
         mode.value = "done";
     } catch (error) {
-        errorMessage.value = error?.message ?? String(error);
+        errorMessage.value = describeError(error);
         mode.value = "error";
     }
 }

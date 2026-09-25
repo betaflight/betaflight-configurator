@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { usePlaybackStore } from "../stores/playback.js";
+import { usePlaybackStore } from "../stores/playback";
 
 const emit = defineEmits(["rate-change"]);
 

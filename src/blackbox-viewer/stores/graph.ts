@@ -1,8 +1,80 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { defineStore } from "pinia";
 import { ref, shallowRef, computed, nextTick } from "vue";
 import { useSettingsStore } from "./settings.js";
-import { useLogStore } from "./log.js";
+import { useLogStore } from "./log";
 import { PrefStorage } from "../pref_storage.js";
+import type { FlightLogGrapher } from "../grapher.js";
+import type { GraphConfig } from "../graph_config.js";
+import type { MapGrapher } from "../graph_map.js";
+import type { SeekBar } from "../seekbar.js";
+
+export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
+export type GraphConfigInstance = InstanceType<typeof GraphConfig>;
+
+/** A field of a graph panel, as saved and as GraphConfig.getGraphs() returns it. */
+export interface GraphFieldConfig {
+    name: string;
+    friendlyName?: string;
+    smoothing?: number;
+    curve?: {
+        power?: number;
+        MinMax?: { min?: number; max?: number };
+        highPrecise?: boolean;
+    };
+    default?: { smoothing?: number; power?: number; MinMax?: { min?: number; max?: number } };
+    /** A palette colour, or -1 for "assign one from the palette" (see GraphConfig.extendFields). */
+    color?: string | -1;
+    lineWidth?: number;
+}
+
+/** A graph panel, as saved and as GraphConfig.getGraphs() returns it. */
+export interface GraphPanelConfig {
+    label: string;
+    height?: number;
+    fields: GraphFieldConfig[];
+}
+
+export interface LegendField {
+    name: string;
+    friendlyName: string;
+    color: string;
+    hidden: boolean;
+}
+
+export interface LegendGraph {
+    label: string;
+    fields: LegendField[];
+}
+
+export interface CanvasRefs {
+    canvas: HTMLCanvasElement;
+    analyserCanvas: HTMLCanvasElement;
+    stickCanvas: HTMLCanvasElement;
+    craftCanvas: HTMLCanvasElement;
+}
+
+type Action = () => void;
 
 export const GRAPH_MIN_ZOOM = 1;
 export const GRAPH_MAX_ZOOM = 1000;
@@ -12,22 +84,16 @@ export const useGraphStore = defineStore("graph", () => {
     const prefs = new PrefStorage();
 
     // Renderer instances — registered by main.js after creation
-    /**
-     * The GraphSpectrumPlot-backed grapher instance, installed by main.js once a log is open.
-     * Only the members consumers reach through the store are named; the rest stay on the
-     * instance until blackbox-viewer itself is converted (#5542 phase 6).
-     * @type {import("vue").ShallowRef<{ getAnalyser?: () => any } | null>}
-     */
-    const graph = shallowRef(null);
-    const mapGrapher = shallowRef(null);
-    const seekBar = shallowRef(null);
+    const graph = shallowRef<GrapherInstance | null>(null);
+    const mapGrapher = shallowRef<InstanceType<typeof MapGrapher> | null>(null);
+    const seekBar = shallowRef<InstanceType<typeof SeekBar> | null>(null);
 
     // Canvas DOM refs — registered by main.js
-    const canvasRefs = shallowRef(null);
+    const canvasRefs = shallowRef<CanvasRefs | null>(null);
 
-    const graphConfig = ref(null);
-    const activeGraphConfig = shallowRef(null);
-    const lastGraphConfig = ref(null);
+    const graphConfig = ref<GraphPanelConfig[] | null>(null);
+    const activeGraphConfig = shallowRef<GraphConfigInstance | null>(null);
+    const lastGraphConfig = ref<GraphPanelConfig[] | null>(null);
     const graphZoom = ref(GRAPH_DEFAULT_ZOOM);
     const lastGraphZoom = ref(GRAPH_DEFAULT_ZOOM);
 
@@ -43,16 +109,13 @@ export const useGraphStore = defineStore("graph", () => {
     const hasConfig = ref(false);
     const hasConfigOverlay = ref(false);
     const configFileName = ref("");
-    /** @type {import("vue").ShallowRef<string[]>} */
-    const configLines = shallowRef([]);
+    const configLines = shallowRef<string[]>([]);
 
     // Legend
     const legendVisible = ref(true);
     const legendTitle = ref("Legend");
-    const legendGraphs = shallowRef([]);
-    // Each: { label, fields: [{ name, friendlyName, color, hidden }] }
-    const legendValues = shallowRef({});
-    // Map of fieldName → { value, settings }
+    const legendGraphs = shallowRef<LegendGraph[]>([]);
+    const legendValues = shallowRef<Record<string, { value: string | number; settings: string } | undefined>>({});
 
     // Analyser
     const analyserLayout = shallowRef({ width: 0, height: 0, left: 0, top: 0 });
@@ -64,41 +127,51 @@ export const useGraphStore = defineStore("graph", () => {
     const seekBarMode = ref("avgThrottle");
 
     // Callbacks registered by main.js
-    const invalidateGraph = shallowRef(null);
-    const updateCanvasSize = shallowRef(null);
-    const zoomGraphConfig = shallowRef(null);
-    const expandGraphConfig = shallowRef(null);
-    const reorderGraphs = shallowRef(null);
-    const resetPen = shallowRef(null);
-    const fieldWheel = shallowRef(null);
-    /** @type {import("vue").ShallowRef<(() => void) | null>} */
-    const spectrumExport = shallowRef(null);
-    /** @type {import("vue").ShallowRef<((files: FileList | null) => void) | null>} */
-    const spectrumImport = shallowRef(null);
-    /** @type {import("vue").ShallowRef<(() => void) | null>} */
-    const spectrumClear = shallowRef(null);
-    const applyGraphZoom = shallowRef(null);
-    /** @type {import("vue").ShallowRef<((index: number) => void) | null>} */
-    const selectLogIndex = shallowRef(null);
-    /** @type {import("vue").ShallowRef<((mode: string) => void) | null>} */
-    const setSeekBarMode = shallowRef(null);
+    const invalidateGraph = shallowRef<Action | null>(null);
+    const updateCanvasSize = shallowRef<Action | null>(null);
+    const zoomGraphConfig = shallowRef<((graphIndex: number) => void) | null>(null);
+    const expandGraphConfig = shallowRef<((graphIndex: number) => void) | null>(null);
+    const reorderGraphs = shallowRef<((newOrder: number[]) => void) | null>(null);
+    const resetPen = shallowRef<((graphIndex: number, fieldIndex: number | null) => void) | null>(null);
+    const fieldWheel = shallowRef<
+        | ((
+              graphIndex: number,
+              fieldIndex: number | null,
+              delta: number,
+              shiftKey: boolean,
+              altKey: boolean,
+              ctrlKey: boolean,
+          ) => void)
+        | null
+    >(null);
+    const spectrumExport = shallowRef<Action | null>(null);
+    const spectrumImport = shallowRef<((files: FileList | null) => void) | null>(null);
+    const spectrumClear = shallowRef<Action | null>(null);
+    const applyGraphZoom = shallowRef<((zoom: number) => void) | null>(null);
+    const selectLogIndex = shallowRef<((index: number) => void) | null>(null);
+    const setSeekBarMode = shallowRef<((mode: string) => void) | null>(null);
 
     // --- Legend actions ---
 
     function buildLegendGraphs() {
-        const graphs = activeGraphConfig.value?.getGraphs() ?? [];
-        legendGraphs.value = graphs.map((g, gi) => ({
+        const config = activeGraphConfig.value;
+        if (!config) {
+            legendGraphs.value = [];
+            return;
+        }
+        const graphs = config.getGraphs();
+        legendGraphs.value = graphs.map((g: GraphPanelConfig, gi: number) => ({
             label: g.label,
             fields: g.fields.map((f, fi) => ({
                 name: f.name,
                 friendlyName: f.friendlyName,
                 color: f.color,
-                hidden: activeGraphConfig.value.isGraphFieldHidden(gi, fi),
+                hidden: config.isGraphFieldHidden(gi, fi),
             })),
         }));
     }
 
-    function highlightLegendField(gi, fi) {
+    function highlightLegendField(gi: number | null, fi: number | null) {
         if (!activeGraphConfig.value) {
             return;
         }
@@ -107,7 +180,7 @@ export const useGraphStore = defineStore("graph", () => {
         invalidateGraph.value?.();
     }
 
-    function selectLegendField(gi, fi, fieldName, ctrlKey) {
+    function selectLegendField(gi: number, fi: number, fieldName: string, ctrlKey: boolean) {
         if (!activeGraphConfig.value) {
             return;
         }
@@ -126,7 +199,7 @@ export const useGraphStore = defineStore("graph", () => {
         invalidateGraph.value?.();
     }
 
-    function toggleLegendField(gi, fi) {
+    function toggleLegendField(gi: number, fi: number) {
         if (!activeGraphConfig.value) {
             return;
         }
@@ -135,20 +208,21 @@ export const useGraphStore = defineStore("graph", () => {
         invalidateGraph.value?.();
     }
 
-    function legendVisibilityChange(hidden) {
+    function legendVisibilityChange(hidden: boolean) {
         prefs.set("log-legend-hidden", hidden);
         updateCanvasSize.value?.();
     }
 
     function toggleAnalyser() {
-        if (activeGraphConfig.value?.selectedFieldName == null) {
-            const graphs = activeGraphConfig.value?.getGraphs() ?? [];
-            if (graphs.length === 0 || graphs[0].fields.length === 0) {
+        const config = activeGraphConfig.value;
+        if (config?.selectedFieldName == null) {
+            const graphs = config?.getGraphs() ?? [];
+            if (!config || graphs.length === 0 || graphs[0].fields.length === 0) {
                 hasAnalyser.value = false;
             } else {
-                activeGraphConfig.value.selectedFieldName = graphs[0].fields[0].friendlyName;
-                activeGraphConfig.value.selectedGraphIndex = 0;
-                activeGraphConfig.value.selectedFieldIndex = 0;
+                config.selectedFieldName = graphs[0].fields[0].friendlyName;
+                config.selectedGraphIndex = 0;
+                config.selectedFieldIndex = 0;
                 hasAnalyser.value = true;
             }
         } else {
@@ -189,11 +263,11 @@ export const useGraphStore = defineStore("graph", () => {
         }
     }
 
-    function setGraphZoom(zoom) {
+    function setGraphZoom(zoom: number) {
         graphZoom.value = Math.max(GRAPH_MIN_ZOOM, Math.min(GRAPH_MAX_ZOOM, zoom));
     }
 
-    function quickZoomToggle(newZoom) {
+    function quickZoomToggle(newZoom: number) {
         if (graphZoom.value === newZoom) {
             setGraphZoom(lastGraphZoom.value);
         } else {

@@ -19,21 +19,28 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
+// sortablejs ships no types; this covers only what the blackbox viewer's
+// GraphConfigDialog and HeaderDialog call. @types/sortablejs would replace it.
+declare module "sortablejs" {
+    interface SortableEvent {
+        oldIndex?: number;
+        newIndex?: number;
+    }
 
-/**
- * Capabilities the configurator provides down to the embedded blackbox viewer.
- *
- * BlackboxViewerTab.vue `provide()`s these; WelcomePage and AppToolbar `inject()` them. Each is
- * absent (null) when the viewer runs standalone rather than embedded, so every consumer has to
- * treat the whole object as optional.
- */
+    interface SortableOptions {
+        handle?: string;
+        ghostClass?: string;
+        animation?: number;
+        onStart?: (event: SortableEvent) => void;
+        onEnd?: (event: SortableEvent) => void;
+    }
 
-/** Pulling a log off the flight controller's dataflash — `provide("bbvDataflash", ...)`. */
-export interface DataflashHost {
-    available: Ref<boolean>;
-    pulling: Ref<boolean>;
-    progress: Ref<number>;
-    /** Resolves with the downloaded log bytes. */
-    pull: () => Promise<Uint8Array>;
+    interface Sortable {
+        destroy(): void;
+    }
+
+    const Sortable: {
+        create(element: HTMLElement, options?: SortableOptions): Sortable;
+    };
+    export default Sortable;
 }

@@ -110,14 +110,17 @@
     </div>
 </template>
 
-<script setup>
-import { computed, watchEffect, onMounted, onUnmounted, inject, unref } from "vue";
-import { useGraphStore } from "./stores/graph.js";
-import { useAppStore } from "./stores/app.js";
-import { useLogStore, FIRMWARE_CLASSES } from "./stores/log.js";
-import { usePlaybackStore } from "./stores/playback.js";
+<script setup lang="ts">
+import { computed, watchEffect, onMounted, onUnmounted, inject, unref, type Ref } from "vue";
+import type { DataflashHost } from "./host_capabilities";
+import type { GraphPanelConfig } from "./stores/graph";
+import type { UserSettings } from "./stores/app";
+import { useGraphStore } from "./stores/graph";
+import { useAppStore } from "./stores/app";
+import { useLogStore, FIRMWARE_CLASSES } from "./stores/log";
+import { usePlaybackStore } from "./stores/playback";
 import { useSettingsStore } from "./stores/settings.js";
-import { useWorkspaceStore } from "./stores/workspace.js";
+import { useWorkspaceStore } from "./stores/workspace";
 import AppToolbar from "./components/AppToolbar.vue";
 import VideoExportDialog from "./components/VideoExportDialog.vue";
 import WelcomePage from "./components/WelcomePage.vue";
@@ -150,12 +153,12 @@ const workspaceStore = useWorkspaceStore();
 // State classes are applied to the viewer root element (provided by the embedding tab) so
 // they stay scoped to the viewer subtree and never leak onto the host configurator's <html>.
 // Embedded: a ref to the tab root, null until the tab mounts. Standalone: nothing injected.
-const injectedRoot = inject("bbvRoot", null);
+const injectedRoot = inject<Ref<HTMLElement | null> | null>("bbvRoot", null);
 
 // FC dataflash pull capability, shared with WelcomePage.vue/AppToolbar.vue via injection so
 // the download control (and its available/pulling/progress state) works from either surface,
 // independent of whether a log is already loaded in the viewer.
-const dataflash = inject("bbvDataflash", null);
+const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 
 // Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js
 watchEffect(() => {
@@ -198,7 +201,7 @@ const sysConfig = computed(() => {
     return activeLogIndex >= 0 ? (logStore.flightLog?.getSysConfig?.() ?? null) : null;
 });
 
-function onFilesSelected(files) {
+function onFilesSelected(files: FileList | File[]) {
     appStore.loadFiles?.(files);
 }
 
@@ -212,7 +215,7 @@ async function onDownloadFromFc() {
         const buffer = await dataflash.pull();
         appStore.loadLogBuffer?.(buffer, "FC dataflash.BBL");
     } catch (e) {
-        alert(`Could not download the log from the flight controller:\n\n${e.message}`);
+        alert(`Could not download the log from the flight controller:\n\n${e instanceof Error ? e.message : e}`);
     }
 }
 
@@ -281,11 +284,11 @@ function onToggleMap() {
     graphStore.toggleMap();
 }
 
-function onRateChange(rate) {
+function onRateChange(rate: number) {
     playbackStore.applyPlaybackRate?.(rate);
 }
 
-function onZoomChange(zoom) {
+function onZoomChange(zoom: number) {
     graphStore.applyGraphZoom?.(zoom);
 }
 
@@ -305,11 +308,11 @@ function onSmartSync() {
     playbackStore.logSmartSync?.();
 }
 
-function onOffsetChange(val) {
+function onOffsetChange(val: string | number) {
     playbackStore.setVideoOffsetValue?.(val);
 }
 
-function onTimeChange(timeStr) {
+function onTimeChange(timeStr: string) {
     playbackStore.setGraphTime?.(timeStr);
 }
 
@@ -341,51 +344,52 @@ function onVideoJumpEnd() {
     playbackStore.videoJumpEnd?.();
 }
 
-function onSaveSettings(newSettings) {
+function onSaveSettings(newSettings: Partial<UserSettings>) {
     appStore.saveUserSettings?.(newSettings);
 }
 
-function onGraphConfigSave(newConfig) {
+function onGraphConfigSave(newConfig: GraphPanelConfig[]) {
     appStore.newGraphConfig?.(newConfig, true);
 }
 
-function onGraphConfigUpdate(newConfig) {
+function onGraphConfigUpdate(newConfig: GraphPanelConfig[]) {
     appStore.newGraphConfig?.(newConfig, true);
 }
 
-function onSwitchWorkspace(id) {
+function onSwitchWorkspace(id: number) {
     workspaceStore.switchWorkspace?.(id);
 }
 
-function onSaveWorkspace(id, title) {
+function onSaveWorkspace(id: number, title: string) {
     workspaceStore.saveWorkspace?.(id, title);
 }
 
-function onRenameWorkspace(id, title) {
+function onRenameWorkspace(id: number, title: string) {
     workspaceStore.renameWorkspace?.(id, title);
 }
 
-function onApplyDefaultWorkspace(index) {
+function onApplyDefaultWorkspace(index: number) {
     workspaceStore.applyDefaultWorkspace?.(index);
 }
 
-function onGotoBookmark(index) {
+function onGotoBookmark(index: number) {
     workspaceStore.gotoBookmark?.(index + 1);
 }
 
 // Drag-and-drop file loading (window-level)
-function onDragOver(e) {
+function onDragOver(e: DragEvent) {
     // Always swallow the browser default so a stray file drop never navigates away, even while
     // the viewer is kept alive behind another tab; only the copy affordance is viewer-specific.
     e.preventDefault();
-    if (!appStore.viewerActive) {
+    // dataTransfer is only null for synthetic events; drag events from the browser carry one.
+    if (!appStore.viewerActive || !e.dataTransfer) {
         return;
     }
     e.dataTransfer.dropEffect = "copy";
 }
-function onDrop(e) {
+function onDrop(e: DragEvent) {
     e.preventDefault();
-    if (!appStore.viewerActive) {
+    if (!appStore.viewerActive || !e.dataTransfer) {
         return;
     }
     const file = e.dataTransfer.files?.[0];
