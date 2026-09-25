@@ -26,13 +26,22 @@
     </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import LedGridPoint from "./LedGridPoint.vue";
+import type { LedGridCell } from "@/composables/useLedStrip";
+import type { LedColor } from "@/stores/fc.types";
+
+interface SelectionBox {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+}
 
 const props = defineProps({
     gridLeds: {
-        type: Array,
+        type: Array as PropType<LedGridCell[]>,
         required: true,
     },
     wireMode: {
@@ -40,46 +49,49 @@ const props = defineProps({
         default: false,
     },
     selectedIndices: {
-        type: Set,
+        type: Set as PropType<Set<number>>,
         required: true,
     },
     hsvToColor: {
-        type: Function,
+        type: Function as PropType<(color: LedColor | undefined) => string>,
         required: true,
     },
     ledColors: {
-        type: Array,
+        type: Array as PropType<LedColor[]>,
         required: true,
     },
 });
 
-const emit = defineEmits(["selection-change", "selection-end"]);
+const emit = defineEmits<{
+    "selection-change": [selection: Set<number>];
+    "selection-end": [];
+}>();
 
 // Selection state
-const gridContainer = ref(null);
+const gridContainer = ref<HTMLElement | null>(null);
 const isSelecting = ref(false);
-const selectionStart = ref(null);
-const selectionBox = ref(null);
+const selectionStart = ref<{ x: number; y: number } | null>(null);
+const selectionBox = ref<SelectionBox | null>(null);
 const isShiftPressed = ref(false);
-const initialSelection = ref(new Set());
+const initialSelection = ref(new Set<number>());
 
 // Handle keyboard events for shift key
-const handleKeyDown = (e) => {
+const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Shift") {
         isShiftPressed.value = true;
     }
 };
 
-const handleKeyUp = (e) => {
+const handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === "Shift") {
         isShiftPressed.value = false;
     }
 };
 
 // Start selection
-const onMouseDown = (e) => {
+const onMouseDown = (e: MouseEvent) => {
     // Only handle left mouse button
-    if (e.button !== 0) {
+    if (e.button !== 0 || !gridContainer.value) {
         return;
     }
 
@@ -104,9 +116,9 @@ const onMouseDown = (e) => {
     }
 
     // Check if we clicked on a point
-    const target = e.target.closest("[data-index]");
+    const target = e.target instanceof Element ? e.target.closest<HTMLElement>("[data-index]") : null;
     if (target) {
-        const index = Number.parseInt(target.dataset.index, 10);
+        const index = Number.parseInt(target.dataset.index ?? "", 10);
         if (!Number.isNaN(index)) {
             const newSelection = new Set(initialSelection.value);
             if (isShiftPressed.value && props.selectedIndices.has(index)) {
@@ -120,8 +132,8 @@ const onMouseDown = (e) => {
 };
 
 // Update selection during drag
-const onMouseMove = (e) => {
-    if (!isSelecting.value || !selectionStart.value) {
+const onMouseMove = (e: MouseEvent) => {
+    if (!isSelecting.value || !selectionStart.value || !gridContainer.value) {
         return;
     }
 
@@ -150,21 +162,23 @@ const onPointMouseEnter = () => {
 
 // Update selection based on current selection box
 const updateSelection = () => {
-    if (!selectionBox.value || !gridContainer.value) {
+    const box = selectionBox.value;
+    const container = gridContainer.value;
+    if (!box || !container) {
         return;
     }
 
     const newSelection = new Set(initialSelection.value);
-    const points = gridContainer.value.querySelectorAll("[data-index]");
+    const points = container.querySelectorAll<HTMLElement>("[data-index]");
 
     points.forEach((point) => {
-        const index = Number.parseInt(point.dataset.index, 10);
+        const index = Number.parseInt(point.dataset.index ?? "", 10);
         if (Number.isNaN(index)) {
             return;
         }
 
         const rect = point.getBoundingClientRect();
-        const containerRect = gridContainer.value.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
 
         const pointBox = {
             x1: rect.left - containerRect.left,
@@ -174,11 +188,7 @@ const updateSelection = () => {
         };
 
         // Check if point intersects with selection box
-        const intersects =
-            pointBox.x1 < selectionBox.value.x2 &&
-            pointBox.x2 > selectionBox.value.x1 &&
-            pointBox.y1 < selectionBox.value.y2 &&
-            pointBox.y2 > selectionBox.value.y1;
+        const intersects = pointBox.x1 < box.x2 && pointBox.x2 > box.x1 && pointBox.y1 < box.y2 && pointBox.y2 > box.y1;
 
         if (intersects) {
             if (isShiftPressed.value && initialSelection.value.has(index)) {

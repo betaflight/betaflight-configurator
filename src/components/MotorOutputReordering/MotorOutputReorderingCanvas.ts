@@ -1,7 +1,50 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import MotorOutputReorderConfig from "./MotorOutputReorderingConfig";
 
 export default class MotorOutputReorderCanvas {
-    constructor(canvas, droneConfiguration, motorClickCallback, spinMotorCallback) {
+    /** Motors already selected by the user for remapping, in the order they were clicked. */
+    readyMotors: number[] = [];
+    remappingReady = false;
+
+    private readonly _spinMotorCallback: (motorIndex: number) => void;
+    private readonly _canvas: HTMLCanvasElement;
+    private readonly _motorClickCallback: (motorIndex: number) => void;
+    private readonly _width: number;
+    private readonly _height: number;
+    private readonly _screenSize: number;
+    private readonly _config: MotorOutputReorderConfig;
+    private readonly _droneConfiguration: string;
+    private readonly _ctx: CanvasRenderingContext2D;
+    private _motorIndexToSpinOnMouseDown = -1;
+    private _keepDrawing = true;
+    private _mouse = { x: 0, y: 0 };
+
+    constructor(
+        canvas: HTMLCanvasElement,
+        droneConfiguration: string,
+        motorClickCallback: (motorIndex: number) => void,
+        spinMotorCallback: (motorIndex: number) => void,
+    ) {
         this._spinMotorCallback = spinMotorCallback;
         this._canvas = canvas;
         this._motorClickCallback = motorClickCallback;
@@ -17,7 +60,11 @@ export default class MotorOutputReorderCanvas {
 
         this._droneConfiguration = droneConfiguration;
 
-        this._ctx = this._canvas.getContext("2d");
+        const ctx = this._canvas.getContext("2d");
+        if (!ctx) {
+            throw new Error("MotorOutputReorderCanvas: 2D canvas context unavailable");
+        }
+        this._ctx = ctx;
         this._ctx.translate(this._width / 2, this._height / 2);
 
         this._canvas.addEventListener("mousemove", (event) => {
@@ -44,7 +91,7 @@ export default class MotorOutputReorderCanvas {
     }
 
     startOver() {
-        this.readyMotors = []; //motors that already being selected for remapping by user
+        this.readyMotors = [];
         this.remappingReady = false;
         this._motorIndexToSpinOnMouseDown = -1;
         this._keepDrawing = true;
@@ -54,7 +101,7 @@ export default class MotorOutputReorderCanvas {
         });
     }
 
-    _drawOnce() {
+    private _drawOnce() {
         this._ctx.clearRect(-this._width / 2, -this._height / 2, this._width, this._height);
 
         this._drawBottomMotors();
@@ -70,7 +117,7 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _onMouseDown() {
+    private _onMouseDown() {
         if (this.remappingReady) {
             this._motorIndexToSpinOnMouseDown = this._getMouseHoverMotorIndex();
 
@@ -80,7 +127,7 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _onMouseUp() {
+    private _onMouseUp() {
         if (-1 !== this._motorIndexToSpinOnMouseDown) {
             this._motorIndexToSpinOnMouseDown = -1;
 
@@ -90,7 +137,7 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _onMouseClick() {
+    private _onMouseClick() {
         const motorIndex = this._getMouseHoverMotorIndex();
 
         if (this._motorClickCallback && -1 !== motorIndex && !this.readyMotors.includes(motorIndex)) {
@@ -98,13 +145,13 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _onMouseMove(event) {
+    private _onMouseMove(event: MouseEvent) {
         const boundingRect = this._canvas.getBoundingClientRect();
         this._mouse.x = event.clientX - boundingRect.left - this._width / 2;
         this._mouse.y = event.clientY - boundingRect.top - this._height / 2;
     }
 
-    _onMouseLeave() {
+    private _onMouseLeave() {
         this._mouse.x = Number.MIN_SAFE_INTEGER;
         this._mouse.y = Number.MIN_SAFE_INTEGER;
 
@@ -117,8 +164,8 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _markMotors() {
-        const motors = this._config[this._droneConfiguration].Motors;
+    private _markMotors() {
+        const motors = this._config.frames[this._droneConfiguration].Motors;
         const mouseHoverMotorIndex = this._getMouseHoverMotorIndex();
 
         if (-1 === this._motorIndexToSpinOnMouseDown) {
@@ -128,7 +175,7 @@ export default class MotorOutputReorderCanvas {
                 this._ctx.arc(
                     motors[motorIndex].x,
                     motors[motorIndex].y,
-                    this._config[this._droneConfiguration].PropRadius,
+                    this._config.frames[this._droneConfiguration].PropRadius,
                     0,
                     2 * Math.PI,
                 );
@@ -142,7 +189,7 @@ export default class MotorOutputReorderCanvas {
                 this._ctx.arc(
                     motors[mouseHoverMotorIndex].x,
                     motors[mouseHoverMotorIndex].y,
-                    this._config[this._droneConfiguration].PropRadius,
+                    this._config.frames[this._droneConfiguration].PropRadius,
                     0,
                     2 * Math.PI,
                 );
@@ -165,7 +212,7 @@ export default class MotorOutputReorderCanvas {
                 this._ctx.arc(
                     motors[i].x,
                     motors[i].y,
-                    this._config[this._droneConfiguration].PropRadius,
+                    this._config.frames[this._droneConfiguration].PropRadius,
                     0,
                     2 * Math.PI,
                 );
@@ -175,19 +222,19 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _getMouseHoverMotorIndex() {
+    private _getMouseHoverMotorIndex() {
         const x = this._mouse.x;
         const y = this._mouse.y;
 
         let result = -1;
         let currentDist = Number.MAX_SAFE_INTEGER;
         let resultTopMotors = -1;
-        const motors = this._config[this._droneConfiguration].Motors;
+        const motors = this._config.frames[this._droneConfiguration].Motors;
 
         for (let i = 0; i < motors.length; i++) {
             const dist = Math.sqrt((x - motors[i].x) * (x - motors[i].x) + (y - motors[i].y) * (y - motors[i].y));
 
-            if (dist < this._config[this._droneConfiguration].PropRadius && dist < currentDist) {
+            if (dist < this._config.frames[this._droneConfiguration].PropRadius && dist < currentDist) {
                 currentDist = dist;
                 result = i;
 
@@ -205,17 +252,17 @@ export default class MotorOutputReorderCanvas {
         return result;
     }
 
-    _drawTopMotors() {
+    private _drawTopMotors() {
         this._drawMotors(false);
     }
 
-    _drawBottomMotors() {
+    private _drawBottomMotors() {
         this._drawMotors(true);
         this._clipTopMotors();
     }
 
-    _clipTopMotors() {
-        const motors = this._config[this._droneConfiguration].Motors;
+    private _clipTopMotors() {
+        const motors = this._config.frames[this._droneConfiguration].Motors;
 
         for (let i = 0; i < motors.length; i++) {
             if ("top" in motors[i]) {
@@ -224,10 +271,10 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _drawMotors(drawBottom) {
+    private _drawMotors(drawBottom: boolean) {
         this._ctx.lineWidth = this._config.PropEdgeLineWidth;
         this._ctx.strokeStyle = this._config.PropEdgeColor;
-        const motors = this._config[this._droneConfiguration].Motors;
+        const motors = this._config.frames[this._droneConfiguration].Motors;
         this._ctx.fillStyle = this._config.PropColor;
 
         for (let i = 0; i < motors.length; i++) {
@@ -239,11 +286,11 @@ export default class MotorOutputReorderCanvas {
         }
     }
 
-    _clipSingleMotor(motorIndex) {
+    private _clipSingleMotor(motorIndex: number) {
         this._ctx.save();
-        const motor = this._config[this._droneConfiguration].Motors[motorIndex];
+        const motor = this._config.frames[this._droneConfiguration].Motors[motorIndex];
         this._ctx.beginPath();
-        const propRadius = this._config[this._droneConfiguration].PropRadius;
+        const propRadius = this._config.frames[this._droneConfiguration].PropRadius;
         this._arcSingleMotor(motorIndex);
         this._ctx.clip();
         this._ctx.clearRect(motor.x - propRadius, motor.y - propRadius, propRadius * 2, propRadius * 2);
@@ -251,19 +298,19 @@ export default class MotorOutputReorderCanvas {
         this._ctx.restore();
     }
 
-    _drawSingleMotor(motorIndex) {
+    private _drawSingleMotor(motorIndex: number) {
         this._ctx.beginPath();
         this._arcSingleMotor(motorIndex);
         this._ctx.stroke();
         this._ctx.closePath();
     }
 
-    _arcSingleMotor(motorIndex) {
-        const motor = this._config[this._droneConfiguration].Motors[motorIndex];
-        this._ctx.arc(motor.x, motor.y, this._config[this._droneConfiguration].PropRadius, 0, 2 * Math.PI);
+    private _arcSingleMotor(motorIndex: number) {
+        const motor = this._config.frames[this._droneConfiguration].Motors[motorIndex];
+        this._ctx.arc(motor.x, motor.y, this._config.frames[this._droneConfiguration].PropRadius, 0, 2 * Math.PI);
     }
 
-    _drawDirectionArrow() {
+    private _drawDirectionArrow() {
         this._ctx.beginPath();
         this._ctx.moveTo(this._config.DirectionArrowPoints[0].x, this._config.DirectionArrowPoints[0].y);
 
@@ -276,12 +323,12 @@ export default class MotorOutputReorderCanvas {
         this._ctx.fill();
     }
 
-    _drawFrame() {
+    private _drawFrame() {
         this._ctx.beginPath();
-        this._ctx.lineWidth = this._config[this._droneConfiguration].ArmWidth;
+        this._ctx.lineWidth = this._config.frames[this._droneConfiguration].ArmWidth;
         this._ctx.lineCap = "round";
         this._ctx.strokeStyle = this._config.FrameColor;
-        const motors = this._config[this._droneConfiguration].Motors;
+        const motors = this._config.frames[this._droneConfiguration].Motors;
 
         switch (this._droneConfiguration) {
             case "Quad X":
