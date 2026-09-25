@@ -85,6 +85,13 @@ function appendData(result: ParsedHex, line: string, record: HexRecord) {
     return crc == record.checksum;
 }
 
+/** Segment records are not implemented; a zero segment is ignored silently. */
+function warnIfSegmentRecord(content: string, kind: string) {
+    if (Number.parseInt(content, 16) != 0) {
+        console.log(`${kind} segment address record found - NOT IMPLEMENTED !!!`);
+    }
+}
+
 // input = string
 // result = if hex file is valid, result is an object
 //          if hex file wasn't valid (crc check failed on any of the lines), result will be null
@@ -129,18 +136,10 @@ export default async function read_hex_file(input: string): Promise<ParsedHex | 
                 result.end_of_file = true;
                 break;
             case 0x02: // extended segment address record
-                // not implemented
-                if (Number.parseInt(content, 16) != 0) {
-                    // ignore if segment is 0
-                    console.log("extended segment address record found - NOT IMPLEMENTED !!!");
-                }
+                warnIfSegmentRecord(content, "extended");
                 break;
             case 0x03: // start segment address record
-                // not implemented
-                if (Number.parseInt(content, 16) != 0) {
-                    // ignore if segment is 0
-                    console.log("start segment address record found - NOT IMPLEMENTED !!!");
-                }
+                warnIfSegmentRecord(content, "start");
                 break;
             case 0x04: // extended linear address record
                 // input address is UNSIGNED
