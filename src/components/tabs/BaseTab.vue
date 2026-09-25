@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, onUnmounted, inject } from "vue";
 import GUI from "../../js/gui";
 
