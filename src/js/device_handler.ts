@@ -97,12 +97,12 @@ function firstRecognisedPath(ports: PortDevice[]): string | undefined {
     return ports.find((device) => DEVICE_FILTER.some((filter) => device.displayName.includes(filter)))?.path;
 }
 
-/** True when both lists hold the same paths in the same order. */
 // The serial facade and the DFU protocol announce devices as CustomEvents carrying the device.
 function eventDetail<T>(event: Event): T {
     return (event as CustomEvent<T>).detail;
 }
 
+/** True when both lists hold the same paths in the same order. */
 function samePaths(a: PortDevice[], b: PortDevice[]) {
     return a.length === b.length && a.every((device, index) => device.path === b[index].path);
 }

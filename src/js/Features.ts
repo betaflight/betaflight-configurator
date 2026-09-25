@@ -63,6 +63,31 @@ function addFeatureDependsOn(obj: FeatureDefinition[], featureName: string, depe
     });
 }
 
+/** The features the build was compiled with, plus those that need no build option, in table order. */
+function supportedByBuild(features: FeatureDefinition[], buildOptions: string[]): FeatureDefinition[] {
+    return features.filter(
+        // `includes(undefined)` looked for the text "undefined"; kept as it was.
+        (feature) =>
+            buildOptions.some((opt) => opt.includes(String(feature.dependsOn))) || feature.dependsOn === undefined,
+    );
+}
+
+/** A receiver protocol that carries telemetry (CRSF, GHST, FPORT, JETI) brings the TELEMETRY feature with it. */
+function addReceiverTelemetry(features: FeatureDefinition[], buildOptions: string[]) {
+    const enableTelemetry = buildOptions.some(
+        (opt) => opt.includes("CRSF") || opt.includes("GHST") || opt.includes("FPORT") || opt.includes("JETI"),
+    );
+    if (enableTelemetry && !features.some((f) => f.name === "TELEMETRY")) {
+        features.push({
+            bit: 10,
+            group: "telemetry",
+            name: "TELEMETRY",
+            haveTip: true,
+            dependsOn: "TELEMETRY",
+        });
+    }
+}
+
 class Features {
     _features: FeatureDefinition[];
     _featureMask = 0;
@@ -103,36 +128,11 @@ class Features {
 
         const buildOptions = config.buildOptions;
         if (buildOptions?.length) {
-            // Filter features based on build options
             if (semver.gte(config.apiVersion, API_VERSION_1_45)) {
-                this._features = [];
-
-                for (const feature of features) {
-                    const dependsOn = feature.dependsOn;
-                    // `includes(undefined)` looked for the text "undefined"; kept as it was.
-                    if (buildOptions.some((opt) => opt.includes(String(dependsOn))) || dependsOn === undefined) {
-                        this._features.push(feature);
-                    }
-                }
+                this._features = supportedByBuild(features, buildOptions);
             }
-
-            // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT, JETI
             if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
-                const enableTelemetry = buildOptions.some(
-                    (opt) =>
-                        opt.includes("CRSF") || opt.includes("GHST") || opt.includes("FPORT") || opt.includes("JETI"),
-                );
-
-                const telemetryFeature = this._features.find((f) => f.name === "TELEMETRY");
-                if (enableTelemetry && !telemetryFeature) {
-                    this._features.push({
-                        bit: 10,
-                        group: "telemetry",
-                        name: "TELEMETRY",
-                        haveTip: true,
-                        dependsOn: "TELEMETRY",
-                    });
-                }
+                addReceiverTelemetry(this._features, buildOptions);
             }
         }
 
