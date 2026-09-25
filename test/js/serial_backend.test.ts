@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
@@ -234,13 +234,6 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 import FC from "../../src/js/fc";
 import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
-
-// device_handler.js attaches these after constructing its singleton, so its type does not
-// carry them; the mock above defines them as vi.fn().
-const DeviceHandlerMock = DeviceHandler as typeof DeviceHandler & {
-    isKnownDevicePath: Mock<(path: string) => boolean>;
-    findDescribedDevice: Mock<(target: unknown) => object | undefined>;
-};
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -984,8 +977,8 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = false;
             DeviceHandler.portAvailable = true; // other serial ports are present throughout
-            DeviceHandlerMock.isKnownDevicePath.mockReturnValue(true); // and one shares our path shape
-            DeviceHandlerMock.findDescribedDevice.mockReturnValue(undefined); // but ours is away
+            vi.mocked(DeviceHandler.isKnownDevicePath).mockReturnValue(true); // and one shares our path shape
+            vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue(undefined); // but ours is away
             CONFIGURATOR.connectionValid = true;
             establishConnection();
 
@@ -996,14 +989,14 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             vi.advanceTimersByTime(1500 + 3000); // flush plus several ticks
             expect(getConnectionState().isRebootWindowOpen).toBe(true); // ours is gone: keep waiting
 
-            DeviceHandlerMock.findDescribedDevice.mockReturnValue({ path: "serial_9" }); // back, new id
+            vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue({ path: "serial_9", displayName: "serial_9" }); // back, new id
             vi.advanceTimersByTime(1000);
             expect(getConnectionState().isRebootWindowOpen).toBe(false);
             expect(serial.connect).not.toHaveBeenCalled(); // nothing auto-reconnects
         } finally {
             DeviceHandler.portAvailable = false;
-            DeviceHandlerMock.isKnownDevicePath.mockReturnValue(false);
-            DeviceHandlerMock.findDescribedDevice.mockReturnValue(undefined);
+            vi.mocked(DeviceHandler.isKnownDevicePath).mockReturnValue(false);
+            vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue(undefined);
             vi.useRealTimers();
         }
     });

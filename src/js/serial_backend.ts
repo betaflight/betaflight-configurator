@@ -30,7 +30,7 @@ import FC from "./fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
-import DeviceHandlerModule from "./device_handler";
+import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
@@ -54,22 +54,6 @@ import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
-
-/** From device_handler's describeDevice(): the USB ids let a rebooted device be matched under a new path. */
-interface DeviceDescriptor {
-    path: string;
-    vendorId: unknown;
-    productId: unknown;
-}
-
-// device_handler.js builds its singleton with `new (function () {...})()` and attaches methods
-// afterwards, which TypeScript cannot see; these are the ones this module calls.
-const DeviceHandler = DeviceHandlerModule as typeof DeviceHandlerModule & {
-    initialize(): void;
-    describeDevice(path: string): DeviceDescriptor | null;
-    findDescribedDevice(target: DeviceDescriptor | null): object | undefined;
-    isKnownDevicePath(path: string): boolean;
-};
 
 // Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
 // tab_switch.js; configuration_loaded is only ever written.
