@@ -36,14 +36,14 @@ export interface PortFunctionRule {
     dependsOn?: string;
     sharableWith?: PortFunctionGroup[];
     notSharableWith?: PortFunctionGroup[];
-    /** Localised label, filled in below. */
-    displayName?: string;
+    /** Localised label. */
+    displayName: string;
 }
 
 export function usePortsRules() {
     const { hasBuildOption } = useBuildOptions();
 
-    const functionRules: PortFunctionRule[] = [
+    const ruleDefinitions: Omit<PortFunctionRule, "displayName">[] = [
         { name: "MSP", groups: ["configuration", "msp"], maxPorts: 2 },
         { name: "GPS", groups: ["sensors"], maxPorts: 1, dependsOn: "USE_GPS" },
         {
@@ -97,12 +97,13 @@ export function usePortsRules() {
     ];
 
     if (FC.CONFIG && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        functionRules.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
+        ruleDefinitions.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
-    for (const rule of functionRules) {
-        rule.displayName = i18n.getMessage(`portsFunction_${rule.name}`);
-    }
+    const functionRules: PortFunctionRule[] = ruleDefinitions.map((rule) => ({
+        ...rule,
+        displayName: i18n.getMessage(`portsFunction_${rule.name}`),
+    }));
 
     const mspBaudRates = ["9600", "19200", "38400", "57600", "115200", "230400", "250000", "500000", "1000000"];
     const gpsBaudRates = ["AUTO", "9600", "19200", "38400", "57600", "115200"];
@@ -127,7 +128,7 @@ export function usePortsRules() {
 
     const getRules = (group: PortFunctionGroup) => {
         const rules = functionRules.filter((r) => r.groups.includes(group));
-        return rules.sort((a, b) => (a.displayName ?? "").localeCompare(b.displayName ?? ""));
+        return rules.sort((a, b) => a.displayName.localeCompare(b.displayName));
     };
 
     const isRuleDisabled = (rule: PortFunctionRule) => {

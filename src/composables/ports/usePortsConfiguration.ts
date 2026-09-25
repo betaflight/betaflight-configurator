@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { toRaw } from "vue";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -7,11 +28,18 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { getTracking } from "../../js/Analytics";
 import { useReboot } from "../useReboot";
+import type { SerialPort } from "@/stores/fc.types";
+import type { PortFunctionRule } from "./usePortsRules";
+import type { PortAnalyticsChanges, PortRow } from "./usePortsState";
 
-export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
+export function usePortsConfiguration(
+    ports: PortRow[],
+    analyticsChanges: PortAnalyticsChanges,
+    functionRules: PortFunctionRule[],
+) {
     const { saveAndReboot } = useReboot();
 
-    const getEnabledFeaturesFromPorts = (portsList) => {
+    const getEnabledFeaturesFromPorts = (portsList: SerialPort[]) => {
         const flags = {
             rxSerial: false,
             telemetry: false,
@@ -45,15 +73,31 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);
 
         const featureConfig = FC.FEATURE_CONFIG.features;
-        rxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
+        if (!featureConfig) {
+            // Set on connect, and this tab only saves while connected; it threw here before too.
+            throw new Error("Feature config is not loaded");
+        }
+        if (rxSerial) {
+            featureConfig.enable("RX_SERIAL");
+        } else {
+            featureConfig.disable("RX_SERIAL");
+        }
 
         if (telemetry) {
             featureConfig.enable("TELEMETRY");
         }
         // Original code did NOT disable TELEMETRY when false — preserving that behavior
 
-        blackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
-        esc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
+        if (blackbox) {
+            featureConfig.enable("BLACKBOX");
+        } else {
+            featureConfig.disable("BLACKBOX");
+        }
+        if (esc) {
+            featureConfig.enable("ESC_SENSOR");
+        } else {
+            featureConfig.disable("ESC_SENSOR");
+        }
 
         // GNSS: only enable when port configured, don't disable (allows Virtual GPS)
         if (gps) {
@@ -62,8 +106,9 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
     };
 
     const saveConfig = () => {
-        getTracking().sendSaveAndChangeEvents(
-            getTracking().EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+        const tracking = getTracking();
+        tracking?.sendSaveAndChangeEvents(
+            tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
             toRaw(analyticsChanges),
             "ports",
         );
@@ -75,7 +120,7 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
 
         // Reconstruct FC.SERIAL_CONFIG.ports
         FC.SERIAL_CONFIG.ports = ports.map((p) => {
-            const functions = [];
+            const functions: string[] = [];
             if (p.msp) {
                 functions.push("MSP");
             }
@@ -118,10 +163,10 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         });
     };
 
-    const findRule = (name) => functionRules.find((r) => r.name === name);
-    const isMspShareable = (rule) => rule?.sharableWith?.includes("msp") === true;
+    const findRule = (name: string) => functionRules.find((r) => r.name === name);
+    const isMspShareable = (rule: PortFunctionRule | undefined) => rule?.sharableWith?.includes("msp") === true;
 
-    const onTelemetryChange = (port) => {
+    const onTelemetryChange = (port: PortRow) => {
         if (port.telemetry) {
             const rule = findRule(port.telemetry);
             if (rule) {
@@ -139,7 +184,7 @@ export function usePortsConfiguration(ports, analyticsChanges, functionRules) {
         }
     };
 
-    const onPeripheralChange = (port) => {
+    const onPeripheralChange = (port: PortRow) => {
         const rule = findRule(port.peripheral);
 
         // VTX_MSP and similar MSP-based peripherals require MSP enabled
