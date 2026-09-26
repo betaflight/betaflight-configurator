@@ -45,6 +45,8 @@ export interface DirectionalCoverage {
     uniform: number;
 }
 
+const ORIGIN: Readonly<Point3> = Object.freeze({ x: 0, y: 0, z: 0 });
+
 /** Augmented [A | b] rows of a linear system. */
 type AugmentedMatrix = number[][];
 
@@ -252,7 +254,7 @@ function computeResidual(points: Point3[], a: number, b: number, c: number, radi
  *
  * @param center - point the directions are measured from (default: origin)
  */
-export function check3DCoverage(samples: Point3[], center: Point3 = { x: 0, y: 0, z: 0 }): CoverageCheck {
+export function check3DCoverage(samples: Point3[], center: Readonly<Point3> = ORIGIN): CoverageCheck {
     const MIN_SAMPLES = 20;
     const PLANAR_RATIO_THRESHOLD = 0.1;
 
