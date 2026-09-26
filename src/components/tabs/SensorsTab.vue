@@ -1779,7 +1779,7 @@ function buildFullCalCliLines() {
     if (!r) {
         return [];
     }
-    const lines = [];
+    const lines: string[] = [];
 
     if (r.preset === 9) {
         if (!isFirmwareCustomMagAlignCapable(fcStore.config?.flightControllerVersion)) {
@@ -1787,10 +1787,12 @@ function buildFullCalCliLines() {
                 `# WARNING: firmware ${fcStore.config?.flightControllerVersion || "?"} predates betaflight#14849 (${MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN}+): it would apply the INVERSE of these angles. Update the firmware before using CUSTOM alignment.`,
             );
         }
-        lines.push("set align_mag = CUSTOM");
-        lines.push(`set mag_align_roll = ${Math.round(r.euler_zyx_deg.roll * 10)}`);
-        lines.push(`set mag_align_pitch = ${Math.round(r.euler_zyx_deg.pitch * 10)}`);
-        lines.push(`set mag_align_yaw = ${Math.round(r.euler_zyx_deg.yaw * 10)}`);
+        lines.push(
+            "set align_mag = CUSTOM",
+            `set mag_align_roll = ${Math.round(r.euler_zyx_deg.roll * 10)}`,
+            `set mag_align_pitch = ${Math.round(r.euler_zyx_deg.pitch * 10)}`,
+            `set mag_align_yaw = ${Math.round(r.euler_zyx_deg.yaw * 10)}`,
+        );
     } else if (r.preset >= 1 && r.preset <= 8) {
         const names = ["", "CW0", "CW90", "CW180", "CW270", "CW0FLIP", "CW90FLIP", "CW180FLIP", "CW270FLIP"];
         lines.push(`set align_mag = ${names[r.preset]}`);
@@ -1911,7 +1913,7 @@ function exportFullCalModel() {
     a.download = `characterization_model_${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
 }
 
