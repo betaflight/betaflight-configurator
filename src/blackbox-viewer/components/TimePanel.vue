@@ -13,13 +13,13 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAppStore } from "../stores/app.js";
 
 const emit = defineEmits(["time-change"]);
 const appStore = useAppStore();
 
-function onTimeChange(e) {
-    emit("time-change", e.target.value);
+function onTimeChange(e: Event) {
+    emit("time-change", (e.target as HTMLInputElement).value);
 }
 </script>

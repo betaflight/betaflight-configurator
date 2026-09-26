@@ -329,9 +329,11 @@
     padding: 3px;
 }
 
-.analyser,
-.map-container,
-.log-seek-bar {
+/* Keep these under the viewer root — the class names collide with GPS/Flight Plan maps,
+   and this file is loaded app-wide via the tab registry. */
+.blackbox-viewer-root .analyser,
+.blackbox-viewer-root .map-container,
+.blackbox-viewer-root .log-seek-bar {
     position: absolute;
 }
 

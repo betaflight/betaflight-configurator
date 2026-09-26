@@ -97,16 +97,17 @@
     </UModal>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
 import { i18n } from "../../js/localization";
 import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
 
-/**
- * @typedef {object} ConnectionBookmark
- * @property {string} name - the label shown in the list and the connect menu
- * @property {string} url - the manual target, e.g. "tcp://192.168.4.1:5761"
- */
+interface ConnectionBookmark {
+    /** the label shown in the list and the connect menu */
+    name: string;
+    /** the manual target, e.g. "tcp://192.168.4.1:5761" */
+    url: string;
+}
 
 const FIRMWARE_VERSIONS = [
     { value: "1.48.0", label: "MSP: 1.48 | Firmware: 2026.06.*" },
@@ -180,17 +181,13 @@ export default defineComponent({
             bookmarksStore.save(portOverride.value, bookmarkName.value);
         }
 
-        /**
-         * @param {ConnectionBookmark} bookmark - the row the user picked
-         */
-        function applyBookmark(bookmark) {
+        /** @param bookmark the row the user picked */
+        function applyBookmark(bookmark: ConnectionBookmark) {
             portOverride.value = bookmark.url;
         }
 
-        /**
-         * @param {ConnectionBookmark} bookmark - the row the user dropped
-         */
-        function removeBookmark(bookmark) {
+        /** @param bookmark the row the user dropped */
+        function removeBookmark(bookmark: ConnectionBookmark) {
             bookmarksStore.remove(bookmark.url);
         }
 

@@ -28,8 +28,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
+import type { PropType } from "vue";
 
 const props = defineProps({
     labelKey: {
@@ -37,11 +38,11 @@ const props = defineProps({
         required: true,
     },
     modelValue: {
-        type: Array,
+        type: Array as PropType<string[]>,
         default: () => [],
     },
     options: {
-        type: Array,
+        type: Array as PropType<string[]>,
         default: () => [],
     },
 });

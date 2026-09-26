@@ -159,7 +159,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { useGraphStore } from "../stores/graph.js";
 import { useSettingsStore } from "../stores/settings.js";
@@ -168,7 +168,7 @@ import { SPECTRUM_TYPE } from "../graph_spectrum_plot";
 const graphStore = useGraphStore();
 const { userSettings } = useSettingsStore();
 
-const importInput = ref(null);
+const importInput = ref<HTMLInputElement | null>(null);
 
 const spectrumTypeOptions = [
     { label: "Frequency", value: "0" },
@@ -266,10 +266,10 @@ const zoomYStyle = computed(() => ({
     height: `${Math.min(layout.value.height - 60, 100)}px`,
 }));
 
-function psdInputStyle(topPx) {
+function psdInputStyle(topPx: number) {
     return { left: `${layout.value.width - 90}px`, top: `${topPx}px` };
 }
-function psdLabelStyle(topPx) {
+function psdLabelStyle(topPx: number) {
     return { left: `${layout.value.width - 150}px`, top: `${topPx}px` };
 }
 const psdLowLevelLabelStyle = computed(() => ({
@@ -320,9 +320,10 @@ const spectrumMenuItems = [
     ],
 ];
 
-function onImportChange(e) {
-    graphStore.spectrumImport?.(e.target.files);
-    e.target.value = "";
+function onImportChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    graphStore.spectrumImport?.(input.files);
+    input.value = "";
 }
 
 function toggleFullscreen() {

@@ -1476,8 +1476,9 @@ function fieldsModuleHeader(repoUrl, annotated) {
  * be labelled from one of them, so both names are kept and the unit dropped - it
  * belongs to one meaning only and would scale the other's samples wrongly - and
  * the disagreement is pushed onto `conflicts` for the caller to report. Identical
- * names are collapsed: the LIDAR-TF and UPT1 drivers both call debug[0] the
- * distance, in cm and in mm, and "Distance / Distance" names nothing.
+ * names are collapsed: two variants can disagree on the unit alone - as the
+ * LIDAR-TF and UPT1 drivers did, before betaflight/betaflight#15727 gave UPT1 a
+ * mode of its own - and "Distance / Distance" names nothing.
  */
 function renderModeFields(mode, fields, apiVersion, conflicts) {
     const lines = [`        ${propertyKey(mode)}: Object.freeze({`];
@@ -1599,15 +1600,25 @@ function renderFieldsModule({ repoUrl, versions }) {
         " * field cannot be labelled: both meanings are kept here so the app can say so",
         " * rather than pick one. Every entry is a firmware bug.",
         " */",
-        "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([",
     );
 
-    for (const conflict of conflicts) {
-        lines.push(...renderConflict(conflict));
+    // Prettier keeps an empty array on the declaration's line, and the file has
+    // to match what it would write.
+    if (conflicts.length === 0) {
+        lines.push(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([]);",
+        );
+    } else {
+        lines.push(
+            "export const FIRMWARE_DEBUG_FIELD_CONFLICTS: readonly FirmwareDebugFieldConflict[] = Object.freeze([",
+        );
+        for (const conflict of conflicts) {
+            lines.push(...renderConflict(conflict));
+        }
+        lines.push("]);");
     }
 
     lines.push(
-        "]);",
         "",
         "/**",
         " * Enumerator names of every firmware enum a `[enum:...]` annotation names,",
@@ -2001,5 +2012,7 @@ export {
     parseNamedEnums,
     propertyKey,
     pullRequestNumber,
+    renderFieldsModule,
+    renderModeFields,
     resolveFieldIndex,
 };

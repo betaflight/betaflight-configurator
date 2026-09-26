@@ -108,7 +108,7 @@
     </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, computed, watch, ref } from "vue";
 import { useTranslation } from "i18next-vue";
 import Dialog from "@/components/elements/Dialog.vue";
@@ -127,10 +127,10 @@ const {
 } = useFlightPlan();
 
 // Form element ref for validation
-const formElement = ref(null);
+const formElement = ref<HTMLFormElement | null>(null);
 
 // Timeout ID for delayed reset to prevent race conditions on quick reopen
-let closeResetTimeoutId = null;
+let closeResetTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
 // Form state
 const form = reactive({

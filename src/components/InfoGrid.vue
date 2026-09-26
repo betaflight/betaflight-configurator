@@ -6,7 +6,7 @@
                 <span v-else>{{ item.label }}</span>
             </dt>
 
-            <dd :class="item.class" :id="item.id ? item.id + '-value' : null">
+            <dd :class="item.class" :id="item.id ? item.id + '-value' : undefined">
                 <slot :name="item.slotName || item.id">
                     <span v-if="item.html" v-html="item.html"></span>
                     <span v-else-if="item.value !== undefined">{{ item.value }}</span>
@@ -16,12 +16,24 @@
     </dl>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
 import { i18n } from "../js/localization";
+
+/** A row: a label (translated via `i18n`, or literal) and a value (text, HTML, or a named slot). */
+export interface InfoGridItem {
+    id?: string;
+    i18n?: string;
+    label?: string;
+    class?: string;
+    slotName?: string;
+    html?: string;
+    value?: string | number;
+}
 
 defineProps({
     items: {
-        type: Array,
+        type: Array as PropType<InfoGridItem[]>,
         default: () => [],
     },
     gridClass: String,

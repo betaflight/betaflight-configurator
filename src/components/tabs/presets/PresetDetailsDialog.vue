@@ -57,7 +57,7 @@
                                                     emit('select-exclusive-option', {
                                                         selectedOptionId: child.id,
                                                         groupOptionIds: option.childs.map(
-                                                            (groupOption) => groupOption.id,
+                                                            (groupOption: { id: string }) => groupOption.id,
                                                         ),
                                                     })
                                                 "
@@ -69,7 +69,7 @@
                                                 @change="
                                                     emit('toggle-option', {
                                                         optionId: child.id,
-                                                        checked: $event.target.checked,
+                                                        checked: ($event.target as HTMLInputElement).checked,
                                                     })
                                                 "
                                             />
@@ -84,7 +84,7 @@
                                         @change="
                                             emit('toggle-option', {
                                                 optionId: option.id,
-                                                checked: $event.target.checked,
+                                                checked: ($event.target as HTMLInputElement).checked,
                                             })
                                         "
                                     />
@@ -156,7 +156,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
@@ -228,10 +228,10 @@ const emit = defineEmits([
     "options-expanded-change",
 ]);
 
-const optionsDetailsRef = ref(null);
+const optionsDetailsRef = ref<HTMLDetailsElement | null>(null);
 
-function handleClickOutside(event) {
-    if (optionsDetailsRef.value?.open && !optionsDetailsRef.value.contains(event.target)) {
+function handleClickOutside(event: MouseEvent) {
+    if (optionsDetailsRef.value?.open && !optionsDetailsRef.value.contains(event.target as Node)) {
         optionsDetailsRef.value.open = false;
         emit("options-expanded-change", false);
     }
@@ -252,7 +252,7 @@ const totalOptionsCount = computed(() => {
         return 0;
     }
 
-    return props.preset.options.reduce((count, option) => {
+    return props.preset.options.reduce((count: number, option: { childs?: unknown[] }) => {
         if (Array.isArray(option.childs)) {
             return count + option.childs.length;
         }
@@ -284,7 +284,8 @@ const descriptionHtml = computed(() => {
         return "";
     }
 
-    const renderedHtml = DOMPurify.sanitize(marked.parse(descriptionText.value));
+    // marked.parse() is typed string | Promise<string> for its async mode, which is not used.
+    const renderedHtml = DOMPurify.sanitize(marked.parse(descriptionText.value) as string);
     const wrapper = document.createElement("div");
     wrapper.innerHTML = renderedHtml;
     wrapper.querySelectorAll("a").forEach((link) => {
@@ -298,13 +299,13 @@ function requestClose() {
     emit("close");
 }
 
-function onOpenChange(value) {
+function onOpenChange(value: boolean) {
     if (!value && props.open) {
         requestClose();
     }
 }
 
-function sanitizeExternalHttpUrl(rawUrl) {
+function sanitizeExternalHttpUrl(rawUrl: string) {
     if (!rawUrl) {
         return "";
     }
@@ -317,7 +318,7 @@ function sanitizeExternalHttpUrl(rawUrl) {
     }
 }
 
-function decodeHtmlEntities(text) {
+function decodeHtmlEntities(text: string) {
     if (!text) {
         return "";
     }
@@ -333,8 +334,8 @@ function handleApply() {
     }
 }
 
-function handleOptionsToggle(event) {
-    emit("options-expanded-change", event.target.open);
+function handleOptionsToggle(event: Event) {
+    emit("options-expanded-change", (event.target as HTMLDetailsElement).open);
 }
 </script>
 

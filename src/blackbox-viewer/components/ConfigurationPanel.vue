@@ -31,22 +31,32 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import { useGraphStore } from "../stores/graph.js";
 
 const graphStore = useGraphStore();
 const filter = ref("");
 
-function escapeHtml(str) {
+function escapeHtml(str: string) {
     return str.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
-function highlightHtml(line) {
-    return `${escapeHtml(line.before)}<b class="text-highlighted">${escapeHtml(line.match)}</b>${escapeHtml(line.after)}`;
+interface ConfigRow {
+    /** set for a plain line */
+    text?: string;
+    empty?: boolean;
+    /** set for a filter match, split around the highlighted part */
+    before?: string;
+    match?: string;
+    after?: string;
 }
 
-const filteredLines = computed(() => {
+function highlightHtml(line: ConfigRow) {
+    return `${escapeHtml(line.before ?? "")}<b class="text-highlighted">${escapeHtml(line.match ?? "")}</b>${escapeHtml(line.after ?? "")}`;
+}
+
+const filteredLines = computed<ConfigRow[]>(() => {
     const lines = graphStore.configLines;
     if (!lines.length) {
         return [];
@@ -66,7 +76,7 @@ const filteredLines = computed(() => {
         return [];
     }
 
-    const result = [];
+    const result: ConfigRow[] = [];
     for (const text of lines) {
         const m = text.match(regex);
         if (m) {

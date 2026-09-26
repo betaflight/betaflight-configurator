@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useSaving, withSaveFailureMessage } from "../../src/composables/useSaving";
 import { MspCancelledError } from "../../src/js/msp/mspErrors";
-import { gui_log } from "../../src/js/gui_log.js";
+import { gui_log } from "../../src/js/gui_log";
 
-vi.mock("../../src/js/gui_log.js", () => ({ gui_log: vi.fn() }));
+vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization.js", () => ({
     i18n: { getMessage: vi.fn((key) => `t:${key}`) },
 }));

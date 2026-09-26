@@ -2,14 +2,14 @@
     <div v-if="dialogStore.activeDialog">
         <component
             ref="currentDialogRef"
-            :is="dialogComponents[dialogStore.activeDialog.type]"
+            :is="dialogComponents[dialogStore.activeDialog.type as keyof typeof dialogComponents]"
             v-bind="dialogStore.activeDialog.props"
             v-on="dialogStore.activeDialog.listeners"
         />
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDialogStore } from "@/stores/dialog";
 import { ref, watch, nextTick } from "vue";
 import YesNoDialog from "./YesNoDialog.vue";
@@ -26,7 +26,12 @@ import InteractiveDialog from "./InteractiveDialog.vue";
 import BoardAlignmentWizardDialog from "./BoardAlignmentWizardDialog.vue";
 
 const dialogStore = useDialogStore();
-const currentDialogRef = ref(null);
+interface DialogExposed {
+    show?: () => void;
+    dialog?: HTMLDialogElement;
+}
+
+const currentDialogRef = ref<DialogExposed | null>(null);
 
 const dialogComponents = {
     YesNoDialog,

@@ -27,12 +27,19 @@ if (!/^\d+\.\d+\.\d+$/.test(version)) {
     process.exit(1);
 }
 
-// tauri.conf.json
+// tauri.conf.json — replace the version string in place rather than re-serialize,
+// so the file keeps its Prettier layout (JSON.stringify would expand every array
+// onto one line per item). Anchored to the top-level key at one indent level.
 const confPath = resolve(projectRoot, "src-tauri/tauri.conf.json");
-const conf = JSON.parse(readFileSync(confPath, "utf8"));
+const confText = readFileSync(confPath, "utf8");
+const conf = JSON.parse(confText);
 if (conf.version !== version) {
-    conf.version = version;
-    writeFileSync(confPath, `${JSON.stringify(conf, null, 4)}\n`);
+    const confVersionRe = /^( {4}"version":\s*")([^"]*)(")/m;
+    if (!confVersionRe.test(confText)) {
+        console.error(`sync-tauri-version: could not locate top-level "version" in ${confPath}`);
+        process.exit(1);
+    }
+    writeFileSync(confPath, confText.replace(confVersionRe, `$1${version}$3`));
     console.log(`sync-tauri-version: tauri.conf.json → ${version}`);
 }
 

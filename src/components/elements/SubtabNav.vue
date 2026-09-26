@@ -11,14 +11,16 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
+import type { PropType } from "vue";
+import type { TabsItem } from "@nuxt/ui";
 
 export default defineComponent({
     name: "SubtabNav",
     props: {
         items: {
-            type: Array,
+            type: Array as PropType<TabsItem[]>,
             required: true,
         },
         modelValue: {
