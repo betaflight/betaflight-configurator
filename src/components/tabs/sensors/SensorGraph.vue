@@ -31,7 +31,7 @@
                     <div v-if="scaleOptions" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
-                            :model-value="scale"
+                            :model-value="scale ?? undefined"
                             :items="scaleItems"
                             @update:model-value="$emit('update:scale', Number($event))"
                             class="min-w-24"
@@ -88,7 +88,7 @@
                     <div v-if="scaleOptions" class="flex items-center gap-2">
                         <span class="flex-1" v-html="$t('sensorsScale')"></span>
                         <USelect
-                            :model-value="scale"
+                            :model-value="scale ?? undefined"
                             :items="scaleItems"
                             @update:model-value="$emit('update:scale', Number($event))"
                             class="min-w-24"
@@ -122,10 +122,10 @@ const props = defineProps({
     svgId: { type: String, required: true },
     visible: { type: Boolean, default: true },
     title: { type: String, required: true },
-    hint: { type: String, default: null },
+    hint: { type: String as PropType<string | null>, default: null },
     showRefreshRate: { type: Boolean, default: true },
     rate: { type: Number, default: 50 },
-    scale: { type: Number, default: null },
+    scale: { type: Number as PropType<number | null>, default: null },
     scaleOptions: { type: Array as PropType<number[]>, default: null },
     displayValues: { type: Array, required: true },
     isDebug: { type: Boolean, default: false },

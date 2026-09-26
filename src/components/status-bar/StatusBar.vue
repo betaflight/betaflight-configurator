@@ -136,8 +136,8 @@
     </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import PortUtilization from "./PortUtilization.vue";
 import { useConnectionStore } from "../../stores/connection";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
@@ -153,41 +153,8 @@ import { vueTabState } from "../../js/vue_tab_mounter.js";
 import { switchTab } from "../../js/tab_switch.js";
 import FC from "../../js/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
+import { shortenTargetDisplay, stripVersionDisplay } from "./statusBarText";
 import { API_VERSION_1_46 } from "../../js/data_storage";
-
-/**
- * Shorter target for the status bar when not in expert mode, e.g.
- * "MFGID/TARGETNAME(MCUNAME)" -> "TARGETNAME"
- */
-function shortenTargetDisplay(name) {
-    if (!name || typeof name !== "string") {
-        return "";
-    }
-    let s = name.trim();
-    const i = s.indexOf("/");
-    if (i >= 0) {
-        s = s.slice(i + 1);
-    }
-    s = s.replace(/\([^)]*\)\s*$/, "").trim();
-    return s;
-}
-
-/**
- * Drop trailing (git/revision) segments from a display version string, e.g.
- * "25.1.0 (a1b2c3d)" or "4.5.0 (a1b2c3d)" for non–expert status text.
- */
-function stripVersionDisplay(version) {
-    if (!version || typeof version !== "string") {
-        return "";
-    }
-    let s = version.trim();
-    let prev;
-    do {
-        prev = s;
-        s = s.replace(/\s+\([^)]*\)\s*$/, "").trim();
-    } while (s !== prev);
-    return s;
-}
 
 export default defineComponent({
     components: {
@@ -208,8 +175,7 @@ export default defineComponent({
             default: 0,
         },
         connectionTimestamp: {
-            /** @type {import("vue").PropType<number | null>} */
-            type: Number,
+            type: Number as PropType<number | null>,
             default: null,
         },
         packetError: {
@@ -265,12 +231,12 @@ export default defineComponent({
 
         const currentTime = ref(Date.now());
         const expertMode = ref(isExpertModeEnabled());
-        let interval = null;
+        let interval: ReturnType<typeof setInterval> | null = null;
         const connectionStore = useConnectionStore();
         const isVirtualMode = computed(() => connectionStore.virtualMode);
         const isConnectedToVirtual = computed(() => connectionStore.connectedTo === "virtual");
 
-        const onExpertModeChange = (enabled) => {
+        const onExpertModeChange = (enabled: boolean) => {
             expertMode.value = enabled;
         };
 

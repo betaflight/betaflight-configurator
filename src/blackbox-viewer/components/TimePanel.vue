@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "../stores/app.js";
+import { useAppStore } from "../stores/app";
 
 const emit = defineEmits(["time-change"]);
 const appStore = useAppStore();

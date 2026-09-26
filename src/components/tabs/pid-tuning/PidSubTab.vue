@@ -1437,7 +1437,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
@@ -1623,12 +1623,12 @@ const pidLevelTransition = computed({
 });
 
 // Helper to check if a PID name exists in firmware PID_NAMES
-function hasPidName(name) {
+function hasPidName(name: string) {
     return FC.PID_NAMES && FC.PID_NAMES.includes(name);
 }
 
 // Helper to create a computed property for an optional PID value by name and component index
-function createPidComputed(pidName, component) {
+function createPidComputed(pidName: string, component: number) {
     return computed({
         get: () => {
             const idx = FC.PID_NAMES ? FC.PID_NAMES.indexOf(pidName) : -1;
@@ -1752,7 +1752,7 @@ const tpaBreakpoint = computed({
 // Feedforward transition display value (divided by 100 for display)
 const feedforwardTransitionValue = computed({
     get: () => FC.ADVANCED_TUNING.feedforwardTransition / 100,
-    set: (val) => (FC.ADVANCED_TUNING.feedforwardTransition = Math.round(Number.parseFloat(val) * 100)),
+    set: (val) => (FC.ADVANCED_TUNING.feedforwardTransition = Math.round(Number.parseFloat(String(val)) * 100)),
 });
 
 // PID Controller Settings - Checkbox computed refs
@@ -1778,7 +1778,7 @@ const antiGravityGainValue = computed({
     get: () =>
         isPreApi145.value ? FC.ADVANCED_TUNING.itermAcceleratorGain / 1000 : FC.ADVANCED_TUNING.antiGravityGain / 10,
     set: (val) => {
-        const parsed = Number.parseFloat(val);
+        const parsed = Number.parseFloat(String(val));
         if (isPreApi145.value) {
             FC.ADVANCED_TUNING.itermAcceleratorGain = Math.round(parsed * 1000);
         } else {
@@ -1982,7 +1982,7 @@ async function initializeSliders() {
 }
 
 // Track timeout to prevent race conditions
-let userInteractionTimeout = null;
+let userInteractionTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Collect current slider ref values into an object for calculateNewPids()
 function collectSliderValues() {
@@ -2000,7 +2000,7 @@ function collectSliderValues() {
 }
 
 // Slider change handler — accepts optional slider key for non-expert clamping
-async function onSliderChange(activeSliderKey) {
+async function onSliderChange(activeSliderKey?: "sliderDGain" | "sliderPIGain" | "sliderFeedforwardGain") {
     isUserInteracting.value = true;
 
     // Clamp the slider the user is actually dragging to the non-expert range.

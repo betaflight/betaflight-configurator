@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { useLogStore } from "../stores/log.js";
-import { useGraphStore } from "../stores/graph.js";
+import { useLogStore } from "../stores/log";
+import { useGraphStore } from "../stores/graph";
 
 const logStore = useLogStore();
 const graphStore = useGraphStore();

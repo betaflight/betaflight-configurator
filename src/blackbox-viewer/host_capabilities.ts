@@ -34,4 +34,6 @@ export interface DataflashHost {
     available: Ref<boolean>;
     pulling: Ref<boolean>;
     progress: Ref<number>;
+    /** Resolves with the downloaded log bytes. */
+    pull: () => Promise<Uint8Array>;
 }

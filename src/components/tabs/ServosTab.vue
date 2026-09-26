@@ -150,7 +150,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -167,13 +167,17 @@ import { useTimeout } from "@/composables/useTimeout";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { clamp } from "@/js/utils/common";
+import type { ServoConfig } from "@/stores/fc.types";
+
+/** The editable part of a servo's FC config. */
+type ServoEdit = Omit<ServoConfig, "reversedInputSources">;
 
 const { t } = useTranslation();
 
 const isSupported = ref(false);
 const liveMode = ref(false);
-const servoConfigs = reactive([]);
-const servoData = reactive([]);
+const servoConfigs = reactive<ServoEdit[]>([]);
+const servoData = reactive<number[]>([]);
 const originalConfigs = ref("");
 
 const { addInterval } = useInterval();
@@ -187,7 +191,7 @@ const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify
 
 // Rate options: 100% down to -100%, as {value, label} for USelect
 const rateOptions = computed(() => {
-    const opts = [];
+    const opts: { value: number; label: string }[] = [];
     for (let i = 100; i > -101; i--) {
         opts.push({ value: i, label: `${t("servosRate")} ${i}%` });
     }
@@ -195,20 +199,20 @@ const rateOptions = computed(() => {
 });
 
 // Bar height as percentage (0-100) for UProgress
-function getBarHeight(value) {
+function getBarHeight(value: number) {
     const clamped = clamp(value - 1000, 0, 1000);
     return (clamped / 1000) * 100;
 }
 
 // Bar opacity string for CSS variable
-function getBarOpacity(value) {
+function getBarOpacity(value: number) {
     const alpha = clamp((value - 1000) / 1000, 0, 1);
     return alpha.toFixed(2);
 }
 
 // Channel forward checkbox — only one per servo (radio-like behavior)
-function setChannelForward(servoIndex, channelIndex, event) {
-    if (event.target.checked) {
+function setChannelForward(servoIndex: number, channelIndex: number, event: Event) {
+    if ((event.target as HTMLInputElement).checked) {
         servoConfigs[servoIndex].indexOfChannelToForward = channelIndex;
     } else {
         servoConfigs[servoIndex].indexOfChannelToForward = 255;

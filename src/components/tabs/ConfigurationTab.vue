@@ -115,7 +115,7 @@
                             >
                                 <USwitch
                                     :model-value="isFeatureEnabled(feature)"
-                                    @update:model-value="(checked) => toggleFeature(feature, checked)"
+                                    @update:model-value="(checked: boolean) => toggleFeature(feature, checked)"
                                 />
                                 <template #label>
                                     <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
@@ -162,7 +162,7 @@
                             <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
                                 <USwitch
                                     :model-value="isDshotConditionEnabled(cond)"
-                                    @update:model-value="(checked) => toggleDshotCondition(cond, checked)"
+                                    @update:model-value="(checked: boolean) => toggleDshotCondition(cond, checked)"
                                 />
                                 <template #label>
                                     <span class="w-20 shrink-0 font-bold text-xs leading-snug">{{ cond.name }}</span>
@@ -198,7 +198,7 @@
                             >
                                 <USwitch
                                     :model-value="isBeeperEnabled(beeper)"
-                                    @update:model-value="(checked) => toggleBeeper(beeper, checked)"
+                                    @update:model-value="(checked: boolean) => toggleBeeper(beeper, checked)"
                                 />
                                 <template #label>
                                     <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ beeper.name }}</span>
@@ -225,7 +225,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, reactive, onMounted, computed, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
@@ -246,6 +246,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import type { Beeper } from "../../js/Beepers";
 
 export default defineComponent({
     name: "ConfigurationTab",
@@ -325,11 +326,11 @@ export default defineComponent({
         });
 
         // Methods for toggling bits
-        const isFeatureEnabled = (feature) => {
+        const isFeatureEnabled = (feature: { name: string }) => {
             return fcStore.features?.features?.isEnabled?.(feature.name) ?? false;
         };
 
-        const toggleFeature = (feature, checked) => {
+        const toggleFeature = (feature: { name: string }, checked: boolean) => {
             const featuresHelper = fcStore.features?.features;
             if (!featuresHelper) {
                 return;
@@ -338,18 +339,18 @@ export default defineComponent({
             updateTabList(featuresHelper);
         };
 
-        const isBeeperEnabled = (beeper) => {
+        const isBeeperEnabled = (beeper: Beeper) => {
             return fcStore.beepers?.beepers?.isEnabled?.(beeper.name) ?? false;
         };
 
-        const toggleBeeper = (beeper, checked) => {
+        const toggleBeeper = (beeper: Beeper, checked: boolean) => {
             fcStore.beepers?.beepers?.setEnabled?.(beeper.name, checked);
         };
 
         const enableAllBeepers = () => {
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
-                    fcStore.beepers.beepers.setEnabled(beeper.name, true);
+                    fcStore.beepers?.beepers?.setEnabled(beeper.name, true);
                 }
             });
         };
@@ -357,28 +358,28 @@ export default defineComponent({
         const disableAllBeepers = () => {
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
-                    fcStore.beepers.beepers.setEnabled(beeper.name, false);
+                    fcStore.beepers?.beepers?.setEnabled(beeper.name, false);
                 }
             });
         };
 
-        const isDshotConditionEnabled = (cond) => {
+        const isDshotConditionEnabled = (cond: Beeper) => {
             return fcStore.beepers?.dshotBeaconConditions?.isEnabled?.(cond.name) ?? false;
         };
 
-        const toggleDshotCondition = (cond, checked) => {
+        const toggleDshotCondition = (cond: Beeper, checked: boolean) => {
             fcStore.beepers?.dshotBeaconConditions?.setEnabled?.(cond.name, checked);
         };
 
         const enableAllDshot = () => {
             dshotBeaconConditionsList.value.forEach((cond) => {
-                fcStore.beepers.dshotBeaconConditions.setEnabled(cond.name, true);
+                fcStore.beepers?.dshotBeaconConditions?.setEnabled(cond.name, true);
             });
         };
 
         const disableAllDshot = () => {
             dshotBeaconConditionsList.value.forEach((cond) => {
-                fcStore.beepers.dshotBeaconConditions.setEnabled(cond.name, false);
+                fcStore.beepers?.dshotBeaconConditions?.setEnabled(cond.name, false);
             });
         };
 
@@ -386,7 +387,7 @@ export default defineComponent({
         const accHardwareEnabled = computed(() => fcStore.sensorConfig.acc_hardware !== 1);
 
         const gyroFrequencyDisplay = ref("");
-        const pidDenomOptions = ref([]);
+        const pidDenomOptions = ref<{ value: number; label: string }[]>([]);
 
         // Features, beepers and DShot conditions are edited on the shared FC helpers rather than
         // local copies, so their masks belong in the snapshot; both readers are side-effect free.
@@ -495,7 +496,7 @@ export default defineComponent({
             markClean();
         };
 
-        const updateGyroDenom = (gyroFrequency) => {
+        const updateGyroDenom = (gyroFrequency: number) => {
             // Mirror legacy updateGyroDenomReadOnly
             if (gyroFrequency === 0) {
                 gyroFrequencyDisplay.value = i18n.getMessage("configurationSpeedGyroNoGyro");
@@ -510,7 +511,7 @@ export default defineComponent({
             // Mirror legacy logic
             const pidBaseFreq = fcStore.config.sampleRateHz / 1000;
             const MAX_DENOM = 8;
-            const options = [];
+            const options: { value: number; label: string }[] = [];
 
             for (let denom = 1; denom <= MAX_DENOM; denom++) {
                 let text;

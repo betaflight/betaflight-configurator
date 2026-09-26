@@ -253,12 +253,12 @@ export function createInitialState(): FcState {
             srcProfile: 0,
         },
         FEATURE_CONFIG: {
-            features: 0,
+            features: null,
         },
         BEEPER_CONFIG: {
-            beepers: 0,
+            beepers: null,
             dshotBeaconTone: 0,
-            dshotBeaconConditions: 0,
+            dshotBeaconConditions: null,
         },
         MIXER_CONFIG: {
             mixer: 0,
@@ -725,7 +725,9 @@ const SERIAL_RX_TYPES_BY_BUILD_OPTION: [buildOption: string, rxTypes: string[]][
 ];
 
 export interface ArmingFlag {
+    id: string;
     name: string;
+    tooltip: string;
     visible: boolean;
 }
 

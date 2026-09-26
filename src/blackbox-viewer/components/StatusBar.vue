@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "../stores/app.js";
-import { useWorkspaceStore } from "../stores/workspace.js";
+import { useAppStore } from "../stores/app";
+import { useWorkspaceStore } from "../stores/workspace";
 
 defineEmits(["goto-bookmark"]);
 

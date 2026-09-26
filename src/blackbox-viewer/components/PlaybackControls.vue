@@ -65,8 +65,8 @@
 </template>
 
 <script setup lang="ts">
-import { usePlaybackStore } from "../stores/playback.js";
-import { useLogStore } from "../stores/log.js";
+import { usePlaybackStore } from "../stores/playback";
+import { useLogStore } from "../stores/log";
 
 defineEmits([
     "jump-start",

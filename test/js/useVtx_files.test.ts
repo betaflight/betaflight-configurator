@@ -12,7 +12,10 @@ vi.mock("../../src/js/localization", () => ({ __esModule: true, i18n: { getMessa
 vi.mock("../../src/js/gui_log", () => ({ __esModule: true, gui_log: vi.fn() }));
 vi.mock("../../src/js/Analytics", () => ({
     __esModule: true,
-    tracking: { sendSaveAndChangeEvents: vi.fn(), EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "fc" } },
+    getTracking: (() => {
+        const tracking = { sendSaveAndChangeEvents: vi.fn(), EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "fc" } };
+        return () => tracking;
+    })(),
 }));
 vi.mock("../../src/composables/useReboot", () => ({
     __esModule: true,

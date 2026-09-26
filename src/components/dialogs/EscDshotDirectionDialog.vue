@@ -205,25 +205,32 @@
     </dialog>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { getMixerImageSrc } from "@/js/utils/common";
-import EscDshotDirectionMotorDriver from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
+import EscDshotDirectionMotorDriver, {
+    type EscDshotMotorConfig,
+} from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
 
+/** Built by MotorsTab's openEscDshotDirectionDialog. */
+interface EscDshotDirectionDialogConfig extends EscDshotMotorConfig {
+    escProtocolIsDshot: boolean;
+}
+
 const props = defineProps({
     motorConfig: {
-        type: Object,
+        type: Object as PropType<EscDshotDirectionDialogConfig>,
         required: true,
     },
 });
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits<{ close: [] }>();
 
 const fcStore = useFlightControllerStore();
-const dialogRef = ref(null);
+const dialogRef = ref<HTMLDialogElement | null>(null);
 
 // Configuration
 const escProtocolIsDshot = computed(() => props.motorConfig.escProtocolIsDshot);
@@ -239,18 +246,18 @@ const selectedMotor = ref(-1);
 const motorIsSpinning = ref(false);
 const showSecondAction = ref(false);
 const currentSpinningButton = ref(-1);
-const spinningDirection = ref(null);
-const wizardMotorDirections = ref([]);
+const spinningDirection = ref<"normal" | "reverse" | null>(null);
+const wizardMotorDirections = ref<boolean[]>([]);
 
 // Translation helper
-const i18nMessage = (key) => {
+const i18nMessage = (key: string) => {
     return i18n.getMessage(key);
 };
 
 // Motor driver
-let motorDriver = null;
-let directionButtonTimeout = null;
-let wizardButtonTimeout = null;
+let motorDriver: EscDshotDirectionMotorDriver | null = null;
+let directionButtonTimeout: ReturnType<typeof setTimeout> | null = null;
+let wizardButtonTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Constants
 const BUTTON_TIMEOUT_MS = 400;
@@ -261,7 +268,7 @@ const ALL_MOTORS = DshotCommand.ALL_MOTORS;
 // Mixer preview
 const mixerPreviewSrc = computed(() => {
     const mixer = fcStore.mixerConfig?.mixer || 1;
-    const reverseMotorDir = fcStore.mixerConfig?.reverseMotorDir || false;
+    const reverseMotorDir = Boolean(fcStore.mixerConfig?.reverseMotorDir);
     return getMixerImageSrc(mixer, reverseMotorDir);
 });
 
@@ -302,24 +309,24 @@ const normalButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandNor
 const reverseButtonText = ref(i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
 
 // Motor button handlers
-const onMotorButtonDown = (index) => {
+const onMotorButtonDown = (index: number) => {
     showSecondAction.value = true;
     motorIsSpinning.value = true;
     currentSpinningButton.value = index;
 
     const motorIndex = index === motorButtons.value.length - 1 ? ALL_MOTORS : index;
     selectedMotor.value = motorIndex;
-    motorDriver.spinMotor(motorIndex);
+    motorDriver?.spinMotor(motorIndex);
 
     clearDirectionButtonTimeout();
     activateDirectionButtons(BUTTON_TIMEOUT_MS);
 };
 
-const onMotorButtonUp = (index) => {
+const onMotorButtonUp = (index: number) => {
     if (motorIsSpinning.value && currentSpinningButton.value === index) {
         motorIsSpinning.value = false;
         currentSpinningButton.value = -1;
-        motorDriver.stopAllMotors();
+        motorDriver?.stopAllMotors();
 
         deactivateDirectionButtons();
         activateDirectionButtons(BUTTON_TIMEOUT_MS);
@@ -327,7 +334,7 @@ const onMotorButtonUp = (index) => {
 };
 
 // Direction button handlers
-const onDirectionButtonDown = (direction) => {
+const onDirectionButtonDown = (direction: "normal" | "reverse") => {
     if (selectedMotor.value === -1) {
         return;
     }
@@ -338,8 +345,8 @@ const onDirectionButtonDown = (direction) => {
             : DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2;
 
     spinningDirection.value = direction;
-    motorDriver.setEscSpinDirection(selectedMotor.value, dshotCommand);
-    motorDriver.spinMotor(selectedMotor.value);
+    motorDriver?.setEscSpinDirection(selectedMotor.value, dshotCommand);
+    motorDriver?.spinMotor(selectedMotor.value);
 
     if (direction === "normal") {
         normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
@@ -350,7 +357,7 @@ const onDirectionButtonDown = (direction) => {
 
 const onDirectionButtonUp = () => {
     if (spinningDirection.value) {
-        motorDriver.stopAllMotors();
+        motorDriver?.stopAllMotors();
         spinningDirection.value = null;
 
         normalButtonText.value = i18n.getMessage("escDshotDirectionDialog-CommandNormal");
@@ -361,7 +368,7 @@ const onDirectionButtonUp = () => {
     }
 };
 
-const activateDirectionButtons = (timeoutMs) => {
+const activateDirectionButtons = (timeoutMs: number) => {
     // Direction buttons are always active in Vue, just add a small delay to prevent accidental double-clicks
     directionButtonTimeout = setTimeout(() => {
         // Ready to accept input
@@ -386,19 +393,19 @@ const onSpinWizardClick = () => {
     wizardSpinning.value = true;
     wizardMotorDirections.value = new Array(numberOfMotors.value).fill(false);
 
-    motorDriver.setEscSpinDirection(ALL_MOTORS, DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1);
-    motorDriver.spinAllMotors();
+    motorDriver?.setEscSpinDirection(ALL_MOTORS, DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1);
+    motorDriver?.spinAllMotors();
 
     activateWizardButtons(0);
 };
 
 const onStopWizardClick = () => {
     wizardSpinning.value = false;
-    motorDriver.stopAllMotorsNow();
+    motorDriver?.stopAllMotorsNow();
     deactivateWizardButtons();
 };
 
-const onWizardMotorClick = (index) => {
+const onWizardMotorClick = (index: number) => {
     deactivateWizardButtons();
 
     const isReversed = wizardMotorDirections.value[index];
@@ -406,13 +413,13 @@ const onWizardMotorClick = (index) => {
         ? DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1
         : DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2;
 
-    motorDriver.setEscSpinDirection(index, direction);
+    motorDriver?.setEscSpinDirection(index, direction);
     wizardMotorDirections.value[index] = !isReversed;
 
     activateWizardButtons(BUTTON_TIMEOUT_MS);
 };
 
-const activateWizardButtons = (timeoutMs) => {
+const activateWizardButtons = (timeoutMs: number) => {
     wizardButtonTimeout = setTimeout(() => {
         // Ready to accept input
     }, timeoutMs);
@@ -429,14 +436,14 @@ const deactivateWizardButtons = () => {
 const startNormalMode = () => {
     showMainContent.value = true;
     wizardMode.value = false;
-    motorDriver.activate();
+    motorDriver?.activate();
 };
 
 const startWizardMode = () => {
     showMainContent.value = true;
     wizardMode.value = true;
     wizardSpinning.value = false;
-    motorDriver.activate();
+    motorDriver?.activate();
 };
 
 // Dialog methods
@@ -477,14 +484,14 @@ const cleanup = () => {
 };
 
 // Handle ESC key
-const handleKeyDown = (e) => {
+const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape" && dialogRef.value?.open) {
         close();
     }
 };
 
 // Handle dialog cancel (backdrop click, ESC)
-const handleCancel = (_e) => {
+const handleCancel = (_e: Event) => {
     close();
 };
 

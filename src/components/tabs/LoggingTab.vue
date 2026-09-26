@@ -66,7 +66,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -84,7 +84,7 @@ import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
 import { useInterval } from "@/composables/useInterval";
 
-const PROPERTY_ORDER = [
+const PROPERTY_ORDER: PropertyCode[] = [
     "MSP_RAW_IMU",
     "MSP_ATTITUDE",
     "MSP_ALTITUDE",
@@ -104,16 +104,19 @@ const connectionStore = useConnectionStore();
 const dialog = useDialog();
 const { addInterval, removeInterval } = useInterval();
 
-const selectedProperties = ref([]);
+type PickedFile = Awaited<ReturnType<typeof FileSystem.pickSaveFile>>;
+type OpenedFile = Awaited<ReturnType<typeof FileSystem.openFile>>;
+
+const selectedProperties = ref<PropertyCode[]>([]);
 const samplingInterval = ref(100);
 const samplesSaved = ref(0);
-const fileEntry = ref(null);
-const fileWriter = ref(null);
+const fileEntry = ref<PickedFile>(null);
+const fileWriter = ref<OpenedFile | null>(null);
 const isLogging = ref(false);
 const isBusy = ref(false);
 
-let logBuffer = [];
-let requestedProperties = [];
+let logBuffer: string[] = [];
+let requestedProperties: PropertyCode[] = [];
 let hasPreviousRequest = false;
 let isDestroyed = false;
 let pendingWrite = Promise.resolve();
@@ -166,8 +169,8 @@ const propertyDefinitions = {
             return [
                 gps.fix ?? 0,
                 gps.numSat ?? 0,
-                (gps.lat ?? 0) / 10000000,
-                (gps.lon ?? 0) / 10000000,
+                (gps.latitude ?? 0) / 10000000,
+                (gps.longitude ?? 0) / 10000000,
                 gps.alt ?? 0,
                 gps.speed ?? 0,
                 gps.ground_course ?? 0,
@@ -228,6 +231,8 @@ const propertyDefinitions = {
     },
 };
 
+type PropertyCode = keyof typeof propertyDefinitions;
+
 const propertyOptions = PROPERTY_ORDER.map((code) => {
     const definition = propertyDefinitions[code];
     return {
@@ -245,7 +250,7 @@ const startStopLabel = computed(() =>
 );
 const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
 
-function toggleProperty(code, enabled) {
+function toggleProperty(code: PropertyCode, enabled: boolean) {
     if (isLogging.value || isBusy.value) {
         return;
     }
@@ -295,7 +300,7 @@ function buildHeader() {
 }
 
 function crunchData() {
-    const row = [millitime()];
+    const row: (number | string)[] = [millitime()];
 
     requestedProperties.forEach((property) => {
         const definition = propertyDefinitions[property];
@@ -308,7 +313,7 @@ function crunchData() {
     logBuffer.push(row.join(","));
 }
 
-function appendToFile(data) {
+function appendToFile(data: string) {
     if (!fileWriter.value) {
         return Promise.resolve();
     }

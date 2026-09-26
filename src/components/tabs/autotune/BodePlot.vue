@@ -29,21 +29,46 @@
     </UiBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import UiBox from "../../elements/UiBox.vue";
 import * as d3 from "d3";
+import type { AxisName } from "@/composables/useAutotune";
+
+interface FrequencyPoint {
+    freq: number;
+    magnitude: number;
+    coherence: number;
+}
+
+interface BodePoint extends FrequencyPoint {
+    phase: number;
+}
+
+interface StepPoint {
+    time: number;
+    value: number;
+}
+
+interface Trace<P> {
+    key: AxisName;
+    color: string;
+    points: P[];
+}
+
+type PlotGroup = d3.Selection<SVGGElement, unknown, null, undefined>;
+type FrequencyScale = d3.ScaleLogarithmic<number, number>;
 
 const store = useAutotuneStore();
-const plotContainer = ref(null);
-const magnitudeSvg = ref(null);
-const phaseSvg = ref(null);
-const sensitivitySvg = ref(null);
-const stepSvg = ref(null);
+const plotContainer = ref<HTMLElement | null>(null);
+const magnitudeSvg = ref<SVGSVGElement | null>(null);
+const phaseSvg = ref<SVGSVGElement | null>(null);
+const sensitivitySvg = ref<SVGSVGElement | null>(null);
+const stepSvg = ref<SVGSVGElement | null>(null);
 
-const AXIS_COLORS = { roll: "#e24761", pitch: "#49c747", yaw: "#477ac7" };
-const AXES = [
+const AXIS_COLORS: Record<AxisName, string> = { roll: "#e24761", pitch: "#49c747", yaw: "#477ac7" };
+const AXES: { key: AxisName; labelKey: string; colorClass: string }[] = [
     { key: "roll", labelKey: "autotuneAxisRoll", colorClass: "toggle-roll" },
     { key: "pitch", labelKey: "autotuneAxisPitch", colorClass: "toggle-pitch" },
     { key: "yaw", labelKey: "autotuneAxisYaw", colorClass: "toggle-yaw" },
@@ -52,13 +77,16 @@ const AXES = [
 const COHERENCE_THRESHOLD = 0.8;
 const margin = { top: 20, right: 30, bottom: 30, left: 55 };
 
-let resizeObserver = null;
+let resizeObserver: ResizeObserver | null = null;
 
-function hasAxis(key) {
+function hasAxis(key: AxisName) {
     return !!store.analysisResult?.axes?.[key];
 }
 
-function toggleAxis(key, event) {
+function toggleAxis(key: AxisName, event: Event) {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
     const wouldBeChecked = event.target.checked;
     if (!wouldBeChecked) {
         const checkedCount = AXES.filter((a) => store.visibleAxes[a.key] && hasAxis(a.key)).length;
@@ -85,13 +113,18 @@ watch(
     { deep: true },
 );
 
-function getVisibleTraces() {
-    if (!store.analysisResult?.axes) {
+function getVisibleTraces(): Trace<BodePoint>[] {
+    const axes = store.analysisResult?.axes;
+    if (!axes) {
         return [];
     }
-    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]).map((a) => {
-        const tf = store.analysisResult.axes[a.key].transferFunction;
-        const points = [];
+    return AXES.flatMap((a) => {
+        const axis = axes[a.key];
+        if (!store.visibleAxes[a.key] || !axis) {
+            return [];
+        }
+        const tf = axis.transferFunction;
+        const points: BodePoint[] = [];
         for (let i = 0; i < tf.frequencies.length; i++) {
             if (tf.frequencies[i] > 0 && tf.coherence[i] >= COHERENCE_THRESHOLD) {
                 points.push({
@@ -102,18 +135,23 @@ function getVisibleTraces() {
                 });
             }
         }
-        return { key: a.key, color: AXIS_COLORS[a.key], points };
+        return [{ key: a.key, color: AXIS_COLORS[a.key], points }];
     });
 }
 
-function getSensitivityTraces() {
-    if (!store.analysisResult?.axes) {
+function getSensitivityTraces(): Trace<FrequencyPoint>[] {
+    const axes = store.analysisResult?.axes;
+    if (!axes) {
         return [];
     }
-    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]?.sensitivity).map((a) => {
-        const s = store.analysisResult.axes[a.key].sensitivity;
-        const tf = store.analysisResult.axes[a.key].transferFunction;
-        const points = [];
+    return AXES.flatMap((a) => {
+        const axis = axes[a.key];
+        if (!store.visibleAxes[a.key] || !axis?.sensitivity) {
+            return [];
+        }
+        const s = axis.sensitivity;
+        const tf = axis.transferFunction;
+        const points: FrequencyPoint[] = [];
         for (let i = 0; i < s.frequencies.length; i++) {
             if (s.frequencies[i] > 0 && tf.coherence[i] >= COHERENCE_THRESHOLD) {
                 points.push({
@@ -123,21 +161,26 @@ function getSensitivityTraces() {
                 });
             }
         }
-        return { key: a.key, color: AXIS_COLORS[a.key], points };
+        return [{ key: a.key, color: AXIS_COLORS[a.key], points }];
     });
 }
 
-function getStepTraces() {
-    if (!store.analysisResult?.axes) {
+function getStepTraces(): Trace<StepPoint>[] {
+    const axes = store.analysisResult?.axes;
+    if (!axes) {
         return [];
     }
-    return AXES.filter((a) => store.visibleAxes[a.key] && store.analysisResult.axes[a.key]?.stepResponse).map((a) => {
-        const sr = store.analysisResult.axes[a.key].stepResponse;
-        const points = [];
+    return AXES.flatMap((a) => {
+        const axis = axes[a.key];
+        if (!store.visibleAxes[a.key] || !axis?.stepResponse) {
+            return [];
+        }
+        const sr = axis.stepResponse;
+        const points: StepPoint[] = [];
         for (let i = 0; i < sr.timeMs.length; i++) {
             points.push({ time: sr.timeMs[i], value: sr.response[i] });
         }
-        return { key: a.key, color: AXIS_COLORS[a.key], points };
+        return [{ key: a.key, color: AXIS_COLORS[a.key], points }];
     });
 }
 
@@ -175,7 +218,14 @@ function drawPlots() {
     drawStepResponse(width, height, svgHeight, containerWidth);
 }
 
-function drawMagnitude(traces, xScale, width, height, svgHeight, containerWidth) {
+function drawMagnitude(
+    traces: Trace<BodePoint>[],
+    xScale: FrequencyScale,
+    width: number,
+    height: number,
+    svgHeight: number,
+    containerWidth: number,
+) {
     const svg = d3.select(magnitudeSvg.value);
     svg.selectAll("*").remove();
     if (!traces.length) {
@@ -232,7 +282,14 @@ function drawMagnitude(traces, xScale, width, height, svgHeight, containerWidth)
         .text("Magnitude (dB)");
 }
 
-function drawPhase(traces, xScale, width, height, svgHeight, containerWidth) {
+function drawPhase(
+    traces: Trace<BodePoint>[],
+    xScale: FrequencyScale,
+    width: number,
+    height: number,
+    svgHeight: number,
+    containerWidth: number,
+) {
     const svg = d3.select(phaseSvg.value);
     svg.selectAll("*").remove();
     if (!traces.length) {
@@ -245,7 +302,7 @@ function drawPhase(traces, xScale, width, height, svgHeight, containerWidth) {
 
     // Unwrap phase per trace
     const unwrappedTraces = traces.map((t) => {
-        const pts = [];
+        const pts: BodePoint[] = [];
         for (let i = 0; i < t.points.length; i++) {
             if (i === 0) {
                 pts.push({ ...t.points[i] });
@@ -316,7 +373,13 @@ function drawPhase(traces, xScale, width, height, svgHeight, containerWidth) {
         .text("Phase (\u00B0)");
 }
 
-function drawSensitivity(xScale, width, height, svgHeight, containerWidth) {
+function drawSensitivity(
+    xScale: FrequencyScale,
+    width: number,
+    height: number,
+    svgHeight: number,
+    containerWidth: number,
+) {
     const svg = d3.select(sensitivitySvg.value);
     svg.selectAll("*").remove();
 
@@ -394,7 +457,7 @@ function drawSensitivity(xScale, width, height, svgHeight, containerWidth) {
         .text("Sensitivity (dB)");
 }
 
-function drawStepResponse(width, height, svgHeight, containerWidth) {
+function drawStepResponse(width: number, height: number, svgHeight: number, containerWidth: number) {
     const svg = d3.select(stepSvg.value);
     svg.selectAll("*").remove();
 
@@ -451,7 +514,7 @@ function drawStepResponse(width, height, svgHeight, containerWidth) {
         .text("1.0");
 
     const line = d3
-        .line()
+        .line<StepPoint>()
         .x((d) => xScale(d.time))
         .y((d) => yScale(d.value))
         .curve(d3.curveMonotoneX);
@@ -489,9 +552,16 @@ function drawStepResponse(width, height, svgHeight, containerWidth) {
  * Draw the set of per-axis path lines plus bottom and left D3 axes.
  * `yValue` picks which field of a point maps to the Y axis.
  */
-function drawTracesAndAxes(g, traces, xScale, yScale, height, yValue) {
+function drawTracesAndAxes<P extends FrequencyPoint>(
+    g: PlotGroup,
+    traces: Trace<P>[],
+    xScale: FrequencyScale,
+    yScale: d3.ScaleLinear<number, number>,
+    height: number,
+    yValue: (d: P) => number,
+) {
     const line = d3
-        .line()
+        .line<P>()
         .x((d) => xScale(d.freq))
         .y((d) => yScale(yValue(d)))
         .curve(d3.curveMonotoneX);

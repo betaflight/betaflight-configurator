@@ -53,11 +53,12 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed, ref } from "vue";
+import type { DropdownMenuItem } from "@nuxt/ui";
 import { useConnectionStore } from "../../stores/connection";
 import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
-import DeviceHandler from "../../js/device_handler";
+import DeviceHandler, { type PortDevice } from "../../js/device_handler";
 import { serial } from "../../js/serial";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
 import { i18n } from "../../js/localization";
@@ -66,25 +67,30 @@ import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { isNetworkOnlyBrowser } from "../../js/utils/checkCompatibility";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 
-function selectAndConnect(path) {
+type ConnectMode = "virtual" | "manual";
+
+/** What ConnectOptionsDialog confirms with. */
+interface ConnectOptions {
+    mode: ConnectMode;
+    version: string;
+    portOverride: string;
+}
+
+function selectAndConnect(path: string) {
     DeviceHandler.devicePicker.selectedDevice = path;
     connectDisconnect();
 }
 
 // A manual target (a serial path, or a tcp://ws:// address such as an ELRS Wi-Fi
 // module) connects through the "manual" pseudo-device, which reads portOverride.
-function connectManual(portOverride) {
+function connectManual(portOverride: string) {
     DeviceHandler.devicePicker.portOverride = portOverride;
     setConfig({ portOverride });
     selectAndConnect("manual");
 }
 
-/**
- * @param {Array<{displayName: string, path: string}>} devices - an enumerated device list
- * @param {string} icon - the icon for that kind of device
- * @returns {Array<object>} dropdown items connecting to each device
- */
-function portItems(devices, icon) {
+/** Dropdown items connecting to each device of an enumerated list, shown with that kind's icon. */
+function portItems(devices: PortDevice[], icon: string) {
     return devices.map((device) => ({
         label: device.displayName,
         icon,
@@ -92,11 +98,8 @@ function portItems(devices, icon) {
     }));
 }
 
-/**
- * @param {Array<{name: string, url: string}>} bookmarks - the saved targets
- * @returns {Array<object>} dropdown items connecting to each saved address
- */
-function bookmarkItems(bookmarks) {
+/** Dropdown items connecting to each saved target's address. */
+function bookmarkItems(bookmarks: { name: string; url: string }[]) {
     return bookmarks.map((bookmark) => ({
         label: bookmark.name,
         icon: "i-lucide-bookmark",
@@ -104,7 +107,7 @@ function bookmarkItems(bookmarks) {
     }));
 }
 
-function onDialogConfirm({ mode, version, portOverride }) {
+function onDialogConfirm({ mode, version, portOverride }: ConnectOptions) {
     if (mode === "virtual") {
         DeviceHandler.devicePicker.virtualMspVersion = version;
         setConfig({ virtualMspVersion: version });
@@ -114,9 +117,29 @@ function onDialogConfirm({ mode, version, portOverride }) {
     }
 }
 
-function toggleAutoConnect(value) {
+function toggleAutoConnect(value: boolean) {
     DeviceHandler.devicePicker.autoConnect = value;
     setConfig({ autoConnect: value });
+}
+
+// Reads only module state, so it lives outside setup.
+function buildPermissionItems() {
+    const items: DropdownMenuItem[] = [];
+    if (DeviceHandler.showSerialOption) {
+        items.push({
+            label: i18n.getMessage("portsSelectPermission"),
+            icon: "i-lucide-plug-zap",
+            onSelect: () => DeviceHandler.requestDevicePermission("serial"),
+        });
+    }
+    if (DeviceHandler.showBluetoothOption) {
+        items.push({
+            label: i18n.getMessage("portsSelectPermissionBluetooth"),
+            icon: "i-lucide-bluetooth",
+            onSelect: () => DeviceHandler.requestDevicePermission("bluetooth"),
+        });
+    }
+    return items;
 }
 
 export default defineComponent({
@@ -182,10 +205,10 @@ export default defineComponent({
         });
 
         const dialogOpen = ref(false);
-        const dialogMode = ref("virtual");
+        const dialogMode = ref<ConnectMode>("virtual");
         const devicePicker = computed(() => DeviceHandler.devicePicker);
 
-        function openConnectDialog(mode) {
+        function openConnectDialog(mode: ConnectMode) {
             dialogMode.value = mode;
             dialogOpen.value = true;
         }
@@ -225,28 +248,9 @@ export default defineComponent({
             ];
         }
 
-        function buildPermissionItems() {
-            const items = [];
-            if (DeviceHandler.showSerialOption) {
-                items.push({
-                    label: i18n.getMessage("portsSelectPermission"),
-                    icon: "i-lucide-plug-zap",
-                    onSelect: () => DeviceHandler.requestDevicePermission("serial"),
-                });
-            }
-            if (DeviceHandler.showBluetoothOption) {
-                items.push({
-                    label: i18n.getMessage("portsSelectPermissionBluetooth"),
-                    icon: "i-lucide-bluetooth",
-                    onSelect: () => DeviceHandler.requestDevicePermission("bluetooth"),
-                });
-            }
-            return items;
-        }
-
         const menuItems = computed(() => {
             const devices = buildDeviceItems();
-            const items = devices.length ? [...devices, { type: "separator" }] : [];
+            const items: DropdownMenuItem[] = devices.length ? [...devices, { type: "separator" }] : [];
             items.push(
                 ...buildPermissionItems(),
                 { type: "separator" },
@@ -255,7 +259,7 @@ export default defineComponent({
                     label: i18n.getMessage("autoConnect"),
                     checked: devicePicker.value.autoConnect,
                     onUpdateChecked: toggleAutoConnect,
-                    onSelect: (e) => e.preventDefault(),
+                    onSelect: (e: Event) => e.preventDefault(),
                 },
             );
             return items;

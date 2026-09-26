@@ -14,8 +14,11 @@
     </UiBox>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, onUnmounted, type Ref } from "vue";
+import type { Coordinate } from "ol/coordinate";
+import MapBrowserEvent from "ol/MapBrowserEvent";
+import type { Layer } from "ol/layer";
 import UiBox from "@/components/elements/UiBox.vue";
 import { initMap } from "@/js/utils/map";
 import { fromLonLat, toLonLat } from "ol/proj";
@@ -35,23 +38,28 @@ const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, add
 // have no horizontal position and would otherwise be plotted at (0, 0).
 const sortedWaypoints = positionalWaypoints;
 
-const mapRef = ref(null);
-const mapContainerRef = ref(null);
-const mapInstance = ref(null);
+const mapRef = ref<HTMLElement | null>(null);
+const mapContainerRef = ref<HTMLElement | null>(null);
+// The OpenLayers objects below live in deep refs, so they are reached through reactive
+// proxies (consistently: the layers are added to the map through the same proxies). Ref<T>
+// rather than ref<T>()'s inferred type, which unwraps the classes into structural copies
+// that no longer match OpenLayers' own signatures.
+type MapInstance = ReturnType<typeof initMap>;
+const mapInstance = ref(null) as Ref<MapInstance | null>;
 const { observeContainer, teardown: teardownMapViewport } = useMapViewport(
     mapContainerRef,
     () => mapInstance.value?.map,
 );
-const waypointLayer = ref(null);
-const pathLayer = ref(null);
-const draggingWaypointUid = ref(null);
-const dragPanInteraction = ref(null);
+const waypointLayer = ref(null) as Ref<LayerVector<SourceVector<Feature<Point>>> | null>;
+const pathLayer = ref(null) as Ref<LayerVector<SourceVector> | null>;
+const draggingWaypointUid = ref<string | null>(null);
+const dragPanInteraction = ref(null) as Ref<DragPan | null>;
 const isDragging = ref(false);
-const dragStartCoordinate = ref(null);
+const dragStartCoordinate = ref<Coordinate | null>(null);
 const isLoading = ref(true);
 
 // Helper function to initialize map with given coordinates
-const initializeMapAtLocation = (latitude, longitude, logMessage) => {
+const initializeMapAtLocation = (latitude: number, longitude: number, logMessage: string) => {
     mapInstance.value = initMap({
         target: mapRef.value,
         defaultZoom: 15, // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
@@ -80,7 +88,7 @@ const fetchIPLocation = async () => {
         }
         throw new Error("Invalid response from IP geolocation API");
     } catch (error) {
-        console.warn("IP geolocation failed:", error.message);
+        console.warn("IP geolocation failed:", error instanceof Error ? error.message : error);
         return null;
     }
 };
@@ -157,6 +165,9 @@ const setupMapLayers = () => {
         console.error("Map instance not available");
         return;
     }
+    // Set once by initializeMapAtLocation, never replaced, so the handlers below can hold it.
+    const { map } = mapInstance.value;
+    const isWaypointLayer = (layer: Layer) => layer === waypointLayer.value;
 
     // Create path line layer (magenta line) - add first so it renders behind waypoints
     pathLayer.value = new LayerVector({
@@ -168,16 +179,16 @@ const setupMapLayers = () => {
             }),
         }),
     });
-    mapInstance.value.map.addLayer(pathLayer.value);
+    map.addLayer(pathLayer.value);
 
     // Create waypoint marker layer with numbered circles - add second so it renders on top
     waypointLayer.value = new LayerVector({
         source: new SourceVector(),
     });
-    mapInstance.value.map.addLayer(waypointLayer.value);
+    map.addLayer(waypointLayer.value);
 
     // Get reference to the default DragPan interaction
-    mapInstance.value.map.getInteractions().forEach((interaction) => {
+    map.getInteractions().forEach((interaction) => {
         if (interaction instanceof DragPan) {
             dragPanInteraction.value = interaction;
         }
@@ -185,9 +196,14 @@ const setupMapLayers = () => {
 
     // Manual drag handling using pointer events
     // Handle pointer down - start dragging
-    mapInstance.value.map.on("pointerdown", (event) => {
-        const feature = mapInstance.value.map.forEachFeatureAtPixel(event.pixel, (feat) => feat, {
-            layerFilter: (layer) => layer === waypointLayer.value,
+    // pointerdown / pointerup are dispatched by the map, but Map.on() does not declare them;
+    // addEventListener is what on() registers through.
+    map.addEventListener("pointerdown", (event) => {
+        if (!(event instanceof MapBrowserEvent)) {
+            return;
+        }
+        const feature = map.forEachFeatureAtPixel(event.pixel, (feat) => feat, {
+            layerFilter: isWaypointLayer,
         });
 
         if (feature) {
@@ -212,35 +228,37 @@ const setupMapLayers = () => {
     });
 
     // Handle pointer move - update waypoint position during drag
-    mapInstance.value.map.on("pointermove", (event) => {
+    map.on("pointermove", (event: MapBrowserEvent) => {
         if (isDragging.value && draggingWaypointUid.value) {
             // Update the feature position in real-time
-            const waypointSource = waypointLayer.value.getSource();
-            const features = waypointSource.getFeatures();
+            const features = waypointLayer.value?.getSource()?.getFeatures() ?? [];
             const feature = features.find((f) => f.get("waypointUid") === draggingWaypointUid.value);
 
             if (feature) {
-                // Update feature geometry
-                feature.getGeometry().setCoordinates(event.coordinate);
+                // Update feature geometry; waypoint markers are always Points.
+                feature.getGeometry()?.setCoordinates(event.coordinate);
 
                 // Update path in real-time
                 updatePathDuringDrag(draggingWaypointUid.value, event.coordinate);
             }
         } else {
             // Update cursor when hovering over waypoints
-            const hit = mapInstance.value.map.hasFeatureAtPixel(event.pixel, {
-                layerFilter: (layer) => layer === waypointLayer.value,
+            const hit = map.hasFeatureAtPixel(event.pixel, {
+                layerFilter: isWaypointLayer,
             });
-            mapInstance.value.map.getTargetElement().style.cursor = hit ? "move" : "";
+            map.getTargetElement().style.cursor = hit ? "move" : "";
         }
     });
 
     // Handle pointer up - end dragging
-    mapInstance.value.map.on("pointerup", (event) => {
-        if (isDragging.value && draggingWaypointUid.value) {
+    map.addEventListener("pointerup", (event) => {
+        if (!(event instanceof MapBrowserEvent)) {
+            return;
+        }
+        if (isDragging.value && draggingWaypointUid.value && dragStartCoordinate.value) {
             // Check if we actually moved (using pixel distance for consistent UI behavior)
-            const startPixel = mapInstance.value.map.getPixelFromCoordinate(dragStartCoordinate.value);
-            const endPixel = mapInstance.value.map.getPixelFromCoordinate(event.coordinate);
+            const startPixel = map.getPixelFromCoordinate(dragStartCoordinate.value);
+            const endPixel = map.getPixelFromCoordinate(event.coordinate);
             const pixelDistance = Math.sqrt(
                 Math.pow(endPixel[0] - startPixel[0], 2) + Math.pow(endPixel[1] - startPixel[1], 2),
             );
@@ -281,10 +299,10 @@ const setupMapLayers = () => {
     });
 
     // Click handler - add new waypoint when clicking on empty map
-    mapInstance.value.map.on("click", (event) => {
+    map.on("click", (event: MapBrowserEvent) => {
         // Check if a waypoint marker was clicked
-        const waypointClicked = mapInstance.value.map.hasFeatureAtPixel(event.pixel, {
-            layerFilter: (layer) => layer === waypointLayer.value,
+        const waypointClicked = map.hasFeatureAtPixel(event.pixel, {
+            layerFilter: isWaypointLayer,
         });
 
         // Only add new waypoint if clicking on empty map (not on a waypoint)
@@ -306,16 +324,16 @@ const setupMapLayers = () => {
 };
 
 // Update path lines during drag in real-time
-const updatePathDuringDrag = (draggingUid, newCoordinates) => {
-    if (!pathLayer.value) {
+const updatePathDuringDrag = (draggingUid: string, newCoordinates: Coordinate) => {
+    const pathSource = pathLayer.value?.getSource();
+    if (!pathSource) {
         return;
     }
 
-    const pathSource = pathLayer.value.getSource();
     pathSource.clear();
 
     // Build coordinates array with the updated position for the dragging waypoint
-    const coordinates = [];
+    const coordinates: Coordinate[] = [];
     sortedWaypoints.value.forEach((wp) => {
         let coord;
         if (wp.uid === draggingUid) {
@@ -339,13 +357,12 @@ const updatePathDuringDrag = (draggingUid, newCoordinates) => {
 
 // Update map features when waypoints change
 const updateMapFeatures = (autoFit = true) => {
-    if (!waypointLayer.value || !pathLayer.value) {
+    const waypointSource = waypointLayer.value?.getSource();
+    const pathSource = pathLayer.value?.getSource();
+    if (!waypointSource || !pathSource || !mapInstance.value) {
         console.log("Layers not ready yet");
         return;
     }
-
-    const waypointSource = waypointLayer.value.getSource();
-    const pathSource = pathLayer.value.getSource();
 
     // Clear existing features
     waypointSource.clear();
@@ -361,7 +378,7 @@ const updateMapFeatures = (autoFit = true) => {
     console.log(`Updating map with ${sorted.length} waypoints`);
 
     // Add markers for each waypoint with order numbers
-    const coordinates = [];
+    const coordinates: Coordinate[] = [];
     sorted.forEach((wp) => {
         const coord = fromLonLat([wp.longitude, wp.latitude]);
         coordinates.push(coord);
@@ -433,6 +450,9 @@ const updateMapFeatures = (autoFit = true) => {
     // Auto-fit map to show all waypoints (only if requested)
     if (autoFit && coordinates.length > 0) {
         const extent = waypointSource.getExtent();
+        if (!extent) {
+            return;
+        }
         mapInstance.value.mapView.fit(extent, {
             padding: [50, 50, 50, 50],
             maxZoom: 15,

@@ -385,7 +385,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
@@ -418,7 +418,7 @@ const procedureDropImageDark = new URL("../../images/icons/cf_failsafe_procedure
 const procedureLandImageDark = new URL("../../images/icons/cf_failsafe_procedure2-dark.svg", import.meta.url).href;
 const procedureGpsImageDark = new URL("../../images/icons/cf_failsafe_procedure4-dark.svg", import.meta.url).href;
 
-const t = (key) => i18n.getMessage(key);
+const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const { saveAndReboot } = useReboot();
 
@@ -463,8 +463,9 @@ const rssiConfig = computed(() => fcStore.rssiConfig);
 
 // --- Dirty state tracking ---
 
-const configDefaults = ref({});
-const configChanges = ref({});
+// JSON snapshots per config section, keyed by section name
+const configDefaults = ref<Record<string, string | null>>({});
+const configChanges = ref<Record<string, string | null>>({});
 const configHasChanged = computed(() => Object.keys(configChanges.value).length > 0);
 
 const initializeDefaults = () => {
@@ -477,7 +478,7 @@ const initializeDefaults = () => {
     configChanges.value = {};
 };
 
-const trackChange = (key, newValue) => {
+const trackChange = (key: string, newValue: string | null) => {
     if (newValue === configDefaults.value[key]) {
         delete configChanges.value[key];
     } else {
@@ -524,13 +525,13 @@ const procedureItems = computed(() => {
 const isDark = document.documentElement.classList.contains("dark");
 
 const procedureImage = computed(() => {
-    const map = isDark
+    const map: Record<number, string> = isDark
         ? { 1: procedureDropImageDark, 0: procedureLandImageDark, 2: procedureGpsImageDark }
         : { 1: procedureDropImage, 0: procedureLandImage, 2: procedureGpsImage };
     return map[failsafeConfig.value.failsafe_procedure];
 });
 
-const channelModeItems = (index) => [
+const channelModeItems = (index: number) => [
     ...(index < 4 ? [{ label: t("failsafeChannelFallbackSettingsValueAuto"), value: 0 }] : []),
     { label: t("failsafeChannelFallbackSettingsValueHold"), value: 1 },
     { label: t("failsafeChannelFallbackSettingsValueSet"), value: 2 },
@@ -550,42 +551,53 @@ const sanityCheckItems = computed(() => [
 
 // --- Channel fallback list ---
 
-const activeChannels = computed(() => {
-    const channels = [];
-    const channelNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
+type AuxAssignments = { label: string }[][];
 
-    let auxIndex = 1;
-    let auxAssignmentIndex = 0;
-
-    const auxAssignments = [];
+function collectAuxAssignments(): AuxAssignments {
+    const auxAssignments: AuxAssignments = [];
     for (let i = 0; i < rc.value.active_channels - 4; i++) {
         auxAssignments.push([]);
     }
 
-    if (rssiConfig.value && typeof rssiConfig.value.channel !== "undefined") {
-        const index = rssiConfig.value.channel - 5;
+    const rssiChannel = rssiConfig.value?.channel;
+    if (rssiChannel !== undefined) {
+        const index = rssiChannel - 5;
         if (index >= 0 && index < auxAssignments.length) {
             auxAssignments[index].push({ label: "RSSI" });
         }
     }
 
     for (let modeIndex = 0; modeIndex < auxConfig.value.length; modeIndex++) {
-        const modeId = auxConfigIds.value[modeIndex];
+        addModeAssignments(auxAssignments, modeIndex);
+    }
+    return auxAssignments;
+}
 
-        for (let modeRangeIndex = 0; modeRangeIndex < modeRanges.value.length; modeRangeIndex++) {
-            const modeRange = modeRanges.value[modeRangeIndex];
-            if (modeRange.id !== modeId) continue;
+// Every channel range that enables this mode labels its aux channel with the mode's name.
+function addModeAssignments(auxAssignments: AuxAssignments, modeIndex: number) {
+    const modeId = auxConfigIds.value[modeIndex];
 
-            const range = modeRange.range;
-            if (range.start >= range.end) continue;
+    for (const modeRange of modeRanges.value) {
+        if (modeRange.id !== modeId) continue;
 
-            const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
+        const range = modeRange.range;
+        if (range.start >= range.end) continue;
 
-            if (modeRange.auxChannelIndex < auxAssignments.length) {
-                auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
-            }
+        const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
+
+        if (modeRange.auxChannelIndex < auxAssignments.length) {
+            auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
         }
     }
+}
+
+const activeChannels = computed(() => {
+    const channels = [];
+    const channelNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
+    const auxAssignments = collectAuxAssignments();
+
+    let auxIndex = 1;
+    let auxAssignmentIndex = 0;
 
     for (let i = 0; i < rxFailConfig.value.length; i++) {
         if (i < 4) {
@@ -635,7 +647,7 @@ const isApiVersion1_47 = computed(() => semver.gte(fcStore.config.apiVersion, AP
 // units shown in the UI: the rates are entered in m/s while the firmware stores cm/s.
 // The baseline is API 1.44 (4.3), the oldest version the configurator connects to.
 const limits = computed(() => {
-    const gte = (version) => semver.gte(fcStore.config.apiVersion, version);
+    const gte = (version: string) => semver.gte(fcStore.config.apiVersion, version);
 
     const l = {
         offDelay: { min: 0, max: 20 }, // failsafe_off_delay, tenths of a second
@@ -762,7 +774,7 @@ const saveConfig = () =>
         await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
         await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
 
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
             mspHelper.sendRxFailConfig(resolve);
         });
 

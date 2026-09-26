@@ -83,12 +83,13 @@ vi.mock("@/js/msp/MSPHelper", () => ({
     mspHelper: { crunch: vi.fn(() => []) },
 }));
 
-vi.mock("@/js/Analytics", () => ({
-    tracking: {
+vi.mock("@/js/Analytics", () => {
+    const tracking = {
         sendSaveAndChangeEvents: vi.fn(),
         EVENT_CATEGORIES: { FLIGHT_CONTROLLER: "flight_controller" },
-    },
-}));
+    };
+    return { getTracking: () => tracking };
+});
 
 vi.mock("@/js/ConfigStorage", () => ({
     get: vi.fn(() => ({})),
