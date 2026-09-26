@@ -21,7 +21,7 @@
                                 </template>
                                 <USwitch
                                     :model-value="gyro.enabled"
-                                    @update:model-value="(checked) => toggleGyro(gyro.index, checked)"
+                                    @update:model-value="(checked: boolean) => toggleGyro(gyro.index, checked)"
                                 />
                             </SettingRow>
                         </template>
