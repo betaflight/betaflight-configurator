@@ -386,13 +386,13 @@ const mainPids = computed(() => {
     const yawPID = filteredSc.value.yawPID == null ? null : [...(filteredSc.value.yawPID ?? [])];
     // Add S term for Wings build
     if (filteredSc.value.s_roll !== undefined && filteredSc.value.s_roll !== null) {
-        rollPID.push(filteredSc.value.s_roll);
+        rollPID[5] = filteredSc.value.s_roll;
     }
     if (filteredSc.value.s_pitch !== undefined && filteredSc.value.s_pitch !== null) {
-        pitchPID.push(filteredSc.value.s_pitch);
+        pitchPID[5] = filteredSc.value.s_pitch;
     }
     if (filteredSc.value.s_yaw !== undefined && filteredSc.value.s_yaw !== null) {
-        yawPID.push(filteredSc.value.s_yaw);
+        yawPID[5] = filteredSc.value.s_yaw;
     }
     return [
         pidRow("Roll", rollPID),
