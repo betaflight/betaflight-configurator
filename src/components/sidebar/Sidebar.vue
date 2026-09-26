@@ -11,6 +11,17 @@
         class="flex flex-row gap-1 border-t border-default pt-2 mt-auto items-center flex-wrap"
         :class="{ 'sidebar-footer--compact': isCompact }"
     >
+        <UTooltip :text="`${t('settingsSearchTitle')} (Ctrl/Cmd + K)`" :delay-duration="300">
+            <UButton
+                icon="i-lucide-search"
+                variant="ghost"
+                color="neutral"
+                square
+                :aria-label="t('settingsSearchTitle')"
+                @click="settingsSearchOpen = true"
+                size="xs"
+            />
+        </UTooltip>
         <UTooltip :text="$t('sidebarOpenOptions')" :delay-duration="300">
             <UButton
                 icon="i-lucide-settings"
@@ -58,6 +69,7 @@
         </UTooltip>
         <UserSession :is-compact="isCompact" />
     </div>
+    <SettingsSearch v-model="settingsSearchOpen" :expert-mode="expertModeOn" @select="onSettingSelected" />
     <OptionsDialog v-model="optionsOpen" />
     <LogDialog v-model="logOpen" />
 </template>
@@ -71,6 +83,7 @@ import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
+import { TABS } from "@/js/gui.js";
 import DarkTheme, { setDarkTheme } from "@/js/DarkTheme.js";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { applyExpertMode } from "@/js/utils/applyExpertMode.js";
@@ -78,8 +91,17 @@ import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus.js";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
 import LogDialog from "@/components/dialogs/LogDialog.vue";
+import SettingsSearch from "@/components/settings-search/SettingsSearch.vue";
 
 const { t } = useTranslation();
+const settingsSearchOpen = ref(false);
+
+function onSettingsSearchShortcut(event) {
+    if ((event.ctrlKey || event.metaKey) && !event.altKey && event.code === "KeyK") {
+        event.preventDefault();
+        settingsSearchOpen.value = true;
+    }
+}
 const sidebarExpanded = inject("sidebarExpanded", ref(true));
 const closeMobileSidebar = inject("closeMobileSidebar", () => {});
 const isCompact = computed(() => !sidebarExpanded.value);
@@ -140,6 +162,86 @@ watch(optionsOpen, (open) => {
 // Dark mode toggle — seed from DarkTheme.configSetting (not reactive, update explicitly)
 const isDark = ref(DarkTheme.enabled);
 
+async function focusSetting(setting) {
+    let subtabSelected = !setting.subtab;
+
+    for (let attempt = 0; attempt < 30; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        if (!subtabSelected) {
+            const tabComponent = TABS[setting.tab]?._vueComponent;
+
+            if (typeof tabComponent?.selectSubtab === "function") {
+                tabComponent.selectSubtab(setting.subtab);
+                subtabSelected = true;
+                continue;
+            }
+        }
+
+        const rows = [...document.querySelectorAll("[data-setting-search-id]")];
+        const target = rows.find((row) => row.dataset.settingSearchId === setting.searchId);
+
+        if (!target) {
+            continue;
+        }
+
+        let expandedUiBox = false;
+        for (
+            let uiBox = target.closest("[data-ui-box]");
+            uiBox;
+            uiBox = uiBox.parentElement?.closest("[data-ui-box]")
+        ) {
+            const toggle = uiBox.querySelector(':scope > [data-ui-box-toggle][aria-expanded="false"]');
+
+            if (toggle) {
+                toggle.click();
+                expandedUiBox = true;
+            }
+        }
+
+        if (expandedUiBox || target.offsetParent === null) {
+            continue;
+        }
+
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+        });
+
+        target.focus({ preventScroll: true });
+
+        target.animate(
+            [
+                { boxShadow: "0 0 0 0 transparent" },
+                { boxShadow: "0 0 0 3px var(--ui-primary)" },
+                { boxShadow: "0 0 0 0 transparent" },
+            ],
+            {
+                duration: 1800,
+                easing: "ease-out",
+            },
+        );
+
+        return;
+    }
+}
+
+function onSettingSelected(setting) {
+    const item = activeItems.value.find((sidebarItem) => (sidebarItem.tab ?? sidebarItem.key) === setting.tab);
+
+    if (!item) {
+        return;
+    }
+
+    switchTab(setting.tab, {
+        mode: item.mode,
+        label: t(item.i18n),
+    });
+
+    closeMobileSidebar();
+    void focusSetting(setting);
+}
+
 function toggleDarkMode() {
     const colorTheme = getConfig("colorTheme", "yellow").colorTheme ?? "yellow";
     if (colorTheme === "contrast") {
@@ -166,10 +268,12 @@ onMounted(() => {
     expertModeOn.value = isExpertModeEnabled();
     isDark.value = DarkTheme.enabled;
     EventBus.$on("expert-mode-change", onExpertModeChange);
+    window.addEventListener("keydown", onSettingsSearchShortcut);
 });
 
 onUnmounted(() => {
     EventBus.$off("expert-mode-change", onExpertModeChange);
+    window.removeEventListener("keydown", onSettingsSearchShortcut);
 });
 </script>
 
