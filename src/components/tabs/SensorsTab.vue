@@ -544,6 +544,13 @@
                                     />
                                 </div>
                                 <p
+                                    v-if="cal.mode === 'full' && fullCalError"
+                                    class="text-xs font-semibold status-bad text-center mt-1.5"
+                                    role="alert"
+                                >
+                                    {{ $t("magCalibrationFullRefused", { reason: fullCalError }) }}
+                                </p>
+                                <p
                                     v-if="cal.mode === 'full'"
                                     class="text-xs text-[var(--surface-500)] text-center mt-1.5"
                                 >
@@ -1556,6 +1563,9 @@ async function autoSetDeclination() {
 const cal = reactive(useMagCalibration());
 const calIsFull = ref(false);
 const fullCalResult = ref<TumbleCharacterization | null>(null);
+// Why the last "Finish calibration" was refused. Shown in the panel: the log alone left the
+// button looking dead.
+const fullCalError = ref("");
 
 // Guided choreography for the full tumble — each step is one full rotation about a
 // different axis, which together light up all 20 coverage zones.
@@ -1651,6 +1661,7 @@ function cancelMagCal() {
     clearFullStepTimer();
     calIsFull.value = false;
     fullCalResult.value = null;
+    fullCalError.value = "";
     cal.cancelCalibration();
 }
 
@@ -1690,6 +1701,7 @@ async function startFullCal() {
     lastCalStarter = startFullCal;
     calIsFull.value = true;
     fullCalResult.value = null;
+    fullCalError.value = "";
 
     // The dip-angle alignment solve needs the WMM inclination. Resolve it up front
     // (best effort, no consent prompt) and reflect it in the panel + field arrow.
@@ -1743,9 +1755,11 @@ async function acceptFullCal(manualGeoRef: GeoReference | null = null) {
         });
 
         if (!result.ok) {
-            gui_log(result.error || i18n.getMessage("magCalibrationError"));
+            fullCalError.value = result.error || i18n.getMessage("magCalibrationError");
+            gui_log(fullCalError.value);
             return;
         }
+        fullCalError.value = "";
 
         // Only now: an early return above leaves the user still collecting, and the step
         // guidance has to keep advancing behind the manual-location modal.
@@ -1924,6 +1938,7 @@ function retryAndStartMagCal() {
 }
 
 function clearMagCalSamples() {
+    fullCalError.value = "";
     cal.clearSamples();
 }
 
@@ -1931,6 +1946,7 @@ function retryMagCal() {
     clearFullStepTimer();
     calIsFull.value = false;
     fullCalResult.value = null;
+    fullCalError.value = "";
     cal.retry();
 }
 

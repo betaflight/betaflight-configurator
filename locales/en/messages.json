@@ -8457,6 +8457,9 @@
     "magCalibrationFullInsufficientSamples": {
         "message": "Not enough samples — spin longer"
     },
+    "magCalibrationFullRefused": {
+        "message": "Calibration refused: {{reason}}"
+    },
     "magCalibrationFullNoGeo": {
         "message": "No GPS, browser, or IP location — enter coordinates manually to continue"
     },

@@ -1,3 +1,53 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+export interface Point3 {
+    x: number;
+    y: number;
+    z: number;
+}
+
+export interface SphereFit {
+    center: Point3;
+    radius: number;
+    residual: number;
+}
+
+export interface CoverageCheck {
+    ok: boolean;
+    reason?: string;
+    ratio?: number;
+}
+
+export interface DirectionalCoverage {
+    covered: number;
+    totalFaces: number;
+    fraction: number;
+    faceCounts: number[];
+    uniform: number;
+}
+
+/** Augmented [A | b] rows of a linear system. */
+type AugmentedMatrix = number[][];
+
 /**
  * Least-squares sphere fitting using the algebraic method.
  *
@@ -11,11 +61,10 @@
  * This gives the normal equations A^T A [a,b,c,d]^T = A^T b
  * solved via Gaussian elimination (no iterative solver needed).
  *
- * @param {Array<{x: number, y: number, z: number}>} points - Input points (minimum 4)
- * @returns {{ center: {x: number, y: number, z: number}, radius: number, residual: number } | null}
- *   Returns null if fewer than 4 points or the system is singular.
+ * @param points - Input points (minimum 4)
+ * @returns null if fewer than 4 points or the system is singular.
  */
-export function fitSphere(points) {
+export function fitSphere(points: Point3[]): SphereFit | null {
     if (points.length < 4) {
         return null;
     }
@@ -55,7 +104,7 @@ export function fitSphere(points) {
     };
 }
 
-function computeCentroid(points) {
+function computeCentroid(points: Point3[]): Point3 {
     let sx = 0,
         sy = 0,
         sz = 0;
@@ -68,7 +117,7 @@ function computeCentroid(points) {
     return { x: sx / n, y: sy / n, z: sz / n };
 }
 
-function buildNormalEquations(points) {
+function buildNormalEquations(points: Point3[]): AugmentedMatrix {
     const n = points.length;
 
     let sumX = 0,
@@ -127,9 +176,9 @@ function buildNormalEquations(points) {
 
 /**
  * Gaussian elimination with partial pivoting on an augmented matrix.
- * @returns {Array<number>|null} Solution vector or null if singular.
+ * @returns Solution vector or null if singular.
  */
-function solveGaussian(matrix, rows, cols) {
+function solveGaussian(matrix: AugmentedMatrix, rows: number, cols: number): number[] | null {
     for (let col = 0; col < rows; col++) {
         const pivotRow = findPivotRow(matrix, col, rows);
         if (Math.abs(matrix[pivotRow][col]) < 1e-12) {
@@ -144,7 +193,7 @@ function solveGaussian(matrix, rows, cols) {
     return backSubstitute(matrix, rows, cols);
 }
 
-function findPivotRow(matrix, col, rows) {
+function findPivotRow(matrix: AugmentedMatrix, col: number, rows: number): number {
     let maxVal = Math.abs(matrix[col][col]);
     let maxRow = col;
     for (let row = col + 1; row < rows; row++) {
@@ -157,7 +206,7 @@ function findPivotRow(matrix, col, rows) {
     return maxRow;
 }
 
-function eliminateBelow(matrix, col, rows, cols) {
+function eliminateBelow(matrix: AugmentedMatrix, col: number, rows: number, cols: number): void {
     for (let row = col + 1; row < rows; row++) {
         const factor = matrix[row][col] / matrix[col][col];
         for (let j = col; j < cols; j++) {
@@ -166,8 +215,8 @@ function eliminateBelow(matrix, col, rows, cols) {
     }
 }
 
-function backSubstitute(matrix, rows, cols) {
-    const params = new Array(rows);
+function backSubstitute(matrix: AugmentedMatrix, rows: number, cols: number): number[] {
+    const params: number[] = new Array(rows);
     for (let row = rows - 1; row >= 0; row--) {
         let sum = matrix[row][cols - 1];
         for (let col = row + 1; col < rows; col++) {
@@ -178,7 +227,7 @@ function backSubstitute(matrix, rows, cols) {
     return params;
 }
 
-function computeResidual(points, a, b, c, radius) {
+function computeResidual(points: Point3[], a: number, b: number, c: number, radius: number): number {
     let sumResidualSq = 0;
     for (const { x, y, z } of points) {
         const dist = Math.hypot(x - a, y - b, z - c);
@@ -196,10 +245,14 @@ function computeResidual(points, a, b, c, radius) {
  * eigenvalue, and returns ok=true only when eigMin/eigMax >= 0.1 (i.e. the
  * point cloud is not confined to a 2D plane or line).
  *
- * @param {Array<{x: number, y: number, z: number}>} samples
- * @returns {{ ok: boolean, reason?: string, ratio?: number }}
+ * Directions are taken from `center`. For raw magnetometer samples pass the
+ * cloud's fitted center: from the origin, a hard-iron bias larger than the
+ * field makes every direction point the same way, and a full tumble is
+ * refused as planar.
+ *
+ * @param center - point the directions are measured from (default: origin)
  */
-export function check3DCoverage(samples) {
+export function check3DCoverage(samples: Point3[], center: Point3 = { x: 0, y: 0, z: 0 }): CoverageCheck {
     const MIN_SAMPLES = 20;
     const PLANAR_RATIO_THRESHOLD = 0.1;
 
@@ -207,11 +260,13 @@ export function check3DCoverage(samples) {
         return { ok: false, reason: "Not enough samples for 3D coverage check." };
     }
 
+    const directions = samples.map((s) => ({ x: s.x - center.x, y: s.y - center.y, z: s.z - center.z }));
+
     let sx = 0,
         sy = 0,
         sz = 0;
     const n = samples.length;
-    for (const s of samples) {
+    for (const s of directions) {
         const len = Math.hypot(s.x, s.y, s.z);
         if (len < 1e-6) {
             continue;
@@ -230,7 +285,7 @@ export function check3DCoverage(samples) {
         cxy = 0,
         cxz = 0,
         cyz = 0;
-    for (const s of samples) {
+    for (const s of directions) {
         const len = Math.hypot(s.x, s.y, s.z);
         if (len < 1e-6) {
             continue;
@@ -255,7 +310,7 @@ export function check3DCoverage(samples) {
     const trace = cxx + cyy + czz;
     const p1 = cxy * cxy + cxz * cxz + cyz * cyz;
 
-    let eig1, eig2, eig3;
+    let eig1: number, eig2: number, eig3: number;
     if (p1 < 1e-12) {
         eig1 = cxx;
         eig2 = cyy;
@@ -271,7 +326,7 @@ export function check3DCoverage(samples) {
             B02 = cxz / p,
             B12 = cyz / p;
         const detB = B00 * (B11 * B22 - B12 * B12) - B01 * (B01 * B22 - B12 * B02) + B02 * (B01 * B12 - B11 * B02);
-        let r = Math.max(-1, Math.min(1, detB / 2));
+        const r = Math.max(-1, Math.min(1, detB / 2));
         const phi = Math.acos(r) / 3;
         eig1 = q + 2 * p * Math.cos(phi);
         eig3 = q + 2 * p * Math.cos(phi + (2 * Math.PI) / 3);
@@ -303,7 +358,7 @@ export function check3DCoverage(samples) {
 const ICOSA_FACE_DIRS = (() => {
     const phi = (1 + Math.sqrt(5)) / 2;
     const inv = 1 / phi;
-    const raw = [];
+    const raw: number[][] = [];
     for (const sx of [-1, 1]) {
         for (const sy of [-1, 1]) {
             for (const sz of [-1, 1]) {
@@ -331,16 +386,12 @@ const ICOSA_FACE_DIRS = (() => {
  * face counts as covered once it has `minHits` samples. A thorough tumble
  * reaches 100%.
  *
- * @param {Array<{x:number,y:number,z:number}>} points
- * @param {{x:number,y:number,z:number}} center - best available cloud center
- *   (running sphere-fit center or sample centroid)
- * @param {number} [minHits=3] - samples required before a face counts
- * @returns {{ covered: number, totalFaces: number, fraction: number,
- *             faceCounts: number[], uniform: number }}
- *   `uniform` aliases `fraction` for backward compatibility with consumers
+ * @param center - best available cloud center (running sphere-fit center or sample centroid)
+ * @param minHits - samples required before a face counts
+ * @returns `uniform` aliases `fraction` for backward compatibility with consumers
  *   expecting a [0, 1] coverage metric.
  */
-export function computeDirectionalCoverage(points, center, minHits = 3) {
+export function computeDirectionalCoverage(points: Point3[], center: Point3, minHits = 3): DirectionalCoverage {
     const faceCounts = new Array(ICOSA_FACE_DIRS.length).fill(0);
 
     for (const pt of points) {

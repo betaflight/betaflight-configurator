@@ -30,8 +30,8 @@
  */
 import semver from "semver";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
-import { fitEllipsoid } from "./ellipsoidFit.js";
-import { check3DCoverage } from "./sphereFit.js";
+import { fitEllipsoid, type EllipsoidFit } from "./ellipsoidFit";
+import { check3DCoverage, fitSphere } from "./sphereFit";
 import { solveTiltAlignment, type TiltAlignmentResult } from "./magTiltAlign";
 
 type Mat3 = number[][];
@@ -51,12 +51,7 @@ export interface Vec3Point {
 }
 
 /** The ellipsoid fit as fitEllipsoid() reports it. */
-export interface EllipsoidParams {
-    center: Vec3Point;
-    W_inv: number[][];
-    radius: number;
-    residual: number;
-}
+export type EllipsoidParams = EllipsoidFit;
 
 /** Just the fields proposedMatrixOf() needs from a tilt-solve result. */
 export interface TiltProposal {
@@ -213,14 +208,21 @@ export function characterizeTumble({
         return { x: raw[0], y: raw[1], z: raw[2], roll: s.roll, pitch: s.pitch };
     });
 
-    const covCheck = check3DCoverage(rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
+    const rawPoints = rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
+
+    // Judge the spread from the cloud's own center, not the origin: an uncalibrated
+    // hard-iron bias larger than the field would otherwise make a full tumble look planar.
+    const sphere = fitSphere(rawPoints);
+    if (!sphere) {
+        return { ok: false, error: "Sphere fit failed — spin through more orientations." };
+    }
+    const covCheck = check3DCoverage(rawPoints, sphere.center);
     if (!covCheck.ok) {
         // check3DCoverage always sets `reason` on failure; the fallback only satisfies its
-        // JSDoc typing where `reason` is optional regardless of `ok`.
+        // type, where `reason` is optional regardless of `ok`.
         return { ok: false, error: covCheck.reason ?? "3D coverage check failed." };
     }
 
-    const rawPoints = rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
     const ep = fitEllipsoid(rawPoints);
     if (!ep) {
         return { ok: false, error: "Ellipsoid fit failed — spin through more orientations." };
