@@ -381,7 +381,7 @@ function pidRow(label, data) {
 }
 
 const mainPids = computed(() => {
-    const src/blackbox-viewer/components/GraphConfigDialog.vue = filteredSc.value.rollPID == null ? null : [...(filteredSc.value.rollPID ?? [])];
+    const rollPID = filteredSc.value.rollPID == null ? null : [...(filteredSc.value.rollPID ?? [])];
     const pitchPID = filteredSc.value.pitchPID == null ? null : [...(filteredSc.value.pitchPID ?? [])];
     const yawPID = filteredSc.value.yawPID == null ? null : [...(filteredSc.value.yawPID ?? [])];
     // Add S term for Wings build
