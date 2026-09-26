@@ -8,9 +8,10 @@ import {
     applySimplifiedGyroFilters,
     applySimplifiedDtermFilters,
     validateVirtualSimplifiedTuning,
+    type SliderFactors,
 } from "../../src/js/simplifiedTuning";
 
-const DEFAULT_FACTORS = {
+const DEFAULT_FACTORS: SliderFactors = {
     pidsMode: 2,
     masterMultiplier: 1,
     rollPitchRatio: 1,

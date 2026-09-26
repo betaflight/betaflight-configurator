@@ -1,8 +1,72 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Client-side port of betaflight/src/main/config/simplified_tuning.c for virtual mode.
  */
 
 import FC from "./fc";
+import type { TuningSliders } from "../stores/fc.types";
+
+/** The tuning-slider values decoded into the multipliers the firmware maths uses. */
+export interface SliderFactors {
+    pidsMode: number;
+    masterMultiplier: number;
+    rollPitchRatio: number;
+    iGain: number;
+    dGain: number;
+    piGain: number;
+    dMaxGain: number;
+    feedforwardGain: number;
+    pitchPIGain: number;
+    gyroFilterMultiplier: number;
+    dtermFilterMultiplier: number;
+    gyroFilterEnabled: boolean;
+    dtermFilterEnabled: boolean;
+}
+
+/** The PID gains computed for one axis. */
+export interface AxisPidValues {
+    P: number;
+    I: number;
+    D: number;
+    F: number;
+    dMax: number;
+}
+
+/** Gyro low-pass values, keyed as FILTER_CONFIG holds them; only the enabled filters are set. */
+export interface GyroFilterValues {
+    gyro_lowpass_dyn_min_hz?: number;
+    gyro_lowpass_dyn_max_hz?: number;
+    gyro_lowpass_hz?: number;
+    gyro_lowpass2_hz?: number;
+}
+
+/** D-term low-pass values, keyed as FILTER_CONFIG holds them; only the enabled filters are set. */
+export interface DtermFilterValues {
+    dterm_lowpass_dyn_min_hz?: number;
+    dterm_lowpass_dyn_max_hz?: number;
+    dterm_lowpass_hz?: number;
+    dterm_lowpass2_hz?: number;
+}
 
 const PID_GAIN_MAX = 250;
 const F_GAIN_MAX = 1000;
@@ -25,17 +89,17 @@ const PID_DEFAULTS = [
 
 const D_MAX_DEFAULT = [40, 46, 0];
 
-const FEEDFORWARD_KEYS = ["feedforwardRoll", "feedforwardPitch", "feedforwardYaw"];
-const DMAX_KEYS = ["dMaxRoll", "dMaxPitch", "dMaxYaw"];
+const FEEDFORWARD_KEYS = ["feedforwardRoll", "feedforwardPitch", "feedforwardYaw"] as const;
+const DMAX_KEYS = ["dMaxRoll", "dMaxPitch", "dMaxYaw"] as const;
 
 // The firmware's constrain() takes int arguments, so a float result is
 // truncated toward zero before clamping (see common/maths.h). Mirror that here
 // so virtual-mode PID/filter values match what a real FC computes.
-function constrain(value, min, max) {
+function constrain(value: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, Math.trunc(value)));
 }
 
-function sliderFactorsFromTuningSliders(sliders = FC.TUNING_SLIDERS) {
+function sliderFactorsFromTuningSliders(sliders: TuningSliders = FC.TUNING_SLIDERS): SliderFactors {
     return {
         pidsMode: sliders.slider_pids_mode,
         masterMultiplier: sliders.slider_master_multiplier / 100,
@@ -53,7 +117,7 @@ function sliderFactorsFromTuningSliders(sliders = FC.TUNING_SLIDERS) {
     };
 }
 
-function calculateAxisPidValues(factors, axis) {
+function calculateAxisPidValues(factors: SliderFactors, axis: number): AxisPidValues {
     const defaults = PID_DEFAULTS[axis];
     const dMaxDefault = D_MAX_DEFAULT[axis];
     const pitchDGain = axis === 1 ? factors.rollPitchRatio : 1;
@@ -81,12 +145,12 @@ function calculateAxisPidValues(factors, axis) {
     return { P, I, D, F, dMax };
 }
 
-export function calculateSimplifiedPidValues(factors) {
+export function calculateSimplifiedPidValues(factors: SliderFactors): AxisPidValues[] {
     if (!factors.pidsMode) {
         return [];
     }
 
-    const axes = [];
+    const axes: AxisPidValues[] = [];
     for (let axis = 0; axis <= factors.pidsMode; axis++) {
         axes.push(calculateAxisPidValues(factors, axis));
     }
@@ -97,8 +161,8 @@ export function calculateSimplifiedPidValues(factors) {
 // firmware's simplified_gyro_filter_multiplier. The firmware uses integer
 // arithmetic (DEFAULT * multiplier / 100), which the truncating constrain()
 // reproduces.
-export function calculateSimplifiedGyroFilterValues(multiplier) {
-    const result = {};
+export function calculateSimplifiedGyroFilterValues(multiplier: number): GyroFilterValues {
+    const result: GyroFilterValues = {};
     if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz) {
         result.gyro_lowpass_dyn_min_hz = constrain(
             (GYRO_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100,
@@ -122,8 +186,8 @@ export function calculateSimplifiedGyroFilterValues(multiplier) {
 
 // `multiplier` is the integer slider value (e.g. 100 = 1.0x), matching the
 // firmware's simplified_dterm_filter_multiplier.
-export function calculateSimplifiedDtermFilterValues(multiplier) {
-    const result = {};
+export function calculateSimplifiedDtermFilterValues(multiplier: number): DtermFilterValues {
+    const result: DtermFilterValues = {};
     if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz) {
         result.dterm_lowpass_dyn_min_hz = constrain(
             (DTERM_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100,
@@ -145,7 +209,7 @@ export function calculateSimplifiedDtermFilterValues(multiplier) {
     return result;
 }
 
-export function applySimplifiedPids(sliders = FC.TUNING_SLIDERS) {
+export function applySimplifiedPids(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
     const factors = sliderFactorsFromTuningSliders(sliders);
     const axes = calculateSimplifiedPidValues(factors);
 
@@ -159,21 +223,21 @@ export function applySimplifiedPids(sliders = FC.TUNING_SLIDERS) {
     }
 }
 
-export function applySimplifiedGyroFilters(sliders = FC.TUNING_SLIDERS) {
+export function applySimplifiedGyroFilters(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
     if (!sliders.slider_gyro_filter) {
         return;
     }
     Object.assign(FC.FILTER_CONFIG, calculateSimplifiedGyroFilterValues(sliders.slider_gyro_filter_multiplier));
 }
 
-export function applySimplifiedDtermFilters(sliders = FC.TUNING_SLIDERS) {
+export function applySimplifiedDtermFilters(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
     if (!sliders.slider_dterm_filter) {
         return;
     }
     Object.assign(FC.FILTER_CONFIG, calculateSimplifiedDtermFilterValues(sliders.slider_dterm_filter_multiplier));
 }
 
-export function validateVirtualSimplifiedTuning() {
+export function validateVirtualSimplifiedTuning(): void {
     const factors = sliderFactorsFromTuningSliders();
     let pidsValid = true;
 
