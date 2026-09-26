@@ -132,16 +132,20 @@ describe("characterizeTumble — synthetic oracle", () => {
         });
 
         expect(result.ok).toBe(true);
+        // Narrow the discriminated union so the success fields are readable without assertions.
+        if (!result.ok) {
+            throw new Error(`expected a successful characterization, got: ${result.error}`);
+        }
         expect(result.preset).toBeGreaterThanOrEqual(1);
         expect(result.preset).toBeLessThanOrEqual(9);
         expect(result.offsets).toBeDefined();
-        expect(Number.isFinite(result.offsets!.x)).toBe(true);
+        expect(Number.isFinite(result.offsets.x)).toBe(true);
 
         // Recovered alignment matrix
         const recovered =
             result.preset === 9
-                ? eulerToMatrix(result.euler_zyx_deg!.roll, result.euler_zyx_deg!.pitch, result.euler_zyx_deg!.yaw)
-                : alignmentMatrices[result.preset!];
+                ? eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw)
+                : alignmentMatrices[result.preset];
 
         // det = +1 (proper rotation)
         expect(Math.abs(det3(recovered) - 1)).toBeLessThan(0.01);
@@ -183,6 +187,10 @@ describe("characterizeTumble — synthetic oracle", () => {
         });
 
         expect(result.ok).toBe(false);
+        // Narrow to the failure branch so `error` is readable.
+        if (result.ok) {
+            throw new Error("expected the planar sample set to be refused");
+        }
         expect(result.error).toBeDefined();
     });
 });

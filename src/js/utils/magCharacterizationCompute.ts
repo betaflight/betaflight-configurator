@@ -32,7 +32,7 @@ import semver from "semver";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
 import { fitEllipsoid } from "./ellipsoidFit.js";
 import { check3DCoverage } from "./sphereFit.js";
-import { solveTiltAlignment } from "./magTiltAlign";
+import { solveTiltAlignment, type TiltAlignmentResult } from "./magTiltAlign";
 
 type Mat3 = number[][];
 
@@ -79,16 +79,17 @@ export interface CharacterizeTumbleArgs {
     inclinationRad: number;
 }
 
-export interface CharacterizeTumbleResult {
-    ok: boolean;
-    preset?: number;
-    label?: string;
-    euler_zyx_deg?: EulerAngles;
-    offsets?: Vec3Point;
-    ellipsoid?: EllipsoidParams;
-    quality?: object;
-    error?: string;
-}
+export type CharacterizeTumbleResult =
+    | {
+          ok: true;
+          preset: number;
+          label: string;
+          euler_zyx_deg: EulerAngles;
+          offsets: Vec3Point;
+          ellipsoid: EllipsoidParams;
+          quality: TiltAlignmentResult["quality"];
+      }
+    | { ok: false; error: string };
 
 export type TumbleVerdict = "clean" | "suspect" | "contaminated";
 
@@ -213,7 +214,9 @@ export function characterizeTumble({
 
     const covCheck = check3DCoverage(rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
     if (!covCheck.ok) {
-        return { ok: false, error: covCheck.reason };
+        // check3DCoverage always sets `reason` on failure; the fallback only satisfies its
+        // JSDoc typing where `reason` is optional regardless of `ok`.
+        return { ok: false, error: covCheck.reason ?? "3D coverage check failed." };
     }
 
     const rawPoints = rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z }));
