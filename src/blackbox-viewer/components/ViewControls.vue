@@ -92,7 +92,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
     headerActive: { type: Boolean, default: false },
     tableActive: { type: Boolean, default: false },

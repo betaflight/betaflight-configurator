@@ -289,5 +289,6 @@ export const OSD_CONSTANTS = {
         { file: "vision", name: "osdSetupFontTypeVision" },
         { file: "impact", name: "osdSetupFontTypeImpact" },
         { file: "impact_mini", name: "osdSetupFontTypeImpactMini" },
+        { file: "FBsmallone", name: "osdSetupFontTypeFBSmallOne", fbOsdSmallFont: true },
     ],
 };

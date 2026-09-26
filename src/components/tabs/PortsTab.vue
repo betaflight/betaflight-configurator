@@ -11,7 +11,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import PortsTilesView from "./ports/PortsTilesView.vue";
