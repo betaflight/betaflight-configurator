@@ -79,17 +79,18 @@ export interface CharacterizeTumbleArgs {
     inclinationRad: number;
 }
 
-export type CharacterizeTumbleResult =
-    | {
-          ok: true;
-          preset: number;
-          label: string;
-          euler_zyx_deg: EulerAngles;
-          offsets: Vec3Point;
-          ellipsoid: EllipsoidParams;
-          quality: TiltAlignmentResult["quality"];
-      }
-    | { ok: false; error: string };
+/** A successful characterizeTumble() run: the proposed alignment and the offsets that go with it. */
+export interface TumbleCharacterization {
+    ok: true;
+    preset: number;
+    label: string;
+    euler_zyx_deg: EulerAngles;
+    offsets: Vec3Point;
+    ellipsoid: EllipsoidParams;
+    quality: TiltAlignmentResult["quality"];
+}
+
+export type CharacterizeTumbleResult = TumbleCharacterization | { ok: false; error: string };
 
 export type TumbleVerdict = "clean" | "suspect" | "contaminated";
 

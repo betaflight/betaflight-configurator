@@ -66,7 +66,13 @@
                             :label="$t('dronecanCanDevice')"
                             :help="$t('dronecanCanDeviceHelp')"
                         >
-                            <USelect v-model="canDevice" :items="canDeviceOptions" size="xs" class="min-w-40" />
+                            <USelect
+                                :model-value="canDevice ?? undefined"
+                                :items="canDeviceOptions"
+                                size="xs"
+                                class="min-w-40"
+                                @update:model-value="canDevice = $event"
+                            />
                         </SettingRow>
                         <SettingRow :label="baroHwName ? '' : $t('configurationBaroHardware')">
                             <template v-if="baroHwName" #label>
@@ -809,8 +815,9 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import type { Quaternion, SensorAlignment, SensorConfigActive } from "@/stores/fc.types";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
@@ -828,13 +835,15 @@ import { i18n } from "../../js/localization";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
-import { sensorTypes } from "../../js/sensor_types";
+import { sensorTypes, type SensorKind, type SensorTypes } from "../../js/sensor_types";
 import { useDronecanDevice } from "@/composables/useDronecanDevice";
 import {
     useMagCalibration,
     computeDeclination,
     getGeoReference,
     parseCoordinates,
+    type GeoReference,
+    type Vec3,
 } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
 import { degToRad } from "../../js/utils/common";
@@ -844,6 +853,7 @@ import {
     currentMatrixOf,
     isFirmwareCustomMagAlignCapable,
     MIN_FC_VERSION_FOR_CUSTOM_MAG_ALIGN,
+    type TumbleCharacterization,
 } from "../../js/utils/magCharacterizationCompute";
 import { buildCharacterizationModel } from "../../js/utils/magModelExport";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
@@ -919,7 +929,7 @@ const isApi148 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore
 const isApi147 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 const isApi146 = computed(() => fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
 
-function roundOneDp(val) {
+function roundOneDp(val: number) {
     return Math.round(val * 10) / 10;
 }
 
@@ -981,8 +991,8 @@ const magHardwareEnabled = computed({
     },
 });
 
-const magTypesList = ref([]);
-const pitotTypesList = ref([]);
+const magTypesList = ref<string[]>([]);
+const pitotTypesList = ref<string[]>([]);
 
 // A DroneCAN compass is inert until the stack is running, and dronecan_enabled is off by default.
 // Choosing DRONECAN above is the request to run it, so saving turns it on; there is no separate
@@ -1026,8 +1036,8 @@ const pitotHardwareEnabled = computed({
     },
 });
 
-const sonarTypesList = ref([]);
-const opticalFlowTypesList = ref([]);
+const sonarTypesList = ref<string[]>([]);
+const opticalFlowTypesList = ref<string[]>([]);
 
 const sonarHardwareEnabled = computed({
     get: () => sensorConfig.sonar_hardware !== 0,
@@ -1067,7 +1077,7 @@ function openBoardAlignmentWizard() {
             },
         },
         {
-            apply: async ({ roll, pitch, yaw }) => {
+            apply: async ({ roll, pitch, yaw }: { roll: number; pitch: number; yaw: number }) => {
                 boardAlignment.roll = roll;
                 boardAlignment.pitch = pitch;
                 boardAlignment.yaw = yaw;
@@ -1089,7 +1099,36 @@ const accelTrims = reactive({
 
 // --- Gyro / IMU ---
 
-const sensorAlignment = reactive({
+// The tab's editable copy of FC.SENSOR_ALIGNMENT. The per-gyro angles stay optional: no MSP
+// payload carries them, so they are undefined until this tab has saved them once.
+type SensorAlignmentForm = Required<
+    Pick<
+        SensorAlignment,
+        | "gyro_to_use"
+        | "gyro_1_align"
+        | "gyro_2_align"
+        | "align_mag"
+        | "mag_align_roll"
+        | "mag_align_pitch"
+        | "mag_align_yaw"
+        | "gyro_align"
+        | "gyro_enable_mask"
+        | "gyro_align_roll"
+        | "gyro_align_pitch"
+        | "gyro_align_yaw"
+    >
+> &
+    Pick<
+        SensorAlignment,
+        | "gyro_1_align_roll"
+        | "gyro_1_align_pitch"
+        | "gyro_1_align_yaw"
+        | "gyro_2_align_roll"
+        | "gyro_2_align_pitch"
+        | "gyro_2_align_yaw"
+    >;
+
+const sensorAlignment = reactive<SensorAlignmentForm>({
     gyro_to_use: 0,
     gyro_1_align: 0,
     gyro_2_align: 0,
@@ -1118,7 +1157,7 @@ const showGyro2Align = ref(false);
 const showMagAlign = ref(false);
 const showPitot = ref(false);
 
-const sensorTypesData = ref(null);
+const sensorTypesData = ref<SensorTypes | null>(null);
 
 const gyroHwName = ref("");
 const accHwName = ref("");
@@ -1132,7 +1171,7 @@ function resolveSensorNames() {
         return;
     }
 
-    function resolve(sensorKey, typeKey) {
+    const resolve = (sensorKey: keyof SensorConfigActive, typeKey: SensorKind) => {
         const hw = active[sensorKey];
         if (hw === undefined || hw === 0xff) {
             return "";
@@ -1142,7 +1181,7 @@ function resolveSensorNames() {
             return "";
         }
         return name;
-    }
+    };
 
     if (!isApi147.value) {
         gyroHwName.value = resolve("gyro_hardware", "gyro");
@@ -1198,7 +1237,7 @@ const gyroList = computed(() => {
     return gyros;
 });
 
-function toggleGyro(index, enabled) {
+function toggleGyro(index: number, enabled: boolean) {
     if (enabled) {
         sensorAlignment.gyro_enable_mask = bit_set(sensorAlignment.gyro_enable_mask, index);
     } else {
@@ -1245,8 +1284,8 @@ const gyroAlignSelectItems = computed(() => {
 // --- Magnetometer ---
 
 const magDeclination = ref(0);
-const magInclination = ref(null);
-const magFieldStrength = ref(null);
+const magInclination = ref<number | null>(null);
+const magFieldStrength = ref<number | null>(null);
 const showMagSection = ref(false);
 const hasMagSensor = ref(false);
 const magNeedsCalibration = ref(false);
@@ -1262,12 +1301,17 @@ function dismissDeclinationNote() {
     declinationNote.value = "";
 }
 
+interface Coordinates {
+    lat: number;
+    lon: number;
+}
+
 /**
  * Acquire GPS coordinates from flight controller, browser geolocation, or IP geolocation.
  * @param {boolean} promptConsent - If true, prompt user for location consent when no GPS fix exists.
  * @returns {Promise<{lat: number, lon: number}|null>}
  */
-async function acquireCoordinates(promptConsent) {
+async function acquireCoordinates(promptConsent: boolean): Promise<Coordinates | null> {
     const gps = await gpsCoordinates();
     if (gps) {
         return gps;
@@ -1280,7 +1324,7 @@ async function acquireCoordinates(promptConsent) {
 }
 
 // A live GPS fix from the flight controller, or null if there's no fix.
-async function gpsCoordinates() {
+async function gpsCoordinates(): Promise<Coordinates | null> {
     try {
         await MSP.promise(MSPCodes.MSP_RAW_GPS);
         if (fcStore.gpsData?.fix) {
@@ -1304,7 +1348,7 @@ async function gpsCoordinates() {
  * @returns {Promise<{lat: number, lon: number}|null>} null on denial, timeout, or when the
  *   API is unavailable.
  */
-async function browserCoordinates(promptConsent = false) {
+async function browserCoordinates(promptConsent = false): Promise<Coordinates | null> {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
         return null;
     }
@@ -1322,13 +1366,13 @@ async function browserCoordinates(promptConsent = false) {
             return null;
         }
     }
-    return new Promise((resolve) => {
+    return new Promise<Coordinates | null>((resolve) => {
         // The spec's `timeout` option bounds position acquisition only — time spent
         // waiting for the user to answer the permission prompt is excluded. A stalled
         // prompt would leave both callbacks unfired, so guard with our own deadline to
         // guarantee this settles and the caller never hangs mid-calibration.
         let settled = false;
-        const settle = (value) => {
+        const settle = (value: Coordinates | null) => {
             if (settled) {
                 return;
             }
@@ -1352,7 +1396,7 @@ async function browserCoordinates(promptConsent = false) {
 
 // IP geolocation (consent-gated), or null. The caller decides when to attempt it,
 // so the consent prompt only appears when there is genuinely no GPS fix.
-async function ipCoordinates(promptConsent) {
+async function ipCoordinates(promptConsent: boolean): Promise<Coordinates | null> {
     const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
     if (!hasConsent) {
         if (!promptConsent) {
@@ -1385,7 +1429,7 @@ async function ipCoordinates(promptConsent) {
     }
 }
 
-function applyDetectedDeclination(detected) {
+function applyDetectedDeclination(detected: number) {
     if (magDeclination.value === 0 && detected !== 0) {
         magDeclination.value = detected;
         declinationNote.value = i18n.getMessage("sensorConfigDeclinationAutoSet", { value: detected });
@@ -1397,7 +1441,7 @@ function applyDetectedDeclination(detected) {
     }
 }
 
-function setDeclinationFrom(result) {
+function setDeclinationFrom(result: GeoReference | null) {
     if (!result) {
         return;
     }
@@ -1427,7 +1471,7 @@ async function tryAutoGeoReference() {
 // inclination + field strength in the reactive panel state. The magSphere field-
 // direction arrow binds to magInclination, so the arrow appears for every source,
 // consistently and live. Returns the reference or null.
-async function resolveGeoReference(promptConsent) {
+async function resolveGeoReference(promptConsent: boolean) {
     // Prefer a live GPS fix from the flight controller; otherwise reuse cached reference if available;
     // fall back to browser geolocation, then IP geolocation, then manual fallback.
     const gps = await gpsCoordinates();
@@ -1511,7 +1555,7 @@ async function autoSetDeclination() {
 
 const cal = reactive(useMagCalibration());
 const calIsFull = ref(false);
-const fullCalResult = ref(null);
+const fullCalResult = ref<TumbleCharacterization | null>(null);
 
 // Guided choreography for the full tumble — each step is one full rotation about a
 // different axis, which together light up all 20 coverage zones.
@@ -1528,7 +1572,7 @@ const CAL_FULL_STEPS = [
 const FULL_STEP_DURATION_MS = 9000;
 const FULL_READY_FRACTION = 0.8; // 16 of 20 zones before "Compute" is allowed
 const fullCalStep = ref(0);
-let fullStepTimer = null;
+let fullStepTimer: ReturnType<typeof setInterval> | null = null;
 
 // "Compute" is enabled only once enough zones are covered — clicking earlier would
 // just be refused by the planar/coverage gate, so the button stays disabled until then.
@@ -1565,8 +1609,8 @@ function clearFullStepTimer() {
         fullStepTimer = null;
     }
 }
-const calGeoRef = ref(null);
-let lastCalStarter = null;
+const calGeoRef = ref<GeoReference | null>(null);
+let lastCalStarter: (() => Promise<void>) | null = null;
 
 const CAL_QUALITY_KEY = {
     good: "magCalibrationQualityGood",
@@ -1574,7 +1618,7 @@ const CAL_QUALITY_KEY = {
     poor: "magCalibrationQualityPoor",
 };
 
-const STATUS_CLASS_MAP = {
+const STATUS_CLASS_MAP: Record<string, string | undefined> = {
     high: "status-ok",
     good: "status-ok",
     medium: "status-warn",
@@ -1583,7 +1627,7 @@ const STATUS_CLASS_MAP = {
     poor: "status-bad",
 };
 
-function statusClass(level) {
+function statusClass(level: string) {
     return STATUS_CLASS_MAP[level] || "";
 }
 
@@ -1657,7 +1701,7 @@ async function startFullCal() {
 
 const isAcceptingCal = ref(false);
 
-async function acceptFullCal(manualGeoRef = null) {
+async function acceptFullCal(manualGeoRef: GeoReference | null = null) {
     isAcceptingCal.value = true;
     try {
         const samples = cal.samples;
@@ -1686,6 +1730,11 @@ async function acceptFullCal(manualGeoRef = null) {
                   }
                 : null;
         const R_cur = currentMatrixOf(align_mag, customAngles);
+        if (!R_cur) {
+            // Unreachable: customAngles is set whenever align_mag is CUSTOM, the one case that yields null.
+            gui_log(i18n.getMessage("magCalibrationError"));
+            return;
+        }
 
         const result = characterizeTumble({
             samples,
@@ -1710,7 +1759,7 @@ async function acceptFullCal(manualGeoRef = null) {
 
 const isSavingCal = ref(false);
 
-async function saveCalValues({ x, y, z }) {
+async function saveCalValues({ x, y, z }: Vec3) {
     isSavingCal.value = true;
     try {
         const result = await cal.writeCalValues(x, y, z);
@@ -1988,21 +2037,22 @@ const showLiveSensors = ref(false);
 
 // --- 3D Model Preview ---
 
-const modelWrapper = ref(null);
-const modelCanvas = ref(null);
-const instrumentAttitude = ref(null);
-const instrumentHeading = ref(null);
-const instrumentAltimeter = ref(null);
-let modelInstance = null;
-let boundModelResize = null;
-let attitudeIndicator = null;
-let headingIndicator = null;
-let altimeterIndicator = null;
+const modelWrapper = ref<HTMLElement | null>(null);
+const modelCanvas = ref<HTMLCanvasElement | null>(null);
+const instrumentAttitude = ref<HTMLElement | null>(null);
+const instrumentHeading = ref<HTMLElement | null>(null);
+const instrumentAltimeter = ref<HTMLElement | null>(null);
+type FlightIndicator = ReturnType<typeof flightIndicator>;
+let modelInstance: Model | null = null;
+let boundModelResize: (() => void) | null = null;
+let attitudeIndicator: FlightIndicator | null = null;
+let headingIndicator: FlightIndicator | null = null;
+let altimeterIndicator: FlightIndicator | null = null;
 
 const { addInterval, pauseInterval, resumeInterval, removeAllIntervals } = useInterval();
 
 const CARDINAL_DIRS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-function toCardinal(deg) {
+function toCardinal(deg: number) {
     return CARDINAL_DIRS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
 }
 
@@ -2014,13 +2064,13 @@ const attitudeDisplay = reactive({
     roll: "0.0",
 });
 const attitudeRaw = reactive({ roll: 0, pitch: 0, heading: 0 });
-const attitudeQuaternion = ref(null);
+const attitudeQuaternion = ref<Quaternion | null>(null);
 
 function resetYaw() {
     yawFix.value = fcStore.sensorData.kinematics[2] * -1;
 }
 
-function formatAttitude(val) {
+function formatAttitude(val: number) {
     return val.toFixed(1);
 }
 
@@ -2081,9 +2131,10 @@ function pollAttitude() {
         if (headingIndicator) {
             headingIndicator.setHeading(headingDeg);
         }
-        if (altimeterIndicator) {
+        const altimeter = altimeterIndicator;
+        if (altimeter) {
             MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, () => {
-                altimeterIndicator.setAltitude(fcStore.sensorData.altitude * 100);
+                altimeter.setAltitude(fcStore.sensorData.altitude * 100);
             });
         }
         renderModel();
