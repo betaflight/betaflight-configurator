@@ -7145,6 +7145,13 @@
     "osdDescElementCompassBar": {
         "message": "Graphical compass bar showing current heading"
     },
+    "osdTextElementDecimalCompassBar": {
+        "message": "Decimal compass bar",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDecimalCompassBar": {
+        "message": "Compass bar showing current heading with degree labels (0, 90, 180 and 270) instead of cardinal directions"
+    },
     "osdTextElementWarnings": {
         "message": "Warnings",
         "description": "One of the elements of the OSD"
