@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Builds a portable, self-contained JSON description of a magnetometer
  * calibration: the hard-iron offsets, the soft-iron (ellipsoid) correction, the
@@ -13,16 +34,156 @@
 import { matrixToEuler } from "./magCharacterization.js";
 import { ALIGNMENT_MATRICES } from "./magAlignment.js";
 
+type Vec3 = { x: number; y: number; z: number };
+type Mat3 = number[][];
+
+/** ZYX Euler angles in degrees. */
+export interface EulerAngles {
+    roll: number;
+    pitch: number;
+    yaw: number;
+}
+
+/** The ellipsoid fit as fitEllipsoid() reports it. */
+export interface EllipsoidParams {
+    center: Vec3;
+    W_inv: Mat3;
+    radius: number;
+    residual: number;
+}
+
+/** Geomagnetic reference for the capture location (WMM). */
+export interface GeoReference {
+    declination: number;
+    inclination: number;
+    fieldStrength: number;
+}
+
+/** Per-axis solver residuals; reserved for future per-axis noise, pass null today. */
+export interface SolverResiduals {
+    xyRms?: number | null;
+    zRms?: number | null;
+}
+
+/**
+ * A solve result, kept deliberately loose: it may carry a preset or a raw
+ * `alignment`, Euler angles either as `euler_zyx_deg` or `customAngles`, and an
+ * `error` flag. Only the fields the builders read are declared.
+ */
+export interface SolverResult {
+    preset?: number;
+    alignment?: number;
+    label?: string;
+    euler_zyx_deg?: EulerAngles;
+    customAngles?: EulerAngles;
+    quality?: {
+        meanResidualDeg?: number | null;
+        sampleCount?: number | null;
+        frobNorm?: number | null;
+        cost?: number | null;
+    };
+    error?: unknown;
+}
+
+/** The FC configuration active during capture, passed through verbatim. */
+export interface CapturedUnder {
+    alignment: number;
+    custom_angles: EulerAngles | null;
+    mag_zero: Vec3 | null;
+    mag_zero_known: boolean;
+}
+
+/** Soft-iron sanity gates: the per-check values plus an overall verdict. */
+export interface MagQualityBounds {
+    field_strength_mg: number | null;
+    field_strength_ok: boolean | null;
+    soft_iron_offdiag_ratio: number | null;
+    soft_iron_offdiag_ok: boolean | null;
+    soft_iron_anisotropy: number | null;
+    soft_iron_anisotropy_ok: boolean | null;
+    bounds_ok: boolean;
+}
+
+/** The WMM earth-field vector in the NED world frame, in Gauss. */
+export interface EarthFieldNedGauss {
+    n: number;
+    e: number;
+    d: number;
+}
+
+/** The `downstream_fusion` block: a seed + noise model for a 3-axis mag filter. */
+export interface DownstreamFusion {
+    frame: "FRD";
+    nt_per_corrected_unit: number | null;
+    gauss_per_corrected_unit: number | null;
+    earth_field_ned_gauss: EarthFieldNedGauss | null;
+    mag_noise_gauss: {
+        sigma: number | null;
+        sigma_xy: number | null;
+        sigma_z: number | null;
+    };
+    quality_bounds: MagQualityBounds;
+}
+
+export interface BuildCharacterizationModelArgs {
+    solverResult: SolverResult | null;
+    capturedUnder: CapturedUnder | null;
+    ellipsoidParams: EllipsoidParams | null;
+    calibrationOffsets: Vec3 | null;
+    geoReference: GeoReference | null;
+    gpsFix: boolean;
+    gpsLat: number;
+    gpsLon: number;
+    qualityAssessment?: object | null;
+}
+
+/** The exported calibration model — a plain, JSON-serializable object. */
+export interface CharacterizationModel {
+    $schema: string;
+    version: string;
+    captured_under: CapturedUnder | null;
+    ellipsoid_correction: {
+        center: Vec3;
+        soft_iron: Mat3;
+        radius: number;
+        residual_rms: number;
+    } | null;
+    geo_reference: {
+        latitude_deg: number | null;
+        longitude_deg: number | null;
+        declination_deg: number | null;
+        inclination_deg: number | null;
+        field_strength_nt: number | null;
+    };
+    alignment: {
+        preset: number | undefined;
+        label: string | undefined;
+        euler_zyx_deg: EulerAngles;
+    } | null;
+    hard_iron: Vec3 | null;
+    quality: {
+        mean_residual_deg: number | null;
+        sample_count: number | null;
+        frob_norm: number | null;
+        cost: number | null;
+    } | null;
+    quality_assessment: object | null;
+    downstream_fusion: DownstreamFusion;
+}
+
+// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
+const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
+
 export const MODEL_SCHEMA_VERSION = "2.2";
 export const MODEL_SCHEMA_URL = `https://betaflight.com/blackbox/mag-characterization-model/${MODEL_SCHEMA_VERSION}`;
 
 /** Normalize a heading to [0, 360). */
-export function normalizeHeading(deg) {
+export function normalizeHeading(deg: number): number {
     return ((deg % 360) + 360) % 360;
 }
 
 /** Signed wrapped heading error in (-180, 180]. */
-export function signedHeadingError(actual, expected) {
+export function signedHeadingError(actual: number, expected: number | null | undefined): number {
     if (expected === null || expected === undefined) {
         return 0;
     }
@@ -37,7 +198,7 @@ export function signedHeadingError(actual, expected) {
 }
 
 /** ZYX Euler angles (degrees) for a solver result, presets included. */
-export function getEulerAngles(solverResultVal) {
+export function getEulerAngles(solverResultVal: SolverResult | null): EulerAngles {
     if (!solverResultVal) {
         return { roll: 0, pitch: 0, yaw: 0 };
     }
@@ -49,8 +210,8 @@ export function getEulerAngles(solverResultVal) {
         const { roll, pitch, yaw } = solverResultVal.customAngles;
         return { roll, pitch, yaw };
     }
-    if (preset >= 1 && preset <= 8 && ALIGNMENT_MATRICES[preset]) {
-        return matrixToEuler(ALIGNMENT_MATRICES[preset]);
+    if (typeof preset === "number" && preset >= 1 && preset <= 8 && alignmentMatrices[preset]) {
+        return matrixToEuler(alignmentMatrices[preset]);
     }
     return { roll: 0, pitch: 0, yaw: 0 };
 }
@@ -72,16 +233,15 @@ export function getEulerAngles(solverResultVal) {
  * (unit-sphere) or in raw ADC scale. They catch degenerate/pathological fits
  * that a residual-only score can miss (e.g. a near-singular soft-iron matrix).
  *
- * @param {number[][]|null} softIron - the W_inv soft-iron matrix
- * @param {number|null} fieldNt - local field strength (nanotesla)
- * @returns {object} per-check values + booleans + overall bounds_ok
+ * @param softIron - the W_inv soft-iron matrix
+ * @param fieldNt - local field strength (nanotesla)
  */
-export function computeMagQualityBounds(softIron, fieldNt) {
+export function computeMagQualityBounds(softIron: Mat3 | null, fieldNt: number | null): MagQualityBounds {
     const fieldMg = fieldNt != null ? fieldNt / 100 : null; // 1 milliGauss = 100 nT
     const fieldOk = fieldMg != null ? fieldMg >= 150 && fieldMg <= 950 : null;
 
-    let offdiagRatio = null;
-    let anisotropy = null;
+    let offdiagRatio: number | null = null;
+    let anisotropy: number | null = null;
     if (Array.isArray(softIron) && softIron.length === 3) {
         const diag = [Math.abs(softIron[0][0]), Math.abs(softIron[1][1]), Math.abs(softIron[2][2])];
         const offdiag = [
@@ -137,26 +297,26 @@ export function computeMagQualityBounds(softIron, fieldNt) {
  *  - frame: the body frame of center/soft_iron/hard_iron and of the live magADC
  *    the estimator applies them to (FRD — firmware-verified).
  *
- * @param {object|null} ellipsoidParams - { center, W_inv, radius, residual }
- * @param {object|null} geoReference - { declination, inclination, fieldStrength }
- * @param {object|null} solverResiduals - { xyRms, zRms } (unused currently,
- *   kept for future per-axis noise; pass null for now)
- * @returns {object} the downstream_fusion block (all keys present; null when unknown)
+ * @param solverResiduals - unused currently, kept for future per-axis noise; pass null for now
  */
-export function computeDownstreamFusion(ellipsoidParams, geoReference, solverResiduals) {
+export function computeDownstreamFusion(
+    ellipsoidParams: EllipsoidParams | null,
+    geoReference: GeoReference | null,
+    solverResiduals: SolverResiduals | null,
+): DownstreamFusion {
     const fieldNt = geoReference?.fieldStrength ?? null;
     const radius = ellipsoidParams?.radius ?? null;
     const softIron = ellipsoidParams?.W_inv ?? null;
     const epResidual = ellipsoidParams?.residual ?? null;
 
-    let ntPerUnit = null;
-    let gaussPerUnit = null;
+    let ntPerUnit: number | null = null;
+    let gaussPerUnit: number | null = null;
     if (fieldNt != null && radius != null && Math.abs(radius) > 1e-9) {
         ntPerUnit = fieldNt / radius;
         gaussPerUnit = ntPerUnit / 1e5; // 1 Gauss = 1e5 nT
     }
 
-    let earthFieldNedGauss = null;
+    let earthFieldNedGauss: EarthFieldNedGauss | null = null;
     if (fieldNt != null && geoReference?.inclination != null && geoReference?.declination != null) {
         const incl = (geoReference.inclination * Math.PI) / 180;
         const decl = (geoReference.declination * Math.PI) / 180;
@@ -169,7 +329,8 @@ export function computeDownstreamFusion(ellipsoidParams, geoReference, solverRes
         };
     }
 
-    const scaleNoise = (r) => (r != null && gaussPerUnit != null ? Math.abs(r) * gaussPerUnit : null);
+    const scaleNoise = (r: number | null | undefined): number | null =>
+        r != null && gaussPerUnit != null ? Math.abs(r) * gaussPerUnit : null;
 
     return {
         frame: "FRD",
@@ -194,18 +355,8 @@ export function computeDownstreamFusion(ellipsoidParams, geoReference, solverRes
  * (the literal `set mag_calibration` values). All are in the FRD body frame
  * (see `downstream_fusion.frame`).
  *
- * @param {object} args
- * @param {object|null} args.solverResult - solveTiltAlignment() result
- * @param {object|null} args.capturedUnder - { alignment, custom_angles, mag_zero, mag_zero_known }
- * @param {object|null} args.ellipsoidParams - { center, W_inv, radius, residual }
- * @param {{ x: number, y: number, z: number }|null} args.calibrationOffsets -
- *   PROPOSED-frame magZero values
- * @param {{ declination: number, inclination: number, fieldStrength: number }|null} args.geoReference
- * @param {boolean} args.gpsFix
- * @param {number} args.gpsLat - raw MSP value (deg x 1e7)
- * @param {number} args.gpsLon - raw MSP value (deg x 1e7)
- * @param {object|null} [args.qualityAssessment]
- * @returns {object} plain JSON-serializable model
+ * @param gpsLat - raw MSP value (deg x 1e7)
+ * @param gpsLon - raw MSP value (deg x 1e7)
  */
 export function buildCharacterizationModel({
     solverResult,
@@ -217,11 +368,11 @@ export function buildCharacterizationModel({
     gpsLat,
     gpsLon,
     qualityAssessment = null,
-}) {
+}: BuildCharacterizationModelArgs): CharacterizationModel {
     const sr = solverResult;
     const ep = ellipsoidParams;
 
-    let alignmentBlock = null;
+    let alignmentBlock: CharacterizationModel["alignment"] = null;
     if (sr && !sr.error) {
         alignmentBlock = {
             preset: sr.preset ?? sr.alignment,
@@ -230,7 +381,7 @@ export function buildCharacterizationModel({
         };
     }
 
-    let qualityBlock = null;
+    let qualityBlock: CharacterizationModel["quality"] = null;
     if (sr && !sr.error) {
         qualityBlock = {
             mean_residual_deg: sr.quality?.meanResidualDeg ?? null,
