@@ -17,6 +17,23 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+/** Precomputed transform state shared across the recursive butterfly passes. */
+interface FFTState {
+    n: number;
+    inverse: boolean;
+    factors: number[];
+    twiddle: Float64Array;
+    scratch: Float64Array;
+}
+
+/** The working set threaded through the recursive `work()` decomposition. */
+interface WorkContext {
+    output: Float64Array;
+    f: Float64Array | Float32Array;
+    inputStride: number;
+    state: FFTState;
+}
+
 // Scratch buffer for twiddleMul() results, reused across butterfly iterations
 // so we don't allocate inside the hot FFT loops.
 const TWIDDLE_TMP = new Float64Array(2);
@@ -27,7 +44,7 @@ const TWIDDLE_TMP = new Float64Array(2);
  * Subsequent calls overwrite the view — callers must copy the real/imag
  * components into locals before calling again.
  */
-function twiddleMul(output, idx, t, tIdx) {
+function twiddleMul(output: Float64Array, idx: number, t: Float64Array, tIdx: number): Float64Array {
     const sr = output[idx];
     const si = output[idx + 1];
     const tr = t[tIdx];
@@ -37,7 +54,14 @@ function twiddleMul(output, idx, t, tIdx) {
     return TWIDDLE_TMP;
 }
 
-function butterfly2(output, outputOffset, outputStride, fStride, state, m) {
+function butterfly2(
+    output: Float64Array,
+    outputOffset: number,
+    outputStride: number,
+    fStride: number,
+    state: FFTState,
+    m: number,
+): void {
     const t = state.twiddle;
     for (let i = 0; i < m; i++) {
         const idx0 = 2 * (outputOffset + outputStride * i);
@@ -61,7 +85,14 @@ function butterfly2(output, outputOffset, outputStride, fStride, state, m) {
     }
 }
 
-function butterfly3(output, outputOffset, outputStride, fStride, state, m) {
+function butterfly3(
+    output: Float64Array,
+    outputOffset: number,
+    outputStride: number,
+    fStride: number,
+    state: FFTState,
+    m: number,
+): void {
     const t = state.twiddle;
     const m1 = m,
         m2 = 2 * m;
@@ -102,7 +133,14 @@ function butterfly3(output, outputOffset, outputStride, fStride, state, m) {
     }
 }
 
-function butterfly4(output, outputOffset, outputStride, fStride, state, m) {
+function butterfly4(
+    output: Float64Array,
+    outputOffset: number,
+    outputStride: number,
+    fStride: number,
+    state: FFTState,
+    m: number,
+): void {
     const t = state.twiddle;
     const m1 = m,
         m2 = 2 * m,
@@ -158,7 +196,15 @@ function butterfly4(output, outputOffset, outputStride, fStride, state, m) {
     }
 }
 
-function butterflyN(output, outputOffset, outputStride, fStride, state, m, p) {
+function butterflyN(
+    output: Float64Array,
+    outputOffset: number,
+    outputStride: number,
+    fStride: number,
+    state: FFTState,
+    m: number,
+    p: number,
+): void {
     const t = state.twiddle;
     const n = state.n;
     const scratch = new Float64Array(2 * p);
@@ -191,10 +237,19 @@ function butterflyN(output, outputOffset, outputStride, fStride, state, m, p) {
     }
 }
 
-function work(ctx, outputOffset, outputStride, fOffset, fStride, factors) {
+function work(
+    ctx: WorkContext,
+    outputOffset: number,
+    outputStride: number,
+    fOffset: number,
+    fStride: number,
+    factors: number[],
+): void {
     const { output, f, inputStride, state } = ctx;
-    const p = factors.shift();
-    const m = factors.shift();
+    // The factor list is built in (p, m) pairs and always non-empty when work() is
+    // entered, so both shifts return a value.
+    const p = factors.shift()!;
+    const m = factors.shift()!;
 
     if (m === 1) {
         for (let i = 0; i < p * m; i++) {
@@ -235,18 +290,20 @@ function work(ctx, outputOffset, outputStride, fOffset, fStride, factors) {
 /**
  * Mixed-radix complex FFT.
  *
- * @param {number} n - Transform size
- * @param {boolean} inverse - true for inverse FFT
+ * @param n - Transform size
+ * @param inverse - true for inverse FFT
  */
 export class ComplexFFT {
-    constructor(n, inverse) {
+    state: FFTState;
+
+    constructor(n: number, inverse: boolean) {
         n = Math.trunc(n);
         inverse = !!inverse;
         if (n < 1) {
             throw new RangeError(`FFT size must be positive, got ${n}`);
         }
 
-        const state = {
+        const state: FFTState = {
             n,
             inverse,
             factors: [],
@@ -291,11 +348,11 @@ export class ComplexFFT {
     /**
      * Compute FFT.
      *
-     * @param {Float64Array} output - Interleaved complex output [re0, im0, ...]
-     * @param {Float64Array|Float32Array} input - Input data
-     * @param {string} [type='complex'] - 'real' for real-valued input, 'complex' for interleaved complex
+     * @param output - Interleaved complex output [re0, im0, ...]
+     * @param input - Input data
+     * @param type - 'real' for real-valued input, 'complex' for interleaved complex
      */
-    simple(output, input, type) {
+    simple(output: Float64Array, input: Float64Array | Float32Array, type?: string): void {
         const { state } = this;
         if (type === "real") {
             for (let i = 0; i < state.n; i++) {
