@@ -1,10 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { detectBoardAlignment, matrixToEuler, snapTo45 } from "../../src/js/utils/boardAlignment";
-import { eulerToMatrix } from "../../src/js/utils/magAlignment.js";
+import { eulerToMatrix, mat3mulVec, mat3transpose } from "../../src/js/utils/magAlignment.js";
 
 type Mat3 = number[][];
 
 const DEG_TO_RAD = Math.PI / 180;
+
+/** Assert two 3×3 matrices agree elementwise to `precision` decimal places. */
+function expectMatrixClose(got: Mat3, expected: Mat3, precision: number): void {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            expect(got[i][j]).toBeCloseTo(expected[i][j], precision);
+        }
+    }
+}
 
 // --- Synthetic sample generation ---
 //
@@ -42,22 +51,6 @@ function rotY(theta: number): Mat3 {
     ];
 }
 
-function transpose(m: Mat3): Mat3 {
-    return [
-        [m[0][0], m[1][0], m[2][0]],
-        [m[0][1], m[1][1], m[2][1]],
-        [m[0][2], m[1][2], m[2][2]],
-    ];
-}
-
-function matVec(m: Mat3, v: number[]): number[] {
-    return [
-        m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2],
-        m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2],
-        m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2],
-    ];
-}
-
 interface Alignment {
     roll: number;
     pitch: number;
@@ -92,7 +85,7 @@ function makeSamples(
 
     // Raw FC accel = R_mount^T · accel_world
     // Post-alignment accel (what MSP_RAW_IMU returns) = R_current · raw_fc
-    const post = (accelWorld: number[]) => matVec(rCurrent, matVec(transpose(rMount), accelWorld));
+    const post = (accelWorld: number[]) => mat3mulVec(rCurrent, mat3mulVec(mat3transpose(rMount), accelWorld));
 
     const noseDown = (reverse.pitch ? -45 : 45) * DEG_TO_RAD;
     const rollRight = (reverse.roll ? -45 : 45) * DEG_TO_RAD;
@@ -103,8 +96,8 @@ function makeSamples(
     //   nose down:   Ry(+45°) applied to body → world-up in body = Ry(-45°)·(0,0,1) = (-sin45, 0, cos45)
     //   roll right:  Right wing (−Y) down = Rx(+45°) applied to body → Rx(-45°)·(0,0,1) = (0, sin45, cos45)
     const accelFlatWorld = [0, 0, 1];
-    const accelPitchWorld = matVec(rotY(-noseDown), [0, 0, 1]);
-    const accelRollWorld = matVec(rotX(-rollRight), [0, 0, 1]);
+    const accelPitchWorld = mat3mulVec(rotY(-noseDown), [0, 0, 1]);
+    const accelRollWorld = mat3mulVec(rotX(-rollRight), [0, 0, 1]);
 
     const jitter = () => (noise > 0 ? (Math.random() - 0.5) * 2 * noise : 0);
     const addNoise = (v: number[]) => [v[0] + jitter(), v[1] + jitter(), v[2] + jitter()];
@@ -142,11 +135,7 @@ describe("matrixToEuler / eulerToMatrix round-trip", () => {
             const e = matrixToEuler(m);
             // Compare via the matrix instead of raw angles (avoids gimbal-lock ambiguity).
             const m2 = eulerToMatrix(e.roll, e.pitch, e.yaw);
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(m2[i][j]).toBeCloseTo(m[i][j], 6);
-                }
-            }
+            expectMatrixClose(m2, m, 6);
         });
     }
 });
@@ -196,11 +185,7 @@ describe("detectBoardAlignment - cardinal mounts", () => {
             // Both sides negate yaw to convert from CW-positive display back to CCW-positive math.
             const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
             const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-                }
-            }
+            expectMatrixClose(got, expected, 4);
         });
     }
 });
@@ -218,11 +203,7 @@ describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
             expect(result.error).toBeUndefined();
             const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
             const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-                }
-            }
+            expectMatrixClose(got, expected, 4);
         });
     }
 });
@@ -236,11 +217,7 @@ describe("detectBoardAlignment - delta from current alignment", () => {
         const result = detectBoardAlignment({ ...samples, currentAlignment: current });
         const expected = eulerToMatrix(current.roll, current.pitch, internalYaw(current.yaw));
         const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-            }
-        }
+        expectMatrixClose(got, expected, 4);
     });
 
     it("composes the residual rotation with current alignment", () => {
@@ -252,11 +229,7 @@ describe("detectBoardAlignment - delta from current alignment", () => {
         expect(result.yaw).toBe(180);
         const expected = eulerToMatrix(0, 0, internalYaw(180));
         const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-            }
-        }
+        expectMatrixClose(got, expected, 4);
     });
 });
 

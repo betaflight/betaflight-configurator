@@ -53,7 +53,7 @@
  *      yaw from internal CCW-positive to Betaflight's CW-positive [0, 360).
  */
 
-import { eulerToMatrix } from "./magAlignment.js";
+import { eulerToMatrix, mat3mul } from "./magAlignment.js";
 
 type Vec3 = [number, number, number];
 type Mat3 = number[][];
@@ -113,20 +113,6 @@ function dot(a: number[], b: number[]): number {
 
 function cross(a: number[], b: number[]): Vec3 {
     return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-}
-
-function matMul(a: Mat3, b: Mat3): Mat3 {
-    const r: Mat3 = [
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0],
-    ];
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            r[i][j] = a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j];
-        }
-    }
-    return r;
 }
 
 // --- Public utilities ---
@@ -307,7 +293,7 @@ export function detectBoardAlignment({
             currentAlignment.pitch || 0,
             -(currentAlignment.yaw || 0),
         );
-        mTotal = matMul(m, cur);
+        mTotal = mat3mul(m, cur);
     }
 
     const euler = matrixToEuler(mTotal);
