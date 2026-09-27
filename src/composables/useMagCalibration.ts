@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref, computed, shallowRef, triggerRef, onScopeDispose } from "vue";
 import geomagnetism from "geomagnetism";
 import MSP from "../js/msp";
@@ -6,6 +27,32 @@ import { useFlightControllerStore } from "../stores/fc";
 import { fitSphere, computeDirectionalCoverage } from "../js/utils/sphereFit";
 import { bit_check } from "../js/bit";
 import { send as cliSend, isMspCliSupported } from "./useMspCliSession";
+
+export interface Vec3 {
+    x: number;
+    y: number;
+    z: number;
+}
+
+/** One magnetometer reading with the attitude it was taken at (degrees). */
+export interface MagSample extends Vec3 {
+    roll: number;
+    pitch: number;
+    heading: number;
+    timestamp: number;
+}
+
+export type MagCalibrationPhase = "idle" | "waiting" | "collecting" | "complete" | "error";
+export type MagCalibrationMode = "full" | "quick" | "check";
+export type MagCalibrationQuality = "good" | "fair" | "poor";
+
+export interface GeoReference {
+    declination: number;
+    inclination: number;
+    fieldStrength: number;
+}
+
+export type WriteCalResult = { ok: true } | { ok: false; error: unknown };
 
 const POLL_INTERVAL_MS = 100;
 const MONITOR_INTERVAL_MS = 1000;
@@ -22,7 +69,7 @@ const MAG_CAL_MAX = 32767;
 const FULL_COVERAGE_GOOD = 0.8;
 const FULL_COVERAGE_FAIR = 0.5;
 
-function coverageQuality(fraction) {
+function coverageQuality(fraction: number): MagCalibrationQuality {
     if (fraction >= FULL_COVERAGE_GOOD) {
         return "good";
     }
@@ -32,7 +79,7 @@ function coverageQuality(fraction) {
     return "poor";
 }
 
-function centroid(points) {
+function centroid(points: Vec3[]): Vec3 {
     let sx = 0;
     let sy = 0;
     let sz = 0;
@@ -45,7 +92,7 @@ function centroid(points) {
     return { x: sx / n, y: sy / n, z: sz / n };
 }
 
-function computeAttitudeCoverage(samples) {
+function computeAttitudeCoverage(samples: MagSample[]) {
     // Match MagSphereView's plotted nose directions in the NED scene. Roll
     // turns the aircraft around its nose, so only pitch and heading set this
     // direction. The raw-mag 3D coverage check still runs before the solve.
@@ -63,12 +110,16 @@ function computeAttitudeCoverage(samples) {
     return computeDirectionalCoverage(directions, { x: 0, y: 0, z: 0 });
 }
 
-async function readFirmwareOffsets() {
+async function readFirmwareOffsets(): Promise<Vec3 | null> {
     if (!isMspCliSupported()) {
         return null;
     }
     try {
+        // send() (still JS) resolves Promise<unknown>; it always resolves an array of lines.
         const lines = await cliSend("get mag_calibration");
+        if (!Array.isArray(lines)) {
+            return null;
+        }
         for (const line of lines) {
             const match = line.match(/mag_calibration\s*=\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)/);
             if (match) {
@@ -94,12 +145,12 @@ export function useMagCalibration() {
     const fcStore = useFlightControllerStore();
 
     // --- Reactive state ---
-    const phase = ref("idle"); // 'idle' | 'waiting' | 'collecting' | 'complete' | 'error'
-    const mode = ref("full"); // 'full' | 'quick' | 'check'
-    const samples = shallowRef([]);
-    const sphereFitResult = ref(null);
-    const coverage = ref(null);
-    const quality = ref(null);
+    const phase = ref<MagCalibrationPhase>("idle");
+    const mode = ref<MagCalibrationMode>("full");
+    const samples = shallowRef<MagSample[]>([]);
+    const sphereFitResult = ref<ReturnType<typeof fitSphere>>(null);
+    const coverage = ref<ReturnType<typeof computeDirectionalCoverage> | null>(null);
+    const quality = ref<MagCalibrationQuality | null>(null);
     const qualityScore = ref(0);
     const progress = ref(0);
     const statusMessage = ref("");
@@ -114,18 +165,18 @@ export function useMagCalibration() {
     const liveFieldStrength = computed(() => Math.round(Math.hypot(liveMag.value.x, liveMag.value.y, liveMag.value.z)));
 
     // Firmware calibration offsets read via CLI
-    const firmwareOffsets = ref(null); // { x, y, z } or null
+    const firmwareOffsets = ref<Vec3 | null>(null);
 
     // --- Internal state (non-reactive) ---
-    let dataInterval = null;
-    let monitorInterval = null;
-    let countdownInterval = null;
+    let dataInterval: ReturnType<typeof setInterval> | null = null;
+    let monitorInterval: ReturnType<typeof setInterval> | null = null;
+    let countdownInterval: ReturnType<typeof setInterval> | null = null;
     let firmwareCollectingStartTime = 0;
     let samplesSinceLastFit = 0;
     let lastMovementTime = 0;
-    let lastMag = null;
+    let lastMag: Vec3 | null = null;
     let firmwareFlagSeen = false;
-    let reconstructionOffsets = null; // firmware offsets to add back in full mode for raw sensor reconstruction
+    let reconstructionOffsets: Vec3 | null = null; // firmware offsets to add back in full mode for raw sensor reconstruction
     let starting = false;
     // Bumped by every teardown path. startCalibration() captures it before awaiting the
     // CLI offset read and re-checks after, so a cancel/retry/discard/unmount during that
@@ -134,12 +185,12 @@ export function useMagCalibration() {
 
     /**
      * Start a calibration session.
-     * @param {'full' | 'quick' | 'check'} [calMode='full'] - Calibration mode:
+     * @param calMode - Calibration mode:
      *   'full' (default): reconstructs raw samples and tracks 20-zone coverage of the plotted attitude sweep.
      *   'quick': triggers the FC onboard 30s min/max routine (legacy).
      *   'check': real-time validation without altering calibration.
      */
-    async function startCalibration(calMode = "full") {
+    async function startCalibration(calMode: MagCalibrationMode = "full") {
         if (phase.value !== "idle" || starting) {
             return;
         }
@@ -391,7 +442,7 @@ export function useMagCalibration() {
         return offsets;
     }
 
-    async function writeCalValues(x, y, z) {
+    async function writeCalValues(x: number, y: number, z: number): Promise<WriteCalResult> {
         const rx = Math.round(x);
         const ry = Math.round(y);
         const rz = Math.round(z);
@@ -481,13 +532,13 @@ export function useMagCalibration() {
  * Compute magnetic declination and inclination from GPS coordinates
  * using the World Magnetic Model via the geomagnetism package.
  *
- * @param {number} lat - Latitude in decimal degrees
- * @param {number} lon - Longitude in decimal degrees
- * @returns {{ declination: number, inclination: number, fieldStrength: number }}
+ * @param lat - Latitude in decimal degrees
+ * @param lon - Longitude in decimal degrees
+ * @returns the reference, or null if the model cannot evaluate the point
  */
-let lastGeoReference = null;
+let lastGeoReference: GeoReference | null = null;
 
-export function computeDeclination(lat, lon) {
+export function computeDeclination(lat: number, lon: number): GeoReference | null {
     try {
         const info = geomagnetism.model().point([lat, lon]);
         const result = { declination: info.decl, inclination: info.incl, fieldStrength: Math.round(info.f) };
@@ -498,7 +549,7 @@ export function computeDeclination(lat, lon) {
     }
 }
 
-export function getGeoReference() {
+export function getGeoReference(): GeoReference | null {
     return lastGeoReference;
 }
 
@@ -508,10 +559,9 @@ const COORDINATE_RE = /^([+-]?\d+(?:\.\d+)?)[,\s]+([+-]?\d+(?:\.\d+)?)$/;
 /**
  * Parse latitude and longitude from user input (e.g. Google Maps: "63.728263, -68.446117").
  *
- * @param {string} input - Coordinate string (comma or space separated)
- * @returns {{ lat: number, lon: number } | null}
+ * @param input - Coordinate string (comma or space separated)
  */
-export function parseCoordinates(input) {
+export function parseCoordinates(input: unknown): { lat: number; lon: number } | null {
     if (!input || typeof input !== "string") {
         return null;
     }
