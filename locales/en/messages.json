@@ -2439,6 +2439,62 @@
         "message": "Throttle % at hover. Motor authority roughly scales with throttle², so b0 is scaled by (throttle / hover)² above this value, clamped to the b0 Scale Max ceiling below. Has no built-in relationship to Liftoff Throttle - they answer different questions ('where do I actually hover' vs. 'how sure am I this throttle means I'm off the ground').",
         "description": "adrc_hover_throttle help, sourced from ADRC.md"
     },
+    "pidTuningAdrcB0Law": {
+        "message": "b0 Law",
+        "description": "Label for adrc_b0_law"
+    },
+    "pidTuningAdrcB0LawHelp": {
+        "message": "Shape of the throttle-to-b0 schedule above hover: QUADRATIC (throttle/hover)², LINEAR, SQRT or FIXED (no scheduling). SQRT is the default from b11; QUADRATIC had the largest throttle-step errors in testing.",
+        "description": "adrc_b0_law help"
+    },
+    "pidTuningAdrcB0ScaleMin": {
+        "message": "b0 Scale Min (%)",
+        "description": "Label for adrc_b0_scale_min"
+    },
+    "pidTuningAdrcB0ScaleMinHelp": {
+        "message": "Floor of the b0 schedule below hover, in percent. 100 = the schedule never goes below 1 (b10.1 behaviour). Lower values let the observer see the lower plant gain at low throttle; testers settled on 70–90. Applies only while the liftoff gate is open.",
+        "description": "adrc_b0_scale_min help"
+    },
+    "pidTuningAdrcGroundWc": {
+        "message": "Ground wc",
+        "description": "Label for adrc_ground_wc"
+    },
+    "pidTuningAdrcGroundWcHelp": {
+        "message": "wc used on all axes while the liftoff gate is closed, ramped to the flight wc after liftoff. Prevents the arm-time lift-off on the ground with airmode. 0 = off. Default 10 from b11.",
+        "description": "adrc_ground_wc help"
+    },
+    "pidTuningAdrcWcRampMs": {
+        "message": "wc Ramp (ms)",
+        "description": "Label for adrc_wc_ramp_ms"
+    },
+    "pidTuningAdrcWcRampMsHelp": {
+        "message": "Time to ramp from Ground wc to the flight wc after the liftoff gate opens. 0 = switch immediately.",
+        "description": "adrc_wc_ramp_ms help"
+    },
+    "pidTuningAdrcGroundDgain": {
+        "message": "Ground D gain cap (x0.1)",
+        "description": "Label for adrc_ground_dgain"
+    },
+    "pidTuningAdrcGroundDgainHelp": {
+        "message": "Additionally caps Ground wc at dgain × b0 / (2 × wo) per axis, so the ground D-path gain is bounded whatever the tune. 0 = no cap. Default 40 (= 4.0) from b11, where the cap does not bind on the tunes flown so far.",
+        "description": "adrc_ground_dgain help"
+    },
+    "pidTuningAdrcGroupSaturation": {
+        "message": "Mixer Saturation",
+        "description": "Group title for adrc_sat_z3_inhibit"
+    },
+    "pidTuningAdrcGroupSaturationHelp": {
+        "message": "What the observer does while the mixer cannot deliver the commanded moment (a motor pinned at the floor and one at the ceiling).",
+        "description": "Group help for the mixer-saturation group"
+    },
+    "pidTuningAdrcSatZ3Inhibit": {
+        "message": "Inhibit z3 growth while saturated",
+        "description": "Label for adrc_sat_z3_inhibit"
+    },
+    "pidTuningAdrcSatZ3InhibitHelp": {
+        "message": "ON: while the mixer clipped on the previous loop, the disturbance estimate z3 may only move toward zero — the same rule the liftoff gate applies on the ground. Removes the all-axis integrator wind-up behind the whoop 'yaw washout'. Opt-in (default OFF); no effect on a craft whose mixer never clips.",
+        "description": "adrc_sat_z3_inhibit help"
+    },
     "pidTuningAdrcB0ScaleMax": {
         "message": "b0 Scale Max",
         "description": "ADRC ceiling on the throttle-scaled b0 multiplier"

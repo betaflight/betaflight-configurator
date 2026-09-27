@@ -1069,7 +1069,7 @@
                  mirrors the classic PID Settings box grouping multiple sub-sections together -->
             <UiBox v-if="isAdrcActive" :title="$t('pidTuningAdrcSettings')" type="neutral">
                 <div
-                    v-for="group in adrcOtherFieldGroups"
+                    v-for="group in adrcVisibleFieldGroups"
                     :key="group.titleKey"
                     class="flex flex-col gap-2 mt-2 first:mt-0"
                 >
@@ -1078,12 +1078,26 @@
                         <HelpIcon :text="$t(group.titleHelpKey)" />
                     </div>
                     <div class="flex flex-wrap items-end gap-3 pl-4">
-                        <div v-for="field in group.fields" :key="field.name" class="flex flex-col gap-1">
+                        <div
+                            v-for="field in group.fields.filter((f) => adrcFields[f.name].available)"
+                            :key="field.name"
+                            class="flex flex-col gap-1"
+                        >
                             <div class="flex items-center gap-1">
                                 <span class="text-xs text-dimmed">{{ $t(field.labelKey) }}</span>
                                 <HelpIcon :text="$t(field.helpKey)" />
                             </div>
+                            <USelect
+                                v-if="field.lookup"
+                                v-model="adrcFields[field.name].value"
+                                :items="adrcFields[field.name].values"
+                                :disabled="!adrcLoaded || adrcFields[field.name].saving"
+                                size="xs"
+                                class="w-32"
+                                @update:model-value="commitAdrcField(field.name)"
+                            />
                             <UInputNumber
+                                v-else
                                 v-model="adrcFields[field.name].value"
                                 :min="adrcFields[field.name].min"
                                 :max="adrcFields[field.name].max"
@@ -1543,6 +1557,13 @@ const adrcFieldGroups = [
                 helpKey: "pidTuningAdrcHoverThrottleHelp",
             },
             { name: "adrc_b0_scale_max", labelKey: "pidTuningAdrcB0ScaleMax", helpKey: "pidTuningAdrcB0ScaleMaxHelp" },
+            { name: "adrc_b0_law", labelKey: "pidTuningAdrcB0Law", helpKey: "pidTuningAdrcB0LawHelp", lookup: true },
+            {
+                name: "adrc_b0_scale_min",
+                labelKey: "pidTuningAdrcB0ScaleMin",
+                helpKey: "pidTuningAdrcB0ScaleMinHelp",
+                optional: true,
+            },
             { name: "adrc_td_hz", labelKey: "pidTuningAdrcTdHz", helpKey: "pidTuningAdrcTdHzHelp" },
         ],
     },
@@ -1577,9 +1598,44 @@ const adrcFieldGroups = [
                 labelKey: "pidTuningAdrcLiftoffHoldMs",
                 helpKey: "pidTuningAdrcLiftoffHoldMsHelp",
             },
+            {
+                name: "adrc_ground_wc",
+                labelKey: "pidTuningAdrcGroundWc",
+                helpKey: "pidTuningAdrcGroundWcHelp",
+                optional: true,
+            },
+            {
+                name: "adrc_wc_ramp_ms",
+                labelKey: "pidTuningAdrcWcRampMs",
+                helpKey: "pidTuningAdrcWcRampMsHelp",
+                optional: true,
+            },
+            {
+                name: "adrc_ground_dgain",
+                labelKey: "pidTuningAdrcGroundDgain",
+                helpKey: "pidTuningAdrcGroundDgainHelp",
+                optional: true,
+            },
+        ],
+    },
+    // The group below exists on the tester builds from b11 on (betaflight#15400 discussion,
+    // ADRC-033); "optional" hides a field the connected firmware does not have instead of
+    // failing the whole panel.
+    {
+        titleKey: "pidTuningAdrcGroupSaturation",
+        titleHelpKey: "pidTuningAdrcGroupSaturationHelp",
+        fields: [
+            {
+                name: "adrc_sat_z3_inhibit",
+                labelKey: "pidTuningAdrcSatZ3Inhibit",
+                helpKey: "pidTuningAdrcSatZ3InhibitHelp",
+                lookup: true,
+                optional: true,
+            },
         ],
     },
 ];
+const adrcFieldDefs = Object.fromEntries(adrcFieldGroups.flatMap((group) => group.fields.map((f) => [f.name, f])));
 
 const adrcFieldNames = adrcFieldGroups.flatMap((group) => group.fields.map((field) => field.name));
 
@@ -1593,7 +1649,16 @@ const adrcGainColumns = [
 ];
 
 const adrcFields = reactive(
-    Object.fromEntries(adrcFieldNames.map((name) => [name, { value: 0, min: 0, max: 65535, saving: false }])),
+    Object.fromEntries(
+        adrcFieldNames.map((name) => [
+            name,
+            { value: 0, min: 0, max: 65535, saving: false, values: [], available: true },
+        ]),
+    ),
+);
+// Hide a group whose fields the connected firmware has none of (e.g. the b11 groups on a b10.1 board).
+const adrcVisibleFieldGroups = computed(() =>
+    adrcOtherFieldGroups.filter((group) => group.fields.some((f) => adrcFields[f.name].available)),
 );
 const adrcLoaded = ref(false);
 const adrcLoading = ref(false);
@@ -1606,11 +1671,22 @@ async function loadAdrcFields() {
         adrcFieldNames.map(async (name) => {
             try {
                 const [info, rawValue] = await Promise.all([getSettingInfo(name), getSetting(name)]);
-                adrcFields[name].min = info.min ?? 0;
-                adrcFields[name].max = info.max ?? 65535;
-                adrcFields[name].value = Number(rawValue);
+                adrcFields[name].available = true;
+                if (adrcFieldDefs[name].lookup) {
+                    // Enum setting: keep the firmware's option names and the current one as strings.
+                    adrcFields[name].values = info.values ?? [];
+                    adrcFields[name].value = rawValue;
+                } else {
+                    adrcFields[name].min = info.min ?? 0;
+                    adrcFields[name].max = info.max ?? 65535;
+                    adrcFields[name].value = Number(rawValue);
+                }
             } catch (e) {
-                adrcLoadError.value = e.message;
+                if (adrcFieldDefs[name].optional) {
+                    adrcFields[name].available = false; // older firmware without this setting
+                } else {
+                    adrcLoadError.value = e.message;
+                }
             }
         }),
     );
@@ -1628,8 +1704,12 @@ async function commitAdrcField(name) {
         // setSetting() resolves with the firmware-echoed value, which may be clamped/rounded
         // differently than what was requested (e.g. a step constraint not exposed via
         // info.min/max) - sync it back so the UI never drifts from what's actually stored.
-        const confirmed = await setSetting(name, Math.round(field.value));
-        field.value = Number(confirmed);
+        if (adrcFieldDefs[name].lookup) {
+            field.value = await setSetting(name, field.value);
+        } else {
+            const confirmed = await setSetting(name, Math.round(field.value));
+            field.value = Number(confirmed);
+        }
     } catch (e) {
         adrcLoadError.value = e.message;
     } finally {
