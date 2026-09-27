@@ -57,6 +57,12 @@
                         </span>
                     </span>
                 </UTooltip>
+                <UTooltip
+                    v-if="cpuTemperatureSupported"
+                    :text="`${$t('initialSetupCpuTemp')} ${cpuTemperature.toFixed(0)} ℃`"
+                >
+                    <span class="value">{{ cpuTemperature.toFixed(0) }} ℃</span>
+                </UTooltip>
 
                 <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
 
@@ -142,10 +148,12 @@ import SensorStatus from "../sensor-status/SensorStatus.vue";
 import { EventBus } from "../eventBus";
 import { useVisibleTabs } from "../sidebar/useVisibleTabs.js";
 import { useTranslation } from "i18next-vue";
+import semver from "semver";
 import { vueTabState } from "../../js/vue_tab_mounter.js";
 import { switchTab } from "../../js/tab_switch.js";
 import FC from "../../js/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
+import { API_VERSION_1_46 } from "../../js/data_storage";
 
 /**
  * Shorter target for the status bar when not in expert mode, e.g.
@@ -213,6 +221,10 @@ export default defineComponent({
             default: 0,
         },
         cpuLoad: {
+            type: Number,
+            default: 0,
+        },
+        cpuTemperature: {
             type: Number,
             default: 0,
         },
@@ -303,6 +315,7 @@ export default defineComponent({
         const gps = computed(() => FC.GPS_DATA ?? {});
         const dataflash = computed(() => FC.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
         const dataflashSupported = computed(() => (dataflash.value.totalSize ?? 0) > 0);
+        const cpuTemperatureSupported = computed(() => semver.gte(fcConfig.value.apiVersion, API_VERSION_1_46));
 
         const clampedCpuLoad = computed(() => Math.max(0, Math.min(100, Number(props.cpuLoad) || 0)));
         const cpuLoadClass = computed(() => {
@@ -355,6 +368,7 @@ export default defineComponent({
             gps,
             dataflash,
             dataflashSupported,
+            cpuTemperatureSupported,
             clampedCpuLoad,
             cpuLoadClass,
         };

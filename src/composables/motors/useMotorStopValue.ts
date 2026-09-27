@@ -10,7 +10,12 @@ const PWM_RANGE_MIDDLE = 1500;
 const NEUTRAL_3D_MIN = 750;
 const NEUTRAL_3D_MAX = 2250;
 
-export function computeZeroThrottleValue(is3dEnabled, isDigitalProtocol, motor3dNeutral, minSliderValue) {
+export function computeZeroThrottleValue(
+    is3dEnabled: boolean,
+    isDigitalProtocol: boolean,
+    motor3dNeutral: number,
+    minSliderValue: number,
+): number {
     if (is3dEnabled) {
         if (isDigitalProtocol) {
             // dshotConvertFromExternal() (firmware src/main/drivers/dshot.c) stops the motor only at this exact value, never at motor3dConfig.neutral.
@@ -22,6 +27,6 @@ export function computeZeroThrottleValue(is3dEnabled, isDigitalProtocol, motor3d
     return minSliderValue;
 }
 
-export function computeIdleThrottleValue(zeroThrottleValue, motorIdle) {
+export function computeIdleThrottleValue(zeroThrottleValue: number, motorIdle: number): number {
     return zeroThrottleValue + (motorIdle * 1000) / 100;
 }

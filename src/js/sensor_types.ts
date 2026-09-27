@@ -1,18 +1,53 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import semver from "semver";
 import FC from "./fc";
 import MSP from "./msp";
 import { API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
+import type { SensorNames } from "../stores/fc.types";
+
+export type SensorKind = keyof SensorNames;
+
+export interface SensorTypeDef {
+    name: string;
+    elements: string[];
+}
+
+/** Every kind but pitot is always listed; pitot only from API 1.49. */
+export type SensorTypes = Record<Exclude<SensorKind, "pitot">, SensorTypeDef> & { pitot?: SensorTypeDef };
 
 // Map firmware sensor type names to configurator names
-const SENSOR_NAME_MAP = {
+const SENSOR_NAME_MAP: Record<string, string | undefined> = {
     rangefinder: "sonar",
 };
+
+function isSensorKind(names: SensorNames, type: string): type is SensorKind {
+    return type in names;
+}
 
 /**
  * Fetches sensor hardware names from the flight controller for API 1.48+.
  * Sends a single "sensor_hardware" command and parses the response lines in "type: VAL1,VAL2,..." format.
- * @returns {Promise<void>} Promise that resolves when all sensor names have been fetched
  */
 export async function fetchSensorNames() {
     FC.SENSOR_NAMES = {
@@ -26,7 +61,7 @@ export async function fetchSensorNames() {
     };
 
     try {
-        const output = await new Promise((resolve) => {
+        const output = await new Promise<string[]>((resolve) => {
             MSP.send_cli_command("sensor_hardware", (response) => {
                 resolve([...response]);
             });
@@ -46,22 +81,21 @@ export async function fetchSensorNames() {
                 .split(",")
                 .map((v) => v.trim());
 
-            if (type in FC.SENSOR_NAMES) {
+            if (isSensorKind(FC.SENSOR_NAMES, type)) {
                 FC.SENSOR_NAMES[type] = values;
             }
         }
     } catch (error) {
-        console.warn(`Failed to fetch sensor hardware names: ${error.message}`);
+        console.warn(`Failed to fetch sensor hardware names: ${(error as Error).message}`);
     }
 }
 
 /**
  * Legacy sensor types function for older API versions.
  * Returns sensor type definitions with hardcoded lists and version-specific modifications.
- * @returns {Object} Object containing sensor type definitions with name and elements properties
  */
-function sensorTypesLegacy() {
-    const sensorTypes = {
+function sensorTypesLegacy(): SensorTypes {
+    const sensorTypes: SensorTypes = {
         acc: {
             name: "Accelerometer",
             elements: [
@@ -185,9 +219,8 @@ function sensorTypesLegacy() {
  * Returns sensor type definitions with display names and available hardware options.
  * For API 1.48+, automatically fetches dynamic sensor names from the flight controller if not already available.
  * For older APIs, uses hardcoded lists with version-specific modifications.
- * @returns {Promise<Object>} Promise that resolves to an object containing sensor type definitions with name and elements properties
  */
-export async function sensorTypes() {
+export async function sensorTypes(): Promise<SensorTypes> {
     // For API 1.48+, fetch dynamic sensor names if not already fetched
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
         const hasSensorNames = FC.SENSOR_NAMES && Object.values(FC.SENSOR_NAMES).some((arr) => arr.length > 0);
@@ -196,7 +229,7 @@ export async function sensorTypes() {
             await fetchSensorNames();
         }
 
-        const sensorTypeList = {
+        const sensorTypeList: SensorTypes = {
             acc: {
                 name: "Accelerometer",
                 elements: FC.SENSOR_NAMES.acc || [],
@@ -239,9 +272,8 @@ export async function sensorTypes() {
 /**
  * Returns the list of available GPS protocol names.
  * For API 1.47+, includes VIRTUAL protocol.
- * @returns {string[]} Array of GPS protocol names
  */
-export function gpsProtocols() {
+export function gpsProtocols(): string[] {
     const protocols = ["NMEA", "UBLOX", "MSP"];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
