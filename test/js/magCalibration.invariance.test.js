@@ -19,9 +19,9 @@ import {
     mat3transpose,
     ALIGNMENT_MATRICES,
 } from "../../src/js/utils/magAlignment.js";
-import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
+import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit";
 import { solveTiltAlignment } from "../../src/js/utils/magTiltAlign.js";
-import { check3DCoverage } from "../../src/js/utils/sphereFit.js";
+import { check3DCoverage } from "../../src/js/utils/sphereFit";
 
 // Deterministic PRNG (mulberry32).
 function mulberry32(seed) {

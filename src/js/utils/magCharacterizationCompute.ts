@@ -30,8 +30,8 @@
  */
 import semver from "semver";
 import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
-import { fitEllipsoid } from "./ellipsoidFit.js";
-import { check3DCoverage } from "./sphereFit.js";
+import { fitEllipsoid } from "./ellipsoidFit";
+import { check3DCoverage } from "./sphereFit";
 import { solveTiltAlignment, type TiltAlignmentResult } from "./magTiltAlign";
 
 type Mat3 = number[][];

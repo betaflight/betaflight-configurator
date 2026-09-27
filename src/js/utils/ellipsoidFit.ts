@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * 3D ellipsoid fit via algebraic least-squares + Cholesky decomposition.
  *
@@ -12,11 +33,29 @@
  * Requires >= 9 non-coplanar points.  Returns null on failure.
  */
 
+type Mat3 = number[][];
+
+/** A 3D point in sensor space. */
+export interface Point3 {
+    x: number;
+    y: number;
+    z: number;
+}
+
+/** The recovered ellipsoid calibration. */
+export interface EllipsoidFitResult {
+    center: Point3;
+    /** 3×3 upper-triangular soft-iron correction matrix. */
+    W_inv: Mat3;
+    radius: number;
+    residual: number;
+}
+
 /**
  * Accumulate design-matrix normal equations for one point.
  * Updates DtD (upper triangle) and DtY in-place.
  */
-function accumulatePoint(DtD, DtY, x, y, z) {
+function accumulatePoint(DtD: Float64Array[], DtY: Float64Array, x: number, y: number, z: number): void {
     const xx = x * x,
         yy = y * y,
         zz = z * z;
@@ -31,12 +70,10 @@ function accumulatePoint(DtD, DtY, x, y, z) {
 
 /**
  * Compute radius (mean corrected magnitude) and RMS residual from the fit.
- * @param {Array<{x,y,z}>} points
- * @param {number[]} bias - [bx, by, bz] hard-iron center
- * @param {number[][]} W_inv - 3×3 soft-iron correction matrix
- * @returns {{ radius: number, residual: number }}
+ * @param bias - [bx, by, bz] hard-iron center
+ * @param W_inv - 3×3 soft-iron correction matrix
  */
-function computeRadiusAndResidual(points, bias, W_inv) {
+function computeRadiusAndResidual(points: Point3[], bias: number[], W_inv: Mat3): { radius: number; residual: number } {
     let sumR = 0;
     let sumResid = 0;
     for (const { x, y, z } of points) {
@@ -56,12 +93,10 @@ function computeRadiusAndResidual(points, bias, W_inv) {
 }
 
 /**
- * Fit a 3D ellipsoid to a set of points.
- *
- * @param {Array<{x:number,y:number,z:number}>} points
- * @returns {{ center: {x,y,z}, W_inv: number[3][3], radius: number, residual: number } | null}
+ * Fit a 3D ellipsoid to a set of points. Returns null on failure (fewer than
+ * 9 points, or a singular/non-positive-definite system).
  */
-export function fitEllipsoid(points) {
+export function fitEllipsoid(points: Point3[]): EllipsoidFitResult | null {
     const N = points.length;
     if (N < 9) {
         return null;
@@ -99,7 +134,7 @@ export function fitEllipsoid(points) {
         I = p[8];
 
     // Reconstruct shape matrix Q (3×3) and linear vector u (3×1)
-    const Q = [
+    const Q: Mat3 = [
         [A, D, E],
         [D, B, F],
         [E, F, C],
@@ -131,7 +166,7 @@ export function fitEllipsoid(points) {
         return null;
     }
 
-    const Q_norm = [
+    const Q_norm: Mat3 = [
         [Q[0][0] / offset, Q[0][1] / offset, Q[0][2] / offset],
         [Q[1][0] / offset, Q[1][1] / offset, Q[1][2] / offset],
         [Q[2][0] / offset, Q[2][1] / offset, Q[2][2] / offset],
@@ -148,7 +183,7 @@ export function fitEllipsoid(points) {
 
     // cholesky3x3 already guarantees L[0][0], L[1][1], L[2][2] > 0
     // (it returns null for any non-positive pivot), so no further negativity check is needed.
-    const W_inv = [
+    const W_inv: Mat3 = [
         [L[0][0], L[1][0], L[2][0]],
         [0, L[1][1], L[2][1]],
         [0, 0, L[2][2]],
@@ -162,11 +197,9 @@ export function fitEllipsoid(points) {
  * Apply ellipsoid correction to a raw sensor reading.
  * m_clean = W_inv * (m_raw - center)
  *
- * @param {number[3]} raw - Raw mag reading [x, y, z]
- * @param {{ center: {x,y,z}, W_inv: number[3][3] }} params
- * @returns {number[3]}
+ * @param raw - Raw mag reading [x, y, z]
  */
-export function applyEllipsoidCorrection(raw, params) {
+export function applyEllipsoidCorrection(raw: number[], params: { center: Point3; W_inv: Mat3 }): number[] {
     const { center, W_inv } = params;
     const dx = raw[0] - center.x;
     const dy = raw[1] - center.y;
@@ -181,7 +214,7 @@ export function applyEllipsoidCorrection(raw, params) {
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
 /** Find the row with the largest absolute value in column `col`, starting from `col`. */
-function findPivot9(aug, col) {
+function findPivot9(aug: Float64Array[], col: number): { maxVal: number; maxRow: number } {
     let maxVal = Math.abs(aug[col][col]);
     let maxRow = col;
     for (let row = col + 1; row < 9; row++) {
@@ -195,7 +228,7 @@ function findPivot9(aug, col) {
 }
 
 /** Eliminate all rows below `col` using the pivot at aug[col][col]. */
-function eliminateBelow9(aug, col) {
+function eliminateBelow9(aug: Float64Array[], col: number): void {
     const pivot = aug[col][col];
     for (let row = col + 1; row < 9; row++) {
         const factor = aug[row][col] / pivot;
@@ -207,13 +240,13 @@ function eliminateBelow9(aug, col) {
 
 /**
  * Solve 9×9 system with partial pivoting.  Returns null if singular.
- * Same pattern as sphereFit.js solveGaussian, extended to 9×9.
+ * Same pattern as sphereFit.ts solveGaussian, extended to 9×9.
  *
- * @param {number[9][9]} A - coefficient matrix (modified in-place)
- * @param {Float64Array} b - right-hand side (modified in-place)
- * @returns {Float64Array|null} solution vector x
+ * @param A - coefficient matrix (modified in-place)
+ * @param b - right-hand side (modified in-place)
+ * @returns solution vector x, or null if singular
  */
-function solve9x9(A, b) {
+function solve9x9(A: Float64Array[], b: Float64Array): Float64Array | null {
     const n = 9;
     // Build augmented matrix [A|b]
     const aug = Array.from({ length: n }, (_, r) => {
@@ -254,11 +287,8 @@ function solve9x9(A, b) {
 
 /**
  * 3×3 matrix inverse via cofactors.  Returns null if det ≈ 0.
- *
- * @param {number[3][3]} m
- * @returns {number[3][3]|null}
  */
-function invert3x3(m) {
+function invert3x3(m: Mat3): Mat3 | null {
     const a = m[0][0],
         b = m[0][1],
         c = m[0][2];
@@ -285,12 +315,9 @@ function invert3x3(m) {
 /**
  * Cholesky-Banachiewicz 3×3 decomposition: Q = L * L^T.
  * L is lower-triangular.  Returns null if Q is not positive-definite.
- *
- * @param {number[3][3]} Q
- * @returns {number[3][3]|null}
  */
-function cholesky3x3(Q) {
-    const L = [
+function cholesky3x3(Q: Mat3): Mat3 | null {
+    const L: Mat3 = [
         [0, 0, 0],
         [0, 0, 0],
         [0, 0, 0],

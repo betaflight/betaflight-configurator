@@ -8,10 +8,12 @@
  * Uses seeded mulberry32 PRNG — never Math.random.
  */
 import { describe, expect, it } from "vitest";
-import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
+import { fitEllipsoid, type Point3 } from "../../src/js/utils/ellipsoidFit";
+
+type Mat3 = number[][];
 
 // Deterministic PRNG (mulberry32) — never Math.random in tests.
-function mulberry32(seed) {
+function mulberry32(seed: number): () => number {
     let s = seed >>> 0;
     return () => {
         s = (s + 0x6d2b79f5) >>> 0;
@@ -27,8 +29,8 @@ function mulberry32(seed) {
  * A point on the unit sphere u gives raw = W * u + c (the forward model).
  * fitEllipsoid should recover center ~= c and W_inv ~= inv(W).
  */
-function makeEllipsoidPoints(center, W, count, rng) {
-    const points = [];
+function makeEllipsoidPoints(center: Point3, W: Mat3, count: number, rng: () => number): Point3[] {
+    const points: Point3[] = [];
     for (let i = 0; i < count; i++) {
         // Sample a point on the unit sphere via spherical coords
         const theta = Math.acos(1 - 2 * rng());
@@ -44,8 +46,8 @@ function makeEllipsoidPoints(center, W, count, rng) {
 }
 
 /** Matrix product A * B for 3x3 matrices. */
-function mat3mul(A, B) {
-    const C = [
+function mat3mul(A: Mat3, B: Mat3): Mat3 {
+    const C: Mat3 = [
         [0, 0, 0],
         [0, 0, 0],
         [0, 0, 0],
@@ -61,7 +63,7 @@ function mat3mul(A, B) {
 }
 
 /** Frobenius norm of (A - I). */
-function frobDistFromIdentity(A) {
+function frobDistFromIdentity(A: Mat3): number {
     let sum = 0;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -88,12 +90,12 @@ describe("fitEllipsoid — synthetic oracle", () => {
         expect(result).not.toBeNull();
 
         // Center recovery within 5 ADC counts
-        expect(Math.abs(result.center.x - center.x)).toBeLessThan(5);
-        expect(Math.abs(result.center.y - center.y)).toBeLessThan(5);
-        expect(Math.abs(result.center.z - center.z)).toBeLessThan(5);
+        expect(Math.abs(result!.center.x - center.x)).toBeLessThan(5);
+        expect(Math.abs(result!.center.y - center.y)).toBeLessThan(5);
+        expect(Math.abs(result!.center.z - center.z)).toBeLessThan(5);
 
         // W_inv * W should be close to identity (Frobenius distance < 0.05)
-        const product = mat3mul(result.W_inv, W);
+        const product = mat3mul(result!.W_inv, W);
         // Normalize: product should be ~= identity * scale; check W_inv*W / scale ~= I
         const scale = (product[0][0] + product[1][1] + product[2][2]) / 3;
         const normalized = product.map((row) => row.map((v) => v / scale));
@@ -113,11 +115,11 @@ describe("fitEllipsoid — synthetic oracle", () => {
         const result = fitEllipsoid(points);
 
         expect(result).not.toBeNull();
-        expect(Math.abs(result.center.x - center.x)).toBeLessThan(10);
-        expect(Math.abs(result.center.y - center.y)).toBeLessThan(10);
-        expect(Math.abs(result.center.z - center.z)).toBeLessThan(10);
+        expect(Math.abs(result!.center.x - center.x)).toBeLessThan(10);
+        expect(Math.abs(result!.center.y - center.y)).toBeLessThan(10);
+        expect(Math.abs(result!.center.z - center.z)).toBeLessThan(10);
 
-        const product = mat3mul(result.W_inv, W);
+        const product = mat3mul(result!.W_inv, W);
         const scale = (product[0][0] + product[1][1] + product[2][2]) / 3;
         const normalized = product.map((row) => row.map((v) => v / scale));
         expect(frobDistFromIdentity(normalized)).toBeLessThan(0.08);
