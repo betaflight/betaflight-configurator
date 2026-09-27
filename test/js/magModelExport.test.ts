@@ -12,7 +12,8 @@ import {
     computeMagQualityBounds,
     MODEL_SCHEMA_VERSION,
     MODEL_SCHEMA_URL,
-} from "../../src/js/utils/magModelExport.js";
+    type BuildCharacterizationModelArgs,
+} from "../../src/js/utils/magModelExport";
 
 // ── Synthetic inputs ────────────────────────────────────────────────────────
 
@@ -54,7 +55,7 @@ const MOCK_CAPTURED_UNDER = {
 
 const MOCK_OFFSETS = { x: -60, y: -490, z: -75 };
 
-function buildModel(overrides = {}) {
+function buildModel(overrides: Partial<BuildCharacterizationModelArgs> = {}) {
     return buildCharacterizationModel({
         solverResult: MOCK_SOLVER_RESULT,
         capturedUnder: MOCK_CAPTURED_UNDER,
@@ -97,13 +98,13 @@ describe("buildCharacterizationModel — schema 2.2", () => {
         const df = model.downstream_fusion;
         const expectedNtPerUnit = MOCK_GEO.fieldStrength / MOCK_ELLIPSOID.radius;
         const expectedGaussPerUnit = expectedNtPerUnit / 1e5;
-        expect(df.nt_per_corrected_unit).toBeCloseTo(expectedNtPerUnit, 3);
-        expect(df.gauss_per_corrected_unit).toBeCloseTo(expectedGaussPerUnit, 9);
+        expect(df.nt_per_corrected_unit!).toBeCloseTo(expectedNtPerUnit, 3);
+        expect(df.gauss_per_corrected_unit!).toBeCloseTo(expectedGaussPerUnit, 9);
     });
 
     it("downstream_fusion earth_field_ned_gauss magnitude equals fieldStrength/1e5", () => {
         const model = buildModel();
-        const { n, e, d } = model.downstream_fusion.earth_field_ned_gauss;
+        const { n, e, d } = model.downstream_fusion.earth_field_ned_gauss!;
         expect(Math.hypot(n, e, d)).toBeCloseTo(MOCK_GEO.fieldStrength / 1e5, 4);
     });
 
@@ -124,7 +125,7 @@ describe("buildCharacterizationModel — schema 2.2", () => {
 
     it("quality block emits meanResidualDeg from solver result", () => {
         const model = buildModel();
-        expect(model.quality.mean_residual_deg).toBeCloseTo(MOCK_SOLVER_RESULT.quality.meanResidualDeg, 5);
+        expect(model.quality!.mean_residual_deg).toBeCloseTo(MOCK_SOLVER_RESULT.quality.meanResidualDeg, 5);
     });
 });
 

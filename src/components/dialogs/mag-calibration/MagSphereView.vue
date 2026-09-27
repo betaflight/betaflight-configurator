@@ -32,10 +32,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { i18n } from "../../../js/localization";
 import { degToRad } from "../../../js/utils/common";
-import type { MagSample, Vec3 } from "@/composables/useMagCalibration";
+import type { MagSample, MagVizMode, Vec3 } from "@/composables/useMagCalibration";
 import type { Quaternion } from "@/stores/fc.types";
 
-type VizMode = "pointcloud" | "heatmap" | "projection" | "polar";
 type ScenePoint = [number, number, number];
 
 const DEFAULT_SPHERE_RADIUS = 400;
@@ -93,7 +92,7 @@ const props = defineProps({
         default: null,
     },
     vizMode: {
-        type: String as PropType<VizMode>,
+        type: String as PropType<MagVizMode>,
         default: "pointcloud",
     },
     calOffsets: {
@@ -1517,7 +1516,7 @@ function setSceneObjectVisibility(pc: boolean, hm: boolean) {
     setVisible(compassGroup, pc || hm);
 }
 
-function applyVizMode(mode: VizMode) {
+function applyVizMode(mode: MagVizMode) {
     const pc = mode === "pointcloud";
     const hm = mode === "heatmap";
 

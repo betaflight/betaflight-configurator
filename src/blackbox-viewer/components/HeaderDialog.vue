@@ -322,7 +322,8 @@ function copyToClipboard() {
             "PID Settings",
             allPids.value.map((r) => {
                 const dMax = showDMax.value ? ` DMax=${r.dMax}` : "";
-                return { name: r.label, value: `P=${r.p} I=${r.i} D=${r.d}${dMax} FF=${r.f}` };
+                const sTerm = r.s !== undefined ? ` S=${r.s}` : "";
+                return { name: r.label, value: `P=${r.p} I=${r.i} D=${r.d}${dMax} FF=${r.f}${sTerm}` };
             }),
         ),
         formatParams("PID Sliders", pidSliderParams.value),
@@ -360,9 +361,22 @@ const boardInfo = computed(() => (sc.value["Board information"] ? `Board: ${sc.v
 const showDMax = computed(() => isBF.value && gte("4.0.0"));
 const allPids = computed(() => [...mainPids.value, ...baroPids.value, ...magPids.value, ...gpsPids.value]);
 
-function pidRow(label: string, data: ArrayLike<number | null | undefined> | null | undefined) {
+interface PidRowData {
+    label: string;
+    p: number | null;
+    i: number | null;
+    d: number | null;
+    dMax: number | null;
+    f: number | null;
+    // Wings builds only: present when the header carries s_roll / s_pitch / s_yaw.
+    s?: number | null;
+    missing: boolean;
+}
+
+function pidRow(label: string, data: ArrayLike<number | null | undefined> | null | undefined): PidRowData {
+    let row: PidRowData;
     if (!data) {
-        return {
+        row = {
             label,
             p: null,
             i: null,
@@ -371,26 +385,44 @@ function pidRow(label: string, data: ArrayLike<number | null | undefined> | null
             f: null,
             missing: true,
         };
+    } else {
+        row = {
+            label,
+            p: data[0] ?? null,
+            i: data[1] ?? null,
+            d: data[2] ?? null,
+            dMax: data[3] ?? null,
+            f: data[4] ?? null,
+            missing: false,
+        };
+        if (data[5] !== undefined) {
+            row.s = data[5];
+        }
     }
-    return {
-        label,
-        p: data[0] ?? null,
-        i: data[1] ?? null,
-        d: data[2] ?? null,
-        dMax: data[3] ?? null,
-        f: data[4] ?? null,
-        missing: false,
-    };
+    return row;
 }
 
-const mainPids = computed(() =>
-    [
-        pidRow("Roll", filteredSc.value.rollPID),
-        pidRow("Pitch", filteredSc.value.pitchPID),
-        pidRow("Yaw", filteredSc.value.yawPID),
+const mainPids = computed(() => {
+    const rollPID = filteredSc.value.rollPID == null ? null : [...(filteredSc.value.rollPID ?? [])];
+    const pitchPID = filteredSc.value.pitchPID == null ? null : [...(filteredSc.value.pitchPID ?? [])];
+    const yawPID = filteredSc.value.yawPID == null ? null : [...(filteredSc.value.yawPID ?? [])];
+    // Add S term for Wings build
+    if (rollPID !== null && filteredSc.value.s_roll !== undefined && filteredSc.value.s_roll !== null) {
+        rollPID[5] = filteredSc.value.s_roll;
+    }
+    if (pitchPID !== null && filteredSc.value.s_pitch !== undefined && filteredSc.value.s_pitch !== null) {
+        pitchPID[5] = filteredSc.value.s_pitch;
+    }
+    if (yawPID !== null && filteredSc.value.s_yaw !== undefined && filteredSc.value.s_yaw !== null) {
+        yawPID[5] = filteredSc.value.s_yaw;
+    }
+    return [
+        pidRow("Roll", rollPID),
+        pidRow("Pitch", pitchPID),
+        pidRow("Yaw", yawPID),
         pidRow("Level", filteredSc.value.levelPID),
-    ].filter((r) => !r.missing),
-);
+    ].filter((r) => !r.missing);
+});
 
 const baroPids = computed(() =>
     [pidRow("ALT", filteredSc.value.altPID), pidRow("VEL", filteredSc.value.velPID)].filter((r) => !r.missing),

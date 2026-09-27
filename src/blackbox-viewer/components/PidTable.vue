@@ -51,6 +51,7 @@ interface PidRow {
     d?: PidValue;
     dMax?: PidValue;
     f?: PidValue;
+    s?: PidValue;
     missing?: boolean;
 }
 
@@ -81,18 +82,29 @@ const columns = computed(() => {
         cols.push({ accessorKey: "_spacer", header: "" });
     }
     cols.push({ accessorKey: "f", header: "FF" });
+    if (showWingSterm.value) {
+        cols.push({ accessorKey: "s", header: "S" });
+    }
     return cols;
 });
 
+const showWingSterm = computed(() => props.rows.slice(0, 3).some((row) => row.s !== undefined));
+
 const data = computed(() =>
-    props.rows.map((row) => ({
-        ...row,
-        p: fmtPid(row.p),
-        i: fmtPid(row.i),
-        d: fmtPid(row.d),
-        dMax: fmtPid(row.dMax),
-        f: fmtPid(row.f),
-        _spacer: "",
-    })),
+    props.rows.map((row) => {
+        const params = {
+            ...row,
+            p: fmtPid(row.p),
+            i: fmtPid(row.i),
+            d: fmtPid(row.d),
+            dMax: fmtPid(row.dMax),
+            f: fmtPid(row.f),
+            _spacer: "",
+        };
+        if (showWingSterm.value) {
+            params.s = fmtPid(row.s);
+        }
+        return params;
+    }),
 );
 </script>
