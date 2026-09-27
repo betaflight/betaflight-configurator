@@ -165,6 +165,22 @@ function internalYaw(displayYaw: number): number {
     return -displayYaw;
 }
 
+/**
+ * Drive detection for a physical `mount` (optionally with a pre-configured
+ * `currentAlignment`) and assert the recovered alignment matches the mount.
+ * Compares via matrix to sidestep 180/-180 and yaw-wrap ambiguity. Returns the
+ * raw result so callers can add case-specific assertions.
+ */
+function expectDetectedAlignment(mount: Alignment, currentAlignment: Alignment = { roll: 0, pitch: 0, yaw: 0 }) {
+    const samples = makeSamples(mount.roll, mount.pitch, mount.yaw, currentAlignment);
+    const result = detectBoardAlignment({ ...samples, currentAlignment });
+    expect(result.error).toBeUndefined();
+    const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
+    const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
+    expectMatrixClose(got, expected, 4);
+    return result;
+}
+
 describe("detectBoardAlignment - cardinal mounts", () => {
     // yaw values use Betaflight's CW-positive convention (same as wizard output).
     const cardinals = [
@@ -178,14 +194,7 @@ describe("detectBoardAlignment - cardinal mounts", () => {
 
     for (const mount of cardinals) {
         it(`detects ${mount.name} from clean samples`, () => {
-            const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
-            const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
-            expect(result.error).toBeUndefined();
-            // Compare via matrix (handles 180/-180 equivalence).
-            // Both sides negate yaw to convert from CW-positive display back to CCW-positive math.
-            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
-            const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-            expectMatrixClose(got, expected, 4);
+            expectDetectedAlignment(mount);
         });
     }
 });
@@ -198,12 +207,7 @@ describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
 
     for (const mount of cinewhoops) {
         it(`detects ${mount.name}`, () => {
-            const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
-            const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
-            expect(result.error).toBeUndefined();
-            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
-            const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-            expectMatrixClose(got, expected, 4);
+            expectDetectedAlignment(mount);
         });
     }
 });
@@ -212,24 +216,23 @@ describe("detectBoardAlignment - delta from current alignment", () => {
     it("returns the same alignment when no change is needed", () => {
         // FC physically mounted CW 90° (display yaw=90). Post-alignment data looks like identity,
         // so M = identity. After composing with current alignment, result = current (no change).
-        const current = { roll: 0, pitch: 0, yaw: 90 };
-        const samples = makeSamples(0, 0, 90, current);
-        const result = detectBoardAlignment({ ...samples, currentAlignment: current });
-        const expected = eulerToMatrix(current.roll, current.pitch, internalYaw(current.yaw));
-        const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-        expectMatrixClose(got, expected, 4);
+        expectDetectedAlignment({ roll: 0, pitch: 0, yaw: 90 }, { roll: 0, pitch: 0, yaw: 90 });
     });
 
     it("composes the residual rotation with current alignment", () => {
         // FC physically mounted CW 180°, user has configured CW 90° (incomplete correction).
         // Wizard should output CW 180° (display yaw = 180).
-        const current = { roll: 0, pitch: 0, yaw: 90 };
-        const samples = makeSamples(0, 0, 180, current);
-        const result = detectBoardAlignment({ ...samples, currentAlignment: current });
+        const result = expectDetectedAlignment({ roll: 0, pitch: 0, yaw: 180 }, { roll: 0, pitch: 0, yaw: 90 });
         expect(result.yaw).toBe(180);
-        const expected = eulerToMatrix(0, 0, internalYaw(180));
-        const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
-        expectMatrixClose(got, expected, 4);
+    });
+
+    it("composes a non-commuting roll mount with a yaw current alignment", () => {
+        // Roll and yaw rotations do not commute, so the order in mat3mul(m, cur) matters: a
+        // yaw-then-roll composition lands somewhere different from roll-then-yaw. FC physically
+        // mounted roll 90°, user has configured CW yaw 90°. The wizard must recover the absolute
+        // mount (roll 90°, yaw 0°); getting the composition order wrong would not.
+        const result = expectDetectedAlignment({ roll: 90, pitch: 0, yaw: 0 }, { roll: 0, pitch: 0, yaw: 90 });
+        expect(result.roll).toBe(90);
     });
 });
 
