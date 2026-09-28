@@ -6,7 +6,7 @@ import { effectScope } from "vue";
 // The connect dropdown is where a saved address turns into an actual connection:
 // the menu item has to route through the "manual" pseudo-device with portOverride
 // set, or the attempt goes to whatever was selected before. That portOverride is
-// then what serial_backend opens — see serial_backend.test.js.
+// then what serial_backend opens — see serial_backend.test.ts.
 // ---------------------------------------------------------------------------
 
 const { DeviceHandler, connectDisconnect, expertMode, networkOnly } = vi.hoisted(() => ({

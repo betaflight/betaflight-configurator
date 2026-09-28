@@ -482,7 +482,7 @@
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" fullWidth>
-                                <USwitch v-model="motorsTestingEnabled" size="xs" />
+                                <USwitch v-model="motorsTestingEnabled" :disabled="!appliedStateReady" size="xs" />
                             </SettingRow>
                         </div>
                     </div>
@@ -579,6 +579,7 @@ import { tracking } from "@/js/Analytics";
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
+import { computeZeroThrottleValue, computeIdleThrottleValue } from "@/composables/motors/useMotorStopValue";
 import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguration";
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
@@ -781,14 +782,42 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
-const zeroThrottleValue = computed(() => {
-    if (isFeatureEnabled("3D")) {
-        const neutral = fcStore.motor3dConfig.neutral;
-        // Sanity check from legacy
-        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
+// Snapshot of the flight controller's actually-applied stop-relevant state, refreshed only
+// after a successful persist. isFeatureEnabled("3D"), fcStore.motor3dConfig.neutral,
+// digitalProtocolConfigured, and fcStore.motorConfig.mincommand are all live, pending UI
+// state — using them directly here would let an unsaved edit (enabling 3D, changing the ESC
+// protocol, then saving before the write reaches the FC) compute a stop command under an
+// interpretation the FC isn't running yet, sending throttle instead of stop.
+const appliedIs3dEnabled = ref(false);
+const appliedMotor3dNeutral = ref(1500);
+const appliedIsDigitalProtocol = ref(false);
+const appliedMotorMincommand = ref(1000);
+// Gates motor testing/reordering until the snapshot above reflects the FC, not ref defaults.
+const appliedStateReady = ref(false);
+
+const syncAppliedMotorStopState = () => {
+    appliedIs3dEnabled.value = isFeatureEnabled("3D");
+    appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
+    appliedIsDigitalProtocol.value = digitalProtocolConfigured.value;
+    appliedMotorMincommand.value = fcStore.motorConfig.mincommand;
+    appliedStateReady.value = true;
+};
+
+const appliedMinSliderValue = computed(() => {
+    if (appliedIsDigitalProtocol.value) {
+        return 1000; // DShot Disarmed
     }
-    return minSliderValue.value;
+    return appliedMotorMincommand.value;
 });
+
+const zeroThrottleValue = computed(() =>
+    computeZeroThrottleValue(
+        appliedIs3dEnabled.value,
+        appliedIsDigitalProtocol.value,
+        appliedMotor3dNeutral.value,
+        appliedMinSliderValue.value,
+    ),
+);
 
 // Initialize motor testing with safety features
 const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
@@ -804,7 +833,7 @@ useMotorDataPolling(motorsTestingEnabled);
 
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
-    toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
+    toolsDisabled: !appliedStateReady.value || configHasChanged.value || motorsTestingEnabled.value,
     saveDisabled: !configHasChanged.value && !escSensorPortChanged.value,
     stopDisabled: !motorsTestingEnabled.value,
 }));
@@ -850,7 +879,10 @@ onMounted(async () => {
     }
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
+    // fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not MSP_PID_ADVANCED —
+    // sync only after this resolves, or the snapshot reads the analog-protocol default.
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+    syncAppliedMotorStopState();
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
 
@@ -1399,7 +1431,7 @@ const openMotorOutputReorderDialog = () => {
         "MotorOutputReorderingDialog",
         {
             droneConfiguration: mixerName,
-            motorStopValue: minSliderValue.value,
+            motorStopValue: zeroThrottleValue.value,
             motorSpinValue: idleThrottleValue.value,
         },
         {
@@ -1420,7 +1452,7 @@ const openEscDshotDirectionDialog = () => {
     const motorConfig = {
         escProtocolIsDshot: digitalProtocolConfigured.value,
         numberOfMotors: numberOfMotors,
-        motorStopValue: minSliderValue.value,
+        motorStopValue: zeroThrottleValue.value,
         motorSpinValue: idleThrottleValue.value,
     };
 
@@ -1458,7 +1490,7 @@ const handleSave = (reboot = true) => {
         }
 
         // Explicitly stop all motors to ensure no spinning after reboot
-        stopAllMotors(minSliderValue.value);
+        stopAllMotors(zeroThrottleValue.value);
         // Give time for motor stop command to be processed
         await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -1484,7 +1516,9 @@ const handleSave = (reboot = true) => {
             await saveToEeprom();
         }
 
-        // Only after a successful persist: record analytics and refresh the dirty baseline.
+        // Only after a successful persist: refresh the applied-state snapshot, record analytics,
+        // and refresh the dirty baseline.
+        syncAppliedMotorStopState();
         if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
             tracking.sendSaveAndChangeEvents(
                 tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
@@ -1564,9 +1598,9 @@ const maxSliderValue = computed(() => {
     return fcStore.motorConfig.maxthrottle;
 });
 
-const idleThrottleValue = computed(() => {
-    return zeroThrottleValue.value + (fcStore.pidAdvancedConfig.motorIdle * 1000) / 100;
-});
+const idleThrottleValue = computed(() =>
+    computeIdleThrottleValue(zeroThrottleValue.value, fcStore.pidAdvancedConfig.motorIdle),
+);
 
 watch(zeroThrottleValue, (val) => {
     if (!motorsTestingEnabled.value) {
@@ -1740,7 +1774,7 @@ onUnmounted(() => {
     }
     // ensure disarmed safety - use proper stop values, not 0
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(new Array(8).fill(minSliderValue.value));
+        sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
     }
 });
 </script>

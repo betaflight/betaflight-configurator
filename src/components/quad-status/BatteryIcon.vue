@@ -102,9 +102,10 @@ export default defineComponent({
 .quad-status-contents {
     position: absolute;
     top: 10px;
+    /* Insets match the SVG inner hole so a full bar keeps equal gaps on both sides. */
     inset-inline-start: 14px;
     height: 10px;
-    width: 31px;
+    width: 29px;
 }
 
 .battery-icon {
@@ -164,7 +165,7 @@ export default defineComponent({
 .battery-icon--compact .quad-status-contents {
     top: 8px;
     inset-inline-start: 11px;
-    width: 26px;
+    width: 24px;
     height: 8px;
 }
 

@@ -36,6 +36,59 @@ export const mixerList = [
     //{ name: "Car", pos: 27, model: "car", image: "car", motors: 1, servos: true }, //  reserved for upcoming feature work
 ];
 
+/**
+ * GLTF stem for the attitude/preview mesh.
+ *
+ * Built-in mixers map 1:1. Custom Airplane / Custom Tricopter get their craft
+ * meshes explicitly. Only the generic Custom entry (pos 22) may infer a mesh
+ * from FC motor count — other `model: "custom"` layouts (Flying Wing, Hex H,
+ * octo variants, …) keep the fallback block so a coincidental motor count does
+ * not pick the wrong craft.
+ *
+ * @param {number} [mixerIndex] - FC.MIXER_CONFIG.mixer (1-based); defaults to live FC
+ * @param {number} [motorCount] - FC.MOTOR_CONFIG.motor_count; defaults to live FC
+ * @returns {string} gltf basename under resources/models/
+ */
+export function resolveMixerModelFile(mixerIndex, motorCount) {
+    const index = mixerIndex ?? FC.MIXER_CONFIG?.mixer;
+    const motors = motorCount ?? FC.MOTOR_CONFIG?.motor_count ?? 0;
+    const entry = mixerList[index - 1];
+
+    if (!entry) {
+        return "fallback";
+    }
+
+    if (entry.model !== "custom") {
+        return entry.model;
+    }
+
+    // Dedicated custom variants: prefer the craft type over a motor-count guess.
+    if (entry.pos === 24) {
+        return "tricopter";
+    }
+    if (entry.pos === 23) {
+        return "airplane";
+    }
+
+    // Motor-count inference is only for generic Custom (e.g. deadcat mmix).
+    if (entry.pos !== 22) {
+        return "fallback";
+    }
+
+    switch (motors) {
+        case 4:
+            return "quad_x";
+        case 3:
+            return "tricopter";
+        case 6:
+            return "hex_x";
+        case 1:
+            return "airplane";
+        default:
+            return "fallback";
+    }
+}
+
 function getContentBoxSize(element) {
     const style = globalThis.getComputedStyle(element);
     const paddingX = Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight);
@@ -73,13 +126,7 @@ const Model = function (wrapper, canvas) {
     const { width, height } = getContentBoxSize(this.wrapper);
     this.renderer.setSize(width, height);
 
-    // load the model including materials
-    let model_file = mixerList[FC.MIXER_CONFIG.mixer - 1]?.model;
-
-    // Temporary workaround for 'custom' model until akfreak's custom model is merged.
-    if (model_file === "custom") {
-        model_file = "fallback";
-    }
+    const model_file = resolveMixerModelFile();
 
     // Setup scene
     this.scene = new THREE.Scene();

@@ -1,0 +1,1159 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+    STM32 F103 serial bus seems to properly initialize with quite a huge auto-baud range
+    From 921600 down to 1200, i don't recommend getting any lower then that
+    Official "specs" are from 115200 to 1200
+
+    popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
+*/
+import MSPConnectorImpl from "../msp/MSPConnector";
+import GUI, { TABS as GUI_TABS } from "../gui";
+import { i18n } from "../localization";
+import MSP from "../msp";
+import FC from "../fc";
+import { bit_check } from "../bit";
+import { gui_log } from "../gui_log";
+import { MspCancelledError } from "../msp/mspErrors";
+import MSPCodes from "../msp/MSPCodes";
+import PortUsage from "../port_usage";
+import { serial } from "../serial";
+import { getConnectionState } from "../connection_state";
+// NOTE: the flashing path must NOT depend on serial_backend (the MSP-connection
+// orchestrator). During flashing the received bytes are always MSP, so we feed
+// MSP.read directly instead of serial_backend.read_serial.
+import { DFU_AUTH_REQUIRED } from "../protocols/usbdfu";
+import DeviceHandler from "../device_handler";
+import NotificationManager from "../utils/notifications";
+import { get as getConfig } from "../ConfigStorage";
+import { MspBuffer } from "../msp/mspBytes";
+
+/** One contiguous block from the Intel HEX parser (`workers/hex_parser.js`). */
+interface HexBlock {
+    address: number;
+    bytes: number;
+    data: number[];
+}
+
+interface ParsedHex {
+    data: HexBlock[];
+    bytes_total: number;
+}
+
+/** The flashing options built by useFirmwareFlashing.flashHexFirmware; only the fields read here. */
+export interface STM32FlashOptions {
+    no_reboot?: boolean;
+    reboot_baud?: number;
+    erase_chip?: boolean;
+    selectedBoard?: string;
+    localFirmwareLoaded?: boolean;
+    showDialogVerifyBoard?: (
+        selectedBoard: string,
+        connectedBoard: string,
+        onAccept: () => void,
+        onAbort: () => void,
+    ) => void;
+}
+
+type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
+
+/** The part of `TABS.firmware_flasher` (registered by FirmwareFlasherTab.vue) that this protocol calls. */
+interface FirmwareFlasherTabApi {
+    flashingMessage(message: string | null, type: string): FirmwareFlasherTabApi;
+    flashProgress(value: number): FirmwareFlasherTabApi;
+    resetFlashingState(): void;
+    requestDfuPermission?: () => void;
+    FLASH_MESSAGE_TYPES: Record<FlashMessageType, string>;
+}
+
+// gui.js types every TABS entry as Record<string, unknown>; the tab registers the shape above.
+const TABS = GUI_TABS as unknown as { firmware_flasher: FirmwareFlasherTabApi };
+
+function readSerialAdapter(event: Event): void {
+    // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
+    // The serial facade wraps every receive as { data, protocolType }, so read .data.
+    MSP.read((event as CustomEvent<{ data: ArrayBuffer }>).detail.data);
+}
+
+function onMSPConnectionError() {
+    gui_log(i18n.getMessage("stm32RebootingToBootloaderFailed"));
+    STM32.handleError();
+}
+
+class STM32Protocol {
+    readonly logHead = "[STM32]";
+    baud: number | null = null;
+    port!: string;
+    serialOptions!: STM32FlashOptions;
+    mspOptions?: { no_reboot: boolean; reboot_baud: number | false | undefined; erase_chip: boolean };
+    callback: (() => void) | null | undefined = null;
+    // Set by connect() before any upload step reads it.
+    hex: ParsedHex | null = null;
+    verify_hex: number[][] = [];
+    receive_buffer: number[] = [];
+    bytesToRead: number = 0;
+    read_callback: ((data: number[]) => void) | null = null;
+    upload_time_start: number = 0;
+    upload_process_alive: boolean = false;
+    mspConnector: MSPConnectorImpl = new MSPConnectorImpl();
+    status: { ACK: number; NACK: number } = {
+        ACK: 0x79, // y
+        NACK: 0x1f,
+    };
+    command: Record<
+        | "get"
+        | "get_ver_r_protect_s"
+        | "get_ID"
+        | "read_memory"
+        | "go"
+        | "write_memory"
+        | "erase"
+        | "extended_erase"
+        | "write_protect"
+        | "write_unprotect"
+        | "readout_protect"
+        | "readout_unprotect",
+        number
+    > = {
+        get: 0x00, // Gets the version and the allowed commands supported by the current version of the bootloader
+        get_ver_r_protect_s: 0x01, // Gets the bootloader version and the Read Protection status of the Flash memory
+        get_ID: 0x02, // Gets the chip ID
+        read_memory: 0x11, // Reads up to 256 bytes of memory starting from an address specified by the application
+        go: 0x21, // Jumps to user application code located in the internal Flash memory or in SRAM
+        write_memory: 0x31, // Writes up to 256 bytes to the RAM or Flash memory starting from an address specified by the application
+        erase: 0x43, // Erases from one to all the Flash memory pages
+        extended_erase: 0x44, // Erases from one to all the Flash memory pages using two byte addressing mode (v3.0+ usart).
+        write_protect: 0x63, // Enables the write protection for some sectors
+        write_unprotect: 0x73, // Disables the write protection for all Flash memory sectors
+        readout_protect: 0x82, // Enables the read protection
+        readout_unprotect: 0x92, // Disables the read protection
+    };
+    // Erase (x043) and Extended Erase (0x44) are exclusive. A device may support either the Erase command or the Extended Erase command but not both.
+    available_flash_size: number = 0;
+    page_size: number = 0;
+    useExtendedErase: boolean = false;
+    rebootMode: number = 0;
+    private readonly _boundHandleConnect: (event: Event) => void;
+    private readonly _boundHandleDisconnect: (event: Event) => void;
+
+    constructor() {
+        this.handleMSPConnect = this.handleMSPConnect.bind(this);
+
+        // Bind event handlers once so they can be properly added/removed
+        this._boundHandleConnect = (event) => this.handleConnect((event as CustomEvent<unknown>).detail);
+        this._boundHandleDisconnect = (event) => {
+            this.handleDisconnect((event as CustomEvent<unknown>).detail).catch((error: unknown) => {
+                console.error(`${this.logHead} DFU wait after disconnect failed:`, error);
+                this.handleError();
+            });
+        };
+    }
+
+    /**
+     * Centralized error handling method that resets UI state and releases connection lock
+     * @param {boolean} resetRebootMode - Whether to reset the reboot mode
+     */
+    handleError(resetRebootMode = true): void {
+        GUI.connect_lock = false;
+        // Flash aborted/failed — release the FLASHING state alongside the lock so
+        // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
+        getConnectionState().endFlashing();
+        if (resetRebootMode) {
+            this.rebootMode = 0;
+        }
+        TABS.firmware_flasher.resetFlashingState();
+    }
+
+    handleConnect(connectionResult: unknown): void {
+        console.log(`${this.logHead} Connected to serial port`, connectionResult);
+        if (connectionResult) {
+            // we are connected, disabling connect button in the UI
+            GUI.connect_lock = true;
+            // The flasher now owns the raw port — stand the MSP reconnect down and
+            // enter FLASHING (hard-blocks connect/reboot until the flash completes).
+            getConnectionState().beginDeviceReplacement();
+
+            this.initialize();
+        } else {
+            gui_log(i18n.getMessage("serialPortOpenFail"));
+        }
+    }
+
+    async handleDisconnect(disconnectionResult: unknown): Promise<void> {
+        console.log(`${this.logHead} Waiting for DFU connection`);
+
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
+
+        if (!disconnectionResult || !this.rebootMode) {
+            this.handleError(false);
+            return;
+        }
+
+        try {
+            // Poll for an already-authorized DFU device (no user gesture needed).
+            // Keep timeout short (~4s) so the Flash button's transient user
+            // activation is still valid if we need to fall back to requestPermission.
+            const device = await DeviceHandler.dfuProtocol.waitForDfu(4000, 500);
+            console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
+        } catch (e) {
+            if ((e as { code?: unknown }).code !== DFU_AUTH_REQUIRED) {
+                console.error(`${this.logHead} waitForDfu error:`, e);
+                this.handleError();
+                return;
+            }
+            await this.requestDfuPermission();
+        }
+    }
+
+    // The rebooted board is in DFU but was never authorised for WebUSB: ask for it.
+    private async requestDfuPermission(): Promise<void> {
+        // Device not previously authorized via WebUSB.
+        // Try requestPermission directly — browser may still honour the
+        // original user gesture from the Flash button click.
+        console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
+        gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
+        GUI.connect_lock = false;
+
+        const device = await DeviceHandler.dfuProtocol.requestPermission();
+        if (device) {
+            // Only WebUSB needs a manual dispatch here. The Android
+            // Capacitor adapter already emits addedDevice from
+            // requestPermission().
+            if (!DeviceHandler.dfuProtocol.transport?.emitsAddedDeviceOnPermissionGrant) {
+                DeviceHandler.dfuProtocol.dispatchEvent(new CustomEvent("addedDevice", { detail: device }));
+            }
+            return;
+        }
+
+        // requestPermission returned null — either the browser blocked it
+        // (no user gesture) or user cancelled. Show dialog as fallback.
+        console.warn(`${this.logHead} requestPermission failed, showing dialog`);
+        if (TABS.firmware_flasher.requestDfuPermission) {
+            TABS.firmware_flasher.requestDfuPermission();
+        } else {
+            this.handleError();
+        }
+    }
+
+    prepareSerialPort(): void {
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.addEventListener("connect", this._boundHandleConnect, { once: true });
+
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
+        serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
+    }
+
+    reboot(): void {
+        const buffer = new MspBuffer();
+        buffer.push8(this.rebootMode);
+        setTimeout(() => {
+            const disconnectFromMsp = () => {
+                this.mspConnector.disconnect((disconnectionResult: unknown) => {
+                    console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
+                });
+            };
+            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer)
+                .then(() => {
+                    // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+                    disconnectFromMsp();
+                })
+                .catch((error) => {
+                    if (error instanceof MspCancelledError && error.reason === "disconnected") {
+                        // Expected: the FC drops the serial link as part of rebooting.
+                        disconnectFromMsp();
+                    } else {
+                        console.error(`${this.logHead} MSP_SET_REBOOT request failed:`, error);
+                        this.handleError();
+                    }
+                });
+            console.log(`${this.logHead} Reboot request received by device`);
+        }, 100);
+    }
+
+    onAbort(): void {
+        GUI.connect_lock = false;
+        getConnectionState().endFlashing();
+        this.rebootMode = 0;
+        console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
+        this.reboot();
+        TABS.firmware_flasher.resetFlashingState();
+    }
+
+    lookingForCapabilitiesViaMSP(): void {
+        console.log(`${this.logHead} Looking for capabilities via MSP`);
+
+        MSP.promise(MSPCodes.MSP_BOARD_INFO)
+            .then(() => {
+                if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                    // Board has flash bootloader
+                    gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
+                    console.log(`${this.logHead} flash bootloader detected`);
+                    this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
+                } else {
+                    gui_log(i18n.getMessage("deviceRebooting_romBootloader"));
+                    console.log(`${this.logHead} no flash bootloader detected`);
+                    this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+                }
+
+                const selectedBoard =
+                    this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
+                        ? this.serialOptions.selectedBoard
+                        : "NONE";
+                const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
+
+                try {
+                    if (
+                        selectedBoard !== connectedBoard &&
+                        !this.serialOptions.localFirmwareLoaded &&
+                        this.serialOptions.showDialogVerifyBoard
+                    ) {
+                        this.serialOptions.showDialogVerifyBoard(
+                            selectedBoard,
+                            connectedBoard,
+                            this.reboot.bind(this),
+                            this.onAbort.bind(this),
+                        );
+                    } else {
+                        this.reboot();
+                    }
+                } catch (e) {
+                    console.error(e);
+                    this.reboot();
+                }
+            })
+            .catch((error) => {
+                console.error(`${this.logHead} MSP_BOARD_INFO request failed:`, error);
+                this.handleError();
+            });
+    }
+
+    handleMSPConnect(): void {
+        gui_log(i18n.getMessage("apiVersionReceived", [FC.CONFIG.apiVersion]));
+
+        this.lookingForCapabilitiesViaMSP();
+    }
+
+    // no input parameters
+    connect(
+        port: string,
+        baud: number,
+        hex: ParsedHex,
+        options: STM32FlashOptions,
+        callback?: (() => void) | null,
+    ): void {
+        this.hex = hex;
+        this.port = port;
+        this.baud = baud;
+        this.callback = callback;
+        this.serialOptions = options;
+
+        // we will crunch the options here since doing it inside initialization routine would be too late
+        this.mspOptions = {
+            no_reboot: false,
+            reboot_baud: false,
+            erase_chip: false,
+        };
+
+        if (options.no_reboot) {
+            this.mspOptions.no_reboot = true;
+        } else {
+            this.mspOptions.reboot_baud = options.reboot_baud;
+        }
+
+        if (options.erase_chip) {
+            this.mspOptions.erase_chip = true;
+        }
+
+        if (this.mspOptions.no_reboot) {
+            this.prepareSerialPort();
+            // serial.js's JSDoc does not mark the callback optional.
+            serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
+        } else {
+            this.rebootMode = 0; // FIRMWARE
+
+            GUI.connect_lock = true;
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32RebootingToBootloader"),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+            );
+
+            serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
+
+            this.mspConnector.connect(
+                this.port,
+                this.mspOptions.reboot_baud,
+                this.handleMSPConnect,
+                onMSPConnectionError,
+                onMSPConnectionError,
+            );
+        }
+    }
+
+    // initialize certain variables and start timers that oversee the communication
+    initialize(): void {
+        // reset and set some variables before we start
+        this.receive_buffer = [];
+        this.verify_hex = [];
+
+        this.upload_time_start = Date.now();
+        this.upload_process_alive = false;
+
+        // reset progress bar to initial state
+        TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
+
+        serial.removeEventListener("receive", readSerialAdapter);
+        serial.addEventListener("receive", readSerialAdapter);
+
+        GUI.interval_add(
+            "STM32_timeout",
+            () => {
+                if (this.upload_process_alive) {
+                    // process is running
+                    this.upload_process_alive = false;
+                } else {
+                    console.log(`${this.logHead} STM32 - timed out, programming failed ...`);
+
+                    TABS.firmware_flasher.flashingMessage(
+                        i18n.getMessage("stm32TimedOut"),
+                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                    );
+
+                    // protocol got stuck, clear timer and disconnect
+                    GUI.interval_remove("STM32_timeout");
+
+                    // exit
+                    this.upload_procedure(99);
+                }
+            },
+            2000,
+        );
+
+        console.log(`${this.logHead} STM32 - Initialization done, starting upload procedure`);
+
+        this.upload_procedure(1);
+    }
+    // no input parameters
+    // this method should be executed every 1 ms via interval timer
+    read(readInfo: { data: ArrayBuffer }): void {
+        // routine that fills the buffer
+        const data = new Uint8Array(readInfo.data);
+
+        for (const instance of data) {
+            this.receive_buffer.push(instance);
+        }
+
+        // routine that fetches data from buffer if statement is true
+        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead !== 0) {
+            const fetched = this.receive_buffer.slice(0, this.bytesToRead); // bytes requested
+            this.receive_buffer.splice(0, this.bytesToRead); // remove read bytes
+
+            this.bytesToRead = 0; // reset trigger
+
+            this.read_callback!(fetched);
+        }
+    }
+    // READ MEMORY (AN3155): command, then the address, then the byte count; each must be ACKed.
+    // `onAddressAccepted` runs once the count is on its way, which is when the old inline chain
+    // updated the progress bar.
+    private readMemoryPage(
+        address: number,
+        bytesToRead: number,
+        onAddressAccepted: () => void,
+        onData: (data: number[]) => void,
+    ): void {
+        this.send([this.command.read_memory, 0xee], 1, (reply) => {
+            if (!this.verify_response(this.status.ACK, reply)) {
+                return;
+            }
+            const addressArray = [address >> 24, address >> 16, address >> 8, address];
+            const addressChecksum = addressArray[0] ^ addressArray[1] ^ addressArray[2] ^ addressArray[3];
+
+            this.send([...addressArray, addressChecksum], 1, (addressReply) => {
+                if (!this.verify_response(this.status.ACK, addressReply)) {
+                    return;
+                }
+                const bytesToReadN = bytesToRead - 1;
+                // bytes to be read + checksum XOR(complement of bytesToReadN)
+                this.send([bytesToReadN, ~bytesToReadN & 0xff], 1, (response) => {
+                    if (this.verify_response(this.status.ACK, response)) {
+                        this.retrieve(bytesToRead, onData);
+                    }
+                });
+
+                onAddressAccepted();
+            });
+        });
+    }
+
+    // All blocks read back: compare them with the hex and report the result.
+    private finishVerification(blocks: number): void {
+        let verify = true;
+        for (let i = 0; i <= blocks; i++) {
+            verify = this.verify_flash(this.hex!.data[i].data, this.verify_hex[i]);
+
+            if (!verify) {
+                break;
+            }
+        }
+
+        if (verify) {
+            console.log(`${this.logHead} Programming: SUCCESSFUL`);
+            // update progress bar
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32ProgrammingSuccessful"),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID,
+            );
+
+            // Show notification
+            if (getConfig("showNotifications").showNotifications) {
+                NotificationManager.showNotification("Betaflight App", {
+                    body: i18n.getMessage("programmingSuccessfulNotification"),
+                    icon: "/images/pwa/favicon.ico",
+                });
+            }
+
+            // proceed to next step
+            this.upload_procedure(7);
+        } else {
+            console.log(`${this.logHead} Programming: FAILED`);
+            // update progress bar
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32ProgrammingFailed"),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+            );
+
+            // Show notification
+            if (getConfig("showNotifications").showNotifications) {
+                NotificationManager.showNotification("Betaflight App", {
+                    body: i18n.getMessage("programmingFailedNotification"),
+                    icon: "/images/pwa/favicon.ico",
+                });
+            }
+
+            // disconnect
+            this.upload_procedure(99);
+        }
+    }
+
+    // we should always try to consume all "proper" available data while using retrieve
+    retrieve(nBytes: number, callback: (data: number[]) => void): void {
+        if (this.receive_buffer.length >= nBytes) {
+            // data that we need are there, process immediately
+            const data = this.receive_buffer.slice(0, nBytes);
+            this.receive_buffer.splice(0, nBytes); // remove read bytes
+
+            callback(data);
+        } else {
+            // still waiting for data, add callback
+            this.bytesToRead = nBytes;
+            this.read_callback = callback;
+        }
+    }
+    // bytes_to_send = array of bytes that will be send over serial
+    // bytesToRead = received bytes necessary to trigger read_callback
+    // callback = function that will be executed after received bytes = bytesToRead
+    send(bytes_to_send: number[], bytesToRead: number, callback: (data: number[]) => void): void {
+        // flip flag
+        this.upload_process_alive = true;
+
+        const bufferOut = new ArrayBuffer(bytes_to_send.length);
+        const bufferView = new Uint8Array(bufferOut);
+
+        // set bytes_to_send values inside bufferView (alternative to for loop)
+        bufferView.set(bytes_to_send);
+
+        // update references
+        this.bytesToRead = bytesToRead;
+        this.read_callback = callback;
+
+        // empty receive buffer before next command is out
+        this.receive_buffer = [];
+
+        // send over the actual data
+        serial.send(bufferOut);
+    }
+    // val = single byte to be verified
+    // data = response of n bytes from mcu (array)
+    // result = true/false
+    verify_response(val: number, data: number[]): boolean {
+        if (val !== data[0]) {
+            const message = `STM32 Communication failed, wrong response, expected: ${val} (0x${val.toString(
+                16,
+            )}) received: ${data[0]} (0x${data[0].toString(16)})`;
+            console.error(message);
+            TABS.firmware_flasher.flashingMessage(
+                i18n.getMessage("stm32WrongResponse", [val, val.toString(16), data[0], data[0].toString(16)]),
+                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+            );
+
+            // disconnect
+            this.upload_procedure(99);
+
+            return false;
+        }
+
+        return true;
+    }
+    // input = 16 bit value
+    // result = true/false
+    verify_chip_signature(signature: number): boolean {
+        switch (signature) {
+            case 0x412: // not tested
+                console.log(`${this.logHead} Chip recognized as F1 Low-density`);
+                break;
+            case 0x410:
+                console.log(`${this.logHead} Chip recognized as F1 Medium-density`);
+                this.available_flash_size = 131072;
+                this.page_size = 1024;
+                break;
+            case 0x414:
+                this.available_flash_size = 0x40000;
+                this.page_size = 2048;
+                console.log(`${this.logHead} Chip recognized as F1 High-density`);
+                break;
+            case 0x418: // not tested
+                console.log(`${this.logHead} Chip recognized as F1 Connectivity line`);
+                break;
+            case 0x420: // not tested
+                console.log(`${this.logHead} Chip recognized as F1 Medium-density value line`);
+                break;
+            case 0x428: // not tested
+                console.log(`${this.logHead} Chip recognized as F1 High-density value line`);
+                break;
+            case 0x430: // not tested
+                console.log(`${this.logHead} Chip recognized as F1 XL-density value line`);
+                break;
+            case 0x416: // not tested
+                console.log(`${this.logHead} Chip recognized as L1 Medium-density ultralow power`);
+                break;
+            case 0x436: // not tested
+                console.log(`${this.logHead} Chip recognized as L1 High-density ultralow power`);
+                break;
+            case 0x427: // not tested
+                console.log(`${this.logHead} Chip recognized as L1 Medium-density plus ultralow power`);
+                break;
+            case 0x411: // not tested
+                console.log(`${this.logHead} Chip recognized as F2 STM32F2xxxx`);
+                break;
+            case 0x440: // not tested
+                console.log(`${this.logHead} Chip recognized as F0 STM32F051xx`);
+                break;
+            case 0x444: // not tested
+                console.log(`${this.logHead} Chip recognized as F0 STM32F050xx`);
+                break;
+            case 0x413: // not tested
+                console.log(`${this.logHead} Chip recognized as F4 STM32F40xxx/41xxx`);
+                break;
+            case 0x419: // not tested
+                console.log(`${this.logHead} Chip recognized as F4 STM32F427xx/437xx, STM32F429xx/439xx`);
+                break;
+            case 0x432: // not tested
+                console.log(`${this.logHead} Chip recognized as F3 STM32F37xxx, STM32F38xxx`);
+                break;
+            case 0x422:
+                console.log(`${this.logHead} Chip recognized as F3 STM32F30xxx, STM32F31xxx`);
+                this.available_flash_size = 0x40000;
+                this.page_size = 2048;
+                break;
+            default:
+                console.log(`${this.logHead} Chip NOT recognized: ${signature}`);
+                break;
+        }
+
+        if (this.available_flash_size > 0) {
+            if (this.hex!.bytes_total < this.available_flash_size) {
+                return true;
+            } else {
+                console.log(
+                    `${this.logHead} Supplied hex is bigger then flash available on the chip, HEX: ${this.hex!.bytes_total} bytes, limit = ${this.available_flash_size} bytes`,
+                );
+                return false;
+            }
+        }
+
+        console.log(`${this.logHead} Chip NOT recognized: ${signature}`);
+
+        return false;
+    }
+    // firstArray = usually hex_to_flash array
+    // secondArray = usually verify_hex array
+    // result = true/false
+    verify_flash(firstArray: number[], secondArray: number[]): boolean {
+        for (let i = 0; i < firstArray.length; i++) {
+            if (firstArray[i] !== secondArray[i]) {
+                console.log(
+                    `${this.logHead} Verification failed on byte: ${i} expected: 0x${firstArray[i].toString(
+                        16,
+                    )} received: 0x${secondArray[i].toString(16)}`,
+                );
+                return false;
+            }
+        }
+
+        console.log(`${this.logHead} Verification successful, matching: ${firstArray.length} bytes`);
+
+        return true;
+    }
+    // step = value depending on current state of upload_procedure
+    upload_procedure(step: number): void {
+        switch (step) {
+            case 1: {
+                // initialize serial interface on the MCU side, auto baud rate settings
+                TABS.firmware_flasher.flashingMessage(
+                    i18n.getMessage("stm32ContactingBootloader"),
+                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                );
+
+                let sendCounter = 0;
+                GUI.interval_add(
+                    "stm32_initialize_mcu",
+                    () => {
+                        this.send([0x7f], 1, (reply) => {
+                            if (reply[0] === 0x7f || reply[0] === this.status.ACK || reply[0] === this.status.NACK) {
+                                GUI.interval_remove("stm32_initialize_mcu");
+                                console.log(`${this.logHead} Serial interface initialized on the MCU side`);
+
+                                // proceed to next step
+                                this.upload_procedure(2);
+                            } else {
+                                TABS.firmware_flasher.flashingMessage(
+                                    i18n.getMessage("stm32ContactingBootloaderFailed"),
+                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                                );
+
+                                GUI.interval_remove("stm32_initialize_mcu");
+
+                                // disconnect
+                                this.upload_procedure(99);
+                            }
+                        });
+
+                        if (sendCounter++ > 3) {
+                            // stop retrying, its too late to get any response from MCU
+                            console.log(`${this.logHead} No response from bootloader, disconnecting`);
+
+                            TABS.firmware_flasher.flashingMessage(
+                                i18n.getMessage("stm32ResponseBootloaderFailed"),
+                                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                            );
+
+                            GUI.interval_remove("stm32_initialize_mcu");
+                            GUI.interval_remove("STM32_timeout");
+
+                            // exit
+                            this.upload_procedure(99);
+                        }
+                    },
+                    250,
+                    true,
+                );
+
+                break;
+            }
+            case 2: {
+                // get version of the bootloader and supported commands
+                this.send([this.command.get, 0xff], 2, (data) => {
+                    if (this.verify_response(this.status.ACK, data)) {
+                        this.retrieve(data[1] + 1 + 1, (data) => {
+                            console.log(
+                                `${this.logHead} Bootloader version: ${(
+                                    Number.parseInt(data[0].toString(16)) / 10
+                                ).toFixed(1)}`,
+                            ); // convert dec to hex, hex to dec and add floating point
+
+                            this.useExtendedErase = data[7] === this.command.extended_erase;
+
+                            // proceed to next step
+                            this.upload_procedure(3);
+                        });
+                    }
+                });
+
+                break;
+            }
+            case 3:
+                // get ID (device signature)
+                this.send([this.command.get_ID, 0xfd], 2, (data) => {
+                    if (this.verify_response(this.status.ACK, data)) {
+                        this.retrieve(data[1] + 1 + 1, (data) => {
+                            const signature = (data[0] << 8) | data[1];
+                            console.log(`${this.logHead} Signature: 0x${signature.toString(16)}`); // signature in hex representation
+
+                            if (this.verify_chip_signature(signature)) {
+                                // proceed to next step
+                                this.upload_procedure(4);
+                            } else {
+                                // disconnect
+                                this.upload_procedure(99);
+                            }
+                        });
+                    }
+                });
+
+                break;
+            case 4: {
+                // erase memory
+                if (this.useExtendedErase) {
+                    if (this.mspOptions?.erase_chip) {
+                        console.log(`${this.logHead} Executing global chip erase (via extended erase)`);
+                        TABS.firmware_flasher.flashingMessage(
+                            i18n.getMessage("stm32GlobalEraseExtended"),
+                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
+                        );
+
+                        this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
+                            if (this.verify_response(this.status.ACK, reply)) {
+                                this.send([0xff, 0xff, 0x00], 1, (reply) => {
+                                    if (this.verify_response(this.status.ACK, reply)) {
+                                        console.log(`${this.logHead} Executing global chip extended erase: done`);
+                                        this.upload_procedure(5);
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        console.log(`${this.logHead} Executing local erase (via extended erase)`);
+                        TABS.firmware_flasher.flashingMessage(
+                            i18n.getMessage("stm32LocalEraseExtended"),
+                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
+                        );
+
+                        this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
+                            if (this.verify_response(this.status.ACK, reply)) {
+                                // For reference: https://code.google.com/p/stm32flash/source/browse/stm32.c#723
+                                const maxAddress =
+                                    this.hex!.data.at(-1)!.address + this.hex!.data.at(-1)!.bytes - 0x8000000;
+                                const erasePagesN = Math.ceil(maxAddress / this.page_size);
+                                const buff = [];
+                                let checksum = 0;
+
+                                let pgByte;
+
+                                pgByte = (erasePagesN - 1) >> 8;
+                                buff.push(pgByte);
+                                checksum ^= pgByte;
+                                pgByte = (erasePagesN - 1) & 0xff;
+                                buff.push(pgByte);
+                                checksum ^= pgByte;
+
+                                for (let i = 0; i < erasePagesN; i++) {
+                                    pgByte = i >> 8;
+                                    buff.push(pgByte);
+                                    checksum ^= pgByte;
+                                    pgByte = i & 0xff;
+                                    buff.push(pgByte);
+                                    checksum ^= pgByte;
+                                }
+
+                                buff.push(checksum);
+                                console.log(
+                                    `${this.logHead} Erasing. pages: 0x00 - 0x${erasePagesN.toString(
+                                        16,
+                                    )}, checksum: 0x${checksum.toString(16)}`,
+                                );
+
+                                this.send(buff, 1, (_reply) => {
+                                    if (this.verify_response(this.status.ACK, _reply)) {
+                                        console.log(`${this.logHead} Erasing: done`);
+                                        // proceed to next step
+                                        this.upload_procedure(5);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    break;
+                }
+
+                if (this.mspOptions?.erase_chip) {
+                    console.log(`${this.logHead} Executing global chip erase`);
+                    TABS.firmware_flasher.flashingMessage(
+                        i18n.getMessage("stm32GlobalErase"),
+                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                    );
+
+                    this.send([this.command.erase, 0xbc], 1, (reply) => {
+                        if (this.verify_response(this.status.ACK, reply)) {
+                            this.send([0xff, 0x00], 1, (reply) => {
+                                if (this.verify_response(this.status.ACK, reply)) {
+                                    console.log(`${this.logHead} Erasing: done`);
+                                    // proceed to next step
+                                    this.upload_procedure(5);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log(`${this.logHead} Executing local erase`);
+                    TABS.firmware_flasher.flashingMessage(
+                        i18n.getMessage("stm32LocalErase"),
+                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                    );
+
+                    this.send([this.command.erase, 0xbc], 1, (reply) => {
+                        if (this.verify_response(this.status.ACK, reply)) {
+                            // the bootloader receives one byte that contains N, the number of pages to be erased – 1
+                            const maxAddress =
+                                this.hex!.data.at(-1)!.address + this.hex!.data.at(-1)!.bytes - 0x8000000;
+                            const erasePagesN = Math.ceil(maxAddress / this.page_size);
+                            const buff = [];
+                            let checksum = erasePagesN - 1;
+
+                            buff.push(erasePagesN - 1);
+
+                            for (let ii = 0; ii < erasePagesN; ii++) {
+                                buff.push(ii);
+                                checksum ^= ii;
+                            }
+
+                            buff.push(checksum);
+
+                            this.send(buff, 1, (reply) => {
+                                if (this.verify_response(this.status.ACK, reply)) {
+                                    console.log(`${this.logHead} Erasing: done`);
+                                    // proceed to next step
+                                    this.upload_procedure(5);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                break;
+            }
+            case 5: {
+                // upload
+                console.log(`${this.logHead} Writing data ...`);
+                TABS.firmware_flasher.flashingMessage(
+                    i18n.getMessage("stm32Flashing"),
+                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.FLASHING,
+                );
+
+                const blocks = this.hex!.data.length - 1;
+                let flashing_block = 0,
+                    address = this.hex!.data[flashing_block].address,
+                    bytes_flashed = 0,
+                    bytes_flashed_total = 0; // used for progress bar
+
+                const write = () => {
+                    if (bytes_flashed < this.hex!.data[flashing_block].bytes) {
+                        const bytesToWrite =
+                            bytes_flashed + 256 <= this.hex!.data[flashing_block].bytes
+                                ? 256
+                                : this.hex!.data[flashing_block].bytes - bytes_flashed;
+
+                        // DEBUG - console.log('STM32 - Writing to: 0x' + address.toString(16) + ', ' + bytesToWrite + ' bytes');
+                        this.send([this.command.write_memory, 0xce], 1, (reply) => {
+                            if (this.verify_response(this.status.ACK, reply)) {
+                                // address needs to be transmitted as 32 bit integer, we need to bit shift each byte out and then calculate address checksum
+                                const addressArray = [address >> 24, address >> 16, address >> 8, address];
+                                const addressChecksum =
+                                    addressArray[0] ^ addressArray[1] ^ addressArray[2] ^ addressArray[3];
+                                // write start address + checksum
+                                this.send(
+                                    [
+                                        addressArray[0],
+                                        addressArray[1],
+                                        addressArray[2],
+                                        addressArray[3],
+                                        addressChecksum,
+                                    ],
+                                    1,
+                                    (_reply) => {
+                                        if (this.verify_response(this.status.ACK, _reply)) {
+                                            // WRITE MEMORY (AN3155): N = byte count - 1 (to write 256 bytes, N is 255), the
+                                            // data, then the XOR of N and every data byte, appended after the last one.
+                                            const arrayOut: number[] = [bytesToWrite - 1];
+                                            let checksum = arrayOut[0];
+                                            for (let ii = 0; ii < bytesToWrite; ii++) {
+                                                const byte = this.hex!.data[flashing_block].data[bytes_flashed];
+                                                arrayOut.push(byte);
+                                                checksum ^= byte;
+
+                                                bytes_flashed++;
+                                            }
+                                            arrayOut.push(checksum);
+
+                                            address += bytesToWrite;
+                                            bytes_flashed_total += bytesToWrite;
+
+                                            this.send(arrayOut, 1, (response) => {
+                                                if (this.verify_response(this.status.ACK, response)) {
+                                                    // flash another page
+                                                    write();
+                                                }
+                                            });
+
+                                            // update progress bar
+                                            TABS.firmware_flasher.flashProgress(
+                                                Math.round((bytes_flashed_total / (this.hex!.bytes_total * 2)) * 100),
+                                            );
+                                        }
+                                    },
+                                );
+                            }
+                        });
+                    } else if (flashing_block < blocks) {
+                        // move to another block
+                        flashing_block++;
+
+                        address = this.hex!.data[flashing_block].address;
+                        bytes_flashed = 0;
+
+                        write();
+                    } else {
+                        // all blocks flashed
+                        console.log(`${this.logHead} Writing: done`);
+
+                        // proceed to next step
+                        this.upload_procedure(6);
+                    }
+                };
+
+                // start writing
+                write();
+
+                break;
+            }
+            case 6: {
+                // verify
+                console.log(`${this.logHead} Verifying data ...`);
+                TABS.firmware_flasher.flashingMessage(
+                    i18n.getMessage("stm32Verifying"),
+                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VERIFYING,
+                );
+
+                const blocks = this.hex!.data.length - 1;
+                let readingBlock = 0;
+                let address = this.hex!.data[readingBlock].address;
+                let bytesVerified = 0;
+                let bytesVerifiedTotal = 0; // used for progress bar
+
+                // initialize arrays
+                for (let i = 0; i <= blocks; i++) {
+                    this.verify_hex.push([]);
+                }
+
+                // update progress bar
+                const updateProgress = () =>
+                    TABS.firmware_flasher.flashProgress(
+                        Math.round(((this.hex!.bytes_total + bytesVerifiedTotal) / (this.hex!.bytes_total * 2)) * 100),
+                    );
+
+                const reading = () => {
+                    if (bytesVerified < this.hex!.data[readingBlock].bytes) {
+                        const bytesToRead =
+                            bytesVerified + 256 <= this.hex!.data[readingBlock].bytes
+                                ? 256
+                                : this.hex!.data[readingBlock].bytes - bytesVerified;
+
+                        // DEBUG console.log('STM32 - Reading from: 0x' + address.toString(16) + ', ' + bytesToRead + ' bytes');
+                        this.readMemoryPage(address, bytesToRead, updateProgress, (data) => {
+                            for (const instance of data) {
+                                this.verify_hex[readingBlock].push(instance);
+                            }
+
+                            address += bytesToRead;
+                            bytesVerified += bytesToRead;
+                            bytesVerifiedTotal += bytesToRead;
+
+                            // verify another page
+                            reading();
+                        });
+                    } else if (readingBlock < blocks) {
+                        // move to another block
+                        readingBlock++;
+
+                        address = this.hex!.data[readingBlock].address;
+                        bytesVerified = 0;
+
+                        reading();
+                    } else {
+                        this.finishVerification(blocks);
+                    }
+                };
+
+                // start reading
+                reading();
+
+                break;
+            }
+            case 7: {
+                // go
+                // memory address = 4 bytes, 1st high byte, 4th low byte, 5th byte = checksum XOR(byte 1, byte 2, byte 3, byte 4)
+                console.log(`${this.logHead} Sending GO command: 0x8000000`);
+
+                this.send([this.command.go, 0xde], 1, (reply) => {
+                    if (this.verify_response(this.status.ACK, reply)) {
+                        const gtAddress = 0x8000000;
+                        const address = [gtAddress >> 24, gtAddress >> 16, gtAddress >> 8, gtAddress];
+                        const addressChecksum = address[0] ^ address[1] ^ address[2] ^ address[3];
+
+                        this.send([address[0], address[1], address[2], address[3], addressChecksum], 1, (response) => {
+                            if (this.verify_response(this.status.ACK, response)) {
+                                // disconnect
+                                this.upload_procedure(99);
+                            }
+                        });
+                    }
+                });
+
+                break;
+            }
+            case 99: {
+                // disconnect
+                GUI.interval_remove("STM32_timeout"); // stop STM32 timeout timer (everything is finished now)
+
+                // close connection
+                if (serial.connectionId) {
+                    serial.disconnect(() => this.cleanup());
+                } else {
+                    this.cleanup();
+                }
+
+                break;
+            }
+        }
+    }
+    cleanup(): void {
+        PortUsage.reset();
+
+        // unlocking connect button
+        GUI.connect_lock = false;
+        // Flash complete — leave FLASHING so normal connect/reboot resume.
+        getConnectionState().endFlashing();
+
+        // handle timing
+        const timeSpent = Date.now() - this.upload_time_start;
+
+        console.log(`${this.logHead} Script finished after: ${timeSpent / 1000} seconds`);
+
+        if (this.callback) {
+            this.callback();
+        }
+    }
+}
+
+// initialize object
+const STM32 = new STM32Protocol();
+export default STM32;
