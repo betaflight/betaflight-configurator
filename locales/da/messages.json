@@ -10244,6 +10244,9 @@
     "pidTuningWingSpaModeOff": {
         "message": "FRA"
     },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I LÅST"
+    },
     "pidTuningWingSpaModeI": {
         "message": "I"
     },
@@ -10258,6 +10261,9 @@
     },
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Avanceret"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Kurve type"
     },
     "pidTuningWingTpaCurveTypeHelp": {
         "message": "Hyperbolsk er normalt til vinge fartøjer. Klassisk er til multirotor og anvender som standard TPA."
