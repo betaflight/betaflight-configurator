@@ -2375,7 +2375,7 @@
         "description": "ADRC tunables group: per-axis controller/observer bandwidth and control-input gain"
     },
     "pidTuningAdrcGroupGainsHelp": {
-        "message": "wc (controller bandwidth), wo (observer bandwidth) and b0 (control-input gain estimate) are ADRC's three per-axis tunables, closest in spirit to classic PID's P/D, I, and a model-calibration input respectively. Raising wc gives a crisper, faster correction; its ceiling is set by gyro noise (kp = wc² amplifies whatever noise reaches it), not by stability - a 'singing' motor noise that gets louder with RPM means wc is too high for your filtering. Raising wo speeds up rejection of wind/prop-wash/CG-offset disturbance; its ceiling is hover chatter/heat from amplified gyro noise. b0 calibrates assumed motor authority: under-estimating can fight the loop toward instability, over-estimating just leaves the correction slightly weak - round up if unsure. Community rule of thumb when picking a fresh pair: wo ≈ 3-5× wc (the shipped defaults intentionally sit outside that range - see ADRC.md for the flight-tested derivation). Note for pilots coming from other ADRC forks: some (e.g. danusha2345/ADRC-betaflight) repurpose the classic p_roll/i_roll/d_roll CLI fields to carry these same three concepts instead of using dedicated fields - a diff/dump from a fork like that will not carry your tune over here, since the CLI field names don't match. Re-enter your values directly.",
+        "message": "wc (controller bandwidth), wo (observer bandwidth) and b0 (control-input gain estimate) are ADRC's three per-axis tunables.<br><br>wc sets how fast the controller makes adjustments, this adjusts control responsiveness. This parameter is similar to the P term in a PID controller. This must be below wo.<br><br>wo is how fast the observer is able to detect and estimate disturbances. If this is too high the observer picks up sensor noise and leads to incorrect state estimations. If this is too low the craft will respond slowly to disturbances.<br><br>b0 is how much the craft accelerates for a given control input. This only needs to be a ballpark estimate, but if this is too far off the craft can oscillate and become unstable.",
         "description": "ADRC tunables group help: what wc/wo/b0 mean and how raising each affects behaviour, sourced from ADRC.md"
     },
     "pidTuningAdrcGroupFilterThrottle": {
@@ -2383,7 +2383,7 @@
         "description": "ADRC tunables group: gyro low-pass, hover throttle, b0 scale ceiling, tracking differentiator"
     },
     "pidTuningAdrcGroupFilterThrottleHelp": {
-        "message": "The pre-ESO gyro low-pass runs ahead of the ESO's error calculation only, separate from the shared gyro-sampling-stage filters on the Filter tab (which apply to both control laws identically) - it exists because ADRC's kp = wc² gain is more sensitive to noise than classic PID's linear gain. Hover throttle and b0 scale max are ADRC's own equivalent of TPA: b0 is scaled by (throttle/hover)² above the hover throttle, clamped to the scale-max ceiling, since motor authority roughly scales with throttle². The tracking differentiator smooths the setpoint feeding the control law (not the ESO's own gyro-tracking error); off by default and unvalidated, ported from a third-party ADRC implementation.",
+        "message": "The pre-ESO gyro low-pass runs ahead of the ESO's error calculation only, separate from the shared gyro-sampling-stage filters on the Filter tab (which apply to both control laws identically). Hover throttle and b0 scale max are ADRC's own equivalent of TPA: b0 is scaled above the hover throttle based on selected scaling law, clamped to the scale-max ceiling, since motor authority changes with throttle. The tracking differentiator smooths the setpoint feeding the control law (not the ESO's own gyro-tracking error); off by default and unvalidated, ported from a third-party ADRC implementation.",
         "description": "ADRC tunables group help: pre-ESO gyro filter, throttle-scaled b0, tracking differentiator, sourced from ADRC.md"
     },
     "pidTuningAdrcGroupDecay": {
@@ -2406,21 +2406,21 @@
     "pidTuningAdrcWcPitch": { "message": "wc Pitch", "description": "ADRC controller bandwidth, pitch axis" },
     "pidTuningAdrcWcYaw": { "message": "wc Yaw", "description": "ADRC controller bandwidth, yaw axis" },
     "pidTuningAdrcWcHelp": {
-        "message": "Controller (virtual PD) bandwidth ωc. Raising it gives a crisper, faster correction with shorter settling time. Too high: oscillation/overshoot, motors 'singing' on throttle-up - that noise ceiling is set by gyro noise (kp = wc²), not stability. Too low: floaty, sluggish. Locks P and D together (kp = wc², kd = 2·wc), one fewer independent degree of freedom than classic 3-term PID for a given axis - an intentional simplification, not an oversight.",
+        "message": "Controller bandwidth ωc. Raising it gives a crisper, faster response. Too high: oscillation/overshoot. Too low: floaty, sluggish. Stay below wo. wc/wo ratio represents a trade-off between disturbance rejection and control responsiveness; a lower ratio prioritizes disturbance rejection, a higher ratio prioritizes control responsiveness.",
         "description": "ADRC adrc_wc_* help, sourced from ADRC.md"
     },
     "pidTuningAdrcWoRoll": { "message": "wo Roll", "description": "ADRC observer bandwidth, roll axis" },
     "pidTuningAdrcWoPitch": { "message": "wo Pitch", "description": "ADRC observer bandwidth, pitch axis" },
     "pidTuningAdrcWoYaw": { "message": "wo Yaw", "description": "ADRC observer bandwidth, yaw axis" },
     "pidTuningAdrcWoHelp": {
-        "message": "Extended State Observer bandwidth ωo - how fast the ESO tracks/estimates rate, its derivative, and the lumped disturbance term. Fuses classic PID's I-term and D-term-filter cutoff into one number. Raising it: faster rejection of wind/prop-wash/CG-offset disturbance. Too high: gyro noise amplification - hover chatter/heat. Too low: laggy, 'soft' recovery from bumps. Community rule of thumb for a fresh pair: wo ≈ 3-5× wc; yaw often defaults lower than roll/pitch.",
+        "message": "Extended State Observer bandwidth ωo - how fast the ESO tracks/estimates the state. Too high: gyro noise amplification - hover chatter/heat. Too low: laggy, 'soft' recovery from bumps. This should be set as high as possible for a given hardware setup.",
         "description": "ADRC adrc_wo_* help, sourced from ADRC.md"
     },
     "pidTuningAdrcB0Roll": { "message": "b0 Roll", "description": "ADRC control-input gain estimate, roll axis" },
     "pidTuningAdrcB0Pitch": { "message": "b0 Pitch", "description": "ADRC control-input gain estimate, pitch axis" },
     "pidTuningAdrcB0Yaw": { "message": "b0 Yaw", "description": "ADRC control-input gain estimate, yaw axis" },
     "pidTuningAdrcB0Help": {
-        "message": "Control-input gain estimate: how much rotational acceleration one unit of output produces. Roughly scales with motor KV × thrust ÷ mass - a model-calibration input, not a feel knob. Under-estimating makes the observer misattribute your own control action as disturbance, which can fight the loop toward instability (like too-high P). Over-estimating just leaves the correction slightly weak (like too-low P) - stable, just underwhelming. Round up if unsure.",
+        "message": "Control-input gain estimate: how much acceleration the controller expects for a given input. This is a physical property, not a control feel adjustment knob. Roughly scales with motor KV × thrust ÷ mass. ADRC plant fitting tool is recommended for determining this value. If this is too far off from the craft's actual gain (b), the observer considers the difference between b0 and b to be a disturbance and can create oscillations. This only needs to be a ballpark estimate. Under-estimation is more likely to create oscillations and instability, so err on the side of a too high value rather than a too low value.",
         "description": "ADRC adrc_b0_* help, sourced from ADRC.md"
     },
     "pidTuningAdrcGyroLpfHz": {
@@ -2428,7 +2428,7 @@
         "description": "ADRC dedicated gyro low-pass cutoff ahead of the ESO's error calculation"
     },
     "pidTuningAdrcGyroLpfHzHelp": {
-        "message": "Low-pass cutoff applied to the gyro signal feeding the ESO's error calculation only - 0 disables it (pass-through). Classic PID's D-term has its own dedicated filter stage on top of the shared base gyro filter; ADRC's control law has no equivalent, and kp = wc² makes it more sensitive to whatever noise gets through than classic's linear gain is. The shared gyro-sampling-stage filters on the Filter tab (dynamic notch, RPM filter, gyro lowpass 1/2) are untouched by this and run identically for both control laws.",
+        "message": "Low-pass cutoff applied to the gyro signal feeding the ESO's error calculation only - 0 disables it (pass-through). Reduces sensor noise passed to the controller. The shared gyro-sampling-stage filters on the Filter tab (dynamic notch, RPM filter, gyro lowpass 1/2) are untouched by this and run identically for both control laws.",
         "description": "adrc_gyro_lpf_hz help, sourced from ADRC.md"
     },
     "pidTuningAdrcHoverThrottle": {
@@ -2436,7 +2436,7 @@
         "description": "ADRC throttle percentage at hover, used to scale b0 above hover"
     },
     "pidTuningAdrcHoverThrottleHelp": {
-        "message": "Throttle % at hover. Motor authority roughly scales with throttle², so b0 is scaled by (throttle / hover)² above this value, clamped to the b0 Scale Max ceiling below. Has no built-in relationship to Liftoff Throttle - they answer different questions ('where do I actually hover' vs. 'how sure am I this throttle means I'm off the ground').",
+        "message": "Throttle % at hover. Motor authority scales with throttle, so b0 is scaled above this value, clamped to the b0 Scale Max ceiling below. Scaling law is set by b0 scaling law.",
         "description": "adrc_hover_throttle help, sourced from ADRC.md"
     },
     "pidTuningAdrcB0Law": {
@@ -2444,7 +2444,7 @@
         "description": "Label for adrc_b0_law"
     },
     "pidTuningAdrcB0LawHelp": {
-        "message": "Shape of the throttle-to-b0 schedule above hover: QUADRATIC (throttle/hover)², LINEAR, SQRT or FIXED (no scheduling). SQRT is the default from b11; QUADRATIC had the largest throttle-step errors in testing.",
+        "message": "Shape of the throttle-to-b0 schedule above hover: QUADRATIC (throttle/hover)², LINEAR, SQRT or FIXED (no scheduling). Defaults to SQRT. Optimal law varies based on specific craft, SQRT or LINEAR generally work the best.",
         "description": "adrc_b0_law help"
     },
     "pidTuningAdrcB0ScaleMin": {
@@ -2452,7 +2452,7 @@
         "description": "Label for adrc_b0_scale_min"
     },
     "pidTuningAdrcB0ScaleMinHelp": {
-        "message": "Floor of the b0 schedule below hover, in percent. 100 = the schedule never goes below 1 (b10.1 behaviour). Lower values let the observer see the lower plant gain at low throttle; testers settled on 70–90. Applies only while the liftoff gate is open.",
+        "message": "Floor of the b0 below hover, in percent. Changes behavior when throttle is below hover. 100 = b0 never goes below 100%. Lower values let the observer see the lower plant gain at low throttle. Applies only after liftoff. Default of 100 (off).",
         "description": "adrc_b0_scale_min help"
     },
     "pidTuningAdrcGroundWc": {
@@ -2460,7 +2460,7 @@
         "description": "Label for adrc_ground_wc"
     },
     "pidTuningAdrcGroundWcHelp": {
-        "message": "wc used on all axes while the liftoff gate is closed, ramped to the flight wc after liftoff. Prevents the arm-time lift-off on the ground with airmode. 0 = off. Default 10 from b11.",
+        "message": "wc used on all axes while the liftoff gate is closed, ramped to the flight wc after liftoff. Prevents a potential runaway on arm caused by sensor noise. 0 = off. Default 10.",
         "description": "adrc_ground_wc help"
     },
     "pidTuningAdrcWcRampMs": {
@@ -2468,7 +2468,7 @@
         "description": "Label for adrc_wc_ramp_ms"
     },
     "pidTuningAdrcWcRampMsHelp": {
-        "message": "Time to ramp from Ground wc to the flight wc after the liftoff gate opens. 0 = switch immediately.",
+        "message": "Time to ramp from Ground wc to the flight wc after the liftoff gate opens. 0 = switch immediately. Default of 100 ms.",
         "description": "adrc_wc_ramp_ms help"
     },
     "pidTuningAdrcGroundDgain": {
@@ -2476,7 +2476,7 @@
         "description": "Label for adrc_ground_dgain"
     },
     "pidTuningAdrcGroundDgainHelp": {
-        "message": "Additionally caps Ground wc at dgain × b0 / (2 × wo) per axis, so the ground D-path gain is bounded whatever the tune. 0 = no cap. Default 40 (= 4.0) from b11, where the cap does not bind on the tunes flown so far.",
+        "message": "Keeps the quad calm on the ground by limiting reactions to small movements before takeoff. On tunes where the ground wc value alone would still be too twitchy, this lowers ground wc automatically. 0 = off. Default 40 (4.0); on most tunes tested so far it has no effect.",
         "description": "adrc_ground_dgain help"
     },
     "pidTuningAdrcGroupSaturation": {
@@ -2492,7 +2492,7 @@
         "description": "Label for adrc_sat_z3_inhibit"
     },
     "pidTuningAdrcSatZ3InhibitHelp": {
-        "message": "ON: while the mixer clipped on the previous loop, the disturbance estimate z3 may only move toward zero — the same rule the liftoff gate applies on the ground. Removes the all-axis integrator wind-up behind the whoop 'yaw washout'. Opt-in (default OFF); no effect on a craft whose mixer never clips.",
+        "message": "ON: while the mixer clipped on the previous loop, the disturbance estimate z3 may only move toward zero — the same rule the liftoff gate applies on the ground. Mixer clipping usually manifests as a washout on the yaw axis. Opt-in (default OFF); no effect on a craft whose mixer never clips.",
         "description": "adrc_sat_z3_inhibit help"
     },
     "pidTuningAdrcB0ScaleMax": {
@@ -2500,7 +2500,7 @@
         "description": "ADRC ceiling on the throttle-scaled b0 multiplier"
     },
     "pidTuningAdrcB0ScaleMaxHelp": {
-        "message": "Ceiling on the throttle-scaled b0 multiplier described above (default 3x). This is ADRC's own equivalent of TPA. The allowed range extends further for experimentation, but the default sits on the conservative side.",
+        "message": "Ceiling on the b0 scaling law. This is ADRC's own equivalent of TPA. The default sits on the conservative side. Default of 3x.",
         "description": "adrc_b0_scale_max help, sourced from ADRC.md"
     },
     "pidTuningAdrcTdHz": {
@@ -2508,7 +2508,7 @@
         "description": "ADRC tracking-differentiator corner frequency on the setpoint (0 = disabled)"
     },
     "pidTuningAdrcTdHzHelp": {
-        "message": "Tracking-differentiator corner frequency: smooths the setpoint feeding the control law's P term before it drives the ESO, instead of feeding it through directly. Only affects what the controller steers toward, not the ESO's own gyro-tracking error. 0 disables it (default). Off by default and unvalidated here - ported from an independent third ADRC implementation, not part of the main fork this Configurator build tracks.",
+        "message": "Tracking-differentiator corner frequency. Smooths inputs before the controller reacts to them so motors get a smooth ramp up rather than a sharp kick. Default of 0 (disabled).",
         "description": "adrc_td_hz help, sourced from ADRC.md"
     },
     "pidTuningAdrcSigmaDecay": {
@@ -2516,7 +2516,7 @@
         "description": "ADRC z3 leaky-decay rate while airborne (0 = pure integrator)"
     },
     "pidTuningAdrcSigmaDecayHelp": {
-        "message": "While airborne, z3 (the ESO's estimated disturbance) bleeds a transient bump back toward zero at this rate instead of holding it indefinitely. Set to 0 for a classic pure integrator. Value is x0.1, e.g. 3 = 0.3/s.",
+        "message": "While airborne, z3 (the ESO's estimated disturbance) bleeds a transient bump back toward zero at this rate instead of holding it indefinitely. Set to 0 for a classic pure integrator. Value is x0.1, e.g. 3 = 0.3/s. Default of 3.",
         "description": "adrc_sigma_decay help, sourced from ADRC.md"
     },
     "pidTuningAdrcGatedZ3Decay": {
@@ -2524,7 +2524,7 @@
         "description": "ADRC z3 decay rate while the liftoff gate is closed (grounded)"
     },
     "pidTuningAdrcGatedZ3DecayHelp": {
-        "message": "z3 is still a leaky integrator of the observer error regardless of gate state; while grounded it decays at this rate so it can't quietly wind up during a long armed-idle period. Never applied slower than the airborne decay above - a low or zero value here is floored up to match it. Value is x0.1, e.g. 200 = 20.0/s.",
+        "message": "z3 is still a leaky integrator of the observer error regardless of gate state; while grounded it decays at this rate so it can't quietly wind up during a long armed-idle period. Never applied slower than the airborne decay above - a low or zero value here is floored up to match it. Value is x0.1, e.g. 200 = 20.0/s. Default of 200.",
         "description": "adrc_gated_z3_decay help, sourced from ADRC.md"
     },
     "pidTuningAdrcLiftoffThrottle": {
@@ -2532,7 +2532,7 @@
         "description": "ADRC throttle percentage that alone confirms liftoff"
     },
     "pidTuningAdrcLiftoffThrottleHelp": {
-        "message": "Throttle % that alone confirms liftoff (opens the gate). Has no built-in relationship to Hover Throttle above - set it comfortably above your actual hover throttle once you know it, rather than assuming the default fits your craft.",
+        "message": "Throttle % that alone confirms liftoff (opens the gate). Has no built-in relationship to Hover Throttle above - set it comfortably above your actual hover throttle once you know it, rather than assuming the default fits your craft. Default of 40%.",
         "description": "adrc_liftoff_throttle help, sourced from ADRC.md"
     },
     "pidTuningAdrcLiftoffGyroDps": {
@@ -2540,7 +2540,7 @@
         "description": "ADRC sustained rotation rate that alone confirms liftoff (toss-launch path)"
     },
     "pidTuningAdrcLiftoffGyroDpsHelp": {
-        "message": "Sustained rotation (deg/s, any axis) that alone confirms liftoff - the toss-launch path, for when throttle alone hasn't crossed the Liftoff Throttle threshold yet.",
+        "message": "Sustained rotation (deg/s, any axis) that alone confirms liftoff - the toss-launch path, for when throttle alone hasn't crossed the Liftoff Throttle threshold yet. Default of 20.",
         "description": "adrc_liftoff_gyro_dps help, sourced from ADRC.md"
     },
     "pidTuningAdrcLiftoffHoldMs": {
@@ -2552,7 +2552,7 @@
         "description": "adrc_liftoff_hold_ms help, sourced from ADRC.md"
     },
     "pidTuningAdrcSliderModeHelp": {
-        "message": "Off: edit wc/wo/b0 directly per axis in the table below. RP: one slider per gain scales Roll and Pitch together, preserving whatever ratio they had when the slider was engaged. RPY: scales Roll, Pitch and Yaw together. This is a Configurator-side convenience only - ADRC has no firmware-side simplified-tuning equivalent to call into, unlike classic PID's slider system.",
+        "message": "Off: edit wc/wo/b0 directly per axis in the table below.<br>RP: one slider per gain scales Roll and Pitch together, preserving whatever ratio they had when the slider was engaged.<br>RPY: scales Roll, Pitch and Yaw together.",
         "description": "ADRC core-gains slider mode selector help"
     },
     "pidTuningAdrcWcSlider": {
@@ -2560,7 +2560,7 @@
         "description": "ADRC combined wc gain slider label"
     },
     "pidTuningAdrcWcSliderHelp": {
-        "message": "Scales the Roll(+Pitch/+Yaw) wc values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged.",
+        "message": "Scales the wc values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged. Depends on slider mode.",
         "description": "ADRC combined wc gain slider help"
     },
     "pidTuningAdrcWoSlider": {
@@ -2568,7 +2568,7 @@
         "description": "ADRC combined wo gain slider label"
     },
     "pidTuningAdrcWoSliderHelp": {
-        "message": "Scales the Roll(+Pitch/+Yaw) wo values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged.",
+        "message": "Scales the wo values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged. Depends on slider mode.",
         "description": "ADRC combined wo gain slider help"
     },
     "pidTuningAdrcB0Slider": {
@@ -2576,11 +2576,11 @@
         "description": "ADRC combined b0 gain slider label"
     },
     "pidTuningAdrcB0SliderHelp": {
-        "message": "Scales the Roll(+Pitch/+Yaw) b0 values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged.",
+        "message": "Scales the b0 values together by this ratio, relative to their values when the slider mode was turned on. 1.00 = unchanged. Depends on slider mode.",
         "description": "ADRC combined b0 gain slider help"
     },
     "pidTuningAdrcWcHeaderHelp": {
-        "message": "Controller bandwidth ωc - see the Core Gains group help above for what raising/lowering it does.",
+        "message": "Controller bandwidth ωc - see the documentation above for what raising/lowering it does.",
         "description": "Per-axis table column header help for wc"
     },
     "pidTuningAdrcWoHeaderHelp": {
