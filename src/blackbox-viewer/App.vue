@@ -30,6 +30,7 @@
                 :sticks-active="graphStore.hasSticks"
                 :analyser-active="graphStore.hasAnalyser"
                 :map-active="graphStore.hasMap"
+                :flight3d-active="graphStore.hasFlight3d"
                 @view-config="onViewConfig"
                 @toggle-header="onToggleHeader"
                 @toggle-table="onToggleTable"
@@ -38,6 +39,7 @@
                 @toggle-sticks="onToggleSticks"
                 @toggle-analyser="onToggleAnalyser"
                 @toggle-map="onToggleMap"
+                @toggle-flight3d="graphStore.toggleFlight3d()"
             />
         </Teleport>
         <Teleport to="#vue-playback">
@@ -85,6 +87,9 @@
         <Teleport to="#vue-analyser">
             <SpectrumAnalyser />
         </Teleport>
+        <Teleport to="#log-graph">
+            <Flight3DPanel v-if="graphStore.hasFlight3d && logStore.hasLog" />
+        </Teleport>
         <Teleport to="#vue-legend-panel">
             <LegendPanel />
         </Teleport>
@@ -111,7 +116,7 @@
 </template>
 
 <script setup>
-import { computed, watchEffect, onMounted, onUnmounted, inject, unref } from "vue";
+import { computed, watchEffect, onMounted, onUnmounted, inject, unref, defineAsyncComponent } from "vue";
 import { useGraphStore } from "./stores/graph.js";
 import { useAppStore } from "./stores/app.js";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log.js";
@@ -139,6 +144,9 @@ import LegendPanel from "./components/LegendPanel.vue";
 import FieldValuesPanel from "./components/FieldValuesPanel.vue";
 import ConfigurationPanel from "./components/ConfigurationPanel.vue";
 import SeekBarToolbar from "./components/SeekBarToolbar.vue";
+
+// Loaded on first use so the three.js addons stay out of the viewer's startup bundle.
+const Flight3DPanel = defineAsyncComponent(() => import("./components/Flight3DPanel.vue"));
 
 const graphStore = useGraphStore();
 const appStore = useAppStore();

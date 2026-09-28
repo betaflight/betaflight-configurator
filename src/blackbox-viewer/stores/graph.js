@@ -20,6 +20,12 @@ export const useGraphStore = defineStore("graph", () => {
      */
     const graph = shallowRef(null);
     const mapGrapher = shallowRef(null);
+    /**
+     * The mounted 3D flight panel, or null while it is hidden, so playback and log loading do no
+     * 3D work until it is opened.
+     * @type {import("vue").ShallowRef<{ setCurrentTime: (tUs: number) => void, resize: (width: number, height: number) => void, setFlightLog: (flightLog: any) => void } | null>}
+     */
+    const flight3d = shallowRef(null);
     const seekBar = shallowRef(null);
 
     // Canvas DOM refs — registered by main.js
@@ -39,6 +45,7 @@ export const useGraphStore = defineStore("graph", () => {
     const hasCraft = computed(() => !!settingsStore.userSettings.drawCraft);
     const hasSticks = computed(() => !!settingsStore.userSettings.drawSticks);
     const hasMap = ref(false);
+    const hasFlight3d = ref(false);
     const hasMarker = ref(false);
     const hasConfig = ref(false);
     const hasConfigOverlay = ref(false);
@@ -182,10 +189,20 @@ export const useGraphStore = defineStore("graph", () => {
 
     function toggleMap() {
         hasMap.value = !hasMap.value;
+        if (hasMap.value) {
+            hasFlight3d.value = false; // the 2D map and the 3D view share one screen slot
+        }
         prefs.set("hasMap", hasMap.value);
         const logStore = useLogStore();
         if (logStore.flightLog?.hasGpsData()) {
             mapGrapher.value?.initialize();
+        }
+    }
+
+    function toggleFlight3d() {
+        hasFlight3d.value = !hasFlight3d.value;
+        if (hasFlight3d.value) {
+            hasMap.value = false;
         }
     }
 
@@ -205,6 +222,7 @@ export const useGraphStore = defineStore("graph", () => {
     return {
         graph,
         mapGrapher,
+        flight3d,
         seekBar,
         canvasRefs,
         graphConfig,
@@ -219,6 +237,7 @@ export const useGraphStore = defineStore("graph", () => {
         hasCraft,
         hasSticks,
         hasMap,
+        hasFlight3d,
         hasMarker,
         hasConfig,
         hasConfigOverlay,
@@ -256,6 +275,7 @@ export const useGraphStore = defineStore("graph", () => {
         toggleAnalyserFullscreen,
         toggleFullscreen,
         toggleMap,
+        toggleFlight3d,
         setGraphZoom,
         quickZoomToggle,
     };
