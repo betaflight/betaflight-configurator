@@ -155,6 +155,64 @@ describe("characterizeTumble — synthetic oracle", () => {
         expect(errDeg).toBeLessThan(15);
     });
 
+    it("accepts a full tumble whose hard-iron bias is larger than the field", () => {
+        // An uncalibrated board: mag_calibration is zero, so the raw readings carry the whole bias.
+        // Field ~480 counts, bias ~930: before the coverage gate measured from the fitted center,
+        // this was refused as "too planar" and Finish calibration appeared to do nothing.
+        const bias = { x: -90, y: 200, z: 900 };
+        const samples = generateTumble(mulberry32(7), {
+            R_plant: eulerToMatrix(0, 0, 0),
+            inclDeg: 67,
+            numSamples: 600,
+        }).map((s) => ({ ...s, x: s.x * 480 + bias.x, y: s.y * 480 + bias.y, z: s.z * 480 + bias.z }));
+
+        const result = characterizeTumble({
+            samples,
+            currentMatrix: [
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
+            ],
+            inclinationRad: 67 * DEG,
+        });
+
+        if (!result.ok) {
+            throw new Error(`expected the biased tumble to be characterized, got: ${result.error}`);
+        }
+        expect(result.preset).toBe(1);
+        expect(Math.abs(result.offsets.x - bias.x)).toBeLessThan(15);
+        expect(Math.abs(result.offsets.y - bias.y)).toBeLessThan(15);
+        expect(Math.abs(result.offsets.z - bias.z)).toBeLessThan(15);
+    });
+
+    it("still refuses a level-only sample set with a large bias", () => {
+        const I = 67 * DEG;
+        const fWorld = [Math.cos(I), 0, -Math.sin(I)];
+        const samples: TumbleSample[] = [];
+        for (let i = 0; i < 200; i++) {
+            const fBody = mat3mulVec(eulerToMatrix(0, 0, (i / 200) * 360), fWorld);
+            samples.push({
+                x: fBody[0] * 480 - 90,
+                y: fBody[1] * 480 + 200,
+                z: fBody[2] * 480 + 900,
+                roll: 0,
+                pitch: 0,
+            });
+        }
+
+        const result = characterizeTumble({
+            samples,
+            currentMatrix: [
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
+            ],
+            inclinationRad: I,
+        });
+
+        expect(result.ok).toBe(false);
+    });
+
     it("refuses a planar (level-only) sample set", () => {
         const I = 71 * DEG;
         const fWorld = [Math.cos(I), 0, -Math.sin(I)];

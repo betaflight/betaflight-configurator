@@ -8,10 +8,13 @@
  * Uses seeded mulberry32 PRNG — never Math.random.
  */
 import { describe, expect, it } from "vitest";
-import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
+import { fitEllipsoid, type EllipsoidFit } from "../../src/js/utils/ellipsoidFit";
+import type { Point3 } from "../../src/js/utils/sphereFit";
+
+type Mat3 = number[][];
 
 // Deterministic PRNG (mulberry32) — never Math.random in tests.
-function mulberry32(seed) {
+function mulberry32(seed: number): () => number {
     let s = seed >>> 0;
     return () => {
         s = (s + 0x6d2b79f5) >>> 0;
@@ -27,8 +30,8 @@ function mulberry32(seed) {
  * A point on the unit sphere u gives raw = W * u + c (the forward model).
  * fitEllipsoid should recover center ~= c and W_inv ~= inv(W).
  */
-function makeEllipsoidPoints(center, W, count, rng) {
-    const points = [];
+function makeEllipsoidPoints(center: Point3, W: Mat3, count: number, rng: () => number): Point3[] {
+    const points: Point3[] = [];
     for (let i = 0; i < count; i++) {
         // Sample a point on the unit sphere via spherical coords
         const theta = Math.acos(1 - 2 * rng());
@@ -44,7 +47,7 @@ function makeEllipsoidPoints(center, W, count, rng) {
 }
 
 /** Matrix product A * B for 3x3 matrices. */
-function mat3mul(A, B) {
+function mat3mul(A: Mat3, B: Mat3): Mat3 {
     const C = [
         [0, 0, 0],
         [0, 0, 0],
@@ -60,8 +63,17 @@ function mat3mul(A, B) {
     return C;
 }
 
+/** Fit, failing the test with a clear message instead of dereferencing null. */
+function fitOrFail(points: Point3[]): EllipsoidFit {
+    const result = fitEllipsoid(points);
+    if (!result) {
+        throw new Error("expected fitEllipsoid to succeed");
+    }
+    return result;
+}
+
 /** Frobenius norm of (A - I). */
-function frobDistFromIdentity(A) {
+function frobDistFromIdentity(A: Mat3): number {
     let sum = 0;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -83,9 +95,7 @@ describe("fitEllipsoid — synthetic oracle", () => {
             [0, 0, 598],
         ];
         const points = makeEllipsoidPoints(center, W, 200, rng);
-        const result = fitEllipsoid(points);
-
-        expect(result).not.toBeNull();
+        const result = fitOrFail(points);
 
         // Center recovery within 5 ADC counts
         expect(Math.abs(result.center.x - center.x)).toBeLessThan(5);
@@ -110,9 +120,7 @@ describe("fitEllipsoid — synthetic oracle", () => {
             [0, 0, 500],
         ];
         const points = makeEllipsoidPoints(center, W, 300, rng);
-        const result = fitEllipsoid(points);
-
-        expect(result).not.toBeNull();
+        const result = fitOrFail(points);
         expect(Math.abs(result.center.x - center.x)).toBeLessThan(10);
         expect(Math.abs(result.center.y - center.y)).toBeLessThan(10);
         expect(Math.abs(result.center.z - center.z)).toBeLessThan(10);
@@ -121,6 +129,29 @@ describe("fitEllipsoid — synthetic oracle", () => {
         const scale = (product[0][0] + product[1][1] + product[2][2]) / 3;
         const normalized = product.map((row) => row.map((v) => v / scale));
         expect(frobDistFromIdentity(normalized)).toBeLessThan(0.08);
+    });
+
+    it("recovers an ellipsoid whose center is farther from the origin than its radius", () => {
+        // Raw magnetometer data before calibration: a hard-iron bias larger than the field puts
+        // the origin outside the ellipsoid, where the uncentered algebraic fit returned null.
+        const rng = mulberry32(0x0b1a5ed);
+        const center = { x: -90, y: 200, z: 900 };
+        const W = [
+            [480, 10, 0],
+            [0, 500, -8],
+            [0, 0, 470],
+        ];
+        const result = fitOrFail(makeEllipsoidPoints(center, W, 300, rng));
+
+        expect(Math.abs(result.center.x - center.x)).toBeLessThan(5);
+        expect(Math.abs(result.center.y - center.y)).toBeLessThan(5);
+        expect(Math.abs(result.center.z - center.z)).toBeLessThan(5);
+
+        const product = mat3mul(result.W_inv, W);
+        const scale = (product[0][0] + product[1][1] + product[2][2]) / 3;
+        const normalized = product.map((row) => row.map((v) => v / scale));
+        expect(frobDistFromIdentity(normalized)).toBeLessThan(0.05);
+        expect(result.residual).toBeLessThan(1e-6);
     });
 
     it("returns null when fewer than 9 points are provided", () => {
