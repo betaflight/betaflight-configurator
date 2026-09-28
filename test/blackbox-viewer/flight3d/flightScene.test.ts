@@ -25,8 +25,12 @@ import { FlightScene } from "../../../src/blackbox-viewer/flight3d/flightScene";
 import { buildTrack } from "../../../src/blackbox-viewer/flight3d/flightTrack";
 
 const stats = vi.hoisted(() => ({ renders: 0, disposals: 0 }));
-// The drone model the fake loader hands over; none unless a test sets one.
-const model = vi.hoisted(() => ({ factory: null as null | (() => unknown) }));
+// The drone model the fake loader hands over (none unless a test sets one), at once or on `deliver`.
+const model = vi.hoisted(() => ({
+    factory: null as null | (() => unknown),
+    deferred: false,
+    deliver: null as null | (() => void),
+}));
 vi.mock("three", async (original) => {
     const three = await original<typeof import("three")>();
     return {
@@ -48,8 +52,12 @@ vi.mock("three", async (original) => {
 vi.mock("three/examples/jsm/loaders/GLTFLoader.js", () => ({
     GLTFLoader: class {
         load(_url: string, onLoad: (gltf: { scene: unknown }) => void) {
-            if (model.factory) {
-                onLoad({ scene: model.factory() });
+            const factory = model.factory;
+            if (factory) {
+                model.deliver = () => onLoad({ scene: factory() });
+                if (!model.deferred) {
+                    model.deliver();
+                }
             }
         }
     },
@@ -155,10 +163,11 @@ describe("flight scene lifecycle", () => {
         }
     });
 
-    it("draws the quad only with the FC's attitude, and a position marker otherwise", () => {
+    it("draws the quad once loaded and with the FC's attitude, and a position marker otherwise", () => {
         vi.stubGlobal("requestAnimationFrame", () => 1);
         vi.stubGlobal("cancelAnimationFrame", () => {});
         model.factory = () => new Group().add(new Mesh(new BoxGeometry(8, 1, 8)));
+        model.deferred = true;
         const canvas = document.createElement("canvas");
         document.body.append(canvas);
         try {
@@ -181,6 +190,8 @@ describe("flight scene lifecycle", () => {
             const east = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), -Math.PI / 2);
 
             scene.setTime(0.5e6, east);
+            expect(parts.marker.visible).toBe(true); // the quad model has not loaded yet
+            model.deliver!();
             expect([parts.model.visible, parts.marker.visible]).toEqual([true, false]);
             expect(parts.drone.quaternion.equals(east)).toBe(true);
 
@@ -188,7 +199,7 @@ describe("flight scene lifecycle", () => {
             expect([parts.model.visible, parts.marker.visible]).toEqual([false, true]);
             scene.dispose();
         } finally {
-            model.factory = null;
+            Object.assign(model, { factory: null, deferred: false, deliver: null });
             canvas.remove();
         }
     });

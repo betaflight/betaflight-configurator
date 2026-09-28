@@ -34,6 +34,13 @@ export type GroundSourceId = "map" | "satellite" | "none";
 
 const SEE_THROUGH_OPACITY = 0.35;
 
+// Tiles are requested once per log (the browser caches them), all at one zoom: the deepest that
+// covers the flight within MAX_TILES. MIN_ZOOM is a deliberate floor, not a budget: coarser tiles
+// are over 10 km wide and show nothing useful, so a larger flight requests more tiles instead
+// (over 100 for a flight spanning 50 km). Revisit if long-range users report slow loading.
+export const MAX_TILES = 64;
+const MIN_ZOOM = 12;
+
 export interface TileSource {
     url: string;
     maxZoom: number;
@@ -94,16 +101,16 @@ function padded(box: LatLonBox): LatLonBox {
     return { minLat: box.minLat - lat, maxLat: box.maxLat + lat, minLon: box.minLon - lon, maxLon: box.maxLon + lon };
 }
 
-/** Deepest zoom whose tiles cover the padded box with at most `maxTiles` requests. */
-export function pickZoom(box: LatLonBox, maxTiles = 36, zMin = 12, zMax = 19): number {
+/** Deepest zoom whose tiles cover the padded box within MAX_TILES, but no coarser than MIN_ZOOM. */
+export function pickZoom(box: LatLonBox, zMax = 19): number {
     const area = padded(box);
-    for (let z = zMax; z > zMin; z--) {
+    for (let z = zMax; z > MIN_ZOOM; z--) {
         const r = tileRange(area, z);
-        if ((r.x1 - r.x0 + 1) * (r.y1 - r.y0 + 1) <= maxTiles) {
+        if ((r.x1 - r.x0 + 1) * (r.y1 - r.y0 + 1) <= MAX_TILES) {
             return z;
         }
     }
-    return zMin;
+    return MIN_ZOOM;
 }
 
 export interface GroundOptions {
@@ -133,7 +140,7 @@ export interface Ground {
  */
 export function buildGround(options: GroundOptions): Ground {
     const { box, source, groundU, toLocal, onTileLoaded } = options;
-    const z = pickZoom(box, 36, 12, source.maxZoom);
+    const z = pickZoom(box, source.maxZoom);
     const range = tileRange(padded(box), z);
 
     const group = new Group();

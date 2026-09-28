@@ -85,6 +85,7 @@ export class FlightScene {
         new MeshBasicMaterial({ color: GRADIENT[GRADIENT.length - 1] }),
     );
     private model: Object3D | null = null;
+    private hasAttitude = false;
     private readonly trackObjects = new Group();
     private track: FlightTrack | null = null;
     private traveled: LineSegmentsGeometry | null = null;
@@ -123,9 +124,9 @@ export class FlightScene {
             }
             model.scale.setScalar(DRONE_MODEL_SCALE);
             model.rotation.y = DRONE_MODEL_YAW;
-            model.visible = !this.marker.visible;
             this.model = model;
             this.drone.add(model);
+            this.showDroneShape();
             this.requestRender();
         });
     }
@@ -229,10 +230,8 @@ export class FlightScene {
             if (attitude) {
                 this.drone.quaternion.copy(attitude);
             }
-            this.marker.visible = !attitude;
-            if (this.model) {
-                this.model.visible = !!attitude;
-            }
+            this.hasAttitude = !!attitude;
+            this.showDroneShape();
             if (this.follow) {
                 const delta = this.drone.position.clone().sub(this.controls.target);
                 this.controls.target.add(delta);
@@ -301,6 +300,15 @@ export class FlightScene {
             this.requestRender();
         } else {
             this.cancelRender();
+        }
+    }
+
+    /** The quad once loaded and oriented by the FC's attitude; the marker otherwise. */
+    private showDroneShape(): void {
+        const quad = this.hasAttitude && this.model !== null;
+        this.marker.visible = !quad;
+        if (this.model) {
+            this.model.visible = quad;
         }
     }
 

@@ -24,8 +24,8 @@ import { Mesh, MeshBasicMaterial, Texture, TextureLoader, Vector3 } from "three"
 import {
     buildGround,
     lonLatToTile,
+    MAX_TILES,
     pickZoom,
-    tileRange,
     tileToLonLat,
     TILE_SOURCES,
     type LatLonBox,
@@ -67,11 +67,23 @@ describe("slippy tile math", () => {
 });
 
 describe("pickZoom", () => {
-    it("keeps a 5 km flight within the 36-tile request budget", () => {
-        const box = boxAround(2500);
-        const z = pickZoom(box);
-        const r = tileRange(box, z);
-        expect((r.x1 - r.x0 + 1) * (r.y1 - r.y0 + 1)).toBeLessThanOrEqual(36);
+    /** Tiles buildGround requests for the box (no network). */
+    const requested = (box: LatLonBox) => {
+        const loader = vi.spyOn(TextureLoader.prototype, "load").mockReturnValue(new Texture());
+        const ground = buildGround({ box, source: TILE_SOURCES.map, groundU: 0, toLocal, onTileLoaded: () => {} });
+        const count = ground.group.children.length;
+        ground.dispose();
+        loader.mockRestore();
+        return count;
+    };
+
+    it("keeps a 5 km flight within the tile budget", () => {
+        expect(requested(boxAround(2500))).toBeLessThanOrEqual(MAX_TILES);
+    });
+
+    it("keeps useful detail for a 50 km flight, requesting more tiles than the budget", () => {
+        expect(pickZoom(boxAround(25_000))).toBe(12);
+        expect(requested(boxAround(25_000))).toBeGreaterThan(100);
     });
 
     it("uses full detail for a hover in one spot", () => {
