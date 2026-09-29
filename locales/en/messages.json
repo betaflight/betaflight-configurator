@@ -2375,7 +2375,7 @@
         "description": "ADRC tunables group: per-axis controller/observer bandwidth and control-input gain"
     },
     "pidTuningAdrcGroupGainsHelp": {
-        "message": "wc (controller bandwidth), wo (observer bandwidth) and b0 (control-input gain estimate) are ADRC's three per-axis tunables.<br><br>wc sets how fast the controller makes adjustments, this adjusts control responsiveness. This parameter is similar to the P term in a PID controller. This must be below wo.<br><br>wo is how fast the observer is able to detect and estimate disturbances. If this is too high the observer picks up sensor noise and leads to incorrect state estimations. If this is too low the craft will respond slowly to disturbances.<br><br>b0 is how much the craft accelerates for a given control input. This only needs to be a ballpark estimate, but if this is too far off the craft can oscillate and become unstable.",
+        "message": "wc (controller bandwidth), wo (observer bandwidth) and b0 (control-input gain estimate) are ADRC's three per-axis tunables.<br><br>wc sets how fast the controller makes adjustments, this adjusts control responsiveness. This parameter is similar to the P term in a PID controller. In most cases this should stay below wo.<br><br>wo is how fast the observer is able to detect and estimate disturbances. If this is too high the observer picks up sensor noise and leads to incorrect state estimations. If this is too low the craft will respond slowly to disturbances.<br><br>b0 is how much the craft accelerates for a given control input. This only needs to be a ballpark estimate, but if this is too far off the craft can oscillate and become unstable.",
         "description": "ADRC tunables group help: what wc/wo/b0 mean and how raising each affects behaviour, sourced from ADRC.md"
     },
     "pidTuningAdrcGroupFilterThrottle": {
@@ -2406,7 +2406,7 @@
     "pidTuningAdrcWcPitch": { "message": "wc Pitch", "description": "ADRC controller bandwidth, pitch axis" },
     "pidTuningAdrcWcYaw": { "message": "wc Yaw", "description": "ADRC controller bandwidth, yaw axis" },
     "pidTuningAdrcWcHelp": {
-        "message": "Controller bandwidth ωc. Raising it gives a crisper, faster response. Too high: oscillation/overshoot. Too low: floaty, sluggish. Stay below wo. wc/wo ratio represents a trade-off between disturbance rejection and control responsiveness; a lower ratio prioritizes disturbance rejection, a higher ratio prioritizes control responsiveness.",
+        "message": "Controller bandwidth ωc. Raising it gives a crisper, faster response. Too high: oscillation/overshoot. Too low: floaty, sluggish. In most cases, keep it below wo. wc/wo ratio represents a trade-off between disturbance rejection and control responsiveness; a lower ratio prioritizes disturbance rejection, a higher ratio prioritizes control responsiveness.",
         "description": "ADRC adrc_wc_* help, sourced from ADRC.md"
     },
     "pidTuningAdrcWoRoll": { "message": "wo Roll", "description": "ADRC observer bandwidth, roll axis" },
@@ -2460,7 +2460,7 @@
         "description": "Label for adrc_ground_wc"
     },
     "pidTuningAdrcGroundWcHelp": {
-        "message": "wc used on all axes while the liftoff gate is closed, ramped to the flight wc after liftoff. Prevents a potential runaway on arm caused by sensor noise. 0 = off. Default 10.",
+        "message": "wc used on all axes while the liftoff gate is closed, ramped to the flight wc after liftoff. Prevents unintended lifting or hopping on arm in airmode, which can lead to a flyaway while the control loop is still closed through ground contact. 0 = off. Default 10.",
         "description": "adrc_ground_wc help"
     },
     "pidTuningAdrcWcRampMs": {
@@ -2492,7 +2492,7 @@
         "description": "Label for adrc_sat_z3_inhibit"
     },
     "pidTuningAdrcSatZ3InhibitHelp": {
-        "message": "ON: while the mixer clipped on the previous loop, the disturbance estimate z3 may only move toward zero — the same rule the liftoff gate applies on the ground. Mixer clipping usually manifests as a washout on the yaw axis. Opt-in (default OFF); no effect on a craft whose mixer never clips.",
+        "message": "ON: while the mixer clipped on the previous loop, the disturbance estimate z3 may only move toward zero — the same rule the liftoff gate applies on the ground. Sustained clipping winds z3 up on all axes, which shows up as a 'yaw washout' (seen mostly on whoops). Opt-in (default OFF); no effect on a craft whose mixer never clips.",
         "description": "adrc_sat_z3_inhibit help"
     },
     "pidTuningAdrcB0ScaleMax": {
