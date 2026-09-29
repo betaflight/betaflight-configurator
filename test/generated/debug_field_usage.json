@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "805313c231e479f226689bfa27e2609580543418",
-            "date": "2026-09-22",
+            "commit": "f583a0c46d666701f300cb4e023715f20853a7d5",
+            "date": "2026-09-25",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1794,7 +1794,7 @@
                     "dynamic": false
                 },
                 "CHIRP": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "CRSF_LINK_STATISTICS_DOWN": {
@@ -1891,6 +1891,10 @@
                 },
                 "FLASH_TEST_PRBS": {
                     "fields": [0, 2, 6, 7],
+                    "dynamic": false
+                },
+                "FLIGHT_PLAN": {
+                    "fields": [0, 1, 2],
                     "dynamic": false
                 },
                 "FPORT": {
