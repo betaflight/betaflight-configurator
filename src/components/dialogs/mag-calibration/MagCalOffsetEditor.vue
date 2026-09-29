@@ -46,11 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, type PropType } from "vue";
+import type { Vec3 } from "@/composables/useMagCalibration";
 
 const props = defineProps({
     offsets: {
-        type: Object,
+        type: Object as PropType<Vec3 | null>,
         default: null,
     },
     saving: {
@@ -67,7 +68,7 @@ const props = defineProps({
     },
 });
 
-defineEmits(["save"]);
+defineEmits<{ save: [offsets: Vec3] }>();
 
 const editX = ref(0);
 const editY = ref(0);

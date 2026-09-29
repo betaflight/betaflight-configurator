@@ -3126,6 +3126,13 @@
     "auxiliaryToggleUnused": {
         "message": "Masquer les modes non utilisés"
     },
+    "auxiliarySearch": {
+        "message": "Modes de recherche",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "Aucun mode ne correspond aux filtres actuels."
+    },
     "auxiliaryMin": {
         "message": "Minimum"
     },
@@ -6386,6 +6393,10 @@
         "message": "Impact Mini",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "Petit FB",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
         "description": "Check to select a bigger display of the OSD preview in small screens"
@@ -6517,6 +6528,14 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Échec du chargement"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "L'OSD est en police de petite taille, mais la police sélectionnée est une police de taille standard. Elle ne s'affichera pas correctement. Télécharger quand même ?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "La police sélectionnée est une petite police pour les OSD framebuffer, mais cet OSD utilise des polices de taille standard. Il ne s'affichera pas correctement. Télécharger quand même ?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
     "osdSetupSaveReboot": {
         "message": "Sauvegarder et Redémarrer"
