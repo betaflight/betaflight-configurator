@@ -1475,6 +1475,28 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "POSH RDY",
         },
+        RADAR_PEER: {
+            name: "RADAR_PEER",
+            text: "osdTextElementRadarPeer",
+            desc: "osdDescElementRadarPeer",
+            defaultPosition: -1,
+            draw_order: 672,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ARROW_EAST)}B125${unit}${FONT.symbol(SYM.ARROW_SMALL_UP)}12${unit}`;
+            },
+        },
+        RADAR_HUD: {
+            name: "RADAR_HUD",
+            text: "osdTextElementRadarHud",
+            desc: "osdDescElementRadarHud",
+            defaultPosition: -1,
+            draw_order: 673,
+            // drawn where each peer is in the camera view; the stored position is unused
+            positionable: false,
+            preview: `A${FONT.symbol(SYM.ARROW_NORTH)}`,
+        },
         PITOT_AIRSPEED: {
             name: "PITOT_AIRSPEED",
             text: "osdPitotAirSpeed",
@@ -1648,6 +1670,8 @@ OSD.chooseFields = function () {
         const hasNavMap =
             hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
         const hasPositionHold = reports("USE_POSITION_HOLD");
+        // firmware drops USE_RADAR without GPS or OSD, so the option alone decides the slot
+        const hasRadar = reports("USE_RADAR");
 
         if (hasFlightPlanWaypoints) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
@@ -1668,6 +1692,10 @@ OSD.chooseFields = function () {
 
         if (hasPositionHold) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
+        }
+
+        if (hasRadar) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.RADAR_PEER, F.RADAR_HUD]);
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
