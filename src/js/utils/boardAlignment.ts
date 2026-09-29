@@ -77,15 +77,17 @@ export interface DetectBoardAlignmentArgs {
  * The detection outcome: either an `error` key (see the `boardAlignmentWizard-Error-*`
  * locale keys) or the snapped alignment plus its confidence grading.
  */
-export interface DetectBoardAlignmentResult {
-    error?: string;
-    roll?: number;
-    pitch?: number;
-    yaw?: number;
-    confidence?: "high" | "medium" | "low";
-    rightAgreement?: number;
-    yawIntegral?: number;
+interface DetectedBoardAlignment extends EulerAngles {
+    confidence: "high" | "medium" | "low";
+    rightAgreement: number;
+    yawIntegral: number;
 }
+
+// A union, so checking `error` narrows to the full alignment; the error side still admits
+// reading the alignment fields, as undefined.
+export type DetectBoardAlignmentResult =
+    | ({ error: string } & { [K in keyof DetectedBoardAlignment]?: undefined })
+    | (DetectedBoardAlignment & { error?: undefined });
 
 const DEG = 180 / Math.PI;
 
