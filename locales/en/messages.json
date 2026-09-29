@@ -4804,7 +4804,7 @@
         "message": "{{bytes}} bytes"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
+        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes). This is not from the Betaflight cloud build, so support for it comes from whoever built it."
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
@@ -9212,7 +9212,7 @@
         "message": "Legacy"
     },
     "firmwareFlasherOptionLabelNotQualified": {
-        "message": "⚠️ Manufacturer supported target, not reviewed by the Betaflight team. For support with this board, contact its manufacturer."
+        "message": "⚠️ Manufacturer supported target. For support with this board, contact its manufacturer."
     },
     "firmwareFlasherOptionLabelLegacyTarget": {
         "message": "⚠️ Legacy target, no longer maintained. Use at your own discretion."
