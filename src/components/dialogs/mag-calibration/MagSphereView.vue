@@ -37,6 +37,7 @@ const DEFAULT_SPHERE_RADIUS = 400;
 
 const props = defineProps({
     samples: {
+        /** @type {import("vue").PropType<import("@/composables/useMagCalibration").MagSample[]>} */
         type: Array,
         default: () => [],
     },
@@ -45,6 +46,7 @@ const props = defineProps({
         default: 0,
     },
     sphereFit: {
+        /** @type {import("vue").PropType<{ center: { x: number, y: number, z: number }, radius: number } | null>} */
         type: Object,
         default: null,
     },
@@ -61,32 +63,38 @@ const props = defineProps({
         default: "",
     },
     liveMag: {
+        /** @type {import("vue").PropType<{ x: number, y: number, z: number } | null>} */
         type: Object,
         default: null,
     },
     inclination: {
+        /** @type {import("vue").PropType<number | null>} */
         type: Number,
         default: null,
     },
     coverage: {
+        /** @type {import("vue").PropType<{ covered: number, totalFaces: number, fraction: number, faceCounts: number[] } | null>} */
         type: Object,
         default: null,
     },
     attitude: {
+        /** @type {import("vue").PropType<{ roll: number, pitch: number, heading: number } | null>} degrees */
         type: Object,
-        default: null, // { roll, pitch, heading } in degrees
+        default: null,
     },
     quaternion: {
+        /** @type {import("vue").PropType<{ w: number, x: number, y: number, z: number } | null>} unit quaternion from MSP_ATTITUDE_QUATERNION */
         type: Object,
-        default: null, // { w, x, y, z } unit quaternion from MSP_ATTITUDE_QUATERNION
+        default: null,
     },
     vizMode: {
         type: String,
         default: "pointcloud",
     },
     calOffsets: {
+        /** @type {import("vue").PropType<{ x: number, y: number, z: number } | null>} current firmware mag calibration offsets */
         type: Object,
-        default: null, // { x, y, z } — current firmware mag calibration offsets
+        default: null,
     },
 });
 

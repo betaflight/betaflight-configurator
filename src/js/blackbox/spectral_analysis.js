@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { ComplexFFT } from "./fft.js";
+import { ComplexFFT } from "./fft";
 import { clamp } from "../utils/common";
 
 // ---------------------------------------------------------------------------

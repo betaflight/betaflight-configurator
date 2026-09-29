@@ -88,6 +88,23 @@
     "portsSelectManual": {
         "message": "Selezione manuale"
     },
+    "networkOnlyBrowserTitle": {
+        "message": "Solo connessioni di rete",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Questo browser può collegarsi ad un controllore di volo attraverso la rete, come un ponte Wi-Fi, un modulo ELRS o SITL. Per USB o Bluetooth, utilizzare Chrome o Edge, o installare Betaflight App sul desktop. Manca qui:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web Serial non è disponibile."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Bluetooth Web non è disponibile."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB non è disponibile, quindi il flash del firmware tramite DFU è disabilitato."
+    },
     "portsSelectNone": {
         "message": "Nessuna connessione disponibile"
     },
@@ -2260,6 +2277,19 @@
     "gpsSerialPortSaveFailed": {
         "message": "Impossibile impostare la porta seriale GPS, quindi non è stato salvato nulla."
     },
+    "gpsProtocolUnknown": {
+        "message": "Sconosciuto ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
+        "message": "CAN Bus"
+    },
+    "dronecanCanDeviceHelp": {
+        "message": "Il bus CAN a cui sono collegati i moduli DroneCAN. Questa impostazione è per DroneCAN nel suo complesso, quindi modificarla sposta tutti i dispositivi DroneCAN, non solo il GPS. La modifica richiede un riavvio."
+    },
+    "dronecanSaveFailed": {
+        "message": "Impossibile cambiare il bus DroneCAN, quindi non è stato salvato nulla."
+    },
     "configurationGPSAutoBaud": {
         "message": "Baud Automatici"
     },
@@ -2448,6 +2478,24 @@
     },
     "portsClaimTelemetry": {
         "message": "Telemetria"
+    },
+    "portsConflictTitle": {
+        "message": "Porta già in uso"
+    },
+    "portsConflictWarning": {
+        "message": "Stai assegnando una porta seriale che è già in uso per un altra funzione. Il salvataggio reimposterà tutte le porte ai valori predefiniti (stato non configurato):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}<\/strong> è utilizzata da {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Vuoi salvare comunque?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Salva comunque"
+    },
+    "portsConflictCancel": {
+        "message": "Cancella"
     },
     "portsSensorGyro": {
         "message": "Giroscopio"
@@ -3144,6 +3192,13 @@
     },
     "auxiliaryToggleUnused": {
         "message": "Nascondi le modalità inutilizzate"
+    },
+    "auxiliarySearch": {
+        "message": "Modalità di ricerca",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "Nessuna modalità corrisponde ai filtri correnti."
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -6421,6 +6476,10 @@
         "message": "Mini Impatto",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "FB Piccolo",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Ingrandisci",
         "description": "Check to select a bigger display of the OSD preview in small screens"
@@ -6552,6 +6611,14 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Upload fallito"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "L'OSD è in modalità carattere piccolo, ma il carattere selezionato è un carattere di dimensione standard. Non verrà visualizzato correttamente. Caricarlo comunque?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "Il carattere selezionato è un carattere piccolo per gli OSD framebuffer, ma questo OSD utilizza caratteri di dimensione standard. Non verrà visualizzato correttamente. Caricare comunque?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
     "osdSetupSaveReboot": {
         "message": "Salva e Riavvia"
@@ -8389,6 +8456,9 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Campioni non sufficienti — gira più lungo"
+    },
+    "magCalibrationFullRefused": {
+        "message": "Calibrazione rifiutata: {{reason}}"
     },
     "magCalibrationFullNoGeo": {
         "message": "Nessun GPS, browser o indirizzo IP — inserisci le coordinate per continuare"
