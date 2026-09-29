@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Board alignment detection.
  *
@@ -32,13 +53,45 @@
  *      yaw from internal CCW-positive to Betaflight's CW-positive [0, 360).
  */
 
-import { eulerToMatrix } from "./magAlignment.js";
+import { eulerToMatrix, mat3mul } from "./magAlignment.js";
+
+type Vec3 = [number, number, number];
+type Mat3 = number[][];
+
+/** ZYX Euler angles in degrees. */
+export interface EulerAngles {
+    roll: number;
+    pitch: number;
+    yaw: number;
+}
+
+export interface DetectBoardAlignmentArgs {
+    flatAccel: number[] | null;
+    pitchAccel: number[] | null;
+    rollAccel: number[] | null;
+    yawIntegral: number;
+    currentAlignment: EulerAngles | null;
+}
+
+/**
+ * The detection outcome: either an `error` key (see the `boardAlignmentWizard-Error-*`
+ * locale keys) or the snapped alignment plus its confidence grading.
+ */
+export interface DetectBoardAlignmentResult {
+    error?: string;
+    roll?: number;
+    pitch?: number;
+    yaw?: number;
+    confidence?: "high" | "medium" | "low";
+    rightAgreement?: number;
+    yawIntegral?: number;
+}
 
 const DEG = 180 / Math.PI;
 
 // --- Vector / matrix helpers ---
 
-function normalize(v) {
+function normalize(v: number[]): Vec3 {
     const m = Math.hypot(v[0], v[1], v[2]);
     if (m < 1e-9) {
         return [0, 0, 0];
@@ -46,34 +99,20 @@ function normalize(v) {
     return [v[0] / m, v[1] / m, v[2] / m];
 }
 
-function subtract(a, b) {
+function subtract(a: number[], b: number[]): Vec3 {
     return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
 
-function scale(v, s) {
+function scale(v: number[], s: number): Vec3 {
     return [v[0] * s, v[1] * s, v[2] * s];
 }
 
-function dot(a, b) {
+function dot(a: number[], b: number[]): number {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-function cross(a, b) {
+function cross(a: number[], b: number[]): Vec3 {
     return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-}
-
-function matMul(a, b) {
-    const r = [
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0],
-    ];
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            r[i][j] = a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j];
-        }
-    }
-    return r;
 }
 
 // --- Public utilities ---
@@ -82,7 +121,7 @@ function matMul(a, b) {
  * Decode a rotation matrix into roll/pitch/yaw (degrees) using Betaflight's
  * ZYX (yaw, pitch, roll) Tait-Bryan convention — inverse of `eulerToMatrix`.
  */
-export function matrixToEuler(m) {
+export function matrixToEuler(m: Mat3): EulerAngles {
     const sp = Math.max(-1, Math.min(1, -m[2][0]));
     const pitch = Math.asin(sp) * DEG;
 
@@ -104,7 +143,7 @@ export function matrixToEuler(m) {
 /**
  * Round an angle (degrees) to the nearest multiple of `step`, normalized to (-180, 180].
  */
-export function snapTo45(deg, step = 45) {
+export function snapTo45(deg: number, step = 45): number {
     let snapped = Math.round(deg / step) * step;
     while (snapped > 180) {
         snapped -= 360;
@@ -119,7 +158,7 @@ export function snapTo45(deg, step = 45) {
 /**
  * Average a list of 3-vectors. Returns a 3-vector or null if `samples` is empty.
  */
-export function meanVec3(samples) {
+export function meanVec3(samples: number[][]): Vec3 | null {
     if (samples.length === 0) {
         return null;
     }
@@ -138,7 +177,7 @@ export function meanVec3(samples) {
 /**
  * Maximum magnitude of any vector in the buffer. Useful for "is steady" checks.
  */
-export function maxMagnitude(samples) {
+export function maxMagnitude(samples: number[][]): number {
     let max = 0;
     for (const s of samples) {
         const m = Math.hypot(s[0], s[1], s[2]);
@@ -154,7 +193,7 @@ export function maxMagnitude(samples) {
  * detect "is the drone tilted enough to lock the pose?" and "has it returned
  * to level?".
  */
-export function tiltAngleDeg(accel, upAxis) {
+export function tiltAngleDeg(accel: number[], upAxis: number[]): number {
     const a = normalize(accel);
     const cosTheta = Math.max(-1, Math.min(1, dot(a, upAxis)));
     return Math.acos(cosTheta) * DEG;
@@ -163,7 +202,7 @@ export function tiltAngleDeg(accel, upAxis) {
 /**
  * The component of `vec` perpendicular to `axis`. The axis must be a unit vector.
  */
-export function perpComponent(vec, axis) {
+export function perpComponent(vec: number[], axis: number[]): Vec3 {
     return subtract(vec, scale(axis, dot(vec, axis)));
 }
 
@@ -188,7 +227,13 @@ export function perpComponent(vec, axis) {
  *
  *   On failure: { error } — see the `boardAlignmentWizard-Error-*` locale keys.
  */
-export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawIntegral, currentAlignment }) {
+export function detectBoardAlignment({
+    flatAccel,
+    pitchAccel,
+    rollAccel,
+    yawIntegral,
+    currentAlignment,
+}: DetectBoardAlignmentArgs): DetectBoardAlignmentResult {
     if (!flatAccel || !pitchAccel || !rollAccel) {
         return { error: "missing_samples" };
     }
@@ -233,7 +278,7 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
     }
 
     // World basis vectors as rows form the matrix M such that M · v_fc = v_world.
-    const m = [
+    const m: Mat3 = [
         [forwardAxis[0], forwardAxis[1], forwardAxis[2]],
         [rightAxis[0], rightAxis[1], rightAxis[2]],
         [upAxis[0], upAxis[1], upAxis[2]],
@@ -248,7 +293,7 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
             currentAlignment.pitch || 0,
             -(currentAlignment.yaw || 0),
         );
-        mTotal = matMul(m, cur);
+        mTotal = mat3mul(m, cur);
     }
 
     const euler = matrixToEuler(mTotal);
@@ -270,7 +315,7 @@ export function detectBoardAlignment({ flatAccel, pitchAccel, rollAccel, yawInte
     // grade how orthogonal the gestures were — a pair of consistently reversed gestures
     // is indistinguishable from a mount yawed 180°, so it scores as high as a clean run.
     const yawMagnitude = Math.abs(yawIntegral || 0);
-    let confidence = "high";
+    let confidence: "high" | "medium" | "low" = "high";
     if (rightAgreement < 0.85 || yawMagnitude < 20) {
         confidence = "medium";
     }
