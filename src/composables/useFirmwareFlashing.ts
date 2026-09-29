@@ -200,7 +200,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
     /**
      * Process HEX firmware data (from file or HTTP) and parse it
      */
-    const processHex = async (data: FirmwareData, options: ProcessFirmwareOptions) => {
+    const processHex = (data: FirmwareData, options: ProcessFirmwareOptions) => {
         const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         console.log(`${logHead} processHex called with data type:`, typeof data);
@@ -331,7 +331,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
 
         try {
             if (fileExtension === "hex") {
-                return await processHex(data, {
+                return processHex(data, {
                     enableFlashButton,
                     enableLoadRemoteFileButton,
                     showLoadedFirmware,
