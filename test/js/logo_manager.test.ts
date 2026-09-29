@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import FileSystem from "../../src/js/FileSystem";
 import LogoManager from "../../src/js/LogoManager";
 import { FONT, SYM } from "../../src/js/utils/osdFont";
 
@@ -54,5 +55,14 @@ describe("LogoManager", () => {
         expect(tiles[0].title).toBe("0xa0");
         expect(tiles[0].getAttribute("src")).toBe("data:image/svg+xml;utf8,first");
         expect(tiles[tiles.length - 1].getAttribute("src")).toBe("data:image/svg+xml;utf8,last");
+    });
+
+    it("rejects openImage when the picked file cannot be read", async () => {
+        LogoManager.init(FONT, SYM.LOGO);
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        vi.spyOn(FileSystem, "pickOpenFile").mockResolvedValue({ name: "logo.png" } as never);
+        vi.spyOn(FileSystem, "readFileAsBlob").mockRejectedValue(new Error("read failed"));
+
+        await expect(LogoManager.openImage()).rejects.toThrow("read failed");
     });
 });

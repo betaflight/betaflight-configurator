@@ -307,8 +307,7 @@ const LogoManager = {
                 }),
                 "logo-file",
             )
-                // A cancelled picker yields no file; the promise stays pending, as it did
-                // when readFileAsBlob rejected on it unobserved.
+                // A cancelled picker yields no file and leaves the promise pending: cancelling is not an error.
                 .then((file) => (file ? FileSystem.readFileAsBlob(file) : undefined))
                 .then((data?: Blob) => {
                     if (data) {
@@ -317,6 +316,7 @@ const LogoManager = {
                 })
                 .catch((error) => {
                     console.error("could not load logo file:", error);
+                    rejectOpenImage(asError(error));
                 });
         });
     },

@@ -154,18 +154,22 @@ function validateModifierWaypoint(waypointData: WaypointInput): boolean {
     return true;
 }
 
+// An absent slot falls back to a default in addWaypoint; a present one must be a finite number in range.
+function isInvalidSlot(value: number | undefined, min: number, max = Infinity): boolean {
+    return value !== undefined && (!Number.isFinite(value) || value < min || value > max);
+}
+
 function validatePositionalWaypoint(waypointData: WaypointInput): boolean {
-    // An absent slot falls back to a default in addWaypoint, and undefined fails every comparison.
-    const { latitude = Number.NaN, longitude = Number.NaN, altitude = Number.NaN } = waypointData;
-    if (latitude < -90 || latitude > 90) {
+    const { latitude, longitude, altitude } = waypointData;
+    if (isInvalidSlot(latitude, -90, 90)) {
         gui_log(i18n.getMessage("flightPlanInvalidLatitude"));
         return false;
     }
-    if (longitude < -180 || longitude > 180) {
+    if (isInvalidSlot(longitude, -180, 180)) {
         gui_log(i18n.getMessage("flightPlanInvalidLongitude"));
         return false;
     }
-    if (altitude < 0) {
+    if (isInvalidSlot(altitude, 0)) {
         gui_log(i18n.getMessage("flightPlanInvalidAltitude") || "Altitude must be positive");
         return false;
     }

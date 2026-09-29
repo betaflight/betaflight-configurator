@@ -44,6 +44,17 @@ describe("useFlightPlan", () => {
         expect(plan.waypoints.value).toHaveLength(0);
     });
 
+    it("rejects non-finite coordinates and altitude", async () => {
+        const { useFlightPlan } = await loadFlightPlan();
+        const plan = useFlightPlan();
+
+        expect(plan.addWaypoint({ latitude: Number.NaN, longitude: 0 })).toBe(false);
+        expect(plan.addWaypoint({ latitude: 0, longitude: Number.NaN })).toBe(false);
+        expect(plan.addWaypoint({ latitude: 0, longitude: 0, altitude: Number.NaN })).toBe(false);
+        expect(plan.addWaypoint({ latitude: 0, longitude: 0, altitude: Infinity })).toBe(false);
+        expect(plan.waypoints.value).toHaveLength(0);
+    });
+
     it("requires the one slot a modifier waypoint uses", async () => {
         const { useFlightPlan } = await loadFlightPlan();
         const plan = useFlightPlan();
