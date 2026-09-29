@@ -1,8 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { detectBoardAlignment, matrixToEuler, snapTo45 } from "../../src/js/utils/boardAlignment.js";
-import { eulerToMatrix } from "../../src/js/utils/magAlignment.js";
+import { detectBoardAlignment, matrixToEuler, snapTo45 } from "../../src/js/utils/boardAlignment";
+import { eulerToMatrix, mat3mulVec, mat3transpose } from "../../src/js/utils/magAlignment.js";
+
+type Mat3 = number[][];
 
 const DEG_TO_RAD = Math.PI / 180;
+
+/** Assert two 3×3 matrices agree elementwise to `precision` decimal places. */
+function expectMatrixClose(got: Mat3, expected: Mat3, precision: number): void {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            expect(got[i][j]).toBeCloseTo(expected[i][j], precision);
+        }
+    }
+}
 
 // --- Synthetic sample generation ---
 //
@@ -20,7 +31,7 @@ const DEG_TO_RAD = Math.PI / 180;
 //   - R_mount = rotation FC frame → world frame.
 //   - accel_fc = R_mount^T · (rotated gravity vector).
 
-function rotX(theta) {
+function rotX(theta: number): Mat3 {
     const c = Math.cos(theta);
     const s = Math.sin(theta);
     return [
@@ -30,7 +41,7 @@ function rotX(theta) {
     ];
 }
 
-function rotY(theta) {
+function rotY(theta: number): Mat3 {
     const c = Math.cos(theta);
     const s = Math.sin(theta);
     return [
@@ -40,20 +51,15 @@ function rotY(theta) {
     ];
 }
 
-function transpose(m) {
-    return [
-        [m[0][0], m[1][0], m[2][0]],
-        [m[0][1], m[1][1], m[2][1]],
-        [m[0][2], m[1][2], m[2][2]],
-    ];
+interface Alignment {
+    roll: number;
+    pitch: number;
+    yaw: number;
 }
 
-function matVec(m, v) {
-    return [
-        m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2],
-        m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2],
-        m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2],
-    ];
+interface ReverseGestures {
+    pitch?: boolean;
+    roll?: boolean;
 }
 
 /**
@@ -67,19 +73,19 @@ function matVec(m, v) {
 // mountYaw and currentAlignment.yaw use Betaflight's CW-positive convention (same as the wizard output).
 // eulerToMatrix uses CCW-positive (standard math), so we negate yaw when building the matrices.
 function makeSamples(
-    mountRoll,
-    mountPitch,
-    mountYaw,
-    currentAlignment = { roll: 0, pitch: 0, yaw: 0 },
+    mountRoll: number,
+    mountPitch: number,
+    mountYaw: number,
+    currentAlignment: Alignment = { roll: 0, pitch: 0, yaw: 0 },
     noise = 0,
-    reverse = {},
+    reverse: ReverseGestures = {},
 ) {
     const rMount = eulerToMatrix(mountRoll, mountPitch, -mountYaw);
     const rCurrent = eulerToMatrix(currentAlignment.roll, currentAlignment.pitch, -currentAlignment.yaw);
 
     // Raw FC accel = R_mount^T · accel_world
     // Post-alignment accel (what MSP_RAW_IMU returns) = R_current · raw_fc
-    const post = (accelWorld) => matVec(rCurrent, matVec(transpose(rMount), accelWorld));
+    const post = (accelWorld: number[]) => mat3mulVec(rCurrent, mat3mulVec(mat3transpose(rMount), accelWorld));
 
     const noseDown = (reverse.pitch ? -45 : 45) * DEG_TO_RAD;
     const rollRight = (reverse.roll ? -45 : 45) * DEG_TO_RAD;
@@ -90,11 +96,11 @@ function makeSamples(
     //   nose down:   Ry(+45°) applied to body → world-up in body = Ry(-45°)·(0,0,1) = (-sin45, 0, cos45)
     //   roll right:  Right wing (−Y) down = Rx(+45°) applied to body → Rx(-45°)·(0,0,1) = (0, sin45, cos45)
     const accelFlatWorld = [0, 0, 1];
-    const accelPitchWorld = matVec(rotY(-noseDown), [0, 0, 1]);
-    const accelRollWorld = matVec(rotX(-rollRight), [0, 0, 1]);
+    const accelPitchWorld = mat3mulVec(rotY(-noseDown), [0, 0, 1]);
+    const accelRollWorld = mat3mulVec(rotX(-rollRight), [0, 0, 1]);
 
     const jitter = () => (noise > 0 ? (Math.random() - 0.5) * 2 * noise : 0);
-    const addNoise = (v) => [v[0] + jitter(), v[1] + jitter(), v[2] + jitter()];
+    const addNoise = (v: number[]) => [v[0] + jitter(), v[1] + jitter(), v[2] + jitter()];
 
     return {
         flatAccel: addNoise(post(accelFlatWorld)),
@@ -129,11 +135,7 @@ describe("matrixToEuler / eulerToMatrix round-trip", () => {
             const e = matrixToEuler(m);
             // Compare via the matrix instead of raw angles (avoids gimbal-lock ambiguity).
             const m2 = eulerToMatrix(e.roll, e.pitch, e.yaw);
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(m2[i][j]).toBeCloseTo(m[i][j], 6);
-                }
-            }
+            expectMatrixClose(m2, m, 6);
         });
     }
 });
@@ -159,8 +161,24 @@ describe("snapTo45", () => {
 });
 
 // Helper: convert Betaflight CW-positive yaw to internal CCW-positive for matrix comparison.
-function internalYaw(displayYaw) {
+function internalYaw(displayYaw: number): number {
     return -displayYaw;
+}
+
+/**
+ * Drive detection for a physical `mount` (optionally with a pre-configured
+ * `currentAlignment`) and assert the recovered alignment matches the mount.
+ * Compares via matrix to sidestep 180/-180 and yaw-wrap ambiguity. Returns the
+ * raw result so callers can add case-specific assertions.
+ */
+function expectDetectedAlignment(mount: Alignment, currentAlignment: Alignment = { roll: 0, pitch: 0, yaw: 0 }) {
+    const samples = makeSamples(mount.roll, mount.pitch, mount.yaw, currentAlignment);
+    const result = detectBoardAlignment({ ...samples, currentAlignment });
+    expect(result.error).toBeUndefined();
+    const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
+    const got = eulerToMatrix(result.roll!, result.pitch!, internalYaw(result.yaw!));
+    expectMatrixClose(got, expected, 4);
+    return result;
 }
 
 describe("detectBoardAlignment - cardinal mounts", () => {
@@ -176,18 +194,7 @@ describe("detectBoardAlignment - cardinal mounts", () => {
 
     for (const mount of cardinals) {
         it(`detects ${mount.name} from clean samples`, () => {
-            const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
-            const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
-            expect(result.error).toBeUndefined();
-            // Compare via matrix (handles 180/-180 equivalence).
-            // Both sides negate yaw to convert from CW-positive display back to CCW-positive math.
-            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
-            const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-                }
-            }
+            expectDetectedAlignment(mount);
         });
     }
 });
@@ -200,16 +207,7 @@ describe("detectBoardAlignment - 45° cinewhoop mounts", () => {
 
     for (const mount of cinewhoops) {
         it(`detects ${mount.name}`, () => {
-            const samples = makeSamples(mount.roll, mount.pitch, mount.yaw);
-            const result = detectBoardAlignment({ ...samples, currentAlignment: { roll: 0, pitch: 0, yaw: 0 } });
-            expect(result.error).toBeUndefined();
-            const expected = eulerToMatrix(mount.roll, mount.pitch, internalYaw(mount.yaw));
-            const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-                }
-            }
+            expectDetectedAlignment(mount);
         });
     }
 });
@@ -218,32 +216,23 @@ describe("detectBoardAlignment - delta from current alignment", () => {
     it("returns the same alignment when no change is needed", () => {
         // FC physically mounted CW 90° (display yaw=90). Post-alignment data looks like identity,
         // so M = identity. After composing with current alignment, result = current (no change).
-        const current = { roll: 0, pitch: 0, yaw: 90 };
-        const samples = makeSamples(0, 0, 90, current);
-        const result = detectBoardAlignment({ ...samples, currentAlignment: current });
-        const expected = eulerToMatrix(current.roll, current.pitch, internalYaw(current.yaw));
-        const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-            }
-        }
+        expectDetectedAlignment({ roll: 0, pitch: 0, yaw: 90 }, { roll: 0, pitch: 0, yaw: 90 });
     });
 
     it("composes the residual rotation with current alignment", () => {
         // FC physically mounted CW 180°, user has configured CW 90° (incomplete correction).
         // Wizard should output CW 180° (display yaw = 180).
-        const current = { roll: 0, pitch: 0, yaw: 90 };
-        const samples = makeSamples(0, 0, 180, current);
-        const result = detectBoardAlignment({ ...samples, currentAlignment: current });
+        const result = expectDetectedAlignment({ roll: 0, pitch: 0, yaw: 180 }, { roll: 0, pitch: 0, yaw: 90 });
         expect(result.yaw).toBe(180);
-        const expected = eulerToMatrix(0, 0, internalYaw(180));
-        const got = eulerToMatrix(result.roll, result.pitch, internalYaw(result.yaw));
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                expect(got[i][j]).toBeCloseTo(expected[i][j], 4);
-            }
-        }
+    });
+
+    it("composes a non-commuting roll mount with a yaw current alignment", () => {
+        // Roll and yaw rotations do not commute, so the order in mat3mul(m, cur) matters: a
+        // yaw-then-roll composition lands somewhere different from roll-then-yaw. FC physically
+        // mounted roll 90°, user has configured CW yaw 90°. The wizard must recover the absolute
+        // mount (roll 90°, yaw 0°); getting the composition order wrong would not.
+        const result = expectDetectedAlignment({ roll: 90, pitch: 0, yaw: 0 }, { roll: 0, pitch: 0, yaw: 90 });
+        expect(result.roll).toBe(90);
     });
 });
 
@@ -254,7 +243,7 @@ describe("detectBoardAlignment - gesture direction", () => {
         const samples = makeSamples(0, 0, 0);
         const result = detectBoardAlignment({ ...samples, currentAlignment: identity });
         expect(result).toMatchObject({ roll: 0, pitch: 0, yaw: 0, confidence: "high" });
-        expect(result.rightAgreement).toBeCloseTo(1, 6);
+        expect(result.rightAgreement!).toBeCloseTo(1, 6);
     });
 
     it("errors instead of reporting yaw 180 when only the roll gesture is reversed", () => {
@@ -278,7 +267,7 @@ describe("detectBoardAlignment - gesture direction", () => {
         // up-axis carries no information about which horizontal direction is the nose.
         const reversed = makeSamples(0, 0, 0, identity, 0, { pitch: true, roll: true });
         const yawed180 = makeSamples(0, 0, 180);
-        for (const key of ["flatAccel", "pitchAccel", "rollAccel"]) {
+        for (const key of ["flatAccel", "pitchAccel", "rollAccel"] as const) {
             for (let i = 0; i < 3; i++) {
                 expect(reversed[key][i]).toBeCloseTo(yawed180[key][i], 6);
             }
