@@ -191,7 +191,7 @@ class DeviceHandler {
         dfuProtocol.addEventListener("removedDevice", (event) => this.removedUsbDevice(eventDetail(event)));
 
         // Initial device discovery using the serial facade
-        this.refreshAllDeviceLists();
+        void this.refreshAllDeviceLists();
     }
 
     // Refactored refreshAllDeviceLists to use updateDeviceList
@@ -242,7 +242,7 @@ class DeviceHandler {
         if (!devicePath) {
             console.warn(`${this.logHead} Device removal event missing path information`, device);
             // Still update ports, but don't try to use the undefined path
-            this.updateDeviceList("serial").then(() => {
+            void this.updateDeviceList("serial").then(() => {
                 this.selectActivePort();
             });
             return;
@@ -253,7 +253,7 @@ class DeviceHandler {
 
         const wasSelectedPort = this.devicePicker.selectedDevice === devicePath;
 
-        updatePromise.then(() => {
+        void updatePromise.then(() => {
             if (wasSelectedPort) {
                 this.selectActivePort();
 
@@ -264,7 +264,7 @@ class DeviceHandler {
     }
 
     addedUsbDevice(device: PortDevice | null | undefined) {
-        this.updateDeviceList("usb").then(() => {
+        void this.updateDeviceList("usb").then(() => {
             const selectedDevice = this.selectActivePort(device);
             if (selectedDevice === device?.path) {
                 // Send event when the port handler auto selects a new USB device
@@ -280,7 +280,7 @@ class DeviceHandler {
 
         if (!devicePath) {
             console.warn(`${this.logHead} USB device removal event missing path information`, device);
-            this.updateDeviceList("usb").then(() => {
+            void this.updateDeviceList("usb").then(() => {
                 this.selectActivePort();
             });
             return;
@@ -288,7 +288,7 @@ class DeviceHandler {
 
         const wasSelectedPort = this.devicePicker.selectedDevice === devicePath;
 
-        this.updateDeviceList("usb").then(() => {
+        void this.updateDeviceList("usb").then(() => {
             this.selectActivePort();
 
             if (wasSelectedPort) {
@@ -499,7 +499,7 @@ class DeviceHandler {
         // Update the appropriate device list
         const updatePromise = this.updateDeviceList(deviceType);
 
-        updatePromise.then(() => {
+        void updatePromise.then(() => {
             const selectedDevice = this.selectActivePort(device);
 
             if (selectedDevice === device.path) {

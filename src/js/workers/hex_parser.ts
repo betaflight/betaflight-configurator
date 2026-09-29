@@ -95,7 +95,7 @@ function warnIfSegmentRecord(content: string, kind: string) {
 // input = string
 // result = if hex file is valid, result is an object
 //          if hex file wasn't valid (crc check failed on any of the lines), result will be null
-export default async function read_hex_file(input: string): Promise<ParsedHex | null> {
+export default function read_hex_file(input: string): ParsedHex | null {
     console.time(TIME_LABEL);
 
     const data = input.split("\n");

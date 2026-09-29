@@ -168,7 +168,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
     /**
      * Populate the target/board list from API response
      */
-    const populateTargetList = async (targets: TargetDescriptor[] | null | undefined) => {
+    const populateTargetList = (targets: TargetDescriptor[] | null | undefined) => {
         if (!targets || !ispConnected()) {
             updateTargetQualification(null);
             state.boardOptions = [];
@@ -246,7 +246,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
         } else {
             try {
                 const targets = await buildApi.loadTargets();
-                await populateTargetList(targets);
+                populateTargetList(targets);
 
                 if (selectedBoardTarget && state.boardOptions.some((b) => b.target === selectedBoardTarget)) {
                     state.selectedBoard = selectedBoardTarget;
@@ -301,7 +301,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
     /**
      * Handle detect board button click
      */
-    const handleDetectBoard = async () => {
+    const handleDetectBoard = () => {
         if (state.detectingBoard) {
             return;
         }
@@ -321,7 +321,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
             return;
         }
 
-        AutoDetect.verifyBoard(async (detectedBoardName: string) => {
+        void AutoDetect.verifyBoard(async (detectedBoardName: string) => {
             let found = state.boardOptions.find((b) => b.target === detectedBoardName);
             if (!found) {
                 found = state.boardOptions.find(

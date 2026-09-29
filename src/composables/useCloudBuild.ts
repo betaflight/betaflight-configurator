@@ -317,7 +317,7 @@ export function useCloudBuild(params: CloudBuildParams) {
     /**
      * Poll for cloud build status
      */
-    const pollCloudBuildStatus = async (response: BuildResponse, isConfigLocal: boolean | undefined) => {
+    const pollCloudBuildStatus = (response: BuildResponse, isConfigLocal: boolean | undefined) => {
         const retrySeconds = 5;
         let retries = 1;
         let processing = false;
@@ -404,7 +404,7 @@ export function useCloudBuild(params: CloudBuildParams) {
 
         // Start polling for build status
         enableCancelBuildButton(true);
-        await pollCloudBuildStatus(response, isConfigLocal);
+        pollCloudBuildStatus(response, isConfigLocal);
 
         return response;
     };

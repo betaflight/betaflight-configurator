@@ -218,7 +218,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         }
 
         try {
-            const parsedHexData = await parseHex(intelHex);
+            const parsedHexData = parseHex(intelHex);
 
             if (parsedHexData) {
                 firmwareState.parsedHex = parsedHexData;
@@ -371,7 +371,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
     /**
      * Flash HEX firmware via selected port (DFU or Serial)
      */
-    const flashHexFirmware = async (options: HexFlashSettings & { firmware: ParsedHex }) => {
+    const flashHexFirmware = (options: HexFlashSettings & { firmware: ParsedHex }) => {
         const {
             firmware,
             eraseChip,
@@ -516,7 +516,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 }
             }
 
-            await flashHexFirmware({
+            flashHexFirmware({
                 firmware: parsedHexData,
                 eraseChip,
                 noRebootSequence,

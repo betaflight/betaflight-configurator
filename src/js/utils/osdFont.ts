@@ -314,33 +314,26 @@ const FONT = {
      *
      * @returns Resolves after the font file has been parsed.
      */
-    openFontFile(): Promise<void> {
-        return new Promise(function (resolve, reject) {
-            const suffix = "mcm";
-            FileSystem.pickOpenFile(
+    async openFontFile(): Promise<void> {
+        const suffix = "mcm";
+        let file;
+        try {
+            file = await FileSystem.pickOpenFile(
                 i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
                 `.${suffix}`,
                 "osd-font-file",
-            )
-                .then((file) => {
-                    // A cancelled picker yields no file; readFile rejected on it before, and still does.
-                    if (!file) {
-                        reject(new Error("no font file was picked"));
-                        return;
-                    }
-                    FileSystem.readFile(file)
-                        .then((contents: string) => {
-                            FONT.parseMCMFontFile(contents);
-                            FONT.requireData().loaded_font_file = file.name;
-                            resolve();
-                        })
-                        .catch(reject);
-                })
-                .catch((error) => {
-                    console.error("could not load whole font file:", error);
-                    reject(error);
-                });
-        });
+            );
+        } catch (error) {
+            console.error("could not load whole font file:", error);
+            throw error;
+        }
+        // A cancelled picker yields no file; readFile rejected on it before, and still does.
+        if (!file) {
+            throw new Error("no font file was picked");
+        }
+        const contents: string = await FileSystem.readFile(file);
+        FONT.parseMCMFontFile(contents);
+        FONT.requireData().loaded_font_file = file.name;
     },
 
     draw(charAddress: number): string {

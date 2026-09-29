@@ -280,7 +280,7 @@ export function usePower() {
         () => FC.CONFIG.batteryProfile,
         (newValue) => {
             if (newValue !== activeBatteryProfile.value) {
-                syncBatteryProfileFromFc();
+                void syncBatteryProfileFromFc();
             }
         },
     );

@@ -150,7 +150,7 @@ export function usePortsConfiguration(
         updateFeatures();
 
         const saveEeprom = () => {
-            saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
+            void saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
         };
 
         mspHelper.sendSerialConfig(() => {

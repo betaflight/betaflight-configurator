@@ -141,7 +141,7 @@ class AutoBackup {
             this.boundReadSerialAdapter = this.readSerialAdapter.bind(this);
             serial.addEventListener("receive", this.boundReadSerialAdapter);
 
-            this.run();
+            void this.run();
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
         }
@@ -188,7 +188,7 @@ class AutoBackup {
     onClose() {
         this.boundHandleDisconnect = this.handleDisconnect.bind(this);
         serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
-        serial.disconnect();
+        void serial.disconnect();
     }
 
     async save(data: string) {
@@ -324,7 +324,7 @@ class AutoBackup {
         setLastBackupData(data);
 
         this.sendCommand("exit", this.onClose.bind(this));
-        this.save(data);
+        void this.save(data);
     }
 
     private saveAfterTimeout(intervalId: ReturnType<typeof setInterval>, command: string, maxWaitTime: number) {
@@ -349,17 +349,17 @@ class AutoBackup {
         if (DEBUG) console.log(`AutoBackup: Saving partial data, buffer length: ${this.outputHistory.length}`);
 
         this.sendCommand("exit", this.onClose.bind(this));
-        this.save(data);
+        void this.save(data);
     }
 
-    async activateCliMode() {
+    activateCliMode() {
         return new Promise<void>((resolve) => {
             const bufferOut = new ArrayBuffer(1);
             const bufView = new Uint8Array(bufferOut);
 
             bufView[0] = 0x23;
 
-            serial.send(bufferOut);
+            void serial.send(bufferOut);
 
             setTimeout(() => {
                 this.resetBuffer();
@@ -368,20 +368,19 @@ class AutoBackup {
         });
     }
 
-    async sendSerial(line: string, callback?: () => void) {
+    private sendSerial(line: string, callback?: () => void) {
         const bufferOut = new ArrayBuffer(line.length);
         const bufView = new Uint8Array(bufferOut);
 
         for (let cKey = 0; cKey < line.length; cKey++) {
-            // charCodeAt, not codePointAt: the byte is the UTF-16 unit truncated to 8 bits, and
-            // codePointAt would change it for a surrogate pair.
-            bufView[cKey] = line.charCodeAt(cKey);
+            // Only ever called with ASCII CLI commands, so each code unit is one code point and one byte.
+            bufView[cKey] = line.codePointAt(cKey) ?? 0;
         }
 
-        serial.send(bufferOut, callback);
+        void serial.send(bufferOut, callback);
     }
 
-    async sendCommand(line: string, callback?: () => void) {
+    private sendCommand(line: string, callback?: () => void) {
         this.sendSerial(`${line}\n`, callback);
     }
 
@@ -397,7 +396,7 @@ class AutoBackup {
         if (port.startsWith("serial")) {
             this.boundHandleConnect = this.handleConnect.bind(this);
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
-            serial.connect(port, { baudRate: baud }, undefined);
+            void serial.connect(port, { baudRate: baud }, undefined);
         } else if (port.startsWith("capacitor-")) {
             // Skip backup on Android (serial disconnect causes device loss), proceed with flashing
             console.log("AutoBackup: Skipping backup on Android capacitor port");

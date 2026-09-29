@@ -1279,8 +1279,8 @@ export default defineComponent({
             }
         };
 
-        const handleDetectBoard = async () => {
-            await boardSelection.handleDetectBoard();
+        const handleDetectBoard = () => {
+            boardSelection.handleDetectBoard();
         };
 
         const onFirmwareVersionChange = async () => {
