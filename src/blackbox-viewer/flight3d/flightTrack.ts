@@ -125,83 +125,128 @@ export function extractSamples(flightLog: FlightLogSource): {
     const iSat = index("GPS_numSat");
     const iLat = index("GPS_coord[0]");
     const iLon = index("GPS_coord[1]");
-    const iAlt = index("GPS_altitude");
-    const iState = index("stateFlags");
+    if (iSat === undefined || iLat === undefined || iLon === undefined) {
+        return { fixes: [], baro: null, idle: null }; // no track to draw: skip reading the log
+    }
     const iBaro = index("baroAlt");
     const iThrottle = index("rcCommand[3]");
-
-    const fixes: GpsFix[] = [];
-    if (iSat === undefined || iLat === undefined || iLon === undefined) {
-        return { fixes, baro: null, idle: null }; // no track to draw: skip reading the log
-    }
-    const baro: BaroSample[] | null = iBaro === undefined ? null : [];
-    const heldUntil: number[] = [];
-    let current: { lat: number; lon: number; alt: number } | null = null;
-    let lastBaroT = -Infinity;
-    let takeoffUs: number | null = null;
-    let lastThrottleUpUs: number | null = null;
-    let firstUs: number | null = null;
-    let lastUs = 0;
+    const gps = new GpsReader(iSat, iLat, iLon, index("GPS_altitude"), index("stateFlags"));
+    const baro = iBaro === undefined ? null : new BaroReader(iBaro);
+    const throttle = iThrottle === undefined ? null : new ThrottleReader(iThrottle);
 
     for (const chunk of flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime())) {
         for (const frame of chunk.frames) {
             const tUs = frame[FRAME_TIME_INDEX];
-            firstUs ??= tUs;
-            lastUs = tUs;
+            gps.add(tUs, frame);
+            baro?.add(tUs, frame);
+            throttle?.add(tUs, frame);
+        }
+    }
+    return {
+        fixes: gps.fixes(),
+        baro: baro && medianFilter(baro.samples, throttle && takeoffFromRest(throttle, baro.samples)),
+        idle: throttle?.idle() ?? null,
+    };
+}
 
-            if (iThrottle !== undefined && frame[iThrottle] > IDLE_THROTTLE) {
-                takeoffUs ??= tUs;
-                lastThrottleUpUs = tUs;
-            }
+type Frame = ArrayLike<number>;
 
-            if (baro && iBaro !== undefined && tUs - lastBaroT >= BARO_MIN_SPACING_US) {
-                const altM = frame[iBaro] / 100;
-                if (Number.isFinite(altM)) {
-                    baro.push({ tUs, altM });
-                    lastBaroT = tUs;
-                }
-            }
+/** Valid fixes, one per new position; a position repeated under a valid fix is held (see holdPositions). */
+class GpsReader {
+    private readonly found: GpsFix[] = [];
+    private readonly heldUntil: number[] = [];
+    private current: { lat: number; lon: number; alt: number } | null = null;
 
-            const lat = frame[iLat];
-            const lon = frame[iLon];
-            // stateFlags is null until the first slow frame; that is no evidence of a lost fix.
-            const hasFix = iState === undefined || frame[iState] == null || (frame[iState] & GPS_FIX_FLAG) !== 0;
-            if (!(frame[iSat] >= MIN_SATELLITES) || !hasFix || !Number.isFinite(lat) || !Number.isFinite(lon)) {
-                current = null; // a hold never spans lost GPS, even if the same position comes back
-                continue;
-            }
-            const alt = iAlt === undefined ? 0 : frame[iAlt];
-            if (current && current.lat === lat && current.lon === lon && current.alt === alt) {
-                heldUntil[heldUntil.length - 1] = tUs;
-                continue;
-            }
-            current = { lat, lon, alt };
-            fixes.push({ tUs, lat: lat / 1e7, lon: lon / 1e7, altM: alt / 10 });
-            heldUntil.push(tUs);
+    constructor(
+        private readonly iSat: number,
+        private readonly iLat: number,
+        private readonly iLon: number,
+        private readonly iAlt: number | undefined,
+        private readonly iState: number | undefined,
+    ) {}
+
+    add(tUs: number, frame: Frame): void {
+        const lat = frame[this.iLat];
+        const lon = frame[this.iLon];
+        if (!this.hasFix(frame) || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+            this.current = null; // a hold never spans lost GPS, even if the same position comes back
+            return;
+        }
+        const alt = this.iAlt === undefined ? 0 : frame[this.iAlt];
+        const current = this.current;
+        if (current?.lat === lat && current.lon === lon && current.alt === alt) {
+            this.heldUntil[this.heldUntil.length - 1] = tUs;
+            return;
+        }
+        this.current = { lat, lon, alt };
+        this.found.push({ tUs, lat: lat / 1e7, lon: lon / 1e7, altM: alt / 10 });
+        this.heldUntil.push(tUs);
+    }
+
+    fixes(): GpsFix[] {
+        return holdPositions(this.found, this.heldUntil);
+    }
+
+    /** Enough satellites and the GPS_FIX flag; stateFlags is null until the first slow frame. */
+    private hasFix(frame: Frame): boolean {
+        const state = this.iState === undefined ? null : frame[this.iState];
+        return frame[this.iSat] >= MIN_SATELLITES && (state == null || (state & GPS_FIX_FLAG) !== 0);
+    }
+}
+
+class BaroReader {
+    readonly samples: BaroSample[] = [];
+
+    constructor(private readonly index: number) {}
+
+    add(tUs: number, frame: Frame): void {
+        const altM = frame[this.index] / 100;
+        const lastUs = this.samples.at(-1)?.tUs ?? -Infinity;
+        if (Number.isFinite(altM) && tUs - lastUs >= BARO_MIN_SPACING_US) {
+            this.samples.push({ tUs, altM });
+        }
+    }
+}
+
+class ThrottleReader {
+    firstUs: number | null = null;
+    takeoffUs: number | null = null;
+    private lastUs = 0;
+    private lastUpUs: number | null = null;
+
+    constructor(private readonly index: number) {}
+
+    add(tUs: number, frame: Frame): void {
+        this.firstUs ??= tUs;
+        this.lastUs = tUs;
+        if (frame[this.index] > IDLE_THROTTLE) {
+            this.takeoffUs ??= tUs;
+            this.lastUpUs = tUs;
         }
     }
 
-    let idle: IdleThrottle | null = null;
-    if (iThrottle !== undefined && firstUs !== null) {
-        idle = {
-            untilUs: takeoffUs === null ? lastUs : takeoffUs === firstUs ? null : takeoffUs,
-            fromUs: lastThrottleUpUs === null ? firstUs : lastThrottleUpUs === lastUs ? null : lastThrottleUpUs,
+    idle(): IdleThrottle | null {
+        if (this.firstUs === null) {
+            return null;
+        }
+        if (this.takeoffUs === null || this.lastUpUs === null) {
+            return { untilUs: this.lastUs, fromUs: this.firstUs }; // the throttle never came up
+        }
+        return {
+            untilUs: this.takeoffUs === this.firstUs ? null : this.takeoffUs,
+            fromUs: this.lastUpUs === this.lastUs ? null : this.lastUpUs,
         };
     }
-    const atRest =
-        takeoffUs === null
-            ? []
-            : (baro ?? []).filter((b) => b.tUs >= takeoffUs - MIN_GROUND_US && b.tUs < takeoffUs).map((b) => b.altM);
-    const takeoffFromRest =
-        takeoffUs !== null &&
-        takeoffUs - firstUs! >= MIN_GROUND_US &&
-        atRest.length >= 3 &&
-        Math.max(...atRest) - Math.min(...atRest) <= GROUND_SPREAD_M;
-    return {
-        fixes: holdPositions(fixes, heldUntil),
-        baro: baro && medianFilter(baro, takeoffFromRest ? takeoffUs : null),
-        idle,
-    };
+}
+
+/** Takeoff time if the craft sat still on the ground before it (the prop-wash dip follows), else null. */
+function takeoffFromRest(throttle: ThrottleReader, baro: BaroSample[]): number | null {
+    const { firstUs, takeoffUs } = throttle;
+    if (firstUs === null || takeoffUs === null || takeoffUs - firstUs < MIN_GROUND_US) {
+        return null;
+    }
+    const atRest = baro.filter((b) => b.tUs >= takeoffUs - MIN_GROUND_US && b.tUs < takeoffUs).map((b) => b.altM);
+    return atRest.length >= 3 && Math.max(...atRest) - Math.min(...atRest) <= GROUND_SPREAD_M ? takeoffUs : null;
 }
 
 /** Running median: short everywhere, wide just after a takeoff from rest. */
@@ -265,18 +310,7 @@ export function buildTrack(
         return { n: p.x, u: p.y, e: p.z };
     };
 
-    const fixes: (GpsFix & TrackPoint)[] = [];
-    for (const fix of allFixes) {
-        const p = { ...fix, ...toLocal(fix.lat, fix.lon, fix.altM) };
-        const prev = fixes.at(-1);
-        if (prev) {
-            const dt = (p.tUs - prev.tUs) / 1e6;
-            if (dt <= 0 || Math.hypot(p.n - prev.n, p.e - prev.e) / dt > MAX_PLAUSIBLE_SPEED) {
-                continue;
-            }
-        }
-        fixes.push(p);
-    }
+    const fixes = plausibleFixes(allFixes, toLocal);
     if (fixes.length < 2) {
         return null;
     }
@@ -284,32 +318,52 @@ export function buildTrack(
     // A barometer that never changes is missing or failed, not a flat flight.
     const hasBaro = !!baro && baro.length >= 2 && baro.some((b) => b.altM !== baro[0].altM);
     const altitude = hasBaro ? baroAltitude(fixes, baro) : smoothGpsAltitude(fixes);
+    const { samples, gapAfter } = resample(fixes, altitude);
+    const pinned = pinToGround(samples, fixes, idle);
 
+    return {
+        origin,
+        samples,
+        gapAfter,
+        pinned,
+        groundU: pinned === "none" ? samples[0].u : 0,
+        bounds: boundsOf(samples),
+        box: boxOf(fixes),
+        toLocal,
+        positionAt: positionLookup(samples, gapAfter),
+    };
+}
+
+/** Fixes in the local frame, without receiver glitches (jumps faster than MAX_PLAUSIBLE_SPEED). */
+function plausibleFixes(
+    allFixes: GpsFix[],
+    toLocal: (lat: number, lon: number, altM: number) => TrackPoint,
+): (GpsFix & TrackPoint)[] {
+    const fixes: (GpsFix & TrackPoint)[] = [];
+    for (const fix of allFixes) {
+        const p = { ...fix, ...toLocal(fix.lat, fix.lon, fix.altM) };
+        const prev = fixes.at(-1);
+        const dt = prev ? (p.tUs - prev.tUs) / 1e6 : 1;
+        if (!prev || (dt > 0 && Math.hypot(p.n - prev.n, p.e - prev.e) / dt <= MAX_PLAUSIBLE_SPEED)) {
+            fixes.push(p);
+        }
+    }
+    return fixes;
+}
+
+/** The path sampled along the curve, split where GPS was lost for longer than GAP_US. */
+function resample(
+    fixes: TrackSample[],
+    altitude: (tUs: number) => number,
+): { samples: TrackSample[]; gapAfter: Uint8Array } {
     const samples: TrackSample[] = [];
     const gaps: number[] = [];
     let segmentStart = 0;
     for (let k = 1; k <= fixes.length; k++) {
-        const endOfSegment = k === fixes.length || fixes[k].tUs - fixes[k - 1].tUs > GAP_US;
-        if (!endOfSegment) {
+        if (k < fixes.length && fixes[k].tUs - fixes[k - 1].tUs <= GAP_US) {
             continue;
         }
-        const segment = fixes.slice(segmentStart, k);
-        const velocities = fixVelocities(segment);
-        let j = 0;
-        const t0 = segment[0].tUs;
-        const t1 = segment.at(-1)!.tUs;
-        for (let t = t0; ;) {
-            while (j < segment.length - 2 && segment[j + 1].tUs <= t) {
-                j++;
-            }
-            const { n, e } = hermite(segment, velocities, j, t);
-            samples.push({ tUs: t, n, e, u: altitude(t) });
-            if (t === t1) {
-                break;
-            }
-            // Also sample at every fix, so the drawn path goes through each one exactly.
-            t = Math.min(t + SAMPLE_STEP_US, segment[j + 1].tUs);
-        }
+        sampleSegment(fixes.slice(segmentStart, k), altitude, samples);
         if (k < fixes.length) {
             gaps.push(samples.length - 1);
         }
@@ -319,36 +373,52 @@ export function buildTrack(
     for (const i of gaps) {
         gapAfter[i] = 1;
     }
+    return { samples, gapAfter };
+}
 
-    const pinned = pinToGround(samples, fixes, idle);
-
-    const bounds = {
-        minN: Infinity,
-        maxN: -Infinity,
-        minE: Infinity,
-        maxE: -Infinity,
-        minU: Infinity,
-        maxU: -Infinity,
-    };
-    for (const s of samples) {
-        bounds.minN = Math.min(bounds.minN, s.n);
-        bounds.maxN = Math.max(bounds.maxN, s.n);
-        bounds.minE = Math.min(bounds.minE, s.e);
-        bounds.maxE = Math.max(bounds.maxE, s.e);
-        bounds.maxU = Math.max(bounds.maxU, s.u);
-        bounds.minU = Math.min(bounds.minU, s.u);
+/** Appends samples every SAMPLE_STEP_US and at every fix, so the path goes through each fix exactly. */
+function sampleSegment(segment: TrackSample[], altitude: (tUs: number) => number, out: TrackSample[]): void {
+    const velocities = fixVelocities(segment);
+    const end = segment.at(-1)!.tUs;
+    let j = 0;
+    for (let t = segment[0].tUs; ; t = Math.min(t + SAMPLE_STEP_US, segment[j + 1].tUs)) {
+        while (j < segment.length - 2 && segment[j + 1].tUs <= t) {
+            j++;
+        }
+        const { n, e } = hermite(segment, velocities, j, t);
+        out.push({ tUs: t, n, e, u: altitude(t) });
+        if (t === end) {
+            return;
+        }
     }
-    const groundU = pinned === "none" ? samples[0].u : 0;
+}
 
-    const box = { minLat: Infinity, maxLat: -Infinity, minLon: Infinity, maxLon: -Infinity };
-    for (const f of fixes) {
-        box.minLat = Math.min(box.minLat, f.lat);
-        box.maxLat = Math.max(box.maxLat, f.lat);
-        box.minLon = Math.min(box.minLon, f.lon);
-        box.maxLon = Math.max(box.maxLon, f.lon);
+function extent(values: number[]): [min: number, max: number] {
+    let min = Infinity;
+    let max = -Infinity;
+    for (const v of values) {
+        min = Math.min(min, v);
+        max = Math.max(max, v);
     }
+    return [min, max];
+}
 
-    const positionAt = (tUs: number): TrackPoint | null => {
+function boundsOf(samples: TrackSample[]): FlightTrack["bounds"] {
+    const [minN, maxN] = extent(samples.map((s) => s.n));
+    const [minE, maxE] = extent(samples.map((s) => s.e));
+    const [minU, maxU] = extent(samples.map((s) => s.u));
+    return { minN, maxN, minE, maxE, minU, maxU };
+}
+
+function boxOf(fixes: GpsFix[]): FlightTrack["box"] {
+    const [minLat, maxLat] = extent(fixes.map((f) => f.lat));
+    const [minLon, maxLon] = extent(fixes.map((f) => f.lon));
+    return { minLat, maxLat, minLon, maxLon };
+}
+
+/** Linear interpolation between samples; null outside the track or across a GPS gap. */
+function positionLookup(samples: TrackSample[], gapAfter: Uint8Array): FlightTrack["positionAt"] {
+    return (tUs) => {
         if (tUs < samples[0].tUs || tUs > samples.at(-1)!.tUs) {
             return null;
         }
@@ -364,8 +434,6 @@ export function buildTrack(
         const f = (tUs - a.tUs) / (b.tUs - a.tUs);
         return { n: a.n + (b.n - a.n) * f, u: a.u + (b.u - a.u) * f, e: a.e + (b.e - a.e) * f };
     };
-
-    return { origin, samples, gapAfter, pinned, groundU, bounds, box, toLocal, positionAt };
 }
 
 /** Horizontal velocity at each fix, from its neighbours (m/s); the curve's tangents. */

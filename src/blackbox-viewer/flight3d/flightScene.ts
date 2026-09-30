@@ -82,7 +82,7 @@ export class FlightScene {
     private readonly drone = new Group();
     private readonly marker = new Mesh(
         new SphereGeometry(MARKER_RADIUS, 16, 12),
-        new MeshBasicMaterial({ color: GRADIENT[GRADIENT.length - 1] }),
+        new MeshBasicMaterial({ color: GRADIENT.at(-1) }),
     );
     private model: Object3D | null = null;
     private hasAttitude = false;
