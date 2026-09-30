@@ -103,13 +103,13 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
 import { decodeDebugFieldToFriendly } from "@/js/utils/debugModes";
-import { useSensorsStore } from "@/stores/sensors";
+import { useSensorsStore, type RatedSensor, type ScaledSensor } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useInterval } from "../../../composables/useInterval";
 import { have_sensor } from "../../../js/sensor_helpers";
@@ -161,7 +161,24 @@ const sonarDisplay = ref("0");
 const pitotDisplay = ref("0");
 const debugDisplay = ref(new Array(8).fill("0"));
 
-const sensorConfigs = [
+interface SensorConfigBase {
+    checkboxIndex: number;
+    titleKey: string;
+    hintKey?: string;
+    getDisplayValues: () => string[];
+}
+
+// Discriminated on hasScale, so the template's `sensor.hasScale ? scales[sensor.type] : null`
+// only indexes the scales with a sensor that has one.
+type SensorConfig =
+    | (SensorConfigBase & { type: ScaledSensor; hasScale: true; scaleOptions: number[] })
+    | (SensorConfigBase & {
+          type: Exclude<RatedSensor, ScaledSensor | "debug">;
+          hasScale: false;
+          scaleOptions?: undefined;
+      });
+
+const sensorConfigs: SensorConfig[] = [
     {
         type: "gyro",
         checkboxIndex: 0,
@@ -351,8 +368,13 @@ function update_sonar_graphs() {
 }
 
 function update_pitot_graphs() {
-    addPitotSample([fcStore.sensorData.pitot.airspeed]);
-    pitotDisplay.value = fcStore.sensorData.pitot.airspeed;
+    // MSP_PITOT's decoder sets this before the callback runs; null only before the first reply.
+    const pitot = fcStore.sensorData.pitot;
+    if (!pitot) {
+        return;
+    }
+    addPitotSample([pitot.airspeed]);
+    pitotDisplay.value = String(pitot.airspeed);
     updateGraphs();
 }
 
@@ -369,10 +391,10 @@ function liveDebugContext() {
         apiVersion: fcStore.config?.apiVersion,
         // `|| 1` (not `??`) so an unloaded 0 can't divide-by-zero in RPM modes.
         motorPoles: fcStore.motorConfig?.motor_poles || 1,
-        gyroRawToDegreesPerSecond: (v) => v * (4 / 16.4),
-        accRawToGs: (v) => v / 2048,
-        rcCommandRawToThrottle: (v) => clamp(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0, 100),
-        throttleToRcCommandRaw: (v) => (v / 100) * (maxThrottle - minThrottle) + minThrottle,
+        gyroRawToDegreesPerSecond: (v: number) => v * (4 / 16.4),
+        accRawToGs: (v: number) => v / 2048,
+        rcCommandRawToThrottle: (v: number) => clamp(((v - minThrottle) / (maxThrottle - minThrottle)) * 100, 0, 100),
+        throttleToRcCommandRaw: (v: number) => (v / 100) * (maxThrottle - minThrottle) + minThrottle,
     };
 }
 
@@ -408,22 +430,22 @@ function onCheckboxChange() {
     initializeTimers();
 }
 
-function updateRate(sensor, value) {
+function updateRate(sensor: RatedSensor, value: number) {
     sensorsStore.updateRate(sensor, value);
     initializeTimers();
 }
 
-function updateGlobalRate(value) {
+function updateGlobalRate(value: number) {
     sensorsStore.updateGlobalRate(value);
     initializeTimers();
 }
 
-function updateScale(sensor, value) {
+function updateScale(sensor: ScaledSensor, value: number) {
     sensorsStore.updateScale(sensor, value);
     updateGraphScales(scales.value);
 }
 
-function updateDebugScale(index, value) {
+function updateDebugScale(index: number, value: number) {
     sensorsStore.updateDebugScale(index, value);
     updateGraphDebugScales(debugScales.value);
 }

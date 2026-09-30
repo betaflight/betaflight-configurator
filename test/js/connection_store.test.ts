@@ -10,7 +10,7 @@ const mspCleanup = vi.hoisted(() => vi.fn());
 
 vi.mock("../../src/js/gui", () => ({ default: { connecting_to: false, connected_to: false, connect_lock: false } }));
 // Both stubs are reactive because both real modules are — data_storage.ts wraps CONFIGURATOR in
-// reactive() and device_handler.js exports reactive(DeviceHandler). The store reads them through
+// reactive() and device_handler exports reactive(new DeviceHandler()). The store reads them through
 // computed(), which only invalidates on a reactive source, so a plain object literal here would
 // stub out the very property the store depends on and quietly freeze every proxy at its initial
 // value.

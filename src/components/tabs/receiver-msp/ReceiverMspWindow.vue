@@ -26,13 +26,13 @@
             <div v-for="i in 4" :key="i" class="flex items-center gap-3">
                 <span class="w-10 shrink-0 text-right">{{ t(`controlAxisAux${i}`) }}</span>
                 <USlider
-                    v-model="stickValues[`Aux${i}`]"
+                    v-model="stickValues[auxChannel(i)]"
                     :min="CHANNEL_MIN_VALUE"
                     :max="CHANNEL_MAX_VALUE"
                     :aria-label="t(`controlAxisAux${i}`)"
                     class="flex-1"
                 />
-                <span class="w-9 shrink-0 tabular-nums">{{ stickValues[`Aux${i}`] }}</span>
+                <span class="w-9 shrink-0 tabular-nums">{{ stickValues[auxChannel(i)] }}</span>
             </div>
         </div>
 
@@ -45,20 +45,25 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { clamp } from "@/js/utils/common";
 import UiBox from "@/components/elements/UiBox.vue";
+import type { StickWindowHost, StickWindowI18n } from "./stickWindow";
+
+const host: typeof globalThis & StickWindowHost = globalThis;
 
 // i18n instance handed to this window by the opener (see openSticksWindow in ReceiverTab.vue).
-const i18n = globalThis.i18n ?? globalThis.opener?.i18n;
-const t = (key) => i18n?.getMessage(key) ?? key;
+const i18n: StickWindowI18n | undefined = host.i18n ?? host.opener?.i18n;
+const t = (key: string) => i18n?.getMessage(key) ?? key;
 
 const CHANNEL_MIN_VALUE = 1000;
 const CHANNEL_MID_VALUE = 1500;
 const CHANNEL_MAX_VALUE = 2000;
 
-const channelMSPIndexes = {
+type ChannelName = "Roll" | "Pitch" | "Throttle" | "Yaw" | "Aux1" | "Aux2" | "Aux3" | "Aux4";
+
+const channelMSPIndexes: Record<ChannelName, number> = {
     Roll: 0,
     Pitch: 1,
     Throttle: 2,
@@ -70,13 +75,13 @@ const channelMSPIndexes = {
 };
 
 // First the vertical axis, then the horizontal
-const gimbals = [
+const gimbals: [vertical: ChannelName, horizontal: ChannelName][] = [
     ["Throttle", "Yaw"],
     ["Pitch", "Roll"],
 ];
 
 // Set reasonable initial stick positions (Mode 2)
-const stickValues = reactive({
+const stickValues = reactive<Record<ChannelName, number>>({
     Throttle: CHANNEL_MIN_VALUE,
     Pitch: CHANNEL_MID_VALUE,
     Roll: CHANNEL_MID_VALUE,
@@ -88,19 +93,21 @@ const stickValues = reactive({
 });
 
 const enableTX = ref(false);
-const gimbalElements = ref([]);
-const activeGimbalIndex = ref(null);
-let transmitInterval = null;
+const gimbalElements = ref<HTMLElement[]>([]);
+const activeGimbalIndex = ref<number | null>(null);
+let transmitInterval: ReturnType<typeof setInterval> | null = null;
 
-function channelValueToStickPortion(channel) {
+const auxChannel = (i: number) => `Aux${i}` as ChannelName;
+
+function channelValueToStickPortion(channel: number) {
     return (channel - CHANNEL_MIN_VALUE) / (CHANNEL_MAX_VALUE - CHANNEL_MIN_VALUE);
 }
 
-function stickPortionToChannelValue(portion) {
+function stickPortionToChannelValue(portion: number) {
     return Math.round(clamp(portion, 0, 1) * (CHANNEL_MAX_VALUE - CHANNEL_MIN_VALUE) + CHANNEL_MIN_VALUE);
 }
 
-function startGimbalDrag(gimbalIndex, event) {
+function startGimbalDrag(gimbalIndex: number, event: MouseEvent) {
     if (event.button !== 0) {
         return;
     }
@@ -108,7 +115,7 @@ function startGimbalDrag(gimbalIndex, event) {
     updateGimbalFromEvent(gimbalIndex, event);
 }
 
-function updateGimbalFromEvent(gimbalIndex, event) {
+function updateGimbalFromEvent(gimbalIndex: number, event: MouseEvent) {
     const gimbalEl = gimbalElements.value[gimbalIndex];
     if (!gimbalEl) {
         return;
@@ -121,7 +128,7 @@ function updateGimbalFromEvent(gimbalIndex, event) {
     stickValues[gimbals[gimbalIndex][1]] = stickPortionToChannelValue((event.clientX - rect.left) / size);
 }
 
-function onMouseMove(event) {
+function onMouseMove(event: MouseEvent) {
     if (activeGimbalIndex.value !== null) {
         updateGimbalFromEvent(activeGimbalIndex.value, event);
     }
@@ -141,14 +148,14 @@ function transmitChannels() {
     }
 
     const channelValues = [0, 0, 0, 0, 0, 0, 0, 0];
-    for (const name in stickValues) {
+    for (const name of Object.keys(stickValues) as ChannelName[]) {
         channelValues[channelMSPIndexes[name]] = stickValues[name];
     }
 
     // Callback given to us by the window creator so we can have it send data over MSP for us
-    if (globalThis.setRawRx && !globalThis.setRawRx(channelValues)) {
+    if (host.setRawRx && !host.setRawRx(channelValues)) {
         // MSP connection has gone away
-        globalThis.close();
+        host.close();
     }
 }
 

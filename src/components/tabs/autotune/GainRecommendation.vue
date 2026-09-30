@@ -45,9 +45,9 @@
                                 :class="changeClass(row.axes[axis.key]?.changePct)"
                             >
                                 <template v-if="row.axes[axis.key]">
-                                    {{ row.axes[axis.key].value }}
-                                    <span v-if="row.axes[axis.key].changePct != null" class="text-[10px] opacity-80">
-                                        ({{ formatChangePct(row.axes[axis.key].changePct) }})
+                                    {{ row.axes[axis.key]?.value }}
+                                    <span v-if="row.axes[axis.key]?.changePct != null" class="text-[10px] opacity-80">
+                                        ({{ formatChangePct(row.axes[axis.key]?.changePct) }})
                                     </span>
                                 </template>
                                 <template v-else>--</template>
@@ -84,14 +84,62 @@
     </UiBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import { useConnectionStore } from "@/stores/connection";
-import { useAutotune } from "@/composables/useAutotune";
+import { useAutotune, type AnalysisResult, type AxisName, type AxisResult } from "@/composables/useAutotune";
 import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
+import type { SysConfig } from "@/js/blackbox/chirp_bbl_parser";
 import { i18n } from "@/js/localization";
 import UiBox from "../../elements/UiBox.vue";
+
+type Gains = AxisResult["gains"];
+type ProposedSliders = Gains["proposed"];
+type NumericGainKey = { [K in keyof Gains]: Gains[K] extends number ? K : never }[keyof Gains];
+type NumericConfigKey = { [K in keyof SysConfig]-?: SysConfig[K] extends number ? K : never }[keyof SysConfig];
+type GainFlag = "gainClamped" | "sensitivityUnreachable" | "sensitivityBinds";
+type AnalysisAxes = AnalysisResult["axes"];
+
+interface AxisDef {
+    key: AxisName;
+    labelKey: string;
+    color: string;
+    pidKey: "rollPID" | "pitchPID" | "yawPID";
+}
+
+interface PidRowDef {
+    key: string;
+    index: number;
+    label: string;
+}
+
+interface AnalysisField {
+    key: NumericGainKey;
+    labelKey: string;
+    format: (v: number) => string;
+}
+
+interface SliderField {
+    key: keyof ProposedSliders;
+    configKey: NumericConfigKey;
+    labelKey: string;
+}
+
+interface RowCell {
+    value: string | number;
+    changePct: number | null;
+}
+
+interface TableRow {
+    key: string;
+    label?: string;
+    labelKey?: string;
+    current: string | number;
+    axes: Partial<Record<AxisName, RowCell>>;
+    sectionTitleKey: string | null;
+    columnHeaders?: boolean;
+}
 
 const store = useAutotuneStore();
 const connectionStore = useConnectionStore();
@@ -100,7 +148,7 @@ const { applyGains, recomputeGains } = useAutotune();
 const applied = ref(false);
 const applying = ref(false);
 const applyError = ref("");
-const selectedAxisKey = ref(null);
+const selectedAxisKey = ref<AxisName | null>(null);
 
 const isConnected = computed(() => connectionStore.connectionValid);
 
@@ -117,13 +165,14 @@ const marginOptions = computed(() =>
     })),
 );
 
-const axisOptions = computed(() =>
+// `null` is the select's "no axis" value (see selectedAxisKey), so the item type admits it.
+const axisOptions = computed((): { label: string; value: AxisName | null }[] =>
     visibleAxisList.value.map((axis) => ({ label: i18n.getMessage(axis.labelKey), value: axis.key })),
 );
 
 const targetPhaseMargin = computed({
     get: () => store.targetPhaseMarginDeg,
-    set: (v) => {
+    set: (v: number) => {
         store.targetPhaseMarginDeg = v;
     },
 });
@@ -155,7 +204,7 @@ const unreachableAxes = computed(() => unreachableAxisDefs.value.map((axis) => i
 const maxReachableMargin = computed(() => {
     const values = unreachableAxisDefs.value
         .map((axis) => store.analysisResult?.axes?.[axis.key]?.gains?.maxPhaseMargin)
-        .filter((v) => Number.isFinite(v));
+        .filter((v): v is number => Number.isFinite(v));
     return values.length ? Math.min(...values) : Number.NaN;
 });
 
@@ -169,16 +218,16 @@ const unreachableMessage = computed(() =>
 
 // Axes carrying a given flag on their recommendation, as { name, gains } pairs
 // so a message can quote the figures behind the flag as well as name the axis.
-function flaggedAxes(flag) {
+function flaggedAxes(flag: GainFlag) {
     return visibleAxisList.value
         .map((axis) => ({
             name: i18n.getMessage(axis.labelKey),
             gains: store.analysisResult?.axes?.[axis.key]?.gains,
         }))
-        .filter((entry) => entry.gains?.[flag]);
+        .filter((entry): entry is { name: string; gains: Gains } => Boolean(entry.gains?.[flag]));
 }
 
-function axesFlagged(flag) {
+function axesFlagged(flag: GainFlag) {
     return flaggedAxes(flag).map((entry) => entry.name);
 }
 
@@ -186,7 +235,7 @@ function axesFlagged(flag) {
 // met in full. Without these the table shows a crossover limit and a proposed
 // gain with no indication that the second does not reach the first.
 const recommendationNotes = computed(() => {
-    const notes = [];
+    const notes: { key: string; text: string }[] = [];
 
     if (unreachableAxes.value.length) {
         notes.push({ key: "unreachable", text: unreachableMessage.value });
@@ -238,19 +287,19 @@ const recommendationNotes = computed(() => {
     return notes;
 });
 
-const AXIS_DEFS = [
+const AXIS_DEFS: AxisDef[] = [
     { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
     { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747", pidKey: "pitchPID" },
     { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7", pidKey: "yawPID" },
 ];
 
-const PID_ROWS = [
+const PID_ROWS: PidRowDef[] = [
     { key: "P", index: 0, label: "P" },
     { key: "I", index: 1, label: "I" },
     { key: "D", index: 2, label: "D" },
 ];
 
-const ANALYSIS_FIELDS = [
+const ANALYSIS_FIELDS: AnalysisField[] = [
     { key: "bandwidth", labelKey: "autotuneBandwidth", format: formatHz },
     { key: "crossover", labelKey: "autotuneCrossover", format: formatHz },
     { key: "phaseMargin", labelKey: "autotunePhaseMargin", format: formatDeg },
@@ -266,7 +315,7 @@ const ANALYSIS_FIELDS = [
     { key: "coherencePct", labelKey: "autotuneCoherence", format: formatPct },
 ];
 
-const SLIDER_FIELDS = [
+const SLIDER_FIELDS: SliderField[] = [
     {
         key: "slider_master_multiplier",
         configKey: "simplified_master_multiplier",
@@ -323,8 +372,8 @@ watch(selectedAxisKey, () => {
     applyError.value = "";
 });
 
-function buildCurrentPidRow(row, sc, isFirst) {
-    const perAxis = {};
+function buildCurrentPidRow(row: PidRowDef, sc: SysConfig, isFirst: boolean): TableRow {
+    const perAxis: TableRow["axes"] = {};
     for (const a of visibleAxisList.value) {
         const pid = sc[a.pidKey];
         if (pid) {
@@ -340,8 +389,8 @@ function buildCurrentPidRow(row, sc, isFirst) {
     };
 }
 
-function buildAnalysisRow(field, axes, isFirst) {
-    const perAxis = {};
+function buildAnalysisRow(field: AnalysisField, axes: AnalysisAxes, isFirst: boolean): TableRow {
+    const perAxis: TableRow["axes"] = {};
     for (const a of visibleAxisList.value) {
         const val = axes[a.key]?.gains?.[field.key];
         if (val != null) {
@@ -357,9 +406,9 @@ function buildAnalysisRow(field, axes, isFirst) {
     };
 }
 
-function buildSliderRow(field, axes, sc, isFirst) {
+function buildSliderRow(field: SliderField, axes: AnalysisAxes, sc: SysConfig, isFirst: boolean): TableRow {
     const current = sc[field.configKey] ?? 100;
-    const perAxis = {};
+    const perAxis: TableRow["axes"] = {};
     for (const a of visibleAxisList.value) {
         const proposed = axes[a.key]?.gains?.proposed?.[field.key];
         if (proposed != null) {
@@ -377,7 +426,7 @@ function buildSliderRow(field, axes, sc, isFirst) {
     };
 }
 
-const tableRows = computed(() => {
+const tableRows = computed((): TableRow[] => {
     const axes = store.analysisResult?.axes;
     const sc = store.analysisResult?.sysConfig;
     if (!axes || !sc) {
@@ -391,7 +440,7 @@ const tableRows = computed(() => {
     ];
 });
 
-function changeClass(pct) {
+function changeClass(pct: number | null | undefined) {
     if (pct == null) {
         return "";
     }
@@ -407,23 +456,23 @@ function changeClass(pct) {
 // Metrics are NaN when the measurement gives no basis for them \u2014 for example a
 // craft whose open-loop phase never reaches the margin limit inside the
 // coherent band. Render those as "--" rather than "NaN".
-function formatHz(v) {
+function formatHz(v: number) {
     return Number.isFinite(v) ? `${v.toFixed(1)} Hz` : "--";
 }
-function formatDeg(v) {
+function formatDeg(v: number) {
     return Number.isFinite(v) ? `${v.toFixed(1)}\u00B0` : "--";
 }
-function formatDb(v) {
+function formatDb(v: number) {
     return Number.isFinite(v) ? `${v.toFixed(1)} dB` : "--";
 }
-function formatPct(v) {
+function formatPct(v: number) {
     return Number.isFinite(v) ? `${v.toFixed(0)}%` : "--";
 }
-function formatMs(v) {
+function formatMs(v: number) {
     return Number.isFinite(v) ? `${v.toFixed(1)} ms` : "--";
 }
 
-function formatChangePct(v) {
+function formatChangePct(v: number | null | undefined) {
     if (v == null || v === 0) {
         return "--";
     }
@@ -447,7 +496,9 @@ async function onApply() {
         await applyGains(proposed);
         applied.value = true;
     } catch (err) {
-        applyError.value = `${i18n.getMessage("autotuneApplyFailed")}: ${err?.message || err}`;
+        // `err?.message || err` for a caught value of unknown type.
+        const message = typeof err === "object" && err !== null ? Reflect.get(err, "message") : undefined;
+        applyError.value = `${i18n.getMessage("autotuneApplyFailed")}: ${message || err}`;
     } finally {
         applying.value = false;
     }

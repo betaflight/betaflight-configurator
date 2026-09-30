@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { useWorkspaceStore } from "../stores/workspace.js";
+import { useWorkspaceStore } from "../stores/workspace";
 
 const emit = defineEmits(["switch-workspace", "save-workspace", "rename-workspace", "apply-default"]);
 

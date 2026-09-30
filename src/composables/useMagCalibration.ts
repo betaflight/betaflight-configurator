@@ -45,6 +45,8 @@ export interface MagSample extends Vec3 {
 export type MagCalibrationPhase = "idle" | "waiting" | "collecting" | "complete" | "error";
 export type MagCalibrationMode = "full" | "quick" | "check";
 export type MagCalibrationQuality = "good" | "fair" | "poor";
+/** How MagSphereView draws the collected samples. */
+export type MagVizMode = "pointcloud" | "heatmap" | "projection" | "polar";
 
 export interface GeoReference {
     declination: number;

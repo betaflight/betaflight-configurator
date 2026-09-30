@@ -49,7 +49,7 @@ import type { CurrentMeterConfig, LedStripEntry } from "../../stores/fc.types";
 import type Features from "../Features";
 import type Beepers from "../Beepers";
 
-// serial_backend's initFeaturesOnConnect (or VirtualFC) replaces the reset value 0 with these
+// serial_backend's initFeaturesOnConnect (or VirtualFC) replaces the reset value null with these
 // instances before any feature or beeper MSP is exchanged.
 function features(): Features {
     return FC.FEATURE_CONFIG.features as Features;
