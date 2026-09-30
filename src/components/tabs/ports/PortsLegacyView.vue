@@ -177,7 +177,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -188,6 +188,7 @@ import { useTranslation } from "i18next-vue";
 import { usePortsRules } from "../../../composables/ports/usePortsRules";
 import { usePortsState } from "../../../composables/ports/usePortsState";
 import { usePortsConfiguration } from "../../../composables/ports/usePortsConfiguration";
+import type { PortRow } from "../../../composables/ports/usePortsState";
 
 const { t } = useTranslation();
 
@@ -237,14 +238,17 @@ const peripheralItems = computed(() => [
     ...getRules("peripherals").map((r) => ({ value: r.name, label: r.displayName, disabled: isRuleDisabled(r) })),
 ]);
 
-function isSerialRxDisabled(port) {
+function isSerialRxDisabled(port: PortRow) {
     return !port.rxSerial && ports.some((p) => p !== port && p.rxSerial);
 }
 
-function portFieldGet(port, field) {
+/** The function columns, whose "" (none) the selects show as NONE. */
+type PortFunctionField = "telemetry" | "sensor" | "peripheral";
+
+function portFieldGet(port: PortRow, field: PortFunctionField) {
     return port[field] || NONE;
 }
-function portFieldSet(port, field, value) {
+function portFieldSet(port: PortRow, field: PortFunctionField, value: string) {
     port[field] = value === NONE ? "" : value;
 }
 </script>

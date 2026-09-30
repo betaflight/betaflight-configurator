@@ -205,7 +205,7 @@
         "message": "אפשר מצב מתקדם"
     },
     "expertModeDescription": {
-        "message": "הפעל אפשרויות מצב מומחה (Expert Mode)"
+        "message": "הפעל אפשרויות מצב מומחה"
     },
     "warningSettings": {
         "message": "הצג אזהרות"
@@ -961,7 +961,7 @@
         "message": "תצורת קושחה"
     },
     "versionLabelFirmware": {
-        "message": "קושחה (Firmware)"
+        "message": "קושחה"
     },
     "versionLabelConfigurator": {
         "message": "גרסת אפליקציה"
@@ -997,7 +997,7 @@
         "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "עומס מעבד (CPU Load):",
+        "message": "עומס מעבד:",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_connection_time": {
@@ -1013,7 +1013,7 @@
         "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_connect_message": {
-        "message": "אנא השתמש בצורב הקושחה (Firmware Flasher) כדי לגשת להתקני DFU"
+        "message": "אנא השתמש בצורב הקושחה כדי לגשת להתקני DFU"
     },
     "dfu_erased_kilobytes": {
         "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully<\/span>"
@@ -1170,7 +1170,7 @@
         "message": "איפוס ציר Z, סטייה $1 מעלות"
     },
     "initialSetupHeading": {
-        "message": "סבסוב (Yaw):",
+        "message": "סבסוב:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
     "initialSetupMagHeading": {
@@ -1205,16 +1205,16 @@
         "message": "מתח תא מקסימלי:"
     },
     "initialSetupVoltageScale": {
-        "message": "קנה מידה למתח (Voltage Scale):"
+        "message": "קנה מידה למתח:"
     },
     "initialSetupAccelTrimsHead": {
         "message": "קיזוז מד תאוצה"
     },
     "initialSetupPitch": {
-        "message": "עלרוד (Pitch):"
+        "message": "עלרוד:"
     },
     "initialSetupRoll": {
-        "message": "גלגול (Roll):"
+        "message": "גלגול:"
     },
     "initialSetupMagHead": {
         "message": "מצפן (Magnetometer)"
@@ -1290,7 +1290,7 @@
         "message": "ג'ירוסקופ:"
     },
     "initialSetupSensorAcc": {
-        "message": "מד תאוצה (Accel):"
+        "message": "מד תאוצה:"
     },
     "initialSetupSensorMag": {
         "message": "מצפן (Mag):"
@@ -1302,7 +1302,7 @@
         "message": "GPS:"
     },
     "initialSetupSensorSonar": {
-        "message": "סונאר (Sonar):"
+        "message": "סונאר:"
     },
     "initialSetupSensorOpticalflow": {
         "message": "זרימה אופטית (Optical Flow):"
@@ -1311,7 +1311,7 @@
         "message": "מכ\"ם (Radar):"
     },
     "initialSetupArmingDisableFlags": {
-        "message": "דגלי חסימת חימוש (Arming Disable Flags):"
+        "message": "דגלי חסימת חימוש:"
     },
     "initialSetupArmingAllowed": {
         "message": "חימוש מאושר (Arming Allowed)"
@@ -1372,7 +1372,7 @@
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
-        "message": "כיול מד התאוצה (Accelerometer) עדיין מתבצע",
+        "message": "כיול מד התאוצה עדיין מתבצע",
         "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
@@ -1459,7 +1459,7 @@
         "description": "Message that pops up to describe the GPS section"
     },
     "initialSetupSonarHead": {
-        "message": "סונאר (Sonar)"
+        "message": "סונאר"
     },
     "initialSetupSonarHeadHelp": {
         "message": "מציג מידע סונאר, אם הופעל כראוי בלשונית תצורה (Configuration)",
@@ -1472,7 +1472,7 @@
         "message": "מחוונים"
     },
     "initialSetupInstrumentsHeadHelp": {
-        "message": "מציג כיוון (Heading), עלרוד (Pitch) וגלגול (Roll) במחוונים",
+        "message": "מציג כיוון, עלרוד וגלגול במחוונים",
         "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoBoardName": {
@@ -1485,14 +1485,14 @@
         "message": "MSP API:"
     },
     "initialSetupInfoBuild": {
-        "message": "מידע קושחה (Firmware)"
+        "message": "מידע קושחה"
     },
     "initialSetupInfoFirmwareHelp": {
         "message": "מציג מידע עבור בניית (Build) הקושחה, דורש חיבור לשרת הבנייה.<br>אפשרויות מציגות הגדרות שהוגדרו בבניית ענן (Cloud Build).<br>קישורי לוג וקונפיג מציגים מידע ענן לפי מפתח שנשמר בקושחה.<br>בבנייה מקומית (Local Build), החלקים ריקים.",
         "description": "Message that pops up to describe the Build \/ Firmware section"
     },
     "initialSetupInfoBuildDate": {
-        "message": "תאריך בנייה (Build):"
+        "message": "תאריך בנייה:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "מידע בנייה:"
@@ -1501,7 +1501,7 @@
         "message": "מפתח בנייה (Build key)"
     },
     "initialSetupInfoBuildConfig": {
-        "message": "קונפיגורציה (Config)"
+        "message": "קונפיגורציה"
     },
     "initialSetupInfoBuildDownload": {
         "message": "הורדה"
@@ -1764,7 +1764,7 @@
         "message": "פיצ'רים של ESC\/מנועים"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>שים לב:<\/strong> לא כל השילובים של פיצ'רים אפשריים. כאשר קושחת בקר הטיסה תזהה שילובים לא תקינים, פיצ'רים מתנגשים יושבתו.<br \/><strong>שים לב:<\/strong> הגדר יציאות סריאליות (Serial Ports) <span class=\"message-negative\">לפני<\/span> הפעלת פיצ'רים שישתמשו ביציאות אלו."
+        "message": "<strong>שים לב:<\/strong> לא כל השילובים של פיצ'רים אפשריים. כאשר קושחת בקר הטיסה תזהה שילובים לא תקינים, פיצ'רים מתנגשים יושבתו.<br \/><strong>שים לב:<\/strong> הגדר יציאות סריאליות  <span class=\"message-negative\">לפני<\/span> הפעלת פיצ'רים שישתמשו ביציאות אלו."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; ה-UART עבור המקלט חייב להיות מוגדר ל-‘Serial Rx’ (בלשונית <i>Ports<\/i>)<br>&#8226; בחר את פורמט הנתונים הנכון מהרשימה הנפתחת למטה:"
@@ -1817,16 +1817,16 @@
         "message": "הפעל חיישן זרימה אופטית (Optical Flow)"
     },
     "configurationBoardAlignment": {
-        "message": "יישור הלוח (Board Alignment)"
+        "message": "יישור הלוח"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "מעלות גלגול (Roll)"
+        "message": "מעלות גלגול"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "מעלות עלרוד (Pitch)"
+        "message": "מעלות עלרוד"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "מעלות סבסוב (Yaw)"
+        "message": "מעלות סבסוב"
     },
     "configurationMagAlignment": {
         "message": "יישור מצפן (Magnetometer Alignment)"
@@ -1976,13 +1976,13 @@
         "message": "מותאם אישית (Custom)"
     },
     "configurationAccelTrimRoll": {
-        "message": "קיזוז גלגול (Roll) למד תאוצה"
+        "message": "קיזוז גלגול למד תאוצה"
     },
     "configurationAccelTrimPitch": {
-        "message": "קיזוז עלרוד (Pitch) למד תאוצה"
+        "message": "קיזוז עלרוד למד תאוצה"
     },
     "configurationArming": {
-        "message": "חימוש (Arming)"
+        "message": "חימוש"
     },
     "configurationArmingHelp": {
         "message": "חלק מאפשרויות החימוש (Arming) עשויות לדרוש את הפעלת מד התאוצה (Accelerometer)"
@@ -2000,7 +2000,7 @@
         "message": "פרוק (Disarm) מנועים לאחר השהיה מוגדרת [שניות] (דורש פיצ'ר MOTOR_STOP)"
     },
     "configurationGyroCalOnFirstArm": {
-        "message": "כייל ג'ירוסקופ בחימוש (Arm) ראשון"
+        "message": "כייל ג'ירוסקופ בחימוש ראשון"
     },
     "configurationGyroCalOnFirstArmHelp": {
         "message": "כאשר מופעל, הג'ירוסקופ יכויל בחימוש (Arming) הראשון לאחר הפעלת המתח. זה יכול לעזור להפחית סחיפה (Drift) של ה-Gyro במהלך הטיסה."
@@ -2052,19 +2052,19 @@
         "message": "<strong>זהירות:<\/strong> בחירת פרוטוקול פלט מנוע שאינו נתמך על ידי ה-ESCs שלך יכולה להוביל ל<strong>סחרור ה-ESCs ברגע שמחברים סוללה<\/strong>. מסיבה זו, <strong>תמיד ודא להסיר את הפרופלורים לפני חיבור סוללה בפעם הראשונה לאחר שינוי פרוטוקול פלט המנוע<\/strong>."
     },
     "configurationDshotBeeper": {
-        "message": "הגדרת זמזם (Beeper) של Dshot"
+        "message": "הגדרת זמזם של Dshot"
     },
     "configurationUseDshotBeeper": {
         "message": "השתמש בזמזם Dshot (שימוש במנועים להפקת צפצופים כשלא חמוש)"
     },
     "configurationDshotBeaconTone": {
-        "message": "צליל משואה (Beacon Tone)"
+        "message": "צליל משואה"
     },
     "configurationDshotBeaconHelp": {
         "message": "זמזם ה-Dshot משתמש ב-ESCs ובמנועים כדי להפיק צליל. משמעות הדבר היא שלא ניתן להשתמש בזמזם Dshot כאשר המנועים מסתובבים. ב-Betaflight 3.4 ומעלה, כאשר מנסים לחמש (Arm) בזמן שזמזם ה-Dshot פעיל, יש עיכוב של 2 שניות לאחר צליל ה-Dshot האחרון לפני שכלי הטיס נדרך. זה נועד למנוע מפונקציית זמזם ה-Dshot להפריע לפקודות Dshot שנשלחות בעת החימוש.<br\/><strong>אזהרה:<\/strong> מכיוון שזמזם ה-Dshot מעביר זרם דרך המנועים שלך כשהוא פעיל, זה עלול לגרום לייצור חום מוגזם ולנזק למנועים ו\/או ל-ESCs אם עוצמת הזמזם מוגדרת גבוה מדי. השתמש ב-BLHeli Configurator או ב-BLHeli Suite כדי להתאים ולבדוק את עוצמת הזמזם."
     },
     "configurationBeeper": {
-        "message": "הגדרת זמזם (Beeper)"
+        "message": "הגדרת זמזם"
     },
     "beeperGYRO_CALIBRATED": {
         "message": "מצפצף כאשר הג'ירוסקופ מכויל"
@@ -2075,11 +2075,8 @@
     "beeperRX_LOST_LANDING": {
         "message": "מצפצף SOS כאשר חמוש והשלט (TX) כבוי או האות אבד (נחיתה אוטומטית\/פרוק אוטומטי)"
     },
-    "beeperDISARMING": {
-        "message": "צפצוף בעת פרוק (Disarming) בקר הטיסה"
-    },
     "beeperARMING": {
-        "message": "צפצוף בעת חימוש (Arming) בקר הטיסה"
+        "message": "צפצוף בעת חימוש בקר הטיסה"
     },
     "beeperARMING_GPS_FIX": {
         "message": "צפצוף בצליל מיוחד בעת חימוש הלוח ול-GPS יש קליטה (Fix)"
@@ -2097,7 +2094,7 @@
         "message": "מצפצף כאשר ערוץ עזר (AUX) מוגדר לצפצוף"
     },
     "beeperACC_CALIBRATION": {
-        "message": "אישור סיום כיול מד תאוצה (Accelerometer) בטיסה"
+        "message": "אישור סיום כיול מד תאוצה בטיסה"
     },
     "beeperACC_CALIBRATION_FAIL": {
         "message": "כיול מד תאוצה (Accelerometer) בטיסה נכשל"
@@ -2106,10 +2103,10 @@
         "message": "השמעת צליל כאשר ה-GPS נעול ומוכן"
     },
     "beeperDISARM_REPEAT": {
-        "message": "צפצופים מושמעים בעוד הסטיק מוחזק במצב פרוק (Disarm)"
+        "message": "צפצופים מושמעים בעוד הסטיק מוחזק במצב פרוק"
     },
     "beeperARMED": {
-        "message": "צפצופי אזהרה כאשר הלוח חמוש (Armed) עם מנועים כבויים במצב סרק (חוזר עד שהלוח עובר פרוק או שהמצערת מוגברת)"
+        "message": "צפצופי אזהרה כאשר הלוח חמוש עם מנועים כבויים במצב סרק (חוזר עד שהלוח עובר פרוק או שהמצערת מוגברת)"
     },
     "beeperSYSTEM_INIT": {
         "message": "צפצופי אתחול כאשר הלוח מופעל"
@@ -2118,10 +2115,10 @@
         "message": "צפצוף כאשר בקר הטיסה מקבל מתח מ-USB. כבה זאת אם אינך רוצה שהזמזם יפעל בזמן עבודה על שולחן העבודה"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "צפצוף כאשר מחיקת רישום טיסה (Blackbox) מסתיימת"
+        "message": "צפצוף כאשר מחיקת רישום טיסה(קופסה שחורה) מסתיימת"
     },
     "beeperCRASH_FLIP": {
-        "message": "צפצוף כאשר מצב היפוך לאחר התרסקות (Crash Flip) פעיל"
+        "message": "צפצוף כאשר מצב היפוך לאחר התרסקות פעיל"
     },
     "beeperCAM_CONNECTION_OPEN": {
         "message": "צפצוף כאשר נכנסים לשליטת המצלמה ב-5 המקשים"
@@ -2130,7 +2127,7 @@
         "message": "צפצוף כאשר יוצאים משליטת המצלמה ב-5 המקשים"
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
-        "message": "צפצוף כאשר חמוש (Armed) והחלקת RC לא אתחלה פילטרים"
+        "message": "צפצוף כאשר חמוש והחלקת RC לא אתחלה פילטרים"
     },
     "configurationBeeperEnableAll": {
         "message": "הפעל הכל"
@@ -2175,7 +2172,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>שים לב:<\/strong> ודא שבקר הטיסה (FC) שלך מסוגל לפעול במהירויות אלו! בדוק את יציבות המעבד וזמן המחזור (cycletime). שינוי זה עשוי לדרוש כוונון PID מחדש. טיפ: השבת את מד התאוצה (Accelerometer) וחיישנים אחרים כדי להשיג יותר ביצועים."
+        "message": "<strong>שים לב:<\/strong> ודא שבקר הטיסה שלך מסוגל לפעול במהירויות אלו! בדוק את יציבות המעבד וזמן המחזור. שינוי זה עשוי לדרוש כוונון PID מחדש. טיפ: השבת את מד התאוצה וחיישנים אחרים כדי להשיג יותר ביצועים."
     },
     "configurationGPS": {
         "message": "תצורת GPS"
@@ -2265,7 +2262,7 @@
         "message": "שמירת התצורה נכשלה"
     },
     "configurationButtonSave": {
-        "message": "שמור ואתחל (Save and Reboot)"
+        "message": "שמור ואתחל"
     },
     "dialogClose": {
         "message": "סגור"
@@ -2277,7 +2274,7 @@
         "message": "<span class=\"message-negative\"><b>אזהרה: שינוי זה יפעיל\/ישבית סינון RPM (RPM filtering), ויגדיל\/יקטין השהיית פילטר\/יעילות.<\/b><\/span><br><br>לאפס את מסנני ה-notch הדינמיים לערכים המומלצים?"
     },
     "portsIdentifier": {
-        "message": "מזהה (Identifier)"
+        "message": "מזהה"
     },
     "portsConfiguration": {
         "message": "תצורה\/MSP"
@@ -2289,13 +2286,13 @@
         "message": "הפעל או השבת מקלט סריאלי של שלט רחוק (RX) על UART שצוין. מותר רק אחד."
     },
     "portsSensorIn": {
-        "message": "קלט חיישן (Sensor Input)"
+        "message": "קלט חיישן"
     },
     "portsTelemetryOut": {
         "message": "פלט טלמטריה"
     },
     "portsPeripherals": {
-        "message": "ציוד היקפי (Peripherals)"
+        "message": "ציוד היקפי"
     },
     "portsHelp": {
         "message": "<strong>שים לב:<\/strong> לא כל השילובים תקינים. כאשר קושחת בקר הטיסה מזהה זאת תצורת הפורט הסריאלי תאופס."
@@ -2412,7 +2409,7 @@
         "message": "שדרוג קושחה <span class=\"message-negative\">נדרש<\/span>. תצורות פורטים סריאליים של קושחה &lt; 1.8.0 אינן נתמכות."
     },
     "portsButtonSave": {
-        "message": "שמור ואתחל (Save and Reboot)"
+        "message": "שמור ואתחל"
     },
     "portsTelemetryDisabled": {
         "message": "מושבת"
@@ -2472,7 +2469,7 @@
         "message": "מצלמה (RunCam Protocol)"
     },
     "portsFunction_FRSKY_OSD": {
-        "message": "OSD (FrSky פרוטוקול)"
+        "message": "OSD (פרוטוקול FrSky)"
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
@@ -2499,7 +2496,7 @@
         "message": "הגדרות פרופיל PID"
     },
     "pidTuningSubTabRates": {
-        "message": "הגדרות פרופיל תגובה (Rateprofile)"
+        "message": "הגדרות פרופיל תגובה"
     },
     "pidTuningSubTabFilter": {
         "message": "הגדרות מסננים"
@@ -2841,7 +2838,7 @@
         "message": "כבוי (OFF)"
     },
     "pidTuningThrottleLimitTypeScale": {
-        "message": "קנה מידה (SCALE)"
+        "message": "קנה מידה"
     },
     "pidTuningThrottleLimitTypeClip": {
         "message": "חיתוך (CLIP)"
@@ -2945,7 +2942,7 @@
         "message": "אם תגדיר את ה-Model Match למטה למספר שאינו 255, תוכל להזין את מספר המקלט בעמוד ההגדרות של המודל ב-OpenTX\/EdgeTX ולהפעיל את ה-Model Match בסקריפט ה-LUA של ELRS עבור אותו מודל. Model match הוא בין 0 ל-63 (כולל).<br \/>למידע נוסף, ראה את תיעוד ELRS."
     },
     "receiverModelId": {
-        "message": "מזהה התאמת מודל (Model Match ID)"
+        "message": "מזהה התאמת מודל"
     },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום (Failsafe) עובד כראוי!<\/a><\/strong><\/b> ההגדרות נמצאות בלשונית Failsafe, שדורשת מצב מומחה (Expert Mode).<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט (TX)!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי<\/a><\/strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' (Receiver) כראוי. בחר את ה-'Channel Map' הנכון לשלט שלך. ודא שהעמודות של Roll, Pitch ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים (Endpoints) בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד<\/a><\/strong>."
@@ -3101,7 +3098,7 @@
         "message": "שמור"
     },
     "auxiliaryAutoChannelSelect": {
-        "message": "אוטומטי (AUTO)"
+        "message": "אוטומטי"
     },
     "auxiliaryLinkNone": {
         "message": "ללא"
@@ -3588,16 +3585,16 @@
         "message": "ממתין לנעילת 3D ב-GPS..."
     },
     "gps3dFix": {
-        "message": "נעילת 3D (3D Fix):"
+        "message": "נעילת 3D:"
     },
     "gpsFixTrue": {
         "message": "כן (True)"
     },
     "gpsFixFalse": {
-        "message": "לא (False)"
+        "message": "לא"
     },
     "gpsPositionUnit": {
-        "message": "מעלות (deg)",
+        "message": "מעלות",
         "description": "Unit for GPS position."
     },
     "gpsAltitude": {
@@ -4139,13 +4136,13 @@
         "message": "זכור ששימוש בזמני עדכון מהירים (Refresh) והצגת מספר גרפים בו-זמנית דורשים משאבים רבים וירוקנו את הסוללה שלך מהר יותר אם אתה משתמש במחשב נייד.<br \/>אנו ממליצים להציג גרפים רק עבור החיישנים שאתה מעוניין בהם, ולהשתמש בזמני עדכון סבירים."
     },
     "sensorsRefresh": {
-        "message": "קצב עדכון (Refresh):"
+        "message": "קצב רענון:"
     },
     "sensorsGlobalRefresh": {
         "message": "רענן הכל:"
     },
     "sensorsScale": {
-        "message": "קנה מידה (Scale):"
+        "message": "קנה מידה:"
     },
     "sensorsScaleAuto": {
         "message": "אוטומטי"
@@ -4154,22 +4151,22 @@
         "message": "ג'ירוסקופ"
     },
     "sensorsAccelSelect": {
-        "message": "מד תאוצה (Accelerometer)"
+        "message": "מד תאוצה"
     },
     "sensorsMagSelect": {
-        "message": "מגנומטר (Magnetometer)"
+        "message": "מגנומטר"
     },
     "sensorsAltitudeSelect": {
-        "message": "גובה (Altitude)"
+        "message": "גובה"
     },
     "sensorsSonarSelect": {
-        "message": "סונאר (Sonar)"
+        "message": "סונאר"
     },
     "sensorsPitotSelect": {
         "message": "Pitot"
     },
     "sensorsDebugSelect": {
-        "message": "ניפוי באגים (Debug)"
+        "message": "ניפוי באגים"
     },
     "sensorsGyroTitle": {
         "message": "ג'ירוסקופ - מעלות לשניה (deg\/s)"
@@ -4193,7 +4190,7 @@
         "message": "מהירות אוויר - ס\"מ\/שנייה"
     },
     "sensorsDebugTitle": {
-        "message": "ניפוי באגים (Debug)"
+        "message": "ניפוי באגים"
     },
     "cliInfo": {
         "message": "<strong>הערה:<\/strong> עזיבת לשונית ה-CLI או לחיצה על ניתוק תשלח <strong>אוטומטית<\/strong> את הפקודה \"<strong>exit<\/strong>\" ללוח. בקושחות החדשות זה יגרום לבקר <strong>לאתחל מחדש (Reboot)<\/strong> ושינויים שלא נשמרו <strong>יאבדו<\/strong>.<p><strong><span class=\"message-negative\">אזהרה:<\/span><\/strong> חלק מהפקודות ב-CLI עלולות לגרום לשליחת אותות אקראיים ליציאות המנועים. הדבר עלול לגרום למנועים להסתובב אם סוללה מחוברת. לכן מומלץ מאוד לוודא ש<strong>אין סוללה מחוברת לפני הזנת פקודות ב-CLI<\/strong>."
@@ -4516,7 +4513,7 @@
         "message": "בחר או זהה את הלוח שלך כדי לראות גרסאות קושחה מקוונות - בחר את הקושחה הנכונה המתאימה ללוח שלך."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "אפליקציית Betaflight תומכת בצריבה של 'לוחות מאוחדים' (Unified Targets) יחד עם ההגדרות הספציפיות לכל לוח בשלב אחד.<br><br>המשמעות של Unified Targets היא שאותו קובץ HEX של קושחה יכול לשמש לכל הלוחות בעלי אותו המעבד (MCU).<br><br>גרסת Betaflight 4.4 מציגה את אפשרות ה-<strong>Cloud Build (בנייה בענן)<\/strong><br><br>בעזרת <strong>Cloud Build<\/strong> אנחנו צריכים להגדיר אילו אפשרויות חומרה קיימות ברחפן שלך.<br><br>כדי שהלוחות השונים יעבדו עם אותה קושחה, קובץ הגדרות ספציפי נפרס יחד עם הקושחה כאשר צורבים Unified Target.<br><br>בבנייה מקומית (Local build) אתה יכול לטעון קובץ הגדרות מאוחד או לבחור לוח לפני טעינת קובץ הקושחה (.hex).<br><br>אם נתקלת בבעיות בשימוש בקושחה, אנא שקול להצטרף לדיסקורד או לפתוח <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue<\/a> בגיטהאב."
+        "message": "אפליקציית Betaflight תומכת בצריבה של 'לוחות מאוחדים' (Unified Targets) יחד עם ההגדרות הספציפיות לכל לוח בשלב אחד.<br><br>המשמעות של Unified Targets היא שאותו קובץ HEX של קושחה יכול לשמש לכל הלוחות בעלי אותו המעבד (MCU).<br><br>גרסת Betaflight 4.4 מציגה את אפשרות ה-<strong>Cloud Build (בנייה בענן)<\/strong><br><br>בעזרת <strong>Cloud Build<\/strong> אנחנו צריכים להגדיר אילו אפשרויות חומרה קיימות ברחפן שלך.<br><br>כדי שהלוחות השונים יעבדו עם אותה קושחה, קובץ הגדרות ספציפי נפרס יחד עם הקושחה כאשר צורבים Unified Target.<br><br>בבנייה מקומית אתה יכול לטעון קובץ הגדרות מאוחד או לבחור לוח לפני טעינת קובץ הקושחה (.hex).<br><br>אם נתקלת בבעיות בשימוש בקושחה, אנא שקול להצטרף לדיסקורד או לפתוח <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue<\/a> בגיטהאב."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "בחר גרסת קושחה עבור הלוח."
@@ -4558,7 +4555,7 @@
         "message": "הצג מועמדים לשחרור"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "הצג גרסאות 'מועמדות לשחרור' (RC) בנוסף לגרסאות יציבות (Stable releases)"
+        "message": "הצג גרסאות 'מועמדות לשחרור' (RC) בנוסף לגרסאות יציבות"
     },
     "firmwareFlasherOptionLoading": {
         "message": "טוען..."
@@ -5138,7 +5135,7 @@
         "message": "עלרוד (Pitch) [E]"
     },
     "controlAxisYaw": {
-        "message": "סבסוב (Yaw) [R]"
+        "message": "סבסוב [R]"
     },
     "controlAxisThrottle": {
         "message": "מצערת (Throttle) [T]"
@@ -5779,7 +5776,7 @@
         "message": "<strong>החזק (Hold)<\/strong> אומר להחזיק את הערך התקין האחרון שהתקבל. <strong>הגדר (Set)<\/strong> אומר שישתמשו בערך שהוגדר כאן"
     },
     "failsafeChannelFallbackSettingsValueAuto": {
-        "message": "אוטומטי (Auto)",
+        "message": "אוטומטי",
         "description": "Text for Auto option"
     },
     "failsafeChannelFallbackSettingsValueHold": {
@@ -5912,7 +5909,7 @@
         "message": "פועל"
     },
     "failsafeGpsRescueItemSanityChecksFSOnly": {
-        "message": "במצב מנגנון חירום (Failsafe) בלבד"
+        "message": "במצב מנגנון חירום בלבד"
     },
     "failsafeKillSwitchItem": {
         "message": "מתג השבתה למנגנון חירום (Failsafe Kill Switch) (הגדר Failsafe בלשונית Modes)"
@@ -6038,7 +6035,7 @@
         "message": "מתח נמדד"
     },
     "powerVoltageCalibratedScale": {
-        "message": "קנה מידה (Scale) מכויל למתח:"
+        "message": "קנה מידה מכויל למתח:"
     },
     "powerVoltageId10": {
         "message": "סוללה"
@@ -6110,13 +6107,13 @@
         "message": "תא 6"
     },
     "powerVoltageScale": {
-        "message": "קנה מידה (Scale)"
+        "message": "קנה מידה"
     },
     "powerVoltageDivider": {
-        "message": "ערך המחלק (Divider)"
+        "message": "ערך המחלק"
     },
     "powerVoltageMultiplier": {
-        "message": "ערך המכפיל (Multiplier)"
+        "message": "ערך המכפיל"
     },
     "powerAmperageHead": {
         "message": "מד זרם"
@@ -6179,16 +6176,16 @@
         "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "קנה מידה (Scale) [1\/10th mV\/A]"
+        "message": "קנה מידה [1\/10th mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "קיזוז (Offset) [mA]"
+        "message": "קיזוז [mA]"
     },
     "powerAmperageCalibration": {
         "message": "זרם נמדד"
     },
     "powerAmperageCalibratedScale": {
-        "message": "קנה מידה (Scale) מכויל לזרם:"
+        "message": "קנה מידה מכויל לזרם:"
     },
     "powerBatteryProfile": {
         "message": "פרופיל סוללה"
@@ -6227,7 +6224,7 @@
         "message": "mAh שנצרכו"
     },
     "powerBatteryAmperage": {
-        "message": "זרם (Amperage)"
+        "message": "זרם"
     },
     "powerBatteryPowerDraw": {
         "message": "צריכת הספק"
@@ -6539,7 +6536,7 @@
         "message": "ערך ערוץ המצערת הנוכחי"
     },
     "osdTextElementCpuLoad": {
-        "message": "עומס מעבד (CPU load)",
+        "message": "עומס מעבד",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCpuLoad": {
@@ -6857,7 +6854,7 @@
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
-        "message": "ניפוי באגים (Debug)",
+        "message": "ניפוי באגים",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
@@ -6885,7 +6882,7 @@
         "message": "ערכי ה-PID בציר ה-Pitch"
     },
     "osdTextElementPIDYaw": {
-        "message": "PID בציר הסבסוב (Yaw)",
+        "message": "PID בציר הסבסוב",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDYaw": {
@@ -7693,7 +7690,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningLoad": {
-        "message": "מתריע אם עומס המעבד (CPU LOAD) של בקר הטיסה גבוה מדי",
+        "message": "מתריע אם עומס המעבד של בקר הטיסה גבוה מדי",
         "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdTextElementPosHoldFailed": {
@@ -7875,7 +7872,7 @@
         "description": "vtx device are ready"
     },
     "vtxReadyFalse": {
-        "message": "לא (False)",
+        "message": "לא",
         "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
@@ -8069,19 +8066,19 @@
         "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
-        "message": "דריכת מנועים (Arming)"
+        "message": "דריכת מנועים"
     },
     "mainHelpFailsafe": {
-        "message": "מצב מנגנון חירום (Failsafe)"
+        "message": "מצב מנגנון חירום"
     },
     "mainHelpLink": {
-        "message": "סטטוס קישור טורי (Serial Link)"
+        "message": "סטטוס קישור טורי"
     },
     "configurationEscProtocol": {
         "message": "פרוטוקול בקר מהירות\/מנוע (ESC\/Motor protocol)"
     },
     "configurationEscProtocolHelp": {
-        "message": "בחר את פרוטוקול המנועים שלך. <br>ודא שהפרוטוקול נתמך על ידי בקר המהירות (ESC) שלך, מידע זה אמור להופיע באתר היצרן."
+        "message": "בחר את פרוטוקול המנועים שלך. <br>ודא שהפרוטוקול נתמך על ידי בקר המהירות שלך, מידע זה אמור להופיע באתר היצרן."
     },
     "configurationunsyndePwm": {
         "message": "מהירות PWM של המנוע נפרדת ממהירות ה-PID"
@@ -8113,7 +8110,7 @@
         "message": "תדר עדכון ג'ירוסקופ של 32kHz אפשרי רק אם שבב ה-Gyro תומך בו (כרגע MPU6500, MPU9250 ו-ICM20xxx אם מחובר דרך SPI). אם יש ספק, בדוק במפרט של הלוח שלך."
     },
     "configurationAccHardware": {
-        "message": "מד תאוצה (Accelerometer)"
+        "message": "מד תאוצה"
     },
     "configurationBaroHardware": {
         "message": "ברומטר (אם נתמך)"
@@ -8368,7 +8365,7 @@
         "message": "חדש"
     },
     "configurationSmallAngle": {
-        "message": "זווית דריכה (ARM) מקסימלית [במעלות]"
+        "message": "זווית דריכה מקסימלית [במעלות]"
     },
     "configurationSmallAngleHelp": {
         "message": "לא ניתן יהיה לדרוך (ARM) את הרחפן אם הוא נוטה ביותר ממספר המעלות שצוין. תקף רק אם מד התאוצה (Accelerometer) מופעל. הגדרה ל-180 תשבית למעשה את הבדיקה הזו."
@@ -8392,7 +8389,7 @@
         "message": "מתח תא לאזהרה"
     },
     "configurationBatteryScale": {
-        "message": "קנה מידה (Scale) למתח"
+        "message": "קנה מידה למתח"
     },
     "configurationCurrentMeterType": {
         "message": "סוג מד זרם"
@@ -8404,7 +8401,7 @@
         "message": "קנה מידה לפלט המתח אל מול מיליאמפר [1\/10th mV\/A]"
     },
     "configurationCurrentOffset": {
-        "message": "קיזוז (Offset) בקפיצות של מיליוולט"
+        "message": "קיזוז בקפיצות של mV"
     },
     "configurationBatteryMultiwiiCurrent": {
         "message": "אפשר תמיכה בפלט זרם ישן מסוג Multiwii MSP"
@@ -8492,7 +8489,7 @@
         "message": "שדות Debug כלולים"
     },
     "onboardLoggingDebugMode": {
-        "message": "מצב ניפוי באגים (Debug Mode) של Blackbox"
+        "message": "מצב ניפוי באגים של Blackbox"
     },
     "onboardLoggingDebugModeUnknown": {
         "message": "לא ידוע (UNKNOWN)"
@@ -8948,7 +8945,7 @@
         "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
-        "message": "אנא ודא שגיבית את ההגדרות הנוכחיות שלך (לחצן '$t(presetsBackupSave.message)' או דרך ה-CLI אם הלחצן מושבת) <strong>לפני<\/strong> בחירת והחלת Presets. אחרת אין שום דרך לחזור להגדרות הקודמות לאחר הפעלת ה-Presets.",
+        "message": "אנא ודא שגיבית את ההגדרות הנוכחיות שלך (לחצן '$t(presetsBackupSave.message)' או דרך ה-CLI אם הלחצן מושבת) <strong>לפני<\/strong> בחירת והחלת הגדרות מוכנות. אחרת אין שום דרך לחזור להגדרות הקודמות לאחר הפעלת ההגדרות המוכנות.",
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
@@ -9017,7 +9014,7 @@
         "message": "שם קובץ הגדרות:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "בחר את פרוטוקול הרדיו שתרצה לכלול בבנייה (Build) זו. שים לב שזו רשימה נפתחת, אך ניתן לבחור רק פריט אחד."
+        "message": "בחר את פרוטוקול הרדיו שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת, אך ניתן לבחור רק פריט אחד."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "בחר את פרוטוקול הטלמטריה שתרצה לכלול בבנייה זו. שים לב שניתן לבחור רק פריט אחד. קיימים גם כמה פרוטוקולי טלמטריה שיופעלו אוטומטית, ללא קשר לבחירה שלך כאן, בהתבסס על פרוטוקול הרדיו שנבחר, למשל CRSF."
@@ -9026,10 +9023,10 @@
         "message": "נכלל אוטומטית"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "בחר את האפשרויות הכלליות שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת וניתן לבחור מספר פריטים. פריטים כמו תיקונים (Fixes), למשל עבור AKK VTX, נכללים כאן."
+        "message": "בחר את האפשרויות הכלליות שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת וניתן לבחור מספר פריטים. פריטים כמו תיקונים, למשל עבור AKK VTX, נכללים כאן."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "בחר את פרוטוקול המנועים (ESC) שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת, אך ניתן לבחור רק פריט אחד."
+        "message": "בחר את פרוטוקול המנועים שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת, אך ניתן לבחור רק פריט אחד."
     },
     "firmwareFlasherOsdProtocolDescription": {
         "message": "בחר את פרוטוקול ה-OSD שתרצה לכלול בבנייה זו. שים לב שזו רשימה נפתחת, אך ניתן לבחור רק פריט אחד."

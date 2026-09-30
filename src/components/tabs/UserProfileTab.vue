@@ -163,7 +163,7 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
@@ -172,21 +172,52 @@ import TabLoadingState from "../elements/TabLoadingState.vue";
 import { useDialog } from "@/composables/useDialog";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
+import type UserApi from "../../js/UserApi";
+
+// Shapes of the build API's /api/user responses, as far as this tab reads them.
+interface UserProfile {
+    name?: string;
+    email?: string;
+    address?: string;
+    country?: string;
+    avatar?: string;
+}
+
+/** The client a token or passkey was issued to; the tab shows its address. */
+interface UserClient {
+    address?: string;
+}
+
+interface UserToken {
+    id: string | number;
+    created?: string;
+    expiry?: string;
+    details?: string;
+    client?: UserClient;
+}
+
+interface UserPasskey {
+    id: string | number;
+    createdAtUtc?: string;
+    updatedAtUtc?: string;
+    client?: UserClient;
+}
 
 const { t } = useTranslation();
 const dialog = useDialog();
 
 const isLoading = ref(true);
 const isLoggedIn = ref(false);
-const editError = ref(null);
-const profile = ref(null);
+const editError = ref<string | null>(null);
+const profile = ref<UserProfile | null>(null);
 const editForm = ref({ name: "", address: "", country: "", avatar: "" });
-const tokens = ref([]);
-const passkeys = ref([]);
+const tokens = ref<UserToken[]>([]);
+const passkeys = ref<UserPasskey[]>([]);
 const editOpen = ref(false);
-let userApi = null;
-let unsubscribeLogin = null;
-let unsubscribeLogout = null;
+let userApi: UserApi | null = null;
+// LoginManager documents the unsubscribe as a bare `Function`; take its type from there.
+let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
+let unsubscribeLogout: ReturnType<typeof loginManager.onLogout> | null = null;
 
 const tokenColumns = computed(() => [
     { accessorKey: "id", header: t("labelId") },
@@ -304,12 +335,13 @@ async function saveProfileChanges() {
         gui_log(t("userProfileUpdateSuccess"));
         editOpen.value = false;
     } catch (error) {
-        editError.value = `${t("userProfileUpdateFailed")}: ${error.message || error}`;
-        gui_log(editError.value);
+        const message = `${t("userProfileUpdateFailed")}: ${(error as Error).message || error}`;
+        editError.value = message;
+        gui_log(message);
     }
 }
 
-async function deleteToken(tokenId) {
+async function deleteToken(tokenId: UserToken["id"]) {
     const confirmed = await dialog.showYesNo(t("actionDelete"), t("confirmDelete", { item: t("itemToken") }));
     if (!confirmed) {
         return;
@@ -329,7 +361,7 @@ async function deleteToken(tokenId) {
     }
 }
 
-async function deletePasskey(passkeyId) {
+async function deletePasskey(passkeyId: UserPasskey["id"]) {
     const confirmed = await dialog.showYesNo(t("actionDelete"), t("confirmDelete", { item: t("itemPasskey") }));
     if (!confirmed) {
         return;
@@ -349,7 +381,7 @@ async function deletePasskey(passkeyId) {
     }
 }
 
-function formatDate(dateString) {
+function formatDate(dateString: string | undefined) {
     if (!dateString) {
         return "";
     }

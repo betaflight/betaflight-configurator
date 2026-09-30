@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  805313c231 2026-09-22  (544 annotated fields)
+ *   API 1.49.0  f583a0c46d 2026-09-25  (551 annotated fields)
  */
 
 /**
@@ -231,6 +231,10 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             1: Object.freeze({ label: "Chirp Axis", unit: null, scale: 1 }),
             2: Object.freeze({ label: "Chirp Frequency", unit: "Hz", scale: 0.1 }),
             3: Object.freeze({ label: "Chirp Excitation", unit: null, scale: 0.001 }),
+            4: Object.freeze({ label: "Current Angle (roll)", unit: "deg", scale: 0.1 }),
+            5: Object.freeze({ label: "Angle Target (roll)", unit: "deg", scale: 0.1 }),
+            6: Object.freeze({ label: "Current Angle (pitch)", unit: "deg", scale: 0.1 }),
+            7: Object.freeze({ label: "Angle Target (pitch)", unit: "deg", scale: 0.1 }),
         }),
         CRSF_LINK_STATISTICS_DOWN: Object.freeze({
             0: Object.freeze({ label: "Downlink RSSI", unit: "dBm", scale: -1 }),
@@ -417,6 +421,37 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             2: Object.freeze({ label: "Checked Length", unit: "bytes", scale: 1 }),
             6: Object.freeze({ label: "Pages In Check Length", unit: null, scale: 1 }),
             7: Object.freeze({ label: "Error Count", unit: null, scale: 1 }),
+        }),
+        FLIGHT_PLAN: Object.freeze({
+            0: Object.freeze({
+                label: "Executor State",
+                unit: null,
+                scale: 1,
+                enumTag: "flightPlanNavState_e",
+                values: Object.freeze([
+                    "FP_NAV_IDLE",
+                    "FP_NAV_TARGETING",
+                    "FP_NAV_HOLDING",
+                    "FP_NAV_COMPLETE",
+                    "FP_NAV_LANDING",
+                    "FP_NAV_ABORTED",
+                ]),
+            }),
+            1: Object.freeze({
+                label: "Abort Reason",
+                unit: null,
+                scale: 1,
+                enumTag: "flightPlanAbortReason_e",
+                values: Object.freeze([
+                    "FP_ABORT_NONE",
+                    "FP_ABORT_ESTIMATOR",
+                    "FP_ABORT_STALLED",
+                    "FP_ABORT_FLYAWAY",
+                    "FP_ABORT_HEADING",
+                    "FP_ABORT_MAG_FAULT",
+                ]),
+            }),
+            2: Object.freeze({ label: "Waypoint Index", unit: null, scale: 1 }),
         }),
         FPORT: Object.freeze({
             0: Object.freeze({ label: "Frame Interval", unit: "us", scale: 1 }),
@@ -1076,6 +1111,22 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "FAILSAFE_RX_LOSS_RECOVERED",
                 "FAILSAFE_GPS_RESCUE",
                 "FAILSAFE_AUTOPILOT",
+            ]),
+            flightPlanAbortReason_e: Object.freeze([
+                "FP_ABORT_NONE",
+                "FP_ABORT_ESTIMATOR",
+                "FP_ABORT_STALLED",
+                "FP_ABORT_FLYAWAY",
+                "FP_ABORT_HEADING",
+                "FP_ABORT_MAG_FAULT",
+            ]),
+            flightPlanNavState_e: Object.freeze([
+                "FP_NAV_IDLE",
+                "FP_NAV_TARGETING",
+                "FP_NAV_HOLDING",
+                "FP_NAV_COMPLETE",
+                "FP_NAV_LANDING",
+                "FP_NAV_ABORTED",
             ]),
             launchWingState_e: Object.freeze([
                 "LAUNCH_WING_IDLE",

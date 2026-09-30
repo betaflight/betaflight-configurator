@@ -39,6 +39,7 @@
                 :packet-error="MSP.packet_error"
                 :cycle-time="FC.CONFIG.cycleTime"
                 :cpu-load="FC.CONFIG.cpuload"
+                :cpu-temperature="FC.CONFIG.cpuTemp"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
                 :firmware-version="FC.CONFIG.flightControllerVersion"
                 :firmware-target="FC.CONFIG.hardwareName"
@@ -60,8 +61,8 @@ import { useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import FCModule from "./js/fc.js";
-import MSPModule from "./js/msp.js";
+import FCModule from "./js/fc";
+import MSPModule from "./js/msp";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage";
 import GUI from "./js/gui.js";
@@ -77,7 +78,7 @@ import { VueTabComponents } from "./js/vue_tab_registry.js";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
-    window.vm = reactive({ expertMode: false }) as typeof window.vm;
+    window.vm = reactive({ expertMode: false });
 }
 
 // Stable fallback so computed() does not allocate a new reactive per evaluation when window.vm.CONNECTION is missing.

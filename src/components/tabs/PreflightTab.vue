@@ -447,7 +447,7 @@
                         <UTable
                             :data="preflight.weather.forecast"
                             :columns="forecastColumns"
-                            :meta="{ class: { tr: (row) => getForecastRowClass(row.original) } }"
+                            :meta="forecastTableMeta"
                             :ui="{ th: 'text-xs', td: 'border-none py-0.5 text-xs' }"
                         >
                             <template #date-cell="{ row }">
@@ -474,9 +474,9 @@
                             <template #precipProbability-cell="{ row }">
                                 <span
                                     :class="
-                                        row.original.precipProbability > 50
+                                        (row.original.precipProbability ?? 0) > 50
                                             ? 'status-warning'
-                                            : row.original.precipProbability > 20
+                                            : (row.original.precipProbability ?? 0) > 20
                                               ? 'status-moderate'
                                               : ''
                                     "
@@ -845,23 +845,25 @@
     </BaseTab>
 </template>
 
-<script>
-import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+<script lang="ts">
+import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch, type Ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
-import { usePreflight } from "@/composables/usePreflight";
+import { usePreflight, type ForecastDay, type Reading } from "@/composables/usePreflight";
 import { useMapViewport } from "@/composables/useMapViewport";
-import { getNotamStatus } from "@/js/notam/index.js";
+import { getNotamStatus, type NotamItem, type NotamStatus } from "@/js/notam/index";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 
-function getWeatherEmoji(code) {
-    if (code === 0) {
+function getWeatherEmoji(weatherCode: number | null): string {
+    if (weatherCode === 0) {
         return "\u2600";
     }
+    // A missing forecast code (null) compares as 0 below, as it always has.
+    const code = Number(weatherCode);
     if (code <= 3) {
         return "\u26C5";
     }
@@ -886,8 +888,8 @@ function getWeatherEmoji(code) {
     return "\u26A1";
 }
 
-function getStormClass(level) {
-    const num = Number.parseInt(level) || 0;
+function getStormClass(level: string): string {
+    const num = Number.parseInt(level, 10) || 0;
     if (num === 0) {
         return "status-good";
     }
@@ -900,7 +902,7 @@ function getStormClass(level) {
     return "status-danger";
 }
 
-function getGnssKpClass(kp) {
+function getGnssKpClass(kp: number): string {
     if (kp <= 3) {
         return "status-good";
     }
@@ -910,7 +912,7 @@ function getGnssKpClass(kp) {
     return "status-danger";
 }
 
-function getGnssKpLabel(kp) {
+function getGnssKpLabel(kp: number): string {
     if (kp <= 3) {
         return i18n.getMessage("preflightKpMinimal");
     }
@@ -920,14 +922,14 @@ function getGnssKpLabel(kp) {
     return i18n.getMessage("preflightKpSevere");
 }
 
-function formatVisibility(vis) {
+function formatVisibility(vis: number): string {
     if (vis >= 1000) {
         return `${(vis / 1000).toFixed(1)} km`;
     }
     return `${vis} m`;
 }
 
-function formatDuration(seconds) {
+function formatDuration(seconds: number | null): string {
     if (!seconds) {
         return "-";
     }
@@ -936,14 +938,14 @@ function formatDuration(seconds) {
     return `${h}h ${m}m`;
 }
 
-function toFahrenheit(celsius) {
+function toFahrenheit(celsius: number | null | undefined): string {
     if (celsius === null || celsius === undefined) {
         return "-";
     }
     return ((celsius * 9) / 5 + 32).toFixed(1);
 }
 
-function formatForecastDay(dateStr) {
+function formatForecastDay(dateStr: string | null): string {
     if (!dateStr) {
         return "-";
     }
@@ -951,7 +953,7 @@ function formatForecastDay(dateStr) {
     return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
 
-function getForecastRowClass(day) {
+function getForecastRowClass(day: ForecastDay): string {
     const wind = Math.max(day.windMax || 0, day.gustsMax || 0);
     const precip = day.precipProbability || 0;
     if (wind >= 14 || precip > 80) {
@@ -966,7 +968,7 @@ function getForecastRowClass(day) {
     return "";
 }
 
-function formatNotamTime(dt) {
+function formatNotamTime(dt: Date | null): string {
     if (!dt) {
         return "-";
     }
@@ -988,9 +990,11 @@ export default defineComponent({
     },
     setup() {
         const preflight = reactive(usePreflight());
-        const mapRef = ref(null);
-        const mapContainerRef = ref(null);
-        const mapInstance = ref(null);
+        const mapRef = ref<HTMLElement | null>(null);
+        const mapContainerRef = ref<HTMLElement | null>(null);
+        // Typed as the OpenLayers objects themselves: ref() wraps them in a reactive proxy, whose
+        // UnwrapRef type strips the private members OL signatures such as setStyle() require.
+        const mapInstance: Ref<ReturnType<typeof initMap> | null> = ref(null);
         const {
             isFullscreen,
             toggleFullscreen,
@@ -999,11 +1003,11 @@ export default defineComponent({
         } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
         const activeLayer = ref("street");
         const detectingLocation = ref(false);
-        const locationError = ref(null);
+        const locationError = ref<string | null>(null);
         const manualLat = ref("");
         const manualLon = ref("");
         const selectedSavedIndex = ref(-1);
-        const locationEditMode = ref(null);
+        const locationEditMode = ref<"save" | "rename" | null>(null);
         const saveLocationLabel = ref("");
 
         const hourlyColumns = computed(() => [
@@ -1023,6 +1027,10 @@ export default defineComponent({
             { accessorKey: "gustsMax", header: i18n.getMessage("preflightGusts") },
             { accessorKey: "precipProbability", header: i18n.getMessage("preflightRainProb") },
         ]);
+
+        const forecastTableMeta = {
+            class: { tr: (row: { original: ForecastDay }) => getForecastRowClass(row.original) },
+        };
 
         const savedLocationOptions = computed(() => {
             return preflight.savedLocations.map((loc, idx) => ({
@@ -1119,10 +1127,14 @@ export default defineComponent({
 
         const gnssInfoData = computed(() => {
             const loc = preflight.location;
-            const rows = [
+            // Latitude and longitude are always set together.
+            const rows: { label: string; value: string; valueClass?: string }[] = [
                 {
                     label: i18n.getMessage("preflightCoordinates"),
-                    value: loc.latitude !== null ? `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}` : "-",
+                    value:
+                        loc.latitude !== null && loc.longitude !== null
+                            ? `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`
+                            : "-",
                 },
                 {
                     label: i18n.getMessage("preflightElevation"),
@@ -1242,7 +1254,7 @@ export default defineComponent({
                 await preflight.refreshAll();
                 updateMapPosition();
             } catch (err) {
-                if (err.message === preflight.IP_CONSENT_NEEDED) {
+                if (err instanceof Error && err.message === preflight.IP_CONSENT_NEEDED) {
                     showIpConsent.value = true;
                 } else {
                     locationError.value = i18n.getMessage("preflightGeolocationFailed");
@@ -1385,10 +1397,12 @@ export default defineComponent({
             }
             nextTick(() => {
                 initializeMap();
-                if (!mapInstance.value) {
+                const { latitude, longitude } = preflight.location;
+                // Re-checked: the location can be cleared before the tick runs.
+                if (!mapInstance.value || latitude === null || longitude === null) {
                     return;
                 }
-                const center = fromLonLat([preflight.location.longitude, preflight.location.latitude]);
+                const center = fromLonLat([longitude, latitude]);
                 mapInstance.value.mapView.setCenter(center);
                 mapInstance.value.iconGeometry.setCoordinates(center);
                 mapInstance.value.iconFeature.setStyle(mapInstance.value.iconStyleGPS);
@@ -1396,7 +1410,7 @@ export default defineComponent({
             });
         }
 
-        function setLayer(layerKey) {
+        function setLayer(layerKey: string) {
             if (!mapInstance.value?.layers) {
                 return;
             }
@@ -1411,25 +1425,31 @@ export default defineComponent({
             if (!mapInstance.value?.mapView) {
                 return;
             }
-            mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() + 1);
+            const zoom = mapInstance.value.mapView.getZoom();
+            if (zoom !== undefined) {
+                mapInstance.value.mapView.setZoom(zoom + 1);
+            }
         }
 
         function zoomOut() {
             if (!mapInstance.value?.mapView) {
                 return;
             }
-            mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
+            const zoom = mapInstance.value.mapView.getZoom();
+            if (zoom !== undefined) {
+                mapInstance.value.mapView.setZoom(zoom - 1);
+            }
         }
 
-        function getWindStatusClass(speed, gusts) {
+        function getWindStatusClass(speed: Reading, gusts: Reading) {
             return preflight.getWindStatus(speed, gusts).cssClass;
         }
 
-        function getVisStatusClass(vis) {
+        function getVisStatusClass(vis: Reading) {
             return preflight.getVisibilityStatus(vis).cssClass;
         }
 
-        function getPrecipStatusClass(precip) {
+        function getPrecipStatusClass(precip: Reading) {
             return preflight.getPrecipitationStatus(precip).cssClass;
         }
 
@@ -1459,30 +1479,30 @@ export default defineComponent({
             return i18n.getMessage("preflightGpsRescueNotRecommended");
         }
 
-        function getDewPointRiskClass(temp, dewPoint) {
+        function getDewPointRiskClass(temp: Reading, dewPoint: Reading) {
             return preflight.getDewPointRisk(temp, dewPoint).cssClass;
         }
 
-        function getDewPointRiskLabel(temp, dewPoint) {
+        function getDewPointRiskLabel(temp: Reading, dewPoint: Reading) {
             return preflight.getDewPointRisk(temp, dewPoint).label;
         }
 
-        function getUvStatusClass(uv) {
+        function getUvStatusClass(uv: Reading) {
             return preflight.getUvStatus(uv).cssClass;
         }
 
-        function getUvStatusLabel(uv) {
+        function getUvStatusLabel(uv: Reading) {
             return preflight.getUvStatus(uv).label;
         }
 
         // ── NOTAM logic ──────────────────────────────────────────────────────────
 
-        const expandedNotams = ref(new Set());
+        const expandedNotams = ref(new Set<string>());
 
         // Two-way binding for provider selector so changes propagate to notamSettings
         const notamProvider = computed({
             get: () => preflight.notamSettings.provider,
-            set: (val) => {
+            set: (val: string | null) => {
                 preflight.notamSettings.provider = val;
             },
         });
@@ -1519,7 +1539,7 @@ export default defineComponent({
             }
         }
 
-        const NOTAM_TYPE_LABELS = {
+        const NOTAM_TYPE_LABELS: Record<string, string | undefined> = {
             TFR: "preflightNotamTypeTfr",
             SUA: "preflightNotamTypeSua",
             SNOWTAM: "preflightNotamTypeSnow",
@@ -1527,7 +1547,7 @@ export default defineComponent({
             NOTAM: "preflightNotamTypeNotam",
         };
 
-        const NOTAM_TYPE_BADGE_CLASSES = {
+        const NOTAM_TYPE_BADGE_CLASSES: Record<string, string | undefined> = {
             TFR: "notam-badge-tfr",
             SUA: "notam-badge-sua",
             SNOWTAM: "notam-badge-snow",
@@ -1535,25 +1555,25 @@ export default defineComponent({
             NOTAM: "notam-badge-notam",
         };
 
-        function getNotamTypeLabel(type) {
+        function getNotamTypeLabel(type: string) {
             return i18n.getMessage(NOTAM_TYPE_LABELS[type] ?? "preflightNotamTypeNotam");
         }
 
-        function getNotamTypeBadgeClass(type) {
+        function getNotamTypeBadgeClass(type: string) {
             return NOTAM_TYPE_BADGE_CLASSES[type] ?? "notam-badge-notam";
         }
 
-        const NOTAM_STATUS_CARD_CLASS = {
+        const NOTAM_STATUS_CARD_CLASS: Record<NotamStatus, string> = {
             active: "notam-card-active",
             future: "notam-card-future",
             expired: "notam-card-expired",
         };
 
-        function getNotamCardClass(item) {
+        function getNotamCardClass(item: NotamItem) {
             return NOTAM_STATUS_CARD_CLASS[getNotamStatus(item)];
         }
 
-        function getNotamStatusBadgeClass(item) {
+        function getNotamStatusBadgeClass(item: NotamItem) {
             const cls = getNotamCardClass(item);
             if (cls === "notam-card-active") {
                 return "notam-status-active";
@@ -1564,7 +1584,7 @@ export default defineComponent({
             return "notam-status-expired";
         }
 
-        function getNotamStatusLabel(item) {
+        function getNotamStatusLabel(item: NotamItem) {
             const cls = getNotamCardClass(item);
             if (cls === "notam-card-active") {
                 return i18n.getMessage("preflightNotamActiveNow");
@@ -1575,7 +1595,7 @@ export default defineComponent({
             return null;
         }
 
-        function toggleNotamExpand(item) {
+        function toggleNotamExpand(item: NotamItem) {
             const key = `${item.id}:${item.source}`;
             const next = new Set(expandedNotams.value);
             if (next.has(key)) {
@@ -1689,7 +1709,7 @@ export default defineComponent({
             getUvStatusClass,
             getUvStatusLabel,
             formatForecastDay,
-            getForecastRowClass,
+            forecastTableMeta,
             notamProvider,
             notamProviderOptions,
             notamRadiusUnitOptions,
