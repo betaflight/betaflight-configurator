@@ -93,8 +93,8 @@
  */
 
 import { computed, onActivated, onDeactivated, onBeforeUnmount, onMounted, ref, shallowRef, toRaw, watch } from "vue";
-import { useGraphStore } from "../stores/graph.js";
-import { useLogStore } from "../stores/log.js";
+import { useGraphStore } from "../stores/graph";
+import { useLogStore } from "../stores/log";
 import { useSettingsStore } from "../stores/settings.js";
 import { setCurrentBlackboxTime } from "../playback_controls.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
@@ -312,7 +312,7 @@ onMounted(() => {
         resize,
         setFlightLog: (log: ViewerFlightLog) => setFlightLog(toRaw(log)),
     };
-    const canvas = (graphStore.canvasRefs as { canvas?: HTMLCanvasElement } | null)?.canvas;
+    const canvas = graphStore.canvasRefs?.canvas;
     if (canvas) {
         resize(canvas.clientWidth, canvas.clientHeight);
     }

@@ -132,11 +132,11 @@ export interface BatteryState {
     batteryState?: number;
 }
 
-// The masks start as 0 and become Beepers instances when a connection is established.
+// The masks start as null and become Beepers instances when a connection is established.
 export interface BeeperConfig {
-    beepers: Beepers | number;
+    beepers: Beepers | null;
     dshotBeaconTone: number;
-    dshotBeaconConditions: Beepers | number;
+    dshotBeaconConditions: Beepers | null;
 }
 
 export interface BfConfig {
@@ -294,9 +294,9 @@ export interface FcLoopConfig {
     loopTime: number;
 }
 
-// The mask starts as 0 and becomes a Features instance when a connection is established.
+// The mask starts as null and becomes a Features instance when a connection is established.
 export interface FeatureConfig {
-    features: Features | number;
+    features: Features | null;
 }
 
 export interface FilterConfig {

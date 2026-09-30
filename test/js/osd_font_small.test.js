@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { FONT } from "../../src/js/utils/osdFont.js";
+import { FONT } from "../../src/js/utils/osdFont";
 
 const LINES_PER_CHAR = FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE;
 const MAX7456_HEADER = FONT.constants.HEADERS.max7456;
@@ -140,10 +140,7 @@ describe("FONT small font parsing", () => {
     it("lays out small glyph rows using the mode's bytes per row", () => {
         // Char 1 in mode 0: 2 bytes per row, 8 rows. Row 0 = white at x=0, row 1 = black at x=4
         // (first pixel of the second byte).
-        const file = buildFile(SMALL_HEADER, [
-            [0],
-            [0b10010101, 0b01010101, 0b01010101, 0b00010101],
-        ]);
+        const file = buildFile(SMALL_HEADER, [[0], [0b10010101, 0b01010101, 0b01010101, 0b00010101]]);
 
         FONT.parseMCMFontFile(file);
 

@@ -25,7 +25,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { defineComponent } from "vue";
 import { Quaternion, Vector3 } from "three";
 import Flight3DPanel from "../../src/blackbox-viewer/components/Flight3DPanel.vue";
-import { useGraphStore } from "../../src/blackbox-viewer/stores/graph.js";
+import { useGraphStore } from "../../src/blackbox-viewer/stores/graph";
 import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings.js";
 import type { FlightTrack } from "../../src/blackbox-viewer/flight3d/flightTrack";
 

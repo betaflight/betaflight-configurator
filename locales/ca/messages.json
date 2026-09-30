@@ -3209,6 +3209,13 @@
     "auxiliaryToggleUnused": {
         "message": "Amagueu els modes no utilitzats"
     },
+    "auxiliarySearch": {
+        "message": "Mode de cerca",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "No hi han modes coincidents amb els filtres actuals."
+    },
     "auxiliaryMin": {
         "message": "Min"
     },
@@ -6485,6 +6492,10 @@
         "message": "Impacte menor",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "Font de lletra petita",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Apropar",
         "description": "Check to select a bigger display of the OSD preview in small screens"
@@ -6616,6 +6627,14 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Pujada fallida"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "L'OSD està en mode de tipus de lletra petit, però el tipus de lletra seleccionat és de mida estàndard. No es visualitzarà correctament. Voleu penjar-lo igualment?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "La tipografia seleccionada és de mida petita per a OSD de *framebuffer*, però aquest OSD utilitza tipografies de mida estàndard. No es visualitzarà correctament. Voleu carregar-la igualment?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
     "osdSetupSaveReboot": {
         "message": "Desa i reinicia"

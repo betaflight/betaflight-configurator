@@ -377,7 +377,7 @@
     </BaseTab>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, computed, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
@@ -463,7 +463,7 @@ export default defineComponent({
             currentMeterTypes.value.map((type, index) => ({ label: type, value: index })),
         );
 
-        const onBatteryProfileChange = async (value) => {
+        const onBatteryProfileChange = async (value: unknown) => {
             const profileIndex = Number(value);
             if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex >= numberOfBatteryProfiles.value) {
                 return;

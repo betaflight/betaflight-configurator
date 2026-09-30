@@ -47,7 +47,7 @@ import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { MspBuffer } from "../msp/mspBytes";
 
-/** One contiguous block from the Intel HEX parser (`workers/hex_parser.js`). */
+/** One contiguous block from the Intel HEX parser (`workers/hex_parser.ts`). */
 interface HexBlock {
     address: number;
     bytes: number;

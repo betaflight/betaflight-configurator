@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { openLoopResponse, recommendGains, PHASE_MARGIN_PRESETS } from "../../src/js/blackbox/spectral_analysis.js";
+import { openLoopResponse, recommendGains, PHASE_MARGIN_PRESETS } from "../../src/js/blackbox/spectral_analysis";
 
 /**
  * Build a synthetic transfer function from an analytic open loop.

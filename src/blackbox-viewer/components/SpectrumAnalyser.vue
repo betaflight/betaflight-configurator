@@ -161,7 +161,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { useGraphStore } from "../stores/graph.js";
+import { useGraphStore } from "../stores/graph";
 import { useSettingsStore } from "../stores/settings.js";
 import { SPECTRUM_TYPE } from "../graph_spectrum_plot";
 
