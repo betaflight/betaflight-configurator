@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { createApp } from "vue";
+import { createApp, type App, type Ref } from "vue";
 import { useIsMounted } from "../../src/composables/useIsMounted";
 
 describe("useIsMounted", () => {
-    let app;
+    let app: App | null = null;
 
     afterEach(() => {
         app?.unmount();
@@ -11,7 +11,7 @@ describe("useIsMounted", () => {
     });
 
     it("is false before mount and true once mounted", () => {
-        let isMounted;
+        let isMounted!: Ref<boolean>;
         const TestComponent = {
             setup() {
                 isMounted = useIsMounted();
@@ -27,7 +27,7 @@ describe("useIsMounted", () => {
     });
 
     it("becomes false again after unmount", () => {
-        let isMounted;
+        let isMounted!: Ref<boolean>;
         const TestComponent = {
             setup() {
                 isMounted = useIsMounted();

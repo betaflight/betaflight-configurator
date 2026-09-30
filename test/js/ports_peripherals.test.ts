@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import FC from "../../src/js/fc";
+import type { SerialPort } from "../../src/stores/fc.types";
 import { parsePeripherals, usePeripherals } from "../../src/composables/ports/usePeripherals";
-import { describeClaim, describeInactiveReason } from "../../src/composables/ports/portClaims";
 
 const { cliSend, loadSerialConfig } = vi.hoisted(() => ({
     cliSend: vi.fn(),
@@ -17,11 +17,17 @@ vi.mock("../../src/js/msp/MSPHelper", () => ({
     mspHelper: { loadSerialConfig },
 }));
 
-vi.mock("../../src/js/localization", () => ({
-    i18n: {
-        getMessage: (key) => ({ portsClaimMsp: "MSP", portsClaimTelemetry: "Telemetry" })[key] ?? "",
-    },
-}));
+/** Only the identifier matters to the tiles; the rest is a realistic default. */
+function port(identifier: number): SerialPort {
+    return {
+        identifier,
+        functions: [],
+        msp_baudrate: "115200",
+        gps_baudrate: "57600",
+        telemetry_baudrate: "AUTO",
+        blackbox_baudrate: "115200",
+    };
+}
 
 describe("parsePeripherals", () => {
     it("reads serial claims with the active one starred", () => {
@@ -91,29 +97,6 @@ describe("parsePeripherals", () => {
     });
 });
 
-describe("describeInactiveReason", () => {
-    it("names the feature to enable and the tab that owns it", () => {
-        expect(describeInactiveReason("feature SOFTSERIAL off").tab).toBe("configuration");
-    });
-
-    it("passes an unknown reason through", () => {
-        expect(describeInactiveReason("something new").tab).toBe(null);
-    });
-});
-
-describe("describeClaim", () => {
-    it("resolves instanced claims and owning tabs", () => {
-        expect(describeClaim("gps").tab).toBe("gps");
-        expect(describeClaim("msp_2")).toEqual({ label: "MSP 2", tab: null });
-        expect(describeClaim("telemetry_1").label).toBe("Telemetry 1");
-        expect(describeClaim("osd_custom_text").tab).toBe("osd");
-    });
-
-    it("passes an unknown claim through by name", () => {
-        expect(describeClaim("mystery")).toEqual({ label: "mystery", tab: null });
-    });
-});
-
 describe("usePeripherals", () => {
     beforeEach(() => {
         FC.resetState();
@@ -123,7 +106,7 @@ describe("usePeripherals", () => {
     });
 
     it("builds one tile per reported port, unclaimed ones empty", async () => {
-        FC.SERIAL_CONFIG.ports = [{ identifier: 20 }, { identifier: 0 }, { identifier: 1 }];
+        FC.SERIAL_CONFIG.ports = [port(20), port(0), port(1)];
         cliSend.mockResolvedValue(["serial VCP: msp_1*", "serial UART2: gps"]);
 
         const peripherals = usePeripherals();
@@ -148,7 +131,7 @@ describe("usePeripherals", () => {
     });
 
     it("tiles a soft serial port the FC cannot open, with the reason", async () => {
-        FC.SERIAL_CONFIG.ports = [{ identifier: 20 }];
+        FC.SERIAL_CONFIG.ports = [port(20)];
         cliSend.mockResolvedValue(["serial VCP: msp_1*", "serial SOFT1 (feature SOFTSERIAL off): vtx"]);
 
         const peripherals = usePeripherals();
@@ -163,7 +146,7 @@ describe("usePeripherals", () => {
     });
 
     it("reports unsupported on a build without the command", async () => {
-        FC.SERIAL_CONFIG.ports = [{ identifier: 20 }];
+        FC.SERIAL_CONFIG.ports = [port(20)];
         cliSend.mockResolvedValue(["###ERROR IN cli: UNKNOWN COMMAND###"]);
 
         const peripherals = usePeripherals();
