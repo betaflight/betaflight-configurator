@@ -1414,9 +1414,9 @@ const PREFIX_GROUPS = [
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
-    ["spa_", "Wing"],
     ["tpa_speed_", "Wing TPA"],
     ["tpa_curve_", "Wing curve"],
+    ["spa_", "Wing SPA"],
 ];
 
 function getHeaderGroup(key: string): string {
