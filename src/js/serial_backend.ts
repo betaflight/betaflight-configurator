@@ -30,7 +30,7 @@ import FC from "./fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
-import DeviceHandlerModule from "./device_handler";
+import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
@@ -39,7 +39,7 @@ import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { parseConnectDeeplink } from "./utils/connectDeeplink";
-import * as Analytics from "./Analytics";
+import { getTracking } from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
@@ -55,32 +55,9 @@ import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
 
-/** From device_handler's describeDevice(): the USB ids let a rebooted device be matched under a new path. */
-interface DeviceDescriptor {
-    path: string;
-    vendorId: unknown;
-    productId: unknown;
-}
-
-// device_handler.js builds its singleton with `new (function () {...})()` and attaches methods
-// afterwards, which TypeScript cannot see; these are the ones this module calls.
-const DeviceHandler = DeviceHandlerModule as typeof DeviceHandlerModule & {
-    initialize(): void;
-    describeDevice(path: string): DeviceDescriptor | null;
-    findDescribedDevice(target: DeviceDescriptor | null): object | undefined;
-    isKnownDevicePath(path: string): boolean;
-};
-
 // Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
 // tab_switch.js; configuration_loaded is only ever written.
 const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
-
-// Analytics.js declares `let tracking = null` and assigns it later, so the binding is implicit
-// any. Read through the namespace to keep the live binding; it is set up before any connection.
-interface AnalyticsTracker {
-    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
-    sendEvent(category: string, action: string, options: Record<string, unknown>): void;
-}
 
 type ReadInfo = Parameters<typeof MSP.read>[0];
 
@@ -289,8 +266,9 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
-    const tracking = Analytics.tracking as AnalyticsTracker;
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
+    // It is set up before any connection.
+    const tracking = getTracking();
+    tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,
         boardName: FC.CONFIG.boardName,

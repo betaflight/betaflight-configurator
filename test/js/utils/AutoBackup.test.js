@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import AutoBackup, { isPlausibleCliDump } from "../../../src/js/utils/AutoBackup.js";
+import AutoBackup, { isPlausibleCliDump } from "../../../src/js/utils/AutoBackup";
 
 const CRLF = "\r\n";
 

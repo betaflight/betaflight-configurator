@@ -40,9 +40,8 @@ describe("usePower", () => {
         CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
-        // usePower.js is plain JavaScript and tsconfig sets `checkJs: false`, so a stale
-        // MSP2TextType member would not fail the build -- it would reach the wire as an
-        // undefined type byte and the FC would answer with the wrong string.
+        // A wrong MSP2TextType member reaches the wire as the wrong type byte and the FC
+        // answers with the wrong string, so pin the exact payload.
         const mspPromise = vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
 
         const power = usePower();

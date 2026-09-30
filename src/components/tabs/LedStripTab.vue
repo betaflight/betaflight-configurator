@@ -325,13 +325,13 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, watch, onBeforeUnmount } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
-import { useLedStrip } from "@/composables/useLedStrip";
+import { useLedStrip, type LedGridCell, type LedModeColorSelection } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useTransientLabel } from "@/composables/useTransientLabel";
@@ -345,7 +345,7 @@ import UiBox from "../elements/UiBox.vue";
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
-function decodeHtmlEntities(text) {
+function decodeHtmlEntities(text: string) {
     if (!text) {
         return text;
     }
@@ -353,7 +353,7 @@ function decodeHtmlEntities(text) {
     textarea.innerHTML = text;
     return textarea.value;
 }
-const t = (key) => decodeHtmlEntities(i18n.getMessage(key));
+const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 
 const {
     wireMode,
@@ -379,7 +379,7 @@ const {
 
 // Grid state (256 LEDs in 16x16 grid)
 const gridLeds = reactive(
-    Array.from({ length: 256 }, () => ({
+    Array.from({ length: 256 }, (): LedGridCell & { overlays: Record<string, never> } => ({
         wireNumber: "",
         functions: [],
         directions: [],
@@ -389,7 +389,7 @@ const gridLeds = reactive(
 );
 
 // Selection state
-const selectedIndices = ref(new Set());
+const selectedIndices = ref(new Set<number>());
 const selectedFunction = ref("none");
 const selectedColorIndex = ref(0);
 
@@ -409,11 +409,11 @@ const overlayStates = reactive({
 });
 
 // Other state
-const activeDirections = ref(new Set());
+const activeDirections = ref(new Set<string>());
 const modeColorsMode = ref(0);
-const selectedModeColor = ref(null);
+const selectedModeColor = ref<LedModeColorSelection | null>(null);
 const auxChannelValue = ref("3");
-const colorDefineSliders = ref(null);
+const colorDefineSliders = ref<HTMLElement | null>(null);
 const colorHSV = reactive({ h: 0, s: 0, v: 0 });
 const { label: transientSaveButtonText, flash: flashSaveButtonText } = useTransientLabel(
     i18n.getMessage("ledStripButtonSave"),
@@ -593,13 +593,14 @@ onBeforeUnmount(() => {
 });
 
 // Click-outside handler for color setup popup
-const handleClickOutside = (event) => {
+const handleClickOutside = (event: MouseEvent) => {
     const sliders = colorDefineSliders.value;
-    const colorButton = event.target.closest(".colors > button");
+    const target = event.target instanceof Element ? event.target : null;
+    const colorButton = target?.closest(".colors > button");
     if (!sliders || sliders.style.display === "none" || colorButton) {
         return;
     }
-    if (!sliders.contains(event.target)) {
+    if (!sliders.contains(target)) {
         closeColorSliders();
     }
 };
@@ -648,7 +649,7 @@ function loadConfigValues() {
 }
 
 // Selection handlers for custom grid
-function onSelectionChange(newSelection) {
+function onSelectionChange(newSelection: Set<number>) {
     selectedIndices.value = newSelection;
 }
 
@@ -675,7 +676,10 @@ function handleSelectionComplete() {
     }
 
     // Update UI state from last selected LED
-    const lastSelected = Array.from(selectedIndices.value).pop();
+    const lastSelected = Array.from(selectedIndices.value).at(-1);
+    if (lastSelected === undefined) {
+        return;
+    }
     const led = gridLeds[lastSelected];
 
     // Update selected color
@@ -725,12 +729,8 @@ function clearSelected() {
     // Clear UI state
     selectedFunction.value = "none";
     activeDirections.value.clear();
-    Object.keys(overlayStates).forEach((key) => {
-        overlayStates[key] = false;
-    });
-    Object.keys(modifiers).forEach((key) => {
-        modifiers[key] = false;
-    });
+    clearFlags(overlayStates);
+    clearFlags(modifiers);
 
     buildLedStripFromGrid(gridLeds);
 }
@@ -746,12 +746,8 @@ function clearAll() {
     // Clear UI state
     selectedFunction.value = "none";
     activeDirections.value.clear();
-    Object.keys(overlayStates).forEach((key) => {
-        overlayStates[key] = false;
-    });
-    Object.keys(modifiers).forEach((key) => {
-        modifiers[key] = false;
-    });
+    clearFlags(overlayStates);
+    clearFlags(modifiers);
 
     // Clear selection
     selectedIndices.value = new Set();
@@ -783,7 +779,7 @@ function onFunctionChange() {
 }
 
 // Direction toggle
-function toggleDirection(dir) {
+function toggleDirection(dir: string) {
     if (selectedIndices.value.size === 0) {
         return;
     }
@@ -811,7 +807,7 @@ function toggleDirection(dir) {
 }
 
 // Modifier change
-function onModifierChange(modifier) {
+function onModifierChange(modifier: string) {
     if (selectedIndices.value.size === 0) {
         return;
     }
@@ -844,13 +840,13 @@ function onModifierChange(modifier) {
 }
 
 // Overlay change
-function onOverlayChange(overlay) {
+function onOverlayChange(overlay: string) {
     if (selectedIndices.value.size === 0) {
         return;
     }
 
     const key = getOverlayStateKey(overlay);
-    const isActive = overlayStates[key];
+    const isActive = key ? overlayStates[key] : undefined;
 
     selectedIndices.value.forEach((index) => {
         if (isActive) {
@@ -869,7 +865,7 @@ function onOverlayChange(overlay) {
 }
 
 // Color selection
-function selectColor(colorIndex) {
+function selectColor(colorIndex: number) {
     selectedColorIndex.value = colorIndex;
 
     if (selectedIndices.value.size > 0) {
@@ -887,7 +883,7 @@ function selectColor(colorIndex) {
     }
 }
 
-function updateColorSliders(colorIndex) {
+function updateColorSliders(colorIndex: number) {
     const color = ledColors.value[colorIndex];
     if (color) {
         colorHSV.h = color.h;
@@ -905,8 +901,11 @@ function onColorSliderChange() {
     }
 }
 
-function openColorSliders(event) {
+function openColorSliders(event: MouseEvent) {
     const target = event.currentTarget;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
     const position = target.getBoundingClientRect();
     const sliders = colorDefineSliders.value;
 
@@ -936,18 +935,18 @@ function closeColorSliders() {
     isColorSlidersOpen.value = false;
 }
 
-function handleColorClick(colorIndex, event) {
+function handleColorClick(colorIndex: number, event: MouseEvent) {
     selectColor(colorIndex);
     closeColorSliders();
     event.stopPropagation();
 }
 
-function handleColorDblClick(event) {
+function handleColorDblClick(event: MouseEvent) {
     openColorSliders(event);
 }
 
 // Mode color handlers
-function handleModeColorClick(mode, direction) {
+function handleModeColorClick(mode: number, direction: number) {
     const modeColorActive = selectedModeColor.value?.mode === mode && selectedModeColor.value?.direction === direction;
 
     if (modeColorActive) {
@@ -959,16 +958,16 @@ function handleModeColorClick(mode, direction) {
     }
 }
 
-function getModeColorButtonClass(mode, direction) {
+function getModeColorButtonClass(mode: number, direction: number) {
     return `mode_color-${mode}-${direction}`;
 }
 
-function getModeColorButtonStyle(mode, direction) {
+function getModeColorButtonStyle(mode: number, direction: number) {
     const colorIndex = getModeColor(mode, direction);
     return { backgroundColor: getColorStyle(colorIndex) };
 }
 
-function getModeColorButtonLabel(direction) {
+function getModeColorButtonLabel(direction: number) {
     const labels = ["ledStripDirN", "ledStripDirE", "ledStripDirS", "ledStripDirW", "ledStripDirU", "ledStripDirD"];
     return labels[direction] || "";
 }
@@ -1031,11 +1030,11 @@ function save() {
 }
 
 // Helper functions
-function getColorStyle(colorIndex) {
+function getColorStyle(colorIndex: number) {
     return hsvToColor(ledColors.value[colorIndex]);
 }
 
-function getColorTitle(colorIndex) {
+function getColorTitle(colorIndex: number) {
     const colorNames = [
         "colorBlack",
         "colorWhite",
@@ -1057,17 +1056,29 @@ function getColorTitle(colorIndex) {
     return colorNames[colorIndex] || "colorBlack";
 }
 
-function getModifierState(modifier) {
-    const map = { t: "throttleHue", o: "larsonScanner", b: "blink", y: "rainbow" };
-    return modifiers[map[modifier]] || false;
+function clearFlags(flags: Record<string, boolean>) {
+    Object.keys(flags).forEach((key) => {
+        flags[key] = false;
+    });
 }
 
-function getOverlayStateKey(overlay) {
-    const map = { w: "warnings", i: "indicator", v: "vtx" };
+function getModifierState(modifier: string) {
+    const map: Record<string, keyof typeof modifiers | undefined> = {
+        t: "throttleHue",
+        o: "larsonScanner",
+        b: "blink",
+        y: "rainbow",
+    };
+    const key = map[modifier];
+    return (key && modifiers[key]) || false;
+}
+
+function getOverlayStateKey(overlay: string) {
+    const map: Record<string, keyof typeof overlayStates | undefined> = { w: "warnings", i: "indicator", v: "vtx" };
     return map[overlay];
 }
 
-function removeOverlayFromSelected(overlay) {
+function removeOverlayFromSelected(overlay: string) {
     selectedIndices.value.forEach((index) => {
         const overlayIndex = gridLeds[index].functions.indexOf(overlay);
         if (overlayIndex !== -1) {

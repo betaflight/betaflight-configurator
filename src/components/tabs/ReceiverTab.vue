@@ -175,7 +175,7 @@
                                 <SettingRow :label="$t('featureRSSI_ADC')">
                                     <USwitch
                                         :model-value="isRssiAdcEnabled"
-                                        @update:model-value="(checked) => toggleRssiAdc(checked)"
+                                        @update:model-value="(checked: boolean) => toggleRssiAdc(checked)"
                                     />
                                 </SettingRow>
                                 <SettingRow :label="$t('receiverRssiChannel')">
@@ -249,7 +249,7 @@
                             <SettingRow :label="$t('featureTELEMETRY')">
                                 <USwitch
                                     :model-value="isTelemetryEnabled"
-                                    @update:model-value="(checked) => toggleTelemetry(checked)"
+                                    @update:model-value="(checked: boolean) => toggleTelemetry(checked)"
                                 />
                             </SettingRow>
                             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -260,13 +260,17 @@
                                     type="neutral"
                                 >
                                     <SettingRow :label="$t('telemetryInstanceProtocol')">
+                                        <!-- USelect's model has no null; null and undefined both leave it unselected. -->
                                         <USelect
-                                            v-model="port.selectedProtocol"
+                                            :model-value="port.selectedProtocol ?? undefined"
                                             :items="port.protocolOptions"
                                             :disabled="!port.writable"
                                             size="xs"
                                             class="min-w-40"
-                                            @update:model-value="onSerialDeviceChange"
+                                            @update:model-value="
+                                                port.selectedProtocol = $event;
+                                                onSerialDeviceChange();
+                                            "
                                         />
                                     </SettingRow>
                                     <SettingRow :label="$t('telemetryInstancePort')">
@@ -281,12 +285,15 @@
                                     </SettingRow>
                                     <SettingRow :label="$t('telemetryInstanceBaud')">
                                         <USelect
-                                            v-model="port.selectedBaud"
+                                            :model-value="port.selectedBaud ?? undefined"
                                             :items="port.baudOptions"
                                             :disabled="!port.writable"
                                             size="xs"
                                             class="min-w-40"
-                                            @update:model-value="onSerialDeviceChange"
+                                            @update:model-value="
+                                                port.selectedBaud = $event;
+                                                onSerialDeviceChange();
+                                            "
                                         />
                                     </SettingRow>
                                 </UiBox>
@@ -404,7 +411,7 @@
                         <SettingRow :label="$t('receiverRcSmoothing')">
                             <USwitch
                                 :model-value="rxConfig.rcSmoothing === 1"
-                                @update:model-value="(on) => (rxConfig.rcSmoothing = on ? 1 : 0)"
+                                @update:model-value="(on: boolean) => (rxConfig.rcSmoothing = on ? 1 : 0)"
                             />
                         </SettingRow>
                         <template v-if="rxConfig.rcSmoothing === 1">
@@ -606,8 +613,10 @@
     </BaseTab>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+import type Features from "@/js/Features";
+import type { StickWindowHost } from "./receiver-msp/stickWindow";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDirtyState } from "@/composables/useDirtyState";
@@ -624,7 +633,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import GUI from "@/js/gui";
 import Model from "@/js/model";
-import RateCurve, { axisRateCurveParams } from "@/js/RateCurve";
+import RateCurve, { axisRateCurveParams, type CurrentRates } from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
 import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
@@ -644,16 +653,16 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 
-const t = (key) => i18n.getMessage(key);
+const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const { saveAndReboot, saveToEeprom } = useReboot();
 const { addInterval, removeInterval } = useInterval();
 
 // Template refs
-const modelPreviewContainer = ref(null);
-const modelCanvas = ref(null);
-const rxPlot = ref(null);
+const modelPreviewContainer = ref<HTMLElement | null>(null);
+const modelCanvas = ref<HTMLCanvasElement | null>(null);
+const rxPlot = ref<SVGSVGElement | null>(null);
 
 // Local state
 const needReboot = ref(false);
@@ -667,15 +676,16 @@ const feedforwardManualMode = ref("0");
 const selectedRxMode = ref(0);
 
 // Model preview state
-let model = null;
-let rateCurve = null;
-let currentRates = null;
-let timer = null;
+let model: InstanceType<typeof Model> | null = null;
+let rateCurve: RateCurve | null = null;
+let currentRates: CurrentRates | null = null;
+let timer: THREE.Timer | null = null;
 let keepRendering = true;
-let animationFrameId = null;
+let animationFrameId: number | null = null;
 
-// D3 chart state
-let rxPlotData = [];
+// D3 chart state: one [sample, value] series per channel
+type PlotPoint = [sample: number, value: number];
+let rxPlotData: PlotPoint[][] = [];
 let samples = 0;
 
 // Meter scale for channel bars
@@ -754,7 +764,7 @@ const telemetryPorts = [1, 2, 3].map((instance) =>
     ),
 );
 
-const isTelemetryInstanceInUse = (port) =>
+const isTelemetryInstanceInUse = (port: (typeof telemetryPorts)[number]) =>
     port.selectedIdentifier !== PORT_NONE || (port.selectedProtocol && port.selectedProtocol !== "NONE");
 
 // An unused instance is noise, so each one is revealed by the one before it filling in.
@@ -846,7 +856,7 @@ const saveMenuItems = computed(() => [
 ]);
 
 // Decode HTML entities in translations (some use &lt; etc)
-function decodeHtmlEntities(text) {
+function decodeHtmlEntities(text: string) {
     if (!text) return text;
     const textarea = document.createElement("textarea");
     textarea.innerHTML = text;
@@ -954,7 +964,7 @@ const rssiChannelOptions = computed(() => {
 
 // Channel bars data
 const auxModeRanges = computed(() => {
-    const rangesByAux = new Map();
+    const rangesByAux = new Map<number, [number, number][]>();
 
     for (const { entry } of entriesFromModeRanges(fcStore.modeRanges ?? [], fcStore.modeRangesExtra ?? [])) {
         if (entry.kind !== "range" || entry.auxChannelIndex < 0) {
@@ -969,7 +979,7 @@ const auxModeRanges = computed(() => {
     return rangesByAux;
 });
 
-function getAuxVisualState(auxIndex, value) {
+function getAuxVisualState(auxIndex: number, value: number | undefined) {
     const ranges = auxModeRanges.value.get(auxIndex);
 
     if (!ranges?.length) {
@@ -1029,12 +1039,13 @@ const plotLabels = computed(() => {
 });
 
 // ELRS Binding Phrase helpers
-function elrsBindingPhraseToBytes(text) {
+function elrsBindingPhraseToBytes(text: string) {
     let uidBytes = [0, 0, 0, 0, 0, 0];
     if (text) {
         const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
         const hash = MD5(bindingPhraseFull).toString();
-        const bytes = hash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16));
+        // An MD5 hex digest always splits into 16 pairs.
+        const bytes = (hash.match(/.{1,2}/g) ?? []).map((byte) => Number.parseInt(byte, 16));
         const view = new DataView(new ArrayBuffer(6));
         for (let i = 0; i < 6; i++) {
             view.setUint8(i, bytes[i]);
@@ -1044,19 +1055,24 @@ function elrsBindingPhraseToBytes(text) {
     return uidBytes;
 }
 
-function lookupElrsBindingPhrase(uidString) {
-    const bindingPhraseMap = getConfig("binding_phrase_map")?.binding_phrase_map ?? {};
+type BindingPhraseMap = Record<string, string | undefined>;
+
+function lookupElrsBindingPhrase(uidString: string) {
+    const bindingPhraseMap = getConfig<BindingPhraseMap | undefined>("binding_phrase_map")?.binding_phrase_map ?? {};
     return bindingPhraseMap[uidString] ?? "";
 }
 
-function saveElrsBindingPhrase(uidString, bindingPhrase) {
-    const bindingPhraseMap = getConfig("binding_phrase_map")?.binding_phrase_map ?? {};
+function saveElrsBindingPhrase(uidString: string, bindingPhrase: string) {
+    const bindingPhraseMap = getConfig<BindingPhraseMap | undefined>("binding_phrase_map")?.binding_phrase_map ?? {};
     bindingPhraseMap[uidString] = bindingPhrase;
     setConfig({ binding_phrase_map: bindingPhraseMap });
 }
 
 // Channel map helpers
-function onChannelMapInput(event) {
+function onChannelMapInput(event: Event) {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
     let val = event.target.value.toUpperCase();
     if (val.length > 8) {
         val = val.substring(0, 8);
@@ -1123,7 +1139,7 @@ const channelMapPresetValue = computed({
 });
 
 // Feature toggles
-function toggleTelemetry(checked) {
+function toggleTelemetry(checked: boolean) {
     if (features.value?.features?.updateData) {
         features.value.features.updateData({ name: "TELEMETRY", checked });
         updateTabList(features.value.features);
@@ -1131,7 +1147,7 @@ function toggleTelemetry(checked) {
     }
 }
 
-function toggleRssiAdc(checked) {
+function toggleRssiAdc(checked: boolean) {
     if (features.value?.features?.updateData) {
         features.value.features.updateData({ name: "RSSI_ADC", checked });
         needReboot.value = needReboot.value || checked !== undefined;
@@ -1189,7 +1205,7 @@ function openSticksWindow() {
     // is left to the user rather than driven from the app.
     const windowHeight = 600;
 
-    const rxFunction = (channels) => {
+    const rxFunction = (channels: number[]) => {
         if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
             mspHelper.setRawRx(channels);
             return true;
@@ -1202,7 +1218,7 @@ function openSticksWindow() {
     // custom scheme (Tauri/Capacitor), where an absolute "/..." path would miss.
     const stickWindowUrl = new URL("components/tabs/receiver-msp/receiver_msp.html", document.baseURI).href;
 
-    const createdWindow = globalThis.open(
+    const createdWindow: (Window & StickWindowHost) | null = globalThis.open(
         stickWindowUrl,
         "receiver_msp",
         `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
@@ -1213,7 +1229,7 @@ function openSticksWindow() {
         // initialised i18n instance — hand it over the same way as setRawRx above. This used to
         // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
         createdWindow.i18n = i18n;
-        DarkTheme.isDarkThemeEnabled((isEnabled) => {
+        DarkTheme.isDarkThemeEnabled((isEnabled: boolean) => {
             windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
         });
     }
@@ -1225,7 +1241,7 @@ async function refreshTab() {
 }
 
 // Find the rx mode bit for the currently enabled "select"/"rxMode" feature, or -1 if none is.
-function findSelectedRxMode(featuresApi) {
+function findSelectedRxMode(featuresApi: Features) {
     for (const feature of featuresApi.getFeatures()) {
         if (feature.mode === "select" && feature.group === "rxMode" && featuresApi.isEnabled(feature.name)) {
             return feature.bit;
@@ -1235,7 +1251,7 @@ function findSelectedRxMode(featuresApi) {
 }
 
 // Look up a stored ELRS binding phrase for the FC's current UID, if any.
-function findElrsBindingPhrase(elrsUid) {
+function findElrsBindingPhrase(elrsUid: number[] | undefined) {
     if (!elrsUid) {
         return null;
     }
@@ -1286,7 +1302,7 @@ async function loadConfig() {
             }
 
             // Load saved refresh rate
-            const savedRate = getConfig("rx_refresh_rate");
+            const savedRate = getConfig<number | undefined>("rx_refresh_rate");
             if (savedRate?.rx_refresh_rate) {
                 refreshRate.value = savedRate.rx_refresh_rate;
             }
@@ -1384,7 +1400,7 @@ function handleModelResize() {
     }
 }
 
-function renderModel(timestamp) {
+function renderModel(timestamp?: number) {
     if (!keepRendering) return;
     animationFrameId = requestAnimationFrame(renderModel);
 
@@ -1434,8 +1450,8 @@ function updateRxPlot() {
 
         // Remove old data
         while (rxPlotData[0]?.length > 300) {
-            for (let i = 0; i < rxPlotData.length; i++) {
-                rxPlotData[i].shift();
+            for (const series of rxPlotData) {
+                series.shift();
             }
         }
     }
@@ -1453,23 +1469,25 @@ function updateRxPlot() {
         .range([0, width]);
     const heightScale = d3.scaleLinear().domain([800, 2200]).range([height, 0]);
 
-    const xGrid = d3.axisBottom().scale(widthScale).tickSize(-height).tickFormat("");
-    const yGrid = d3.axisLeft().scale(heightScale).tickSize(-width).tickFormat("");
-    const xAxis = d3.axisBottom().scale(widthScale);
-    const yAxis = d3.axisLeft().scale(heightScale);
+    // Grid lines are ticks with blank labels.
+    const blankLabel = () => "";
+    const xGrid = d3.axisBottom(widthScale).tickSize(-height).tickFormat(blankLabel);
+    const yGrid = d3.axisLeft(heightScale).tickSize(-width).tickFormat(blankLabel);
+    const xAxis = d3.axisBottom(widthScale);
+    const yAxis = d3.axisLeft(heightScale);
 
     const line = d3
-        .line()
+        .line<PlotPoint>()
         .x((d) => widthScale(d[0]))
         .y((d) => heightScale(d[1]));
 
-    svg.select(".x.grid-display").call(xGrid);
-    svg.select(".y.grid-display").call(yGrid);
-    svg.select(".x.axis-display").call(xAxis);
-    svg.select(".y.axis-display").call(yAxis);
+    svg.select<SVGGElement>(".x.grid-display").call(xGrid);
+    svg.select<SVGGElement>(".y.grid-display").call(yGrid);
+    svg.select<SVGGElement>(".x.axis-display").call(xAxis);
+    svg.select<SVGGElement>(".y.axis-display").call(yAxis);
 
     const data = svg.select("g.data");
-    const lines = data.selectAll("path").data(rxPlotData);
+    const lines = data.selectAll<SVGPathElement, PlotPoint[]>("path").data(rxPlotData);
     lines.enter().append("path").attr("class", "line").merge(lines).attr("d", line);
     lines.exit().remove();
 

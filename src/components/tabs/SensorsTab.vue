@@ -850,6 +850,7 @@ import {
     getGeoReference,
     parseCoordinates,
     type GeoReference,
+    type MagVizMode,
     type Vec3,
 } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
@@ -1665,13 +1666,13 @@ function cancelMagCal() {
     cal.cancelCalibration();
 }
 
-const MAG_VIZ_MODES = [
+const MAG_VIZ_MODES: { value: MagVizMode; label: string; icon: string }[] = [
     { value: "pointcloud", label: "magVizPointCloud", icon: "i-lucide-scatter-chart" },
     { value: "heatmap", label: "magVizHeatmap", icon: "i-lucide-globe" },
     { value: "projection", label: "magVizProjection", icon: "i-lucide-circle-dot" },
     { value: "polar", label: "magVizPolar", icon: "i-lucide-radar" },
 ];
-const magVizMode = ref("pointcloud");
+const magVizMode = ref<MagVizMode>("pointcloud");
 
 const calGuidedAvailable = computed(() => isApi147.value && isMspCliSupported());
 

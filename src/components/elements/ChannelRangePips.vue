@@ -24,7 +24,7 @@ export default defineComponent({
             required: true,
         },
         markerPercent: {
-            type: Number,
+            type: Number as PropType<number | null>,
             default: null,
         },
         variant: {
