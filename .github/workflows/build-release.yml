@@ -33,12 +33,33 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: false
-      build_apk: false
       commit_ref: ${{ github.event.release.target_commitish }}
+    secrets:
+      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
-  # Build the Tauri desktop bundles (Windows/macOS/Linux) and the signed Tauri
-  # Android APK, then attach them to the release. The Tauri APK is the release's
-  # Android download; the Capacitor APK from build.yml is no longer attached.
+  attach_apk:
+    name: Attach Android APK
+    needs: modern_build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@v7
+        with:
+          name: betaflight-app-apk
+          path: apk
+
+      - name: Upload APK to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" apk/*.apk --clobber --repo "$GITHUB_REPOSITORY"
+
+  # Build the Tauri desktop bundles (Windows/macOS/Linux) and attach them to the release.
   modern_release:
     name: Attach Release Artifacts
     needs: check_tag
