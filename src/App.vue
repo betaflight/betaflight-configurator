@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { isAndroid, isTauriAndroid, isTauriIOS } from "@/js/utils/checkCompatibility.js";
+import { isAndroid } from "@/js/utils/checkCompatibility.js";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
@@ -137,7 +137,7 @@ const isLandingTab = computed(() => vueTabState.activeTabName === "landing");
 
 // Connecting is the app's primary action and it lives in the drawer, which the phone shell no
 // longer opens. Teleport it into the floating chrome there, and leave it in place everywhere else.
-const isAppShell = isTauriIOS() || isTauriAndroid() || isAndroid();
+const isAppShell = isAndroid();
 const useFloatingChrome = computed(() => isAppShell && isCompactBreakpoint.value);
 
 const topbarHidden = ref(false);
