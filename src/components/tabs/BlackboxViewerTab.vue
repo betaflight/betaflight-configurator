@@ -53,7 +53,7 @@ import GUI from "../../js/gui";
 import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
 import { bootstrapViewer } from "../../blackbox-viewer/main.js";
 import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init.js";
-import { useGraphStore } from "../../blackbox-viewer/stores/graph.js";
+import { useGraphStore } from "../../blackbox-viewer/stores/graph";
 import { useDataflashPull } from "../../composables/useDataflashPull";
 
 // Named so <keep-alive :include> in App.vue can target this tab (and only this tab) for caching.

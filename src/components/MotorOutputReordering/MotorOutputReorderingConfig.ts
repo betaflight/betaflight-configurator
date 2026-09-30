@@ -1,0 +1,305 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+export interface MotorPosition {
+    x: number;
+    y: number;
+    /** Coaxial frames: the upper propeller of a stacked pair. */
+    top?: true;
+    /** Coaxial frames: the lower propeller of a stacked pair. */
+    bottom?: true;
+}
+
+export interface FrameConfig {
+    PropRadius: number;
+    ArmWidth: number;
+    Motors: MotorPosition[];
+}
+
+/** Drawing geometry for the motor output reordering canvas, scaled to `screenSize` pixels. */
+export default class MotorOutputReorderConfig {
+    FrameColor = "rgb(186, 186, 186)";
+    PropEdgeColor = "rgb(255, 187, 0)";
+    PropColor = "rgb(186, 186, 186, 0.4)";
+    PropEdgeLineWidth = 3;
+    MotorNumberTextFont: string;
+    MotorNumberTextColor = "rgb(0, 0, 0)";
+    MotorMouseHoverColor = "rgba(255, 187, 0, 0.4)";
+    MotorSpinningColor = "rgba(255, 0, 0, 0.4)";
+    MotorReadyColor = "rgba(0,128,0,0.4)";
+    ArrowColor = "rgb(182,67,67)";
+    DirectionArrowPoints: { x: number; y: number }[];
+    /** Keyed by the mixer name MotorsTab passes as the drone configuration, e.g. "Quad X". */
+    frames: Record<string, FrameConfig> = {};
+
+    constructor(screenSize: number) {
+        this.MotorNumberTextFont = `${screenSize * 0.1}px 'Open Sans', 'Segoe UI', Tahoma, sans-serif`;
+
+        this.DirectionArrowPoints = [
+            { x: -0.03 * screenSize, y: 0.11 * screenSize },
+            { x: -0.03 * screenSize, y: -0.01 * screenSize },
+            { x: -0.07 * screenSize, y: -0.01 * screenSize },
+            { x: 0.0 * screenSize, y: -0.13 * screenSize },
+            { x: 0.07 * screenSize, y: -0.01 * screenSize },
+            { x: 0.03 * screenSize, y: -0.01 * screenSize },
+            { x: 0.03 * screenSize, y: 0.11 * screenSize },
+        ];
+
+        //===========================================
+        let frameRadius = 0.28 * screenSize;
+        this.frames["Quad X"] = {
+            PropRadius: 0.2 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: frameRadius, y: frameRadius },
+                { x: frameRadius, y: -frameRadius },
+                { x: -frameRadius, y: frameRadius },
+                { x: -frameRadius, y: -frameRadius },
+            ],
+        };
+
+        //===========================================
+        frameRadius = 0.28 * screenSize;
+        this.frames["Quad X 1234"] = {
+            PropRadius: 0.2 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: -frameRadius, y: -frameRadius },
+                { x: frameRadius, y: -frameRadius },
+                { x: frameRadius, y: frameRadius },
+                { x: -frameRadius, y: frameRadius },
+            ],
+        };
+
+        //===========================================
+        frameRadius = 0.32 * screenSize;
+        this.frames["Quad +"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: 0, y: frameRadius },
+                { x: frameRadius, y: 0 },
+                { x: -frameRadius, y: 0 },
+                { x: 0, y: -frameRadius },
+            ],
+        };
+
+        //===========================================
+        frameRadius = 0.3 * screenSize;
+        this.frames["Tricopter"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: 0, y: frameRadius },
+                { x: frameRadius, y: -frameRadius },
+                { x: -frameRadius, y: -frameRadius },
+            ],
+        };
+
+        //===========================================
+        frameRadius = 0.35 * screenSize;
+        this.frames["Hex +"] = {
+            PropRadius: 0.14 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [],
+        };
+        let dAngle = Math.PI / 3;
+        let angle = 0;
+
+        angle = dAngle * 1;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        angle = dAngle * 2;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        angle = -dAngle * 1;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        angle = -dAngle * 2;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        angle = dAngle * 3;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        angle = dAngle * 0;
+        this.frames["Hex +"].Motors.push({ x: Math.sin(angle) * frameRadius, y: Math.cos(angle) * frameRadius });
+
+        //===========================================
+        frameRadius = 0.35 * screenSize;
+        this.frames["Hex X"] = {
+            PropRadius: 0.14 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [],
+        };
+        dAngle = Math.PI / 3;
+
+        angle = dAngle * 1;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = -dAngle * 1;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 2;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = -dAngle * 2;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 0;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 3;
+        this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        //===========================================
+        this._addOcto("Octo Flat +", -Math.PI / 2.0, screenSize);
+        this._addOcto("Octo Flat X", -Math.PI / 2.0 + Math.PI / 8.0, screenSize);
+        this._addOctoX8(screenSize);
+        this._addBicopter(screenSize);
+        this._addVTailQuad(screenSize);
+        this._addATailQuad(screenSize);
+        this._addY4(screenSize);
+        this._addY6(screenSize);
+    }
+
+    private _addY6(screenSize: number) {
+        const frameRadius = 0.3 * screenSize;
+        this.frames["Y6"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: 0, y: frameRadius * 0.7, top: true },
+                { x: frameRadius * 0.7, y: -frameRadius * 0.7, top: true },
+                { x: -frameRadius * 0.7, y: -frameRadius * 0.7, top: true },
+                { x: 0, y: frameRadius * 1.1, bottom: true },
+                { x: frameRadius * 1.1, y: -frameRadius * 1.1, bottom: true },
+                { x: -frameRadius * 1.1, y: -frameRadius * 1.1, bottom: true },
+            ],
+        };
+    }
+
+    private _addY4(screenSize: number) {
+        const frameRadius = 0.3 * screenSize;
+        this.frames["Y4"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: 0, y: frameRadius * 0.7, top: true },
+                { x: frameRadius, y: -frameRadius },
+                { x: 0, y: frameRadius * 1.1, bottom: true },
+                { x: -frameRadius, y: -frameRadius },
+            ],
+        };
+    }
+
+    private _addVTailQuad(screenSize: number) {
+        const frameRadius = 0.3 * screenSize;
+        this.frames["V-tail Quad"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: frameRadius * 0.7, y: frameRadius * 0.7 },
+                { x: frameRadius, y: -frameRadius },
+                { x: -frameRadius * 0.7, y: frameRadius * 0.7 },
+                { x: -frameRadius, y: -frameRadius },
+            ],
+        };
+    }
+
+    private _addATailQuad(screenSize: number) {
+        const frameRadius = 0.3 * screenSize;
+        this.frames["A-tail Quad"] = {
+            PropRadius: 0.15 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: -frameRadius * 0.7, y: frameRadius * 0.7 },
+                { x: frameRadius, y: -frameRadius },
+                { x: frameRadius * 0.7, y: frameRadius * 0.7 },
+                { x: -frameRadius, y: -frameRadius },
+            ],
+        };
+    }
+
+    private _addBicopter(screenSize: number) {
+        const frameRadius = 0.35 * screenSize;
+        this.frames["Bicopter"] = {
+            PropRadius: 0.2 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: -frameRadius, y: 0 },
+                { x: frameRadius, y: 0 },
+            ],
+        };
+    }
+
+    private _addOctoX8(screenSize: number) {
+        const frameRadius = 0.2 * screenSize;
+        const frameRadius2 = 0.28 * screenSize;
+        this.frames["Octo X8"] = {
+            PropRadius: 0.12 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [
+                { x: frameRadius, y: frameRadius, top: true },
+                { x: frameRadius, y: -frameRadius, top: true },
+                { x: -frameRadius, y: frameRadius, top: true },
+                { x: -frameRadius, y: -frameRadius, top: true },
+                { x: frameRadius2, y: frameRadius2, bottom: true },
+                { x: frameRadius2, y: -frameRadius2, bottom: true },
+                { x: -frameRadius2, y: frameRadius2, bottom: true },
+                { x: -frameRadius2, y: -frameRadius2, bottom: true },
+            ],
+        };
+    }
+
+    private _addOcto(frameName: string, rotateAngle: number, screenSize: number) {
+        const frameRadius = 0.35 * screenSize;
+        this.frames[frameName] = {
+            PropRadius: 0.1 * screenSize,
+            ArmWidth: 0.1 * screenSize,
+            Motors: [],
+        };
+        const dAngle = Math.PI / 4;
+
+        let angle = -dAngle * 2 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 0 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 2 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 4 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = -dAngle * 1 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 1 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = dAngle * 3 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+
+        angle = -dAngle * 3 + rotateAngle;
+        this.frames[frameName].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
+    }
+}

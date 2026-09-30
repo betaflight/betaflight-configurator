@@ -80,8 +80,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useLogStore } from "../stores/log.js";
-import { useGraphStore } from "../stores/graph.js";
+import { useLogStore } from "../stores/log";
+import { useGraphStore } from "../stores/graph";
 import UiBox from "./UiBox.vue";
 
 const logStore = useLogStore();
