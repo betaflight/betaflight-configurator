@@ -1344,8 +1344,6 @@ const PREFIX_GROUPS = [
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
     ["spa_", "Wing"],
-    ["tpa_speed_", "Wing"],
-    ["tpa_curve_", "Wing"],
     ["tpa_speed_", "Wing TPA"],
     ["tpa_curve_", "Wing curve"],
 ];
