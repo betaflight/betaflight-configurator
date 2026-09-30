@@ -1,6 +1,4 @@
-/* Safe-area insets. On iOS the native shell cancels the webview's safe area so the page can
-   use the whole window, and pushes the real insets in as these properties; everywhere else they
-   fall back to env(). Always use these rather than env(safe-area-inset-*) directly. */
+/* Safe-area insets. Always use these rather than env(safe-area-inset-*) directly. */
 :root {
     --bf-inset-top: env(safe-area-inset-top, 0px);
     --bf-inset-bottom: env(safe-area-inset-bottom, 0px);
