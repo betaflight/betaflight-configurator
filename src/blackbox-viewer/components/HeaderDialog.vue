@@ -65,6 +65,8 @@
                         <!-- PID Settings: single merged table -->
                         <PidTable v-if="group === 'PID Settings'" :rows="allPids" :showDMax="showDMax" />
 
+                        <!-- Wing SPA -->
+                        <SpaTable v-else-if="group === 'Wing SPA'" :rows="wingSpaParams" />
                         <!-- Features / Disabled Fields -->
                         <FeatureTable v-else-if="group === 'Features'" :data="featuresList" />
                         <FeatureTable v-else-if="group === 'Disabled Fields'" :data="disabledFieldsList" />
@@ -200,6 +202,7 @@ import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout, type HeaderL
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
+import SpaTable from "./SpaTable.vue";
 import FeatureTable from "./FeatureTable.vue";
 import {
     OFF_ON,
@@ -910,6 +913,48 @@ const wingCurvesParams = computed(() => {
     return result.filter((p) => !p.missing);
 });
 
+function wingSpaRow(label, data) {
+    return {
+        label: label ?? null,
+        mode: data[0] ?? null,
+        center: data[1] ?? null,
+        width: data[2] ?? null,
+    };
+}
+
+const wingSpaModeNames = computed(() => [
+    t("pidTuningWingSpaModeOff"),
+    t("pidTuningWingSpaModeIFreeze"),
+    t("pidTuningWingSpaModeI"),
+    t("pidTuningWingSpaModePID"),
+    t("pidTuningWingSpaModePDIFreeze"),
+]);
+
+const wingSpaParams = computed(() => {
+    const s = filteredSc.value;
+    const result = [];
+
+    // Show SPA only when mode is not Off
+    if (s.spa_roll_mode) {
+        const row = wingSpaRow("Roll", [wingSpaModeNames.value[s.spa_roll_mode], s.spa_roll_center, s.spa_roll_width]);
+        result.push(row);
+    }
+    if (s.spa_pitch_mode) {
+        const row = wingSpaRow("Pitch", [
+            wingSpaModeNames.value[s.spa_pitch_mode],
+            s.spa_pitch_center,
+            s.spa_pitch_width,
+        ]);
+        result.push(row);
+    }
+    if (s.spa_yaw_mode) {
+        const row = wingSpaRow("Yaw", [wingSpaModeNames.value[s.spa_yaw_mode], s.spa_yaw_center, s.spa_yaw_width]);
+        result.push(row);
+    }
+    return result;
+>>>>>>> a0311285 (The Wings SPA settings table added at the Blackbox explorers Header info panel)
+});
+
 // --- Features ---
 
 const featuresList = computed(() => {
@@ -1079,6 +1124,7 @@ const GROUP_ORDER = new Set([
     "D-Term Filters",
     "RC Smoothing",
     "Wing",
+    "Wing SPA",
     "Wing TPA",
     "Wing curve",
     "Features",
@@ -1141,6 +1187,9 @@ function paneHasData(group: string) {
     }
     if (group === "Disabled Fields") {
         return disabledFieldsList.value.length > 0;
+    }
+    if (group === "Wing SPA") {
+        return wingSpaParams.value.length > 0;
     }
     const params = groupParamMap.value[group];
     return params && params.length > 0;
