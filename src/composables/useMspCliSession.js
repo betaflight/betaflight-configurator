@@ -40,6 +40,11 @@ function delayAfter(line) {
     return line.toLowerCase().startsWith("profile") ? PROFILE_COMMAND_DELAY_MS : LINE_DELAY_MS;
 }
 
+/**
+ * @param {string} command
+ * @param {{ timeoutMs?: number }} [options]
+ * @returns {Promise<string[]>} the reply lines
+ */
 export function send(command, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
     return new Promise((resolve, reject) => {
         MSP.send_cli_command(
@@ -91,6 +96,10 @@ export function isConnectionClosedError(error) {
 // `send` resolves with whatever the FC replied, and a command the FC refused replies normally —
 // the refusal is a line in the response, not a transport error. Callers that need to know whether
 // a command took effect have to look for it.
+/**
+ * @param {readonly string[] | null | undefined} lines
+ * @returns {string | null}
+ */
 export function findCliError(lines) {
     return parseErrors(lines ?? [])[0] ?? null;
 }
