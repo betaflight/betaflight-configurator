@@ -33,7 +33,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: false
-      commit_ref: ${{ github.event.release.target_commitish }}
+      commit_ref: ${{ github.event.release.tag_name }}
     secrets:
       RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
       RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}

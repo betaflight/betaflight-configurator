@@ -26,7 +26,7 @@ on:
         required: true
         type: choice
         default: completed
-        options: [completed, draft, inProgress]
+        options: [completed, draft]
 
 jobs:
   android:
@@ -47,7 +47,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build web assets
         run: npm run build
@@ -56,7 +56,7 @@ jobs:
         run: node capacitor.config.generator.mjs
 
       - name: Sync Capacitor Android project
-        run: npx cap sync android
+        run: npx --no cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v5
