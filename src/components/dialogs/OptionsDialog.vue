@@ -397,7 +397,7 @@ watch(
                     setConfig({ showNotifications: enabled });
                     break;
                 case "denied":
-                    dialog.openInfo(informationDialog.title, informationDialog.text, {
+                    dialog.openInfo(informationDialog.title, informationDialog.text, null, {
                         confirmText: informationDialog.buttonConfirmText,
                     });
                     settings.showNotifications = false;
@@ -413,7 +413,7 @@ watch(
                             setConfig({ showNotifications: true });
                             settings.showNotifications = true;
                         } else {
-                            dialog.openInfo(informationDialog.title, informationDialog.text, {
+                            dialog.openInfo(informationDialog.title, informationDialog.text, null, {
                                 confirmText: informationDialog.buttonConfirmText,
                             });
                         }
