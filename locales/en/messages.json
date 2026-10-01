@@ -485,6 +485,9 @@
     "sensorConfigHardware": {
         "message": "Sensor Hardware"
     },
+    "sensorConfigActiveGyros": {
+        "message": "Active Gyros"
+    },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
     },
@@ -3992,6 +3995,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Build Type"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Board"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Select build type to see available boards."
