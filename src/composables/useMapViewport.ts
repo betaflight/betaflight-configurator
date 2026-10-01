@@ -1,4 +1,55 @@
-import { onScopeDispose, ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { onScopeDispose, ref, type Ref } from "vue";
+
+// The WebKit and MS spellings of the Fullscreen API, which lib.dom does not declare.
+interface PrefixedFullscreenDocument extends Document {
+    webkitFullscreenElement?: Element | null;
+    msFullscreenElement?: Element | null;
+    webkitExitFullscreen?: () => void;
+    msExitFullscreen?: () => void;
+}
+
+interface PrefixedFullscreenElement extends HTMLElement {
+    webkitRequestFullscreen?: () => void;
+    msRequestFullscreen?: () => void;
+}
+
+/** The part of an ol/Map this composable uses. */
+export interface ResizableMap {
+    updateSize: () => void;
+}
+
+export interface MapViewport {
+    isFullscreen: Ref<boolean>;
+    toggleFullscreen: () => void;
+    /**
+     * Start watching the container.  Safe to call more than once and before the map
+     * exists — only the container is needed, and the map is resolved per callback.
+     */
+    observeContainer: () => void;
+    /** Idempotent: callers with their own teardown path may also call this. */
+    teardown: () => void;
+}
 
 /**
  * Viewport plumbing shared by the OpenLayers maps (GPS, Preflight, Flight Plan).
@@ -16,21 +67,25 @@ import { onScopeDispose, ref } from "vue";
  * Document listeners are attached immediately and released when the owning
  * component's scope is disposed, so callers only need to wire up the returned state.
  *
- * @param {import("vue").Ref<HTMLElement|null>} containerRef Element to fullscreen and observe.
- * @param {() => object|null|undefined} getMap Resolves the ol/Map; it may not exist yet.
+ * @param containerRef Element to fullscreen and observe.
+ * @param getMap Resolves the ol/Map; it may not exist yet.
  */
-export function useMapViewport(containerRef, getMap) {
+export function useMapViewport(
+    containerRef: Ref<HTMLElement | null>,
+    getMap: () => ResizableMap | null | undefined,
+): MapViewport {
     const isFullscreen = ref(false);
+    const doc = document as PrefixedFullscreenDocument;
 
     const updateSize = () => getMap()?.updateSize();
 
     const toggleFullscreen = () => {
-        const container = containerRef.value;
+        const container = containerRef.value as PrefixedFullscreenElement | null;
         if (!container) {
             return;
         }
 
-        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        if (!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.webkitRequestFullscreen) {
@@ -38,21 +93,17 @@ export function useMapViewport(containerRef, getMap) {
             } else if (container.msRequestFullscreen) {
                 container.msRequestFullscreen();
             }
-        } else if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
+        } else if (doc.exitFullscreen) {
+            doc.exitFullscreen();
+        } else if (doc.webkitExitFullscreen) {
+            doc.webkitExitFullscreen();
+        } else if (doc.msExitFullscreen) {
+            doc.msExitFullscreen();
         }
     };
 
     const handleFullscreenChange = () => {
-        isFullscreen.value = !!(
-            document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            document.msFullscreenElement
-        );
+        isFullscreen.value = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement);
         // The map can only be measured once the browser has finished switching modes.
         requestAnimationFrame(updateSize);
     };
@@ -62,12 +113,8 @@ export function useMapViewport(containerRef, getMap) {
         document.addEventListener(event, handleFullscreenChange);
     }
 
-    let resizeObserver = null;
+    let resizeObserver: ResizeObserver | null = null;
 
-    /**
-     * Start watching the container.  Safe to call more than once and before the map
-     * exists — only the container is needed, and the map is resolved per callback.
-     */
     const observeContainer = () => {
         if (resizeObserver || !containerRef.value) {
             return;
@@ -89,7 +136,6 @@ export function useMapViewport(containerRef, getMap) {
         resizeObserver.observe(containerRef.value);
     };
 
-    /** Idempotent: callers with their own teardown path may also call this. */
     const teardown = () => {
         for (const event of FULLSCREEN_EVENTS) {
             document.removeEventListener(event, handleFullscreenChange);
