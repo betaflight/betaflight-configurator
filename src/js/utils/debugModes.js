@@ -536,12 +536,13 @@ export function getDebugModeIndex(name, apiVersion) {
  *
  * Shape: `{ [modeName]: { "debug[all]": label, "debug[0]": label, ... } }`.
  * This is the single source of truth shared by the configurator's debug store
- * (`src/stores/debug.js`, sensors live view + onboard logging tab) and the
+ * (`src/stores/debug.ts`, sensors live view + onboard logging tab) and the
  * blackbox log viewer.
  *
  * @param {string} [apiVersion] - e.g. "1.47.0". If falsy, returns the
  *   pre-1.46 base labels (matches the behaviour when no FC is connected).
- * @returns {object} A fresh object; callers must treat it as read-only.
+ * @returns {Record<string, Record<string, string>>} Field labels by debug mode name, then by
+ *   `debug[n]` key. A fresh object; callers must treat it as read-only.
  */
 export function getDebugFieldNames(apiVersion) {
     const baseFieldNames = {

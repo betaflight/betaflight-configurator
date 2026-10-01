@@ -42,14 +42,16 @@
 import { computed } from "vue";
 import type { PropType } from "vue";
 
+type PidValue = string | number | null;
+
 interface PidRow {
     label: string;
-    p?: string | number;
-    i?: string | number;
-    d?: string | number;
-    dMax?: string | number;
-    f?: string | number;
-    s?: string | number;
+    p?: PidValue;
+    i?: PidValue;
+    d?: PidValue;
+    dMax?: PidValue;
+    f?: PidValue;
+    s?: PidValue;
     missing?: boolean;
 }
 
@@ -59,7 +61,7 @@ const props = defineProps({
     srOnly: { type: Boolean, default: false },
 });
 
-function fmtPid(val: string | number | null | undefined) {
+function fmtPid(val: PidValue | undefined) {
     if (val == null) {
         return "-";
     }

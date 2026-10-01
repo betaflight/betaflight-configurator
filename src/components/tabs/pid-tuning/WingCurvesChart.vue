@@ -16,23 +16,44 @@
     </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
 import { getCssVar } from "../../../js/utils/common";
 
+interface CurvePoint {
+    speed: number;
+    multiplier: number;
+}
+
+interface ChartCurve {
+    data?: CurvePoint[];
+    color?: string;
+    active?: boolean;
+}
+
+interface ChartColors {
+    axis: string;
+    axisLabel: string;
+    tick: string;
+    grid: string;
+    curve: string;
+}
+
+type Scale = (value: number) => number;
+
 const props = defineProps({
-    chartCurves: { type: Array, default: () => [] },
+    chartCurves: { type: Array as PropType<ChartCurve[]>, default: () => [] },
     showGrid: { type: Boolean, default: true },
     showLegend: { type: Boolean, default: true },
 });
 
-const containerRef = ref(null);
-const chartCanvas = ref(null);
+const containerRef = ref<HTMLElement | null>(null);
+const chartCanvas = ref<HTMLCanvasElement | null>(null);
 const canvasWidth = ref(0);
 const canvasHeight = ref(0);
 const dpr = window.devicePixelRatio || 1;
-let resizeObserver = null;
-let themeObserver = null;
+let resizeObserver: ResizeObserver | null = null;
+let themeObserver: MutationObserver | null = null;
 
 function resizeCanvas() {
     const container = containerRef.value;
@@ -56,7 +77,7 @@ function resizeCanvas() {
 const pad = { top: 20, right: 20, bottom: 30, left: 40 };
 
 // Draw axises
-function drawAxes(ctx, plotWidth, plotHeight, colors) {
+function drawAxes(ctx: CanvasRenderingContext2D, plotWidth: number, plotHeight: number, colors: ChartColors) {
     ctx.strokeStyle = colors.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -76,7 +97,7 @@ function drawAxes(ctx, plotWidth, plotHeight, colors) {
     ctx.fillText("Gain", pad.left - 5, pad.top + 10);
 }
 
-function getStepAxisX(maxSpeed) {
+function getStepAxisX(maxSpeed: number) {
     let step = 5;
     if (maxSpeed <= 1) {
         step = 0.2;
@@ -86,8 +107,30 @@ function getStepAxisX(maxSpeed) {
     return step;
 }
 
+interface AxisGridOptions {
+    ctx: CanvasRenderingContext2D;
+    plotWidth: number;
+    plotHeight: number;
+    xScale: Scale;
+    yScale: Scale;
+    maxSpeed: number;
+    minMult: number;
+    maxMult: number;
+    colors: ChartColors;
+}
+
 // Draw axises ticks and grid
-function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors) {
+function drawAxisTicksAndGrid({
+    ctx,
+    plotWidth,
+    plotHeight,
+    xScale,
+    yScale,
+    maxSpeed,
+    minMult,
+    maxMult,
+    colors,
+}: AxisGridOptions) {
     const fontSize = 9;
     ctx.font = `${fontSize}px sans-serif`;
     ctx.fillStyle = colors.tick;
@@ -159,7 +202,7 @@ function drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpe
 }
 
 // The curves drawing
-function drawCurves(ctx, xScale, yScale, colors) {
+function drawCurves(ctx: CanvasRenderingContext2D, xScale: Scale, yScale: Scale, colors: ChartColors) {
     props.chartCurves.forEach((curve) => {
         if (!curve.data) {
             return;
@@ -188,10 +231,13 @@ function drawChart() {
         return;
     }
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        return;
+    }
     const w = canvasWidth.value / dpr;
     const h = canvasHeight.value / dpr;
 
-    const colors = {
+    const colors: ChartColors = {
         axis: getCssVar("--chart-axis-color", "#555555"),
         axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
         tick: getCssVar("--chart-tick-color", "#888888"),
@@ -210,7 +256,7 @@ function drawChart() {
     }
 
     // Collect Y values
-    const allData = [];
+    const allData: CurvePoint[] = [];
     for (const curve of props.chartCurves) {
         if (curve.data) {
             allData.push(...curve.data);
@@ -230,14 +276,14 @@ function drawChart() {
         return;
     }
 
-    const xScale = (speed) => pad.left + (speed / maxSpeed) * plotWidth;
-    const yScale = (mult) => pad.top + plotHeight - ((mult - minMult) / yRange) * plotHeight;
+    const xScale = (speed: number) => pad.left + (speed / maxSpeed) * plotWidth;
+    const yScale = (mult: number) => pad.top + plotHeight - ((mult - minMult) / yRange) * plotHeight;
 
     // The axises
     drawAxes(ctx, plotWidth, plotHeight, colors);
 
     // The ticks, grid and labels
-    drawAxisTicksAndGrid(ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors);
+    drawAxisTicksAndGrid({ ctx, plotWidth, plotHeight, xScale, yScale, maxSpeed, minMult, maxMult, colors });
 
     // The curves
     drawCurves(ctx, xScale, yScale, colors);

@@ -28,7 +28,7 @@ import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc";
 import MSP from "../js/msp";
-import DeviceHandler from "../js/device_handler.js";
+import DeviceHandler from "../js/device_handler";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage";
 import { BetaflightComponents } from "../js/vue_components.js";

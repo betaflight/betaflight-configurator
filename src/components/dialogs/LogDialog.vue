@@ -28,7 +28,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import UiBox from "../elements/UiBox.vue";
 import { useLogStore } from "../../stores/log";
@@ -41,7 +41,7 @@ const emit = defineEmits(["update:modelValue"]);
 const store = useLogStore();
 const entries = computed(() => store.entries);
 const autoScroll = ref(true);
-const scrollArea = ref(null);
+const scrollArea = ref<HTMLElement | null>(null);
 
 const open = computed({
     get: () => props.modelValue,
