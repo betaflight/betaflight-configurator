@@ -9,6 +9,7 @@ import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
+import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
 import nuxtUiViteOptions from "./nuxt-ui.vite.js";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
@@ -189,6 +190,7 @@ export default defineConfig({
         },
     },
     plugins: [
+        settingsSearchIndexPlugin(),
         vue(),
         ui(nuxtUiViteOptions),
         serveLocalesPlugin(),
