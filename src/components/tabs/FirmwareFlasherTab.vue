@@ -890,6 +890,8 @@ export default defineComponent({
                 if (filteredReleases.length > 0) {
                     boardSelection.state.selectedFirmwareVersion = filteredReleases[0].release;
                     await selectFirmware(boardSelection.state.selectedFirmwareVersion);
+                } else {
+                    boardSelection.state.selectedFirmwareVersion = "";
                 }
             } else {
                 boardSelection.state.firmwareVersionOptions = [];
