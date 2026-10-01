@@ -202,7 +202,7 @@ import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout, type HeaderL
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
-import SpaTable from "./SpaTable.vue";
+import SpaTable, { type SpaRow } from "./SpaTable.vue";
 import FeatureTable from "./FeatureTable.vue";
 import {
     OFF_ON,
@@ -913,9 +913,9 @@ const wingCurvesParams = computed(() => {
     return result.filter((p) => !p.missing);
 });
 
-function wingSpaRow(label, data) {
+function wingSpaRow(label: string, data: (string | number | null | undefined)[]): SpaRow {
     return {
-        label: label ?? null,
+        label,
         mode: data[0] ?? null,
         center: data[1] ?? null,
         width: data[2] ?? null,
@@ -932,7 +932,7 @@ const wingSpaModeNames = computed(() => [
 
 const wingSpaParams = computed(() => {
     const s = filteredSc.value;
-    const result = [];
+    const result: SpaRow[] = [];
 
     // Show SPA only when mode is not Off
     if (s.spa_roll_mode) {

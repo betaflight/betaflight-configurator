@@ -29,18 +29,17 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { PropType } from "vue";
 
-interface SpaRow {
+export interface SpaRow {
     label: string;
-    mode?: string | number;
-    center?: string | number;
-    width?: string | number;
+    mode: string | number | null;
+    center: string | number | null;
+    width: string | number | null;
 }
 
-const props = defineProps({
-    rows: { type: Array as PropType<SpaRow[]>, required: true },
-});
+const props = defineProps<{
+    rows: SpaRow[];
+}>();
 
 function fmtSpa(val: string | number | null | undefined) {
     if (val == null) {
@@ -49,15 +48,12 @@ function fmtSpa(val: string | number | null | undefined) {
     return typeof val === "number" ? val.toFixed(0) : String(val);
 }
 
-const columns = computed(() => {
-    const cols = [
-        { accessorKey: "label", header: "Axis" },
-        { accessorKey: "mode", header: "Mode" },
-        { accessorKey: "center", header: "Center" },
-        { accessorKey: "width", header: "Width" },
-    ];
-    return cols;
-});
+const columns = [
+    { accessorKey: "label", header: "Axis" },
+    { accessorKey: "mode", header: "Mode" },
+    { accessorKey: "center", header: "Center" },
+    { accessorKey: "width", header: "Width" },
+];
 
 const data = computed(() =>
     props.rows.map((row) => {
@@ -66,7 +62,6 @@ const data = computed(() =>
             mode: fmtSpa(row.mode),
             center: fmtSpa(row.center),
             width: fmtSpa(row.width),
-            _spacer: "",
         };
         return params;
     }),
