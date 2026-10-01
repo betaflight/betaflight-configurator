@@ -975,6 +975,32 @@ export default defineComponent({
             await setupUIHandlers();
             setupEventBusListeners();
 
+<<<<<<< HEAD
+=======
+            // Register this module for backward compatibility
+            TABS.firmware_flasher = {
+                ...TABS.firmware_flasher,
+                targets: boardSelection.state.targets,
+                validateBuildKey,
+                resetFlashingState,
+                preservePreFlashingState,
+                flashingMessage,
+                flashProgress,
+                cleanup,
+                FLASH_MESSAGE_TYPES,
+                requestDfuPermission,
+                get parsed_hex() {
+                    return firmwareFlashing.getParsedHex();
+                },
+                get hex() {
+                    return firmwareFlashing.getIntelHex();
+                },
+                get uf2_binary() {
+                    return firmwareFlashing.getUf2Binary();
+                },
+            };
+
+>>>>>>> 2188dd01 (Add global settings search)
             // Localize content
             i18n.localizePage();
         });
@@ -1776,12 +1802,19 @@ export default defineComponent({
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
         ]);
 
+        const selectSubtab = (subtab: string) => {
+            if (subtabItems.value.some((item) => item.value === subtab)) {
+                activeFlasherStep.value = subtab;
+            }
+        };
+
         // Return all public methods and state
         return {
             state,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
+            selectSubtab,
             flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
