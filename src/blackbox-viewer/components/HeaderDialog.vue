@@ -227,8 +227,9 @@ import {
     FIRMWARE_TYPE_INAV,
 } from "../flightlog_fielddefs";
 import { getDebugModes } from "../../js/utils/debugModes";
-import { useTranslation } from "i18next-vue";
-const { t } = useTranslation();
+import { i18n } from "../../js/localization";
+
+const t = (key: string) => i18n.getMessage(key);
 
 const open = defineModel("open", { type: Boolean, default: false });
 const cols = ref<number | null>(null);
