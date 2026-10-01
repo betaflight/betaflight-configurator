@@ -842,6 +842,8 @@ const motorParams = computed(() => {
     ].filter((p) => !p.missing);
 });
 
+const wingYawTypeNames = computed(() => [t("pidTuningWingYawTypeRudder"), t("pidTuningWingYawTypeDiffThrust")]);
+
 const wingTpaParams = computed(() => {
     const s = filteredSc.value;
     let result: HeaderParam[] = [];
@@ -866,6 +868,8 @@ const wingTpaParams = computed(() => {
             param(t("pidTuningWingTpaAdvSpeedPitchOffset"), fmtVal(s.tpa_speed_pitch_offset, 0)),
         ];
     }
+
+    result.push(param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value)));
 
     return result.filter((p) => !p.missing);
 });
