@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { useCli } from "../../src/composables/useCli";
+import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
 import FC from "../../src/js/fc";
@@ -11,7 +11,7 @@ import BFClipboard from "../../src/js/Clipboard";
 
 const BANNER = "\r\nEntering CLI Mode, type 'exit' to reboot, or 'help'\r\n\r\n# ";
 
-function bytes(str) {
+function bytes(str: string) {
     return new TextEncoder().encode(str);
 }
 
@@ -22,13 +22,13 @@ function makeCli() {
     return cli;
 }
 
-function feed(cli, chunks) {
+function feed(cli: Cli, chunks: string[]) {
     for (const chunk of chunks) {
         cli.read(bytes(chunk));
     }
 }
 
-function getHistory(cli) {
+function getHistory(cli: Cli) {
     const spy = vi.spyOn(BFClipboard, "writeText").mockImplementation(() => {});
     cli.copyToClipboard();
     const text = spy.mock.calls[0][0];

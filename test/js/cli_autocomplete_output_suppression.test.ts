@@ -1,19 +1,24 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { useCli } from "../../src/composables/useCli";
+import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
 import FC from "../../src/js/fc";
 import GUI from "../../src/js/gui";
 import BFClipboard from "../../src/js/Clipboard";
 
-function bytes(str) {
+// The builder's sentinel is set when a build starts; CliAutoComplete is JS and does not declare it.
+function currentSentinel(): string {
+    return (CliAutoComplete.builder as { sentinel?: string }).sentinel!;
+}
+
+function bytes(str: string) {
     return new TextEncoder().encode(str);
 }
 
 // The cache builder's own help/dump/get traffic must never reach the CLI window or the saved/copied
 // history, including the tail that keeps arriving after the watchdog has given up on a slow FC.
 describe("useCli output suppression around CliAutoComplete", () => {
-    let cli;
+    let cli: Cli;
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -53,12 +58,12 @@ describe("useCli output suppression around CliAutoComplete", () => {
 
     function visibleText() {
         vi.advanceTimersByTime(100); // let the buffered output flush
-        return cli.windowWrapperRef.value.textContent;
+        return cli.windowWrapperRef.value!.textContent;
     }
 
     function startBuildAndReachHelp() {
         CliAutoComplete.builderStart();
-        cli.read(bytes(`${CliAutoComplete.builder.sentinel}\r`));
+        cli.read(bytes(`${currentSentinel()}\r`));
         expect(CliAutoComplete.builder.state).toBe("parse-help");
     }
 
@@ -84,7 +89,7 @@ describe("useCli output suppression around CliAutoComplete", () => {
         failWatchdog();
 
         // the retry regenerated the sentinel; that last one sent is what ends the drain
-        const sentinel = CliAutoComplete.builder.sentinel;
+        const sentinel = currentSentinel();
         cli.read(bytes(`set dyn_notch_count = 3\r${sentinel}\r`));
         expect(CliAutoComplete.isSuppressingOutput()).toBe(false);
 
@@ -111,7 +116,7 @@ describe("useCli output suppression around CliAutoComplete", () => {
 
         cli.read(bytes("set gyro_lpf1_st")); // chunk boundary lands mid-line
         failWatchdog();
-        cli.read(bytes(`atic_hz = 250\r${CliAutoComplete.builder.sentinel}\r`));
+        cli.read(bytes(`atic_hz = 250\r${currentSentinel()}\r`));
         expect(CliAutoComplete.isSuppressingOutput()).toBe(false);
 
         expect(historyText()).toBe("");
@@ -132,7 +137,7 @@ describe("useCli output suppression around CliAutoComplete", () => {
 
     it("does not leak the character that completes the build into history", () => {
         CliAutoComplete.builderStart();
-        const sentinel = CliAutoComplete.builder.sentinel;
+        const sentinel = currentSentinel();
 
         for (let i = 0; i < 5; i++) {
             cli.read(bytes(`${sentinel}\r`));
