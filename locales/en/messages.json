@@ -556,6 +556,10 @@
     "autotuneCurrent": { "message": "Current" },
     "autotuneProposed": { "message": "Proposed" },
     "autotuneApplied": { "message": "Gains applied and saved." },
+    "autotuneApplyConfirmText": {
+        "message": "Applying writes the tuning sliders to the flight controller and saves them to EEPROM. Recommended gains can destabilise the craft on first arm, so be ready to disarm for the first test."
+    },
+    "autotuneApplyConfirmTitle": { "message": "Apply recommended gains?" },
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
