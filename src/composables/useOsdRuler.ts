@@ -1,4 +1,54 @@
-import { onMounted, onUnmounted, watch } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { onMounted, onUnmounted, watch, type Ref } from "vue";
+
+type HorizontalAxis = "top" | "bottom";
+type VerticalAxis = "left" | "right";
+
+/** The preview's grid as laid out on screen, measured relative to the ruler canvas' container. */
+interface RulerLayout {
+    ctx: CanvasRenderingContext2D;
+    cw: number;
+    ch: number;
+    containerRect: DOMRect;
+    previewRect: DOMRect;
+    cols: number;
+    rowsCount: number;
+    cx: number;
+    cy: number;
+    cellW: number;
+    cellH: number;
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    rows: NodeListOf<Element>;
+    colsInRow: NodeListOf<Element>;
+    signPad: number;
+}
+
+export interface OsdRuler {
+    drawRulers: () => void;
+}
 
 const RulerConfig = {
     meterThickness: 16, // px
@@ -21,13 +71,13 @@ const RulerConfig = {
     font: "10px monospace",
 };
 
-function applyRulerMargins(containerRef, enabled) {
+function applyRulerMargins(containerRef: Ref<HTMLElement | null>, enabled: boolean) {
     const container = containerRef.value;
     if (!container) {
         return;
     }
 
-    const preview = container.querySelector(".tab-osd-preview");
+    const preview = container.querySelector<HTMLElement>(".tab-osd-preview");
     if (!preview) {
         return;
     }
@@ -44,17 +94,17 @@ function applyRulerMargins(containerRef, enabled) {
     preview.style.marginLeft = "";
 }
 
-function colCenterX(i, containerRect, colsInRow) {
+function colCenterX(i: number, containerRect: DOMRect, colsInRow: NodeListOf<Element>): number {
     const rect = colsInRow[i].getBoundingClientRect();
     return Math.round(rect.left - containerRect.left + rect.width / 2);
 }
 
-function rowCenterY(i, containerRect, rows) {
+function rowCenterY(i: number, containerRect: DOMRect, rows: NodeListOf<Element>): number {
     const rect = rows[i].getBoundingClientRect();
     return Math.round(rect.top - containerRect.top + rect.height / 2);
 }
 
-function getContext(canvas, container) {
+function getContext(canvas: HTMLCanvasElement | null, container: HTMLElement | null): RulerLayout | null {
     if (!canvas || !container) {
         return null;
     }
@@ -133,7 +183,7 @@ function getContext(canvas, container) {
     };
 }
 
-function getHorizontalAxisGeometry(axis, params, tick) {
+function getHorizontalAxisGeometry(axis: HorizontalAxis, params: RulerLayout, tick: number) {
     if (axis === "top") {
         const y0 = Math.max(0, params.top - RulerConfig.edgeGap);
         const y1 = Math.max(0, y0 - tick);
@@ -148,7 +198,7 @@ function getHorizontalAxisGeometry(axis, params, tick) {
     return { y0, y1, labelY };
 }
 
-function getAxisColor(isCenter, isMajor) {
+function getAxisColor(isCenter: boolean, isMajor: boolean): string {
     if (isCenter) {
         return RulerConfig.colorCenter;
     }
@@ -160,7 +210,7 @@ function getAxisColor(isCenter, isMajor) {
     return RulerConfig.colorMinor;
 }
 
-function drawHorizontalTick(ctx, x, y0, y1, color) {
+function drawHorizontalTick(ctx: CanvasRenderingContext2D, x: number, y0: number, y1: number, color: string) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -169,7 +219,14 @@ function drawHorizontalTick(ctx, x, y0, y1, color) {
     ctx.stroke();
 }
 
-function drawHorizontalLabel(ctx, axis, offset, x, labelY, isDark) {
+function drawHorizontalLabel(
+    ctx: CanvasRenderingContext2D,
+    axis: HorizontalAxis,
+    offset: number,
+    x: number,
+    labelY: number,
+    isDark: boolean,
+) {
     ctx.fillStyle = isDark ? "#fff" : "#000";
     ctx.save();
     ctx.textBaseline = axis === "top" ? "bottom" : "top";
@@ -177,7 +234,7 @@ function drawHorizontalLabel(ctx, axis, offset, x, labelY, isDark) {
     ctx.restore();
 }
 
-function drawHorizontalAxis(ctx, params, axis) {
+function drawHorizontalAxis(ctx: CanvasRenderingContext2D, params: RulerLayout, axis: HorizontalAxis) {
     const centerIndex = Math.floor(params.cols / 2);
     const minOffset = -centerIndex;
     const maxOffset = centerIndex;
@@ -201,7 +258,7 @@ function drawHorizontalAxis(ctx, params, axis) {
     }
 }
 
-function getVerticalAxisGeometry(axis, left, right, cw, tick) {
+function getVerticalAxisGeometry(axis: VerticalAxis, left: number, right: number, cw: number, tick: number) {
     if (axis === "left") {
         return {
             x0: left - 1,
@@ -215,7 +272,14 @@ function getVerticalAxisGeometry(axis, left, right, cw, tick) {
     };
 }
 
-function getVerticalLabelX(axis, x1, isMajor, extra, textWidth, cw) {
+function getVerticalLabelX(
+    axis: VerticalAxis,
+    x1: number,
+    isMajor: boolean,
+    extra: number,
+    textWidth: number,
+    cw: number,
+): number {
     const offset = isMajor ? RulerConfig.sideLabelOffsetMajor : RulerConfig.sideLabelOffset;
     if (axis === "left") {
         const desired = x1 - offset - extra;
@@ -226,7 +290,7 @@ function getVerticalLabelX(axis, x1, isMajor, extra, textWidth, cw) {
     return Math.min(cw - RulerConfig.minEdgePadding - textWidth, desired);
 }
 
-function drawVerticalTick(ctx, x0, x1, y, color) {
+function drawVerticalTick(ctx: CanvasRenderingContext2D, x0: number, x1: number, y: number, color: string) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -235,7 +299,15 @@ function drawVerticalTick(ctx, x0, x1, y, color) {
     ctx.stroke();
 }
 
-function drawVerticalLabel(ctx, params, axis, offset, x1, y, isDark) {
+function drawVerticalLabel(
+    ctx: CanvasRenderingContext2D,
+    params: RulerLayout,
+    axis: VerticalAxis,
+    offset: number,
+    x1: number,
+    y: number,
+    isDark: boolean,
+) {
     ctx.fillStyle = isDark ? "#fff" : "#000";
     const text = offset.toString();
     const textWidth = ctx.measureText(text).width;
@@ -245,7 +317,7 @@ function drawVerticalLabel(ctx, params, axis, offset, x1, y, isDark) {
     ctx.fillText(text, labelX, yLabel);
 }
 
-function drawVerticalAxis(ctx, params, axis) {
+function drawVerticalAxis(ctx: CanvasRenderingContext2D, params: RulerLayout, axis: VerticalAxis) {
     ctx.textAlign = axis === "left" ? "right" : "left";
     const isDark = document.documentElement.classList.contains("dark");
 
@@ -268,7 +340,7 @@ function drawVerticalAxis(ctx, params, axis) {
     }
 }
 
-function clearCanvas(canvas) {
+function clearCanvas(canvas: HTMLCanvasElement | null) {
     if (!canvas) {
         return;
     }
@@ -279,8 +351,12 @@ function clearCanvas(canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-export function useOsdRuler(canvasRef, containerRef, showRulers) {
-    let resizeTimer = null;
+export function useOsdRuler(
+    canvasRef: Ref<HTMLCanvasElement | null>,
+    containerRef: Ref<HTMLElement | null>,
+    showRulers: Readonly<Ref<boolean>>,
+): OsdRuler {
+    let resizeTimer: number | null = null;
 
     function drawRulers() {
         if (!showRulers.value) {
