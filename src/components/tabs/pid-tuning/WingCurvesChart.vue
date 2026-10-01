@@ -28,6 +28,7 @@ interface CurvePoint {
 interface ChartCurve {
     data?: CurvePoint[];
     color?: string;
+    label?: string;
     active?: boolean;
 }
 
