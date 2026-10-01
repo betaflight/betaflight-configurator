@@ -301,6 +301,14 @@ export function findLogBoundaries(data: Uint8Array): LogBoundary[] {
 // ---------------------------------------------------------------------------
 
 /**
+ * Which explicit header lines the log carried. A later fallback line (for
+ * example "P ratio") must not override a value the log states directly.
+ */
+interface HeaderParseState {
+    pIntervalSeen: boolean;
+}
+
+/**
  * Parse the text header section of a single flight log.
  * Returns a sysConfig object plus field definitions for I, P, and S frames.
  */
@@ -348,6 +356,8 @@ function parseHeader(data: Uint8Array, logStart: number, logEnd: number) {
         fieldIndices: {},
     };
 
+    const headerState: HeaderParseState = { pIntervalSeen: false };
+
     // Read header lines one at a time until we hit a non-header byte
     while (!stream.eof) {
         const startOfLine = stream.pos;
@@ -372,7 +382,7 @@ function parseHeader(data: Uint8Array, logStart: number, logEnd: number) {
                 line += c;
             }
 
-            parseHeaderLine(line, sysConfig, frameDefs);
+            parseHeaderLine(line, sysConfig, frameDefs, headerState);
         } else {
             // We've reached the binary data section — put back the byte
             stream.pos = startOfLine;
@@ -435,7 +445,7 @@ const CSV_NUMBER_HEADERS = new Set(["rollPID", "pitchPID", "yawPID"]);
  * Parse a single header line (without the "H " prefix) and update
  * sysConfig / frameDefs accordingly.
  */
-function parseHeaderLine(line: string, sysConfig: SysConfig, frameDefs: FrameDefs) {
+function parseHeaderLine(line: string, sysConfig: SysConfig, frameDefs: FrameDefs, headerState: HeaderParseState) {
     const colonIdx = line.indexOf(":");
     if (colonIdx === -1) {
         return;
@@ -450,7 +460,7 @@ function parseHeaderLine(line: string, sysConfig: SysConfig, frameDefs: FrameDef
     if (parseIntHeader(key, value, sysConfig)) {
         return;
     }
-    parseSpecialHeader(key, value, sysConfig);
+    parseSpecialHeader(key, value, sysConfig, headerState);
 }
 
 function parseFieldDef(key: string, value: string, frameDefs: FrameDefs) {
@@ -491,13 +501,13 @@ function parseIntHeader(key: string, value: string, sysConfig: SysConfig) {
     return false;
 }
 
-function parseSpecialHeader(key: string, value: string, sysConfig: SysConfig) {
+function parseSpecialHeader(key: string, value: string, sysConfig: SysConfig, headerState: HeaderParseState) {
     if (key === "P interval") {
-        parsePIntervalHeader(value, sysConfig);
+        parsePIntervalHeader(value, sysConfig, headerState);
         return;
     }
     if (key === "P ratio") {
-        parsePRatioHeader(value, sysConfig);
+        parsePRatioHeader(value, sysConfig, headerState);
         return;
     }
     if (key === "motorOutput") {
@@ -521,21 +531,26 @@ function parseSpecialHeader(key: string, value: string, sysConfig: SysConfig) {
     }
 }
 
-function parsePIntervalHeader(value: string, sysConfig: SysConfig) {
+function parsePIntervalHeader(value: string, sysConfig: SysConfig, headerState: HeaderParseState) {
+    headerState.pIntervalSeen = true;
     if (value.includes("/")) {
         const parts = value.split("/");
         sysConfig.frameIntervalPNum = Number.parseInt(parts[0], 10);
         sysConfig.frameIntervalPDenom = Number.parseInt(parts[1], 10);
     } else {
-        sysConfig.frameIntervalPNum = Number.parseInt(value, 10);
-        sysConfig.frameIntervalPDenom = 1;
+        // Firmware prints a bare divider ("P interval:2" logs every 2nd loop),
+        // and consumers read the denominator, same as the num/denom form above
+        // and the blackbox-viewer parser.
+        sysConfig.frameIntervalPNum = 1;
+        sysConfig.frameIntervalPDenom = Number.parseInt(value, 10);
     }
 }
 
-function parsePRatioHeader(value: string, sysConfig: SysConfig) {
-    // Alternative form — derive P interval from ratio (I interval / P interval).
-    // Use it only if P interval wasn't explicitly set.
-    if (sysConfig.frameIntervalPNum === 1 && sysConfig.frameIntervalPDenom === 1) {
+function parsePRatioHeader(value: string, sysConfig: SysConfig, headerState: HeaderParseState) {
+    // Alternative form: derive P interval from ratio (I interval / P interval).
+    // Only used when the log does not carry an explicit P interval line;
+    // firmware prints both, and the explicit interval always wins.
+    if (!headerState.pIntervalSeen) {
         const ratio = Number.parseInt(value, 10);
         if (ratio > 0) {
             sysConfig.frameIntervalPNum = 1;
