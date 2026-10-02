@@ -851,7 +851,7 @@ const wingTpaParams = computed(() => {
     const s = filteredSc.value;
     const result: HeaderParam[] = [];
 
-    if (s.tpa_curve_type === null || s.tpa_speed_type === null) {
+    if (s.tpa_curve_type == null || s.tpa_speed_type == null) {
         return result;
     }
 
@@ -892,7 +892,7 @@ const wingCurvesParams = computed(() => {
     const s = filteredSc.value;
     const result: HeaderParam[] = [];
 
-    if (s.tpa_curve_type === null) {
+    if (s.tpa_curve_type == null) {
         return result;
     }
 
