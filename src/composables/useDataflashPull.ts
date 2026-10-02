@@ -93,7 +93,7 @@ export function useDataflashPull(): DataflashPull {
 
                 const onChunkRead: DataflashReadCallback = (_chunkAddress, chunkDataView, _bytesCompressed, error) => {
                     if (error) {
-                        reject(error);
+                        reject(error instanceof Error ? error : new Error(String(error)));
                         return;
                     }
                     if (chunkDataView === null) {

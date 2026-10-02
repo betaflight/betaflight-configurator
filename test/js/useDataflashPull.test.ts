@@ -193,6 +193,14 @@ describe("useDataflashPull", () => {
         expect(connectionStore.liveDataPaused).toBe(false);
     });
 
+    it("rejects with an Error when the read reports a bare value", async () => {
+        reportedUsedSize = 8192;
+        readReply = (address, _blockSize, callback) => callback(address, null, null, "link lost");
+
+        await expect(dataflash.pull()).rejects.toThrow(new Error("link lost"));
+        expect(dataflash.pulling.value).toBe(false);
+    });
+
     it("rejects when the first read throws synchronously", async () => {
         reportedUsedSize = 8192;
         const error = new Error("port closed");

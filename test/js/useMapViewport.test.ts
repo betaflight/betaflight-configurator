@@ -49,6 +49,7 @@ describe("useMapViewport", () => {
     afterEach(() => {
         scope.stop();
         vi.unstubAllGlobals();
+        vi.restoreAllMocks();
         for (const name of ["fullscreenElement", "webkitFullscreenElement", "msFullscreenElement"]) {
             Reflect.deleteProperty(document, name);
         }
@@ -59,7 +60,7 @@ describe("useMapViewport", () => {
 
     describe("toggleFullscreen", () => {
         it("requests fullscreen on the container when nothing is fullscreen", () => {
-            const requestFullscreen = vi.fn();
+            const requestFullscreen = vi.fn().mockResolvedValue(undefined);
             Object.assign(container.value!, { requestFullscreen });
 
             viewport.toggleFullscreen();
@@ -77,8 +78,8 @@ describe("useMapViewport", () => {
         });
 
         it("exits when an element is already fullscreen, even if only a prefixed property says so", () => {
-            const requestFullscreen = vi.fn();
-            const exitFullscreen = vi.fn();
+            const requestFullscreen = vi.fn().mockResolvedValue(undefined);
+            const exitFullscreen = vi.fn().mockResolvedValue(undefined);
             Object.assign(container.value!, { requestFullscreen });
             Object.assign(document, { exitFullscreen });
             setFullscreenElement("webkitFullscreenElement", container.value);
@@ -87,6 +88,18 @@ describe("useMapViewport", () => {
 
             expect(exitFullscreen).toHaveBeenCalledOnce();
             expect(requestFullscreen).not.toHaveBeenCalled();
+        });
+
+        it("logs a refused request instead of leaving the rejection unhandled", async () => {
+            const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+            const refusal = new TypeError("Permissions check failed");
+            Object.assign(container.value!, { requestFullscreen: vi.fn().mockRejectedValue(refusal) });
+
+            viewport.toggleFullscreen();
+            await Promise.resolve();
+            await Promise.resolve();
+
+            expect(warn).toHaveBeenCalledWith("Fullscreen toggle failed:", refusal);
         });
 
         it("does nothing without a container", () => {

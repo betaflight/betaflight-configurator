@@ -81,7 +81,7 @@ export interface Cli {
     saveFile: () => Promise<void>;
     loadFile: () => Promise<(() => void) | null>;
     copyToClipboard: () => void;
-    submitSupportRequest: () => Promise<void>;
+    submitSupportRequest: () => void;
     handleCommandKeyDown: (event: KeyboardEvent) => void;
     handleCommandKeyPress: (event: KeyboardEvent) => void;
     handleCommandKeyUp: (event: KeyboardEvent) => void;
@@ -158,7 +158,7 @@ async function submitSupportData(
     data: string,
     state: CliState,
     clearHistory: () => void,
-    executeCommands: (outString: string) => Promise<void>,
+    executeCommands: (outString: string) => void,
     writeToOutput: (text: string) => void,
     getOutputHistory: () => string,
     trackPollInterval?: (id: ReturnType<typeof setInterval> | null) => void,
@@ -173,7 +173,7 @@ async function submitSupportData(
     }
 
     commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
-    await executeCommands(commands.join("\n"));
+    executeCommands(commands.join("\n"));
     const delay = setInterval(async () => {
         const time = Date.now();
         if (state.lastArrival < time - SERIAL_IDLE_MS) {
@@ -315,10 +315,11 @@ export function useCli(): Cli {
 
     const encoder = new TextEncoder();
     const send = (line: string, callback?: SendCallback) => {
-        serial.send(encoder.encode(line), callback);
+        // serial.send never rejects: it logs a failure and reports it through the callback.
+        void serial.send(encoder.encode(line), callback);
     };
 
-    const executeCommands = async (outString: string) => {
+    const executeCommands = (outString: string) => {
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
@@ -434,7 +435,7 @@ export function useCli(): Cli {
         BFClipboard.writeText(text, onCopySuccessful, onCopyFailed);
     };
 
-    const submitSupportRequest = async () => {
+    const submitSupportRequest = () => {
         showSupportWarningDialog((data) =>
             submitSupportData(
                 data,
@@ -724,8 +725,8 @@ export function useCli(): Cli {
         // making the near-bottom detection zoom-level and UI-scale independent.
         if (cliWindowRef.value) {
             const updateThreshold = () => {
-                const lh = parseFloat(getComputedStyle(cliWindowRef.value!).lineHeight);
-                if (!isNaN(lh) && lh > 0) {
+                const lh = Number.parseFloat(getComputedStyle(cliWindowRef.value!).lineHeight);
+                if (!Number.isNaN(lh) && lh > 0) {
                     scrollNearBottomPx = lh;
                 }
                 // Post-layout: recheck pin state (resize changes scrollHeight; no scroll event fires).
@@ -783,7 +784,7 @@ export function useCli(): Cli {
                 const bufferOut = new ArrayBuffer(1);
                 const bufView = new Uint8Array(bufferOut);
                 bufView[0] = 0x23; // #
-                serial.send(bufferOut);
+                void serial.send(bufferOut);
             },
             250,
         );

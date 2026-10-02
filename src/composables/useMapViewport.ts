@@ -34,6 +34,11 @@ interface PrefixedFullscreenElement extends HTMLElement {
     msRequestFullscreen?: () => void;
 }
 
+// The browser may refuse the switch, e.g. without a user gesture; the map simply stays as it is.
+function warnFullscreenFailed(error: unknown) {
+    console.warn("Fullscreen toggle failed:", error);
+}
+
 /** The part of an ol/Map this composable uses. */
 export interface ResizableMap {
     updateSize: () => void;
@@ -87,14 +92,14 @@ export function useMapViewport(
 
         if (!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
             if (container.requestFullscreen) {
-                container.requestFullscreen();
+                container.requestFullscreen().catch(warnFullscreenFailed);
             } else if (container.webkitRequestFullscreen) {
                 container.webkitRequestFullscreen();
             } else if (container.msRequestFullscreen) {
                 container.msRequestFullscreen();
             }
         } else if (doc.exitFullscreen) {
-            doc.exitFullscreen();
+            doc.exitFullscreen().catch(warnFullscreenFailed);
         } else if (doc.webkitExitFullscreen) {
             doc.webkitExitFullscreen();
         } else if (doc.msExitFullscreen) {
