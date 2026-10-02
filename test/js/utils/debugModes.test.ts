@@ -5,6 +5,7 @@ import {
     getDebugFieldNames,
     decodeDebugFieldToFriendly,
     convertDebugFieldValue,
+    type DebugScaleContext,
 } from "../../../src/js/utils/debugModes";
 import {
     API_VERSION_1_44,
@@ -246,13 +247,13 @@ describe("debugModes helper", () => {
     });
 
     // Deterministic stub scaling so assertions are exact (gyro is identity).
-    const stubCtx = (overrides = {}) => ({
+    const stubCtx = (overrides: Partial<DebugScaleContext> = {}): DebugScaleContext => ({
         apiVersion: API_VERSION_1_48,
         motorPoles: 14,
-        gyroRawToDegreesPerSecond: (v) => v,
-        accRawToGs: (v) => v / 2048,
-        rcCommandRawToThrottle: (v) => v,
-        throttleToRcCommandRaw: (v) => v,
+        gyroRawToDegreesPerSecond: (v: number) => v,
+        accRawToGs: (v: number) => v / 2048,
+        rcCommandRawToThrottle: (v: number) => v,
+        throttleToRcCommandRaw: (v: number) => v,
         ...overrides,
     });
 
@@ -270,7 +271,7 @@ describe("debugModes helper", () => {
                     "GYRO_FILTERED",
                     "debug[0]",
                     10,
-                    stubCtx({ gyroRawToDegreesPerSecond: (v) => v * 2 }),
+                    stubCtx({ gyroRawToDegreesPerSecond: (v: number) => v * 2 }),
                 ),
             ).toBe("20 °/s");
         });
