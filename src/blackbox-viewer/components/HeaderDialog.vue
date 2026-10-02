@@ -1008,6 +1008,7 @@ const GROUP_ORDER = new Set([
     "D-Term Filters",
     "RC Smoothing",
     "Wing",
+    "PSAS",
     "Features",
     "Disabled Fields",
 ]);
@@ -1293,6 +1294,7 @@ const PREFIX_GROUPS = [
     ["spa_", "Wing"],
     ["tpa_speed_", "Wing"],
     ["tpa_curve_", "Wing"],
+    ["psas_", "PSAS"],
 ];
 
 function getHeaderGroup(key: string): string {

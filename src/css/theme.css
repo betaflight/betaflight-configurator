@@ -110,7 +110,9 @@ html {
     --chart-axis-label-color: var(--chart-text-color);
     --chart-tick-color: var(--chart-text-color);
     --chart-grid-line-color: var(--surface-400);
-    --chart-curve-color: var(--error-500);
+    --chart-curve-color-1: #d55e00;
+    --chart-curve-color-2: #0072b2;
+    --chart-curve-color-3: #009e73;
     --chart-text-color: var(--text);
 }
 
@@ -151,7 +153,9 @@ html {
     --chart-axis-label-color: var(--chart-text-color);
     --chart-tick-color: var(--chart-text-color);
     --chart-grid-line-color: var(--surface-600);
-    --chart-curve-color: var(--error-400);
+    --chart-curve-color-1: #ffb000;
+    --chart-curve-color-2: #56b4e9;
+    --chart-curve-color-3: #34d399;
     --chart-text-color: var(--text);
 }
 
@@ -181,7 +185,9 @@ html {
     --chart-axis-label-color: var(--chart-text-color);
     --chart-tick-color: var(--chart-text-color);
     --chart-grid-line-color: var(--surface-600);
-    --chart-curve-color: var(--error-400);
+    --chart-curve-color-1: #ffb000;
+    --chart-curve-color-2: #56b4e9;
+    --chart-curve-color-3: #34d399;
     --chart-text-color: var(--text);
 }
 
@@ -211,7 +217,9 @@ body[data-theme="amber"] {
     --chart-axis-label-color: var(--chart-text-color);
     --chart-tick-color: var(--chart-text-color);
     --chart-grid-line-color: var(--surface-400);
-    --chart-curve-color: var(--error-500);
+    --chart-curve-color-1: #d55e00;
+    --chart-curve-color-2: #0072b2;
+    --chart-curve-color-3: #009e73;
     --chart-text-color: var(--text);
 }
 
@@ -240,7 +248,9 @@ body[data-theme="contrast"] {
     --chart-axis-label-color: var(--chart-text-color);
     --chart-tick-color: var(--chart-text-color);
     --chart-grid-line-color: var(--surface-400);
-    --chart-curve-color: var(--error-400);
+    --chart-curve-color-1: #ffb000;
+    --chart-curve-color-2: #56b4e9;
+    --chart-curve-color-3: #34d399;
     --chart-text-color: var(--text);
 
     #tabs li.active a {

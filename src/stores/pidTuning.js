@@ -42,6 +42,8 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             filterConfig: FC.FILTER_CONFIG,
             tuningSliders: sliderPositions(),
             wingConfig: FC.WING_CONFIG,
+            psasConfig: FC.PSAS_CONFIG,
+
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
             pidProfileName: FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] ?? "",

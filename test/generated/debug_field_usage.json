@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "f583a0c46d666701f300cb4e023715f20853a7d5",
-            "date": "2026-09-25",
+            "commit": "610e068e2d7302f9088a3b9e0b713854c089e326",
+            "date": "2026-09-27",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1954,7 +1954,7 @@
                     "dynamic": false
                 },
                 "LAUNCH": {
-                    "fields": [0, 1, 2, 3, 4, 5, 6],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "LIDAR_TF": {
@@ -2010,6 +2010,10 @@
                     "dynamic": false
                 },
                 "POSITION_NAV": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
+                "PSAS": {
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },

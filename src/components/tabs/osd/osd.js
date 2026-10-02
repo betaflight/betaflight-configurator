@@ -1488,6 +1488,15 @@ OSD.loadDisplayFields = function () {
                 return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
             },
         },
+        PSAS_AOA_LIMITER: {
+            name: "PSAS AOA LIMITER",
+            text: "osdPsasAoALimiter",
+            desc: "osdDescPsasAoALimiter",
+            defaultPosition: -1,
+            draw_order: 625,
+            positionable: true,
+            preview: "AOA ON",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1664,6 +1673,10 @@ OSD.chooseFields = function () {
 
         if (hasNavMap) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
+        }
+
+        if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PSAS_AOA_LIMITER]);
         }
 
         if (hasPositionHold) {

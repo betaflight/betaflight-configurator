@@ -1,12 +1,24 @@
 <template>
     <div ref="containerRef" class="chart-container">
         <canvas ref="chartCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+        <div v-if="showLegend" class="flex flex-wrap justify-center gap-4 mt-1 text-xs">
+            <div v-for="(curve, index) in chartCurves" :key="index">
+                <span>
+                    <span
+                        class="inline-block w-3 h-0.5 align-middle mr-1"
+                        :style="{ backgroundColor: curve.color, opacity: curve.active ? 1 : 0.4 }"
+                    >
+                    </span>
+                    {{ curve.label }}
+                </span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
-import { getCssVar } from "./WingTpaCurvesData";
+import { getCssVar } from "../../../js/utils/common";
 
 interface CurvePoint {
     speed: number;
@@ -16,6 +28,7 @@ interface CurvePoint {
 interface ChartCurve {
     data?: CurvePoint[];
     color?: string;
+    label?: string;
     active?: boolean;
 }
 
@@ -32,6 +45,7 @@ type Scale = (value: number) => number;
 const props = defineProps({
     chartCurves: { type: Array as PropType<ChartCurve[]>, default: () => [] },
     showGrid: { type: Boolean, default: true },
+    showLegend: { type: Boolean, default: true },
 });
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -229,7 +243,7 @@ function drawChart() {
         axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
         tick: getCssVar("--chart-tick-color", "#888888"),
         grid: getCssVar("--chart-grid-line-color", "#333333"),
-        curve: getCssVar("--chart-curve-color", "#e24761"),
+        curve: getCssVar("--chart-curve-color-1", "#d55e00"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);

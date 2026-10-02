@@ -74,6 +74,13 @@ describe("presentFlags", () => {
         );
     });
 
+    // 2026.12 inserts PSAS after AUTOPILOT, which shifts the table up one and
+    // moves CAMERA3 (firmware BOXCAMERA3) into bit 31.
+    it("names the real 2026.12 bit 31 alongside ARM", () => {
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "2026.6.12");
+        expect(FlightLogFieldPresenter.presentFlags(0x80000001, FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe("ARM|CAMERA3");
+    });
+
     // 4.0 dropped BARO, GPSHOME and GPSHOLD from boxId_e, which pulls BOXPARALYZE
     // down to boxId 31 for the whole 4.0-4.5 range. PARALYZE is a sticky mode
     // (rc_modes.c puts it in stickyModes), so once the switch fires the bit latches

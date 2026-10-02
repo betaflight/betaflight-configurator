@@ -1517,6 +1517,7 @@ export function getDebugFieldNames(apiVersion) {
             "Gyro after all filtering [dbg-axis]",
             "CPU Load at Sample",
         );
+
         // Flow-processing pipeline replaced the quality/raw/processed/delta-time
         // layout used prior to 1.48 (opticalflow.c rewrite).
         result.OPTICALFLOW = debugFields(
@@ -1693,6 +1694,8 @@ export function getDebugFieldNames(apiVersion) {
             "RGpsPos",
             "RGpsVel",
         );
+
+        result.PSAS = debugFields("Plane SAS");
     }
 
     // Firmware labels win where the firmware carries them: the annotation sits on
@@ -2156,6 +2159,15 @@ const DEBUG_DECODE = {
     },
     VELOCITY: () => "",
     DFILTER: () => "",
+    PSAS: {
+        "debug[0]": (v) => `${v.toFixed(1)} %`,
+        "debug[1]": (v) => `${v.toFixed(1)} %`,
+        "debug[2]": (v) => `${(v / 100).toFixed(2)}`,
+        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[5]": (v) => `${(v / 10).toFixed(1)}`,
+        "debug[6]": (v) => `${(v / 100).toFixed(2)}`,
+    },
 };
 // Gyro-family modes share one whole-mode formatter.
 for (const m of [
@@ -2518,6 +2530,13 @@ const DEBUG_CONVERT = {
     },
     FEEDFORWARD_LIMIT: {
         "debug[6]": cScale(1000),
+    },
+    PSAS: {
+        "debug[2]": cScale100,
+        "debug[3]": cScale10,
+        "debug[4]": cScale10,
+        "debug[5]": cScale10,
+        "debug[6]": cScale100,
     },
 };
 

@@ -36,7 +36,7 @@ function verifyChunkIndexes(_chunks) {
  * Window based smoothing of fields is offered.
  */
 export function FlightLog(logData) {
-    const ADDITIONAL_COMPUTED_FIELD_COUNT = 21; /** attitude + PID_SUM + PID_ERROR + RCCOMMAND_SCALED + GPS coord, distance, azimuth, trajectory tilt angle **/
+    const ADDITIONAL_COMPUTED_FIELD_COUNT = 24; /** attitude + PID_SUM + PID_ERROR + RCCOMMAND_SCALED + GPS coord, distance, azimuth, trajectory tilt angle, PSAS Sum **/
     let logIndex = 0;
     const logIndexes = new FlightLogIndex(logData);
     const parser = new FlightLogParser(logData);
@@ -299,6 +299,24 @@ export function FlightLog(logData) {
             }
             if (fieldNames.includes("GPS_velned[0]")) {
                 fieldNames.push("gpsTrajectoryTiltAngle");
+            }
+        }
+
+        if (!disabled.PSAS) {
+            if (
+                fieldNames.includes("PSAS_roll[0]") ||
+                fieldNames.includes("PSAS_roll[1]") ||
+                fieldNames.includes("PSAS_pitch[0]") ||
+                fieldNames.includes("PSAS_pitch[1]") ||
+                fieldNames.includes("PSAS_pitch[2]") ||
+                fieldNames.includes("PSAS_pitch[3]") ||
+                fieldNames.includes("PSAS_pitch[4]") ||
+                fieldNames.includes("PSAS_yaw[0]") ||
+                fieldNames.includes("PSAS_yaw[1]") ||
+                fieldNames.includes("PSAS_yaw[2]") ||
+                fieldNames.includes("PSAS_yaw[3]")
+            ) {
+                fieldNames.push("psasSum[0]", "psasSum[1]", "psasSum[2]");
             }
         }
     };
@@ -829,44 +847,109 @@ export function FlightLog(logData) {
     };
 
     /**
+     * Compute sum of plane SAS channels components.
+     * Writes 3 field to destFrame at fieldIndex.
+     * Returns updated fieldIndex.
+     */
+    const computePlaneSasSum = (srcFrame, destFrame, fieldIndex, psasData) => {
+        let psasRollSum = 0;
+        for (const rollDataIndex of psasData[AXIS.ROLL]) {
+            if (rollDataIndex !== undefined) {
+                psasRollSum += srcFrame[rollDataIndex];
+            }
+        }
+        destFrame[fieldIndex++] = psasRollSum;
+
+        let psasPitchSum = 0;
+        for (const pitchDataIndex of psasData[AXIS.PITCH]) {
+            if (pitchDataIndex !== undefined) {
+                psasPitchSum += srcFrame[pitchDataIndex];
+            }
+        }
+        destFrame[fieldIndex++] = psasPitchSum;
+
+        let psasYawSum = 0;
+        for (const yawDataIndex of psasData[AXIS.YAW]) {
+            if (yawDataIndex !== undefined) {
+                psasYawSum += srcFrame[yawDataIndex];
+            }
+        }
+        destFrame[fieldIndex++] = psasYawSum;
+
+        return fieldIndex;
+    };
+
+    /**
      * Resolve field indices from fieldNameToIndex for computed field injection.
      * Sets arrays to false when the primary field is absent.
      */
     const resolveFieldIndices = () => {
         let gyroADC = [fieldNameToIndex["gyroADC[0]"], fieldNameToIndex["gyroADC[1]"], fieldNameToIndex["gyroADC[2]"]];
+        if (!gyroADC[0]) {
+            gyroADC = false;
+        }
+
         let accSmooth = [
             fieldNameToIndex["accSmooth[0]"],
             fieldNameToIndex["accSmooth[1]"],
             fieldNameToIndex["accSmooth[2]"],
         ];
+        if (!accSmooth[0]) {
+            accSmooth = false;
+        }
+
         let magADC = [fieldNameToIndex["magADC[0]"], fieldNameToIndex["magADC[1]"], fieldNameToIndex["magADC[2]"]];
+        if (!magADC[0]) {
+            magADC = false;
+        }
+
         let imuQuaternion = [
             fieldNameToIndex["imuQuaternion[0]"],
             fieldNameToIndex["imuQuaternion[1]"],
             fieldNameToIndex["imuQuaternion[2]"],
         ];
+        if (!imuQuaternion[0]) {
+            imuQuaternion = false;
+        }
+
         let rcCommand = [
             fieldNameToIndex["rcCommand[0]"],
             fieldNameToIndex["rcCommand[1]"],
             fieldNameToIndex["rcCommand[2]"],
             fieldNameToIndex["rcCommand[3]"],
         ];
+        if (!rcCommand[0]) {
+            rcCommand = false;
+        }
+
         let setpoint = [
             fieldNameToIndex["setpoint[0]"],
             fieldNameToIndex["setpoint[1]"],
             fieldNameToIndex["setpoint[2]"],
             fieldNameToIndex["setpoint[3]"],
         ];
+        if (!setpoint[0]) {
+            setpoint = false;
+        }
+
         let gpsCoord = [
             fieldNameToIndex["GPS_coord[0]"],
             fieldNameToIndex["GPS_coord[1]"],
             fieldNameToIndex["GPS_altitude"],
         ];
+        if (!gpsCoord[0]) {
+            gpsCoord = false;
+        }
+
         let gpsVelNED = [
             fieldNameToIndex["GPS_velned[0]"],
             fieldNameToIndex["GPS_velned[1]"],
             fieldNameToIndex["GPS_velned[2]"],
         ];
+        if (!gpsVelNED[0]) {
+            gpsVelNED = false;
+        }
+
         let axisPID = [
             [
                 fieldNameToIndex["axisP[0]"],
@@ -891,32 +974,24 @@ export function FlightLog(logData) {
             ],
         ];
 
-        if (!magADC[0]) {
-            magADC = false;
-        }
-        if (!gyroADC[0]) {
-            gyroADC = false;
-        }
-        if (!accSmooth[0]) {
-            accSmooth = false;
-        }
-        if (!imuQuaternion[0]) {
-            imuQuaternion = false;
-        }
-        if (!rcCommand[0]) {
-            rcCommand = false;
-        }
-        if (!setpoint[0]) {
-            setpoint = false;
-        }
-        if (!axisPID[0]) {
-            axisPID = false;
-        }
-        if (!gpsCoord[0]) {
-            gpsCoord = false;
-        }
-        if (!gpsVelNED[0]) {
-            gpsVelNED = false;
+        let psasData = false;
+        if (fieldNameToIndex["psasSum[0]"]) {
+            psasData = [
+                [fieldNameToIndex["PSAS_roll[0]"], fieldNameToIndex["PSAS_roll[1]"]],
+                [
+                    fieldNameToIndex["PSAS_pitch[0]"],
+                    fieldNameToIndex["PSAS_pitch[1]"],
+                    fieldNameToIndex["PSAS_pitch[2]"],
+                    fieldNameToIndex["PSAS_pitch[3]"],
+                    fieldNameToIndex["PSAS_pitch[4]"],
+                ],
+                [
+                    fieldNameToIndex["PSAS_yaw[0]"],
+                    fieldNameToIndex["PSAS_yaw[1]"],
+                    fieldNameToIndex["PSAS_yaw[2]"],
+                    fieldNameToIndex["PSAS_yaw[3]"],
+                ],
+            ];
         }
 
         return {
@@ -929,6 +1004,7 @@ export function FlightLog(logData) {
             gpsCoord,
             gpsVelNED,
             axisPID,
+            psasData,
             numSatIndex: fieldNameToIndex["GPS_numSat"],
             flightModeFlagsIndex: fieldNameToIndex["flightModeFlags"],
             sysConfig: this.getSysConfig(),
@@ -982,6 +1058,9 @@ export function FlightLog(logData) {
             fieldIndex = computeTrajectoryTilt(srcFrame, destFrame, fieldIndex, ctx.gpsVelNED);
         }
 
+        if (ctx.psasData) {
+            fieldIndex = computePlaneSasSum(srcFrame, destFrame, fieldIndex, ctx.psasData);
+        }
         destFrame.splice(fieldIndex);
     };
 
