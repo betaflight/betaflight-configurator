@@ -50,11 +50,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+type SpaValue = string | number | null;
+
 export interface SpaRow {
-    label: string;
-    mode: string | number | null;
-    center: string | number | null;
-    width: string | number | null;
+  label: string;
+  mode: SpaValue;
+  center: SpaValue;
+  width: SpaValue;
 }
 
 const props = defineProps<{
