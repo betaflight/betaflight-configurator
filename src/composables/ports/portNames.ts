@@ -1,10 +1,33 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { SerialPort } from "@/stores/fc.types";
+
 export const PORT_NONE = -1;
 export const PORT_NAME_NONE = "NONE";
 
 // Keyed by serialPortIdentifier_e. The UART block appears twice because the identifier base
 // moved; only one of the two blocks is ever populated on a given target, so a name round trip
 // is unambiguous in practice.
-const portCliNames = {
+const portCliNames: Readonly<Record<number, string | undefined>> = {
     0: "UART1",
     1: "UART2",
     2: "UART3",
@@ -50,19 +73,15 @@ const portCliNames = {
 // A build either has both soft serial ports or neither: USE_SOFTSERIAL turns on
 // SOFTSERIAL1 and SOFTSERIAL2 together (firmware target/serial_post.h), so the
 // board's capability bit is enough to offer the pair.
-export const SOFT_SERIAL_IDENTIFIERS = [30, 31];
+export const SOFT_SERIAL_IDENTIFIERS: readonly number[] = [30, 31];
 
-/**
- * @param {number} identifier
- * @returns {boolean}
- */
-export function isSoftSerialIdentifier(identifier) {
+export function isSoftSerialIdentifier(identifier: number): boolean {
     return SOFT_SERIAL_IDENTIFIERS.includes(identifier);
 }
 
 // The configurator has always shown the USB port as "USB VCP" and soft serial in full; the
 // firmware CLI knows them as "VCP", "SOFT1" and "SOFT2".
-const portDisplayNames = {
+const portDisplayNames: Readonly<Record<number, string | undefined>> = {
     20: "USB VCP",
     30: "SOFTSERIAL1",
     31: "SOFTSERIAL2",
@@ -71,19 +90,12 @@ const portDisplayNames = {
 /**
  * The name the firmware CLI accepts and prints for a port, or null when the identifier is
  * unknown to us.
- *
- * @param {number} identifier
- * @returns {string|null}
  */
-export function getPortCliName(identifier) {
+export function getPortCliName(identifier: number): string | null {
     return portCliNames[identifier] ?? null;
 }
 
-/**
- * @param {number} identifier
- * @returns {string}
- */
-export function getPortDisplayName(identifier) {
+export function getPortDisplayName(identifier: number): string {
     return portDisplayNames[identifier] ?? portCliNames[identifier] ?? `UART (${identifier})`;
 }
 
@@ -94,11 +106,14 @@ export function getPortDisplayName(identifier) {
  * ports the FC reported can settle it. A name this board does not report reads as unassigned,
  * which is also what the firmware does with an assignment naming a port it has no driver for.
  *
- * @param {Array<{identifier: number}>} ports FC.SERIAL_CONFIG.ports
- * @param {string|null} name as the CLI prints it, e.g. "UART3", "VCP", "NONE"
- * @returns {number} identifier, or PORT_NONE
+ * @param ports FC.SERIAL_CONFIG.ports
+ * @param name as the CLI prints it, e.g. "UART3", "VCP", "NONE"
+ * @returns identifier, or PORT_NONE
  */
-export function findPortIdentifierByCliName(ports, name) {
+export function findPortIdentifierByCliName(
+    ports: readonly Pick<SerialPort, "identifier">[] | null | undefined,
+    name: string | null | undefined,
+): number {
     const wanted = (name ?? "").trim().toUpperCase();
 
     if (!wanted || wanted === PORT_NAME_NONE) {
@@ -124,11 +139,9 @@ export function findPortIdentifierByCliName(ports, name) {
  * name only and rejects a number, so an unmappable identifier has to surface here instead of
  * failing on the board.
  *
- * @param {string} setting CLI setting name, e.g. "rx_uart"
- * @param {number} identifier
- * @returns {string}
+ * @param setting CLI setting name, e.g. "rx_uart"
  */
-export function formatPortSetCommand(setting, identifier) {
+export function formatPortSetCommand(setting: string, identifier: number): string {
     if (identifier === PORT_NONE) {
         return `set ${setting} = ${PORT_NAME_NONE}`;
     }
