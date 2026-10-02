@@ -852,7 +852,9 @@ const wingTpaParams = computed(() => {
 
     // Show TPA speed parameters for hyperbolic curves type only
     if (!s.tpa_curve_type) {
-        return [param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value))];
+        return [param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value))].filter(
+            (p) => !p.missing,
+        );
     } else if (s.tpa_speed_type == 0) {
         // Basic mode
         result = [
