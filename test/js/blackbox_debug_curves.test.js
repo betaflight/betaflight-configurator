@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { GraphConfig } from "../../src/blackbox-viewer/graph_config.js";
-import { getDebugModes } from "../../src/js/utils/debugModes.js";
+import { getDebugModes } from "../../src/js/utils/debugModes";
 
 // getDefaultCurveForField swallows every error and falls back to a +/-500 curve, so a missing
 // import or a typo in the debug mode table degrades silently into a plausible looking graph

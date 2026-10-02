@@ -105,7 +105,7 @@ function shouldSkip(line: string): boolean {
     return !trimmed || trimmed.startsWith("#");
 }
 
-function parseErrors(lines: string[]): string[] {
+function parseErrors(lines: readonly string[]): string[] {
     return lines.filter((line) => line.startsWith(ERROR_PREFIX));
 }
 
@@ -177,7 +177,7 @@ export function isConnectionClosedError(error: unknown): boolean {
 // `send` resolves with whatever the FC replied, and a command the FC refused replies normally —
 // the refusal is a line in the response, not a transport error. Callers that need to know whether
 // a command took effect have to look for it.
-export function findCliError(lines: string[] | null | undefined): string | null {
+export function findCliError(lines: readonly string[] | null | undefined): string | null {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 

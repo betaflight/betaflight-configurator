@@ -70,9 +70,9 @@ npm run tauri:dev # Desktop app (requires display)
 ## What's included
 
 - **Node.js 24.x** — matches `.nvmrc`
-- **Rust 1.95** — matches `src-tauri/rust-toolchain.toml`, with Android cross-compilation targets
+- **Rust 1.95** — matches `src-tauri/rust-toolchain.toml`
 - **Tauri system libs** — webkit2gtk, libsoup, librsvg, openssl, udev
-- **Android SDK** — platform-tools, build-tools 35, NDK 28, JDK 21
+- **Android SDK** — platform-tools, build-tools 35, JDK 21
 - **USB passthrough** — serial device access for flight controller communication
 
 ## Build targets

@@ -1,7 +1,5 @@
-/* Safe-area insets. On iOS the native shell cancels the webview's safe area so the page can
-   use the whole window, and pushes the real insets in as these properties. On Capacitor Android,
-   prefer the SystemBars-injected safe-area properties, with env() as the platform fallback.
-   Always use these rather than env(safe-area-inset-*) directly. */
+/* Safe-area insets. On Capacitor Android, prefer the SystemBars-injected safe-area properties,
+   with env() as the platform fallback. Always use these rather than env(safe-area-inset-*) directly. */
 :root {
     --bf-inset-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
     --bf-inset-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
