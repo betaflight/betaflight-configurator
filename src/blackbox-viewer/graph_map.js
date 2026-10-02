@@ -1,5 +1,20 @@
 import { useSettingsStore } from "./stores/settings.js";
 
+/**
+ * Flight trail colors from lowest to highest altitude, shared by the 2D map and the 3D view.
+ * @type {{ color: string }[]}
+ */
+export const ALTITUDE_TRAIL_COLORS = [
+    { color: "#00ffe0bf" },
+    { color: "#00ff8cbf" },
+    { color: "#00ff02bf" },
+    { color: "#75ff00bf" },
+    { color: "#e5ff00bf" },
+    { color: "#ffb100bf" },
+    { color: "#ff4c00bf" },
+    { color: "#ff1414" },
+];
+
 export function MapGrapher() {
     const { userSettings } = useSettingsStore();
     let myMap,
@@ -47,17 +62,7 @@ export function MapGrapher() {
         smoothFactor: 1,
     };
 
-    // flight trail colors
-    const colorTrailGradient = [
-        { color: "#00ffe0bf" },
-        { color: "#00ff8cbf" },
-        { color: "#00ff02bf" },
-        { color: "#75ff00bf" },
-        { color: "#e5ff00bf" },
-        { color: "#ffb100bf" },
-        { color: "#ff4c00bf" },
-        { color: "#ff1414" },
-    ];
+    const colorTrailGradient = ALTITUDE_TRAIL_COLORS;
 
     // debug circles can be used to aligh icons at the correct coordinates
     const debugCircle = false;
