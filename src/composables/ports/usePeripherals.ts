@@ -1,30 +1,79 @@
-import { ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { ref, type Ref } from "vue";
 import FC from "../../js/fc";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
 import { PORT_NONE, findPortIdentifierByCliName, getPortDisplayName } from "./portNames";
 
-/**
- * Parses the firmware `peripherals` command output. One line per device:
- *
- *   serial UART1: vtx*, osd     claims on a port, the one it opened for starred
- *   serial SOFTSERIAL1 (feature SOFTSERIAL off): vtx
- *                               a port the FC cannot open, and why
- *   can node 125: org.gps (OK) gps, mag
- *   gyro 1: ICM42688P* on SPI1  starred when the instance is enabled
- *   baro: BMP280 on I2C1 @0x76
- *   mag: QMC5883 configured, not detected
- *
- * @param {string[]} lines
- */
-function splitList(text) {
+export interface PeripheralClaim {
+    name: string;
+    active: boolean;
+}
+
+export interface PeripheralSerialPort {
+    portName: string;
+    inactiveReason: string | null;
+    claims: PeripheralClaim[];
+}
+
+export interface CanNode {
+    nodeId: number;
+    name: string;
+    health: string;
+    mode: string | null;
+    sensors: string[];
+}
+
+export interface DetectedSensor {
+    /** e.g. "gyro 0", "baro" */
+    key: string;
+    hardware: string;
+    bus: string | null;
+    detected: boolean;
+    enabled: boolean;
+}
+
+export interface Peripherals {
+    serial: PeripheralSerialPort[];
+    canNodes: CanNode[];
+    sensors: DetectedSensor[];
+}
+
+export interface SerialPortTile {
+    identifier: number;
+    displayName: string;
+    inactiveReason: string | null;
+    claims: PeripheralClaim[];
+}
+
+function splitList(text: string): string[] {
     return text
         .split(",")
         .map((entry) => entry.trim())
         .filter(Boolean);
 }
 
-function parseSerialLine(line) {
+function parseSerialLine(line: string): PeripheralSerialPort | null {
     // The claims are absent altogether on a port nothing has claimed, which the
     // firmware prints as a bare "serial UART4:".
     const match = /^serial (\S+)(?: \(([^)]*)\))?:(?: (.*))?$/.exec(line);
@@ -42,7 +91,7 @@ function parseSerialLine(line) {
     };
 }
 
-function parseCanNodeLine(line) {
+function parseCanNodeLine(line: string): CanNode | null {
     const match = /^can node (\d+): (.*)$/.exec(line);
     if (!match) {
         return null;
@@ -68,7 +117,7 @@ function parseCanNodeLine(line) {
     };
 }
 
-function parseSensorLine(line) {
+function parseSensorLine(line: string): DetectedSensor | null {
     const match = /^(gyro \d+|acc|baro|mag): (.*)$/.exec(line);
     if (!match) {
         return null;
@@ -92,10 +141,21 @@ function parseSensorLine(line) {
     };
 }
 
-export function parsePeripherals(lines) {
-    const serial = [];
-    const canNodes = [];
-    const sensors = [];
+/**
+ * Parses the firmware `peripherals` command output. One line per device:
+ *
+ *   serial UART1: vtx*, osd     claims on a port, the one it opened for starred
+ *   serial SOFTSERIAL1 (feature SOFTSERIAL off): vtx
+ *                               a port the FC cannot open, and why
+ *   can node 125: org.gps (OK) gps, mag
+ *   gyro 1: ICM42688P* on SPI1  starred when the instance is enabled
+ *   baro: BMP280 on I2C1 @0x76
+ *   mag: QMC5883 configured, not detected
+ */
+export function parsePeripherals(lines: readonly string[] | null | undefined): Peripherals {
+    const serial: PeripheralSerialPort[] = [];
+    const canNodes: CanNode[] = [];
+    const sensors: DetectedSensor[] = [];
 
     for (const raw of lines ?? []) {
         const line = raw.trim();
@@ -121,6 +181,10 @@ export function parsePeripherals(lines) {
     return { serial, canNodes, sensors };
 }
 
+function loadSerialPortInventory(): Promise<void> {
+    return new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
+}
+
 /**
  * The peripherals inventory the tiles Ports view renders: every serial port the
  * board has, whether claimed, unclaimed or not openable at all, discovered
@@ -129,42 +193,12 @@ export function parsePeripherals(lines) {
  * The probe is the command itself — a build without it answers with a CLI
  * error, and the view falls back to a "nothing to show" note.
  */
-function loadSerialPortInventory() {
-    return new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
-}
-
 export function usePeripherals() {
     const isLoading = ref(true);
     const supported = ref(false);
-    /**
-     * @typedef {object} SerialPortTile
-     * @property {number} identifier
-     * @property {string} displayName
-     * @property {string | null} inactiveReason
-     * @property {{ name: string, active: boolean, [key: string]: unknown }[]} claims
-     */
-    /**
-     * @typedef {object} CanNode
-     * @property {number} nodeId
-     * @property {string} name
-     * @property {string} health
-     * @property {string | null} mode
-     * @property {string[]} sensors
-     */
-    /**
-     * @typedef {object} DetectedSensor
-     * @property {string} key e.g. "gyro 0", "baro"
-     * @property {string} hardware
-     * @property {string | null} bus
-     * @property {boolean} detected
-     * @property {boolean} enabled
-     */
-    /** @type {import("vue").Ref<SerialPortTile[]>} */
-    const serialPorts = ref([]);
-    /** @type {import("vue").Ref<CanNode[]>} */
-    const canNodes = ref([]);
-    /** @type {import("vue").Ref<DetectedSensor[]>} */
-    const sensors = ref([]);
+    const serialPorts: Ref<SerialPortTile[]> = ref([]);
+    const canNodes: Ref<CanNode[]> = ref([]);
+    const sensors: Ref<DetectedSensor[]> = ref([]);
 
     async function load() {
         isLoading.value = true;
@@ -188,8 +222,8 @@ export function usePeripherals() {
             const parsed = parsePeripherals(lines);
             const fcPorts = FC.SERIAL_CONFIG?.ports ?? [];
 
-            const reported = new Map();
-            const unopenable = [];
+            const reported = new Map<number, PeripheralSerialPort>();
+            const unopenable: { identifier: number; entry: PeripheralSerialPort }[] = [];
             for (const entry of parsed.serial) {
                 const identifier = findPortIdentifierByCliName(fcPorts, entry.portName);
                 if (identifier === PORT_NONE) {
@@ -206,7 +240,7 @@ export function usePeripherals() {
             // plus the ones nothing can open yet - a soft serial port waiting on
             // its feature - so it, rather than the MSP list, is the inventory.
             // A port MSP does not report at all is therefore an inactive one.
-            const tileFor = (identifier, entry) => ({
+            const tileFor = (identifier: number, entry: PeripheralSerialPort | undefined): SerialPortTile => ({
                 identifier,
                 displayName: getPortDisplayName(identifier),
                 inactiveReason: entry?.inactiveReason ?? null,
