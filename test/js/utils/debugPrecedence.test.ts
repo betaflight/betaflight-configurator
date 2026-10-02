@@ -6,6 +6,9 @@ import {
     getDebugFieldAxis,
     getDebugModes,
     resolveDebugField,
+    type DebugContext,
+    type DebugScaleContext,
+    type DebugSysConfig,
 } from "../../../src/js/utils/debugModes";
 import { API_VERSION_1_46, API_VERSION_1_48, API_VERSION_1_49 } from "../../../src/js/data_storage";
 import { FlightLogFieldPresenter } from "../../../src/blackbox-viewer/flightlog_fields_presenter.js";
@@ -23,7 +26,7 @@ import { FlightLogFieldPresenter } from "../../../src/blackbox-viewer/flightlog_
  * annotations, and a mode annotates only the slots it writes.
  */
 
-const sysConfig = (overrides) => ({
+const sysConfig = (overrides: Partial<DebugSysConfig> = {}) => ({
     apiVersion: API_VERSION_1_49,
     debug_mode: null,
     debug_mode_name: null,
@@ -31,7 +34,24 @@ const sysConfig = (overrides) => ({
     ...overrides,
 });
 
-const ctx = (overrides) => debugContextFromSysConfig(sysConfig(overrides));
+/*
+ * A viewer's context: the log's own resolved context plus the FC functions a
+ * device-native unit needs. `apiVersion` is restated because the resolved
+ * context types it as possibly-absent while the scaling context requires it,
+ * and `sysConfig` always sets one.
+ */
+const scalingStubs = {
+    motorPoles: 14,
+    accRawToGs: (v: number) => v / 2048,
+    gyroRawToDegreesPerSecond: (v: number) => v,
+    rcCommandRawToThrottle: (v: number) => v,
+    throttleToRcCommandRaw: (v: number) => v,
+};
+
+const ctx = (overrides: Partial<DebugSysConfig> = {}): DebugContext & DebugScaleContext => {
+    const config = sysConfig(overrides);
+    return { ...debugContextFromSysConfig(config), ...scalingStubs, apiVersion: config.apiVersion };
+};
 
 // CYCLETIME[0] is "Cycle Time" in μs in the generated table for 1.49.
 const CYCLETIME = getDebugModes(API_VERSION_1_49).indexOf("CYCLETIME");
@@ -75,7 +95,7 @@ describe("per-slot resolution", () => {
             debugFields: { 0: { label: "Something Else Entirely", unit: "ms", scale: 1 } },
         });
 
-        expect(resolveDebugField("debug[0]", context).label).toBe("Something Else Entirely");
+        expect(resolveDebugField("debug[0]", context)!.label).toBe("Something Else Entirely");
     });
 
     it("falls back per slot, not per log", () => {
@@ -85,9 +105,9 @@ describe("per-slot resolution", () => {
             debugFields: { 0: { label: "Logged Slot", unit: "us", scale: 1 } },
         });
 
-        expect(resolveDebugField("debug[0]", context).label).toBe("Logged Slot");
+        expect(resolveDebugField("debug[0]", context)!.label).toBe("Logged Slot");
         // Slot 1 carries no header line, so the generated table still answers.
-        expect(resolveDebugField("debug[1]", context).label).toBe("CPU Load");
+        expect(resolveDebugField("debug[1]", context)!.label).toBe("CPU Load");
     });
 
     it("answers nothing for a log with neither, leaving the hand-written tables to it", () => {
@@ -146,7 +166,7 @@ describe("a logged enumerator", () => {
             debugFields: { 0: { label: "Failsafe Phase", unit: null, scale: 1, enumTag: "failsafePhase_e" } },
         });
 
-        expect(resolveDebugField("debug[0]", context).values[0]).toBe("FAILSAFE_IDLE");
+        expect(resolveDebugField("debug[0]", context)!.values![0]).toBe("FAILSAFE_IDLE");
         expect(decodeDebugFieldToFriendly(undefined, "debug[0]", 1, context)).toBe("FAILSAFE_RX_LOSS_DETECTED");
     });
 
@@ -162,7 +182,7 @@ describe("a logged enumerator", () => {
             debugFields: { 0: { label: "New Phase", unit: null, scale: 1, enumTag: "notAnEnum_e" } },
         });
 
-        expect(resolveDebugField("debug[0]", context).values).toBeUndefined();
+        expect(resolveDebugField("debug[0]", context)!.values).toBeUndefined();
         expect(decodeDebugFieldToFriendly(undefined, "debug[0]", 3, context)).toBe("3");
         expect(getDebugFieldAxis("debug[0]", context)).toEqual({ fit: ["debug[0]"] });
     });
@@ -177,7 +197,7 @@ describe("a log with none of the new headers", () => {
     it("decodes through the generated table, as it always has", () => {
         const context = ctx({ debug_mode: CYCLETIME });
 
-        expect(resolveDebugField("debug[0]", context).label).toBe("Cycle Time");
+        expect(resolveDebugField("debug[0]", context)!.label).toBe("Cycle Time");
         expect(decodeDebugFieldToFriendly(undefined, "debug[0]", 125, context)).toBe("125 μs");
         expect(getDebugFieldAxis("debug[1]", context)).toEqual({ range: { min: 0, max: 100 } });
     });
@@ -205,7 +225,7 @@ describe("a sparse header", () => {
         });
 
         // Slot 0 is the only logged one; slots 1 to 6 are Hz in the generated table.
-        const axis = getDebugFieldAxis("debug[1]", context);
+        const axis = getDebugFieldAxis("debug[1]", context)!;
 
         expect(axis.fit).toContain("debug[1]");
         expect(axis.fit).not.toContain("debug[0]");
@@ -218,7 +238,7 @@ describe("a sparse header", () => {
             debugFields: { 0: { label: "Logged Slot", unit: "dps", scale: 1 } },
         });
 
-        expect(getDebugFieldAxis("debug[0]", context).fit).toEqual(["debug[0]"]);
+        expect(getDebugFieldAxis("debug[0]", context)!.fit).toEqual(["debug[0]"]);
     });
 });
 

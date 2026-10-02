@@ -1,8 +1,9 @@
 import semver from "semver";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
-import { FIRMWARE_DEBUG_ENUMS, FIRMWARE_DEBUG_FIELDS } from "../debug_fields_table";
-import { DEBUG_UNITS } from "../debug_units";
+import { FIRMWARE_DEBUG_ENUMS, FIRMWARE_DEBUG_FIELDS, type FirmwareDebugField } from "../debug_fields_table";
+import { DEBUG_UNITS, type DebugUnit } from "../debug_units";
+import type { DebugFieldAnnotation } from "../debug_annotation";
 
 /*
  * The ordered debug_mode lists come straight from the firmware enum, one entry
@@ -19,8 +20,88 @@ import { DEBUG_UNITS } from "../debug_units";
  * tables below serve the firmware versions that carry no annotations, the
  * mode-level `debug[all]` names, and the few formatters an annotation cannot
  * express. They are checked against the firmware's own `DEBUG_SET()` call sites by
- * `test/js/utils/debugModesFirmware.test.js`.
+ * `test/js/utils/debugModesFirmware.test.ts`.
  */
+
+/** The slice of a log's own context the field lookups read. */
+export interface DebugScope {
+    /** Resolved API version; selects the generated tables. */
+    apiVersion?: string;
+    /** The debug mode's name, from the log's header or the guessed table. */
+    modeName?: string;
+    /** The log's own `debug[n]` annotations, when its header carries them. */
+    headerFields?: Record<string, DebugFieldAnnotation>;
+}
+
+/** A parsed log header, as far as the debug lookups read it. */
+export interface DebugSysConfig {
+    /** MSP API version the log was recorded with, e.g. "1.49.0". */
+    apiVersion: string;
+    /** Numeric `debug_mode` from the header, or null when it carries none. */
+    debug_mode?: number | null;
+    /** The firmware's own name for the mode, when the log carries one. */
+    debug_mode_name?: string | null;
+    /** The log's own annotations, keyed by `debug[n]` index. */
+    debugFields?: Record<string, DebugFieldAnnotation> | null;
+}
+
+/** What a log says about its own debug fields, resolved against the generated tables. */
+export interface DebugContext {
+    /** Resolved API version the tables were chosen with. */
+    apiVersion: string | undefined;
+    /** Index of the mode in the resolved table, when the header carries one. */
+    modeIndex: number | undefined;
+    /** The name to show for the mode: the log's own when it has one. */
+    modeName: string | undefined;
+    /** The mode name the guessed table gives that index. */
+    tableName: string | undefined;
+    /** Which of the two `modeName` came from. */
+    modeNameSource: "table" | "header";
+    /** The log's own annotations, when its header carries them. */
+    headerFields: Record<string, DebugFieldAnnotation> | undefined;
+}
+
+/** A resolved `debug[n]`: the log's own annotation for the slot, or the generated table entry. */
+export interface DebugFieldDescriptor {
+    label: string;
+    unit: string | null;
+    scale: number;
+    enumTag?: string;
+    values?: readonly (string | null)[];
+    flags?: readonly (string | null)[];
+}
+
+/** The graph axis a resolved field implies. */
+export interface DebugFieldAxis {
+    range?: { min: number; max: number };
+    dynamic?: "gyro" | "acc" | "throttle";
+    fit?: string[];
+}
+
+/**
+ * Hardware-scaling context for the debug value decode/convert helpers.
+ * Injected by the caller so these functions stay free of FlightLog / Pinia /
+ * FC-store coupling. The blackbox viewer builds it from a parsed log; the
+ * sensors live view builds it from the connected FC. It carries the log's own
+ * scope too where there is one, so a log's header travels with it.
+ */
+export interface DebugScaleContext extends DebugScope {
+    /** Resolved API version (selects field layouts). */
+    apiVersion: string;
+    /** Motor pole count for eRPM conversions. */
+    motorPoles: number;
+    /** Raw accel → g. */
+    accRawToGs: (v: number) => number;
+    /** Raw gyro → °/s. */
+    gyroRawToDegreesPerSecond: (v: number) => number;
+    /** Raw throttle → %. */
+    rcCommandRawToThrottle: (v: number) => number;
+    /** Inverse of above (convert only). */
+    throttleToRcCommandRaw?: (v: number) => number;
+    /** FFT calc-step enum names (optional). */
+    fftCalcSteps?: string[];
+}
+
 const GENERATED_API_VERSIONS = Object.freeze(
     Object.keys(FIRMWARE_DEBUG_MODES).sort((left, right) => semver.compare(left, right)),
 );
@@ -34,10 +115,9 @@ const OLDEST_API_VERSION = GENERATED_API_VERSIONS[0];
  * than it, so a firmware reporting an API version released after this build
  * (or a patch version in between) still decodes through the closest known enum.
  *
- * @param {string} [apiVersion] - e.g. "1.47.0".
- * @returns {string} a key of `FIRMWARE_DEBUG_MODES`.
+ * `apiVersion` is e.g. "1.47.0"; the result is a key of `FIRMWARE_DEBUG_MODES`.
  */
-function resolveTableVersion(apiVersion) {
+function resolveTableVersion(apiVersion?: string): string {
     if (!apiVersion || !semver.valid(apiVersion)) {
         return OLDEST_API_VERSION;
     }
@@ -54,18 +134,15 @@ function resolveTableVersion(apiVersion) {
 const LEGACY_MODE_NAMES = Object.entries(DEBUG_MODE_ALIASES).reduce((map, [legacy, current]) => {
     map.set(current, [...(map.get(current) ?? []), legacy]);
     return map;
-}, new Map());
+}, new Map<string, string[]>());
 
 /**
  * Every name the firmware has used for the enum slot `name` identifies, the name
  * as reported first. A 4.5 log reports "D_MIN" for the slot called "D_MAX" today,
  * and the label tables below are keyed by whichever name was current when the
  * entry was written, so label lookups have to try both directions.
- *
- * @param {string} [name]
- * @returns {string[]}
  */
-function modeNameCandidates(name) {
+function modeNameCandidates(name?: string): string[] {
     if (!name) {
         return [];
     }
@@ -88,15 +165,12 @@ const GENERATED_FIELD_VERSIONS = Object.freeze(
  * Newest annotated API version that is not newer than `apiVersion`, or undefined
  * when the firmware predates the annotations (nothing to overlay, so the
  * hand-written tables answer alone).
- *
- * @param {string} [apiVersion]
- * @returns {string|undefined}
  */
-function resolveFieldsVersion(apiVersion) {
+function resolveFieldsVersion(apiVersion?: string): string | undefined {
     if (!apiVersion || !semver.valid(apiVersion)) {
         return undefined;
     }
-    let resolved;
+    let resolved: string | undefined;
     for (const candidate of GENERATED_FIELD_VERSIONS) {
         if (semver.gte(apiVersion, candidate)) {
             resolved = candidate;
@@ -113,12 +187,8 @@ function resolveFieldsVersion(apiVersion) {
  * the type and the firmware does not log the names. An enum's names are far more
  * stable than `debug_mode_e`'s ordering though, so the worst case is one
  * unnamed enumerator rather than every field relabelled.
- *
- * @param {string} [enumTag]
- * @param {string} [apiVersion]
- * @returns {readonly (string|null)[]|undefined}
  */
-function enumValues(enumTag, apiVersion) {
+function enumValues(enumTag?: string, apiVersion?: string): readonly (string | null)[] | undefined {
     if (!enumTag) {
         return undefined;
     }
@@ -134,15 +204,10 @@ function enumValues(enumTag, apiVersion) {
  * 2026.12 on records the mode's own name and, where it has the flash for it, one
  * annotation per slot. Both are preferred here over anything generated, because
  * they came from the firmware that wrote the data.
- *
- * @param {object} [sysConfig] - a parsed log header.
- * @returns {{apiVersion: string, modeIndex: number, modeName: string|undefined,
- *            tableName: string|undefined, modeNameSource: string,
- *            headerFields: object|undefined}}
  */
-const DEBUG_CONTEXTS = new WeakMap();
+const DEBUG_CONTEXTS = new WeakMap<object, DebugContext>();
 
-export function debugContextFromSysConfig(sysConfig) {
+export function debugContextFromSysConfig(sysConfig?: DebugSysConfig | null): DebugContext {
     const memoised = sysConfig === undefined || sysConfig === null ? undefined : DEBUG_CONTEXTS.get(sysConfig);
     if (memoised !== undefined) {
         return memoised;
@@ -156,10 +221,10 @@ export function debugContextFromSysConfig(sysConfig) {
     return context;
 }
 
-function buildDebugContext(sysConfig) {
+function buildDebugContext(sysConfig?: DebugSysConfig | null): DebugContext {
     const apiVersion = sysConfig?.apiVersion;
-    const modeIndex = sysConfig?.debug_mode;
-    const tableName = getDebugModes(apiVersion)[modeIndex];
+    const modeIndex = sysConfig?.debug_mode ?? undefined;
+    const tableName = modeIndex == null ? undefined : getDebugModes(apiVersion)[modeIndex];
     const loggedName = sysConfig?.debug_mode_name ?? undefined;
 
     return {
@@ -179,7 +244,7 @@ function buildDebugContext(sysConfig) {
  * no log at all and the mode name is passed positionally, so a scope is built
  * from whichever of the two the caller has.
  */
-function debugScope(ctx, fallbackModeName) {
+function debugScope(ctx: DebugScaleContext, fallbackModeName?: string): DebugScope {
     return {
         apiVersion: ctx?.apiVersion,
         modeName: ctx?.modeName ?? fallbackModeName,
@@ -195,11 +260,10 @@ function debugScope(ctx, fallbackModeName) {
  * the mode name but no annotations, and a mode annotates only the slots it
  * writes, so "some header lines present" never means "the header is complete".
  *
- * @param {string} fieldName - e.g. "debug[3]".
- * @param {object} [scope] - from `debugContextFromSysConfig` or `debugScope`.
- * @returns {{label: string, unit: string|null, scale: number}|undefined}
+ * `fieldName` is e.g. "debug[3]"; `scope` comes from `debugContextFromSysConfig`
+ * or `debugScope`.
  */
-export function resolveDebugField(fieldName, scope) {
+export function resolveDebugField(fieldName: string, scope?: DebugScope): DebugFieldDescriptor | undefined {
     const index = /^debug\[([0-7])\]$/.exec(fieldName)?.[1];
     if (index === undefined) {
         return undefined;
@@ -212,7 +276,7 @@ export function resolveDebugField(fieldName, scope) {
         // rather than being borrowed from a different enum.
         return logged.enumTag === undefined
             ? logged
-            : { ...logged, values: enumValues(logged.enumTag, scope.apiVersion) };
+            : { ...logged, values: enumValues(logged.enumTag, scope?.apiVersion) };
     }
 
     return generatedField(scope?.modeName, fieldName, scope?.apiVersion);
@@ -221,13 +285,12 @@ export function resolveDebugField(fieldName, scope) {
 /**
  * The firmware annotation for one field: `{ label, unit, scale }`, or undefined
  * when this firmware does not annotate it.
- *
- * @param {string} [debugModeName]
- * @param {string} fieldName - e.g. "debug[3]".
- * @param {string} [apiVersion]
- * @returns {{label: string, unit: string|null, scale: number}|undefined}
  */
-function generatedField(debugModeName, fieldName, apiVersion) {
+function generatedField(
+    debugModeName: string | undefined,
+    fieldName: string,
+    apiVersion?: string,
+): FirmwareDebugField | undefined {
     const version = resolveFieldsVersion(apiVersion);
     const index = /^debug\[([0-7])\]$/.exec(fieldName)?.[1];
     if (version === undefined || index === undefined) {
@@ -252,12 +315,8 @@ function generatedField(debugModeName, fieldName, apiVersion) {
  *
  * A field with no unit is never grouped: a 0/1 flag sharing an axis with a 16-bit
  * word would be a flat line at the bottom of it.
- *
- * @param {string} fieldName - e.g. "debug[3]".
- * @param {object} [scope]
- * @returns {string[]}
  */
-function generatedFieldGroup(fieldName, scope) {
+function generatedFieldGroup(fieldName: string, scope?: DebugScope): string[] {
     const field = resolveDebugField(fieldName, scope);
     if (field?.unit == null) {
         return [fieldName];
@@ -278,8 +337,9 @@ function generatedFieldGroup(fieldName, scope) {
 }
 
 /* The generated entry for the resolved mode, or undefined when there is none. */
-function generatedModeFields(scope) {
-    const modes = FIRMWARE_DEBUG_FIELDS[resolveFieldsVersion(scope?.apiVersion)];
+function generatedModeFields(scope?: DebugScope): Record<string, FirmwareDebugField> | undefined {
+    const version = resolveFieldsVersion(scope?.apiVersion);
+    const modes = version === undefined ? undefined : FIRMWARE_DEBUG_FIELDS[version];
     if (modes === undefined) {
         return undefined;
     }
@@ -300,12 +360,8 @@ function generatedModeFields(scope) {
  *                    the caller resolves it: "gyro", "acc" or "throttle".
  *   `{ fit }`      - the logged data should decide, over these field names
  *                    together, which is the common case.
- *
- * @param {string} fieldName - e.g. "debug[3]".
- * @param {object} [scope]
- * @returns {{range?: {min: number, max: number}, dynamic?: string, fit?: string[]}|undefined}
  */
-export function getDebugFieldAxis(fieldName, scope) {
+export function getDebugFieldAxis(fieldName: string, scope?: DebugScope): DebugFieldAxis | undefined {
     const field = resolveDebugField(fieldName, scope);
     if (!field) {
         return undefined;
@@ -341,26 +397,33 @@ export function getDebugFieldAxis(fieldName, scope) {
 
 // Hardware conversions for the device-native units, and their inverses. Each is
 // linear, so the inverse of a scale factor is one division by it.
-const CTX_CONVERSIONS = Object.freeze({
+/** A device-native unit's conversion and its inverse, driven by the FC context. */
+interface CtxConversion {
+    toDisplay: (value: number, ctx: DebugScaleContext) => number;
+    toRaw: (value: number, ctx: DebugScaleContext) => number;
+}
+
+const CTX_CONVERSIONS: Readonly<Record<"gyro" | "acc" | "throttle" | "erpm", CtxConversion>> = Object.freeze({
     gyro: {
-        toDisplay: (value, ctx) => ctx.gyroRawToDegreesPerSecond(value),
-        toRaw: (value, ctx) => value / ctx.gyroRawToDegreesPerSecond(1),
+        toDisplay: (value: number, ctx: DebugScaleContext) => ctx.gyroRawToDegreesPerSecond(value),
+        toRaw: (value: number, ctx: DebugScaleContext) => value / ctx.gyroRawToDegreesPerSecond(1),
     },
     acc: {
-        toDisplay: (value, ctx) => ctx.accRawToGs(value),
-        toRaw: (value, ctx) => value / ctx.accRawToGs(1),
+        toDisplay: (value: number, ctx: DebugScaleContext) => ctx.accRawToGs(value),
+        toRaw: (value: number, ctx: DebugScaleContext) => value / ctx.accRawToGs(1),
     },
     throttle: {
-        toDisplay: (value, ctx) => ctx.rcCommandRawToThrottle(value),
-        toRaw: (value, ctx) => ctx.throttleToRcCommandRaw?.(value) ?? value / ctx.rcCommandRawToThrottle(1),
+        toDisplay: (value: number, ctx: DebugScaleContext) => ctx.rcCommandRawToThrottle(value),
+        toRaw: (value: number, ctx: DebugScaleContext) =>
+            ctx.throttleToRcCommandRaw?.(value) ?? value / ctx.rcCommandRawToThrottle(1),
     },
     erpm: {
-        toDisplay: (value, ctx) => (value * 2) / ctx.motorPoles,
-        toRaw: (value, ctx) => (value * ctx.motorPoles) / 2,
+        toDisplay: (value: number, ctx: DebugScaleContext) => (value * 2) / ctx.motorPoles,
+        toRaw: (value: number, ctx: DebugScaleContext) => (value * ctx.motorPoles) / 2,
     },
 });
 
-function defaultDecimals(multiplier) {
+function defaultDecimals(multiplier: number): number {
     const magnitude = Math.abs(multiplier);
     if (magnitude >= 1) {
         return 0;
@@ -368,23 +431,28 @@ function defaultDecimals(multiplier) {
     return Math.min(3, Math.max(0, Math.round(-Math.log10(magnitude))));
 }
 
+/** The display and conversion rules a resolved field implies. */
+interface DebugFieldScaling {
+    values?: readonly (string | null)[];
+    flags?: readonly (string | null)[];
+    suffix: string;
+    decimals: number;
+    toDisplay: (value: number, ctx: DebugScaleContext) => number;
+    toRaw: (value: number, ctx: DebugScaleContext) => number;
+}
+
 /**
  * The scaling and formatting an annotated field implies, or undefined when the
  * field is not annotated. A field holding an enumerator carries `values` instead
  * of a scaling: the firmware's own enumerator names, indexed by value.
- *
- * @param {string} fieldName
- * @param {object} [scope]
- * @returns {{suffix: string, decimals: number, toDisplay: (v:number, ctx:object)=>number,
- *            toRaw: (v:number, ctx:object)=>number}|undefined}
  */
-function generatedScaling(fieldName, scope) {
+function generatedScaling(fieldName: string, scope?: DebugScope): DebugFieldScaling | undefined {
     const field = resolveDebugField(fieldName, scope);
     if (!field) {
         return undefined;
     }
 
-    const display = field.unit === null ? {} : (DEBUG_UNITS[field.unit] ?? {});
+    const display: Partial<DebugUnit> = field.unit === null ? {} : (DEBUG_UNITS[field.unit] ?? {});
     const multiplier = field.scale * (display.factor ?? 1);
     const conversion = display.ctx === undefined ? undefined : CTX_CONVERSIONS[display.ctx];
 
@@ -393,21 +461,20 @@ function generatedScaling(fieldName, scope) {
         flags: field.flags,
         suffix: display.suffix ?? "",
         decimals: display.decimals ?? defaultDecimals(multiplier),
-        toDisplay: (value, ctx) => (conversion ? conversion.toDisplay(value * multiplier, ctx) : value * multiplier),
-        toRaw: (value, ctx) => (conversion ? conversion.toRaw(value, ctx) : value) / multiplier,
+        toDisplay: (value: number, ctx: DebugScaleContext) =>
+            conversion ? conversion.toDisplay(value * multiplier, ctx) : value * multiplier,
+        toRaw: (value: number, ctx: DebugScaleContext) =>
+            (conversion ? conversion.toRaw(value, ctx) : value) / multiplier,
     };
 }
 
 /**
- * The set bits of a flag field, by the names the firmware annotation gives them.
+ * The set bits of a flag field, by the names the firmware annotation gives them,
+ * lowest bit first.
  * A bit with no name - one the field does not use, or above the named ones -
  * shows as its bit number, so an unexpected bit is visible rather than dropped.
- *
- * @param {number} value
- * @param {(string|null)[]} flags - bit names, lowest bit first.
- * @returns {string}
  */
-function decodeFlags(value, flags) {
+function decodeFlags(value: number, flags: readonly (string | null)[]): string {
     // A debug field is an int16_t, so a value with the top bit set arrives here
     // negative. Mask it to the field's own width: unmasked, `>>>` wraps its shift
     // count at 32 and the scan below would never end for a negative value.
@@ -431,7 +498,7 @@ function decodeFlags(value, flags) {
  * all: "AUTOPILOT_PID" -> "Debug Autopilot Pid". Only ever used for `debug[all]`,
  * which names the whole mode and is not something firmware records.
  */
-function modeDisplayName(modeName) {
+function modeDisplayName(modeName: string): string {
     const words = modeName
         .toLowerCase()
         .split("_")
@@ -451,17 +518,18 @@ function modeDisplayName(modeName) {
  * the mode-level `debug[all]` names, which firmware has no equivalent of, are left
  * as they were.
  *
- * @param {object} result - label table keyed by mode name, mutated.
- * @param {string} [apiVersion]
+ * `result` is a label table keyed by mode name, mutated in place.
  */
-function overlayGeneratedLabels(result, apiVersion) {
+function overlayGeneratedLabels(result: Record<string, Record<string, string>>, apiVersion?: string): void {
     const version = resolveFieldsVersion(apiVersion);
     if (version === undefined) {
         return;
     }
 
     for (const [modeName, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[version])) {
-        const labels = { "debug[all]": result[modeName]?.["debug[all]"] ?? modeDisplayName(modeName) };
+        const labels: Record<string, string> = {
+            "debug[all]": result[modeName]?.["debug[all]"] ?? modeDisplayName(modeName),
+        };
         for (const [index, field] of Object.entries(fields)) {
             labels[`debug[${index}]`] = field.label;
         }
@@ -479,12 +547,8 @@ function overlayGeneratedLabels(result, apiVersion) {
  * new data whenever a slot was reworked rather than merely renamed, which is what
  * happened to AUTOPILOT_ALTITUDE (GPS_RESCUE_THROTTLE_PID's µs and its × 100
  * altitude scaling are not what 1.47+ writes there).
- *
- * @param {object} table - keyed by debug mode name.
- * @param {string} [name]
- * @returns {*} the entry, or undefined if no name matches.
  */
-function lookupByModeName(table, name) {
+function lookupByModeName<T>(table: Record<string, T>, name?: string): T | undefined {
     if (!name) {
         return undefined;
     }
@@ -498,17 +562,16 @@ function lookupByModeName(table, name) {
  * A name's index in the returned array equals the numeric value stored
  * in a blackbox log header's `debug_mode` field for that firmware.
  *
- * @param {string} [apiVersion] - e.g. "1.47.0". If falsy or unparseable, returns
- *   the oldest generated list (the conservative choice when the firmware that
- *   produced the data is unknown).
- * @returns {string[]} A fresh array; callers may mutate it freely.
+ * `apiVersion` is e.g. "1.47.0". If falsy or unparseable, returns the oldest
+ * generated list (the conservative choice when the firmware that produced the
+ * data is unknown). The array is fresh; callers may mutate it freely.
  */
-export function getDebugModes(apiVersion) {
+export function getDebugModes(apiVersion?: string): string[] {
     return [...FIRMWARE_DEBUG_MODES[resolveTableVersion(apiVersion)]];
 }
 
-const debugFields = (all, ...fields) => {
-    const result = { "debug[all]": all };
+const debugFields = (all: string, ...fields: string[]): Record<string, string> => {
+    const result: Record<string, string> = { "debug[all]": all };
 
     fields.forEach((field, index) => {
         result[`debug[${index}]`] = field;
@@ -521,12 +584,8 @@ const debugFields = (all, ...fields) => {
  * Returns the numeric debug_mode value for a given name in the firmware
  * identified by `apiVersion`, or -1 if the name is not defined in that
  * firmware's enum.
- *
- * @param {string} name - debug mode name, e.g. "CHIRP"
- * @param {string} [apiVersion]
- * @returns {number}
  */
-export function getDebugModeIndex(name, apiVersion) {
+export function getDebugModeIndex(name: string, apiVersion?: string): number {
     return getDebugModes(apiVersion).indexOf(name);
 }
 
@@ -539,13 +598,11 @@ export function getDebugModeIndex(name, apiVersion) {
  * (`src/stores/debug.ts`, sensors live view + onboard logging tab) and the
  * blackbox log viewer.
  *
- * @param {string} [apiVersion] - e.g. "1.47.0". If falsy, returns the
- *   pre-1.46 base labels (matches the behaviour when no FC is connected).
- * @returns {Record<string, Record<string, string>>} Field labels by debug mode name, then by
- *   `debug[n]` key. A fresh object; callers must treat it as read-only.
+ * `apiVersion` is e.g. "1.47.0"; if falsy, returns the pre-1.46 base labels
+ * (matches the behaviour when no FC is connected).
  */
-export function getDebugFieldNames(apiVersion) {
-    const baseFieldNames = {
+export function getDebugFieldNames(apiVersion?: string): Record<string, Record<string, string>> {
+    const baseFieldNames: Record<string, Record<string, string>> = {
         NONE: {
             "debug[all]": "Debug [all]",
             "debug[0]": "Debug [0]",
@@ -1719,51 +1776,47 @@ export function getDebugFieldNames(apiVersion) {
     return result;
 }
 
-/**
- * Hardware-scaling context for the debug value decode/convert helpers below.
- * Injected by the caller so these functions stay free of FlightLog / Pinia /
- * FC-store coupling. The blackbox viewer builds it from a parsed log; the
- * sensors live view builds it from the connected FC.
- *
- * @typedef {object} DebugScaleContext
- * @property {string} apiVersion - resolved API version (selects field layouts).
- * @property {number} motorPoles - motor pole count for eRPM conversions.
- * @property {(v:number)=>number} accRawToGs - raw accel → g.
- * @property {(v:number)=>number} gyroRawToDegreesPerSecond - raw gyro → °/s.
- * @property {(v:number)=>number} rcCommandRawToThrottle - raw throttle → %.
- * @property {(v:number)=>number} [throttleToRcCommandRaw] - inverse of above (convert only).
- * @property {string[]} [fftCalcSteps] - FFT calc-step enum names (optional).
- */
-
 // ---------------------------------------------------------------------------
 // Per-debug-mode value decoding (→ display string with units).
 //
 // Each entry is keyed by mode name and is either:
-//   - a function (value, ctx, fieldName) => string  (whole-mode formatter), or
-//   - an object  { "debug[n]": (value, ctx) => string, _default: ... } keyed by field.
+//   - a whole-mode DebugDecodeFormatter, or
+//   - a per-field map of DebugDecodeField formatters keyed by `debug[n]` (with a
+//     `_default` formatter for the fields it does not name).
 // Modes/fields not present fall back to a plain integer (`value.toFixed(0)`),
 // which matches the firmware's "no special formatting" behaviour. Hardware
 // scaling comes from the injected ctx so this stays source-agnostic.
 // ---------------------------------------------------------------------------
 
-const f0 = (v) => v.toFixed(0);
-const isApiAtLeast = (ctx, version) => Boolean(ctx?.apiVersion) && semver.gte(ctx.apiVersion, version);
+/** A whole-mode decode formatter: the raw value and the field's name → display string. */
+type DebugDecodeFormatter = (value: number, ctx: DebugScaleContext, fieldName: string) => string;
 
-const gyroDps = (v, ctx) => `${Math.round(ctx.gyroRawToDegreesPerSecond(v))} °/s`;
-const gyroDecode = (v, ctx, fieldName) => (fieldName === "debug[4]" ? `${v.toFixed(0)} %` : gyroDps(v, ctx));
-const fftFreqDecode = (v, ctx, fieldName) => {
+/** One field's decode formatter. */
+type DebugDecodeField = (value: number, ctx: DebugScaleContext) => string;
+
+/** One mode's decode entry: a whole-mode formatter, or per-field formatters keyed by `debug[n]`. */
+type DebugDecodeEntry = DebugDecodeFormatter | Record<string, DebugDecodeField>;
+
+const f0 = (v: number) => v.toFixed(0);
+const isApiAtLeast = (ctx: DebugScaleContext, version: string): boolean =>
+    Boolean(ctx?.apiVersion) && semver.gte(ctx.apiVersion, version);
+
+const gyroDps = (v: number, ctx: DebugScaleContext) => `${Math.round(ctx.gyroRawToDegreesPerSecond(v))} °/s`;
+const gyroDecode = (v: number, ctx: DebugScaleContext, fieldName: string) =>
+    fieldName === "debug[4]" ? `${v.toFixed(0)} %` : gyroDps(v, ctx);
+const fftFreqDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
     return fieldName === gyroField ? gyroDps(v, ctx) : `${v.toFixed(0)} Hz`;
 };
 // Pre-1.48: debug[0] is raw quality, debug[5] is deltaTimeUs (both unscaled ints).
 // 1.48+: all 8 fields are the rotate/compensate/filter pipeline, scaled by 1000.
-const opticalflowDecode = (v, ctx, fieldName) => {
+const opticalflowDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_48) && (fieldName === "debug[0]" || fieldName === "debug[5]")) {
         return f0(v);
     }
     return (v / 1000).toFixed(1);
 };
-const altitudeDecode = (v, ctx, fieldName) => {
+const altitudeDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
@@ -1792,7 +1845,7 @@ const altitudeDecode = (v, ctx, fieldName) => {
     }
 };
 
-const autopilotAltitudeDecode = (v, ctx, fieldName) => {
+const autopilotAltitudeDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
     }
@@ -1806,7 +1859,7 @@ const autopilotAltitudeDecode = (v, ctx, fieldName) => {
     }
 };
 
-const autopilotPidDecode = (v, ctx, fieldName) => {
+const autopilotPidDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
     }
@@ -1820,7 +1873,7 @@ const autopilotPidDecode = (v, ctx, fieldName) => {
             return f0(v);
     }
 };
-const positionNavDecode = (v, ctx, fieldName) => {
+const positionNavDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
     }
@@ -1834,7 +1887,7 @@ const positionNavDecode = (v, ctx, fieldName) => {
             return f0(v);
     }
 };
-const autopilotStopDecode = (v, ctx, fieldName) => {
+const autopilotStopDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         return f0(v);
     }
@@ -1851,7 +1904,7 @@ const autopilotStopDecode = (v, ctx, fieldName) => {
     }
 };
 
-const gpsRescueVelocityDecode = (v, ctx, fieldName) => {
+const gpsRescueVelocityDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
@@ -1882,7 +1935,7 @@ const gpsRescueVelocityDecode = (v, ctx, fieldName) => {
     }
 };
 
-const gpsRescueHeadingDecode = (v, ctx, fieldName) => {
+const gpsRescueHeadingDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
@@ -1911,7 +1964,7 @@ const gpsRescueHeadingDecode = (v, ctx, fieldName) => {
     }
 };
 
-const gpsRescueTrackingDecode = (v, ctx, fieldName) => {
+const gpsRescueTrackingDecode = (v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]":
@@ -1944,47 +1997,47 @@ const gpsRescueTrackingDecode = (v, ctx, fieldName) => {
     }
 };
 
-const DEBUG_DECODE = {
+const DEBUG_DECODE: Record<string, DebugDecodeEntry> = {
     NONE: {
-        "debug[1]": (v) => `${v.toFixed(0)} hPa`,
-        "debug[2]": (v) => `${(v / 100).toFixed(2)} °C`,
-        "debug[3]": (v) => `${(v / 100).toFixed(2)} m`,
-        _default: (v) => `${v.toFixed(0)}`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} hPa`,
+        "debug[2]": (v: number) => `${(v / 100).toFixed(2)} °C`,
+        "debug[3]": (v: number) => `${(v / 100).toFixed(2)} m`,
+        _default: (v: number) => `${v.toFixed(0)}`,
     },
     CYCLETIME: {
-        "debug[1]": (v) => `${v.toFixed(0)} %`,
-        _default: (v) => `${v.toFixed(0)}μS`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} %`,
+        _default: (v: number) => `${v.toFixed(0)}μS`,
     },
     BATTERY: {
         "debug[0]": f0,
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} V`,
-        "debug[2]": (v) => `${v.toFixed(0)} %`,
-        "debug[6]": (v) => `${(v / 10).toFixed(1)} V`,
+        "debug[1]": (v: number) => `${(v / 10).toFixed(1)} V`,
+        "debug[2]": (v: number) => `${v.toFixed(0)} %`,
+        "debug[6]": (v: number) => `${(v / 10).toFixed(1)} V`,
         _default: f0,
     },
     ACCELEROMETER: {
-        "debug[0]": (v, ctx) => `${ctx.accRawToGs(v).toFixed(2)} g`,
-        "debug[1]": (v, ctx) => `${ctx.accRawToGs(v).toFixed(2)} g`,
-        "debug[2]": (v) => `${(v / 1000).toFixed(2)} g`,
-        "debug[3]": (v, ctx) => `${ctx.accRawToGs(v * 100).toFixed(2)} g/s`,
-        "debug[4]": (v) => `${(v / 1000).toFixed(2)} g/s`,
+        "debug[0]": (v: number, ctx: DebugScaleContext) => `${ctx.accRawToGs(v).toFixed(2)} g`,
+        "debug[1]": (v: number, ctx: DebugScaleContext) => `${ctx.accRawToGs(v).toFixed(2)} g`,
+        "debug[2]": (v: number) => `${(v / 1000).toFixed(2)} g`,
+        "debug[3]": (v: number, ctx: DebugScaleContext) => `${ctx.accRawToGs(v * 100).toFixed(2)} g/s`,
+        "debug[4]": (v: number) => `${(v / 1000).toFixed(2)} g/s`,
         _default: f0,
     },
-    MIXER: (v, ctx) => `${Math.round(ctx.rcCommandRawToThrottle(v))} %`,
-    PIDLOOP: (v) => `${v.toFixed(0)} μS`,
+    MIXER: (v: number, ctx: DebugScaleContext) => `${Math.round(ctx.rcCommandRawToThrottle(v))} %`,
+    PIDLOOP: (v: number) => `${v.toFixed(0)} μS`,
     RC_INTERPOLATION: {
-        "debug[1]": (v) => `${v.toFixed(0)} ms`,
-        "debug[3]": (v) => `${v.toFixed(0)} °/s`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} ms`,
+        "debug[3]": (v: number) => `${v.toFixed(0)} °/s`,
         _default: f0,
     },
-    ANGLERATE: (v) => `${v.toFixed(0)} °/s`,
+    ANGLERATE: (v: number) => `${v.toFixed(0)} °/s`,
     ESC_SENSOR: {
-        "debug[3]": (v) => `${v.toFixed(0)} μS`,
+        "debug[3]": (v: number) => `${v.toFixed(0)} μS`,
         _default: f0,
     },
-    SCHEDULER: (v) => `${v.toFixed(0)} μS`,
-    ESC_SENSOR_RPM: (v) => `${v.toFixed(0)} rpm`,
-    ESC_SENSOR_TMP: (v) => `${v.toFixed(0)} °C`,
+    SCHEDULER: (v: number) => `${v.toFixed(0)} μS`,
+    ESC_SENSOR_RPM: (v: number) => `${v.toFixed(0)} rpm`,
+    ESC_SENSOR_TMP: (v: number) => `${v.toFixed(0)} °C`,
     ALTITUDE: altitudeDecode,
     AUTOPILOT_ALTITUDE: autopilotAltitudeDecode,
     AUTOPILOT_PID: autopilotPidDecode,
@@ -1992,12 +2045,12 @@ const DEBUG_DECODE = {
     AUTOPILOT_STOP: autopilotStopDecode,
 
     POSITION_EST: {
-        "debug[0]": (v) => `${(v / 100).toFixed(2)} m`,
-        "debug[1]": (v) => `${(v / 100).toFixed(2)} m/s`,
-        "debug[2]": (v) => `${(v / 100).toFixed(2)} m/s/s`,
-        "debug[3]": (v) => `${(v / 100).toFixed(2)} m/s`,
-        "debug[4]": (v) => `${(v / 100).toFixed(2)} m/s`,
-        "debug[5]": (v) => `${(v / 100).toFixed(2)} m/s/s`,
+        "debug[0]": (v: number) => `${(v / 100).toFixed(2)} m`,
+        "debug[1]": (v: number) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[2]": (v: number) => `${(v / 100).toFixed(2)} m/s/s`,
+        "debug[3]": (v: number) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[4]": (v: number) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[5]": (v: number) => `${(v / 100).toFixed(2)} m/s/s`,
         _default: f0,
     },
     FFT: {
@@ -2007,151 +2060,151 @@ const DEBUG_DECODE = {
         _default: f0,
     },
     FFT_TIME: {
-        "debug[0]": (v, ctx) => ctx.fftCalcSteps?.[v] ?? v.toFixed(0),
-        "debug[1]": (v) => `${v.toFixed(0)} μs`,
+        "debug[0]": (v: number, ctx: DebugScaleContext) => ctx.fftCalcSteps?.[v] ?? v.toFixed(0),
+        "debug[1]": (v: number) => `${v.toFixed(0)} μs`,
         _default: f0,
     },
     FFT_FREQ: fftFreqDecode,
     ITERM_RELAX: {
-        "debug[0]": (v) => `${v.toFixed(0)} °/s`,
-        "debug[1]": (v) => `${v.toFixed(0)} %`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[0]": (v: number) => `${v.toFixed(0)} °/s`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} %`,
+        "debug[3]": (v: number) => `${(v / 10).toFixed(1)} °`,
         _default: f0,
     },
     RC_SMOOTHING: {
-        "debug[0]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[1]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[2]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[3]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[5]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[4]": (v) => `${(v / 1000).toFixed(3)}`,
+        "debug[0]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[2]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[3]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[5]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[4]": (v: number) => `${(v / 1000).toFixed(3)}`,
         _default: f0,
     },
     RC_SMOOTHING_RATE: {
-        "debug[0]": (v) => `${(v / 1000).toFixed(2)} ms`,
-        "debug[2]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[0]": (v: number) => `${(v / 1000).toFixed(2)} ms`,
+        "debug[2]": (v: number) => `${v.toFixed(0)} Hz`,
         _default: f0,
     },
-    DSHOT_RPM_TELEMETRY: (v, ctx) =>
+    DSHOT_RPM_TELEMETRY: (v: number, ctx: DebugScaleContext) =>
         `${((v * 200) / ctx.motorPoles).toFixed(0)} rpm / ${((v * 3.333) / ctx.motorPoles).toFixed(0)} hz`,
-    RPM_FILTER: (v) => `${(v * 60).toFixed(0)}rpm / ${v.toFixed(0)} Hz`,
+    RPM_FILTER: (v: number) => `${(v * 60).toFixed(0)}rpm / ${v.toFixed(0)} Hz`,
     D_MAX: {
-        "debug[0]": (v) => `${v.toFixed(0)} %`,
-        "debug[1]": (v) => `${v.toFixed(0)} %`,
-        "debug[2]": (v) => (v / 10).toFixed(1),
-        "debug[3]": (v) => (v / 10).toFixed(1),
+        "debug[0]": (v: number) => `${v.toFixed(0)} %`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} %`,
+        "debug[2]": (v: number) => (v / 10).toFixed(1),
+        "debug[3]": (v: number) => (v / 10).toFixed(1),
         _default: f0,
     },
     DYN_LPF: {
         "debug[0]": gyroDps,
         "debug[3]": gyroDps,
-        _default: (v) => `${v.toFixed(0)} Hz`,
+        _default: (v: number) => `${v.toFixed(0)} Hz`,
     },
     DYN_IDLE: {
-        "debug[3]": (v) => `${v * 6} rpm / ${(v / 10).toFixed(0)} hz`,
+        "debug[3]": (v: number) => `${v * 6} rpm / ${(v / 10).toFixed(0)} hz`,
         _default: f0,
     },
-    AC_CORRECTION: (v) => `${(v / 10).toFixed(1)} °/s`,
-    AC_ERROR: (v) => `${(v / 10).toFixed(1)} °`,
+    AC_CORRECTION: (v: number) => `${(v / 10).toFixed(1)} °/s`,
+    AC_ERROR: (v: number) => `${(v / 10).toFixed(1)} °`,
     RX_TIMING: {
-        "debug[0]": (v) => `${(v / 100).toFixed(2)} ms`,
-        "debug[3]": (v) => `${(v / 100).toFixed(2)} ms`,
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} ms`,
-        "debug[4]": (v) => `${v.toFixed(0)} Hz`,
-        "debug[5]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[0]": (v: number) => `${(v / 100).toFixed(2)} ms`,
+        "debug[3]": (v: number) => `${(v / 100).toFixed(2)} ms`,
+        "debug[1]": (v: number) => `${(v / 10).toFixed(1)} ms`,
+        "debug[4]": (v: number) => `${v.toFixed(0)} Hz`,
+        "debug[5]": (v: number) => `${v.toFixed(0)} Hz`,
         _default: f0,
     },
     GHST: {
-        "debug[3]": (v) => `${v.toFixed(0)} %`,
+        "debug[3]": (v: number) => `${v.toFixed(0)} %`,
         _default: f0,
     },
     SCHEDULER_DETERMINISM: {
-        "debug[0]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[2]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[4]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[5]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[6]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[7]": (v) => `${(v / 10).toFixed(1)} us`,
+        "debug[0]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[2]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[3]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[4]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[5]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[6]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[7]": (v: number) => `${(v / 10).toFixed(1)} us`,
         _default: f0,
     },
     TIMING_ACCURACY: {
-        "debug[0]": (v) => `${v.toFixed(1)} %`,
-        "debug[2]": (v) => `${(v / 10).toFixed(1)} us`,
-        "debug[4]": (v) => `${(v / 10).toFixed(1)} %`,
-        "debug[7]": (v) => `${(v / 10).toFixed(1)} us`,
+        "debug[0]": (v: number) => `${v.toFixed(1)} %`,
+        "debug[2]": (v: number) => `${(v / 10).toFixed(1)} us`,
+        "debug[4]": (v: number) => `${(v / 10).toFixed(1)} %`,
+        "debug[7]": (v: number) => `${(v / 10).toFixed(1)} us`,
         _default: f0,
     },
     RX_EXPRESSLRS_SPI: {
-        "debug[3]": (v) => `${v.toFixed(1)} %`,
+        "debug[3]": (v: number) => `${v.toFixed(1)} %`,
         _default: f0,
     },
     RX_EXPRESSLRS_PHASELOCK: {
-        "debug[2]": (v) => `${v.toFixed(0)} ticks`,
-        _default: (v) => `${v.toFixed(0)} us`,
+        "debug[2]": (v: number) => `${v.toFixed(0)} ticks`,
+        _default: (v: number) => `${v.toFixed(0)} us`,
     },
     GPS_RESCUE_THROTTLE_PID: {
-        "debug[0]": (v) => `${v.toFixed(0)} uS`,
-        "debug[1]": (v) => `${v.toFixed(0)} uS`,
-        "debug[4]": (v) => `${v.toFixed(0)} uS`,
-        "debug[6]": (v) => `${v.toFixed(0)} uS`,
-        "debug[2]": (v) => `${(v / 100).toFixed(1)} m`,
-        "debug[3]": (v) => `${(v / 100).toFixed(1)} m`,
+        "debug[0]": (v: number) => `${v.toFixed(0)} uS`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} uS`,
+        "debug[4]": (v: number) => `${v.toFixed(0)} uS`,
+        "debug[6]": (v: number) => `${v.toFixed(0)} uS`,
+        "debug[2]": (v: number) => `${(v / 100).toFixed(1)} m`,
+        "debug[3]": (v: number) => `${(v / 100).toFixed(1)} m`,
         _default: f0,
     },
     GPS_RESCUE_VELOCITY: gpsRescueVelocityDecode,
     GPS_RESCUE_HEADING: gpsRescueHeadingDecode,
     GPS_RESCUE_TRACKING: gpsRescueTrackingDecode,
     GPS_CONNECTION: {
-        "debug[3]": (v) => (v * 100).toFixed(0),
+        "debug[3]": (v: number) => (v * 100).toFixed(0),
         _default: f0,
     },
     GPS_DOP: {
         "debug[0]": f0,
-        _default: (v) => (v / 100).toFixed(2),
+        _default: (v: number) => (v / 100).toFixed(2),
     },
     ANGLE_MODE: {
-        "debug[0]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)} °`,
+        "debug[0]": (v: number) => `${(v / 10).toFixed(1)} °`,
+        "debug[1]": (v: number) => `${(v / 10).toFixed(1)} °`,
+        "debug[2]": (v: number) => `${(v / 10).toFixed(1)} °`,
+        "debug[3]": (v: number) => `${(v / 10).toFixed(1)} °`,
         _default: f0,
     },
-    EZLANDING: (v) => `${(v / 100).toFixed(2)} %`,
+    EZLANDING: (v: number) => `${(v / 100).toFixed(2)} %`,
     OPTICALFLOW: opticalflowDecode,
     AUTOPILOT_POSITION: {
-        "debug[2]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[4]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[5]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[6]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[7]": (v) => `${(v / 10).toFixed(1)}`,
-        _default: (v) => v.toFixed(1),
+        "debug[2]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[3]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[5]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[6]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[7]": (v: number) => `${(v / 10).toFixed(1)}`,
+        _default: (v: number) => v.toFixed(1),
     },
     TPA: {
-        "debug[1]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[2]": (v) => `${(v / 10).toFixed(1)} °`,
-        "debug[4]": (v) => `${(v / 10).toFixed(1)} m/s`,
-        _default: (v) => v.toFixed(1),
+        "debug[1]": (v: number) => `${(v / 10).toFixed(1)} °`,
+        "debug[2]": (v: number) => `${(v / 10).toFixed(1)} °`,
+        "debug[4]": (v: number) => `${(v / 10).toFixed(1)} m/s`,
+        _default: (v: number) => v.toFixed(1),
     },
     FEEDFORWARD: {
-        "debug[0]": (v) => `${v.toFixed(0)} °/s`,
-        "debug[1]": (v) => `${v.toFixed(0)} °/s/s`,
-        "debug[3]": (v) => `${(v / 10).toFixed(1)}`,
-        "debug[4]": (v) => `${v.toFixed(0)} %`,
+        "debug[0]": (v: number) => `${v.toFixed(0)} °/s`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} °/s/s`,
+        "debug[3]": (v: number) => `${(v / 10).toFixed(1)}`,
+        "debug[4]": (v: number) => `${v.toFixed(0)} %`,
         _default: f0,
     },
     FEEDFORWARD_LIMIT: {
-        "debug[0]": (v) => `${v.toFixed(0)} %`,
-        "debug[6]": (v) => `${(v / 1000).toFixed(3)}`,
-        "debug[7]": (v) => `${v.toFixed(0)} Hz`,
+        "debug[0]": (v: number) => `${v.toFixed(0)} %`,
+        "debug[6]": (v: number) => `${(v / 1000).toFixed(3)}`,
+        "debug[7]": (v: number) => `${v.toFixed(0)} Hz`,
         _default: f0,
     },
     PITOT: {
-        "debug[0]": (v) => `${(v / 100).toFixed(2)} m/s`,
-        "debug[1]": (v) => `${v.toFixed(0)} Pa`,
-        "debug[2]": (v) => `${v.toFixed(0)} Pa`,
-        "debug[3]": (v) => `${v.toFixed(0)} °C`,
+        "debug[0]": (v: number) => `${(v / 100).toFixed(2)} m/s`,
+        "debug[1]": (v: number) => `${v.toFixed(0)} Pa`,
+        "debug[2]": (v: number) => `${v.toFixed(0)} Pa`,
+        "debug[3]": (v: number) => `${v.toFixed(0)} °C`,
         _default: f0,
     },
     VELOCITY: () => "",
@@ -2185,13 +2238,16 @@ DEBUG_DECODE.BARO = DEBUG_DECODE.NONE;
  * This is the single source of truth shared by the blackbox viewer and the
  * sensors live view.
  *
- * @param {string} debugModeName - e.g. "BATTERY" (from getDebugModes(apiVersion)).
- * @param {string} fieldName - e.g. "debug[1]".
- * @param {number} value - raw field value.
- * @param {DebugScaleContext} ctx - hardware scaling context.
- * @returns {string}
+ * `debugModeName` is e.g. "BATTERY" (from getDebugModes(apiVersion)), `fieldName`
+ * e.g. "debug[1]", `value` the raw field value and `ctx` the hardware scaling
+ * context.
  */
-export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx) {
+export function decodeDebugFieldToFriendly(
+    debugModeName: string | undefined,
+    fieldName: string,
+    value: number,
+    ctx: DebugScaleContext,
+): string {
     const scope = debugScope(ctx, debugModeName);
     const scaling = generatedScaling(fieldName, scope);
     if (scaling) {
@@ -2218,16 +2274,27 @@ export function decodeDebugFieldToFriendly(debugModeName, fieldName, value, ctx)
 
 // ---------------------------------------------------------------------------
 // Per-debug-mode value conversion (log/raw units ↔ chart/friendly units).
-// Same table shape as DEBUG_DECODE; each formatter is (toFriendly, value, ctx)
-// => number. Modes/fields not present pass the value through unchanged.
+// Same table shape as DEBUG_DECODE; each entry is a DebugConvertFormatter or a
+// per-field map of DebugConvertField formatters. Modes/fields not present pass
+// the value through unchanged.
 // ---------------------------------------------------------------------------
 
-const cScale = (n) => (toFriendly, v) => (toFriendly ? v / n : v * n);
-const cInvScale = (n) => (toFriendly, v) => (toFriendly ? v * n : v / n);
-const cGyro = (toFriendly, v, ctx) =>
+/** A whole-mode convert formatter: `toFriendly` picks the direction. */
+type DebugConvertFormatter = (toFriendly: boolean, value: number, ctx: DebugScaleContext, fieldName: string) => number;
+
+/** One field's convert formatter; `null` passes the value through. */
+type DebugConvertField = ((toFriendly: boolean, value: number, ctx: DebugScaleContext) => number) | null;
+
+/** One mode's convert entry: a whole-mode formatter, or per-field formatters keyed by `debug[n]`. */
+type DebugConvertEntry = DebugConvertFormatter | Record<string, DebugConvertField>;
+
+const cScale = (n: number) => (toFriendly: boolean, v: number) => (toFriendly ? v / n : v * n);
+const cInvScale = (n: number) => (toFriendly: boolean, v: number) => (toFriendly ? v * n : v / n);
+const cGyro = (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
     toFriendly ? ctx.gyroRawToDegreesPerSecond(v) : v / ctx.gyroRawToDegreesPerSecond(1);
-const cGyroGroup = (toFriendly, v, ctx, fieldName) => (fieldName === "debug[4]" ? v : cGyro(toFriendly, v, ctx));
-const cFftFreq = (toFriendly, v, ctx, fieldName) => {
+const cGyroGroup = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) =>
+    fieldName === "debug[4]" ? v : cGyro(toFriendly, v, ctx);
+const cFftFreq = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     const gyroField = semver.gte(ctx.apiVersion, API_VERSION_1_47) ? "debug[0]" : "debug[3]";
     return fieldName === gyroField ? cGyro(toFriendly, v, ctx) : v;
 };
@@ -2237,14 +2304,14 @@ const cScale10 = cScale(10);
 const cScale1000 = cScale(1000);
 
 // Pre-1.48: debug[0]/debug[5] (quality/deltaTimeUs) pass through unscaled.
-const cOpticalflow = (toFriendly, v, ctx, fieldName) => {
+const cOpticalflow = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (!semver.gte(ctx.apiVersion, API_VERSION_1_48) && (fieldName === "debug[0]" || fieldName === "debug[5]")) {
         return v;
     }
     return cScale1000(toFriendly, v);
 };
 
-const cAltitude = (toFriendly, v, ctx, fieldName) => {
+const cAltitude = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         return cScale100(toFriendly, v);
     } else {
@@ -2259,7 +2326,7 @@ const cAltitude = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cAutopilotAltitude = (toFriendly, v, ctx, fieldName) => {
+const cAutopilotAltitude = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[1]": // Target Altitude
@@ -2273,7 +2340,7 @@ const cAutopilotAltitude = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cAutopilotPid = (toFriendly, v, ctx, fieldName) => {
+const cAutopilotPid = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Velocity
@@ -2287,7 +2354,7 @@ const cAutopilotPid = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cPositionNav = (toFriendly, v, ctx, fieldName) => {
+const cPositionNav = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Target Velocity
@@ -2302,7 +2369,7 @@ const cPositionNav = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cAutopilotStop = (toFriendly, v, ctx, fieldName) => {
+const cAutopilotStop = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Velocity Error East
@@ -2319,7 +2386,7 @@ const cAutopilotStop = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cGpsRescueVelocity = (toFriendly, v, ctx, fieldName) => {
+const cGpsRescueVelocity = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Target Velocity
@@ -2345,7 +2412,7 @@ const cGpsRescueVelocity = (toFriendly, v, ctx, fieldName) => {
     }
 };
 
-const cGpsRescueHeading = (toFriendly, v, ctx, fieldName) => {
+const cGpsRescueHeading = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Ground Speed
@@ -2372,7 +2439,7 @@ const cGpsRescueHeading = (toFriendly, v, ctx, fieldName) => {
         }
     }
 };
-const cGpsRescueTracking = (toFriendly, v, ctx, fieldName) => {
+const cGpsRescueTracking = (toFriendly: boolean, v: number, ctx: DebugScaleContext, fieldName: string) => {
     if (isApiAtLeast(ctx, API_VERSION_1_49)) {
         switch (fieldName) {
             case "debug[0]": // Velocity
@@ -2399,7 +2466,7 @@ const cGpsRescueTracking = (toFriendly, v, ctx, fieldName) => {
         }
     }
 };
-const DEBUG_CONVERT = {
+const DEBUG_CONVERT: Record<string, DebugConvertEntry> = {
     NONE: {
         "debug[2]": cScale100,
         "debug[3]": cScale100,
@@ -2411,13 +2478,17 @@ const DEBUG_CONVERT = {
         _default: null,
     },
     ACCELEROMETER: {
-        "debug[0]": (toFriendly, v, ctx) => (toFriendly ? ctx.accRawToGs(v) : v / ctx.accRawToGs(1)),
-        "debug[1]": (toFriendly, v, ctx) => (toFriendly ? ctx.accRawToGs(v) : v / ctx.accRawToGs(1)),
+        "debug[0]": (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
+            toFriendly ? ctx.accRawToGs(v) : v / ctx.accRawToGs(1),
+        "debug[1]": (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
+            toFriendly ? ctx.accRawToGs(v) : v / ctx.accRawToGs(1),
         "debug[2]": cScale1000,
-        "debug[3]": (toFriendly, v, ctx) => (toFriendly ? ctx.accRawToGs(v * 100) : v / ctx.accRawToGs(1) / 100),
+        "debug[3]": (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
+            toFriendly ? ctx.accRawToGs(v * 100) : v / ctx.accRawToGs(1) / 100,
         "debug[4]": cScale1000,
     },
-    MIXER: (toFriendly, v, ctx) => (toFriendly ? ctx.rcCommandRawToThrottle(v) : ctx.throttleToRcCommandRaw(v)),
+    MIXER: (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
+        toFriendly ? ctx.rcCommandRawToThrottle(v) : ctx.throttleToRcCommandRaw!(v),
 
     ALTITUDE: cAltitude,
     AUTOPILOT_ALTITUDE: cAutopilotAltitude,
@@ -2451,7 +2522,8 @@ const DEBUG_CONVERT = {
     RC_SMOOTHING_RATE: {
         "debug[0]": cScale(1000),
     },
-    DSHOT_RPM_TELEMETRY: (toFriendly, v, ctx) => (toFriendly ? (v * 200) / ctx.motorPoles : (v * ctx.motorPoles) / 200),
+    DSHOT_RPM_TELEMETRY: (toFriendly: boolean, v: number, ctx: DebugScaleContext) =>
+        toFriendly ? (v * 200) / ctx.motorPoles : (v * ctx.motorPoles) / 200,
     RPM_FILTER: cInvScale(60),
     D_MAX: {
         "debug[2]": cScale10,
@@ -2546,14 +2618,16 @@ DEBUG_CONVERT.BARO = DEBUG_CONVERT.NONE;
  * Convert a debug field value between log/raw units and chart/friendly units
  * for the given debug mode. Inverse direction when `toFriendly` is false.
  *
- * @param {string} debugModeName - e.g. "BATTERY".
- * @param {string} fieldName - e.g. "debug[1]".
- * @param {boolean} toFriendly - true: raw → chart units; false: chart → raw.
- * @param {number} value
- * @param {DebugScaleContext} ctx - hardware scaling context.
- * @returns {number}
+ * `debugModeName` is e.g. "BATTERY", `fieldName` e.g. "debug[1]"; `toFriendly`
+ * true converts raw → chart units and false chart → raw.
  */
-export function convertDebugFieldValue(debugModeName, fieldName, toFriendly, value, ctx) {
+export function convertDebugFieldValue(
+    debugModeName: string | undefined,
+    fieldName: string,
+    toFriendly: boolean,
+    value: number,
+    ctx: DebugScaleContext,
+): number {
     const scope = debugScope(ctx, debugModeName);
     const scaling = generatedScaling(fieldName, scope);
     if (scaling) {
