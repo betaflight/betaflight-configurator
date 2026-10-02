@@ -45,6 +45,7 @@ export interface FirmwareRelease {
     release: string;
     label: string;
     type: string;
+    withdrawn?: boolean;
 }
 
 /**

@@ -453,11 +453,13 @@ export default defineComponent({
 
             const targetDescriptor = findTargetDescriptor(targetName) ?? state.targetDetail;
             const descriptorGroup = targetDescriptor?.group;
-            const isQualified = descriptorGroup === "supported" || targetDescriptor?.partnerApproved === true;
 
-            if (isQualified) {
+            if (descriptorGroup === "supported") {
                 state.targetQualificationText = $t("firmwareFlasherOptionLabelVerifiedPartner");
                 state.targetQualification = true;
+            } else if (descriptorGroup === "legacy") {
+                state.targetQualificationText = $t("firmwareFlasherOptionLabelLegacyTarget");
+                state.targetQualification = false;
             } else {
                 state.targetQualificationText = $t("firmwareFlasherOptionLabelNotQualified");
                 state.targetQualification = false;
@@ -868,6 +870,7 @@ export default defineComponent({
 
                 const filteredReleases = releases
                     .sort(sortReleases)
+                    .filter((r) => !r.withdrawn)
                     .filter((r) => {
                         return (
                             (r.type === "Unstable" && build_type > 1) ||
@@ -887,6 +890,8 @@ export default defineComponent({
                 if (filteredReleases.length > 0) {
                     boardSelection.state.selectedFirmwareVersion = filteredReleases[0].release;
                     await selectFirmware(boardSelection.state.selectedFirmwareVersion);
+                } else {
+                    boardSelection.state.selectedFirmwareVersion = "";
                 }
             } else {
                 boardSelection.state.firmwareVersionOptions = [];
