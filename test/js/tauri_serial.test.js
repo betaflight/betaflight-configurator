@@ -163,10 +163,9 @@ describe("TauriSerial write lock timeout", () => {
     });
 
     it("tears the connection down once the plugin has dropped the port", async () => {
-        // A flight controller re-enumerates on every reboot, and on Android the
-        // path is the USB device node, so it never comes back. Without this the
-        // MSP queue keeps writing to a dead path until the 1 s hotplug poll
-        // catches up, which reads as a hang.
+        // A flight controller re-enumerates on every reboot, so the old path may
+        // never come back. Without this the MSP queue keeps writing to a dead path
+        // until the 1 s hotplug poll catches up, which reads as a hang.
         mockWrites("Port '/dev/ttyACM0' not found");
         const serial = connectedSerial();
 
@@ -221,10 +220,8 @@ describe("TauriSerial write lock timeout", () => {
 });
 
 describe("TauriSerial port enumeration", () => {
-    // The plugin's two backends format the USB IDs differently: the desktop
-    // serialport enumerator stringifies them as decimal, the Android USB bridge
-    // as hex. Both must survive into the known-device filter, or the transport
-    // reports no ports at all on that platform.
+    // The serialport enumerator stringifies the USB IDs as decimal. They must
+    // survive into the known-device filter, or the transport reports no ports.
     const STM32_VCP = { type: "Usb", manufacturer: "Betaflight", product: "SPEEDYBEEF405MINI" };
 
     beforeEach(() => {
@@ -246,23 +243,11 @@ describe("TauriSerial port enumeration", () => {
         return new TauriSerial().getDevices();
     }
 
-    it("parses the decimal IDs the desktop backend reports", async () => {
+    it("parses the decimal IDs the plugin reports", async () => {
         const ports = await listPorts({ "/dev/ttyACM0": { ...STM32_VCP, vid: "1155", pid: "22336" } });
 
         expect(ports).toHaveLength(1);
         expect(ports[0]).toMatchObject({ path: "/dev/ttyACM0", vendorId: 0x0483, productId: 0x5740 });
-    });
-
-    it("parses the hex IDs the Android backend reports", async () => {
-        const ports = await listPorts({ "/dev/bus/usb/002/003": { ...STM32_VCP, vid: "0x0483", pid: "0x5740" } });
-
-        expect(ports).toHaveLength(1);
-        expect(ports[0]).toMatchObject({
-            path: "/dev/bus/usb/002/003",
-            vendorId: 0x0483,
-            productId: 0x5740,
-            displayName: "Betaflight STM32",
-        });
     });
 
     it("drops a port whose IDs are unknown rather than reading them as zero", async () => {
@@ -294,10 +279,8 @@ describe("TauriSerial connect", () => {
     });
 
     it("refuses to open a path the transport no longer lists", async () => {
-        // Opening a vanished USB node makes the plugin's Kotlin bridge throw, and
-        // its JNI wrapper leaves that exception pending, wedging every later call
-        // over the bridge. The reconnect after "Save and Reboot" aims at exactly
-        // such a stale path, so the open must not be attempted at all.
+        // The reconnect after "Save and Reboot" aims at a stale path, so the open
+        // must not be attempted at all.
         invoke.mockImplementation((cmd) =>
             Promise.resolve(cmd === "plugin:serialplugin|available_ports" ? {} : undefined),
         );
@@ -375,9 +358,6 @@ describe("TauriSerial connect", () => {
     });
 
     it("suspends port enumeration for the life of the connection", async () => {
-        // available_ports crosses into Kotlin and queries the USB service on a
-        // single-threaded executor over the same bridge the reads and writes
-        // use. Leaving it running underneath a live session wedged the bridge.
         mockPresentPort();
         const serial = new TauriSerial();
         const stop = vi.spyOn(serial, "stopDeviceMonitoring");

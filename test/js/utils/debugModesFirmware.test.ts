@@ -7,7 +7,7 @@ import { DEBUG_VALUE_COUNT } from "../../../src/js/debug_annotation";
 import { getDebugFieldNames, getDebugModes } from "../../../src/js/utils/debugModes";
 
 /*
- * Keeps the hand-written half of `src/js/utils/debugModes.js` honest against the
+ * Keeps the hand-written half of `src/js/utils/debugModes.ts` honest against the
  * firmware, which is the single source of truth for debug modes.
  *
  * `src/js/debug_modes_table.ts`, `src/js/debug_fields_table.ts` and
@@ -95,19 +95,13 @@ interface ModeUsage {
 }
 
 /*
- * The fixture and `debugModes.js` are both keyed by names only known at run time.
- * The JSON import types every key as a literal and `debugModes.js` is still
- * JavaScript (#5542 tier 6), so both come through un-indexable; naming the shapes
- * here is what keeps the lookups below checked. Drop `fieldNames` when that module
- * is converted.
+ * The fixture is keyed by names only known at run time: the JSON import types
+ * every key as a literal, so it comes through un-indexable; naming the shape
+ * here is what keeps the lookups below checked.
  */
 const usage = fieldUsage as unknown as {
     versions: Record<string, { modes: Record<string, ModeUsage | undefined> }>;
 };
-
-type DebugFieldNames = Record<string, Record<string, string>>;
-
-const fieldNames = (apiVersion: string): DebugFieldNames => getDebugFieldNames(apiVersion) as DebugFieldNames;
 
 /** The mode-level summary label, which is not a slot. */
 const SUMMARY_KEY = "debug[all]";
@@ -134,7 +128,7 @@ function collectLabelGaps(): string[] {
     const gaps: string[] = [];
 
     for (const [apiVersion, version] of Object.entries(usage.versions)) {
-        const labels = fieldNames(apiVersion);
+        const labels = getDebugFieldNames(apiVersion);
 
         for (const mode of getDebugModes(apiVersion)) {
             const written = version.modes[mode];
@@ -222,7 +216,7 @@ describe("debug modes against the firmware source", () => {
             for (const [legacyName, currentName] of Object.entries(DEBUG_MODE_ALIASES)) {
                 for (const apiVersion of generatedVersions) {
                     const modes = FIRMWARE_DEBUG_MODES[apiVersion];
-                    const labels = fieldNames(apiVersion);
+                    const labels = getDebugFieldNames(apiVersion);
                     const name = modes.includes(legacyName) ? legacyName : currentName;
                     if (modes.includes(name) && (labels[legacyName] || labels[currentName])) {
                         expect(labels[name]).toBeDefined();
@@ -238,7 +232,7 @@ describe("debug modes against the firmware source", () => {
             expect(annotated.length).toBeGreaterThan(0);
 
             for (const apiVersion of annotated) {
-                const labels = fieldNames(apiVersion);
+                const labels = getDebugFieldNames(apiVersion);
                 for (const [mode, fields] of Object.entries(FIRMWARE_DEBUG_FIELDS[apiVersion])) {
                     // A generated mode with no labels means the overlay never ran
                     // for it, which is worth saying rather than reading undefined.
@@ -270,7 +264,7 @@ describe("debug modes against the firmware source", () => {
 
         it("carries only keys the grammar allows, so no label falls outside a slot", () => {
             for (const apiVersion of generatedVersions) {
-                for (const [mode, modeLabels] of Object.entries(fieldNames(apiVersion))) {
+                for (const [mode, modeLabels] of Object.entries(getDebugFieldNames(apiVersion))) {
                     for (const key of Object.keys(modeLabels)) {
                         // Catches an out-of-range slot and a malformed key alike,
                         // either of which would otherwise be labelled and never shown.
@@ -282,7 +276,7 @@ describe("debug modes against the firmware source", () => {
 
         it("give every labelled mode a debug[all] summary label", () => {
             for (const apiVersion of generatedVersions) {
-                for (const [mode, modeLabels] of Object.entries(fieldNames(apiVersion))) {
+                for (const [mode, modeLabels] of Object.entries(getDebugFieldNames(apiVersion))) {
                     expect(modeLabels["debug[all]"], `${apiVersion} ${mode}`).toBeDefined();
                 }
             }

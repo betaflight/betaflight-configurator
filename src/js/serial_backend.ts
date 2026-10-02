@@ -45,7 +45,6 @@ import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
-import { isTauriIOS } from "./utils/checkCompatibility.js";
 import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
@@ -471,9 +470,9 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     // and the Connect button would spin forever. If the attempt neither opens nor becomes valid
     // within the window, recover the UI and tell the user. The disconnect-during-connect path in
     // onClosed normally handles this sooner; this covers protocols that signal nothing at all.
-    // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake — a slow AP plus
-    // the iOS Local Network permission prompt on the first connection — so give them a wider
-    // window than the enumerated-serial default before the safety net calls the attempt failed.
+    // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake over a slow AP, so
+    // give them a wider window than the enumerated-serial default before the safety net calls
+    // the attempt failed.
     const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
     GUI.timeout_add(
         "connectAttempt",
@@ -788,21 +787,7 @@ function abortConnection(messageKey?: string) {
     const isManualTarget =
         DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
     const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
-    let message = i18n.getMessage(effectiveKey);
-
-    // iOS gates connections to local-network addresses (where an ELRS module lives) behind a
-    // per-app Local Network permission; when it is denied the socket fails immediately with no
-    // route to host and no prompt. Point the user at the setting, since that is the usual cause.
-    // The watchdog and connect-phase disconnect paths both report "connectionFailed" explicitly,
-    // so key off the resolved message rather than the absence of a messageKey.
-    if (
-        effectiveKey === "connectionFailed" &&
-        isManualTarget &&
-        isTauriIOS() &&
-        serial.isLocalNetworkAddress(connectingTo)
-    ) {
-        message += ` ${i18n.getMessage("connectionFailedLocalNetworkIOS")}`;
-    }
+    const message = i18n.getMessage(effectiveKey);
 
     // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
     // FAILED edge before teardown. notifyClosed (via resetConnection's close path)
