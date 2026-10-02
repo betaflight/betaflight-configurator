@@ -952,7 +952,6 @@ const wingSpaParams = computed(() => {
         result.push(row);
     }
     return result;
->>>>>>> a0311285 (The Wings SPA settings table added at the Blackbox explorers Header info panel)
 });
 
 // --- Features ---
