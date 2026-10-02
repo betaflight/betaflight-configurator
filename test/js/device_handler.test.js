@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
+import { computed, toRaw } from "vue";
 
 // ---------------------------------------------------------------------------
 // device_handler pulls in ConfigStorage, the serial facade, the DFU protocol,
@@ -13,9 +13,9 @@ import { computed } from "vue";
 // getConnectionState().isReconnecting being false — see the tests below.
 // ---------------------------------------------------------------------------
 
-const { serial, dfuProtocol, isExpertModeEnabled, TauriDfuTransportMock } = vi.hoisted(() => {
+const { serial, dfuProtocol, isExpertModeEnabled, CapacitorDfuTransportMock } = vi.hoisted(() => {
     return {
-        TauriDfuTransportMock: class {},
+        CapacitorDfuTransportMock: class {},
         serial: {
             connected: false,
             connectionId: null,
@@ -63,12 +63,7 @@ vi.mock("../../src/js/protocols/usbdfu", () => ({
 
 vi.mock("../../src/js/protocols/CapacitorDfuTransport", () => ({
     __esModule: true,
-    default: class {},
-}));
-
-vi.mock("../../src/js/protocols/TauriDfuTransport", () => ({
-    __esModule: true,
-    default: TauriDfuTransportMock,
+    default: CapacitorDfuTransportMock,
 }));
 
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({
@@ -95,7 +90,6 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isAndroid: () => false,
     isNetworkOnlyBrowser: () => false,
     isTauri: () => true,
-    isTauriAndroid: () => false,
 }));
 
 import DeviceHandler from "../../src/js/device_handler";
@@ -382,9 +376,13 @@ describe("DeviceHandler show* setters", () => {
 });
 
 describe("createDfuProtocol routing", () => {
-    // dfuProtocol is chosen at module scope, so exercising the Tauri Android branch
-    // needs a fresh module graph with isTauriAndroid flipped before the re-import.
-    it("wraps the Tauri transport on Tauri Android", async () => {
+    it("uses the default WebUSB protocol outside Android", () => {
+        expect(toRaw(DeviceHandler.dfuProtocol)).toBe(dfuProtocol);
+    });
+
+    // dfuProtocol is chosen at module scope, so exercising the Android branch needs a
+    // fresh module graph with isAndroid flipped before the re-import.
+    it("wraps the Capacitor transport on Android", async () => {
         vi.resetModules();
         vi.doMock("../../src/js/utils/checkCompatibility.js", () => ({
             __esModule: true,
@@ -392,17 +390,16 @@ describe("createDfuProtocol routing", () => {
             checkBluetoothSupport: () => true,
             checkSerialSupport: () => true,
             checkUsbSupport: () => true,
-            isAndroid: () => false,
+            isAndroid: () => true,
             isNetworkOnlyBrowser: () => false,
-            isTauri: () => true,
-            isTauriAndroid: () => true,
+            isTauri: () => false,
         }));
 
         try {
             const { default: handler } = await import("../../src/js/device_handler");
 
             expect(handler.dfuProtocol).not.toBe(dfuProtocol);
-            expect(handler.dfuProtocol.transport).toBeInstanceOf(TauriDfuTransportMock);
+            expect(handler.dfuProtocol.transport).toBeInstanceOf(CapacitorDfuTransportMock);
         } finally {
             vi.doUnmock("../../src/js/utils/checkCompatibility.js");
             vi.resetModules();

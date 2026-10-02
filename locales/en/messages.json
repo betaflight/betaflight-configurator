@@ -664,9 +664,6 @@
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
     },
-    "connectionFailedLocalNetworkIOS": {
-        "message": "On iOS, allow <strong>Local Network</strong> access for Betaflight under Settings &rarr; Privacy &amp; Security &rarr; Local Network, then try again."
-    },
     "connectionLostTitle": {
         "message": "Connection lost"
     },
@@ -929,7 +926,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "Betaflight runs on flight controllers from many manufacturers, listed in the Firmware Flasher tab. Support for your hardware comes from its manufacturer, see <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">Hardware support</a>.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -996,10 +993,7 @@
         "message": "Developer"
     },
     "defaultSupport": {
-        "message": "For support please search the forums and wiki first or contact your vendor.<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
+        "message": "The Betaflight team fixes Betaflight: report bugs on GitHub. For help with your hardware, contact its manufacturer. For help with your build and setup, ask the community on Discord or search the wiki.<br /><br />"
     },
     "defaultSupport2": {
         "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
@@ -1011,7 +1005,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs on Discord</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight community on Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
@@ -4091,7 +4085,7 @@
         "message": "{{bytes}} bytes"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
+        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes). This is not from the Betaflight cloud build, so support for it comes from whoever built it."
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
@@ -8071,16 +8065,19 @@
         "message": "Continue without OSD protocol"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "✅ Verified Partner"
+        "message": "✅ Betaflight Supported"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "⚠️ Vendor / Community"
+        "message": "⚠️ Manufacturer supported"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Legacy"
     },
     "firmwareFlasherOptionLabelNotQualified": {
-        "message": "⚠️ Community / Manufacturer supported target — not officially supported ⚠️"
+        "message": "⚠️ Manufacturer supported target. For support with this board, contact its manufacturer."
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ Legacy target, no longer maintained. Use at your own discretion."
     },
     "coreBuild": {
         "message": "Core Only"
