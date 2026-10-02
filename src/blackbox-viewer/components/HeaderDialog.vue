@@ -344,6 +344,13 @@ function copyToClipboard() {
         formatParams("Dynamic Notch", dynNotchParams.value),
         formatParams("RPM Filter", rpmFilterParams.value),
         formatParams("RC Smoothing", rcSmoothingParams.value),
+        formatParams(
+            "Wing SPA",
+            wingSpaParams.value.map((r) => ({
+                name: r.label,
+                value: `Mode=${r.mode ?? "-"} Center=${r.center ?? "-"} Width=${r.width ?? "-"}`,
+            })),
+        ),
         formatParams("Wing TPA", wingTpaParams.value),
         formatParams("Wing curve", wingCurvesParams.value),
     ];
