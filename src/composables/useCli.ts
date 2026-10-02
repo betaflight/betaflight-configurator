@@ -94,6 +94,14 @@ export interface Cli {
     adaptPhones: () => void;
 }
 
+/**
+ * True for a key event that belongs to an IME composition, e.g. the Enter that accepts the composed
+ * text. WebKit fires that keydown after composition ends (isComposing false), keyCode 229 its only mark.
+ */
+function isComposing(event: KeyboardEvent): boolean {
+    return event.isComposing || event.keyCode === 229; // NOSONAR: WebKit's only signal for an IME-committing keydown
+}
+
 function removePromptHash(promptText: string): string {
     return promptText.startsWith(CLI_PROMPT) ? promptText.slice(CLI_PROMPT.length) : promptText;
 }
@@ -511,6 +519,10 @@ export function useCli(): Cli {
     };
 
     const handleCommandKeyDown = (event: KeyboardEvent) => {
+        if (isComposing(event)) {
+            return;
+        }
+
         switch (event.key) {
             case "Escape":
                 if (autocomplete.isOpen()) {
@@ -551,7 +563,8 @@ export function useCli(): Cli {
     };
 
     const handleCommandKeyUp = (event: KeyboardEvent) => {
-        if (autocomplete.isOpen()) {
+        // arrows pick IME candidates while composing; they must not recall history over the text
+        if (isComposing(event) || autocomplete.isOpen()) {
             return; // disable history keys if autocomplete is open
         }
 

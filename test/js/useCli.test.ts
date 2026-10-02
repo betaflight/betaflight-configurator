@@ -4,8 +4,8 @@ import CliAutoComplete from "../../src/js/CliAutoComplete";
 import FileSystem from "../../src/js/FileSystem";
 import { serial } from "../../src/js/serial";
 
-function key(name: string): KeyboardEvent {
-    return { key: name, preventDefault: vi.fn() } as unknown as KeyboardEvent;
+function key(name: string, ime: { isComposing?: boolean; keyCode?: number } = {}): KeyboardEvent {
+    return { key: name, isComposing: false, keyCode: 0, ...ime, preventDefault: vi.fn() } as unknown as KeyboardEvent;
 }
 
 const UP = "ArrowUp";
@@ -168,6 +168,64 @@ describe("useCli", () => {
 
             expect(enter.preventDefault).toHaveBeenCalled();
             expect(other.preventDefault).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("keys while an IME is composing", () => {
+        it.each([
+            ["Chromium/Firefox, during composition", { isComposing: true, keyCode: 229 }],
+            ["WebKit, the keydown that commits it", { isComposing: false, keyCode: 229 }],
+        ])("ignores Enter and Tab (%s)", (_engine, ime) => {
+            vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
+            vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(false);
+            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const cli = useCli();
+            cli.state.commandInput = "get gyro_";
+
+            const enter = key(ENTER, ime);
+            const tab = key("Tab", ime);
+            cli.handleCommandKeyDown(enter);
+            cli.handleCommandKeyDown(tab);
+
+            expect(send).not.toHaveBeenCalled();
+            expect(enter.preventDefault).not.toHaveBeenCalled();
+            expect(tab.preventDefault).not.toHaveBeenCalled();
+            expect(cli.state.commandInput).toBe("get gyro_");
+        });
+
+        it("leaves an open dropdown alone", () => {
+            const cli = useCli();
+            vi.spyOn(cli.autocomplete, "isOpen").mockReturnValue(true);
+            const hide = vi.spyOn(cli.autocomplete, "hide");
+            const up = vi.spyOn(cli.autocomplete, "navigateUp");
+
+            cli.handleCommandKeyDown(key("Escape", { isComposing: true }));
+            cli.handleCommandKeyDown(key(UP, { isComposing: true }));
+
+            expect(hide).not.toHaveBeenCalled();
+            expect(up).not.toHaveBeenCalled();
+        });
+
+        it("does not recall history over the text being composed", () => {
+            vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const cli = useCli();
+            cli.state.commandInput = "earlier";
+            cli.handleCommandKeyDown(key(ENTER));
+            cli.state.commandInput = "かな";
+
+            cli.handleCommandKeyUp(key(UP, { isComposing: true }));
+
+            expect(cli.state.commandInput).toBe("かな");
+        });
+
+        it("still sends once the composition is over", () => {
+            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const cli = useCli();
+            cli.state.commandInput = "status";
+
+            cli.handleCommandKeyDown(key(ENTER));
+
+            expect(sentText(send)).toBe("status\n");
         });
     });
 
