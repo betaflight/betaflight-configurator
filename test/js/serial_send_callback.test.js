@@ -16,8 +16,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isAndroid: () => false,
     isTauri: () => false,
-    isTauriIOS: () => false,
-    isTauriAndroid: () => false,
+    isTauriMacOS: () => false,
 }));
 
 const stub = (tag) =>
