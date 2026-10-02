@@ -2,14 +2,13 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri, isTauriAndroid, isTauriIOS, isTauriMacOS } from "./utils/checkCompatibility.js";
+import { isAndroid, isTauri, isTauriMacOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial.js";
 import TauriTcp from "./protocols/TauriTcp.js";
 import TauriBle from "./protocols/TauriBle.js";
-import { unbracketHost } from "./utils/host.js";
 
 // A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
 // The pattern permits the underscore. mDNS host names can contain an underscore, for example
@@ -23,7 +22,6 @@ const HOST = String.raw`(?:\[[0-9a-f:.]+\]|[a-z0-9._-]+)(?::\d+)?`;
 const urlPattern = (scheme) => new RegExp(`^(?:${scheme})://${HOST}(?:/.*)?$`, "i");
 const WEBSOCKET_URL = urlPattern("wss?");
 const TCP_URL = urlPattern("tcp");
-const BARE_HOST = new RegExp(`^${HOST}$`, "i");
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -52,17 +50,15 @@ class Serial extends EventTarget {
         } else if (isTauri()) {
             // Tauri shell: raw TCP via the Rust tcp_* commands (so the Betaflight bridge
             // on 5761 works), and WebSocket (ws://, wss://) via the WebSocket API the webview
-            // exposes — these are distinct transports, so they get distinct slots. Bluetooth
-            // via the web API the webview exposes. Native serial (tauri-plugin-serialplugin)
-            // is desktop + Android only — iOS has no USB serial.
+            // exposes — these are distinct transports, so they get distinct slots. Native
+            // serial via tauri-plugin-serialplugin.
             this._protocols = [
-                ...(isTauriIOS() ? [] : [{ name: "serial", instance: new TauriSerial() }]),
-                // Neither WKWebView (iOS, macOS) nor the Android System WebView exposes Web
-                // Bluetooth, so those use the native transport; Linux and Windows keep the
-                // webview's own Web Bluetooth.
+                { name: "serial", instance: new TauriSerial() },
+                // WKWebView (macOS) doesn't expose Web Bluetooth, so macOS uses the native
+                // transport; Linux and Windows keep the webview's own Web Bluetooth.
                 {
                     name: "bluetooth",
-                    instance: isTauriIOS() || isTauriMacOS() || isTauriAndroid() ? new TauriBle() : new WebBluetooth(),
+                    instance: isTauriMacOS() ? new TauriBle() : new WebBluetooth(),
                 },
                 { name: "tcp", instance: new TauriTcp() },
                 { name: "websocket", instance: new Websocket() },
@@ -175,15 +171,7 @@ class Serial extends EventTarget {
         if (s.startsWith("bluetooth")) {
             return this._instance("bluetooth");
         }
-        const serialInstance = this._instance("serial");
-        // No native serial transport (iOS): a schemeless manual entry that looks like a network
-        // host (an IP, a dotted hostname, [IPv6], or host:port — e.g. an ELRS Wi-Fi module at 10.0.0.1)
-        // can only be a TCP endpoint, so route it to TCP rather than a serial slot that doesn't
-        // exist. A device path (/dev/tty*, COM3) still resolves to no protocol, as before.
-        if (!serialInstance && BARE_HOST.test(s) && (s.includes(".") || s.includes(":"))) {
-            return this._instance("tcp");
-        }
-        return serialInstance;
+        return this._instance("serial");
     }
 
     /**
@@ -195,30 +183,6 @@ class Serial extends EventTarget {
      */
     canOpen(target) {
         return !TCP_URL.test(typeof target === "string" ? target.trim() : "") || this._hasRawTcp;
-    }
-
-    /**
-     * Classifies a manual target as a local-network address (RFC1918 / IPv4 & IPv6 link-local /
-     * .local) — the range an ELRS Wi-Fi module sits in, and the range iOS Local Network gates.
-     * @param {string} target - a manual connection target (URL or bare host[:port]).
-     * @returns {boolean} true when it resolves to a local-network address.
-     */
-    isLocalNetworkAddress(target) {
-        try {
-            const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(target) ? target : `tcp://${target}`;
-            // Strips IPv6 brackets so fe80::/10 link-local hosts can be matched.
-            const host = unbracketHost(new URL(withScheme).hostname.toLowerCase());
-            return (
-                host.startsWith("10.") ||
-                host.startsWith("192.168.") ||
-                /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
-                host.startsWith("169.254.") ||
-                /^fe[89ab][0-9a-f]:/.test(host) ||
-                host.endsWith(".local")
-            );
-        } catch {
-            return false;
-        }
     }
 
     /**

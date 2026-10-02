@@ -35,13 +35,12 @@ test-results-junit/
 # must not be reformatted.
 libraries/
 
-# Tool-owned JSON -- written by npm, Tauri, Xcode and the 3D model exporter; keep
+# Tool-owned JSON -- written by npm, Tauri and the 3D model exporter; keep
 # their native formatting so regeneration does not churn the diff.
 package.json
 package-lock.json
 resources/models/
 src-tauri/gen/
-src-tauri/plugins/*/permissions/schemas/
 
 # Capacitor copies the web build here during a local Android build.
 android/app/src/main/assets/public/
