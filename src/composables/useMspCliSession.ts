@@ -113,12 +113,15 @@ function delayAfter(line: string): number {
     return line.toLowerCase().startsWith("profile") ? PROFILE_COMMAND_DELAY_MS : LINE_DELAY_MS;
 }
 
-/** `error.message ?? error` as text, for an error of unknown shape. */
+/** A failed command's error as text. `send` rejects with an Error; anything else is shown as JSON. */
 function errorMessage(error: unknown): string {
-    if (typeof error === "object" && error !== null && "message" in error && error.message != null) {
-        return String(error.message);
+    if (error instanceof Error) {
+        return error.message;
     }
-    return String(error);
+    if (typeof error === "string") {
+        return error;
+    }
+    return JSON.stringify(error) ?? "Unknown error";
 }
 
 export function send(command: string, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS }: SendOptions = {}): Promise<string[]> {
@@ -272,7 +275,7 @@ export function useMspCliSession(): MspCliSession {
                 const line = rawLine.trim();
                 let response: string[];
                 try {
-                    response = await send(line, { timeoutMs: commandTimeoutMs });
+                    response = await send(line, { timeoutMs: commandTimeoutMs }); // NOSONAR: commands run one at a time, in order
                     sent++;
                 } catch (error) {
                     const message = errorMessage(error);
@@ -291,7 +294,7 @@ export function useMspCliSession(): MspCliSession {
                 }
 
                 onProgress?.({ index, total, sent, errorCount: errors.length });
-                await wait(delayAfter(line));
+                await wait(delayAfter(line)); // NOSONAR: the FC needs this gap before the next command
             }
         } finally {
             isBatchRunning.value = false;

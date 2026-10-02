@@ -257,7 +257,7 @@ export function useCliAutocomplete(): CliAutocomplete {
             index: 3,
             savedTerm: "",
             context(text) {
-                const m = text.match(/^\s*resource\s+(\w+)\s/i);
+                const m = /^\s*resource\s+(\w+)\s/i.exec(text);
                 return !!m && (cache.resourcesCount[m[1].toUpperCase()] || 0) > 1;
             },
             search(term, match) {
@@ -359,7 +359,7 @@ export function useCliAutocomplete(): CliAutocomplete {
                 match: /^(\s*resource\s+\w+\s+(\d+\s+)?)(\w*)$/i,
                 index: 3,
                 context(text) {
-                    const m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
+                    const m = /^\s*resource\s+(\w+)\s+(\d+\s)?/i.exec(text);
                     if (m) {
                         const count = cache.resourcesCount[m[1].toUpperCase()] || 0;
                         return !!count && (!!m[2] || count === 1);
@@ -471,9 +471,7 @@ export function useCliAutocomplete(): CliAutocomplete {
             }
         }
 
-        if (cursorPos === undefined) {
-            cursorPos = inputText.length;
-        }
+        cursorPos ??= inputText.length;
 
         // Only autocomplete if cursor is at end of word
         if (!isAtWordEnd(inputText, cursorPos)) {

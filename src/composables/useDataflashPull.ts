@@ -29,6 +29,15 @@ import { useConnectionStore } from "../stores/connection";
 
 const BLOCK_SIZE = 4096;
 
+/** MSP reports read failures as Errors; anything else is wrapped, keeping the original as the cause. */
+function asReadError(error: unknown): Error {
+    if (error instanceof Error) {
+        return error;
+    }
+    const message = typeof error === "string" ? error : "Dataflash read failed";
+    return new Error(message, { cause: error });
+}
+
 export interface DataflashPull {
     pulling: Ref<boolean>;
     /** Percentage of the occupied flash read so far, 0–100. */
@@ -93,7 +102,7 @@ export function useDataflashPull(): DataflashPull {
 
                 const onChunkRead: DataflashReadCallback = (_chunkAddress, chunkDataView, _bytesCompressed, error) => {
                     if (error) {
-                        reject(error instanceof Error ? error : new Error(String(error)));
+                        reject(asReadError(error));
                         return;
                     }
                     if (chunkDataView === null) {

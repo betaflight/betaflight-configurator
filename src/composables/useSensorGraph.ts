@@ -105,8 +105,8 @@ export function useSensorGraph() {
             }
         }
         while (data[0].length > 300) {
-            for (let i = 0; i < data.length; i++) {
-                data[i].shift();
+            for (const series of data) {
+                series.shift();
             }
         }
         return sampleNumber + 1;
@@ -207,8 +207,8 @@ export function useSensorGraph() {
         updateGraphHelperSize(helpers);
         const element = selectGraph(helpers);
         element.selectAll("defs").data([0]).join("defs");
-        const xAxis = d3.axisBottom(helpers.scaleX).tickFormat((d) => String(d));
-        const yAxis = d3.axisLeft(helpers.scaleY).tickFormat((d) => String(d));
+        const xAxis = d3.axisBottom(helpers.scaleX).tickFormat(String);
+        const yAxis = d3.axisLeft(helpers.scaleY).tickFormat(String);
         const xGrid = d3
             .axisBottom(helpers.scaleX)
             .tickFormat(() => "")
@@ -267,15 +267,9 @@ export function useSensorGraph() {
 
         const element = selectGraph(helpers);
 
-        const xAxis = d3
-            .axisBottom(helpers.scaleX)
-            .ticks(5)
-            .tickFormat((d) => String(d));
+        const xAxis = d3.axisBottom(helpers.scaleX).ticks(5).tickFormat(String);
 
-        const yAxis = d3
-            .axisLeft(helpers.scaleY)
-            .ticks(5)
-            .tickFormat((d) => String(d));
+        const yAxis = d3.axisLeft(helpers.scaleY).ticks(5).tickFormat(String);
 
         const xGrid = d3
             .axisBottom(helpers.scaleX)

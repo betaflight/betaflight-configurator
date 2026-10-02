@@ -46,9 +46,7 @@ export function withSaveFailureMessage<T>(
     const tagged = (
         error !== null && typeof error === "object" ? error : new Error(String(error), { cause: error })
     ) as (T extends object ? T : Error) & SaveFailureTagged;
-    if (tagged.saveFailureMessage === undefined) {
-        tagged.saveFailureMessage = message;
-    }
+    tagged.saveFailureMessage ??= message;
     return tagged;
 }
 

@@ -40,8 +40,8 @@ import { escapeHtml } from "../js/utils/common";
 const backspaceCode = 8;
 const lineFeedCode = 10;
 const carriageReturnCode = 13;
-const enterKeyCode = 13;
-const tabKeyCode = 9;
+const escapeSequenceCode = 27;
+const escapeSequenceCharLength = 3;
 const SERIAL_IDLE_MS = 250; // quiet period after which a command response is considered complete
 const CLI_ENTRY_MARKER = "CLI";
 const CLI_PROMPT = "# ";
@@ -471,95 +471,94 @@ export function useCli(): Cli {
         state.supportDialogInput = "";
     };
 
-    const handleCommandKeyDown = (event: KeyboardEvent) => {
-        const upKeyCode = 38;
-        const downKeyCode = 40;
-        const escKeyCode = 27;
+    const handleTabKey = () => {
+        if (!CliAutoComplete.isEnabled()) {
+            // Native FC autoComplete
+            const outString = state.commandInput;
+            const lastCommand = outString.split("\n").pop()!;
+            const command = getCliCommand(lastCommand, cliBuffer);
+            if (command) {
+                sendNativeAutoComplete(command);
+                state.commandInput = "";
+            }
+        } else if (autocomplete.isOpen()) {
+            // Tab selects the active item in the dropdown (never execute)
+            autocomplete.selectItem(autocomplete.activeIndex.value);
+        } else if (!CliAutoComplete.isBuilding()) {
+            // force show autocomplete on Tab
+            autocomplete.openForced(state.commandInput);
+        }
+    };
 
-        if (event.which === escKeyCode && autocomplete.isOpen()) {
-            event.preventDefault();
-            autocomplete.hide();
+    const handleEnterKey = () => {
+        if (CliAutoComplete.isBuilding()) {
             return;
         }
 
-        if (event.which === tabKeyCode) {
-            event.preventDefault();
-
-            if (!CliAutoComplete.isEnabled()) {
-                // Native FC autoComplete
-                const outString = state.commandInput;
-                const lastCommand = outString.split("\n").pop()!;
-                const command = getCliCommand(lastCommand, cliBuffer);
-                if (command) {
-                    sendNativeAutoComplete(command);
-                    state.commandInput = "";
-                }
-            } else if (autocomplete.isOpen()) {
-                // Tab selects the active item in the dropdown (never execute)
-                autocomplete.selectItem(autocomplete.activeIndex.value);
-            } else if (!CliAutoComplete.isBuilding()) {
-                // force show autocomplete on Tab
-                autocomplete.openForced(state.commandInput);
-            }
-        }
-
-        if (event.which === enterKeyCode) {
-            event.preventDefault();
-
-            if (CliAutoComplete.isBuilding()) {
-                return;
-            }
-
-            if (autocomplete.isOpen()) {
-                autocomplete.selectItem(autocomplete.activeIndex.value);
-                if (autocomplete.sendOnEnter.value) {
-                    nextTick(() => {
-                        executeCommands(state.commandInput);
-                        state.commandInput = "";
-                    });
-                }
-            } else {
-                const outString = state.commandInput;
-                executeCommands(outString);
-                state.commandInput = "";
-            }
-        }
-
-        // Arrow keys when dropdown is open
         if (autocomplete.isOpen()) {
-            if (event.which === upKeyCode) {
-                event.preventDefault();
-                autocomplete.navigateUp();
+            autocomplete.selectItem(autocomplete.activeIndex.value);
+            if (autocomplete.sendOnEnter.value) {
+                nextTick(() => {
+                    executeCommands(state.commandInput);
+                    state.commandInput = "";
+                });
             }
-            if (event.which === downKeyCode) {
+        } else {
+            const outString = state.commandInput;
+            executeCommands(outString);
+            state.commandInput = "";
+        }
+    };
+
+    const handleCommandKeyDown = (event: KeyboardEvent) => {
+        switch (event.key) {
+            case "Escape":
+                if (autocomplete.isOpen()) {
+                    event.preventDefault();
+                    autocomplete.hide();
+                }
+                break;
+            case "Tab":
                 event.preventDefault();
-                autocomplete.navigateDown();
-            }
+                handleTabKey();
+                break;
+            case "Enter":
+                event.preventDefault();
+                handleEnterKey();
+                break;
+            // Arrow keys move through the dropdown while it is open; otherwise keyup recalls history
+            case "ArrowUp":
+                if (autocomplete.isOpen()) {
+                    event.preventDefault();
+                    autocomplete.navigateUp();
+                }
+                break;
+            case "ArrowDown":
+                if (autocomplete.isOpen()) {
+                    event.preventDefault();
+                    autocomplete.navigateDown();
+                }
+                break;
         }
     };
 
     const handleCommandKeyPress = (event: KeyboardEvent) => {
         // Deprecated: keypress event - keeping for compatibility but main logic moved to keydown
         // This prevents any default keypress behavior
-        if (event.which === enterKeyCode) {
+        if (event.key === "Enter") {
             event.preventDefault();
         }
     };
 
     const handleCommandKeyUp = (event: KeyboardEvent) => {
-        const keyUp: Record<number, true> = { 38: true };
-        const keyDown: Record<number, true> = { 40: true };
-
         if (autocomplete.isOpen()) {
             return; // disable history keys if autocomplete is open
         }
 
         // An empty history has no entry to recall; "" is what the textarea shows for none.
-        if (event.keyCode in keyUp) {
+        if (event.key === "ArrowUp") {
             state.commandInput = history.prev() ?? "";
-        }
-
-        if (event.keyCode in keyDown) {
+        } else if (event.key === "ArrowDown") {
             state.commandInput = history.next() ?? "";
         }
     };
@@ -622,6 +621,46 @@ export function useCli(): Cli {
     };
 
     /**
+     * Handle one byte of the welcome banner the FC sends on entering CLI mode.
+     * @returns whether to start autocomplete, once the banner's closing prompt has arrived;
+     *   undefined before that.
+     */
+    const readCliEntryChar = (currentChar: string): boolean | undefined => {
+        // try to catch part of valid CLI enter message (firmware message starts with CRLF)
+        state.startProcessing = true;
+        cliEntrySuffix = `${cliEntrySuffix}${currentChar}`.slice(-CLI_ENTRY_PROMPT.length);
+        if (cliEntrySuffix.endsWith(CLI_ENTRY_MARKER)) {
+            cliEntrySawMarker = true;
+        }
+        writeToOutput(escapeHtml(currentChar));
+        return cliEntrySuffix === CLI_ENTRY_PROMPT ? validateCliEntry() : undefined;
+    };
+
+    /** Handle one byte of ordinary CLI traffic, after the banner and outside escape sequences. */
+    const readCliChar = (byte: number, currentChar: string) => {
+        // snapshot first: processing this character can end suppression, and the character that
+        // ends it still belongs to the builder
+        const suppressed = CliAutoComplete.isSuppressingOutput();
+
+        if (outputSuppressed && !suppressed) {
+            // drop whatever half of a builder line was already buffered
+            cliBuffer = "";
+        }
+        outputSuppressed = suppressed;
+
+        // a backspace has already taken its character back out of the history
+        if (CONFIGURATOR.cliValid && processCharacterInCliMode(byte, currentChar)) {
+            return;
+        }
+
+        if (!suppressed) {
+            outputHistory += currentChar;
+        }
+
+        checkForReboot();
+    };
+
+    /**
      * Process bytes received from the serial port.
      */
     const read = (readInfo: CliReadInfo): void => {
@@ -641,27 +680,15 @@ export function useCli(): Cli {
         let sequenceCharsToSkip = 0;
         let startAutocompleteAfterRead = false;
 
-        for (let i = 0; i < data.length; i++) {
-            const byte = data[i];
+        for (const byte of data) {
             const currentChar = String.fromCodePoint(byte);
             const isCRLF = byte === lineFeedCode || byte === carriageReturnCode;
 
             if (!CONFIGURATOR.cliValid && (isCRLF || state.startProcessing)) {
-                // try to catch part of valid CLI enter message (firmware message starts with CRLF)
-                state.startProcessing = true;
-                cliEntrySuffix = `${cliEntrySuffix}${currentChar}`.slice(-CLI_ENTRY_PROMPT.length);
-                if (cliEntrySuffix.endsWith(CLI_ENTRY_MARKER)) {
-                    cliEntrySawMarker = true;
-                }
-                writeToOutput(escapeHtml(currentChar));
-                if (cliEntrySuffix === CLI_ENTRY_PROMPT) {
-                    startAutocompleteAfterRead = validateCliEntry();
-                }
+                startAutocompleteAfterRead = readCliEntryChar(currentChar) ?? startAutocompleteAfterRead;
                 continue;
             }
 
-            const escapeSequenceCode = 27;
-            const escapeSequenceCharLength = 3;
             if (byte === escapeSequenceCode && !sequenceCharsToSkip) {
                 // ESC + other
                 sequenceCharsToSkip = escapeSequenceCharLength;
@@ -672,28 +699,7 @@ export function useCli(): Cli {
                 continue;
             }
 
-            // snapshot first: processing this character can end suppression, and the character that
-            // ends it still belongs to the builder
-            const suppressed = CliAutoComplete.isSuppressingOutput();
-
-            if (outputSuppressed && !suppressed) {
-                // drop whatever half of a builder line was already buffered
-                cliBuffer = "";
-            }
-            outputSuppressed = suppressed;
-
-            if (CONFIGURATOR.cliValid) {
-                const shouldContinue = processCharacterInCliMode(byte, currentChar);
-                if (shouldContinue) {
-                    continue;
-                }
-            }
-
-            if (!suppressed) {
-                outputHistory += currentChar;
-            }
-
-            checkForReboot();
+            readCliChar(byte, currentChar);
         }
 
         state.lastArrival = Date.now();
