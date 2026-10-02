@@ -341,6 +341,8 @@ function copyToClipboard() {
         formatParams("Dynamic Notch", dynNotchParams.value),
         formatParams("RPM Filter", rpmFilterParams.value),
         formatParams("RC Smoothing", rcSmoothingParams.value),
+        formatParams("Wing TPA", wingTpaParams.value),
+        formatParams("Wing curve", wingCurvesParams.value),
     ];
     const text = `${craftName.value}\n${revision.value}\n${boardInfo.value}\n\n${sections.filter(Boolean).join("\n")}`;
     navigator.clipboard.writeText(text);
