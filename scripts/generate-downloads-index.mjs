@@ -228,8 +228,7 @@ function renderNightlySection(nightly) {
         { key: "linux", title: "Linux" },
     ];
     const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
-    const android = [nightly?.android, nightly?.tauriAndroid].filter(Boolean);
-    const hasAndroid = android.length > 0;
+    const hasAndroid = Boolean(nightly?.android);
 
     if (!nightly || (!hasDesktop && !hasAndroid)) {
         return `
@@ -244,7 +243,7 @@ function renderNightlySection(nightly) {
         .map((p) => `<h3>${escapeHtml(p.title)}</h3>${fileList(desktop[p.key])}`)
         .join("");
 
-    const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList(android)}` : "";
+    const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList([nightly.android])}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];

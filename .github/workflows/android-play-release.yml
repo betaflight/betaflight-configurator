@@ -1,12 +1,11 @@
-name: Tauri Android release
+name: Android Play release
 
-# Builds the signed Tauri Android App Bundle and uploads it to Google Play.
-# Runs alongside the Capacitor APK build — it does not touch it.
+# Builds the signed Capacitor Android App Bundle and uploads it to Google Play.
 #
 # versionCode = <version floor, e.g. 2026006000> + github.run_number, so every
 # run outranks the previous upload. versionName = <version>.<run_number>.
 #
-# Required repository secrets (distinct from the Capacitor RELEASE_* secrets):
+# Required repository secrets (distinct from the sideload RELEASE_* secrets):
 #   ANDROID_UPLOAD_KEYSTORE           base64 of the upload keystore (betaflight-upload.jks)
 #   ANDROID_UPLOAD_KEYSTORE_PASSWORD  keystore (store) password
 #   ANDROID_UPLOAD_KEY_ALIAS          key alias (upload)
@@ -17,20 +16,17 @@ on:
   workflow_dispatch:
     inputs:
       track:
-        description: 'Play track to publish to'
+        description: "Play track to publish to"
         required: true
         type: choice
         default: internal
         options: [internal, alpha, beta, production]
       status:
-        description: 'Release status on the track'
+        description: "Release status on the track"
         required: true
         type: choice
         default: completed
-        options: [completed, draft, inProgress]
-
-env:
-  NDK_VERSION: 27.2.12479018
+        options: [completed, draft]
 
 jobs:
   android:
@@ -50,43 +46,32 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Generate Capacitor config
+        run: node capacitor.config.generator.mjs
+
+      - name: Sync Capacitor Android project
+        run: npx --no cap sync android
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "21"
+          cache: gradle
 
-      # Default 'packages' input includes the legacy 'tools' package, which
-      # Google removed from the SDK repository — sdkmanager fails to find it.
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
-        with:
-          packages: platform-tools
-
-      - name: Install NDK
-        run: |
-          sdkmanager "ndk;${NDK_VERSION}"
-          echo "NDK_HOME=$ANDROID_HOME/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
-
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
-        with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-
-      - name: Cache Cargo registry and target
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
-        with:
-          workspaces: src-tauri
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Configure signing
+      - name: Build signed AAB
         env:
           ANDROID_UPLOAD_KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
           ANDROID_UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
           ANDROID_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
           ANDROID_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           : "${ANDROID_UPLOAD_KEYSTORE:?Set the ANDROID_UPLOAD_KEYSTORE secret (base64 keystore)}"
           : "${ANDROID_UPLOAD_KEYSTORE_PASSWORD:?Set the ANDROID_UPLOAD_KEYSTORE_PASSWORD secret}"
@@ -94,31 +79,19 @@ jobs:
           : "${ANDROID_UPLOAD_KEY_PASSWORD:?Set the ANDROID_UPLOAD_KEY_PASSWORD secret}"
           KS="$RUNNER_TEMP/betaflight-upload.jks"
           echo "$ANDROID_UPLOAD_KEYSTORE" | base64 --decode > "$KS"
-          # Write each property explicitly — a heredoc here would fold the YAML
-          # block indentation into the values and corrupt the keystore path.
-          {
-            printf 'storeFile=%s\n' "$KS"
-            printf 'storePassword=%s\n' "$ANDROID_UPLOAD_KEYSTORE_PASSWORD"
-            printf 'keyAlias=%s\n' "$ANDROID_UPLOAD_KEY_ALIAS"
-            printf 'keyPassword=%s\n' "$ANDROID_UPLOAD_KEY_PASSWORD"
-          } > src-tauri/gen/android/keystore.properties
-
-      - name: Build signed AAB
-        env:
-          ANDROID_BUILD_NUMBER: ${{ github.run_number }}
-        run: npx tauri android build --aab
-
-      - name: Locate AAB
-        id: aab
-        run: |
-          AAB=$(ls src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab | head -1)
-          echo "path=$AAB" >> "$GITHUB_OUTPUT"
+          pushd android >/dev/null
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file="$KS" \
+            -Pandroid.injected.signing.store.password="$ANDROID_UPLOAD_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$ANDROID_UPLOAD_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$ANDROID_UPLOAD_KEY_PASSWORD"
+          popd >/dev/null
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v6
         with:
           name: betaflight-app-aab
-          path: ${{ steps.aab.outputs.path }}
+          path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
 
@@ -126,8 +99,8 @@ jobs:
         uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-          packageName: com.betaflight.app
-          releaseFiles: ${{ steps.aab.outputs.path }}
+          packageName: com.betaflight.android
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           track: ${{ inputs.track }}
           status: ${{ inputs.status }}
           whatsNewDirectory: distribution/play/whatsnew
