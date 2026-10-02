@@ -96,6 +96,7 @@ export function animationLoop() {
     if (logStore.flightLog.hasGpsData()) {
         graphStore.mapGrapher.setCurrentTime(logStore.currentBlackboxTime);
     }
+    graphStore.flight3d?.setCurrentTime(logStore.currentBlackboxTime);
 
     updateValuesRateLimited();
 
@@ -137,6 +138,7 @@ export function updateCanvasSize() {
         if (logStore.flightLog.hasGpsData()) {
             graphStore.mapGrapher.resize(width, height);
         }
+        graphStore.flight3d?.resize(width, height);
 
         invalidateGraph();
     }
