@@ -3,7 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { bracketHost, unbracketHost } from "../utils/host.js";
 
 /**
- * Raw TCP transport for the Tauri shell (desktop and Android).
+ * Raw TCP transport for the Tauri desktop shell.
  *
  * The webview has no raw-socket API and the Betaflight bridge speaks plain TCP
  * (port 5761, not WebSocket), so this drives the Rust `tcp_*` commands and

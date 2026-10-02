@@ -23,8 +23,6 @@ import {
     checkUsbSupport,
     isAndroid,
     isNetworkOnlyBrowser,
-    isTauriAndroid,
-    isTauriIOS,
 } from "./utils/checkCompatibility.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
@@ -241,7 +239,7 @@ async function startProcess() {
 
     // The phone/tablet shell only. A narrow desktop or browser window is still the desktop
     // experience, so width alone must not opt anything in here.
-    document.body.classList.toggle("mobile-app-shell", isTauriIOS() || isTauriAndroid() || isAndroid());
+    document.body.classList.toggle("mobile-app-shell", isAndroid());
 
     // The on-screen keyboard leaves no room for the tab strip in the floating bar. Track focus
     // rather than viewport height: the layout viewport shrinks with the keyboard, so measuring
