@@ -30,6 +30,7 @@ describe("UserApi.deleteAccount", () => {
         expect(fetchMock).toHaveBeenCalledWith("https://user.betaflight.com/api/user", {
             method: "DELETE",
             headers: { Authorization: "Bearer abc123" },
+            signal: expect.any(AbortSignal),
         });
     });
 
@@ -38,6 +39,22 @@ describe("UserApi.deleteAccount", () => {
         const api = new UserApi(fakeLoginApi());
 
         await expect(api.deleteAccount()).rejects.toThrow("account locked");
+    });
+
+    it("gives up when the server never answers", async () => {
+        vi.useFakeTimers();
+        fetchMock.mockImplementation(
+            (_url, { signal }) =>
+                new Promise((_resolve, reject) => {
+                    signal.addEventListener("abort", () => reject(signal.reason));
+                }),
+        );
+        const api = new UserApi(fakeLoginApi());
+
+        const result = expect(api.deleteAccount()).rejects.toThrow();
+        await vi.advanceTimersByTimeAsync(30000);
+        await result;
+        vi.useRealTimers();
     });
 
     it("does not call the API without an access token", async () => {
