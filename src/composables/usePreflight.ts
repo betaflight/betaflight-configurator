@@ -24,6 +24,7 @@ import geomagnetism from "geomagnetism";
 import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
+import { IP_GEOLOCATION_CONSENT_KEY } from "../js/utils/ipGeolocation";
 import { sortNotams, kmToNm, type NotamItem } from "../js/notam/index";
 import { fetchFromFaa } from "../js/notam/faa";
 import { fetchFromOpenAip } from "../js/notam/openaip";
@@ -121,7 +122,6 @@ function messageOf(err: unknown): string {
 }
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
-const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
 const NOTAM_PROVIDER_KEY = "preflight_notam_provider";
 const NOTAM_FAA_API_KEY = "preflight_notam_faa_api_key";

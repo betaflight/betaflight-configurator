@@ -30,6 +30,7 @@ import { Style, Stroke, Circle, Fill, Text } from "ol/style";
 import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useMapViewport } from "@/composables/useMapViewport";
+import { ipCoordinates } from "@/js/utils/ipGeolocation";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -72,29 +73,22 @@ const initializeMapAtLocation = (latitude: number, longitude: number, logMessage
     setupMapLayers();
 };
 
-// Fetch location from IP-based geolocation API
-const fetchIPLocation = async () => {
-    try {
-        const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.latitude && data.longitude) {
-            return {
-                latitude: Number(data.latitude),
-                longitude: Number(data.longitude),
-            };
-        }
-        throw new Error("Invalid response from IP geolocation API");
-    } catch (error) {
-        console.warn("IP geolocation failed:", error instanceof Error ? error.message : error);
-        return null;
+// Final fallback coordinates (Sydney Harbour Bridge, Australia)
+const FALLBACK_LAT = -33.8523;
+const FALLBACK_LON = 151.2108;
+
+// Browser location was unavailable: try the consent-gated IP lookup, then the fixed fallback.
+const initializeWithoutBrowserLocation = async () => {
+    const ipLocation = await ipCoordinates(true);
+    if (ipLocation) {
+        initializeMapAtLocation(ipLocation.lat, ipLocation.lon, "Map initialized at IP-based location");
+    } else {
+        initializeMapAtLocation(FALLBACK_LAT, FALLBACK_LON, "Map initialized at final fallback location");
     }
 };
 
 // Initialize map and layers
-onMounted(async () => {
+onMounted(() => {
     if (!mapRef.value) {
         console.error("Map ref not available");
         return;
@@ -104,59 +98,28 @@ onMounted(async () => {
     // observer only needs the container.
     observeContainer();
 
-    // Final fallback coordinates (Sydney Harbour Bridge, Australia)
-    const finalFallbackLat = -33.8523;
-    const finalFallbackLon = 151.2108;
-
-    // Try to get user's geolocation via browser API
-    if (navigator.geolocation) {
-        // prettier-ignore
-        navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for map centering
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                console.log("Browser geolocation obtained:", latitude, longitude);
-                initializeMapAtLocation(latitude, longitude, "Map initialized at browser location");
-            },
-            async (error) => {
-                console.warn("Browser geolocation failed:", error.message);
-
-                // Fallback to IP-based geolocation
-                const ipLocation = await fetchIPLocation();
-                if (ipLocation) {
-                    console.log("IP geolocation obtained:", ipLocation.latitude, ipLocation.longitude);
-                    initializeMapAtLocation(
-                        ipLocation.latitude,
-                        ipLocation.longitude,
-                        "Map initialized at IP-based location",
-                    );
-                } else {
-                    console.warn("IP geolocation failed, using final fallback");
-                    initializeMapAtLocation(
-                        finalFallbackLat,
-                        finalFallbackLon,
-                        "Map initialized at final fallback location",
-                    );
-                }
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0,
-            },
-        );
-    } else {
+    if (!navigator.geolocation) {
         console.warn("Browser geolocation not supported");
-
-        // Fallback to IP-based geolocation
-        const ipLocation = await fetchIPLocation();
-        if (ipLocation) {
-            console.log("IP geolocation obtained:", ipLocation.latitude, ipLocation.longitude);
-            initializeMapAtLocation(ipLocation.latitude, ipLocation.longitude, "Map initialized at IP-based location");
-        } else {
-            console.warn("IP geolocation failed, using final fallback");
-            initializeMapAtLocation(finalFallbackLat, finalFallbackLon, "Map initialized at final fallback location");
-        }
+        void initializeWithoutBrowserLocation();
+        return;
     }
+
+    // prettier-ignore
+    navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for map centering
+        (position) => {
+            const { latitude, longitude } = position.coords;
+            initializeMapAtLocation(latitude, longitude, "Map initialized at browser location");
+        },
+        (error) => {
+            console.warn("Browser geolocation failed:", error.message);
+            void initializeWithoutBrowserLocation();
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        },
+    );
 });
 
 // Setup map layers and event handlers
