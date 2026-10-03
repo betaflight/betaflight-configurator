@@ -1,9 +1,80 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { RadioGroupItem, RadioGroupValue } from "@nuxt/ui";
 import { useDialogStore } from "@/stores/dialog";
+
+/** A dialog button handler; callers pass null or omit it when the button only closes. */
+type DialogCallback = (() => void) | null | undefined;
+
+// `never[]` lets a listener declare whatever payload its dialog emits.
+type DialogListener = (...args: never[]) => unknown;
+
+export interface YesNoOptions {
+    yesText?: string;
+    noText?: string;
+    destructive?: boolean;
+}
+
+export interface InfoOptions {
+    confirmText?: string;
+}
+
+export interface WaitOptions {
+    cancelText?: string;
+    showCancel?: boolean;
+}
+
+export interface CopyProfileOptions {
+    profileText?: string;
+    rateProfileText?: string;
+    confirmText?: string;
+    cancelText?: string;
+}
+
+export interface CopyProfileOption {
+    label: string;
+    value: number;
+}
+
+/** What CopyProfileDialog confirms with; null for a list that offered nothing. */
+export interface CopyProfileSelection {
+    profile: number | null;
+    rateProfile: number | null;
+}
+
+export interface WaitHandle {
+    close: () => void;
+}
 
 export function useDialog() {
     const store = useDialogStore();
 
-    const openYesNo = (title, text, onYes, onNo, options = {}) => {
+    const openYesNo = (
+        title: string,
+        text: string,
+        onYes?: DialogCallback,
+        onNo?: DialogCallback,
+        options: YesNoOptions = {},
+    ) => {
         store.open(
             "YesNoDialog",
             {
@@ -30,7 +101,7 @@ export function useDialog() {
         );
     };
 
-    const openInfo = (title, text, onConfirm, options = {}) => {
+    const openInfo = (title: string, text: string, onConfirm?: DialogCallback, options: InfoOptions = {}) => {
         store.open(
             "InformationDialog",
             {
@@ -50,7 +121,7 @@ export function useDialog() {
         );
     };
 
-    const openWait = (title, onCancel, options = {}) => {
+    const openWait = (title: string, onCancel?: DialogCallback, options: WaitOptions = {}) => {
         store.open(
             "WaitDialog",
             {
@@ -71,11 +142,11 @@ export function useDialog() {
     };
 
     const openProfileSelection = (
-        title,
-        message,
-        options,
-        onConfirm,
-        onCancel,
+        title: string,
+        message: string,
+        options: RadioGroupItem[],
+        onConfirm?: ((selectedValue: RadioGroupValue | null) => void) | null,
+        onCancel?: DialogCallback,
         confirmText = "OK",
         cancelText = "Cancel",
     ) => {
@@ -89,7 +160,7 @@ export function useDialog() {
                 cancelText,
             },
             {
-                confirm: (selectedValue) => {
+                confirm: (selectedValue: RadioGroupValue | null) => {
                     store.close();
                     if (onConfirm) {
                         onConfirm(selectedValue);
@@ -105,7 +176,15 @@ export function useDialog() {
         );
     };
 
-    const openCopyProfile = (title, note, profileOptions, rateOptions, onConfirm, onCancel, options = {}) => {
+    const openCopyProfile = (
+        title: string,
+        note: string,
+        profileOptions: CopyProfileOption[],
+        rateOptions: CopyProfileOption[],
+        onConfirm?: ((selected: CopyProfileSelection) => void) | null,
+        onCancel?: DialogCallback,
+        options: CopyProfileOptions = {},
+    ) => {
         store.open(
             "CopyProfileDialog",
             {
@@ -116,7 +195,7 @@ export function useDialog() {
                 ...options,
             },
             {
-                confirm: (selected) => {
+                confirm: (selected: CopyProfileSelection) => {
                     store.close();
                     if (onConfirm) {
                         onConfirm(selected);
@@ -135,7 +214,7 @@ export function useDialog() {
     /**
      * Promise-based yes/no dialog — resolves true (yes) or false (no).
      */
-    const showYesNo = (title, text, options = {}) => {
+    const showYesNo = (title: string, text: string, options: YesNoOptions = {}): Promise<boolean> => {
         return new Promise((resolve) => {
             openYesNo(
                 title,
@@ -150,7 +229,7 @@ export function useDialog() {
     /**
      * Promise-based information dialog — resolves when confirmed.
      */
-    const showInfo = (title, text, options = {}) => {
+    const showInfo = (title: string, text: string, options: InfoOptions = {}): Promise<void> => {
         return new Promise((resolve) => {
             openInfo(title, text, () => resolve(), options);
         });
@@ -159,7 +238,7 @@ export function useDialog() {
     /**
      * Opens a wait dialog and returns a close function.
      */
-    const showWait = (title, onCancel, options = {}) => {
+    const showWait = (title: string, onCancel?: DialogCallback, options: WaitOptions = {}): WaitHandle => {
         openWait(title, onCancel, options);
         return { close: () => store.close() };
     };
@@ -168,7 +247,12 @@ export function useDialog() {
         store.close();
     };
 
-    const open = (type, props = {}, listeners = {}) => {
+    /** Open any dialog component by name, for the ones without a dedicated helper above. */
+    const open = (
+        type: string,
+        props: Record<string, unknown> = {},
+        listeners: Record<string, DialogListener> = {},
+    ) => {
         store.open(type, props, listeners);
     };
 

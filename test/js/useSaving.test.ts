@@ -18,8 +18,8 @@ describe("useSaving", () => {
         const { isSaving, runSave } = useSaving();
         expect(isSaving.value).toBe(false);
 
-        let resolveFn;
-        const fn = vi.fn(() => new Promise((resolve) => (resolveFn = resolve)));
+        let resolveFn!: () => void;
+        const fn = vi.fn(() => new Promise<void>((resolve) => (resolveFn = resolve)));
 
         const pending = runSave(fn);
         expect(isSaving.value).toBe(true);
@@ -34,9 +34,9 @@ describe("useSaving", () => {
     it("blocks re-entry while a save is in progress", async () => {
         const { isSaving, runSave } = useSaving();
 
-        let resolveFirst;
-        const first = vi.fn(() => new Promise((resolve) => (resolveFirst = resolve)));
-        const second = vi.fn().mockResolvedValue();
+        let resolveFirst!: () => void;
+        const first = vi.fn(() => new Promise<void>((resolve) => (resolveFirst = resolve)));
+        const second = vi.fn<() => Promise<void>>().mockResolvedValue();
 
         const pending = runSave(first);
         expect(isSaving.value).toBe(true);
@@ -110,9 +110,10 @@ describe("useSaving", () => {
             const error = new Error("boom");
 
             withSaveFailureMessage(error, "inner step");
-            withSaveFailureMessage(error, "outer step");
+            const tagged = withSaveFailureMessage(error, "outer step");
 
-            expect(error.saveFailureMessage).toBe("inner step");
+            expect(tagged).toBe(error);
+            expect(tagged.saveFailureMessage).toBe("inner step");
         });
 
         it("tags the error in place, so a tagged cancellation is still recognised and stays silent", async () => {

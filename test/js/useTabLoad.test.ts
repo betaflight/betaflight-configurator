@@ -22,6 +22,16 @@ describe("useTabLoad", () => {
         expect(onError).not.toHaveBeenCalled();
     });
 
+    it("swallows a cancellation from a dropped link (reason disconnected)", async () => {
+        const onError = vi.fn();
+        const error = new MspCancelledError("MSP queue cleared", undefined, "disconnected");
+
+        const result = await runTabLoad(() => Promise.reject(error), onError);
+
+        expect(result).toBeUndefined();
+        expect(onError).not.toHaveBeenCalled();
+    });
+
     it("routes a genuine failure to onError", async () => {
         const onError = vi.fn();
         const error = new Error("timeout");
@@ -30,5 +40,14 @@ describe("useTabLoad", () => {
 
         expect(result).toBeUndefined();
         expect(onError).toHaveBeenCalledWith(error);
+    });
+
+    it("routes a non-Error rejection to onError as-is", async () => {
+        const onError = vi.fn<(error: unknown) => void>();
+
+        const result = await runTabLoad<number>(() => Promise.reject("link lost"), onError);
+
+        expect(result).toBeUndefined();
+        expect(onError).toHaveBeenCalledWith("link lost");
     });
 });

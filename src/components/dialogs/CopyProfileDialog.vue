@@ -71,7 +71,7 @@ const close = () => {
 };
 
 const confirm = () => {
-    // null, not undefined, is the payload contract the consumers in useDialog.js see.
+    // null, not undefined, is the payload contract the consumers in useDialog.ts see.
     emit("confirm", { profile: selectedProfile.value ?? null, rateProfile: selectedRateProfile.value ?? null });
     close();
 };

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { useCli } from "../../src/composables/useCli";
+import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
 import GUI from "../../src/js/gui";
@@ -20,7 +20,7 @@ const NORMAL_OUTPUT_CHUNKS = [
 ];
 const EXPECTED_HISTORY = `# ${NORMAL_OUTPUT_CHUNKS.join("")}`;
 
-function bytes(str) {
+function bytes(str: string) {
     return new TextEncoder().encode(str);
 }
 
@@ -31,13 +31,13 @@ function makeCli() {
     return cli;
 }
 
-function feed(cli, chunks) {
+function feed(cli: Cli, chunks: string[]) {
     for (const chunk of chunks) {
         cli.read(bytes(chunk));
     }
 }
 
-function getHistory(cli) {
+function getHistory(cli: Cli) {
     const spy = vi.spyOn(BFClipboard, "writeText").mockImplementation(() => {});
     cli.copyToClipboard();
     const text = spy.mock.calls[0][0];
@@ -46,7 +46,7 @@ function getHistory(cli) {
 }
 
 // Counts non-overlapping occurrences of `needle` in `haystack`.
-function countOccurrences(haystack, needle) {
+function countOccurrences(haystack: string, needle: string) {
     let count = 0;
     let idx = 0;
     while ((idx = haystack.indexOf(needle, idx)) !== -1) {
@@ -73,7 +73,7 @@ describe("useCli welcome-banner split-read handling (#5445)", () => {
 
     // Split boundaries requested by #5445, covering every place the banner could be torn across
     // a read() event.
-    const cases = [
+    const cases: Array<[label: string, chunks: string[]]> = [
         ["complete banner in one read", [BANNER]],
         ["split immediately before 'CLI'", ["\r\nEntering ", "CLI Mode, type 'exit' to reboot, or 'help'\r\n\r\n# "]],
         ["split immediately after 'CLI'", ["\r\nEntering CLI", " Mode, type 'exit' to reboot, or 'help'\r\n\r\n# "]],

@@ -1,16 +1,27 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import MSP from "../../src/js/msp";
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import MSP, { type CliCallback } from "../../src/js/msp";
 import FC from "../../src/js/fc";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
+    findCliError,
+    findCliSettingAllowedValues,
     findCliSettingRange,
+    isConnectionClosedError,
     findCliSettingValue,
     isMspCliSupported,
     useMspCliSession,
     send,
     readDumpAll,
     sendSave,
+    type BatchProgress,
 } from "../../src/composables/useMspCliSession";
+
+interface PendingCommand {
+    cmd: string;
+    cb: CliCallback;
+    opts: { timeoutMs?: number };
+    timer?: ReturnType<typeof setTimeout>;
+}
 
 async function flushMicrotasks() {
     for (let i = 0; i < 5; i++) {
@@ -19,14 +30,14 @@ async function flushMicrotasks() {
 }
 
 describe("useMspCliSession", () => {
-    let sendCliCommandSpy;
-    let pending;
+    let sendCliCommandSpy: MockInstance<typeof MSP.send_cli_command>;
+    let pending: PendingCommand[];
 
     beforeEach(() => {
         vi.useFakeTimers();
         pending = [];
         sendCliCommandSpy = vi.spyOn(MSP, "send_cli_command").mockImplementation((cmd, cb, opts = {}) => {
-            const entry = { cmd, cb, opts };
+            const entry: PendingCommand = { cmd, cb: cb!, opts };
             if (opts.timeoutMs) {
                 entry.timer = setTimeout(() => {
                     const idx = pending.indexOf(entry);
@@ -34,7 +45,7 @@ describe("useMspCliSession", () => {
                         return;
                     }
                     pending.splice(idx, 1);
-                    cb([], new Error(`Timed out after ${opts.timeoutMs}ms waiting for response to "${cmd}"`));
+                    entry.cb([], new Error(`Timed out after ${opts.timeoutMs}ms waiting for response to "${cmd}"`));
                 }, opts.timeoutMs);
             }
             pending.push(entry);
@@ -47,7 +58,7 @@ describe("useMspCliSession", () => {
         vi.restoreAllMocks();
     });
 
-    async function respondTo(cmd, lines = []) {
+    async function respondTo(cmd: string, lines: string[] = []) {
         await flushMicrotasks();
         const entry = pending.find((p) => p.cmd === cmd);
         if (!entry) {
@@ -101,7 +112,7 @@ describe("useMspCliSession", () => {
     describe("runBatch", () => {
         it("runs every non-skipped command and reports progress", async () => {
             const session = useMspCliSession();
-            const progress = [];
+            const progress: BatchProgress[] = [];
             const promise = session.runBatch(["set foo = 1", "", "# comment", "set bar = 2"], {
                 onProgress: (update) => progress.push({ ...update }),
             });
@@ -165,6 +176,42 @@ describe("useMspCliSession", () => {
             expect(result.cancelled).toBe(true);
             expect(result.sent).toBe(1);
             expect(sendCliCommandSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it("holds isBatchRunning only while the batch runs, failures included", async () => {
+            const session = useMspCliSession();
+            expect(session.isBatchRunning.value).toBe(false);
+
+            const promise = session.runBatch(["slow"], { commandTimeoutMs: 100 });
+            expect(session.isBatchRunning.value).toBe(true);
+
+            await flushMicrotasks();
+            await vi.advanceTimersByTimeAsync(150);
+            await promise;
+            expect(session.isBatchRunning.value).toBe(false);
+        });
+
+        it("clears isBatchRunning even when a progress callback throws", async () => {
+            const session = useMspCliSession();
+            const promise = session.runBatch(["# comment"], {
+                onProgress: () => {
+                    throw new Error("listener bug");
+                },
+            });
+
+            await expect(promise).rejects.toThrow("listener bug");
+            expect(session.isBatchRunning.value).toBe(false);
+        });
+
+        it("starts a new batch uncancelled after an earlier cancel", async () => {
+            const session = useMspCliSession();
+            session.cancel();
+
+            const promise = session.runBatch(["a"]);
+            await respondTo("a", []);
+            await vi.advanceTimersByTimeAsync(20);
+
+            await expect(promise).resolves.toMatchObject({ sent: 1, cancelled: false });
         });
 
         it("applies a longer delay after profile commands", async () => {
@@ -259,5 +306,44 @@ describe("findCliSettingRange", () => {
     it("reports nothing for a setting printed without a range", () => {
         expect(findCliSettingRange(["gps_baud = 57600", "Allowed values: AUTO, 9600"])).toBeNull();
         expect(findCliSettingRange(undefined)).toBeNull();
+    });
+});
+
+describe("findCliSettingAllowedValues", () => {
+    it("lists the names a lookup setting accepts, dropping empty entries", () => {
+        expect(findCliSettingAllowedValues(["gps_provider = UBLOX", "Allowed values: NMEA, UBLOX,, MSP"])).toEqual([
+            "NMEA",
+            "UBLOX",
+            "MSP",
+        ]);
+    });
+
+    it("reports nothing for a setting printed without a list", () => {
+        expect(findCliSettingAllowedValues(["Allowed range: 1 - 3"])).toBeNull();
+        expect(findCliSettingAllowedValues(null)).toBeNull();
+    });
+});
+
+describe("findCliError", () => {
+    it("returns the first refusal line", () => {
+        expect(findCliError(["set x = 1", "###ERROR: INVALID NAME", "###ERROR: second"])).toBe(
+            "###ERROR: INVALID NAME",
+        );
+    });
+
+    it("returns null for a clean or missing reply", () => {
+        expect(findCliError(["x = 1"])).toBeNull();
+        expect(findCliError(undefined)).toBeNull();
+    });
+});
+
+describe("isConnectionClosedError", () => {
+    it("recognises only the drain's tagged error", () => {
+        expect(isConnectionClosedError(Object.assign(new Error("closed"), { connectionClosed: true }))).toBe(true);
+
+        expect(isConnectionClosedError(new Error("Serial connection closed"))).toBe(false);
+        expect(isConnectionClosedError({ connectionClosed: "true" })).toBe(false);
+        expect(isConnectionClosedError(null)).toBe(false);
+        expect(isConnectionClosedError("connectionClosed")).toBe(false);
     });
 });
