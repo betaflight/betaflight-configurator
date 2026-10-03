@@ -24,7 +24,7 @@ import geomagnetism from "geomagnetism";
 import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
-import { IP_GEOLOCATION_CONSENT_KEY } from "../js/utils/ipGeolocation";
+import { IP_GEOLOCATION_CONSENT_KEY, hasIpGeolocationConsent } from "../js/utils/ipGeolocation";
 import { sortNotams, kmToNm, type NotamItem } from "../js/notam/index";
 import { fetchFromFaa } from "../js/notam/faa";
 import { fetchFromOpenAip } from "../js/notam/openaip";
@@ -845,7 +845,7 @@ const launchStatus = computed((): StatusResult & { checks: LaunchCheck[] } => {
 
 const IP_CONSENT_NEEDED = "IP_CONSENT_NEEDED";
 
-const ipGeolocationConsent = ref(!!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY]);
+const ipGeolocationConsent = ref(hasIpGeolocationConsent());
 
 function setIpGeolocationConsent(value: boolean): void {
     ipGeolocationConsent.value = !!value;

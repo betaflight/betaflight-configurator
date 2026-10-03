@@ -27,6 +27,11 @@ export const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
 const IP_GEOLOCATION_TIMEOUT_MS = 10000;
 
+/** Consent is opt-in, so only a stored literal `true` counts; anything else reads as no. */
+export function hasIpGeolocationConsent(): boolean {
+    return getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY] === true;
+}
+
 export interface IpCoordinates {
     lat: number;
     lon: number;
@@ -41,8 +46,7 @@ export async function ipCoordinates(promptConsent: boolean): Promise<IpCoordinat
     if (!ispConnected()) {
         return null;
     }
-    const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
-    if (!hasConsent) {
+    if (!hasIpGeolocationConsent()) {
         if (!promptConsent) {
             return null;
         }
@@ -63,7 +67,7 @@ export async function ipCoordinates(promptConsent: boolean): Promise<IpCoordinat
         const data = await response.json();
         const lat = Number.parseFloat(data.latitude);
         const lon = Number.parseFloat(data.longitude);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
             return null;
         }
         return { lat, lon };

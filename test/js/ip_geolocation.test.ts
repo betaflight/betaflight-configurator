@@ -65,6 +65,13 @@ describe("ipCoordinates", () => {
         expect(confirmMock).not.toHaveBeenCalled();
     });
 
+    it("treats anything but a stored true as no consent", async () => {
+        setConfig({ [IP_GEOLOCATION_CONSENT_KEY]: "false" });
+
+        expect(await ipCoordinates(false)).toBeNull();
+        expect(fetchMock).not.toHaveBeenCalled();
+    });
+
     it("stays offline when internet access is disabled or metered", async () => {
         grantConsent();
         connection.online = false;
@@ -81,6 +88,9 @@ describe("ipCoordinates", () => {
         expect(await ipCoordinates(false)).toBeNull();
 
         fetchMock.mockResolvedValueOnce(okResponse({ latitude: "n/a" }));
+        expect(await ipCoordinates(false)).toBeNull();
+
+        fetchMock.mockResolvedValueOnce(okResponse({ latitude: "200", longitude: "153.02" }));
         expect(await ipCoordinates(false)).toBeNull();
 
         fetchMock.mockRejectedValueOnce(new Error("network"));

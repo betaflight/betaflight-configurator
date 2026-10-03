@@ -61,6 +61,10 @@ const isLoading = ref(true);
 
 // Helper function to initialize map with given coordinates
 const initializeMapAtLocation = (latitude: number, longitude: number, logMessage: string) => {
+    // Location lookups resolve asynchronously; the tab may have been left by then.
+    if (!mapRef.value) {
+        return;
+    }
     mapInstance.value = initMap({
         target: mapRef.value,
         defaultZoom: 15, // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
