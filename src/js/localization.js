@@ -42,6 +42,7 @@ i18n.selectedLanguage = undefined;
 // Create new locale for them extending the English locale as base
 // For Serbian locales, use its closely related Croatian
 const he = { ...en, name: "\u05E2\u05D1\u05E8\u05D9\u05EA", code: "he", dir: "rtl" };
+const kk = { ...en, name: "\u049A\u0430\u0437\u0430\u049B\u0448\u0430", code: "kk" };
 const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
 const sr_Cyrl = {
     ...hr,
@@ -70,6 +71,7 @@ const supportedLocales = [
     it,
     ja,
     ka,
+    kk,
     ko,
     nl,
     pt,
