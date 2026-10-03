@@ -347,7 +347,7 @@ const MSP = {
             }, entry.timeoutMs);
         }
 
-        serial.send(this.encode_message_cli(entry.command));
+        void serial.send(this.encode_message_cli(entry.command));
     },
     _finish_cli(lines: string[], error: Error | null) {
         const entry = this.cli_in_flight;
@@ -516,7 +516,7 @@ const MSP = {
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
-            serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
+            void serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
                     callback_sent();
                 }
@@ -550,7 +550,7 @@ const MSP = {
             console.warn(
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
-            serial.send(obj.requestBuffer);
+            void serial.send(obj.requestBuffer);
             this._arm_timer(obj);
             return;
         }
@@ -608,7 +608,7 @@ const MSP = {
         this._arm_timer(entry);
         this.callbacks.push(entry);
 
-        serial.send(entry.requestBuffer, (sendInfo: { bytesSent: number }) => {
+        void serial.send(entry.requestBuffer, (sendInfo: { bytesSent: number }) => {
             if (sendInfo.bytesSent === entry.requestBuffer.byteLength && entry.callbackSent) {
                 entry.callbackSent();
             }
