@@ -828,6 +828,20 @@ OSD.loadDisplayFields = function () {
                 );
             },
         },
+        DECIMAL_COMPASS_BAR: {
+            name: "DECIMAL_COMPASS_BAR",
+            text: "osdTextElementDecimalCompassBar",
+            desc: "osdDescElementDecimalCompassBar",
+            defaultPosition: -1,
+            draw_order: 315,
+            positionable: true,
+            /** @returns {string} North-facing nine-column bar, with edge labels shifted inward. */
+            preview() {
+                const line = FONT.symbol(SYM.HEADING_LINE);
+                const dividedLine = FONT.symbol(SYM.HEADING_DIVIDED_LINE);
+                return `270${line}0${line}${dividedLine}90`;
+            },
+        },
         WARNINGS: {
             name: "WARNINGS",
             text: "osdTextElementWarnings",
@@ -1517,8 +1531,11 @@ OSD.loadDisplayFields = function () {
 
 OSD.constants = OSD_CONSTANTS;
 
-// Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
-OSD.chooseFields = function () {
+/**
+ * @param {number} [displayItemsCount] Element count reported by MSP, omitted before receiving a response.
+ * @returns {void} Selects the positional MSP field layout for the connected firmware.
+ */
+OSD.chooseFields = function (displayItemsCount) {
     let F = OSD.ALL_DISPLAY_FIELDS;
 
     // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
@@ -1671,7 +1688,12 @@ OSD.chooseFields = function () {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+            // USE_PITOT is not reported in build options. After the known navigation
+            // fields, one slot is the decimal compass; a second slot adds pitot before it.
+            if (displayItemsCount === undefined || displayItemsCount > OSD.constants.DISPLAY_FIELDS.length + 1) {
+                OSD.constants.DISPLAY_FIELDS.push(F.PITOT_AIRSPEED);
+            }
+            OSD.constants.DISPLAY_FIELDS.push(F.DECIMAL_COMPASS_BAR);
         }
     }
     // Choose statistic fields
@@ -1920,6 +1942,7 @@ OSD.msp = {
                 // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
                 view.readU8();
                 displayItemsCountActual = view.readU8();
+                OSD.chooseFields(displayItemsCountActual);
 
                 d.alarms["alt"] = {
                     display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"),
