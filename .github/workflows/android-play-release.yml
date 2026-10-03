@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       track:
-        description: "Play track to publish to"
+        description: "Play track to publish to (internal testing always gets the same build)"
         required: true
         type: choice
         default: internal
@@ -101,6 +101,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.betaflight.android
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: ${{ inputs.track }}
+          tracks: ${{ inputs.track == 'internal' && 'internal' || format('internal,{0}', inputs.track) }}
           status: ${{ inputs.status }}
           whatsNewDirectory: distribution/play/whatsnew

@@ -1,22 +1,50 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Motor Configuration Tracking Composable
  * Watches all configuration changes and tracks them
  * Based on original motors.js disableHandler
  */
 
-import { watch } from "vue";
+import { watch, type Ref } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import type { MotorConfigKey, MotorDefaults, MotorsState } from "./useMotorsState";
 
-export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMotorTesting) {
+export function useMotorConfiguration(
+    motorsState: Pick<MotorsState, "trackChange">,
+    motorsTestingEnabled: Ref<boolean>,
+    stopMotorTesting: () => void,
+) {
     const fcStore = useFlightControllerStore();
 
     /**
      * Track a value change
-     * @param {string} key - Configuration key
-     * @param {any} newValue - New value
-     * @param {any} oldValue - Old value
+     * @param key - Configuration key
+     * @param newValue - New value
+     * @param oldValue - Old value
      */
-    const handleChange = (key, newValue, oldValue) => {
+    const handleChange = <K extends MotorConfigKey>(key: K, newValue: MotorDefaults[K], oldValue: MotorDefaults[K]) => {
+        // Defensive only: watch() already skips unchanged values (Object.is), so this differs
+        // solely for +0/-0, which MSP-decoded integers never produce.
         if (newValue !== oldValue) {
             motorsState.trackChange(key, newValue);
 

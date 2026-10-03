@@ -96,6 +96,7 @@ export function renderSelectedLogInfo() {
     if (logStore.flightLog.hasGpsData()) {
         graphStore.mapGrapher.setFlightLog(logStore.flightLog);
     }
+    graphStore.flight3d?.setFlightLog(logStore.flightLog);
 }
 
 export function setSeekBarMode(mode) {
