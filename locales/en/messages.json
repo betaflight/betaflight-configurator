@@ -8261,6 +8261,12 @@
     "userProfileUpdateFailed": {
         "message": "Failed to update profile"
     },
+    "userAccountDeleteSuccess": {
+        "message": "Your Betaflight account has been deleted"
+    },
+    "userAccountDeleteFailed": {
+        "message": "Failed to delete account"
+    },
     "userBackupsLoadFailed": {
         "message": "Failed to load backups"
     },
@@ -8492,6 +8498,18 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "sectionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "deleteAccountDescription": {
+        "message": "Permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and cloud backups. This cannot be undone."
+    },
+    "actionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "confirmDeleteAccount": {
+        "message": "This will permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and all cloud backups. This cannot be undone and the data cannot be recovered. Are you sure you want to continue?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "Align to position",

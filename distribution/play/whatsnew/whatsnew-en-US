@@ -1,0 +1,9 @@
+First Android release of the Betaflight App.
+
+Set up and tune your Betaflight flight controller from your phone or tablet:
+• Connect over USB, Bluetooth or Wi-Fi (ELRS and the Betaflight bridge)
+• Flash firmware over USB
+• Configure ports, modes, rates, PIDs, filters, receiver, motors and OSD
+• Use the CLI and review Blackbox logs
+
+This is an early test build, so please report any issues on GitHub.

@@ -238,6 +238,10 @@ export default class LoginApi {
 
     async signOut() {
         await this.removeCurrentToken();
+        this.clearSession();
+    }
+
+    clearSession() {
         removeConfig("userToken");
         removeConfig("accessToken");
         this._accessToken = null;

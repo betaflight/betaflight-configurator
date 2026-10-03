@@ -1,5 +1,7 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { usePreflight, type CurrentWeather } from "../../src/composables/usePreflight";
+import { set as setConfig } from "../../src/js/ConfigStorage";
+import { IP_GEOLOCATION_CONSENT_KEY } from "../../src/js/utils/ipGeolocation";
 
 const preflight = usePreflight();
 
@@ -76,5 +78,32 @@ describe("usePreflight status helpers", () => {
         expect(preflight.getWindDirectionLabel(0)).toBe("N");
         expect(preflight.getWindDirectionLabel(350)).toBe("N");
         expect(preflight.getWindDirectionLabel(null)).toBe("");
+    });
+});
+
+describe("IP geolocation consent", () => {
+    beforeEach(() => {
+        preflight.setIpGeolocationConsent(false);
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue({ ok: true, json: async () => ({ latitude: "-27.47", longitude: "153.02" }) }),
+        );
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it("needs consent before the IP fallback", async () => {
+        await expect(preflight.useIpGeolocationFallback()).rejects.toThrow("IP_CONSENT_NEEDED");
+    });
+
+    it("honours consent granted from another tab after load", async () => {
+        setConfig({ [IP_GEOLOCATION_CONSENT_KEY]: true });
+
+        await preflight.useIpGeolocationFallback();
+
+        expect(preflight.ipGeolocationConsent.value).toBe(true);
+        expect(preflight.location.source).toBe("ip");
     });
 });
