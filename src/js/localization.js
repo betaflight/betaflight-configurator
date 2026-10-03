@@ -46,7 +46,7 @@ const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
 const sr_Cyrl = {
     ...hr,
     name: "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
-    code: "sr_Cyrl",
+    code: "sr-Cyrl",
 };
 
 /**
