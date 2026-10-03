@@ -252,7 +252,9 @@ async function startProcess() {
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
     if (isDeleteAccountPath(window.location.pathname)) {
-        openDeleteAccountFromLink();
+        openDeleteAccountFromLink().catch((err) => {
+            console.warn("Failed to open account deletion from link:", err);
+        });
     } else {
         switchTab("landing", { mode: "disconnected" });
     }
