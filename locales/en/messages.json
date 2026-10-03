@@ -276,12 +276,9 @@
     "userLanguageSelect": {
         "message": "Select default language"
     },
-    "language_default": {
-        "message": "System Default"
-    },
     "language_DEFAULT": {
-        "message": "$t(language_default.message)",
-        "description": "Don't translate!!!"
+        "message": "System default ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "language_ar": {
         "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",

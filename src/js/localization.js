@@ -228,6 +228,10 @@ i18n.getCurrentLocale = function () {
     return i18next.language;
 };
 
+i18n.getSystemLocale = function () {
+    return getValidLocale("DEFAULT");
+};
+
 i18n.existsMessage = function (key) {
     return i18next.exists(key);
 };
