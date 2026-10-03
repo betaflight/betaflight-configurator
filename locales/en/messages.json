@@ -8205,6 +8205,20 @@
     "osdDescElementNavMap": {
         "message": "Minimap showing home, the flight plan, and the flown trail"
     },
+    "osdTextElementRadarPeer": {
+        "message": "Radar peer",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarPeer": {
+        "message": "FormationFlight / INAV-Radar peers, one at a time: direction, letter, distance and height difference. Needs GPS and the radar module on a UART with MSP enabled"
+    },
+    "osdTextElementRadarHud": {
+        "message": "Radar HUD",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarHud": {
+        "message": "FormationFlight / INAV-Radar peers drawn where they are in the camera view, with their letter, direction and alternating distance / height difference. Camera FOV, uptilt and range are set in the CLI (radar_*)"
+    },
     "osdTextElementPosHoldReady": {
         "message": "Position Hold Ready",
         "description": "One of the elements of the OSD"
