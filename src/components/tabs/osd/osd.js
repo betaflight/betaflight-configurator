@@ -1497,6 +1497,74 @@ OSD.loadDisplayFields = function () {
             positionable: false,
             preview: `A${FONT.symbol(SYM.ARROW_NORTH)}`,
         },
+        RADAR_PEER_1: {
+            name: "RADAR_PEER_1",
+            text: "osdTextElementRadarPeer1",
+            desc: "osdDescElementRadarPeerFixed",
+            defaultPosition: -1,
+            draw_order: 672,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ARROW_EAST)}A125${unit}${FONT.symbol(SYM.ARROW_SMALL_UP)}12${unit}`;
+            },
+        },
+        RADAR_PEER_2: {
+            name: "RADAR_PEER_2",
+            text: "osdTextElementRadarPeer2",
+            desc: "osdDescElementRadarPeerFixed",
+            defaultPosition: -1,
+            draw_order: 672,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ARROW_EAST)}B125${unit}${FONT.symbol(SYM.ARROW_SMALL_UP)}12${unit}`;
+            },
+        },
+        RADAR_PEER_3: {
+            name: "RADAR_PEER_3",
+            text: "osdTextElementRadarPeer3",
+            desc: "osdDescElementRadarPeerFixed",
+            defaultPosition: -1,
+            draw_order: 672,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ARROW_EAST)}C125${unit}${FONT.symbol(SYM.ARROW_SMALL_UP)}12${unit}`;
+            },
+        },
+        RADAR_PEER_4: {
+            name: "RADAR_PEER_4",
+            text: "osdTextElementRadarPeer4",
+            desc: "osdDescElementRadarPeerFixed",
+            defaultPosition: -1,
+            draw_order: 672,
+            positionable: true,
+            preview(osdData) {
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ARROW_EAST)}D125${unit}${FONT.symbol(SYM.ARROW_SMALL_UP)}12${unit}`;
+            },
+        },
+        RADAR_HUD_HOME: {
+            name: "RADAR_HUD_HOME",
+            text: "osdTextElementRadarHudHome",
+            desc: "osdDescElementRadarHudHome",
+            defaultPosition: -1,
+            draw_order: 674,
+            // drawn where home is in the camera view; the stored position is unused
+            positionable: false,
+            preview: `${FONT.symbol(SYM.HOMEFLAG)}${FONT.symbol(SYM.ARROW_NORTH)}`,
+        },
+        RADAR_HUD_WAYPOINT: {
+            name: "RADAR_HUD_WAYPOINT",
+            text: "osdTextElementRadarHudWaypoint",
+            desc: "osdDescElementRadarHudWaypoint",
+            defaultPosition: -1,
+            draw_order: 674,
+            // drawn where the next waypoint is in the camera view; the stored position is unused
+            positionable: false,
+            preview: `WP1${FONT.symbol(SYM.ARROW_NORTH)}`,
+        },
         PITOT_AIRSPEED: {
             name: "PITOT_AIRSPEED",
             text: "osdPitotAirSpeed",
@@ -1695,7 +1763,19 @@ OSD.chooseFields = function () {
         }
 
         if (hasRadar) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.RADAR_PEER, F.RADAR_HUD]);
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.RADAR_PEER,
+                F.RADAR_HUD,
+                F.RADAR_PEER_1,
+                F.RADAR_PEER_2,
+                F.RADAR_PEER_3,
+                F.RADAR_PEER_4,
+                F.RADAR_HUD_HOME,
+            ]);
+            // the firmware only has the waypoint marker on builds with the flight plan engine
+            if (reports("USE_FLIGHT_PLAN")) {
+                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.RADAR_HUD_WAYPOINT]);
+            }
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
