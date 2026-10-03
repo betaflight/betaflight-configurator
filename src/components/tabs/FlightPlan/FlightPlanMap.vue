@@ -83,6 +83,9 @@ const FALLBACK_LON = 151.2108;
 
 // Browser location was unavailable: try the consent-gated IP lookup, then the fixed fallback.
 const initializeWithoutBrowserLocation = async () => {
+    if (!mapRef.value) {
+        return;
+    }
     const ipLocation = await ipCoordinates(true);
     if (ipLocation) {
         initializeMapAtLocation(ipLocation.lat, ipLocation.lon, "Map initialized at IP-based location");

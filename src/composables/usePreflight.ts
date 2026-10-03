@@ -854,6 +854,12 @@ function setIpGeolocationConsent(value: boolean): void {
     setConfig(obj);
 }
 
+// Other tabs can grant consent through the shared prompt, so re-read it rather than trusting the ref.
+function refreshIpGeolocationConsent(): boolean {
+    ipGeolocationConsent.value = hasIpGeolocationConsent();
+    return ipGeolocationConsent.value;
+}
+
 async function useGeolocation() {
     let coords;
     let source: LocationSource = "geolocation";
@@ -863,7 +869,7 @@ async function useGeolocation() {
         if (!ispConnected()) {
             throw new Error("Geolocation failed and internet access is disabled");
         }
-        if (ipGeolocationConsent.value) {
+        if (refreshIpGeolocationConsent()) {
             coords = await ipGeolocation();
             source = "ip";
         } else {
@@ -881,7 +887,7 @@ async function useIpGeolocationFallback() {
     if (!ispConnected()) {
         throw new Error("Internet access is disabled");
     }
-    if (!ipGeolocationConsent.value) {
+    if (!refreshIpGeolocationConsent()) {
         throw new Error(IP_CONSENT_NEEDED);
     }
     const coords = await ipGeolocation();
