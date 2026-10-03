@@ -64,6 +64,20 @@ export default class UserApi {
         return await response.json();
     }
 
+    async deleteAccount() {
+        const authHeaders = await this._authHeaders();
+        const response = await fetch(`${this._url}/api/user`, {
+            method: "DELETE",
+            headers: {
+                ...authHeaders,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+    }
+
     /* User Token Management Functionality */
     async getTokens() {
         const authHeaders = await this._authHeaders();

@@ -16,6 +16,7 @@ class LoginManager {
     _onLoginCallbacks = [];
     _onLogoutCallbacks = [];
     _dialogOpener = null;
+    _loginDialogPending = false;
     _waitingDialogController = null;
 
     /**
@@ -23,6 +24,10 @@ class LoginManager {
      */
     setDialogOpener(callback) {
         this._dialogOpener = callback;
+        if (callback && this._loginDialogPending) {
+            this._loginDialogPending = false;
+            callback();
+        }
     }
 
     /**
@@ -70,12 +75,13 @@ class LoginManager {
     }
 
     /**
-     * Show the login dialog
+     * Show the login dialog, or as soon as the Vue component registers its opener
      */
     showLoginDialog() {
-        // Call the Vue component's dialog opener if available
         if (this._dialogOpener) {
             this._dialogOpener();
+        } else {
+            this._loginDialogPending = true;
         }
     }
 
@@ -212,22 +218,35 @@ class LoginManager {
     async signOut() {
         try {
             await this._loginApi.signOut();
-
-            this._profile = null;
-            this.notifyLogoutCallbacks();
-
-            // Pick a tab that is valid for the current connection state —
-            // "landing" is disconnected-only, so fall back to "setup" or the
-            // first allowed tab when connected.
-            const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
-            if (fallback) {
-                switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
-            }
-
+            this._finishSession();
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {
             gui_log(`${i18n.getMessage("userSignOutFailed")}: ${error}`);
             console.error("Sign out error:", error);
+        }
+    }
+
+    /**
+     * Permanently delete the signed-in user's account, then end the local session.
+     * Throws (leaving the session intact) when the server refuses.
+     */
+    async deleteAccount() {
+        await this.getUserApi().deleteAccount();
+        this._loginApi.clearSession();
+        this._finishSession();
+        gui_log(i18n.getMessage("userAccountDeleteSuccess"));
+    }
+
+    _finishSession() {
+        this._profile = null;
+        this.notifyLogoutCallbacks();
+
+        // Pick a tab that is valid for the current connection state —
+        // "landing" is disconnected-only, so fall back to "setup" or the
+        // first allowed tab when connected.
+        const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
+        if (fallback) {
+            switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
         }
     }
 

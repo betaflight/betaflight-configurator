@@ -158,13 +158,36 @@
                         </template>
                     </UTable>
                 </UiBox>
+
+                <!-- Delete Account Section -->
+                <UiBox
+                    ref="deleteAccountBox"
+                    class="options col-span-3"
+                    :title="$t('sectionDeleteAccount')"
+                    type="error"
+                    highlight
+                >
+                    <p>{{ $t("deleteAccountDescription") }}</p>
+                    <div>
+                        <UButton
+                            ref="deleteAccountButton"
+                            color="error"
+                            icon="i-lucide-trash-2"
+                            :loading="isDeletingAccount"
+                            :disabled="isDeletingAccount"
+                            @click="deleteAccount"
+                        >
+                            {{ $t("actionDeleteAccount") }}
+                        </UButton>
+                    </div>
+                </UiBox>
             </div>
         </div>
     </BaseTab>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
@@ -172,6 +195,7 @@ import TabLoadingState from "../elements/TabLoadingState.vue";
 import { useDialog } from "@/composables/useDialog";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
+import { consumeDeleteAccountFocus } from "../../js/utils/deleteAccountLink";
 import type UserApi from "../../js/UserApi";
 
 // Shapes of the build API's /api/user responses, as far as this tab reads them.
@@ -214,6 +238,9 @@ const editForm = ref({ name: "", address: "", country: "", avatar: "" });
 const tokens = ref<UserToken[]>([]);
 const passkeys = ref<UserPasskey[]>([]);
 const editOpen = ref(false);
+const isDeletingAccount = ref(false);
+const deleteAccountBox = ref<InstanceType<typeof UiBox> | null>(null);
+const deleteAccountButton = ref<{ $el: HTMLElement } | null>(null);
 let userApi: UserApi | null = null;
 // LoginManager documents the unsubscribe as a bare `Function`; take its type from there.
 let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
@@ -292,6 +319,16 @@ async function loadProfile() {
     }
 
     isLoading.value = false;
+    await focusDeleteAccountIfRequested();
+}
+
+async function focusDeleteAccountIfRequested() {
+    if (!consumeDeleteAccountFocus()) {
+        return;
+    }
+    await nextTick();
+    deleteAccountBox.value?.$el.scrollIntoView({ block: "center" });
+    deleteAccountButton.value?.$el.focus();
 }
 
 function startEdit() {
@@ -378,6 +415,26 @@ async function deletePasskey(passkeyId: UserPasskey["id"]) {
         gui_log(t("userPasskeyDeleteSuccess"));
     } catch (error) {
         gui_log(`${t("userPasskeyDeleteFailed")}: ${error}`);
+    }
+}
+
+async function deleteAccount() {
+    const confirmed = await dialog.showYesNo(t("sectionDeleteAccount"), t("confirmDeleteAccount"), {
+        destructive: true,
+        yesText: t("actionDeleteAccount"),
+        noText: t("cancel"),
+    });
+    if (!confirmed) {
+        return;
+    }
+
+    isDeletingAccount.value = true;
+    try {
+        await loginManager.deleteAccount();
+    } catch (error) {
+        gui_log(`${t("userAccountDeleteFailed")}: ${error}`);
+    } finally {
+        isDeletingAccount.value = false;
     }
 }
 
