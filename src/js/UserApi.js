@@ -1,5 +1,7 @@
 import LoginApi from "./LoginApi";
 
+const DELETE_ACCOUNT_TIMEOUT_MS = 30000;
+
 export default class UserApi {
     _url = "https://user.betaflight.com";
     _loginApi;
@@ -62,6 +64,27 @@ export default class UserApi {
         }
 
         return await response.json();
+    }
+
+    async deleteAccount() {
+        const authHeaders = await this._authHeaders();
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), DELETE_ACCOUNT_TIMEOUT_MS);
+        try {
+            const response = await fetch(`${this._url}/api/user`, {
+                method: "DELETE",
+                headers: {
+                    ...authHeaders,
+                },
+                signal: controller.signal,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+        } finally {
+            clearTimeout(timer);
+        }
     }
 
     /* User Token Management Functionality */
