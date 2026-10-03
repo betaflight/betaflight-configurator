@@ -380,7 +380,7 @@ jobs:
         run: |
           mkdir -p staging
           SHA_SHORT=$(echo "$COMMIT_SHA" | head -c 8)
-          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}-capacitor.apk"
+          APK_NAME="betaflight-${VERSION}-${SHA_SHORT}.apk"
           cp android/app/build/outputs/apk/release/app-release.apk "staging/${APK_NAME}"
           echo "APK_NAME=${APK_NAME}" >> "$GITHUB_ENV"
 
