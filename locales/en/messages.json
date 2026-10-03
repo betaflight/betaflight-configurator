@@ -332,6 +332,10 @@
         "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
         "description": "Don't translate!!!"
     },
+    "language_kk": {
+        "message": "\u049A\u0430\u0437\u0430\u049B\u0448\u0430",
+        "description": "Don't translate!!!"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
@@ -360,7 +364,7 @@
         "message": "Srpski (latinica)",
         "description": "Don't translate!!!"
     },
-    "language_sr_Cyrl": {
+    "language_sr-Cyrl": {
         "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
         "description": "Don't translate!!!"
     },
