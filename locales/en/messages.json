@@ -276,12 +276,9 @@
     "userLanguageSelect": {
         "message": "Select default language"
     },
-    "language_default": {
-        "message": "System Default"
-    },
     "language_DEFAULT": {
-        "message": "$t(language_default.message)",
-        "description": "Don't translate!!!"
+        "message": "System default ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "language_ar": {
         "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
@@ -335,6 +332,10 @@
         "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
         "description": "Don't translate!!!"
     },
+    "language_kk": {
+        "message": "\u049A\u0430\u0437\u0430\u049B\u0448\u0430",
+        "description": "Don't translate!!!"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
@@ -363,7 +364,7 @@
         "message": "Srpski (latinica)",
         "description": "Don't translate!!!"
     },
-    "language_sr_Cyrl": {
+    "language_sr-Cyrl": {
         "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
         "description": "Don't translate!!!"
     },
@@ -8261,6 +8262,12 @@
     "userProfileUpdateFailed": {
         "message": "Failed to update profile"
     },
+    "userAccountDeleteSuccess": {
+        "message": "Your Betaflight account has been deleted"
+    },
+    "userAccountDeleteFailed": {
+        "message": "Failed to delete account"
+    },
     "userBackupsLoadFailed": {
         "message": "Failed to load backups"
     },
@@ -8492,6 +8499,18 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "sectionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "deleteAccountDescription": {
+        "message": "Permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and cloud backups. This cannot be undone."
+    },
+    "actionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "confirmDeleteAccount": {
+        "message": "This will permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and all cloud backups. This cannot be undone and the data cannot be recovered. Are you sure you want to continue?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "Align to position",

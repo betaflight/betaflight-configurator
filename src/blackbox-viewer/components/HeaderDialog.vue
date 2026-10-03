@@ -65,6 +65,8 @@
                         <!-- PID Settings: single merged table -->
                         <PidTable v-if="group === 'PID Settings'" :rows="allPids" :showDMax="showDMax" />
 
+                        <!-- Wing SPA -->
+                        <SpaTable v-else-if="group === 'Wing SPA'" :rows="wingSpaParams" />
                         <!-- Features / Disabled Fields -->
                         <FeatureTable v-else-if="group === 'Features'" :data="featuresList" />
                         <FeatureTable v-else-if="group === 'Disabled Fields'" :data="disabledFieldsList" />
@@ -200,6 +202,7 @@ import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout, type HeaderL
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
+import SpaTable, { type SpaRow } from "./SpaTable.vue";
 import FeatureTable from "./FeatureTable.vue";
 import {
     OFF_ON,
@@ -341,6 +344,13 @@ function copyToClipboard() {
         formatParams("Dynamic Notch", dynNotchParams.value),
         formatParams("RPM Filter", rpmFilterParams.value),
         formatParams("RC Smoothing", rcSmoothingParams.value),
+        formatParams(
+            "Wing SPA",
+            wingSpaParams.value.map((r) => ({
+                name: r.label,
+                value: `Mode=${r.mode ?? "-"} Center=${r.center ?? "-"} Width=${r.width ?? "-"}`,
+            })),
+        ),
         formatParams("Wing TPA", wingTpaParams.value),
         formatParams("Wing curve", wingCurvesParams.value),
     ];
@@ -848,28 +858,29 @@ const wingTpaSpeedTypeNames = computed(() => [t("pidTuningWingTpaSpeedBasic"), t
 const wingYawTypeNames = computed(() => [t("pidTuningWingYawTypeRudder"), t("pidTuningWingYawTypeDiffThrust")]);
 
 const wingTpaParams = computed(() => {
+    const mode = sc.value;
     const s = filteredSc.value;
     const result: HeaderParam[] = [];
 
-    if (s.tpa_curve_type == null || s.tpa_speed_type == null) {
+    if (mode.tpa_curve_type == null || mode.tpa_speed_type == null) {
         return result;
     }
 
     // Show TPA speed parameters for hyperbolic curves type only
-    if (s.tpa_curve_type === 0) {
+    if (mode.tpa_curve_type === 0) {
         return [param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value))].filter(
             (p) => !p.missing,
         );
     }
 
-    result.push(param(t("pidTuningWingTpaSpeedType"), selectVal(s.tpa_speed_type, wingTpaSpeedTypeNames.value)));
-    if (s.tpa_speed_type == 0) {
+    result.push(param(t("pidTuningWingTpaSpeedType"), selectVal(mode.tpa_speed_type, wingTpaSpeedTypeNames.value)));
+    if (mode.tpa_speed_type == 0) {
         // Basic mode
         result.push(
             param(t("pidTuningWingTpaBasicSpeedDelay"), fmtVal(s.tpa_speed_basic_delay, 0)),
             param(t("pidTuningWingTpaBasicSpeedGravity"), fmtVal(s.tpa_speed_basic_gravity, 0)),
         );
-    } else if (s.tpa_speed_type == 1) {
+    } else if (mode.tpa_speed_type == 1) {
         // Advanced mode
         result.push(
             param(t("pidTuningWingTpaAdvSpeedPropPitch"), fmtVal(s.tpa_speed_adv_prop_pitch, 0)),
@@ -889,16 +900,17 @@ const wingTpaParams = computed(() => {
 const wingTpaCurveTypeNames = computed(() => [t("pidTuningWingTpaCurveClassic"), t("pidTuningWingTpaCurveHyperbolic")]);
 
 const wingCurvesParams = computed(() => {
+    const mode = sc.value;
     const s = filteredSc.value;
     const result: HeaderParam[] = [];
 
-    if (s.tpa_curve_type == null) {
+    if (mode.tpa_curve_type == null) {
         return result;
     }
 
-    result.push(param(t("pidTuningWingTpaCurveType"), selectVal(s.tpa_curve_type, wingTpaCurveTypeNames.value)));
+    result.push(param(t("pidTuningWingTpaCurveType"), selectVal(mode.tpa_curve_type, wingTpaCurveTypeNames.value)));
     // Show curve parameters for hyperbolic curves type only
-    if (s.tpa_curve_type === 1) {
+    if (mode.tpa_curve_type === 1) {
         result.push(
             param(t("pidTuningWingTpaAdvSpeedCurveStallSpeed"), fmtVal(s.tpa_curve_stall_throttle, 0)),
             param(t("pidTuningWingTpaAdvSpeedCurvePidThr0"), fmtVal(s.tpa_curve_pid_thr0, 0)),
@@ -908,6 +920,52 @@ const wingCurvesParams = computed(() => {
     }
 
     return result.filter((p) => !p.missing);
+});
+
+function wingSpaRow(label: string, data: (string | number | null | undefined)[]): SpaRow {
+    return {
+        label,
+        mode: data[0] ?? null,
+        center: data[1] ?? null,
+        width: data[2] ?? null,
+    };
+}
+
+const wingSpaModeNames = computed(() => [
+    t("pidTuningWingSpaModeOff"),
+    t("pidTuningWingSpaModeIFreeze"),
+    t("pidTuningWingSpaModeI"),
+    t("pidTuningWingSpaModePID"),
+    t("pidTuningWingSpaModePDIFreeze"),
+]);
+
+const wingSpaParams = computed(() => {
+    const mode = sc.value;
+    const s = filteredSc.value;
+    const result: SpaRow[] = [];
+
+    // Show SPA only when mode is not Off
+    if (mode.spa_roll_mode) {
+        const row = wingSpaRow("Roll", [
+            wingSpaModeNames.value[mode.spa_roll_mode],
+            s.spa_roll_center,
+            s.spa_roll_width,
+        ]);
+        result.push(row);
+    }
+    if (mode.spa_pitch_mode) {
+        const row = wingSpaRow("Pitch", [
+            wingSpaModeNames.value[mode.spa_pitch_mode],
+            s.spa_pitch_center,
+            s.spa_pitch_width,
+        ]);
+        result.push(row);
+    }
+    if (mode.spa_yaw_mode) {
+        const row = wingSpaRow("Yaw", [wingSpaModeNames.value[mode.spa_yaw_mode], s.spa_yaw_center, s.spa_yaw_width]);
+        result.push(row);
+    }
+    return result;
 });
 
 // --- Features ---
@@ -1079,6 +1137,7 @@ const GROUP_ORDER = new Set([
     "D-Term Filters",
     "RC Smoothing",
     "Wing",
+    "Wing SPA",
     "Wing TPA",
     "Wing curve",
     "Features",
@@ -1141,6 +1200,9 @@ function paneHasData(group: string) {
     }
     if (group === "Disabled Fields") {
         return disabledFieldsList.value.length > 0;
+    }
+    if (group === "Wing SPA") {
+        return wingSpaParams.value.length > 0;
     }
     const params = groupParamMap.value[group];
     return params && params.length > 0;
@@ -1341,7 +1403,7 @@ const EXPLICIT_GROUPS: Record<string, string | undefined> = {
     serialrx_provider: "RC Smoothing",
     yaw_lpf_hz: "Gyro Filters",
     digitalIdleOffset: "Motor / ESC",
-    yaw_type: "Wing",
+    yaw_type: "Wing TPA",
 };
 
 const PREFIX_GROUPS = [
@@ -1365,9 +1427,9 @@ const PREFIX_GROUPS = [
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
-    ["spa_", "Wing"],
     ["tpa_speed_", "Wing TPA"],
     ["tpa_curve_", "Wing curve"],
+    ["spa_", "Wing SPA"],
 ];
 
 function getHeaderGroup(key: string): string {

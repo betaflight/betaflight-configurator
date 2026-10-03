@@ -42,11 +42,12 @@ i18n.selectedLanguage = undefined;
 // Create new locale for them extending the English locale as base
 // For Serbian locales, use its closely related Croatian
 const he = { ...en, name: "\u05E2\u05D1\u05E8\u05D9\u05EA", code: "he", dir: "rtl" };
+const kk = { ...en, name: "\u049A\u0430\u0437\u0430\u049B\u0448\u0430", code: "kk" };
 const sr = { ...hr, name: "Srpski (latinica)", code: "sr" };
 const sr_Cyrl = {
     ...hr,
     name: "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
-    code: "sr_Cyrl",
+    code: "sr-Cyrl",
 };
 
 /**
@@ -70,6 +71,7 @@ const supportedLocales = [
     it,
     ja,
     ka,
+    kk,
     ko,
     nl,
     pt,
@@ -226,6 +228,10 @@ i18n.getLanguagesAvailables = function () {
 
 i18n.getCurrentLocale = function () {
     return i18next.language;
+};
+
+i18n.getSystemLocale = function () {
+    return getValidLocale("DEFAULT");
 };
 
 i18n.existsMessage = function (key) {

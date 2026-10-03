@@ -104,7 +104,12 @@
                             v-model="settings.userLanguage"
                             value-key="value"
                             :items="[
-                                { label: $t('language_default'), value: 'DEFAULT' },
+                                {
+                                    label: i18n.getMessage('language_DEFAULT', {
+                                        systemLanguage: i18n.getMessage(`language_${i18n.getSystemLocale()}`),
+                                    }),
+                                    value: 'DEFAULT',
+                                },
                                 { type: 'separator' },
                                 ...availableLanguages.map((lang) => ({
                                     label: $t(`language_${lang}`),

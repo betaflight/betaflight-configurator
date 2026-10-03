@@ -49,8 +49,8 @@
                 text-decoration: underline;
             }
 
-            /* Masthead matching status.betaflight.com: centred column, accent top rule,
-               logo inside the h1 with a muted brand word beside it. */
+            /* Masthead shared with status.betaflight.com: centred column, accent top rule,
+               logo inside the h1 with a muted brand word centred beneath it. */
             header {
                 max-width: 880px;
                 margin: 0 auto;
@@ -58,8 +58,9 @@
             }
             header h1 {
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 12px;
+                gap: 8px;
                 font-size: 22px;
                 font-weight: 600;
                 margin: 0;
