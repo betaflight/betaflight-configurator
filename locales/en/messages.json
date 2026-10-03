@@ -31,6 +31,18 @@
     "search": {
         "message": "Search"
     },
+    "settingsSearchTitle": {
+        "message": "Search settings",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Search settings...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "No settings found",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },
@@ -473,6 +485,9 @@
     },
     "sensorConfigHardware": {
         "message": "Sensor Hardware"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "Active Gyros"
     },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
@@ -3975,6 +3990,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Build Type"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Board"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Select build type to see available boards."

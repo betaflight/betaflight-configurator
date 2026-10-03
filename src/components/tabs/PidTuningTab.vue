@@ -644,7 +644,13 @@ function cleanup(callback?: () => void) {
     }
 }
 
-defineExpose({ cleanup });
+function selectSubtab(subtab: string) {
+    if (subtabItems.value.some((item) => item.value === subtab)) {
+        activeSubtab.value = subtab;
+    }
+}
+
+defineExpose({ cleanup, selectSubtab });
 
 // Lifecycle
 onMounted(async () => {

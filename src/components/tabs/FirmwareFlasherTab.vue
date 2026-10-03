@@ -969,6 +969,7 @@ export default defineComponent({
 
             // Register this module for backward compatibility
             TABS.firmware_flasher = {
+                ...TABS.firmware_flasher,
                 targets: boardSelection.state.targets,
                 validateBuildKey,
                 resetFlashingState,
@@ -1793,12 +1794,19 @@ export default defineComponent({
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
         ]);
 
+        const selectSubtab = (subtab: string) => {
+            if (subtabItems.value.some((item) => item.value === subtab)) {
+                activeFlasherStep.value = subtab;
+            }
+        };
+
         // Return all public methods and state
         return {
             state,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
+            selectSubtab,
             flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
