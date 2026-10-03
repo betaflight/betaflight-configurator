@@ -85,7 +85,11 @@
                             :class="{ selected_language: lang === selectedLanguage }"
                             @click.prevent="changeLanguage(lang)"
                         >
-                            {{ $t(`language_${lang}`) }}
+                            {{
+                                $t(`language_${lang}`, {
+                                    systemLanguage: i18n.getMessage(`language_${i18n.getSystemLocale()}`),
+                                })
+                            }}
                         </a>
                     </div>
                 </div>
@@ -126,6 +130,7 @@ export default defineComponent({
             availableLanguages,
             selectedLanguage,
             changeLanguage,
+            i18n,
         };
     },
 });
