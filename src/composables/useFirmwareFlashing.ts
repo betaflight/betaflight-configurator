@@ -101,7 +101,7 @@ export interface FlashWorkflowOptions {
     enableLoadRemoteFileButton?: (enabled: boolean) => void;
     enableLoadFileButton?: (enabled: boolean) => void;
     saveFirmware?: () => Promise<boolean>;
-    startFlashing?: () => Promise<void>;
+    startFlashing?: () => void;
     startBackup?: (callback: () => Promise<void>) => void;
     initiateFlashing: () => Promise<void>;
     progressCallback?: (progress: { stage: string; [key: string]: unknown }) => void;
@@ -478,7 +478,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
     /**
      * Executes the flashing sequence for HEX firmware, including optional config insertion
      */
-    const startFlashing = async (options: StartFlashingOptions = {}) => {
+    const startFlashing = (options: StartFlashingOptions = {}) => {
         const {
             config,
             clearBoardConfig,
@@ -639,7 +639,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         // Either flash-on-connect or no available port falls back to immediate flashing
         if (flashOnConnectEnabled || !portAvailable) {
             report("flash-now", { flashOnConnect: flashOnConnectEnabled, portAvailable });
-            await startFlashingCallback?.();
+            startFlashingCallback?.();
             return;
         }
 

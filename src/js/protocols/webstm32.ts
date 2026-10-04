@@ -387,7 +387,7 @@ class STM32Protocol {
         if (this.mspOptions.no_reboot) {
             this.prepareSerialPort();
             // serial.js's JSDoc does not mark the callback optional.
-            serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
+            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
         } else {
             this.rebootMode = 0; // FIRMWARE
 
@@ -1126,7 +1126,7 @@ class STM32Protocol {
 
                 // close connection
                 if (serial.connectionId) {
-                    serial.disconnect(() => this.cleanup());
+                    void serial.disconnect(() => this.cleanup());
                 } else {
                     this.cleanup();
                 }
