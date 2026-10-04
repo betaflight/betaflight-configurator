@@ -35,7 +35,7 @@
                             <!-- Data rows, in physical output order. Each row edits the
                                  firmware servo that output carries; servos the mixer
                                  doesn't drive come last, dimmed. -->
-                            <template v-for="row in servoConfigRows" :key="row.target">
+                            <template v-for="row in servoConfigRows" :key="row.slot ?? `unused-${row.target}`">
                                 <div
                                     class="text-center text-sm py-1 whitespace-nowrap"
                                     :class="{ 'opacity-50': row.slot == null }"
@@ -458,13 +458,16 @@ function servoOutputLabel(target: number, mixer: number | null) {
 }
 
 // Output dropdown: driven outputs in physical order, undriven targets last
-// and disabled.
+// and disabled. One entry per target; a rule on a target drives every output
+// carrying it.
 const servoMixOutputItems = computed(() =>
-    servoOutputItems(mixerMode.value, slotLayoutOptions()).map((item) => ({
-        value: item.target,
-        label: servoOutputLabel(item.target, mixerMode.value),
-        disabled: item.slot == null,
-    })),
+    servoOutputItems(mixerMode.value, slotLayoutOptions())
+        .filter((item, i, items) => items.findIndex((other) => other.target === item.target) === i)
+        .map((item) => ({
+            value: item.target,
+            label: servoOutputLabel(item.target, mixerMode.value),
+            disabled: item.slot == null,
+        })),
 );
 // The CLI servo and smix commands take the firmware servo index, not the
 // output number the tab shows; spell out the mapping for the active mixer.

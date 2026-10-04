@@ -204,16 +204,19 @@ export function servoTargetToSlot(
 }
 
 /**
- * Every firmware servo target with the physical output carrying it: driven
- * targets first in output order, then the undriven ones (slot null).
+ * Every physical output with the firmware servo target it carries, in output
+ * order, then the targets no output carries (slot null). A target can appear
+ * twice: the gimbal pair (targets 0 and 1) is written after a mixer that
+ * already drives them, e.g. HELI_120_CCPM with SERVO_TILT. Identity while
+ * the mixer is unknown.
  */
 export function servoOutputItems(mixerMode: MixerMode, options: SlotLayoutOptions = {}): ServoOutputItem[] {
-    const items: ServoOutputItem[] = [];
-    for (let target = 0; target < MAX_SUPPORTED_SERVOS; target++) {
-        items.push({ target, slot: servoTargetToSlot(target, mixerMode, options) });
-    }
-    const driven = items.filter((item) => item.slot != null).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
-    return [...driven, ...items.filter((item) => item.slot == null)];
+    const allTargets = Array.from({ length: MAX_SUPPORTED_SERVOS }, (_, target) => target);
+    const layout = mixerMode == null ? allTargets : servoSlotLayout(mixerMode, options);
+    const driven = layout.map((target, slot) => ({ target, slot }));
+    const carried = new Set(layout);
+    const undriven = allTargets.filter((target) => !carried.has(target)).map((target) => ({ target, slot: null }));
+    return [...driven, ...undriven];
 }
 
 // --- Built-in (preset) servo mixer rules ----------------------------------

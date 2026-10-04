@@ -212,6 +212,35 @@ describe("custom rule list", () => {
     });
 });
 
+describe("servoOutputItems", () => {
+    it("lists every driven output, then the targets nothing drives", () => {
+        expect(servoOutputItems(MIXER_IDS.FLYING_WING)).toEqual([
+            { target: 3, slot: 0 },
+            { target: 4, slot: 1 },
+            { target: 0, slot: null },
+            { target: 1, slot: null },
+            { target: 2, slot: null },
+            { target: 5, slot: null },
+            { target: 6, slot: null },
+            { target: 7, slot: null },
+        ]);
+    });
+
+    it("keeps outputs that repeat a target, like the gimbal pair after HELI_120_CCPM", () => {
+        // firmware writeServos(): heli 0..3, then updateGimbalServos() writes 0 and 1 again.
+        const items = servoOutputItems(MIXER_IDS.HELI_120_CCPM, { servoTilt: true });
+        expect(items.filter((item) => item.slot != null)).toEqual([
+            { target: 0, slot: 0 },
+            { target: 1, slot: 1 },
+            { target: 2, slot: 2 },
+            { target: 3, slot: 3 },
+            { target: 0, slot: 4 },
+            { target: 1, slot: 5 },
+        ]);
+        expect(items.filter((item) => item.slot == null).map((item) => item.target)).toEqual([4, 5, 6, 7]);
+    });
+});
+
 describe("servoMixRulesToSave", () => {
     const rule = (target: number, rate: number, min = 0, max = 100) => ({
         target,
