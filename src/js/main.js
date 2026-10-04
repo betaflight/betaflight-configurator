@@ -23,13 +23,12 @@ import {
     checkUsbSupport,
     isAndroid,
     isNetworkOnlyBrowser,
-    isTauriAndroid,
-    isTauriIOS,
 } from "./utils/checkCompatibility.js";
 import { pinia } from "./pinia_instance.js";
 import { useNavigationStore } from "../stores/navigation.js";
 import { useDialogStore } from "../stores/dialog.js";
 import { MspCancelledError } from "./msp/mspErrors";
+import { isDeleteAccountPath, requestDeleteAccountFocus } from "./utils/deleteAccountLink";
 
 window.addEventListener("unhandledrejection", (event) => {
     if (event.reason instanceof MspCancelledError) {
@@ -175,6 +174,21 @@ function appReady() {
     }
 }
 
+async function openDeleteAccountFromLink() {
+    try {
+        window.history.replaceState(null, "", `/${window.location.search}${window.location.hash}`);
+    } catch (error) {
+        console.warn("Could not strip delete account link from URL:", error);
+    }
+
+    requestDeleteAccountFocus();
+    switchTab("user_profile", { mode: "loggedin" });
+
+    if (!(await loginManager.isUserLoggedIn())) {
+        loginManager.showLoginDialog();
+    }
+}
+
 //Process to execute to real start the app
 async function startProcess() {
     // translate to user-selected language
@@ -237,11 +251,17 @@ async function startProcess() {
     loadUiScale();
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
-    switchTab("landing", { mode: "disconnected" });
+    if (isDeleteAccountPath(window.location.pathname)) {
+        openDeleteAccountFromLink().catch((err) => {
+            console.warn("Failed to open account deletion from link:", err);
+        });
+    } else {
+        switchTab("landing", { mode: "disconnected" });
+    }
 
     // The phone/tablet shell only. A narrow desktop or browser window is still the desktop
     // experience, so width alone must not opt anything in here.
-    document.body.classList.toggle("mobile-app-shell", isTauriIOS() || isTauriAndroid() || isAndroid());
+    document.body.classList.toggle("mobile-app-shell", isAndroid());
 
     // The on-screen keyboard leaves no room for the tab strip in the floating bar. Track focus
     // rather than viewport height: the layout viewport shrinks with the keyboard, so measuring

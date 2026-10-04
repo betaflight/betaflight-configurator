@@ -24,6 +24,7 @@ import geomagnetism from "geomagnetism";
 import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
+import { IP_GEOLOCATION_CONSENT_KEY, hasIpGeolocationConsent } from "../js/utils/ipGeolocation";
 import { sortNotams, kmToNm, type NotamItem } from "../js/notam/index";
 import { fetchFromFaa } from "../js/notam/faa";
 import { fetchFromOpenAip } from "../js/notam/openaip";
@@ -121,7 +122,6 @@ function messageOf(err: unknown): string {
 }
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
-const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
 const NOTAM_PROVIDER_KEY = "preflight_notam_provider";
 const NOTAM_FAA_API_KEY = "preflight_notam_faa_api_key";
@@ -845,13 +845,19 @@ const launchStatus = computed((): StatusResult & { checks: LaunchCheck[] } => {
 
 const IP_CONSENT_NEEDED = "IP_CONSENT_NEEDED";
 
-const ipGeolocationConsent = ref(!!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY]);
+const ipGeolocationConsent = ref(hasIpGeolocationConsent());
 
 function setIpGeolocationConsent(value: boolean): void {
     ipGeolocationConsent.value = !!value;
     const obj: Record<string, unknown> = {};
     obj[IP_GEOLOCATION_CONSENT_KEY] = !!value;
     setConfig(obj);
+}
+
+// Other tabs can grant consent through the shared prompt, so re-read it rather than trusting the ref.
+function refreshIpGeolocationConsent(): boolean {
+    ipGeolocationConsent.value = hasIpGeolocationConsent();
+    return ipGeolocationConsent.value;
 }
 
 async function useGeolocation() {
@@ -863,7 +869,7 @@ async function useGeolocation() {
         if (!ispConnected()) {
             throw new Error("Geolocation failed and internet access is disabled");
         }
-        if (ipGeolocationConsent.value) {
+        if (refreshIpGeolocationConsent()) {
             coords = await ipGeolocation();
             source = "ip";
         } else {
@@ -881,7 +887,7 @@ async function useIpGeolocationFallback() {
     if (!ispConnected()) {
         throw new Error("Internet access is disabled");
     }
-    if (!ipGeolocationConsent.value) {
+    if (!refreshIpGeolocationConsent()) {
         throw new Error(IP_CONSENT_NEEDED);
     }
     const coords = await ipGeolocation();
