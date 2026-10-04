@@ -1,10 +1,87 @@
-import { ref, nextTick } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { ref, nextTick, type Ref } from "vue";
 import semver from "semver";
 import FC from "../js/fc";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { escapeHtml } from "../js/utils/common";
 
-function highlightAnywhere(value, term) {
+/** What CliAutoComplete learns from the FC's `help`, `dump`, `get` and `mixer list` output. */
+interface CliAutoCompleteCache {
+    commands: string[];
+    resources: string[];
+    resourcesCount: Record<string, number>;
+    settings: string[];
+    /** The accepted names of a lookup setting, or the "Allowed range: …" line of a numeric one. */
+    settingsAcceptedValues: Record<string, string[] | string>;
+    feature: string[];
+    beeper: string[];
+    mixers: string[];
+}
+
+/** One dropdown entry: the text to insert, and the same text with the typed term highlighted. */
+export interface CliAutocompleteItem {
+    text: string;
+    html: string;
+}
+
+/**
+ * Completes one shape of command line. `match` captures the line so far, and `replace` returns a
+ * pattern whose $1..$9 are filled from those captures, or null to leave the input alone.
+ */
+interface Strategy {
+    match: RegExp;
+    /** The capture group holding the word being completed. */
+    index: number;
+    /** When present, the strategy only applies to lines it accepts. */
+    context?: (text: string) => boolean;
+    search: (term: string, match: RegExpExecArray) => string[];
+    template: (value: string, term: string) => string;
+    replace: (value: string) => string | null;
+}
+
+export interface CliAutocomplete {
+    visible: Ref<boolean>;
+    items: Ref<CliAutocompleteItem[]>;
+    activeIndex: Ref<number>;
+    sendOnEnter: Ref<boolean>;
+    forceOpen: Ref<boolean>;
+    caretLeft: Ref<number>;
+    connect: (
+        getter: () => string,
+        setter: (value: string) => void,
+        elGetter?: () => HTMLTextAreaElement | null,
+    ) => void;
+    initStrategies: () => void;
+    update: (inputText: string, cursorPos?: number) => void;
+    selectItem: (index: number) => void;
+    openForced: (inputText: string) => void;
+    navigateUp: () => void;
+    navigateDown: () => void;
+    hide: () => void;
+    isOpen: () => boolean;
+}
+
+function highlightAnywhere(value: string, term: string): string {
     if (!term) {
         return escapeHtml(value);
     }
@@ -17,7 +94,7 @@ function highlightAnywhere(value, term) {
     return `${value.slice(0, idx)}<b>${value.slice(idx, idx + term.length)}</b>${value.slice(idx + term.length)}`;
 }
 
-function highlightPrefix(value, term) {
+function highlightPrefix(value: string, term: string): string {
     if (!term) {
         return escapeHtml(value);
     }
@@ -29,8 +106,18 @@ function highlightPrefix(value, term) {
     return `<b>${value.slice(0, term.length)}</b>${value.slice(term.length)}`;
 }
 
-function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
-    const res = [];
+/**
+ * @param minChars the term length that opens the list unprompted, or false for never
+ */
+function searchArray(
+    term: string,
+    array: string[],
+    minChars: number | false,
+    matchPrefix: boolean,
+    forceOpen: boolean,
+    isOpen: boolean,
+): string[] {
+    const res: string[] = [];
     if ((minChars !== false && term.length >= minChars) || forceOpen || isOpen) {
         const lowerTerm = term.toLowerCase();
         for (const item of array) {
@@ -47,43 +134,47 @@ function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
  * Apply a replacement pattern using regex match groups.
  * Pattern tokens like $1, $2, $3 are replaced with the corresponding capture groups.
  */
-function applyReplacement(pattern, match) {
+function applyReplacement(pattern: string, match: RegExpExecArray): string {
     // Only replace $1..$9 (capture groups). Do not treat $0 as the full match;
     // leave any accidental "$0" sequences unchanged.
-    return pattern.replaceAll(/\$([1-9])/g, (_, n) => match[Number(n)] ?? "");
+    return pattern.replaceAll(/\$([1-9])/g, (_, n: string) => match[Number(n)] ?? "");
 }
 
 /**
  * Check if cursor is at end of text (not in middle of a word).
  */
-function isAtWordEnd(text, cursorPos) {
+function isAtWordEnd(text: string, cursorPos: number): boolean {
     return cursorPos >= text.length || /\s/.test(text[cursorPos]);
 }
 
-export function useCliAutocomplete() {
+export function useCliAutocomplete(): CliAutocomplete {
     const visible = ref(false);
-    const items = ref([]);
+    const items = ref<CliAutocompleteItem[]>([]);
     const activeIndex = ref(0);
     const forceOpen = ref(false);
     const sendOnEnter = ref(false);
     const caretLeft = ref(0);
 
     // Internal state
-    let strategies = [];
-    let matchedStrategy = null;
-    let matchedGroups = null;
+    let strategies: Strategy[] = [];
+    let matchedStrategy: Strategy | null = null;
+    let matchedGroups: RegExpExecArray | null = null;
     let openLaterRequested = false;
-    let inputSetter = null;
-    let inputGetter = null;
-    let textareaGetter = null;
+    let inputSetter: ((value: string) => void) | null = null;
+    let inputGetter: (() => string) | null = null;
+    let textareaGetter: (() => HTMLTextAreaElement | null) | null = null;
 
     /**
      * Wire the composable to the textarea's v-model.
-     * @param {Function} getter  - returns current input value
-     * @param {Function} setter  - sets the input value
-     * @param {Function} elGetter - returns the textarea DOM element
+     * @param getter  - returns current input value
+     * @param setter  - sets the input value
+     * @param elGetter - returns the textarea DOM element
      */
-    function connect(getter, setter, elGetter) {
+    function connect(
+        getter: () => string,
+        setter: (value: string) => void,
+        elGetter?: () => HTMLTextAreaElement | null,
+    ) {
         inputGetter = getter;
         inputSetter = setter;
         textareaGetter = elGetter || null;
@@ -117,7 +208,8 @@ export function useCliAutocomplete() {
      * Called once after CliAutoComplete finishes building.
      */
     function initStrategies() {
-        const cache = CliAutoComplete.cache;
+        // CliAutoComplete is unchecked JS that creates its cache when a build starts.
+        const cache = (CliAutoComplete as { cache?: CliAutoCompleteCache }).cache;
         if (!cache) {
             return;
         }
@@ -125,6 +217,63 @@ export function useCliAutocomplete() {
         // diff command arguments
         const diffArgs1 = ["all", "hardware", "master", "profile", "rates"];
         const diffArgs2 = ["bare", "defaults"];
+
+        const settingValueStrategy: Strategy & { isSettingValueArray: boolean; savedValue: string } = {
+            // "set <setting> = <value>"
+            match: /^(\s*set\s+(\w+))\s*=\s*(\S.*)?$/i,
+            index: 3,
+            isSettingValueArray: false,
+            savedValue: "",
+            search(term, match) {
+                const settingName = match[2].toLowerCase();
+                this.isSettingValueArray = false;
+                this.savedValue = match[3];
+                sendOnEnter.value = !!term;
+
+                if (settingName in cache.settingsAcceptedValues) {
+                    const val = cache.settingsAcceptedValues[settingName];
+                    if (Array.isArray(val)) {
+                        this.isSettingValueArray = true;
+                        sendOnEnter.value = true;
+                        return searchArray(term, val, 0, false, forceOpen.value, visible.value);
+                    }
+                    // Numeric range hint - show as tooltip
+                    return [val];
+                }
+                return [];
+            },
+            template: highlightAnywhere,
+            replace(value) {
+                if (!this.isSettingValueArray) {
+                    value = this.savedValue;
+                }
+                return `$1 = ${value}`;
+            },
+        };
+
+        const resourceIndexStrategy: Strategy & { savedTerm: string } = {
+            // "resource <name> <index>" (only for multi-index resources)
+            match: /^(\s*resource\s+(\w+)\s+)(\d*)$/i,
+            index: 3,
+            savedTerm: "",
+            context(text) {
+                const m = /^\s*resource\s+(\w+)\s/i.exec(text);
+                return !!m && (cache.resourcesCount[m[1].toUpperCase()] || 0) > 1;
+            },
+            search(term, match) {
+                sendOnEnter.value = false;
+                this.savedTerm = term;
+                return [`<1-${cache.resourcesCount[match[2].toUpperCase()]}>`];
+            },
+            template: (value) => value,
+            replace() {
+                if (this.savedTerm) {
+                    openLaterRequested = true;
+                    return "$1$3 ";
+                }
+                return null;
+            },
+        };
 
         strategies = [
             {
@@ -178,38 +327,7 @@ export function useCliAutocomplete() {
                     return `$1${value} `;
                 },
             },
-            {
-                // "set <setting> = <value>"
-                match: /^(\s*set\s+(\w+))\s*=\s*(\S.*)?$/i,
-                index: 3,
-                isSettingValueArray: false,
-                savedValue: "",
-                search(term, match) {
-                    const settingName = match[2].toLowerCase();
-                    this.isSettingValueArray = false;
-                    this.savedValue = match[3];
-                    sendOnEnter.value = !!term;
-
-                    if (settingName in cache.settingsAcceptedValues) {
-                        const val = cache.settingsAcceptedValues[settingName];
-                        if (Array.isArray(val)) {
-                            this.isSettingValueArray = true;
-                            sendOnEnter.value = true;
-                            return searchArray(term, val, 0, false, forceOpen.value, visible.value);
-                        }
-                        // Numeric range hint - show as tooltip
-                        return [val];
-                    }
-                    return [];
-                },
-                template: highlightAnywhere,
-                replace(value) {
-                    if (!this.isSettingValueArray) {
-                        value = this.savedValue;
-                    }
-                    return `$1 = ${value}`;
-                },
-            },
+            settingValueStrategy,
             {
                 // "resource <name>"
                 match: /^(\s*resource\s+)(\w*)$/i,
@@ -235,38 +353,16 @@ export function useCliAutocomplete() {
                     return `$1${value} `;
                 },
             },
-            {
-                // "resource <name> <index>" (only for multi-index resources)
-                match: /^(\s*resource\s+(\w+)\s+)(\d*)$/i,
-                index: 3,
-                savedTerm: "",
-                context(text) {
-                    const m = text.match(/^\s*resource\s+(\w+)\s/i);
-                    return m && (cache.resourcesCount[m[1].toUpperCase()] || 0) > 1;
-                },
-                search(term, match) {
-                    sendOnEnter.value = false;
-                    this.savedTerm = term;
-                    return [`<1-${cache.resourcesCount[match[2].toUpperCase()]}>`];
-                },
-                template: (value) => value,
-                replace() {
-                    if (this.savedTerm) {
-                        openLaterRequested = true;
-                        return "$1$3 ";
-                    }
-                    return null;
-                },
-            },
+            resourceIndexStrategy,
             {
                 // "resource <name> [<index>] <pin|none>"
                 match: /^(\s*resource\s+\w+\s+(\d+\s+)?)(\w*)$/i,
                 index: 3,
                 context(text) {
-                    const m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
+                    const m = /^\s*resource\s+(\w+)\s+(\d+\s)?/i.exec(text);
                     if (m) {
                         const count = cache.resourcesCount[m[1].toUpperCase()] || 0;
-                        return count && (m[2] || count === 1);
+                        return !!count && (!!m[2] || count === 1);
                     }
                     return false;
                 },
@@ -294,7 +390,7 @@ export function useCliAutocomplete() {
                 index: 4,
                 search(term, match) {
                     sendOnEnter.value = !!term;
-                    let arr = cache[match[2].toLowerCase()];
+                    let arr = cache[match[2].toLowerCase() as "feature" | "beeper"];
                     if (!match[3]) {
                         arr = ["-", "list", ...arr];
                     }
@@ -359,7 +455,7 @@ export function useCliAutocomplete() {
     /**
      * Evaluate strategies against the current input and populate the dropdown.
      */
-    function update(inputText, cursorPos) {
+    function update(inputText: string, cursorPos?: number) {
         if (!CliAutoComplete.isEnabled() || CliAutoComplete.isBuilding()) {
             hide();
             return;
@@ -375,9 +471,7 @@ export function useCliAutocomplete() {
             }
         }
 
-        if (cursorPos === undefined) {
-            cursorPos = inputText.length;
-        }
+        cursorPos ??= inputText.length;
 
         // Only autocomplete if cursor is at end of word
         if (!isAtWordEnd(inputText, cursorPos)) {
@@ -419,15 +513,15 @@ export function useCliAutocomplete() {
     /**
      * Select an item from the dropdown and apply the replacement.
      */
-    function selectItem(index) {
-        if (!matchedStrategy || index < 0 || index >= items.value.length) {
+    function selectItem(index: number) {
+        if (!matchedStrategy || !matchedGroups || index < 0 || index >= items.value.length) {
             return;
         }
 
         const value = items.value[index].text;
         openLaterRequested = false;
 
-        const replacementPattern = matchedStrategy.replace(value, matchedGroups);
+        const replacementPattern = matchedStrategy.replace(value);
         if (replacementPattern === null || replacementPattern === undefined) {
             hide();
             return;
@@ -454,7 +548,7 @@ export function useCliAutocomplete() {
      * Force-open the dropdown (triggered by Tab).
      * If there's exactly one match, auto-select it.
      */
-    function openForced(inputText) {
+    function openForced(inputText: string) {
         forceOpen.value = true;
         update(inputText);
         forceOpen.value = false;

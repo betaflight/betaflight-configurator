@@ -1,5 +1,48 @@
-import { ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { ref, type Ref } from "vue";
 import * as d3 from "d3";
+import type { SensorScales } from "@/stores/sensors";
+
+/** A sample: [sample number, value]. */
+type Point = [number, number];
+
+/** One plotted line: its recent samples, plus the extremes seen so far for auto-scaling. */
+export type Series = Point[] & { min: number; max: number };
+
+interface GraphHelpers {
+    selector: string;
+    data: Series[];
+    scaleYMax: Ref<number>;
+    // When dynamic, the Y-axis follows the data range instead of the
+    // fixed symmetric [-scaleYMax, scaleYMax] domain.
+    dynamic: boolean;
+    // NaN until the SVG has been measured, so the first measurement always counts as a change.
+    width: number;
+    height: number;
+    scaleX: d3.ScaleLinear<number, number>;
+    scaleY: d3.ScaleLinear<number, number>;
+    clipId: string;
+}
 
 export function useSensorGraph() {
     // `bottom` is the gutter that holds the x-axis tick labels, `top` the gap above
@@ -9,13 +52,13 @@ export function useSensorGraph() {
     const margin = { top: 10, right: 10, bottom: 20, left: 40 };
 
     // Data arrays
-    const gyro_data = ref([]);
-    const accel_data = ref([]);
-    const mag_data = ref([]);
-    const altitude_data = ref([]);
-    const sonar_data = ref([]);
-    const pitot_data = ref([]);
-    const debug_data = ref([]);
+    const gyro_data = ref<Series[]>([]);
+    const accel_data = ref<Series[]>([]);
+    const mag_data = ref<Series[]>([]);
+    const altitude_data = ref<Series[]>([]);
+    const sonar_data = ref<Series[]>([]);
+    const pitot_data = ref<Series[]>([]);
+    const debug_data = ref<Series[][]>([]);
 
     // Sample counters and dirty flags
     let samples_gyro_i = 0;
@@ -34,25 +77,23 @@ export function useSensorGraph() {
     let dirty_debug = false;
 
     // Graph helpers storage
-    let gyroHelpers = null;
-    let accelHelpers = null;
-    let magHelpers = null;
-    let altitudeHelpers = null;
-    let sonarHelpers = null;
-    let pitotHelpers = null;
-    let debugHelpers = [];
+    let gyroHelpers: GraphHelpers | null = null;
+    let accelHelpers: GraphHelpers | null = null;
+    let magHelpers: GraphHelpers | null = null;
+    let altitudeHelpers: GraphHelpers | null = null;
+    let sonarHelpers: GraphHelpers | null = null;
+    let pitotHelpers: GraphHelpers | null = null;
+    let debugHelpers: GraphHelpers[] = [];
 
-    function initDataArray(length) {
-        const data = new Array(length);
+    function initDataArray(length: number): Series[] {
+        const data: Series[] = new Array(length);
         for (let i = 0; i < length; i++) {
-            data[i] = [];
-            data[i].min = -1;
-            data[i].max = 1;
+            data[i] = Object.assign([], { min: -1, max: 1 });
         }
         return data;
     }
 
-    function addSampleToData(data, sampleNumber, sensorData) {
+    function addSampleToData(data: Series[], sampleNumber: number, sensorData: number[]): number {
         for (let i = 0; i < data.length; i++) {
             const dataPoint = sensorData[i];
             data[i].push([sampleNumber, dataPoint]);
@@ -64,17 +105,21 @@ export function useSensorGraph() {
             }
         }
         while (data[0].length > 300) {
-            for (let i = 0; i < data.length; i++) {
-                data[i].shift();
+            for (const series of data) {
+                series.shift();
             }
         }
         return sampleNumber + 1;
     }
 
+    function selectGraph(helpers: GraphHelpers) {
+        return d3.select<SVGSVGElement, unknown>(helpers.selector);
+    }
+
     // Returns true when the measured plot area changed, so callers can skip the
     // expensive scale/clip-path rebuild while the SVG keeps its size.
-    function measureGraphSize(helpers) {
-        const node = d3.select(helpers.selector).node();
+    function measureGraphSize(helpers: GraphHelpers): boolean {
+        const node = selectGraph(helpers).node();
         if (!node) {
             return false;
         }
@@ -92,8 +137,8 @@ export function useSensorGraph() {
     // Place the axis, grid and data groups for the measured plot area: the y groups
     // at the top-left corner of the plot, the x groups on its baseline so the
     // horizontal scale always sits directly below the vertical one.
-    function applyGraphTransforms(helpers) {
-        const element = d3.select(helpers.selector);
+    function applyGraphTransforms(helpers: GraphHelpers) {
+        const element = selectGraph(helpers);
         const topLeft = `translate(${margin.left}, ${margin.top})`;
         const baseline = `translate(${margin.left}, ${margin.top + helpers.height})`;
 
@@ -104,7 +149,7 @@ export function useSensorGraph() {
         element.select(".axis.x").attr("transform", baseline);
     }
 
-    function updateGraphHelperSize(helpers) {
+    function updateGraphHelperSize(helpers: GraphHelpers) {
         measureGraphSize(helpers);
         applyGraphTransforms(helpers);
 
@@ -116,7 +161,7 @@ export function useSensorGraph() {
 
         // Only create clipPath rect if dimensions are valid
         if (helpers.width > 0 && helpers.height > 0) {
-            const element = d3.select(helpers.selector);
+            const element = selectGraph(helpers);
             element
                 .selectAll("defs")
                 .data([0])
@@ -133,48 +178,69 @@ export function useSensorGraph() {
         }
     }
 
-    function initGraph(selector, sampleCount, heightRef, dataRef, dynamic = false) {
-        const helpers = {
+    function lineFor(helpers: GraphHelpers) {
+        return d3
+            .line<Point>()
+            .x((d) => helpers.scaleX(d[0]))
+            .y((d) => helpers.scaleY(d[1]));
+    }
+
+    function initGraph(
+        selector: string,
+        sampleCount: number,
+        heightRef: Ref<number>,
+        dataRef: Series[],
+        dynamic = false,
+    ): GraphHelpers {
+        const helpers: GraphHelpers = {
             selector,
             data: dataRef,
             scaleYMax: heightRef,
-            // When dynamic, the Y-axis follows the data range instead of the
-            // fixed symmetric [-scaleYMax, scaleYMax] domain.
             dynamic,
+            width: Number.NaN,
+            height: Number.NaN,
+            // Placeholders; updateGraphHelperSize builds the real ones from the measured size.
+            scaleX: d3.scaleLinear(),
+            scaleY: d3.scaleLinear(),
+            clipId: "",
         };
         updateGraphHelperSize(helpers);
-        const element = d3.select(helpers.selector);
+        const element = selectGraph(helpers);
         element.selectAll("defs").data([0]).join("defs");
-        const xAxis = d3
-            .axisBottom()
-            .scale(helpers.scaleX)
-            .tickFormat((d) => d);
-        const yAxis = d3
-            .axisLeft()
-            .scale(helpers.scaleY)
-            .tickFormat((d) => d);
-        const xGrid = d3.axisBottom().scale(helpers.scaleX).tickFormat("").tickSize(-helpers.height, 0, 0);
-        const yGrid = d3.axisLeft().scale(helpers.scaleY).tickFormat("").tickSize(-helpers.width, 0, 0);
-        element.select(".grid.x").call(xGrid).selectAll("line").attr("clip-path", `url(#${helpers.clipId})`);
-        element.select(".grid.y").call(yGrid).selectAll("line").attr("clip-path", `url(#${helpers.clipId})`);
-        element.select(".axis.x").call(xAxis);
-        element.select(".axis.y").call(yAxis);
-        const line = d3
-            .line()
-            .x((d) => helpers.scaleX(d[0]))
-            .y((d) => helpers.scaleY(d[1]));
+        const xAxis = d3.axisBottom(helpers.scaleX).tickFormat(String);
+        const yAxis = d3.axisLeft(helpers.scaleY).tickFormat(String);
+        const xGrid = d3
+            .axisBottom(helpers.scaleX)
+            .tickFormat(() => "")
+            .tickSize(-helpers.height);
+        const yGrid = d3
+            .axisLeft(helpers.scaleY)
+            .tickFormat(() => "")
+            .tickSize(-helpers.width);
+        element
+            .select<SVGGElement>(".grid.x")
+            .call(xGrid)
+            .selectAll("line")
+            .attr("clip-path", `url(#${helpers.clipId})`);
+        element
+            .select<SVGGElement>(".grid.y")
+            .call(yGrid)
+            .selectAll("line")
+            .attr("clip-path", `url(#${helpers.clipId})`);
+        element.select<SVGGElement>(".axis.x").call(xAxis);
+        element.select<SVGGElement>(".axis.y").call(yAxis);
         element
             .select(".data")
-            .selectAll(".line")
+            .selectAll<SVGPathElement, Series>(".line")
             .data(helpers.data)
             .join("path")
             .attr("class", "line")
             .attr("clip-path", `url(#${helpers.clipId})`)
-            .attr("d", line);
+            .attr("d", lineFor(helpers));
         return helpers;
     }
 
-    function drawGraph(helpers, sampleNumber) {
+    function drawGraph(helpers: GraphHelpers, sampleNumber: number): boolean | undefined {
         // Re-measure every frame: the SVG may have been hidden via v-show when the
         // graph was created, and it stretches with the window.  updateGraphHelperSize
         // only rebuilds the scales and clip path when the size actually changed.
@@ -189,7 +255,7 @@ export function useSensorGraph() {
         helpers.scaleX.domain([sampleNumber - 299, sampleNumber]).range([0, helpers.width]);
         if (helpers.dynamic) {
             // Follow the data range (matches 2025.12-maintenance debug graphs).
-            const limits = [];
+            const limits: number[] = [];
             for (const series of helpers.data) {
                 limits.push(series.min, series.max);
             }
@@ -199,38 +265,34 @@ export function useSensorGraph() {
             helpers.scaleY.domain([-helpers.scaleYMax.value, helpers.scaleYMax.value]).range([helpers.height, 0]);
         }
 
-        const element = d3.select(helpers.selector);
+        const element = selectGraph(helpers);
 
-        const xAxis = d3
-            .axisBottom()
-            .scale(helpers.scaleX)
+        const xAxis = d3.axisBottom(helpers.scaleX).ticks(5).tickFormat(String);
+
+        const yAxis = d3.axisLeft(helpers.scaleY).ticks(5).tickFormat(String);
+
+        const xGrid = d3
+            .axisBottom(helpers.scaleX)
             .ticks(5)
-            .tickFormat((d) => d);
+            .tickFormat(() => "")
+            .tickSize(-helpers.height);
 
-        const yAxis = d3
-            .axisLeft()
-            .scale(helpers.scaleY)
+        const yGrid = d3
+            .axisLeft(helpers.scaleY)
             .ticks(5)
-            .tickFormat((d) => d);
+            .tickFormat(() => "")
+            .tickSize(-helpers.width);
 
-        const xGrid = d3.axisBottom().scale(helpers.scaleX).ticks(5).tickFormat("").tickSize(-helpers.height, 0, 0);
+        element.select<SVGGElement>(".grid.x").call(xGrid);
+        element.select<SVGGElement>(".grid.y").call(yGrid);
+        element.select<SVGGElement>(".axis.x").call(xAxis);
+        element.select<SVGGElement>(".axis.y").call(yAxis);
 
-        const yGrid = d3.axisLeft().scale(helpers.scaleY).ticks(5).tickFormat("").tickSize(-helpers.width, 0, 0);
-
-        element.select(".grid.x").call(xGrid);
-        element.select(".grid.y").call(yGrid);
-        element.select(".axis.x").call(xAxis);
-        element.select(".axis.y").call(yAxis);
-
-        const line = d3
-            .line()
-            .x((d) => helpers.scaleX(d[0]))
-            .y((d) => helpers.scaleY(d[1]));
-
-        element.select(".data").selectAll(".line").attr("d", line);
+        element.select(".data").selectAll<SVGPathElement, Series>(".line").attr("d", lineFor(helpers));
     }
 
-    function initializeGraphs(refs, debugColumns) {
+    // The first argument is unused; callers still pass one.
+    function initializeGraphs(_refs: unknown, debugColumns: number) {
         gyro_data.value = initDataArray(3);
         accel_data.value = initDataArray(3);
         mag_data.value = initDataArray(3);
@@ -258,7 +320,7 @@ export function useSensorGraph() {
         }
     }
 
-    function updateScales(scales) {
+    function updateScales(scales: SensorScales) {
         if (gyroHelpers) {
             gyroHelpers.scaleYMax.value = scales.gyro;
         }
@@ -273,7 +335,8 @@ export function useSensorGraph() {
         }
     }
 
-    function setDebugScales(debugScales) {
+    /** @param debugScales one per debug column; 0 (or missing) means Auto. */
+    function setDebugScales(debugScales: number[] | null | undefined) {
         for (let i = 0; i < debugHelpers.length; i++) {
             const helper = debugHelpers[i];
             const scale = debugScales?.[i] ?? 0;
@@ -286,7 +349,7 @@ export function useSensorGraph() {
         }
     }
 
-    function drawIfDirty(helpers, sampleIndex) {
+    function drawIfDirty(helpers: GraphHelpers | null, sampleIndex: number): boolean {
         if (!helpers) {
             return false;
         }
@@ -320,37 +383,37 @@ export function useSensorGraph() {
         }
     }
 
-    function addGyroSample(data) {
+    function addGyroSample(data: number[]) {
         samples_gyro_i = addSampleToData(gyro_data.value, samples_gyro_i, data);
         dirty_gyro = true;
     }
 
-    function addAccelSample(data) {
+    function addAccelSample(data: number[]) {
         samples_accel_i = addSampleToData(accel_data.value, samples_accel_i, data);
         dirty_accel = true;
     }
 
-    function addMagSample(data) {
+    function addMagSample(data: number[]) {
         samples_mag_i = addSampleToData(mag_data.value, samples_mag_i, data);
         dirty_mag = true;
     }
 
-    function addAltitudeSample(data) {
+    function addAltitudeSample(data: number[]) {
         samples_altitude_i = addSampleToData(altitude_data.value, samples_altitude_i, data);
         dirty_altitude = true;
     }
 
-    function addSonarSample(data) {
+    function addSonarSample(data: number[]) {
         samples_sonar_i = addSampleToData(sonar_data.value, samples_sonar_i, data);
         dirty_sonar = true;
     }
 
-    function addPitotSample(data) {
+    function addPitotSample(data: number[]) {
         samples_pitot_i = addSampleToData(pitot_data.value, samples_pitot_i, data);
         dirty_pitot = true;
     }
 
-    function addDebugSample(index, data) {
+    function addDebugSample(index: number, data: number[]) {
         if (!debug_data.value[index]) {
             return;
         }

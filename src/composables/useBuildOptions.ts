@@ -1,14 +1,54 @@
-import { computed } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { computed, type ComputedRef } from "vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../stores/fc";
+import type { FcConfig } from "../stores/fc.types";
 import { API_VERSION_1_45 } from "../js/data_storage";
 import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options.js";
 
+/**
+ * The part of `FC.CONFIG` build-option gating reads. Partial, since a firmware that
+ * predates the build-option list leaves `buildOptions` unset.
+ */
+export type BuildOptionsConfig = Partial<Pick<FcConfig, "apiVersion" | "buildOptions">>;
+
+type ReportedBuildOptionsConfig = BuildOptionsConfig & Pick<FcConfig, "apiVersion" | "buildOptions">;
+
+export interface BuildOptions {
+    buildOptions: ComputedRef<string[]>;
+    buildOptionsAvailable: ComputedRef<boolean>;
+    /**
+     * @param name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
+     * @returns true when the option is in the build, or when gating does not apply
+     */
+    hasBuildOption: (name: string) => boolean;
+}
+
 // Module level so an unknown name is reported once per session, not once per
 // component instance that happens to ask for it.
-const warnedUnknownOptions = new Set();
+const warnedUnknownOptions = new Set<string>();
 
-function warnUnknownOption(name) {
+function warnUnknownOption(name: string) {
     if (!import.meta.env.DEV || warnedUnknownOptions.has(name)) {
         return;
     }
@@ -23,10 +63,11 @@ function warnUnknownOption(name) {
  * predates that - or answers with an empty list - tells us nothing about what
  * it contains.
  *
- * @param {object} config an `FC.CONFIG`-shaped object
- * @returns {boolean}
+ * @param config an `FC.CONFIG`-shaped object
  */
-export function buildOptionsReported(config) {
+export function buildOptionsReported(
+    config: BuildOptionsConfig | null | undefined,
+): config is ReportedBuildOptionsConfig {
     const apiVersion = config?.apiVersion;
     if (!apiVersion || !semver.valid(apiVersion) || !semver.gte(apiVersion, API_VERSION_1_45)) {
         return false;
@@ -42,11 +83,11 @@ export function buildOptionsReported(config) {
  * not the same as absent, and hiding UI from a firmware that simply cannot answer
  * the question is always wrong.
  *
- * @param {object} config an `FC.CONFIG`-shaped object
- * @param {string} name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
- * @returns {boolean} true when the option is in the build, or when gating does not apply
+ * @param config an `FC.CONFIG`-shaped object
+ * @param name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
+ * @returns true when the option is in the build, or when gating does not apply
  */
-export function configHasBuildOption(config, name) {
+export function configHasBuildOption(config: BuildOptionsConfig | null | undefined, name: string): boolean {
     if (!Object.hasOwn(FIRMWARE_BUILD_OPTIONS, name)) {
         // A name outside the table can never appear in FC.CONFIG.buildOptions,
         // so answering "absent" would hide UI forever on a typo. Fail open and
@@ -70,11 +111,11 @@ export function configHasBuildOption(config, name) {
  * omits an entry. Anything that decides whether UI is shown or enabled wants
  * {@link configHasBuildOption} instead.
  *
- * @param {object} config an `FC.CONFIG`-shaped object
- * @param {string} name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
- * @returns {boolean} true only when the firmware reported this option
+ * @param config an `FC.CONFIG`-shaped object
+ * @param name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
+ * @returns true only when the firmware reported this option
  */
-export function configReportsBuildOption(config, name) {
+export function configReportsBuildOption(config: BuildOptionsConfig | null | undefined, name: string): boolean {
     if (!Object.hasOwn(FIRMWARE_BUILD_OPTIONS, name)) {
         warnUnknownOption(name);
         return false;
@@ -86,17 +127,13 @@ export function configReportsBuildOption(config, name) {
  * Build-option gating for components and other composables. See
  * {@link configHasBuildOption} for the rule this applies.
  */
-export function useBuildOptions() {
+export function useBuildOptions(): BuildOptions {
     const fcStore = useFlightControllerStore();
 
     const buildOptions = computed(() => fcStore.config?.buildOptions ?? []);
     const buildOptionsAvailable = computed(() => buildOptionsReported(fcStore.config));
 
-    /**
-     * @param {string} name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
-     * @returns {boolean} true when the option is in the build, or when gating does not apply
-     */
-    function hasBuildOption(name) {
+    function hasBuildOption(name: string) {
         return configHasBuildOption(fcStore.config, name);
     }
 

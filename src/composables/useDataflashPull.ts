@@ -1,19 +1,57 @@
-import { ref, computed } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { ref, computed, type ComputedRef, type Ref } from "vue";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
-import { mspHelper } from "../js/msp/MSPHelper";
+import { mspHelper, type DataflashReadCallback } from "../js/msp/MSPHelper";
 import GUI from "../js/gui";
 import FC from "../js/fc";
 import { useConnectionStore } from "../stores/connection";
 
 const BLOCK_SIZE = 4096;
 
+/** MSP reports read failures as Errors; anything else is wrapped, keeping the original as the cause. */
+function asReadError(error: unknown): Error {
+    if (error instanceof Error) {
+        return error;
+    }
+    const message = typeof error === "string" ? error : "Dataflash read failed";
+    return new Error(message, { cause: error });
+}
+
+export interface DataflashPull {
+    pulling: Ref<boolean>;
+    /** Percentage of the occupied flash read so far, 0–100. */
+    progress: Ref<number>;
+    available: ComputedRef<boolean>;
+    pull: () => Promise<Uint8Array>;
+}
+
 /**
  * Pull the onboard dataflash log off a connected flight controller into an in-memory
  * Uint8Array (rather than streaming it to disk like OnboardLoggingTab). Intended to feed the
  * embedded blackbox viewer directly. Mirrors the MSP read loop in OnboardLoggingTab.
  */
-export function useDataflashPull() {
+export function useDataflashPull(): DataflashPull {
     const connectionStore = useConnectionStore();
     const pulling = ref(false);
     const progress = ref(0);
@@ -25,12 +63,12 @@ export function useDataflashPull() {
     /**
      * Pull the onboard dataflash log into memory.
      *
-     * @returns {Promise<Uint8Array>} Resolves with the downloaded log bytes.
+     * @returns Resolves with the downloaded log bytes.
      * @throws {Error} If not connected or the flight controller holds no log data.
      * @throws {MspTimeoutError|MspCancelledError|MspCrcError} If the underlying MSP
      *   summary/read flow fails (e.g. timeout, disconnect or queue drain).
      */
-    async function pull() {
+    async function pull(): Promise<Uint8Array> {
         if (!GUI.connected_to) {
             throw new Error("Not connected to a flight controller");
         }
@@ -59,12 +97,12 @@ export function useDataflashPull() {
 
             const buffer = new Uint8Array(maxBytes);
 
-            const result = await new Promise((resolve, reject) => {
+            const result = await new Promise<Uint8Array>((resolve, reject) => {
                 let nextAddress = 0;
 
-                function onChunkRead(chunkAddress, chunkDataView, chunkDataSize, error) {
+                const onChunkRead: DataflashReadCallback = (_chunkAddress, chunkDataView, _bytesCompressed, error) => {
                     if (error) {
-                        reject(error);
+                        reject(asReadError(error));
                         return;
                     }
                     if (chunkDataView === null) {
@@ -93,7 +131,7 @@ export function useDataflashPull() {
                         return;
                     }
                     mspHelper.dataflashRead(nextAddress, BLOCK_SIZE, onChunkRead);
-                }
+                };
 
                 try {
                     mspHelper.dataflashRead(0, BLOCK_SIZE, onChunkRead);

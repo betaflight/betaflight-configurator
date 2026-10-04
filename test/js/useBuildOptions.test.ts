@@ -4,6 +4,7 @@ import { computed } from "vue";
 import FC from "../../src/js/fc";
 import {
     buildOptionsReported,
+    type BuildOptionsConfig,
     configHasBuildOption,
     configReportsBuildOption,
     useBuildOptions,
@@ -55,7 +56,8 @@ describe("useBuildOptions", () => {
 
         it("is false when the firmware reported no build option list at all", () => {
             FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = undefined;
+            // Outside FcConfig's type, which promises a list: the gate must not trust that.
+            (FC.CONFIG as BuildOptionsConfig).buildOptions = undefined;
             const { buildOptionsAvailable, hasBuildOption } = useBuildOptions();
 
             expect(buildOptionsAvailable.value).toBe(false);

@@ -1060,13 +1060,13 @@ export default defineComponent({
         };
 
         // Flashing methods
-        const startFlashing = async () => {
+        const startFlashing = () => {
             const selectedBoardTarget = boardSelection.state.selectedBoard;
 
             // Pause sponsor during flashing
             sponsorTile.value?.pause();
 
-            await firmwareFlashing.startFlashing({
+            firmwareFlashing.startFlashing({
                 config: state.config,
                 clearBoardConfig,
                 // Flash HEX options
@@ -1137,7 +1137,7 @@ export default defineComponent({
             if (!lastWarning || Date.now() - lastWarning > DAY_MS) {
                 await showAcknowledgementDialog(setAcknowledgementTimestamp);
             } else {
-                await startFlashing();
+                startFlashing();
             }
         };
 
@@ -1153,7 +1153,7 @@ export default defineComponent({
             if (isUnstableFirmware) {
                 await checkShowAcknowledgementDialog();
             } else {
-                await startFlashing();
+                startFlashing();
             }
         };
 
@@ -1604,7 +1604,7 @@ export default defineComponent({
             }
         };
 
-        const handleUnstableFirmwareFlash = async () => {
+        const handleUnstableFirmwareFlash = () => {
             if (!state.dialogUnstableFirmwareAcknowledgementCheckbox) {
                 return;
             }
@@ -1619,9 +1619,7 @@ export default defineComponent({
                 acknowledgementCallback();
             }
 
-            await startFlashing().catch((error) => {
-                console.error("Flash error:", error);
-            });
+            startFlashing();
         };
 
         const handleUnstableFirmwareCancel = () => {

@@ -1,17 +1,17 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { useCli } from "../../src/composables/useCli";
+import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
 import GUI from "../../src/js/gui";
 import BFClipboard from "../../src/js/Clipboard";
 
-function bytes(str) {
+function bytes(str: string) {
     return new TextEncoder().encode(str);
 }
 
-// Documents the suppression contract in useCli.js read()/writeLineToOutput (see cli_autocomplete_idle_gate.test.js for the fix that keeps builds from starting over an in-flight command).
+// Documents the suppression contract in useCli.ts read()/writeLineToOutput (see cli_autocomplete_idle_gate.test.js for the fix that keeps builds from starting over an in-flight command).
 describe("useCli output during CliAutoComplete build", () => {
-    let cli;
+    let cli: Cli;
 
     beforeEach(() => {
         CONFIGURATOR.cliActive = true;
