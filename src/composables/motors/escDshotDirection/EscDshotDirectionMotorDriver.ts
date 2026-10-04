@@ -20,11 +20,11 @@
  */
 
 import EscDshotCommandQueue from "./EscDshotCommandQueue";
-import DshotCommand from "../../js/utils/DshotCommand";
-import MSPCodes from "../../js/msp/MSPCodes";
-import { gui_log } from "../../js/gui_log";
-import { i18n } from "../../js/localization";
-import { MspBuffer } from "../../js/msp/mspBytes";
+import DshotCommand from "../../../js/utils/DshotCommand";
+import MSPCodes from "../../../js/msp/MSPCodes";
+import { gui_log } from "../../../js/gui_log";
+import { i18n } from "../../../js/localization";
+import { MspBuffer } from "../../../js/msp/mspBytes";
 
 export interface EscDshotMotorConfig {
     numberOfMotors: number;

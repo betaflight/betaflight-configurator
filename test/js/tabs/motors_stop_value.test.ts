@@ -11,8 +11,20 @@ globalThis.ResizeObserver = class {
 };
 
 // Mocks isolate MotorsTab.vue's own wiring — which value reaches the dialogs/composables — from their internal MSP/DShot logic, which didn't regress.
-const { dialogOpen, stopAllMotors, sendMotorCommand, motorsTestingEnabled, configHasChanged } = vi.hoisted(() => {
+const {
+    dialogOpen,
+    stopAllMotors,
+    sendMotorCommand,
+    motorsTestingEnabled,
+    configHasChanged,
+    saveToEeprom,
+    saveAndReboot,
+    initializeDefaults,
+} = vi.hoisted(() => {
     return {
+        saveToEeprom: vi.fn(),
+        saveAndReboot: vi.fn(),
+        initializeDefaults: vi.fn(),
         dialogOpen: vi.fn(),
         stopAllMotors: vi.fn(),
         sendMotorCommand: vi.fn(),
@@ -20,6 +32,34 @@ const { dialogOpen, stopAllMotors, sendMotorCommand, motorsTestingEnabled, confi
         configHasChanged: { value: false },
     };
 });
+
+// The ESC sensor port pick, stubbed so the save path's port steps can be driven and observed.
+const port = vi.hoisted(() => ({
+    changed: { value: false },
+    load: vi.fn(),
+    write: vi.fn(),
+    confirmPortConflicts: vi.fn(),
+}));
+
+vi.mock("@/composables/ports/useFeaturePort", async () => {
+    const { ref } = await import("vue");
+    return {
+        useFeaturePort: () => ({
+            available: ref(false),
+            writable: ref(false),
+            options: ref([]),
+            selectedIdentifier: ref(null),
+            changed: port.changed,
+            conflict: ref(null),
+            load: port.load,
+            write: port.write,
+        }),
+    };
+});
+
+vi.mock("@/composables/ports/usePortConflicts", () => ({
+    usePortConflicts: () => ({ confirmPortConflicts: port.confirmPortConflicts }),
+}));
 
 vi.mock("@/composables/useDialog", () => ({
     useDialog: () => ({ open: dialogOpen, close: vi.fn() }),
@@ -54,7 +94,7 @@ vi.mock("@/composables/motors/useMotorsState", () => ({
         armed: ref(false),
         numberOfValidOutputs: ref(4),
         defaultConfiguration: ref({}),
-        initializeDefaults: vi.fn(),
+        initializeDefaults,
         trackChange: vi.fn(),
         resetChanges: vi.fn(),
     }),
@@ -68,7 +108,7 @@ vi.mock("@/composables/useSaving", () => ({
 }));
 
 vi.mock("@/composables/useReboot", () => ({
-    useReboot: () => ({ saveToEeprom: vi.fn(), saveAndReboot: vi.fn() }),
+    useReboot: () => ({ saveToEeprom, saveAndReboot }),
 }));
 
 vi.mock("@/composables/useBuildOptions", () => ({
@@ -103,6 +143,8 @@ vi.mock("@/js/utils/common", async (importOriginal) => ({
 }));
 
 import MotorsTab from "../../../src/components/tabs/MotorsTab.vue";
+import MSP from "../../../src/js/msp";
+import MSPCodes from "../../../src/js/msp/MSPCodes";
 import UApp from "@nuxt/ui/components/App.vue";
 import FC from "../../../src/js/fc";
 import Features from "../../../src/js/Features";
@@ -179,6 +221,15 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         dialogOpen.mockClear();
         stopAllMotors.mockClear();
         sendMotorCommand.mockClear();
+        saveToEeprom.mockClear();
+        saveAndReboot.mockClear();
+        initializeDefaults.mockClear();
+        port.changed.value = false;
+        port.load.mockReset().mockResolvedValue(undefined);
+        port.write.mockReset().mockResolvedValue(undefined);
+        port.confirmPortConflicts.mockReset().mockResolvedValue(true);
+        vi.mocked(MSP.promise).mockClear();
+        vi.mocked(MSP.send_message).mockClear();
     });
 
     afterEach(() => {
@@ -256,6 +307,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(stopAllMotors).toHaveBeenCalledWith(1500);
+        expect(motorsTestingEnabled.value).toBe(false);
     });
 
     it("stops motors at the previously-applied value, not a pending unsaved 3D-enable edit, on save", async () => {
@@ -306,5 +358,96 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         wrapper!.unmount();
 
         expect(sendMotorCommand).toHaveBeenCalledWith(new Array(8).fill(1500));
+    });
+
+    it("polls one IMU sample per sensor-rate tick for the graph", async () => {
+        await mountReady({ enable3d: false, neutral: 1500 });
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_RAW_IMU, false, false, expect.any(Function));
+    });
+
+    it("the Save button writes the motor configuration and reboots", async () => {
+        configHasChanged.value = true;
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        findButton(container, "configurationButtonSave").click();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_SET_MOTOR_CONFIG, []);
+        expect(saveAndReboot).toHaveBeenCalledOnce();
+        expect(saveToEeprom).not.toHaveBeenCalled();
+    });
+
+    it("initialises the change baseline only once the whole load has landed", async () => {
+        let release!: () => void;
+        vi.mocked(MSP.promise).mockImplementation((code) =>
+            code === MSPCodes.MSP_ARMING_CONFIG
+                ? new Promise((resolve) => {
+                      release = () => resolve(undefined);
+                  })
+                : Promise.resolve(undefined),
+        );
+        try {
+            await mountReady({ enable3d: false, neutral: 1500 });
+            expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_ARMING_CONFIG);
+            expect(initializeDefaults).not.toHaveBeenCalled();
+
+            release();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            expect(initializeDefaults).toHaveBeenCalledOnce();
+        } finally {
+            vi.mocked(MSP.promise).mockResolvedValue(undefined);
+        }
+    });
+
+    it("saves a port change alone, confirming conflicts first and writing the port just before the reboot", async () => {
+        port.changed.value = true;
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        findButton(container, "configurationButtonSave").click();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        const order = (mock: { mock: { invocationCallOrder: number[] } }) => mock.mock.invocationCallOrder.at(-1)!;
+        expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
+        expect(port.write).toHaveBeenCalledOnce();
+        expect(saveAndReboot).toHaveBeenCalledOnce();
+        expect(order(port.confirmPortConflicts)).toBeLessThan(order(stopAllMotors));
+        expect(order(vi.mocked(MSP.promise))).toBeLessThan(order(port.write));
+        expect(order(port.write)).toBeLessThan(order(saveAndReboot));
+    });
+
+    it("writes nothing when the port conflict is declined", async () => {
+        configHasChanged.value = true;
+        port.confirmPortConflicts.mockResolvedValue(false);
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        findButton(container, "configurationButtonSave").click();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
+        expect(stopAllMotors).not.toHaveBeenCalled();
+        expect(MSP.promise).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_FEATURE_CONFIG, expect.anything());
+        expect(port.write).not.toHaveBeenCalled();
+        expect(saveAndReboot).not.toHaveBeenCalled();
+    });
+
+    it("adopts the saved configuration as the applied one, so the next save stops under it", async () => {
+        configHasChanged.value = true;
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        const feature3dLabel = [...container.querySelectorAll("span")].find((el) => el.textContent === "feature3D");
+        feature3dLabel!
+            .closest(".flex.items-center.gap-2")!
+            .querySelector<HTMLButtonElement>('button[role="switch"]')!
+            .click();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        findButton(container, "configurationButtonSave").click();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        findButton(container, "configurationButtonSave").click();
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        expect(stopAllMotors.mock.calls).toEqual([[1000], [1500]]);
     });
 });
