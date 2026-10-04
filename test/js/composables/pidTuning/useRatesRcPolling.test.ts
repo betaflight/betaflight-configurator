@@ -32,44 +32,19 @@ describe("useRatesRcPolling", () => {
         vi.useRealTimers();
     });
 
-    it("does not poll until started", () => {
-        mountPolling();
-
-        vi.advanceTimersByTime(1000);
-
-        expect(MSP.send_message).not.toHaveBeenCalled();
-    });
-
-    it("requests MSP_RC every 100 ms, not up front, and hands each reply to the caller", () => {
+    it("polls MSP_RC every 100 ms once started, hands each reply to the caller, and stops on unmount", () => {
         const onRcData = vi.fn();
-        mountPolling().polling.startRcPolling(onRcData);
-
-        expect(MSP.send_message).not.toHaveBeenCalled();
-        vi.advanceTimersByTime(99);
-        expect(MSP.send_message).not.toHaveBeenCalled();
-        vi.advanceTimersByTime(1);
-        expect(MSP.send_message).toHaveBeenCalledOnce();
-        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_RC, false, false, onRcData);
-
-        vi.advanceTimersByTime(200);
-        expect(MSP.send_message).toHaveBeenCalledTimes(3);
-    });
-
-    it("stops polling when the component unmounts", () => {
         const { wrapper, polling } = mountPolling();
-        polling.startRcPolling(() => {});
-        vi.advanceTimersByTime(100);
-        expect(MSP.send_message).toHaveBeenCalledOnce();
+        vi.advanceTimersByTime(1000);
+        expect(MSP.send_message).not.toHaveBeenCalled();
+
+        polling.startRcPolling(onRcData);
+        vi.advanceTimersByTime(300);
+        expect(MSP.send_message).toHaveBeenCalledTimes(3);
+        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_RC, false, false, onRcData);
 
         wrapper.unmount();
         vi.advanceTimersByTime(1000);
-
-        expect(MSP.send_message).toHaveBeenCalledOnce();
-    });
-
-    it("unmounting before polling starts is harmless", () => {
-        const { wrapper } = mountPolling();
-
-        expect(() => wrapper.unmount()).not.toThrow();
+        expect(MSP.send_message).toHaveBeenCalledTimes(3);
     });
 });

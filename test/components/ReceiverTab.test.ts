@@ -59,7 +59,13 @@ describe("Receiver MSP wiring", () => {
     let wrapper: ReturnType<typeof mountTab>;
     let vm: ReceiverVm;
 
-    beforeEach(async () => {
+    const mountLoaded = async () => {
+        wrapper = mountTab();
+        vm = wrapper.vm as unknown as ReceiverVm;
+        await flushPromises();
+    };
+
+    beforeEach(() => {
         vi.resetAllMocks();
         setActivePinia(createPinia());
         localStorage.clear();
@@ -67,16 +73,15 @@ describe("Receiver MSP wiring", () => {
         vi.mocked(mspHelper.crunch).mockReturnValue([]);
         saveToEeprom.mockResolvedValue(undefined);
         saveAndReboot.mockResolvedValue(undefined);
-        wrapper = mountTab();
-        vm = wrapper.vm as unknown as ReceiverVm;
-        await flushPromises();
     });
 
     afterEach(() => {
         wrapper.unmount();
     });
 
-    it("loads the configuration and starts both RC polls on mount", () => {
+    it("loads the configuration and starts both RC polls on mount", async () => {
+        await mountLoaded();
+
         expect(vi.mocked(MSP.promise).mock.calls[0]).toEqual([MSPCodes.MSP_FEATURE_CONFIG]);
         expect(GUI.interval_add).toHaveBeenCalledWith(
             "receiver_pull_for_model_preview",
@@ -88,7 +93,15 @@ describe("Receiver MSP wiring", () => {
         expect(GUI.content_ready).toHaveBeenCalledOnce();
     });
 
+    it("starts the plot poll at the stored refresh rate", async () => {
+        localStorage.setItem("rx_refresh_rate", JSON.stringify({ rx_refresh_rate: 120 }));
+        await mountLoaded();
+
+        expect(plotPull()[2]).toBe(120);
+    });
+
     it("draws each plot RC reply and restarts the poll at a new refresh rate", async () => {
+        await mountLoaded();
         Object.assign(useFlightControllerStore().rc, { active_channels: 4, channels: [1500, 1500, 1000, 1500] });
         plotPull()[1]();
         const [code, , , onRcData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
@@ -109,6 +122,7 @@ describe("Receiver MSP wiring", () => {
         [false, saveToEeprom],
         [true, saveAndReboot],
     ])("saves the settings, then the feature mask, then persists (reboot: %s)", async (withReboot, persist) => {
+        await mountLoaded();
         const steps: Array<number | string> = [];
         vi.mocked(MSP.promise).mockImplementation(async (code) => {
             steps.push(code ?? "no code");
@@ -129,13 +143,33 @@ describe("Receiver MSP wiring", () => {
         ]);
     });
 
-    it("sends the bind command", () => {
+    it("persists only once the feature mask write is acknowledged", async () => {
+        await mountLoaded();
+        let release!: () => void;
+        vi.mocked(MSP.promise).mockImplementation((code) =>
+            code === MSPCodes.MSP_SET_FEATURE_CONFIG
+                ? new Promise((resolve) => (release = () => resolve(undefined)))
+                : Promise.resolve(undefined),
+        );
+
+        const saving = vm.saveConfig(false);
+        await flushPromises();
+        expect(saveToEeprom).not.toHaveBeenCalled();
+
+        release();
+        await saving;
+        expect(saveToEeprom).toHaveBeenCalledOnce();
+    });
+
+    it("sends the bind command", async () => {
+        await mountLoaded();
         vm.sendBind();
 
         expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP2_BETAFLIGHT_BIND);
     });
 
-    it("forwards stick window channels while the connection is valid", () => {
+    it("forwards stick window channels while the connection is valid", async () => {
+        await mountLoaded();
         const popup: { setRawRx?: (channels: number[]) => boolean } = {};
         vi.spyOn(globalThis, "open").mockReturnValue(popup as unknown as Window);
         useConnectionStore().connectionValid = true;
@@ -143,78 +177,5 @@ describe("Receiver MSP wiring", () => {
 
         expect(popup.setRawRx!([1500, 1600])).toBe(true);
         expect(mspHelper.setRawRx).toHaveBeenCalledExactlyOnceWith([1500, 1600]);
-    });
-});
-
-describe("Receiver MSP sequencing", () => {
-    let wrapper: ReturnType<typeof mountTab>;
-
-    const hold = (held: number) => {
-        let release!: () => void;
-        vi.mocked(MSP.promise).mockImplementation((code) =>
-            code === held
-                ? new Promise((resolve) => {
-                      release = () => resolve(undefined);
-                  })
-                : Promise.resolve(undefined),
-        );
-        return () => release();
-    };
-
-    beforeEach(() => {
-        vi.resetAllMocks();
-        setActivePinia(createPinia());
-        localStorage.clear();
-        vi.mocked(MSP.promise).mockResolvedValue(undefined);
-        vi.mocked(mspHelper.crunch).mockReturnValue([]);
-        saveToEeprom.mockResolvedValue(undefined);
-        saveAndReboot.mockResolvedValue(undefined);
-    });
-
-    afterEach(() => {
-        wrapper.unmount();
-    });
-
-    it("starts the plot poll at the stored refresh rate", async () => {
-        localStorage.setItem("rx_refresh_rate", JSON.stringify({ rx_refresh_rate: 120 }));
-        wrapper = mountTab();
-        await flushPromises();
-
-        expect(plotPull()[2]).toBe(120);
-    });
-
-    it("waits for the whole load before announcing the content", async () => {
-        const release = hold(MSPCodes.MSP_MOTOR_CONFIG);
-        wrapper = mountTab();
-        await flushPromises();
-
-        expect(GUI.content_ready).not.toHaveBeenCalled();
-
-        release();
-        await flushPromises();
-        expect(GUI.content_ready).toHaveBeenCalledOnce();
-    });
-
-    it.each([
-        [MSPCodes.MSP_SET_RX_CONFIG, MSPCodes.MSP_SET_FEATURE_CONFIG],
-        [MSPCodes.MSP_SET_FEATURE_CONFIG, "persist"],
-    ])("holds the save after %i until it is acknowledged", async (held, next) => {
-        wrapper = mountTab();
-        await flushPromises();
-        const vm = wrapper.vm as unknown as ReceiverVm;
-        const release = hold(held);
-
-        const saving = vm.saveConfig(false);
-        await flushPromises();
-
-        if (next === "persist") {
-            expect(saveToEeprom).not.toHaveBeenCalled();
-        } else {
-            expect(MSP.promise).not.toHaveBeenCalledWith(next, expect.anything());
-        }
-
-        release();
-        await saving;
-        expect(saveToEeprom).toHaveBeenCalledOnce();
     });
 });

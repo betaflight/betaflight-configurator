@@ -113,75 +113,52 @@ describe("PID Tuning MSP wiring", () => {
         expect(saveToEeprom).toHaveBeenCalledOnce();
     });
 
-    it("selects the chosen PID profile, and reloads only once the FC has switched", async () => {
-        const release = hold(msp.selectPidProfile);
-
-        select(wrapper).vm.$emit("update:modelValue", 0);
-        await flushPromises();
-        expect(msp.selectPidProfile).toHaveBeenCalledWith(0);
-        expect(msp.selectRateProfile).not.toHaveBeenCalled();
-        expect(msp.loadPidTuningData).toHaveBeenCalledOnce();
-
-        release();
-        await flushPromises();
-        expect(msp.loadPidTuningData).toHaveBeenCalledTimes(2);
-    });
-
-    it("selects the chosen rate profile, and reloads only once the FC has switched", async () => {
-        await showSubtab(wrapper, "rates");
-        const release = hold(msp.selectRateProfile);
-
-        select(wrapper).vm.$emit("update:modelValue", 3);
-        await flushPromises();
-        expect(msp.selectRateProfile).toHaveBeenCalledWith(3);
-        expect(msp.selectPidProfile).not.toHaveBeenCalled();
-        expect(msp.loadPidTuningData).toHaveBeenCalledOnce();
-
-        release();
-        await flushPromises();
-        expect(msp.loadPidTuningData).toHaveBeenCalledTimes(2);
-    });
-
-    it("copies the current PID profile to the confirmed target", async () => {
-        button(wrapper, "pidTuningCopyProfile").vm.$emit("click");
-        const onConfirm = openCopyProfile.mock.calls[0][4];
-
-        await onConfirm({ profile: 0, rateProfile: null });
-
-        expect(msp.copyProfile).toHaveBeenCalledWith(CopyProfileType.PID, 1, 0);
-    });
-
     it.each([
-        ["PID", "pid", "pidTuningCopyProfile", { profile: 0, rateProfile: null }, true],
-        ["PID", "pid", "pidTuningCopyProfile", { profile: 0, rateProfile: null }, false],
-        ["rate", "rates", "pidTuningCopyRateProfile", { profile: null, rateProfile: 3 }, true],
-        ["rate", "rates", "pidTuningCopyRateProfile", { profile: null, rateProfile: 3 }, false],
+        ["PID", "pid", 0, msp.selectPidProfile, msp.selectRateProfile],
+        ["rate", "rates", 3, msp.selectRateProfile, msp.selectPidProfile],
     ])(
-        "flags a %s profile copy (%s subtab, %s, %o) unsaved only once it lands: %s",
-        async (_, subtab, label, selection, succeeds) => {
-            if (!succeeds) {
-                msp.copyProfile.mockRejectedValueOnce(new Error("MSP timeout"));
-                vi.spyOn(console, "error").mockImplementation(() => {});
-            }
+        "selects the chosen %s profile, and reloads only once the FC has switched",
+        async (_, subtab, value, chosen, other) => {
             await showSubtab(wrapper, subtab as string);
-            expect(usePidTuningStore().hasChanges).toBe(false);
-            button(wrapper, label as string).vm.$emit("click");
-            const onConfirm = openCopyProfile.mock.calls[0][4];
+            const release = hold(chosen);
 
-            await onConfirm(selection);
+            select(wrapper).vm.$emit("update:modelValue", value);
+            await flushPromises();
+            expect(chosen).toHaveBeenCalledWith(value);
+            expect(other).not.toHaveBeenCalled();
+            expect(msp.loadPidTuningData).toHaveBeenCalledOnce();
 
-            expect(usePidTuningStore().hasChanges).toBe(succeeds);
+            release();
+            await flushPromises();
+            expect(msp.loadPidTuningData).toHaveBeenCalledTimes(2);
         },
     );
 
-    it("copies the current rate profile to the confirmed target", async () => {
-        await showSubtab(wrapper, "rates");
-        button(wrapper, "pidTuningCopyRateProfile").vm.$emit("click");
-        const onConfirm = openCopyProfile.mock.calls[0][4];
+    it.each([
+        ["PID", "pid", "pidTuningCopyProfile", { profile: 0, rateProfile: null }, [CopyProfileType.PID, 1, 0]],
+        ["rate", "rates", "pidTuningCopyRateProfile", { profile: null, rateProfile: 3 }, [CopyProfileType.RATE, 2, 3]],
+    ])(
+        "copies the current %s profile to the confirmed target and flags it unsaved",
+        async (_, subtab, label, selection, args) => {
+            await showSubtab(wrapper, subtab as string);
+            expect(usePidTuningStore().hasChanges).toBe(false);
+            button(wrapper, label as string).vm.$emit("click");
 
-        await onConfirm({ profile: null, rateProfile: 3 });
+            await openCopyProfile.mock.calls[0][4](selection);
 
-        expect(msp.copyProfile).toHaveBeenCalledWith(CopyProfileType.RATE, 2, 3);
+            expect(msp.copyProfile).toHaveBeenCalledWith(...(args as unknown[]));
+            expect(usePidTuningStore().hasChanges).toBe(true);
+        },
+    );
+
+    it("does not flag a failed profile copy unsaved", async () => {
+        msp.copyProfile.mockRejectedValueOnce(new Error("MSP timeout"));
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        button(wrapper, "pidTuningCopyProfile").vm.$emit("click");
+
+        await openCopyProfile.mock.calls[0][4]({ profile: 0, rateProfile: null });
+
+        expect(usePidTuningStore().hasChanges).toBe(false);
     });
 
     it("resets the PID profile, and reloads only once the FC has reset it", async () => {

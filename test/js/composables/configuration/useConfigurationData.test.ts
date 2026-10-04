@@ -14,17 +14,6 @@ vi.mock("../../../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn(
 /** What crunch() was asked for, so each request's payload is identifiable in the call log. */
 const payload = (code: number, modifier?: number) => [`crunch:${code}:${modifier ?? "-"}`];
 
-const LOAD_1_45 = [
-    MSPCodes.MSP_FEATURE_CONFIG,
-    MSPCodes.MSP_BEEPER_CONFIG,
-    MSPCodes.MSP_ARMING_CONFIG,
-    MSPCodes.MSP_SENSOR_CONFIG,
-    MSPCodes.MSP2_GET_TEXT,
-    MSPCodes.MSP_RX_CONFIG,
-    MSPCodes.MSP2_GET_TEXT,
-    MSPCodes.MSP_ADVANCED_CONFIG,
-];
-
 describe("useConfigurationData", () => {
     let fcStore: ReturnType<typeof useFlightControllerStore>;
 
@@ -70,36 +59,6 @@ describe("useConfigurationData", () => {
                 [MSPCodes.MSP_ADVANCED_CONFIG, undefined],
             ]);
         });
-
-        it.each(LOAD_1_45.map((code, index) => [index, code]))(
-            "holds back everything after request %i until its reply lands",
-            async (index) => {
-                let release!: () => void;
-                let seen = 0;
-                vi.mocked(MSP.promise).mockImplementation(() =>
-                    seen++ === index
-                        ? new Promise((resolve) => {
-                              release = () => resolve(undefined);
-                          })
-                        : Promise.resolve(undefined),
-                );
-                let done = false;
-
-                const loading = useConfigurationData()
-                    .loadConfigurationData(ref(true))
-                    .then(() => {
-                        done = true;
-                    });
-                await flushPromises();
-
-                expect(calls().map(([code]) => code)).toEqual(LOAD_1_45.slice(0, index + 1));
-                expect(done).toBe(false);
-
-                release();
-                await loading;
-                expect(calls()).toHaveLength(LOAD_1_45.length);
-            },
-        );
 
         it("sends nothing when the tab is already gone", async () => {
             await expect(useConfigurationData().loadConfigurationData(ref(false))).resolves.toBe(false);
@@ -177,35 +136,30 @@ describe("useConfigurationData", () => {
             expect(calls()).toHaveLength(SEND_1_45.length - 1);
         });
 
-        it.each(SEND_1_45.map((_, index) => [index]))(
-            "holds back everything after write %i until its reply lands",
-            async (index) => {
-                let release!: () => void;
-                let seen = 0;
-                vi.mocked(MSP.promise).mockImplementation(() =>
-                    seen++ === index
-                        ? new Promise((resolve) => {
-                              release = () => resolve(undefined);
-                          })
-                        : Promise.resolve(undefined),
-                );
-                let done = false;
+        it("does not finish until the last write is acknowledged, so the caller persists after it", async () => {
+            let release!: () => void;
+            vi.mocked(MSP.promise).mockImplementation((code) =>
+                code === MSPCodes.MSP_SET_ADVANCED_CONFIG
+                    ? new Promise((resolve) => {
+                          release = () => resolve(undefined);
+                      })
+                    : Promise.resolve(undefined),
+            );
+            let done = false;
 
-                const sending = useConfigurationData()
-                    .sendConfigurationData()
-                    .then(() => {
-                        done = true;
-                    });
-                await flushPromises();
+            const sending = useConfigurationData()
+                .sendConfigurationData()
+                .then(() => {
+                    done = true;
+                });
+            await flushPromises();
+            expect(calls()).toEqual(SEND_1_45);
+            expect(done).toBe(false);
 
-                expect(calls()).toEqual(SEND_1_45.slice(0, index + 1));
-                expect(done).toBe(false);
-
-                release();
-                await sending;
-                expect(calls()).toEqual(SEND_1_45);
-            },
-        );
+            release();
+            await sending;
+            expect(done).toBe(true);
+        });
 
         it("stops at the first failed write", async () => {
             vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));

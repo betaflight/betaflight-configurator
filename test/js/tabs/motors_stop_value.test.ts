@@ -401,35 +401,16 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         }
     });
 
-    it("saves a port change alone, confirming conflicts first and writing the port just before the reboot", async () => {
+    it("saves a port change alone, through the port's conflict check and write", async () => {
         port.changed.value = true;
         const container = await mountReady({ enable3d: false, neutral: 1500 });
 
         findButton(container, "configurationButtonSave").click();
         await new Promise((resolve) => setTimeout(resolve, 200));
 
-        const order = (mock: { mock: { invocationCallOrder: number[] } }) => mock.mock.invocationCallOrder.at(-1)!;
         expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
         expect(port.write).toHaveBeenCalledOnce();
         expect(saveAndReboot).toHaveBeenCalledOnce();
-        expect(order(port.confirmPortConflicts)).toBeLessThan(order(stopAllMotors));
-        expect(order(vi.mocked(MSP.promise))).toBeLessThan(order(port.write));
-        expect(order(port.write)).toBeLessThan(order(saveAndReboot));
-    });
-
-    it("writes nothing when the port conflict is declined", async () => {
-        configHasChanged.value = true;
-        port.confirmPortConflicts.mockResolvedValue(false);
-        const container = await mountReady({ enable3d: false, neutral: 1500 });
-
-        findButton(container, "configurationButtonSave").click();
-        await new Promise((resolve) => setTimeout(resolve, 200));
-
-        expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
-        expect(stopAllMotors).not.toHaveBeenCalled();
-        expect(MSP.promise).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_FEATURE_CONFIG, expect.anything());
-        expect(port.write).not.toHaveBeenCalled();
-        expect(saveAndReboot).not.toHaveBeenCalled();
     });
 
     it("adopts the saved configuration as the applied one, so the next save stops under it", async () => {

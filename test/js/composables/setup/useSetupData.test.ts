@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { flushPromises } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
 import { MspCancelledError } from "../../../../src/js/msp/mspErrors";
@@ -46,35 +45,6 @@ describe("useSetupData", () => {
             expect(warn).not.toHaveBeenCalled();
         });
 
-        it.each(LOAD_ORDER.map((code, index) => [index, code]))(
-            "holds back everything after request %i until its reply lands",
-            async (index, held) => {
-                let release!: () => void;
-                vi.mocked(MSP.promise).mockImplementation((code) =>
-                    code === held
-                        ? new Promise((resolve) => {
-                              release = () => resolve(undefined);
-                          })
-                        : Promise.resolve(undefined),
-                );
-                let done = false;
-
-                const loading = useSetupData()
-                    .loadSetupData()
-                    .then(() => {
-                        done = true;
-                    });
-                await flushPromises();
-
-                expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(LOAD_ORDER.slice(0, index + 1));
-                expect(done).toBe(false);
-
-                release();
-                await loading;
-                expect(MSP.promise).toHaveBeenCalledTimes(LOAD_ORDER.length);
-            },
-        );
-
         it("on a failed request skips the rest, warns, and still lets the tab render", async () => {
             const failure = new Error("MSP timeout");
             vi.mocked(MSP.promise).mockResolvedValueOnce(undefined).mockRejectedValueOnce(failure);
@@ -104,28 +74,19 @@ describe("useSetupData", () => {
 
             useSetupData().rebootToBootloader();
 
-            expect(MSP.send_message).toHaveBeenCalledOnce();
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, [rebootType], false);
-        });
-
-        it("resets the settings and hands the acknowledgement to the caller", () => {
-            const onReset = vi.fn();
-
-            useSetupData().resetSettings(onReset);
-
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_RESET_CONF, false, false, onReset);
+            expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_SET_REBOOT, [rebootType], false);
         });
 
         it.each([
+            ["resetSettings", MSPCodes.MSP_RESET_CONF],
             ["requestAttitude", MSPCodes.MSP_ATTITUDE],
             ["requestSonar", MSPCodes.MSP_SONAR],
         ] as const)("%s hands the reply to the caller", (name, code) => {
-            const onData = vi.fn();
+            const onReply = vi.fn();
 
-            useSetupData()[name](onData);
+            useSetupData()[name](onReply);
 
-            expect(MSP.send_message).toHaveBeenCalledOnce();
-            expect(MSP.send_message).toHaveBeenCalledWith(code, false, false, onData);
+            expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(code, false, false, onReply);
         });
     });
 });

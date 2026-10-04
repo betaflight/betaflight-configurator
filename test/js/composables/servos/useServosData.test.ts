@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent } from "vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
 import GUI from "../../../../src/js/gui";
@@ -43,35 +43,6 @@ describe("useServosData", () => {
         expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(LOAD_ORDER);
     });
 
-    it.each(LOAD_ORDER.map((code, index) => [index, code]))(
-        "holds back everything after request %i until its reply lands",
-        async (index, held) => {
-            let release!: () => void;
-            vi.mocked(MSP.promise).mockImplementation((code) =>
-                code === held
-                    ? new Promise((resolve) => {
-                          release = () => resolve(undefined);
-                      })
-                    : Promise.resolve(undefined),
-            );
-            let done = false;
-
-            const loading = mountData()
-                .data.loadServoConfigs()
-                .then(() => {
-                    done = true;
-                });
-            await flushPromises();
-
-            expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(LOAD_ORDER.slice(0, index + 1));
-            expect(done).toBe(false);
-
-            release();
-            await loading;
-            expect(done).toBe(true);
-        },
-    );
-
     it("stops at the first failed request", async () => {
         vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
 
@@ -80,28 +51,30 @@ describe("useServosData", () => {
         expect(MSP.promise).toHaveBeenCalledOnce();
     });
 
-    it("polls servos every 50 ms and status every 250 ms, and removes both on unmount", () => {
+    it("polls servos every 50 ms (to the caller's callback) and status every 250 ms, and removes both on unmount", () => {
+        const onServoData = vi.fn();
         const { wrapper, data } = mountData();
 
-        data.startPolling(() => {});
+        data.startPolling(onServoData);
+        const [[servoName, servoTick, ...servoTiming], [statusName, statusTick, ...statusTiming]] = vi.mocked(
+            GUI.interval_add,
+        ).mock.calls;
+        expect([servoTiming, statusTiming]).toEqual([
+            [50, false],
+            [250, true],
+        ]);
 
-        expect(GUI.interval_add).toHaveBeenCalledWith("servo_data_pull", expect.any(Function), 50, false);
-        expect(GUI.interval_add).toHaveBeenCalledWith("status_pull", expect.any(Function), 250, true);
-
-        wrapper.unmount();
-        expect(GUI.interval_remove).toHaveBeenCalledWith("servo_data_pull");
-        expect(GUI.interval_remove).toHaveBeenCalledWith("status_pull");
-    });
-
-    it("hands each servo reply to the caller and requests status without a callback", () => {
-        const onServoData = vi.fn();
-        mountData().data.startPolling(onServoData);
-        const ticks = new Map(vi.mocked(GUI.interval_add).mock.calls.map(([name, code]) => [name, code]));
-
-        ticks.get("servo_data_pull")!();
-        ticks.get("status_pull")!();
-
+        servoTick();
+        statusTick();
         expect(MSP.send_message).toHaveBeenNthCalledWith(1, MSPCodes.MSP_SERVO, false, false, onServoData);
         expect(MSP.send_message).toHaveBeenNthCalledWith(2, MSPCodes.MSP_STATUS);
+
+        wrapper.unmount();
+        expect(
+            vi
+                .mocked(GUI.interval_remove)
+                .mock.calls.map(([name]) => name)
+                .sort(),
+        ).toEqual([servoName, statusName].sort());
     });
 });

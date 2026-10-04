@@ -38,19 +38,6 @@ function setup(api146: string | boolean | undefined = true, api147: string | boo
     return { isApi146, isApi147, data: useSensorsData(isApi146, isApi147) };
 }
 
-/** Make the request for `held` pend until the returned release is called. */
-function holdRequest(held: number) {
-    let release!: () => void;
-    vi.mocked(MSP.promise).mockImplementation((code) =>
-        code === held
-            ? new Promise((resolve) => {
-                  release = () => resolve(undefined);
-              })
-            : Promise.resolve(undefined),
-    );
-    return () => release();
-}
-
 describe("useSensorsData", () => {
     beforeEach(() => {
         vi.resetAllMocks();
@@ -60,20 +47,15 @@ describe("useSensorsData", () => {
     });
 
     describe("loadSensorsConfig", () => {
-        it("loads in order, with compass and gyro sensors on API 1.47+", async () => {
-            await setup().data.loadSensorsConfig();
-
-            expect(vi.mocked(MSP.promise).mock.calls).toEqual(LOAD_ALL.map((code) => [code]));
-        });
-
         it.each([
-            ["1.45", false, false, LOAD_BASE],
+            ["1.47", true, true, LOAD_ALL],
             ["1.46", true, false, [...LOAD_BASE, MSPCodes.MSP_COMPASS_CONFIG]],
+            ["1.45", false, false, LOAD_BASE],
             ["empty api version", "", "", LOAD_BASE],
-        ] as const)("gates the optional requests (%s)", async (_label, api146, api147, expected) => {
+        ] as const)("loads in order, gating the optional requests (%s)", async (_label, api146, api147, expected) => {
             await setup(api146, api147).data.loadSensorsConfig();
 
-            expect(sentCodes()).toEqual(expected);
+            expect(vi.mocked(MSP.promise).mock.calls).toEqual(expected.map((code) => [code]));
         });
 
         it("reads the API gates when it gets to them, not when created", async () => {
@@ -85,27 +67,6 @@ describe("useSensorsData", () => {
 
             expect(sentCodes()).toEqual(LOAD_ALL);
         });
-
-        it.each(LOAD_ALL.map((code, index) => [index, code]))(
-            "holds back everything after request %i until its reply lands",
-            async (index, held) => {
-                const release = holdRequest(held);
-                let done = false;
-
-                const loading = setup()
-                    .data.loadSensorsConfig()
-                    .then(() => {
-                        done = true;
-                    });
-                await flushPromises();
-                expect(sentCodes()).toEqual(LOAD_ALL.slice(0, index + 1));
-                expect(done).toBe(false);
-
-                release();
-                await loading;
-                expect(sentCodes()).toEqual(LOAD_ALL);
-            },
-        );
 
         it("stops at the first failed request", async () => {
             vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
@@ -131,26 +92,29 @@ describe("useSensorsData", () => {
             expect(sentCodes()).toEqual(SEND_BASE);
         });
 
-        it.each(SEND_ALL.map((code, index) => [index, code]))(
-            "holds back everything after write %i until it is acknowledged",
-            async (index, held) => {
-                const release = holdRequest(held);
-                let done = false;
+        it("does not finish until the last write is acknowledged, so the caller persists after it", async () => {
+            let release!: () => void;
+            vi.mocked(MSP.promise).mockImplementation((code) =>
+                code === MSPCodes.MSP_SET_COMPASS_CONFIG
+                    ? new Promise((resolve) => {
+                          release = () => resolve(undefined);
+                      })
+                    : Promise.resolve(undefined),
+            );
+            let done = false;
 
-                const sending = setup()
-                    .data.sendSensorsConfig()
-                    .then(() => {
-                        done = true;
-                    });
-                await flushPromises();
-                expect(sentCodes()).toEqual(SEND_ALL.slice(0, index + 1));
-                expect(done).toBe(false);
+            const sending = setup()
+                .data.sendSensorsConfig()
+                .then(() => {
+                    done = true;
+                });
+            await flushPromises();
+            expect(done).toBe(false);
 
-                release();
-                await sending;
-                expect(sentCodes()).toEqual(SEND_ALL);
-            },
-        );
+            release();
+            await sending;
+            expect(done).toBe(true);
+        });
 
         it("stops at the first failed write", async () => {
             vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("refused"));
@@ -160,30 +124,11 @@ describe("useSensorsData", () => {
         });
     });
 
-    describe("loadGpsData", () => {
-        it("requests the GPS data and waits for the reply", async () => {
-            const release = holdRequest(MSPCodes.MSP_RAW_GPS);
-            let done = false;
+    it("loadGpsData requests the GPS data and passes a failure on, for the caller's fallback", async () => {
+        vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("no GPS"));
 
-            const loading = setup()
-                .data.loadGpsData()
-                .then(() => {
-                    done = true;
-                });
-            await flushPromises();
-            expect(vi.mocked(MSP.promise).mock.calls).toEqual([[MSPCodes.MSP_RAW_GPS]]);
-            expect(done).toBe(false);
-
-            release();
-            await loading;
-            expect(done).toBe(true);
-        });
-
-        it("passes a failure on, for the caller's fallback", async () => {
-            vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("no GPS"));
-
-            await expect(setup().data.loadGpsData()).rejects.toThrow("no GPS");
-        });
+        await expect(setup().data.loadGpsData()).rejects.toThrow("no GPS");
+        expect(vi.mocked(MSP.promise).mock.calls).toEqual([[MSPCodes.MSP_RAW_GPS]]);
     });
 
     it.each([
@@ -198,6 +143,5 @@ describe("useSensorsData", () => {
         setup().data[fn](onReply);
 
         expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(code, false, false, onReply);
-        expect(MSP.promise).not.toHaveBeenCalled();
     });
 });

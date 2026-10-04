@@ -37,10 +37,7 @@ describe("useOnboardLoggingSave", () => {
     it("writes the debug mode only once the blackbox config reply lands, and saves a change made meanwhile", async () => {
         let release!: () => void;
         vi.mocked(MSP.promise).mockImplementationOnce(
-            () =>
-                new Promise((resolve) => {
-                    release = () => resolve(undefined);
-                }),
+            () => new Promise((resolve) => (release = () => resolve(undefined))),
         );
         const debugMode = ref(7);
 
@@ -62,19 +59,12 @@ describe("useOnboardLoggingSave", () => {
         let release!: () => void;
         vi.mocked(MSP.promise)
             .mockResolvedValueOnce(undefined)
-            .mockImplementationOnce(
-                () =>
-                    new Promise((resolve) => {
-                        release = () => resolve(undefined);
-                    }),
-            );
+            .mockImplementationOnce(() => new Promise((resolve) => (release = () => resolve(undefined))));
         let done = false;
 
         const saving = useOnboardLoggingSave()
             .sendLoggingConfig(ref(1))
-            .then(() => {
-                done = true;
-            });
+            .then(() => (done = true));
         await flushPromises();
         expect(done).toBe(false);
 

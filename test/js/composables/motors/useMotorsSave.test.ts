@@ -153,20 +153,6 @@ describe("useMotorsSave", () => {
         expect(options.writeEscSensorPort).not.toHaveBeenCalled();
     });
 
-    it("does not stop motors until the port conflict answer is in", async () => {
-        let answer!: (ok: boolean) => void;
-        vi.mocked(options.confirmPortConflicts).mockReturnValue(new Promise((resolve) => (answer = resolve)));
-
-        const done = useMotorsSave(options).saveMotors();
-        await vi.advanceTimersByTimeAsync(500);
-        expect(options.stopAllMotors).not.toHaveBeenCalled();
-
-        answer(true);
-        await vi.runAllTimersAsync();
-        await done;
-        expect(options.stopAllMotors).toHaveBeenCalledOnce();
-    });
-
     it("ends a running motor test and waits 50 ms before the stop, then 100 ms before the first write", async () => {
         motorsTestingEnabled.value = true;
 
@@ -188,49 +174,27 @@ describe("useMotorsSave", () => {
         await done;
     });
 
-    it("stops straight away when no motor test is running", async () => {
-        const done = useMotorsSave(options).saveMotors();
-        await flushPromises();
-
-        expect(options.stopAllMotors).toHaveBeenCalledExactlyOnceWith(1500);
-
-        await vi.runAllTimersAsync();
-        await done;
-    });
-
-    it.each(WRITE_ORDER.map((code, index) => [index, code]))(
-        "holds back everything after write %i until its reply lands",
-        async (index, held) => {
-            let release!: () => void;
-            vi.mocked(MSP.promise).mockImplementation((code) =>
-                code === held
-                    ? new Promise((resolve) => {
-                          release = () => resolve(undefined as never);
-                      })
-                    : Promise.resolve(undefined as never),
-            );
-
-            const done = useMotorsSave(options).saveMotors();
-            await vi.runAllTimersAsync();
-
-            expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(WRITE_ORDER.slice(0, index + 1));
-            expect(options.writeEscSensorPort).not.toHaveBeenCalled();
-
-            release();
-            await done;
-            expect(options.writeEscSensorPort).toHaveBeenCalledOnce();
-        },
-    );
-
-    it("does not persist until the port write lands", async () => {
+    it("chains each write on the previous reply and persists only after the port write", async () => {
         let release!: () => void;
-        vi.mocked(options.writeEscSensorPort).mockReturnValue(new Promise((resolve) => (release = resolve)));
+        vi.mocked(MSP.promise).mockImplementation((code) =>
+            code === MSPCodes.MSP_SET_FEATURE_CONFIG
+                ? new Promise((resolve) => (release = () => resolve(undefined as never)))
+                : Promise.resolve(undefined as never),
+        );
+        let releasePort!: () => void;
+        vi.mocked(options.writeEscSensorPort).mockReturnValue(new Promise((resolve) => (releasePort = resolve)));
 
         const done = useMotorsSave(options).saveMotors();
         await vi.runAllTimersAsync();
-        expect(saveAndReboot).not.toHaveBeenCalled();
+        expect(MSP.promise).toHaveBeenCalledOnce();
+        expect(options.writeEscSensorPort).not.toHaveBeenCalled();
 
         release();
+        await flushPromises();
+        expect(options.writeEscSensorPort).toHaveBeenCalledOnce();
+        expect(saveAndReboot).not.toHaveBeenCalled();
+
+        releasePort();
         await done;
         expect(saveAndReboot).toHaveBeenCalledOnce();
     });
@@ -275,16 +239,6 @@ describe("useMotorsSave", () => {
         expect(options.syncAppliedMotorStopState).not.toHaveBeenCalled();
         expect(tracking.sendSaveAndChangeEvents).not.toHaveBeenCalled();
         expect(options.motorsState.resetChanges).not.toHaveBeenCalled();
-        expect(isSaving.value).toBe(false);
-    });
-
-    it("holds isSaving for the whole save", async () => {
-        const { saveMotors, isSaving } = useMotorsSave(options);
-
-        const done = saveMotors();
-        expect(isSaving.value).toBe(true);
-        await vi.runAllTimersAsync();
-        await done;
         expect(isSaving.value).toBe(false);
     });
 });

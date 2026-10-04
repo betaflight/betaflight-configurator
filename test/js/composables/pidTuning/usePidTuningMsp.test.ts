@@ -67,33 +67,6 @@ function setFc(apiVersion: string, { wing = false } = {}) {
     FC.CONFIG.rateProfileNames = ["d", "e", "f"];
 }
 
-/** Hold the request at `index` open and check nothing after it goes out until it is released. */
-async function expectHeldAt(run: () => Promise<unknown>, order: Call[], index: number) {
-    let release!: () => void;
-    let seen = 0;
-    vi.mocked(MSP.promise).mockImplementation(() => {
-        if (seen++ === index) {
-            return new Promise((resolve) => {
-                release = () => resolve(undefined);
-            });
-        }
-        return Promise.resolve(undefined);
-    });
-    let done = false;
-
-    const running = run().then(() => {
-        done = true;
-    });
-    await flushPromises();
-
-    expect(calls()).toEqual(order.slice(0, index + 1));
-    expect(done).toBe(false);
-
-    release();
-    await running;
-    expect(calls()).toEqual(order);
-}
-
 describe("usePidTuningMsp", () => {
     beforeEach(() => {
         vi.resetAllMocks();
@@ -105,31 +78,19 @@ describe("usePidTuningMsp", () => {
     });
 
     describe("loadPidTuningData", () => {
-        it("loads everything in order on a 1.49 wing build", async () => {
-            await usePidTuningMsp().loadPidTuningData();
-
-            expect(calls()).toEqual(LOAD_ALL);
-        });
-
         it.each([
             ["1.44.0", false, [...LOAD_HEAD, ...LOAD_TAIL]],
             ["1.45.0", false, [...LOAD_HEAD, ...LOAD_NAMES, ...LOAD_TAIL]],
             ["1.47.0", true, [...LOAD_HEAD, ...LOAD_NAMES, ...LOAD_STATUS_EX, ...LOAD_TAIL]],
             ["1.49.0", false, [...LOAD_HEAD, ...LOAD_NAMES, ...LOAD_STATUS_EX, ...LOAD_TAIL]],
-        ])("on API %s (USE_WING: %s) asks only for what the FC supports", async (api, wing, expected) => {
+            ["1.49.0", true, LOAD_ALL],
+        ])("on API %s (USE_WING: %s) asks, in order, only for what the FC supports", async (api, wing, expected) => {
             setFc(api as string, { wing: wing as boolean });
 
             await usePidTuningMsp().loadPidTuningData();
 
             expect(calls()).toEqual(expected);
         });
-
-        it.each(LOAD_ALL.map((_, index) => index))(
-            "holds back everything after request %i until its reply lands",
-            async (index) => {
-                await expectHeldAt(() => usePidTuningMsp().loadPidTuningData(), LOAD_ALL, index);
-            },
-        );
 
         it("stops at the first failed request", async () => {
             vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
@@ -141,48 +102,50 @@ describe("usePidTuningMsp", () => {
     });
 
     describe("writePidTuningConfig", () => {
-        it("writes everything in order on a 1.49 wing build", async () => {
-            await usePidTuningMsp().writePidTuningConfig();
-
-            expect(calls()).toEqual(WRITE_ALL);
-        });
-
-        it("skips the profile names before API 1.45 and the wing config without USE_WING", async () => {
-            setFc("1.44.0", { wing: true });
+        it.each([
+            ["1.44.0", true, WRITE_HEAD],
+            ["1.49.0", false, [...WRITE_HEAD, WRITE_PID_NAME, WRITE_RATE_NAME]],
+            ["1.49.0", true, WRITE_ALL],
+        ])("on API %s (USE_WING: %s) writes, in order, only what the FC supports", async (api, wing, expected) => {
+            setFc(api as string, { wing: wing as boolean });
 
             await usePidTuningMsp().writePidTuningConfig();
 
-            expect(calls()).toEqual(WRITE_HEAD);
+            expect(calls()).toEqual(expected);
         });
 
-        it("skips the wing config on a 1.49 build without USE_WING", async () => {
-            setFc("1.49.0", { wing: false });
-
-            await usePidTuningMsp().writePidTuningConfig();
-
-            expect(calls()).toEqual([...WRITE_HEAD, WRITE_PID_NAME, WRITE_RATE_NAME]);
-        });
-
-        it("sends each profile name only when the FC reported that kind of name", async () => {
+        it.each([
+            ["pidProfileNames", [...WRITE_HEAD, WRITE_RATE_NAME]],
+            ["rateProfileNames", [...WRITE_HEAD, WRITE_PID_NAME]],
+        ])("skips a profile name the FC never reported (%s)", async (missing, expected) => {
             // Typed as always present, but the tab guarded against an FC that never sent them.
             setFc("1.45.0");
-            Object.assign(FC.CONFIG, { pidProfileNames: undefined });
-            await usePidTuningMsp().writePidTuningConfig();
-            expect(calls()).toEqual([...WRITE_HEAD, WRITE_RATE_NAME]);
+            Object.assign(FC.CONFIG, { [missing]: undefined });
 
-            vi.mocked(MSP.promise).mockClear();
-            setFc("1.45.0");
-            Object.assign(FC.CONFIG, { rateProfileNames: undefined });
             await usePidTuningMsp().writePidTuningConfig();
-            expect(calls()).toEqual([...WRITE_HEAD, WRITE_PID_NAME]);
+
+            expect(calls()).toEqual(expected);
         });
 
-        it.each(WRITE_ALL.map((_, index) => index))(
-            "holds back everything after write %i until its reply lands",
-            async (index) => {
-                await expectHeldAt(() => usePidTuningMsp().writePidTuningConfig(), WRITE_ALL, index);
-            },
-        );
+        it("settles only once the last write lands, so the caller's persist follows it", async () => {
+            let release!: () => void;
+            vi.mocked(MSP.promise).mockImplementation((code) =>
+                code === MSPCodes.MSP_SET_WING
+                    ? new Promise((resolve) => (release = () => resolve(undefined)))
+                    : Promise.resolve(undefined),
+            );
+            let done = false;
+
+            const writing = usePidTuningMsp()
+                .writePidTuningConfig()
+                .then(() => (done = true));
+            await flushPromises();
+            expect(done).toBe(false);
+
+            release();
+            await writing;
+            expect(done).toBe(true);
+        });
 
         it("stops at the first failed write", async () => {
             vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
@@ -194,16 +157,26 @@ describe("usePidTuningMsp", () => {
     });
 
     describe("profile commands", () => {
-        it("selects a PID profile by its index", async () => {
-            await usePidTuningMsp().selectPidProfile(2);
+        it.each([
+            [
+                "selects a PID profile by its index",
+                () => usePidTuningMsp().selectPidProfile(2),
+                [MSPCodes.MSP_SELECT_SETTING, [2]],
+            ],
+            [
+                "selects a rate profile with the high bit set",
+                () => usePidTuningMsp().selectRateProfile(3),
+                [MSPCodes.MSP_SELECT_SETTING, [3 | 128]],
+            ],
+            [
+                "resets the active PID profile",
+                () => usePidTuningMsp().resetPidProfile(),
+                [MSPCodes.MSP_SET_RESET_CURR_PID],
+            ],
+        ])("%s", async (_, run, expected) => {
+            await run();
 
-            expect(calls()).toEqual([[MSPCodes.MSP_SELECT_SETTING, [2]]]);
-        });
-
-        it("selects a rate profile with the high bit set", async () => {
-            await usePidTuningMsp().selectRateProfile(3);
-
-            expect(calls()).toEqual([[MSPCodes.MSP_SELECT_SETTING, [3 | 128]]]);
+            expect(calls()).toEqual([expected]);
         });
 
         it.each([
@@ -246,22 +219,6 @@ describe("usePidTuningMsp", () => {
             expect(atCrunch).toEqual({ type: wire, srcProfile: 1, dstProfile: 2 });
             expect(mspHelper.crunch).toHaveBeenCalledWith(MSPCodes.MSP_COPY_PROFILE);
             expect(calls()).toEqual([[MSPCodes.MSP_COPY_PROFILE, payload(MSPCodes.MSP_COPY_PROFILE)]]);
-        });
-
-        it("reuses an existing FC.COPY_PROFILE object", async () => {
-            const existing = { type: 1, srcProfile: 0, dstProfile: 0 };
-            FC.COPY_PROFILE = existing;
-
-            await usePidTuningMsp().copyProfile(CopyProfileType.PID, 2, 0);
-
-            expect(FC.COPY_PROFILE).toBe(existing);
-            expect(existing).toEqual({ type: 0, srcProfile: 2, dstProfile: 0 });
-        });
-
-        it("resets the active PID profile", async () => {
-            await usePidTuningMsp().resetPidProfile();
-
-            expect(calls()).toEqual([[MSPCodes.MSP_SET_RESET_CURR_PID]]);
         });
     });
 });

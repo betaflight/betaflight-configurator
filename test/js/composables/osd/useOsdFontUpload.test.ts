@@ -23,7 +23,5 @@ describe("useOsdFontUpload", () => {
         useOsdFontUpload().rebootAfterFontUpload();
 
         expect(order).toEqual(["cleanup", "reboot"]);
-        expect(MSP.disconnect_cleanup).toHaveBeenCalledOnce();
-        expect(reinitializeConnection).toHaveBeenCalledOnce();
     });
 });

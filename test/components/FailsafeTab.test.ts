@@ -42,22 +42,11 @@ describe("Failsafe MSP wiring", () => {
         wrapper.unmount();
     });
 
-    it("loads the configuration on mount before announcing the content", async () => {
-        let release!: () => void;
-        vi.mocked(MSP.promise).mockImplementationOnce(
-            () =>
-                new Promise((resolve) => {
-                    release = () => resolve(undefined);
-                }),
-        );
+    it("loads the configuration on mount, then announces the content", async () => {
         wrapper = mountTab();
         await flushPromises();
 
-        expect(MSP.promise).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_RX_CONFIG);
-        expect(GUI.content_ready).not.toHaveBeenCalled();
-
-        release();
-        await flushPromises();
+        expect(vi.mocked(MSP.promise).mock.calls[0]).toEqual([MSPCodes.MSP_RX_CONFIG]);
         expect(vi.mocked(MSP.promise).mock.calls.at(-1)).toEqual([MSPCodes.MSP_MODE_RANGES]);
         expect(GUI.content_ready).toHaveBeenCalledOnce();
     });

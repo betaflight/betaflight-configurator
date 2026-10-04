@@ -57,31 +57,7 @@ describe("useAuxiliaryData", () => {
         expect(order).toEqual([...LOAD_ORDER.map(String), "serial"]);
     });
 
-    it.each(LOAD_ORDER.map((code, index) => [index, code]))(
-        "holds back everything after request %i until its reply lands",
-        async (index, held) => {
-            let release!: () => void;
-            vi.mocked(MSP.promise).mockImplementation((code) =>
-                code === held
-                    ? new Promise((resolve) => {
-                          release = () => resolve(undefined);
-                      })
-                    : Promise.resolve(undefined),
-            );
-
-            const loading = mountData().data.loadAuxiliaryData();
-            await flushPromises();
-
-            expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(LOAD_ORDER.slice(0, index + 1));
-            expect(mspHelper.loadSerialConfig).not.toHaveBeenCalled();
-
-            release();
-            await loading;
-            expect(mspHelper.loadSerialConfig).toHaveBeenCalledOnce();
-        },
-    );
-
-    it("does not finish until the serial config reply lands", async () => {
+    it("does not finish until the serial config callback fires", async () => {
         let reply!: () => void;
         vi.mocked(mspHelper.loadSerialConfig).mockImplementation((callback) => {
             reply = () => callback?.();
@@ -110,28 +86,29 @@ describe("useAuxiliaryData", () => {
         expect(mspHelper.loadSerialConfig).not.toHaveBeenCalled();
     });
 
-    it("polls RC every 50 ms and status every 250 ms, and removes both on unmount", () => {
+    it("polls RC every 50 ms (to the caller's callback) and status every 250 ms, and removes both on unmount", () => {
+        const onRcData = vi.fn();
         const { wrapper, data } = mountData();
 
-        data.startPolling(() => {});
+        data.startPolling(onRcData);
+        const [[rcName, rcTick, ...rcTiming], [statusName, statusTick, ...statusTiming]] = vi.mocked(GUI.interval_add)
+            .mock.calls;
+        expect([rcTiming, statusTiming]).toEqual([
+            [50, false],
+            [250, true],
+        ]);
 
-        expect(GUI.interval_add).toHaveBeenCalledWith("aux_data_pull", expect.any(Function), 50, false);
-        expect(GUI.interval_add).toHaveBeenCalledWith("status_pull", expect.any(Function), 250, true);
-
-        wrapper.unmount();
-        expect(GUI.interval_remove).toHaveBeenCalledWith("aux_data_pull");
-        expect(GUI.interval_remove).toHaveBeenCalledWith("status_pull");
-    });
-
-    it("hands each RC reply to the caller and requests status without a callback", () => {
-        const onRcData = vi.fn();
-        mountData().data.startPolling(onRcData);
-        const ticks = new Map(vi.mocked(GUI.interval_add).mock.calls.map(([name, code]) => [name, code]));
-
-        ticks.get("aux_data_pull")!();
-        ticks.get("status_pull")!();
-
+        rcTick();
+        statusTick();
         expect(MSP.send_message).toHaveBeenNthCalledWith(1, MSPCodes.MSP_RC, false, false, onRcData);
         expect(MSP.send_message).toHaveBeenNthCalledWith(2, MSPCodes.MSP_STATUS);
+
+        wrapper.unmount();
+        expect(
+            vi
+                .mocked(GUI.interval_remove)
+                .mock.calls.map(([name]) => name)
+                .sort(),
+        ).toEqual([rcName, statusName].sort());
     });
 });

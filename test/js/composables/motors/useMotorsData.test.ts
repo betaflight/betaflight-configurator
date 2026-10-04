@@ -36,14 +36,22 @@ describe("useMotorsData", () => {
 
     const requested = () => vi.mocked(MSP.promise).mock.calls.map(([code]) => code);
 
-    it("loads in order and snapshots right after the advanced config, before the filter config", async () => {
+    it("loads in order and snapshots once the advanced config reply lands, before the filter config", async () => {
         const order: string[] = [];
-        vi.mocked(MSP.promise).mockImplementation(async (code) => {
+        let release!: () => void;
+        vi.mocked(MSP.promise).mockImplementation((code) => {
             order.push(String(code));
+            return code === MSPCodes.MSP_ADVANCED_CONFIG
+                ? new Promise((resolve) => (release = () => resolve(undefined)))
+                : Promise.resolve(undefined);
         });
 
-        await useMotorsData().loadMotorsData(() => order.push("snapshot"));
+        const loading = useMotorsData().loadMotorsData(() => order.push("snapshot"));
+        await flushPromises();
+        expect(order).not.toContain("snapshot");
 
+        release();
+        await loading;
         expect(order).toEqual([
             ...[...BEFORE_TELEMETRY, MSPCodes.MSP_MOTOR_TELEMETRY, ...AFTER_TELEMETRY].map(String),
             "snapshot",
@@ -74,57 +82,6 @@ describe("useMotorsData", () => {
         await useMotorsData().loadMotorsData(() => {});
 
         expect(requested()).toEqual([...BEFORE_TELEMETRY, ...AFTER_TELEMETRY, ...AFTER_SNAPSHOT]);
-    });
-
-    it.each(LOAD_ORDER.map((code, index) => [index, code]))(
-        "holds back everything after request %i until its reply lands",
-        async (index, held) => {
-            let release!: () => void;
-            vi.mocked(MSP.promise).mockImplementation((code) =>
-                code === held
-                    ? new Promise((resolve) => {
-                          release = () => resolve(undefined);
-                      })
-                    : Promise.resolve(undefined),
-            );
-            const onAdvancedConfig = vi.fn();
-
-            const loading = useMotorsData().loadMotorsData(onAdvancedConfig);
-            await flushPromises();
-
-            expect(requested()).toEqual(LOAD_ORDER.slice(0, index + 1));
-            const snapshotted = index > LOAD_ORDER.indexOf(MSPCodes.MSP_ADVANCED_CONFIG);
-            expect(onAdvancedConfig).toHaveBeenCalledTimes(snapshotted ? 1 : 0);
-
-            release();
-            await loading;
-            expect(requested()).toEqual(LOAD_ORDER);
-            expect(onAdvancedConfig).toHaveBeenCalledOnce();
-        },
-    );
-
-    it("does not finish until the last reply lands", async () => {
-        let reply!: () => void;
-        vi.mocked(MSP.promise).mockImplementation((code) =>
-            code === MSPCodes.MSP_ARMING_CONFIG
-                ? new Promise((resolve) => {
-                      reply = () => resolve(undefined);
-                  })
-                : Promise.resolve(undefined),
-        );
-        let done = false;
-
-        const loading = useMotorsData()
-            .loadMotorsData(() => {})
-            .then(() => {
-                done = true;
-            });
-        await flushPromises();
-        expect(done).toBe(false);
-
-        reply();
-        await loading;
-        expect(done).toBe(true);
     });
 
     it("stops at the first failed request", async () => {

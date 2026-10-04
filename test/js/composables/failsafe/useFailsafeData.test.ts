@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { flushPromises } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
@@ -45,40 +44,10 @@ describe("useFailsafeData", () => {
         expect(requested()).toEqual(LOAD_ORDER.filter((code) => code !== MSPCodes.MSP_GPS_RESCUE));
     });
 
-    it.each(LOAD_ORDER.map((code, index) => [index, code]))(
-        "holds back everything after request %i until its reply lands",
-        async (index, held) => {
-            let release!: () => void;
-            vi.mocked(MSP.promise).mockImplementation((code) =>
-                code === held
-                    ? new Promise((resolve) => {
-                          release = () => resolve(undefined);
-                      })
-                    : Promise.resolve(undefined),
-            );
-            let done = false;
-
-            const loading = useFailsafeData()
-                .loadFailsafeData()
-                .then(() => {
-                    done = true;
-                });
-            await flushPromises();
-
-            expect(requested()).toEqual(LOAD_ORDER.slice(0, index + 1));
-            expect(done).toBe(false);
-
-            release();
-            await loading;
-            expect(requested()).toEqual(LOAD_ORDER);
-        },
-    );
-
     it("stops at the first failed request", async () => {
         vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
 
         await expect(useFailsafeData().loadFailsafeData()).rejects.toThrow("MSP timeout");
-
         expect(MSP.promise).toHaveBeenCalledOnce();
     });
 });

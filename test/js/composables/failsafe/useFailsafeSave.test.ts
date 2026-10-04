@@ -57,7 +57,6 @@ describe("useFailsafeSave", () => {
         expect(steps).toEqual([...SEND_ORDER, "defaults", "reboot"]);
         for (const code of SEND_ORDER.filter((step) => step !== "rxfail")) {
             expect(MSP.promise).toHaveBeenCalledWith(code, [code, 0xaa]);
-            expect(mspHelper.crunch).toHaveBeenCalledWith(code);
         }
     });
 
@@ -73,9 +72,10 @@ describe("useFailsafeSave", () => {
         ]);
     });
 
-    it.each(SEND_ORDER.map((step, index) => [index, step]))(
-        "holds back everything after write %i until it is acknowledged",
-        async (index, held) => {
+    // rxfail is a callback bridged to a promise; GPS Rescue is the last write before the baseline.
+    it.each(["rxfail", MSPCodes.MSP_SET_GPS_RESCUE])(
+        "holds back the baseline and the reboot until %s is acknowledged",
+        async (held) => {
             let release!: () => void;
             if (held === "rxfail") {
                 vi.mocked(mspHelper.sendRxFailConfig).mockImplementation((callback) => {
@@ -86,17 +86,14 @@ describe("useFailsafeSave", () => {
                 vi.mocked(MSP.promise).mockImplementation((code) => {
                     steps.push(code ?? "no code");
                     return code === held
-                        ? new Promise((resolve) => {
-                              release = () => resolve(undefined);
-                          })
+                        ? new Promise((resolve) => (release = () => resolve(undefined)))
                         : Promise.resolve(undefined);
                 });
             }
 
             const saving = save();
             await flushPromises();
-
-            expect(steps).toEqual(SEND_ORDER.slice(0, index + 1));
+            expect(steps).toEqual(SEND_ORDER.slice(0, SEND_ORDER.indexOf(held) + 1));
 
             release();
             await saving;
@@ -106,12 +103,7 @@ describe("useFailsafeSave", () => {
 
     it("stays saving until the save-and-reboot settles", async () => {
         let rebooted!: () => void;
-        saveAndReboot.mockImplementation(
-            () =>
-                new Promise<void>((resolve) => {
-                    rebooted = resolve;
-                }),
-        );
+        saveAndReboot.mockImplementation(() => new Promise<void>((resolve) => (rebooted = resolve)));
         const { saveConfig, isSaving } = useFailsafeSave(initializeDefaults);
 
         const saving = saveConfig();

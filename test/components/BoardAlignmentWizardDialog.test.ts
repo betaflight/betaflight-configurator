@@ -94,26 +94,22 @@ describe("BoardAlignmentWizardDialog IMU polling", () => {
         wrapper.unmount();
     });
 
-    it("stops polling when the wizard is cancelled", async () => {
-        const wrapper = mountDialog();
-        await button(wrapper, "boardAlignmentWizard-Start").trigger("click");
-
-        await button(wrapper, "boardAlignmentWizard-Cancel").trigger("click");
-        lastReply()();
-        vi.advanceTimersByTime(1000);
-
-        expect(MSP.send_message).toHaveBeenCalledTimes(1);
-        wrapper.unmount();
-    });
-
-    it("stops polling on unmount", async () => {
+    it.each([
+        [
+            "the wizard is cancelled",
+            (wrapper: ReturnType<typeof mountDialog>) =>
+                button(wrapper, "boardAlignmentWizard-Cancel").trigger("click"),
+        ],
+        ["the dialog unmounts", (wrapper: ReturnType<typeof mountDialog>) => wrapper.unmount()],
+    ])("stops polling when %s", async (_label, close) => {
         const wrapper = mountDialog();
         await button(wrapper, "boardAlignmentWizard-Start").trigger("click");
         lastReply()();
 
-        wrapper.unmount();
+        await close(wrapper);
         vi.advanceTimersByTime(1000);
 
         expect(MSP.send_message).toHaveBeenCalledTimes(1);
+        wrapper.unmount();
     });
 });

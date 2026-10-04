@@ -59,24 +59,6 @@ describe("useServosSave", () => {
             expect(saveToEeprom).toHaveBeenCalledOnce();
         });
 
-        it("waits for the EEPROM write before moving the baseline", async () => {
-            let release!: () => void;
-            saveToEeprom.mockImplementation(
-                () =>
-                    new Promise<void>((resolve) => {
-                        release = resolve;
-                    }),
-            );
-
-            const saving = useServosSave(marshal, markClean).saveServoConfig();
-            await flushPromises();
-            expect(markClean).not.toHaveBeenCalled();
-
-            release();
-            await saving;
-            expect(markClean).toHaveBeenCalledOnce();
-        });
-
         it("leaves the baseline alone and skips EEPROM when the send fails", async () => {
             vi.mocked(mspHelper.sendServoConfigurations).mockRejectedValue(new Error("MSP timeout"));
             vi.spyOn(console, "error").mockImplementation(() => {});

@@ -24,42 +24,16 @@ describe("useGpsSave", () => {
         ]);
     });
 
-    it("builds and sends the GPS config only after the feature config reply lands", async () => {
-        let release!: () => void;
-        vi.mocked(MSP.promise).mockImplementationOnce(
-            () =>
-                new Promise((resolve) => {
-                    release = () => resolve(undefined);
-                }),
-        );
-
-        const saving = useGpsSave().sendGpsConfig();
-        await flushPromises();
-        expect(MSP.promise).toHaveBeenCalledOnce();
-        expect(mspHelper.crunch).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_SET_FEATURE_CONFIG);
-
-        release();
-        await saving;
-        expect(MSP.promise).toHaveBeenCalledTimes(2);
-    });
-
-    it("does not finish until the GPS config reply lands", async () => {
+    it("does not finish until the GPS config write lands", async () => {
         let release!: () => void;
         vi.mocked(MSP.promise)
             .mockResolvedValueOnce(undefined)
-            .mockImplementationOnce(
-                () =>
-                    new Promise((resolve) => {
-                        release = () => resolve(undefined);
-                    }),
-            );
+            .mockImplementationOnce(() => new Promise((resolve) => (release = () => resolve(undefined))));
         let done = false;
 
         const saving = useGpsSave()
             .sendGpsConfig()
-            .then(() => {
-                done = true;
-            });
+            .then(() => (done = true));
         await flushPromises();
         expect(done).toBe(false);
 

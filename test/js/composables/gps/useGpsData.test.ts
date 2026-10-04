@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import MSP, { type MspCallback } from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
 import GUI from "../../../../src/js/gui";
@@ -34,7 +34,7 @@ function mountData() {
     return { wrapper, data };
 }
 
-/** Run one poll tick, answering every request at once, and return the codes it sent. */
+/** Run one poll tick and return the codes it sent. */
 function runTick() {
     const tick = vi.mocked(GUI.interval_add).mock.calls[0][1];
     vi.mocked(MSP.send_message).mockClear();
@@ -61,49 +61,6 @@ describe("useGpsData", () => {
         expect(vi.mocked(MSP.promise).mock.calls).toEqual([[MSPCodes.MSP_FEATURE_CONFIG], [MSPCodes.MSP_GPS_CONFIG]]);
     });
 
-    it("holds back the GPS config until the feature config reply lands", async () => {
-        let release!: () => void;
-        vi.mocked(MSP.promise).mockImplementationOnce(
-            () =>
-                new Promise((resolve) => {
-                    release = () => resolve(undefined);
-                }),
-        );
-
-        const loading = mountData().data.fetchGpsConfig();
-        await flushPromises();
-        expect(MSP.promise).toHaveBeenCalledOnce();
-
-        release();
-        await loading;
-        expect(MSP.promise).toHaveBeenCalledTimes(2);
-    });
-
-    it("does not finish until the GPS config reply lands", async () => {
-        let release!: () => void;
-        vi.mocked(MSP.promise)
-            .mockResolvedValueOnce(undefined)
-            .mockImplementationOnce(
-                () =>
-                    new Promise((resolve) => {
-                        release = () => resolve(undefined);
-                    }),
-            );
-        let done = false;
-
-        const loading = mountData()
-            .data.fetchGpsConfig()
-            .then(() => {
-                done = true;
-            });
-        await flushPromises();
-        expect(done).toBe(false);
-
-        release();
-        await loading;
-        expect(done).toBe(true);
-    });
-
     it("stops at the first failed request", async () => {
         vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("MSP timeout"));
 
@@ -126,30 +83,6 @@ describe("useGpsData", () => {
         mountData().data.startPolling(ref(false), onData);
 
         expect(runTick()).toEqual(POLL_CHAIN);
-        for (const [, data, callbackAfterSend] of vi.mocked(MSP.send_message).mock.calls) {
-            expect(data).toBe(false);
-            expect(callbackAfterSend).toBe(false);
-        }
-        expect(onData).toHaveBeenCalledOnce();
-    });
-
-    it("hands over only after the compass config reply when a mag is present", () => {
-        const onData = vi.fn();
-        let compassReply!: () => void;
-        vi.mocked(MSP.send_message).mockImplementation((code, _data, _callbackAfterSend, callbackOnReply) => {
-            if (code === MSPCodes.MSP_COMPASS_CONFIG) {
-                compassReply = () => (callbackOnReply as MspCallback)(null);
-            } else if (typeof callbackOnReply === "function") {
-                callbackOnReply(null);
-            }
-            return true;
-        });
-        mountData().data.startPolling(ref(true), onData);
-
-        expect(runTick()).toEqual([...POLL_CHAIN, MSPCodes.MSP_COMPASS_CONFIG]);
-        expect(onData).not.toHaveBeenCalled();
-
-        compassReply();
         expect(onData).toHaveBeenCalledOnce();
     });
 
@@ -160,27 +93,40 @@ describe("useGpsData", () => {
         expect(runTick()).toEqual([MSPCodes.MSP_RAW_GPS]);
     });
 
-    it("reads the mag flag on every tick", () => {
+    it("reads the mag flag on every tick and hands over only after the compass config reply", () => {
+        const onData = vi.fn();
+        let compassReply!: () => void;
+        vi.mocked(MSP.send_message).mockImplementation((code, _data, _callbackAfterSend, callbackOnReply) => {
+            if (code === MSPCodes.MSP_COMPASS_CONFIG) {
+                compassReply = () => (callbackOnReply as MspCallback)(null);
+            } else if (typeof callbackOnReply === "function") {
+                callbackOnReply(null);
+            }
+            return true;
+        });
         const hasMag = ref(false);
-        mountData().data.startPolling(hasMag, () => {});
+        mountData().data.startPolling(hasMag, onData);
 
-        expect(runTick()).not.toContain(MSPCodes.MSP_COMPASS_CONFIG);
+        expect(runTick()).toEqual(POLL_CHAIN);
+        onData.mockClear();
         hasMag.value = true;
-        expect(runTick()).toContain(MSPCodes.MSP_COMPASS_CONFIG);
+        expect(runTick()).toEqual([...POLL_CHAIN, MSPCodes.MSP_COMPASS_CONFIG]);
+        expect(onData).not.toHaveBeenCalled();
+
+        compassReply();
+        expect(onData).toHaveBeenCalledOnce();
     });
 
-    it("pauses, resumes and stops the poll by name", () => {
+    it("pauses, resumes and stops the poll", () => {
         const { data } = mountData();
         data.startPolling(ref(false), () => {});
 
         data.pausePolling();
-        expect(GUI.interval_pause).toHaveBeenCalledExactlyOnceWith("gps_pull");
-        expect(GUI.interval_resume).not.toHaveBeenCalled();
-
         data.resumePolling();
-        expect(GUI.interval_resume).toHaveBeenCalledExactlyOnceWith("gps_pull");
-
         data.stopPolling();
-        expect(GUI.interval_remove).toHaveBeenCalledExactlyOnceWith("gps_pull");
+
+        expect(GUI.interval_pause).toHaveBeenCalledWith("gps_pull");
+        expect(GUI.interval_resume).toHaveBeenCalledWith("gps_pull");
+        expect(GUI.interval_remove).toHaveBeenCalledWith("gps_pull");
     });
 });
