@@ -12,7 +12,7 @@ import {
     servoOutputItems,
     servoTargetToSlot,
     usesCustomServoRules,
-} from "../../../src/js/utils/servoMixerModel.js";
+} from "../../../src/js/utils/servoMixerModel";
 
 describe("pwmSlotToServoIndex", () => {
     it("maps airplane PWM slots to logical servoIndex_e (FLAPS..THROTTLE)", () => {
@@ -96,10 +96,11 @@ describe("pwmSlotToServoIndex", () => {
         expect(pwmSlotToServoIndex(3, QUADX, options)).toBeNull();
     });
 
-    it("treats slots driven by AUX channel forwarding as having no logical servo", () => {
-        const options = { channelForwarding: true };
-        expect(pwmSlotToServoIndex(0, MIXER_IDS.FLYING_WING, options)).toBe(3);
-        expect(pwmSlotToServoIndex(2, MIXER_IDS.FLYING_WING, options)).toBeNull();
+    it("adds no servo for AUX channel forwarding", () => {
+        // CHANNEL_FORWARDING drives raw RC channels, not a servo, so it isn't
+        // a layout input: the wing still drives only its two elevons.
+        expect(pwmSlotToServoIndex(0, MIXER_IDS.FLYING_WING)).toBe(3);
+        expect(pwmSlotToServoIndex(2, MIXER_IDS.FLYING_WING)).toBeNull();
     });
 });
 
@@ -136,8 +137,8 @@ describe("built-in servo mixer rules", () => {
     it("returns the firmware's fixed rules for preset mixers", () => {
         const wing = builtinServoMixRules(MIXER_IDS.FLYING_WING);
         expect(wing).toHaveLength(5);
-        expect(wing[2]).toEqual({ target: 4, input: 0, rate: -100, speed: 0, min: 0, max: 100, box: 0 });
-        expect(builtinServoMixRules(MIXER_IDS.AIRPLANE).map((r) => r.target)).toEqual([3, 4, 5, 6, 7]);
+        expect(wing?.[2]).toEqual({ target: 4, input: 0, rate: -100, speed: 0, min: 0, max: 100, box: 0 });
+        expect(builtinServoMixRules(MIXER_IDS.AIRPLANE)?.map((r) => r.target)).toEqual([3, 4, 5, 6, 7]);
     });
 
     it("returns null for custom mixers and multirotors", () => {
@@ -147,8 +148,9 @@ describe("built-in servo mixer rules", () => {
     });
 
     it("returns a copy, not the shared table", () => {
-        builtinServoMixRules(MIXER_IDS.TRI)[0].rate = 1;
-        expect(builtinServoMixRules(MIXER_IDS.TRI)[0].rate).toBe(100);
+        const tri = builtinServoMixRules(MIXER_IDS.TRI) ?? [];
+        tri[0].rate = 1;
+        expect(builtinServoMixRules(MIXER_IDS.TRI)?.[0].rate).toBe(100);
     });
 
     it("only reads custom rules on Custom Airplane and Custom Tri", () => {
@@ -160,7 +162,15 @@ describe("built-in servo mixer rules", () => {
 });
 
 describe("custom rule list", () => {
-    const rule = (target, rate, min = 0, max = 100) => ({ target, input: 0, rate, speed: 0, min, max, box: 0 });
+    const rule = (target: number, rate: number, min = 0, max = 100) => ({
+        target,
+        input: 0,
+        rate,
+        speed: 0,
+        min,
+        max,
+        box: 0,
+    });
 
     it("loads rules up to the first rate-0 rule, like firmware loadCustomServoMixer", () => {
         const stored = [rule(2, 100), rule(3, -50), rule(0, 0, 0, 0), rule(4, 100)];

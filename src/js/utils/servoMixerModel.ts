@@ -1,6 +1,45 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // Servo mixer (smix) model for the Servos tab. Mirrors firmware
 // src/main/flight/servos.c so the tab can show which physical output each
 // rule drives and what a preset mixer does without a custom rule list.
+
+import type { ServoRule } from "../../stores/fc.types";
+
+/** Mixer mode from MSP_MIXER_CONFIG; null/undefined while unknown. */
+export type MixerMode = number | null | undefined;
+
+export interface SlotLayoutOptions {
+    /** FEATURE_SERVO_TILT enabled */
+    servoTilt?: boolean;
+    /** servo indices whose indexOfChannelToForward is set (not 255) */
+    forwardedServos?: number[];
+}
+
+/** A firmware servo target and the physical output carrying it (null: not driven). */
+export interface ServoOutputItem {
+    target: number;
+    slot: number | null;
+}
 
 export const SERVO_MIX_INPUT_LABELS = [
     "STABILIZED_ROLL",
@@ -37,14 +76,14 @@ export const MIXER_IDS = {
     SINGLECOPTER: 21,
     CUSTOM_AIRPLANE: 24,
     CUSTOM_TRI: 25,
-};
+} as const;
 
 // Firmware servoIndex_e names per mixer family (enum in
 // src/main/flight/servos.h). The same index means different things on
 // different mixers (e.g. 4 = FLAPPERON_2 on airplane, BICOPTER_LEFT on
 // bicopter). The plane names are the default; other mixers override only
 // the entries that differ.
-const SERVO_ENUM_NAMES_PLANE = {
+const SERVO_ENUM_NAMES_PLANE: Record<number, string> = {
     0: "GIMBAL_PITCH",
     1: "GIMBAL_ROLL",
     2: "FLAPS",
@@ -55,7 +94,7 @@ const SERVO_ENUM_NAMES_PLANE = {
     7: "THROTTLE",
 };
 
-const SERVO_ENUM_NAMES_BY_MIXER = {
+const SERVO_ENUM_NAMES_BY_MIXER: Record<number, Record<number, string>> = {
     [MIXER_IDS.TRI]: { 5: "RUDDER" },
     [MIXER_IDS.CUSTOM_TRI]: { 5: "RUDDER" },
     [MIXER_IDS.BICOPTER]: { 4: "BICOPTER_LEFT", 5: "BICOPTER_RIGHT" },
@@ -74,26 +113,20 @@ const SERVO_ENUM_NAMES_BY_MIXER = {
 /**
  * Firmware servoIndex_e name (e.g. "FLAPPERON_1") of `target` under
  * `mixerMode`, or null when the target is out of range.
- * @param {number} target
- * @param {number|null} mixerMode
- * @returns {string|null}
  */
-export function servoMixOutputEnumName(target, mixerMode) {
+export function servoMixOutputEnumName(target: number, mixerMode: MixerMode): string | null {
     const targetId = Number(target);
     if (!Number.isInteger(targetId) || targetId < 0 || targetId >= MAX_SUPPORTED_SERVOS) {
         return null;
     }
-    const overrides = SERVO_ENUM_NAMES_BY_MIXER[mixerMode];
-    if (overrides?.[targetId] != null) {
-        return overrides[targetId];
-    }
-    return SERVO_ENUM_NAMES_PLANE[targetId] ?? null;
+    const overrides = mixerMode == null ? undefined : SERVO_ENUM_NAMES_BY_MIXER[mixerMode];
+    return overrides?.[targetId] ?? SERVO_ENUM_NAMES_PLANE[targetId] ?? null;
 }
 
 // Fixed slots written by the mixer-specific switch in firmware writeServos().
 // MIXER_GIMBAL is absent on purpose: firmware drives it through the same
 // gimbal branch as FEATURE_SERVO_TILT (see servoSlotLayout).
-const SERVO_PWM_SLOT_TO_INDEX = {
+const SERVO_PWM_SLOT_TO_INDEX: Record<number, number[]> = {
     [MIXER_IDS.TRI]: [5],
     [MIXER_IDS.CUSTOM_TRI]: [5],
     [MIXER_IDS.BICOPTER]: [4, 5],
@@ -116,15 +149,12 @@ const SERVO_GIMBAL_ROLL = 1;
  *   3. every servo with channel forwarding not already written, in index order,
  *   4. AUX channel forwarding (CHANNEL_FORWARDING), which drives raw RC
  *      channels rather than a servo -- those outputs are not listed.
- * @param {number} mixerMode
- * @param {object} [options]
- * @param {boolean} [options.servoTilt] - FEATURE_SERVO_TILT enabled
- * @param {number[]} [options.forwardedServos] - servo indices whose
- *   indexOfChannelToForward is set (not 255)
- * @returns {number[]}
  */
-export function servoSlotLayout(mixerMode, { servoTilt = false, forwardedServos = [] } = {}) {
-    const layout = [...(SERVO_PWM_SLOT_TO_INDEX[mixerMode] ?? [])];
+export function servoSlotLayout(
+    mixerMode: MixerMode,
+    { servoTilt = false, forwardedServos = [] }: SlotLayoutOptions = {},
+): number[] {
+    const layout = [...((mixerMode == null ? undefined : SERVO_PWM_SLOT_TO_INDEX[mixerMode]) ?? [])];
     if (servoTilt || mixerMode === MIXER_IDS.GIMBAL) {
         layout.push(SERVO_GIMBAL_PITCH, SERVO_GIMBAL_ROLL);
     }
@@ -141,12 +171,12 @@ export function servoSlotLayout(mixerMode, { servoTilt = false, forwardedServos 
 /**
  * Firmware servo index carried by physical output `slotIndex` (0-based), or
  * null when that output isn't driven. Identity while the mixer is unknown.
- * @param {number} slotIndex
- * @param {number|null} mixerMode
- * @param {{servoTilt?: boolean, forwardedServos?: number[]}} [options]
- * @returns {number|null}
  */
-export function pwmSlotToServoIndex(slotIndex, mixerMode, options = {}) {
+export function pwmSlotToServoIndex(
+    slotIndex: number,
+    mixerMode: MixerMode,
+    options: SlotLayoutOptions = {},
+): number | null {
     if (mixerMode == null) {
         return slotIndex;
     }
@@ -160,12 +190,12 @@ export function pwmSlotToServoIndex(slotIndex, mixerMode, options = {}) {
 /**
  * Physical output (0-based) carrying firmware servo `target`, or null when
  * the mixer doesn't drive it. Identity while the mixer is unknown.
- * @param {number} target
- * @param {number|null} mixerMode
- * @param {{servoTilt?: boolean, forwardedServos?: number[]}} [options]
- * @returns {number|null}
  */
-export function servoTargetToSlot(target, mixerMode, options = {}) {
+export function servoTargetToSlot(
+    target: number,
+    mixerMode: MixerMode,
+    options: SlotLayoutOptions = {},
+): number | null {
     if (mixerMode == null) {
         return target;
     }
@@ -176,16 +206,13 @@ export function servoTargetToSlot(target, mixerMode, options = {}) {
 /**
  * Every firmware servo target with the physical output carrying it: driven
  * targets first in output order, then the undriven ones (slot null).
- * @param {number|null} mixerMode
- * @param {{servoTilt?: boolean, forwardedServos?: number[]}} [options]
- * @returns {Array<{target: number, slot: number|null}>}
  */
-export function servoOutputItems(mixerMode, options = {}) {
-    const items = [];
+export function servoOutputItems(mixerMode: MixerMode, options: SlotLayoutOptions = {}): ServoOutputItem[] {
+    const items: ServoOutputItem[] = [];
     for (let target = 0; target < MAX_SUPPORTED_SERVOS; target++) {
         items.push({ target, slot: servoTargetToSlot(target, mixerMode, options) });
     }
-    const driven = items.filter((item) => item.slot != null).sort((a, b) => a.slot - b.slot);
+    const driven = items.filter((item) => item.slot != null).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
     return [...driven, ...items.filter((item) => item.slot == null)];
 }
 
@@ -206,11 +233,11 @@ const IN_GIMBAL_ROLL = 13;
 
 export const SERVO_MIX_INPUT_STABILIZED_THROTTLE = IN_THROTTLE;
 
-function builtinRule(target, input, rate) {
+function builtinRule(target: number, input: number, rate: number): ServoRule {
     return { target, input, rate, speed: 0, min: 0, max: 100, box: 0 };
 }
 
-const BUILTIN_SERVO_MIX_RULES = {
+const BUILTIN_SERVO_MIX_RULES: Record<number, ServoRule[]> = {
     [MIXER_IDS.TRI]: [builtinRule(5, IN_YAW, 100)],
     [MIXER_IDS.BICOPTER]: [
         builtinRule(4, IN_YAW, 100),
@@ -260,20 +287,14 @@ const BUILTIN_SERVO_MIX_RULES = {
 /**
  * The hard-coded servo rules a preset mixer runs, or null when the mixer has
  * none (multirotors) or reads the custom smix list instead.
- * @param {number} mixerMode
- * @returns {Array<{target: number, input: number, rate: number, speed: number, min: number, max: number, box: number}>|null}
  */
-export function builtinServoMixRules(mixerMode) {
-    const rules = BUILTIN_SERVO_MIX_RULES[mixerMode];
+export function builtinServoMixRules(mixerMode: MixerMode): ServoRule[] | null {
+    const rules = mixerMode == null ? undefined : BUILTIN_SERVO_MIX_RULES[mixerMode];
     return rules ? rules.map((r) => ({ ...r })) : null;
 }
 
-/**
- * True for the mixers whose servos follow the custom smix list.
- * @param {number|null} mixerMode
- * @returns {boolean}
- */
-export function usesCustomServoRules(mixerMode) {
+/** True for the mixers whose servos follow the custom smix list. */
+export function usesCustomServoRules(mixerMode: MixerMode): boolean {
     return mixerMode === MIXER_IDS.CUSTOM_AIRPLANE || mixerMode === MIXER_IDS.CUSTOM_TRI;
 }
 
@@ -287,27 +308,19 @@ export const SERVO_MIX_MAX = 100;
 export const SERVO_MIX_RATE_MIN = -125;
 export const SERVO_MIX_RATE_MAX = 125;
 
-const EMPTY_RULE = { target: 0, input: 0, rate: 0, speed: 0, min: 0, max: 0, box: 0 };
+const EMPTY_RULE: ServoRule = { target: 0, input: 0, rate: 0, speed: 0, min: 0, max: 0, box: 0 };
 
-/**
- * A new rule with full travel and no speed limit.
- * @param {number} target
- * @param {number} input
- * @param {number} rate
- */
-export function makeServoMixRule(target, input, rate) {
+/** A new rule with full travel and no speed limit. */
+export function makeServoMixRule(target: number, input: number, rate: number): ServoRule {
     return { target, input, rate, speed: 0, min: SERVO_MIX_MIN, max: SERVO_MIX_MAX, box: 0 };
 }
 
 /**
  * The rules the firmware actually runs: loadCustomServoMixer() stops at the
  * first rule with rate 0, so anything stored after it is ignored.
- * @template {{rate: number}} T
- * @param {T[]} rules
- * @returns {T[]}
  */
-export function activeServoMixRules(rules) {
-    const active = [];
+export function activeServoMixRules<T extends { rate: number }>(rules: T[] | null | undefined): T[] {
+    const active: T[] = [];
     for (const rule of rules ?? []) {
         if (rule.rate === 0) {
             break;
@@ -321,7 +334,10 @@ export function activeServoMixRules(rules) {
  * `rules` followed by empty rules up to `maxRules`, so a save also clears
  * slots left over from a longer list.
  */
-export function padServoMixRulesToMax(rules, maxRules = MAX_SERVO_RULES) {
+export function padServoMixRulesToMax(
+    rules: ServoRule[] | null | undefined,
+    maxRules: number = MAX_SERVO_RULES,
+): ServoRule[] {
     const padded = (rules ?? []).slice(0, maxRules).map((rule) => ({ ...rule }));
     while (padded.length < maxRules) {
         padded.push({ ...EMPTY_RULE });
@@ -334,11 +350,10 @@ export function padServoMixRulesToMax(rules, maxRules = MAX_SERVO_RULES) {
  * rule list, dropping every rule after it) or outside -125..125, and
  * min/max outside 0..100 or min >= max (the CLI rejects these, but
  * MSP_SET_SERVO_MIX_RULE stores them as-is, so a -100 min becomes 156).
- * @returns {number[]}
  */
-export function invalidServoMixRules(rules) {
-    const inRange = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
-    const bad = [];
+export function invalidServoMixRules(rules: ServoRule[] | null | undefined): number[] {
+    const inRange = (v: number, lo: number, hi: number) => Number.isInteger(v) && v >= lo && v <= hi;
+    const bad: number[] = [];
     (rules ?? []).forEach((rule, i) => {
         const rateOk = rule.rate !== 0 && inRange(rule.rate, SERVO_MIX_RATE_MIN, SERVO_MIX_RATE_MAX);
         const rangeOk =
