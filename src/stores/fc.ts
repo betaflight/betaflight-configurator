@@ -292,6 +292,7 @@ export function createInitialState(): FcState {
         ADJUSTMENT_RANGES: [],
         SERVO_CONFIG: [],
         SERVO_RULES: [],
+        SERVO_RULES_PARSE_OK: true,
         SERIAL_CONFIG: {
             ports: [],
 

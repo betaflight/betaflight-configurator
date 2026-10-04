@@ -44,6 +44,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../../components/tabs/osd/osd";
 import { reinitializeConnection } from "../serial_backend";
+import { MAX_SERVO_RULES } from "../utils/servoMixerModel";
 import type { MspCallback, MspFrame, MspResponse } from "../msp";
 import type { CurrentMeterConfig, LedStripEntry } from "../../stores/fc.types";
 import type Features from "../Features";
@@ -550,6 +551,29 @@ class MspHelper {
             buffer.push8(out).push32(servoConfiguration.reversedInputSources);
 
             await MSP.promise(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer);
+        }
+    }
+
+    // Sends one MSP_SET_SERVO_MIX_RULE per slot for all MAX_SERVO_RULES slots.
+    // Slots past the end of FC.SERVO_RULES get an empty rule so rules left
+    // over from a longer list are cleared.
+    async sendServoMixRules() {
+        const rules = FC.SERVO_RULES;
+        for (let ruleIndex = 0; ruleIndex < MAX_SERVO_RULES; ruleIndex++) {
+            const rule = rules[ruleIndex] ?? { target: 0, input: 0, rate: 0, speed: 0, min: 0, max: 0, box: 0 };
+            const buffer = new MspBuffer();
+
+            buffer
+                .push8(ruleIndex)
+                .push8(rule.target)
+                .push8(rule.input)
+                .push8(rule.rate & 0xff)
+                .push8(rule.speed)
+                .push8(rule.min)
+                .push8(rule.max)
+                .push8(rule.box);
+
+            await MSP.promise(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer);
         }
     }
 
@@ -1285,7 +1309,30 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         }
     },
 
-    [MSPCodes.MSP_SERVO_MIX_RULES]: NOTHING_TO_DO,
+    [MSPCodes.MSP_SERVO_MIX_RULES](data) {
+        // MAX_SERVO_RULES rules of 7 bytes: target, input, rate (int8), speed,
+        // min, max, box -- the same layout as MSP_SET_SERVO_MIX_RULE.
+        // A payload that isn't a whole number of rules leaves SERVO_RULES
+        // empty and clears SERVO_RULES_PARSE_OK, so the Servos tab won't
+        // overwrite the FC's rules with a list it couldn't read.
+        FC.SERVO_RULES = [];
+        FC.SERVO_RULES_PARSE_OK = data.byteLength % 7 === 0;
+        if (!FC.SERVO_RULES_PARSE_OK) {
+            console.warn(`MSP_SERVO_MIX_RULES: unexpected data length ${data.byteLength} (not a multiple of 7)`);
+            return;
+        }
+        for (let i = 0; i < data.byteLength; i += 7) {
+            FC.SERVO_RULES.push({
+                target: data.readU8(),
+                input: data.readU8(),
+                rate: data.read8(),
+                speed: data.readU8(),
+                min: data.readU8(),
+                max: data.readU8(),
+                box: data.readU8(),
+            });
+        }
+    },
 
     [MSPCodes.MSP_SERVO_CONFIGURATIONS](data) {
         FC.SERVO_CONFIG = []; // empty the array as new data is coming in
@@ -1386,6 +1433,10 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
     [MSPCodes.MSP_SET_SERVO_CONFIGURATION]() {
         console.log("Servo Configuration saved");
+    },
+
+    [MSPCodes.MSP_SET_SERVO_MIX_RULE]() {
+        console.log("Servo mix rule saved");
     },
 
     [MSPCodes.MSP_EEPROM_WRITE]() {

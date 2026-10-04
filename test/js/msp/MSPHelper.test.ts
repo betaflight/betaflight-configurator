@@ -13,6 +13,42 @@ describe("MspHelper", () => {
         FC.resetState();
     });
     describe("process_data", () => {
+        const servoMixFrame = (bytes: number[]) => ({
+            code: MSPCodes.MSP_SERVO_MIX_RULES,
+            dataView: new MspDataView(new Uint8Array(bytes.map((v) => v & 0xff)).buffer),
+            crcError: false,
+            unsupported: 0,
+            callbacks: [],
+        });
+        it("handles MSP_SERVO_MIX_RULES with a valid payload", () => {
+            // Rate is signed (-50 round-trips); min/max are unsigned 0..100.
+            mspHelper.process_data(servoMixFrame([3, 0, 100, 5, 0, 100, 0, 4, 0, -50, 0, 20, 80, 1]));
+
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(true);
+            expect(FC.SERVO_RULES).toEqual([
+                { target: 3, input: 0, rate: 100, speed: 5, min: 0, max: 100, box: 0 },
+                { target: 4, input: 0, rate: -50, speed: 0, min: 20, max: 80, box: 1 },
+            ]);
+        });
+        it("reads MSP_SERVO_MIX_RULES min/max as unsigned bytes", () => {
+            // A stored 156 (a -100 written without validation) must read as
+            // 156, so it shows up as out of range instead of a valid -100.
+            mspHelper.process_data(servoMixFrame([3, 0, 100, 0, 156, 100, 0]));
+
+            expect(FC.SERVO_RULES[0].min).toBe(156);
+        });
+        it("handles an empty MSP_SERVO_MIX_RULES payload as zero rules", () => {
+            mspHelper.process_data(servoMixFrame([]));
+
+            expect(FC.SERVO_RULES).toEqual([]);
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(true);
+        });
+        it("flags a malformed MSP_SERVO_MIX_RULES payload so Save can't wipe the FC rules", () => {
+            mspHelper.process_data(servoMixFrame([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+
+            expect(FC.SERVO_RULES).toEqual([]);
+            expect(FC.SERVO_RULES_PARSE_OK).toBe(false);
+        });
         it("refuses to process data with crc-error", () => {
             let callbackCalled = false;
 
