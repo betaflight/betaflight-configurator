@@ -3133,6 +3133,69 @@
     "servosButtonSave": {
         "message": "Save"
     },
+    "servosMixerRulesTitle": {
+        "message": "Servo Mixer"
+    },
+    "servosMixerRulesDesc": {
+        "message": "Each rule feeds an input onto a servo output. Rules on the same output add together."
+    },
+    "servosMixerBuiltinHint": {
+        "message": "This mixer drives the servos from rules built into the firmware. They are shown for reference and cannot be edited; switch to Custom Airplane or Custom Tri to use your own rules."
+    },
+    "servosMixerOutput": {
+        "message": "Output"
+    },
+    "servosMixerInput": {
+        "message": "Input"
+    },
+    "servosMixerRate": {
+        "message": "Rate"
+    },
+    "servosMixerSpeed": {
+        "message": "Speed"
+    },
+    "servosMixerMin": {
+        "message": "Min"
+    },
+    "servosMixerMax": {
+        "message": "Max"
+    },
+    "servosMixerBox": {
+        "message": "Box"
+    },
+    "servosMixerBoxHelp": {
+        "message": "Flight mode gate. Always = rule always applies. BOXSERVO1-3 = rule only applies while that mode is active."
+    },
+    "servosMixerAddRule": {
+        "message": "Add rule"
+    },
+    "servosMixerDeleteRule": {
+        "message": "Delete rule"
+    },
+    "servosMixerNoRules": {
+        "message": "No custom servo mixer rules."
+    },
+    "servosMixerLoadFailed": {
+        "message": "Couldn't read the servo mixer rules from the flight controller. Saving is disabled so your rules aren't overwritten. Reconnect to retry."
+    },
+    "servosMixerRulesInvalid": {
+        "message": "Not saved: check servo mixer rule {{rules}}. Rate must not be 0 (the firmware stops at a rule with rate 0), and Min and Max must be between 0 and 100 with Min below Max."
+    },
+    "servosMixerCliHint": {
+        "message": "In the CLI, the smix command uses firmware servo numbers instead: {{map}}."
+    },
+    "servosMixerOutputServo": {
+        "message": "Servo {{index}}"
+    },
+    "servosMixerOutputNotDriven": {
+        "message": "{{name}} (unused)"
+    },
+    "servosOutputUnused": {
+        "message": "Unused"
+    },
+    "servosCliServoHint": {
+        "message": "In the CLI, the servo command uses firmware servo numbers instead: {{map}}."
+    },
     "gpsHead": {
         "message": "General"
     },
