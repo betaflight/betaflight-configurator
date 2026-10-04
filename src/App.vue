@@ -106,7 +106,8 @@ function currentVm() {
 
 const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
 const FC = computed(() => currentVm()?.FC ?? FCModule);
-const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
+// Not on the legacy vm model: MSP is a module singleton, and window.MSP (set in js/msp) is the debug handle.
+const MSP = MSPModule;
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 

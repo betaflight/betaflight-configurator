@@ -27,7 +27,6 @@ import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc";
-import MSP from "../js/msp";
 import DeviceHandler from "../js/device_handler";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage";
@@ -55,7 +54,6 @@ const CONNECTION = reactive({
 const betaflightModel = reactive({
     CONFIGURATOR,
     FC,
-    MSP,
     PortUsage,
     DeviceHandler,
     CONNECTION,
