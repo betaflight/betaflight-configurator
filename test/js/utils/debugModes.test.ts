@@ -71,7 +71,7 @@ describe("debugModes helper", () => {
             expect(modes.indexOf("PITOT")).toBe(modes.length - 1);
         });
 
-        it("appends POSITION_EST, AUTOPILOT_HEADING, RX_REDPINE_SPI, LAUNCH, VELOCITY_EST, SAG_COMPENSATION, UPT1, PSAS at API 1.49", () => {
+        it("appends POSITION_EST, AUTOPILOT_HEADING, RX_REDPINE_SPI, LAUNCH, VELOCITY_EST, SAG_COMPENSATION, UPT1, FLIGHT_PLAN, PSAS at API 1.49", () => {
             const modes = getDebugModes(API_VERSION_1_49);
             expect(getDebugModeIndex("POSITION_EST", API_VERSION_1_49)).toBe(103);
             expect(getDebugModeIndex("AUTOPILOT_HEADING", API_VERSION_1_49)).toBe(104);
@@ -80,7 +80,8 @@ describe("debugModes helper", () => {
             expect(getDebugModeIndex("VELOCITY_EST", API_VERSION_1_49)).toBe(107);
             expect(getDebugModeIndex("SAG_COMPENSATION", API_VERSION_1_49)).toBe(108);
             expect(getDebugModeIndex("UPT1", API_VERSION_1_49)).toBe(109);
-            expect(getDebugModeIndex("PSAS", API_VERSION_1_49)).toBe(110);
+            expect(getDebugModeIndex("FLIGHT_PLAN", API_VERSION_1_49)).toBe(110);
+            expect(getDebugModeIndex("PSAS", API_VERSION_1_49)).toBe(111);
 
             // PSAS is the last entry.
             expect(modes.indexOf("PSAS")).toBe(modes.length - 1);

@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  85ba082870 2026-09-22  (552 annotated fields)
+ *   API 1.49.0  610e068e2d 2026-09-27  (560 annotated fields)
  */
 
 /**
@@ -626,6 +626,21 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 scale: 1,
                 flags: Object.freeze(["Bungee", "Swing", "Ground Speed"]),
             }),
+            7: Object.freeze({
+                label: "Launch Exit Reason",
+                unit: null,
+                scale: 1,
+                enumTag: "launchWingExit_e",
+                values: Object.freeze([
+                    "LAUNCH_WING_EXIT_NONE",
+                    "LAUNCH_WING_EXIT_STICKS",
+                    "LAUNCH_WING_EXIT_ATTITUDE",
+                    "LAUNCH_WING_EXIT_ALTITUDE",
+                    "LAUNCH_WING_EXIT_TIMEOUT",
+                    "LAUNCH_WING_EXIT_HANDOVER",
+                    "LAUNCH_WING_EXIT_MODE_OFF",
+                ]),
+            }),
         }),
         LIDAR_TF: Object.freeze({
             0: Object.freeze({ label: "Distance", unit: "cm", scale: 1 }),
@@ -1137,6 +1152,15 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "FP_NAV_COMPLETE",
                 "FP_NAV_LANDING",
                 "FP_NAV_ABORTED",
+            ]),
+            launchWingExit_e: Object.freeze([
+                "LAUNCH_WING_EXIT_NONE",
+                "LAUNCH_WING_EXIT_STICKS",
+                "LAUNCH_WING_EXIT_ATTITUDE",
+                "LAUNCH_WING_EXIT_ALTITUDE",
+                "LAUNCH_WING_EXIT_TIMEOUT",
+                "LAUNCH_WING_EXIT_HANDOVER",
+                "LAUNCH_WING_EXIT_MODE_OFF",
             ]),
             launchWingState_e: Object.freeze([
                 "LAUNCH_WING_IDLE",
