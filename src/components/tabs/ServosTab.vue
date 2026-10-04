@@ -182,6 +182,7 @@
                                         :items="servoMixOutputItems"
                                         size="xs"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <USelect
@@ -189,6 +190,7 @@
                                         :items="servoMixInputItems"
                                         size="xs"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <UInputNumber
@@ -199,6 +201,7 @@
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <UInputNumber
@@ -209,6 +212,7 @@
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <UInputNumber
@@ -219,6 +223,7 @@
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <UInputNumber
@@ -229,6 +234,7 @@
                                         orientation="vertical"
                                         :format-options="{ useGrouping: false }"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <USelect
@@ -236,6 +242,7 @@
                                         :items="servoMixBoxItems"
                                         size="xs"
                                         class="w-full"
+                                        :disabled="isSaving"
                                         @change="onMixRuleChange"
                                     />
                                     <UButton
@@ -244,6 +251,7 @@
                                         variant="ghost"
                                         size="xs"
                                         :title="$t('servosMixerDeleteRule')"
+                                        :disabled="isSaving"
                                         @click="removeServoMixRule(idx)"
                                     />
                                 </template>
@@ -259,7 +267,7 @@
                                 icon="i-lucide-plus"
                                 size="xs"
                                 variant="outline"
-                                :disabled="servoMixRules.length >= MAX_SERVO_RULES || mixerLoadFailed"
+                                :disabled="servoMixRules.length >= MAX_SERVO_RULES || mixerLoadFailed || isSaving"
                                 @click="addServoMixRule"
                             />
                             <span class="text-xs text-muted ml-auto">
@@ -358,9 +366,8 @@ import {
     MAX_SERVO_RULES,
     activeServoMixRules,
     builtinServoMixRules,
-    invalidServoMixRules,
+    servoMixRulesToSave,
     makeServoMixRule,
-    padServoMixRulesToMax,
     pwmSlotToServoIndex,
     servoMixOutputEnumName,
     servoOutputItems,
@@ -590,20 +597,19 @@ function saveServoConfig() {
     if (mixerLoadFailed.value) {
         return;
     }
-    // MSP_SET_SERVO_MIX_RULE stores whatever it gets, so refuse rules the
-    // firmware wouldn't run as shown.
-    const invalid = mixerDirty.value ? invalidServoMixRules(servoMixRules) : [];
-    if (invalid.length > 0) {
-        gui_log(t("servosMixerRulesInvalid", { rules: invalid.map((i) => i + 1).join(", ") }));
+    // Rules are only rewritten when edited. MSP_SET_SERVO_MIX_RULE stores
+    // whatever it gets, so refuse rules the firmware wouldn't run as shown;
+    // the editor is locked while saving, and the validated copy is what's sent.
+    const mixerSave = mixerDirty.value ? servoMixRulesToSave(servoMixRules) : null;
+    if (mixerSave && mixerSave.invalid.length > 0) {
+        gui_log(t("servosMixerRulesInvalid", { rules: mixerSave.invalid.map((i) => i + 1).join(", ") }));
         return;
     }
     return runSave(async () => {
         marshalServoConfigs();
         await mspHelper.sendServoConfigurations();
-        // Only rewrite the rules when they were edited; padded to
-        // MAX_SERVO_RULES so removed rules are cleared too.
-        if (mixerDirty.value) {
-            FC.SERVO_RULES = padServoMixRulesToMax(servoMixRules);
+        if (mixerSave) {
+            FC.SERVO_RULES = mixerSave.rules;
             await mspHelper.sendServoMixRules();
         }
         await saveToEeprom();

@@ -12,6 +12,7 @@ import {
     servoOutputItems,
     servoTargetToSlot,
     usesCustomServoRules,
+    servoMixRulesToSave,
 } from "../../../src/js/utils/servoMixerModel";
 
 describe("pwmSlotToServoIndex", () => {
@@ -208,5 +209,33 @@ describe("custom rule list", () => {
             rule(2, -125, 0, 100),
         ];
         expect(invalidServoMixRules(rules)).toEqual([1, 2, 3, 4, 5]);
+    });
+});
+
+describe("servoMixRulesToSave", () => {
+    const rule = (target: number, rate: number, min = 0, max = 100) => ({
+        target,
+        input: 0,
+        rate,
+        speed: 0,
+        min,
+        max,
+        box: 0,
+    });
+
+    it("returns a padded copy that later edits can't reach", () => {
+        const rules = [rule(2, 100)];
+        const save = servoMixRulesToSave(rules);
+        // Edits made while the save runs: a rate the validation would refuse.
+        rules[0].rate = 0;
+        rules.push(rule(3, 50));
+        expect(save.invalid).toEqual([]);
+        expect(save.rules).toHaveLength(MAX_SERVO_RULES);
+        expect(save.rules[0]).toEqual(rule(2, 100));
+        expect(save.rules[1].rate).toBe(0);
+    });
+
+    it("lists the rules Save must refuse", () => {
+        expect(servoMixRulesToSave([rule(2, 100), rule(3, 0), rule(4, 50, 60, 40)]).invalid).toEqual([1, 2]);
     });
 });

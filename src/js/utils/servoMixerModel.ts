@@ -366,3 +366,13 @@ export function invalidServoMixRules(rules: ServoRule[] | null | undefined): num
     });
     return bad;
 }
+
+/**
+ * What a Save writes: the rules padded to MAX_SERVO_RULES, copied so edits
+ * made while the save runs can't change or skip what gets validated and
+ * sent. `invalid` lists the 0-based rules invalidServoMixRules() refuses;
+ * Save writes nothing then.
+ */
+export function servoMixRulesToSave(rules: ServoRule[]): { invalid: number[]; rules: ServoRule[] } {
+    return { invalid: invalidServoMixRules(rules), rules: padServoMixRulesToMax(rules) };
+}
