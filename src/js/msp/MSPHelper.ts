@@ -573,7 +573,7 @@ class MspHelper {
                 .push8(rule.max)
                 .push8(rule.box);
 
-            await MSP.promise(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer);
+            await MSP.promise(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer); // NOSONAR: one rule at a time, in slot order
         }
     }
 
