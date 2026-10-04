@@ -28,6 +28,9 @@ import AuxiliaryTab from "../../src/components/tabs/AuxiliaryTab.vue";
 import FC from "../../src/js/fc";
 import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
+import MSPCodes from "../../src/js/msp/MSPCodes";
+import { mspHelper } from "../../src/js/msp/MSPHelper";
+import { channelPercent } from "../../src/js/utils/rcChannel";
 import { MspCancelledError } from "../../src/js/msp/mspErrors";
 
 vi.mock("../../src/js/gui", () => ({
@@ -35,7 +38,7 @@ vi.mock("../../src/js/gui", () => ({
 }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({
-    mspHelper: { loadSerialConfig: (callback: () => void) => callback() },
+    mspHelper: { loadSerialConfig: (callback: () => void) => callback(), sendModeRanges: vi.fn() },
 }));
 vi.mock("../../src/composables/useReboot", () => ({
     useReboot: () => ({ saveToEeprom: vi.fn() }),
@@ -120,4 +123,52 @@ describe("Modes empty-state announcement", () => {
             expect(wrapper.find('[role="status"]').exists()).toBe(false);
         },
     );
+});
+
+describe("Modes MSP wiring", () => {
+    let wrapper: ReturnType<typeof mountTab>;
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        setActivePinia(createPinia());
+        FC.resetState();
+        Object.assign(FC, { AUX_CONFIG: ["ARM"], AUX_CONFIG_IDS: [0] });
+        localStorage.clear();
+        vi.mocked(MSP.promise).mockResolvedValue(undefined);
+    });
+
+    afterEach(() => {
+        wrapper.unmount();
+    });
+
+    it("starts RC polling on mount and refreshes the channel markers from each reply", async () => {
+        Object.assign(FC.RC, { active_channels: 5, channels: [1500, 1500, 1000, 1500, 1234] });
+        wrapper = mountTab();
+        await flushPromises();
+        const rcTick = vi.mocked(GUI.interval_add).mock.calls.find(([name]) => name === "aux_data_pull")![1];
+
+        rcTick();
+        const [code, , , onRcData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
+        expect(code).toBe(MSPCodes.MSP_RC);
+        FC.RC.channels[4] = 1900;
+        (onRcData as () => void)();
+        await flushPromises();
+
+        expect(wrapper.vm.rcMarkers).toEqual({ 0: channelPercent(1900) });
+    });
+
+    it("pads the saved ranges to the slot count the FC reported at load", async () => {
+        FC.MODE_RANGES = Array.from({ length: 4 }, () => ({
+            id: 0,
+            auxChannelIndex: 0,
+            range: { start: 900, end: 900 },
+        }));
+        wrapper = mountTab();
+        await flushPromises();
+
+        await wrapper.vm.saveModes();
+
+        expect(mspHelper.sendModeRanges).toHaveBeenCalledOnce();
+        expect(FC.MODE_RANGES).toHaveLength(4);
+    });
 });
