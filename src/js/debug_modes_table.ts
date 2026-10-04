@@ -589,7 +589,8 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "VELOCITY_EST", // 107
         "SAG_COMPENSATION", // 108
         "UPT1", // 109
-        "PSAS", // 110
+        "FLIGHT_PLAN", // 110
+        "PSAS", // 111
     ]),
 });
 

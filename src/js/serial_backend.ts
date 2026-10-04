@@ -30,7 +30,7 @@ import FC from "./fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
-import DeviceHandlerModule from "./device_handler";
+import DeviceHandler from "./device_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
@@ -39,13 +39,12 @@ import { updateTabList } from "./utils/updateTabList";
 import { applyExpertMode } from "./utils/applyExpertMode";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { parseConnectDeeplink } from "./utils/connectDeeplink";
-import * as Analytics from "./Analytics";
+import { getTracking } from "./Analytics";
 import semver from "semver";
 import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
-import { isTauriIOS } from "./utils/checkCompatibility.js";
 import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
@@ -55,32 +54,9 @@ import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
 
-/** From device_handler's describeDevice(): the USB ids let a rebooted device be matched under a new path. */
-interface DeviceDescriptor {
-    path: string;
-    vendorId: unknown;
-    productId: unknown;
-}
-
-// device_handler.js builds its singleton with `new (function () {...})()` and attaches methods
-// afterwards, which TypeScript cannot see; these are the ones this module calls.
-const DeviceHandler = DeviceHandlerModule as typeof DeviceHandlerModule & {
-    initialize(): void;
-    describeDevice(path: string): DeviceDescriptor | null;
-    findDescribedDevice(target: DeviceDescriptor | null): object | undefined;
-    isKnownDevicePath(path: string): boolean;
-};
-
 // Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
 // tab_switch.js; configuration_loaded is only ever written.
 const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
-
-// Analytics.js declares `let tracking = null` and assigns it later, so the binding is implicit
-// any. Read through the namespace to keep the live binding; it is set up before any connection.
-interface AnalyticsTracker {
-    EVENT_CATEGORIES: { FLIGHT_CONTROLLER: string };
-    sendEvent(category: string, action: string, options: Record<string, unknown>): void;
-}
 
 type ReadInfo = Parameters<typeof MSP.read>[0];
 
@@ -289,8 +265,9 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
-    const tracking = Analytics.tracking as AnalyticsTracker;
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
+    // It is set up before any connection.
+    const tracking = getTracking();
+    tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,
         boardName: FC.CONFIG.boardName,
@@ -493,9 +470,9 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     // and the Connect button would spin forever. If the attempt neither opens nor becomes valid
     // within the window, recover the UI and tell the user. The disconnect-during-connect path in
     // onClosed normally handles this sooner; this covers protocols that signal nothing at all.
-    // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake — a slow AP plus
-    // the iOS Local Network permission prompt on the first connection — so give them a wider
-    // window than the enumerated-serial default before the safety net calls the attempt failed.
+    // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake over a slow AP, so
+    // give them a wider window than the enumerated-serial default before the safety net calls
+    // the attempt failed.
     const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
     GUI.timeout_add(
         "connectAttempt",
@@ -810,21 +787,7 @@ function abortConnection(messageKey?: string) {
     const isManualTarget =
         DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
     const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
-    let message = i18n.getMessage(effectiveKey);
-
-    // iOS gates connections to local-network addresses (where an ELRS module lives) behind a
-    // per-app Local Network permission; when it is denied the socket fails immediately with no
-    // route to host and no prompt. Point the user at the setting, since that is the usual cause.
-    // The watchdog and connect-phase disconnect paths both report "connectionFailed" explicitly,
-    // so key off the resolved message rather than the absence of a messageKey.
-    if (
-        effectiveKey === "connectionFailed" &&
-        isManualTarget &&
-        isTauriIOS() &&
-        serial.isLocalNetworkAddress(connectingTo)
-    ) {
-        message += ` ${i18n.getMessage("connectionFailedLocalNetworkIOS")}`;
-    }
+    const message = i18n.getMessage(effectiveKey);
 
     // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
     // FAILED edge before teardown. notifyClosed (via resetConnection's close path)

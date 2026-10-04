@@ -104,7 +104,12 @@
                             v-model="settings.userLanguage"
                             value-key="value"
                             :items="[
-                                { label: $t('language_default'), value: 'DEFAULT' },
+                                {
+                                    label: i18n.getMessage('language_DEFAULT', {
+                                        systemLanguage: i18n.getMessage(`language_${i18n.getSystemLocale()}`),
+                                    }),
+                                    value: 'DEFAULT',
+                                },
                                 { type: 'separator' },
                                 ...availableLanguages.map((lang) => ({
                                     label: $t(`language_${lang}`),
@@ -145,7 +150,7 @@
     </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onUnmounted, reactive, watch } from "vue";
 import { useDialog } from "@/composables/useDialog";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
@@ -244,7 +249,7 @@ watch(
     (value) => {
         setConfig({ analyticsOptOut: value });
         checkSetupAnalytics((analyticsService) => {
-            analyticsService.setOptOut(value);
+            analyticsService?.setOptOut(value);
         });
     },
 );
@@ -362,7 +367,7 @@ watch(
     },
 );
 
-let uiScalePersistTimer = null;
+let uiScalePersistTimer: ReturnType<typeof setTimeout> | undefined;
 let notificationRequestId = 0;
 
 watch(

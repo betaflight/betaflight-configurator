@@ -21,13 +21,13 @@
                         <p v-html="$t('defaultSupport')"></p>
                         <ul>
                             <li>
-                                <span v-html="$t('defaultSupport1')"></span>
-                            </li>
-                            <li>
                                 <span v-html="$t('defaultSupport2')"></span>
                             </li>
                             <li>
                                 <span v-html="$t('defaultSupport3')"></span>
+                            </li>
+                            <li>
+                                <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
                         <div class="subline">
@@ -36,9 +36,6 @@
                         <ul>
                             <li>
                                 <span v-html="$t('defaultSupport4')"></span>
-                            </li>
-                            <li>
-                                <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
                     </UiBox>

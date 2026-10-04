@@ -66,10 +66,9 @@ function isBrokenPipeError(error) {
  * as soon as the device leaves the bus.
  *
  * A flight controller re-enumerates on every reboot — "Save and Reboot", exiting
- * the bootloader — and on Android the port path is the USB device node, so the
- * old path is gone for good rather than reappearing. Treating this as fatal
- * stops the read loop and the MSP queue from hammering a dead path for the
- * second or so it takes the hotplug poll to notice.
+ * the bootloader — so the old path can be gone for good rather than reappearing.
+ * Treating this as fatal stops the read loop and the MSP queue from hammering a
+ * dead path for the second or so it takes the hotplug poll to notice.
  * @param {unknown} error - Rejection value from the plugin (string, Error or object).
  * @returns {boolean} Whether the port no longer exists.
  */
@@ -89,10 +88,9 @@ function isLockTimeoutError(error) {
 }
 
 /**
- * Parse a vendor/product ID from the plugin response. The shape depends on the
- * backend: the desktop serialport enumerator stringifies the numbers as decimal
- * ("1155"), while the Android USB bridge formats them as hex ("0x0483"). Ports
- * with no USB descriptor report the literal "Unknown".
+ * Parse a vendor/product ID from the plugin response. The serialport enumerator
+ * stringifies the numbers as decimal ("1155"). Ports with no USB descriptor
+ * report the literal "Unknown".
  * @param {unknown} value - Raw `vid`/`pid` field from `available_ports`.
  * @returns {number|undefined} The numeric ID, or undefined when absent/unparseable.
  */
@@ -100,8 +98,8 @@ function parseId(value) {
     if (typeof value === "number") {
         return value;
     }
-    // Anything that is not a string cannot be an ID from either backend, and
-    // stringifying it would only produce "[object Object]" to fail on below.
+    // Anything that is not a string cannot be an ID, and stringifying it would
+    // only produce "[object Object]" to fail on below.
     if (typeof value !== "string") {
         return undefined;
     }
@@ -109,10 +107,10 @@ function parseId(value) {
     // Match the whole string, because parseInt stops at the first invalid
     // character: "1155unknown" would otherwise read as 1155 and promote an
     // unrecognised device into the known-device list.
-    if (!/^(?:0x[\da-f]+|\d+)$/i.test(text)) {
+    if (!/^\d+$/.test(text)) {
         return undefined;
     }
-    return Number.parseInt(text, /^0x/i.test(text) ? 16 : 10);
+    return Number.parseInt(text, 10);
 }
 
 /**
@@ -356,17 +354,9 @@ class TauriSerial extends EventTarget {
      * Whether the transport still enumerates `path`, asked fresh rather than read
      * from the cached list.
      *
-     * Opening a path that has gone away is not a harmless failure on Android. The
-     * plugin's Kotlin bridge throws `device not found` for a vanished USB node,
-     * and its JNI wrapper leaks that exception: `with_env` only clears a pending
-     * exception after the call succeeds, so a throw returns early and leaves the
-     * exception set on the thread. Every later call over that bridge is then
-     * undefined — in practice the webview's JavaScript thread blocks inside
-     * `postMessage` and never comes back, which reads as the whole app freezing.
-     *
      * This matters most straight after "Save and Reboot": the flight controller
-     * re-enumerates under a new device node, so the remembered path is dead while
-     * the reconnect cycle is retrying against it.
+     * re-enumerates, so the remembered path can be dead while the reconnect cycle
+     * is retrying against it.
      *
      * Checked against the raw port map, not the known-device list, so this only
      * ever answers "does this path exist".
@@ -461,12 +451,8 @@ class TauriSerial extends EventTarget {
 
             this.addEventListener("receive", this.handleReceiveBytes);
 
-            // Enumeration has no job while a port is open, and on Android it is
-            // actively harmful: `available_ports` crosses into Kotlin and queries
-            // the USB service on a single-threaded executor with an unbounded
-            // wait. Running that underneath a live MSP session is what wedged the
-            // bridge and froze the app. Loss of the device is noticed by the read
-            // and write paths instead, which is both safe and quicker.
+            // Enumeration has no job while a port is open. Loss of the device is
+            // noticed by the read and write paths instead, which is quicker.
             await this.stopDeviceMonitoring();
 
             // Nothing reads the port without the watch, so a failure here is a

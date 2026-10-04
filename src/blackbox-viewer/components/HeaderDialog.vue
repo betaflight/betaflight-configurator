@@ -65,12 +65,14 @@
                         <!-- PID Settings: single merged table -->
                         <PidTable v-if="group === 'PID Settings'" :rows="allPids" :showDMax="showDMax" />
 
+                        <!-- Wing SPA -->
+                        <SpaTable v-else-if="group === 'Wing SPA'" :rows="wingSpaParams" />
                         <!-- Features / Disabled Fields -->
                         <FeatureTable v-else-if="group === 'Features'" :data="featuresList" />
                         <FeatureTable v-else-if="group === 'Disabled Fields'" :data="disabledFieldsList" />
 
                         <!-- Default: ParamTable -->
-                        <ParamTable v-else :params="groupParamMap[group]" />
+                        <ParamTable v-else :params="groupParamMap[group] ?? []" />
                     </UiBox>
                 </div>
             </div>
@@ -192,14 +194,15 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import semver from "semver";
 import Sortable from "sortablejs";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout } from "../header_layout";
+import { loadHeaderLayout, saveHeaderLayout, subscribeHeaderLayout, type HeaderLayout } from "../header_layout";
 import UiBox from "./UiBox.vue";
 import ParamTable from "./ParamTable.vue";
 import PidTable from "./PidTable.vue";
+import SpaTable, { type SpaRow } from "./SpaTable.vue";
 import FeatureTable from "./FeatureTable.vue";
 import {
     OFF_ON,
@@ -227,13 +230,26 @@ import {
     FIRMWARE_TYPE_INAV,
 } from "../flightlog_fielddefs";
 import { getDebugModes } from "../../js/utils/debugModes";
+import { i18n } from "../../js/localization";
+
+const t = (key: string) => i18n.getMessage(key);
 
 const open = defineModel("open", { type: Boolean, default: false });
-const cols = ref(null);
+const cols = ref<number | null>(null);
 
 const props = defineProps({
     sysConfig: { type: Object, default: null },
 });
+
+/** The parsed log header: the parser keys it by header name, so every value is dynamic. */
+type SysConfig = NonNullable<typeof props.sysConfig>;
+type HeaderParam = ReturnType<typeof param>;
+
+interface HeaderField {
+    name: string;
+    value: string;
+    group: string;
+}
 
 // --- Helpers ---
 
@@ -253,38 +269,38 @@ const fwVer = computed(() => sc.value.firmwareVersion || "0.0.0");
 const isBF = computed(() => fwType.value === FIRMWARE_TYPE_BETAFLIGHT);
 const isINAV = computed(() => fwType.value === FIRMWARE_TYPE_INAV);
 
-function gte(ver) {
+function gte(ver: string) {
     return semver.gte(fwVer.value, ver);
 }
-function lt(ver) {
+function lt(ver: string) {
     return semver.lt(fwVer.value, ver);
 }
-function lte(ver) {
+function lte(ver: string) {
     return semver.lte(fwVer.value, ver);
 }
 
-function fmtVal(data, decimalPlaces) {
+function fmtVal(data: number | null | undefined, decimalPlaces: number) {
     if (data == null) {
         return null;
     }
     return (data / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
 }
 
-function fmtFloat(data, decimalPlaces) {
+function fmtFloat(data: number | null | undefined, decimalPlaces: number) {
     if (data == null) {
         return null;
     }
     return data.toFixed(decimalPlaces);
 }
 
-function selectVal(data, list) {
+function selectVal(data: number | null | undefined, list: ArrayLike<string> | null | undefined) {
     if (data == null || !list) {
         return null;
     }
     return list[data] ?? String(data);
 }
 
-function bitmaskVal(data, totalBits = 8) {
+function bitmaskVal(data: number | null | undefined, totalBits = 8) {
     if (data == null) {
         return null;
     }
@@ -292,13 +308,13 @@ function bitmaskVal(data, totalBits = 8) {
     return `${data} (${bin})`;
 }
 
-function param(name, value, opts = {}) {
-    return { name, value: value ?? "-", missing: value == null, ...opts };
+function param(name: string, value: string | number | null | undefined) {
+    return { name, value: value ?? "-", missing: value == null };
 }
 
 // --- Copy to clipboard ---
 
-function formatParams(title, params) {
+function formatParams(title: string, params: { name: string; value: string | number }[]) {
     if (!params.length) {
         return "";
     }
@@ -328,6 +344,15 @@ function copyToClipboard() {
         formatParams("Dynamic Notch", dynNotchParams.value),
         formatParams("RPM Filter", rpmFilterParams.value),
         formatParams("RC Smoothing", rcSmoothingParams.value),
+        formatParams(
+            "Wing SPA",
+            wingSpaParams.value.map((r) => ({
+                name: r.label,
+                value: `Mode=${r.mode ?? "-"} Center=${r.center ?? "-"} Width=${r.width ?? "-"}`,
+            })),
+        ),
+        formatParams("Wing TPA", wingTpaParams.value),
+        formatParams("Wing curve", wingCurvesParams.value),
     ];
     const text = `${craftName.value}\n${revision.value}\n${boardInfo.value}\n\n${sections.filter(Boolean).join("\n")}`;
     navigator.clipboard.writeText(text);
@@ -351,8 +376,20 @@ const boardInfo = computed(() => (sc.value["Board information"] ? `Board: ${sc.v
 const showDMax = computed(() => isBF.value && gte("4.0.0"));
 const allPids = computed(() => [...mainPids.value, ...baroPids.value, ...magPids.value, ...gpsPids.value]);
 
-function pidRow(label, data) {
-    let row;
+interface PidRowData {
+    label: string;
+    p: number | null;
+    i: number | null;
+    d: number | null;
+    dMax: number | null;
+    f: number | null;
+    // Wings builds only: present when the header carries s_roll / s_pitch / s_yaw.
+    s?: number | null;
+    missing: boolean;
+}
+
+function pidRow(label: string, data: ArrayLike<number | null | undefined> | null | undefined): PidRowData {
+    let row: PidRowData;
     if (!data) {
         row = {
             label,
@@ -455,8 +492,9 @@ const feedforwardParams = computed(() => {
 
 // --- Rates ---
 
-function rateValue(rates, index, rMul, rDec) {
-    return fmtVal(rates?.[index] == null ? null : rates[index] * rMul, rDec);
+function rateValue(rates: ArrayLike<number | null> | null | undefined, index: number, rMul: number, rDec: number) {
+    const rate = rates?.[index];
+    return fmtVal(rate == null ? null : rate * rMul, rDec);
 }
 
 const rateParams = computed(() => {
@@ -718,7 +756,7 @@ const rpmFilterParams = computed(() => {
 
 // --- RC Smoothing ---
 
-function buildRcSmoothing43(s) {
+function buildRcSmoothing43(s: SysConfig) {
     const result = [
         param("Mode", selectVal(s.rc_smoothing_mode, RC_SMOOTHING_MODE)),
         param("Setpoint Hz", fmtVal(s.rc_smoothing_setpoint_hz, 0)),
@@ -747,7 +785,7 @@ function buildRcSmoothing43(s) {
     return result;
 }
 
-function buildRcSmoothing34(s) {
+function buildRcSmoothing34(s: SysConfig) {
     const result = [param("Mode", selectVal(s.rc_smoothing_mode, RC_SMOOTHING_TYPE))];
     const cutoffs = s.rc_smoothing_cutoffs;
     if (cutoffs) {
@@ -766,7 +804,7 @@ const rcSmoothingParams = computed(() => {
         return [];
     }
     const s = filteredSc.value;
-    let result;
+    let result: HeaderParam[];
 
     if (gte("4.3.0")) {
         result = buildRcSmoothing43(s);
@@ -814,6 +852,120 @@ const motorParams = computed(() => {
         param("Dyn Idle I", fmtVal(s.dyn_idle_i_gain, 0)),
         param("Dyn Idle D", fmtVal(s.dyn_idle_d_gain, 0)),
     ].filter((p) => !p.missing);
+});
+
+const wingTpaSpeedTypeNames = computed(() => [t("pidTuningWingTpaSpeedBasic"), t("pidTuningWingTpaSpeedAdvanced")]);
+const wingYawTypeNames = computed(() => [t("pidTuningWingYawTypeRudder"), t("pidTuningWingYawTypeDiffThrust")]);
+
+const wingTpaParams = computed(() => {
+    const mode = sc.value;
+    const s = filteredSc.value;
+    const result: HeaderParam[] = [];
+
+    if (mode.tpa_curve_type == null || mode.tpa_speed_type == null) {
+        return result;
+    }
+
+    // Show TPA speed parameters for hyperbolic curves type only
+    if (mode.tpa_curve_type === 0) {
+        return [param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value))].filter(
+            (p) => !p.missing,
+        );
+    }
+
+    result.push(param(t("pidTuningWingTpaSpeedType"), selectVal(mode.tpa_speed_type, wingTpaSpeedTypeNames.value)));
+    if (mode.tpa_speed_type == 0) {
+        // Basic mode
+        result.push(
+            param(t("pidTuningWingTpaBasicSpeedDelay"), fmtVal(s.tpa_speed_basic_delay, 0)),
+            param(t("pidTuningWingTpaBasicSpeedGravity"), fmtVal(s.tpa_speed_basic_gravity, 0)),
+        );
+    } else if (mode.tpa_speed_type == 1) {
+        // Advanced mode
+        result.push(
+            param(t("pidTuningWingTpaAdvSpeedPropPitch"), fmtVal(s.tpa_speed_adv_prop_pitch, 0)),
+            param(t("pidTuningWingTpaAdvSpeedMass"), fmtVal(s.tpa_speed_adv_mass, 0)),
+            param(t("pidTuningWingTpaAdvSpeedDragK"), fmtVal(s.tpa_speed_adv_drag_k, 0)),
+            param(t("pidTuningWingTpaAdvSpeedThrust"), fmtVal(s.tpa_speed_adv_thrust, 0)),
+            param(t("pidTuningWingTpaAdvSpeedMaxVoltage"), fmtVal(s.tpa_speed_max_voltage, 0)),
+            param(t("pidTuningWingTpaAdvSpeedPitchOffset"), fmtVal(s.tpa_speed_pitch_offset, 0)),
+        );
+    }
+
+    result.push(param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value)));
+
+    return result.filter((p) => !p.missing);
+});
+
+const wingTpaCurveTypeNames = computed(() => [t("pidTuningWingTpaCurveClassic"), t("pidTuningWingTpaCurveHyperbolic")]);
+
+const wingCurvesParams = computed(() => {
+    const mode = sc.value;
+    const s = filteredSc.value;
+    const result: HeaderParam[] = [];
+
+    if (mode.tpa_curve_type == null) {
+        return result;
+    }
+
+    result.push(param(t("pidTuningWingTpaCurveType"), selectVal(mode.tpa_curve_type, wingTpaCurveTypeNames.value)));
+    // Show curve parameters for hyperbolic curves type only
+    if (mode.tpa_curve_type === 1) {
+        result.push(
+            param(t("pidTuningWingTpaAdvSpeedCurveStallSpeed"), fmtVal(s.tpa_curve_stall_throttle, 0)),
+            param(t("pidTuningWingTpaAdvSpeedCurvePidThr0"), fmtVal(s.tpa_curve_pid_thr0, 0)),
+            param(t("pidTuningWingTpaAdvSpeedCurvePidThr100"), fmtVal(s.tpa_curve_pid_thr100, 0)),
+            param(t("pidTuningWingTpaAdvSpeedCurveExpo"), fmtVal(s.tpa_curve_expo, 0)),
+        );
+    }
+
+    return result.filter((p) => !p.missing);
+});
+
+function wingSpaRow(label: string, data: (string | number | null | undefined)[]): SpaRow {
+    return {
+        label,
+        mode: data[0] ?? null,
+        center: data[1] ?? null,
+        width: data[2] ?? null,
+    };
+}
+
+const wingSpaModeNames = computed(() => [
+    t("pidTuningWingSpaModeOff"),
+    t("pidTuningWingSpaModeIFreeze"),
+    t("pidTuningWingSpaModeI"),
+    t("pidTuningWingSpaModePID"),
+    t("pidTuningWingSpaModePDIFreeze"),
+]);
+
+const wingSpaParams = computed(() => {
+    const mode = sc.value;
+    const s = filteredSc.value;
+    const result: SpaRow[] = [];
+
+    // Show SPA only when mode is not Off
+    if (mode.spa_roll_mode) {
+        const row = wingSpaRow("Roll", [
+            wingSpaModeNames.value[mode.spa_roll_mode],
+            s.spa_roll_center,
+            s.spa_roll_width,
+        ]);
+        result.push(row);
+    }
+    if (mode.spa_pitch_mode) {
+        const row = wingSpaRow("Pitch", [
+            wingSpaModeNames.value[mode.spa_pitch_mode],
+            s.spa_pitch_center,
+            s.spa_pitch_width,
+        ]);
+        result.push(row);
+    }
+    if (mode.spa_yaw_mode) {
+        const row = wingSpaRow("Yaw", [wingSpaModeNames.value[mode.spa_yaw_mode], s.spa_yaw_center, s.spa_yaw_width]);
+        result.push(row);
+    }
+    return result;
 });
 
 // --- Features ---
@@ -965,12 +1117,12 @@ const headerFieldColumns = [
 const headerSearch = ref("");
 const headerSortAlpha = ref(false);
 const headerSortGroups = ref(false);
-const expandedHeaderGroups = ref(new Set());
-const hiddenGroups = ref(new Set());
-const hiddenFields = ref(new Set());
+const expandedHeaderGroups = ref(new Set<string>());
+const hiddenGroups = ref(new Set<string>());
+const hiddenFields = ref(new Set<string>());
 
-// Group order for display
-const GROUP_ORDER = [
+// Group order for display (a Set keeps insertion order)
+const GROUP_ORDER = new Set([
     "PID Settings",
     "PID Sliders",
     "PID Controller",
@@ -985,10 +1137,13 @@ const GROUP_ORDER = [
     "D-Term Filters",
     "RC Smoothing",
     "Wing",
+    "Wing SPA",
+    "Wing TPA",
+    "Wing curve",
     "PSAS",
     "Features",
     "Disabled Fields",
-];
+]);
 
 // --- Pane ordering and drag-and-drop ---
 
@@ -996,8 +1151,7 @@ const DEFAULT_PANE_ORDER = [...GROUP_ORDER];
 
 const paneOrder = ref([...DEFAULT_PANE_ORDER]);
 
-/** @param {import("../header_layout").HeaderLayout} layout */
-function applyHeaderLayout(layout) {
+function applyHeaderLayout(layout: HeaderLayout) {
     hiddenGroups.value = new Set(layout.hiddenGroups);
     hiddenFields.value = new Set(layout.hiddenFields);
 
@@ -1021,7 +1175,7 @@ function persistHeaderLayout() {
 applyHeaderLayout(loadHeaderLayout());
 const unsubscribeHeaderLayout = subscribeHeaderLayout(applyHeaderLayout);
 
-const groupParamMap = computed(() => ({
+const groupParamMap = computed<Record<string, HeaderParam[] | undefined>>(() => ({
     "PID Sliders": pidSliderParams.value,
     "PID Controller": pidControllerParams.value,
     Feedforward: feedforwardParams.value,
@@ -1034,9 +1188,11 @@ const groupParamMap = computed(() => ({
     "RPM Filter": rpmFilterParams.value,
     "D-Term Filters": dtermFilterParams.value,
     "RC Smoothing": rcSmoothingParams.value,
+    "Wing TPA": wingTpaParams.value,
+    "Wing curve": wingCurvesParams.value,
 }));
 
-function paneHasData(group) {
+function paneHasData(group: string) {
     if (group === "PID Settings") {
         return allPids.value.length > 0;
     }
@@ -1046,6 +1202,9 @@ function paneHasData(group) {
     if (group === "Disabled Fields") {
         return disabledFieldsList.value.length > 0;
     }
+    if (group === "Wing SPA") {
+        return wingSpaParams.value.length > 0;
+    }
     const params = groupParamMap.value[group];
     return params && params.length > 0;
 }
@@ -1053,8 +1212,13 @@ function paneHasData(group) {
 const visiblePanes = computed(() => paneOrder.value.filter((g) => !hiddenGroups.value.has(g) && paneHasData(g)));
 
 // --- Sortable.js drag-and-drop ---
-const gridEl = ref(null);
-let sortable = null;
+const gridEl = ref<HTMLElement | null>(null);
+let sortable: ReturnType<typeof Sortable.create> | null = null;
+
+/** The pane wrappers in the grid; all are elements, the filter only narrows the type. */
+function paneElements(el: HTMLElement): HTMLElement[] {
+    return Array.from(el.children).filter((c): c is HTMLElement => c instanceof HTMLElement);
+}
 
 watch(gridEl, (el) => {
     if (sortable) {
@@ -1070,7 +1234,7 @@ watch(gridEl, (el) => {
         animation: 0,
         onStart() {
             // Freeze all pane positions to prevent CSS columns reflow during drag
-            const children = Array.from(el.children);
+            const children = paneElements(el);
             const containerRect = el.getBoundingClientRect();
             const rects = children.map((c) => c.getBoundingClientRect());
             el.style.columns = "auto";
@@ -1088,7 +1252,7 @@ watch(gridEl, (el) => {
         },
         onEnd() {
             // Unfreeze — clear inline styles, restore CSS columns layout
-            for (const c of el.children) {
+            for (const c of paneElements(el)) {
                 c.style.position = "";
                 c.style.left = "";
                 c.style.top = "";
@@ -1099,9 +1263,9 @@ watch(gridEl, (el) => {
             el.style.position = "";
             el.style.height = "";
             // Read reordered visible groups from DOM (Sortable already moved elements)
-            const newVisible = Array.from(el.children)
+            const newVisible = paneElements(el)
                 .map((c) => c.dataset.group)
-                .filter(Boolean);
+                .filter((g): g is string => Boolean(g));
             // Rebuild full order: reordered visible + hidden groups preserved
             const visibleSet = new Set(newVisible);
             const hidden = paneOrder.value.filter((g) => !visibleSet.has(g));
@@ -1118,7 +1282,7 @@ onBeforeUnmount(() => {
     }
 });
 
-function toggleGroupVisibility(group) {
+function toggleGroupVisibility(group: string) {
     const s = hiddenGroups.value;
     if (s.has(group)) {
         s.delete(group);
@@ -1129,7 +1293,7 @@ function toggleGroupVisibility(group) {
     persistHeaderLayout();
 }
 
-function toggleFieldVisibility(key) {
+function toggleFieldVisibility(key: string) {
     const s = hiddenFields.value;
     if (s.has(key)) {
         s.delete(key);
@@ -1140,7 +1304,7 @@ function toggleFieldVisibility(key) {
     persistHeaderLayout();
 }
 
-function toggleGroupExpand(group) {
+function toggleGroupExpand(group: string) {
     const s = expandedHeaderGroups.value;
     if (s.has(group)) {
         s.delete(group);
@@ -1164,7 +1328,7 @@ function toggleAllGroups() {
 }
 
 // Group assignment by sysConfig key
-const EXPLICIT_GROUPS = {
+const EXPLICIT_GROUPS: Record<string, string | undefined> = {
     rollPID: "PID Settings",
     pitchPID: "PID Settings",
     yawPID: "PID Settings",
@@ -1240,7 +1404,7 @@ const EXPLICIT_GROUPS = {
     serialrx_provider: "RC Smoothing",
     yaw_lpf_hz: "Gyro Filters",
     digitalIdleOffset: "Motor / ESC",
-    yaw_type: "Wing",
+    yaw_type: "Wing TPA",
 };
 
 const PREFIX_GROUPS = [
@@ -1264,13 +1428,13 @@ const PREFIX_GROUPS = [
     ["unsynced_", "Motor / ESC"],
     ["fast_pwm_", "Motor / ESC"],
     ["s_", "Wing"],
-    ["spa_", "Wing"],
-    ["tpa_speed_", "Wing"],
-    ["tpa_curve_", "Wing"],
     ["psas_", "PSAS"],
+    ["tpa_speed_", "Wing TPA"],
+    ["tpa_curve_", "Wing curve"],
+    ["spa_", "Wing SPA"],
 ];
 
-function getHeaderGroup(key) {
+function getHeaderGroup(key: string): string {
     if (EXPLICIT_GROUPS[key]) {
         return EXPLICIT_GROUPS[key];
     }
@@ -1282,7 +1446,7 @@ function getHeaderGroup(key) {
     return "Parameters";
 }
 
-function formatHeaderValue(val) {
+function formatHeaderValue(val: unknown): string | null {
     if (val == null) {
         return null;
     }
@@ -1306,8 +1470,8 @@ const HEADER_SKIP_KEYS = new Set([
     "flightControllerVersion",
 ]);
 
-function buildGroupMap(s) {
-    const groups = {};
+function buildGroupMap(s: SysConfig) {
+    const groups: Record<string, HeaderField[]> = {};
     for (const key of Object.keys(s)) {
         if (HEADER_SKIP_KEYS.has(key)) {
             continue;
@@ -1333,7 +1497,7 @@ function buildGroupMap(s) {
     return groups;
 }
 
-function filterAndSort(fields, query, sortAlpha) {
+function filterAndSort(fields: HeaderField[], query: string, sortAlpha: boolean) {
     let result = fields;
     if (query) {
         result = result.filter((f) => f.name.toLowerCase().includes(query) || f.value.toLowerCase().includes(query));
@@ -1347,7 +1511,7 @@ function filterAndSort(fields, query, sortAlpha) {
 const groupedHeaders = computed(() => {
     const groups = buildGroupMap(sc.value);
     const q = headerSearch.value.trim().toLowerCase();
-    const result = [];
+    const result: { name: string; fields: HeaderField[] }[] = [];
 
     // Groups in defined order
     for (const name of GROUP_ORDER) {
@@ -1361,7 +1525,7 @@ const groupedHeaders = computed(() => {
     }
     // Any groups not in GROUP_ORDER
     for (const name of Object.keys(groups)) {
-        if (GROUP_ORDER.includes(name)) {
+        if (GROUP_ORDER.has(name)) {
             continue;
         }
         const fields = filterAndSort(groups[name], q, headerSortAlpha.value);

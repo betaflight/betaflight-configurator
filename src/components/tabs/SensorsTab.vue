@@ -839,6 +839,7 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
+import { ipCoordinates } from "../../js/utils/ipGeolocation";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { have_sensor } from "../../js/sensor_helpers";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
@@ -850,6 +851,7 @@ import {
     getGeoReference,
     parseCoordinates,
     type GeoReference,
+    type MagVizMode,
     type Vec3,
 } from "../../composables/useMagCalibration";
 import { isMspCliSupported } from "../../composables/useMspCliSession";
@@ -863,7 +865,6 @@ import {
     type TumbleCharacterization,
 } from "../../js/utils/magCharacterizationCompute";
 import { buildCharacterizationModel } from "../../js/utils/magModelExport";
-import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
 import Model from "../../js/model";
@@ -919,13 +920,10 @@ const isMounted = useIsMounted();
 // --- Constants ---
 const SENSOR_ALIGN_CUSTOM = 9;
 const GPS_COORD_SCALE = 1e7;
-const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
-const IP_GEOLOCATION_TIMEOUT_MS = 10000;
 const BROWSER_GEOLOCATION_TIMEOUT_MS = 15000;
 const ACC_CALIBRATION_TIMEOUT_MS = 2000;
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 const ATTITUDE_POLL_MS = 33;
-const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 
 // Wizard needs mixer + motor_count for the craft mesh and hydrated boardAlignment
 // for its starting angles — keep the launch button off until loadConfig finishes both.
@@ -1401,41 +1399,6 @@ async function browserCoordinates(promptConsent = false): Promise<Coordinates | 
     });
 }
 
-// IP geolocation (consent-gated), or null. The caller decides when to attempt it,
-// so the consent prompt only appears when there is genuinely no GPS fix.
-async function ipCoordinates(promptConsent: boolean): Promise<Coordinates | null> {
-    const hasConsent = !!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY];
-    if (!hasConsent) {
-        if (!promptConsent) {
-            return null;
-        }
-        const allowed = confirm(i18n.getMessage("preflightIpConsentMessage"));
-        if (!allowed) {
-            return null;
-        }
-        setConfig({ [IP_GEOLOCATION_CONSENT_KEY]: true });
-    }
-
-    try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), IP_GEOLOCATION_TIMEOUT_MS);
-        const response = await fetch(IP_GEOLOCATION_URL, { signal: controller.signal });
-        clearTimeout(timer);
-        if (!response.ok) {
-            return null;
-        }
-        const data = await response.json();
-        const lat = Number.parseFloat(data.latitude);
-        const lon = Number.parseFloat(data.longitude);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-            return null;
-        }
-        return { lat, lon };
-    } catch {
-        return null;
-    }
-}
-
 function applyDetectedDeclination(detected: number) {
     if (magDeclination.value === 0 && detected !== 0) {
         magDeclination.value = detected;
@@ -1665,13 +1628,13 @@ function cancelMagCal() {
     cal.cancelCalibration();
 }
 
-const MAG_VIZ_MODES = [
+const MAG_VIZ_MODES: { value: MagVizMode; label: string; icon: string }[] = [
     { value: "pointcloud", label: "magVizPointCloud", icon: "i-lucide-scatter-chart" },
     { value: "heatmap", label: "magVizHeatmap", icon: "i-lucide-globe" },
     { value: "projection", label: "magVizProjection", icon: "i-lucide-circle-dot" },
     { value: "polar", label: "magVizPolar", icon: "i-lucide-radar" },
 ];
-const magVizMode = ref("pointcloud");
+const magVizMode = ref<MagVizMode>("pointcloud");
 
 const calGuidedAvailable = computed(() => isApi147.value && isMspCliSupported());
 

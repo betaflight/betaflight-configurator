@@ -75,10 +75,7 @@ RUN yes | sdkmanager --licenses > /dev/null 2>&1 && \
     sdkmanager --install \
     "platform-tools" \
     "platforms;android-35" \
-    "build-tools;35.0.0" \
-    "ndk;28.0.13004108"
-
-ENV NDK_HOME="${ANDROID_HOME}/ndk/28.0.13004108"
+    "build-tools;35.0.0"
 
 # Create a non-root user
 ARG USERNAME=devpod
@@ -98,8 +95,7 @@ RUN chown -R $USERNAME:$USERNAME ${ANDROID_HOME}
 # Install Rust toolchain as the user (matches src-tauri/rust-toolchain.toml)
 USER $USERNAME
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.95 --profile minimal && \
-    /home/$USERNAME/.cargo/bin/rustup component add rustfmt clippy && \
-    /home/$USERNAME/.cargo/bin/rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+    /home/$USERNAME/.cargo/bin/rustup component add rustfmt clippy
 
 # Add cargo to PATH
 ENV PATH="/home/$USERNAME/.cargo/bin:${PATH}"
