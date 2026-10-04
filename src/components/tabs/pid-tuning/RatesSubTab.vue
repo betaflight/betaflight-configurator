@@ -307,12 +307,11 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useTranslation } from "i18next-vue";
 import { i18n } from "@/js/localization";
 import { useDialog } from "@/composables/useDialog";
+import { useRatesRcPolling } from "@/composables/pidTuning/useRatesRcPolling";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import FC from "@/js/fc";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve, { axisRateCurveParams, type CurrentRates, type RateCurveParams } from "@/js/RateCurve";
 import Model from "@/js/model";
 import { degToRad } from "@/js/utils/common";
@@ -382,9 +381,11 @@ const throttleCurveCanvas = ref<HTMLCanvasElement | null>(null);
 const ratesPreviewCanvas = ref<HTMLCanvasElement | null>(null);
 const ratesPreviewContainer = ref<HTMLElement | null>(null);
 
+// Live stick data (MSP_RC), cleared on unmount
+const { startRcPolling } = useRatesRcPolling();
+
 // 3D Model
 let model: Model | null = null;
-let rcUpdateInterval: ReturnType<typeof setInterval> | null = null; // For setInterval RC updates
 let initModelTimeoutId: ReturnType<typeof setTimeout> | null = null; // For setTimeout initModel retries
 let modelInitTimeout: ReturnType<typeof setTimeout> | null = null; // For setTimeout after model creation
 let initTimeout: ReturnType<typeof setTimeout> | null = null; // For setTimeout initial draw delay
@@ -1751,14 +1752,12 @@ onMounted(() => {
     });
 
     // Poll MSP_RC for live stick data and update rate curve labels + throttle curve
-    rcUpdateInterval = setInterval(() => {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
-            if (rateCurveLayer1.value) {
-                updateRatesLabels();
-            }
-            drawThrottleCurve();
-        });
-    }, 100); // Update 10 times per second
+    startRcPolling(() => {
+        if (rateCurveLayer1.value) {
+            updateRatesLabels();
+        }
+        drawThrottleCurve();
+    });
 });
 
 // Set defaults for rates type
@@ -1845,12 +1844,6 @@ onUnmounted(() => {
     if (initModelTimeoutId) {
         clearTimeout(initModelTimeoutId);
         initModelTimeoutId = null;
-    }
-
-    // Clear RC update interval
-    if (rcUpdateInterval) {
-        clearInterval(rcUpdateInterval);
-        rcUpdateInterval = null;
     }
 });
 </script>
