@@ -123,10 +123,8 @@ describe("useMspCliSession.scheduleReconnect", () => {
         const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         // `save` reboots the FC: the port closes before it replies, so the in-flight command is
         // drained with the tagged connection-closed error.
-        MSP.send_cli_command.mockImplementation((_cmd, cb) => {
-            const err = new Error("Serial connection closed");
-            err.connectionClosed = true;
-            cb([], err);
+        vi.mocked(MSP.send_cli_command).mockImplementation((_cmd, cb) => {
+            cb?.([], Object.assign(new Error("Serial connection closed"), { connectionClosed: true }));
         });
 
         const result = await saveAndReconnect();
@@ -139,8 +137,8 @@ describe("useMspCliSession.scheduleReconnect", () => {
     it("still reports a genuine save failure", async () => {
         DeviceHandler.devicePicker.autoConnect = false;
         const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-        MSP.send_cli_command.mockImplementation((_cmd, cb) => {
-            cb([], new Error("###ERROR: bad command"));
+        vi.mocked(MSP.send_cli_command).mockImplementation((_cmd, cb) => {
+            cb?.([], new Error("###ERROR: bad command"));
         });
 
         const result = await saveAndReconnect();

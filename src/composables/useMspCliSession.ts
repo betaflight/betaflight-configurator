@@ -1,4 +1,25 @@
-import { ref } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { ref, type Ref } from "vue";
 import semver from "semver";
 import MSP from "../js/msp";
 import FC from "../js/fc";
@@ -13,7 +34,59 @@ const ERROR_PREFIX = "###ERROR";
 
 export const MIN_FC_VERSION_FOR_MSP_CLI = "4.5.4";
 
-export function isMspCliSupported() {
+export interface SendOptions {
+    timeoutMs?: number;
+}
+
+export interface CliSettingRange {
+    min: number;
+    max: number;
+}
+
+export interface SaveAndReconnectResult {
+    ok: boolean;
+    error: unknown;
+}
+
+export interface BatchProgress {
+    /** 1-based position in the batch, counting skipped blank and comment lines. */
+    index: number;
+    total: number;
+    sent: number;
+    errorCount: number;
+}
+
+/** One command of a batch that failed: refused by the FC, or never answered. */
+export interface BatchFailure {
+    command: string;
+    /** The FC's reply, or the transport error's message when there was none. */
+    response: string[];
+    errors: string[];
+}
+
+export interface BatchOptions {
+    onProgress?: (progress: BatchProgress) => void;
+    onError?: (failure: BatchFailure) => void;
+    commandTimeoutMs?: number;
+}
+
+export interface BatchResult {
+    sent: number;
+    total: number;
+    errors: BatchFailure[];
+    cancelled: boolean;
+}
+
+export interface MspCliSession {
+    isBatchRunning: Ref<boolean>;
+    send: typeof send;
+    sendSave: typeof sendSave;
+    readDumpAll: typeof readDumpAll;
+    runBatch: (commands: string[], options?: BatchOptions) => Promise<BatchResult>;
+    cancel: () => void;
+}
+
+export function isMspCliSupported(): boolean {
     const version = FC.CONFIG?.flightControllerVersion;
     if (!version) {
         return false;
@@ -23,29 +96,35 @@ export function isMspCliSupported() {
     return semver.valid(normalizedVersion) ? semver.gte(normalizedVersion, MIN_FC_VERSION_FOR_MSP_CLI) : false;
 }
 
-function wait(ms) {
+function wait(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function shouldSkip(line) {
+function shouldSkip(line: string): boolean {
     const trimmed = line.trim();
     return !trimmed || trimmed.startsWith("#");
 }
 
-function parseErrors(lines) {
+function parseErrors(lines: readonly string[]): string[] {
     return lines.filter((line) => line.startsWith(ERROR_PREFIX));
 }
 
-function delayAfter(line) {
+function delayAfter(line: string): number {
     return line.toLowerCase().startsWith("profile") ? PROFILE_COMMAND_DELAY_MS : LINE_DELAY_MS;
 }
 
-/**
- * @param {string} command
- * @param {{ timeoutMs?: number }} [options]
- * @returns {Promise<string[]>} the reply lines
- */
-export function send(command, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
+/** A failed command's error as text. `send` rejects with an Error; anything else is shown as JSON. */
+function errorMessage(error: unknown): string {
+    if (error instanceof Error) {
+        return error.message;
+    }
+    if (typeof error === "string") {
+        return error;
+    }
+    return JSON.stringify(error) ?? "Unknown error";
+}
+
+export function send(command: string, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS }: SendOptions = {}): Promise<string[]> {
     return new Promise((resolve, reject) => {
         MSP.send_cli_command(
             command,
@@ -61,11 +140,11 @@ export function send(command, { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
     });
 }
 
-export function sendSave() {
+export function sendSave(): Promise<string[]> {
     return send("save", { timeoutMs: SAVE_COMMAND_TIMEOUT_MS });
 }
 
-export function readDumpAll() {
+export function readDumpAll(): Promise<string[]> {
     return send("diff all", { timeoutMs: DUMP_READ_TIMEOUT_MS });
 }
 
@@ -76,12 +155,12 @@ export function readDumpAll() {
  * deadline. Previously this path ran its own 500 ms timeout and put the connection state into
  * RECONNECTING with no window, so a device that never came back left the phase there for good.
  */
-export function scheduleReconnect() {
+export function scheduleReconnect(): void {
     scheduleRebootReconnect();
 }
 
 /** Abandon that wait (a tab unmounting mid-reconnect). */
-export function cancelScheduledReconnect() {
+export function cancelScheduledReconnect(): void {
     cancelRebootReconnect();
 }
 
@@ -89,25 +168,23 @@ export function cancelScheduledReconnect() {
 // in-flight promise is drained with a connection-closed error (tagged in MSP.disconnect_cleanup).
 // That is the EXPECTED successful outcome — the config is saved and the board is restarting — not
 // a failure, so callers should not surface it as an error.
-export function isConnectionClosedError(error) {
-    return error?.connectionClosed === true;
+export function isConnectionClosedError(error: unknown): boolean {
+    return (
+        typeof error === "object" && error !== null && "connectionClosed" in error && error.connectionClosed === true
+    );
 }
 
 // `send` resolves with whatever the FC replied, and a command the FC refused replies normally —
 // the refusal is a line in the response, not a transport error. Callers that need to know whether
 // a command took effect have to look for it.
-/**
- * @param {readonly string[] | null | undefined} lines
- * @returns {string | null}
- */
-export function findCliError(lines) {
+export function findCliError(lines: readonly string[] | null | undefined): string | null {
     return parseErrors(lines ?? [])[0] ?? null;
 }
 
 // A numeric setting is printed with its bounds, so the firmware can tell us the limits of a build
 // rather than the app having to guess. Prefer getSettingInfo() in useMspSetting where the FC is
 // new enough: it reports the same bounds as MSP rather than as prose to be scraped.
-export function findCliSettingRange(lines) {
+export function findCliSettingRange(lines: string[] | null | undefined): CliSettingRange | null {
     for (const line of lines ?? []) {
         const match = /^Allowed range:\s*(-?\d+)\s*-\s*(-?\d+)/.exec(line.trim());
         if (match) {
@@ -120,7 +197,7 @@ export function findCliSettingRange(lines) {
 
 // `get <name>` matches on substring, so the reply can carry several settings, each followed by its
 // allowed range and default. Only the line naming the setting exactly holds the current value.
-export function findCliSettingValue(lines, setting) {
+export function findCliSettingValue(lines: string[] | null | undefined, setting: string): string | null {
     for (const line of lines ?? []) {
         const [name, ...rest] = line.split("=");
         if (name.trim() === setting && rest.length) {
@@ -134,7 +211,7 @@ export function findCliSettingValue(lines, setting) {
 // A MODE_LOOKUP setting is printed with the names it accepts, so the app can offer exactly those
 // rather than carrying its own copy of a firmware table. NULL table entries are skipped by the
 // firmware, so the list is not positionally aligned with the enum — names only.
-export function findCliSettingAllowedValues(lines) {
+export function findCliSettingAllowedValues(lines: string[] | null | undefined): string[] | null {
     for (const line of lines ?? []) {
         const match = /^Allowed values:(.*)$/.exec(line.trim());
         if (match) {
@@ -148,8 +225,8 @@ export function findCliSettingAllowedValues(lines) {
     return null;
 }
 
-export async function saveAndReconnect() {
-    let saveError = null;
+export async function saveAndReconnect(): Promise<SaveAndReconnectResult> {
+    let saveError: unknown = null;
     try {
         await sendSave();
     } catch (error) {
@@ -166,23 +243,18 @@ export async function saveAndReconnect() {
     return { ok: saveError === null, error: saveError };
 }
 
-export function useMspCliSession() {
+export function useMspCliSession(): MspCliSession {
     const isBatchRunning = ref(false);
     let cancelRequested = false;
 
-    /**
-     * @param {string[]} commands
-     * @param {{
-     *   onProgress?: (p: { index: number, total: number, sent: number, errorCount: number }) => void,
-     *   onError?: (failure: { command: string, response: string[] }) => void,
-     *   commandTimeoutMs?: number,
-     * }} [options]
-     */
-    async function runBatch(commands, { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS } = {}) {
+    async function runBatch(
+        commands: string[],
+        { onProgress, onError, commandTimeoutMs = DEFAULT_COMMAND_TIMEOUT_MS }: BatchOptions = {},
+    ): Promise<BatchResult> {
         cancelRequested = false;
         isBatchRunning.value = true;
 
-        const errors = [];
+        const errors: BatchFailure[] = [];
         const total = commands.length;
         let index = 0;
         let sent = 0;
@@ -201,12 +273,12 @@ export function useMspCliSession() {
                 }
 
                 const line = rawLine.trim();
-                let response;
+                let response: string[];
                 try {
-                    response = await send(line, { timeoutMs: commandTimeoutMs });
+                    response = await send(line, { timeoutMs: commandTimeoutMs }); // NOSONAR: commands run one at a time, in order
                     sent++;
                 } catch (error) {
-                    const message = String(error?.message ?? error);
+                    const message = errorMessage(error);
                     const failure = { command: line, response: [message], errors: [message] };
                     errors.push(failure);
                     onError?.(failure);
@@ -222,7 +294,7 @@ export function useMspCliSession() {
                 }
 
                 onProgress?.({ index, total, sent, errorCount: errors.length });
-                await wait(delayAfter(line));
+                await wait(delayAfter(line)); // NOSONAR: the FC needs this gap before the next command
             }
         } finally {
             isBatchRunning.value = false;

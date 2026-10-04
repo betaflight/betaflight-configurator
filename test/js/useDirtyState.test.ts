@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { reactive } from "vue";
 import { useDirtyState } from "../../src/composables/useDirtyState";
 
-function setup(initial = { a: 1 }) {
+function setup(initial: Record<string, number> = { a: 1 }) {
     const state = reactive({ ...initial });
     const tracker = useDirtyState(() => JSON.stringify(state));
     return { state, ...tracker };
