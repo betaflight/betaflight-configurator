@@ -608,7 +608,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useTranslation } from "i18next-vue";
 import FC from "@/js/fc";
@@ -862,16 +862,16 @@ const psasSpeedCurvesPilotYawEnabled = computed({
     },
 });
 
-const psasSpeedCurvesMainEnabled = computed({
-    get: () =>
+const psasSpeedCurvesMainEnabled = computed(
+    () =>
         psasSpeedCurvesMainPitchEnabled.value ||
         psasSpeedCurvesMainRollEnabled.value ||
         psasSpeedCurvesMainYawEnabled.value,
-});
+);
 
-const psasSpeedCurvesPilotEnabled = computed({
-    get: () => psasSpeedCurvesPilotPitchEnabled.value || psasSpeedCurvesPilotYawEnabled.value,
-});
+const psasSpeedCurvesPilotEnabled = computed(
+    () => psasSpeedCurvesPilotPitchEnabled.value || psasSpeedCurvesPilotYawEnabled.value,
+);
 
 const psasSpeedCurvesModeList = computed(() => [
     { value: 0, label: t("psasSpeedCurvesModeTpa") },
