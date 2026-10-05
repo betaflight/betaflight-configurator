@@ -50,6 +50,9 @@ export function getPsasHyperbolicCurves(psasConfig, curvesState) {
 
 // Hyperbolic curve definition
 function generatePsasCurve(refSpeed, power, minLimit, maxLimit) {
+    if (!(refSpeed > 0 && power > 0 && minLimit > 0 && maxLimit > 0)) {
+        return [];
+    }
     const steps = 100;
     const minSpeed = refSpeed * Math.pow(maxLimit, -1 / power);
     const maxSpeed = refSpeed * Math.pow(minLimit, -1 / power);
