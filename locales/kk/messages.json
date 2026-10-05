@@ -273,9 +273,6 @@
     "userLanguageSelect": {
         "message": "Әдепкі тілді таңдаңыз"
     },
-    "language_default": {
-        "message": "Жүйе тілі"
-    },
     "sensorDataFlashNotFound": {
         "message": "<br>жад модулі жоқ",
         "description": "Text of the dataflash image in the header of the page."
