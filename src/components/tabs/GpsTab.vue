@@ -355,7 +355,7 @@ const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url)
 /** One row of the satellite signal table. */
 interface SignalRow {
     gnss: string;
-    /** "-" pads the table out to 32 rows; null marks a channel with no GNSS. */
+    /** "-" pads the table out to 50 rows; null marks a channel with no GNSS. */
     satId: number | string | null;
     satUsed: boolean;
     cno: number;
@@ -522,11 +522,13 @@ export default defineComponent({
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
+        const septentrioIndex = computed(() => gpsProtocols.value.indexOf("SEPTENTRIO"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
 
         const ubloxSelected = computed(() => gpsConfig.provider === ubloxIndex.value);
+        const septentrioSelected = computed(() => gpsConfig.provider === septentrioIndex.value);
         const mspSelected = computed(() => gpsConfig.provider === mspIndex.value);
-        const showAutoConfig = computed(() => ubloxSelected.value);
+        const showAutoConfig = computed(() => ubloxSelected.value || septentrioSelected.value);
         const showAutoBaud = computed(
             () => (ubloxSelected.value || mspSelected.value) && semver.lt(apiVersion.value, API_VERSION_1_46),
         );
@@ -557,8 +559,8 @@ export default defineComponent({
         const dronecanNeedsEnable = computed(() => dronecanSelected.value && !dronecanEnabled.value);
         const canSave = computed(() => dirty.value || dronecanNeedsEnable.value);
 
-        const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
-        const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
+        const showUbloxGalileo = computed(() => ubloxSelected.value && showAutoConfig.value && gpsConfig.auto_config === 1);
+        const showUbloxSbas = computed(() => ubloxSelected.value && showAutoConfig.value && gpsConfig.auto_config === 1);
         const showPositionalDop = computed(() => semver.gte(apiVersion.value, API_VERSION_1_46));
 
         const autoBaudChecked = computed({
@@ -676,7 +678,7 @@ export default defineComponent({
             return { qualityColor, stars };
         };
 
-        const gnssArray = ["GPS", "SBAS", "Galileo", "BeiDou", "IMES", "QZSS", "Glonass"];
+        const gnssArray = ["GPS", "SBAS", "Galileo", "BeiDou", "IMES", "QZSS", "Glonass", "NavIC"];
         const qualityArray = [
             "gnssQualityNoSignal",
             "gnssQualitySearching",
@@ -701,12 +703,12 @@ export default defineComponent({
         // Firmware reporting more than 16 channels sends UBX-NAV-SIG style GNSS ids and quality bits.
         const gnssSignalRows = (gpsData: GpsData, channels: number): SignalRow[] => {
             const rows: SignalRow[] = [];
-            const maxUIChannels = 32;
-            const channelCount = Math.min(maxUIChannels, channels) || 32;
+            const maxUIChannels = 50;
+            const channelCount = Math.min(maxUIChannels, channels) || 50;
 
             for (let i = 0; i < channelCount; i++) {
                 const gnssId = gpsData.chn[i];
-                if (gnssId >= 7) {
+                if (gnssId >= 8) {
                     rows.push({ gnss: "-", satId: null, satUsed: false, cno: 0, quality: "", qualityClass: "" });
                     continue;
                 }
@@ -725,7 +727,7 @@ export default defineComponent({
             return rows;
         };
 
-        // Older firmware: raw quality bytes, padded out to 32 rows.
+        // Older firmware: raw quality bytes, padded out to 50 rows.
         const legacySignalRows = (gpsData: GpsData, channels: number): SignalRow[] => {
             const rows: SignalRow[] = [];
             for (let i = 0; i < channels; i++) {
@@ -739,7 +741,7 @@ export default defineComponent({
                 });
             }
 
-            for (let i = channels; i < 32; i++) {
+            for (let i = channels; i < 50; i++) {
                 rows.push({ gnss: "-", satId: "-", satUsed: false, cno: 0, quality: "", qualityClass: "" });
             }
             return rows;
