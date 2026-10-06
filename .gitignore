@@ -1,6 +1,7 @@
 # node.js npm related
 
-node_modules/
+# no trailing slash: also ignores a node_modules symlink (worktrees linked to a shared install)
+node_modules
 npm-debug.log*
 
 # App Build process
@@ -21,9 +22,6 @@ testresults/
 
 # Visual Studio
 .vs/
-
-# node js
-node_modules/
 
 # NetBeans
 nbproject/
