@@ -8210,6 +8210,53 @@
     "osdDescElementNavMap": {
         "message": "Minimap showing home, the flight plan, and the flown trail"
     },
+    "osdTextElementRadarPeer": {
+        "message": "Radar peer (cycling)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarPeer": {
+        "message": "FormationFlight / INAV-Radar peers, one at a time: direction, letter, distance and height difference. Needs GPS and the radar module on a UART with MSP enabled"
+    },
+    "osdTextElementRadarHud": {
+        "message": "Radar HUD",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarHud": {
+        "message": "FormationFlight / INAV-Radar peers drawn where they are in the camera view, with their letter, direction and alternating distance / height difference. Camera FOV, uptilt and range are set in the CLI (radar_*)"
+    },
+    "osdTextElementRadarPeer1": {
+        "message": "Radar peer 1 (A)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRadarPeer2": {
+        "message": "Radar peer 2 (B)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRadarPeer3": {
+        "message": "Radar peer 3 (C)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRadarPeer4": {
+        "message": "Radar peer 4 (D)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarPeerFixed": {
+        "message": "One FormationFlight / INAV-Radar peer in a fixed place: direction, letter, distance and height difference. Shows the letter and a dash while that peer is not received"
+    },
+    "osdTextElementRadarHudHome": {
+        "message": "Radar HUD home",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarHudHome": {
+        "message": "Home drawn as the home icon where it is in the camera view, like a radar peer, with alternating distance / height difference. Uses the camera and margin settings of the Radar HUD (radar_* in the CLI)"
+    },
+    "osdTextElementRadarHudWaypoint": {
+        "message": "Radar HUD waypoint",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRadarHudWaypoint": {
+        "message": "The next flight plan waypoint drawn as WP and its number where it is in the camera view, with alternating distance / height difference. Uses the camera and margin settings of the Radar HUD (radar_* in the CLI)"
+    },
     "osdTextElementPosHoldReady": {
         "message": "Position Hold Ready",
         "description": "One of the elements of the OSD"
