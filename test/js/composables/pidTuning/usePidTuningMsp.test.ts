@@ -204,7 +204,7 @@ describe("usePidTuningMsp", () => {
         it.each([
             [CopyProfileType.PID, 0],
             [CopyProfileType.RATE, 1],
-        ])("copies with type %s, filling FC.COPY_PROFILE before the payload is built", async (type, wire) => {
+        ])("copies with type %s, filling fcStore.copyProfile before the payload is built", async (type, wire) => {
             let atCrunch: unknown;
             vi.mocked(mspHelper.crunch).mockImplementation((code) => {
                 atCrunch = { ...useFlightControllerStore().copyProfile };

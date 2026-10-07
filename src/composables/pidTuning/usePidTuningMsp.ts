@@ -26,7 +26,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 
-/** `FC.COPY_PROFILE.type`: which kind of profile MSP_COPY_PROFILE copies. */
+/** `fcStore.copyProfile.type`: which kind of profile MSP_COPY_PROFILE copies. */
 export enum CopyProfileType {
     PID = 0,
     RATE = 1,
@@ -87,7 +87,7 @@ export function usePidTuningMsp() {
 
     /**
      * Write the tab's config to the FC (RAM only; the caller persists to EEPROM). Profile names are
-     * sent from FC.CONFIG, so the caller mirrors its inputs there first.
+     * sent from fcStore.config, so the caller mirrors its inputs there first.
      */
     const writePidTuningConfig = async () => {
         // Save PIDs

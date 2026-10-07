@@ -119,7 +119,7 @@ export function usePortsConfiguration(
             delete analyticsChanges[key];
         }
 
-        // Reconstruct FC.SERIAL_CONFIG.ports
+        // Reconstruct fcStore.serialConfig.ports
         fcStore.serialConfig.ports = ports.map((p) => {
             const functions: string[] = [];
             if (p.msp) {

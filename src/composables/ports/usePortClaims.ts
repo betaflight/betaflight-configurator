@@ -31,7 +31,7 @@ import { parsePeripherals } from "./usePeripherals";
 export type PortClaims = Record<string, string[]>;
 
 /**
- * The claims ride on FC.SERIAL_CONFIG so they live exactly as long as the connection's serial
+ * The claims ride on fcStore.serialConfig so they live exactly as long as the connection's serial
  * config does - a connect or disconnect resets both together - and are read once per connection
  * rather than once per select: a tab loads its feature ports in turn, and five identical CLI
  * round trips for one answer is what that would cost. A port assignment written from the app

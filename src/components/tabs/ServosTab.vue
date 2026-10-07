@@ -223,7 +223,7 @@ function onServoChange() {
     }
 }
 
-// Marshal reactive servoConfigs into fcStore.SERVO_CONFIG (clamping min/middle/max) so the
+// Marshal reactive servoConfigs into fcStore.servoConfig (clamping min/middle/max) so the
 // values sent over MSP match the UI. Also normalizes the reactive values in place.
 function marshalServoConfigs() {
     const SERVO_MIN = 500;

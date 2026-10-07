@@ -20,7 +20,7 @@
  */
 
 import { defineStore } from "pinia";
-import { computed, reactive, ref, toRefs, type WritableComputedRef } from "vue";
+import { computed, reactive, ref, toRefs } from "vue";
 import semver from "semver";
 import { bit_check } from "../js/bit";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
@@ -731,112 +731,9 @@ export interface ArmingFlag {
     visible: boolean;
 }
 
-/**
- * The legacy SCREAMING parameter-group names, each mapped to the camelCase key that now owns the
- * state. Deprecated: they exist so the src/js/fc.ts shim and the src/js modules behind it keep
- * working until #4800 step 4 moves those to the camelCase keys, after which this table goes.
- */
-const LEGACY_KEYS = {
-    ADJUSTMENT_RANGES: "adjustmentRanges",
-    ADVANCED_TUNING: "advancedTuning",
-    ADVANCED_TUNING_ACTIVE: "advancedTuningActive",
-    ANALOG: "analogData",
-    ARMING_CONFIG: "armingConfig",
-    AUX_CONFIG: "auxConfig",
-    AUX_CONFIG_IDS: "auxConfigIds",
-    BATTERY_CONFIG: "batteryConfig",
-    BATTERY_STATE: "batteryState",
-    BEEPER_CONFIG: "beepers",
-    BF_CONFIG: "bfConfig",
-    BLACKBOX: "blackbox",
-    BOARD_ALIGNMENT_CONFIG: "boardAlignment",
-    CONFIG: "config",
-    COPY_PROFILE: "copyProfile",
-    CURRENT_METERS: "currentMeters",
-    CURRENT_METER_CONFIGS: "currentMeterConfigs",
-    DATAFLASH: "dataflash",
-    DEFAULT: "filterDefaults",
-    DEFAULT_PIDS: "defaultPids",
-    DEFAULT_TUNING_SLIDERS: "defaultTuningSliders",
-    FAILSAFE_CONFIG: "failsafeConfig",
-    FC_CONFIG: "fcConfig",
-    FEATURE_CONFIG: "features",
-    FILTER_CONFIG: "filterConfig",
-    GYRO_SENSOR: "gyroSensor",
-    SENSOR_NAMES: "sensorNames",
-    GPS_CONFIG: "gpsConfig",
-    COMPASS_CONFIG: "compassConfig",
-    GPS_DATA: "gpsData",
-    GPS_RESCUE: "gpsRescue",
-    LED_COLORS: "ledColors",
-    LED_MODE_COLORS: "ledModeColors",
-    LED_STRIP: "ledStrip",
-    LED_CONFIG_VALUES: "ledConfigValues",
-    MCU_INFO: "mcuInfo",
-    MISC: "misc",
-    MIXER_CONFIG: "mixerConfig",
-    MODE_RANGES: "modeRanges",
-    MODE_RANGES_EXTRA: "modeRangesExtra",
-    MOTOR_3D_CONFIG: "motor3dConfig",
-    MOTOR_CONFIG: "motorConfig",
-    MOTOR_DATA: "motorData",
-    MOTOR_OUTPUT_ORDER: "motorOutputOrder",
-    MOTOR_TELEMETRY_DATA: "motorTelemetryData",
-    MULTIPLE_MSP: "multipleMsp",
-    PID: "pidController",
-    PIDS_ACTIVE: "pidsActive",
-    PID_ADVANCED_CONFIG: "pidAdvancedConfig",
-    PID_NAMES: "pidNames",
-    PIDS: "pids",
-    RC: "rc",
-    RC_DEADBAND_CONFIG: "rcDeadbandConfig",
-    RC_MAP: "rcMap",
-    RC_TUNING: "rcTuning",
-    RSSI_CONFIG: "rssiConfig",
-    RXFAIL_CONFIG: "rxFailConfig",
-    RX_CONFIG: "rxConfig",
-    SDCARD: "sdcard",
-    SENSOR_ALIGNMENT: "sensorAlignment",
-    SENSOR_CONFIG: "sensorConfig",
-    SENSOR_CONFIG_ACTIVE: "sensorConfigActive",
-    SENSOR_DATA: "sensorData",
-    SERIAL_CONFIG: "serialConfig",
-    SERVO_CONFIG: "servoConfig",
-    SERVO_DATA: "servoData",
-    SERVO_RULES: "servoRules",
-    TUNING_SLIDERS: "tuningSliders",
-    VOLTAGE_METERS: "voltageMeters",
-    VOLTAGE_METER_CONFIGS: "voltageMeterConfigs",
-    VTXTABLE_BAND: "vtxTableBand",
-    VTXTABLE_POWERLEVEL: "vtxTablePowerLevel",
-    VTX_CONFIG: "vtxConfig",
-    VTX_DEVICE_STATUS: "vtxDeviceStatus",
-    WING_CONFIG: "wingConfig",
-} as const satisfies Record<string, keyof FcState>;
-
-type LegacyAliases = {
-    -readonly [K in keyof typeof LEGACY_KEYS]: WritableComputedRef<FcState[(typeof LEGACY_KEYS)[K]]>;
-};
-
 export const useFlightControllerStore = defineStore("flightController", () => {
-    // The store owns the FC state under camelCase parameter-group keys. src/js/fc.ts is a shim over
-    // it for legacy callers (MSPHelper, serial_backend, ...) that still write `FC.X` through the
-    // SCREAMING names in LEGACY_KEYS; both reach the same state.
+    // The store owns the flight controller state, keyed by camelCase parameter group.
     const state = reactive(createInitialState()) as FcState;
-
-    // Each legacy SCREAMING name reads and writes the camelCase key it maps to (LEGACY_KEYS).
-    function alias<K extends keyof FcState>(key: K): WritableComputedRef<FcState[K]> {
-        return computed({
-            get: () => state[key],
-            set: (val) => {
-                state[key] = val;
-            },
-        });
-    }
-
-    const legacyAliases = Object.fromEntries(
-        Object.entries(LEGACY_KEYS).map(([legacyKey, key]) => [legacyKey, alias(key)]),
-    ) as LegacyAliases;
 
     const apiVersion = computed(() => state.config.apiVersion);
 
@@ -1025,7 +922,6 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     return {
         ...toRefs(state),
-        ...legacyAliases,
 
         apiVersion,
         armingFlags,

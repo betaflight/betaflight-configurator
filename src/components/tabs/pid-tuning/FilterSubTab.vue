@@ -670,7 +670,7 @@ const dtermSliderEnabled = computed({
 
 // Filter Sliders
 // Local refs for slider positions — decoupled from FC state so MSP responses
-// writing back to FC.TUNING_SLIDERS don't cause the slider to bounce.
+// writing back to fcStore.tuningSliders don't cause the slider to bounce.
 const gyroFilterMultiplier = ref((fcStore.tuningSliders.slider_gyro_filter_multiplier || 100) / 100);
 const dtermFilterMultiplier = ref((fcStore.tuningSliders.slider_dterm_filter_multiplier || 100) / 100);
 

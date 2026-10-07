@@ -40,7 +40,7 @@ export function useServosData() {
 
     /**
      * Poll servo outputs (50 ms) and FC status (250 ms) until the tab unmounts.
-     * @param onServoData called after each MSP_SERVO reply, once FC.SERVO_DATA holds the new values
+     * @param onServoData called after each MSP_SERVO reply, once fcStore.servoData holds the new values
      */
     const startPolling = (onServoData: () => void) => {
         addInterval("servo_data_pull", () => MSP.send_message(MSPCodes.MSP_SERVO, false, false, onServoData), 50);

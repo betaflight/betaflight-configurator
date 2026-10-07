@@ -208,7 +208,7 @@ export function usePower() {
             // Suppress the TX-driven sync watcher while we apply our own change
             isLoading.value = true;
             // Pause global and local polling to prevent MSP_STATUS_EX from
-            // overwriting fcStore.CONFIG.batteryProfile with stale data during the switch
+            // overwriting fcStore.config.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
             GUI.interval_pause("power_data_pull_slow");
 
@@ -257,7 +257,7 @@ export function usePower() {
     };
 
     // Reflect TX-driven battery-profile changes in the UI. The global live-status poller
-    // (serial_backend.js) refreshes fcStore.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
+    // (serial_backend.js) refreshes fcStore.config.batteryProfile via MSP_STATUS_EX every 250ms;
     // an adjustment switch on the TX can change the active profile out from under the UI.
     // Reload when that happens — but never during our own change (isLoading), an in-flight
     // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).

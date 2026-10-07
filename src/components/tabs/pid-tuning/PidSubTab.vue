@@ -1852,7 +1852,7 @@ const ffGainOutsideRange = computed(() => {
     return v < NON_EXPERT_SLIDER_MIN || v > NON_EXPERT_SLIDER_MAX;
 });
 
-// Advanced slider non-default flags — compare against FC.DEFAULT_TUNING_SLIDERS (matches original)
+// Advanced slider non-default flags — compare against fcStore.defaultTuningSliders (matches original)
 const dMaxGainChanged = computed(
     () => Math.round(sliderDMaxGain.value * 100) !== fcStore.defaultTuningSliders.slider_dmax_gain,
 );
@@ -1970,7 +1970,7 @@ const showExpertSettingsWarning = computed(() => {
     return hasBasicSlidersOutsideRange.value || hasAdvancedSlidersChanged.value;
 });
 
-// Initialize sliders from FC.TUNING_SLIDERS
+// Initialize sliders from fcStore.tuningSliders
 async function initializeSliders() {
     const pos = readPidSliderPositions();
     sliderPidsMode.value = pos.pidsMode;
@@ -2045,7 +2045,7 @@ function onSliderModeChange() {
     onSliderChange();
 }
 
-// Watch for changes in FC.TUNING_SLIDERS to reinitialize sliders after data loads
+// Watch for changes in fcStore.tuningSliders to reinitialize sliders after data loads
 watch(
     () => fcStore.tuningSliders,
     () => {

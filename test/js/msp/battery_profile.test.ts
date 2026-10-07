@@ -49,8 +49,8 @@ describe("Battery Profiles", () => {
     const mspHelper = new MspHelper();
 
     beforeEach(() => {
-        // A fresh Pinia per test: the store starts from its initial state, and VirtualFC (still on
-        // the FC shim) resolves the same active Pinia.
+        // A fresh Pinia per test: the store starts from its initial state, and VirtualFC resolves
+        // the same active Pinia.
         setActivePinia(createPinia());
         fcStore = useFlightControllerStore();
         CONFIGURATOR.virtualApiVersion = "0.0.1";

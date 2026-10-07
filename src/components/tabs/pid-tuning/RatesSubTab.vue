@@ -1661,7 +1661,7 @@ function renderModel(timestamp: number) {
     animationFrameId = requestAnimationFrame(renderModel);
 }
 
-// Watch for changes and redraw. The rate limits are read straight off FC.RC_TUNING because
+// Watch for changes and redraw. The rate limits are read straight off fcStore.rcTuning because
 // they have no scaled computed, but they feed both the curve and the max-velocity labels.
 watch(
     [
@@ -1696,7 +1696,7 @@ onMounted(() => {
     // Initialize 3D Model for rates preview
     // Wait for MIXER_CONFIG to be available before initializing model
     if (ratesPreviewContainer.value && ratesPreviewCanvas.value) {
-        // Check if FC.MIXER_CONFIG is available, if not wait a bit
+        // Check if fcStore.mixerConfig is available, if not wait a bit
         const initModel = () => {
             // Guard: Return early if refs are null (component unmounted)
             if (!ratesPreviewContainer.value || !ratesPreviewCanvas.value) {
@@ -1726,7 +1726,7 @@ onMounted(() => {
 
                 model = new Model(ratesPreviewContainer.value, ratesPreviewCanvas.value);
 
-                // Model automatically loads based on FC.MIXER_CONFIG.mixer
+                // Model automatically loads based on fcStore.mixerConfig.mixer
                 // Give the model a moment to initialize its renderer
                 modelInitTimeout = setTimeout(() => {
                     modelInitTimeout = null; // Clear reference once callback runs

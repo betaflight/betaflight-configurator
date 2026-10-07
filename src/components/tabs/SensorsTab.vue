@@ -1112,7 +1112,7 @@ const accelTrims = reactive({
 
 // --- Gyro / IMU ---
 
-// The tab's editable copy of FC.SENSOR_ALIGNMENT. The per-gyro angles stay optional: no MSP
+// The tab's editable copy of fcStore.sensorAlignment. The per-gyro angles stay optional: no MSP
 // payload carries them, so they are undefined until this tab has saved them once.
 type SensorAlignmentForm = Required<
     Pick<

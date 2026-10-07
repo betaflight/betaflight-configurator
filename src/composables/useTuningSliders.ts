@@ -81,7 +81,7 @@ export function downscaleSliderValue(value: number): number {
     return value;
 }
 
-// ── Initialization helpers (read FC.TUNING_SLIDERS → plain objects) ──────────
+// ── Initialization helpers (read fcStore.tuningSliders → plain objects) ──────────
 
 export function readPidSliderPositions(): PidSliderPositions {
     const fcStore = useFlightControllerStore();
@@ -117,9 +117,9 @@ export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
 // ── MSP actions ──────────────────────────────────────────────────────────────
 
 /**
- * Write slider values to FC.TUNING_SLIDERS and ask the FC to compute the
- * resulting PID values.  Returns a promise that resolves after FC.PIDS and
- * FC.ADVANCED_TUNING have been updated by the MSP response handler.
+ * Write slider values to fcStore.tuningSliders and ask the FC to compute the
+ * resulting PID values.  Returns a promise that resolves after fcStore.pids and
+ * fcStore.advancedTuning have been updated by the MSP response handler.
  *
  * @param s  Slider values (all decimals 0.0-2.0)
  */
@@ -153,9 +153,9 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
 }
 
 /**
- * Write the gyro filter slider position to FC.TUNING_SLIDERS and compute the
+ * Write the gyro filter slider position to fcStore.tuningSliders and compute the
  * resulting gyro lowpass cutoffs.  Returns a promise that resolves after
- * FC.FILTER_CONFIG has been updated.
+ * fcStore.filterConfig has been updated.
  *
  * @param multiplier  Gyro filter multiplier (decimal, e.g. 1.0)
  */
@@ -179,9 +179,9 @@ export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse
 }
 
 /**
- * Write the D-term filter slider position to FC.TUNING_SLIDERS and compute the
+ * Write the D-term filter slider position to fcStore.tuningSliders and compute the
  * resulting D-term lowpass cutoffs.  Returns a promise that resolves after
- * FC.FILTER_CONFIG has been updated.
+ * fcStore.filterConfig has been updated.
  *
  * @param multiplier  D-term filter multiplier (decimal, e.g. 1.0)
  */
@@ -206,7 +206,7 @@ export function calculateNewDTermFilters(multiplier: number): Promise<MspRespons
 
 /**
  * Validate that the current FC PID/filter values match what the sliders would
- * produce.  After the MSP response, FC.TUNING_SLIDERS is patched so that
+ * produce.  After the MSP response, fcStore.tuningSliders is patched so that
  * invalid slider modes are set to 0 (sliders off).  Returns a promise.
  */
 export function validateTuningSliders(): Promise<void> {

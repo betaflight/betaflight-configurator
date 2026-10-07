@@ -1493,7 +1493,7 @@ const stopMotors = () => {
 
 // Feature Logic
 
-// `fcStore.features` is FC.FEATURE_CONFIG; its `features` is the Features helper, null until connect.
+// `fcStore.features` is the feature-config group; its `features` is the Features helper, null until connect.
 const toggleFeature = (featureName: string, checked: boolean) => {
     const featuresHelper = fcStore.features.features;
     if (checked) {

@@ -179,7 +179,7 @@ export function useVtx() {
     const frequencyMode = ref(false);
     const analyticsChanges = reactive<Record<string, string | number | undefined>>({});
 
-    // VTX config mirrors fcStore.VTX_CONFIG
+    // VTX config mirrors fcStore.vtxConfig
     const vtxConfig = reactive<Omit<VtxConfig, "vtx_table_clear">>({
         vtx_type: 0,
         vtx_band: 0,

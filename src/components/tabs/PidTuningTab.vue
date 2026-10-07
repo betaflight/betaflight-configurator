@@ -259,7 +259,7 @@ async function loadData() {
                 // Load all PID tuning related MSP data
                 await loadPidTuningData();
 
-                // Initialize profile names from FC.CONFIG
+                // Initialize profile names from fcStore.config
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     pidProfileName.value = fcStore.config.pidProfileNames?.[fcStore.config.profile] || "";
                     rateProfileName.value = fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] || "";
@@ -446,7 +446,7 @@ function save() {
         pidProfileName.value = pidProfileName.value.trim();
         rateProfileName.value = rateProfileName.value.trim();
 
-        // Save profile names to FC.CONFIG (API 1.45+)
+        // Save profile names to fcStore.config (API 1.45+)
         if (fcStore.config.pidProfileNames) {
             fcStore.config.pidProfileNames[fcStore.config.profile] = pidProfileName.value;
         }
@@ -494,7 +494,7 @@ async function refresh() {
     }
 }
 
-// Mirror the lifted profile-name inputs into FC.CONFIG — that is what the save crunches, and
+// Mirror the lifted profile-name inputs into fcStore.config — that is what the save crunches, and
 // what the store compares against its baseline.
 watch(
     () => pidProfileName.value,
@@ -515,8 +515,8 @@ watch(
 );
 
 // Keep the profile / rate-profile selectors in sync with TX-driven changes.
-// The global live-status poller (serial_backend.js) refreshes FC.CONFIG.profile and
-// FC.CONFIG.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
+// The global live-status poller (serial_backend.js) refreshes fcStore.config.profile and
+// fcStore.config.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
 // can therefore change the active profile out from under the UI. Reflect that here and
 // reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
 // checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).

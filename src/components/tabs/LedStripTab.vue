@@ -430,7 +430,7 @@ const brightness = ref(50);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
 
-// Snapshot the grid, not fcStore.LED_STRIP: the strip is rebuilt from the grid on every edit, and
+// Snapshot the grid, not fcStore.ledStrip: the strip is rebuilt from the grid on every edit, and
 // initializeGrid drops placeholder LEDs that the rebuild writes back differently, so a
 // strip-based snapshot would flag an edit that changed nothing. The brightness/rainbow sliders
 // go to the FC live but only reach EEPROM on Save, so they are unsaved work too.

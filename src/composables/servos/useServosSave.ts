@@ -26,7 +26,7 @@ import { useReboot } from "@/composables/useReboot";
 
 /**
  * Live-preview and save paths for the Servos tab.
- * @param marshalServoConfigs copies the tab's edits into FC.SERVO_CONFIG; runs before every send
+ * @param marshalServoConfigs copies the tab's edits into fcStore.servoConfig; runs before every send
  * @param markClean moves the tab's dirty baseline; only called after a successful persist
  */
 export function useServosSave(marshalServoConfigs: () => void, markClean: () => void) {
