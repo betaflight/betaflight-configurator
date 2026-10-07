@@ -2,15 +2,20 @@ import { beforeEach, describe, expect, it } from "vitest";
 import semver from "semver";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
-import FC from "../../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../../src/stores/fc";
 import { API_VERSION_1_47 } from "../../../src/js/data_storage";
 import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
 import type { MspRequest, MspResponse } from "../../../src/js/msp";
 
 describe("MspHelper", () => {
+    let fcStore: ReturnType<typeof useFlightControllerStore>;
     const mspHelper = new MspHelper();
     beforeEach(() => {
-        FC.resetState();
+        // A fresh Pinia per test: the store starts from its initial state, and MspHelper resolves
+        // the active Pinia on every handler call.
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
     });
     describe("process_data", () => {
         it("refuses to process data with crc-error", () => {
@@ -50,8 +55,8 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.CONFIG.mspProtocolVersion).toEqual(mspProtocolVersion);
-            expect(FC.CONFIG.apiVersion).toEqual(`${apiVersionMajor}.${apiVersionMinor}.0`);
+            expect(fcStore.config.mspProtocolVersion).toEqual(mspProtocolVersion);
+            expect(fcStore.config.apiVersion).toEqual(`${apiVersionMajor}.${apiVersionMinor}.0`);
         });
         it("keeps a valid default apiVersion when MSP_API_VERSION payload is empty (MSP corruption)", () => {
             // An empty/truncated payload makes readU8() return null, which would
@@ -65,9 +70,9 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.CONFIG.apiVersion).not.toContain("null");
-            expect(FC.CONFIG.apiVersion).toEqual("0.0.0"); // unchanged default
-            expect(semver.valid(FC.CONFIG.apiVersion)).not.toBeNull();
+            expect(fcStore.config.apiVersion).not.toContain("null");
+            expect(fcStore.config.apiVersion).toEqual("0.0.0"); // unchanged default
+            expect(semver.valid(fcStore.config.apiVersion)).not.toBeNull();
         });
         it("keeps a valid default apiVersion when MSP_API_VERSION payload is truncated (MSP corruption)", () => {
             // Only the protocol-version byte present, major/minor missing -> "X.null.null".
@@ -79,9 +84,9 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.CONFIG.apiVersion).not.toContain("null");
-            expect(FC.CONFIG.apiVersion).toEqual("0.0.0");
-            expect(semver.valid(FC.CONFIG.apiVersion)).not.toBeNull();
+            expect(fcStore.config.apiVersion).not.toContain("null");
+            expect(fcStore.config.apiVersion).toEqual("0.0.0");
+            expect(semver.valid(fcStore.config.apiVersion)).not.toBeNull();
         });
         it("does not let a corrupt MSP_API_VERSION throw in a downstream semver comparison", () => {
             mspHelper.process_data({
@@ -93,7 +98,7 @@ describe("MspHelper", () => {
             });
 
             // Mirrors the guard in serial_backend.js after the MSP_API_VERSION callback.
-            expect(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)).not.toThrow();
+            expect(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)).not.toThrow();
         });
         it("handles MSP_PIDNAMES correctly", () => {
             const pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
@@ -110,7 +115,7 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.PID_NAMES).toEqual(expectedNames);
+            expect(fcStore.pidNames).toEqual(expectedNames);
         });
         it("handles MSP_MOTOR correctly", () => {
             const motorCount = crypto.getRandomValues(new Uint8Array(1))[0] % 8;
@@ -123,11 +128,11 @@ describe("MspHelper", () => {
                 unsupported: 0,
                 callbacks: [],
             });
-            expect(new Uint16Array(FC.MOTOR_DATA).slice(0, motorCount)).toEqual(motorBytes);
-            expect(FC.MOTOR_DATA.slice(motorCount, 8)).toContain(undefined);
+            expect(new Uint16Array(fcStore.motorData).slice(0, motorCount)).toEqual(motorBytes);
+            expect(fcStore.motorData.slice(motorCount, 8)).toContain(undefined);
         });
         it("handles MSP_BOARD_INFO correctly for API version", () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_47;
+            fcStore.config.apiVersion = API_VERSION_1_47;
             const infoBuffer = new MspBuffer();
 
             const boardIdentifier = appendStringToArray(infoBuffer, generateRandomString(4)); // set board-identifier
@@ -155,19 +160,19 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.CONFIG.boardIdentifier).toEqual(boardIdentifier);
-            expect(FC.CONFIG.boardVersion).toEqual(0xdead);
-            expect(FC.CONFIG.boardType).toEqual(0x12);
-            expect(FC.CONFIG.targetCapabilities).toEqual(0x32);
-            expect(FC.CONFIG.targetName).toEqual(targetName);
-            expect(FC.CONFIG.boardName).toEqual(boardName);
-            expect(FC.CONFIG.manufacturerId).toEqual(manufacturerId);
-            expect(new Uint8Array(FC.CONFIG.signature)).toEqual(signature);
-            expect(FC.CONFIG.mcuTypeId).toEqual(0xfa);
+            expect(fcStore.config.boardIdentifier).toEqual(boardIdentifier);
+            expect(fcStore.config.boardVersion).toEqual(0xdead);
+            expect(fcStore.config.boardType).toEqual(0x12);
+            expect(fcStore.config.targetCapabilities).toEqual(0x32);
+            expect(fcStore.config.targetName).toEqual(targetName);
+            expect(fcStore.config.boardName).toEqual(boardName);
+            expect(fcStore.config.manufacturerId).toEqual(manufacturerId);
+            expect(new Uint8Array(fcStore.config.signature)).toEqual(signature);
+            expect(fcStore.config.mcuTypeId).toEqual(0xfa);
 
-            expect(FC.CONFIG.configurationState).toEqual(0xbb);
-            expect(FC.CONFIG.sampleRateHz).toEqual(0xbaab);
-            expect(FC.CONFIG.configurationProblems).toEqual(0xdeadbeef);
+            expect(fcStore.config.configurationState).toEqual(0xbb);
+            expect(fcStore.config.sampleRateHz).toEqual(0xbaab);
+            expect(fcStore.config.configurationProblems).toEqual(0xdeadbeef);
         });
         it("handles MSP_ATTITUDE_QUATERNION correctly", () => {
             // Encode known quaternion values as int16 (value * 32767)
@@ -191,7 +196,7 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            const q = FC.SENSOR_DATA.quaternion!;
+            const q = fcStore.sensorData.quaternion!;
             expect(q).not.toBeNull();
             expect(q.w).toBeCloseTo(qw, 3);
             expect(q.x).toBeCloseTo(qx, 3);
@@ -215,7 +220,7 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            const q = FC.SENSOR_DATA.quaternion!;
+            const q = fcStore.sensorData.quaternion!;
             expect(q.w).toBeCloseTo(1, 3);
             expect(q.x).toBeCloseTo(-1, 3);
             expect(q.y).toBeCloseTo(0, 3);
@@ -225,7 +230,7 @@ describe("MspHelper", () => {
 
     describe("MSP2 text types", () => {
         /*
-         * These tests pin the type byte that goes on the wire and the FC.CONFIG field each type
+         * These tests pin the type byte that goes on the wire and the fcStore.config field each type
          * lands in. MSPHelper is TypeScript now, so a stale MSP2TextType member no longer
          * compiles, but a case wired to the wrong member or the wrong field still would.
          */
@@ -245,27 +250,31 @@ describe("MspHelper", () => {
 
         beforeEach(() => {
             // Non-zero indices so the profile-indexed types cannot pass by hitting slot 0.
-            FC.CONFIG.profile = 2;
-            FC.CONFIG.rateProfile = 1;
-            FC.CONFIG.batteryProfile = 1;
+            fcStore.config.profile = 2;
+            fcStore.config.rateProfile = 1;
+            fcStore.config.batteryProfile = 1;
         });
 
         it.each([
-            ["PILOT_NAME", MSP2TextType.PILOT_NAME, () => FC.CONFIG.pilotName],
-            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, () => FC.CONFIG.craftName],
-            ["PID_PROFILE_NAME", MSP2TextType.PID_PROFILE_NAME, () => FC.CONFIG.pidProfileNames[FC.CONFIG.profile]],
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME, () => fcStore.config.pilotName],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, () => fcStore.config.craftName],
+            [
+                "PID_PROFILE_NAME",
+                MSP2TextType.PID_PROFILE_NAME,
+                () => fcStore.config.pidProfileNames[fcStore.config.profile],
+            ],
             [
                 "RATE_PROFILE_NAME",
                 MSP2TextType.RATE_PROFILE_NAME,
-                () => FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile],
+                () => fcStore.config.rateProfileNames[fcStore.config.rateProfile],
             ],
-            ["BUILDKEY", MSP2TextType.BUILDKEY, () => FC.CONFIG.buildKey],
+            ["BUILDKEY", MSP2TextType.BUILDKEY, () => fcStore.config.buildKey],
             [
                 "BATTERY_PROFILE_NAME",
                 MSP2TextType.BATTERY_PROFILE_NAME,
-                () => FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile],
+                () => fcStore.config.batteryProfileNames[fcStore.config.batteryProfile],
             ],
-        ])("decodes MSP2_GET_TEXT %s into its FC.CONFIG field", (name, textType, read) => {
+        ])("decodes MSP2_GET_TEXT %s into its fcStore.config field", (name, textType, read) => {
             const text = `text-${name}`;
 
             mspHelper.process_data({
@@ -289,9 +298,9 @@ describe("MspHelper", () => {
                 callbacks: [],
             });
 
-            expect(FC.CONFIG.pilotName).toEqual("");
-            expect(FC.CONFIG.craftName).toEqual("");
-            expect(FC.CONFIG.buildKey).toEqual("");
+            expect(fcStore.config.pilotName).toEqual("");
+            expect(fcStore.config.craftName).toEqual("");
+            expect(fcStore.config.buildKey).toEqual("");
         });
 
         it.each([
@@ -306,25 +315,25 @@ describe("MspHelper", () => {
         });
 
         it.each([
-            ["PILOT_NAME", MSP2TextType.PILOT_NAME, 16, (value: string) => (FC.CONFIG.pilotName = value)],
-            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, 16, (value: string) => (FC.CONFIG.craftName = value)],
+            ["PILOT_NAME", MSP2TextType.PILOT_NAME, 16, (value: string) => (fcStore.config.pilotName = value)],
+            ["CRAFT_NAME", MSP2TextType.CRAFT_NAME, 16, (value: string) => (fcStore.config.craftName = value)],
             [
                 "PID_PROFILE_NAME",
                 MSP2TextType.PID_PROFILE_NAME,
                 8,
-                (value: string) => (FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = value),
+                (value: string) => (fcStore.config.pidProfileNames[fcStore.config.profile] = value),
             ],
             [
                 "RATE_PROFILE_NAME",
                 MSP2TextType.RATE_PROFILE_NAME,
                 8,
-                (value: string) => (FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value),
+                (value: string) => (fcStore.config.rateProfileNames[fcStore.config.rateProfile] = value),
             ],
             [
                 "BATTERY_PROFILE_NAME",
                 MSP2TextType.BATTERY_PROFILE_NAME,
                 8,
-                (value: string) => (FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = value),
+                (value: string) => (fcStore.config.batteryProfileNames[fcStore.config.batteryProfile] = value),
             ],
         ])(
             "crunches MSP2_SET_TEXT %s and truncates to the firmware field width",
@@ -340,7 +349,7 @@ describe("MspHelper", () => {
         );
 
         it("round-trips a craft name shorter than the field width", () => {
-            FC.CONFIG.craftName = "Twig";
+            fcStore.config.craftName = "Twig";
 
             const view = readBuffer(mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.CRAFT_NAME));
 

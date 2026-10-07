@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
-import FC from "../../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../../src/stores/fc";
 import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 import VirtualFC from "../../../src/js/VirtualFC";
 import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
@@ -44,10 +45,14 @@ function buildStatusExBuffer({
 }
 
 describe("Battery Profiles", () => {
+    let fcStore: ReturnType<typeof useFlightControllerStore>;
     const mspHelper = new MspHelper();
 
     beforeEach(() => {
-        FC.resetState();
+        // A fresh Pinia per test: the store starts from its initial state, and VirtualFC (still on
+        // the FC shim) resolves the same active Pinia.
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
         CONFIGURATOR.virtualApiVersion = "0.0.1";
     });
 
@@ -56,67 +61,67 @@ describe("Battery Profiles", () => {
             CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
             VirtualFC.setVirtualConfig();
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(3);
-            expect(FC.CONFIG.batteryProfile).toEqual(0);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(3);
+            expect(fcStore.config.batteryProfile).toEqual(0);
         });
 
         it("keeps legacy virtual firmware without battery profiles below API 1.48", () => {
             CONFIGURATOR.virtualApiVersion = API_VERSION_1_47;
             VirtualFC.setVirtualConfig();
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
-            expect(FC.CONFIG.batteryProfile).toEqual(0);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(0);
+            expect(fcStore.config.batteryProfile).toEqual(0);
         });
     });
 
     describe("process_data", () => {
         it("parses MSP_STATUS_EX battery profile fields for API >= 1.48", () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_48;
+            fcStore.config.apiVersion = API_VERSION_1_48;
             processMessage(
                 mspHelper,
                 MSPCodes.MSP_STATUS_EX,
                 buildStatusExBuffer({ batteryProfiles: 3, batteryProfile: 2 }),
             );
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(3);
-            expect(FC.CONFIG.batteryProfile).toEqual(2);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(3);
+            expect(fcStore.config.batteryProfile).toEqual(2);
         });
 
         it("parses MSP_STATUS_EX battery profile fields for API > 1.48", () => {
-            FC.CONFIG.apiVersion = "1.49.0";
+            fcStore.config.apiVersion = "1.49.0";
             processMessage(
                 mspHelper,
                 MSPCodes.MSP_STATUS_EX,
                 buildStatusExBuffer({ batteryProfiles: 3, batteryProfile: 2 }),
             );
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(3);
-            expect(FC.CONFIG.batteryProfile).toEqual(2);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(3);
+            expect(fcStore.config.batteryProfile).toEqual(2);
         });
 
         it("grows batteryProfileNames when FC reports more profiles than initialized", () => {
-            FC.CONFIG.apiVersion = "1.49.0";
+            fcStore.config.apiVersion = "1.49.0";
             processMessage(
                 mspHelper,
                 MSPCodes.MSP_STATUS_EX,
                 buildStatusExBuffer({ batteryProfiles: 5, batteryProfile: 4 }),
             );
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(5);
-            expect(FC.CONFIG.batteryProfileNames).toHaveLength(5);
-            expect(FC.CONFIG.batteryProfileNames[4]).toEqual("");
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(5);
+            expect(fcStore.config.batteryProfileNames).toHaveLength(5);
+            expect(fcStore.config.batteryProfileNames[4]).toEqual("");
         });
 
         it("does not parse battery profile fields for API < 1.48", () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_47;
+            fcStore.config.apiVersion = API_VERSION_1_47;
             processMessage(mspHelper, MSPCodes.MSP_STATUS_EX, buildStatusExBuffer());
 
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
-            expect(FC.CONFIG.batteryProfile).toEqual(0);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(0);
+            expect(fcStore.config.batteryProfile).toEqual(0);
         });
 
         it("handles MSP2_GET_TEXT with BATTERY_PROFILE_NAME", () => {
-            FC.CONFIG.batteryProfile = 1;
+            fcStore.config.batteryProfile = 1;
 
             const buffer = new MspBuffer();
             buffer.push8(MSP2TextType.BATTERY_PROFILE_NAME);
@@ -127,14 +132,14 @@ describe("Battery Profiles", () => {
             }
 
             processMessage(mspHelper, MSPCodes.MSP2_GET_TEXT, buffer);
-            expect(FC.CONFIG.batteryProfileNames[1]).toEqual("Li-Ion");
+            expect(fcStore.config.batteryProfileNames[1]).toEqual("Li-Ion");
         });
     });
 
     describe("crunch", () => {
         it("serializes MSP2_SET_TEXT with BATTERY_PROFILE_NAME", () => {
-            FC.CONFIG.batteryProfile = 0;
-            FC.CONFIG.batteryProfileNames[0] = "LiPo";
+            fcStore.config.batteryProfile = 0;
+            fcStore.config.batteryProfileNames[0] = "LiPo";
 
             const result = mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME);
             const view = new MspDataView(new Uint8Array(result).buffer);
@@ -151,13 +156,13 @@ describe("Battery Profiles", () => {
         });
     });
 
-    describe("FC.resetState", () => {
+    describe("fcStore.resetState", () => {
         it("initializes battery profile state correctly", () => {
-            FC.resetState();
+            fcStore.resetState();
 
-            expect(FC.CONFIG.batteryProfile).toEqual(0);
-            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
-            expect(FC.CONFIG.batteryProfileNames).toEqual(["", "", ""]);
+            expect(fcStore.config.batteryProfile).toEqual(0);
+            expect(fcStore.config.numberOfBatteryProfiles).toEqual(0);
+            expect(fcStore.config.batteryProfileNames).toEqual(["", "", ""]);
         });
     });
 });
