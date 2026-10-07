@@ -132,7 +132,7 @@ import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import semver from "semver";
@@ -156,6 +156,7 @@ interface CopyProfileSelection {
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
 const navigationStore = useNavigationStore();
+const fcStore = useFlightControllerStore();
 const dialog = useDialog();
 const {
     loadPidTuningData,
@@ -170,7 +171,7 @@ const {
 const expertModeEnabled = computed(() => navigationStore.expertMode);
 const activeSubtab = ref("pid");
 const showAllPids = ref(false);
-const currentProfile = ref(FC.CONFIG.profile);
+const currentProfile = ref(fcStore.CONFIG.profile);
 const currentRateProfile = ref(0);
 const isMounted = useIsMounted();
 // Guards for the TX-driven profile sync (see watchers below).
@@ -181,12 +182,12 @@ const filterSubTab = ref<InstanceType<typeof FilterSubTab> | null>(null);
 const ratesSubTab = ref(null);
 
 // Profile count — matches original loadProfilesList() logic
-const numberOfProfiles = computed(() => FC.CONFIG.numProfiles ?? 3);
+const numberOfProfiles = computed(() => fcStore.CONFIG.numProfiles ?? 3);
 
 // Rate profile count — matches original loadRateProfilesList() logic
 const numberOfRateProfiles = computed(() => {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        return FC.CONFIG.numberOfRateProfiles ?? 4;
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+        return fcStore.CONFIG.numberOfRateProfiles ?? 4;
     }
     return 4;
 });
@@ -219,10 +220,10 @@ const pidProfileName = ref("");
 const rateProfileName = ref("");
 
 const showProfileName = computed(
-    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
+    () => semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
 );
 const showRateProfileName = computed(
-    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
+    () => semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
 );
 
 const localProfileName = computed({
@@ -259,9 +260,9 @@ async function loadData() {
                 await loadPidTuningData();
 
                 // Initialize profile names from FC.CONFIG
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    pidProfileName.value = FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] || "";
-                    rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
+                if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    pidProfileName.value = fcStore.CONFIG.pidProfileNames?.[fcStore.CONFIG.profile] || "";
+                    rateProfileName.value = fcStore.CONFIG.rateProfileNames?.[fcStore.CONFIG.rateProfile] || "";
                 }
 
                 if (!isMounted.value) {
@@ -303,15 +304,15 @@ async function loadData() {
 
 function initializeUI() {
     // Set current profiles
-    currentProfile.value = FC.CONFIG.profile;
-    currentRateProfile.value = FC.CONFIG.rateProfile;
+    currentProfile.value = fcStore.CONFIG.profile;
+    currentRateProfile.value = fcStore.CONFIG.rateProfile;
     // Get expert mode from global checkbox (in header) and sync to global state
     navigationStore.expertMode = isExpertModeEnabled();
 }
 
 // Profile Management
 async function onProfileChange() {
-    FC.CONFIG.profile = currentProfile.value;
+    fcStore.CONFIG.profile = currentProfile.value;
 
     // Select profile via MSP
     await selectPidProfile(currentProfile.value);
@@ -321,7 +322,7 @@ async function onProfileChange() {
 }
 
 async function onRateProfileChange() {
-    FC.CONFIG.rateProfile = currentRateProfile.value;
+    fcStore.CONFIG.rateProfile = currentRateProfile.value;
 
     // Select rate profile via MSP
     await selectRateProfile(currentRateProfile.value);
@@ -446,11 +447,11 @@ function save() {
         rateProfileName.value = rateProfileName.value.trim();
 
         // Save profile names to FC.CONFIG (API 1.45+)
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
+        if (fcStore.CONFIG.pidProfileNames) {
+            fcStore.CONFIG.pidProfileNames[fcStore.CONFIG.profile] = pidProfileName.value;
         }
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
+        if (fcStore.CONFIG.rateProfileNames) {
+            fcStore.CONFIG.rateProfileNames[fcStore.CONFIG.rateProfile] = rateProfileName.value;
         }
 
         // Pin what this save is about to write. The form stays live while the MSP writes are
@@ -498,8 +499,8 @@ async function refresh() {
 watch(
     () => pidProfileName.value,
     (newValue) => {
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
+        if (fcStore.CONFIG.pidProfileNames) {
+            fcStore.CONFIG.pidProfileNames[fcStore.CONFIG.profile] = newValue;
         }
     },
 );
@@ -507,8 +508,8 @@ watch(
 watch(
     () => rateProfileName.value,
     (newValue) => {
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
+        if (fcStore.CONFIG.rateProfileNames) {
+            fcStore.CONFIG.rateProfileNames[fcStore.CONFIG.rateProfile] = newValue;
         }
     },
 );
@@ -530,8 +531,8 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
 
     syncingFromFc = true;
     try {
-        currentProfile.value = FC.CONFIG.profile;
-        currentRateProfile.value = FC.CONFIG.rateProfile;
+        currentProfile.value = fcStore.CONFIG.profile;
+        currentRateProfile.value = fcStore.CONFIG.rateProfile;
         // Only announce (and adopt) the profile once the reload actually succeeded. The FC picked
         // this profile itself, so the tab is mirroring it rather than holding a pending switch —
         // but a pending reset or copy is untouched by that, and stays unsaved.
@@ -539,7 +540,7 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
             pidTuningStore.markProfileSelectionClean();
             gui_log(
                 i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
-                    (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
+                    (kind === "rate" ? fcStore.CONFIG.rateProfile : fcStore.CONFIG.profile) + 1,
                 ]),
             );
         }
@@ -549,7 +550,7 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
 }
 
 watch(
-    () => FC.CONFIG.profile,
+    () => fcStore.CONFIG.profile,
     (newValue) => {
         if (newValue !== currentProfile.value) {
             syncProfileFromFc("profile");
@@ -558,7 +559,7 @@ watch(
 );
 
 watch(
-    () => FC.CONFIG.rateProfile,
+    () => fcStore.CONFIG.rateProfile,
     (newValue) => {
         if (newValue !== currentRateProfile.value) {
             syncProfileFromFc("rate");

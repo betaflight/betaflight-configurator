@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP, { type MspResponse } from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -84,30 +84,33 @@ export function downscaleSliderValue(value: number): number {
 // ── Initialization helpers (read FC.TUNING_SLIDERS → plain objects) ──────────
 
 export function readPidSliderPositions(): PidSliderPositions {
+    const fcStore = useFlightControllerStore();
     return {
-        pidsMode: FC.TUNING_SLIDERS.slider_pids_mode,
-        dGain: FC.TUNING_SLIDERS.slider_d_gain / 100,
-        piGain: FC.TUNING_SLIDERS.slider_pi_gain / 100,
-        feedforwardGain: FC.TUNING_SLIDERS.slider_feedforward_gain / 100,
-        dMaxGain: FC.TUNING_SLIDERS.slider_dmax_gain / 100,
-        iGain: FC.TUNING_SLIDERS.slider_i_gain / 100,
-        rollPitchRatio: FC.TUNING_SLIDERS.slider_roll_pitch_ratio / 100,
-        pitchPIGain: FC.TUNING_SLIDERS.slider_pitch_pi_gain / 100,
-        masterMultiplier: FC.TUNING_SLIDERS.slider_master_multiplier / 100,
+        pidsMode: fcStore.TUNING_SLIDERS.slider_pids_mode,
+        dGain: fcStore.TUNING_SLIDERS.slider_d_gain / 100,
+        piGain: fcStore.TUNING_SLIDERS.slider_pi_gain / 100,
+        feedforwardGain: fcStore.TUNING_SLIDERS.slider_feedforward_gain / 100,
+        dMaxGain: fcStore.TUNING_SLIDERS.slider_dmax_gain / 100,
+        iGain: fcStore.TUNING_SLIDERS.slider_i_gain / 100,
+        rollPitchRatio: fcStore.TUNING_SLIDERS.slider_roll_pitch_ratio / 100,
+        pitchPIGain: fcStore.TUNING_SLIDERS.slider_pitch_pi_gain / 100,
+        masterMultiplier: fcStore.TUNING_SLIDERS.slider_master_multiplier / 100,
     };
 }
 
 export function readGyroFilterSliderPosition(): GyroFilterSliderPosition {
+    const fcStore = useFlightControllerStore();
     return {
-        sliderGyroFilter: FC.TUNING_SLIDERS.slider_gyro_filter,
-        sliderGyroFilterMultiplier: FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100,
+        sliderGyroFilter: fcStore.TUNING_SLIDERS.slider_gyro_filter,
+        sliderGyroFilterMultiplier: fcStore.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100,
     };
 }
 
 export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
+    const fcStore = useFlightControllerStore();
     return {
-        sliderDTermFilter: FC.TUNING_SLIDERS.slider_dterm_filter,
-        sliderDTermFilterMultiplier: FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100,
+        sliderDTermFilter: fcStore.TUNING_SLIDERS.slider_dterm_filter,
+        sliderDTermFilterMultiplier: fcStore.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100,
     };
 }
 
@@ -121,15 +124,16 @@ export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
  * @param s  Slider values (all decimals 0.0-2.0)
  */
 export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | undefined> {
-    FC.TUNING_SLIDERS.slider_pids_mode = s.pidsMode;
-    FC.TUNING_SLIDERS.slider_d_gain = Math.round(s.dGain * 100);
-    FC.TUNING_SLIDERS.slider_pi_gain = Math.round(s.piGain * 100);
-    FC.TUNING_SLIDERS.slider_feedforward_gain = Math.round(s.feedforwardGain * 100);
-    FC.TUNING_SLIDERS.slider_dmax_gain = Math.round(s.dMaxGain * 100);
-    FC.TUNING_SLIDERS.slider_i_gain = Math.round(s.iGain * 100);
-    FC.TUNING_SLIDERS.slider_roll_pitch_ratio = Math.round(s.rollPitchRatio * 100);
-    FC.TUNING_SLIDERS.slider_pitch_pi_gain = Math.round(s.pitchPIGain * 100);
-    FC.TUNING_SLIDERS.slider_master_multiplier = Math.round(s.masterMultiplier * 100);
+    const fcStore = useFlightControllerStore();
+    fcStore.TUNING_SLIDERS.slider_pids_mode = s.pidsMode;
+    fcStore.TUNING_SLIDERS.slider_d_gain = Math.round(s.dGain * 100);
+    fcStore.TUNING_SLIDERS.slider_pi_gain = Math.round(s.piGain * 100);
+    fcStore.TUNING_SLIDERS.slider_feedforward_gain = Math.round(s.feedforwardGain * 100);
+    fcStore.TUNING_SLIDERS.slider_dmax_gain = Math.round(s.dMaxGain * 100);
+    fcStore.TUNING_SLIDERS.slider_i_gain = Math.round(s.iGain * 100);
+    fcStore.TUNING_SLIDERS.slider_roll_pitch_ratio = Math.round(s.rollPitchRatio * 100);
+    fcStore.TUNING_SLIDERS.slider_pitch_pi_gain = Math.round(s.pitchPIGain * 100);
+    fcStore.TUNING_SLIDERS.slider_master_multiplier = Math.round(s.masterMultiplier * 100);
 
     // In virtual mode there is no FC to crunch the sliders, so compute the
     // resulting PID/feedforward/D-max values client-side (port of the firmware's
@@ -156,8 +160,9 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
  * @param multiplier  Gyro filter multiplier (decimal, e.g. 1.0)
  */
 export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse | undefined> {
-    FC.TUNING_SLIDERS.slider_gyro_filter = 1;
-    FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
+    const fcStore = useFlightControllerStore();
+    fcStore.TUNING_SLIDERS.slider_gyro_filter = 1;
+    fcStore.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
 
     if (CONFIGURATOR.virtualMode) {
         applySimplifiedGyroFilters();
@@ -181,8 +186,9 @@ export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse
  * @param multiplier  D-term filter multiplier (decimal, e.g. 1.0)
  */
 export function calculateNewDTermFilters(multiplier: number): Promise<MspResponse | undefined> {
-    FC.TUNING_SLIDERS.slider_dterm_filter = 1;
-    FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
+    const fcStore = useFlightControllerStore();
+    fcStore.TUNING_SLIDERS.slider_dterm_filter = 1;
+    fcStore.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
 
     if (CONFIGURATOR.virtualMode) {
         applySimplifiedDtermFilters();
@@ -204,15 +210,16 @@ export function calculateNewDTermFilters(multiplier: number): Promise<MspRespons
  * invalid slider modes are set to 0 (sliders off).  Returns a promise.
  */
 export function validateTuningSliders(): Promise<void> {
+    const fcStore = useFlightControllerStore();
     const patchInvalidSliders = () => {
-        if (!FC.TUNING_SLIDERS.slider_pids_valid) {
-            FC.TUNING_SLIDERS.slider_pids_mode = 0;
+        if (!fcStore.TUNING_SLIDERS.slider_pids_valid) {
+            fcStore.TUNING_SLIDERS.slider_pids_mode = 0;
         }
-        if (!FC.TUNING_SLIDERS.slider_gyro_valid) {
-            FC.TUNING_SLIDERS.slider_gyro_filter = 0;
+        if (!fcStore.TUNING_SLIDERS.slider_gyro_valid) {
+            fcStore.TUNING_SLIDERS.slider_gyro_filter = 0;
         }
-        if (!FC.TUNING_SLIDERS.slider_dterm_valid) {
-            FC.TUNING_SLIDERS.slider_dterm_filter = 0;
+        if (!fcStore.TUNING_SLIDERS.slider_dterm_valid) {
+            fcStore.TUNING_SLIDERS.slider_dterm_filter = 0;
         }
     };
 

@@ -1,19 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises } from "@vue/test-utils";
-import FC from "../../../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
 import MSP from "../../../../src/js/msp";
 import MSPCodes, { MSP2TextType } from "../../../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../../../src/js/msp/MSPHelper";
 import { CopyProfileType, usePidTuningMsp } from "../../../../src/composables/pidTuning/usePidTuningMsp";
+import { useFlightControllerStore } from "../../../../src/stores/fc";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn() } }));
 vi.mock("../../../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn() } }));
-vi.mock("../../../../src/js/fc", () => ({
-    default: {
-        CONFIG: { apiVersion: "1.49.0", buildOptions: [], pidProfileNames: [], rateProfileNames: [] },
-        COPY_PROFILE: undefined,
-    },
-}));
 
 /** A fake crunch result that records which code (and text type) it was built for. */
 const payload = (code: number, modifier?: number) => [0xfa, code, modifier ?? -1];
@@ -61,20 +56,22 @@ const WRITE_ALL = [...WRITE_HEAD, WRITE_PID_NAME, WRITE_RATE_NAME, WRITE_WING];
 const calls = () => vi.mocked(MSP.promise).mock.calls.map((args) => (args.length > 1 ? args : [args[0]]));
 
 function setFc(apiVersion: string, { wing = false } = {}) {
-    FC.CONFIG.apiVersion = apiVersion;
-    FC.CONFIG.buildOptions = wing ? ["USE_WING"] : [];
-    FC.CONFIG.pidProfileNames = ["a", "b", "c"];
-    FC.CONFIG.rateProfileNames = ["d", "e", "f"];
+    const fc = useFlightControllerStore();
+    fc.CONFIG.apiVersion = apiVersion;
+    fc.CONFIG.buildOptions = wing ? ["USE_WING"] : [];
+    fc.CONFIG.pidProfileNames = ["a", "b", "c"];
+    fc.CONFIG.rateProfileNames = ["d", "e", "f"];
 }
 
 describe("usePidTuningMsp", () => {
     beforeEach(() => {
+        setActivePinia(createPinia());
         vi.resetAllMocks();
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(mspHelper.crunch).mockImplementation(payload);
         setFc("1.49.0", { wing: true });
         // The tab guarded against a missing COPY_PROFILE, so start without one.
-        Object.assign(FC, { COPY_PROFILE: undefined });
+        Object.assign(useFlightControllerStore(), { COPY_PROFILE: undefined });
     });
 
     describe("loadPidTuningData", () => {
@@ -120,7 +117,7 @@ describe("usePidTuningMsp", () => {
         ])("skips a profile name the FC never reported (%s)", async (missing, expected) => {
             // Typed as always present, but the tab guarded against an FC that never sent them.
             setFc("1.45.0");
-            Object.assign(FC.CONFIG, { [missing]: undefined });
+            Object.assign(useFlightControllerStore().CONFIG, { [missing]: undefined });
 
             await usePidTuningMsp().writePidTuningConfig();
 
@@ -210,7 +207,7 @@ describe("usePidTuningMsp", () => {
         ])("copies with type %s, filling FC.COPY_PROFILE before the payload is built", async (type, wire) => {
             let atCrunch: unknown;
             vi.mocked(mspHelper.crunch).mockImplementation((code) => {
-                atCrunch = { ...FC.COPY_PROFILE };
+                atCrunch = { ...useFlightControllerStore().COPY_PROFILE };
                 return payload(code);
             });
 

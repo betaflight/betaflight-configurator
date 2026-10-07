@@ -1,6 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import FC from "@/js/fc";
+import { useFlightControllerStore, type FcState } from "@/stores/fc";
 import { useDirtyState } from "@/composables/useDirtyState";
 
 /**
@@ -18,6 +39,8 @@ import { useDirtyState } from "@/composables/useDirtyState";
  *    survive the reload that a switch or a reset triggers.
  */
 export const usePidTuningStore = defineStore("pidTuning", () => {
+    const fcStore = useFlightControllerStore();
+
     /**
      * The slider positions, without the FC's `slider_*_valid` verdict on whether the stored values
      * still match what the sliders would produce. Nothing in the UI writes those flags — only
@@ -26,7 +49,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
      * went through perfectly as still dirty.
      */
     const sliderPositions = () => {
-        const positions = { ...FC.TUNING_SLIDERS };
+        const positions: Partial<FcState["TUNING_SLIDERS"]> = { ...fcStore.TUNING_SLIDERS };
         delete positions.slider_pids_valid;
         delete positions.slider_gyro_valid;
         delete positions.slider_dterm_valid;
@@ -36,16 +59,16 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     /** The editable set: the same six objects the tab writes back over MSP, plus the profile names. */
     const serializeEdits = () =>
         JSON.stringify({
-            pids: FC.PIDS,
-            advancedTuning: FC.ADVANCED_TUNING,
-            rcTuning: FC.RC_TUNING,
-            filterConfig: FC.FILTER_CONFIG,
+            pids: fcStore.PIDS,
+            advancedTuning: fcStore.ADVANCED_TUNING,
+            rcTuning: fcStore.RC_TUNING,
+            filterConfig: fcStore.FILTER_CONFIG,
             tuningSliders: sliderPositions(),
-            wingConfig: FC.WING_CONFIG,
+            wingConfig: fcStore.WING_CONFIG,
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
-            pidProfileName: FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] ?? "",
-            rateProfileName: FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] ?? "",
+            pidProfileName: fcStore.CONFIG.pidProfileNames?.[fcStore.CONFIG.profile] ?? "",
+            rateProfileName: fcStore.CONFIG.rateProfileNames?.[fcStore.CONFIG.rateProfile] ?? "",
         });
 
     const {
@@ -55,7 +78,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     } = useDirtyState(serializeEdits);
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
-        () => `${FC.CONFIG.profile}:${FC.CONFIG.rateProfile}`,
+        () => `${fcStore.CONFIG.profile}:${fcStore.CONFIG.rateProfile}`,
     );
 
     // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a
