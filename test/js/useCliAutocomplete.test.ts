@@ -74,7 +74,7 @@ describe("useCliAutocomplete", () => {
         autoComplete.building = false;
         input = "";
         setActivePinia(createPinia());
-        useFlightControllerStore().CONFIG.flightControllerVersion = "4.5.0";
+        useFlightControllerStore().config.flightControllerVersion = "4.5.0";
         ac = useCliAutocomplete();
         ac.connect(
             () => input,

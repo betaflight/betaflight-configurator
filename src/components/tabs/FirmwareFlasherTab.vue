@@ -608,7 +608,7 @@ export default defineComponent({
             }
 
             // extract osd protocols from general options and add to osdProtocols
-            const cloudBuildOptions = fcStore.CONFIG.buildOptions || [];
+            const cloudBuildOptions = fcStore.config.buildOptions || [];
             state.cloudBuildOptions = cloudBuildOptions;
 
             // Mark all options as default if they're in cloudBuildOptions

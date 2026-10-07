@@ -64,8 +64,8 @@ export function useVisibleTabs(): ComputedRef<SidebarItem[]> {
         const model = betaflightModel ?? globalThis.vm;
         return {
             expertMode: Boolean(model?.expertMode),
-            config: fcStore.CONFIG,
-            features: fcStore.FEATURE_CONFIG?.features,
+            config: fcStore.config,
+            features: fcStore.features?.features,
         };
     });
 

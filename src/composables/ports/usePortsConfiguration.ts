@@ -71,9 +71,9 @@ export function usePortsConfiguration(
     };
 
     const updateFeatures = () => {
-        const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(fcStore.SERIAL_CONFIG.ports);
+        const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(fcStore.serialConfig.ports);
 
-        const featureConfig = fcStore.FEATURE_CONFIG.features;
+        const featureConfig = fcStore.features.features;
         if (!featureConfig) {
             // Set on connect, and this tab only saves while connected; it threw here before too.
             throw new Error("Feature config is not loaded");
@@ -120,7 +120,7 @@ export function usePortsConfiguration(
         }
 
         // Reconstruct FC.SERIAL_CONFIG.ports
-        fcStore.SERIAL_CONFIG.ports = ports.map((p) => {
+        fcStore.serialConfig.ports = ports.map((p) => {
             const functions: string[] = [];
             if (p.msp) {
                 functions.push("MSP");

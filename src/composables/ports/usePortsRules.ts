@@ -97,7 +97,7 @@ export function usePortsRules() {
         { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_FRSKYOSD" },
     ];
 
-    if (fcStore.CONFIG && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (fcStore.config && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         ruleDefinitions.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
@@ -122,7 +122,7 @@ export function usePortsRules() {
         "2470000",
     ];
 
-    if (fcStore.CONFIG && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (fcStore.config && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
         gpsBaudRates.push("230400");
         telemetryBaudRates.push("230400", "460800");
     }

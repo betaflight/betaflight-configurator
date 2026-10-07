@@ -86,31 +86,31 @@ export function downscaleSliderValue(value: number): number {
 export function readPidSliderPositions(): PidSliderPositions {
     const fcStore = useFlightControllerStore();
     return {
-        pidsMode: fcStore.TUNING_SLIDERS.slider_pids_mode,
-        dGain: fcStore.TUNING_SLIDERS.slider_d_gain / 100,
-        piGain: fcStore.TUNING_SLIDERS.slider_pi_gain / 100,
-        feedforwardGain: fcStore.TUNING_SLIDERS.slider_feedforward_gain / 100,
-        dMaxGain: fcStore.TUNING_SLIDERS.slider_dmax_gain / 100,
-        iGain: fcStore.TUNING_SLIDERS.slider_i_gain / 100,
-        rollPitchRatio: fcStore.TUNING_SLIDERS.slider_roll_pitch_ratio / 100,
-        pitchPIGain: fcStore.TUNING_SLIDERS.slider_pitch_pi_gain / 100,
-        masterMultiplier: fcStore.TUNING_SLIDERS.slider_master_multiplier / 100,
+        pidsMode: fcStore.tuningSliders.slider_pids_mode,
+        dGain: fcStore.tuningSliders.slider_d_gain / 100,
+        piGain: fcStore.tuningSliders.slider_pi_gain / 100,
+        feedforwardGain: fcStore.tuningSliders.slider_feedforward_gain / 100,
+        dMaxGain: fcStore.tuningSliders.slider_dmax_gain / 100,
+        iGain: fcStore.tuningSliders.slider_i_gain / 100,
+        rollPitchRatio: fcStore.tuningSliders.slider_roll_pitch_ratio / 100,
+        pitchPIGain: fcStore.tuningSliders.slider_pitch_pi_gain / 100,
+        masterMultiplier: fcStore.tuningSliders.slider_master_multiplier / 100,
     };
 }
 
 export function readGyroFilterSliderPosition(): GyroFilterSliderPosition {
     const fcStore = useFlightControllerStore();
     return {
-        sliderGyroFilter: fcStore.TUNING_SLIDERS.slider_gyro_filter,
-        sliderGyroFilterMultiplier: fcStore.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100,
+        sliderGyroFilter: fcStore.tuningSliders.slider_gyro_filter,
+        sliderGyroFilterMultiplier: fcStore.tuningSliders.slider_gyro_filter_multiplier / 100,
     };
 }
 
 export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
     const fcStore = useFlightControllerStore();
     return {
-        sliderDTermFilter: fcStore.TUNING_SLIDERS.slider_dterm_filter,
-        sliderDTermFilterMultiplier: fcStore.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100,
+        sliderDTermFilter: fcStore.tuningSliders.slider_dterm_filter,
+        sliderDTermFilterMultiplier: fcStore.tuningSliders.slider_dterm_filter_multiplier / 100,
     };
 }
 
@@ -125,15 +125,15 @@ export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
  */
 export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | undefined> {
     const fcStore = useFlightControllerStore();
-    fcStore.TUNING_SLIDERS.slider_pids_mode = s.pidsMode;
-    fcStore.TUNING_SLIDERS.slider_d_gain = Math.round(s.dGain * 100);
-    fcStore.TUNING_SLIDERS.slider_pi_gain = Math.round(s.piGain * 100);
-    fcStore.TUNING_SLIDERS.slider_feedforward_gain = Math.round(s.feedforwardGain * 100);
-    fcStore.TUNING_SLIDERS.slider_dmax_gain = Math.round(s.dMaxGain * 100);
-    fcStore.TUNING_SLIDERS.slider_i_gain = Math.round(s.iGain * 100);
-    fcStore.TUNING_SLIDERS.slider_roll_pitch_ratio = Math.round(s.rollPitchRatio * 100);
-    fcStore.TUNING_SLIDERS.slider_pitch_pi_gain = Math.round(s.pitchPIGain * 100);
-    fcStore.TUNING_SLIDERS.slider_master_multiplier = Math.round(s.masterMultiplier * 100);
+    fcStore.tuningSliders.slider_pids_mode = s.pidsMode;
+    fcStore.tuningSliders.slider_d_gain = Math.round(s.dGain * 100);
+    fcStore.tuningSliders.slider_pi_gain = Math.round(s.piGain * 100);
+    fcStore.tuningSliders.slider_feedforward_gain = Math.round(s.feedforwardGain * 100);
+    fcStore.tuningSliders.slider_dmax_gain = Math.round(s.dMaxGain * 100);
+    fcStore.tuningSliders.slider_i_gain = Math.round(s.iGain * 100);
+    fcStore.tuningSliders.slider_roll_pitch_ratio = Math.round(s.rollPitchRatio * 100);
+    fcStore.tuningSliders.slider_pitch_pi_gain = Math.round(s.pitchPIGain * 100);
+    fcStore.tuningSliders.slider_master_multiplier = Math.round(s.masterMultiplier * 100);
 
     // In virtual mode there is no FC to crunch the sliders, so compute the
     // resulting PID/feedforward/D-max values client-side (port of the firmware's
@@ -161,8 +161,8 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
  */
 export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse | undefined> {
     const fcStore = useFlightControllerStore();
-    fcStore.TUNING_SLIDERS.slider_gyro_filter = 1;
-    fcStore.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
+    fcStore.tuningSliders.slider_gyro_filter = 1;
+    fcStore.tuningSliders.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
 
     if (CONFIGURATOR.virtualMode) {
         applySimplifiedGyroFilters();
@@ -187,8 +187,8 @@ export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse
  */
 export function calculateNewDTermFilters(multiplier: number): Promise<MspResponse | undefined> {
     const fcStore = useFlightControllerStore();
-    fcStore.TUNING_SLIDERS.slider_dterm_filter = 1;
-    fcStore.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
+    fcStore.tuningSliders.slider_dterm_filter = 1;
+    fcStore.tuningSliders.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
 
     if (CONFIGURATOR.virtualMode) {
         applySimplifiedDtermFilters();
@@ -212,14 +212,14 @@ export function calculateNewDTermFilters(multiplier: number): Promise<MspRespons
 export function validateTuningSliders(): Promise<void> {
     const fcStore = useFlightControllerStore();
     const patchInvalidSliders = () => {
-        if (!fcStore.TUNING_SLIDERS.slider_pids_valid) {
-            fcStore.TUNING_SLIDERS.slider_pids_mode = 0;
+        if (!fcStore.tuningSliders.slider_pids_valid) {
+            fcStore.tuningSliders.slider_pids_mode = 0;
         }
-        if (!fcStore.TUNING_SLIDERS.slider_gyro_valid) {
-            fcStore.TUNING_SLIDERS.slider_gyro_filter = 0;
+        if (!fcStore.tuningSliders.slider_gyro_valid) {
+            fcStore.tuningSliders.slider_gyro_filter = 0;
         }
-        if (!fcStore.TUNING_SLIDERS.slider_dterm_valid) {
-            fcStore.TUNING_SLIDERS.slider_dterm_filter = 0;
+        if (!fcStore.tuningSliders.slider_dterm_valid) {
+            fcStore.tuningSliders.slider_dterm_filter = 0;
         }
     };
 

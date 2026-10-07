@@ -147,7 +147,7 @@ export function useDataflashErase({ onComplete, onError, onFinish }: DataflashEr
 
         if (!connectionStore.connectionValid) {
             finish(sequence, "disconnected");
-        } else if (fcStore.DATAFLASH?.ready) {
+        } else if (fcStore.dataflash?.ready) {
             finish(sequence, "complete");
         } else if (deadlineExpired && notifyTimeout) {
             finish(sequence, "error", new Error("Dataflash erase did not complete within the allowed time"));

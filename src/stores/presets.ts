@@ -374,7 +374,7 @@ export const usePresetsStore = defineStore("presets", () => {
         const fcStore = useFlightControllerStore();
         filters.firmwareVersions = getDefaultFirmwareSelections(
             repositories.value,
-            fcStore.CONFIG.flightControllerVersion,
+            fcStore.config.flightControllerVersion,
         );
     }
 

@@ -321,7 +321,7 @@ async function ensureCliPresetActionSupported() {
             i18n.getMessage("warningTitle"),
             i18n.getMessage("mspCliFirmwareTooOld", {
                 required: MIN_FC_VERSION_FOR_MSP_CLI,
-                current: fcStore.CONFIG?.flightControllerVersion || "?",
+                current: fcStore.config?.flightControllerVersion || "?",
             }),
             { confirmText: i18n.getMessage("close") },
         );
@@ -415,7 +415,7 @@ async function loadConfigBackup() {
 
 function isPresetCompatible(preset: { firmware_version?: string[] }) {
     return preset.firmware_version?.some((firmwareVersion: string) =>
-        fcStore.CONFIG.flightControllerVersion.startsWith(firmwareVersion),
+        fcStore.config.flightControllerVersion.startsWith(firmwareVersion),
     );
 }
 
@@ -433,7 +433,7 @@ function pickPresetAfterVersionCheck() {
         i18n.getMessage("presetsWarningDialogTitle"),
         i18n.getMessage("presetsWarningWrongVersionConfirmation", [
             store.selectedPreset.firmware_version,
-            fcStore.CONFIG.flightControllerVersion,
+            fcStore.config.flightControllerVersion,
         ]),
         () => store.pickSelectedPreset(),
         null,

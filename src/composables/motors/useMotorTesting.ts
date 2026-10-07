@@ -181,7 +181,7 @@ export function useMotorTesting(
     };
 
     // Arm state detection: fcStore.CONFIG.mode bit 0 indicates armed (matches original update_arm_status)
-    const isArmed = computed(() => bit_check(fcStore.CONFIG.mode, 0));
+    const isArmed = computed(() => bit_check(fcStore.config.mode, 0));
 
     // Sliders disabled when not testing or when armed via RC (matches original setSlidersEnabled)
     const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);

@@ -395,15 +395,15 @@ let lastTimestamp = 0;
 let keepRendering = true;
 
 // API Version helpers
-const hasThrottleHover = computed(() => semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47));
+const hasThrottleHover = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 
 // Rates Type
 const dialog = useDialog();
 
 const ratesType = computed({
-    get: () => fcStore.RC_TUNING.rates_type,
+    get: () => fcStore.rcTuning.rates_type,
     set: (value) => {
-        const current = fcStore.RC_TUNING.rates_type;
+        const current = fcStore.rcTuning.rates_type;
         if (value === current) {
             return;
         }
@@ -420,7 +420,7 @@ const ratesType = computed({
             {
                 confirm: () => {
                     dialog.close();
-                    fcStore.RC_TUNING.rates_type = value;
+                    fcStore.rcTuning.rates_type = value;
                     // Only a user-initiated type change resets the rates to that type's defaults.
                     // A type change coming from MSP (profile switch, reconnect) must keep the
                     // values the FC just sent us.
@@ -545,7 +545,7 @@ const rcRatePrecision = computed(() => {
 
 // Helper to get scale factor based on rates type
 const getScaleFactor = () => {
-    const type = fcStore.RC_TUNING.rates_type;
+    const type = fcStore.rcTuning.rates_type;
     switch (type) {
         case RatesType.RACEFLIGHT:
         case RatesType.ACTUAL:
@@ -556,7 +556,7 @@ const getScaleFactor = () => {
 };
 
 const getRateScaleFactor = () => {
-    const type = fcStore.RC_TUNING.rates_type;
+    const type = fcStore.rcTuning.rates_type;
     switch (type) {
         case RatesType.RACEFLIGHT:
             return 100;
@@ -570,49 +570,49 @@ const getRateScaleFactor = () => {
 
 // RC Rate (Roll) - scaled for display
 const rcRate = computed({
-    get: () => fcStore.RC_TUNING.RC_RATE * getScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.RC_RATE = value / getScaleFactor()),
+    get: () => fcStore.rcTuning.RC_RATE * getScaleFactor(),
+    set: (value) => (fcStore.rcTuning.RC_RATE = value / getScaleFactor()),
 });
 
 // RC Rate Pitch - scaled for display
 const rcRatePitch = computed({
-    get: () => fcStore.RC_TUNING.rcPitchRate * getScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.rcPitchRate = value / getScaleFactor()),
+    get: () => fcStore.rcTuning.rcPitchRate * getScaleFactor(),
+    set: (value) => (fcStore.rcTuning.rcPitchRate = value / getScaleFactor()),
 });
 
 // RC Rate Yaw - scaled for display
 const rcRateYaw = computed({
-    get: () => fcStore.RC_TUNING.rcYawRate * getScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.rcYawRate = value / getScaleFactor()),
+    get: () => fcStore.rcTuning.rcYawRate * getScaleFactor(),
+    set: (value) => (fcStore.rcTuning.rcYawRate = value / getScaleFactor()),
 });
 
 // Roll Rate - scaled for display
 const rollRate = computed({
-    get: () => fcStore.RC_TUNING.roll_rate * getRateScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.roll_rate = value / getRateScaleFactor()),
+    get: () => fcStore.rcTuning.roll_rate * getRateScaleFactor(),
+    set: (value) => (fcStore.rcTuning.roll_rate = value / getRateScaleFactor()),
 });
 
 // Pitch Rate - scaled for display
 const pitchRate = computed({
-    get: () => fcStore.RC_TUNING.pitch_rate * getRateScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.pitch_rate = value / getRateScaleFactor()),
+    get: () => fcStore.rcTuning.pitch_rate * getRateScaleFactor(),
+    set: (value) => (fcStore.rcTuning.pitch_rate = value / getRateScaleFactor()),
 });
 
 // Yaw Rate - scaled for display
 const yawRate = computed({
-    get: () => fcStore.RC_TUNING.yaw_rate * getRateScaleFactor(),
-    set: (value) => (fcStore.RC_TUNING.yaw_rate = value / getRateScaleFactor()),
+    get: () => fcStore.rcTuning.yaw_rate * getRateScaleFactor(),
+    set: (value) => (fcStore.rcTuning.yaw_rate = value / getRateScaleFactor()),
 });
 
 // RC Expo
 const rcExpo = computed({
     get: () => {
         const type = ratesType.value;
-        return type === RatesType.RACEFLIGHT ? fcStore.RC_TUNING.RC_EXPO * 100 : fcStore.RC_TUNING.RC_EXPO;
+        return type === RatesType.RACEFLIGHT ? fcStore.rcTuning.RC_EXPO * 100 : fcStore.rcTuning.RC_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        fcStore.RC_TUNING.RC_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
+        fcStore.rcTuning.RC_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
@@ -620,11 +620,11 @@ const rcExpo = computed({
 const rcPitchExpo = computed({
     get: () => {
         const type = ratesType.value;
-        return type === RatesType.RACEFLIGHT ? fcStore.RC_TUNING.RC_PITCH_EXPO * 100 : fcStore.RC_TUNING.RC_PITCH_EXPO;
+        return type === RatesType.RACEFLIGHT ? fcStore.rcTuning.RC_PITCH_EXPO * 100 : fcStore.rcTuning.RC_PITCH_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        fcStore.RC_TUNING.RC_PITCH_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
+        fcStore.rcTuning.RC_PITCH_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
@@ -632,38 +632,38 @@ const rcPitchExpo = computed({
 const rcYawExpo = computed({
     get: () => {
         const type = ratesType.value;
-        return type === RatesType.RACEFLIGHT ? fcStore.RC_TUNING.RC_YAW_EXPO * 100 : fcStore.RC_TUNING.RC_YAW_EXPO;
+        return type === RatesType.RACEFLIGHT ? fcStore.rcTuning.RC_YAW_EXPO * 100 : fcStore.rcTuning.RC_YAW_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        fcStore.RC_TUNING.RC_YAW_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
+        fcStore.rcTuning.RC_YAW_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
 // Throttle Settings
 const throttleLimitType = computed({
-    get: () => fcStore.RC_TUNING.throttleLimitType,
-    set: (value) => (fcStore.RC_TUNING.throttleLimitType = value),
+    get: () => fcStore.rcTuning.throttleLimitType,
+    set: (value) => (fcStore.rcTuning.throttleLimitType = value),
 });
 
 const throttleLimitPercent = computed({
-    get: () => fcStore.RC_TUNING.throttleLimitPercent,
-    set: (value) => (fcStore.RC_TUNING.throttleLimitPercent = Number.parseFloat(String(value))),
+    get: () => fcStore.rcTuning.throttleLimitPercent,
+    set: (value) => (fcStore.rcTuning.throttleLimitPercent = Number.parseFloat(String(value))),
 });
 
 const throttleMid = computed({
-    get: () => fcStore.RC_TUNING.throttle_MID ?? 0,
-    set: (value) => (fcStore.RC_TUNING.throttle_MID = Number.parseFloat(String(value))),
+    get: () => fcStore.rcTuning.throttle_MID ?? 0,
+    set: (value) => (fcStore.rcTuning.throttle_MID = Number.parseFloat(String(value))),
 });
 
 const throttleHover = computed({
-    get: () => fcStore.RC_TUNING.throttle_HOVER ?? 0.5,
-    set: (value) => (fcStore.RC_TUNING.throttle_HOVER = Number.parseFloat(String(value))),
+    get: () => fcStore.rcTuning.throttle_HOVER ?? 0.5,
+    set: (value) => (fcStore.rcTuning.throttle_HOVER = Number.parseFloat(String(value))),
 });
 
 const throttleExpo = computed({
-    get: () => fcStore.RC_TUNING.throttle_EXPO ?? 0,
-    set: (value) => (fcStore.RC_TUNING.throttle_EXPO = Number.parseFloat(String(value))),
+    get: () => fcStore.rcTuning.throttle_EXPO ?? 0,
+    set: (value) => (fcStore.rcTuning.throttle_EXPO = Number.parseFloat(String(value))),
 });
 
 // Rate Curve Helper
@@ -694,7 +694,7 @@ const centerSensitivityRoll = computed(() => {
         rollRate.value,
         rcRate.value,
         rcExpo.value,
-        fcStore.RC_TUNING.roll_rate_limit,
+        fcStore.rcTuning.roll_rate_limit,
     );
     const centerSensitivity = getAcroSensitivityFraction(rcExpo.value, rcRate.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
@@ -705,7 +705,7 @@ const centerSensitivityPitch = computed(() => {
         pitchRate.value,
         rcRatePitch.value,
         rcPitchExpo.value,
-        fcStore.RC_TUNING.pitch_rate_limit,
+        fcStore.rcTuning.pitch_rate_limit,
     );
     const centerSensitivity = getAcroSensitivityFraction(rcPitchExpo.value, rcRatePitch.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
@@ -717,7 +717,7 @@ const centerSensitivityYaw = computed(() => {
         yawRate.value,
         rcRateYaw.value,
         rcYawExpo.value,
-        fcStore.RC_TUNING.yaw_rate_limit,
+        fcStore.rcTuning.yaw_rate_limit,
         rates.yawDeadband,
     );
     const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRateYaw.value);
@@ -730,7 +730,7 @@ const maxAngularVelRoll = computed(() => {
         rollRate.value,
         rcRate.value,
         rcExpo.value,
-        fcStore.RC_TUNING.roll_rate_limit,
+        fcStore.rcTuning.roll_rate_limit,
     ).toString();
 });
 
@@ -739,7 +739,7 @@ const maxAngularVelPitch = computed(() => {
         pitchRate.value,
         rcRatePitch.value,
         rcPitchExpo.value,
-        fcStore.RC_TUNING.pitch_rate_limit,
+        fcStore.rcTuning.pitch_rate_limit,
     ).toString();
 });
 
@@ -749,14 +749,14 @@ const maxAngularVelYaw = computed(() => {
         yawRate.value,
         rcRateYaw.value,
         rcYawExpo.value,
-        fcStore.RC_TUNING.yaw_rate_limit,
+        fcStore.rcTuning.yaw_rate_limit,
         rates.yawDeadband,
     ).toString();
 });
 
 // Numeric Max Angular Velocity (All rate types) - Used for warning checks
 const numericMaxAngularVelRoll = computed(() => {
-    return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, fcStore.RC_TUNING.roll_rate_limit);
+    return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, fcStore.rcTuning.roll_rate_limit);
 });
 
 const numericMaxAngularVelPitch = computed(() => {
@@ -764,7 +764,7 @@ const numericMaxAngularVelPitch = computed(() => {
         pitchRate.value,
         rcRatePitch.value,
         rcPitchExpo.value,
-        fcStore.RC_TUNING.pitch_rate_limit,
+        fcStore.rcTuning.pitch_rate_limit,
     );
 });
 
@@ -774,7 +774,7 @@ const numericMaxAngularVelYaw = computed(() => {
         yawRate.value,
         rcRateYaw.value,
         rcYawExpo.value,
-        fcStore.RC_TUNING.yaw_rate_limit,
+        fcStore.rcTuning.yaw_rate_limit,
         rates.yawDeadband,
     );
 });
@@ -813,7 +813,7 @@ const expoLimits = computed(() => {
 
 function calculateMaxAngularVel(rate: number, rcRate: number, rcExpo: number, limit: number, deadband?: number) {
     // Use provided deadband or fall back to generic deadband
-    const db = deadband === undefined ? fcStore.RC_DEADBAND_CONFIG?.deadband || 0 : deadband;
+    const db = deadband === undefined ? fcStore.rcDeadbandConfig?.deadband || 0 : deadband;
     const maxAngularVel = maxAngularVelOf({
         rate,
         rcRate,
@@ -1029,11 +1029,11 @@ function updateRatesLabels() {
     // Add current RC stick values on the left side (like master)
     // Calculate stick values first, then add to balloons array AFTER sorting
     if (
-        fcStore.RC &&
-        fcStore.RC.channels &&
-        fcStore.RC.channels[0] &&
-        fcStore.RC.channels[1] &&
-        fcStore.RC.channels[2]
+        fcStore.rc &&
+        fcStore.rc.channels &&
+        fcStore.rc.channels[0] &&
+        fcStore.rc.channels[1] &&
+        fcStore.rc.channels[2]
     ) {
         // Draw the stick-position dots in the unscaled coordinate space so they line up
         // with the rate curve (drawn without the horizontal textScale) instead of being
@@ -1043,7 +1043,7 @@ function updateRatesLabels() {
 
         // Calculate current stick angular velocities
         const currentRollRate = rateCurve.drawStickPosition(
-            fcStore.RC.channels[0],
+            fcStore.rc.channels[0],
             axisRateCurveParams(rates, "roll"),
             maxRateRounded,
             ctx,
@@ -1051,7 +1051,7 @@ function updateRatesLabels() {
         );
 
         const currentPitchRate = rateCurve.drawStickPosition(
-            fcStore.RC.channels[1],
+            fcStore.rc.channels[1],
             axisRateCurveParams(rates, "pitch"),
             maxRateRounded,
             ctx,
@@ -1059,7 +1059,7 @@ function updateRatesLabels() {
         );
 
         const currentYawRate = rateCurve.drawStickPosition(
-            fcStore.RC.channels[2],
+            fcStore.rc.channels[2],
             axisRateCurveParams(rates, "yaw"),
             maxRateRounded,
             ctx,
@@ -1266,7 +1266,7 @@ function drawAngleModeLabels(
         drawAxisLabel(ctx, "Angle Mode", (canvas.width - 10) / textScale, canvas.height - 250, "right");
 
         // Draw angle sensitivity ranges
-        const angleLimit = fcStore.ADVANCED_TUNING?.levelAngleLimit || 60;
+        const angleLimit = fcStore.advancedTuning?.levelAngleLimit || 60;
         const maxAngVelRoll = maxAngularVelOf(axisRateCurveParams(rates, "roll"));
         const maxAngVelPitch = maxAngularVelOf(axisRateCurveParams(rates, "pitch"));
 
@@ -1588,8 +1588,8 @@ function drawThrottleCurve() {
     context.lineWidth = 2;
     context.strokeStyle = "#ffbb00";
 
-    const thrPercent = fcStore.RC?.channels?.[3]
-        ? Math.max(0, Math.min(1, (fcStore.RC.channels[3] - 1000) / 1000))
+    const thrPercent = fcStore.rc?.channels?.[3]
+        ? Math.max(0, Math.min(1, (fcStore.rc.channels[3] - 1000) / 1000))
         : 0.5;
     const thrX = thrPercent * canvasWidth;
 
@@ -1639,7 +1639,7 @@ function renderModel(timestamp: number) {
     const delta = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
 
-    const channels = fcStore.RC?.channels;
+    const channels = fcStore.rc?.channels;
 
     // Only rotate when we have valid RC channel data
     if (channels?.[0] && channels?.[1] && channels?.[2]) {
@@ -1675,9 +1675,9 @@ watch(
         rcExpo,
         rcPitchExpo,
         rcYawExpo,
-        () => fcStore.RC_TUNING.roll_rate_limit,
-        () => fcStore.RC_TUNING.pitch_rate_limit,
-        () => fcStore.RC_TUNING.yaw_rate_limit,
+        () => fcStore.rcTuning.roll_rate_limit,
+        () => fcStore.rcTuning.pitch_rate_limit,
+        () => fcStore.rcTuning.yaw_rate_limit,
     ],
     () => {
         nextTick(() => {
@@ -1703,7 +1703,7 @@ onMounted(() => {
                 return;
             }
 
-            if (!fcStore.MIXER_CONFIG || fcStore.MIXER_CONFIG.mixer === undefined) {
+            if (!fcStore.mixerConfig || fcStore.mixerConfig.mixer === undefined) {
                 // Use separate timeout ID for init retries
                 initModelTimeoutId = setTimeout(initModel, 100);
                 return;
@@ -1783,49 +1783,49 @@ onMounted(() => {
 const setDefaultsForRatesType = (type: number) => {
     switch (type) {
         case RatesType.RACEFLIGHT:
-            fcStore.RC_TUNING.RC_RATE = 0.37;
-            fcStore.RC_TUNING.rcPitchRate = 0.37;
-            fcStore.RC_TUNING.rcYawRate = 0.37;
-            fcStore.RC_TUNING.roll_rate = 0.8;
-            fcStore.RC_TUNING.pitch_rate = 0.8;
-            fcStore.RC_TUNING.yaw_rate = 0.8;
-            fcStore.RC_TUNING.RC_EXPO = 0.5;
-            fcStore.RC_TUNING.RC_PITCH_EXPO = 0.5;
-            fcStore.RC_TUNING.RC_YAW_EXPO = 0.5;
+            fcStore.rcTuning.RC_RATE = 0.37;
+            fcStore.rcTuning.rcPitchRate = 0.37;
+            fcStore.rcTuning.rcYawRate = 0.37;
+            fcStore.rcTuning.roll_rate = 0.8;
+            fcStore.rcTuning.pitch_rate = 0.8;
+            fcStore.rcTuning.yaw_rate = 0.8;
+            fcStore.rcTuning.RC_EXPO = 0.5;
+            fcStore.rcTuning.RC_PITCH_EXPO = 0.5;
+            fcStore.rcTuning.RC_YAW_EXPO = 0.5;
             break;
         case RatesType.ACTUAL:
-            fcStore.RC_TUNING.RC_RATE = 0.07;
-            fcStore.RC_TUNING.rcPitchRate = 0.07;
-            fcStore.RC_TUNING.rcYawRate = 0.07;
-            fcStore.RC_TUNING.roll_rate = 0.67;
-            fcStore.RC_TUNING.pitch_rate = 0.67;
-            fcStore.RC_TUNING.yaw_rate = 0.67;
-            fcStore.RC_TUNING.RC_EXPO = 0;
-            fcStore.RC_TUNING.RC_PITCH_EXPO = 0;
-            fcStore.RC_TUNING.RC_YAW_EXPO = 0;
+            fcStore.rcTuning.RC_RATE = 0.07;
+            fcStore.rcTuning.rcPitchRate = 0.07;
+            fcStore.rcTuning.rcYawRate = 0.07;
+            fcStore.rcTuning.roll_rate = 0.67;
+            fcStore.rcTuning.pitch_rate = 0.67;
+            fcStore.rcTuning.yaw_rate = 0.67;
+            fcStore.rcTuning.RC_EXPO = 0;
+            fcStore.rcTuning.RC_PITCH_EXPO = 0;
+            fcStore.rcTuning.RC_YAW_EXPO = 0;
             break;
         case RatesType.QUICKRATES:
-            fcStore.RC_TUNING.RC_RATE = 1;
-            fcStore.RC_TUNING.rcPitchRate = 1;
-            fcStore.RC_TUNING.rcYawRate = 1;
-            fcStore.RC_TUNING.roll_rate = 0.67;
-            fcStore.RC_TUNING.pitch_rate = 0.67;
-            fcStore.RC_TUNING.yaw_rate = 0.67;
-            fcStore.RC_TUNING.RC_EXPO = 0;
-            fcStore.RC_TUNING.RC_PITCH_EXPO = 0;
-            fcStore.RC_TUNING.RC_YAW_EXPO = 0;
+            fcStore.rcTuning.RC_RATE = 1;
+            fcStore.rcTuning.rcPitchRate = 1;
+            fcStore.rcTuning.rcYawRate = 1;
+            fcStore.rcTuning.roll_rate = 0.67;
+            fcStore.rcTuning.pitch_rate = 0.67;
+            fcStore.rcTuning.yaw_rate = 0.67;
+            fcStore.rcTuning.RC_EXPO = 0;
+            fcStore.rcTuning.RC_PITCH_EXPO = 0;
+            fcStore.rcTuning.RC_YAW_EXPO = 0;
             break;
         case RatesType.BETAFLIGHT:
         case RatesType.KISS:
-            fcStore.RC_TUNING.RC_RATE = 1;
-            fcStore.RC_TUNING.rcPitchRate = 1;
-            fcStore.RC_TUNING.rcYawRate = 1;
-            fcStore.RC_TUNING.roll_rate = 0.7;
-            fcStore.RC_TUNING.pitch_rate = 0.7;
-            fcStore.RC_TUNING.yaw_rate = 0.7;
-            fcStore.RC_TUNING.RC_EXPO = 0;
-            fcStore.RC_TUNING.RC_PITCH_EXPO = 0;
-            fcStore.RC_TUNING.RC_YAW_EXPO = 0;
+            fcStore.rcTuning.RC_RATE = 1;
+            fcStore.rcTuning.rcPitchRate = 1;
+            fcStore.rcTuning.rcYawRate = 1;
+            fcStore.rcTuning.roll_rate = 0.7;
+            fcStore.rcTuning.pitch_rate = 0.7;
+            fcStore.rcTuning.yaw_rate = 0.7;
+            fcStore.rcTuning.RC_EXPO = 0;
+            fcStore.rcTuning.RC_PITCH_EXPO = 0;
+            fcStore.rcTuning.RC_YAW_EXPO = 0;
             break;
     }
 };

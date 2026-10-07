@@ -357,7 +357,7 @@ async function ensureMspCliSupported() {
         t("warningTitle"),
         t("mspCliFirmwareTooOld", {
             required: MIN_FC_VERSION_FOR_MSP_CLI,
-            current: fcStore.CONFIG?.flightControllerVersion || "?",
+            current: fcStore.config?.flightControllerVersion || "?",
         }),
         { confirmText: t("close") },
     );

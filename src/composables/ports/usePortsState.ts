@@ -73,7 +73,7 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
 
     const handleSerialConfigLoaded = () => {
         ports.length = 0;
-        fcStore.SERIAL_CONFIG.ports.forEach((p) => {
+        fcStore.serialConfig.ports.forEach((p) => {
             ports.push(transformPortData(p));
         });
         markClean();
@@ -99,10 +99,10 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
 
     const vtxTableNotConfigured = computed(() => {
         return (
-            fcStore.VTX_CONFIG?.vtx_table_available &&
-            (fcStore.VTX_CONFIG.vtx_table_bands === 0 ||
-                fcStore.VTX_CONFIG.vtx_table_channels === 0 ||
-                fcStore.VTX_CONFIG.vtx_table_powerlevels === 0)
+            fcStore.vtxConfig?.vtx_table_available &&
+            (fcStore.vtxConfig.vtx_table_bands === 0 ||
+                fcStore.vtxConfig.vtx_table_channels === 0 ||
+                fcStore.vtxConfig.vtx_table_powerlevels === 0)
         );
     });
 

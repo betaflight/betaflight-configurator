@@ -58,7 +58,7 @@ export function useDataflashPull(): DataflashPull {
     const progress = ref(0);
 
     const available = computed(
-        () => !!GUI.connected_to && connectionStore.connectionValid && (fcStore.DATAFLASH?.usedSize || 0) > 0,
+        () => !!GUI.connected_to && connectionStore.connectionValid && (fcStore.dataflash?.usedSize || 0) > 0,
     );
 
     /**
@@ -91,7 +91,7 @@ export function useDataflashPull(): DataflashPull {
 
             // Refresh the occupied size before reading.
             await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-            const maxBytes = fcStore.DATAFLASH?.usedSize || 0;
+            const maxBytes = fcStore.dataflash?.usedSize || 0;
             if (maxBytes <= 0) {
                 throw new Error("No log data on the flight controller");
             }

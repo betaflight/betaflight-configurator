@@ -75,11 +75,11 @@ async function unlessCancelled<T>(picker: Promise<T | null>): Promise<T | null> 
 
 function getVtxTypeString() {
     const fcStore = useFlightControllerStore();
-    let result = i18n.getMessage(`vtxType_${fcStore.VTX_CONFIG.vtx_type}`);
-    const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === fcStore.VTX_CONFIG.vtx_type;
-    if (isSmartAudio && fcStore.VTX_DEVICE_STATUS !== null) {
+    let result = i18n.getMessage(`vtxType_${fcStore.vtxConfig.vtx_type}`);
+    const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === fcStore.vtxConfig.vtx_type;
+    if (isSmartAudio && fcStore.vtxDeviceStatus !== null) {
         // The status factory builds the SmartAudio subclass for a SmartAudio device.
-        result += ` ${(fcStore.VTX_DEVICE_STATUS as VtxDeviceStatusSmartAudio).smartAudioVersion}`;
+        result += ` ${(fcStore.vtxDeviceStatus as VtxDeviceStatusSmartAudio).smartAudioVersion}`;
     }
     return result;
 }
@@ -338,7 +338,7 @@ export function useVtx() {
     // --- State sync helpers ---
 
     function populateStateFromFC() {
-        const cfg = fcStore.VTX_CONFIG;
+        const cfg = fcStore.vtxConfig;
         vtxConfig.vtx_type = cfg.vtx_type;
         vtxConfig.vtx_band = cfg.vtx_band;
         vtxConfig.vtx_channel = cfg.vtx_channel;
@@ -364,44 +364,44 @@ export function useVtx() {
 
     function syncStateToFC() {
         if (frequencyMode.value) {
-            fcStore.VTX_CONFIG.vtx_frequency = toInt(vtxConfig.vtx_frequency);
-            fcStore.VTX_CONFIG.vtx_band = 0;
-            fcStore.VTX_CONFIG.vtx_channel = 0;
+            fcStore.vtxConfig.vtx_frequency = toInt(vtxConfig.vtx_frequency);
+            fcStore.vtxConfig.vtx_band = 0;
+            fcStore.vtxConfig.vtx_channel = 0;
         } else {
-            fcStore.VTX_CONFIG.vtx_band = toInt(vtxConfig.vtx_band);
-            fcStore.VTX_CONFIG.vtx_channel = toInt(vtxConfig.vtx_channel);
-            fcStore.VTX_CONFIG.vtx_frequency = 0;
+            fcStore.vtxConfig.vtx_band = toInt(vtxConfig.vtx_band);
+            fcStore.vtxConfig.vtx_channel = toInt(vtxConfig.vtx_channel);
+            fcStore.vtxConfig.vtx_frequency = 0;
         }
-        fcStore.VTX_CONFIG.vtx_power = toInt(vtxConfig.vtx_power);
-        fcStore.VTX_CONFIG.vtx_pit_mode = vtxConfig.vtx_pit_mode;
-        fcStore.VTX_CONFIG.vtx_pit_mode_frequency = toInt(vtxConfig.vtx_pit_mode_frequency);
-        fcStore.VTX_CONFIG.vtx_low_power_disarm = toInt(vtxConfig.vtx_low_power_disarm);
-        fcStore.VTX_CONFIG.vtx_table_clear = true;
+        fcStore.vtxConfig.vtx_power = toInt(vtxConfig.vtx_power);
+        fcStore.vtxConfig.vtx_pit_mode = vtxConfig.vtx_pit_mode;
+        fcStore.vtxConfig.vtx_pit_mode_frequency = toInt(vtxConfig.vtx_pit_mode_frequency);
+        fcStore.vtxConfig.vtx_low_power_disarm = toInt(vtxConfig.vtx_low_power_disarm);
+        fcStore.vtxConfig.vtx_table_clear = true;
 
-        fcStore.VTX_CONFIG.vtx_table_powerlevels = toInt(vtxConfig.vtx_table_powerlevels);
-        fcStore.VTX_CONFIG.vtx_table_bands = toInt(vtxConfig.vtx_table_bands);
-        fcStore.VTX_CONFIG.vtx_table_channels = toInt(vtxConfig.vtx_table_channels);
+        fcStore.vtxConfig.vtx_table_powerlevels = toInt(vtxConfig.vtx_table_powerlevels);
+        fcStore.vtxConfig.vtx_table_bands = toInt(vtxConfig.vtx_table_bands);
+        fcStore.vtxConfig.vtx_table_channels = toInt(vtxConfig.vtx_table_channels);
     }
 
     // --- MSP Communication ---
 
     async function loadVtxTableBands() {
         bandList.length = 0;
-        for (let i = 1; i <= fcStore.VTX_CONFIG.vtx_table_bands; i++) {
+        for (let i = 1; i <= fcStore.vtxConfig.vtx_table_bands; i++) {
             const buffer = new MspBuffer();
             buffer.push8(i);
             await sendMspPromise(MSPCodes.MSP_VTXTABLE_BAND, buffer);
-            bandList.push({ ...fcStore.VTXTABLE_BAND });
+            bandList.push({ ...fcStore.vtxTableBand });
         }
     }
 
     async function loadVtxTablePowerLevels() {
         powerLevelList.length = 0;
-        for (let i = 1; i <= fcStore.VTX_CONFIG.vtx_table_powerlevels; i++) {
+        for (let i = 1; i <= fcStore.vtxConfig.vtx_table_powerlevels; i++) {
             const buffer = new MspBuffer();
             buffer.push8(i);
             await sendMspPromise(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer);
-            powerLevelList.push({ ...fcStore.VTXTABLE_POWERLEVEL });
+            powerLevelList.push({ ...fcStore.vtxTablePowerLevel });
         }
     }
 
@@ -417,7 +417,7 @@ export function useVtx() {
     function updateDeviceStatus() {
         MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, () => {
             vtxTypeString.value = getVtxTypeString();
-            const isReady = fcStore.VTX_DEVICE_STATUS !== null && fcStore.VTX_DEVICE_STATUS.deviceIsReady;
+            const isReady = fcStore.vtxDeviceStatus !== null && fcStore.vtxDeviceStatus.deviceIsReady;
             deviceReady.value = !!isReady;
         });
     }
@@ -438,16 +438,16 @@ export function useVtx() {
 
         await MSP.promise(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG));
 
-        for (let index = 0; index < fcStore.VTX_CONFIG.vtx_table_powerlevels; index++) {
-            fcStore.VTXTABLE_POWERLEVEL = { ...powerLevelList[index] };
+        for (let index = 0; index < fcStore.vtxConfig.vtx_table_powerlevels; index++) {
+            fcStore.vtxTablePowerLevel = { ...powerLevelList[index] };
             await MSP.promise(
                 MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
                 mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL),
             );
         }
 
-        for (let index = 0; index < fcStore.VTX_CONFIG.vtx_table_bands; index++) {
-            fcStore.VTXTABLE_BAND = { ...bandList[index] };
+        for (let index = 0; index < fcStore.vtxConfig.vtx_table_bands; index++) {
+            fcStore.vtxTableBand = { ...bandList[index] };
             await MSP.promise(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND));
         }
 
@@ -490,11 +490,11 @@ export function useVtx() {
     // --- JSON Import from config object ---
 
     function readVtxConfigJson(vtxJsonConfig: VtxJsonConfig) {
-        fcStore.VTX_CONFIG.vtx_table_bands = vtxJsonConfig.vtx_table.bands_list.length;
+        fcStore.vtxConfig.vtx_table_bands = vtxJsonConfig.vtx_table.bands_list.length;
 
         let maxChannels = 0;
         bandList.length = 0;
-        for (let i = 0; i < fcStore.VTX_CONFIG.vtx_table_bands; i++) {
+        for (let i = 0; i < fcStore.vtxConfig.vtx_table_bands; i++) {
             const src = vtxJsonConfig.vtx_table.bands_list[i];
             bandList.push({
                 vtxtable_band_number: i + 1,
@@ -506,12 +506,12 @@ export function useVtx() {
             maxChannels = Math.max(maxChannels, src.frequencies.length);
         }
 
-        fcStore.VTX_CONFIG.vtx_table_channels = maxChannels;
+        fcStore.vtxConfig.vtx_table_channels = maxChannels;
 
-        fcStore.VTX_CONFIG.vtx_table_powerlevels = vtxJsonConfig.vtx_table.powerlevels_list.length;
+        fcStore.vtxConfig.vtx_table_powerlevels = vtxJsonConfig.vtx_table.powerlevels_list.length;
 
         powerLevelList.length = 0;
-        for (let i = 0; i < fcStore.VTX_CONFIG.vtx_table_powerlevels; i++) {
+        for (let i = 0; i < fcStore.vtxConfig.vtx_table_powerlevels; i++) {
             const src = vtxJsonConfig.vtx_table.powerlevels_list[i];
             powerLevelList.push({
                 vtxtable_powerlevel_number: i + 1,
@@ -520,8 +520,8 @@ export function useVtx() {
             });
         }
 
-        if (fcStore.VTX_CONFIG.vtx_power > powerLevelList.length) {
-            fcStore.VTX_CONFIG.vtx_power = powerLevelList.length;
+        if (fcStore.vtxConfig.vtx_power > powerLevelList.length) {
+            fcStore.vtxConfig.vtx_power = powerLevelList.length;
         }
 
         populateStateFromFC();
@@ -593,9 +593,9 @@ export function useVtx() {
     function saveLuaFile() {
         const suffix = "lua";
 
-        const uid0 = fcStore.CONFIG.uid[0].toString(16).padStart(8, "0");
-        const uid1 = fcStore.CONFIG.uid[1].toString(16).padStart(8, "0");
-        const uid2 = fcStore.CONFIG.uid[2].toString(16).padStart(8, "0");
+        const uid0 = fcStore.config.uid[0].toString(16).padStart(8, "0");
+        const uid1 = fcStore.config.uid[1].toString(16).padStart(8, "0");
+        const uid2 = fcStore.config.uid[2].toString(16).padStart(8, "0");
 
         const filename = `${uid0}${uid1}${uid2}.${suffix}`;
 

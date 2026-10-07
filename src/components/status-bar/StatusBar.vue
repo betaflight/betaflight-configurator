@@ -274,13 +274,13 @@ export default defineComponent({
             return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         });
 
-        const analog = computed(() => fcStore.ANALOG ?? {});
-        const batteryConfig = computed(() => fcStore.BATTERY_CONFIG ?? {});
-        const batteryState = computed(() => fcStore.BATTERY_STATE ?? {});
-        const auxConfig = computed(() => fcStore.AUX_CONFIG ?? []);
-        const fcConfig = computed(() => fcStore.CONFIG ?? {});
-        const gps = computed(() => fcStore.GPS_DATA ?? {});
-        const dataflash = computed(() => fcStore.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
+        const analog = computed(() => fcStore.analogData ?? {});
+        const batteryConfig = computed(() => fcStore.batteryConfig ?? {});
+        const batteryState = computed(() => fcStore.batteryState ?? {});
+        const auxConfig = computed(() => fcStore.auxConfig ?? []);
+        const fcConfig = computed(() => fcStore.config ?? {});
+        const gps = computed(() => fcStore.gpsData ?? {});
+        const dataflash = computed(() => fcStore.dataflash ?? { totalSize: 0, usedSize: 0 });
         const dataflashSupported = computed(() => (dataflash.value.totalSize ?? 0) > 0);
         const cpuTemperatureSupported = computed(() => semver.gte(fcConfig.value.apiVersion, API_VERSION_1_46));
 

@@ -278,7 +278,7 @@ OSD.refreshDisplayItemPreview = function (osdData, displayItem) {
 
 OSD.isCrsfReceiver = function () {
     const fcStore = useFlightControllerStore();
-    return fcStore.getSerialRxTypes().indexOf("CRSF") === fcStore.RX_CONFIG.serialrx_provider;
+    return fcStore.getSerialRxTypes().indexOf("CRSF") === fcStore.rxConfig.serialrx_provider;
 };
 
 OSD.generateAltitudePreview = function (osdData) {
@@ -421,9 +421,9 @@ OSD.generateCraftName = function () {
     const fcStore = useFlightControllerStore();
     let preview = "CRAFT_NAME";
 
-    const craftName = semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
-        ? fcStore.CONFIG.craftName
-        : fcStore.CONFIG.name;
+    const craftName = semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)
+        ? fcStore.config.craftName
+        : fcStore.config.name;
     if (craftName !== "") {
         preview = craftName.toUpperCase();
     }
@@ -434,8 +434,8 @@ OSD.generateCraftName = function () {
 OSD.generateDisplayName = function () {
     const fcStore = useFlightControllerStore();
     let preview = "DISPLAY_NAME";
-    if (fcStore.CONFIG.displayName) {
-        preview = fcStore.CONFIG.displayName?.toUpperCase();
+    if (fcStore.config.displayName) {
+        preview = fcStore.config.displayName?.toUpperCase();
     }
     return preview;
 };
@@ -444,8 +444,8 @@ OSD.generateDisplayName = function () {
 OSD.generatePilotName = function () {
     const fcStore = useFlightControllerStore();
     let preview = "PILOT_NAME";
-    if (fcStore.CONFIG.pilotName) {
-        preview = fcStore.CONFIG.pilotName?.toUpperCase();
+    if (fcStore.config.pilotName) {
+        preview = fcStore.config.pilotName?.toUpperCase();
     }
     return preview;
 };
@@ -1233,7 +1233,7 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: OSD.drawStickOverlayPreview,
         },
-        ...(semver.lt(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)
             ? {
                   DISPLAY_NAME: {
                       name: "DISPLAY_NAME",
@@ -1248,7 +1248,7 @@ OSD.loadDisplayFields = function () {
                   },
               }
             : {}),
-        ...(semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)
             ? {
                   PILOT_NAME: {
                       name: "PILOT_NAME",
@@ -1712,8 +1712,8 @@ OSD.loadDisplayFields = function () {
         },
     };
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
-        if (have_sensor(fcStore.CONFIG.activeSensors, "gps")) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+        if (have_sensor(fcStore.config.activeSensors, "gps")) {
             OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants!.push(
                 "osdTextElementAltitudeVariant1DecimalASL",
                 "osdTextElementAltitudeVariantNoDecimalASL",
@@ -1725,12 +1725,12 @@ OSD.loadDisplayFields = function () {
         ];
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         // Set by the API 1.47 branch above.
         OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants!.push("osdTextElementRtcDateTimeVariantTimeOnly");
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
         OSD.ALL_DISPLAY_FIELDS.LINK_QUALITY.variants = [
             "osdTextElementLinkQualityVariantRfMode",
             "osdTextElementLinkQualityVariantQualityOnly",
@@ -1801,7 +1801,7 @@ OSD.chooseFields = function () {
         F.STICK_OVERLAY_LEFT,
         F.STICK_OVERLAY_RIGHT,
         // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
-        semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
         F.ESC_RPM_FREQ,
         F.RATE_PROFILE_NAME,
         F.PID_PROFILE_NAME,
@@ -1815,7 +1815,7 @@ OSD.chooseFields = function () {
         F.OSD_TX_UPLINK_POWER,
     ];
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.WH_DRAWN,
             F.AUX_VALUE,
@@ -1835,7 +1835,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.GPS_LAP_TIME_CURRENT,
             F.GPS_LAP_TIME_PREVIOUS,
@@ -1843,7 +1843,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.DEBUG2,
             F.CUSTOM_MSG0,
@@ -1854,7 +1854,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
@@ -1868,7 +1868,7 @@ OSD.chooseFields = function () {
         // the gating follows: an unreported option decides how the firmware's enum
         // is laid out, not whether a control is shown, so guessing "present" would
         // misread every later field.
-        const reports = (name: string) => configReportsBuildOption(fcStore.CONFIG, name);
+        const reports = (name: string) => configReportsBuildOption(fcStore.config, name);
         const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
         const hasNavMap =
             hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
@@ -1895,7 +1895,7 @@ OSD.chooseFields = function () {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
         }
 
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_49)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
         }
     }
@@ -1939,11 +1939,11 @@ OSD.chooseFields = function () {
         S.MIN_RSSI_DBM,
     ];
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([S.USED_WH, S.MIN_RSNR]);
     }
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
             S.STAT_BEST_3_CONSEC_LAPS,
             S.STAT_BEST_LAP,
@@ -1979,17 +1979,17 @@ OSD.chooseFields = function () {
 
     OSD.constants.TIMER_TYPES = ["ON_TIME", "TOTAL_ARMED_TIME", "LAST_ARMED_TIME", "ON_ARM_TIME"];
 
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.RSNR]);
     }
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.LOAD]);
     }
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.filter((w) => w.name !== "RC_SMOOTHING_FAILURE");
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.POSHOLD_FAILED]);
     }
-    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.AUTOPILOT_ABORT]);
     }
 };
@@ -2169,7 +2169,7 @@ OSD.msp = {
         d.state.haveMax7456FontDeviceConfigured =
             d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveFbOsdConfigured;
         d.state.haveAirbotTheiaOsdDevice =
-            bit_check(d.flags, 7) && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47);
+            bit_check(d.flags, 7) && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47);
         const osdDeviceDetected = bit_check(d.flags, 5);
         // FbOsd is immediately ready to receive font upload even if display is not yet synced.
         d.state.isMax7456FontDeviceDetected =
@@ -2178,7 +2178,7 @@ OSD.msp = {
             d.state.haveFbOsdConfigured;
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
-        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45);
+        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45);
 
         // Must run before element positions are decoded, as they depend on the column count.
         OSD.applyCanvas(d);
@@ -2291,7 +2291,7 @@ OSD.msp = {
         d.parameters.cameraFrameWidth = view.readU8();
         d.parameters.cameraFrameHeight = view.readU8();
 
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
             d.alarms["link_quality"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionLinkQuality"),
                 value: view.readU16(),
@@ -2300,7 +2300,7 @@ OSD.msp = {
             };
         }
 
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             d.alarms["rssi_dbm"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionRssiDbm"),
                 value: view.read16(),

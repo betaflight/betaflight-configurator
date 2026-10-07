@@ -318,14 +318,14 @@ async function applyGains(proposed: ProposedSliders) {
     const fcStore = useFlightControllerStore();
     // Object.keys widens to string[]; the keys are the proposal's own.
     for (const key of Object.keys(proposed) as (keyof ProposedSliders)[]) {
-        if (key in fcStore.TUNING_SLIDERS) {
-            fcStore.TUNING_SLIDERS[key] = proposed[key];
+        if (key in fcStore.tuningSliders) {
+            fcStore.tuningSliders[key] = proposed[key];
         }
     }
 
     await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
     await validateTuningSliders();
-    if (!fcStore.TUNING_SLIDERS.slider_pids_valid || !fcStore.TUNING_SLIDERS.slider_dterm_valid) {
+    if (!fcStore.tuningSliders.slider_pids_valid || !fcStore.tuningSliders.slider_dterm_valid) {
         throw new Error("Recommended autotune sliders did not pass firmware validation.");
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);

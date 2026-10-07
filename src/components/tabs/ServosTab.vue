@@ -182,7 +182,7 @@ const { updateServos, saveServoConfig, isSaving } = useServosSave(marshalServoCo
     originalConfigs.value = JSON.stringify(servoConfigs);
 });
 
-const totalChannels = computed(() => fcStore.RC?.active_channels || 8);
+const totalChannels = computed(() => fcStore.rc?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
 const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify(servoConfigs));
 
@@ -231,7 +231,7 @@ function marshalServoConfigs() {
 
     for (let i = 0; i < servoConfigs.length; i++) {
         const src = servoConfigs[i];
-        const cfg = fcStore.SERVO_CONFIG[i];
+        const cfg = fcStore.servoConfig[i];
 
         const min = clamp(src.min ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
         const middle = clamp(src.middle ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
@@ -250,13 +250,13 @@ function marshalServoConfigs() {
 }
 
 function updateServoData() {
-    for (let i = 0; i < fcStore.SERVO_DATA.length; i++) {
-        servoData[i] = fcStore.SERVO_DATA[i];
+    for (let i = 0; i < fcStore.servoData.length; i++) {
+        servoData[i] = fcStore.servoData[i];
     }
 }
 
 async function loadServoData() {
-    if (!fcStore.CONFIG?.apiVersion) {
+    if (!fcStore.config?.apiVersion) {
         isSupported.value = false;
         GUI.content_ready();
         return;
@@ -273,7 +273,7 @@ async function loadServoData() {
 }
 
 function initializeUI() {
-    if (!fcStore.SERVO_CONFIG || fcStore.SERVO_CONFIG.length === 0) {
+    if (!fcStore.servoConfig || fcStore.servoConfig.length === 0) {
         isSupported.value = false;
         GUI.content_ready();
         return;
@@ -283,13 +283,13 @@ function initializeUI() {
 
     servoConfigs.length = 0;
     for (let i = 0; i < 8; i++) {
-        if (fcStore.SERVO_CONFIG[i]) {
+        if (fcStore.servoConfig[i]) {
             servoConfigs.push({
-                min: fcStore.SERVO_CONFIG[i].min,
-                middle: fcStore.SERVO_CONFIG[i].middle,
-                max: fcStore.SERVO_CONFIG[i].max,
-                rate: fcStore.SERVO_CONFIG[i].rate,
-                indexOfChannelToForward: fcStore.SERVO_CONFIG[i].indexOfChannelToForward,
+                min: fcStore.servoConfig[i].min,
+                middle: fcStore.servoConfig[i].middle,
+                max: fcStore.servoConfig[i].max,
+                rate: fcStore.servoConfig[i].rate,
+                indexOfChannelToForward: fcStore.servoConfig[i].indexOfChannelToForward,
             });
         }
     }

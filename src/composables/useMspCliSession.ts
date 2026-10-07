@@ -88,7 +88,7 @@ export interface MspCliSession {
 
 export function isMspCliSupported(): boolean {
     const fcStore = useFlightControllerStore();
-    const version = fcStore.CONFIG?.flightControllerVersion;
+    const version = fcStore.config?.flightControllerVersion;
     if (!version) {
         return false;
     }

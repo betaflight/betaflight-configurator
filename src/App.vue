@@ -11,9 +11,9 @@
                 <div class="tab_container" :class="{ reveal: isMobileSidebarOpen }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                        :firmware-version="fcStore.CONFIG.flightControllerVersion"
-                        :firmware-id="fcStore.CONFIG.flightControllerIdentifier"
-                        :hardware-id="fcStore.CONFIG.hardwareName"
+                        :firmware-version="fcStore.config.flightControllerVersion"
+                        :firmware-id="fcStore.config.flightControllerIdentifier"
+                        :hardware-id="fcStore.config.hardwareName"
                     ></betaflight-logo>
                     <Teleport to=".floating-connect" :disabled="!useFloatingChrome">
                         <ConnectButton />
@@ -37,12 +37,12 @@
                 :port-usage-up="PortUsage.port_usage_up"
                 :connection-timestamp="CONNECTION.timestamp"
                 :packet-error="MSP.packet_error"
-                :cycle-time="fcStore.CONFIG.cycleTime"
-                :cpu-load="fcStore.CONFIG.cpuload"
-                :cpu-temperature="fcStore.CONFIG.cpuTemp"
+                :cycle-time="fcStore.config.cycleTime"
+                :cpu-load="fcStore.config.cpuload"
+                :cpu-temperature="fcStore.config.cpuTemp"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                :firmware-version="fcStore.CONFIG.flightControllerVersion"
-                :firmware-target="fcStore.CONFIG.hardwareName"
+                :firmware-version="fcStore.config.flightControllerVersion"
+                :firmware-target="fcStore.config.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
@@ -180,7 +180,7 @@ watch(isLandingTab, (isLanding) => {
 
 const logoTooltip = computed(() => {
     const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
-    const cfg = fcStore.CONFIG ?? {};
+    const cfg = fcStore.config ?? {};
     if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
         lines.push(
             `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,

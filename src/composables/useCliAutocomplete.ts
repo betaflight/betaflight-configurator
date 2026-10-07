@@ -336,7 +336,7 @@ export function useCliAutocomplete(): CliAutocomplete {
                 search(term) {
                     sendOnEnter.value = false;
                     let arr = cache.resources;
-                    if (semver.gte(fcStore.CONFIG.flightControllerVersion, "4.0.0")) {
+                    if (semver.gte(fcStore.config.flightControllerVersion, "4.0.0")) {
                         arr = ["show", ...arr];
                     } else {
                         arr = ["list", ...arr];

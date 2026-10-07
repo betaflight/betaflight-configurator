@@ -43,7 +43,7 @@ import { i18n } from "@/js/localization";
 async function saveToEeprom(): Promise<void> {
     const fcStore = useFlightControllerStore();
     // Never persist while arming is possible (matches writeConfiguration).
-    if (!fcStore.CONFIG.armingDisabled) {
+    if (!fcStore.config.armingDisabled) {
         mspHelper.disableArming();
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);

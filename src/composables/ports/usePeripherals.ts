@@ -221,7 +221,7 @@ export function usePeripherals() {
             }
 
             const parsed = parsePeripherals(lines);
-            const fcPorts = fcStore.SERIAL_CONFIG?.ports ?? [];
+            const fcPorts = fcStore.serialConfig?.ports ?? [];
 
             const reported = new Map<number, PeripheralSerialPort>();
             const unopenable: { identifier: number; entry: PeripheralSerialPort }[] = [];

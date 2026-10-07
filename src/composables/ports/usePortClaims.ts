@@ -78,7 +78,7 @@ async function readClaims(): Promise<PortClaims | null | undefined> {
  * @param options.refresh ask the FC again even if the answer is already held
  */
 export function loadPortClaims({ refresh = false }: { refresh?: boolean } = {}): Promise<PortClaims | null> {
-    const config = useFlightControllerStore().SERIAL_CONFIG as SerialConfigWithClaims | null;
+    const config = useFlightControllerStore().serialConfig as SerialConfigWithClaims | null;
     if (!config) {
         return Promise.resolve(null);
     }

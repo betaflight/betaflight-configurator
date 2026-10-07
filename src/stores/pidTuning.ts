@@ -49,7 +49,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
      * went through perfectly as still dirty.
      */
     const sliderPositions = () => {
-        const positions: Partial<FcState["TUNING_SLIDERS"]> = { ...fcStore.TUNING_SLIDERS };
+        const positions: Partial<FcState["tuningSliders"]> = { ...fcStore.tuningSliders };
         delete positions.slider_pids_valid;
         delete positions.slider_gyro_valid;
         delete positions.slider_dterm_valid;
@@ -59,16 +59,16 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     /** The editable set: the same six objects the tab writes back over MSP, plus the profile names. */
     const serializeEdits = () =>
         JSON.stringify({
-            pids: fcStore.PIDS,
-            advancedTuning: fcStore.ADVANCED_TUNING,
-            rcTuning: fcStore.RC_TUNING,
-            filterConfig: fcStore.FILTER_CONFIG,
+            pids: fcStore.pids,
+            advancedTuning: fcStore.advancedTuning,
+            rcTuning: fcStore.rcTuning,
+            filterConfig: fcStore.filterConfig,
             tuningSliders: sliderPositions(),
-            wingConfig: fcStore.WING_CONFIG,
+            wingConfig: fcStore.wingConfig,
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into FC.CONFIG, and a second source would be free to drift (#5385).
-            pidProfileName: fcStore.CONFIG.pidProfileNames?.[fcStore.CONFIG.profile] ?? "",
-            rateProfileName: fcStore.CONFIG.rateProfileNames?.[fcStore.CONFIG.rateProfile] ?? "",
+            pidProfileName: fcStore.config.pidProfileNames?.[fcStore.config.profile] ?? "",
+            rateProfileName: fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] ?? "",
         });
 
     const {
@@ -78,7 +78,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     } = useDirtyState(serializeEdits);
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
-        () => `${fcStore.CONFIG.profile}:${fcStore.CONFIG.rateProfile}`,
+        () => `${fcStore.config.profile}:${fcStore.config.rateProfile}`,
     );
 
     // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a

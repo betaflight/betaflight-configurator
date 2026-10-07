@@ -37,7 +37,7 @@ const RATE_PROFILE_SELECT_FLAG = 128;
 
 const hasWing = () => {
     const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_49) && fcStore.CONFIG.buildOptions.includes("USE_WING");
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_WING");
 };
 
 /**
@@ -59,7 +59,7 @@ export function usePidTuningMsp() {
         await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
 
         // Profile names (API 1.45+)
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
                 mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PID_PROFILE_NAME),
@@ -71,7 +71,7 @@ export function usePidTuningMsp() {
         }
 
         // Status EX (API 1.47+)
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
         }
 
@@ -106,14 +106,14 @@ export function usePidTuningMsp() {
         await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
 
         // Save profile names to firmware (API 1.45+)
-        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
-            if (fcStore.CONFIG.pidProfileNames) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            if (fcStore.config.pidProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PID_PROFILE_NAME),
                 );
             }
-            if (fcStore.CONFIG.rateProfileNames) {
+            if (fcStore.config.rateProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
@@ -136,10 +136,10 @@ export function usePidTuningMsp() {
 
     /** Copy one PID or rate profile over another, in the FC's RAM. */
     const copyProfile = (type: CopyProfileType, srcProfile: number, dstProfile: number) => {
-        fcStore.COPY_PROFILE = fcStore.COPY_PROFILE || {};
-        fcStore.COPY_PROFILE.type = type;
-        fcStore.COPY_PROFILE.srcProfile = srcProfile;
-        fcStore.COPY_PROFILE.dstProfile = dstProfile;
+        fcStore.copyProfile = fcStore.copyProfile || {};
+        fcStore.copyProfile.type = type;
+        fcStore.copyProfile.srcProfile = srcProfile;
+        fcStore.copyProfile.dstProfile = dstProfile;
 
         return MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
     };

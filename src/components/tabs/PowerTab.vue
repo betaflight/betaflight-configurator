@@ -447,7 +447,7 @@ export default defineComponent({
         } = usePower();
 
         const calibrationVisibility = computed(() => getCalibrationVisibility());
-        const numberOfBatteryProfiles = computed(() => fcStore.CONFIG.numberOfBatteryProfiles || 0);
+        const numberOfBatteryProfiles = computed(() => fcStore.config.numberOfBatteryProfiles || 0);
 
         const batteryProfileItems = computed(() =>
             Array.from({ length: numberOfBatteryProfiles.value }, (_, i) => ({

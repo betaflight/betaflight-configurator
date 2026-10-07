@@ -57,10 +57,10 @@ const calls = () => vi.mocked(MSP.promise).mock.calls.map((args) => (args.length
 
 function setFc(apiVersion: string, { wing = false } = {}) {
     const fc = useFlightControllerStore();
-    fc.CONFIG.apiVersion = apiVersion;
-    fc.CONFIG.buildOptions = wing ? ["USE_WING"] : [];
-    fc.CONFIG.pidProfileNames = ["a", "b", "c"];
-    fc.CONFIG.rateProfileNames = ["d", "e", "f"];
+    fc.config.apiVersion = apiVersion;
+    fc.config.buildOptions = wing ? ["USE_WING"] : [];
+    fc.config.pidProfileNames = ["a", "b", "c"];
+    fc.config.rateProfileNames = ["d", "e", "f"];
 }
 
 describe("usePidTuningMsp", () => {
@@ -117,7 +117,7 @@ describe("usePidTuningMsp", () => {
         ])("skips a profile name the FC never reported (%s)", async (missing, expected) => {
             // Typed as always present, but the tab guarded against an FC that never sent them.
             setFc("1.45.0");
-            Object.assign(useFlightControllerStore().CONFIG, { [missing]: undefined });
+            Object.assign(useFlightControllerStore().config, { [missing]: undefined });
 
             await usePidTuningMsp().writePidTuningConfig();
 
@@ -207,7 +207,7 @@ describe("usePidTuningMsp", () => {
         ])("copies with type %s, filling FC.COPY_PROFILE before the payload is built", async (type, wire) => {
             let atCrunch: unknown;
             vi.mocked(mspHelper.crunch).mockImplementation((code) => {
-                atCrunch = { ...useFlightControllerStore().COPY_PROFILE };
+                atCrunch = { ...useFlightControllerStore().copyProfile };
                 return payload(code);
             });
 
