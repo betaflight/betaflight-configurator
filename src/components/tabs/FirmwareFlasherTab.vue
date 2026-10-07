@@ -142,7 +142,7 @@ import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
@@ -186,6 +186,7 @@ export default defineComponent({
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject<Translate>("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
+        const fcStore = useFlightControllerStore();
 
         // Reactive state, provided to the sub-tabs below
         const state = createFlasherState();
@@ -607,7 +608,7 @@ export default defineComponent({
             }
 
             // extract osd protocols from general options and add to osdProtocols
-            const cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            const cloudBuildOptions = fcStore.CONFIG.buildOptions || [];
             state.cloudBuildOptions = cloudBuildOptions;
 
             // Mark all options as default if they're in cloudBuildOptions

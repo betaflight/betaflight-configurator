@@ -22,7 +22,7 @@
 import { ref, type Ref } from "vue";
 import semver from "semver";
 import MSP from "../js/msp";
-import FC from "../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { cancelRebootReconnect, scheduleRebootReconnect } from "../js/serial_backend";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
@@ -87,7 +87,8 @@ export interface MspCliSession {
 }
 
 export function isMspCliSupported(): boolean {
-    const version = FC.CONFIG?.flightControllerVersion;
+    const fcStore = useFlightControllerStore();
+    const version = fcStore.CONFIG?.flightControllerVersion;
     if (!version) {
         return false;
     }

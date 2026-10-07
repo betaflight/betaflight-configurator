@@ -21,7 +21,7 @@
 
 import { ref, nextTick, type Ref } from "vue";
 import semver from "semver";
-import FC from "../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { escapeHtml } from "../js/utils/common";
 
@@ -148,6 +148,7 @@ function isAtWordEnd(text: string, cursorPos: number): boolean {
 }
 
 export function useCliAutocomplete(): CliAutocomplete {
+    const fcStore = useFlightControllerStore();
     const visible = ref(false);
     const items = ref<CliAutocompleteItem[]>([]);
     const activeIndex = ref(0);
@@ -335,7 +336,7 @@ export function useCliAutocomplete(): CliAutocomplete {
                 search(term) {
                     sendOnEnter.value = false;
                     let arr = cache.resources;
-                    if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
+                    if (semver.gte(fcStore.CONFIG.flightControllerVersion, "4.0.0")) {
                         arr = ["show", ...arr];
                     } else {
                         arr = ["list", ...arr];

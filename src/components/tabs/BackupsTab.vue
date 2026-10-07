@@ -266,7 +266,7 @@ import {
     useMspCliSession,
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import type UserApi from "@/js/UserApi";
 
 /** A cloud backup as the user API's `/api/backups` lists it. */
@@ -295,6 +295,7 @@ function describeError(error: unknown) {
 
 const { t } = useTranslation();
 const connectionStore = useConnectionStore();
+const fcStore = useFlightControllerStore();
 const cliSession = useMspCliSession();
 const dialog = useDialog();
 
@@ -356,7 +357,7 @@ async function ensureMspCliSupported() {
         t("warningTitle"),
         t("mspCliFirmwareTooOld", {
             required: MIN_FC_VERSION_FOR_MSP_CLI,
-            current: FC.CONFIG?.flightControllerVersion || "?",
+            current: fcStore.CONFIG?.flightControllerVersion || "?",
         }),
         { confirmText: t("close") },
     );

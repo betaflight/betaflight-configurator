@@ -157,7 +157,7 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { useTimeout } from "@/composables/useTimeout";
 import { useServosData } from "@/composables/servos/useServosData";
 import { useServosSave } from "@/composables/servos/useServosSave";
@@ -168,6 +168,7 @@ import type { ServoConfig } from "@/stores/fc.types";
 type ServoEdit = Omit<ServoConfig, "reversedInputSources">;
 
 const { t } = useTranslation();
+const fcStore = useFlightControllerStore();
 
 const isSupported = ref(false);
 const liveMode = ref(false);
@@ -181,7 +182,7 @@ const { updateServos, saveServoConfig, isSaving } = useServosSave(marshalServoCo
     originalConfigs.value = JSON.stringify(servoConfigs);
 });
 
-const totalChannels = computed(() => FC.RC?.active_channels || 8);
+const totalChannels = computed(() => fcStore.RC?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
 const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify(servoConfigs));
 
@@ -222,7 +223,7 @@ function onServoChange() {
     }
 }
 
-// Marshal reactive servoConfigs into FC.SERVO_CONFIG (clamping min/middle/max) so the
+// Marshal reactive servoConfigs into fcStore.SERVO_CONFIG (clamping min/middle/max) so the
 // values sent over MSP match the UI. Also normalizes the reactive values in place.
 function marshalServoConfigs() {
     const SERVO_MIN = 500;
@@ -230,7 +231,7 @@ function marshalServoConfigs() {
 
     for (let i = 0; i < servoConfigs.length; i++) {
         const src = servoConfigs[i];
-        const cfg = FC.SERVO_CONFIG[i];
+        const cfg = fcStore.SERVO_CONFIG[i];
 
         const min = clamp(src.min ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
         const middle = clamp(src.middle ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
@@ -249,13 +250,13 @@ function marshalServoConfigs() {
 }
 
 function updateServoData() {
-    for (let i = 0; i < FC.SERVO_DATA.length; i++) {
-        servoData[i] = FC.SERVO_DATA[i];
+    for (let i = 0; i < fcStore.SERVO_DATA.length; i++) {
+        servoData[i] = fcStore.SERVO_DATA[i];
     }
 }
 
 async function loadServoData() {
-    if (!FC.CONFIG?.apiVersion) {
+    if (!fcStore.CONFIG?.apiVersion) {
         isSupported.value = false;
         GUI.content_ready();
         return;
@@ -272,7 +273,7 @@ async function loadServoData() {
 }
 
 function initializeUI() {
-    if (!FC.SERVO_CONFIG || FC.SERVO_CONFIG.length === 0) {
+    if (!fcStore.SERVO_CONFIG || fcStore.SERVO_CONFIG.length === 0) {
         isSupported.value = false;
         GUI.content_ready();
         return;
@@ -282,13 +283,13 @@ function initializeUI() {
 
     servoConfigs.length = 0;
     for (let i = 0; i < 8; i++) {
-        if (FC.SERVO_CONFIG[i]) {
+        if (fcStore.SERVO_CONFIG[i]) {
             servoConfigs.push({
-                min: FC.SERVO_CONFIG[i].min,
-                middle: FC.SERVO_CONFIG[i].middle,
-                max: FC.SERVO_CONFIG[i].max,
-                rate: FC.SERVO_CONFIG[i].rate,
-                indexOfChannelToForward: FC.SERVO_CONFIG[i].indexOfChannelToForward,
+                min: fcStore.SERVO_CONFIG[i].min,
+                middle: fcStore.SERVO_CONFIG[i].middle,
+                max: fcStore.SERVO_CONFIG[i].max,
+                rate: fcStore.SERVO_CONFIG[i].rate,
+                indexOfChannelToForward: fcStore.SERVO_CONFIG[i].indexOfChannelToForward,
             });
         }
     }

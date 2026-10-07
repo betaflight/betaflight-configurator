@@ -1,11 +1,32 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { defineStore } from "pinia";
 import { computed, reactive, ref } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { i18n } from "../js/localization";
-import FC from "../js/fc";
+import { useFlightControllerStore } from "./fc";
 import { escapeHtml } from "../js/utils/common";
 import { useDialogStore } from "./dialog";
-import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
+import * as favoritePresetsModule from "../components/tabs/presets/FavoritePresets";
 import PickedPreset from "../components/tabs/presets/PickedPreset";
 import PresetsGithubRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
 import PresetsWebsiteRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo";
@@ -28,7 +49,92 @@ import {
     sanitizeActiveSourceIndexes,
 } from "./presets_helpers";
 
-function createRepositoryFromSource(source) {
+type PresetRepository = PresetsGithubRepo | PresetsWebsiteRepo;
+
+/** An option as parsed by PresetParser; `id` is attached by attachOptionIds() when the details open. */
+export type PresetOption = {
+    id?: string;
+    name: string;
+    checked?: boolean;
+    childs?: PresetOption[];
+};
+
+/** A preset as listed in a repository's index.json, plus the fields loadPreset() fills in. */
+export type Preset = {
+    hash?: string;
+    fullPath?: string;
+    title?: string;
+    priority?: number;
+    status?: string;
+    category?: string;
+    keywords?: string[];
+    author?: string;
+    firmware_version?: string[];
+    hidden?: boolean;
+    force_options_review?: boolean;
+    completeWarning?: string;
+    options?: PresetOption[];
+    originalPresetCliStrings?: string[];
+};
+
+export type PresetSourceEntry = {
+    id: string;
+    name: string;
+    url: string;
+    gitHubBranch: string;
+    official: boolean;
+};
+
+export type PresetEntry = {
+    key: string;
+    preset: Preset;
+    repository: PresetRepository;
+};
+
+export type PresetSearchEntry = PresetEntry & {
+    favoriteDate: number | undefined;
+    isPicked: boolean;
+};
+
+export type PresetCliFailure = {
+    command: string;
+    response: string[];
+};
+
+type PresetSearchParams = {
+    categories: string[];
+    keywords: string[];
+    authors: string[];
+    firmwareVersions: string[];
+    status: string[];
+    searchString: string;
+};
+
+type FavoritePresetsApi = {
+    add(preset: Preset, repo: PresetRepository): number;
+    delete(preset: Preset, repo: PresetRepository): void;
+    getLastPickDate(preset: Preset, repo: PresetRepository): number | undefined;
+    saveToStorage(): void;
+    loadFromStorage(): void;
+};
+
+// FavoritePresets.js exports its singleton through an unannotated `let`, so it arrives as an
+// implicit `any`; this gives the store a typed view of the same object.
+const favoritePresets: FavoritePresetsApi = favoritePresetsModule.favoritePresets;
+
+// presets_helpers.js infers the callback as `() => {}` from its default, which rejects any
+// callback that takes the arguments getFitPresets() actually passes; same function, typed.
+const getFitPresetEntries = getFitPresets as unknown as (
+    repositories: readonly PresetRepository[],
+    searchParams: PresetSearchParams,
+    getPresetEntryState: (
+        preset: Preset,
+        repository: PresetRepository,
+        presetKey: string,
+    ) => Pick<PresetSearchEntry, "favoriteDate" | "isPicked">,
+) => PresetSearchEntry[];
+
+function createRepositoryFromSource(source: PresetSourceEntry): PresetRepository {
     if (PresetSource.isUrlGithubRepo(source.url)) {
         return new PresetsGithubRepo(source.url, source.gitHubBranch ?? "", source.official, source.name);
     }
@@ -36,18 +142,18 @@ function createRepositoryFromSource(source) {
     return new PresetsWebsiteRepo(source.url, source.official, source.name);
 }
 
-function getSourceIndexById(sourceId, availableSources) {
+function getSourceIndexById(sourceId: string, availableSources: readonly PresetSourceEntry[]) {
     return availableSources.findIndex((source) => source.id === sourceId);
 }
 
 export const usePresetsStore = defineStore("presets", () => {
     const majorVersion = 1;
-    const repositories = ref([]);
-    const failedRepositoryNames = ref([]);
-    const sources = ref([]);
-    const activeSourceIds = ref([]);
-    const pickedPresetList = ref([]);
-    const favoritePresetDates = ref({});
+    const repositories = ref<PresetRepository[]>([]);
+    const failedRepositoryNames = ref<string[]>([]);
+    const sources = ref<PresetSourceEntry[]>([]);
+    const activeSourceIds = ref<string[]>([]);
+    const pickedPresetList = ref<PickedPreset[]>([]);
+    const favoritePresetDates = ref<Record<string, number>>({});
 
     const isLoading = ref(false);
     const hasLoadError = ref(false);
@@ -55,20 +161,20 @@ export const usePresetsStore = defineStore("presets", () => {
     const showSourcesDialog = ref(false);
 
     const filters = reactive({
-        categories: [],
-        keywords: [],
-        authors: [],
-        firmwareVersions: [],
-        status: [],
+        categories: [] as string[],
+        keywords: [] as string[],
+        authors: [] as string[],
+        firmwareVersions: [] as string[],
+        status: [] as string[],
         searchString: "",
     });
 
     const filterOptions = reactive({
-        categories: [],
-        keywords: [],
-        authors: [],
-        firmwareVersions: [],
-        status: [],
+        categories: [] as string[],
+        keywords: [] as string[],
+        authors: [] as string[],
+        firmwareVersions: [] as string[],
+        status: [] as string[],
     });
 
     const detailsState = reactive({
@@ -78,7 +184,7 @@ export const usePresetsStore = defineStore("presets", () => {
         showCli: false,
         optionsExpanded: false,
         optionsReviewed: false,
-        selectedOptionIds: [],
+        selectedOptionIds: [] as string[],
     });
 
     const applyState = reactive({
@@ -86,11 +192,10 @@ export const usePresetsStore = defineStore("presets", () => {
         progressDialogOpen: false,
         cliErrorsDialogOpen: false,
         cliErrorsSavePressed: false,
-        /** @type {{ command: string, response: string[] }[]} */
-        cliErrors: [],
+        cliErrors: [] as PresetCliFailure[],
     });
 
-    const selectedPresetEntry = ref(null);
+    const selectedPresetEntry = ref<PresetEntry | null>(null);
     let detailsRequestToken = 0;
 
     const activeSourceIndexes = computed(() =>
@@ -102,7 +207,7 @@ export const usePresetsStore = defineStore("presets", () => {
     const activeSources = computed(() =>
         activeSourceIds.value
             .map((sourceId) => sources.value.find((source) => source.id === sourceId))
-            .filter((source) => source !== undefined),
+            .filter((source): source is PresetSourceEntry => source !== undefined),
     );
 
     const pickedPresetKeys = computed(
@@ -119,7 +224,7 @@ export const usePresetsStore = defineStore("presets", () => {
             : "",
     );
 
-    const searchParams = computed(() => ({
+    const searchParams = computed<PresetSearchParams>(() => ({
         categories: [...filters.categories],
         keywords: [...filters.keywords],
         authors: filters.authors.map((author) => author.toLowerCase()),
@@ -129,10 +234,14 @@ export const usePresetsStore = defineStore("presets", () => {
     }));
 
     const filteredPresetEntries = computed(() =>
-        getFitPresets(repositories.value, searchParams.value, (preset, repository, presetKey) => ({
-            favoriteDate: favoritePresetDates.value[presetKey],
-            isPicked: pickedPresetKeys.value.has(getPresetEntryKey(preset, repository)),
-        })),
+        getFitPresetEntries(
+            repositories.value,
+            searchParams.value,
+            (preset: Preset, repository: PresetRepository, presetKey: string) => ({
+                favoriteDate: favoritePresetDates.value[presetKey],
+                isPicked: pickedPresetKeys.value.has(getPresetEntryKey(preset, repository)),
+            }),
+        ),
     );
     const visiblePresetEntries = computed(() => filteredPresetEntries.value.slice(0, PRESETS_MAX_RESULTS));
     const hasTooManyResults = computed(() => filteredPresetEntries.value.length > PRESETS_MAX_RESULTS);
@@ -179,10 +288,10 @@ export const usePresetsStore = defineStore("presets", () => {
     });
 
     function syncFavoritePresetDates(nextRepositories = repositories.value) {
-        const nextFavoritePresetDates = {};
+        const nextFavoritePresetDates: Record<string, number> = {};
 
         nextRepositories.forEach((repository) => {
-            repository.index.presets.forEach((preset) => {
+            repository.index.presets.forEach((preset: Preset) => {
                 const presetKey = getPresetEntryKey(preset, repository);
                 const lastPickDate = favoritePresets.getLastPickDate(preset, repository);
 
@@ -222,7 +331,7 @@ export const usePresetsStore = defineStore("presets", () => {
         backupWarningVisible.value = storedValue === undefined ? true : Boolean(storedValue);
     }
 
-    function setBackupWarningVisible(value) {
+    function setBackupWarningVisible(value: boolean) {
         backupWarningVisible.value = value;
         setConfig({ [PRESETS_STORAGE_KEYS.showBackupWarning]: value });
     }
@@ -234,14 +343,26 @@ export const usePresetsStore = defineStore("presets", () => {
     }
 
     function buildFilterOptions() {
-        filterOptions.categories = collectUniqueValues(repositories.value, (repo) => repo.index.uniqueValues.category);
-        filterOptions.keywords = collectUniqueValues(repositories.value, (repo) => repo.index.uniqueValues.keywords);
-        filterOptions.authors = collectUniqueValues(repositories.value, (repo) => repo.index.uniqueValues.author);
+        filterOptions.categories = collectUniqueValues(
+            repositories.value,
+            (repo: PresetRepository) => repo.index.uniqueValues.category,
+        );
+        filterOptions.keywords = collectUniqueValues(
+            repositories.value,
+            (repo: PresetRepository) => repo.index.uniqueValues.keywords,
+        );
+        filterOptions.authors = collectUniqueValues(
+            repositories.value,
+            (repo: PresetRepository) => repo.index.uniqueValues.author,
+        );
         filterOptions.firmwareVersions = collectUniqueValues(
             repositories.value,
-            (repo) => repo.index.uniqueValues.firmware_version,
+            (repo: PresetRepository) => repo.index.uniqueValues.firmware_version,
         );
-        filterOptions.status = collectUniqueValues(repositories.value, (repo) => repo.index.settings.PresetStatusEnum);
+        filterOptions.status = collectUniqueValues(
+            repositories.value,
+            (repo: PresetRepository) => repo.index.settings.PresetStatusEnum,
+        );
     }
 
     function resetFilters() {
@@ -250,7 +371,11 @@ export const usePresetsStore = defineStore("presets", () => {
         filters.authors = [];
         filters.status = [];
         filters.searchString = "";
-        filters.firmwareVersions = getDefaultFirmwareSelections(repositories.value, FC.CONFIG.flightControllerVersion);
+        const fcStore = useFlightControllerStore();
+        filters.firmwareVersions = getDefaultFirmwareSelections(
+            repositories.value,
+            fcStore.CONFIG.flightControllerVersion,
+        );
     }
 
     function clearLoadState() {
@@ -284,7 +409,7 @@ export const usePresetsStore = defineStore("presets", () => {
         resetApplyState();
     }
 
-    function updateApplyProgress(value) {
+    function updateApplyProgress(value: number) {
         applyState.progress = value;
     }
 
@@ -310,7 +435,7 @@ export const usePresetsStore = defineStore("presets", () => {
         saveSourceConfiguration();
     }
 
-    function updateSource(sourceId, source) {
+    function updateSource(sourceId: string, source: Record<string, unknown>) {
         const sourceIndex = getSourceIndexById(sourceId, sources.value);
 
         if (sourceIndex < 0 || sources.value[sourceIndex]?.official) {
@@ -319,18 +444,19 @@ export const usePresetsStore = defineStore("presets", () => {
 
         sources.value = sources.value.map((existingSource) =>
             existingSource.id === sourceId
-                ? {
+                ? // The source card emits its draft untyped; it carries name / url / gitHubBranch.
+                  ({
                       ...existingSource,
                       ...source,
                       gitHubBranch: source.gitHubBranch ?? "",
                       official: false,
-                  }
+                  } as PresetSourceEntry)
                 : existingSource,
         );
         saveSourceConfiguration();
     }
 
-    function deleteSource(sourceId) {
+    function deleteSource(sourceId: string) {
         const source = sources.value.find((item) => item.id === sourceId);
 
         if (!source || source.official) {
@@ -345,7 +471,7 @@ export const usePresetsStore = defineStore("presets", () => {
         saveSourceConfiguration();
     }
 
-    function setSourceActive(sourceId, isActive) {
+    function setSourceActive(sourceId: string, isActive: boolean) {
         const currentSourceIds = new Set(activeSourceIds.value);
 
         if (isActive) {
@@ -376,7 +502,7 @@ export const usePresetsStore = defineStore("presets", () => {
         );
 
         const dialogStore = useDialogStore();
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             dialogStore.open(
                 "YesNoDialog",
                 {
@@ -410,8 +536,8 @@ export const usePresetsStore = defineStore("presets", () => {
         isLoading.value = true;
 
         try {
-            const failedNames = new Set();
-            const nextRepositories = [];
+            const failedNames = new Set<string>();
+            const nextRepositories: PresetRepository[] = [];
 
             activeSources.value.forEach((source) => {
                 try {
@@ -424,7 +550,7 @@ export const usePresetsStore = defineStore("presets", () => {
 
             await Promise.all(
                 nextRepositories.map((repository) =>
-                    repository.loadIndex().catch((error) => {
+                    repository.loadIndex().catch((error: unknown) => {
                         failedNames.add(repository.name);
                         console.error(error);
                         return null;
@@ -447,11 +573,11 @@ export const usePresetsStore = defineStore("presets", () => {
         }
     }
 
-    function setSearchString(searchString) {
+    function setSearchString(searchString: string) {
         filters.searchString = searchString;
     }
 
-    function toggleFavorite(preset, repository) {
+    function toggleFavorite(preset: Preset, repository: PresetRepository) {
         const presetKey = getPresetEntryKey(preset, repository);
 
         if (favoritePresetDates.value[presetKey]) {
@@ -464,7 +590,7 @@ export const usePresetsStore = defineStore("presets", () => {
         syncFavoritePresetDates();
     }
 
-    async function openPresetDetails(preset, repository) {
+    async function openPresetDetails(preset: Preset, repository: PresetRepository) {
         const requestToken = detailsRequestToken + 1;
         const presetKey = getPresetEntryKey(preset, repository);
 
@@ -517,18 +643,18 @@ export const usePresetsStore = defineStore("presets", () => {
         resetDetailsState();
     }
 
-    function setDetailsCliVisible(isVisible) {
+    function setDetailsCliVisible(isVisible: boolean) {
         detailsState.showCli = isVisible;
     }
 
-    function setOptionsExpanded(isExpanded) {
+    function setOptionsExpanded(isExpanded: boolean) {
         detailsState.optionsExpanded = isExpanded;
         if (isExpanded) {
             detailsState.optionsReviewed = true;
         }
     }
 
-    function setOptionChecked(optionId, isChecked) {
+    function setOptionChecked(optionId: string, isChecked: boolean) {
         if (isChecked) {
             if (!detailsState.selectedOptionIds.includes(optionId)) {
                 detailsState.selectedOptionIds = [...detailsState.selectedOptionIds, optionId];
@@ -540,7 +666,7 @@ export const usePresetsStore = defineStore("presets", () => {
         }
     }
 
-    function setExclusiveOption(groupOptionIds, selectedOptionId) {
+    function setExclusiveOption(groupOptionIds: readonly string[], selectedOptionId: string | null | undefined) {
         const nextSelectedOptions = detailsState.selectedOptionIds.filter(
             (currentOptionId) => !groupOptionIds.includes(currentOptionId),
         );
@@ -572,7 +698,7 @@ export const usePresetsStore = defineStore("presets", () => {
         closePresetDetails();
     }
 
-    function appendPickedPreset(preset, cliStrings, presetRepository) {
+    function appendPickedPreset(preset: Preset, cliStrings: string[], presetRepository: PresetRepository | undefined) {
         const presetKey = presetRepository ? getPresetEntryKey(preset, presetRepository) : undefined;
         const pickedPreset = new PickedPreset(preset, cliStrings, presetRepository, presetKey);
 
@@ -621,7 +747,7 @@ export const usePresetsStore = defineStore("presets", () => {
         applyState.progressDialogOpen = false;
     }
 
-    function openCliErrorsDialog(cliErrors = []) {
+    function openCliErrorsDialog(cliErrors: PresetCliFailure[] = []) {
         applyState.cliErrorsSavePressed = false;
         applyState.cliErrors = cliErrors;
         applyState.cliErrorsDialogOpen = true;
@@ -632,11 +758,11 @@ export const usePresetsStore = defineStore("presets", () => {
         applyState.cliErrorsDialogOpen = false;
     }
 
-    function isPresetFavorite(preset, repository) {
+    function isPresetFavorite(preset: Preset, repository: PresetRepository) {
         return Boolean(favoritePresetDates.value[getPresetEntryKey(preset, repository)]);
     }
 
-    function isPresetPicked(preset, repository) {
+    function isPresetPicked(preset: Preset, repository: PresetRepository) {
         return pickedPresetKeys.value.has(getPresetEntryKey(preset, repository));
     }
 
