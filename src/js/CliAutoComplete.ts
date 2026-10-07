@@ -62,6 +62,24 @@ export interface CliAutoCompleteBuilder {
     currentSetting?: string | null;
 }
 
+/**
+ * Split an "Allowed values" list on commas, dropping the whitespace around each comma: the same
+ * result as splitting on the regex `\s*,\s*`, without that regex's backtracking.
+ */
+function splitAcceptedValues(list: string): string[] {
+    const parts = list.split(",");
+    return parts.map((part, i) => {
+        let value = part;
+        if (i > 0) {
+            value = value.trimStart();
+        }
+        if (i < parts.length - 1) {
+            value = value.trimEnd();
+        }
+        return value;
+    });
+}
+
 export interface CliAutoCompleteApi {
     configEnabled: boolean;
     builder: CliAutoCompleteBuilder;
@@ -336,10 +354,9 @@ const CliAutoComplete: CliAutoCompleteApi = {
             if (matchGetSettings !== null && builder.currentSetting) {
                 if (/values/i.test(matchGetSettings[1])) {
                     // Allowed Values
-                    cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[2]
-                        .trimStart()
-                        .split(/\s*,\s*/)
-                        .sort(byCodeUnit);
+                    cache.settingsAcceptedValues[builder.currentSetting] = splitAcceptedValues(
+                        matchGetSettings[2].trimStart(),
+                    ).sort(byCodeUnit);
                 } else if (/range|length/i.test(matchGetSettings[1])) {
                     // "Allowed range" or "Array length", store as string hint
                     cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[0];
