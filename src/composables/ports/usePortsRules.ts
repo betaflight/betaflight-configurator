@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { useBuildOptions } from "../useBuildOptions";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -41,6 +41,7 @@ export interface PortFunctionRule {
 }
 
 export function usePortsRules() {
+    const fcStore = useFlightControllerStore();
     const { hasBuildOption } = useBuildOptions();
 
     const ruleDefinitions: Omit<PortFunctionRule, "displayName">[] = [
@@ -96,7 +97,7 @@ export function usePortsRules() {
         { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_FRSKYOSD" },
     ];
 
-    if (FC.CONFIG && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (fcStore.CONFIG && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
         ruleDefinitions.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
@@ -121,7 +122,7 @@ export function usePortsRules() {
         "2470000",
     ];
 
-    if (FC.CONFIG && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (fcStore.CONFIG && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
         gpsBaudRates.push("230400");
         telemetryBaudRates.push("230400", "460800");
     }

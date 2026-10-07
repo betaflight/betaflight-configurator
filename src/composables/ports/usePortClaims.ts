@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
 import { parsePeripherals } from "./usePeripherals";
 
@@ -78,7 +78,7 @@ async function readClaims(): Promise<PortClaims | null | undefined> {
  * @param options.refresh ask the FC again even if the answer is already held
  */
 export function loadPortClaims({ refresh = false }: { refresh?: boolean } = {}): Promise<PortClaims | null> {
-    const config = FC.SERIAL_CONFIG as SerialConfigWithClaims | null;
+    const config = useFlightControllerStore().SERIAL_CONFIG as SerialConfigWithClaims | null;
     if (!config) {
         return Promise.resolve(null);
     }

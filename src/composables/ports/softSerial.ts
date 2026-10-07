@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import type { SerialPort } from "@/stores/fc.types";
 import { SOFT_SERIAL_IDENTIFIERS } from "./portNames";
 
@@ -37,7 +37,7 @@ import { SOFT_SERIAL_IDENTIFIERS } from "./portNames";
 export function unreportedSoftSerialIdentifiers(
     ports: readonly Pick<SerialPort, "identifier">[] | null | undefined,
 ): number[] {
-    if (!FC.boardHasSoftSerial()) {
+    if (!useFlightControllerStore().boardHasSoftSerial()) {
         return [];
     }
 

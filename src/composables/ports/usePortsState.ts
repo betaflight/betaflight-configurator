@@ -21,7 +21,7 @@
 
 import { reactive, ref, computed, nextTick, onMounted } from "vue";
 import GUI from "../../js/gui";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -49,6 +49,7 @@ export interface PortRow {
 export type PortAnalyticsChanges = Record<string, string>;
 
 export function usePortsState(getRules: (group: PortFunctionGroup) => PortFunctionRule[]) {
+    const fcStore = useFlightControllerStore();
     const ports = reactive<PortRow[]>([]);
     const analyticsChanges = reactive<PortAnalyticsChanges>({});
     const isLoading = ref(true);
@@ -72,7 +73,7 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
 
     const handleSerialConfigLoaded = () => {
         ports.length = 0;
-        FC.SERIAL_CONFIG.ports.forEach((p) => {
+        fcStore.SERIAL_CONFIG.ports.forEach((p) => {
             ports.push(transformPortData(p));
         });
         markClean();
@@ -98,10 +99,10 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
 
     const vtxTableNotConfigured = computed(() => {
         return (
-            FC.VTX_CONFIG?.vtx_table_available &&
-            (FC.VTX_CONFIG.vtx_table_bands === 0 ||
-                FC.VTX_CONFIG.vtx_table_channels === 0 ||
-                FC.VTX_CONFIG.vtx_table_powerlevels === 0)
+            fcStore.VTX_CONFIG?.vtx_table_available &&
+            (fcStore.VTX_CONFIG.vtx_table_bands === 0 ||
+                fcStore.VTX_CONFIG.vtx_table_channels === 0 ||
+                fcStore.VTX_CONFIG.vtx_table_powerlevels === 0)
         );
     });
 
