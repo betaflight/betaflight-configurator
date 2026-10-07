@@ -355,13 +355,14 @@ OSD.generateGpsLatLongPreview = function (osdData, elementName) {
                     : `${FONT.symbol(SYM.GPS_LAT)}-00.0000 `;
             break;
 
-        case 2:
+        case 2: {
             const degreesSymbol = FONT.symbol(SYM.STICK_OVERLAY_SPRITE_HIGH);
             value =
                 elementName === "GPS_LON"
                     ? `${FONT.symbol(SYM.GPS_LON)}00${degreesSymbol}000'00.0"N`
                     : `${FONT.symbol(SYM.GPS_LAT)}00${degreesSymbol}00'00.0"E `;
             break;
+        }
 
         case 3:
             value = `${FONT.symbol(SYM.GPS_SAT_L)}${FONT.symbol(SYM.GPS_SAT_R)}000000AA+BBB`;
@@ -399,11 +400,12 @@ OSD.generateTimerPreview = function (osdData, timerIndex) {
 OSD.generateTemperaturePreview = function (osdData, temperature) {
     let preview = FONT.symbol(SYM.TEMPERATURE);
     switch (osdData.unit_mode) {
-        case 0:
+        case 0: {
             let temperatureConversion = temperature * (9.0 / 5.0);
             temperatureConversion += 32.0;
             preview += Math.floor(temperatureConversion) + FONT.symbol(SYM.TEMP_F);
             break;
+        }
         case 1:
         case 2:
             preview += temperature + FONT.symbol(SYM.TEMP_C);
@@ -414,7 +416,11 @@ OSD.generateTemperaturePreview = function (osdData, temperature) {
 
 OSD.generateLQPreview = function (osdData) {
     const variantSelected = OSD.getVariantForPreview(osdData, "LINK_QUALITY");
-    return FONT.symbol(SYM.LINK_QUALITY) + (OSD.isCrsfReceiver() ? (variantSelected === 0 ? "2:100" : "100") : "8");
+    let value = "8";
+    if (OSD.isCrsfReceiver()) {
+        value = variantSelected === 0 ? "2:100" : "100";
+    }
+    return FONT.symbol(SYM.LINK_QUALITY) + value;
 };
 
 OSD.generateCraftName = function () {
@@ -450,11 +456,12 @@ OSD.generatePilotName = function () {
     return preview;
 };
 
-OSD.drawStickOverlayPreview = function () {
-    function randomInt(count: number) {
-        return Math.floor(Math.random() * Math.floor(count));
-    }
+/** A random preview position, so the stick overlay preview is not always drawn in one spot. */
+function randomInt(count: number) {
+    return Math.floor(Math.random() * Math.floor(count)); // NOSONAR: preview placement, not security-relevant
+}
 
+OSD.drawStickOverlayPreview = function () {
     const STICK_OVERLAY_SPRITE = [
         SYM.STICK_OVERLAY_SPRITE_HIGH,
         SYM.STICK_OVERLAY_SPRITE_MID,
@@ -1741,9 +1748,130 @@ OSD.loadDisplayFields = function () {
 // chooseFields adds DISPLAY_FIELDS, STATISTIC_FIELDS, WARNINGS and TIMER_TYPES to the shared OSD_CONSTANTS.
 OSD.constants = OSD_CONSTANTS as OsdConstants;
 
+type OsdDataView = MspResponse["data"];
+
+/**
+ * Read the rest of the MSP_OSD_CONFIG header after the flags byte: when the OSD feature is on, the video system,
+ * units and the first alarms. Returns how many display element positions follow.
+ */
+function decodeOsdHeader(view: OsdDataView, payloadLength: number, flags: number, d: OsdData): number {
+    let displayItemsCountActual = OSD.constants.DISPLAY_FIELDS.length;
+
+    if (flags > 0 && payloadLength > 1) {
+        d.video_system = view.readU8();
+        if (bit_check(flags, 0)) {
+            d.unit_mode = view.readU8();
+            d.alarms = {};
+            d.alarms["rssi"] = {
+                display_name: i18n.getMessage("osdTimerAlarmOptionRssi"),
+                value: view.readU8(),
+                min: 0,
+                max: 100,
+            };
+            d.alarms["cap"] = {
+                display_name: i18n.getMessage("osdTimerAlarmOptionCapacity"),
+                value: view.readU16(),
+                min: 0,
+                max: 20000,
+            };
+            // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
+            view.readU8();
+            displayItemsCountActual = view.readU8();
+
+            d.alarms["alt"] = {
+                display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"),
+                value: view.readU16(),
+                min: 0,
+                max: 10000,
+            };
+        }
+    }
+
+    return displayItemsCountActual;
+}
+
+/** Read the statistics enable flags; any the configurator does not know become UNKNOWN entries. */
+function decodeStatItems(view: OsdDataView, d: OsdData) {
+    // Parse statistics display enable
+    const expectedStatsCount = view.readU8();
+    if (expectedStatsCount !== OSD.constants.STATISTIC_FIELDS.length) {
+        console.error(
+            `Firmware is transmitting a different number of statistics (${expectedStatsCount}) to what the configurator ` +
+                `is expecting (${OSD.constants.STATISTIC_FIELDS.length})`,
+        );
+    }
+
+    for (let i = 0; i < expectedStatsCount; i++) {
+        const v = view.readU8();
+
+        // Known statistics field
+        if (i < OSD.constants.STATISTIC_FIELDS.length) {
+            const c = OSD.constants.STATISTIC_FIELDS[i];
+            d.statItems.push({
+                name: c.name,
+                text: c.text,
+                desc: c.desc,
+                index: i,
+                enabled: v === 1,
+            });
+
+            // Read all the data for any statistics we don't know about
+        } else {
+            const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
+            d.statItems.push({
+                name: "UNKNOWN",
+                text: "osdTextStatUnknown",
+                textParams: { 1: statisticNumber },
+                desc: "osdDescStatUnknown",
+                index: i,
+                enabled: v === 1,
+            });
+        }
+    }
+}
+
+/** Read the enabled-warnings flags; any the configurator does not know become UNKNOWN entries. */
+function decodeWarnings(view: OsdDataView, d: OsdData) {
+    // Parse enabled warnings
+    view.readU16(); // obsolete
+    const warningCount = view.readU8();
+    // the flags were replaced with a 32bit version
+    const warningFlags = view.readU32();
+
+    for (let i = 0; i < warningCount; i++) {
+        const enabled = (warningFlags & (1 << i)) !== 0;
+
+        // Known warning field
+        if (i < OSD.constants.WARNINGS.length) {
+            const warning = { ...OSD.constants.WARNINGS[i], enabled, index: i };
+            d.warnings.push(warning);
+
+            // Push Unknown Warning field
+        } else {
+            const warningNumber = i - OSD.constants.WARNINGS.length + 1;
+            d.warnings.push({
+                name: "UNKNOWN",
+                text: "osdWarningTextUnknown",
+                textParams: { 1: warningNumber },
+                desc: "osdWarningUnknown",
+                enabled,
+                index: i,
+            });
+        }
+    }
+}
+
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
 OSD.chooseFields = function () {
     const fcStore = useFlightControllerStore();
+    chooseDisplayFields(fcStore);
+    chooseStatisticFields(fcStore);
+    chooseWarnings(fcStore);
+};
+
+type FcStore = ReturnType<typeof useFlightControllerStore>;
+
+function chooseDisplayFields(fcStore: FcStore) {
     const F = OSD.ALL_DISPLAY_FIELDS;
 
     // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
@@ -1860,45 +1988,55 @@ OSD.chooseFields = function () {
             F.BATTERY_PROFILE_NAME,
         ]);
 
-        // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
-        // when their compile flags are present. Unconditional listing would
-        // misalign every later DISPLAY_FIELDS position on builds lacking them.
-        //
-        // This is the one place that must NOT use the fail-open rule the rest of
-        // the gating follows: an unreported option decides how the firmware's enum
-        // is laid out, not whether a control is shown, so guessing "present" would
-        // misread every later field.
-        const reports = (name: string) => configReportsBuildOption(fcStore.config, name);
-        const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
-        const hasNavMap =
-            hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
-        const hasPositionHold = reports("USE_POSITION_HOLD");
-
-        if (hasFlightPlanWaypoints) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.WP_NUMBER,
-                F.WP_CURRENT_LAT,
-                F.WP_CURRENT_LON,
-                F.WP_CURRENT_ALT,
-                F.WP_DISTANCE,
-                F.WP_DIRECTION,
-                F.WP_NEXT_NUMBER,
-                F.WP_ETA,
-            ]);
-        }
-
-        if (hasNavMap) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
-        }
-
-        if (hasPositionHold) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
-        }
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
         }
     }
+}
+
+/** API 1.48+ display fields whose firmware enum entries exist only with their build options. */
+function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIELDS): OsdDisplayField[] {
+    let fields: OsdDisplayField[] = [];
+    // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
+    // when their compile flags are present. Unconditional listing would
+    // misalign every later DISPLAY_FIELDS position on builds lacking them.
+    //
+    // This is the one place that must NOT use the fail-open rule the rest of
+    // the gating follows: an unreported option decides how the firmware's enum
+    // is laid out, not whether a control is shown, so guessing "present" would
+    // misread every later field.
+    const reports = (name: string) => configReportsBuildOption(fcStore.config, name);
+    const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
+    const hasNavMap =
+        hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
+    const hasPositionHold = reports("USE_POSITION_HOLD");
+
+    if (hasFlightPlanWaypoints) {
+        fields = fields.concat([
+            F.WP_NUMBER,
+            F.WP_CURRENT_LAT,
+            F.WP_CURRENT_LON,
+            F.WP_CURRENT_ALT,
+            F.WP_DISTANCE,
+            F.WP_DIRECTION,
+            F.WP_NEXT_NUMBER,
+            F.WP_ETA,
+        ]);
+    }
+
+    if (hasNavMap) {
+        fields = fields.concat([F.NAV_MAP]);
+    }
+
+    if (hasPositionHold) {
+        fields = fields.concat([F.POS_HOLD_READY]);
+    }
+    return fields;
+}
+
+function chooseStatisticFields(fcStore: FcStore) {
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
     const S = OSD.constants.ALL_STATISTIC_FIELDS;
@@ -1952,7 +2090,9 @@ OSD.chooseFields = function () {
             S.STAT_AVG_THROTTLE,
         ]);
     }
+}
 
+function chooseWarnings(fcStore: FcStore) {
     // Choose warnings
     // Nothing much to do here, I'm preempting there being new warnings
     const W = OSD.constants.ALL_WARNINGS;
@@ -1992,7 +2132,7 @@ OSD.chooseFields = function () {
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.AUTOPILOT_ABORT]);
     }
-};
+}
 
 // Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.
 OSD.applyCanvas = function (d) {
@@ -2108,7 +2248,8 @@ OSD.msp = {
                 desc: c.desc,
                 index: j,
                 draw_order: c.draw_order,
-                preview: suffix ? c.preview + suffix : c.preview,
+                // Only the UNKNOWN field takes a suffix, and its preview is a string.
+                preview: suffix && typeof c.preview === "string" ? c.preview + suffix : c.preview,
                 variants: c.variants,
                 ignoreSize,
                 ...this.helpers.unpack.position(item, c),
@@ -2127,39 +2268,8 @@ OSD.msp = {
         const view = payload!.data;
         const d = OSD.data;
 
-        let displayItemsCountActual = OSD.constants.DISPLAY_FIELDS.length;
-
         d.flags = view.readU8();
-
-        if (d.flags > 0 && payload!.length > 1) {
-            d.video_system = view.readU8();
-            if (bit_check(d.flags, 0)) {
-                d.unit_mode = view.readU8();
-                d.alarms = {};
-                d.alarms["rssi"] = {
-                    display_name: i18n.getMessage("osdTimerAlarmOptionRssi"),
-                    value: view.readU8(),
-                    min: 0,
-                    max: 100,
-                };
-                d.alarms["cap"] = {
-                    display_name: i18n.getMessage("osdTimerAlarmOptionCapacity"),
-                    value: view.readU16(),
-                    min: 0,
-                    max: 20000,
-                };
-                // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
-                view.readU8();
-                displayItemsCountActual = view.readU8();
-
-                d.alarms["alt"] = {
-                    display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"),
-                    value: view.readU16(),
-                    min: 0,
-                    max: 10000,
-                };
-            }
-        }
+        const displayItemsCountActual = decodeOsdHeader(view, payload!.length, d.flags, d);
 
         d.state = {};
         d.state.haveSomeOsd = d.flags !== 0;
@@ -2201,42 +2311,7 @@ OSD.msp = {
             itemsPositionsRead.push(v);
         }
 
-        // Parse statistics display enable
-        const expectedStatsCount = view.readU8();
-        if (expectedStatsCount !== OSD.constants.STATISTIC_FIELDS.length) {
-            console.error(
-                `Firmware is transmitting a different number of statistics (${expectedStatsCount}) to what the configurator ` +
-                    `is expecting (${OSD.constants.STATISTIC_FIELDS.length})`,
-            );
-        }
-
-        for (let i = 0; i < expectedStatsCount; i++) {
-            const v = view.readU8();
-
-            // Known statistics field
-            if (i < OSD.constants.STATISTIC_FIELDS.length) {
-                const c = OSD.constants.STATISTIC_FIELDS[i];
-                d.statItems.push({
-                    name: c.name,
-                    text: c.text,
-                    desc: c.desc,
-                    index: i,
-                    enabled: v === 1,
-                });
-
-                // Read all the data for any statistics we don't know about
-            } else {
-                const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
-                d.statItems.push({
-                    name: "UNKNOWN",
-                    text: "osdTextStatUnknown",
-                    textParams: { 1: statisticNumber },
-                    desc: "osdDescStatUnknown",
-                    index: i,
-                    enabled: v === 1,
-                });
-            }
-        }
+        decodeStatItems(view, d);
 
         // Parse configurable timers
         let expectedTimersCount = view.readU8();
@@ -2252,33 +2327,7 @@ OSD.msp = {
             expectedTimersCount--;
         }
 
-        // Parse enabled warnings
-        view.readU16(); // obsolete
-        const warningCount = view.readU8();
-        // the flags were replaced with a 32bit version
-        const warningFlags = view.readU32();
-
-        for (let i = 0; i < warningCount; i++) {
-            const enabled = (warningFlags & (1 << i)) !== 0;
-
-            // Known warning field
-            if (i < OSD.constants.WARNINGS.length) {
-                const warning = { ...OSD.constants.WARNINGS[i], enabled, index: i };
-                d.warnings.push(warning);
-
-                // Push Unknown Warning field
-            } else {
-                const warningNumber = i - OSD.constants.WARNINGS.length + 1;
-                d.warnings.push({
-                    name: "UNKNOWN",
-                    text: "osdWarningTextUnknown",
-                    textParams: { 1: warningNumber },
-                    desc: "osdWarningUnknown",
-                    enabled,
-                    index: i,
-                });
-            }
-        }
+        decodeWarnings(view, d);
 
         // OSD profiles
         d.osd_profiles.number = view.readU8();

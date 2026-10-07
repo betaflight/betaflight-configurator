@@ -55,7 +55,7 @@ class MSPConnectorImpl {
     _mspApiVersionReceived = false;
 
     _disconnectAfterMspTimeout() {
-        serial.disconnect((result: unknown) => {
+        void serial.disconnect((result: unknown) => {
             console.log("Disconnected", result);
 
             MSP.clearListeners();
@@ -143,13 +143,13 @@ class MSPConnectorImpl {
         serial.addEventListener("disconnect", (e: Event) => this.handleDisconnect(e), { once: true });
 
         // serial.js types its optional callback as required; the connect event above reports the result.
-        serial.connect(this.port, { baudRate: this.baud }, undefined);
+        void serial.connect(this.port, { baudRate: this.baud }, undefined);
     }
 
     disconnect(onDisconnectCallback: ConnectorCallback) {
         this.onDisconnectCallback = onDisconnectCallback;
 
-        serial.disconnect((result: unknown) => {
+        void serial.disconnect((result: unknown) => {
             MSP.clearListeners();
             console.log("Disconnected", result);
 

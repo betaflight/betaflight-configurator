@@ -137,7 +137,9 @@
             @apply="applyPresetSelection"
             @close="store.closePresetDetails()"
             @toggle-cli-visible="store.setDetailsCliVisible($event)"
-            @toggle-option="store.setOptionChecked($event.optionId, $event.checked)"
+            @toggle-option="
+                $event.checked ? store.selectOption($event.optionId) : store.deselectOption($event.optionId)
+            "
             @select-exclusive-option="store.setExclusiveOption($event.groupOptionIds, $event.selectedOptionId)"
             @toggle-favorite="toggleSelectedPresetFavorite"
             @options-expanded-change="store.setOptionsExpanded($event)"

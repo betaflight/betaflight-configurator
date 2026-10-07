@@ -88,7 +88,7 @@ class AutoRestore {
     }
 
     handleConnect(event: Event) {
-        this.onConnect((event as CustomEvent).detail);
+        void this.onConnect((event as CustomEvent).detail);
     }
 
     handleDisconnect() {
@@ -166,7 +166,7 @@ class AutoRestore {
             }
 
             // Handshake OK — proceed to send CLI commands
-            this._sendCliCommands();
+            void this._sendCliCommands();
         } catch (error) {
             console.error("AutoRestore: MSP query failed:", error);
             // Only cleanup if not already cleaned up (guard against double cleanup)
@@ -176,6 +176,30 @@ class AutoRestore {
         }
     }
 
+    /**
+     * Send one CLI line and resolve with its response lines, or with null after recording the
+     * failure in `errors` and the log, so the batch carries on with the next line.
+     */
+    _sendCliCommand(command: string, errors: CliError[]): Promise<string[] | null> {
+        return new Promise<string[]>((resolve, reject) => {
+            MSP.send_cli_command(
+                command,
+                (data, error) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve(Array.isArray(data) ? data : []);
+                },
+                { timeoutMs: DEFAULT_COMMAND_TIMEOUT_MS },
+            );
+        }).catch((error) => {
+            const message = String(error?.message ?? error);
+            errors.push({ command, error: message });
+            gui_log(`CLI command failed: ${command} — ${message}`);
+            return null;
+        });
+    }
     async _sendCliCommands() {
         const cliLines = this._cliLines!;
         const errors: CliError[] = [];
@@ -197,24 +221,8 @@ class AutoRestore {
                     return;
                 }
 
-                const response = await new Promise<string[]>((resolve, reject) => {
-                    MSP.send_cli_command(
-                        trimmed,
-                        (data, error) => {
-                            if (error) {
-                                reject(error);
-                                return;
-                            }
-                            resolve(Array.isArray(data) ? data : []);
-                        },
-                        { timeoutMs: DEFAULT_COMMAND_TIMEOUT_MS },
-                    );
-                }).catch((error) => {
-                    const message = String(error?.message ?? error);
-                    errors.push({ command: trimmed, error: message });
-                    gui_log(`CLI command failed: ${trimmed} — ${message}`);
-                    return null;
-                });
+                // CLI commands must run one at a time, in backup order.
+                const response = await this._sendCliCommand(trimmed, errors); // NOSONAR: sequential by design
 
                 // Check for error lines in response
                 if (response) {
@@ -226,7 +234,7 @@ class AutoRestore {
                 }
 
                 // Small delay between commands
-                await new Promise((resolve) => setTimeout(resolve, 15));
+                await new Promise((resolve) => setTimeout(resolve, 15)); // NOSONAR: deliberate pacing between sequential commands
             }
 
             // Backup did not contain a `save` line — persist explicitly.

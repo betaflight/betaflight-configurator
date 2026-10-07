@@ -121,7 +121,7 @@ describe("usePresetsStore", () => {
         expect(store.selectedPresetOptionLabels).toEqual(["Option A"]);
         expect(store.selectedPresetCliStrings).toEqual(["set foo = on"]);
 
-        store.setOptionChecked("1", true);
+        store.selectOption("1");
         expect(store.selectedPresetCliStrings).toEqual(["set foo = on", "set bar = on"]);
     });
 

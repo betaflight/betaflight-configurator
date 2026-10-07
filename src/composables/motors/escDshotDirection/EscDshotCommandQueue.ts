@@ -28,16 +28,13 @@ type QueueEntry = [command: number, buffer: MspPayload] | [command: null, buffer
  * Paces MSP sends for the ESC DShot direction dialog: one queued entry is sent per interval tick.
  */
 class EscDshotCommandQueue {
-    private _intervalId: ReturnType<typeof setInterval> | null;
+    private _intervalId: ReturnType<typeof setInterval> | null = null;
     private readonly _interval: number;
-    private _queue: QueueEntry[];
-    private _purging: boolean;
+    private _queue: QueueEntry[] = [];
+    private _purging = false;
 
     constructor(intervalMs: number) {
-        this._intervalId = null;
         this._interval = intervalMs;
-        this._queue = [];
-        this._purging = false;
     }
 
     pushCommand(command: number, buffer: MspPayload): void {
@@ -53,11 +50,9 @@ class EscDshotCommandQueue {
     }
 
     start(): void {
-        if (null === this._intervalId) {
-            this._intervalId = setInterval(() => {
-                this._checkQueue();
-            }, this._interval);
-        }
+        this._intervalId ??= setInterval(() => {
+            this._checkQueue();
+        }, this._interval);
     }
 
     stop(): void {

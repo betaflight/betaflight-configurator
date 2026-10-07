@@ -84,6 +84,9 @@ export interface CliAutoCompleteApi {
     _builderWatchdogStop(): void;
     builderStart(): void;
     builderParseLine(line: string): void;
+    _builderOnSentinel(): void;
+    _builderParseDumpLine(line: string): void;
+    _builderParseGetLine(line: string): void;
 }
 
 /**
@@ -223,7 +226,7 @@ const CliAutoComplete: CliAutoCompleteApi = {
         };
         this.builder.commandSequence = ["help", "dump", "get", "mixer list"];
         this.builder.currentSetting = null;
-        this.builder.sentinel = `# ${Math.random()}`;
+        this.builder.sentinel = `# ${Math.random()}`; // NOSONAR: a marker to spot the end of our own output, not a secret
         this.builder.state = "init";
         this.writeToOutput!("<br># Building AutoComplete Cache ... ");
         this.sendLine!(this.builder.sentinel);
@@ -232,46 +235,15 @@ const CliAutoComplete: CliAutoCompleteApi = {
     },
 
     builderParseLine(line) {
-        const cache = this.cache!;
-        const builder = this.builder;
-
         this._builderWatchdogTouch();
 
-        if (line.includes(builder.sentinel!)) {
-            // got sentinel
-            const command = builder.commandSequence!.shift();
-
-            if (command && this.configEnabled) {
-                // next state
-                builder.state = `parse-${command}`;
-                this.sendLine!(command);
-                this.sendLine!(builder.sentinel!);
-            } else {
-                // done
-                this._builderWatchdogStop();
-
-                if (this.configEnabled) {
-                    const byLocale = (a: string, b: string) =>
-                        a.localeCompare(b, globalThis.navigator.language, { ignorePunctuation: true });
-                    cache.settings.sort(byLocale);
-                    cache.commands.sort(byLocale);
-                    cache.feature.sort(byLocale);
-                    cache.beeper.sort(byLocale);
-                    cache.resources = Object.keys(cache.resourcesCount).sort(byLocale);
-
-                    this.writeToOutput!("Done!<br># ");
-                    builder.state = "done";
-                } else {
-                    // disabled while we were building
-                    this.writeToOutput!("Cancelled!<br># ");
-                    this.cleanup();
-                }
-                EventBus.$emit("autocomplete:build:stop");
-            }
+        if (line.includes(this.builder.sentinel!)) {
+            this._builderOnSentinel();
             return;
         }
 
-        switch (builder.state) {
+        const cache = this.cache!;
+        switch (this.builder.state) {
             case "parse-help": {
                 const matchHelp = /^(\w+)/.exec(line);
                 if (matchHelp) {
@@ -280,44 +252,13 @@ const CliAutoComplete: CliAutoCompleteApi = {
                 break;
             }
 
-            case "parse-dump": {
-                const matchDump = /^resource\s+(\w+)/i.exec(line);
-                if (matchDump) {
-                    const r = matchDump[1].toUpperCase(); // should alread be upper, but to be sure, since we depend on that later
-                    cache.resourcesCount[r] = (cache.resourcesCount[r] || 0) + 1;
-                } else {
-                    const matchFeatBeep = /^(feature|beeper)\s+-?(\w+)/i.exec(line);
-                    if (matchFeatBeep) {
-                        cache[matchFeatBeep[1].toLowerCase() as "feature" | "beeper"].push(matchFeatBeep[2]);
-                    }
-                }
+            case "parse-dump":
+                this._builderParseDumpLine(line);
                 break;
-            }
 
-            case "parse-get": {
-                const matchGet = /^(\w+)\s*=/.exec(line);
-                if (matchGet) {
-                    // setting name
-                    cache.settings.push(matchGet[1]);
-                    builder.currentSetting = matchGet[1].toLowerCase();
-                } else {
-                    // Avoid catastrophic backtracking from two greedy `.*` groups.
-                    // Match up to the first colon for the key, then the rest.
-                    const matchGetSettings = /^([^:]+):\s*(.*)/.exec(line);
-                    if (matchGetSettings !== null && builder.currentSetting) {
-                        if (/values/i.test(matchGetSettings[1])) {
-                            // Allowed Values
-                            cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[2]
-                                .split(/\s*,\s*/)
-                                .sort(byCodeUnit);
-                        } else if (/range|length/i.test(matchGetSettings[1])) {
-                            // "Allowed range" or "Array length", store as string hint
-                            cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[0];
-                        }
-                    }
-                }
+            case "parse-get":
+                this._builderParseGetLine(line);
                 break;
-            }
 
             case "parse-mixer list": {
                 const matchMixer = /:(.+)/.exec(line);
@@ -325,6 +266,84 @@ const CliAutoComplete: CliAutoCompleteApi = {
                     cache.mixers = ["list"].concat(matchMixer[1].trim().split(/\s+/));
                 }
                 break;
+            }
+        }
+    },
+
+    /** The sentinel ends the current command's output: send the next command, or finish. */
+    _builderOnSentinel() {
+        const cache = this.cache!;
+        const builder = this.builder;
+        // got sentinel
+        const command = builder.commandSequence!.shift();
+
+        if (command && this.configEnabled) {
+            // next state
+            builder.state = `parse-${command}`;
+            this.sendLine!(command);
+            this.sendLine!(builder.sentinel!);
+        } else {
+            // done
+            this._builderWatchdogStop();
+
+            if (this.configEnabled) {
+                const byLocale = (a: string, b: string) =>
+                    a.localeCompare(b, globalThis.navigator.language, { ignorePunctuation: true });
+                cache.settings.sort(byLocale);
+                cache.commands.sort(byLocale);
+                cache.feature.sort(byLocale);
+                cache.beeper.sort(byLocale);
+                cache.resources = Object.keys(cache.resourcesCount).sort(byLocale);
+
+                this.writeToOutput!("Done!<br># ");
+                builder.state = "done";
+            } else {
+                // disabled while we were building
+                this.writeToOutput!("Cancelled!<br># ");
+                this.cleanup();
+            }
+            EventBus.$emit("autocomplete:build:stop");
+        }
+    },
+
+    _builderParseDumpLine(line) {
+        const cache = this.cache!;
+        const matchDump = /^resource\s+(\w+)/i.exec(line);
+        if (matchDump) {
+            const r = matchDump[1].toUpperCase(); // should alread be upper, but to be sure, since we depend on that later
+            cache.resourcesCount[r] = (cache.resourcesCount[r] || 0) + 1;
+        } else {
+            const matchFeatBeep = /^(feature|beeper)\s+-?(\w+)/i.exec(line);
+            if (matchFeatBeep) {
+                cache[matchFeatBeep[1].toLowerCase() as "feature" | "beeper"].push(matchFeatBeep[2]);
+            }
+        }
+    },
+
+    _builderParseGetLine(line) {
+        const cache = this.cache!;
+        const builder = this.builder;
+        const matchGet = /^(\w+)\s*=/.exec(line);
+        if (matchGet) {
+            // setting name
+            cache.settings.push(matchGet[1]);
+            builder.currentSetting = matchGet[1].toLowerCase();
+        } else {
+            // Avoid catastrophic backtracking from two greedy `.*` groups.
+            // Match up to the first colon for the key, then the rest; the value's leading
+            // whitespace is trimmed separately so the pattern cannot backtrack.
+            const matchGetSettings = /^([^:]+):(.*)/.exec(line);
+            if (matchGetSettings !== null && builder.currentSetting) {
+                if (/values/i.test(matchGetSettings[1])) {
+                    // Allowed Values
+                    cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[2]
+                        .trimStart()
+                        .split(/\s*,\s*/)
+                        .sort(byCodeUnit);
+                } else if (/range|length/i.test(matchGetSettings[1])) {
+                    // "Allowed range" or "Array length", store as string hint
+                    cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[0];
+                }
             }
         }
     },

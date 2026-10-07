@@ -654,16 +654,16 @@ export const usePresetsStore = defineStore("presets", () => {
         }
     }
 
-    function setOptionChecked(optionId: string, isChecked: boolean) {
-        if (isChecked) {
-            if (!detailsState.selectedOptionIds.includes(optionId)) {
-                detailsState.selectedOptionIds = [...detailsState.selectedOptionIds, optionId];
-            }
-        } else {
-            detailsState.selectedOptionIds = detailsState.selectedOptionIds.filter(
-                (selectedOptionId) => selectedOptionId !== optionId,
-            );
+    function selectOption(optionId: string) {
+        if (!detailsState.selectedOptionIds.includes(optionId)) {
+            detailsState.selectedOptionIds = [...detailsState.selectedOptionIds, optionId];
         }
+    }
+
+    function deselectOption(optionId: string) {
+        detailsState.selectedOptionIds = detailsState.selectedOptionIds.filter(
+            (selectedOptionId) => selectedOptionId !== optionId,
+        );
     }
 
     function setExclusiveOption(groupOptionIds: readonly string[], selectedOptionId: string | null | undefined) {
@@ -812,7 +812,8 @@ export const usePresetsStore = defineStore("presets", () => {
         closePresetDetails,
         setDetailsCliVisible,
         setOptionsExpanded,
-        setOptionChecked,
+        selectOption,
+        deselectOption,
         setExclusiveOption,
         pickSelectedPreset,
         appendPickedPreset,

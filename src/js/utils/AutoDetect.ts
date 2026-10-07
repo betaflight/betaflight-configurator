@@ -133,7 +133,7 @@ class AutoDetect {
         } finally {
             // Only run cleanup when connection attempt failed
             if (!result) {
-                this.cleanup();
+                void this.cleanup();
             }
         }
     }
@@ -173,7 +173,7 @@ class AutoDetect {
                 { boardName: board },
             ),
         );
-        this.cleanup();
+        void this.cleanup();
     }
 
     async getBoardInfo() {
@@ -225,7 +225,7 @@ class AutoDetect {
 
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
-            this.requestBoardInformation();
+            void this.requestBoardInformation();
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
         }
