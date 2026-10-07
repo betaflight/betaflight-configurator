@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import ServosTab from "../../src/components/tabs/ServosTab.vue";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
@@ -44,6 +44,8 @@ function mountTab() {
     });
 }
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("Servos MSP wiring", () => {
     let wrapper: ReturnType<typeof mountTab>;
     const vm = () => wrapper.vm as unknown as ServosVm;
@@ -51,9 +53,10 @@ describe("Servos MSP wiring", () => {
     beforeEach(async () => {
         vi.resetAllMocks();
         setActivePinia(createPinia());
-        FC.resetState();
-        FC.CONFIG.apiVersion = "1.47.0";
-        FC.SERVO_CONFIG = [{ ...SERVO }, { ...SERVO }];
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        fcStore.config.apiVersion = "1.47.0";
+        fcStore.servoConfig = [{ ...SERVO }, { ...SERVO }];
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(mspHelper.sendServoConfigurations).mockResolvedValue(undefined);
         wrapper = mountTab();
@@ -70,7 +73,7 @@ describe("Servos MSP wiring", () => {
         servoTick();
         const [code, , , onServoData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
         expect(code).toBe(MSPCodes.MSP_SERVO);
-        FC.SERVO_DATA = [1100, 1900];
+        fcStore.servoData = [1100, 1900];
         (onServoData as () => void)();
         await flushPromises();
 
@@ -84,7 +87,7 @@ describe("Servos MSP wiring", () => {
         await vm().saveServoConfig();
 
         expect(mspHelper.sendServoConfigurations).toHaveBeenCalledOnce();
-        expect(FC.SERVO_CONFIG[0].min).toBe(500);
+        expect(fcStore.servoConfig[0].min).toBe(500);
         expect(vm().configHasChanged).toBe(false);
     });
 
@@ -98,7 +101,7 @@ describe("Servos MSP wiring", () => {
         await flushPromises();
 
         expect(mspHelper.sendServoConfigurations).toHaveBeenCalledOnce();
-        expect(FC.SERVO_CONFIG[1].max).toBe(1800);
+        expect(fcStore.servoConfig[1].max).toBe(1800);
         expect(vm().configHasChanged).toBe(true);
     });
 });

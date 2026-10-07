@@ -25,13 +25,13 @@ import { createPinia, setActivePinia } from "pinia";
 import type { ComponentPublicInstance } from "vue";
 import UInput from "@nuxt/ui/components/Input.vue";
 import AuxiliaryTab from "../../src/components/tabs/AuxiliaryTab.vue";
-import FC from "../../src/js/fc";
 import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
 import { channelPercent } from "../../src/js/utils/rcChannel";
 import { MspCancelledError } from "../../src/js/msp/mspErrors";
+import { useFlightControllerStore } from "../../src/stores/fc";
 
 vi.mock("../../src/js/gui", () => ({
     default: { content_ready: vi.fn(), interval_add: vi.fn(), interval_remove: vi.fn() },
@@ -45,6 +45,8 @@ vi.mock("../../src/composables/useReboot", () => ({
 }));
 vi.mock("../../src/js/utils/common", () => ({ getTextWidth: () => 8 }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 function mountTab() {
     return shallowMount(AuxiliaryTab, {
@@ -63,8 +65,9 @@ describe("Modes empty-state announcement", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         setActivePinia(createPinia());
-        FC.resetState();
-        Object.assign(FC, { AUX_CONFIG: ["ARM", "ANGLE"], AUX_CONFIG_IDS: [0, 1] });
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        Object.assign(fcStore, { auxConfig: ["ARM", "ANGLE"], auxConfigIds: [0, 1] });
         localStorage.clear();
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(MSP.promise).mockImplementationOnce(
@@ -107,7 +110,7 @@ describe("Modes empty-state announcement", () => {
     });
 
     it("announces an empty list when the controller successfully returns no modes", async () => {
-        Object.assign(FC, { AUX_CONFIG: [], AUX_CONFIG_IDS: [] });
+        Object.assign(fcStore, { auxConfig: [], auxConfigIds: [] });
         resolveLoad();
         await flushPromises();
         expect(wrapper.get('[role="status"]').text()).toBe("auxiliaryNoModesFound");
@@ -131,8 +134,9 @@ describe("Modes MSP wiring", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         setActivePinia(createPinia());
-        FC.resetState();
-        Object.assign(FC, { AUX_CONFIG: ["ARM"], AUX_CONFIG_IDS: [0] });
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        Object.assign(fcStore, { auxConfig: ["ARM"], auxConfigIds: [0] });
         localStorage.clear();
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
     });
@@ -142,7 +146,7 @@ describe("Modes MSP wiring", () => {
     });
 
     it("starts RC polling on mount and refreshes the channel markers from each reply", async () => {
-        Object.assign(FC.RC, { active_channels: 5, channels: [1500, 1500, 1000, 1500, 1234] });
+        Object.assign(fcStore.rc, { active_channels: 5, channels: [1500, 1500, 1000, 1500, 1234] });
         wrapper = mountTab();
         await flushPromises();
         const rcTick = vi.mocked(GUI.interval_add).mock.calls.find(([name]) => name === "aux_data_pull")![1];
@@ -150,7 +154,7 @@ describe("Modes MSP wiring", () => {
         rcTick();
         const [code, , , onRcData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
         expect(code).toBe(MSPCodes.MSP_RC);
-        FC.RC.channels[4] = 1900;
+        fcStore.rc.channels[4] = 1900;
         (onRcData as () => void)();
         await flushPromises();
 
@@ -158,7 +162,7 @@ describe("Modes MSP wiring", () => {
     });
 
     it("pads the saved ranges to the slot count the FC reported at load", async () => {
-        FC.MODE_RANGES = Array.from({ length: 4 }, () => ({
+        fcStore.modeRanges = Array.from({ length: 4 }, () => ({
             id: 0,
             auxChannelIndex: 0,
             range: { start: 900, end: 900 },
@@ -169,6 +173,6 @@ describe("Modes MSP wiring", () => {
         await wrapper.vm.saveModes();
 
         expect(mspHelper.sendModeRanges).toHaveBeenCalledOnce();
-        expect(FC.MODE_RANGES).toHaveLength(4);
+        expect(fcStore.modeRanges).toHaveLength(4);
     });
 });

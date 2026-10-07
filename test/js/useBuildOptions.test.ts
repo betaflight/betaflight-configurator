@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { computed } from "vue";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import {
     buildOptionsReported,
     type BuildOptionsConfig,
@@ -11,10 +11,13 @@ import {
 } from "../../src/composables/useBuildOptions";
 import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("useBuildOptions", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        FC.resetState();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
     });
 
     afterEach(() => {
@@ -29,24 +32,24 @@ describe("useBuildOptions", () => {
         });
 
         it("is false when the api version is too old, even with a populated list", () => {
-            FC.CONFIG.apiVersion = "1.44.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.44.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { buildOptionsAvailable } = useBuildOptions();
 
             expect(buildOptionsAvailable.value).toBe(false);
         });
 
         it("is false when the api version is new enough but the list is empty", () => {
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = [];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = [];
             const { buildOptionsAvailable } = useBuildOptions();
 
             expect(buildOptionsAvailable.value).toBe(false);
         });
 
         it("is false when the api version is not valid semver, and does not throw", () => {
-            FC.CONFIG.apiVersion = "not-a-version";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "not-a-version";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { buildOptionsAvailable, hasBuildOption } = useBuildOptions();
 
             expect(() => buildOptionsAvailable.value).not.toThrow();
@@ -55,9 +58,9 @@ describe("useBuildOptions", () => {
         });
 
         it("is false when the firmware reported no build option list at all", () => {
-            FC.CONFIG.apiVersion = "1.47.0";
+            fcStore.config.apiVersion = "1.47.0";
             // Outside FcConfig's type, which promises a list: the gate must not trust that.
-            (FC.CONFIG as BuildOptionsConfig).buildOptions = undefined;
+            (fcStore.config as BuildOptionsConfig).buildOptions = undefined;
             const { buildOptionsAvailable, hasBuildOption } = useBuildOptions();
 
             expect(buildOptionsAvailable.value).toBe(false);
@@ -65,19 +68,19 @@ describe("useBuildOptions", () => {
         });
 
         it("is true from API 1.45 with a populated list", () => {
-            FC.CONFIG.apiVersion = "1.45.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.45.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { buildOptionsAvailable } = useBuildOptions();
 
             expect(buildOptionsAvailable.value).toBe(true);
         });
 
-        it("stays reactive to later FC.CONFIG changes", () => {
+        it("stays reactive to later fcStore.config changes", () => {
             const { buildOptionsAvailable } = useBuildOptions();
             expect(buildOptionsAvailable.value).toBe(false);
 
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
 
             expect(buildOptionsAvailable.value).toBe(true);
         });
@@ -93,16 +96,16 @@ describe("useBuildOptions", () => {
         });
 
         it("returns true for everything when the firmware is too old to report options", () => {
-            FC.CONFIG.apiVersion = "1.44.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.44.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { hasBuildOption } = useBuildOptions();
 
             expect(hasBuildOption("USE_MAG")).toBe(true);
         });
 
         it("reports presence and absence when gating applies", () => {
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = ["USE_GPS", "USE_DSHOT"];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS", "USE_DSHOT"];
             const { hasBuildOption } = useBuildOptions();
 
             expect(hasBuildOption("USE_GPS")).toBe(true);
@@ -112,12 +115,12 @@ describe("useBuildOptions", () => {
         });
 
         it("re-evaluates on every call rather than capturing a value", () => {
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { hasBuildOption } = useBuildOptions();
             expect(hasBuildOption("USE_MAG")).toBe(false);
 
-            FC.CONFIG.buildOptions = ["USE_GPS", "USE_MAG"];
+            fcStore.config.buildOptions = ["USE_GPS", "USE_MAG"];
 
             expect(hasBuildOption("USE_MAG")).toBe(true);
         });
@@ -127,19 +130,19 @@ describe("useBuildOptions", () => {
             const gated = computed(() => hasBuildOption("USE_MAG"));
             expect(gated.value).toBe(true);
 
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
 
             expect(gated.value).toBe(false);
         });
 
         it("fails open for a name that is not a key of FIRMWARE_BUILD_OPTIONS", () => {
             vi.spyOn(console, "warn").mockImplementation(() => {});
-            FC.CONFIG.apiVersion = "1.47.0";
-            FC.CONFIG.buildOptions = ["USE_GPS"];
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
             const { hasBuildOption } = useBuildOptions();
 
-            // Such a name can never be present in FC.CONFIG.buildOptions, so
+            // Such a name can never be present in fcStore.config.buildOptions, so
             // answering "absent" would hide the gated UI forever.
             expect(hasBuildOption("USE_TYPO_NOT_IN_TABLE")).toBe(true);
             expect(hasBuildOption("USE_MAG")).toBe(false);

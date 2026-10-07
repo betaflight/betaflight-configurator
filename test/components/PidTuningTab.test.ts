@@ -6,7 +6,7 @@ import UButton from "@nuxt/ui/components/Button.vue";
 import USelect from "@nuxt/ui/components/Select.vue";
 import PidTuningTab from "../../src/components/tabs/PidTuningTab.vue";
 import SubtabNav from "../../src/components/elements/SubtabNav.vue";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import { usePidTuningStore } from "../../src/stores/pidTuning";
 import { CopyProfileType } from "../../src/composables/pidTuning/usePidTuningMsp";
 
@@ -70,19 +70,22 @@ function hold(fn: ReturnType<typeof vi.fn>) {
     return () => release();
 }
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("PID Tuning MSP wiring", () => {
     let wrapper: Wrapper;
 
     beforeEach(async () => {
         vi.resetAllMocks();
         setActivePinia(createPinia());
-        FC.resetState();
-        FC.CONFIG.apiVersion = "1.47.0";
-        FC.CONFIG.numProfiles = 3;
-        FC.CONFIG.numberOfRateProfiles = 4;
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        fcStore.config.apiVersion = "1.47.0";
+        fcStore.config.numProfiles = 3;
+        fcStore.config.numberOfRateProfiles = 4;
         // Distinct active profiles, so a PID / rate mix-up in the wiring shows.
-        FC.CONFIG.profile = 1;
-        FC.CONFIG.rateProfile = 2;
+        fcStore.config.profile = 1;
+        fcStore.config.rateProfile = 2;
         Object.values(msp).forEach((fn) => fn.mockResolvedValue(undefined));
         saveToEeprom.mockResolvedValue(undefined);
         wrapper = mountTab();
@@ -100,7 +103,7 @@ describe("PID Tuning MSP wiring", () => {
 
     it("persists to EEPROM only once the config write has landed", async () => {
         const release = hold(msp.writePidTuningConfig);
-        FC.PIDS[0][0] = 99;
+        fcStore.pids[0][0] = 99;
         await flushPromises();
 
         button(wrapper, "pidTuningButtonSave").vm.$emit("click");

@@ -24,7 +24,7 @@ import { setActivePinia } from "pinia";
 import { useDataflashPull, type DataflashPull } from "../../src/composables/useDataflashPull";
 import { useConnectionStore } from "../../src/stores/connection";
 import CONFIGURATOR from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
@@ -46,6 +46,8 @@ function sequentialBytes(length: number): Uint8Array {
     return Uint8Array.from({ length }, (_, i) => i % 251);
 }
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("useDataflashPull", () => {
     let connectionStore: ReturnType<typeof useConnectionStore>;
     let dataflash: DataflashPull;
@@ -57,7 +59,8 @@ describe("useDataflashPull", () => {
         // GUI.connected_to reads the app's Pinia instance (and makes it the active one), so the
         // composable and the test must share that instance to see the same connection store.
         setActivePinia(pinia);
-        FC.resetState();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         CONFIGURATOR.connectionValid = true;
         connectionStore = useConnectionStore();
         connectionStore.resumeLiveData();
@@ -71,7 +74,7 @@ describe("useDataflashPull", () => {
         // The summary is what refreshes the occupied size before the pull reads.
         vi.spyOn(MSP, "promise").mockImplementation(async (code) => {
             if (code === MSPCodes.MSP_DATAFLASH_SUMMARY) {
-                FC.DATAFLASH.usedSize = reportedUsedSize;
+                fcStore.dataflash.usedSize = reportedUsedSize;
             }
             return undefined;
         });
@@ -112,7 +115,7 @@ describe("useDataflashPull", () => {
     });
 
     it("sizes the read from the fresh summary, not the size known before the pull", async () => {
-        FC.DATAFLASH.usedSize = 10;
+        fcStore.dataflash.usedSize = 10;
         const log = sequentialBytes(300);
         reportedUsedSize = log.length;
         readReply = flashOf(log);
@@ -136,7 +139,7 @@ describe("useDataflashPull", () => {
         );
         vi.mocked(MSP.promise).mockImplementation(async () => {
             order.push("summary");
-            FC.DATAFLASH.usedSize = 0;
+            fcStore.dataflash.usedSize = 0;
             return undefined;
         });
 
@@ -260,13 +263,13 @@ describe("useDataflashPull", () => {
 
     describe("available", () => {
         it("is true only when connected, the link is valid and the flash holds data", () => {
-            FC.DATAFLASH.usedSize = 100;
+            fcStore.dataflash.usedSize = 100;
             expect(dataflash.available.value).toBe(true);
 
-            FC.DATAFLASH.usedSize = 0;
+            fcStore.dataflash.usedSize = 0;
             expect(dataflash.available.value).toBe(false);
 
-            FC.DATAFLASH.usedSize = 100;
+            fcStore.dataflash.usedSize = 100;
             CONFIGURATOR.connectionValid = false;
             expect(dataflash.available.value).toBe(false);
 

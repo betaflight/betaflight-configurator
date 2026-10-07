@@ -146,12 +146,14 @@ import MotorsTab from "../../../src/components/tabs/MotorsTab.vue";
 import MSP from "../../../src/js/msp";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
 import UApp from "@nuxt/ui/components/App.vue";
-import FC from "../../../src/js/fc";
+import { useFlightControllerStore } from "../../../src/stores/fc";
 import Features from "../../../src/js/Features";
 import { mixerList } from "../../../src/js/model";
 
 const QUAD_X_MIXER_ID = mixerList.findIndex((m) => m.name === "Quad X") + 1;
 const DSHOT300_PROTOCOL_INDEX = 6;
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 function mountMotorsTab() {
     const container = document.createElement("div");
@@ -178,23 +180,23 @@ interface FcOptions {
 }
 
 function configureFc({ enable3d, neutral, protocolIndex = DSHOT300_PROTOCOL_INDEX }: FcOptions) {
-    FC.resetState();
-    FC.CONFIG.apiVersion = "1.47.0";
-    FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
+    fcStore.resetState();
+    fcStore.config.apiVersion = "1.47.0";
+    fcStore.features.features = new Features(fcStore.config);
     if (enable3d) {
-        FC.FEATURE_CONFIG.features.enable("3D");
+        fcStore.features.features.enable("3D");
     }
-    FC.MOTOR_3D_CONFIG.neutral = neutral;
-    FC.MOTOR_CONFIG.mincommand = 1000;
-    FC.MOTOR_CONFIG.maxthrottle = 2000;
-    FC.MOTOR_CONFIG.motor_count = 4;
-    FC.MOTOR_CONFIG.motor_poles = 14;
-    FC.MOTOR_CONFIG.use_dshot_telemetry = true;
-    FC.MIXER_CONFIG.mixer = QUAD_X_MIXER_ID;
-    FC.MIXER_CONFIG.reverseMotorDir = 0;
-    FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = protocolIndex;
-    FC.PID_ADVANCED_CONFIG.motorIdle = 6.5;
-    FC.MOTOR_OUTPUT_ORDER = [0, 1, 2, 3];
+    fcStore.motor3dConfig.neutral = neutral;
+    fcStore.motorConfig.mincommand = 1000;
+    fcStore.motorConfig.maxthrottle = 2000;
+    fcStore.motorConfig.motor_count = 4;
+    fcStore.motorConfig.motor_poles = 14;
+    fcStore.motorConfig.use_dshot_telemetry = true;
+    fcStore.mixerConfig.mixer = QUAD_X_MIXER_ID;
+    fcStore.mixerConfig.reverseMotorDir = 0;
+    fcStore.pidAdvancedConfig.fast_pwm_protocol = protocolIndex;
+    fcStore.pidAdvancedConfig.motorIdle = 6.5;
+    fcStore.motorOutputOrder = [0, 1, 2, 3];
 }
 
 const PWM_ANALOG_PROTOCOL_INDEX = 0;
@@ -216,6 +218,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
 
     beforeEach(() => {
         setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
         motorsTestingEnabled.value = false;
         configHasChanged.value = false;
         dialogOpen.mockClear();
@@ -335,10 +338,10 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         configHasChanged.value = true;
         await mountReady({ enable3d: true, neutral: 1460, protocolIndex: PWM_ANALOG_PROTOCOL_INDEX });
 
-        // Simulate an unsaved edit: switch to a DShot protocol without saving yet. FC (src/js/fc.js)
-        // is a Vue-reactive singleton, so this mutation is picked up the same way selectedEscProtocol's
+        // Simulate an unsaved edit: switch to a DShot protocol without saving yet. The store is
+        // reactive, so this mutation is picked up the same way selectedEscProtocol's
         // own setter would update it through the real USelect control.
-        FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = DSHOT300_PROTOCOL_INDEX;
+        fcStore.pidAdvancedConfig.fast_pwm_protocol = DSHOT300_PROTOCOL_INDEX;
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         const saveButton = findButton(wrapper!.container, "configurationButtonSave");
