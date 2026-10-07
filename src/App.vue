@@ -11,9 +11,9 @@
                 <div class="tab_container" :class="{ reveal: isMobileSidebarOpen }">
                     <betaflight-logo
                         :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                        :firmware-version="FC.CONFIG.flightControllerVersion"
-                        :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                        :hardware-id="FC.CONFIG.hardwareName"
+                        :firmware-version="fcStore.CONFIG.flightControllerVersion"
+                        :firmware-id="fcStore.CONFIG.flightControllerIdentifier"
+                        :hardware-id="fcStore.CONFIG.hardwareName"
                     ></betaflight-logo>
                     <Teleport to=".floating-connect" :disabled="!useFloatingChrome">
                         <ConnectButton />
@@ -37,12 +37,12 @@
                 :port-usage-up="PortUsage.port_usage_up"
                 :connection-timestamp="CONNECTION.timestamp"
                 :packet-error="MSP.packet_error"
-                :cycle-time="FC.CONFIG.cycleTime"
-                :cpu-load="FC.CONFIG.cpuload"
-                :cpu-temperature="FC.CONFIG.cpuTemp"
+                :cycle-time="fcStore.CONFIG.cycleTime"
+                :cpu-load="fcStore.CONFIG.cpuload"
+                :cpu-temperature="fcStore.CONFIG.cpuTemp"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                :firmware-version="FC.CONFIG.flightControllerVersion"
-                :firmware-target="FC.CONFIG.hardwareName"
+                :firmware-version="fcStore.CONFIG.flightControllerVersion"
+                :firmware-target="fcStore.CONFIG.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
@@ -61,13 +61,13 @@ import { useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import FCModule from "./js/fc";
 import MSPModule from "./js/msp";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage";
 import GUI from "./js/gui.js";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";
+import { useFlightControllerStore } from "./stores/fc";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
@@ -105,7 +105,7 @@ function currentVm() {
 }
 
 const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
-const FC = computed(() => currentVm()?.FC ?? FCModule);
+const fcStore = useFlightControllerStore();
 // Not on the legacy vm model: MSP is a module singleton, and window.MSP (set in js/msp) is the debug handle.
 const MSP = MSPModule;
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
@@ -180,7 +180,7 @@ watch(isLandingTab, (isLanding) => {
 
 const logoTooltip = computed(() => {
     const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
-    const cfg = FC.value.CONFIG ?? {};
+    const cfg = fcStore.CONFIG ?? {};
     if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
         lines.push(
             `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,

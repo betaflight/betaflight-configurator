@@ -140,6 +140,7 @@
 import { defineComponent, ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import PortUtilization from "./PortUtilization.vue";
 import { useConnectionStore } from "../../stores/connection";
+import { useFlightControllerStore } from "../../stores/fc";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
 import BatteryLegend from "../quad-status/BatteryLegend.vue";
 import BottomStatusIcons from "../quad-status/BottomStatusIcons.vue";
@@ -151,7 +152,6 @@ import { useTranslation } from "i18next-vue";
 import semver from "semver";
 import { vueTabState } from "../../js/vue_tab_mounter.js";
 import { switchTab } from "../../js/tab_switch.js";
-import FC from "../../js/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { shortenTargetDisplay, stripVersionDisplay } from "./statusBarText";
 import { API_VERSION_1_46 } from "../../js/data_storage";
@@ -233,6 +233,7 @@ export default defineComponent({
         const expertMode = ref(isExpertModeEnabled());
         let interval: ReturnType<typeof setInterval> | null = null;
         const connectionStore = useConnectionStore();
+        const fcStore = useFlightControllerStore();
         const isVirtualMode = computed(() => connectionStore.virtualMode);
         const isConnectedToVirtual = computed(() => connectionStore.connectedTo === "virtual");
 
@@ -273,13 +274,13 @@ export default defineComponent({
             return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         });
 
-        const analog = computed(() => FC.ANALOG ?? {});
-        const batteryConfig = computed(() => FC.BATTERY_CONFIG ?? {});
-        const batteryState = computed(() => FC.BATTERY_STATE ?? {});
-        const auxConfig = computed(() => FC.AUX_CONFIG ?? []);
-        const fcConfig = computed(() => FC.CONFIG ?? {});
-        const gps = computed(() => FC.GPS_DATA ?? {});
-        const dataflash = computed(() => FC.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
+        const analog = computed(() => fcStore.ANALOG ?? {});
+        const batteryConfig = computed(() => fcStore.BATTERY_CONFIG ?? {});
+        const batteryState = computed(() => fcStore.BATTERY_STATE ?? {});
+        const auxConfig = computed(() => fcStore.AUX_CONFIG ?? []);
+        const fcConfig = computed(() => fcStore.CONFIG ?? {});
+        const gps = computed(() => fcStore.GPS_DATA ?? {});
+        const dataflash = computed(() => fcStore.DATAFLASH ?? { totalSize: 0, usedSize: 0 });
         const dataflashSupported = computed(() => (dataflash.value.totalSize ?? 0) > 0);
         const cpuTemperatureSupported = computed(() => semver.gte(fcConfig.value.apiVersion, API_VERSION_1_46));
 
