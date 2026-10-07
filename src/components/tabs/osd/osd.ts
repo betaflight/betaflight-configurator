@@ -1,6 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { i18n } from "../../../js/localization";
 import { bit_check } from "../../../js/bit";
-import FC from "../../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { configReportsBuildOption } from "../../../composables/useBuildOptions";
 import {
     API_VERSION_1_45,
@@ -13,8 +34,196 @@ import semver from "semver";
 import { have_sensor } from "../../../js/sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
 import { FONT, SYM } from "../../../js/utils/osdFont";
+import type { MspResponse } from "../../../js/msp";
+import type {
+    OsdAlarm,
+    OsdParameters,
+    OsdProfiles,
+    OsdStatItem,
+    OsdTextParams,
+    OsdTimer,
+    OsdWarning,
+} from "@/stores/osd";
 
-const OSD = {};
+/** One symbol of a multi-cell preview, relative to the element's position. */
+export interface OsdPreviewCell {
+    x: number;
+    y: number;
+    /** SYM codes are only present once SYM.loadSymbols() has run. */
+    sym: number | undefined;
+}
+
+/** What a preview evaluates to: a string, a column of strings, or placed symbols. */
+export type OsdPreviewValue = string | string[] | OsdPreviewCell[];
+
+/** A preview computed from the current OSD data; some return nothing for an unknown variant. */
+export type OsdPreviewFunction = (osdData: OsdData) => OsdPreviewValue | undefined;
+
+/** An entry of OSD.ALL_DISPLAY_FIELDS: the configurator's description of one firmware OSD element. */
+export interface OsdDisplayField {
+    name: string;
+    /** i18n key */
+    text: string;
+    /** i18n key */
+    desc: string;
+    defaultPosition: number | (() => number);
+    draw_order?: number;
+    positionable: boolean | (() => boolean);
+    preview: OsdPreviewValue | OsdPreviewFunction;
+    /** i18n keys, one per variant; absent for elements with a single form. */
+    variants?: string[];
+}
+
+/** The name / label / description triple of a statistic or warning, from OSD_CONSTANTS. */
+export interface OsdLabel {
+    name: string;
+    /** i18n key */
+    text: string;
+    /** i18n key */
+    desc: string;
+}
+
+/** What OSD.msp.helpers.unpack.position decodes from a packed element position. */
+export interface OsdUnpackedPosition {
+    positionable: boolean;
+    position: number;
+    isVisible: boolean[];
+    variant: number;
+}
+
+/** A display element as OSD.msp.processOsdElements builds it. */
+export interface OsdDataDisplayItem extends OsdUnpackedPosition {
+    name: string;
+    /** i18n key */
+    text: string;
+    textParams?: OsdTextParams;
+    /** i18n key */
+    desc: string;
+    index: number;
+    draw_order?: number;
+    /** A function until OSD.refreshDisplayItemPreview evaluates it. */
+    preview: OsdPreviewValue | OsdPreviewFunction | undefined;
+    variants?: string[];
+    ignoreSize: boolean;
+}
+
+/** Decoded from the MSP_OSD_CONFIG flags; VirtualFC and the OSD store write their own subsets. */
+export interface OsdState {
+    haveSomeOsd?: boolean;
+    haveMax7456Video?: boolean;
+    haveFbOsdConfigured?: boolean;
+    haveMax7456Configured?: boolean;
+    haveFrSkyOSDConfigured?: boolean;
+    haveMax7456FontDeviceConfigured?: boolean;
+    haveAirbotTheiaOsdDevice?: boolean;
+    isMax7456FontDeviceDetected?: boolean;
+    haveOsdFeature?: boolean;
+    isOsdSlave?: boolean;
+    isMspDevice?: boolean;
+    requiresFbSmallFont?: boolean;
+}
+
+/** Grid size in characters per video type name ("PAL", "NTSC", "HD"). */
+export type OsdVideoTable = Record<string, number>;
+
+/** Parsed FC output and the input to the OSD encoders. Built by initData, filled in by decode. */
+export interface OsdData {
+    video_system: number | null;
+    unit_mode: number | null;
+    flags?: number;
+    /** initData starts it as an empty array; it is only ever read and written by key. */
+    alarms: Record<string, OsdAlarm>;
+    statItems: OsdStatItem[];
+    warnings: OsdWarning[];
+    displayItems: OsdDataDisplayItem[];
+    timers: OsdTimer[];
+    /** Empty until decode reads the profile count. */
+    osd_profiles: Partial<OsdProfiles>;
+    /** `{ cols, rows }` as reported by MSP_OSD_CANVAS, if any. */
+    canvas: { cols: number; rows: number } | null;
+    VIDEO_COLS: OsdVideoTable;
+    VIDEO_ROWS: OsdVideoTable;
+    /** Set by decode (or VirtualFC); absent before. */
+    state?: OsdState;
+    /** Set by decode (or VirtualFC); absent before. */
+    parameters?: OsdParameters;
+    /** Set by updateDisplaySize. */
+    displaySize?: { x: number; y: number; total: number | null };
+}
+
+/** Written by VirtualFC.setupVirtualOSD; stands in for the FC in virtual mode. */
+export interface OsdVirtualMode {
+    itemPositions: (number | undefined)[];
+    statisticsState: boolean[];
+    warningFlags: number;
+    /** The OSD store adds an entry as `{}` and then fills in every field. */
+    timerData: Partial<Omit<OsdTimer, "index">>[];
+}
+
+/** OSD_CONSTANTS plus the version-dependent lists chooseFields adds to it. */
+type OsdConstants = typeof OSD_CONSTANTS & {
+    DISPLAY_FIELDS: OsdDisplayField[];
+    STATISTIC_FIELDS: OsdLabel[];
+    WARNINGS: OsdLabel[];
+    TIMER_TYPES: string[];
+};
+
+interface OsdMsp {
+    helpers: {
+        unpack: {
+            position(bits: number | undefined, c: OsdDisplayField): OsdUnpackedPosition;
+            timer(bits: number): Omit<OsdTimer, "index">;
+        };
+    };
+    processOsdElements(data: OsdData, itemPositions: readonly (number | undefined)[]): void;
+    /** The OSD store passes its fetch result, which is undefined only in virtual mode. */
+    decode(payload: MspResponse | undefined): void;
+    decodeVirtual(): void;
+}
+
+interface OsdModule {
+    /** Set by initData, which runs when this module loads. */
+    data: OsdData;
+    /** Set by VirtualFC.setupVirtualOSD; only present in virtual mode. */
+    virtualMode?: OsdVirtualMode;
+    /** Set by loadDisplayFields. */
+    ALL_DISPLAY_FIELDS: Record<string, OsdDisplayField>;
+    /** DISPLAY_FIELDS, STATISTIC_FIELDS, WARNINGS and TIMER_TYPES are only there once chooseFields has run. */
+    constants: OsdConstants;
+    msp: OsdMsp;
+    getNumberOfProfiles(): number | undefined;
+    resetVideoTables(d: Pick<OsdData, "VIDEO_COLS" | "VIDEO_ROWS">): void;
+    initData(): void;
+    getVariantForPreview(osdData: OsdData, elementName: string): number;
+    refreshDisplayItemPreview(osdData: OsdData, displayItem: OsdDataDisplayItem): void;
+    isCrsfReceiver(): boolean;
+    generateAltitudePreview(osdData: OsdData): string;
+    generateVTXChannelPreview(osdData: OsdData): string | undefined;
+    generateBatteryUsagePreview(osdData: OsdData): string | undefined;
+    generateGpsLatLongPreview(osdData: OsdData, elementName: string): string | undefined;
+    generateTimerPreview(osdData: OsdData, timerIndex: number): string;
+    generateTemperaturePreview(osdData: OsdData, temperature: number): string;
+    generateLQPreview(osdData: OsdData): string;
+    generateCraftName(): string;
+    generateDisplayName(): string;
+    generatePilotName(): string;
+    drawStickOverlayPreview(): OsdPreviewCell[];
+    drawCameraFramePreview(): OsdPreviewCell[];
+    drawNavMapPreview(): OsdPreviewCell[];
+    formatPidsPreview(axis: number): string;
+    loadDisplayFields(): void;
+    chooseFields(): void;
+    applyCanvas(d: OsdData): void;
+    updateDisplaySize(): void;
+}
+
+// The members are assigned one at a time below, as they were when this module was JavaScript.
+const OSD = {} as OsdModule;
+
+// Before the FC reports a video system it is null; VIDEO_TYPES[null] is undefined, and so is VIDEO_TYPES[-1].
+function videoTypeOf(videoSystem: number | null): string {
+    return OSD.constants.VIDEO_TYPES[videoSystem ?? -1];
+}
 
 // FONT and SYM are now imported from osdFont.js (see import above)
 
@@ -40,20 +249,24 @@ OSD.initData = function () {
     OSD.data = {
         video_system: null,
         unit_mode: null,
-        alarms: [],
+        // An array, as it always was, until decode replaces it with an object; it is only ever used by key.
+        alarms: [] as unknown as Record<string, OsdAlarm>,
         statItems: [],
         warnings: [],
         displayItems: [],
         timers: [],
         osd_profiles: {},
         canvas: null, // { cols, rows } as reported by MSP_OSD_CANVAS, if any
+        // Filled in by resetVideoTables, straight away.
+        VIDEO_COLS: {},
+        VIDEO_ROWS: {},
     };
     OSD.resetVideoTables(OSD.data);
 };
 OSD.initData();
 
 OSD.getVariantForPreview = function (osdData, elementName) {
-    return osdData.displayItems.find((element) => element.name === elementName).variant;
+    return osdData.displayItems.find((element) => element.name === elementName)!.variant;
 };
 
 OSD.refreshDisplayItemPreview = function (osdData, displayItem) {
@@ -64,7 +277,8 @@ OSD.refreshDisplayItemPreview = function (osdData, displayItem) {
 };
 
 OSD.isCrsfReceiver = function () {
-    return FC.getSerialRxTypes().indexOf("CRSF") === FC.RX_CONFIG.serialrx_provider;
+    const fcStore = useFlightControllerStore();
+    return fcStore.getSerialRxTypes().indexOf("CRSF") === fcStore.RX_CONFIG.serialrx_provider;
 };
 
 OSD.generateAltitudePreview = function (osdData) {
@@ -204,9 +418,12 @@ OSD.generateLQPreview = function (osdData) {
 };
 
 OSD.generateCraftName = function () {
+    const fcStore = useFlightControllerStore();
     let preview = "CRAFT_NAME";
 
-    const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
+    const craftName = semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
+        ? fcStore.CONFIG.craftName
+        : fcStore.CONFIG.name;
     if (craftName !== "") {
         preview = craftName.toUpperCase();
     }
@@ -215,24 +432,26 @@ OSD.generateCraftName = function () {
 
 // for backwards compatibility before API_VERSION_1_45
 OSD.generateDisplayName = function () {
+    const fcStore = useFlightControllerStore();
     let preview = "DISPLAY_NAME";
-    if (FC.CONFIG.displayName) {
-        preview = FC.CONFIG.displayName?.toUpperCase();
+    if (fcStore.CONFIG.displayName) {
+        preview = fcStore.CONFIG.displayName?.toUpperCase();
     }
     return preview;
 };
 
 // added in API_VERSION_1_45
 OSD.generatePilotName = function () {
+    const fcStore = useFlightControllerStore();
     let preview = "PILOT_NAME";
-    if (FC.CONFIG.pilotName) {
-        preview = FC.CONFIG.pilotName?.toUpperCase();
+    if (fcStore.CONFIG.pilotName) {
+        preview = fcStore.CONFIG.pilotName?.toUpperCase();
     }
     return preview;
 };
 
 OSD.drawStickOverlayPreview = function () {
-    function randomInt(count) {
+    function randomInt(count: number) {
         return Math.floor(Math.random() * Math.floor(count));
     }
 
@@ -279,8 +498,9 @@ OSD.drawStickOverlayPreview = function () {
 };
 
 OSD.drawCameraFramePreview = function () {
-    const FRAME_WIDTH = OSD.data.parameters.cameraFrameWidth;
-    const FRAME_HEIGHT = OSD.data.parameters.cameraFrameHeight;
+    // Only drawn for a decoded config, which always has parameters.
+    const FRAME_WIDTH = OSD.data.parameters!.cameraFrameWidth;
+    const FRAME_HEIGHT = OSD.data.parameters!.cameraFrameHeight;
 
     const cameraFrame = [];
 
@@ -328,7 +548,8 @@ OSD.drawNavMapPreview = function () {
 };
 
 OSD.formatPidsPreview = function (axis) {
-    const pidDefaults = FC.getPidDefaults();
+    const fcStore = useFlightControllerStore();
+    const pidDefaults = fcStore.getPidDefaults();
     const p = pidDefaults[axis * 5].toString().padStart(3);
     const i = pidDefaults[axis * 5 + 1].toString().padStart(3);
     const d = pidDefaults[axis * 5 + 2].toString().padStart(3);
@@ -337,7 +558,8 @@ OSD.formatPidsPreview = function (axis) {
 };
 
 OSD.loadDisplayFields = function () {
-    let videoType = OSD.constants.VIDEO_TYPES[OSD.data.video_system];
+    const fcStore = useFlightControllerStore();
+    const videoType = videoTypeOf(OSD.data.video_system);
 
     // All display fields, from every version, do not remove elements, only add!
     OSD.ALL_DISPLAY_FIELDS = {
@@ -470,7 +692,7 @@ OSD.loadDisplayFields = function () {
 
                             // Sample of horizon
                         } else {
-                            element = { x: i, y: j, sym: SYM.AH_BAR9_0 + 4 };
+                            element = { x: i, y: j, sym: SYM.AH_BAR9_0! + 4 };
                         }
                         artificialHorizon.push(element);
                     }
@@ -772,7 +994,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 850,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_SOUTH + 2),
+            preview: FONT.symbol(SYM.ARROW_SOUTH! + 2),
         },
         HOME_DIST: {
             name: "HOME_DISTANCE",
@@ -1011,7 +1233,7 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: OSD.drawStickOverlayPreview,
         },
-        ...(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(semver.lt(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
                   DISPLAY_NAME: {
                       name: "DISPLAY_NAME",
@@ -1020,13 +1242,13 @@ OSD.loadDisplayFields = function () {
                       defaultPosition: -77,
                       draw_order: 350,
                       positionable: true,
-                      preview(osdData) {
-                          return OSD.generateDisplayName(osdData, 1);
+                      preview() {
+                          return OSD.generateDisplayName();
                       },
                   },
               }
             : {}),
-        ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
                   PILOT_NAME: {
                       name: "PILOT_NAME",
@@ -1035,8 +1257,8 @@ OSD.loadDisplayFields = function () {
                       defaultPosition: -77,
                       draw_order: 350,
                       positionable: true,
-                      preview(osdData) {
-                          return OSD.generatePilotName(osdData, 1);
+                      preview() {
+                          return OSD.generatePilotName();
                       },
                   },
               }
@@ -1437,7 +1659,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 650,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_SOUTH + 2),
+            preview: FONT.symbol(SYM.ARROW_SOUTH! + 2),
         },
         WP_NEXT_NUMBER: {
             name: "WP_NEXT_NUMBER",
@@ -1490,9 +1712,9 @@ OSD.loadDisplayFields = function () {
         },
     };
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push(
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (have_sensor(fcStore.CONFIG.activeSensors, "gps")) {
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants!.push(
                 "osdTextElementAltitudeVariant1DecimalASL",
                 "osdTextElementAltitudeVariantNoDecimalASL",
             );
@@ -1503,11 +1725,12 @@ OSD.loadDisplayFields = function () {
         ];
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-        OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants.push("osdTextElementRtcDateTimeVariantTimeOnly");
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
+        // Set by the API 1.47 branch above.
+        OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants!.push("osdTextElementRtcDateTimeVariantTimeOnly");
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_49) && OSD.isCrsfReceiver()) {
         OSD.ALL_DISPLAY_FIELDS.LINK_QUALITY.variants = [
             "osdTextElementLinkQualityVariantRfMode",
             "osdTextElementLinkQualityVariantQualityOnly",
@@ -1515,11 +1738,13 @@ OSD.loadDisplayFields = function () {
     }
 };
 
-OSD.constants = OSD_CONSTANTS;
+// chooseFields adds DISPLAY_FIELDS, STATISTIC_FIELDS, WARNINGS and TIMER_TYPES to the shared OSD_CONSTANTS.
+OSD.constants = OSD_CONSTANTS as OsdConstants;
 
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
 OSD.chooseFields = function () {
-    let F = OSD.ALL_DISPLAY_FIELDS;
+    const fcStore = useFlightControllerStore();
+    const F = OSD.ALL_DISPLAY_FIELDS;
 
     // DISPLAY_FIELDS order must mirror firmware's osd_items_e enum order.
     // decode() maps wire position N to DISPLAY_FIELDS[N] positionally.
@@ -1576,7 +1801,7 @@ OSD.chooseFields = function () {
         F.STICK_OVERLAY_LEFT,
         F.STICK_OVERLAY_RIGHT,
         // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
-        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
+        semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
         F.ESC_RPM_FREQ,
         F.RATE_PROFILE_NAME,
         F.PID_PROFILE_NAME,
@@ -1590,7 +1815,7 @@ OSD.chooseFields = function () {
         F.OSD_TX_UPLINK_POWER,
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.WH_DRAWN,
             F.AUX_VALUE,
@@ -1610,7 +1835,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.GPS_LAP_TIME_CURRENT,
             F.GPS_LAP_TIME_PREVIOUS,
@@ -1618,7 +1843,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.DEBUG2,
             F.CUSTOM_MSG0,
@@ -1629,7 +1854,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
@@ -1643,7 +1868,7 @@ OSD.chooseFields = function () {
         // the gating follows: an unreported option decides how the firmware's enum
         // is laid out, not whether a control is shown, so guessing "present" would
         // misread every later field.
-        const reports = (name) => configReportsBuildOption(FC.CONFIG, name);
+        const reports = (name: string) => configReportsBuildOption(fcStore.CONFIG, name);
         const hasFlightPlanWaypoints = reports("USE_GPS") && reports("USE_FLIGHT_PLAN");
         const hasNavMap =
             hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
@@ -1670,13 +1895,13 @@ OSD.chooseFields = function () {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
         }
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
-    F = OSD.constants.ALL_STATISTIC_FIELDS;
+    const S = OSD.constants.ALL_STATISTIC_FIELDS;
 
     // ** IMPORTANT **
     //
@@ -1688,90 +1913,92 @@ OSD.chooseFields = function () {
 
     // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
     OSD.constants.STATISTIC_FIELDS = [
-        F.RTC_DATE_TIME,
-        F.TIMER_1,
-        F.TIMER_2,
-        F.MAX_SPEED,
-        F.MAX_DISTANCE,
-        F.MIN_BATTERY,
-        F.END_BATTERY,
-        F.STAT_BATTERY,
-        F.MIN_RSSI,
-        F.MAX_CURRENT,
-        F.USED_MAH,
-        F.MAX_ALTITUDE,
-        F.BLACKBOX,
-        F.BLACKBOX_LOG_NUMBER,
-        F.MAX_G_FORCE,
-        F.MAX_ESC_TEMP,
-        F.MAX_ESC_RPM,
-        F.MIN_LINK_QUALITY,
-        F.FLIGHT_DISTANCE,
-        F.MAX_FFT,
-        F.STAT_TOTAL_FLIGHTS,
-        F.STAT_TOTAL_FLIGHT_TIME,
-        F.STAT_TOTAL_FLIGHT_DIST,
-        F.MIN_RSSI_DBM,
+        S.RTC_DATE_TIME,
+        S.TIMER_1,
+        S.TIMER_2,
+        S.MAX_SPEED,
+        S.MAX_DISTANCE,
+        S.MIN_BATTERY,
+        S.END_BATTERY,
+        S.STAT_BATTERY,
+        S.MIN_RSSI,
+        S.MAX_CURRENT,
+        S.USED_MAH,
+        S.MAX_ALTITUDE,
+        S.BLACKBOX,
+        S.BLACKBOX_LOG_NUMBER,
+        S.MAX_G_FORCE,
+        S.MAX_ESC_TEMP,
+        S.MAX_ESC_RPM,
+        S.MIN_LINK_QUALITY,
+        S.FLIGHT_DISTANCE,
+        S.MAX_FFT,
+        S.STAT_TOTAL_FLIGHTS,
+        S.STAT_TOTAL_FLIGHT_TIME,
+        S.STAT_TOTAL_FLIGHT_DIST,
+        S.MIN_RSSI_DBM,
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([F.USED_WH, F.MIN_RSNR]);
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([S.USED_WH, S.MIN_RSNR]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-            F.STAT_BEST_3_CONSEC_LAPS,
-            F.STAT_BEST_LAP,
-            F.STAT_FULL_THROTTLE_TIME,
-            F.STAT_FULL_THROTTLE_COUNTER,
-            F.STAT_AVG_THROTTLE,
+            S.STAT_BEST_3_CONSEC_LAPS,
+            S.STAT_BEST_LAP,
+            S.STAT_FULL_THROTTLE_TIME,
+            S.STAT_FULL_THROTTLE_COUNTER,
+            S.STAT_AVG_THROTTLE,
         ]);
     }
 
     // Choose warnings
     // Nothing much to do here, I'm preempting there being new warnings
-    F = OSD.constants.ALL_WARNINGS;
+    const W = OSD.constants.ALL_WARNINGS;
 
     OSD.constants.WARNINGS = [
-        F.ARMING_DISABLED,
-        F.BATTERY_NOT_FULL,
-        F.BATTERY_WARNING,
-        F.BATTERY_CRITICAL,
-        F.VISUAL_BEEPER,
-        F.CRASH_FLIP_MODE,
-        F.ESC_FAIL,
-        F.CORE_TEMPERATURE,
-        F.RC_SMOOTHING_FAILURE,
-        F.FAILSAFE,
-        F.LAUNCH_CONTROL,
-        F.GPS_RESCUE_UNAVAILABLE,
-        F.GPS_RESCUE_DISABLED,
-        F.RSSI,
-        F.LINK_QUALITY,
-        F.RSSI_DBM,
-        F.OVER_CAP,
+        W.ARMING_DISABLED,
+        W.BATTERY_NOT_FULL,
+        W.BATTERY_WARNING,
+        W.BATTERY_CRITICAL,
+        W.VISUAL_BEEPER,
+        W.CRASH_FLIP_MODE,
+        W.ESC_FAIL,
+        W.CORE_TEMPERATURE,
+        W.RC_SMOOTHING_FAILURE,
+        W.FAILSAFE,
+        W.LAUNCH_CONTROL,
+        W.GPS_RESCUE_UNAVAILABLE,
+        W.GPS_RESCUE_DISABLED,
+        W.RSSI,
+        W.LINK_QUALITY,
+        W.RSSI_DBM,
+        W.OVER_CAP,
     ];
 
     OSD.constants.TIMER_TYPES = ["ON_TIME", "TOTAL_ARMED_TIME", "LAST_ARMED_TIME", "ON_ARM_TIME"];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.RSNR]);
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.RSNR]);
     }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.LOAD]);
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.LOAD]);
     }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.filter((w) => w.name !== "RC_SMOOTHING_FAILURE");
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.POSHOLD_FAILED]);
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.POSHOLD_FAILED]);
     }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.AUTOPILOT_ABORT]);
+    if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_48)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.AUTOPILOT_ABORT]);
     }
 };
 
 // Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.
 OSD.applyCanvas = function (d) {
-    d.state.requiresFbSmallFont = false;
+    // Called once decode has set d.state.
+    const state = d.state!;
+    state.requiresFbSmallFont = false;
     OSD.resetVideoTables(d);
     const canvas = d.canvas;
     if (!canvas) {
@@ -1779,8 +2006,8 @@ OSD.applyCanvas = function (d) {
     }
 
     let videoType = "HD";
-    if (d.state.haveFbOsdConfigured) {
-        videoType = OSD.constants.VIDEO_TYPES[d.video_system];
+    if (state.haveFbOsdConfigured) {
+        videoType = videoTypeOf(d.video_system);
         if (videoType === "AUTO") {
             videoType = "PAL";
         }
@@ -1788,7 +2015,7 @@ OSD.applyCanvas = function (d) {
             return;
         }
 
-        d.state.requiresFbSmallFont = canvas.cols > 30; // 30 (or adjusted down) implies MAX7456 compatibility mode, not small font.
+        state.requiresFbSmallFont = canvas.cols > 30; // 30 (or adjusted down) implies MAX7456 compatibility mode, not small font.
     }
 
     d.VIDEO_COLS[videoType] = canvas.cols;
@@ -1796,7 +2023,7 @@ OSD.applyCanvas = function (d) {
 };
 
 OSD.updateDisplaySize = function () {
-    let videoType = OSD.constants.VIDEO_TYPES[OSD.data.video_system];
+    let videoType = videoTypeOf(OSD.data.video_system);
     if (videoType === "AUTO") {
         videoType = "PAL";
     }
@@ -1823,14 +2050,13 @@ OSD.msp = {
      */
     helpers: {
         unpack: {
-            position(bits, c) {
-                const displayItem = {};
+            position(rawBits, c) {
+                // Virtual mode has no position for an element it never saw, and undefined reads as 0 in every bit operation.
+                const bits = rawBits ?? 0;
 
                 const positionable = typeof c.positionable === "function" ? c.positionable() : c.positionable;
                 const defaultPosition =
                     typeof c.defaultPosition === "function" ? c.defaultPosition() : c.defaultPosition;
-
-                displayItem.positionable = positionable;
 
                 OSD.updateDisplaySize();
 
@@ -1838,16 +2064,19 @@ OSD.msp = {
                 const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001f);
                 const ypos = (bits >> 5) & 0x001f;
 
-                displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
+                // updateDisplaySize has just set it.
+                const position = positionable ? OSD.data.displaySize!.x * ypos + xpos : defaultPosition;
 
-                displayItem.isVisible = [];
-                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                    displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
+                const isVisible: boolean[] = [];
+                // Before decode has read the profile count this is undefined, and the loop does not run.
+                const profileCount = OSD.getNumberOfProfiles() ?? 0;
+                for (let osd_profile = 0; osd_profile < profileCount; osd_profile++) {
+                    isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
                 }
 
-                displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
+                const variant = (bits & OSD.constants.VARIANTS) >> 14;
 
-                return displayItem;
+                return { positionable, position, isVisible, variant };
             },
             timer(bits) {
                 return {
@@ -1862,7 +2091,7 @@ OSD.msp = {
         // Now we have the number of profiles, process the OSD elements
         for (const item of itemPositions) {
             const j = data.displayItems.length;
-            let c;
+            let c: OsdDisplayField;
             let suffix;
             let ignoreSize = false;
             if (data.displayItems.length < OSD.constants.DISPLAY_FIELDS.length) {
@@ -1893,14 +2122,16 @@ OSD.msp = {
     },
     // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
     decode(payload) {
-        const view = payload.data;
+        const fcStore = useFlightControllerStore();
+        // The OSD store passes undefined only in virtual mode, where it calls decodeVirtual instead.
+        const view = payload!.data;
         const d = OSD.data;
 
         let displayItemsCountActual = OSD.constants.DISPLAY_FIELDS.length;
 
         d.flags = view.readU8();
 
-        if (d.flags > 0 && payload.length > 1) {
+        if (d.flags > 0 && payload!.length > 1) {
             d.video_system = view.readU8();
             if (bit_check(d.flags, 0)) {
                 d.unit_mode = view.readU8();
@@ -1937,7 +2168,8 @@ OSD.msp = {
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured =
             d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured || d.state.haveFbOsdConfigured;
-        d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
+        d.state.haveAirbotTheiaOsdDevice =
+            bit_check(d.flags, 7) && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47);
         const osdDeviceDetected = bit_check(d.flags, 5);
         // FbOsd is immediately ready to receive font upload even if display is not yet synced.
         d.state.isMax7456FontDeviceDetected =
@@ -1946,7 +2178,7 @@ OSD.msp = {
             d.state.haveFbOsdConfigured;
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
-        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_45);
 
         // Must run before element positions are decoded, as they depend on the column count.
         OSD.applyCanvas(d);
@@ -1956,10 +2188,11 @@ OSD.msp = {
         d.warnings = [];
         d.timers = [];
 
-        d.parameters = {};
-        d.parameters.overlayRadioMode = 0;
-        d.parameters.cameraFrameWidth = 24;
-        d.parameters.cameraFrameHeight = 11;
+        d.parameters = {
+            overlayRadioMode: 0,
+            cameraFrameWidth: 24,
+            cameraFrameHeight: 11,
+        };
 
         // Read display element positions, the parsing is done later because we need the number of profiles
         const itemsPositionsRead = [];
@@ -2058,7 +2291,7 @@ OSD.msp = {
         d.parameters.cameraFrameWidth = view.readU8();
         d.parameters.cameraFrameHeight = view.readU8();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_46)) {
             d.alarms["link_quality"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionLinkQuality"),
                 value: view.readU16(),
@@ -2067,7 +2300,7 @@ OSD.msp = {
             };
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(fcStore.CONFIG.apiVersion, API_VERSION_1_47)) {
             d.alarms["rssi_dbm"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionRssiDbm"),
                 value: view.read16(),
@@ -2082,6 +2315,8 @@ OSD.msp = {
     },
     decodeVirtual() {
         const d = OSD.data;
+        // VirtualFC.setupVirtualOSD has run.
+        const virtualMode = OSD.virtualMode!;
 
         OSD.resetVideoTables(d);
         d.displayItems = [];
@@ -2093,7 +2328,7 @@ OSD.msp = {
         const expectedStatsCount = OSD.constants.STATISTIC_FIELDS.length;
 
         for (let i = 0; i < expectedStatsCount; i++) {
-            const v = OSD.virtualMode.statisticsState[i] ? 1 : 0;
+            const v = virtualMode.statisticsState[i] ? 1 : 0;
 
             // Known statistics field
             if (i < expectedStatsCount) {
@@ -2123,12 +2358,13 @@ OSD.msp = {
         // Parse configurable timers
         const expectedTimersCount = 3;
         for (let i = 0; i < expectedTimersCount; i++) {
-            d.timers.push({ index: i, ...OSD.virtualMode.timerData[i] });
+            // VirtualFC seeds all three timers, and the OSD store fills in every field of one it adds.
+            d.timers.push({ index: i, ...virtualMode.timerData[i] } as OsdTimer);
         }
 
         // Parse enabled warnings
         const warningCount = OSD.constants.WARNINGS.length;
-        const warningFlags = OSD.virtualMode.warningFlags;
+        const warningFlags = virtualMode.warningFlags;
 
         for (let i = 0; i < warningCount; i++) {
             const enabled = (warningFlags & (1 << i)) !== 0;
@@ -2152,7 +2388,7 @@ OSD.msp = {
             }
         }
 
-        this.processOsdElements(OSD.data, OSD.virtualMode.itemPositions);
+        this.processOsdElements(OSD.data, virtualMode.itemPositions);
 
         OSD.updateDisplaySize();
     },
