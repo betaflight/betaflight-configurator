@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
@@ -14,6 +15,7 @@ describe("useCli output during CliAutoComplete build", () => {
     let cli: Cli;
 
     beforeEach(() => {
+        setActivePinia(createPinia());
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = true;
         CliAutoComplete.builder.state = "reset";

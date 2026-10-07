@@ -1,14 +1,35 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import DeviceHandler from "../device_handler";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
-import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes, { MSP2TextType } from "../msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import { serial } from "../serial";
 import BuildApi from "../BuildApi";
+import { useFlightControllerStore } from "../../stores/fc";
 
 /**
  *
@@ -16,24 +37,33 @@ import BuildApi from "../BuildApi";
  *
  */
 
-let mspHelper = null;
+/** One entry of the build API's target list. */
+interface BoardTarget {
+    target: string;
+}
+
+/** Resolves truthy when the detected board is one the caller can build for. */
+type BoardDetectedCallback = (boardName: string) => boolean | Promise<boolean>;
+
+let mspHelper: MspHelper | null = null;
 
 class AutoDetect {
-    constructor() {
-        this.board = FC.CONFIG.boardName;
-        this.targetAvailable = false;
+    targetAvailable = false;
+    cloudBuildOptions?: string[];
+    cloudBuildKey?: string;
+    private _boardOptions?: BoardTarget[];
+    private _onBoardDetected?: BoardDetectedCallback;
 
-        // Store bound event handlers to make removal more reliable
-        this.boundHandleConnect = this.handleConnect.bind(this);
-        this.boundHandleDisconnect = this.handleDisconnect.bind(this);
-        this.boundHandleSerialReceive = this.handleSerialReceive.bind(this);
+    // Store bound event handlers to make removal more reliable
+    readonly boundHandleConnect = this.handleConnect.bind(this);
+    readonly boundHandleDisconnect = this.handleDisconnect.bind(this);
+    readonly boundHandleSerialReceive = this.handleSerialReceive.bind(this);
+
+    handleSerialReceive(event: Event) {
+        MSP.read((event as CustomEvent).detail);
     }
 
-    handleSerialReceive(event) {
-        MSP.read(event.detail);
-    }
-
-    async loadTargetsIfNeeded() {
+    async loadTargetsIfNeeded(): Promise<boolean> {
         if (this._boardOptions && Array.isArray(this._boardOptions) && this._boardOptions.length > 0) {
             return true;
         }
@@ -49,7 +79,7 @@ class AutoDetect {
         }
     }
 
-    canAttemptConnection() {
+    canAttemptConnection(): boolean {
         if (!DeviceHandler.portAvailable) {
             gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
             return false;
@@ -69,7 +99,7 @@ class AutoDetect {
         return true;
     }
 
-    async verifyBoard(onBoardDetected) {
+    async verifyBoard(onBoardDetected: BoardDetectedCallback): Promise<void> {
         const port = DeviceHandler.devicePicker.selectedDevice;
         if (port.startsWith("virtual")) {
             return;
@@ -93,7 +123,11 @@ class AutoDetect {
 
             console.log("Connecting to serial port", port);
             gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
-            result = await serial.connect(port, { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 });
+            result = await serial.connect(
+                port,
+                { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 },
+                undefined,
+            );
         } catch (error) {
             console.error("Failed to connect:", error);
         } finally {
@@ -104,15 +138,15 @@ class AutoDetect {
         }
     }
 
-    handleConnect(event) {
-        this.onConnect(event.detail);
+    handleConnect(event: Event) {
+        this.onConnect((event as CustomEvent).detail);
     }
 
-    handleDisconnect(event) {
-        this.onClosed(event.detail);
+    handleDisconnect(event: Event) {
+        this.onClosed((event as CustomEvent).detail);
     }
 
-    onClosed(result) {
+    onClosed(result: unknown) {
         gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
         if (!this.targetAvailable) {
@@ -121,8 +155,9 @@ class AutoDetect {
     }
 
     onFinishClose() {
-        const board = FC.CONFIG.boardName;
-        let found = false;
+        const fcStore = useFlightControllerStore();
+        const board = fcStore.config.boardName;
+        let found: unknown = false;
         if (board && typeof this._onBoardDetected === "function") {
             found = this._onBoardDetected(board);
         } else if (board && this._boardOptions) {
@@ -142,33 +177,39 @@ class AutoDetect {
     }
 
     async getBoardInfo() {
+        const fcStore = useFlightControllerStore();
         await MSP.promise(MSPCodes.MSP_BOARD_INFO);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            this.cloudBuildOptions = FC.CONFIG.buildOptions;
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            this.cloudBuildOptions = fcStore.config.buildOptions;
         }
         this.onFinishClose();
     }
 
     async getBuildInfo() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === "BTFL") {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
+        const fcStore = useFlightControllerStore();
+        if (
+            semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) &&
+            fcStore.config.flightControllerIdentifier === "BTFL"
+        ) {
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BUILDKEY));
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
-                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
+                mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
             );
             await MSP.promise(MSPCodes.MSP_BUILD_INFO);
 
-            // store FC.CONFIG.buildKey locally if needed
-            this.cloudBuildKey = FC.CONFIG.buildKey;
+            // store the build key locally if needed
+            this.cloudBuildKey = fcStore.config.buildKey;
         }
         await this.getBoardInfo();
     }
 
     async requestBoardInformation() {
+        const fcStore = useFlightControllerStore();
         await MSP.promise(MSPCodes.MSP_API_VERSION);
-        gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
+        gui_log(i18n.getMessage("apiVersionReceived", fcStore.config.apiVersion));
 
-        if (FC.CONFIG.apiVersion.includes("null") || semver.lt(FC.CONFIG.apiVersion, "1.39.0")) {
+        if (fcStore.config.apiVersion.includes("null") || semver.lt(fcStore.config.apiVersion, "1.39.0")) {
             // auto-detect is not supported
             this.onFinishClose();
         } else {
@@ -177,7 +218,7 @@ class AutoDetect {
         }
     }
 
-    onConnect(openInfo) {
+    onConnect(openInfo: unknown) {
         if (openInfo) {
             serial.removeEventListener("receive", this.boundHandleSerialReceive);
             serial.addEventListener("receive", this.boundHandleSerialReceive);

@@ -24,7 +24,7 @@ import type { SelectMenuItem } from "@nuxt/ui";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
 import GUI from "../js/gui";
-import AutoDetect from "../js/utils/AutoDetect.js";
+import AutoDetect from "../js/utils/AutoDetect";
 
 /** A board as the build API's `/api/targets` lists it. */
 export interface TargetDescriptor {

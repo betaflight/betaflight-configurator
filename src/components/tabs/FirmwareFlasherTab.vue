@@ -138,7 +138,7 @@ import { gui_log } from "../../js/gui_log";
 import semver from "semver";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup";
-import AutoRestore from "../../js/utils/AutoRestore.js";
+import AutoRestore from "../../js/utils/AutoRestore";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection";
@@ -1687,7 +1687,7 @@ export default defineComponent({
                     dialog.openWait($t("firmwareFlasherRestoreBackupTitle"), null);
 
                     // Execute restore
-                    AutoRestore.execute(cliLines, (result: { success: boolean; skipped?: number; errors?: string }) => {
+                    AutoRestore.execute(cliLines, (result) => {
                         dialog.close();
                         GUI.connect_lock = false;
                         state.restoreInProgress = false;

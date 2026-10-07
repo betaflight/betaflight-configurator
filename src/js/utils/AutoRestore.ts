@@ -1,8 +1,28 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import DeviceHandler from "../device_handler";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
-import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import GUI from "../gui";
@@ -10,6 +30,7 @@ import { serial } from "../serial";
 import { MIN_FC_VERSION_FOR_MSP_CLI, isMspCliSupported } from "../../composables/useMspCliSession";
 import semver from "semver";
 import CONFIGURATOR from "../data_storage";
+import { useFlightControllerStore } from "../../stores/fc";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const CONNECT_TIMEOUT_MS = 10000;
@@ -17,22 +38,35 @@ const TIMEOUT_NAME = "msp_restore_timeout";
 // Time to let the `save` command flush to the FC before we tear down the connection.
 const SAVE_FLUSH_MS = 500;
 
-class AutoRestore {
-    constructor() {
-        this.boundHandleConnect = this.handleConnect.bind(this);
-        this.boundHandleDisconnect = this.handleDisconnect.bind(this);
-        this.boundHandleSerialReceive = this.handleSerialReceive.bind(this);
-        this._callback = null;
-        this._mspHelper = null;
-        this._cliLines = null;
-        // Count of CLI lines that returned an error (rejected/###ERROR) during restore.
-        this._skipped = 0;
-        // True while the `save` command is in flight. A `save` reboots the FC, so the
-        // resulting disconnect/timeout is expected success, not a failure.
-        this._saving = false;
-    }
+interface CliError {
+    command: string;
+    error: string;
+}
 
-    canAttemptConnection() {
+export interface AutoRestoreResult {
+    success: boolean;
+    /** The failure message, or null on success. */
+    errors: string | null;
+    /** CLI lines the FC rejected; absent when the restore never connected. */
+    skipped?: number;
+}
+
+type AutoRestoreCallback = (result: AutoRestoreResult) => void;
+
+class AutoRestore {
+    readonly boundHandleConnect = this.handleConnect.bind(this);
+    readonly boundHandleDisconnect = this.handleDisconnect.bind(this);
+    readonly boundHandleSerialReceive = this.handleSerialReceive.bind(this);
+    private _callback: AutoRestoreCallback | null = null;
+    private _mspHelper: MspHelper | null = null;
+    private _cliLines: string[] | null = null;
+    // Count of CLI lines that returned an error (rejected/###ERROR) during restore.
+    private _skipped = 0;
+    // True while the `save` command is in flight. A `save` reboots the FC, so the
+    // resulting disconnect/timeout is expected success, not a failure.
+    private _saving = false;
+
+    canAttemptConnection(): boolean {
         if (CONFIGURATOR.virtualMode) {
             gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
             return false;
@@ -47,14 +81,14 @@ class AutoRestore {
         return true;
     }
 
-    handleSerialReceive(event) {
+    handleSerialReceive(event: Event) {
         // MSP.read accepts either the raw bytes or the { data } wrapper, but pass
         // event.detail.data to match the convention used by serial_backend.
-        MSP.read(event.detail.data);
+        MSP.read((event as CustomEvent).detail.data);
     }
 
-    handleConnect(event) {
-        this.onConnect(event.detail);
+    handleConnect(event: Event) {
+        this.onConnect((event as CustomEvent).detail);
     }
 
     handleDisconnect() {
@@ -70,7 +104,7 @@ class AutoRestore {
         this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
     }
 
-    async onConnect(openInfo) {
+    async onConnect(openInfo: unknown) {
         // A "connect" event can fire for a failed attempt too (the serial wrapper
         // normalizes the detail into a truthy object), so verify the transport is
         // actually connected rather than relying on openInfo being falsy.
@@ -80,7 +114,8 @@ class AutoRestore {
         }
 
         // CRITICAL: Reset FC state to clear stale data before any MSP queries
-        FC.resetState();
+        const fcStore = useFlightControllerStore();
+        fcStore.resetState();
 
         // Set up receive handler
         serial.removeEventListener("receive", this.boundHandleSerialReceive);
@@ -106,9 +141,9 @@ class AutoRestore {
 
             // Handle potential API version parsing issues
             if (
-                !FC.CONFIG.apiVersion ||
-                FC.CONFIG.apiVersion.includes("null") ||
-                semver.lt(FC.CONFIG.apiVersion, "1.39.0")
+                !fcStore.config.apiVersion ||
+                fcStore.config.apiVersion.includes("null") ||
+                semver.lt(fcStore.config.apiVersion, "1.39.0")
             ) {
                 this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
                 return;
@@ -117,7 +152,7 @@ class AutoRestore {
             // Query FC version to check MSP CLI support
             await MSP.promise(MSPCodes.MSP_FC_VERSION);
 
-            const fcVersion = FC.CONFIG.flightControllerVersion;
+            const fcVersion = fcStore.config.flightControllerVersion;
             // MIN_FC_VERSION_FOR_MSP_CLI is a flight-controller version (4.5.4), so it
             // must be compared against flightControllerVersion — NOT apiVersion (1.x.x).
             if (!isMspCliSupported()) {
@@ -142,8 +177,8 @@ class AutoRestore {
     }
 
     async _sendCliCommands() {
-        const cliLines = this._cliLines;
-        const errors = [];
+        const cliLines = this._cliLines!;
+        const errors: CliError[] = [];
 
         try {
             for (const line of cliLines) {
@@ -162,7 +197,7 @@ class AutoRestore {
                     return;
                 }
 
-                const response = await new Promise((resolve, reject) => {
+                const response = await new Promise<string[]>((resolve, reject) => {
                     MSP.send_cli_command(
                         trimmed,
                         (data, error) => {
@@ -183,7 +218,7 @@ class AutoRestore {
 
                 // Check for error lines in response
                 if (response) {
-                    const errorLines = response.filter((l) => l && l.startsWith("###ERROR"));
+                    const errorLines = response.filter((l) => l?.startsWith("###ERROR"));
                     if (errorLines.length > 0) {
                         errors.push({ command: trimmed, error: errorLines.join("; ") });
                         gui_log(`CLI command failed: ${trimmed} — ${errorLines.join("; ")}`);
@@ -207,7 +242,7 @@ class AutoRestore {
      * logged but never fail the restore; only a connection loss BEFORE save (reported via
      * handleDisconnect with _saving=false) is a failure.
      */
-    async _finishWithSave(errors) {
+    async _finishWithSave(errors: CliError[]) {
         // Record skipped lines before save so this path and the save-reboot disconnect
         // path (handleDisconnect) report the same count.
         this._skipped = errors.length;
@@ -223,7 +258,7 @@ class AutoRestore {
         this._cleanup(true, null);
     }
 
-    _cleanup(success, errorMsg) {
+    _cleanup(success: boolean, errorMsg: string | null) {
         // Guard against double-invocation (e.g. timeout + disconnect)
         if (!this._callback) {
             return;
@@ -244,14 +279,14 @@ class AutoRestore {
 
         MSP.clearListeners();
         MSP.disconnect_cleanup();
-        FC.resetState();
+        useFlightControllerStore().resetState();
 
         GUI.timeout_remove(TIMEOUT_NAME);
 
         callback({ success, errors: errorMsg, skipped: this._skipped });
     }
 
-    async execute(cliLines, callback) {
+    async execute(cliLines: string[], callback: AutoRestoreCallback) {
         if (!this.canAttemptConnection()) {
             callback({ success: false, errors: i18n.getMessage("firmwareFlasherRestoreConnectionFailed") });
             return;
@@ -271,7 +306,7 @@ class AutoRestore {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            const result = await serial.connect(port, { baudRate: baud });
+            const result = await serial.connect(port, { baudRate: baud }, undefined);
             if (!result) {
                 this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
             }
