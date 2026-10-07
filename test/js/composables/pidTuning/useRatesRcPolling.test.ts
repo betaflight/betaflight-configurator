@@ -47,4 +47,21 @@ describe("useRatesRcPolling", () => {
         vi.advanceTimersByTime(1000);
         expect(MSP.send_message).toHaveBeenCalledTimes(3);
     });
+
+    it("replaces a running poll when started again, so only the latest callback is polled", () => {
+        const first = vi.fn();
+        const second = vi.fn();
+        const { wrapper, polling } = mountPolling();
+
+        polling.startRcPolling(first);
+        polling.startRcPolling(second);
+        vi.advanceTimersByTime(300);
+
+        expect(MSP.send_message).toHaveBeenCalledTimes(3);
+        expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_RC, false, false, first);
+
+        wrapper.unmount();
+        vi.advanceTimersByTime(1000);
+        expect(MSP.send_message).toHaveBeenCalledTimes(3);
+    });
 });

@@ -42,10 +42,11 @@ export function useRatesRcPolling() {
     };
 
     /**
-     * Start polling MSP_RC.
+     * Start polling MSP_RC, replacing any poll already running so a second call cannot leak a timer.
      * @param onRcData called after each MSP_RC reply, once the store holds the new channels
      */
     const startRcPolling = (onRcData: () => void) => {
+        stopRcPolling();
         rcUpdateInterval = setInterval(() => {
             MSP.send_message(MSPCodes.MSP_RC, false, false, onRcData);
         }, RATES_RC_POLL_MS);
