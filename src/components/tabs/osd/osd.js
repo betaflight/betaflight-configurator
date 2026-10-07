@@ -1493,9 +1493,36 @@ OSD.loadDisplayFields = function () {
             text: "osdPsasAoALimiter",
             desc: "osdDescPsasAoALimiter",
             defaultPosition: -1,
-            draw_order: 625,
+            draw_order: 680,
             positionable: true,
             preview: "AOA ON",
+        },
+        PSAS_TRIM_ROLL: {
+            name: "PSAS TRIM ROLL",
+            text: "osdPsasTrimRoll",
+            desc: "osdDescPsasTrimRoll",
+            defaultPosition: -1,
+            draw_order: 681,
+            positionable: true,
+            preview: "TRM R 10% ADJ",
+        },
+        PSAS_TRIM_PITCH: {
+            name: "PSAS TRIM PITCH",
+            text: "osdPsasTrimPitch",
+            desc: "osdDescPsasTrimPitch",
+            defaultPosition: -1,
+            draw_order: 682,
+            positionable: true,
+            preview: "TRM P 10% ADJ",
+        },
+        PSAS_TRIM_YAW: {
+            name: "PSAS TRIM YAW",
+            text: "osdPsasTrimYaw",
+            desc: "osdDescPsasTrimYaw",
+            defaultPosition: -1,
+            draw_order: 683,
+            positionable: true,
+            preview: "TRM Y 10% ADJ",
         },
     };
 
@@ -1675,16 +1702,21 @@ OSD.chooseFields = function () {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.NAV_MAP]);
         }
 
-        if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PSAS_AOA_LIMITER]);
-        }
-
         if (hasPositionHold) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.POS_HOLD_READY]);
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+        }
+
+        if (FC.CONFIG.buildOptions.includes("USE_PSAS")) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.PSAS_AOA_LIMITER,
+                F.PSAS_TRIM_ROLL,
+                F.PSAS_TRIM_PITCH,
+                F.PSAS_TRIM_YAW,
+            ]);
         }
     }
     // Choose statistic fields

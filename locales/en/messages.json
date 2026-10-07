@@ -8462,6 +8462,28 @@
     "osdDescPsasAoALimiter": {
         "message": "PSAS angle of attack limiter state"
     },
+    "osdPsasTrimRoll": {
+        "message": "PSAS roll trim state",
+        "description": "PSAS roll trim state"
+    },
+    "osdDescPsasTrimRoll": {
+        "message": "PSAS roll trim state"
+    },
+    "osdPsasTrimPitch": {
+        "message": "PSAS pitch trim state",
+        "description": "PSAS pitch trim state"
+    },
+    "osdDescPsasTrimPitch": {
+        "message": "PSAS pitch trim state"
+    },
+    "osdPsasTrimYaw": {
+        "message": "PSAS yaw trim state",
+        "description": "PSAS yaw trim state"
+    },
+    "osdDescPsasTrimYaw": {
+        "message": "PSAS yaw trim state"
+    },
+
     "tabUserProfile": {
         "message": "User Profile"
     },
