@@ -23,7 +23,7 @@
  * Client-side port of betaflight/src/main/config/simplified_tuning.c for virtual mode.
  */
 
-import FC from "./fc";
+import { useFlightControllerStore } from "../stores/fc";
 import type { TuningSliders } from "../stores/fc.types";
 
 /** The tuning-slider values decoded into the multipliers the firmware maths uses. */
@@ -99,7 +99,7 @@ function constrain(value: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, Math.trunc(value)));
 }
 
-function sliderFactorsFromTuningSliders(sliders: TuningSliders = FC.TUNING_SLIDERS): SliderFactors {
+function sliderFactorsFromTuningSliders(sliders: TuningSliders): SliderFactors {
     return {
         pidsMode: sliders.slider_pids_mode,
         masterMultiplier: sliders.slider_master_multiplier / 100,
@@ -162,8 +162,9 @@ export function calculateSimplifiedPidValues(factors: SliderFactors): AxisPidVal
 // arithmetic (DEFAULT * multiplier / 100), which the truncating constrain()
 // reproduces.
 export function calculateSimplifiedGyroFilterValues(multiplier: number): GyroFilterValues {
+    const fcStore = useFlightControllerStore();
     const result: GyroFilterValues = {};
-    if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz) {
+    if (fcStore.filterConfig.gyro_lowpass_dyn_min_hz) {
         result.gyro_lowpass_dyn_min_hz = constrain(
             (GYRO_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100,
             0,
@@ -175,10 +176,10 @@ export function calculateSimplifiedGyroFilterValues(multiplier: number): GyroFil
             DYN_LPF_MAX_HZ,
         );
     }
-    if (FC.FILTER_CONFIG.gyro_lowpass_hz) {
+    if (fcStore.filterConfig.gyro_lowpass_hz) {
         result.gyro_lowpass_hz = constrain((GYRO_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100, 0, DYN_LPF_MAX_HZ);
     }
-    if (FC.FILTER_CONFIG.gyro_lowpass2_hz) {
+    if (fcStore.filterConfig.gyro_lowpass2_hz) {
         result.gyro_lowpass2_hz = constrain((GYRO_LPF2_HZ_DEFAULT * multiplier) / 100, 0, LPF_MAX_HZ);
     }
     return result;
@@ -187,8 +188,9 @@ export function calculateSimplifiedGyroFilterValues(multiplier: number): GyroFil
 // `multiplier` is the integer slider value (e.g. 100 = 1.0x), matching the
 // firmware's simplified_dterm_filter_multiplier.
 export function calculateSimplifiedDtermFilterValues(multiplier: number): DtermFilterValues {
+    const fcStore = useFlightControllerStore();
     const result: DtermFilterValues = {};
-    if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz) {
+    if (fcStore.filterConfig.dterm_lowpass_dyn_min_hz) {
         result.dterm_lowpass_dyn_min_hz = constrain(
             (DTERM_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100,
             0,
@@ -200,45 +202,49 @@ export function calculateSimplifiedDtermFilterValues(multiplier: number): DtermF
             DYN_LPF_MAX_HZ,
         );
     }
-    if (FC.FILTER_CONFIG.dterm_lowpass_hz) {
+    if (fcStore.filterConfig.dterm_lowpass_hz) {
         result.dterm_lowpass_hz = constrain((DTERM_LPF1_DYN_MIN_HZ_DEFAULT * multiplier) / 100, 0, DYN_LPF_MAX_HZ);
     }
-    if (FC.FILTER_CONFIG.dterm_lowpass2_hz) {
+    if (fcStore.filterConfig.dterm_lowpass2_hz) {
         result.dterm_lowpass2_hz = constrain((DTERM_LPF2_HZ_DEFAULT * multiplier) / 100, 0, LPF_MAX_HZ);
     }
     return result;
 }
 
-export function applySimplifiedPids(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
+export function applySimplifiedPids(sliders: TuningSliders = useFlightControllerStore().tuningSliders): void {
+    const fcStore = useFlightControllerStore();
     const factors = sliderFactorsFromTuningSliders(sliders);
     const axes = calculateSimplifiedPidValues(factors);
 
     for (let axis = 0; axis < axes.length; axis++) {
         const { P, I, D, F, dMax } = axes[axis];
-        FC.PIDS[axis][0] = P;
-        FC.PIDS[axis][1] = I;
-        FC.PIDS[axis][2] = D;
-        FC.ADVANCED_TUNING[FEEDFORWARD_KEYS[axis]] = F;
-        FC.ADVANCED_TUNING[DMAX_KEYS[axis]] = dMax;
+        fcStore.pids[axis][0] = P;
+        fcStore.pids[axis][1] = I;
+        fcStore.pids[axis][2] = D;
+        fcStore.advancedTuning[FEEDFORWARD_KEYS[axis]] = F;
+        fcStore.advancedTuning[DMAX_KEYS[axis]] = dMax;
     }
 }
 
-export function applySimplifiedGyroFilters(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
+export function applySimplifiedGyroFilters(sliders: TuningSliders = useFlightControllerStore().tuningSliders): void {
     if (!sliders.slider_gyro_filter) {
         return;
     }
-    Object.assign(FC.FILTER_CONFIG, calculateSimplifiedGyroFilterValues(sliders.slider_gyro_filter_multiplier));
+    const fcStore = useFlightControllerStore();
+    Object.assign(fcStore.filterConfig, calculateSimplifiedGyroFilterValues(sliders.slider_gyro_filter_multiplier));
 }
 
-export function applySimplifiedDtermFilters(sliders: TuningSliders = FC.TUNING_SLIDERS): void {
+export function applySimplifiedDtermFilters(sliders: TuningSliders = useFlightControllerStore().tuningSliders): void {
     if (!sliders.slider_dterm_filter) {
         return;
     }
-    Object.assign(FC.FILTER_CONFIG, calculateSimplifiedDtermFilterValues(sliders.slider_dterm_filter_multiplier));
+    const fcStore = useFlightControllerStore();
+    Object.assign(fcStore.filterConfig, calculateSimplifiedDtermFilterValues(sliders.slider_dterm_filter_multiplier));
 }
 
 export function validateVirtualSimplifiedTuning(): void {
-    const factors = sliderFactorsFromTuningSliders();
+    const fcStore = useFlightControllerStore();
+    const factors = sliderFactorsFromTuningSliders(fcStore.tuningSliders);
     let pidsValid = true;
 
     if (factors.pidsMode > 0) {
@@ -247,11 +253,11 @@ export function validateVirtualSimplifiedTuning(): void {
             const { P, I, D, F, dMax } = expected[axis];
             pidsValid =
                 pidsValid &&
-                FC.PIDS[axis][0] === P &&
-                FC.PIDS[axis][1] === I &&
-                FC.PIDS[axis][2] === D &&
-                FC.ADVANCED_TUNING[FEEDFORWARD_KEYS[axis]] === F &&
-                FC.ADVANCED_TUNING[DMAX_KEYS[axis]] === dMax;
+                fcStore.pids[axis][0] === P &&
+                fcStore.pids[axis][1] === I &&
+                fcStore.pids[axis][2] === D &&
+                fcStore.advancedTuning[FEEDFORWARD_KEYS[axis]] === F &&
+                fcStore.advancedTuning[DMAX_KEYS[axis]] === dMax;
         }
     }
 
@@ -259,27 +265,27 @@ export function validateVirtualSimplifiedTuning(): void {
     if (factors.gyroFilterEnabled) {
         const expected = calculateSimplifiedGyroFilterValues(factors.gyroFilterMultiplier);
         gyroValid =
-            (!expected.gyro_lowpass_hz || FC.FILTER_CONFIG.gyro_lowpass_hz === expected.gyro_lowpass_hz) &&
-            (!expected.gyro_lowpass2_hz || FC.FILTER_CONFIG.gyro_lowpass2_hz === expected.gyro_lowpass2_hz) &&
+            (!expected.gyro_lowpass_hz || fcStore.filterConfig.gyro_lowpass_hz === expected.gyro_lowpass_hz) &&
+            (!expected.gyro_lowpass2_hz || fcStore.filterConfig.gyro_lowpass2_hz === expected.gyro_lowpass2_hz) &&
             (!expected.gyro_lowpass_dyn_min_hz ||
-                FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz === expected.gyro_lowpass_dyn_min_hz) &&
+                fcStore.filterConfig.gyro_lowpass_dyn_min_hz === expected.gyro_lowpass_dyn_min_hz) &&
             (!expected.gyro_lowpass_dyn_max_hz ||
-                FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz === expected.gyro_lowpass_dyn_max_hz);
+                fcStore.filterConfig.gyro_lowpass_dyn_max_hz === expected.gyro_lowpass_dyn_max_hz);
     }
 
     let dtermValid = true;
     if (factors.dtermFilterEnabled) {
         const expected = calculateSimplifiedDtermFilterValues(factors.dtermFilterMultiplier);
         dtermValid =
-            (!expected.dterm_lowpass_hz || FC.FILTER_CONFIG.dterm_lowpass_hz === expected.dterm_lowpass_hz) &&
-            (!expected.dterm_lowpass2_hz || FC.FILTER_CONFIG.dterm_lowpass2_hz === expected.dterm_lowpass2_hz) &&
+            (!expected.dterm_lowpass_hz || fcStore.filterConfig.dterm_lowpass_hz === expected.dterm_lowpass_hz) &&
+            (!expected.dterm_lowpass2_hz || fcStore.filterConfig.dterm_lowpass2_hz === expected.dterm_lowpass2_hz) &&
             (!expected.dterm_lowpass_dyn_min_hz ||
-                FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz === expected.dterm_lowpass_dyn_min_hz) &&
+                fcStore.filterConfig.dterm_lowpass_dyn_min_hz === expected.dterm_lowpass_dyn_min_hz) &&
             (!expected.dterm_lowpass_dyn_max_hz ||
-                FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz === expected.dterm_lowpass_dyn_max_hz);
+                fcStore.filterConfig.dterm_lowpass_dyn_max_hz === expected.dterm_lowpass_dyn_max_hz);
     }
 
-    FC.TUNING_SLIDERS.slider_pids_valid = pidsValid ? 1 : 0;
-    FC.TUNING_SLIDERS.slider_gyro_valid = gyroValid ? 1 : 0;
-    FC.TUNING_SLIDERS.slider_dterm_valid = dtermValid ? 1 : 0;
+    fcStore.tuningSliders.slider_pids_valid = pidsValid ? 1 : 0;
+    fcStore.tuningSliders.slider_gyro_valid = gyroValid ? 1 : 0;
+    fcStore.tuningSliders.slider_dterm_valid = dtermValid ? 1 : 0;
 }
