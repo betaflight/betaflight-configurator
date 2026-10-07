@@ -148,27 +148,6 @@ vi.mock("../../src/stores/connection", () => ({
     useConnectionStore: () => ({ liveDataPaused: false }),
 }));
 
-vi.mock("../../src/js/fc", () => ({
-    __esModule: true,
-    default: {
-        CONFIG: {
-            apiVersion: "1.47.0",
-            flightControllerVersion: "",
-            flightControllerIdentifier: "BTFL",
-            boardType: 0,
-            buildOptions: [],
-            buildKey: "",
-            targetCapabilities: 0,
-        },
-        FEATURE_CONFIG: { features: {} },
-        BEEPER_CONFIG: {},
-        TARGET_CAPABILITIES_FLAGS: {},
-        CONFIGURATION_STATES: {},
-        CONFIGURATION_PROBLEM_FLAGS: {},
-        resetState: vi.fn(),
-    },
-}));
-
 vi.mock("../../src/js/data_storage", () => ({
     __esModule: true,
     default: {
@@ -228,7 +207,7 @@ import { set as setConfig } from "../../src/js/ConfigStorage";
 import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
 
@@ -239,6 +218,9 @@ import { __resetConnectionStateForTests, getConnectionState } from "../../src/js
 // down so the next test starts clean.
 function resetMocks() {
     vi.clearAllMocks();
+    // serial_backend reads the real flightController store: give every test a fresh one,
+    // whether or not its describe block installs a Pinia of its own.
+    setActivePinia(createPinia());
     Object.keys(serialHandlers).forEach((k) => delete serialHandlers[k]);
     GUI.connect_lock = false;
     GUI.connected_to = false;
@@ -607,14 +589,8 @@ describe("serial_backend connect-failure dialog", () => {
         serialHandlers.connect({ detail: true }); // opened -> linkOpen, HANDSHAKING
         dialogStore.open.mockClear();
 
-        // FC.CONFIG is module state on the mock; resetMocks() does not restore it.
-        const apiVersion = FC.CONFIG.apiVersion;
-        try {
-            FC.CONFIG.apiVersion = "0.0.0";
-            (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback -> abortConnection
-        } finally {
-            FC.CONFIG.apiVersion = apiVersion;
-        }
+        useFlightControllerStore().config.apiVersion = "0.0.0";
+        (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback -> abortConnection
 
         expect(infoDialogCount()).toBe(1);
     });
@@ -623,25 +599,20 @@ describe("serial_backend connect-failure dialog", () => {
         // MSP.send_message calls back synchronously when the link dropped again, so
         // abortConnection runs before connectHandler returns.
         DeviceHandler.devicePicker.autoConnect = true;
-        const apiVersion = FC.CONFIG.apiVersion;
 
-        try {
-            connectDisconnect({ automatic: true });
-            dialogStore.open.mockClear();
+        connectDisconnect({ automatic: true });
+        dialogStore.open.mockClear();
 
-            vi.mocked(MSP.send_message).mockImplementationOnce((_code, _data, _sent, callback) => {
-                FC.CONFIG.apiVersion = "0.0.0";
-                (callback as (() => void) | undefined)?.();
-                // The real send_message returns false after calling back synchronously.
-                return false;
-            });
+        vi.mocked(MSP.send_message).mockImplementationOnce((_code, _data, _sent, callback) => {
+            useFlightControllerStore().config.apiVersion = "0.0.0";
+            (callback as (() => void) | undefined)?.();
+            // The real send_message returns false after calling back synchronously.
+            return false;
+        });
 
-            serialHandlers.connect({ detail: true });
+        serialHandlers.connect({ detail: true });
 
-            expect(infoDialogCount()).toBe(1);
-        } finally {
-            FC.CONFIG.apiVersion = apiVersion;
-        }
+        expect(infoDialogCount()).toBe(1);
     });
 
     it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {

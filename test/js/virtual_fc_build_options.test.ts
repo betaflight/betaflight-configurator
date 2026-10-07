@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import VirtualFC from "../../src/js/VirtualFC";
 import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
 import CONFIGURATOR, {
@@ -8,16 +9,22 @@ import CONFIGURATOR, {
     API_VERSION_1_47,
     API_VERSION_1_48,
 } from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import Features from "../../src/js/Features";
 
 const VIRTUAL_API_VERSIONS = [API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48];
 
 describe("Virtual FC build options", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+    });
+
     it("only reports option names that firmware can emit", () => {
         VirtualFC.setVirtualConfig();
 
-        const unreportable = FC.CONFIG.buildOptions.filter((option) => !Object.hasOwn(FIRMWARE_BUILD_OPTIONS, option));
+        const unreportable = useFlightControllerStore().config.buildOptions.filter(
+            (option) => !Object.hasOwn(FIRMWARE_BUILD_OPTIONS, option),
+        );
 
         expect(unreportable).toEqual([]);
     });
@@ -27,9 +34,7 @@ describe("Virtual FC build options", () => {
         const optionNames = Object.keys(FIRMWARE_BUILD_OPTIONS);
         const unmatched = definitions
             .filter(
-                (feature) =>
-                    feature.dependsOn !== undefined &&
-                    !optionNames.some((option) => option.includes(feature.dependsOn)),
+                ({ dependsOn }) => dependsOn !== undefined && !optionNames.some((option) => option.includes(dependsOn)),
             )
             .map((feature) => ({ name: feature.name, dependsOn: feature.dependsOn }));
 
@@ -48,8 +53,9 @@ describe("Virtual FC build options", () => {
                 TELEMETRY: true,
                 TRANSPONDER: true,
             };
+            const { features } = useFlightControllerStore().features;
             const actualStates = Object.fromEntries(
-                Object.keys(expectedStates).map((name) => [name, FC.FEATURE_CONFIG.features.isEnabled(name)]),
+                Object.keys(expectedStates).map((name) => [name, features?.isEnabled(name)]),
             );
 
             expect(actualStates).toEqual(expectedStates);
