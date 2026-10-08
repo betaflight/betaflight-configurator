@@ -140,6 +140,104 @@ describe("devices", () => {
             expect(devices.usbDevices.filters).toEqual([{ vendorId: 1, productId: 2 }]);
         });
 
+        it("drops Bluetooth profiles without a name or both characteristics, or with a non-boolean CRC flag", async () => {
+            const devices = await freshDevices();
+            const { writeCharacteristic: _write, ...noWrite } = BLE;
+            const flagged = { ...BLE, serviceUuid: "flagged", susceptibleToCrcCorruption: true };
+
+            await devices.loadDeviceFilters(
+                buildApiReturning({
+                    bluetoothDevices: [
+                        BLE,
+                        noWrite,
+                        { ...BLE, name: 3 },
+                        { ...BLE, readCharacteristic: null },
+                        { ...BLE, susceptibleToCrcCorruption: "false" },
+                        flagged,
+                    ],
+                }),
+            );
+
+            expect(devices.bluetoothDevices).toEqual([BLE, flagged]);
+        });
+
+        it("ignores a non-empty list with nothing valid in it, keeping the current list out of the cache", async () => {
+            const devices = await freshDevices();
+            const defaults = {
+                bluetoothDevices: [...devices.bluetoothDevices],
+                usbFilters: [...devices.usbDevices.filters],
+                vendorIdNames: { ...devices.vendorIdNames },
+            };
+
+            await devices.loadDeviceFilters(
+                buildApiReturning({
+                    serialDevices: [SERIAL],
+                    bluetoothDevices: [{ uuid: "renamed field" }],
+                    usbDevices: { filters: [{ vid: 1, pid: 2 }] },
+                    vendorIdNames: { 1155: { name: "STM" } },
+                }),
+            );
+
+            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.bluetoothDevices).toEqual(defaults.bluetoothDevices);
+            expect(devices.usbDevices.filters).toEqual(defaults.usbFilters);
+            expect(devices.vendorIdNames).toEqual(defaults.vendorIdNames);
+            expect(cached()).toEqual({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
+        });
+
+        it("falls back to the cache when the payload's only list is unusable", async () => {
+            cache({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
+            const devices = await freshDevices();
+
+            await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [{ vendorId: "1234" }] }));
+
+            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(cached()).toEqual({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
+        });
+
+        it("clears a list the server sends empty, and caches the empty list", async () => {
+            const devices = await freshDevices();
+
+            await devices.loadDeviceFilters(buildApiReturning({ usbDevices: { filters: [] }, vendorIdNames: {} }));
+
+            expect(devices.usbDevices.filters).toEqual([]);
+            expect(devices.vendorIdNames).toEqual({});
+            expect(cached()).toEqual({ [STORAGE_KEY]: { usbDevices: { filters: [] }, vendorIdNames: {} } });
+        });
+
+        it("keeps lists loaded earlier when the server sends only some, and caches the merge", async () => {
+            const OLD_SERIAL = { vendorId: 1, productId: 1 };
+            cache({ [STORAGE_KEY]: { bluetoothDevices: [BLE], serialDevices: [OLD_SERIAL] } });
+            const devices = await freshDevices();
+
+            await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL] }));
+
+            expect(devices.bluetoothDevices).toEqual([BLE]);
+            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(cached()).toEqual({ [STORAGE_KEY]: { bluetoothDevices: [BLE], serialDevices: [SERIAL] } });
+        });
+
+        it("does not cache the built-in defaults of lists the server never sent", async () => {
+            const devices = await freshDevices();
+
+            await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL] }));
+
+            expect(cached()).toEqual({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
+        });
+
+        it("validates a cached copy written by an older version", async () => {
+            cache({
+                [STORAGE_KEY]: { serialDevices: [SERIAL, { vendorId: 1 }], bluetoothDevices: [{ serviceUuid: "x" }] },
+            });
+            const devices = await freshDevices();
+            const defaultBle = [...devices.bluetoothDevices];
+
+            await devices.loadDeviceFilters(buildApiReturning(null));
+
+            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.bluetoothDevices).toEqual(defaultBle);
+        });
+
         it("keeps prototype keys and non-string names out of the vendor names", async () => {
             const devices = await freshDevices();
             // JSON.parse makes "__proto__" an own key, as it would arrive from the server.

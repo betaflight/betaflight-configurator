@@ -149,75 +149,104 @@ function isUsbDeviceId(entry: unknown): entry is UsbDeviceId {
     return isPlainObject(entry) && typeof entry.vendorId === "number" && typeof entry.productId === "number";
 }
 
-// Only the service UUID is checked: it is what the transports match a device on. The other
-// fields are taken as the build server sent them.
 function isBluetoothProfile(entry: unknown): entry is BluetoothDeviceProfile {
-    return isPlainObject(entry) && typeof entry.serviceUuid === "string";
-}
-
-function usbFiltersOf(data: Record<string, unknown>): unknown {
-    return isPlainObject(data.usbDevices) ? data.usbDevices.filters : undefined;
-}
-
-/** Replace each list the payload carries, dropping malformed entries; lists it omits keep their contents. */
-function applyFilters(data: unknown) {
-    if (!isPlainObject(data)) {
-        return;
-    }
-    if (Array.isArray(data.bluetoothDevices)) {
-        const sanitized = data.bluetoothDevices.filter(isBluetoothProfile);
-        bluetoothDevices.splice(0, bluetoothDevices.length, ...sanitized);
-    }
-    if (Array.isArray(data.serialDevices)) {
-        const sanitized = data.serialDevices.filter(isUsbDeviceId);
-        serialDevices.splice(0, serialDevices.length, ...sanitized);
-        webSerialDevices.splice(0, webSerialDevices.length, ...sanitized.map(toWebSerialFilter));
-    }
-    const usbFilters = usbFiltersOf(data);
-    if (Array.isArray(usbFilters)) {
-        const sanitized = usbFilters.filter(isUsbDeviceId);
-        usbDevices.filters.splice(0, usbDevices.filters.length, ...sanitized);
-    }
-    if (isPlainObject(data.vendorIdNames)) {
-        for (const key of Object.keys(vendorIdNames)) {
-            delete vendorIdNames[key];
-        }
-        for (const [key, value] of Object.entries(data.vendorIdNames)) {
-            if (UNSAFE_KEYS.has(key) || typeof value !== "string") {
-                continue;
-            }
-            vendorIdNames[key] = value;
-        }
-    }
-}
-
-/** True when the payload carries at least one list applyFilters would use. */
-function isValidPayload(data: unknown): boolean {
-    if (!isPlainObject(data)) {
-        return false;
-    }
     return (
-        Array.isArray(data.bluetoothDevices) ||
-        Array.isArray(data.serialDevices) ||
-        Array.isArray(usbFiltersOf(data)) ||
-        isPlainObject(data.vendorIdNames)
+        isPlainObject(entry) &&
+        typeof entry.name === "string" &&
+        typeof entry.serviceUuid === "string" &&
+        typeof entry.writeCharacteristic === "string" &&
+        typeof entry.readCharacteristic === "string" &&
+        (entry.susceptibleToCrcCorruption === undefined || typeof entry.susceptibleToCrcCorruption === "boolean")
     );
 }
 
+/** The lists a payload carries, each validated; a list it omits, or one it garbled, is absent. */
+interface DeviceFilters {
+    bluetoothDevices?: BluetoothDeviceProfile[];
+    serialDevices?: UsbDeviceId[];
+    usbDevices?: { filters: UsbDeviceId[] };
+    vendorIdNames?: Record<string, string>;
+}
+
+// An empty list is an instruction to clear it. A non-empty one with nothing valid in it is a
+// format this version does not understand, so it is ignored rather than allowed to wipe the list.
+function validList<T>(value: unknown, isValid: (entry: unknown) => entry is T): T[] | undefined {
+    if (!Array.isArray(value)) {
+        return undefined;
+    }
+    const valid = value.filter(isValid);
+    return value.length > 0 && valid.length === 0 ? undefined : valid;
+}
+
+function validVendorNames(value: unknown): Record<string, string> | undefined {
+    if (!isPlainObject(value)) {
+        return undefined;
+    }
+    const names: Record<string, string> = {};
+    for (const [key, name] of Object.entries(value)) {
+        if (!UNSAFE_KEYS.has(key) && typeof name === "string") {
+            names[key] = name;
+        }
+    }
+    return Object.keys(value).length > 0 && Object.keys(names).length === 0 ? undefined : names;
+}
+
+function parseDeviceFilters(data: unknown): DeviceFilters {
+    if (!isPlainObject(data)) {
+        return {};
+    }
+    const filters: DeviceFilters = {};
+    const bluetooth = validList(data.bluetoothDevices, isBluetoothProfile);
+    if (bluetooth) {
+        filters.bluetoothDevices = bluetooth;
+    }
+    const serial = validList(data.serialDevices, isUsbDeviceId);
+    if (serial) {
+        filters.serialDevices = serial;
+    }
+    const usb = validList(isPlainObject(data.usbDevices) ? data.usbDevices.filters : undefined, isUsbDeviceId);
+    if (usb) {
+        filters.usbDevices = { filters: usb };
+    }
+    const names = validVendorNames(data.vendorIdNames);
+    if (names) {
+        filters.vendorIdNames = names;
+    }
+    return filters;
+}
+
+/** Replace each list the filters carry; the others keep their contents. */
+function applyFilters(filters: DeviceFilters) {
+    if (filters.bluetoothDevices) {
+        bluetoothDevices.splice(0, bluetoothDevices.length, ...filters.bluetoothDevices);
+    }
+    if (filters.serialDevices) {
+        serialDevices.splice(0, serialDevices.length, ...filters.serialDevices);
+        webSerialDevices.splice(0, webSerialDevices.length, ...filters.serialDevices.map(toWebSerialFilter));
+    }
+    if (filters.usbDevices) {
+        usbDevices.filters.splice(0, usbDevices.filters.length, ...filters.usbDevices.filters);
+    }
+    if (filters.vendorIdNames) {
+        for (const key of Object.keys(vendorIdNames)) {
+            delete vendorIdNames[key];
+        }
+        Object.assign(vendorIdNames, filters.vendorIdNames);
+    }
+}
+
 /**
- * Take the device lists from the build server and cache them; offline, fall back to the last
- * cached copy, and failing that keep the built-in defaults.
+ * Take the device lists from the build server, on top of those cached from earlier loads, and
+ * cache the result. A list neither has sent keeps the built-in default, which is not cached, so
+ * a newer app version's defaults still apply to it.
  */
 export async function loadDeviceFilters(buildApi: Pick<BuildApi, "loadDeviceFilters"> = new BuildApi()): Promise<void> {
-    const remote: unknown = await buildApi.loadDeviceFilters();
-    if (isValidPayload(remote)) {
-        applyFilters(remote);
-        setConfig({ [STORAGE_KEY]: remote });
-        return;
-    }
+    const cached = parseDeviceFilters(getConfig(STORAGE_KEY)?.[STORAGE_KEY]);
+    const remote = parseDeviceFilters(await buildApi.loadDeviceFilters());
+    const merged: DeviceFilters = { ...cached, ...remote };
 
-    const cached = getConfig(STORAGE_KEY)?.[STORAGE_KEY];
-    if (cached) {
-        applyFilters(cached);
+    applyFilters(merged);
+    if (Object.keys(remote).length > 0) {
+        setConfig({ [STORAGE_KEY]: merged });
     }
 }
