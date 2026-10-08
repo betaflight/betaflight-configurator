@@ -185,9 +185,16 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         const socket = new Websocket();
         await socket.connect("ws://localhost:5761");
 
-        await socket.send(new Uint8Array([1, 2, 3, 4]));
+        const result = await socket.send(new Uint8Array([1, 2, 3, 4]));
 
+        expect(result).toEqual({ bytesSent: 0 });
         expect(socket.bytesSent).toBe(0);
         expect(errSpy).toHaveBeenCalled();
+    });
+
+    it("a send with no socket reports no bytes", async () => {
+        const socket = new Websocket();
+
+        expect(await socket.send(new Uint8Array([1, 2, 3, 4]))).toEqual({ bytesSent: 0 });
     });
 });

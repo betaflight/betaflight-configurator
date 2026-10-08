@@ -200,10 +200,14 @@ class Websocket extends EventTarget {
         data: WebsocketPayload,
         cb?: (result: { error: unknown; bytesSent: number }) => void,
     ): Promise<WebsocketSendResult> {
+        // Report only what was written: MSP fires its sent-callback when bytesSent
+        // equals the frame length, so a failed or socketless send must report 0.
+        let bytesSent = 0;
         if (this.ws) {
             try {
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
+                bytesSent = data.byteLength;
 
                 if (cb) {
                     cb({
@@ -223,9 +227,7 @@ class Websocket extends EventTarget {
             }
         }
 
-        return {
-            bytesSent: data.byteLength,
-        };
+        return { bytesSent };
     }
 }
 
