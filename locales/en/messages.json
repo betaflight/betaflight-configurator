@@ -3324,6 +3324,10 @@
         "message": "Battery Profile Selection",
         "description": "Allows switching battery profiles via RC channel"
     },
+    "adjustmentsFunction34": {
+        "message": "PSAS trimming assistant",
+        "description": "The managment of PSAS trimming assistant"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
