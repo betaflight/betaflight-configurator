@@ -1,4 +1,55 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/** The device record this transport reports; a SITL endpoint has no USB identity. */
+export interface WebsocketDevice {
+    path: string;
+    displayName: string;
+    vendorId: number;
+    productId: number;
+    port: number;
+}
+
+/** `connect` carries `false` for a failed open, so serial_backend can tell it from success. */
+export type WebsocketConnectDetail = false | { socketId: string };
+
+export interface WebsocketSendResult {
+    bytesSent: number;
+}
+
+/** Same payloads `WebSocket.send` accepts, minus the string and Blob forms, which carry no `byteLength`. */
+export type WebsocketPayload = ArrayBuffer | ArrayBufferView<ArrayBuffer>;
+
 class Websocket extends EventTarget {
+    connected: boolean;
+    // Never written by this transport; kept for parity with the other protocols.
+    connectionInfo: null;
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+    logHead: string;
+    address: string;
+    ws: WebSocket | null;
+
     constructor() {
         super();
 
@@ -19,15 +70,15 @@ class Websocket extends EventTarget {
         this.connect = this.connect.bind(this);
     }
 
-    handleReceiveBytes(info) {
+    handleReceiveBytes(info: { detail: { byteLength: number } }): void {
         this.bytesReceived += info.detail.byteLength;
     }
 
-    handleDisconnect() {
+    handleDisconnect(): void {
         this.disconnect();
     }
 
-    createPort(url) {
+    createPort(url: string): WebsocketDevice {
         this.address = url;
         return {
             path: url,
@@ -38,7 +89,7 @@ class Websocket extends EventTarget {
         };
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): WebsocketDevice {
         return {
             path: this.address,
             displayName: `Betaflight SITL`,
@@ -48,16 +99,16 @@ class Websocket extends EventTarget {
         };
     }
 
-    async getDevices() {
+    async getDevices(): Promise<WebsocketDevice[]> {
         return [];
     }
 
-    async blob2uint(blob) {
+    async blob2uint(blob: Blob): Promise<Uint8Array> {
         const buffer = await new Response(blob).arrayBuffer();
         return new Uint8Array(buffer);
     }
 
-    async connect(path) {
+    async connect(path: string): Promise<void> {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
@@ -77,63 +128,61 @@ class Websocket extends EventTarget {
         // Capture this attempt's socket: every handler below must no-op once this.ws
         // has been replaced by a newer attempt, otherwise a stale onclose would run
         // disconnect() against — and close — the newer socket.
-        let ws;
+        let ws: WebSocket;
         try {
             ws = new WebSocket(this.address, ["binary"]);
         } catch (e) {
             // Invalid URL/scheme, e.g. a raw tcp:// manual override, which a browser
             // cannot open (raw TCP needs the desktop app's native transport).
             console.error(`${this.logHead} Failed to open ${this.address}:`, e);
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            this.dispatchEvent(new CustomEvent<WebsocketConnectDetail>("connect", { detail: false }));
             return;
         }
         this.ws = ws;
-        let socket = this;
-
-        this.ws.onopen = function (e) {
-            if (socket.ws !== ws) {
+        this.ws.onopen = (e: Event) => {
+            if (this.ws !== ws) {
                 return;
             }
-            console.log(`${socket.logHead} Connected: `, e);
-            socket.connected = true;
-            socket.dispatchEvent(
-                new CustomEvent("connect", {
+            console.log(`${this.logHead} Connected: `, e);
+            this.connected = true;
+            this.dispatchEvent(
+                new CustomEvent<WebsocketConnectDetail>("connect", {
                     detail: {
-                        socketId: socket.address,
+                        socketId: this.address,
                     },
                 }),
             );
         };
 
-        this.ws.onclose = async function (e) {
-            if (socket.ws !== ws) {
+        this.ws.onclose = async (e: CloseEvent) => {
+            if (this.ws !== ws) {
                 return;
             }
-            console.log(`${socket.logHead} Connection closed: `, e);
+            console.log(`${this.logHead} Connection closed: `, e);
 
-            await socket.disconnect();
-            socket.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: socket.address } }));
+            await this.disconnect();
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: this.address } }));
         };
 
-        this.ws.onerror = function (e) {
-            console.error(`${socket.logHead} Connection error: `, e);
+        this.ws.onerror = (e: Event) => {
+            console.error(`${this.logHead} Connection error: `, e);
         };
 
-        this.ws.onmessage = async function (msg) {
-            if (socket.ws !== ws) {
+        this.ws.onmessage = async (msg: MessageEvent<Blob>) => {
+            if (this.ws !== ws) {
                 return;
             }
-            let uint8Chunk = await socket.blob2uint(msg.data);
+            const uint8Chunk = await this.blob2uint(msg.data);
             // Re-check after the await: the socket may have been superseded while the
             // blob decoded, and stale bytes must not leak into the new session's stream.
-            if (socket.ws !== ws) {
+            if (this.ws !== ws) {
                 return;
             }
-            socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
+            this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: uint8Chunk }));
         };
     }
 
-    async disconnect() {
+    async disconnect(): Promise<void> {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
@@ -147,7 +196,10 @@ class Websocket extends EventTarget {
         }
     }
 
-    async send(data, cb) {
+    async send(
+        data: WebsocketPayload,
+        cb?: (result: { error: unknown; bytesSent: number }) => void,
+    ): Promise<WebsocketSendResult> {
         if (this.ws) {
             try {
                 this.ws.send(data);
