@@ -23,12 +23,23 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Websocket, { type WebsocketConnectDetail } from "../../src/js/protocols/WebSocket";
 
 // Minimal stand-in for the browser WebSocket: the protocol assigns the on* handlers
-// directly, so tests can capture and invoke them like the platform would.
+// directly, so tests can capture and invoke them like the platform would. Like the real
+// one, it starts CONNECTING and refuses to send until it is open.
 class FakeWebSocket {
+    // Own constants: once stubbed, the global WebSocket IS this class, so
+    // WebSocket.OPEN would read these too.
+    static readonly CONNECTING = 0;
+    static readonly OPEN = 1;
+
     url: string;
     protocols: string[];
+    readyState: number = FakeWebSocket.CONNECTING;
     close = vi.fn();
-    send = vi.fn();
+    send = vi.fn(() => {
+        if (this.readyState !== FakeWebSocket.OPEN) {
+            throw new DOMException("Still in CONNECTING state.", "InvalidStateError");
+        }
+    });
 
     constructor(url: string, protocols: string[]) {
         this.url = url;
@@ -40,6 +51,12 @@ class FakeWebSocket {
 function currentSocket(socket: Websocket): WebSocket {
     expect(socket.ws).not.toBeNull();
     return socket.ws as WebSocket;
+}
+
+/** Opens the socket as the platform would: the state changes before onopen fires. */
+function open(ws: WebSocket): void {
+    (ws as unknown as FakeWebSocket).readyState = FakeWebSocket.OPEN;
+    ws.onopen?.call(ws, new Event("open"));
 }
 
 function closeEvent(): CloseEvent {
@@ -113,8 +130,7 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         socket.addEventListener("connect", (e) => connected((e as CustomEvent<WebsocketConnectDetail>).detail));
 
         await socket.connect("ws://sitl.local:5761");
-        const ws = currentSocket(socket);
-        ws.onopen?.call(ws, new Event("open"));
+        open(currentSocket(socket));
 
         expect(socket.connected).toBe(true);
         expect(connected).toHaveBeenCalledWith({ socketId: "ws://sitl.local:5761" });
@@ -151,14 +167,27 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
     });
 
     it("send counts the bytes it wrote and reports them", async () => {
+        vi.spyOn(console, "log").mockImplementation(() => {});
         const socket = new Websocket();
         await socket.connect("ws://localhost:5761");
         const ws = currentSocket(socket);
+        open(ws);
 
         const result = await socket.send(new Uint8Array([1, 2, 3, 4]));
 
         expect(ws.send).toHaveBeenCalledTimes(1);
         expect(result).toEqual({ bytesSent: 4 });
         expect(socket.bytesSent).toBe(4);
+    });
+
+    it("a send before the socket opens counts no bytes", async () => {
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+        const socket = new Websocket();
+        await socket.connect("ws://localhost:5761");
+
+        await socket.send(new Uint8Array([1, 2, 3, 4]));
+
+        expect(socket.bytesSent).toBe(0);
+        expect(errSpy).toHaveBeenCalled();
     });
 });
