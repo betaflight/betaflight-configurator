@@ -1,4 +1,25 @@
 /*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
     USB DFU protocol implementation.
 
     Some references:
@@ -24,76 +45,204 @@ import { get as getConfig } from "../ConfigStorage";
 import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
 import { useConnectionStore } from "../../stores/connection";
+import type { ParsedHex } from "../workers/hex_parser";
 
 // Error constant used when an already-authorized DFU device isn't found
 export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
 
 export class DFUAuthRequiredError extends Error {
+    readonly code = DFU_AUTH_REQUIRED;
+
     constructor() {
         super(DFU_AUTH_REQUIRED);
         this.name = "DFUAuthRequiredError";
-        this.code = DFU_AUTH_REQUIRED;
     }
 }
 
+/** A DFU-capable USB device as the transports list it (`createPort()`). */
+export interface DfuPort {
+    path: string;
+    displayName: string;
+    vendorId?: number;
+    productId?: number;
+    manufacturerName?: string;
+    productName?: string;
+    /** The transport's own device handle (a WebUSB `USBDevice`, or the native Android device info). */
+    port?: unknown;
+}
+
+/** Setup packet of a DFU class control transfer. */
+export interface DfuControlSetup {
+    requestType: string;
+    recipient: string;
+    request: number;
+    value: number;
+    index: number;
+}
+
+/** Bytes as they come back from a control transfer IN or a failed one (`[]`). */
+type DfuBytes = Uint8Array | number[];
+
+/** Payload of a control transfer OUT: a byte list, or `0` for a zero-length transfer. */
+type DfuOutData = number[] | Uint8Array | 0;
+
+interface DfuFunctionalDescriptor {
+    bLength: number;
+    bDescriptorType: number;
+    bmAttributes: number;
+    wDetachTimeOut: number;
+    wTransferSize: number;
+    bcdDFUVersion: number;
+}
+
+/**
+ * The transport contract shared by WebUsbDfuTransport (WebUSB) and CapacitorDfuTransport
+ * (Android). It forwards "addedDevice" / "removedDevice" CustomEvents carrying a DfuPort.
+ */
+export interface DfuTransport extends EventTarget {
+    /** True when requestPermission() already dispatches "addedDevice" itself (Android). */
+    readonly emitsAddedDeviceOnPermissionGrant?: boolean;
+    getDevices(): Promise<DfuPort[]>;
+    requestPermission(): Promise<DfuPort | null>;
+    waitForDfuDevice(timeout: number, interval: number): Promise<DfuPort | null>;
+    /** Path of the open device, or null when none is open. */
+    getConnectedDevice(): string | null;
+    open(devicePort: DfuPort): Promise<void>;
+    close(): Promise<void>;
+    claimInterface(interfaceNumber: number): Promise<void>;
+    releaseInterface(interfaceNumber: number): Promise<void>;
+    reset(): Promise<void>;
+    getString(index: number): Promise<string>;
+    getInterfaceDescriptors(interfaceNum: number): Promise<string[]>;
+    getInterfaceDescriptor(interfaceIndex: number): Promise<Record<string, number> | null>;
+    getFunctionalDescriptor(interfaceIndex?: number): Promise<DfuFunctionalDescriptor>;
+    controlTransferIn(
+        setup: DfuControlSetup,
+        length: number,
+    ): Promise<{ status: string; data: Uint8Array | ArrayBufferView | ArrayBuffer }>;
+    controlTransferOut(setup: DfuControlSetup, data?: DfuOutData): Promise<{ status: string }>;
+}
+
+/** One run of equally sized pages in a memory region. */
+interface DfuSector {
+    num_pages: number;
+    start_address: number;
+    page_size: number;
+    total_size: number;
+}
+
+/** The layout being flashed; `type` is absent only on the placeholder before chip detection. */
+interface FlashLayout {
+    type?: string;
+    start_address: number;
+    total_size: number;
+    sectors: DfuSector[];
+}
+
+/** One memory region parsed from a DFU interface string such as "@Internal Flash  /0x08000000/04*016Kg". */
+interface DfuMemory extends FlashLayout {
+    type: string;
+}
+
+/** Memory regions keyed by their lower-cased type ("internal_flash", "option_bytes", ...). */
+type ChipInfo = Partial<Record<string, DfuMemory>>;
+
+type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
+
+/** What the firmware flasher passes to connect(). */
+export interface DfuConnectOptions {
+    exitDfu?: boolean;
+    erase_chip?: boolean;
+    bareBoard?: string;
+    // Method syntax: the type is undefined whenever flashMessageTypes was not supplied.
+    flashingMessage?(message: string | null, type?: string): unknown;
+    flashProgress?(progress: number): unknown;
+    flashMessageTypes?: Partial<Record<FlashMessageType, string>>;
+}
+
+/** connect()'s options, normalised. */
+interface DfuFlashOptions {
+    erase_chip: boolean;
+    exitDfu: boolean;
+    flashingMessage?: DfuConnectOptions["flashingMessage"];
+    flashProgress?: DfuConnectOptions["flashProgress"];
+    flashMessageTypes?: DfuConnectOptions["flashMessageTypes"];
+}
+
+/** [start, end] percentages of the progress bar given to each phase. */
+interface ProgressWeights {
+    erase: [number, number];
+    flash: [number, number];
+    verify: [number, number];
+}
+
 export class UsbDfuProtocol extends EventTarget {
-    constructor(transport) {
+    readonly logHead = "[USB DFU]";
+    transport: DfuTransport;
+
+    callback: (() => void) | null | undefined = null;
+    hex: ParsedHex | null = null;
+    verify_hex: number[][] = [];
+    _connecting = false;
+
+    bareBoard?: string;
+    // Set by connect() before any flashing step reads them.
+    options?: DfuFlashOptions;
+    progressWeights?: ProgressWeights;
+    upload_time_start?: number;
+    connectedDevice?: DfuPort;
+
+    readonly request = {
+        DETACH: 0x00, // OUT, Requests the device to leave DFU mode and enter the application.
+        DNLOAD: 0x01, // OUT, Requests data transfer from Host to the device in order to load them into device internal Flash. Includes also erase commands
+        UPLOAD: 0x02, // IN,  Requests data transfer from device to Host in order to load content of device internal Flash into a Host file.
+        GETSTATUS: 0x03, // IN,  Requests device to send status report to the Host (including status resulting from the last request execution and the state the device will enter immediately after this request).
+        CLRSTATUS: 0x04, // OUT, Requests device to clear error status and move to next step
+        GETSTATE: 0x05, // IN,  Requests the device to send only the state it will enter immediately after this request.
+        ABORT: 0x06, // OUT, Requests device to exit the current state/operation and enter idle state immediately.
+    };
+
+    readonly status = {
+        OK: 0x00, // No error condition is present.
+        errTARGET: 0x01, // File is not targeted for use by this device.
+        errFILE: 0x02, // File is for this device but fails some vendor-specific verification test
+        errWRITE: 0x03, // Device is unable to write memory.
+        errERASE: 0x04, // Memory erase function failed.
+        errCHECK_ERASED: 0x05, // Memory erase check failed.
+        errPROG: 0x06, // Program memory function failed.
+        errVERIFY: 0x07, // Programmed memory failed verification.
+        errADDRESS: 0x08, // Cannot program memory due to received address that is out of range.
+        errNOTDONE: 0x09, // Received DFU_DNLOAD with wLength = 0, but device does not think it has all of the data yet.
+        errFIRMWARE: 0x0a, // Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations.
+        errVENDOR: 0x0b, // iString indicates a vendor-specific error.
+        errUSBR: 0x0c, // Device detected unexpected USB reset signaling.
+        errPOR: 0x0d, // Device detected unexpected power on reset.
+        errUNKNOWN: 0x0e, // Something went wrong, but the device does not know what it was.
+        errSTALLEDPKT: 0x0f, // Device stalled an unexpected request.
+    };
+
+    readonly state = {
+        appIDLE: 0, // Device is running its normal application.
+        appDETACH: 1, // Device is running its normal application, has received the DFU_DETACH request, and is waiting for a USB reset.
+        dfuIDLE: 2, // Device is operating in the DFU mode and is waiting for requests.
+        dfuDNLOAD_SYNC: 3, // Device has received a block and is waiting for the host to solicit the status via DFU_GETSTATUS.
+        dfuDNBUSY: 4, // Device is programming a control-write block into its nonvolatile memories.
+        dfuDNLOAD_IDLE: 5, // Device is processing a download operation. Expecting DFU_DNLOAD requests.
+        dfuMANIFEST_SYNC: 6, // Device has received the final block of firmware from the host and is waiting for receipt of DFU_GETSTATUS to begin the Manifestation phase; or device has completed the Manifestation phase and is waiting for receipt of DFU_GETSTATUS.
+        dfuMANIFEST: 7, // Device is in the Manifestation phase. (Not all devices will be able to respond to DFU_GETSTATUS when in this state.)
+        dfuMANIFEST_WAIT_RESET: 8, // Device has programmed its memories and is waiting for a USB reset or a power on reset. (Devices that must enter this state clear bitManifestationTolerant to 0.)
+        dfuUPLOAD_IDLE: 9, // The device is processing an upload operation. Expecting DFU_UPLOAD requests.
+        dfuERROR: 10, // An error has occurred. Awaiting the DFU_CLRSTATUS request.
+    };
+
+    chipInfo: ChipInfo | null = null; // information about chip's memory
+    flash_layout: FlashLayout = { start_address: 0, total_size: 0, sectors: [] };
+    transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
+
+    constructor(transport: DfuTransport) {
         super();
 
-        this.logHead = "[USB DFU]";
         this.transport = transport;
-
-        this.callback = null;
-        this.hex = null;
-        this.verify_hex = [];
-        this._connecting = false;
-
-        this.request = {
-            DETACH: 0x00, // OUT, Requests the device to leave DFU mode and enter the application.
-            DNLOAD: 0x01, // OUT, Requests data transfer from Host to the device in order to load them into device internal Flash. Includes also erase commands
-            UPLOAD: 0x02, // IN,  Requests data transfer from device to Host in order to load content of device internal Flash into a Host file.
-            GETSTATUS: 0x03, // IN,  Requests device to send status report to the Host (including status resulting from the last request execution and the state the device will enter immediately after this request).
-            CLRSTATUS: 0x04, // OUT, Requests device to clear error status and move to next step
-            GETSTATE: 0x05, // IN,  Requests the device to send only the state it will enter immediately after this request.
-            ABORT: 0x06, // OUT, Requests device to exit the current state/operation and enter idle state immediately.
-        };
-
-        this.status = {
-            OK: 0x00, // No error condition is present.
-            errTARGET: 0x01, // File is not targeted for use by this device.
-            errFILE: 0x02, // File is for this device but fails some vendor-specific verification test
-            errWRITE: 0x03, // Device is unable to write memory.
-            errERASE: 0x04, // Memory erase function failed.
-            errCHECK_ERASED: 0x05, // Memory erase check failed.
-            errPROG: 0x06, // Program memory function failed.
-            errVERIFY: 0x07, // Programmed memory failed verification.
-            errADDRESS: 0x08, // Cannot program memory due to received address that is out of range.
-            errNOTDONE: 0x09, // Received DFU_DNLOAD with wLength = 0, but device does not think it has all of the data yet.
-            errFIRMWARE: 0x0a, // Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations.
-            errVENDOR: 0x0b, // iString indicates a vendor-specific error.
-            errUSBR: 0x0c, // Device detected unexpected USB reset signaling.
-            errPOR: 0x0d, // Device detected unexpected power on reset.
-            errUNKNOWN: 0x0e, // Something went wrong, but the device does not know what it was.
-            errSTALLEDPKT: 0x0f, // Device stalled an unexpected request.
-        };
-
-        this.state = {
-            appIDLE: 0, // Device is running its normal application.
-            appDETACH: 1, // Device is running its normal application, has received the DFU_DETACH request, and is waiting for a USB reset.
-            dfuIDLE: 2, // Device is operating in the DFU mode and is waiting for requests.
-            dfuDNLOAD_SYNC: 3, // Device has received a block and is waiting for the host to solicit the status via DFU_GETSTATUS.
-            dfuDNBUSY: 4, // Device is programming a control-write block into its nonvolatile memories.
-            dfuDNLOAD_IDLE: 5, // Device is processing a download operation. Expecting DFU_DNLOAD requests.
-            dfuMANIFEST_SYNC: 6, // Device has received the final block of firmware from the host and is waiting for receipt of DFU_GETSTATUS to begin the Manifestation phase; or device has completed the Manifestation phase and is waiting for receipt of DFU_GETSTATUS.
-            dfuMANIFEST: 7, // Device is in the Manifestation phase. (Not all devices will be able to respond to DFU_GETSTATUS when in this state.)
-            dfuMANIFEST_WAIT_RESET: 8, // Device has programmed its memories and is waiting for a USB reset or a power on reset. (Devices that must enter this state clear bitManifestationTolerant to 0.)
-            dfuUPLOAD_IDLE: 9, // The device is processing an upload operation. Expecting DFU_UPLOAD requests.
-            dfuERROR: 10, // An error has occurred. Awaiting the DFU_CLRSTATUS request.
-        };
-
-        this.chipInfo = null; // information about chip's memory
-        this.flash_layout = { start_address: 0, total_size: 0, sectors: [] };
-        this.transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
 
         if (!this.transport) {
             console.error(`${this.logHead} No transport provided`);
@@ -102,26 +251,26 @@ export class UsbDfuProtocol extends EventTarget {
 
         // Forward device events from transport
         this.transport.addEventListener("addedDevice", (e) => {
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: e.detail }));
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: (e as CustomEvent<DfuPort>).detail }));
         });
 
         this.transport.addEventListener("removedDevice", (e) => {
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: e.detail }));
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: (e as CustomEvent<DfuPort>).detail }));
         });
     }
 
-    // Backward-compatible getter: device_handler.js checks WEBUSBDFU.usbDevice
+    // Backward-compatible getter: device_handler.ts checks dfuProtocol.usbDevice
     // to determine if a DFU device is currently connected.
-    get usbDevice() {
+    get usbDevice(): true | null {
         return this.transport.getConnectedDevice() ? true : null;
     }
 
-    getDevices() {
+    getDevices(): Promise<DfuPort[]> {
         return this.transport.getDevices();
     }
 
-    async requestPermission() {
-        let newPermissionPort = null;
+    async requestPermission(): Promise<DfuPort | null> {
+        let newPermissionPort: DfuPort | null = null;
         try {
             newPermissionPort = await this.transport.requestPermission();
             console.info("User selected USB device from permissions:", newPermissionPort);
@@ -136,7 +285,7 @@ export class UsbDfuProtocol extends EventTarget {
      * If none appear within `timeout`, rejects with an Error(DFU_AUTH_REQUIRED).
      * This allows the caller to present a user gesture to call `requestDevice`.
      */
-    async waitForDfu(timeout = 10000, interval = 500) {
+    async waitForDfu(timeout = 10000, interval = 500): Promise<DfuPort> {
         const result = await this.transport.waitForDfuDevice(timeout, interval);
         if (result) {
             return result;
@@ -145,11 +294,16 @@ export class UsbDfuProtocol extends EventTarget {
         throw new DFUAuthRequiredError();
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): string | null {
         return this.transport.getConnectedDevice();
     }
 
-    async connect(devicePath, hex, options, callback) {
+    async connect(
+        devicePath: string,
+        hex: ParsedHex | null,
+        options?: DfuConnectOptions,
+        callback?: () => void,
+    ): Promise<void> {
         if (this._connecting) {
             console.warn(`${this.logHead} Connect already in progress, ignoring duplicate call`);
             return;
@@ -182,14 +336,14 @@ export class UsbDfuProtocol extends EventTarget {
             : { erase: [0, 10], flash: [10, 50], verify: [50, 100] };
 
         // reset and set some variables before we start
-        this.upload_time_start = new Date().getTime();
+        this.upload_time_start = Date.now();
         this.verify_hex = [];
 
         // reset progress bar to initial state
         this.options?.flashingMessage?.(null, this.options?.flashMessageTypes?.NEUTRAL);
         this.options?.flashProgress?.(0);
 
-        let deviceFound;
+        let deviceFound: DfuPort | undefined;
         try {
             const devices = await this.getDevices();
             deviceFound = devices.find((device) => device.path === devicePath);
@@ -215,59 +369,60 @@ export class UsbDfuProtocol extends EventTarget {
         return this.openDevice();
     }
 
-    flashingMessage(message, type) {
+    flashingMessage(message: string | null, type?: string): void {
         this.options?.flashingMessage?.(message, type);
     }
 
-    flashProgress(progress) {
+    flashProgress(progress: number): void {
         this.options?.flashProgress?.(progress);
     }
 
-    openDevice() {
+    openDevice(): void {
         this.transport
-            .open(this.connectedDevice)
+            .open(this.connectedDevice!)
             .then(() => {
-                this.claimInterface(0);
+                void this.claimInterface(0);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
                 // A SecurityError from open() means the OS refused access to the device node.
                 // On Linux that is a missing udev rule for the bootloader's vendor ID, which the
                 // bare "failed to open" message gives no clue about.
-                if (error?.name === "SecurityError" && getOS() === "Linux") {
+                if ((error as Error | undefined)?.name === "SecurityError" && getOS() === "Linux") {
                     gui_log(i18n.getMessage("usbDeviceUdevNotice"));
                 }
                 this.cleanup();
             });
     }
 
-    closeDevice() {
+    closeDevice(): void {
         this.transport
             .close()
             .then(() => {
                 gui_log(i18n.getMessage("usbDeviceClosed"));
                 console.log(`${this.logHead} DFU Device closed`);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} Failed to close USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceCloseFail"));
             });
     }
 
-    async claimInterface(interfaceNumber, retries = 6, delay = 1000) {
+    async claimInterface(interfaceNumber: number, retries = 6, delay = 1000): Promise<void> {
         for (let attempt = 1; attempt <= retries; attempt++) {
             try {
                 await this.transport.claimInterface(interfaceNumber);
                 console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
-                if (this.options.exitDfu) {
+                if (this.options!.exitDfu) {
                     this.leave();
                 } else {
                     this.upload_procedure(0);
                 }
                 return;
             } catch (error) {
-                const isBusy = error.message?.includes("Unable to claim interface") || error.message?.includes("busy");
+                const message = (error as Error).message;
+                const isBusy = message?.includes("Unable to claim interface") || message?.includes("busy");
                 if (isBusy && attempt < retries) {
                     console.warn(
                         `${this.logHead} Interface ${interfaceNumber} busy, retrying (${attempt}/${retries})...`,
@@ -282,10 +437,10 @@ export class UsbDfuProtocol extends EventTarget {
         }
     }
 
-    releaseInterface(interfaceNumber) {
+    releaseInterface(interfaceNumber: number): void {
         this.transport
             .releaseInterface(interfaceNumber)
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} Could not release interface: ${interfaceNumber} (${error})`);
             })
             .finally(() => {
@@ -294,69 +449,75 @@ export class UsbDfuProtocol extends EventTarget {
             });
     }
 
-    resetDevice(callback) {
+    resetDevice(callback?: () => void): void {
         this.transport
             .reset()
             .then(() => {
                 console.log(`${this.logHead} Reset Device`);
                 callback?.();
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} Could not reset device: ${error}`);
                 callback?.();
             });
     }
 
-    getString(index, callback) {
+    getString(index: number, callback: (descriptor: string, resultCode: number) => void): void {
         this.transport
             .getString(index)
             .then((descriptor) => {
                 callback(descriptor, 0);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} USB getString failed! ${error}`);
                 callback("", 1);
             });
     }
 
-    getInterfaceDescriptors(interfaceNum, callback) {
+    getInterfaceDescriptors(interfaceNum: number, callback: (descriptors: string[], resultCode: number) => void): void {
         this.transport
             .getInterfaceDescriptors(interfaceNum)
             .then((descriptors) => {
                 callback(descriptors, 0);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} USB getInterfaceDescriptors failed! ${error}`);
                 callback([], 1);
             });
     }
 
-    getInterfaceDescriptor(_interface, callback) {
+    getInterfaceDescriptor(
+        _interface: number,
+        callback: (descriptor: Record<string, number> | null, resultCode: number) => void,
+    ): void {
         this.transport
             .getInterfaceDescriptor(_interface)
             .then((descriptor) => {
-                console.log(`${this.logHead} USB getInterfaceDescriptor: ${Object.values(descriptor)}`);
+                console.log(`${this.logHead} USB getInterfaceDescriptor: ${Object.values(descriptor!)}`);
                 callback(descriptor, 0);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} USB getInterfaceDescriptor failed: ${error}`);
                 callback({}, 1);
             });
     }
 
-    getFunctionalDescriptor(_interface, callback) {
+    getFunctionalDescriptor(
+        _interface: number,
+        callback: (descriptor: Partial<DfuFunctionalDescriptor>, resultCode: number) => void,
+    ): void {
         this.transport
             .getFunctionalDescriptor(_interface)
             .then((descriptor) => {
                 callback(descriptor, 0);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 console.log(`${this.logHead} USB getFunctionalDescriptor failed: ${error}`);
                 callback({}, 1);
             });
     }
 
-    getChipInfo(_interface, callback) {
+    getChipInfo(_interface: number, callback: (chipInfo: ChipInfo, resultCode: number) => void): void {
         this.getInterfaceDescriptors(0, (descriptors, resultCode) => {
             if (resultCode) {
                 callback({}, resultCode);
@@ -367,7 +528,7 @@ export class UsbDfuProtocol extends EventTarget {
             // These come from the on-chip bootloader (ST ROM for STM32C5/H5), so this is
             // the fastest way to diagnose a new MCU whose layout string we don't yet handle.
             console.log(`${this.logHead} DFU memory descriptors:`, descriptors);
-            const parseDescriptor = (str) => {
+            const parseDescriptor = (str: string): DfuMemory | null => {
                 // F303: "@Internal Flash  /0x08000000/128*0002Kg"
                 // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
                 // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
@@ -392,7 +553,7 @@ export class UsbDfuProtocol extends EventTarget {
                     str = str.replace("@InternalFlash", "@Internal Flash");
                 }
                 // split main into [location, start_addr, sectors]
-                const tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
+                const tmp0 = str.replaceAll(/[^\x20-\x7E]+/g, "");
                 const tmp1 = tmp0.split("/");
 
                 // G474 (and may be other G4 variants) returns
@@ -424,7 +585,7 @@ export class UsbDfuProtocol extends EventTarget {
                 const start_address = Number.parseInt(tmp1[1]);
 
                 // split sectors into array
-                const sectors = [];
+                const sectors: DfuSector[] = [];
                 let total_size = 0;
                 const tmp2 = tmp1[2].split(",");
 
@@ -456,20 +617,20 @@ export class UsbDfuProtocol extends EventTarget {
                     }
 
                     sectors.push({
-                        num_pages: num_pages,
+                        num_pages,
                         start_address: start_address + total_size,
-                        page_size: page_size,
+                        page_size,
                         total_size: num_pages * page_size,
                     });
 
                     total_size += num_pages * page_size;
                 }
 
-                const memory = {
-                    type: type,
-                    start_address: start_address,
-                    sectors: sectors,
-                    total_size: total_size,
+                const memory: DfuMemory = {
+                    type,
+                    start_address,
+                    sectors,
+                    total_size,
                 };
                 return memory;
             };
@@ -477,8 +638,8 @@ export class UsbDfuProtocol extends EventTarget {
             // string (common on brand-new silicon such as the STM32C5 ROM bootloader)
             // must not throw and abort the whole flash. Skip the ones we can't parse
             // and keep the regions we understand.
-            const chipInfo = descriptors.reduce((o, str) => {
-                let memory = null;
+            const chipInfo = descriptors.reduce<ChipInfo>((o, str) => {
+                let memory: DfuMemory | null = null;
                 try {
                     memory = parseDescriptor(str);
                 } catch (error) {
@@ -498,54 +659,78 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    controlTransfer(direction, request, value, _interface, length, data, callback) {
+    controlTransfer(
+        direction: "in",
+        request: number,
+        value: number,
+        _interface: number,
+        length: number,
+        data: 0,
+        callback: (data: DfuBytes, error: number) => void,
+    ): void;
+    controlTransfer(
+        direction: "out",
+        request: number,
+        value: number,
+        _interface: number,
+        length: 0,
+        data: DfuOutData,
+        callback: (result: { status: string }) => void,
+    ): void;
+    controlTransfer(
+        direction: "in" | "out",
+        request: number,
+        value: number,
+        _interface: number,
+        length: number,
+        data: DfuOutData,
+        callback: ((data: DfuBytes, error: number) => void) | ((result: { status: string }) => void),
+    ): void {
+        const setup: DfuControlSetup = {
+            requestType: "class",
+            recipient: "interface",
+            request,
+            value,
+            index: _interface,
+        };
+
         if (direction === "in") {
             // data is ignored
-            const setup = {
-                requestType: "class",
-                recipient: "interface",
-                request: request,
-                value: value,
-                index: _interface,
-            };
-
+            const callbackIn = callback as (data: DfuBytes, error: number) => void;
             this.transport
                 .controlTransferIn(setup, length)
                 .then((result) => {
                     if (result.status === "ok") {
-                        const buf =
-                            result.data instanceof Uint8Array
-                                ? result.data
-                                : new Uint8Array(result.data.buffer || result.data);
-                        callback(buf, 0);
+                        let buf: Uint8Array;
+                        if (result.data instanceof Uint8Array) {
+                            buf = result.data;
+                        } else if (ArrayBuffer.isView(result.data)) {
+                            buf = new Uint8Array(result.data.buffer);
+                        } else {
+                            buf = new Uint8Array(result.data);
+                        }
+                        callbackIn(buf, 0);
                     } else {
                         throw new Error(result.status);
                     }
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.log(`${this.logHead} USB controlTransfer IN failed for request: ${request} (${error})`);
-                    callback([], 1);
+                    callbackIn([], 1);
                 });
         } else {
             // length is ignored
-            const setup = {
-                requestType: "class",
-                recipient: "interface",
-                request: request,
-                value: value,
-                index: _interface,
-            };
-
+            const callbackOut = callback as (result: { status: string }) => void;
             this.transport
                 .controlTransferOut(setup, data)
                 .then((result) => {
                     if (result.status === "ok") {
-                        callback(result);
+                        callbackOut(result);
                     } else {
                         throw new Error(result.status);
                     }
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request} (${error})`);
                     if (this._connecting) {
                         this.cleanup();
@@ -572,12 +757,11 @@ export class UsbDfuProtocol extends EventTarget {
     // that (busyIsStuck) — everyone else keeps polling, so a strict bootloader is never sent a
     // CLRSTATUS it would STALL, and maxAttempts stays the backstop.
     /**
-     * @param {(data: Uint8Array) => void} callback - Invoked once the device reaches dfuIDLE.
-     * @param {boolean} [busyIsStuck=false] - Caller already waited out the device-reported poll
+     * @param callback - Invoked once the device reaches dfuIDLE.
+     * @param busyIsStuck - Caller already waited out the device-reported poll
      *   timeout, so a dfuDNBUSY read means wedged rather than working.
-     * @returns {void}
      */
-    clearStatus(callback, busyIsStuck = false) {
+    clearStatus(callback: (data: DfuBytes) => void, busyIsStuck = false): void {
         // Bound the retries so an unexpected/never-idling bootloader state surfaces as an
         // error instead of looping forever (a failed GETSTATUS returns an empty buffer, which
         // otherwise spins tightly since data[4] is undefined and the reported delay is 0).
@@ -624,7 +808,7 @@ export class UsbDfuProtocol extends EventTarget {
         check_status();
     }
 
-    loadAddress(address, callback, abort) {
+    loadAddress(address: number, callback: (data: DfuBytes) => void, abort?: boolean): void {
         this.controlTransfer(
             "out",
             this.request.DNLOAD,
@@ -663,7 +847,7 @@ export class UsbDfuProtocol extends EventTarget {
     // first_array = usually hex_to_flash array
     // second_array = usually verify_hex array
     // result = true/false
-    verify_flash(first_array, second_array) {
+    verify_flash(first_array: number[], second_array: number[]): boolean {
         for (let i = 0; i < first_array.length; i++) {
             if (first_array[i] !== second_array[i]) {
                 console.log(
@@ -680,13 +864,13 @@ export class UsbDfuProtocol extends EventTarget {
         return true;
     }
 
-    isBlockUsable(startAddress, length) {
+    isBlockUsable(startAddress: number, length: number): boolean {
         let result = false;
 
         let searchAddress = startAddress;
         let remainingLength = length;
 
-        let restart;
+        let restart: boolean;
 
         do {
             restart = false;
@@ -720,36 +904,36 @@ export class UsbDfuProtocol extends EventTarget {
         return result;
     }
 
-    upload_procedure(step) {
-        let blocks;
-        let address;
-        let wBlockNum;
+    upload_procedure(step: 0 | 1 | 2 | 4 | 5): void {
+        let blocks: number;
+        let address: number;
+        let wBlockNum: number;
 
         switch (step) {
             case 0:
                 this.getChipInfo(0, (chipInfo, resultCode) => {
-                    if (resultCode !== 0 || typeof chipInfo === "undefined") {
+                    if (resultCode !== 0 || chipInfo === undefined) {
                         console.log(`${this.logHead} Failed to detect chip info, resultCode: ${resultCode}`);
                         this.cleanup();
                     } else {
-                        let nextAction;
+                        let nextAction: 1 | 2 | undefined;
 
-                        if (typeof chipInfo.internal_flash !== "undefined") {
+                        if (chipInfo.internal_flash !== undefined) {
                             // internal flash
                             nextAction = 1;
 
                             this.chipInfo = chipInfo;
                             this.flash_layout = chipInfo.internal_flash;
 
-                            if (this.hex.bytes_total > chipInfo.internal_flash.total_size) {
-                                const firmwareSize = this.hex.bytes_total;
+                            if (this.hex!.bytes_total > chipInfo.internal_flash.total_size) {
+                                const firmwareSize = this.hex!.bytes_total;
                                 const boardSize = chipInfo.internal_flash.total_size;
                                 const bareBoard = this.bareBoard;
                                 console.log(
                                     `${this.logHead} Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`,
                                 );
                             }
-                        } else if (typeof chipInfo.external_flash !== "undefined") {
+                        } else if (chipInfo.external_flash !== undefined) {
                             // external flash
                             nextAction = 2; // no option bytes
 
@@ -760,7 +944,8 @@ export class UsbDfuProtocol extends EventTarget {
                             this.cleanup();
                         }
 
-                        if (typeof nextAction !== "undefined") {
+                        if (nextAction !== undefined) {
+                            const action = nextAction;
                             gui_log(
                                 i18n.getMessage(
                                     "dfu_device_flash_info",
@@ -771,7 +956,7 @@ export class UsbDfuProtocol extends EventTarget {
                             // verify all addresses in the hex are writable.
                             const unusableBlocks = [];
 
-                            for (const block of this.hex.data) {
+                            for (const block of this.hex!.data) {
                                 const usable = this.isBlockUsable(block.address, block.bytes);
                                 if (!usable) {
                                     unusableBlocks.push(block);
@@ -789,11 +974,11 @@ export class UsbDfuProtocol extends EventTarget {
                                 this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
                                     // Never let a missing/zero wTransferSize into the write loop
                                     // (it would stall or divide the payload into empty blocks).
-                                    const reportedSize = resultCode ? 0 : descriptor?.wTransferSize;
+                                    const reportedSize = (resultCode ? 0 : descriptor?.wTransferSize) ?? 0;
                                     this.transferSize = reportedSize > 0 ? reportedSize : 2048;
                                     console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
                                     this.clearStatus(() => {
-                                        this.upload_procedure(nextAction);
+                                        this.upload_procedure(action);
                                     });
                                 });
                             }
@@ -802,7 +987,8 @@ export class UsbDfuProtocol extends EventTarget {
                 });
                 break;
             case 1: {
-                if (typeof this.chipInfo.option_bytes === "undefined") {
+                const optionBytes = this.chipInfo!.option_bytes;
+                if (optionBytes === undefined) {
                     // Some bootloaders (e.g. the STM32C5 ROM) don't expose an "@Option Bytes"
                     // DFU alternate setting, so we can't run the read-protection pre-check.
                     // Skip straight to erase instead of aborting: a non-read-protected chip
@@ -881,7 +1067,7 @@ export class UsbDfuProtocol extends EventTarget {
                                 }, incr);
                             } else {
                                 console.log(`${this.logHead} Failed to initiate unprotect memory command`);
-                                let messageUnprotectInitFailed = i18n.getMessage("stm32UnprotectInitFailed");
+                                const messageUnprotectInitFailed = i18n.getMessage("stm32UnprotectInitFailed");
                                 gui_log(messageUnprotectInitFailed);
                                 this.flashingMessage(
                                     messageUnprotectInitFailed,
@@ -900,7 +1086,7 @@ export class UsbDfuProtocol extends EventTarget {
                         this.request.UPLOAD,
                         2,
                         0,
-                        this.chipInfo.option_bytes.total_size,
+                        optionBytes.total_size,
                         0,
                         (ob_data, errcode) => {
                             if (errcode) {
@@ -914,7 +1100,7 @@ export class UsbDfuProtocol extends EventTarget {
                             this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                                 if (
                                     data[4] === this.state.dfuUPLOAD_IDLE &&
-                                    ob_data.length === this.chipInfo.option_bytes.total_size
+                                    ob_data.length === optionBytes.total_size
                                 ) {
                                     console.log(`${this.logHead} Option bytes read successfully`);
                                     console.log(`${this.logHead} Chip does not appear read protected`);
@@ -934,7 +1120,7 @@ export class UsbDfuProtocol extends EventTarget {
                     );
                 };
 
-                const initReadOB = (loadAddressResponse) => {
+                const initReadOB = (loadAddressResponse: DfuBytes) => {
                     // contrary to what is in the docs. Address load should in theory work even if read protection is active
                     // if address load fails with this specific error though, it is very likely bc of read protection
                     if (
@@ -956,17 +1142,17 @@ export class UsbDfuProtocol extends EventTarget {
 
                 this.clearStatus(() => {
                     // load address fails if read protection is active unlike as stated in the docs
-                    this.loadAddress(this.chipInfo.option_bytes.start_address, initReadOB, false);
+                    this.loadAddress(optionBytes.start_address, initReadOB, false);
                 });
                 break;
             }
             case 2: {
                 // erase
                 // find out which pages to erase
-                const erase_pages = [];
+                const erase_pages: { sector: number; page: number }[] = [];
                 for (let i = 0; i < this.flash_layout.sectors.length; i++) {
                     for (let j = 0; j < this.flash_layout.sectors[i].num_pages; j++) {
-                        if (this.options.erase_chip) {
+                        if (this.options!.erase_chip) {
                             // full chip erase
                             erase_pages.push({ sector: i, page: j });
                         } else {
@@ -974,7 +1160,7 @@ export class UsbDfuProtocol extends EventTarget {
                             const page_start =
                                 this.flash_layout.sectors[i].start_address + j * this.flash_layout.sectors[i].page_size;
                             const page_end = page_start + this.flash_layout.sectors[i].page_size - 1;
-                            for (const hexData of this.hex.data) {
+                            for (const hexData of this.hex!.data) {
                                 const starts_in_page = hexData.address >= page_start && hexData.address <= page_end;
                                 const end_address = hexData.address + hexData.bytes - 1;
                                 const ends_in_page = end_address >= page_start && end_address <= page_end;
@@ -1008,8 +1194,8 @@ export class UsbDfuProtocol extends EventTarget {
 
                 const erase_page_next = () => {
                     // Calculate progress within erase phase
-                    const eraseStart = this.progressWeights.erase[0];
-                    const eraseRange = this.progressWeights.erase[1] - this.progressWeights.erase[0];
+                    const eraseStart = this.progressWeights!.erase[0];
+                    const eraseRange = this.progressWeights!.erase[1] - this.progressWeights!.erase[0];
                     const eraseProgress = ((page + 1) / erase_pages.length) * eraseRange;
                     this.flashProgress(eraseStart + eraseProgress);
                     page++;
@@ -1111,22 +1297,23 @@ export class UsbDfuProtocol extends EventTarget {
                 console.log(`${this.logHead} Writing data ...`);
                 this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.FLASHING);
 
-                blocks = this.hex.data.length - 1;
+                const hex = this.hex!;
+                blocks = hex.data.length - 1;
                 let flashing_block = 0;
-                address = this.hex.data[flashing_block].address;
+                address = hex.data[flashing_block].address;
 
                 let bytes_flashed = 0;
                 let bytes_flashed_total = 0; // used for progress bar
                 wBlockNum = 2; // required by DFU
 
                 const write = () => {
-                    if (bytes_flashed < this.hex.data[flashing_block].bytes) {
+                    if (bytes_flashed < hex.data[flashing_block].bytes) {
                         const bytes_to_write =
-                            bytes_flashed + this.transferSize <= this.hex.data[flashing_block].bytes
+                            bytes_flashed + this.transferSize <= hex.data[flashing_block].bytes
                                 ? this.transferSize
-                                : this.hex.data[flashing_block].bytes - bytes_flashed;
+                                : hex.data[flashing_block].bytes - bytes_flashed;
 
-                        const data_to_flash = this.hex.data[flashing_block].data.slice(
+                        const data_to_flash = hex.data[flashing_block].data.slice(
                             bytes_flashed,
                             bytes_flashed + bytes_to_write,
                         );
@@ -1144,11 +1331,11 @@ export class UsbDfuProtocol extends EventTarget {
                                         this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                                             if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                                 // update progress bar
-                                                const flashStart = this.progressWeights.flash[0];
+                                                const flashStart = this.progressWeights!.flash[0];
                                                 const flashRange =
-                                                    this.progressWeights.flash[1] - this.progressWeights.flash[0];
+                                                    this.progressWeights!.flash[1] - this.progressWeights!.flash[0];
                                                 const flashProgress =
-                                                    (bytes_flashed_total / this.hex.bytes_total) * flashRange;
+                                                    (bytes_flashed_total / hex.bytes_total) * flashRange;
                                                 this.flashProgress(flashStart + flashProgress);
 
                                                 // flash another page
@@ -1175,23 +1362,21 @@ export class UsbDfuProtocol extends EventTarget {
                                 }
                             });
                         });
+                    } else if (flashing_block < blocks) {
+                        // move to another block
+                        flashing_block++;
+
+                        address = hex.data[flashing_block].address;
+                        bytes_flashed = 0;
+                        wBlockNum = 2;
+
+                        this.loadAddress(address, write);
                     } else {
-                        if (flashing_block < blocks) {
-                            // move to another block
-                            flashing_block++;
+                        // all blocks flashed
+                        console.log(`${this.logHead} Writing: done`);
 
-                            address = this.hex.data[flashing_block].address;
-                            bytes_flashed = 0;
-                            wBlockNum = 2;
-
-                            this.loadAddress(address, write);
-                        } else {
-                            // all blocks flashed
-                            console.log(`${this.logHead} Writing: done`);
-
-                            // proceed to next step
-                            this.upload_procedure(5);
-                        }
+                        // proceed to next step
+                        this.upload_procedure(5);
                     }
                 };
 
@@ -1205,9 +1390,10 @@ export class UsbDfuProtocol extends EventTarget {
                 console.log(`${this.logHead} Verifying data ...`);
                 this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.VERIFYING);
 
-                blocks = this.hex.data.length - 1;
+                const hex = this.hex!;
+                blocks = hex.data.length - 1;
                 let reading_block = 0;
-                address = this.hex.data[reading_block].address;
+                address = hex.data[reading_block].address;
 
                 let bytes_verified = 0;
                 let bytes_verified_total = 0; // used for progress bar
@@ -1218,19 +1404,12 @@ export class UsbDfuProtocol extends EventTarget {
                     this.verify_hex.push([]);
                 }
 
-                // start
-                this.clearStatus(() => {
-                    this.loadAddress(address, () => {
-                        this.clearStatus(read);
-                    });
-                });
-
                 const read = () => {
-                    if (bytes_verified < this.hex.data[reading_block].bytes) {
+                    if (bytes_verified < hex.data[reading_block].bytes) {
                         const bytes_to_read =
-                            bytes_verified + this.transferSize <= this.hex.data[reading_block].bytes
+                            bytes_verified + this.transferSize <= hex.data[reading_block].bytes
                                 ? this.transferSize
-                                : this.hex.data[reading_block].bytes - bytes_verified;
+                                : hex.data[reading_block].bytes - bytes_verified;
 
                         this.controlTransfer("in", this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data) => {
                             for (const piece of data) {
@@ -1242,83 +1421,88 @@ export class UsbDfuProtocol extends EventTarget {
                             bytes_verified_total += bytes_to_read;
 
                             // update progress bar
-                            const verifyStart = this.progressWeights.verify[0];
-                            const verifyRange = this.progressWeights.verify[1] - this.progressWeights.verify[0];
-                            const verifyProgress = (bytes_verified_total / this.hex.bytes_total) * verifyRange;
+                            const verifyStart = this.progressWeights!.verify[0];
+                            const verifyRange = this.progressWeights!.verify[1] - this.progressWeights!.verify[0];
+                            const verifyProgress = (bytes_verified_total / hex.bytes_total) * verifyRange;
                             this.flashProgress(verifyStart + verifyProgress);
 
                             // verify another page
                             read();
                         });
-                    } else {
-                        if (reading_block < blocks) {
-                            // move to another block
-                            reading_block++;
+                    } else if (reading_block < blocks) {
+                        // move to another block
+                        reading_block++;
 
-                            address = this.hex.data[reading_block].address;
-                            bytes_verified = 0;
-                            wBlockNum = 2;
+                        address = hex.data[reading_block].address;
+                        bytes_verified = 0;
+                        wBlockNum = 2;
 
-                            this.clearStatus(() => {
-                                this.loadAddress(address, () => {
-                                    this.clearStatus(read);
-                                });
+                        this.clearStatus(() => {
+                            this.loadAddress(address, () => {
+                                this.clearStatus(read);
                             });
+                        });
+                    } else {
+                        // all blocks read, verify
+                        let verify = true;
+                        for (let i = 0; i <= blocks; i++) {
+                            verify = this.verify_flash(hex.data[i].data, this.verify_hex[i]);
+
+                            if (!verify) break;
+                        }
+
+                        if (verify) {
+                            console.log(`${this.logHead} Programming: SUCCESSFUL`);
+                            // update progress bar
+                            this.flashingMessage(
+                                i18n.getMessage("stm32ProgrammingSuccessful"),
+                                this.options?.flashMessageTypes?.VALID,
+                            );
+
+                            // Show notification
+                            if (getConfig("showNotifications").showNotifications) {
+                                NotificationManager.showNotification("Betaflight App", {
+                                    body: i18n.getMessage("programmingSuccessfulNotification"),
+                                    icon: "/images/pwa/favicon.ico",
+                                });
+                            }
+
+                            // proceed to next step
+                            this.leave();
                         } else {
-                            // all blocks read, verify
-                            let verify = true;
-                            for (let i = 0; i <= blocks; i++) {
-                                verify = this.verify_flash(this.hex.data[i].data, this.verify_hex[i]);
+                            console.log(`${this.logHead} Programming: FAILED`);
+                            // update progress bar
+                            this.flashingMessage(
+                                i18n.getMessage("stm32ProgrammingFailed"),
+                                this.options?.flashMessageTypes?.INVALID,
+                            );
 
-                                if (!verify) break;
+                            // Show notification
+                            if (getConfig("showNotifications").showNotifications) {
+                                NotificationManager.showNotification("Betaflight App", {
+                                    body: i18n.getMessage("programmingFailedNotification"),
+                                    icon: "/images/pwa/favicon.ico",
+                                });
                             }
 
-                            if (verify) {
-                                console.log(`${this.logHead} Programming: SUCCESSFUL`);
-                                // update progress bar
-                                this.flashingMessage(
-                                    i18n.getMessage("stm32ProgrammingSuccessful"),
-                                    this.options?.flashMessageTypes?.VALID,
-                                );
-
-                                // Show notification
-                                if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight App", {
-                                        body: i18n.getMessage("programmingSuccessfulNotification"),
-                                        icon: "/images/pwa/favicon.ico",
-                                    });
-                                }
-
-                                // proceed to next step
-                                this.leave();
-                            } else {
-                                console.log(`${this.logHead} Programming: FAILED`);
-                                // update progress bar
-                                this.flashingMessage(
-                                    i18n.getMessage("stm32ProgrammingFailed"),
-                                    this.options?.flashMessageTypes?.INVALID,
-                                );
-
-                                // Show notification
-                                if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight App", {
-                                        body: i18n.getMessage("programmingFailedNotification"),
-                                        icon: "/images/pwa/favicon.ico",
-                                    });
-                                }
-
-                                // disconnect
-                                this.cleanup();
-                            }
+                            // disconnect
+                            this.cleanup();
                         }
                     }
                 };
+
+                // start
+                this.clearStatus(() => {
+                    this.loadAddress(address, () => {
+                        this.clearStatus(read);
+                    });
+                });
                 break;
             }
         }
     }
 
-    leave() {
+    leave(): void {
         // leave DFU
         const address = this.hex ? this.hex.data[0].address : 0x08000000;
 
@@ -1334,19 +1518,17 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
-    cleanup() {
+    cleanup(): void {
         this._connecting = false;
         this.releaseInterface(0);
 
         useConnectionStore().connectLock = false;
 
-        const timeSpent = new Date().getTime() - this.upload_time_start;
+        const timeSpent = Date.now() - this.upload_time_start!;
 
         console.log(`${this.logHead} Script finished after: ${timeSpent / 1000} seconds`);
 
-        if (this.callback) {
-            this.callback();
-        }
+        this.callback?.();
     }
 }
 

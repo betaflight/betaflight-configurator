@@ -274,7 +274,7 @@ class Serial extends EventTarget {
      * Request permission to access a device
      * @param {boolean} showAllDevices - Whether to show all devices or only those with filters
      * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', etc.)
-     * @returns {Promise<Object>} - Promise resolving to the selected device
+     * @returns {Promise<{path: string}|false|undefined>} - The selected device, or false/undefined when none was granted
      */
     async requestPermissionDevice(showAllDevices = false, protocolType) {
         let result = false;

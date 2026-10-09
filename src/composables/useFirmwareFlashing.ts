@@ -435,6 +435,11 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             DeviceHandler.dfuProtocol
                 .requestPermission()
                 .then((device) => {
+                    // requestPermission() resolves null when the user cancels the chooser;
+                    // fail into the catch below, as dereferencing null always did.
+                    if (!device) {
+                        throw new Error("No DFU device selected");
+                    }
                     DeviceHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
                 })
                 .catch((error) => {

@@ -220,7 +220,7 @@ class WebUsbDfuTransport extends UsbDfuDescriptors {
     /**
      * Perform a USB control transfer OUT (host -> device).
      * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} setup
-     * @param {ArrayBuffer|Uint8Array} [data] - Payload to send; an empty transfer when omitted.
+     * @param {ArrayBuffer|ArrayLike<number>|0} [data] - Payload to send; an empty transfer when omitted or 0.
      * @returns {Promise<{status: string}>}
      */
     async controlTransferOut(setup, data) {

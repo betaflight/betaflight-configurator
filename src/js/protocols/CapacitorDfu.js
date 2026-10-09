@@ -22,6 +22,7 @@ class CapacitorDfu extends EventTarget {
             return;
         }
 
+        /** @type {import("./usbdfu").DfuPort[]} */
         this.ports = [];
 
         BetaflightDfu.addListener("deviceAttached", this.handleDeviceAttached.bind(this));
