@@ -22,7 +22,7 @@
 import { ref, type Ref } from "vue";
 import { isMspCancelled } from "../js/msp/mspErrors";
 import { gui_log } from "../js/gui_log";
-import { i18n } from "../js/localization.js";
+import { i18n } from "../js/localization";
 
 /** An error carrying the message runSave shows in place of the generic one. */
 export interface SaveFailureTagged {

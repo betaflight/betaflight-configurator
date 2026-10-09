@@ -21,7 +21,7 @@
 
 // This module is imported for its side effects: setting up i18next
 // and initializing the Vue app with plugins and global model.
-import "../js/localization.js";
+import "../js/localization";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
