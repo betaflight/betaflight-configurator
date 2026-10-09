@@ -127,6 +127,7 @@ const languageFallback = {
 /**
  * Functions that depend on the i18n framework
  */
+/** @param {() => void} [cb] called once i18next has finished loading, whether or not it succeeded */
 i18n.init = function (cb) {
     getStoredUserLocale(function (userLanguage) {
         i18next.use(HttpBackend).init(
@@ -177,7 +178,7 @@ i18n.parseInputFile = function (data) {
     const dataChrome = data.replace(REGEXP_CHROME, "{{$1}}");
 
     // Remove the .message of the nesting $t(xxxxx.message) -> $t(xxxxx)
-    const REGEXP_NESTING = /\$t\(([^\)]*).message\)/g;
+    const REGEXP_NESTING = /\$t\(([^)]*).message\)/g;
     const dataNesting = dataChrome.replace(REGEXP_NESTING, "$t($1)");
 
     // Move the .message of the json object to root xxxxx.message -> xxxxx

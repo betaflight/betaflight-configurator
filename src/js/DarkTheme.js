@@ -8,7 +8,7 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
     if (this.configSetting === 0) {
         callback(true);
     } else if (this.configSetting === 2) {
-        const isEnabled = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const isEnabled = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
         callback(isEnabled);
     } else {
         callback(false);
@@ -16,12 +16,11 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
 };
 
 DarkTheme.apply = function () {
-    const self = this;
-    this.isDarkThemeEnabled(function (isEnabled) {
+    this.isDarkThemeEnabled((isEnabled) => {
         if (isEnabled) {
-            self.applyDark();
+            this.applyDark();
         } else {
-            self.applyNormal();
+            this.applyNormal();
         }
     });
 };
@@ -49,6 +48,7 @@ DarkTheme.applyNormal = function () {
     this.enabled = false;
 };
 
+/** @param {number | undefined} enabled 0 = dark, 1 = light, 2 = follow the OS */
 export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
 }
