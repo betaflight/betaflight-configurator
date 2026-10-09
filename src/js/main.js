@@ -16,7 +16,7 @@ import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
-import { loadDeviceFilters } from "./protocols/devices.js";
+import { loadDeviceFilters } from "./protocols/devices";
 import {
     checkBluetoothSupport,
     checkSerialSupport,
