@@ -1,9 +1,95 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { webSerialDevices, vendorIdNames } from "./devices";
 import { useAppInfoStore } from "../../stores/appInfo";
 
 const logHead = "[WEBSERIAL]";
 
-async function* streamAsyncIterable(reader, keepReadingFlag) {
+// TypeScript's DOM library does not declare the Web Serial API (it is Chromium only), and
+// @types/w3c-web-serial is not a dependency. These are the parts of it this transport uses,
+// named apart from the W3C names so they cannot clash with those typings if they are added.
+
+/** `SerialPort.getInfo()`. Both ids are absent for a port that is not a USB device. */
+export interface WebSerialPortInfo {
+    usbVendorId?: number;
+    usbProductId?: number;
+}
+
+/** `SerialOptions`, as handed to `SerialPort.open()`. */
+export interface WebSerialOptions {
+    baudRate: number;
+    dataBits?: number;
+    stopBits?: number;
+    parity?: string;
+    bufferSize?: number;
+    flowControl?: string;
+}
+
+/** The payloads this transport writes. */
+export type WebSerialPayload = ArrayBuffer | Uint8Array<ArrayBuffer>;
+
+/** The W3C `SerialPort`. */
+export interface WebSerialPort extends EventTarget {
+    // Null in the spec while the port is closed. This transport reads them only after
+    // open() resolves, so they are declared as the open port has them.
+    readonly readable: ReadableStream<Uint8Array>;
+    readonly writable: WritableStream<WebSerialPayload>;
+    getInfo(): WebSerialPortInfo;
+    open(options: WebSerialOptions): Promise<void>;
+    close(): Promise<void>;
+}
+
+/** `navigator.serial`. Its connect and disconnect events have the port as their target. */
+interface WebSerialApi extends EventTarget {
+    getPorts(): Promise<WebSerialPort[]>;
+    requestPort(options?: { filters?: { usbVendorId?: number; usbProductId?: number }[] }): Promise<WebSerialPort>;
+}
+
+/** `navigator.serial`, absent where the browser has no Web Serial. */
+function webSerialApi(): WebSerialApi | undefined {
+    return (navigator as (Navigator & { serial?: WebSerialApi }) | undefined)?.serial;
+}
+
+/** A port as this transport reports it to serial.js and the port picker. */
+export interface WebSerialDevice {
+    path: string;
+    displayName: string;
+    vendorId: number | undefined;
+    productId: number | undefined;
+    port: WebSerialPort;
+}
+
+/** What `send` reports, both as its result and to the callback. */
+export interface WebSerialSendResult {
+    bytesSent: number;
+}
+
+/** The options `connect` opens with when the caller gives none. Read, never written. */
+const DEFAULT_CONNECT_OPTIONS: Readonly<WebSerialOptions> = Object.freeze({ baudRate: 115200 });
+
+async function* streamAsyncIterable(
+    reader: ReadableStreamDefaultReader<Uint8Array>,
+    keepReadingFlag: () => boolean,
+): AsyncGenerator<Uint8Array, void> {
     try {
         while (keepReadingFlag()) {
             try {
@@ -22,7 +108,9 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
         try {
             // Always attempt once; spec allows releasing even if the stream
             // is already closed.  `locked` is the boolean we can trust.
-            if (reader?.locked) {
+            // NOTE: `locked` is a property of the ReadableStream, not of its reader, so this
+            // reads undefined and never releases. Kept as found; this change is a conversion.
+            if ((reader as ReadableStreamDefaultReader<Uint8Array> & { locked?: boolean })?.locked) {
                 reader.releaseLock();
             }
         } catch (error) {
@@ -40,9 +128,31 @@ class WebSerial extends EventTarget {
     // But the id changes if the device disconnects and then connects again, because Chrome
     // makes a new SerialPort object for it. Do not keep a path. Read the path from the
     // current list. The WeakMap lets the browser release the entry with the SerialPort.
-    #portIds = new WeakMap();
+    readonly #portIds = new WeakMap<WebSerialPort, string>();
     #nextPortId = 0;
     #loadGeneration = 0;
+
+    connected: boolean;
+    openRequested: boolean;
+    openCanceled: boolean;
+    closeRequested: boolean;
+    transmitting: boolean;
+    connectionInfo: WebSerialPortInfo | null;
+    // Unset until the first connect; disconnect() resets it to false, not null.
+    connectionId?: string | false;
+
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+
+    ports: WebSerialDevice[];
+    port: WebSerialPort | null;
+    reader: ReadableStreamDefaultReader<Uint8Array> | null;
+    writer: WritableStreamDefaultWriter<WebSerialPayload> | null;
+    reading: boolean;
+
+    isNeedBatchWrite = false;
 
     constructor() {
         super();
@@ -65,7 +175,8 @@ class WebSerial extends EventTarget {
         this.writer = null;
         this.reading = false;
 
-        if (!navigator?.serial) {
+        const serial = webSerialApi();
+        if (!serial) {
             console.error(`${logHead} Web Serial API not supported`);
             return;
         }
@@ -76,21 +187,27 @@ class WebSerial extends EventTarget {
         this.handleReceiveBytes = this.handleReceiveBytes.bind(this);
 
         // Initialize device connection/disconnection listeners
-        navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
-        navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
+        serial.addEventListener("connect", (e) => this.handleNewDevice(e.target as WebSerialPort));
+        serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target as WebSerialPort));
 
         this.isNeedBatchWrite = false;
-        this.loadDevices();
+        // Fire-and-forget load, kept out of the constructor body (Sonar S7059).
+        this._bootstrap();
     }
 
-    handleNewDevice(device) {
+    private _bootstrap(): void {
+        // loadDevices() catches and logs its own failures.
+        void this.loadDevices();
+    }
+
+    handleNewDevice(device: WebSerialPort): WebSerialDevice {
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
         return added;
     }
 
-    handleRemovedDevice(device) {
+    handleRemovedDevice(device: WebSerialPort): void {
         const removed = this.ports.find((port) => port.port === device);
 
         // The list does not hold this port, because loadDevices() removed it before. There is
@@ -104,35 +221,35 @@ class WebSerial extends EventTarget {
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
-    handleReceiveBytes(info) {
-        this.bytesReceived += info.detail.byteLength;
+    handleReceiveBytes(info: Event): void {
+        // Registered only for this transport's own "receive" events, which carry the bytes.
+        this.bytesReceived += (info as CustomEvent<Uint8Array>).detail.byteLength;
     }
 
-    handleDisconnect() {
+    handleDisconnect(): void {
         console.log(`${logHead} Device disconnected externally`);
-        this.disconnect();
+        // disconnect() catches its own failures and reports them as a "disconnect" event.
+        void this.disconnect();
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): WebSerialPort | null {
         return this.port;
     }
 
     /**
      * Return the raw W3C SerialPort for a given path, so callers that need direct
      * port access (e.g. esptool-js for ESP32 flashing) can own open/close and signals.
-     * @param {string} path - port path (e.g. "serial")
-     * @returns {SerialPort|undefined}
+     * @param path - port path (e.g. "serial")
      */
-    getNativePort(path) {
+    getNativePort(path: string): WebSerialPort | undefined {
         return this.ports.find((device) => device.path === path)?.port;
     }
 
     /**
      * Get the id of a SerialPort object. Make a new id if the object is new.
-     * @param {SerialPort} port
-     * @returns {string} the id, for example "serial_0"
+     * @returns the id, for example "serial_0"
      */
-    #getStablePortId(port) {
+    #getStablePortId(port: WebSerialPort): string {
         let id = this.#portIds.get(port);
         if (id === undefined) {
             id = `serial_${this.#nextPortId++}`;
@@ -141,11 +258,10 @@ class WebSerial extends EventTarget {
         return id;
     }
 
-    createPort(port) {
+    createPort(port: WebSerialPort): WebSerialDevice {
         const portInfo = port.getInfo();
-        const displayName = vendorIdNames[portInfo.usbVendorId]
-            ? vendorIdNames[portInfo.usbVendorId]
-            : `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
+        const vendorName = portInfo.usbVendorId === undefined ? undefined : vendorIdNames[portInfo.usbVendorId];
+        const displayName = vendorName || `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
         return {
             path: this.#getStablePortId(port),
             displayName: `Betaflight ${displayName}`,
@@ -155,11 +271,12 @@ class WebSerial extends EventTarget {
         };
     }
 
-    async loadDevices() {
+    async loadDevices(): Promise<void> {
         const generation = ++this.#loadGeneration;
 
         try {
-            const ports = await navigator.serial.getPorts();
+            // Throws inside the try where Web Serial is missing, as `navigator.serial.getPorts()` did.
+            const ports = await (webSerialApi() as WebSerialApi).getPorts();
 
             // A burst of device events starts several refreshes at once, and getPorts() gives
             // no order guarantee. An older call that finishes last must not put its list back.
@@ -173,14 +290,15 @@ class WebSerial extends EventTarget {
         }
     }
 
-    async requestPermissionDevice(showAllSerialDevices = false) {
-        let newPermissionPort = null;
+    async requestPermissionDevice(showAllSerialDevices = false): Promise<WebSerialDevice | null> {
+        let newPermissionPort: WebSerialDevice | null = null;
 
         try {
             const options = showAllSerialDevices ? {} : { filters: webSerialDevices };
-            const userSelectedPort = await navigator.serial.requestPort(options);
+            // Throws inside the try where Web Serial is missing, as `navigator.serial.requestPort()` did.
+            const userSelectedPort = await (webSerialApi() as WebSerialApi).requestPort(options);
 
-            newPermissionPort = this.ports.find((port) => port.port === userSelectedPort);
+            newPermissionPort = this.ports.find((port) => port.port === userSelectedPort) ?? null;
 
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
@@ -192,12 +310,12 @@ class WebSerial extends EventTarget {
         return newPermissionPort;
     }
 
-    async getDevices() {
+    async getDevices(): Promise<WebSerialDevice[]> {
         await this.loadDevices();
         return this.ports;
     }
 
-    async connect(path, options = { baudRate: 115200 }) {
+    async connect(path: string, options: WebSerialOptions = DEFAULT_CONNECT_OPTIONS): Promise<boolean> {
         // Prevent double connections
         if (this.connected) {
             console.log(`${logHead} Already connected, not connecting again`);
@@ -244,9 +362,9 @@ class WebSerial extends EventTarget {
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
 
-                // Start reading from the port
+                // Start reading from the port. readLoop() catches its own failures.
                 this.reading = true;
-                this.readLoop();
+                void this.readLoop();
 
                 return true;
             } else if (connectionInfo && this.openCanceled) {
@@ -257,7 +375,7 @@ class WebSerial extends EventTarget {
                 setTimeout(() => {
                     this.openRequested = false;
                     this.openCanceled = false;
-                    this.disconnect();
+                    void this.disconnect();
                     this.dispatchEvent(new CustomEvent("connect", { detail: false }));
                 }, 150);
 
@@ -276,21 +394,23 @@ class WebSerial extends EventTarget {
         }
     }
 
-    async readLoop() {
+    async readLoop(): Promise<void> {
+        // connect() sets the reader immediately before it starts this loop.
+        const reader = this.reader as ReadableStreamDefaultReader<Uint8Array>;
         try {
-            for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
+            for await (const value of streamAsyncIterable(reader, () => this.reading)) {
                 this.dispatchEvent(new CustomEvent("receive", { detail: value }));
             }
         } catch (error) {
             console.error(`${logHead} Error reading:`, error);
             if (this.connected) {
-                this.disconnect();
+                void this.disconnect();
             }
         }
     }
 
     // Update disconnect method
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         // If already disconnected, just return
         if (!this.connected) {
             return true;
@@ -375,7 +495,7 @@ class WebSerial extends EventTarget {
         }
     }
 
-    forceClose() {
+    forceClose(): void {
         // Best-effort teardown for page-unload (pagehide / beforeunload).
         // Instance refs are nulled immediately so the rest of the class sees a
         // disconnected state; the actual async teardown runs in a Promise chain
@@ -402,7 +522,8 @@ class WebSerial extends EventTarget {
         }
 
         // Mirrors the disconnect() sequence but without awaiting at call-site.
-        (async () => {
+        // Every step catches its own failure, so the chain never rejects.
+        void (async () => {
             // 1. Cancel reader — resolves the pending read in streamAsyncIterable,
             //    whose finally block will call releaseLock() on the readable side.
             if (reader) {
@@ -437,12 +558,15 @@ class WebSerial extends EventTarget {
         this.connectionId = false;
     }
 
-    checkIsNeedBatchWrite() {
+    checkIsNeedBatchWrite(): boolean {
         const isMac = useAppInfoStore().operatingSystem === "MacOS";
-        return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
+        const vendorId = this.connectionInfo?.usbVendorId;
+        return isMac && vendorId !== undefined && vendorIdNames[vendorId] === "AT32";
     }
 
-    async batchWrite(data) {
+    async batchWrite(data: WebSerialPayload): Promise<void> {
+        // send() only calls this with a writer. this.writer is read per chunk, not captured,
+        // so a disconnect mid-frame fails the next chunk rather than writing to a released lock.
         // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to
         // USB buffer size limitations in the macOS implementation
         const batchWriteSize = 63;
@@ -451,16 +575,17 @@ class WebSerial extends EventTarget {
             const sliceData = remainingData.slice(0, batchWriteSize);
             remainingData = remainingData.slice(batchWriteSize);
             try {
-                await this.writer.write(sliceData);
+                // The chunks are one frame, so they must reach the port in order.
+                await this.writer!.write(sliceData); // NOSONAR: sequential by design
             } catch (error) {
                 console.error(`${logHead} Error writing batch chunk:`, error);
                 throw error; // Re-throw to be caught by the send method
             }
         }
-        await this.writer.write(remainingData);
+        await this.writer!.write(remainingData);
     }
 
-    async send(data, callback) {
+    async send(data: WebSerialPayload, callback?: (result: WebSerialSendResult) => void): Promise<WebSerialSendResult> {
         if (!this.connected || !this.writer) {
             console.error(`${logHead} Failed to send data, serial port not open`);
             if (callback) {

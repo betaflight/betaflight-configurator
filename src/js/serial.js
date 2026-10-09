@@ -1,4 +1,4 @@
-import WebSerial from "./protocols/WebSerial.js";
+import WebSerial from "./protocols/WebSerial";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";

@@ -24,7 +24,7 @@ const stub = (tag) =>
         [tag]: class extends EventTarget {},
     })[tag];
 
-vi.mock("../../src/js/protocols/WebSerial.js", () => ({ default: stub("WebSerial") }));
+vi.mock("../../src/js/protocols/WebSerial", () => ({ default: stub("WebSerial") }));
 vi.mock("../../src/js/protocols/WebBluetooth.js", () => ({ default: stub("WebBluetooth") }));
 vi.mock("../../src/js/protocols/WebSocket.js", () => ({ default: stub("Websocket") }));
 vi.mock("../../src/js/protocols/VirtualSerial.js", () => ({ default: stub("VirtualSerial") }));

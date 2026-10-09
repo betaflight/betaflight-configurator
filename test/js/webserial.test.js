@@ -70,7 +70,7 @@ afterEach(() => {
 });
 
 async function loadWebSerial() {
-    const mod = await import("../../src/js/protocols/WebSerial.js");
+    const mod = await import("../../src/js/protocols/WebSerial");
     return mod.default;
 }
 
