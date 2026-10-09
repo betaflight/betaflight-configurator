@@ -24,13 +24,7 @@ import { API_VERSION_1_45 } from "../data_storage";
 import { useFlightControllerStore } from "../../stores/fc";
 
 function zeroPad(value: number, width: number): string {
-    let valuePadded = String(value);
-
-    while (valuePadded.length < width) {
-        valuePadded = `0${value}`;
-    }
-
-    return valuePadded;
+    return String(value).padStart(width, "0");
 }
 
 export function generateFilename(prefix: string, suffix: string): string {
@@ -44,7 +38,7 @@ export function generateFilename(prefix: string, suffix: string): string {
     let filename = `${fcStore.config.flightControllerIdentifier || "UNKNOWN"}_${prefix}`;
 
     if (craftName.length) {
-        filename += `_${craftName.trim().replace(" ", "_").toUpperCase()}`;
+        filename += `_${craftName.trim().replaceAll(/\s+/g, "_").toUpperCase()}`;
     }
 
     filename += `_${yyyymmdd}_${hhmmss}`;
