@@ -902,597 +902,568 @@ export class UsbDfuProtocol extends EventTarget {
     }
 
     upload_procedure(step: 0 | 1 | 2 | 4 | 5): void {
-        let blocks: number;
-        let address: number;
-        let wBlockNum: number;
-
         switch (step) {
             case 0:
-                this.getChipInfo(0, (chipInfo, resultCode) => {
-                    if (resultCode !== 0 || chipInfo === undefined) {
-                        console.log(`${this.logHead} Failed to detect chip info, resultCode: ${resultCode}`);
-                        this.cleanup();
-                    } else {
-                        let nextAction: 1 | 2 | undefined;
-
-                        if (chipInfo.internal_flash !== undefined) {
-                            // internal flash
-                            nextAction = 1;
-
-                            this.chipInfo = chipInfo;
-                            this.flash_layout = chipInfo.internal_flash;
-
-                            if (this.hex!.bytes_total > chipInfo.internal_flash.total_size) {
-                                const firmwareSize = this.hex!.bytes_total;
-                                const boardSize = chipInfo.internal_flash.total_size;
-                                const bareBoard = this.bareBoard;
-                                console.log(
-                                    `${this.logHead} Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`,
-                                );
-                            }
-                        } else if (chipInfo.external_flash !== undefined) {
-                            // external flash
-                            nextAction = 2; // no option bytes
-
-                            this.chipInfo = chipInfo;
-                            this.flash_layout = chipInfo.external_flash;
-                        } else {
-                            console.log(`${this.logHead} Failed to detect internal or external flash`);
-                            this.cleanup();
-                        }
-
-                        if (nextAction !== undefined) {
-                            const action = nextAction;
-                            gui_log(
-                                i18n.getMessage(
-                                    "dfu_device_flash_info",
-                                    (this.flash_layout.total_size / 1024).toString(),
-                                ),
-                            );
-
-                            // verify all addresses in the hex are writable.
-                            const unusableBlocks = [];
-
-                            for (const block of this.hex!.data) {
-                                const usable = this.isBlockUsable(block.address, block.bytes);
-                                if (!usable) {
-                                    unusableBlocks.push(block);
-                                }
-                            }
-
-                            if (unusableBlocks.length > 0) {
-                                gui_log(i18n.getMessage("dfu_hex_address_errors"));
-                                this.flashingMessage(
-                                    i18n.getMessage("dfu_hex_address_errors"),
-                                    this.options?.flashMessageTypes?.INVALID,
-                                );
-                                this.leave();
-                            } else {
-                                this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
-                                    // Never let a missing/zero wTransferSize into the write loop
-                                    // (it would stall or divide the payload into empty blocks).
-                                    const reportedSize = (resultCode ? 0 : descriptor?.wTransferSize) ?? 0;
-                                    this.transferSize = reportedSize > 0 ? reportedSize : 2048;
-                                    console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
-                                    this.clearStatus(() => {
-                                        this.upload_procedure(action);
-                                    });
-                                });
-                            }
-                        }
-                    }
-                });
+                this.uploadDetectChip();
                 break;
-            case 1: {
-                const optionBytes = this.chipInfo!.option_bytes;
-                if (optionBytes === undefined) {
-                    // Some bootloaders (e.g. the STM32C5 ROM) don't expose an "@Option Bytes"
-                    // DFU alternate setting, so we can't run the read-protection pre-check.
-                    // Skip straight to erase instead of aborting: a non-read-protected chip
-                    // flashes fine, and a protected one surfaces errVENDOR during erase (handled).
-                    // Falling through here previously dereferenced the missing option_bytes and
-                    // threw inside an async callback, hanging the flash silently.
-                    console.log(`${this.logHead} No option bytes region; skipping read-protection check`);
-                    this.upload_procedure(2);
-                    break;
+            case 1:
+                this.uploadCheckReadProtection();
+                break;
+            case 2:
+                this.uploadErase();
+                break;
+            case 4:
+                this.uploadWrite();
+                break;
+            case 5:
+                this.uploadVerify();
+                break;
+        }
+    }
+
+    /** GETSTATUS: the 6-byte status report (state at [4], poll timeout in [1..3]). */
+    private getStatus(callback: (data: DfuBytes, error: number) => void): void {
+        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, callback);
+    }
+
+    /**
+     * DNLOAD followed by GETSTATUS. A device that accepted the command reports dfuDNBUSY and
+     * the time to wait before polling again, passed to onBusy; anything else goes to onRejected.
+     */
+    private download(
+        wBlockNum: number,
+        data: DfuOutData,
+        onBusy: (delay: number) => void,
+        onRejected: () => void,
+    ): void {
+        this.controlTransfer("out", this.request.DNLOAD, wBlockNum, 0, 0, data, () => {
+            this.getStatus((status) => {
+                if (status[4] === this.state.dfuDNBUSY) {
+                    onBusy(status[1] | (status[2] << 8) | (status[3] << 16));
+                } else {
+                    onRejected();
                 }
+            });
+        });
+    }
 
-                const unprotect = () => {
-                    console.log(`${this.logHead} Initiate read unprotect`);
-                    const messageReadProtected = i18n.getMessage("stm32ReadProtected");
-                    gui_log(messageReadProtected);
-                    this.flashingMessage(messageReadProtected, this.options?.flashMessageTypes?.ACTION);
+    /** Step 0: read the chip's memory layout and check the hex fits before touching flash. */
+    private uploadDetectChip(): void {
+        this.getChipInfo(0, (chipInfo, resultCode) => {
+            if (resultCode !== 0 || chipInfo === undefined) {
+                console.log(`${this.logHead} Failed to detect chip info, resultCode: ${resultCode}`);
+                this.cleanup();
+                return;
+            }
 
-                    this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, [0x92], () => {
-                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                            if (data[4] === this.state.dfuDNBUSY) {
-                                // completely normal
-                                const delay = data[1] | (data[2] << 8) | (data[3] << 16);
-                                const total_delay = delay + 20000; // wait at least 20 seconds to make sure the user does not disconnect the board while erasing the memory
-                                let timeSpentWaiting = 0;
-                                const incr = 1000; // one sec increments
-                                const waitForErase = setInterval(() => {
-                                    this.flashProgress(Math.min(timeSpentWaiting / total_delay, 1) * 100);
+            const nextStep = this.selectFlashLayout(chipInfo);
+            if (nextStep !== undefined) {
+                this.checkHexAndContinue(nextStep);
+            }
+        });
+    }
 
-                                    if (timeSpentWaiting < total_delay) {
-                                        timeSpentWaiting += incr;
-                                        return;
-                                    }
-                                    clearInterval(waitForErase);
-                                    setTimeout(() => {
-                                        this.controlTransfer(
-                                            "in",
-                                            this.request.GETSTATUS,
-                                            0,
-                                            0,
-                                            6,
-                                            0,
-                                            (data, error) => {
-                                                if (error) {
-                                                    // we encounter an error, but this is expected. should be a stall.
-                                                    console.log(
-                                                        `${this.logHead} Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.`,
-                                                    );
-                                                    gui_log(i18n.getMessage("stm32UnprotectSuccessful"));
+    /**
+     * Picks the flash to write.
+     * @returns the next step: 1 (check the option bytes first) for internal flash, 2 for
+     * external flash, which has no option bytes; undefined, after cleanup, when there is neither
+     */
+    private selectFlashLayout(chipInfo: ChipInfo): 1 | 2 | undefined {
+        if (chipInfo.internal_flash !== undefined) {
+            this.chipInfo = chipInfo;
+            this.flash_layout = chipInfo.internal_flash;
 
-                                                    const messageUnprotectUnplug =
-                                                        i18n.getMessage("stm32UnprotectUnplug");
-                                                    gui_log(messageUnprotectUnplug);
+            if (this.hex!.bytes_total > chipInfo.internal_flash.total_size) {
+                const firmwareSize = this.hex!.bytes_total;
+                const boardSize = chipInfo.internal_flash.total_size;
+                const bareBoard = this.bareBoard;
+                console.log(
+                    `${this.logHead} Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`,
+                );
+            }
+            return 1;
+        }
 
-                                                    this.flashingMessage(
-                                                        messageUnprotectUnplug,
-                                                        this.options?.flashMessageTypes?.ACTION,
-                                                    );
-                                                    this.flashProgress(0);
-                                                } else {
-                                                    // unprotecting the flight controller did not work. It did not reboot.
-                                                    console.log(
-                                                        `${this.logHead} Failed to execute unprotect memory command`,
-                                                    );
+        if (chipInfo.external_flash !== undefined) {
+            this.chipInfo = chipInfo;
+            this.flash_layout = chipInfo.external_flash;
+            return 2;
+        }
 
-                                                    gui_log(i18n.getMessage("stm32UnprotectFailed"));
-                                                    this.flashingMessage(
-                                                        i18n.getMessage("stm32UnprotectFailed"),
-                                                        this.options?.flashMessageTypes?.INVALID,
-                                                    );
-                                                    console.log(`${this.logHead} `, data);
-                                                    this.cleanup();
-                                                }
-                                            },
-                                        );
-                                    }, 2000); // this should stall/disconnect anyways. so we only wait 2 sec max.
-                                }, incr);
-                            } else {
-                                console.log(`${this.logHead} Failed to initiate unprotect memory command`);
-                                const messageUnprotectInitFailed = i18n.getMessage("stm32UnprotectInitFailed");
-                                gui_log(messageUnprotectInitFailed);
-                                this.flashingMessage(
-                                    messageUnprotectInitFailed,
-                                    this.options?.flashMessageTypes?.INVALID,
-                                );
-                                this.cleanup();
-                            }
-                        });
+        console.log(`${this.logHead} Failed to detect internal or external flash`);
+        this.cleanup();
+        return undefined;
+    }
+
+    /** Refuses a hex with addresses outside the flash, else reads the transfer size and goes on. */
+    private checkHexAndContinue(nextStep: 1 | 2): void {
+        gui_log(i18n.getMessage("dfu_device_flash_info", (this.flash_layout.total_size / 1024).toString()));
+
+        // verify all addresses in the hex are writable.
+        const unusableBlocks = this.hex!.data.filter((block) => !this.isBlockUsable(block.address, block.bytes));
+
+        if (unusableBlocks.length > 0) {
+            gui_log(i18n.getMessage("dfu_hex_address_errors"));
+            this.flashingMessage(i18n.getMessage("dfu_hex_address_errors"), this.options?.flashMessageTypes?.INVALID);
+            this.leave();
+            return;
+        }
+
+        this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
+            // Never let a missing/zero wTransferSize into the write loop
+            // (it would stall or divide the payload into empty blocks).
+            const reportedSize = (resultCode ? 0 : descriptor?.wTransferSize) ?? 0;
+            this.transferSize = reportedSize > 0 ? reportedSize : 2048;
+            console.log(`${this.logHead} Using transfer size: ${this.transferSize}`);
+            this.clearStatus(() => {
+                this.upload_procedure(nextStep);
+            });
+        });
+    }
+
+    /** Step 1: read the option bytes; if that fails the chip is read protected and gets unprotected. */
+    private uploadCheckReadProtection(): void {
+        const optionBytes = this.chipInfo!.option_bytes;
+        if (optionBytes === undefined) {
+            // Some bootloaders (e.g. the STM32C5 ROM) don't expose an "@Option Bytes"
+            // DFU alternate setting, so we can't run the read-protection pre-check.
+            // Skip straight to erase instead of aborting: a non-read-protected chip
+            // flashes fine, and a protected one surfaces errVENDOR during erase (handled).
+            // Falling through here previously dereferenced the missing option_bytes and
+            // threw inside an async callback, hanging the flash silently.
+            console.log(`${this.logHead} No option bytes region; skipping read-protection check`);
+            this.upload_procedure(2);
+            return;
+        }
+
+        this.clearStatus(() => {
+            // load address fails if read protection is active unlike as stated in the docs
+            this.loadAddress(
+                optionBytes.start_address,
+                (response) => this.onOptionBytesAddressLoaded(response, optionBytes),
+                false,
+            );
+        });
+    }
+
+    private onOptionBytesAddressLoaded(loadAddressResponse: DfuBytes, optionBytes: DfuMemory): void {
+        // contrary to what is in the docs. Address load should in theory work even if read protection is active
+        // if address load fails with this specific error though, it is very likely bc of read protection
+        if (loadAddressResponse[4] === this.state.dfuERROR && loadAddressResponse[0] === this.status.errVENDOR) {
+            // read protected
+            gui_log(i18n.getMessage("stm32AddressLoadFailed"));
+            this.clearStatus(() => this.unprotect());
+        } else if (loadAddressResponse[4] === this.state.dfuDNLOAD_IDLE) {
+            console.log(`${this.logHead} Address load for option bytes sector succeeded.`);
+            this.clearStatus(() => this.readOptionBytes(optionBytes));
+        } else {
+            gui_log(i18n.getMessage("stm32AddressLoadUnknown"));
+            this.cleanup();
+        }
+    }
+
+    private readOptionBytes(optionBytes: DfuMemory): void {
+        // the following should fail if read protection is active
+        this.controlTransfer("in", this.request.UPLOAD, 2, 0, optionBytes.total_size, 0, (ob_data, errcode) => {
+            if (errcode) {
+                console.log(`USB transfer error while reading option bytes: ${errcode}`);
+                this.cleanup();
+                return;
+            }
+
+            this.getStatus((data) => {
+                if (data[4] === this.state.dfuUPLOAD_IDLE && ob_data.length === optionBytes.total_size) {
+                    console.log(`${this.logHead} Option bytes read successfully`);
+                    console.log(`${this.logHead} Chip does not appear read protected`);
+                    gui_log(i18n.getMessage("stm32NotReadProtected"));
+                    // it is pretty safe to continue to erase flash
+                    this.clearStatus(() => {
+                        this.upload_procedure(2);
                     });
-                };
+                } else {
+                    console.log(`${this.logHead} Option bytes could not be read. Quite possibly read protected.`);
+                    this.clearStatus(() => this.unprotect());
+                }
+            });
+        });
+    }
 
-                const tryReadOB = () => {
-                    // the following should fail if read protection is active
-                    this.controlTransfer(
-                        "in",
-                        this.request.UPLOAD,
-                        2,
-                        0,
-                        optionBytes.total_size,
-                        0,
-                        (ob_data, errcode) => {
-                            if (errcode) {
-                                console.log(`USB transfer error while reading option bytes: ${errcode}`);
-                                this.cleanup();
-                                return;
-                            }
+    private unprotect(): void {
+        console.log(`${this.logHead} Initiate read unprotect`);
+        const messageReadProtected = i18n.getMessage("stm32ReadProtected");
+        gui_log(messageReadProtected);
+        this.flashingMessage(messageReadProtected, this.options?.flashMessageTypes?.ACTION);
 
-                            this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                if (
-                                    data[4] === this.state.dfuUPLOAD_IDLE &&
-                                    ob_data.length === optionBytes.total_size
-                                ) {
-                                    console.log(`${this.logHead} Option bytes read successfully`);
-                                    console.log(`${this.logHead} Chip does not appear read protected`);
-                                    gui_log(i18n.getMessage("stm32NotReadProtected"));
-                                    // it is pretty safe to continue to erase flash
-                                    this.clearStatus(() => {
-                                        this.upload_procedure(2);
-                                    });
-                                } else {
-                                    console.log(
-                                        `${this.logHead} Option bytes could not be read. Quite possibly read protected.`,
-                                    );
-                                    this.clearStatus(unprotect);
-                                }
-                            });
-                        },
-                    );
-                };
+        this.download(
+            0,
+            [0x92],
+            // wait at least 20 seconds to make sure the user does not disconnect the board while erasing the memory
+            (delay) => this.waitForUnprotect(delay + 20000),
+            () => {
+                console.log(`${this.logHead} Failed to initiate unprotect memory command`);
+                const messageUnprotectInitFailed = i18n.getMessage("stm32UnprotectInitFailed");
+                gui_log(messageUnprotectInitFailed);
+                this.flashingMessage(messageUnprotectInitFailed, this.options?.flashMessageTypes?.INVALID);
+                this.cleanup();
+            },
+        );
+    }
 
-                const initReadOB = (loadAddressResponse: DfuBytes) => {
-                    // contrary to what is in the docs. Address load should in theory work even if read protection is active
-                    // if address load fails with this specific error though, it is very likely bc of read protection
-                    if (
-                        loadAddressResponse[4] === this.state.dfuERROR &&
-                        loadAddressResponse[0] === this.status.errVENDOR
-                    ) {
-                        // read protected
-                        gui_log(i18n.getMessage("stm32AddressLoadFailed"));
-                        this.clearStatus(unprotect);
-                    } else if (loadAddressResponse[4] === this.state.dfuDNLOAD_IDLE) {
-                        console.log(`${this.logHead} Address load for option bytes sector succeeded.`);
-                        this.clearStatus(tryReadOB);
-                    } else {
-                        gui_log(i18n.getMessage("stm32AddressLoadUnknown"));
-                        this.cleanup();
-                    }
-                };
+    /** Unprotecting erases the whole chip: show progress for the given time, then check the result. */
+    private waitForUnprotect(totalDelay: number): void {
+        let timeSpentWaiting = 0;
+        const incr = 1000; // one sec increments
+        const waitForErase = setInterval(() => {
+            this.flashProgress(Math.min(timeSpentWaiting / totalDelay, 1) * 100);
+
+            if (timeSpentWaiting < totalDelay) {
+                timeSpentWaiting += incr;
+                return;
+            }
+            clearInterval(waitForErase);
+            // this should stall/disconnect anyways. so we only wait 2 sec max.
+            setTimeout(() => this.getStatus((data, error) => this.reportUnprotectResult(data, error)), 2000);
+        }, incr);
+    }
+
+    private reportUnprotectResult(data: DfuBytes, error: number): void {
+        if (error) {
+            // we encounter an error, but this is expected. should be a stall.
+            console.log(
+                `${this.logHead} Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.`,
+            );
+            gui_log(i18n.getMessage("stm32UnprotectSuccessful"));
+
+            const messageUnprotectUnplug = i18n.getMessage("stm32UnprotectUnplug");
+            gui_log(messageUnprotectUnplug);
+
+            this.flashingMessage(messageUnprotectUnplug, this.options?.flashMessageTypes?.ACTION);
+            this.flashProgress(0);
+        } else {
+            // unprotecting the flight controller did not work. It did not reboot.
+            console.log(`${this.logHead} Failed to execute unprotect memory command`);
+
+            gui_log(i18n.getMessage("stm32UnprotectFailed"));
+            this.flashingMessage(i18n.getMessage("stm32UnprotectFailed"), this.options?.flashMessageTypes?.INVALID);
+            console.log(`${this.logHead} `, data);
+            this.cleanup();
+        }
+    }
+
+    /** The pages to erase: every page for a full chip erase, else the ones the hex writes to. */
+    private pagesToErase(): { sector: number; page: number }[] {
+        const erase_pages: { sector: number; page: number }[] = [];
+        for (let i = 0; i < this.flash_layout.sectors.length; i++) {
+            const sector = this.flash_layout.sectors[i];
+            for (let j = 0; j < sector.num_pages; j++) {
+                const page_start = sector.start_address + j * sector.page_size;
+                if (this.options!.erase_chip || this.pageHoldsHexData(page_start, sector.page_size)) {
+                    erase_pages.push({ sector: i, page: j });
+                }
+            }
+        }
+        return erase_pages;
+    }
+
+    private pageHoldsHexData(page_start: number, page_size: number): boolean {
+        const page_end = page_start + page_size - 1;
+        return this.hex!.data.some((hexData) => {
+            const starts_in_page = hexData.address >= page_start && hexData.address <= page_end;
+            const end_address = hexData.address + hexData.bytes - 1;
+            const ends_in_page = end_address >= page_start && end_address <= page_end;
+            const spans_page = hexData.address < page_start && end_address > page_end;
+            return starts_in_page || ends_in_page || spans_page;
+        });
+    }
+
+    /** Step 2: erase the pages the firmware needs, one at a time. */
+    private uploadErase(): void {
+        const erase_pages = this.pagesToErase();
+
+        if (erase_pages.length === 0) {
+            console.log(`${this.logHead} Aborting, No flash pages to erase`);
+            this.flashingMessage(i18n.getMessage("stm32InvalidHex"), this.options?.flashMessageTypes?.INVALID);
+            this.cleanup();
+            return;
+        }
+
+        this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.ERASING);
+        console.log(`${this.logHead} Executing local chip erase`, erase_pages);
+
+        let page = 0;
+        let total_erased = 0; // bytes
+
+        const erase_page_next = () => {
+            // Calculate progress within erase phase
+            const eraseStart = this.progressWeights!.erase[0];
+            const eraseRange = this.progressWeights!.erase[1] - this.progressWeights!.erase[0];
+            const eraseProgress = ((page + 1) / erase_pages.length) * eraseRange;
+            this.flashProgress(eraseStart + eraseProgress);
+            page++;
+
+            if (page === erase_pages.length) {
+                console.log(`${this.logHead} Erase: complete`);
+                gui_log(i18n.getMessage("dfu_erased_kilobytes", (total_erased / 1024).toString()));
+                this.upload_procedure(4);
+            } else {
+                erase_page();
+            }
+        };
+
+        const erase_page = () => {
+            const sector = this.flash_layout.sectors[erase_pages[page].sector];
+            const page_addr = erase_pages[page].page * sector.page_size + sector.start_address;
+            const cmd = [
+                0x41,
+                page_addr & 0xff,
+                (page_addr >> 8) & 0xff,
+                (page_addr >> 16) & 0xff,
+                (page_addr >> 24) & 0xff,
+            ];
+            total_erased += sector.page_size;
+            console.log(
+                `${this.logHead} Erasing. sector ${erase_pages[page].sector}, page ${
+                    erase_pages[page].page
+                } @ 0x${page_addr.toString(16)}`,
+            );
+
+            this.download(
+                0,
+                cmd,
+                (delay) => setTimeout(() => this.confirmPageErased(page_addr, erase_page_next), delay),
+                () => {
+                    console.log(`${this.logHead} Failed to initiate page erase, page 0x${page_addr.toString(16)}`);
+                    this.cleanup();
+                },
+            );
+        };
+
+        // start
+        erase_page();
+    }
+
+    private confirmPageErased(page_addr: number, onErased: () => void): void {
+        this.getStatus((data) => {
+            if (data[4] === this.state.dfuDNBUSY) {
+                // H743 Rev.V (probably other H7 Rev.Vs also) stays in
+                // dfuDNBUSY past the reported delay. clearStatus()
+                // unsticks it; the erase itself already completed.
+                console.log(`${this.logHead} erase_page: dfuDNBUSY after timeout, clearing`);
 
                 this.clearStatus(() => {
-                    // load address fails if read protection is active unlike as stated in the docs
-                    this.loadAddress(optionBytes.start_address, initReadOB, false);
-                });
-                break;
-            }
-            case 2: {
-                // erase
-                // find out which pages to erase
-                const erase_pages: { sector: number; page: number }[] = [];
-                for (let i = 0; i < this.flash_layout.sectors.length; i++) {
-                    for (let j = 0; j < this.flash_layout.sectors[i].num_pages; j++) {
-                        if (this.options!.erase_chip) {
-                            // full chip erase
-                            erase_pages.push({ sector: i, page: j });
+                    this.getStatus((data) => {
+                        if (data[4] === this.state.dfuIDLE) {
+                            onErased();
                         } else {
-                            // local erase
-                            const page_start =
-                                this.flash_layout.sectors[i].start_address + j * this.flash_layout.sectors[i].page_size;
-                            const page_end = page_start + this.flash_layout.sectors[i].page_size - 1;
-                            for (const hexData of this.hex!.data) {
-                                const starts_in_page = hexData.address >= page_start && hexData.address <= page_end;
-                                const end_address = hexData.address + hexData.bytes - 1;
-                                const ends_in_page = end_address >= page_start && end_address <= page_end;
-                                const spans_page = hexData.address < page_start && end_address > page_end;
-
-                                if (starts_in_page || ends_in_page || spans_page) {
-                                    const idx = erase_pages.findIndex((element) => {
-                                        return element.sector === i && element.page === j;
-                                    });
-                                    if (idx === -1) {
-                                        erase_pages.push({ sector: i, page: j });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (erase_pages.length === 0) {
-                    console.log(`${this.logHead} Aborting, No flash pages to erase`);
-                    this.flashingMessage(i18n.getMessage("stm32InvalidHex"), this.options?.flashMessageTypes?.INVALID);
-                    this.cleanup();
-                    break;
-                }
-
-                this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.ERASING);
-                console.log(`${this.logHead} Executing local chip erase`, erase_pages);
-
-                let page = 0;
-                let total_erased = 0; // bytes
-
-                const erase_page_next = () => {
-                    // Calculate progress within erase phase
-                    const eraseStart = this.progressWeights!.erase[0];
-                    const eraseRange = this.progressWeights!.erase[1] - this.progressWeights!.erase[0];
-                    const eraseProgress = ((page + 1) / erase_pages.length) * eraseRange;
-                    this.flashProgress(eraseStart + eraseProgress);
-                    page++;
-
-                    if (page === erase_pages.length) {
-                        console.log(`${this.logHead} Erase: complete`);
-                        gui_log(i18n.getMessage("dfu_erased_kilobytes", (total_erased / 1024).toString()));
-                        this.upload_procedure(4);
-                    } else {
-                        erase_page();
-                    }
-                };
-
-                const erase_page = () => {
-                    const page_addr =
-                        erase_pages[page].page * this.flash_layout.sectors[erase_pages[page].sector].page_size +
-                        this.flash_layout.sectors[erase_pages[page].sector].start_address;
-                    const cmd = [
-                        0x41,
-                        page_addr & 0xff,
-                        (page_addr >> 8) & 0xff,
-                        (page_addr >> 16) & 0xff,
-                        (page_addr >> 24) & 0xff,
-                    ];
-                    total_erased += this.flash_layout.sectors[erase_pages[page].sector].page_size;
-                    console.log(
-                        `${this.logHead} Erasing. sector ${erase_pages[page].sector}, page ${
-                            erase_pages[page].page
-                        } @ 0x${page_addr.toString(16)}`,
-                    );
-
-                    this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, cmd, () => {
-                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                            if (data[4] === this.state.dfuDNBUSY) {
-                                // completely normal
-                                const delay = data[1] | (data[2] << 8) | (data[3] << 16);
-
-                                setTimeout(() => {
-                                    this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                        if (data[4] === this.state.dfuDNBUSY) {
-                                            // H743 Rev.V (probably other H7 Rev.Vs also) stays in
-                                            // dfuDNBUSY past the reported delay. clearStatus()
-                                            // unsticks it; the erase itself already completed.
-                                            console.log(
-                                                `${this.logHead} erase_page: dfuDNBUSY after timeout, clearing`,
-                                            );
-
-                                            this.clearStatus(() => {
-                                                this.controlTransfer(
-                                                    "in",
-                                                    this.request.GETSTATUS,
-                                                    0,
-                                                    0,
-                                                    6,
-                                                    0,
-                                                    (data) => {
-                                                        if (data[4] === this.state.dfuIDLE) {
-                                                            erase_page_next();
-                                                        } else {
-                                                            console.log(
-                                                                `${
-                                                                    this.logHead
-                                                                } Failed to erase page 0x${page_addr.toString(
-                                                                    16,
-                                                                )} (did not reach dfuIDLE after clearing`,
-                                                            );
-                                                            this.cleanup();
-                                                        }
-                                                    },
-                                                );
-                                            }, true);
-                                        } else if (data[4] === this.state.dfuDNLOAD_IDLE) {
-                                            erase_page_next();
-                                        } else {
-                                            console.log(
-                                                `${this.logHead} Failed to erase page 0x${page_addr.toString(16)}`,
-                                            );
-                                            this.cleanup();
-                                        }
-                                    });
-                                }, delay);
-                            } else {
-                                console.log(
-                                    `${this.logHead} Failed to initiate page erase, page 0x${page_addr.toString(16)}`,
-                                );
-                                this.cleanup();
-                            }
-                        });
-                    });
-                };
-
-                // start
-                erase_page();
-                break;
-            }
-            case 4: {
-                // upload
-                // we dont need to clear the state as we are already using DFU_DNLOAD
-                console.log(`${this.logHead} Writing data ...`);
-                this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.FLASHING);
-
-                const hex = this.hex!;
-                blocks = hex.data.length - 1;
-                let flashing_block = 0;
-                address = hex.data[flashing_block].address;
-
-                let bytes_flashed = 0;
-                let bytes_flashed_total = 0; // used for progress bar
-                wBlockNum = 2; // required by DFU
-
-                const write = () => {
-                    if (bytes_flashed < hex.data[flashing_block].bytes) {
-                        const bytes_to_write =
-                            bytes_flashed + this.transferSize <= hex.data[flashing_block].bytes
-                                ? this.transferSize
-                                : hex.data[flashing_block].bytes - bytes_flashed;
-
-                        const data_to_flash = hex.data[flashing_block].data.slice(
-                            bytes_flashed,
-                            bytes_flashed + bytes_to_write,
-                        );
-
-                        address += bytes_to_write;
-                        bytes_flashed += bytes_to_write;
-                        bytes_flashed_total += bytes_to_write;
-
-                        this.controlTransfer("out", this.request.DNLOAD, wBlockNum++, 0, 0, data_to_flash, () => {
-                            this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                if (data[4] === this.state.dfuDNBUSY) {
-                                    const delay = data[1] | (data[2] << 8) | (data[3] << 16);
-
-                                    setTimeout(() => {
-                                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                            if (data[4] === this.state.dfuDNLOAD_IDLE) {
-                                                // update progress bar
-                                                const flashStart = this.progressWeights!.flash[0];
-                                                const flashRange =
-                                                    this.progressWeights!.flash[1] - this.progressWeights!.flash[0];
-                                                const flashProgress =
-                                                    (bytes_flashed_total / hex.bytes_total) * flashRange;
-                                                this.flashProgress(flashStart + flashProgress);
-
-                                                // flash another page
-                                                write();
-                                            } else {
-                                                console.log(
-                                                    `${
-                                                        this.logHead
-                                                    } Failed to write ${bytes_to_write}bytes to 0x${address.toString(
-                                                        16,
-                                                    )}`,
-                                                );
-                                                this.cleanup();
-                                            }
-                                        });
-                                    }, delay);
-                                } else {
-                                    console.log(
-                                        `${
-                                            this.logHead
-                                        } Failed to initiate write ${bytes_to_write}bytes to 0x${address.toString(16)}`,
-                                    );
-                                    this.cleanup();
-                                }
-                            });
-                        });
-                    } else if (flashing_block < blocks) {
-                        // move to another block
-                        flashing_block++;
-
-                        address = hex.data[flashing_block].address;
-                        bytes_flashed = 0;
-                        wBlockNum = 2;
-
-                        this.loadAddress(address, write);
-                    } else {
-                        // all blocks flashed
-                        console.log(`${this.logHead} Writing: done`);
-
-                        // proceed to next step
-                        this.upload_procedure(5);
-                    }
-                };
-
-                // start
-                this.loadAddress(address, write);
-
-                break;
-            }
-            case 5: {
-                // verify
-                console.log(`${this.logHead} Verifying data ...`);
-                this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.VERIFYING);
-
-                const hex = this.hex!;
-                blocks = hex.data.length - 1;
-                let reading_block = 0;
-                address = hex.data[reading_block].address;
-
-                let bytes_verified = 0;
-                let bytes_verified_total = 0; // used for progress bar
-                wBlockNum = 2; // required by DFU
-
-                // initialize arrays
-                for (let i = 0; i <= blocks; i++) {
-                    this.verify_hex.push([]);
-                }
-
-                const read = () => {
-                    if (bytes_verified < hex.data[reading_block].bytes) {
-                        const bytes_to_read =
-                            bytes_verified + this.transferSize <= hex.data[reading_block].bytes
-                                ? this.transferSize
-                                : hex.data[reading_block].bytes - bytes_verified;
-
-                        this.controlTransfer("in", this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data) => {
-                            for (const piece of data) {
-                                this.verify_hex[reading_block].push(piece);
-                            }
-
-                            address += bytes_to_read;
-                            bytes_verified += bytes_to_read;
-                            bytes_verified_total += bytes_to_read;
-
-                            // update progress bar
-                            const verifyStart = this.progressWeights!.verify[0];
-                            const verifyRange = this.progressWeights!.verify[1] - this.progressWeights!.verify[0];
-                            const verifyProgress = (bytes_verified_total / hex.bytes_total) * verifyRange;
-                            this.flashProgress(verifyStart + verifyProgress);
-
-                            // verify another page
-                            read();
-                        });
-                    } else if (reading_block < blocks) {
-                        // move to another block
-                        reading_block++;
-
-                        address = hex.data[reading_block].address;
-                        bytes_verified = 0;
-                        wBlockNum = 2;
-
-                        this.clearStatus(() => {
-                            this.loadAddress(address, () => {
-                                this.clearStatus(read);
-                            });
-                        });
-                    } else {
-                        // all blocks read, verify
-                        let verify = true;
-                        for (let i = 0; i <= blocks; i++) {
-                            verify = this.verify_flash(hex.data[i].data, this.verify_hex[i]);
-
-                            if (!verify) break;
-                        }
-
-                        if (verify) {
-                            console.log(`${this.logHead} Programming: SUCCESSFUL`);
-                            // update progress bar
-                            this.flashingMessage(
-                                i18n.getMessage("stm32ProgrammingSuccessful"),
-                                this.options?.flashMessageTypes?.VALID,
+                            console.log(
+                                `${this.logHead} Failed to erase page 0x${page_addr.toString(16)} (did not reach dfuIDLE after clearing`,
                             );
-
-                            // Show notification
-                            if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
-                                    body: i18n.getMessage("programmingSuccessfulNotification"),
-                                    icon: "/images/pwa/favicon.ico",
-                                });
-                            }
-
-                            // proceed to next step
-                            this.leave();
-                        } else {
-                            console.log(`${this.logHead} Programming: FAILED`);
-                            // update progress bar
-                            this.flashingMessage(
-                                i18n.getMessage("stm32ProgrammingFailed"),
-                                this.options?.flashMessageTypes?.INVALID,
-                            );
-
-                            // Show notification
-                            if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight App", {
-                                    body: i18n.getMessage("programmingFailedNotification"),
-                                    icon: "/images/pwa/favicon.ico",
-                                });
-                            }
-
-                            // disconnect
                             this.cleanup();
                         }
-                    }
+                    });
+                }, true);
+            } else if (data[4] === this.state.dfuDNLOAD_IDLE) {
+                onErased();
+            } else {
+                console.log(`${this.logHead} Failed to erase page 0x${page_addr.toString(16)}`);
+                this.cleanup();
+            }
+        });
+    }
+
+    /** Step 4: write the hex, block by block, in transfer-size chunks. */
+    private uploadWrite(): void {
+        // we dont need to clear the state as we are already using DFU_DNLOAD
+        console.log(`${this.logHead} Writing data ...`);
+        this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.FLASHING);
+
+        const hex = this.hex!;
+        const blocks = hex.data.length - 1;
+        let flashing_block = 0;
+        let address = hex.data[flashing_block].address;
+
+        let bytes_flashed = 0;
+        let bytes_flashed_total = 0; // used for progress bar
+        let wBlockNum = 2; // required by DFU
+
+        const write = () => {
+            if (bytes_flashed < hex.data[flashing_block].bytes) {
+                const bytes_to_write =
+                    bytes_flashed + this.transferSize <= hex.data[flashing_block].bytes
+                        ? this.transferSize
+                        : hex.data[flashing_block].bytes - bytes_flashed;
+
+                const data_to_flash = hex.data[flashing_block].data.slice(
+                    bytes_flashed,
+                    bytes_flashed + bytes_to_write,
+                );
+
+                address += bytes_to_write;
+                bytes_flashed += bytes_to_write;
+                bytes_flashed_total += bytes_to_write;
+
+                const onWritten = () => {
+                    // update progress bar
+                    const flashStart = this.progressWeights!.flash[0];
+                    const flashRange = this.progressWeights!.flash[1] - this.progressWeights!.flash[0];
+                    const flashProgress = (bytes_flashed_total / hex.bytes_total) * flashRange;
+                    this.flashProgress(flashStart + flashProgress);
+
+                    // flash another page
+                    write();
+                };
+                const onFailed = () => {
+                    console.log(`${this.logHead} Failed to write ${bytes_to_write}bytes to 0x${address.toString(16)}`);
+                    this.cleanup();
                 };
 
-                // start
+                this.download(
+                    wBlockNum++,
+                    data_to_flash,
+                    (delay) => setTimeout(() => this.confirmChunkWritten(onWritten, onFailed), delay),
+                    () => {
+                        console.log(
+                            `${this.logHead} Failed to initiate write ${bytes_to_write}bytes to 0x${address.toString(16)}`,
+                        );
+                        this.cleanup();
+                    },
+                );
+            } else if (flashing_block < blocks) {
+                // move to another block
+                flashing_block++;
+
+                address = hex.data[flashing_block].address;
+                bytes_flashed = 0;
+                wBlockNum = 2;
+
+                this.loadAddress(address, write);
+            } else {
+                // all blocks flashed
+                console.log(`${this.logHead} Writing: done`);
+
+                // proceed to next step
+                this.upload_procedure(5);
+            }
+        };
+
+        // start
+        this.loadAddress(address, write);
+    }
+
+    private confirmChunkWritten(onWritten: () => void, onFailed: () => void): void {
+        this.getStatus((data) => {
+            if (data[4] === this.state.dfuDNLOAD_IDLE) {
+                onWritten();
+            } else {
+                onFailed();
+            }
+        });
+    }
+
+    /** Step 5: read the flash back and compare it with the hex. */
+    private uploadVerify(): void {
+        console.log(`${this.logHead} Verifying data ...`);
+        this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.VERIFYING);
+
+        const hex = this.hex!;
+        const blocks = hex.data.length - 1;
+        let reading_block = 0;
+        let address = hex.data[reading_block].address;
+
+        let bytes_verified = 0;
+        let bytes_verified_total = 0; // used for progress bar
+        let wBlockNum = 2; // required by DFU
+
+        // initialize arrays
+        for (let i = 0; i <= blocks; i++) {
+            this.verify_hex.push([]);
+        }
+
+        const read = () => {
+            if (bytes_verified < hex.data[reading_block].bytes) {
+                const bytes_to_read =
+                    bytes_verified + this.transferSize <= hex.data[reading_block].bytes
+                        ? this.transferSize
+                        : hex.data[reading_block].bytes - bytes_verified;
+
+                this.controlTransfer("in", this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data) => {
+                    for (const piece of data) {
+                        this.verify_hex[reading_block].push(piece);
+                    }
+
+                    address += bytes_to_read;
+                    bytes_verified += bytes_to_read;
+                    bytes_verified_total += bytes_to_read;
+
+                    // update progress bar
+                    const verifyStart = this.progressWeights!.verify[0];
+                    const verifyRange = this.progressWeights!.verify[1] - this.progressWeights!.verify[0];
+                    const verifyProgress = (bytes_verified_total / hex.bytes_total) * verifyRange;
+                    this.flashProgress(verifyStart + verifyProgress);
+
+                    // verify another page
+                    read();
+                });
+            } else if (reading_block < blocks) {
+                // move to another block
+                reading_block++;
+
+                address = hex.data[reading_block].address;
+                bytes_verified = 0;
+                wBlockNum = 2;
+
                 this.clearStatus(() => {
                     this.loadAddress(address, () => {
                         this.clearStatus(read);
                     });
                 });
-                break;
+            } else {
+                this.finishVerify(hex);
             }
+        };
+
+        // start
+        this.clearStatus(() => {
+            this.loadAddress(address, () => {
+                this.clearStatus(read);
+            });
+        });
+    }
+
+    /** All blocks read back: compare them with the hex and report the result. */
+    private finishVerify(hex: ParsedHex): void {
+        let verify = true;
+        for (let i = 0; i < hex.data.length; i++) {
+            verify = this.verify_flash(hex.data[i].data, this.verify_hex[i]);
+
+            if (!verify) break;
+        }
+
+        if (verify) {
+            console.log(`${this.logHead} Programming: SUCCESSFUL`);
+            // update progress bar
+            this.flashingMessage(i18n.getMessage("stm32ProgrammingSuccessful"), this.options?.flashMessageTypes?.VALID);
+            this.showProgrammingNotification("programmingSuccessfulNotification");
+
+            // proceed to next step
+            this.leave();
+        } else {
+            console.log(`${this.logHead} Programming: FAILED`);
+            // update progress bar
+            this.flashingMessage(i18n.getMessage("stm32ProgrammingFailed"), this.options?.flashMessageTypes?.INVALID);
+            this.showProgrammingNotification("programmingFailedNotification");
+
+            // disconnect
+            this.cleanup();
+        }
+    }
+
+    private showProgrammingNotification(bodyKey: string): void {
+        if (getConfig("showNotifications").showNotifications) {
+            NotificationManager.showNotification("Betaflight App", {
+                body: i18n.getMessage(bodyKey),
+                icon: "/images/pwa/favicon.ico",
+            });
         }
     }
 
