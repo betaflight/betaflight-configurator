@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "./fc";
+import { RATES_TYPE, useFlightControllerStore } from "../stores/fc";
 
 const minRc = 1000;
 const midRc = 1500;
@@ -102,6 +102,12 @@ export default class RateCurve {
 
     constructor(useLegacyCurve: boolean) {
         this.useLegacyCurve = useLegacyCurve;
+    }
+
+    // Resolved per access, never cached in the instance: a RateCurve can outlive the Pinia that was active when it was built
+    // (tests install a fresh one per case).
+    private get fcStore() {
+        return useFlightControllerStore();
     }
 
     constrain(value: number, min: number, max: number): number {
@@ -269,8 +275,8 @@ export default class RateCurve {
     }
 
     getCurrentRates(): CurrentRates {
-        const tuning = FC.RC_TUNING!;
-        const deadbandConfig = FC.RC_DEADBAND_CONFIG!;
+        const tuning = this.fcStore.rcTuning;
+        const deadbandConfig = this.fcStore.rcDeadbandConfig;
 
         const currentRates: CurrentRates = {
             roll_rate: tuning.roll_rate,
@@ -292,7 +298,7 @@ export default class RateCurve {
         };
 
         switch (tuning.rates_type) {
-            case FC.RATES_TYPE.RACEFLIGHT:
+            case RATES_TYPE.RACEFLIGHT:
                 currentRates.roll_rate *= 100;
                 currentRates.pitch_rate *= 100;
                 currentRates.yaw_rate *= 100;
@@ -304,7 +310,7 @@ export default class RateCurve {
                 currentRates.rc_pitch_expo *= 100;
 
                 break;
-            case FC.RATES_TYPE.ACTUAL:
+            case RATES_TYPE.ACTUAL:
                 currentRates.roll_rate *= 1000;
                 currentRates.pitch_rate *= 1000;
                 currentRates.yaw_rate *= 1000;
@@ -313,7 +319,7 @@ export default class RateCurve {
                 currentRates.rc_rate_pitch *= 1000;
 
                 break;
-            case FC.RATES_TYPE.QUICKRATES:
+            case RATES_TYPE.QUICKRATES:
                 currentRates.roll_rate *= 1000;
                 currentRates.pitch_rate *= 1000;
                 currentRates.yaw_rate *= 1000;
@@ -339,23 +345,23 @@ export default class RateCurve {
 
             const rcCommandfAbs = Math.abs(rcCommandf);
 
-            switch (FC.RC_TUNING!.rates_type) {
-                case FC.RATES_TYPE.RACEFLIGHT:
+            switch (this.fcStore.rcTuning.rates_type) {
+                case RATES_TYPE.RACEFLIGHT:
                     angleRate = this.getRaceflightRates(rcCommandf, rate, rcRate, rcExpo);
 
                     break;
 
-                case FC.RATES_TYPE.KISS:
+                case RATES_TYPE.KISS:
                     angleRate = this.getKISSRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                     break;
 
-                case FC.RATES_TYPE.ACTUAL:
+                case RATES_TYPE.ACTUAL:
                     angleRate = this.getActualRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                     break;
 
-                case FC.RATES_TYPE.QUICKRATES:
+                case RATES_TYPE.QUICKRATES:
                     angleRate = this.getQuickRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                     break;

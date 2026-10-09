@@ -20,6 +20,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 const simplified = vi.hoisted(() => ({
     applySimplifiedPids: vi.fn(),
@@ -43,7 +44,7 @@ import {
     type PidSliderPositions,
 } from "../../src/composables/useTuningSliders";
 import CONFIGURATOR from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
@@ -60,9 +61,13 @@ const positions: PidSliderPositions = {
     masterMultiplier: 1.35,
 };
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("useTuningSliders", () => {
     beforeEach(() => {
-        FC.resetState();
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         CONFIGURATOR.virtualMode = false;
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
         vi.spyOn(mspHelper, "crunch").mockReturnValue([0xaa]);
@@ -93,7 +98,7 @@ describe("useTuningSliders", () => {
 
     describe("reading slider positions", () => {
         it("turns the FC's percentages into decimals, leaving the mode as-is", () => {
-            Object.assign(FC.TUNING_SLIDERS, {
+            Object.assign(fcStore.tuningSliders, {
                 slider_pids_mode: 2,
                 slider_d_gain: 110,
                 slider_pi_gain: 85,
@@ -109,7 +114,7 @@ describe("useTuningSliders", () => {
         });
 
         it("reads the gyro and D-term filter sliders the same way", () => {
-            Object.assign(FC.TUNING_SLIDERS, {
+            Object.assign(fcStore.tuningSliders, {
                 slider_gyro_filter: 1,
                 slider_gyro_filter_multiplier: 120,
                 slider_dterm_filter: 0,
@@ -129,7 +134,7 @@ describe("useTuningSliders", () => {
             // 0.57 * 100 is 56.99999999999999 in floating point: the write must round, not truncate.
             await calculateNewPids({ ...positions, dGain: 0.57 });
 
-            expect(FC.TUNING_SLIDERS).toMatchObject({
+            expect(fcStore.tuningSliders).toMatchObject({
                 slider_pids_mode: 2,
                 slider_d_gain: 57,
                 slider_pi_gain: 85,
@@ -151,7 +156,7 @@ describe("useTuningSliders", () => {
         it("asks the FC to compute the PIDs from the written sliders", async () => {
             let slidersAtCrunch: number | undefined;
             vi.mocked(mspHelper.crunch).mockImplementation(() => {
-                slidersAtCrunch = FC.TUNING_SLIDERS.slider_master_multiplier;
+                slidersAtCrunch = fcStore.tuningSliders.slider_master_multiplier;
                 return [0xaa];
             });
 
@@ -199,12 +204,12 @@ describe("useTuningSliders", () => {
         },
     ] as const)("$name", ({ run, code, apply, mode, multiplier }) => {
         it("turns the slider on and writes the multiplier as a rounded percentage", async () => {
-            FC.TUNING_SLIDERS[mode] = 0;
+            fcStore.tuningSliders[mode] = 0;
 
             await run(1.155);
 
-            expect(FC.TUNING_SLIDERS[mode]).toBe(1);
-            expect(FC.TUNING_SLIDERS[multiplier]).toBe(116);
+            expect(fcStore.tuningSliders[mode]).toBe(1);
+            expect(fcStore.tuningSliders[multiplier]).toBe(116);
             expect(MSP.promise).toHaveBeenCalledWith(code, [0xaa]);
             expect(apply).not.toHaveBeenCalled();
         });
@@ -229,20 +234,28 @@ describe("useTuningSliders", () => {
 
     describe("validateTuningSliders", () => {
         function startAllOn() {
-            Object.assign(FC.TUNING_SLIDERS, { slider_pids_mode: 2, slider_gyro_filter: 1, slider_dterm_filter: 1 });
+            Object.assign(fcStore.tuningSliders, {
+                slider_pids_mode: 2,
+                slider_gyro_filter: 1,
+                slider_dterm_filter: 1,
+            });
         }
 
         it("switches off each slider the FC reports invalid, and only those", async () => {
             startAllOn();
             vi.mocked(MSP.promise).mockImplementation(async () => {
-                Object.assign(FC.TUNING_SLIDERS, { slider_pids_valid: 0, slider_gyro_valid: 1, slider_dterm_valid: 0 });
+                Object.assign(fcStore.tuningSliders, {
+                    slider_pids_valid: 0,
+                    slider_gyro_valid: 1,
+                    slider_dterm_valid: 0,
+                });
                 return undefined;
             });
 
             await validateTuningSliders();
 
             expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING);
-            expect(FC.TUNING_SLIDERS).toMatchObject({
+            expect(fcStore.tuningSliders).toMatchObject({
                 slider_pids_mode: 0,
                 slider_gyro_filter: 1,
                 slider_dterm_filter: 0,
@@ -251,15 +264,19 @@ describe("useTuningSliders", () => {
 
         it("patches from the FC's answer, not the validity flags from before the request", async () => {
             startAllOn();
-            Object.assign(FC.TUNING_SLIDERS, { slider_pids_valid: 0, slider_gyro_valid: 0, slider_dterm_valid: 0 });
+            Object.assign(fcStore.tuningSliders, { slider_pids_valid: 0, slider_gyro_valid: 0, slider_dterm_valid: 0 });
             vi.mocked(MSP.promise).mockImplementation(async () => {
-                Object.assign(FC.TUNING_SLIDERS, { slider_pids_valid: 1, slider_gyro_valid: 1, slider_dterm_valid: 1 });
+                Object.assign(fcStore.tuningSliders, {
+                    slider_pids_valid: 1,
+                    slider_gyro_valid: 1,
+                    slider_dterm_valid: 1,
+                });
                 return undefined;
             });
 
             await validateTuningSliders();
 
-            expect(FC.TUNING_SLIDERS).toMatchObject({
+            expect(fcStore.tuningSliders).toMatchObject({
                 slider_pids_mode: 2,
                 slider_gyro_filter: 1,
                 slider_dterm_filter: 1,
@@ -270,13 +287,17 @@ describe("useTuningSliders", () => {
             CONFIGURATOR.virtualMode = true;
             startAllOn();
             simplified.validateVirtualSimplifiedTuning.mockImplementation(() => {
-                Object.assign(FC.TUNING_SLIDERS, { slider_pids_valid: 1, slider_gyro_valid: 0, slider_dterm_valid: 1 });
+                Object.assign(fcStore.tuningSliders, {
+                    slider_pids_valid: 1,
+                    slider_gyro_valid: 0,
+                    slider_dterm_valid: 1,
+                });
             });
 
             await validateTuningSliders();
 
             expect(MSP.promise).not.toHaveBeenCalled();
-            expect(FC.TUNING_SLIDERS).toMatchObject({
+            expect(fcStore.tuningSliders).toMatchObject({
                 slider_pids_mode: 2,
                 slider_gyro_filter: 0,
                 slider_dterm_filter: 1,
@@ -286,12 +307,12 @@ describe("useTuningSliders", () => {
         it("leaves the sliders alone and resolves when the FC request fails", async () => {
             vi.spyOn(console, "error").mockImplementation(() => {});
             startAllOn();
-            Object.assign(FC.TUNING_SLIDERS, { slider_pids_valid: 0, slider_gyro_valid: 0, slider_dterm_valid: 0 });
+            Object.assign(fcStore.tuningSliders, { slider_pids_valid: 0, slider_gyro_valid: 0, slider_dterm_valid: 0 });
             vi.mocked(MSP.promise).mockRejectedValue(new Error("timeout"));
 
             await expect(validateTuningSliders()).resolves.toBeUndefined();
 
-            expect(FC.TUNING_SLIDERS).toMatchObject({
+            expect(fcStore.tuningSliders).toMatchObject({
                 slider_pids_mode: 2,
                 slider_gyro_filter: 1,
                 slider_dterm_filter: 1,

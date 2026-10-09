@@ -211,7 +211,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { getMixerImageSrc } from "@/js/utils/common";
 import EscDshotDirectionMotorDriver, {
     type EscDshotMotorConfig,
-} from "@/components/EscDshotDirection/EscDshotDirectionMotorDriver";
+} from "@/composables/motors/escDshotDirection/EscDshotDirectionMotorDriver";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
 

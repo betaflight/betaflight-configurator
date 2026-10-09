@@ -26,7 +26,7 @@ import Features from "./Features";
 import MspHelper from "./msp/MSPHelper";
 import VirtualFC from "./VirtualFC";
 import Beepers from "./Beepers";
-import FC from "./fc";
+import { type CONFIGURATION_PROBLEM_FLAGS, useFlightControllerStore } from "../stores/fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
@@ -265,21 +265,22 @@ export function initializeSerialBackend() {
 }
 
 async function sendConfigTracking() {
+    const fcStore = useFlightControllerStore();
     // It is set up before any connection.
     const tracking = getTracking();
     tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
-        boardIdentifier: FC.CONFIG.boardIdentifier,
-        targetName: FC.CONFIG.targetName,
-        boardName: FC.CONFIG.boardName,
-        hardware: FC.CONFIG.hardwareName,
-        manufacturerId: FC.CONFIG.manufacturerId,
-        apiVersion: FC.CONFIG.apiVersion,
-        flightControllerVersion: FC.CONFIG.flightControllerVersion,
-        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
-        mcu: FC.CONFIG.targetName,
+        boardIdentifier: fcStore.config.boardIdentifier,
+        targetName: fcStore.config.targetName,
+        boardName: fcStore.config.boardName,
+        hardware: fcStore.config.hardwareName,
+        manufacturerId: fcStore.config.manufacturerId,
+        apiVersion: fcStore.config.apiVersion,
+        flightControllerVersion: fcStore.config.flightControllerVersion,
+        flightControllerIdentifier: fcStore.config.flightControllerIdentifier,
+        mcu: fcStore.config.targetName,
         // Only reached after MSP_UID succeeded, which stores a hex string (the number is VirtualFC's).
-        deviceIdentifier: SHA1(FC.CONFIG.deviceIdentifier as string).toString(),
-        buildKey: FC.CONFIG.buildKey,
+        deviceIdentifier: SHA1(fcStore.config.deviceIdentifier as string).toString(),
+        buildKey: fcStore.config.buildKey,
     });
 }
 
@@ -512,7 +513,8 @@ function registerCliHotkey() {
         if (!isCliHotkey(e)) {
             return;
         }
-        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        const fcStore = useFlightControllerStore();
+        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             GUI.showCliPanel();
         }
     };
@@ -590,10 +592,11 @@ function defaultDisplayForTag(tag: string): string {
 // resetConnection() — it must NOT repeat resetConnection's work (listeners,
 // connectionValid/cli flags, live-data timer, devicePickerDisabled).
 function teardownConnectionUi() {
+    const fcStore = useFlightControllerStore();
     MSP.disconnect_cleanup();
     PortUsage.reset();
     // To trigger the UI updates by Vue reset the state.
-    FC.resetState();
+    fcStore.resetState();
 
     GUI.connected_to = false;
     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
@@ -623,9 +626,10 @@ function teardownConnectionUi() {
 }
 
 function finishClose() {
+    const fcStore = useFlightControllerStore();
     const wasConnected = CONFIGURATOR.connectionValid;
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
         (document.getElementById("dialogResetToCustomDefaults") as HTMLDialogElement | null)?.close();
     }
@@ -854,6 +858,7 @@ function read_serial_adapter(event: Event) {
 }
 
 function onOpen(openInfo: unknown) {
+    const fcStore = useFlightControllerStore();
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
 
@@ -882,7 +887,7 @@ function onOpen(openInfo: unknown) {
         // Fresh handshake, fresh progress signal for the stall watchdog.
         rebootHandshakeSawTraffic = false;
         setConnectionTimeout();
-        FC.resetState();
+        fcStore.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.onTimeout = handleConnectionTimeout;
@@ -890,30 +895,30 @@ function onOpen(openInfo: unknown) {
         console.log(`${logHead} Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
-            gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
+            gui_log(i18n.getMessage("apiVersionReceived", fcStore.config.apiVersion));
 
             // "0.0.0" is the uninitialised default (no valid version received), and any
             // unparseable string (e.g. "null.null.0" from a corrupt/truncated payload)
             // would make the semver.gte() below throw. Reject both robustly instead of
             // matching a specific garbage substring.
-            if (FC.CONFIG.apiVersion === "0.0.0" || !semver.valid(FC.CONFIG.apiVersion)) {
+            if (fcStore.config.apiVersion === "0.0.0" || !semver.valid(fcStore.config.apiVersion)) {
                 abortConnection();
                 return;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+            if (semver.gte(fcStore.config.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    if (FC.CONFIG.flightControllerIdentifier === "BTFL") {
+                    if (fcStore.config.flightControllerIdentifier === "BTFL") {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
                             gui_log(
                                 i18n.getMessage("fcInfoReceived", [
-                                    FC.CONFIG.flightControllerIdentifier,
-                                    FC.CONFIG.flightControllerVersion,
+                                    fcStore.config.flightControllerIdentifier,
+                                    fcStore.config.flightControllerVersion,
                                 ]),
                             );
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
-                                gui_log(i18n.getMessage("buildInfoReceived", [FC.CONFIG.buildInfo]));
+                                gui_log(i18n.getMessage("buildInfoReceived", [fcStore.config.buildInfo]));
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
@@ -934,6 +939,7 @@ function onOpen(openInfo: unknown) {
 }
 
 function onOpenVirtual() {
+    const fcStore = useFlightControllerStore();
     GUI.timeout_remove("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
     GUI.connected_to = GUI.connecting_to;
     GUI.connecting_to = false;
@@ -961,14 +967,15 @@ function onOpenVirtual() {
 
     processBoardInfo();
 
-    updateTabList(FC.FEATURE_CONFIG.features);
+    updateTabList(fcStore.features.features);
 }
 
 function processCustomDefaults() {
+    const fcStore = useFlightControllerStore();
     if (
-        bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) &&
-        bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
-        FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE
+        bit_check(fcStore.config.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) &&
+        bit_check(fcStore.config.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
+        fcStore.config.configurationState === fcStore.CONFIGURATION_STATES.DEFAULTS_BARE
     ) {
         const dialogStore = useDialogStore();
         dialogStore.open(
@@ -1011,9 +1018,10 @@ function processCustomDefaults() {
 }
 
 function processBoardInfo() {
-    gui_log(i18n.getMessage("boardInfoReceived", [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
+    const fcStore = useFlightControllerStore();
+    gui_log(i18n.getMessage("boardInfoReceived", [fcStore.config.hardwareName, fcStore.config.boardVersion]));
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         checkReportProblems();
     } else {
         processCustomDefaults();
@@ -1021,10 +1029,11 @@ function processBoardInfo() {
 }
 
 function checkReportProblem(
-    problemName: keyof typeof FC.CONFIGURATION_PROBLEM_FLAGS,
+    problemName: keyof typeof CONFIGURATION_PROBLEM_FLAGS,
     problems: ReportedProblem[],
 ): boolean {
-    if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+    const fcStore = useFlightControllerStore();
+    if (bit_check(fcStore.config.configurationProblems, fcStore.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
         problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
         return true;
     }
@@ -1032,6 +1041,7 @@ function checkReportProblem(
 }
 
 async function checkReportProblems() {
+    const fcStore = useFlightControllerStore();
     try {
         await MSP.promise(MSPCodes.MSP_STATUS);
     } catch (error) {
@@ -1045,7 +1055,7 @@ async function checkReportProblems() {
     needsProblemReportingDialog =
         checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
 
-    if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
+    if (have_sensor(fcStore.config.activeSensors, "acc")) {
         needsProblemReportingDialog =
             checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
     }
@@ -1059,7 +1069,8 @@ async function checkReportProblems() {
 }
 
 async function processBuildConfiguration() {
-    const buildOptionsSupported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+    const fcStore = useFlightControllerStore();
+    const buildOptionsSupported = semver.gte(fcStore.config.apiVersion, API_VERSION_1_45);
 
     if (buildOptionsSupported) {
         // get build key from firmware
@@ -1068,16 +1079,20 @@ async function processBuildConfiguration() {
         } catch (error) {
             console.error("Failed to request build key:", error);
         }
-        gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
+        gui_log(i18n.getMessage("buildKey", fcStore.config.buildKey));
 
         // firmware 1_45 or higher is required to support cloud build options
         // firmware 1_46 or higher retrieves build options from the flight controller
-        if (FC.CONFIG.buildKey.length === 32 && ispConnected() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (
+            fcStore.config.buildKey.length === 32 &&
+            ispConnected() &&
+            semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)
+        ) {
             const buildApi = new BuildApi();
             try {
-                const options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                const options = await buildApi.requestBuildOptions(fcStore.config.buildKey);
                 if (options) {
-                    FC.CONFIG.buildOptions = options?.request?.options ?? [];
+                    fcStore.config.buildOptions = options?.request?.options ?? [];
                 }
             } catch (error) {
                 console.error("Failed to request build options: ", error);
@@ -1089,6 +1104,7 @@ async function processBuildConfiguration() {
 }
 
 async function processUid() {
+    const fcStore = useFlightControllerStore();
     try {
         await MSP.promise(MSPCodes.MSP_UID);
     } catch (error) {
@@ -1106,15 +1122,16 @@ async function processUid() {
         }
     }, 100);
 
-    gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
+    gui_log(i18n.getMessage("uniqueDeviceIdReceived", fcStore.config.deviceIdentifier));
 
     await processBuildConfiguration();
     await sendConfigTracking();
 }
 
 async function processCraftName() {
+    const fcStore = useFlightControllerStore();
     try {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
                 mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
@@ -1129,11 +1146,13 @@ async function processCraftName() {
     gui_log(
         i18n.getMessage(
             "craftNameReceived",
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name],
+            semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)
+                ? [fcStore.config.craftName]
+                : [fcStore.config.name],
         ),
     );
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         try {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
@@ -1144,7 +1163,7 @@ async function processCraftName() {
         }
     }
 
-    FC.CONFIG.armingDisabled = false;
+    fcStore.config.armingDisabled = false;
     mspHelper!.disableArming(setRtc);
 }
 
@@ -1153,6 +1172,7 @@ function setRtc() {
 }
 
 function finishOpen() {
+    const fcStore = useFlightControllerStore();
     CONFIGURATOR.connectionValid = true;
 
     if (isCliOnlyMode()) {
@@ -1160,17 +1180,20 @@ function finishOpen() {
         return;
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && fcStore.config.buildOptions.length) {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
         for (const tab of GUI.defaultCloudBuildTabOptions) {
-            if (FC.CONFIG.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
+            if (fcStore.config.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
                 GUI.allowedTabs.push(tab);
             }
         }
 
         // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
-        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
+        if (
+            fcStore.config.buildOptions.some((opt) => opt.includes("USE_WING")) &&
+            !GUI.allowedTabs.includes("servos")
+        ) {
             GUI.allowedTabs.push("servos");
         }
     } else {
@@ -1218,6 +1241,7 @@ function onConnect() {
 
 // Update which tabs are visible based on `GUI.allowedTabs` and board type
 function updateTabVisibility() {
+    const fcStore = useFlightControllerStore();
     const connectedItems = document.querySelectorAll<HTMLElement>("#tabs ul.mode-connected li");
     for (const li of connectedItems) {
         const classes = new Set(li.className.split(/\s+/));
@@ -1231,7 +1255,7 @@ function updateTabVisibility() {
             }
         }
 
-        if (FC.CONFIG.boardType == 0 && classes.has("osd-required")) {
+        if (fcStore.config.boardType == 0 && classes.has("osd-required")) {
             found = false;
         }
 
@@ -1241,11 +1265,12 @@ function updateTabVisibility() {
 
 // Initialize feature-related UI and fetch configs from the flight controller
 function initFeaturesOnConnect() {
-    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
+    const fcStore = useFlightControllerStore();
+    if (fcStore.config.flightControllerVersion !== "" && !isCliOnlyMode()) {
         if (!CONFIGURATOR.virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
-            FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-            FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-            FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+            fcStore.features.features = new Features(fcStore.config);
+            fcStore.beepers.beepers = new Beepers(fcStore.config);
+            fcStore.beepers.dshotBeaconConditions = new Beepers(fcStore.config, ["RX_LOST", "RX_SET"]);
         }
 
         show("#tabs ul.mode-connected");
@@ -1256,7 +1281,7 @@ function initFeaturesOnConnect() {
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
         MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false);
 
-        if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
+        if (fcStore.config.boardType === 0 || fcStore.config.boardType === 2) {
             startLiveDataRefreshTimer();
         }
     }
@@ -1405,6 +1430,7 @@ function handleConnectionTimeout() {
 }
 
 export async function update_sensor_status() {
+    const fcStore = useFlightControllerStore();
     if (!(await requestLiveData(MSPCodes.MSP_ANALOG, "MSP_ANALOG"))) {
         return;
     }
@@ -1418,7 +1444,7 @@ export async function update_sensor_status() {
         return;
     }
 
-    if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
+    if (have_sensor(fcStore.config.activeSensors, "gps")) {
         await requestLiveData(MSPCodes.MSP_RAW_GPS, "MSP_RAW_GPS");
     }
 }

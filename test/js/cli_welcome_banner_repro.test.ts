@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
@@ -58,6 +59,7 @@ function countOccurrences(haystack: string, needle: string) {
 
 describe("useCli welcome-banner split-read handling (#5445)", () => {
     beforeEach(() => {
+        setActivePinia(createPinia());
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = false;
         CliAutoComplete.builder.state = "reset";

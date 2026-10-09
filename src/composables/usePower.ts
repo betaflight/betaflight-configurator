@@ -25,7 +25,7 @@ import { i18n } from "../js/localization";
 import { getTracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
 import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
-import FC from "../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../js/msp";
 import MSPCodes, { MSP2TextType } from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
@@ -37,15 +37,17 @@ import { useReboot } from "./useReboot";
 import type { CurrentMeter, CurrentMeterConfig, VoltageMeter, VoltageMeterConfig } from "../stores/fc.types";
 
 export function usePower() {
+    const fcStore = useFlightControllerStore();
+
     const supported = computed(() => {
-        return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44);
+        return fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_44);
     });
     const hasBatteryProfiles = computed(() => {
-        if (!FC.CONFIG?.apiVersion || !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+        if (!fcStore.config?.apiVersion || !semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
             return false;
         }
         // Custom firmware builds may omit multi-profile support while still reporting API 1.48+; hide UI when the FC reports no profiles.
-        return (FC.CONFIG.numberOfBatteryProfiles || 0) > 0;
+        return (fcStore.config.numberOfBatteryProfiles || 0) > 0;
     });
     const activeBatteryProfile = ref(0);
     const batteryProfileName = ref("");
@@ -126,7 +128,7 @@ export function usePower() {
 
     // Battery meter types
     const batteryMeterTypes = computed(() => {
-        const haveFc = FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2;
+        const haveFc = fcStore.config.boardType === 0 || fcStore.config.boardType === 2;
         const types = [
             i18n.getMessage("powerBatteryVoltageMeterTypeNone"),
             i18n.getMessage("powerBatteryVoltageMeterTypeAdc"),
@@ -139,7 +141,7 @@ export function usePower() {
 
     // Current meter types
     const currentMeterTypes = computed(() => {
-        const haveFc = FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2;
+        const haveFc = fcStore.config.boardType === 0 || fcStore.config.boardType === 2;
         const types = [
             i18n.getMessage("powerBatteryCurrentMeterTypeNone"),
             i18n.getMessage("powerBatteryCurrentMeterTypeAdc"),
@@ -192,8 +194,8 @@ export function usePower() {
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME),
         );
 
-        activeBatteryProfile.value = FC.CONFIG.batteryProfile;
-        batteryProfileName.value = FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] || "";
+        activeBatteryProfile.value = fcStore.config.batteryProfile;
+        batteryProfileName.value = fcStore.config.batteryProfileNames[fcStore.config.batteryProfile] || "";
     };
 
     // Change active battery profile
@@ -206,12 +208,12 @@ export function usePower() {
             // Suppress the TX-driven sync watcher while we apply our own change
             isLoading.value = true;
             // Pause global and local polling to prevent MSP_STATUS_EX from
-            // overwriting FC.CONFIG.batteryProfile with stale data during the switch
+            // overwriting fcStore.config.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
             GUI.interval_pause("power_data_pull_slow");
 
             if (CONFIGURATOR.virtualMode) {
-                FC.CONFIG.batteryProfile = profileIndex;
+                fcStore.config.batteryProfile = profileIndex;
                 activeBatteryProfile.value = profileIndex;
                 await loadBatteryProfileName();
                 updateStateFromFC();
@@ -221,7 +223,7 @@ export function usePower() {
             const BATTERYPROFILE_MASK = 0x40;
             await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
-            activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+            activeBatteryProfile.value = fcStore.config.batteryProfile;
             await loadBatteryProfileName();
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
             updateStateFromFC();
@@ -229,7 +231,7 @@ export function usePower() {
             // Best-effort: resync UI with actual FC state in case the
             // profile switch partially succeeded on the FC side
             if (CONFIGURATOR.virtualMode) {
-                FC.CONFIG.batteryProfile = previousProfile;
+                fcStore.config.batteryProfile = previousProfile;
                 activeBatteryProfile.value = previousProfile;
                 batteryProfileName.value = previousProfileName;
                 throw error;
@@ -237,7 +239,7 @@ export function usePower() {
 
             try {
                 await MSP.promise(MSPCodes.MSP_STATUS_EX);
-                activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+                activeBatteryProfile.value = fcStore.config.batteryProfile;
                 await loadBatteryProfileName();
                 await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
                 updateStateFromFC();
@@ -255,7 +257,7 @@ export function usePower() {
     };
 
     // Reflect TX-driven battery-profile changes in the UI. The global live-status poller
-    // (serial_backend.js) refreshes FC.CONFIG.batteryProfile via MSP_STATUS_EX every 250ms;
+    // (serial_backend.js) refreshes fcStore.config.batteryProfile via MSP_STATUS_EX every 250ms;
     // an adjustment switch on the TX can change the active profile out from under the UI.
     // Reload when that happens — but never during our own change (isLoading), an in-flight
     // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
@@ -269,7 +271,7 @@ export function usePower() {
             // Only announce the profile the FC actually sent. The load resolves either way,
             // so without this a cancelled or failed read still logged a successful sync.
             if (await loadData()) {
-                gui_log(i18n.getMessage("powerReceivedBatteryProfile", [FC.CONFIG.batteryProfile + 1]));
+                gui_log(i18n.getMessage("powerReceivedBatteryProfile", [fcStore.config.batteryProfile + 1]));
             }
         } finally {
             syncingFromFc = false;
@@ -277,7 +279,7 @@ export function usePower() {
     };
 
     watch(
-        () => FC.CONFIG.batteryProfile,
+        () => fcStore.config.batteryProfile,
         (newValue) => {
             if (newValue !== activeBatteryProfile.value) {
                 void syncBatteryProfileFromFc();
@@ -319,43 +321,43 @@ export function usePower() {
     const updateStateFromFC = () => {
         // Battery config
         Object.assign(batteryConfig, {
-            voltageMeterSource: FC.BATTERY_CONFIG.voltageMeterSource,
-            currentMeterSource: FC.BATTERY_CONFIG.currentMeterSource,
-            vbatmincellvoltage: FC.BATTERY_CONFIG.vbatmincellvoltage,
-            vbatmaxcellvoltage: FC.BATTERY_CONFIG.vbatmaxcellvoltage,
-            vbatwarningcellvoltage: FC.BATTERY_CONFIG.vbatwarningcellvoltage,
-            capacity: FC.BATTERY_CONFIG.capacity,
+            voltageMeterSource: fcStore.batteryConfig.voltageMeterSource,
+            currentMeterSource: fcStore.batteryConfig.currentMeterSource,
+            vbatmincellvoltage: fcStore.batteryConfig.vbatmincellvoltage,
+            vbatmaxcellvoltage: fcStore.batteryConfig.vbatmaxcellvoltage,
+            vbatwarningcellvoltage: fcStore.batteryConfig.vbatwarningcellvoltage,
+            capacity: fcStore.batteryConfig.capacity,
         });
 
         // Battery state
         Object.assign(batteryState, {
-            cellCount: FC.BATTERY_STATE.cellCount,
-            voltage: FC.BATTERY_STATE.voltage,
-            mAhDrawn: FC.BATTERY_STATE.mAhDrawn,
-            amperage: FC.BATTERY_STATE.amperage,
+            cellCount: fcStore.batteryState.cellCount,
+            voltage: fcStore.batteryState.voltage,
+            mAhDrawn: fcStore.batteryState.mAhDrawn,
+            amperage: fcStore.batteryState.amperage,
         });
 
         // Voltage meters
         voltageMeters.length = 0;
-        FC.VOLTAGE_METERS.forEach((meter) => {
+        fcStore.voltageMeters.forEach((meter) => {
             voltageMeters.push({ ...meter });
         });
 
         // Current meters
         currentMeters.length = 0;
-        FC.CURRENT_METERS.forEach((meter) => {
+        fcStore.currentMeters.forEach((meter) => {
             currentMeters.push({ ...meter });
         });
 
         // Voltage configs
         voltageConfigs.length = 0;
-        FC.VOLTAGE_METER_CONFIGS.forEach((config) => {
+        fcStore.voltageMeterConfigs.forEach((config) => {
             voltageConfigs.push({ ...config });
         });
 
         // Current configs
         currentConfigs.length = 0;
-        FC.CURRENT_METER_CONFIGS.forEach((config) => {
+        fcStore.currentMeterConfigs.forEach((config) => {
             currentConfigs.push({ ...config });
         });
 
@@ -366,14 +368,14 @@ export function usePower() {
     const updateLiveData = async () => {
         try {
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METERS);
-            FC.VOLTAGE_METERS.forEach((meter, i) => {
+            fcStore.voltageMeters.forEach((meter, i) => {
                 if (voltageMeters[i]) {
                     voltageMeters[i].voltage = meter.voltage;
                 }
             });
 
             await MSP.promise(MSPCodes.MSP_CURRENT_METERS);
-            FC.CURRENT_METERS.forEach((meter, i) => {
+            fcStore.currentMeters.forEach((meter, i) => {
                 if (currentMeters[i]) {
                     currentMeters[i].amperage = meter.amperage;
                 }
@@ -381,10 +383,10 @@ export function usePower() {
 
             await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
             Object.assign(batteryState, {
-                cellCount: FC.BATTERY_STATE.cellCount,
-                voltage: FC.BATTERY_STATE.voltage,
-                mAhDrawn: FC.BATTERY_STATE.mAhDrawn,
-                amperage: FC.BATTERY_STATE.amperage,
+                cellCount: fcStore.batteryState.cellCount,
+                voltage: fcStore.batteryState.voltage,
+                mAhDrawn: fcStore.batteryState.mAhDrawn,
+                amperage: fcStore.batteryState.amperage,
             });
         } catch (error) {
             // Same lifecycle race as the main live-data poller: switching away from the Power tab
@@ -400,20 +402,20 @@ export function usePower() {
     // Handle voltage meter source change
     const onVoltageMeterSourceChange = (value: string | number) => {
         batteryConfig.voltageMeterSource = Number.parseInt(String(value), 10);
-        FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
+        fcStore.batteryConfig.voltageMeterSource = batteryConfig.voltageMeterSource;
         sourceschanged.value = true;
     };
 
     // Handle current meter source change
     const onCurrentMeterSourceChange = (value: string | number) => {
         batteryConfig.currentMeterSource = Number.parseInt(String(value), 10);
-        FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
+        fcStore.batteryConfig.currentMeterSource = batteryConfig.currentMeterSource;
         sourceschanged.value = true;
     };
 
     // Handle voltage scale change
     const onVoltageScaleChange = (index: number, value: number) => {
-        const originalValue = FC.VOLTAGE_METER_CONFIGS[index].vbatscale;
+        const originalValue = fcStore.voltageMeterConfigs[index].vbatscale;
         if (value !== originalValue) {
             analyticsChanges["PowerVBatUpdated"] = value;
         }
@@ -421,7 +423,7 @@ export function usePower() {
 
     // Handle amperage scale change
     const onAmperageScaleChange = (index: number, value: number) => {
-        const originalValue = FC.CURRENT_METER_CONFIGS[index].scale;
+        const originalValue = fcStore.currentMeterConfigs[index].scale;
         if (value !== originalValue) {
             analyticsChanges["PowerAmperageUpdated"] = value;
         }
@@ -464,7 +466,7 @@ export function usePower() {
 
         vbatnewscale.value = newScale;
         voltageConfigs[0].vbatscale = newScale;
-        FC.VOLTAGE_METER_CONFIGS[0].vbatscale = newScale;
+        fcStore.voltageMeterConfigs[0].vbatscale = newScale;
         return true;
     };
 
@@ -497,7 +499,7 @@ export function usePower() {
 
         amperagenewscale.value = newScale;
         currentConfigs[ampsource - 1].scale = newScale;
-        FC.CURRENT_METER_CONFIGS[ampsource - 1].scale = newScale;
+        fcStore.currentMeterConfigs[ampsource - 1].scale = newScale;
         return true;
     };
 
@@ -536,29 +538,29 @@ export function usePower() {
         const savedSnapshot = takeSnapshot();
 
         // Update FC data from reactive state
-        FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
-        FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
-        FC.BATTERY_CONFIG.vbatmincellvoltage = batteryConfig.vbatmincellvoltage;
-        FC.BATTERY_CONFIG.vbatmaxcellvoltage = batteryConfig.vbatmaxcellvoltage;
-        FC.BATTERY_CONFIG.vbatwarningcellvoltage = batteryConfig.vbatwarningcellvoltage;
-        FC.BATTERY_CONFIG.capacity = batteryConfig.capacity;
+        fcStore.batteryConfig.voltageMeterSource = batteryConfig.voltageMeterSource;
+        fcStore.batteryConfig.currentMeterSource = batteryConfig.currentMeterSource;
+        fcStore.batteryConfig.vbatmincellvoltage = batteryConfig.vbatmincellvoltage;
+        fcStore.batteryConfig.vbatmaxcellvoltage = batteryConfig.vbatmaxcellvoltage;
+        fcStore.batteryConfig.vbatwarningcellvoltage = batteryConfig.vbatwarningcellvoltage;
+        fcStore.batteryConfig.capacity = batteryConfig.capacity;
 
         voltageConfigs.forEach((config, index) => {
-            FC.VOLTAGE_METER_CONFIGS[index].vbatscale = config.vbatscale;
-            FC.VOLTAGE_METER_CONFIGS[index].vbatresdivval = config.vbatresdivval;
-            FC.VOLTAGE_METER_CONFIGS[index].vbatresdivmultiplier = config.vbatresdivmultiplier;
+            fcStore.voltageMeterConfigs[index].vbatscale = config.vbatscale;
+            fcStore.voltageMeterConfigs[index].vbatresdivval = config.vbatresdivval;
+            fcStore.voltageMeterConfigs[index].vbatresdivmultiplier = config.vbatresdivmultiplier;
         });
 
         currentConfigs.forEach((config, index) => {
-            FC.CURRENT_METER_CONFIGS[index].scale = config.scale;
-            FC.CURRENT_METER_CONFIGS[index].offset = config.offset;
+            fcStore.currentMeterConfigs[index].scale = config.scale;
+            fcStore.currentMeterConfigs[index].offset = config.offset;
         });
 
         await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
 
         // Save battery profile name if supported
         if (hasBatteryProfiles.value) {
-            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
+            fcStore.config.batteryProfileNames[fcStore.config.batteryProfile] = batteryProfileName.value;
             await MSP.promise(
                 MSPCodes.MSP2_SET_TEXT,
                 mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.BATTERY_PROFILE_NAME),

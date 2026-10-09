@@ -339,7 +339,7 @@ import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import GUI from "@/js/gui";
 import semver from "semver";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
 
@@ -354,6 +354,7 @@ function decodeHtmlEntities(text: string) {
     return textarea.value;
 }
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
+const fcStore = useFlightControllerStore();
 
 const {
     wireMode,
@@ -429,7 +430,7 @@ const brightness = ref(50);
 const rainbowDelta = ref(0);
 const rainbowFreq = ref(1);
 
-// Snapshot the grid, not FC.LED_STRIP: the strip is rebuilt from the grid on every edit, and
+// Snapshot the grid, not fcStore.ledStrip: the strip is rebuilt from the grid on every edit, and
 // initializeGrid drops placeholder LEDs that the rebuild writes back differently, so a
 // strip-based snapshot would flag an edit that changed nothing. The brightness/rainbow sliders
 // go to the FC live but only reach EEPROM on Save, so they are unsaved work too.
@@ -443,7 +444,7 @@ const serializeLedState = () =>
             colorIndex: led.colorIndex,
         })),
         colors: (ledColors.value || []).map(({ h, s, v }) => ({ h, s, v })),
-        modeColors: (FC.LED_MODE_COLORS || []).map(({ mode, direction, color }) => ({ mode, direction, color })),
+        modeColors: (fcStore.ledModeColors || []).map(({ mode, direction, color }) => ({ mode, direction, color })),
         brightness: brightness.value,
         rainbowDelta: rainbowDelta.value,
         rainbowFreq: rainbowFreq.value,
@@ -454,7 +455,7 @@ const { dirty, markClean, takeSnapshot } = useDirtyState(serializeLedState);
 // Computed properties
 const wiresRemaining = computed(() => {
     const usedCount = gridLeds.filter((led) => led.wireNumber !== "").length;
-    return FC.LED_STRIP.length - usedCount;
+    return fcStore.ledStrip.length - usedCount;
 });
 
 const hasSelection = computed(() => selectedIndices.value.size > 0);
@@ -465,7 +466,7 @@ const showRainbow = computed(() => isRainbowActive(selectedFunction.value));
 const showWarning = computed(() => isWarningActive(selectedFunction.value));
 const showVtx = computed(() => isVtxActive(selectedFunction.value));
 const showModeColors = computed(() => selectedFunction.value === "function-f");
-const showBrightness = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46));
+const showBrightness = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_46));
 
 const showSpecialColors = computed(() => {
     const func = selectedFunction.value;
@@ -617,7 +618,7 @@ function initializeGrid() {
     });
 
     // Populate from LED strip
-    FC.LED_STRIP.forEach((led, ledIndex) => {
+    fcStore.ledStrip.forEach((led, ledIndex) => {
         if (
             !led ||
             (led.functions[0] === "c" &&
@@ -668,7 +669,7 @@ function handleSelectionComplete() {
         selectedIndices.value.forEach((index) => {
             if (gridLeds[index].wireNumber === "") {
                 const nextWire = getNextWireNumber(gridLeds);
-                if (nextWire < FC.LED_STRIP.length) {
+                if (nextWire < fcStore.ledStrip.length) {
                     gridLeds[index].wireNumber = String(nextWire);
                 }
             }

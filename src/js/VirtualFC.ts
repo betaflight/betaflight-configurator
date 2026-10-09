@@ -22,7 +22,7 @@
 import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
-import FC from "./fc";
+import { useFlightControllerStore } from "../stores/fc";
 import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
@@ -135,23 +135,23 @@ const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
     setVirtualConfig() {
-        const virtualFC = FC;
+        const fcStore = useFlightControllerStore();
 
-        virtualFC.resetState();
-        virtualFC.CONFIG.deviceIdentifier = 0;
+        fcStore.resetState();
+        fcStore.config.deviceIdentifier = 0;
 
-        virtualFC.CONFIG.flightControllerVersion = "2025.12.0";
-        virtualFC.CONFIG.flightControllerIdentifier = "BTFL";
-        virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
+        fcStore.config.flightControllerVersion = "2025.12.0";
+        fcStore.config.flightControllerIdentifier = "BTFL";
+        fcStore.config.apiVersion = CONFIGURATOR.virtualApiVersion;
         // Mirror MSP_STATUS_EX fields so virtual API 1.48 exposes battery profile UI.
-        if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            virtualFC.CONFIG.numberOfBatteryProfiles = 3;
-            virtualFC.CONFIG.batteryProfile = 0;
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
+            fcStore.config.numberOfBatteryProfiles = 3;
+            fcStore.config.batteryProfile = 0;
         }
 
-        virtualFC.CONFIG.cpuTemp = 48;
+        fcStore.config.cpuTemp = 48;
 
-        virtualFC.CONFIG.buildInfo = "now";
+        fcStore.config.buildInfo = "now";
         /** @type {string[]} */
         const buildOptions = [
             "USE_DASHBOARD",
@@ -169,37 +169,37 @@ const VirtualFC = {
             "USE_TELEMETRY_SMARTPORT",
             "USE_DSHOT",
         ];
-        virtualFC.CONFIG.buildOptions = buildOptions;
+        fcStore.config.buildOptions = buildOptions;
 
-        virtualFC.CONFIG.craftName = "BetaFlight";
-        virtualFC.CONFIG.pilotName = "BF pilot";
+        fcStore.config.craftName = "BetaFlight";
+        fcStore.config.pilotName = "BF pilot";
 
-        virtualFC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-        virtualFC.FEATURE_CONFIG.features.setMask(0);
-        virtualFC.FEATURE_CONFIG.features.enable("ESC_SENSOR");
-        virtualFC.FEATURE_CONFIG.features.enable("GPS");
-        virtualFC.FEATURE_CONFIG.features.enable("LED_STRIP");
-        virtualFC.FEATURE_CONFIG.features.enable("OSD");
-        virtualFC.FEATURE_CONFIG.features.enable("SONAR");
-        virtualFC.FEATURE_CONFIG.features.enable("TELEMETRY");
-        virtualFC.FEATURE_CONFIG.features.enable("TRANSPONDER");
-        virtualFC.FEATURE_CONFIG.features.enable("RX_SERIAL");
+        fcStore.features.features = new Features(fcStore.config);
+        fcStore.features.features.setMask(0);
+        fcStore.features.features.enable("ESC_SENSOR");
+        fcStore.features.features.enable("GPS");
+        fcStore.features.features.enable("LED_STRIP");
+        fcStore.features.features.enable("OSD");
+        fcStore.features.features.enable("SONAR");
+        fcStore.features.features.enable("TELEMETRY");
+        fcStore.features.features.enable("TRANSPONDER");
+        fcStore.features.features.enable("RX_SERIAL");
 
-        virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-        virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
-        virtualFC.BEEPER_CONFIG.dshotBeaconTone = 1;
+        fcStore.beepers.beepers = new Beepers(fcStore.config);
+        fcStore.beepers.dshotBeaconConditions = new Beepers(fcStore.config, ["RX_LOST", "RX_SET"]);
+        fcStore.beepers.dshotBeaconTone = 1;
 
-        virtualFC.MIXER_CONFIG.mixer = 3;
+        fcStore.mixerConfig.mixer = 3;
 
-        virtualFC.MOTOR_DATA = Array.from({ length: 8 });
-        virtualFC.MOTOR_3D_CONFIG = {
+        fcStore.motorData = Array.from({ length: 8 });
+        fcStore.motor3dConfig = {
             deadband3d_low: 1406,
             deadband3d_high: 1514,
             neutral: 1460,
         };
         // Spread the reset values first so the virtual board reports every field a real one does.
-        virtualFC.MOTOR_CONFIG = {
-            ...virtualFC.MOTOR_CONFIG,
+        fcStore.motorConfig = {
+            ...fcStore.motorConfig,
             minthrottle: 1070,
             maxthrottle: 2000,
             mincommand: 1000,
@@ -209,10 +209,10 @@ const VirtualFC = {
             use_esc_sensor: false,
         };
 
-        virtualFC.SERVO_CONFIG = Array.from({ length: 8 });
+        fcStore.servoConfig = Array.from({ length: 8 });
 
-        for (let i = 0; i < virtualFC.SERVO_CONFIG.length; i++) {
-            virtualFC.SERVO_CONFIG[i] = {
+        for (let i = 0; i < fcStore.servoConfig.length; i++) {
+            fcStore.servoConfig[i] = {
                 middle: 1500,
                 min: 1000,
                 max: 2000,
@@ -222,10 +222,10 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.ADJUSTMENT_RANGES = Array.from({ length: 16 });
+        fcStore.adjustmentRanges = Array.from({ length: 16 });
 
-        for (let i = 0; i < virtualFC.ADJUSTMENT_RANGES.length; i++) {
-            virtualFC.ADJUSTMENT_RANGES[i] = {
+        for (let i = 0; i < fcStore.adjustmentRanges.length; i++) {
+            fcStore.adjustmentRanges[i] = {
                 slotIndex: 0,
                 auxChannelIndex: 0,
                 range: {
@@ -239,9 +239,9 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.SERIAL_CONFIG.ports = Array.from({ length: 6 });
+        fcStore.serialConfig.ports = Array.from({ length: 6 });
 
-        virtualFC.SERIAL_CONFIG.ports[0] = {
+        fcStore.serialConfig.ports[0] = {
             identifier: 20,
             functions: ["MSP"],
             msp_baudrate: "115200",
@@ -250,8 +250,8 @@ const VirtualFC = {
             blackbox_baudrate: "115200",
         };
 
-        for (let i = 1; i < virtualFC.SERIAL_CONFIG.ports.length; i++) {
-            virtualFC.SERIAL_CONFIG.ports[i] = {
+        for (let i = 1; i < fcStore.serialConfig.ports.length; i++) {
+            fcStore.serialConfig.ports[i] = {
                 identifier: i - 1,
                 functions: [],
                 msp_baudrate: "115200",
@@ -261,10 +261,10 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.LED_STRIP = Array.from({ length: 256 });
+        fcStore.ledStrip = Array.from({ length: 256 });
 
-        for (let i = 0; i < virtualFC.LED_STRIP.length; i++) {
-            virtualFC.LED_STRIP[i] = {
+        for (let i = 0; i < fcStore.ledStrip.length; i++) {
+            fcStore.ledStrip[i] = {
                 x: 0,
                 y: 0,
                 functions: ["c"],
@@ -274,50 +274,50 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.ANALOG = {
-            ...virtualFC.ANALOG,
+        fcStore.analogData = {
+            ...fcStore.analogData,
             voltage: 12,
             mAhdrawn: 1200,
             rssi: 100,
             amperage: 3,
         };
 
-        virtualFC.CONFIG.sampleRateHz = 12000;
-        virtualFC.PID_ADVANCED_CONFIG.pid_process_denom = 2;
-        virtualFC.PID_ADVANCED_CONFIG.fast_pwm_protocol = 6; // DSHOT300
-        virtualFC.PID_ADVANCED_CONFIG.debugModeCount = getDebugModes(virtualFC.CONFIG.apiVersion).length;
-        virtualFC.PIDS = virtualFC.PIDS.map((pid, index) => DEFAULT_BETAFLIGHT_PIDS[index]?.slice() ?? pid);
-        virtualFC.PIDS_ACTIVE = virtualFC.PIDS.map((pid) => pid.slice());
+        fcStore.config.sampleRateHz = 12000;
+        fcStore.pidAdvancedConfig.pid_process_denom = 2;
+        fcStore.pidAdvancedConfig.fast_pwm_protocol = 6; // DSHOT300
+        fcStore.pidAdvancedConfig.debugModeCount = getDebugModes(fcStore.config.apiVersion).length;
+        fcStore.pids = fcStore.pids.map((pid, index) => DEFAULT_BETAFLIGHT_PIDS[index]?.slice() ?? pid);
+        fcStore.pidsActive = fcStore.pids.map((pid) => pid.slice());
         // pid.c simplified_pids_mode RPY; fc.js DEFAULT_TUNING_SLIDERS (all multipliers 100 = 1.0)
-        virtualFC.TUNING_SLIDERS = {
-            ...virtualFC.TUNING_SLIDERS,
-            ...virtualFC.getSliderDefaults(),
+        fcStore.tuningSliders = {
+            ...fcStore.tuningSliders,
+            ...fcStore.getSliderDefaults(),
         };
-        virtualFC.RC_TUNING = {
-            ...virtualFC.RC_TUNING,
+        fcStore.rcTuning = {
+            ...fcStore.rcTuning,
             ...DEFAULT_BETAFLIGHT_RC_TUNING,
         };
-        virtualFC.FILTER_CONFIG = {
-            ...virtualFC.FILTER_CONFIG,
+        fcStore.filterConfig = {
+            ...fcStore.filterConfig,
             ...DEFAULT_BETAFLIGHT_FILTER_CONFIG,
         };
-        virtualFC.ADVANCED_TUNING = {
-            ...virtualFC.ADVANCED_TUNING,
+        fcStore.advancedTuning = {
+            ...fcStore.advancedTuning,
             ...DEFAULT_BETAFLIGHT_ADVANCED_TUNING,
         };
-        virtualFC.ADVANCED_TUNING_ACTIVE = { ...virtualFC.ADVANCED_TUNING };
-        virtualFC.RX_CONFIG = {
-            ...virtualFC.RX_CONFIG,
+        fcStore.advancedTuningActive = { ...fcStore.advancedTuning };
+        fcStore.rxConfig = {
+            ...fcStore.rxConfig,
             ...DEFAULT_BETAFLIGHT_RX_CONFIG,
         };
 
-        virtualFC.BLACKBOX = {
-            ...virtualFC.BLACKBOX,
+        fcStore.blackbox = {
+            ...fcStore.blackbox,
             supported: true,
             blackboxDevice: 1, // Onboard flash
         };
 
-        virtualFC.BATTERY_CONFIG = {
+        fcStore.batteryConfig = {
             vbatmincellvoltage: 3.7,
             vbatmaxcellvoltage: 4.3,
             vbatwarningcellvoltage: 3.8,
@@ -326,14 +326,14 @@ const VirtualFC = {
             currentMeterSource: 3,
         };
 
-        virtualFC.BATTERY_STATE = {
+        fcStore.batteryState = {
             cellCount: 4,
             voltage: 16.1,
             mAhDrawn: 3000,
             amperage: 2,
         };
 
-        virtualFC.DATAFLASH = {
+        fcStore.dataflash = {
             ready: true,
             supported: true,
             sectors: 1024,
@@ -341,33 +341,31 @@ const VirtualFC = {
             usedSize: 10000,
         };
 
-        virtualFC.SDCARD = {
-            ...virtualFC.SDCARD,
+        fcStore.sdcard = {
+            ...fcStore.sdcard,
             supported: true,
             state: 1,
             freeSizeKB: 1024,
             totalSizeKB: 2048,
         };
 
-        virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
-        virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
-        virtualFC.SENSOR_ALIGNMENT.gyro_enable_mask = (1 << 8) - 1; // Used for API v1.47+
-        virtualFC.SENSOR_ALIGNMENT.gyro_detection_flags = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)
-            ? 3
-            : 1;
+        fcStore.sensorAlignment = { ...fcStore.sensorAlignment };
+        fcStore.sensorAlignment.gyro_to_use = 0;
+        fcStore.sensorAlignment.gyro_enable_mask = (1 << 8) - 1; // Used for API v1.47+
+        fcStore.sensorAlignment.gyro_detection_flags = semver.gte(fcStore.config.apiVersion, API_VERSION_1_47) ? 3 : 1;
 
-        virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
+        fcStore.sensorData = { ...fcStore.sensorData };
 
-        virtualFC.RC = {
+        fcStore.rc = {
             channels: Array.from({ length: 16 }),
             active_channels: 16,
         };
-        for (let i = 0; i < virtualFC.RC.channels.length; i++) {
-            virtualFC.RC.channels[i] = 1500;
+        for (let i = 0; i < fcStore.rc.channels.length; i++) {
+            fcStore.rc.channels[i] = 1500;
         }
 
         // from https://betaflight.com/docs/development/Modes or msp/msp_box.c
-        virtualFC.AUX_CONFIG = [
+        fcStore.auxConfig = [
             "ARM",
             "ANGLE",
             "HORIZON",
@@ -415,30 +413,30 @@ const VirtualFC = {
             "LAP TIMER RESET",
         ];
 
-        if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            addArrayElementAfter(virtualFC.AUX_CONFIG, "HORIZON", "ALT_HOLD");
-            addArrayElementAfter(virtualFC.AUX_CONFIG, "CAMSTAB", "POS_HOLD");
-            addArrayElementAfter(virtualFC.AUX_CONFIG, "GPS RESCUE", "AUTOPILOT");
-            addArrayElement(virtualFC.AUX_CONFIG, "CHIRP");
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            addArrayElementAfter(fcStore.auxConfig, "HORIZON", "ALT_HOLD");
+            addArrayElementAfter(fcStore.auxConfig, "CAMSTAB", "POS_HOLD");
+            addArrayElementAfter(fcStore.auxConfig, "GPS RESCUE", "AUTOPILOT");
+            addArrayElement(fcStore.auxConfig, "CHIRP");
         }
 
-        FC.AUX_CONFIG_IDS = [
+        fcStore.auxConfigIds = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
             36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
         ];
 
         for (let i = 0; i < 16; i++) {
-            virtualFC.RXFAIL_CONFIG[i] = {
+            fcStore.rxFailConfig[i] = {
                 mode: 1,
                 value: 1500,
             };
         }
 
         // 11 1111 (pass bitchecks)
-        virtualFC.CONFIG.activeSensors = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47) ? 127 : 63;
+        fcStore.config.activeSensors = semver.gte(fcStore.config.apiVersion, API_VERSION_1_47) ? 127 : 63;
 
-        virtualFC.SENSOR_CONFIG_ACTIVE = {
-            ...virtualFC.SENSOR_CONFIG_ACTIVE,
+        fcStore.sensorConfigActive = {
+            ...fcStore.sensorConfigActive,
             gyro_hardware: 2, // MPU6050
             acc_hardware: 3, // MPU6050
             baro_hardware: 4, // BMP280
@@ -448,12 +446,12 @@ const VirtualFC = {
         };
 
         // For API v1.47+, set dual gyro hardware IDs
-        virtualFC.GYRO_SENSOR.gyro_hardware[0] = 13;
-        virtualFC.GYRO_SENSOR.gyro_hardware[1] = 22;
+        fcStore.gyroSensor.gyro_hardware[0] = 13;
+        fcStore.gyroSensor.gyro_hardware[1] = 22;
 
-        virtualFC.SENSOR_DATA.sonars = 231;
+        fcStore.sensorData.sonars = 231;
 
-        virtualFC.GPS_CONFIG = {
+        fcStore.gpsConfig = {
             provider: 1,
             ublox_sbas: 1,
             auto_config: 1,
@@ -462,17 +460,14 @@ const VirtualFC = {
             ublox_use_galileo: 1,
         };
 
-        virtualFC.GPS_DATA = sampleGpsData;
+        fcStore.gpsData = sampleGpsData;
     },
 
     setupVirtualOSD() {
-        // osd.js assigns OSD.data and OSD.virtualMode inside functions, where TypeScript does not see them.
-        const virtualOSD = OSD as typeof OSD & { data: Record<string, unknown>; virtualMode: Record<string, unknown> };
+        OSD.data.video_system = 1; // PAL
+        OSD.data.unit_mode = 1; // METRIC
 
-        virtualOSD.data.video_system = 1; // PAL
-        virtualOSD.data.unit_mode = 1; // METRIC
-
-        virtualOSD.virtualMode = {
+        OSD.virtualMode = {
             itemPositions: Array.from({ length: 77 }),
             statisticsState: [],
             warningFlags: 0,
@@ -480,7 +475,7 @@ const VirtualFC = {
             timerData: Array.from({ length: 3 }, () => OSD.msp.helpers.unpack.timer(0)),
         };
 
-        virtualOSD.data.state = {
+        OSD.data.state = {
             haveMax7456Configured: true,
             haveMax7456Video: true,
             haveOsdFeature: true,
@@ -490,18 +485,18 @@ const VirtualFC = {
             haveSomeOsd: true,
         };
 
-        virtualOSD.data.parameters = {
+        OSD.data.parameters = {
             overlayRadioMode: 0,
             cameraFrameWidth: 30,
             cameraFrameHeight: 30,
         };
 
-        virtualOSD.data.osd_profiles = {
+        OSD.data.osd_profiles = {
             number: 3,
             selected: 0,
         };
 
-        virtualOSD.data.alarms = {
+        OSD.data.alarms = {
             rssi: { display_name: i18n.getMessage("osdTimerAlarmOptionRssi"), value: 0 },
             cap: { display_name: i18n.getMessage("osdTimerAlarmOptionCapacity"), value: 0 },
             alt: { display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"), value: 0 },

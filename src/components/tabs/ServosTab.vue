@@ -157,15 +157,10 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useTranslation } from "i18next-vue";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
-import { mspHelper } from "@/js/msp/MSPHelper";
-import { isMspCancelled } from "@/js/msp/mspErrors";
-import { useInterval } from "@/composables/useInterval";
+import { useFlightControllerStore } from "@/stores/fc";
 import { useTimeout } from "@/composables/useTimeout";
-import { useSaving } from "@/composables/useSaving";
-import { useReboot } from "@/composables/useReboot";
+import { useServosData } from "@/composables/servos/useServosData";
+import { useServosSave } from "@/composables/servos/useServosSave";
 import { clamp } from "@/js/utils/common";
 import type { ServoConfig } from "@/stores/fc.types";
 
@@ -173,6 +168,7 @@ import type { ServoConfig } from "@/stores/fc.types";
 type ServoEdit = Omit<ServoConfig, "reversedInputSources">;
 
 const { t } = useTranslation();
+const fcStore = useFlightControllerStore();
 
 const isSupported = ref(false);
 const liveMode = ref(false);
@@ -180,12 +176,13 @@ const servoConfigs = reactive<ServoEdit[]>([]);
 const servoData = reactive<number[]>([]);
 const originalConfigs = ref("");
 
-const { addInterval } = useInterval();
 const { addTimeout } = useTimeout();
-const { isSaving, runSave } = useSaving();
-const { saveToEeprom } = useReboot();
+const { loadServoConfigs, startPolling } = useServosData();
+const { updateServos, saveServoConfig, isSaving } = useServosSave(marshalServoConfigs, () => {
+    originalConfigs.value = JSON.stringify(servoConfigs);
+});
 
-const totalChannels = computed(() => FC.RC?.active_channels || 8);
+const totalChannels = computed(() => fcStore.rc?.active_channels || 8);
 const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
 const configHasChanged = computed(() => originalConfigs.value !== JSON.stringify(servoConfigs));
 
@@ -226,7 +223,7 @@ function onServoChange() {
     }
 }
 
-// Marshal reactive servoConfigs into FC.SERVO_CONFIG (clamping min/middle/max) so the
+// Marshal reactive servoConfigs into fcStore.servoConfig (clamping min/middle/max) so the
 // values sent over MSP match the UI. Also normalizes the reactive values in place.
 function marshalServoConfigs() {
     const SERVO_MIN = 500;
@@ -234,7 +231,7 @@ function marshalServoConfigs() {
 
     for (let i = 0; i < servoConfigs.length; i++) {
         const src = servoConfigs[i];
-        const cfg = FC.SERVO_CONFIG[i];
+        const cfg = fcStore.servoConfig[i];
 
         const min = clamp(src.min ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
         const middle = clamp(src.middle ?? SERVO_MIN, SERVO_MIN, SERVO_MAX);
@@ -252,48 +249,21 @@ function marshalServoConfigs() {
     }
 }
 
-// Live-mode preview: push the current servo config to the FC without persisting.
-// sendServoConfigurations is now error-aware/async; this is fire-and-forget preview, so
-// ignore a benign queue-clear cancellation on tab switch but still log genuine failures.
-function updateServos() {
-    marshalServoConfigs();
-    mspHelper.sendServoConfigurations().catch((error) => {
-        if (!isMspCancelled(error)) {
-            console.error("Failed to update servo configuration", error);
-        }
-    });
-}
-
-const saveServoConfig = () =>
-    runSave(async () => {
-        marshalServoConfigs();
-        await mspHelper.sendServoConfigurations();
-        await saveToEeprom();
-        // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
-        // resolved to the same string, so it's dropped here to avoid a duplicate.
-        originalConfigs.value = JSON.stringify(servoConfigs);
-    });
-
-function getServoData() {
-    MSP.send_message(MSPCodes.MSP_SERVO, false, false, () => {
-        for (let i = 0; i < FC.SERVO_DATA.length; i++) {
-            servoData[i] = FC.SERVO_DATA[i];
-        }
-    });
+function updateServoData() {
+    for (let i = 0; i < fcStore.servoData.length; i++) {
+        servoData[i] = fcStore.servoData[i];
+    }
 }
 
 async function loadServoData() {
-    if (!FC.CONFIG?.apiVersion) {
+    if (!fcStore.config?.apiVersion) {
         isSupported.value = false;
         GUI.content_ready();
         return;
     }
 
     try {
-        await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);
-        await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
-        await MSP.promise(MSPCodes.MSP_RC);
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await loadServoConfigs();
         initializeUI();
     } catch (e) {
         console.error("Failed to load servo configs", e);
@@ -303,7 +273,7 @@ async function loadServoData() {
 }
 
 function initializeUI() {
-    if (!FC.SERVO_CONFIG || FC.SERVO_CONFIG.length === 0) {
+    if (!fcStore.servoConfig || fcStore.servoConfig.length === 0) {
         isSupported.value = false;
         GUI.content_ready();
         return;
@@ -313,21 +283,20 @@ function initializeUI() {
 
     servoConfigs.length = 0;
     for (let i = 0; i < 8; i++) {
-        if (FC.SERVO_CONFIG[i]) {
+        if (fcStore.servoConfig[i]) {
             servoConfigs.push({
-                min: FC.SERVO_CONFIG[i].min,
-                middle: FC.SERVO_CONFIG[i].middle,
-                max: FC.SERVO_CONFIG[i].max,
-                rate: FC.SERVO_CONFIG[i].rate,
-                indexOfChannelToForward: FC.SERVO_CONFIG[i].indexOfChannelToForward,
+                min: fcStore.servoConfig[i].min,
+                middle: fcStore.servoConfig[i].middle,
+                max: fcStore.servoConfig[i].max,
+                rate: fcStore.servoConfig[i].rate,
+                indexOfChannelToForward: fcStore.servoConfig[i].indexOfChannelToForward,
             });
         }
     }
 
     originalConfigs.value = JSON.stringify(servoConfigs);
 
-    addInterval("servo_data_pull", getServoData, 50);
-    addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+    startPolling(updateServoData);
 
     GUI.content_ready();
 }

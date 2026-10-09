@@ -20,7 +20,7 @@
  */
 
 import { toRaw } from "vue";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -37,6 +37,7 @@ export function usePortsConfiguration(
     analyticsChanges: PortAnalyticsChanges,
     functionRules: PortFunctionRule[],
 ) {
+    const fcStore = useFlightControllerStore();
     const { saveAndReboot } = useReboot();
 
     const getEnabledFeaturesFromPorts = (portsList: SerialPort[]) => {
@@ -70,9 +71,9 @@ export function usePortsConfiguration(
     };
 
     const updateFeatures = () => {
-        const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);
+        const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(fcStore.serialConfig.ports);
 
-        const featureConfig = FC.FEATURE_CONFIG.features;
+        const featureConfig = fcStore.features.features;
         if (!featureConfig) {
             // Set on connect, and this tab only saves while connected; it threw here before too.
             throw new Error("Feature config is not loaded");
@@ -118,8 +119,8 @@ export function usePortsConfiguration(
             delete analyticsChanges[key];
         }
 
-        // Reconstruct FC.SERIAL_CONFIG.ports
-        FC.SERIAL_CONFIG.ports = ports.map((p) => {
+        // Reconstruct fcStore.serialConfig.ports
+        fcStore.serialConfig.ports = ports.map((p) => {
             const functions: string[] = [];
             if (p.msp) {
                 functions.push("MSP");

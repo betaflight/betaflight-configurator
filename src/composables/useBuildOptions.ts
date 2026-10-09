@@ -27,7 +27,7 @@ import { API_VERSION_1_45 } from "../js/data_storage";
 import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options.js";
 
 /**
- * The part of `FC.CONFIG` build-option gating reads. Partial, since a firmware that
+ * The part of `fcStore.config` build-option gating reads. Partial, since a firmware that
  * predates the build-option list leaves `buildOptions` unset.
  */
 export type BuildOptionsConfig = Partial<Pick<FcConfig, "apiVersion" | "buildOptions">>;
@@ -63,7 +63,7 @@ function warnUnknownOption(name: string) {
  * predates that - or answers with an empty list - tells us nothing about what
  * it contains.
  *
- * @param config an `FC.CONFIG`-shaped object
+ * @param config an `fcStore.config`-shaped object
  */
 export function buildOptionsReported(
     config: BuildOptionsConfig | null | undefined,
@@ -83,13 +83,13 @@ export function buildOptionsReported(
  * not the same as absent, and hiding UI from a firmware that simply cannot answer
  * the question is always wrong.
  *
- * @param config an `FC.CONFIG`-shaped object
+ * @param config an `fcStore.config`-shaped object
  * @param name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
  * @returns true when the option is in the build, or when gating does not apply
  */
 export function configHasBuildOption(config: BuildOptionsConfig | null | undefined, name: string): boolean {
     if (!Object.hasOwn(FIRMWARE_BUILD_OPTIONS, name)) {
-        // A name outside the table can never appear in FC.CONFIG.buildOptions,
+        // A name outside the table can never appear in fcStore.config.buildOptions,
         // so answering "absent" would hide UI forever on a typo. Fail open and
         // let the DEV warning surface the mistake.
         warnUnknownOption(name);
@@ -111,7 +111,7 @@ export function configHasBuildOption(config: BuildOptionsConfig | null | undefin
  * omits an entry. Anything that decides whether UI is shown or enabled wants
  * {@link configHasBuildOption} instead.
  *
- * @param config an `FC.CONFIG`-shaped object
+ * @param config an `fcStore.config`-shaped object
  * @param name a `USE_*` key of FIRMWARE_BUILD_OPTIONS
  * @returns true only when the firmware reported this option
  */

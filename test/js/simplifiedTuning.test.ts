@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import FC from "../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
 import {
     calculateSimplifiedPidValues,
     calculateSimplifiedGyroFilterValues,
@@ -10,6 +10,7 @@ import {
     validateVirtualSimplifiedTuning,
     type SliderFactors,
 } from "../../src/js/simplifiedTuning";
+import { useFlightControllerStore } from "../../src/stores/fc";
 
 const DEFAULT_FACTORS: SliderFactors = {
     pidsMode: 2,
@@ -27,18 +28,21 @@ const DEFAULT_FACTORS: SliderFactors = {
     dtermFilterEnabled: true,
 };
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 function enableFilterFeatureDetection() {
-    FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = 1;
-    FC.FILTER_CONFIG.gyro_lowpass_hz = 1;
-    FC.FILTER_CONFIG.gyro_lowpass2_hz = 1;
-    FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = 1;
-    FC.FILTER_CONFIG.dterm_lowpass_hz = 1;
-    FC.FILTER_CONFIG.dterm_lowpass2_hz = 1;
+    fcStore.filterConfig.gyro_lowpass_dyn_min_hz = 1;
+    fcStore.filterConfig.gyro_lowpass_hz = 1;
+    fcStore.filterConfig.gyro_lowpass2_hz = 1;
+    fcStore.filterConfig.dterm_lowpass_dyn_min_hz = 1;
+    fcStore.filterConfig.dterm_lowpass_hz = 1;
+    fcStore.filterConfig.dterm_lowpass2_hz = 1;
 }
 
 describe("simplifiedTuning", () => {
     beforeEach(() => {
-        FC.resetState();
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
     });
 
     describe("calculateSimplifiedPidValues", () => {
@@ -290,62 +294,62 @@ describe("simplifiedTuning", () => {
 
     describe("applySimplifiedPids", () => {
         beforeEach(() => {
-            Object.assign(FC.TUNING_SLIDERS, FC.DEFAULT_TUNING_SLIDERS);
+            Object.assign(fcStore.tuningSliders, fcStore.defaultTuningSliders);
         });
 
-        it("writes derived PID/feedforward/dMax values onto FC.PIDS and FC.ADVANCED_TUNING", () => {
+        it("writes derived PID/feedforward/dMax values onto fcStore.pids and fcStore.advancedTuning", () => {
             applySimplifiedPids();
-            expect(FC.PIDS.slice(0, 3)).toEqual([
+            expect(fcStore.pids.slice(0, 3)).toEqual([
                 [45, 80, 30],
                 [47, 84, 34],
                 [45, 80, 0],
             ]);
-            expect(FC.ADVANCED_TUNING.feedforwardRoll).toBe(120);
-            expect(FC.ADVANCED_TUNING.feedforwardPitch).toBe(125);
-            expect(FC.ADVANCED_TUNING.feedforwardYaw).toBe(120);
-            expect(FC.ADVANCED_TUNING.dMaxRoll).toBe(40);
-            expect(FC.ADVANCED_TUNING.dMaxPitch).toBe(46);
-            expect(FC.ADVANCED_TUNING.dMaxYaw).toBe(0);
+            expect(fcStore.advancedTuning.feedforwardRoll).toBe(120);
+            expect(fcStore.advancedTuning.feedforwardPitch).toBe(125);
+            expect(fcStore.advancedTuning.feedforwardYaw).toBe(120);
+            expect(fcStore.advancedTuning.dMaxRoll).toBe(40);
+            expect(fcStore.advancedTuning.dMaxPitch).toBe(46);
+            expect(fcStore.advancedTuning.dMaxYaw).toBe(0);
         });
     });
 
     describe("applySimplifiedGyroFilters / applySimplifiedDtermFilters", () => {
         beforeEach(() => {
-            Object.assign(FC.TUNING_SLIDERS, FC.DEFAULT_TUNING_SLIDERS);
+            Object.assign(fcStore.tuningSliders, fcStore.defaultTuningSliders);
             enableFilterFeatureDetection();
         });
 
-        it("writes derived cutoffs onto FC.FILTER_CONFIG for the default (100) multiplier", () => {
+        it("writes derived cutoffs onto fcStore.filterConfig for the default (100) multiplier", () => {
             applySimplifiedGyroFilters();
             applySimplifiedDtermFilters();
-            expect(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz).toBe(250);
-            expect(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz).toBe(500);
-            expect(FC.FILTER_CONFIG.gyro_lowpass_hz).toBe(250);
-            expect(FC.FILTER_CONFIG.gyro_lowpass2_hz).toBe(500);
-            expect(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz).toBe(75);
-            expect(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz).toBe(150);
-            expect(FC.FILTER_CONFIG.dterm_lowpass_hz).toBe(75);
-            expect(FC.FILTER_CONFIG.dterm_lowpass2_hz).toBe(150);
+            expect(fcStore.filterConfig.gyro_lowpass_dyn_min_hz).toBe(250);
+            expect(fcStore.filterConfig.gyro_lowpass_dyn_max_hz).toBe(500);
+            expect(fcStore.filterConfig.gyro_lowpass_hz).toBe(250);
+            expect(fcStore.filterConfig.gyro_lowpass2_hz).toBe(500);
+            expect(fcStore.filterConfig.dterm_lowpass_dyn_min_hz).toBe(75);
+            expect(fcStore.filterConfig.dterm_lowpass_dyn_max_hz).toBe(150);
+            expect(fcStore.filterConfig.dterm_lowpass_hz).toBe(75);
+            expect(fcStore.filterConfig.dterm_lowpass2_hz).toBe(150);
         });
 
         it("is a no-op for the gyro filter when its slider is disabled", () => {
-            FC.TUNING_SLIDERS.slider_gyro_filter = 0;
-            const before = { ...FC.FILTER_CONFIG };
+            fcStore.tuningSliders.slider_gyro_filter = 0;
+            const before = { ...fcStore.filterConfig };
             applySimplifiedGyroFilters();
-            expect(FC.FILTER_CONFIG).toEqual(before);
+            expect(fcStore.filterConfig).toEqual(before);
         });
 
         it("is a no-op for the dterm filter when its slider is disabled", () => {
-            FC.TUNING_SLIDERS.slider_dterm_filter = 0;
-            const before = { ...FC.FILTER_CONFIG };
+            fcStore.tuningSliders.slider_dterm_filter = 0;
+            const before = { ...fcStore.filterConfig };
             applySimplifiedDtermFilters();
-            expect(FC.FILTER_CONFIG).toEqual(before);
+            expect(fcStore.filterConfig).toEqual(before);
         });
     });
 
     describe("validateVirtualSimplifiedTuning", () => {
         beforeEach(() => {
-            Object.assign(FC.TUNING_SLIDERS, FC.DEFAULT_TUNING_SLIDERS);
+            Object.assign(fcStore.tuningSliders, fcStore.defaultTuningSliders);
             enableFilterFeatureDetection();
             applySimplifiedPids();
             applySimplifiedGyroFilters();
@@ -354,25 +358,25 @@ describe("simplifiedTuning", () => {
 
         it("marks pids/gyro/dterm all valid right after applying the sliders they were derived from", () => {
             validateVirtualSimplifiedTuning();
-            expect(FC.TUNING_SLIDERS.slider_pids_valid).toBe(1);
-            expect(FC.TUNING_SLIDERS.slider_gyro_valid).toBe(1);
-            expect(FC.TUNING_SLIDERS.slider_dterm_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_pids_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_gyro_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_dterm_valid).toBe(1);
         });
 
-        it("marks only pids invalid when FC.PIDS is tampered with independently of the sliders", () => {
-            FC.PIDS[0][0] = 1;
+        it("marks only pids invalid when fcStore.pids is tampered with independently of the sliders", () => {
+            fcStore.pids[0][0] = 1;
             validateVirtualSimplifiedTuning();
-            expect(FC.TUNING_SLIDERS.slider_pids_valid).toBe(0);
-            expect(FC.TUNING_SLIDERS.slider_gyro_valid).toBe(1);
-            expect(FC.TUNING_SLIDERS.slider_dterm_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_pids_valid).toBe(0);
+            expect(fcStore.tuningSliders.slider_gyro_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_dterm_valid).toBe(1);
         });
 
-        it("marks only gyro invalid when FC.FILTER_CONFIG's gyro cutoff is tampered with independently of the sliders", () => {
-            FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = 999;
+        it("marks only gyro invalid when fcStore.filterConfig's gyro cutoff is tampered with independently of the sliders", () => {
+            fcStore.filterConfig.gyro_lowpass_dyn_min_hz = 999;
             validateVirtualSimplifiedTuning();
-            expect(FC.TUNING_SLIDERS.slider_pids_valid).toBe(1);
-            expect(FC.TUNING_SLIDERS.slider_gyro_valid).toBe(0);
-            expect(FC.TUNING_SLIDERS.slider_dterm_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_pids_valid).toBe(1);
+            expect(fcStore.tuningSliders.slider_gyro_valid).toBe(0);
+            expect(fcStore.tuningSliders.slider_dterm_valid).toBe(1);
         });
     });
 });

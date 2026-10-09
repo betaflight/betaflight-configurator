@@ -388,26 +388,17 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useReboot } from "@/composables/useReboot";
-import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
+import { useFailsafeData } from "@/composables/failsafe/useFailsafeData";
+import { useFailsafeSave } from "@/composables/failsafe/useFailsafeSave";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
-import { mspHelper } from "@/js/msp/MSPHelper";
 import adjustBoxNameIfPeripheralWithModeID from "@/js/peripherals";
 import semver from "semver";
-import {
-    API_VERSION_1_41,
-    API_VERSION_1_45,
-    API_VERSION_1_46,
-    API_VERSION_1_47,
-    API_VERSION_1_48,
-} from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
 import GUI from "@/js/gui";
 
 // Procedure illustration images (same pattern as GpsTab's loadingBarsUrl)
@@ -420,29 +411,14 @@ const procedureGpsImageDark = new URL("../../images/icons/cf_failsafe_procedure4
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
-const { saveAndReboot } = useReboot();
-
-const { runSave } = useSaving();
+const { loadFailsafeData } = useFailsafeData();
 
 // --- Data loading ---
 
 const loadConfig = async () => {
     await runTabLoad(
         async () => {
-            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-            await MSP.promise(MSPCodes.MSP_FAILSAFE_CONFIG);
-
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
-                await MSP.promise(MSPCodes.MSP_GPS_RESCUE);
-            }
-
-            await MSP.promise(MSPCodes.MSP_RXFAIL_CONFIG);
-            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-            await MSP.promise(MSPCodes.MSP_BOXNAMES);
-            await MSP.promise(MSPCodes.MSP_BOXIDS);
-            await MSP.promise(MSPCodes.MSP_RC);
-            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-            await MSP.promise(MSPCodes.MSP_MODE_RANGES);
+            await loadFailsafeData();
         },
         (e) => console.error("Failed to load Failsafe configuration", e),
     );
@@ -769,25 +745,7 @@ const gpsRescueAllowArmingWithoutFix = computed({
 
 // --- Save ---
 
-const saveConfig = () =>
-    runSave(async () => {
-        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG));
-
-        await new Promise<void>((resolve) => {
-            mspHelper.sendRxFailConfig(resolve);
-        });
-
-        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_41)) {
-            await MSP.promise(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE));
-        }
-
-        initializeDefaults();
-
-        await saveAndReboot();
-    });
+const { saveConfig } = useFailsafeSave(initializeDefaults);
 
 onMounted(async () => {
     await loadConfig();
