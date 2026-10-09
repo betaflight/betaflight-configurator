@@ -20,7 +20,7 @@
  */
 
 import { ref, type Ref } from "vue";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
 import { PORT_NONE, findPortIdentifierByCliName, getPortDisplayName } from "./portNames";
@@ -194,6 +194,7 @@ function loadSerialPortInventory(): Promise<void> {
  * error, and the view falls back to a "nothing to show" note.
  */
 export function usePeripherals() {
+    const fcStore = useFlightControllerStore();
     const isLoading = ref(true);
     const supported = ref(false);
     const serialPorts: Ref<SerialPortTile[]> = ref([]);
@@ -220,7 +221,7 @@ export function usePeripherals() {
             }
 
             const parsed = parsePeripherals(lines);
-            const fcPorts = FC.SERIAL_CONFIG?.ports ?? [];
+            const fcPorts = fcStore.serialConfig?.ports ?? [];
 
             const reported = new Map<number, PeripheralSerialPort>();
             const unopenable: { identifier: number; entry: PeripheralSerialPort }[] = [];

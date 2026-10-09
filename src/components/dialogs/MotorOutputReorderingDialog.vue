@@ -72,11 +72,8 @@ import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import MotorOutputReorderCanvas from "@/components/MotorOutputReordering/MotorOutputReorderingCanvas";
 import MotorOutputReorderConfig from "@/components/MotorOutputReordering/MotorOutputReorderingConfig";
-import { mspHelper } from "@/js/msp/MSPHelper";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import { i18n } from "@/js/localization";
-import { useReboot } from "@/composables/useReboot";
+import { useMotorOutputReordering } from "@/composables/motors/useMotorOutputReordering";
 
 const props = defineProps({
     droneConfiguration: {
@@ -96,7 +93,7 @@ const props = defineProps({
 const emit = defineEmits<{ close: [] }>();
 
 const fcStore = useFlightControllerStore();
-const { saveAndReboot } = useReboot();
+const { spinOnlyMotor, saveMotorOutputOrder } = useMotorOutputReordering();
 const dialogRef = ref<HTMLDialogElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
@@ -131,16 +128,10 @@ const i18nMessage = (key: string) => {
 // Motor spinning
 const spinMotor = (motorIndex: number) => {
     currentSpinningMotor = motorIndex;
-    const buffer = [];
 
     const numberOfMotors = config.frames[props.droneConfiguration].Motors.length;
 
-    for (let i = 0; i < numberOfMotors; i++) {
-        const value = i === motorIndex ? props.motorSpinValue : props.motorStopValue;
-        buffer.push(value & 0xff, (value >> 8) & 0xff);
-    }
-
-    MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
+    spinOnlyMotor(motorIndex, numberOfMotors, props.motorSpinValue, props.motorStopValue);
 };
 
 const stopMotor = () => {
@@ -273,14 +264,7 @@ const startOver = () => {
 };
 
 const save = () => {
-    fcStore.motorOutputOrder = Array.from(newMotorOutputReorder);
-
-    MSP.send_message(
-        MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING,
-        mspHelper.crunch(MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING),
-        false,
-        () => saveAndReboot(),
-    );
+    saveMotorOutputOrder(newMotorOutputReorder);
 
     close();
 };

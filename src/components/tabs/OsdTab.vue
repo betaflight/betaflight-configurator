@@ -621,6 +621,7 @@ import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useOsdFontUpload } from "@/composables/osd/useOsdFontUpload";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
@@ -690,8 +691,6 @@ import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells, type PositionConfig } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
-import MSP from "@/js/msp";
-import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { getTracking } from "@/js/Analytics";
 import semver from "semver";
@@ -725,6 +724,7 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const { isSaving, runSave } = useSaving();
 const { reboot } = useReboot();
+const { rebootAfterFontUpload } = useOsdFontUpload();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
@@ -1821,13 +1821,7 @@ async function flashFont() {
         // Close the dialog before rebooting so the user isn't left with
         // a stale modal over a disconnected UI.
         closeFontManager();
-        // Reset MSP parser state and flush pending callbacks to prevent
-        // CRC errors from residual serial data before the reboot command.
-        MSP.disconnect_cleanup();
-        // Reboot FC to apply the new font — reinitializeConnection sends
-        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
-        // serial backend auto-reconnects after the device comes back.
-        reinitializeConnection();
+        rebootAfterFontUpload();
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");

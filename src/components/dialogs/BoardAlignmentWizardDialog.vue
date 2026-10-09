@@ -181,14 +181,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import Model from "@/js/model";
 import { i18n } from "@/js/localization";
 import { have_sensor } from "@/js/sensor_helpers";
 import { bit_check } from "@/js/bit";
 import { detectBoardAlignment, meanVec3, tiltAngleDeg, matrixToEuler } from "@/js/utils/boardAlignment";
 import { eulerToMatrix } from "@/js/utils/magAlignment";
+import { useBoardAlignmentPolling } from "@/composables/sensors/useBoardAlignmentPolling";
 
 const ACC_NEEDS_CALIBRATION_BIT = 0;
 
@@ -365,8 +364,6 @@ const phaseDetail = ref("");
 
 // --- Sample buffers ---
 let accelBuf: Vec[] = []; // rolling buffer of recent accel vectors
-let pollTimer: ReturnType<typeof setTimeout> | null = null;
-let isPolling = false;
 
 // Captured pose averages
 const captured: {
@@ -533,28 +530,12 @@ function startLiveAttitudeRender() {
 
 // --- Polling ---
 
-function startPolling() {
-    if (isPolling) return;
-    isPolling = true;
-    pollLoop();
-}
-
-function stopPolling() {
-    isPolling = false;
-    if (pollTimer !== null) {
-        clearTimeout(pollTimer);
-        pollTimer = null;
-    }
-}
-
-function pollLoop() {
-    if (!isPolling) return;
-    MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, () => {
-        if (!isPolling) return;
-        onImuSample();
-        pollTimer = setTimeout(pollLoop, POLL_MS);
-    });
-}
+const {
+    startImuPolling: startPolling,
+    stopImuPolling: stopPolling,
+    startAttitudePolling,
+    stopAttitudePolling,
+} = useBoardAlignmentPolling(POLL_MS, onImuSample);
 
 // Rolling tilt history (one number per IMU sample) used for accel-direction stability.
 let tiltHistory: number[] = [];
@@ -844,28 +825,6 @@ function enterTestPhase() {
     };
     requestAnimationFrame(autoReset);
     startLiveAttitudeRender();
-}
-
-let attitudePollTimer: ReturnType<typeof setTimeout> | null = null;
-let attitudePolling = false;
-function startAttitudePolling() {
-    if (attitudePolling) return;
-    attitudePolling = true;
-    const loop = () => {
-        if (!attitudePolling) return;
-        MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, () => {
-            if (!attitudePolling) return;
-            attitudePollTimer = setTimeout(loop, POLL_MS);
-        });
-    };
-    loop();
-}
-function stopAttitudePolling() {
-    attitudePolling = false;
-    if (attitudePollTimer !== null) {
-        clearTimeout(attitudePollTimer);
-        attitudePollTimer = null;
-    }
 }
 
 function onApply() {

@@ -21,6 +21,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
+import { createPinia, setActivePinia } from "pinia";
 
 const autoComplete = vi.hoisted(() => ({
     enabled: true,
@@ -50,9 +51,9 @@ vi.mock("../../src/js/CliAutoComplete", () => ({
         },
     },
 }));
-vi.mock("../../src/js/fc", () => ({ default: { CONFIG: { flightControllerVersion: "4.5.0" } } }));
 
 import { useCliAutocomplete, type CliAutocomplete } from "../../src/composables/useCliAutocomplete";
+import { useFlightControllerStore } from "../../src/stores/fc";
 
 describe("useCliAutocomplete", () => {
     let ac: CliAutocomplete;
@@ -72,6 +73,8 @@ describe("useCliAutocomplete", () => {
         autoComplete.enabled = true;
         autoComplete.building = false;
         input = "";
+        setActivePinia(createPinia());
+        useFlightControllerStore().config.flightControllerVersion = "4.5.0";
         ac = useCliAutocomplete();
         ac.connect(
             () => input,

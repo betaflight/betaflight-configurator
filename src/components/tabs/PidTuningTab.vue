@@ -132,14 +132,11 @@ import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
 import GUI from "@/js/gui";
-import MSP from "@/js/msp";
-import MSPCodes, { MSP2TextType } from "@/js/msp/MSPCodes";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
-import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
@@ -148,6 +145,7 @@ import { gui_log } from "@/js/gui_log";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { runTabLoad } from "@/composables/useTabLoad";
+import { CopyProfileType, usePidTuningMsp } from "@/composables/pidTuning/usePidTuningMsp";
 
 /** What CopyProfileDialog confirms with: the selected target profile and/or rate profile. */
 interface CopyProfileSelection {
@@ -158,13 +156,22 @@ interface CopyProfileSelection {
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
 const navigationStore = useNavigationStore();
+const fcStore = useFlightControllerStore();
 const dialog = useDialog();
+const {
+    loadPidTuningData,
+    writePidTuningConfig,
+    selectPidProfile,
+    selectRateProfile,
+    copyProfile: sendCopyProfile,
+    resetPidProfile,
+} = usePidTuningMsp();
 
 // State - use navigation store for expert mode
 const expertModeEnabled = computed(() => navigationStore.expertMode);
 const activeSubtab = ref("pid");
 const showAllPids = ref(false);
-const currentProfile = ref(FC.CONFIG.profile);
+const currentProfile = ref(fcStore.config.profile);
 const currentRateProfile = ref(0);
 const isMounted = useIsMounted();
 // Guards for the TX-driven profile sync (see watchers below).
@@ -175,12 +182,12 @@ const filterSubTab = ref<InstanceType<typeof FilterSubTab> | null>(null);
 const ratesSubTab = ref(null);
 
 // Profile count — matches original loadProfilesList() logic
-const numberOfProfiles = computed(() => FC.CONFIG.numProfiles ?? 3);
+const numberOfProfiles = computed(() => fcStore.config.numProfiles ?? 3);
 
 // Rate profile count — matches original loadRateProfilesList() logic
 const numberOfRateProfiles = computed(() => {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        return FC.CONFIG.numberOfRateProfiles ?? 4;
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+        return fcStore.config.numberOfRateProfiles ?? 4;
     }
     return 4;
 });
@@ -213,10 +220,10 @@ const pidProfileName = ref("");
 const rateProfileName = ref("");
 
 const showProfileName = computed(
-    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
+    () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
 );
 const showRateProfileName = computed(
-    () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
+    () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
 );
 
 const localProfileName = computed({
@@ -250,44 +257,12 @@ async function loadData() {
                 }
 
                 // Load all PID tuning related MSP data
-                await MSP.promise(MSPCodes.MSP_PIDNAMES);
-                await MSP.promise(MSPCodes.MSP_PID);
-                await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
-                await MSP.promise(MSPCodes.MSP_RC_TUNING);
-                await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
-                await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-                await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+                await loadPidTuningData();
 
-                // Profile names (API 1.45+)
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PID_PROFILE_NAME),
-                    );
-                    await MSP.promise(
-                        MSPCodes.MSP2_GET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
-                    );
-                }
-
-                // Status EX (API 1.47+)
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    await MSP.promise(MSPCodes.MSP_STATUS_EX);
-                }
-
-                await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
-                await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-                await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
-
-                // Wing config (API 1.49+, WING build)
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
-                    await MSP.promise(MSPCodes.MSP_WING);
-                }
-
-                // Initialize profile names from FC.CONFIG
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    pidProfileName.value = FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] || "";
-                    rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
+                // Initialize profile names from fcStore.config
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    pidProfileName.value = fcStore.config.pidProfileNames?.[fcStore.config.profile] || "";
+                    rateProfileName.value = fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] || "";
                 }
 
                 if (!isMounted.value) {
@@ -329,28 +304,28 @@ async function loadData() {
 
 function initializeUI() {
     // Set current profiles
-    currentProfile.value = FC.CONFIG.profile;
-    currentRateProfile.value = FC.CONFIG.rateProfile;
+    currentProfile.value = fcStore.config.profile;
+    currentRateProfile.value = fcStore.config.rateProfile;
     // Get expert mode from global checkbox (in header) and sync to global state
     navigationStore.expertMode = isExpertModeEnabled();
 }
 
 // Profile Management
 async function onProfileChange() {
-    FC.CONFIG.profile = currentProfile.value;
+    fcStore.config.profile = currentProfile.value;
 
     // Select profile via MSP
-    await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [currentProfile.value]);
+    await selectPidProfile(currentProfile.value);
 
     // Reload data
     await loadData();
 }
 
 async function onRateProfileChange() {
-    FC.CONFIG.rateProfile = currentRateProfile.value;
+    fcStore.config.rateProfile = currentRateProfile.value;
 
-    // Select rate profile via MSP (use high bit to indicate rate profile)
-    await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [currentRateProfile.value | 128]);
+    // Select rate profile via MSP
+    await selectRateProfile(currentRateProfile.value);
 
     // Reload data
     await loadData();
@@ -382,13 +357,8 @@ async function copyProfile() {
             if (selected && typeof selected.profile === "number") {
                 const targetProfile = selected.profile;
 
-                FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-                FC.COPY_PROFILE.type = 0; // 0 = PID profile
-                FC.COPY_PROFILE.srcProfile = currentProfile.value;
-                FC.COPY_PROFILE.dstProfile = targetProfile;
-
                 try {
-                    await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    await sendCopyProfile(CopyProfileType.PID, currentProfile.value, targetProfile);
                     // The copy landed in the destination profile in RAM only, and nothing on screen
                     // reflects it — flag it so Save is the way out.
                     pidTuningStore.markProfileUnsaved();
@@ -429,13 +399,8 @@ async function copyRateProfile() {
             if (selected && typeof selected.rateProfile === "number") {
                 const targetProfile = selected.rateProfile;
 
-                FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-                FC.COPY_PROFILE.type = 1; // 1 = Rate profile
-                FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
-                FC.COPY_PROFILE.dstProfile = targetProfile;
-
                 try {
-                    await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    await sendCopyProfile(CopyProfileType.RATE, currentRateProfile.value, targetProfile);
                     pidTuningStore.markProfileUnsaved();
                     console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
                 } catch (error) {
@@ -451,7 +416,7 @@ async function copyRateProfile() {
 
 async function resetProfile() {
     try {
-        await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
+        await resetPidProfile();
         // The reset rewrote the profile in RAM only, and the reload below adopts those defaults as
         // the clean value baseline — so flag the reset itself as work that still needs an EEPROM
         // write, or it would read as saved the moment the reload lands.
@@ -481,12 +446,12 @@ function save() {
         pidProfileName.value = pidProfileName.value.trim();
         rateProfileName.value = rateProfileName.value.trim();
 
-        // Save profile names to FC.CONFIG (API 1.45+)
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
+        // Save profile names to fcStore.config (API 1.45+)
+        if (fcStore.config.pidProfileNames) {
+            fcStore.config.pidProfileNames[fcStore.config.profile] = pidProfileName.value;
         }
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
+        if (fcStore.config.rateProfileNames) {
+            fcStore.config.rateProfileNames[fcStore.config.rateProfile] = rateProfileName.value;
         }
 
         // Pin what this save is about to write. The form stays live while the MSP writes are
@@ -494,41 +459,8 @@ function save() {
         // the post-save state would silently swallow it.
         const pending = pidTuningStore.takeEditsSnapshot();
 
-        // Save PIDs
-        await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
-
-        // Save advanced tuning
-        await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
-
-        // Save RC tuning
-        await MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
-
-        // Save filter config
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-        // Save simplified tuning (sliders)
-        await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
-
-        // Save profile names to firmware (API 1.45+)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            if (FC.CONFIG.pidProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PID_PROFILE_NAME),
-                );
-            }
-            if (FC.CONFIG.rateProfileNames) {
-                await MSP.promise(
-                    MSPCodes.MSP2_SET_TEXT,
-                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.RATE_PROFILE_NAME),
-                );
-            }
-        }
-
-        // Save Wing config (API 1.49+, WING build)
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49) && FC.CONFIG.buildOptions.includes("USE_WING")) {
-            await MSP.promise(MSPCodes.MSP_SET_WING, mspHelper.crunch(MSPCodes.MSP_SET_WING));
-        }
+        // Save PIDs, advanced tuning, rates, filters, sliders, profile names and wing config
+        await writePidTuningConfig();
 
         // Persist to EEPROM (no reboot)
         await saveToEeprom();
@@ -562,13 +494,13 @@ async function refresh() {
     }
 }
 
-// Mirror the lifted profile-name inputs into FC.CONFIG — that is what the save crunches, and
+// Mirror the lifted profile-name inputs into fcStore.config — that is what the save crunches, and
 // what the store compares against its baseline.
 watch(
     () => pidProfileName.value,
     (newValue) => {
-        if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
+        if (fcStore.config.pidProfileNames) {
+            fcStore.config.pidProfileNames[fcStore.config.profile] = newValue;
         }
     },
 );
@@ -576,15 +508,15 @@ watch(
 watch(
     () => rateProfileName.value,
     (newValue) => {
-        if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
+        if (fcStore.config.rateProfileNames) {
+            fcStore.config.rateProfileNames[fcStore.config.rateProfile] = newValue;
         }
     },
 );
 
 // Keep the profile / rate-profile selectors in sync with TX-driven changes.
-// The global live-status poller (serial_backend.js) refreshes FC.CONFIG.profile and
-// FC.CONFIG.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
+// The global live-status poller (serial_backend.js) refreshes fcStore.config.profile and
+// fcStore.config.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
 // can therefore change the active profile out from under the UI. Reflect that here and
 // reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
 // checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
@@ -599,8 +531,8 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
 
     syncingFromFc = true;
     try {
-        currentProfile.value = FC.CONFIG.profile;
-        currentRateProfile.value = FC.CONFIG.rateProfile;
+        currentProfile.value = fcStore.config.profile;
+        currentRateProfile.value = fcStore.config.rateProfile;
         // Only announce (and adopt) the profile once the reload actually succeeded. The FC picked
         // this profile itself, so the tab is mirroring it rather than holding a pending switch —
         // but a pending reset or copy is untouched by that, and stays unsaved.
@@ -608,7 +540,7 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
             pidTuningStore.markProfileSelectionClean();
             gui_log(
                 i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
-                    (kind === "rate" ? FC.CONFIG.rateProfile : FC.CONFIG.profile) + 1,
+                    (kind === "rate" ? fcStore.config.rateProfile : fcStore.config.profile) + 1,
                 ]),
             );
         }
@@ -618,7 +550,7 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
 }
 
 watch(
-    () => FC.CONFIG.profile,
+    () => fcStore.config.profile,
     (newValue) => {
         if (newValue !== currentProfile.value) {
             syncProfileFromFc("profile");
@@ -627,7 +559,7 @@ watch(
 );
 
 watch(
-    () => FC.CONFIG.rateProfile,
+    () => fcStore.config.rateProfile,
     (newValue) => {
         if (newValue !== currentRateProfile.value) {
             syncProfileFromFc("rate");

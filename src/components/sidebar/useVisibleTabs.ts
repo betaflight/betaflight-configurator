@@ -23,8 +23,8 @@ import { computed, inject, type ComputedRef } from "vue";
 import { sidebarItems, isItemVisible } from "./sidebar_items.js";
 import { useConnectionStore } from "@/stores/connection";
 import { useAuthStore } from "@/stores/auth";
+import { useFlightControllerStore } from "@/stores/fc";
 import GUI from "@/js/gui.js";
-import FCModule from "@/js/fc";
 import type { BetaflightModel } from "../init";
 
 type SidebarItem = (typeof sidebarItems)[number];
@@ -41,6 +41,7 @@ type SidebarItem = (typeof sidebarItems)[number];
 export function useVisibleTabs(): ComputedRef<SidebarItem[]> {
     const connectionStore = useConnectionStore();
     const authStore = useAuthStore();
+    const fcStore = useFlightControllerStore();
     const betaflightModel = inject<Partial<BetaflightModel> | null>("betaflightModel", null);
 
     const isModeVisible = (mode: string) => {
@@ -61,11 +62,10 @@ export function useVisibleTabs(): ComputedRef<SidebarItem[]> {
 
     const ctx = computed(() => {
         const model = betaflightModel ?? globalThis.vm;
-        const fc = model?.FC ?? FCModule;
         return {
             expertMode: Boolean(model?.expertMode),
-            config: fc?.CONFIG,
-            features: fc?.FEATURE_CONFIG?.features,
+            config: fcStore.config,
+            features: fcStore.features?.features,
         };
     });
 

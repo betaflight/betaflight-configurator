@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import { effectScope, type EffectScope } from "vue";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import { gui_log } from "../../src/js/gui_log";
 
@@ -39,12 +40,16 @@ const abort = () => Object.assign(new Error("The user aborted a request."), { na
 // Let the picker's promise chain run to completion.
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("useVtx file export and import", () => {
     let scope: EffectScope;
     let vtx: ReturnType<typeof useVtx>;
 
     beforeEach(async () => {
-        FC.resetState();
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
         vi.mocked(gui_log).mockClear();
         for (const fn of Object.values(fileSystem)) {

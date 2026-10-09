@@ -20,7 +20,7 @@
  */
 
 import { defineStore } from "pinia";
-import { computed, reactive, ref, toRefs, type WritableComputedRef } from "vue";
+import { computed, reactive, ref, toRefs } from "vue";
 import semver from "semver";
 import { bit_check } from "../js/bit";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
@@ -83,7 +83,7 @@ export const RATES_TYPE = {
     QUICKRATES: 4,
 } as const;
 
-const INITIAL_CONFIG: FcState["CONFIG"] = {
+const INITIAL_CONFIG: FcState["config"] = {
     apiVersion: "0.0.0",
     flightControllerIdentifier: "",
     // Valid semver default so consumers (e.g. CLI autocomplete) that call semver.*
@@ -138,7 +138,7 @@ const INITIAL_CONFIG: FcState["CONFIG"] = {
     batteryProfileNames: new Array<string>(MAX_BATTERY_PROFILES).fill(""),
 };
 
-const INITIAL_ANALOG: FcState["ANALOG"] = {
+const INITIAL_ANALOG: FcState["analogData"] = {
     voltage: 0,
     mAhdrawn: 0,
     rssi: 0,
@@ -146,7 +146,7 @@ const INITIAL_ANALOG: FcState["ANALOG"] = {
     last_received_timestamp: 0,
 };
 
-const INITIAL_RC_TUNING: FcState["RC_TUNING"] = {
+const INITIAL_RC_TUNING: FcState["rcTuning"] = {
     RC_RATE: 0,
     RC_EXPO: 0,
     roll_pitch_rate: 0, // pre 1.7 api only
@@ -170,7 +170,7 @@ const INITIAL_RC_TUNING: FcState["RC_TUNING"] = {
     throttle_HOVER: 0.5, // default for firmware before 1.47
 };
 
-const INITIAL_RC_DEADBAND_CONFIG: FcState["RC_DEADBAND_CONFIG"] = {
+const INITIAL_RC_DEADBAND_CONFIG: FcState["rcDeadbandConfig"] = {
     deadband: 0,
     yaw_deadband: 0,
     alt_hold_deadband: 0,
@@ -178,7 +178,7 @@ const INITIAL_RC_DEADBAND_CONFIG: FcState["RC_DEADBAND_CONFIG"] = {
 };
 
 export function createInitialState(): FcState {
-    const advancedTuning: FcState["ADVANCED_TUNING"] = {
+    const advancedTuning: FcState["advancedTuning"] = {
         rollPitchItermIgnoreRate: 0,
         yawItermIgnoreRate: 0,
         yaw_p_limit: 0,
@@ -229,7 +229,7 @@ export function createInitialState(): FcState {
         tpaRate: 0,
         tpaBreakpoint: 0,
     };
-    const sensorConfig: FcState["SENSOR_CONFIG"] = {
+    const sensorConfig: FcState["sensorConfig"] = {
         acc_hardware: 0,
         baro_hardware: 0,
         mag_hardware: 0,
@@ -239,60 +239,60 @@ export function createInitialState(): FcState {
     };
 
     return {
-        CONFIG: structuredClone(INITIAL_CONFIG),
-        ANALOG: { ...INITIAL_ANALOG },
-        BF_CONFIG: {
+        config: structuredClone(INITIAL_CONFIG),
+        analogData: { ...INITIAL_ANALOG },
+        bfConfig: {
             currentscale: 0,
             currentoffset: 0,
             currentmetertype: 0,
             batterycapacity: 0,
         },
-        COPY_PROFILE: {
+        copyProfile: {
             type: 0,
             dstProfile: 0,
             srcProfile: 0,
         },
-        FEATURE_CONFIG: {
+        features: {
             features: null,
         },
-        BEEPER_CONFIG: {
+        beepers: {
             beepers: null,
             dshotBeaconTone: 0,
             dshotBeaconConditions: null,
         },
-        MIXER_CONFIG: {
+        mixerConfig: {
             mixer: 0,
             reverseMotorDir: 0,
         },
-        BOARD_ALIGNMENT_CONFIG: {
+        boardAlignment: {
             roll: 0,
             pitch: 0,
             yaw: 0,
         },
-        LED_STRIP: [],
-        LED_COLORS: [],
-        LED_MODE_COLORS: [],
-        PID: {
+        ledStrip: [],
+        ledColors: [],
+        ledModeColors: [],
+        pidController: {
             controller: 0,
         },
-        PID_NAMES: [],
-        PIDS_ACTIVE: Array.from({ length: 10 }, () => Array.from<number>({ length: 3 })),
-        PIDS: Array.from({ length: 10 }, () => Array.from<number>({ length: 3 })),
-        RC_MAP: [],
+        pidNames: [],
+        pidsActive: Array.from({ length: 10 }, () => Array.from<number>({ length: 3 })),
+        pids: Array.from({ length: 10 }, () => Array.from<number>({ length: 3 })),
+        rcMap: [],
         // roll, pitch, yaw, throttle, aux 1, ... aux n
-        RC: {
+        rc: {
             active_channels: 0,
             channels: Array.from<number>({ length: 32 }),
         },
-        RC_TUNING: { ...INITIAL_RC_TUNING },
-        AUX_CONFIG: [],
-        AUX_CONFIG_IDS: [],
-        MODE_RANGES: [],
-        MODE_RANGES_EXTRA: [],
-        ADJUSTMENT_RANGES: [],
-        SERVO_CONFIG: [],
-        SERVO_RULES: [],
-        SERIAL_CONFIG: {
+        rcTuning: { ...INITIAL_RC_TUNING },
+        auxConfig: [],
+        auxConfigIds: [],
+        modeRanges: [],
+        modeRangesExtra: [],
+        adjustmentRanges: [],
+        servoConfig: [],
+        servoRules: [],
+        serialConfig: {
             ports: [],
 
             // pre 1.6 settings
@@ -301,7 +301,7 @@ export function createInitialState(): FcState {
             gpsPassthroughBaudRate: 0,
             cliBaudRate: 0,
         },
-        SENSOR_DATA: {
+        sensorData: {
             gyroscope: [0, 0, 0],
             accelerometer: [0, 0, 0],
             magnetometer: [0, 0, 0],
@@ -312,9 +312,9 @@ export function createInitialState(): FcState {
             quaternion: null,
             debug: [0, 0, 0, 0, 0, 0, 0, 0],
         },
-        MOTOR_DATA: Array.from<number>({ length: 8 }),
-        SERVO_DATA: Array.from<number>({ length: 8 }),
-        MOTOR_TELEMETRY_DATA: {
+        motorData: Array.from<number>({ length: 8 }),
+        servoData: Array.from<number>({ length: 8 }),
+        motorTelemetryData: {
             rpm: [0, 0, 0, 0, 0, 0, 0, 0],
             invalidPercent: [0, 0, 0, 0, 0, 0, 0, 0],
             temperature: [0, 0, 0, 0, 0, 0, 0, 0],
@@ -322,7 +322,7 @@ export function createInitialState(): FcState {
             current: [0, 0, 0, 0, 0, 0, 0, 0],
             consumption: [0, 0, 0, 0, 0, 0, 0, 0],
         },
-        GPS_DATA: {
+        gpsData: {
             fix: 0,
             numSat: 0,
             latitude: 0,
@@ -340,12 +340,12 @@ export function createInitialState(): FcState {
             quality: [],
             cno: [],
         },
-        VOLTAGE_METERS: [],
-        VOLTAGE_METER_CONFIGS: [],
-        CURRENT_METERS: [],
-        CURRENT_METER_CONFIGS: [],
-        BATTERY_STATE: {},
-        BATTERY_CONFIG: {
+        voltageMeters: [],
+        voltageMeterConfigs: [],
+        currentMeters: [],
+        currentMeterConfigs: [],
+        batteryState: {},
+        batteryConfig: {
             vbatmincellvoltage: 0,
             vbatmaxcellvoltage: 0,
             vbatwarningcellvoltage: 0,
@@ -353,16 +353,16 @@ export function createInitialState(): FcState {
             voltageMeterSource: 0,
             currentMeterSource: 0,
         },
-        ARMING_CONFIG: {
+        armingConfig: {
             auto_disarm_delay: 0,
             disarm_kill_switch: 0,
             small_angle: 0,
             gyro_cal_on_first_arm: 0,
         },
-        FC_CONFIG: {
+        fcConfig: {
             loopTime: 0,
         },
-        MISC: {
+        misc: {
             // DEPRECATED = only used to store values that are written back to the fc as-is, do NOT use for any other purpose
             failsafe_throttle: 0,
             gps_baudrate: 0,
@@ -374,7 +374,7 @@ export function createInitialState(): FcState {
             vbatwarningcellvoltage: 0,
             batterymetertype: 1, // 1=ADC, 2=ESC
         },
-        MOTOR_CONFIG: {
+        motorConfig: {
             minthrottle: 0,
             maxthrottle: 0,
             mincommand: 0,
@@ -384,7 +384,7 @@ export function createInitialState(): FcState {
             use_esc_sensor: false,
             motor_kv: 0,
         },
-        GPS_CONFIG: {
+        gpsConfig: {
             provider: 0,
             ublox_sbas: 0,
             auto_config: 0,
@@ -392,32 +392,32 @@ export function createInitialState(): FcState {
             home_point_once: 0,
             ublox_use_galileo: 0,
         },
-        COMPASS_CONFIG: {
+        compassConfig: {
             mag_declination: 0,
         },
-        RSSI_CONFIG: {
+        rssiConfig: {
             channel: 0,
         },
-        MOTOR_3D_CONFIG: {
+        motor3dConfig: {
             deadband3d_low: 0,
             deadband3d_high: 0,
             neutral: 0,
         },
-        DATAFLASH: {
+        dataflash: {
             ready: false,
             supported: false,
             sectors: 0,
             totalSize: 0,
             usedSize: 0,
         },
-        SDCARD: {
+        sdcard: {
             supported: false,
             state: 0,
             filesystemLastError: 0,
             freeSizeKB: 0,
             totalSizeKB: 0,
         },
-        BLACKBOX: {
+        blackbox: {
             supported: false,
             blackboxDevice: 0,
             blackboxRateNum: 1,
@@ -426,8 +426,8 @@ export function createInitialState(): FcState {
             blackboxSampleRate: 0,
             blackboxDisabledMask: 0,
         },
-        RC_DEADBAND_CONFIG: { ...INITIAL_RC_DEADBAND_CONFIG },
-        SENSOR_ALIGNMENT: {
+        rcDeadbandConfig: { ...INITIAL_RC_DEADBAND_CONFIG },
+        sensorAlignment: {
             align_gyro: 0,
             align_acc: 0,
             align_mag: 0,
@@ -439,7 +439,7 @@ export function createInitialState(): FcState {
             mag_align_pitch: 0,
             mag_align_yaw: 0,
         },
-        PID_ADVANCED_CONFIG: {
+        pidAdvancedConfig: {
             gyro_sync_denom: 0,
             pid_process_denom: 0,
             use_unsyncedPwm: 0,
@@ -456,7 +456,7 @@ export function createInitialState(): FcState {
             debugMode: 0,
             debugModeCount: 0,
         },
-        FILTER_CONFIG: {
+        filterConfig: {
             gyro_hardware_lpf: 0,
             gyro_32khz_hardware_lpf: 0,
             gyro_lowpass_hz: 0,
@@ -491,19 +491,19 @@ export function createInitialState(): FcState {
             gyro_rpm_notch_q: 0,
             gyro_rpm_notch_weights: [0, 0, 0],
         },
-        ADVANCED_TUNING: advancedTuning,
-        ADVANCED_TUNING_ACTIVE: { ...advancedTuning },
-        SENSOR_CONFIG: sensorConfig,
-        SENSOR_CONFIG_ACTIVE: { gyro_hardware: 0, ...sensorConfig },
-        MCU_INFO: {
+        advancedTuning: advancedTuning,
+        advancedTuningActive: { ...advancedTuning },
+        sensorConfig: sensorConfig,
+        sensorConfigActive: { gyro_hardware: 0, ...sensorConfig },
+        mcuInfo: {
             id: 0,
             name: 0,
         },
-        GYRO_SENSOR: {
+        gyroSensor: {
             gyro_count: 0,
             gyro_hardware: [],
         },
-        SENSOR_NAMES: {
+        sensorNames: {
             acc: [],
             gyro: [],
             baro: [],
@@ -512,7 +512,7 @@ export function createInitialState(): FcState {
             opticalflow: [],
             pitot: [],
         },
-        RX_CONFIG: {
+        rxConfig: {
             serialrx_provider: 0,
             stick_max: 0,
             stick_center: 0,
@@ -540,7 +540,7 @@ export function createInitialState(): FcState {
             rcSmoothing: 0,
             elrsUid: [0, 0, 0, 0, 0, 0],
         },
-        FAILSAFE_CONFIG: {
+        failsafeConfig: {
             failsafe_delay: 0,
             failsafe_off_delay: 0,
             failsafe_throttle: 0,
@@ -548,7 +548,7 @@ export function createInitialState(): FcState {
             failsafe_throttle_low_delay: 0,
             failsafe_procedure: 0,
         },
-        GPS_RESCUE: {
+        gpsRescue: {
             angle: 0,
             returnAltitudeM: 0,
             descentDistanceM: 0,
@@ -565,8 +565,8 @@ export function createInitialState(): FcState {
             minStartDistM: 0,
             initialClimbM: 0,
         },
-        RXFAIL_CONFIG: [],
-        VTX_CONFIG: {
+        rxFailConfig: [],
+        vtxConfig: {
             vtx_type: 0,
             vtx_band: 0,
             vtx_channel: 0,
@@ -582,23 +582,23 @@ export function createInitialState(): FcState {
             vtx_table_powerlevels: 0,
             vtx_table_clear: false,
         },
-        VTXTABLE_BAND: {
+        vtxTableBand: {
             vtxtable_band_number: 0,
             vtxtable_band_name: "",
             vtxtable_band_letter: "",
             vtxtable_band_is_factory_band: false,
             vtxtable_band_frequencies: [],
         },
-        VTXTABLE_POWERLEVEL: {
+        vtxTablePowerLevel: {
             vtxtable_powerlevel_number: 0,
             vtxtable_powerlevel_value: 0,
             vtxtable_powerlevel_label: "",
         },
-        MOTOR_OUTPUT_ORDER: [],
-        MULTIPLE_MSP: {
+        motorOutputOrder: [],
+        multipleMsp: {
             msp_commands: [],
         },
-        DEFAULT: {
+        filterDefaults: {
             gyro_lowpass_hz: 100,
             gyro_lowpass_dyn_min_hz: 150,
             gyro_lowpass_dyn_max_hz: 450,
@@ -629,9 +629,9 @@ export function createInitialState(): FcState {
             dyn_notch_min_hz: 150,
             dyn_notch_max_hz: 600,
         },
-        DEFAULT_PIDS: [42, 85, 35, 20, 90, 46, 90, 38, 22, 95, 30, 90, 0, 0, 90],
-        VTX_DEVICE_STATUS: null,
-        TUNING_SLIDERS: {
+        defaultPids: [42, 85, 35, 20, 90, 46, 90, 38, 22, 95, 30, 90, 0, 0, 90],
+        vtxDeviceStatus: null,
+        tuningSliders: {
             slider_pd_ratio: 0,
             slider_pd_gain: 0,
             slider_feedforward_gain: 0,
@@ -653,7 +653,7 @@ export function createInitialState(): FcState {
             slider_gyro_valid: 0,
             slider_dterm_valid: 0,
         },
-        DEFAULT_TUNING_SLIDERS: {
+        defaultTuningSliders: {
             slider_pids_mode: 2,
             slider_d_gain: 100,
             slider_pi_gain: 100,
@@ -673,7 +673,7 @@ export function createInitialState(): FcState {
             slider_gyro_valid: 1,
             slider_dterm_valid: 1,
         },
-        WING_CONFIG: {
+        wingConfig: {
             s_term: [0, 0, 0],
             spa_center: [0, 0, 0],
             spa_width: [0, 0, 0],
@@ -695,7 +695,7 @@ export function createInitialState(): FcState {
             yaw_type: 0,
             angle_pitch_offset: 0,
         },
-        LED_CONFIG_VALUES: {},
+        ledConfigValues: {},
     };
 }
 
@@ -732,75 +732,10 @@ export interface ArmingFlag {
 }
 
 export const useFlightControllerStore = defineStore("flightController", () => {
-    // The store owns the FC state. src/js/fc.js is a shim over it for legacy callers
-    // (MSPHelper, serial_backend, ...) that still write `FC.X`; both reach the same refs.
+    // The store owns the flight controller state, keyed by camelCase parameter group.
     const state = reactive(createInitialState()) as FcState;
 
-    // The camelCase names predate the store owning the state and are kept so existing
-    // callers keep working; each one reads and writes the FcState key it names.
-    function alias<K extends keyof FcState>(key: K): WritableComputedRef<FcState[K]> {
-        return computed({
-            get: () => state[key],
-            set: (val) => {
-                state[key] = val;
-            },
-        });
-    }
-
-    const config = alias("CONFIG");
-    const gpsConfig = alias("GPS_CONFIG");
-    const features = alias("FEATURE_CONFIG");
-    const beepers = alias("BEEPER_CONFIG");
-    const gyroSensor = alias("GYRO_SENSOR");
-    const sensorAlignment = alias("SENSOR_ALIGNMENT");
-    const boardAlignment = alias("BOARD_ALIGNMENT_CONFIG");
-    const sensorData = alias("SENSOR_DATA");
-    const compassConfig = alias("COMPASS_CONFIG");
-    const gpsData = alias("GPS_DATA");
-    const analogData = alias("ANALOG");
-    const rc = alias("RC");
-    const motorData = alias("MOTOR_DATA");
-    const pidAdvancedConfig = alias("PID_ADVANCED_CONFIG");
-    const sensorConfig = alias("SENSOR_CONFIG");
-    const sensorConfigActive = alias("SENSOR_CONFIG_ACTIVE");
-    const rxConfig = alias("RX_CONFIG");
-    const armingConfig = alias("ARMING_CONFIG");
-    const auxConfig = alias("AUX_CONFIG");
-    const auxConfigIds = alias("AUX_CONFIG_IDS");
-    const modeRanges = alias("MODE_RANGES");
-    const modeRangesExtra = alias("MODE_RANGES_EXTRA");
-    const adjustmentRanges = alias("ADJUSTMENT_RANGES");
-    const rssiConfig = alias("RSSI_CONFIG");
-    const failsafeConfig = alias("FAILSAFE_CONFIG");
-    const gpsRescue = alias("GPS_RESCUE");
-    const rxFailConfig = alias("RXFAIL_CONFIG");
-    const blackbox = alias("BLACKBOX");
-    const dataflash = alias("DATAFLASH");
-    const sdcard = alias("SDCARD");
-    const mixerConfig = alias("MIXER_CONFIG");
-    const motorConfig = alias("MOTOR_CONFIG");
-    const motor3dConfig = alias("MOTOR_3D_CONFIG");
-    const motorOutputOrder = alias("MOTOR_OUTPUT_ORDER");
-    const motorTelemetryData = alias("MOTOR_TELEMETRY_DATA");
-    const advancedTuning = alias("ADVANCED_TUNING");
-    const filterConfig = alias("FILTER_CONFIG");
-    const rcDeadbandConfig = alias("RC_DEADBAND_CONFIG");
-    const rcMap = alias("RC_MAP");
-    const rcTuning = alias("RC_TUNING");
-    const pids = alias("PIDS");
-    const wingConfig = alias("WING_CONFIG");
-    const pidNames = alias("PID_NAMES");
-    const tuningSliders = alias("TUNING_SLIDERS");
-    const copyProfile = alias("COPY_PROFILE");
-    const serialConfig = alias("SERIAL_CONFIG");
-    const servoConfig = alias("SERVO_CONFIG");
-    const servoData = alias("SERVO_DATA");
-    const ledStrip = alias("LED_STRIP");
-    const vtxConfig = alias("VTX_CONFIG");
-    const defaultTuningSliders = computed(() => state.DEFAULT_TUNING_SLIDERS);
-    const sensorNames = computed(() => state.SENSOR_NAMES);
-    const mcuInfo = computed(() => state.MCU_INFO);
-    const apiVersion = computed(() => state.CONFIG.apiVersion);
+    const apiVersion = computed(() => state.config.apiVersion);
 
     const armingFlags = ref<ArmingFlag[]>([]);
 
@@ -822,24 +757,24 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
     });
 
-    const failsafeActive = computed(() => isFailsafeActive(state.CONFIG.armingDisableFlags));
+    const failsafeActive = computed(() => isFailsafeActive(state.config.armingDisableFlags));
 
-    // LED_CONFIG_VALUES survives a reset, as it did in the legacy resetState().
+    // ledConfigValues survives a reset, as it did in the legacy resetState().
     function resetState() {
-        const { LED_CONFIG_VALUES: _ledConfigValues, ...fresh } = createInitialState();
+        const { ledConfigValues: _ledConfigValues, ...fresh } = createInitialState();
         Object.assign(state, fresh);
     }
 
     function isApiVersionSupported(version: string) {
-        return semver.gte(state.CONFIG.apiVersion, version);
+        return semver.gte(state.config.apiVersion, version);
     }
 
     function isApiVersionLessThan(version: string) {
-        return semver.lt(state.CONFIG.apiVersion, version);
+        return semver.lt(state.config.apiVersion, version);
     }
 
     function getSerialRxTypes(): string[] {
-        const apiVersion = state.CONFIG.apiVersion;
+        const apiVersion = state.config.apiVersion;
 
         // defaults
         const serialRxTypes = [
@@ -874,7 +809,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     }
 
     function getSupportedSerialRxTypes(): string[] {
-        const options = state.CONFIG.buildOptions;
+        const options = state.config.buildOptions;
         if (!options?.length) {
             return getSerialRxTypes();
         }
@@ -883,36 +818,36 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     }
 
     function checkBuildOption(option: string): boolean {
-        if (state.CONFIG.buildOptions?.length) {
-            return state.CONFIG.buildOptions.includes(option);
+        if (state.config.buildOptions?.length) {
+            return state.config.buildOptions.includes(option);
         }
         return true; // assume all options are available if build options are not known
     }
 
     function calculateHardwareName() {
         let name;
-        if (state.CONFIG.targetName) {
-            name = state.CONFIG.targetName;
+        if (state.config.targetName) {
+            name = state.config.targetName;
         } else {
-            name = state.CONFIG.boardIdentifier;
+            name = state.config.boardIdentifier;
         }
 
-        if (state.CONFIG.boardName && state.CONFIG.boardName !== name) {
-            name = `${state.CONFIG.boardName}(${name})`;
+        if (state.config.boardName && state.config.boardName !== name) {
+            name = `${state.config.boardName}(${name})`;
         }
 
-        if (state.CONFIG.manufacturerId) {
-            name = `${state.CONFIG.manufacturerId}/${name}`;
+        if (state.config.manufacturerId) {
+            name = `${state.config.manufacturerId}/${name}`;
         }
 
-        state.CONFIG.hardwareName = name;
+        state.config.hardwareName = name;
     }
 
     // MSP_BUILD_INFO pushes the raw numeric option ids into CONFIG.buildOptions and then
     // calls this to replace them with their names, so only here are they numbers.
     function processBuildOptions() {
         const buildOptions: string[] = [];
-        const optionIds = state.CONFIG.buildOptions as unknown as number[];
+        const optionIds = state.config.buildOptions as unknown as number[];
 
         for (const [key, value] of Object.entries(FIRMWARE_BUILD_OPTIONS)) {
             for (const option of optionIds) {
@@ -923,23 +858,23 @@ export const useFlightControllerStore = defineStore("flightController", () => {
             }
         }
 
-        state.CONFIG.buildOptions = buildOptions;
+        state.config.buildOptions = buildOptions;
     }
 
     function boardHasVcp(): boolean {
-        return bit_check(state.CONFIG.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_VCP);
+        return bit_check(state.config.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_VCP);
     }
 
     function boardHasSoftSerial(): boolean {
-        return bit_check(state.CONFIG.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL);
+        return bit_check(state.config.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL);
     }
 
     function boardHasFlashBootloader(): boolean {
-        return bit_check(state.CONFIG.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER);
+        return bit_check(state.config.targetCapabilities, TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER);
     }
 
-    function getFilterDefaults(): FcState["DEFAULT"] {
-        const versionFilterDefaults = state.DEFAULT;
+    function getFilterDefaults(): FcState["filterDefaults"] {
+        const versionFilterDefaults = state.filterDefaults;
         // Change filter defaults depending on API version here
         versionFilterDefaults.gyro_lowpass_hz = 150;
         versionFilterDefaults.gyro_lowpass_type = FILTER_TYPE_FLAGS.BIQUAD;
@@ -974,73 +909,20 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
 
         // Introduced in 1.45
-        if (semver.gte(state.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(state.config.apiVersion, API_VERSION_1_45)) {
             versionFilterDefaults.dyn_notch_min_hz = 100;
         }
 
         return versionFilterDefaults;
     }
 
-    function getSliderDefaults(): FcState["DEFAULT_TUNING_SLIDERS"] {
-        return state.DEFAULT_TUNING_SLIDERS;
+    function getSliderDefaults(): FcState["defaultTuningSliders"] {
+        return state.defaultTuningSliders;
     }
 
     return {
         ...toRefs(state),
 
-        config,
-        gpsConfig,
-        features,
-        beepers,
-        gyroSensor,
-        sensorAlignment,
-        boardAlignment,
-        sensorData,
-        compassConfig,
-        gpsData,
-        analogData,
-        rc,
-        motorData,
-        pidAdvancedConfig,
-        sensorConfig,
-        sensorConfigActive,
-        rxConfig,
-        armingConfig,
-        auxConfig,
-        auxConfigIds,
-        modeRanges,
-        modeRangesExtra,
-        adjustmentRanges,
-        rssiConfig,
-        failsafeConfig,
-        gpsRescue,
-        rxFailConfig,
-        blackbox,
-        dataflash,
-        sdcard,
-        mixerConfig,
-        motorConfig,
-        motor3dConfig,
-        motorOutputOrder,
-        motorTelemetryData,
-        advancedTuning,
-        filterConfig,
-        rcDeadbandConfig,
-        rcMap,
-        rcTuning,
-        pids,
-        wingConfig,
-        pidNames,
-        tuningSliders,
-        copyProfile,
-        serialConfig,
-        servoConfig,
-        servoData,
-        ledStrip,
-        vtxConfig,
-        defaultTuningSliders,
-        sensorNames,
-        mcuInfo,
         apiVersion,
         armingFlags,
         setArmingFlags,

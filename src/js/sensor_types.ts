@@ -20,10 +20,10 @@
  */
 
 import semver from "semver";
-import FC from "./fc";
 import MSP from "./msp";
 import { API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
+import { useFlightControllerStore } from "../stores/fc";
 import type { SensorNames } from "../stores/fc.types";
 
 export type SensorKind = keyof SensorNames;
@@ -50,7 +50,8 @@ function isSensorKind(names: SensorNames, type: string): type is SensorKind {
  * Sends a single "sensor_hardware" command and parses the response lines in "type: VAL1,VAL2,..." format.
  */
 export async function fetchSensorNames() {
-    FC.SENSOR_NAMES = {
+    const fcStore = useFlightControllerStore();
+    fcStore.sensorNames = {
         acc: [],
         gyro: [],
         baro: [],
@@ -81,8 +82,8 @@ export async function fetchSensorNames() {
                 .split(",")
                 .map((v) => v.trim());
 
-            if (isSensorKind(FC.SENSOR_NAMES, type)) {
-                FC.SENSOR_NAMES[type] = values;
+            if (isSensorKind(fcStore.sensorNames, type)) {
+                fcStore.sensorNames[type] = values;
             }
         }
     } catch (error) {
@@ -95,6 +96,7 @@ export async function fetchSensorNames() {
  * Returns sensor type definitions with hardcoded lists and version-specific modifications.
  */
 function sensorTypesLegacy(): SensorTypes {
+    const fcStore = useFlightControllerStore();
     const sensorTypes: SensorTypes = {
         acc: {
             name: "Accelerometer",
@@ -194,7 +196,10 @@ function sensorTypesLegacy(): SensorTypes {
     const accElements = sensorTypes.acc.elements;
 
     // remove deprecated sensors or add new ones, only for API 1.47 (not for 1.48+ which uses dynamic names)
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (
+        semver.lt(fcStore.config.apiVersion, API_VERSION_1_48) &&
+        semver.eq(fcStore.config.apiVersion, API_VERSION_1_47)
+    ) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", [
@@ -221,9 +226,10 @@ function sensorTypesLegacy(): SensorTypes {
  * For older APIs, uses hardcoded lists with version-specific modifications.
  */
 export async function sensorTypes(): Promise<SensorTypes> {
+    const fcStore = useFlightControllerStore();
     // For API 1.48+, fetch dynamic sensor names if not already fetched
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-        const hasSensorNames = FC.SENSOR_NAMES && Object.values(FC.SENSOR_NAMES).some((arr) => arr.length > 0);
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
+        const hasSensorNames = fcStore.sensorNames && Object.values(fcStore.sensorNames).some((arr) => arr.length > 0);
 
         if (!hasSensorNames) {
             await fetchSensorNames();
@@ -232,34 +238,34 @@ export async function sensorTypes(): Promise<SensorTypes> {
         const sensorTypeList: SensorTypes = {
             acc: {
                 name: "Accelerometer",
-                elements: FC.SENSOR_NAMES.acc || [],
+                elements: fcStore.sensorNames.acc || [],
             },
             gyro: {
                 name: "Gyroscope",
-                elements: FC.SENSOR_NAMES.gyro || [],
+                elements: fcStore.sensorNames.gyro || [],
             },
             baro: {
                 name: "Barometer",
-                elements: FC.SENSOR_NAMES.baro || [],
+                elements: fcStore.sensorNames.baro || [],
             },
             mag: {
                 name: "Magnetometer",
-                elements: FC.SENSOR_NAMES.mag || [],
+                elements: fcStore.sensorNames.mag || [],
             },
             sonar: {
                 name: "Sonar",
-                elements: FC.SENSOR_NAMES.sonar || [],
+                elements: fcStore.sensorNames.sonar || [],
             },
             opticalflow: {
                 name: "Optical Flow",
-                elements: FC.SENSOR_NAMES.opticalflow || [],
+                elements: fcStore.sensorNames.opticalflow || [],
             },
         };
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             sensorTypeList.pitot = {
                 name: "Pitot",
-                elements: FC.SENSOR_NAMES.pitot || [],
+                elements: fcStore.sensorNames.pitot || [],
             };
         }
 
@@ -274,9 +280,10 @@ export async function sensorTypes(): Promise<SensorTypes> {
  * For API 1.47+, includes VIRTUAL protocol.
  */
 export function gpsProtocols(): string[] {
+    const fcStore = useFlightControllerStore();
     const protocols = ["NMEA", "UBLOX", "MSP"];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
         addArrayElement(protocols, "VIRTUAL");
     }
 

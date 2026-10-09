@@ -22,7 +22,7 @@
 import { useAutotuneStore } from "@/stores/autotune";
 import FileSystem from "@/js/FileSystem";
 import { i18n } from "@/js/localization";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -315,16 +315,17 @@ function computeAxisResult(
 }
 
 async function applyGains(proposed: ProposedSliders) {
+    const fcStore = useFlightControllerStore();
     // Object.keys widens to string[]; the keys are the proposal's own.
     for (const key of Object.keys(proposed) as (keyof ProposedSliders)[]) {
-        if (key in FC.TUNING_SLIDERS) {
-            FC.TUNING_SLIDERS[key] = proposed[key];
+        if (key in fcStore.tuningSliders) {
+            fcStore.tuningSliders[key] = proposed[key];
         }
     }
 
     await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
     await validateTuningSliders();
-    if (!FC.TUNING_SLIDERS.slider_pids_valid || !FC.TUNING_SLIDERS.slider_dterm_valid) {
+    if (!fcStore.tuningSliders.slider_pids_valid || !fcStore.tuningSliders.slider_dterm_valid) {
         throw new Error("Recommended autotune sliders did not pass firmware validation.");
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);

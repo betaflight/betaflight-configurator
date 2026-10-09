@@ -39,7 +39,7 @@ class Beepers {
     _beepers: Beeper[];
     _beeperDisabledMask: number;
 
-    // The first argument is FC.CONFIG, accepted for the callers' sake and not read.
+    // The first argument is fcStore.config, accepted for the callers' sake and not read.
     constructor(_config?: unknown, supportedConditions?: string[]) {
         const beepers: Beeper[] = [
             { bit: 0, name: "GYRO_CALIBRATED", visible: true },

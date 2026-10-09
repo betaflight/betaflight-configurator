@@ -4,10 +4,12 @@ import { effectScope, nextTick } from "vue";
 import { useDataflashErase, DATAFLASH_ERASE_TIMEOUT_MS } from "../../src/composables/useDataflashErase";
 import { useConnectionStore } from "../../src/stores/connection";
 import CONFIGURATOR from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { MspTimeoutError } from "../../src/js/msp/mspErrors";
+
+let fcStore;
 
 describe("useDataflashErase", () => {
     let scope;
@@ -19,7 +21,8 @@ describe("useDataflashErase", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
-        FC.resetState();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         CONFIGURATOR.connectionValid = true;
         connectionStore = useConnectionStore();
         callbacks = {
@@ -53,7 +56,7 @@ describe("useDataflashErase", () => {
 
     it("completes and resumes live data when dataflash reports ready", async () => {
         MSP.promise.mockResolvedValue({});
-        FC.DATAFLASH.ready = true;
+        fcStore.dataflash.ready = true;
 
         await erase.start({ clearQueue: false });
         expect(connectionStore.liveDataPaused).toBe(true);
@@ -108,7 +111,7 @@ describe("useDataflashErase", () => {
 
         erase.cancel();
         await erase.start({ clearQueue: false });
-        FC.DATAFLASH.ready = true;
+        fcStore.dataflash.ready = true;
 
         resolveCancelledPoll({});
         await vi.runAllTicks();

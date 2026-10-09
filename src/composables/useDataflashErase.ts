@@ -22,7 +22,7 @@
 import { onScopeDispose, ref, watch, type Ref } from "vue";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
-import FC from "../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "../stores/connection";
 
 const ERASE_POLL_INTERVAL_MS = 500;
@@ -58,6 +58,7 @@ interface DataflashEraseApi {
  */
 export function useDataflashErase({ onComplete, onError, onFinish }: DataflashEraseCallbacks = {}): DataflashEraseApi {
     const connectionStore = useConnectionStore();
+    const fcStore = useFlightControllerStore();
     const isErasing = ref(false);
 
     let pollTimer: ReturnType<typeof setTimeout> | null = null;
@@ -146,7 +147,7 @@ export function useDataflashErase({ onComplete, onError, onFinish }: DataflashEr
 
         if (!connectionStore.connectionValid) {
             finish(sequence, "disconnected");
-        } else if (FC.DATAFLASH?.ready) {
+        } else if (fcStore.dataflash?.ready) {
             finish(sequence, "complete");
         } else if (deadlineExpired && notifyTimeout) {
             finish(sequence, "error", new Error("Dataflash erase did not complete within the allowed time"));
