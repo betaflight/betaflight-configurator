@@ -71,7 +71,7 @@ import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
-import DarkTheme, { setDarkTheme } from "@/js/DarkTheme.js";
+import DarkTheme, { setDarkTheme } from "@/js/DarkTheme";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { applyExpertMode } from "@/js/utils/applyExpertMode";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
