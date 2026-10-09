@@ -1,7 +1,7 @@
 import WebSerial from "./protocols/WebSerial";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
-import VirtualSerial from "./protocols/VirtualSerial.js";
+import VirtualSerial from "./protocols/VirtualSerial";
 import { isAndroid, isTauri, isTauriMacOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
