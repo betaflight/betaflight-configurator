@@ -62,8 +62,8 @@ if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "bo
     Capacitor.isLoggingEnabled = false;
 }
 
-// Not a top-level await: that would hold up the rest of this module, including the
-// DOMContentLoaded listener below, until the debug tools have loaded.
+// Started from appReady() rather than at module level: a top-level await would hold up the
+// rest of this module, including the DOMContentLoaded listener, until the tools had loaded.
 async function loadMspDebugTools(): Promise<void> {
     try {
         await import("./msp/debug/msp_debug_tools");
@@ -73,10 +73,6 @@ async function loadMspDebugTools(): Promise<void> {
     } catch (err) {
         console.warn("Failed to load MSP debug tools:", err);
     }
-}
-
-if (import.meta.env.DEV) {
-    void loadMspDebugTools();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -168,6 +164,10 @@ function showNetworkOnlyNotice(next: () => void): void {
 }
 
 function appReady() {
+    if (import.meta.env.DEV) {
+        void loadMspDebugTools();
+    }
+
     readConfiguratorVersionMetadata();
 
     cleanupLocalStorage();
