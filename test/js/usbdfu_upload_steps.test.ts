@@ -253,3 +253,19 @@ describe("DFU upload steps", () => {
         expect(messages.map((m) => m.msg)).not.toContain("stm32ProgrammingSuccessful");
     });
 });
+
+describe("UsbDfuProtocol.controlTransfer", () => {
+    it("reads only the view's own bytes when the transport returns a DataView into a larger buffer", async () => {
+        const backing = new Uint8Array([0xaa, 0xbb, 0, 0, 0, 0, STATE.dfuIDLE, 0, 0xcc]);
+        const transport = Object.assign(new EventTarget(), {
+            controlTransferIn: () => Promise.resolve({ status: "ok", data: new DataView(backing.buffer, 2, 6) }),
+        });
+        const dfu = new UsbDfuProtocol(transport as unknown as DfuTransport);
+
+        const data = await new Promise<ArrayLike<number>>((resolve) => {
+            dfu.controlTransfer("in", REQ.GETSTATUS, 0, 0, 6, 0, (bytes) => resolve(bytes));
+        });
+
+        expect(Array.from(data)).toEqual([0, 0, 0, 0, STATE.dfuIDLE, 0]);
+    });
+});

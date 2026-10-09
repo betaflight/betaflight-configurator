@@ -23,6 +23,10 @@ import MSP from "./msp";
 import { i18n } from "./localization";
 import { useDialogStore } from "../stores/dialog";
 
+// Longer than the 2 s used for scripted commands: the panel runs whatever the user types. Without
+// a timeout, a command the FC never finishes answering would block every later CLI command.
+const CLI_PANEL_TIMEOUT_MS = 5000;
+
 interface InteractiveDialogSettings {
     title: string;
     buttonCloseText: string;
@@ -90,7 +94,9 @@ export function showCliPanel(): void {
                 if (!command) {
                     return;
                 }
-                MSP.send_cli_command(command, setCliResponse);
+                MSP.send_cli_command(command, (lines, error) => setCliResponse(error ? [error.message] : lines), {
+                    timeoutMs: CLI_PANEL_TIMEOUT_MS,
+                });
             };
             cliCommandInput.focus();
         }

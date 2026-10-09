@@ -702,7 +702,7 @@ export class UsbDfuProtocol extends EventTarget {
                         if (result.data instanceof Uint8Array) {
                             buf = result.data;
                         } else if (ArrayBuffer.isView(result.data)) {
-                            buf = new Uint8Array(result.data.buffer);
+                            buf = new Uint8Array(result.data.buffer, result.data.byteOffset, result.data.byteLength);
                         } else {
                             buf = new Uint8Array(result.data);
                         }

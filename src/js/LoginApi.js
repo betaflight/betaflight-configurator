@@ -10,8 +10,11 @@ export class TokenFailure extends Error {
 
 export default class LoginApi {
     _url = "https://login.betaflight.com";
+    /** @type {string | null} */
     _accessToken = null;
+    /** @type {number | null} */
     _accessExpiryMs = null;
+    /** @type {string | null} */
     _userToken = null;
 
     userToken() {
@@ -242,8 +245,12 @@ export default class LoginApi {
     }
 
     async signOut() {
-        await this.removeCurrentToken();
+        // removeCurrentToken() builds its request from the current token before its first await,
+        // so the local session can be cleared straight away. Clearing it only after the
+        // revocation round-trip let a login made meanwhile have its new token wiped.
+        const revocation = this.removeCurrentToken();
         this.clearSession();
+        await revocation;
     }
 
     clearSession() {
