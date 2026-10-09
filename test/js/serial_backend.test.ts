@@ -85,7 +85,7 @@ vi.mock("../../src/js/cli_panel", () => ({
     showCliPanel: vi.fn(),
 }));
 
-vi.mock("../../src/js/serial.js", () => ({
+vi.mock("../../src/js/serial", () => ({
     __esModule: true,
     serial,
 }));

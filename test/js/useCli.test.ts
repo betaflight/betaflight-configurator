@@ -50,7 +50,7 @@ describe("useCli", () => {
     // Runs first: the history lives at module scope and outlasts each useCli().
     describe("command history before anything was sent", () => {
         it("leaves an empty line on Up and Down, which Enter can still send", async () => {
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
 
             cli.handleCommandKeyUp(key(UP));
@@ -67,7 +67,7 @@ describe("useCli", () => {
 
     describe("command history", () => {
         it("recalls sent commands with Up and walks forward with Down", () => {
-            vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
 
             for (const command of ["status", "version"]) {
@@ -160,7 +160,7 @@ describe("useCli", () => {
 
         it("on Tab without app autocomplete, asks the FC to complete the line", () => {
             vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
             cli.state.commandInput = "feat";
 
@@ -172,7 +172,7 @@ describe("useCli", () => {
 
         it("holds Enter while the autocomplete cache is building", () => {
             vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(true);
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
             cli.state.commandInput = "status";
 
@@ -204,7 +204,7 @@ describe("useCli", () => {
         ])("ignores Enter and Tab (%s)", (_engine, ime) => {
             vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
             vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(false);
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
             cli.state.commandInput = "get gyro_";
 
@@ -233,7 +233,7 @@ describe("useCli", () => {
         });
 
         it("does not recall history over the text being composed", () => {
-            vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
             cli.state.commandInput = "earlier";
             cli.handleCommandKeyDown(key(ENTER));
@@ -245,7 +245,7 @@ describe("useCli", () => {
         });
 
         it("still sends once the composition is over", () => {
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
             cli.state.commandInput = "status";
 
@@ -270,7 +270,7 @@ describe("useCli", () => {
         it("previews a picked file and hands back a callback that sends it", async () => {
             vi.spyOn(FileSystem, "pickOpenFile").mockResolvedValue({ name: "diff.txt" });
             vi.spyOn(FileSystem, "readFile").mockResolvedValue("set a = 1");
-            const send = vi.spyOn(serial, "send").mockResolvedValue(undefined);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
             const cli = useCli();
 
             const run = await cli.loadFile();

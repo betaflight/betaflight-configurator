@@ -20,7 +20,7 @@
  */
 
 import CONFIGURATOR from "./data_storage";
-import { serial } from "./serial.js";
+import { serial } from "./serial";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 import { MspDataView } from "./msp/mspBytes";
 import { useNavigationStore } from "../stores/navigation";

@@ -142,7 +142,7 @@ class MSPConnectorImpl {
         serial.removeEventListener("disconnect", (e: Event) => this.handleDisconnect(e));
         serial.addEventListener("disconnect", (e: Event) => this.handleDisconnect(e), { once: true });
 
-        // serial.js types its optional callback as required; the connect event above reports the result.
+        // The connect event above reports the result.
         void serial.connect(this.port, { baudRate: this.baud }, undefined);
     }
 

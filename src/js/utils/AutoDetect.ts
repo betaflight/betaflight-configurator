@@ -114,7 +114,7 @@ class AutoDetect {
             return;
         }
 
-        let result = false;
+        let result: boolean | void = false;
         try {
             // Register listeners just-in-time before connection attempt
             this._onBoardDetected = onBoardDetected;

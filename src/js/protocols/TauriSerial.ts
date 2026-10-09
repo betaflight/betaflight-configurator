@@ -738,7 +738,7 @@ class TauriSerial extends EventTarget {
             } else if (Array.isArray(data)) {
                 dataArray = new Uint8Array(data);
             } else {
-                // Unreachable for a typed caller, but serial.js is still JavaScript.
+                // Unreachable for a typed caller, but some callers of serial.send are still JavaScript.
                 console.error(`${logHead} Unsupported data type:`, (data as object | null)?.constructor?.name);
                 const res = { bytesSent: 0 };
                 callback?.(res);
