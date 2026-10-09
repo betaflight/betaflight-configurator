@@ -1,8 +1,60 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import { bluetoothDevices } from "./devices";
+import { bluetoothDevices, type BluetoothDeviceProfile } from "./devices";
+
+/** A peripheral as the Rust `ble_scan` command reports it (`ScannedDevice`). The name may be empty. */
+interface BleScannedDevice {
+    id: string;
+    name?: string;
+    services?: string[];
+}
+
+/** A Bluetooth device as this transport lists it. */
+export interface TauriBlePort {
+    path: string;
+    displayName: string;
+    vendorId: "unknown";
+    /** The CoreBluetooth UUID, which is all there is to identify the peripheral by. */
+    productId: string;
+    port: BleScannedDevice;
+}
+
+/** What the Rust `ble_connect` command reports: the GATT service that matched. */
+interface BleConnectResult {
+    serviceUuid: string;
+}
+
+/** What `send` hands its callback. */
+export interface TauriBleSendInfo {
+    error: unknown;
+    bytesSent: number;
+}
+
+/** The payloads `send` writes. */
+export type TauriBlePayload = ArrayBuffer | ArrayLike<number>;
 
 /**
  * Native BLE transport for the Tauri macOS shell, whose webview (WKWebView) has
@@ -13,6 +65,21 @@ import { bluetoothDevices } from "./devices";
  * as `WebBluetooth`, so serial.js and serial_backend treat it identically.
  */
 class TauriBle extends EventTarget {
+    connected: boolean;
+    connectionId: string | false;
+    deviceDescription: BluetoothDeviceProfile | null;
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+    devices: TauriBlePort[];
+    _connectedDevice: TauriBlePort | null;
+    _unlisten: UnlistenFn[];
+    logHead: string;
+    bt11_crc_corruption_logged: boolean;
+    /** Never assigned here: the check that reads it is shared with WebBluetooth, where it is not set either. */
+    message_checksum?: number;
+
     constructor() {
         super();
 
@@ -37,18 +104,22 @@ class TauriBle extends EventTarget {
         this.handleDisconnect = this.handleDisconnect.bind(this);
     }
 
-    handleReceiveBytes(info) {
-        this.bytesReceived += info.detail.byteLength;
+    /**
+     * Counts received bytes. Called directly with the chunk, and registered as the
+     * "receive" listener, whose CustomEvent carries the same chunk in `detail`.
+     */
+    handleReceiveBytes(info: Event | { detail: Uint8Array }): void {
+        this.bytesReceived += (info as { detail: Uint8Array }).detail.byteLength;
     }
 
-    handleDisconnect() {
-        this.disconnect();
+    handleDisconnect(): void {
+        void this.disconnect();
     }
 
     // Mirrors WebBluetooth/CapacitorBle: a stable `bluetooth_`-prefixed path keeps
     // serial.js selectProtocol routing to the BLE slot, and the id (a CoreBluetooth
     // UUID) is stable across scans so a pinned path re-resolves to the same device.
-    createPort(device) {
+    createPort(device: BleScannedDevice): TauriBlePort {
         return {
             path: `bluetooth_${device.id}`,
             displayName: device.name || device.id,
@@ -58,11 +129,11 @@ class TauriBle extends EventTarget {
         };
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): TauriBlePort | null {
         return this._connectedDevice;
     }
 
-    isBT11CorruptionPattern(expectedChecksum) {
+    isBT11CorruptionPattern(expectedChecksum: number): boolean {
         if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
             return false;
         }
@@ -78,7 +149,7 @@ class TauriBle extends EventTarget {
         return this.deviceDescription?.susceptibleToCrcCorruption ?? false;
     }
 
-    shouldBypassCrc(expectedChecksum) {
+    shouldBypassCrc(expectedChecksum: number): boolean {
         if (this.isBT11CorruptionPattern(expectedChecksum)) {
             if (!this.bt11_crc_corruption_logged) {
                 console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
@@ -91,9 +162,9 @@ class TauriBle extends EventTarget {
 
     // A BLE scan doubles as the permission gate: it raises the macOS Bluetooth prompt
     // on first CoreBluetooth use. The picker renders whatever this returns.
-    async getDevices() {
+    async getDevices(): Promise<TauriBlePort[]> {
         try {
-            const found = await invoke("ble_scan");
+            const found = await invoke<BleScannedDevice[]>("ble_scan");
             this.devices = found.map((device) => this.createPort(device));
         } catch (e) {
             console.error(`${this.logHead} Scan failed: ${e}`);
@@ -103,12 +174,12 @@ class TauriBle extends EventTarget {
 
     // No OS device chooser on macOS — a scan surfaces the permission prompt and refreshes
     // the list. Return the first hit to mirror CapacitorBle's shape.
-    async requestPermissionDevice() {
+    async requestPermissionDevice(): Promise<TauriBlePort | null> {
         const devices = await this.getDevices();
         return devices?.[0] ?? null;
     }
 
-    async _teardownListeners() {
+    async _teardownListeners(): Promise<void> {
         for (const unlisten of this._unlisten) {
             try {
                 await unlisten();
@@ -119,7 +190,7 @@ class TauriBle extends EventTarget {
         this._unlisten = [];
     }
 
-    async connect(path, _options) {
+    async connect(path: string, _options?: unknown): Promise<boolean> {
         try {
             const device = this.devices.find((d) => d.path === path);
             const id = device ? device.port.id : path.replace(/^bluetooth_/, "");
@@ -128,7 +199,7 @@ class TauriBle extends EventTarget {
             // otherwise reconnects leak listeners and duplicate receive/disconnect handling.
             await this._teardownListeners();
 
-            const dataUnlisten = await listen("ble-data", (event) => {
+            const dataUnlisten = await listen<number[]>("ble-data", (event) => {
                 const bytes = new Uint8Array(event.payload);
                 this.handleReceiveBytes({ detail: bytes });
                 this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
@@ -147,7 +218,7 @@ class TauriBle extends EventTarget {
                 readCharacteristic: d.readCharacteristic,
             }));
 
-            const result = await invoke("ble_connect", { id, devices: descriptors });
+            const result = await invoke<BleConnectResult>("ble_connect", { id, devices: descriptors });
 
             this.deviceDescription = bluetoothDevices.find((d) => d.serviceUuid === result.serviceUuid) ?? null;
             this._connectedDevice = device ?? this._portInfo(id);
@@ -171,11 +242,11 @@ class TauriBle extends EventTarget {
         }
     }
 
-    _portInfo(id) {
+    _portInfo(id: string): TauriBlePort {
         return { path: `bluetooth_${id}`, displayName: id, vendorId: "unknown", productId: id, port: { id } };
     }
 
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
@@ -198,7 +269,7 @@ class TauriBle extends EventTarget {
         }
     }
 
-    async send(data, cb) {
+    async send(data: TauriBlePayload, cb?: (info: TauriBleSendInfo) => void): Promise<{ bytesSent: number }> {
         let actualBytesSent = 0;
         if (this.connected) {
             const bytes = new Uint8Array(data);

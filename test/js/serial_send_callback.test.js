@@ -33,7 +33,7 @@ vi.mock("../../src/js/protocols/CapacitorBle.js", () => ({ default: stub("Capaci
 vi.mock("../../src/js/protocols/CapacitorTcp.js", () => ({ default: stub("CapacitorTcp") }));
 vi.mock("../../src/js/protocols/TauriSerial", () => ({ default: stub("TauriSerial") }));
 vi.mock("../../src/js/protocols/TauriTcp.js", () => ({ default: stub("TauriTcp") }));
-vi.mock("../../src/js/protocols/TauriBle.js", () => ({ default: stub("TauriBle") }));
+vi.mock("../../src/js/protocols/TauriBle", () => ({ default: stub("TauriBle") }));
 
 let serial;
 // The singleton builds its slot table at module load.

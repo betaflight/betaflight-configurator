@@ -8,7 +8,7 @@ import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
 import TauriSerial from "./protocols/TauriSerial";
 import TauriTcp from "./protocols/TauriTcp.js";
-import TauriBle from "./protocols/TauriBle.js";
+import TauriBle from "./protocols/TauriBle";
 
 // A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
 // The pattern permits the underscore. mDNS host names can contain an underscore, for example
