@@ -6,7 +6,7 @@ import { isAndroid, isTauri, isTauriMacOS } from "./utils/checkCompatibility.js"
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
-import TauriSerial from "./protocols/TauriSerial.js";
+import TauriSerial from "./protocols/TauriSerial";
 import TauriTcp from "./protocols/TauriTcp.js";
 import TauriBle from "./protocols/TauriBle.js";
 

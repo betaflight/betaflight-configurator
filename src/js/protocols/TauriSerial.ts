@@ -1,8 +1,103 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
 import { useAppInfoStore } from "../../stores/appInfo";
 
 const logHead = "[TAURI SERIAL]";
+
+/**
+ * One entry of the plugin's `available_ports` map. The serialport enumerator
+ * stringifies `vid`/`pid` as decimal, or reports the literal "Unknown", so they
+ * stay `unknown` until `parseId` has looked at them.
+ */
+interface PluginPortInfo {
+    vid?: unknown;
+    pid?: unknown;
+    serial_number?: string;
+}
+
+/** `available_ports` and the monitor's snapshot: port path to port info. */
+type PluginPortsMap = Record<string, PluginPortInfo>;
+
+/** A port as this transport reports it to serial.js and the port picker. */
+export interface TauriSerialPort {
+    path: string;
+    displayName: string;
+    vendorId: number | undefined;
+    productId: number | undefined;
+    serialNumber: string | undefined;
+}
+
+/** What `connect` records for the open session; a fresh object per session (see `send`). */
+export interface TauriSerialConnectionInfo {
+    connectionId: string;
+    bitrate: number;
+    vendorId: number | undefined;
+    productId: number | undefined;
+    serialNumber: string | undefined;
+}
+
+/**
+ * Options `connect` accepts. Everything but `baudRate` is forwarded to the
+ * plugin unchanged when present; the flasher sends `parityBit` and `stopBits`
+ * for the STM32 bootloader.
+ */
+export interface TauriSerialConnectOptions {
+    baudRate?: number;
+    dataBits?: number | string;
+    parityBit?: string;
+    parity?: string;
+    stopBits?: number | string;
+    flowControl?: string;
+}
+
+/** The payload of the plugin's `open` command. A type alias, so it satisfies `invoke`'s `InvokeArgs` record. */
+type PluginOpenOptions = {
+    path: string;
+    baudRate: number;
+    dataBits?: number | string;
+    parity?: string;
+    stopBits?: number | string;
+    flowControl?: string;
+};
+
+/** A `PortListEvent` from the plugin's port-list monitor. */
+type PortListEvent =
+    | { kind: "snapshot"; ports?: PluginPortsMap }
+    | { kind: "added"; path: string; info?: PluginPortInfo }
+    | { kind: "removed"; path: string };
+
+/** A `SerialEvent` from the open port's watch channel. */
+type SerialEvent =
+    { kind: "data"; data: number[] } | { kind: "disconnect"; reason?: string } | { kind: "error"; message?: string };
+
+/** What `send` reports, both as its result and to the callback. */
+export interface TauriSerialSendResult {
+    bytesSent: number;
+}
+
+/** The payloads `send` writes. Anything else is rejected at runtime with `bytesSent: 0`. */
+export type TauriSerialPayload = ArrayBuffer | Uint8Array | number[];
 
 /**
  * Options handed to the plugin's `watch` command.
@@ -41,15 +136,16 @@ const PORT_LIST_POLL_INTERVAL_MS = 1000;
  * (string | Error | plugin-returned object). Flattened from a nested ternary
  * so the sequence is easier to follow.
  */
-function extractErrorMessage(error) {
+function extractErrorMessage(error: unknown): string {
     if (typeof error === "string") {
         return error;
     }
-    if (error?.message) {
-        return error.message;
+    const value = error as { message?: string; toString?: () => string } | null | undefined;
+    if (value?.message) {
+        return value.message;
     }
-    if (error?.toString) {
-        return error.toString();
+    if (value?.toString) {
+        return value.toString();
     }
     return "";
 }
@@ -57,7 +153,7 @@ function extractErrorMessage(error) {
 /**
  * Detects Broken pipe/EPIPE errors across platforms.
  */
-function isBrokenPipeError(error) {
+function isBrokenPipeError(error: unknown): boolean {
     return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(extractErrorMessage(error));
 }
 
@@ -72,7 +168,7 @@ function isBrokenPipeError(error) {
  * @param {unknown} error - Rejection value from the plugin (string, Error or object).
  * @returns {boolean} Whether the port no longer exists.
  */
-function isPortGoneError(error) {
+function isPortGoneError(error: unknown): boolean {
     return /not found|is not open|disconnected|detached/i.test(extractErrorMessage(error));
 }
 
@@ -83,7 +179,7 @@ function isPortGoneError(error) {
  * @param {unknown} error - Rejection value from the plugin (string, Error or object).
  * @returns {boolean} Whether the write failed on the port lock without transmitting.
  */
-function isLockTimeoutError(error) {
+function isLockTimeoutError(error: unknown): boolean {
     return /lock timeout/i.test(extractErrorMessage(error));
 }
 
@@ -94,7 +190,7 @@ function isLockTimeoutError(error) {
  * @param {unknown} value - Raw `vid`/`pid` field from `available_ports`.
  * @returns {number|undefined} The numeric ID, or undefined when absent/unparseable.
  */
-function parseId(value) {
+function parseId(value: unknown): number | undefined {
     if (typeof value === "number") {
         return value;
     }
@@ -120,6 +216,29 @@ function parseId(value) {
  * Tauri shell. The plugin exposes a stable command interface via `invoke`.
  */
 class TauriSerial extends EventTarget {
+    connected: boolean;
+    openRequested: boolean;
+    openCanceled: boolean;
+    closeRequested: boolean;
+    transmitting: boolean;
+    connectionInfo: TauriSerialConnectionInfo | null;
+
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+
+    ports: TauriSerialPort[];
+    connectionId: string | null;
+
+    isNeedBatchWrite: boolean;
+
+    dataChannelId: number | null;
+    portListChannelId: number | null;
+    portListChannel: Channel<PortListEvent> | null;
+    monitoringDevices: boolean;
+    portListSubscription: Promise<void> | null;
+
     constructor() {
         super();
 
@@ -159,26 +278,29 @@ class TauriSerial extends EventTarget {
         this._bootstrap();
     }
 
-    _bootstrap() {
+    private _bootstrap(): void {
         this.loadDevices()
             .then(() => this.startDeviceMonitoring())
             .catch((error) => console.error(`${logHead} Bootstrap failed:`, error));
     }
 
-    handleReceiveBytes(info) {
-        this.bytesReceived += info.detail.byteLength;
+    handleReceiveBytes(info: Event): void {
+        // Registered only for this transport's own "receive" events, which carry the bytes.
+        this.bytesReceived += (info as CustomEvent<Uint8Array>).detail.byteLength;
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): string | null {
         return this.connectionId;
     }
 
-    handleFatalSerialError() {
+    handleFatalSerialError(): void {
         // On fatal errors (broken pipe, port gone) just disconnect cleanly. The
         // monitor loop resumes once we are disconnected and surfaces the removal
         // as a removedDevice event, which is what the reconnect cycle waits for.
         if (this.connected) {
-            this.disconnect();
+            // disconnect() catches its own failures and reports them as a
+            // "disconnect" event, so there is nothing left to handle here.
+            void this.disconnect();
         }
     }
 
@@ -189,13 +311,13 @@ class TauriSerial extends EventTarget {
      * so unlike the `available_ports` poll this replaces, nothing is spent on the
      * JavaScript thread between events.
      */
-    async startDeviceMonitoring() {
+    async startDeviceMonitoring(): Promise<void> {
         if (this.monitoringDevices) {
             return;
         }
 
         this.monitoringDevices = true;
-        const channel = new Channel();
+        const channel = new Channel<PortListEvent>();
         this.portListChannel = channel;
         channel.onmessage = (event) => {
             if (this.portListChannel !== channel) {
@@ -204,7 +326,7 @@ class TauriSerial extends EventTarget {
             this._handlePortListEvent(event);
         };
 
-        this.portListSubscription = invoke("plugin:serialplugin|watch_ports", {
+        this.portListSubscription = invoke<number>("plugin:serialplugin|watch_ports", {
             options: { pollIntervalMs: PORT_LIST_POLL_INTERVAL_MS },
             channel,
         })
@@ -221,7 +343,7 @@ class TauriSerial extends EventTarget {
         await this.portListSubscription;
     }
 
-    async stopDeviceMonitoring() {
+    async stopDeviceMonitoring(): Promise<void> {
         // A subscribe still in flight would otherwise store its channel id after
         // this teardown had read it, leaving the monitor running for the whole
         // connection — the very thing connect() stops it to avoid.
@@ -254,10 +376,9 @@ class TauriSerial extends EventTarget {
      * monitor sends one on every subscribe, and this transport unsubscribes for
      * the duration of a connection, so the snapshot that arrives on reconnect is
      * what reports a device that vanished while the port was open.
-     * @param {{kind: string, ports?: object, path?: string, info?: object}} event - Event from the monitor.
-     * @private
+     * @param event - Event from the monitor.
      */
-    _handlePortListEvent(event) {
+    private _handlePortListEvent(event: PortListEvent): void {
         switch (event?.kind) {
             case "snapshot":
                 this._reconcilePorts(this._filterToKnownDevices(this._convertPortsMapToArray(event.ports ?? {})));
@@ -281,10 +402,9 @@ class TauriSerial extends EventTarget {
      *
      * Kept as a diff rather than trusting each event verbatim so a duplicate
      * `added` or a `removed` for a path already gone stays silent.
-     * @param {Array<object>} currentPorts - The known-device ports as they now stand.
-     * @private
+     * @param currentPorts - The known-device ports as they now stand.
      */
-    _reconcilePorts(currentPorts) {
+    private _reconcilePorts(currentPorts: TauriSerialPort[]): void {
         const removedPorts = this.ports.filter(
             (oldPort) => !currentPorts.some((newPort) => newPort.path === oldPort.path),
         );
@@ -306,9 +426,8 @@ class TauriSerial extends EventTarget {
     /**
      * Convert the raw portsMap from the plugin into our standardized port
      * objects.
-     * @private
      */
-    _convertPortsMapToArray(portsMap) {
+    private _convertPortsMapToArray(portsMap: PluginPortsMap): TauriSerialPort[] {
         return Object.entries(portsMap).map(([path, info]) => {
             const vendorId = parseId(info.vid);
             const productId = parseId(info.pid);
@@ -325,9 +444,8 @@ class TauriSerial extends EventTarget {
 
     /**
      * Filter ports to only include known Betaflight-compatible devices.
-     * @private
      */
-    _filterToKnownDevices(ports) {
+    private _filterToKnownDevices(ports: TauriSerialPort[]): TauriSerialPort[] {
         return ports.filter((port) => {
             if (!port.vendorId || !port.productId) {
                 return false;
@@ -336,9 +454,9 @@ class TauriSerial extends EventTarget {
         });
     }
 
-    async loadDevices() {
+    async loadDevices(): Promise<TauriSerialPort[]> {
         try {
-            const portsMap = await invoke("plugin:serialplugin|available_ports");
+            const portsMap = await invoke<PluginPortsMap>("plugin:serialplugin|available_ports");
             const allPorts = this._convertPortsMapToArray(portsMap);
             this.ports = this._filterToKnownDevices(allPorts);
 
@@ -360,13 +478,12 @@ class TauriSerial extends EventTarget {
      *
      * Checked against the raw port map, not the known-device list, so this only
      * ever answers "does this path exist".
-     * @param {string} path - Port path about to be opened.
-     * @returns {Promise<boolean>} Whether the transport still lists it.
-     * @private
+     * @param path - Port path about to be opened.
+     * @returns Whether the transport still lists it.
      */
-    async _portExists(path) {
+    private async _portExists(path: string): Promise<boolean> {
         try {
-            const portsMap = await invoke("plugin:serialplugin|available_ports");
+            const portsMap = await invoke<PluginPortsMap | null>("plugin:serialplugin|available_ports");
             return Object.hasOwn(portsMap ?? {}, path);
         } catch (error) {
             // An enumeration failure is not evidence the port is gone; let the
@@ -376,7 +493,7 @@ class TauriSerial extends EventTarget {
         }
     }
 
-    getDisplayName(path, vendorId, productId) {
+    getDisplayName(path: string, vendorId: number | undefined, productId: number | undefined): string {
         if (vendorId && productId) {
             const vendorName = vendorIdNames[vendorId] || `VID:${vendorId} PID:${productId}`;
             return `Betaflight ${vendorName}`;
@@ -384,7 +501,10 @@ class TauriSerial extends EventTarget {
         return path;
     }
 
-    async connect(path, { baudRate = 115200, dataBits, parityBit, parity, stopBits, flowControl } = {}) {
+    async connect(
+        path: string,
+        { baudRate = 115200, dataBits, parityBit, parity, stopBits, flowControl }: TauriSerialConnectOptions = {},
+    ): Promise<boolean> {
         if (this.openRequested) {
             console.log(`${logHead} Connection already requested`);
             return false;
@@ -403,7 +523,7 @@ class TauriSerial extends EventTarget {
         }
 
         try {
-            const openOptions = { path, baudRate };
+            const openOptions: PluginOpenOptions = { path, baudRate };
             // Forward optional serial settings when callers supply them (e.g.
             // the flasher uses parity / stopBits for STM32 bootloader comms).
             if (dataBits != null) {
@@ -476,9 +596,8 @@ class TauriSerial extends EventTarget {
     /**
      * Abandon an open that was cancelled mid-flight by a concurrent
      * disconnect(). Closes the port we just opened and clears pending flags.
-     * @private
      */
-    async _abortOpen(path) {
+    private async _abortOpen(path: string): Promise<false> {
         console.log(`${logHead} Open cancelled for ${path}, closing`);
         try {
             await invoke("plugin:serialplugin|close", { path });
@@ -494,10 +613,9 @@ class TauriSerial extends EventTarget {
     /**
      * Undo a connection whose port opened but whose byte stream would not start.
      * Mirrors `_abortOpen`, plus the state `connect` had already committed.
-     * @param {string} path - The port to close again.
-     * @private
+     * @param path - The port to close again.
      */
-    async _abortConnect(path) {
+    private async _abortConnect(path: string): Promise<false> {
         this.removeEventListener("receive", this.handleReceiveBytes);
         this.connected = false;
         this.connectionId = null;
@@ -508,7 +626,7 @@ class TauriSerial extends EventTarget {
         return false;
     }
 
-    checkIsNeedBatchWrite() {
+    checkIsNeedBatchWrite(): boolean {
         const isMac = useAppInfoStore().operatingSystem === "MacOS";
         const vendorId = this.connectionInfo?.vendorId;
         return isMac && vendorId != null && vendorIdNames[vendorId] === "AT32";
@@ -520,7 +638,7 @@ class TauriSerial extends EventTarget {
      * WebSerial.requestPermissionDevice: re-scan and return the first known
      * port (or null if none).
      */
-    async requestPermissionDevice() {
+    async requestPermissionDevice(): Promise<TauriSerialPort | null> {
         await this.loadDevices();
         const port = this.ports[0] ?? null;
         if (port) {
@@ -536,15 +654,14 @@ class TauriSerial extends EventTarget {
      * asks it to push what it reads instead of holding it in an idle buffer for
      * the next poll to collect. A failure here is fatal to the connection: the
      * port would be open with nothing reading it.
-     * @param {string} path - The open port's path.
-     * @private
+     * @param path - The open port's path.
      */
-    async _startWatch(path) {
-        const channel = new Channel();
+    private async _startWatch(path: string): Promise<boolean> {
+        const channel = new Channel<SerialEvent>();
         channel.onmessage = (event) => this._handleSerialEvent(event);
 
         try {
-            this.dataChannelId = await invoke("plugin:serialplugin|watch", {
+            this.dataChannelId = await invoke<number>("plugin:serialplugin|watch", {
                 path,
                 options: WATCH_OPTIONS,
                 channel,
@@ -556,7 +673,7 @@ class TauriSerial extends EventTarget {
         }
     }
 
-    async _stopWatch() {
+    private async _stopWatch(): Promise<void> {
         const channelId = this.dataChannelId;
         this.dataChannelId = null;
         if (channelId === null) {
@@ -578,10 +695,9 @@ class TauriSerial extends EventTarget {
      * Late events are dropped rather than dispatched: a channel already in flight
      * when the port closed would otherwise inject bytes into whatever session
      * comes next.
-     * @param {{kind: string, data?: Array<number>, reason?: string, message?: string}} event - Event from the plugin.
-     * @private
+     * @param event - Event from the plugin.
      */
-    _handleSerialEvent(event) {
+    private _handleSerialEvent(event: SerialEvent): void {
         if (!this.connected) {
             return;
         }
@@ -592,7 +708,7 @@ class TauriSerial extends EventTarget {
                 break;
             case "disconnect":
                 console.error(`${logHead} Port ${this.connectionId} disconnected: ${event.reason}`);
-                this.handleFatalSerialError(event.reason);
+                this.handleFatalSerialError();
                 break;
             case "error":
                 console.warn(`${logHead} Read error on ${this.connectionId}: ${event.message}`);
@@ -602,7 +718,10 @@ class TauriSerial extends EventTarget {
         }
     }
 
-    async send(data, callback) {
+    async send(
+        data: TauriSerialPayload,
+        callback?: (result: TauriSerialSendResult) => void,
+    ): Promise<TauriSerialSendResult> {
         if (!this.connected) {
             console.error(`${logHead} Cannot send: port not connected`);
             const res = { bytesSent: 0 };
@@ -611,7 +730,7 @@ class TauriSerial extends EventTarget {
         }
 
         try {
-            let dataArray;
+            let dataArray: Uint8Array;
             if (data instanceof ArrayBuffer) {
                 dataArray = new Uint8Array(data);
             } else if (data instanceof Uint8Array) {
@@ -619,7 +738,8 @@ class TauriSerial extends EventTarget {
             } else if (Array.isArray(data)) {
                 dataArray = new Uint8Array(data);
             } else {
-                console.error(`${logHead} Unsupported data type:`, data?.constructor?.name);
+                // Unreachable for a typed caller, but serial.js is still JavaScript.
+                console.error(`${logHead} Unsupported data type:`, (data as object | null)?.constructor?.name);
                 const res = { bytesSent: 0 };
                 callback?.(res);
                 return res;
@@ -627,7 +747,7 @@ class TauriSerial extends EventTarget {
 
             this.transmitting = true;
 
-            const writeChunk = async (chunk) => {
+            const writeChunk = async (chunk: Uint8Array): Promise<void> => {
                 const value = Array.from(chunk);
                 const path = this.connectionId;
                 const session = this.connectionInfo;
@@ -654,7 +774,8 @@ class TauriSerial extends EventTarget {
                 const batchSize = 63;
                 for (let offset = 0; offset < dataArray.length; offset += batchSize) {
                     const chunk = dataArray.slice(offset, offset + batchSize);
-                    await writeChunk(chunk);
+                    // The chunks are one frame, so they must reach the port in order.
+                    await writeChunk(chunk); // NOSONAR: sequential by design
                 }
             } else {
                 await writeChunk(dataArray);
@@ -670,7 +791,7 @@ class TauriSerial extends EventTarget {
             console.error(`${logHead} Error sending data:`, error);
             this.transmitting = false;
             if (isBrokenPipeError(error) || isPortGoneError(error)) {
-                this.handleFatalSerialError(error);
+                this.handleFatalSerialError();
             }
             const res = { bytesSent: 0 };
             callback?.(res);
@@ -678,7 +799,7 @@ class TauriSerial extends EventTarget {
         }
     }
 
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         // If an open is in flight (still awaiting the plugin), signal
         // cancellation so the connect() coroutine aborts after its current
         // await and closes the port it just opened — rather than letting it
@@ -741,7 +862,7 @@ class TauriSerial extends EventTarget {
         }
     }
 
-    async getDevices() {
+    async getDevices(): Promise<TauriSerialPort[]> {
         await this.loadDevices();
         return this.ports;
     }
