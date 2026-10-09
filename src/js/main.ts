@@ -62,16 +62,21 @@ if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "bo
     Capacitor.isLoggingEnabled = false;
 }
 
+// Not a top-level await: that would hold up the rest of this module, including the
+// DOMContentLoaded listener below, until the debug tools have loaded.
+async function loadMspDebugTools(): Promise<void> {
+    try {
+        await import("./msp/debug/msp_debug_tools");
+        console.log("🔧 MSP Debug Tools loaded for development environment");
+        console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
+        console.log("• Use MSPTestRunner.help() for all commands");
+    } catch (err) {
+        console.warn("Failed to load MSP debug tools:", err);
+    }
+}
+
 if (import.meta.env.DEV) {
-    import("./msp/debug/msp_debug_tools")
-        .then(() => {
-            console.log("🔧 MSP Debug Tools loaded for development environment");
-            console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
-            console.log("• Use MSPTestRunner.help() for all commands");
-        })
-        .catch((err) => {
-            console.warn("Failed to load MSP debug tools:", err);
-        });
+    void loadMspDebugTools();
 }
 
 document.addEventListener("DOMContentLoaded", function () {

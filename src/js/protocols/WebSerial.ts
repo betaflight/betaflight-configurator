@@ -298,11 +298,8 @@ class WebSerial extends EventTarget {
             // Throws inside the try where Web Serial is missing, as `navigator.serial.requestPort()` did.
             const userSelectedPort = await (webSerialApi() as WebSerialApi).requestPort(options);
 
-            newPermissionPort = this.ports.find((port) => port.port === userSelectedPort) ?? null;
-
-            if (!newPermissionPort) {
-                newPermissionPort = this.handleNewDevice(userSelectedPort);
-            }
+            newPermissionPort =
+                this.ports.find((port) => port.port === userSelectedPort) ?? this.handleNewDevice(userSelectedPort);
             console.info(`${logHead} User selected SERIAL device from permissions:`, newPermissionPort.path);
         } catch (error) {
             console.error(`${logHead} User didn't select any SERIAL device when requesting permission:`, error);

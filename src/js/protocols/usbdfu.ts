@@ -161,12 +161,9 @@ export interface DfuConnectOptions {
 }
 
 /** connect()'s options, normalised. */
-interface DfuFlashOptions {
+interface DfuFlashOptions extends Pick<DfuConnectOptions, "flashingMessage" | "flashProgress" | "flashMessageTypes"> {
     erase_chip: boolean;
     exitDfu: boolean;
-    flashingMessage?: DfuConnectOptions["flashingMessage"];
-    flashProgress?: DfuConnectOptions["flashProgress"];
-    flashMessageTypes?: DfuConnectOptions["flashMessageTypes"];
 }
 
 /** [start, end] percentages of the progress bar given to each phase. */
@@ -1090,9 +1087,7 @@ export class UsbDfuProtocol extends EventTarget {
                         0,
                         (ob_data, errcode) => {
                             if (errcode) {
-                                // TODO: this was undefined, guessing with how it usually works it should be 1
-                                const errcode1 = 1;
-                                console.log(`USB transfer error while reading option bytes: ${errcode1}`);
+                                console.log(`USB transfer error while reading option bytes: ${errcode}`);
                                 this.cleanup();
                                 return;
                             }
@@ -1130,7 +1125,6 @@ export class UsbDfuProtocol extends EventTarget {
                         // read protected
                         gui_log(i18n.getMessage("stm32AddressLoadFailed"));
                         this.clearStatus(unprotect);
-                        return;
                     } else if (loadAddressResponse[4] === this.state.dfuDNLOAD_IDLE) {
                         console.log(`${this.logHead} Address load for option bytes sector succeeded.`);
                         this.clearStatus(tryReadOB);
