@@ -115,6 +115,10 @@ export default class LoginApi {
     }
 
     /* PASSKEY Functionality */
+    /**
+     * @param {string} email
+     * @param {string} key the emailed verification code
+     */
     async createCredentialOptions(email, key) {
         this.checkMediationSupport();
 
@@ -172,6 +176,7 @@ export default class LoginApi {
         }
     }
 
+    /** @param {string} email */
     async createAssertionOptions(email) {
         this.checkMediationSupport();
 
@@ -265,6 +270,7 @@ export default class LoginApi {
         }
     }
 
+    /** @param {string} email */
     async requestTemporaryPassword(email) {
         const response = await fetch(`${this._url}/api/user/verify/${encodeURIComponent(email)}/request`, {
             method: "POST",
@@ -281,6 +287,8 @@ export default class LoginApi {
     /**
      * Verify an emailed code and obtain a refresh token without using a passkey.
      * Intended for browsers where passkey authentication is unreliable.
+     * @param {string} email
+     * @param {string} code
      */
     async verifyLogin(email, code) {
         const response = await fetch(`${this._url}/api/user/verify/${encodeURIComponent(email)}/login`, {

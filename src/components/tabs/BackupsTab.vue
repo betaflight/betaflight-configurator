@@ -320,7 +320,7 @@ const restoreErrors = ref<RestoreFailure[]>([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
 let userApi: UserApi | null = null;
-// LoginManager documents these as a bare `Function`, so they are typed by what it returns.
+// The unsubscribe functions LoginManager returns; take their type from there.
 let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
 let unsubscribeLogout: ReturnType<typeof loginManager.onLogout> | null = null;
 

@@ -1,28 +1,57 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
-import UserApi from "./UserApi";
+import UserApi, { type UserProfile } from "./UserApi";
 import { switchTab } from "./tab_switch";
 import { useNavigationStore } from "../stores/navigation";
+
+type SessionCallback = () => void;
+
+/** The waiting dialog UserSession registers; LoginManager only ever shows and hides it. */
+export interface WaitingDialogController {
+    show: (message: string) => void;
+    hide: () => void;
+}
 
 /**
  * LoginManager - Handles user authentication using passkeys
  * This is a global login manager that works independently of any specific tab
  */
 class LoginManager {
-    _loginApi = new LoginApi();
-    _userApi = new UserApi(this._loginApi);
-    _profile = null;
-    _onLoginCallbacks = [];
-    _onLogoutCallbacks = [];
-    _dialogOpener = null;
+    readonly _loginApi = new LoginApi();
+    readonly _userApi = new UserApi(this._loginApi);
+    _profile: UserProfile | null = null;
+    readonly _onLoginCallbacks: SessionCallback[] = [];
+    readonly _onLogoutCallbacks: SessionCallback[] = [];
+    _dialogOpener: SessionCallback | null = null;
     _loginDialogPending = false;
-    _waitingDialogController = null;
+    _waitingDialogController: WaitingDialogController | null = null;
 
     /**
      * Set the dialog opener callback from Vue component
      */
-    setDialogOpener(callback) {
+    setDialogOpener(callback: SessionCallback | null): void {
         this._dialogOpener = callback;
         if (callback && this._loginDialogPending) {
             this._loginDialogPending = false;
@@ -32,24 +61,23 @@ class LoginManager {
 
     /**
      * Set a controller from Vue to manage the waiting dialog
-     * @param {{show: Function, hide: Function}|null} controller
      */
-    setWaitingDialogController(controller) {
+    setWaitingDialogController(controller: WaitingDialogController | null): void {
         this._waitingDialogController = controller;
     }
 
     /**
      * Initialize the login manager and set up UI handlers
      */
-    async initialize() {
+    async initialize(): Promise<void> {
         await this.fetchUserProfile();
     }
 
     /**
      * Show waiting dialog
-     * @param {string} message Message to display
+     * @param message Message to display
      */
-    showWaitingDialog(message = "Processing passkey authentication...") {
+    showWaitingDialog(message = "Processing passkey authentication..."): void {
         // Only use Vue component controller
         if (this._waitingDialogController && typeof this._waitingDialogController.show === "function") {
             try {
@@ -63,7 +91,7 @@ class LoginManager {
     /**
      * Hide waiting dialog
      */
-    hideWaitingDialog() {
+    hideWaitingDialog(): void {
         // Only use Vue component controller
         if (this._waitingDialogController && typeof this._waitingDialogController.hide === "function") {
             try {
@@ -77,7 +105,7 @@ class LoginManager {
     /**
      * Show the login dialog, or as soon as the Vue component registers its opener
      */
-    showLoginDialog() {
+    showLoginDialog(): void {
         if (this._dialogOpener) {
             this._dialogOpener();
         } else {
@@ -88,7 +116,7 @@ class LoginManager {
     /**
      * Create a new passkey for the user
      */
-    async createPasskey(email) {
+    async createPasskey(email: string): Promise<void> {
         try {
             this.showWaitingDialog(i18n.getMessage("userCreatingPasskey"));
 
@@ -106,10 +134,10 @@ class LoginManager {
     /**
      * Verify code and create passkey
      */
-    async verifyAndCreatePasskey(email, code) {
+    async verifyAndCreatePasskey(email: string, code: string): Promise<void> {
         try {
             // Show non-blocking waiting dialog so OS/browser UI can surface
-            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"), true);
+            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"));
 
             const result = await this._loginApi.createCredentialOptions(email, code);
             await this._loginApi.createCredential(result.key, result.options);
@@ -133,7 +161,7 @@ class LoginManager {
      * Request a verification code to be emailed to the user.
      * Throws on failure so the caller can present a specific error.
      */
-    async requestVerificationCode(email) {
+    async requestVerificationCode(email: string): Promise<void> {
         try {
             this.showWaitingDialog(i18n.getMessage("userSendingCode"));
             await this._loginApi.requestTemporaryPassword(email);
@@ -151,7 +179,7 @@ class LoginManager {
      * Used for browsers (e.g. Safari) where passkeys are unreliable.
      * Throws on failure so the caller can present a specific error.
      */
-    async loginWithEmailCode(email, code) {
+    async loginWithEmailCode(email: string, code: string): Promise<void> {
         try {
             this.showWaitingDialog(i18n.getMessage("userVerifyingCode"));
 
@@ -173,10 +201,10 @@ class LoginManager {
     /**
      * Login with existing passkey
      */
-    async loginWithPasskey(email) {
+    async loginWithPasskey(email: string): Promise<void> {
         try {
             // Show non-blocking waiting dialog so OS/browser UI can surface
-            this.showWaitingDialog(i18n.getMessage("userLoggingIn"), true);
+            this.showWaitingDialog(i18n.getMessage("userLoggingIn"));
 
             const result = await this._loginApi.createAssertionOptions(email);
             await this._loginApi.verifyAssertion(result.key, result.options);
@@ -198,7 +226,7 @@ class LoginManager {
     /**
      * Fetch user profile data
      */
-    async fetchUserProfile() {
+    async fetchUserProfile(): Promise<void> {
         try {
             if (await this._loginApi.checkToken()) {
                 const profile = await this._userApi.profile();
@@ -215,7 +243,7 @@ class LoginManager {
     /**
      * Sign out the user
      */
-    async signOut() {
+    async signOut(): Promise<void> {
         try {
             await this._loginApi.signOut();
             this._finishSession();
@@ -230,14 +258,14 @@ class LoginManager {
      * Permanently delete the signed-in user's account, then end the local session.
      * Throws (leaving the session intact) when the server refuses.
      */
-    async deleteAccount() {
+    async deleteAccount(): Promise<void> {
         await this.getUserApi().deleteAccount();
         this._loginApi.clearSession();
         this._finishSession();
         gui_log(i18n.getMessage("userAccountDeleteSuccess"));
     }
 
-    _finishSession() {
+    _finishSession(): void {
         this._profile = null;
         this.notifyLogoutCallbacks();
 
@@ -253,27 +281,27 @@ class LoginManager {
 
     /**
      * Register callback for login events
-     * @returns {Function} Unsubscribe function to remove the callback
+     * @returns Unsubscribe function to remove the callback
      */
-    onLogin(callback) {
+    onLogin(callback: SessionCallback): () => void {
         this._onLoginCallbacks.push(callback);
         return () => this.removeLoginCallback(callback);
     }
 
     /**
      * Register callback for logout events
-     * @returns {Function} Unsubscribe function to remove the callback
+     * @returns Unsubscribe function to remove the callback
      */
-    onLogout(callback) {
+    onLogout(callback: SessionCallback): () => void {
         this._onLogoutCallbacks.push(callback);
         return () => this.removeLogoutCallback(callback);
     }
 
     /**
      * Remove a login callback
-     * @param {Function} callback The callback to remove
+     * @param callback The callback to remove
      */
-    removeLoginCallback(callback) {
+    removeLoginCallback(callback: SessionCallback): void {
         const index = this._onLoginCallbacks.indexOf(callback);
         if (index > -1) {
             this._onLoginCallbacks.splice(index, 1);
@@ -283,23 +311,23 @@ class LoginManager {
     /**
      * Notify login callbacks
      */
-    notifyLoginCallbacks() {
+    notifyLoginCallbacks(): void {
         // Iterate over shallow copy to allow removals during notification
         const callbacks = this._onLoginCallbacks.slice();
-        callbacks.forEach((callback) => {
+        for (const callback of callbacks) {
             try {
                 callback();
             } catch (error) {
                 console.error("Error in login callback:", error);
             }
-        });
+        }
     }
 
     /**
      * Remove a logout callback
-     * @param {Function} callback The callback to remove
+     * @param callback The callback to remove
      */
-    removeLogoutCallback(callback) {
+    removeLogoutCallback(callback: SessionCallback): void {
         const index = this._onLogoutCallbacks.indexOf(callback);
         if (index > -1) {
             this._onLogoutCallbacks.splice(index, 1);
@@ -309,43 +337,43 @@ class LoginManager {
     /**
      * Notify logout callbacks
      */
-    notifyLogoutCallbacks() {
+    notifyLogoutCallbacks(): void {
         // Iterate over shallow copy to allow removals during notification
         const callbacks = this._onLogoutCallbacks.slice();
-        callbacks.forEach((callback) => {
+        for (const callback of callbacks) {
             try {
                 callback();
             } catch (error) {
                 console.error("Error in logout callback:", error);
             }
-        });
+        }
     }
 
     /**
      * Get user API instance
      */
-    getUserApi() {
+    getUserApi(): UserApi {
         return this._userApi;
     }
 
     /**
      * Check if user is logged in
      */
-    async isUserLoggedIn() {
+    async isUserLoggedIn(): Promise<boolean> {
         return await this._loginApi.isSignedIn();
     }
 
     /**
      * Get current user email
      */
-    getUserEmail() {
+    getUserEmail(): string | undefined {
         return this._profile?.email;
     }
 
     /**
      * Get current user profile
      */
-    getUserProfile() {
+    getUserProfile(): UserProfile | null {
         return this._profile;
     }
 }

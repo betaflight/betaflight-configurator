@@ -242,7 +242,7 @@ const isDeletingAccount = ref(false);
 const deleteAccountBox = ref<InstanceType<typeof UiBox> | null>(null);
 const deleteAccountButton = ref<{ $el: HTMLElement } | null>(null);
 let userApi: UserApi | null = null;
-// LoginManager documents the unsubscribe as a bare `Function`; take its type from there.
+// The unsubscribe functions LoginManager returns; take their type from there.
 let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
 let unsubscribeLogout: ReturnType<typeof loginManager.onLogout> | null = null;
 

@@ -2,6 +2,12 @@ import LoginApi from "./LoginApi";
 
 const DELETE_ACCOUNT_TIMEOUT_MS = 30000;
 
+/**
+ * The /api/user profile, as far as the app reads it. The response is parsed JSON, so
+ * this is the contract, not a runtime guarantee.
+ * @typedef {{ name?: string, email?: string, address?: string, country?: string, avatar?: string }} UserProfile
+ */
+
 export default class UserApi {
     _url = "https://user.betaflight.com";
     _loginApi;
@@ -27,6 +33,7 @@ export default class UserApi {
     }
 
     /* Profile Functionality */
+    /** @returns {Promise<UserProfile>} */
     async profile() {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user`, {
@@ -38,7 +45,7 @@ export default class UserApi {
 
         if (response.status === 401) {
             // token is bad - logout
-            this._loginApi.signOut();
+            void this._loginApi.signOut();
             throw new Error("Unauthorized access to User API.");
         }
 
