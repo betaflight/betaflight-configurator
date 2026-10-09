@@ -64,7 +64,6 @@ import Sidebar from "./components/sidebar/Sidebar.vue";
 import MSPModule from "./js/msp";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage";
-import GUI from "./js/gui.js";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";
 import { useFlightControllerStore } from "./stores/fc";
@@ -204,7 +203,7 @@ provide("closeMobileSidebar", () => {
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
-    return tabName ? (VueTabComponents[tabName] ?? null) : null;
+    return tabName ? (VueTabComponents[tabName as keyof typeof VueTabComponents] ?? null) : null;
 });
 
 // Tabs that keep their state (and heavy resources) alive across switches rather than being torn
@@ -218,7 +217,6 @@ const activeTabKey = computed(() =>
 );
 
 provide("betaflightModel", currentVm());
-provide("gui", GUI);
 provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
 
 watch(

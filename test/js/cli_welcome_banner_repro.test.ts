@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import GUI from "../../src/js/gui";
+import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
 
 // Reproduction harness for betaflight/betaflight-configurator#5445: "outputHistory can contain a
@@ -63,7 +63,7 @@ describe("useCli welcome-banner split-read handling (#5445)", () => {
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = false;
         CliAutoComplete.builder.state = "reset";
-        GUI.operating_system = "Linux";
+        useAppInfoStore().operatingSystem = "Linux";
     });
 
     afterEach(() => {

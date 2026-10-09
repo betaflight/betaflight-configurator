@@ -3,11 +3,11 @@ import { defineComponent } from "vue";
 import { mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { useLiveSensorData, type LiveSensorPull } from "../../../../src/composables/sensors/useLiveSensorData";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({ default: { interval_add: vi.fn(), interval_remove: vi.fn() } }));
+vi.mock("../../../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 
 type LiveSensorData = ReturnType<typeof useLiveSensorData>;
 
@@ -37,12 +37,12 @@ function startAll(data: LiveSensorData) {
     const names = new Map<LiveSensorPull, string>();
     for (const [sensor] of PULLS) {
         data.startPolling(sensor, 50, () => {});
-        names.set(sensor, vi.mocked(GUI.interval_add).mock.lastCall![0]);
+        names.set(sensor, vi.mocked(timers.addInterval).mock.lastCall![0]);
     }
     return names;
 }
 
-const removed = () => vi.mocked(GUI.interval_remove).mock.calls.map(([name]) => name);
+const removed = () => vi.mocked(timers.removeInterval).mock.calls.map(([name]) => name);
 
 describe("useLiveSensorData", () => {
     beforeEach(() => {
@@ -65,14 +65,14 @@ describe("useLiveSensorData", () => {
             const onReply = vi.fn();
             mountData().data.startPolling(sensor, 123, onReply);
 
-            expect(GUI.interval_add).toHaveBeenCalledExactlyOnceWith(
+            expect(timers.addInterval).toHaveBeenCalledExactlyOnceWith(
                 expect.any(String),
                 expect.any(Function),
                 123,
                 true,
             );
 
-            const tick = vi.mocked(GUI.interval_add).mock.calls[0][1];
+            const tick = vi.mocked(timers.addInterval).mock.calls[0][1];
             tick();
             expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(code, false, false, onReply);
         },
@@ -87,7 +87,7 @@ describe("useLiveSensorData", () => {
         data.stopPolling();
         expect(removed()).toEqual(allButPitot);
 
-        vi.mocked(GUI.interval_remove).mockClear();
+        vi.mocked(timers.removeInterval).mockClear();
         wrapper.unmount();
         expect(removed()).toEqual([names.get("pitot")]);
     });

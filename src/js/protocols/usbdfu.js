@@ -17,13 +17,13 @@
     - WebUsbDfuTransport (desktop browsers with WebUSB)
     - CapacitorDfuTransport (Android via native USB APIs)
 */
-import GUI from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
+import { useConnectionStore } from "../../stores/connection";
 
 // Error constant used when an already-authorized DFU device isn't found
 export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
@@ -197,7 +197,7 @@ export class UsbDfuProtocol extends EventTarget {
             console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
             gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
-            GUI.connect_lock = false;
+            useConnectionStore().connectLock = false;
             this.callback?.();
             return;
         }
@@ -206,7 +206,7 @@ export class UsbDfuProtocol extends EventTarget {
             console.error(`${this.logHead} Device not found: ${devicePath}`);
             gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
-            GUI.connect_lock = false;
+            useConnectionStore().connectLock = false;
             this.callback?.();
             return;
         }
@@ -1338,7 +1338,7 @@ export class UsbDfuProtocol extends EventTarget {
         this._connecting = false;
         this.releaseInterface(0);
 
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
 
         const timeSpent = new Date().getTime() - this.upload_time_start;
 

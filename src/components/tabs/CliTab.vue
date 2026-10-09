@@ -129,7 +129,7 @@ import { defineComponent, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import CliAutocompleteDropdown from "../cli/CliAutocompleteDropdown.vue";
 import { useCli } from "../../composables/useCli";
-import { TABS } from "../../js/gui";
+import { TABS } from "../../js/tab_adapters";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import { EventBus } from "../eventBus";
 import { i18n } from "../../js/localization";

@@ -4,7 +4,7 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import GUI from "../../src/js/gui";
+import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
 
 // The firmware banner is transport-fragmented. Entry validation must therefore retain its state
@@ -43,7 +43,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = false;
         CliAutoComplete.builder.state = "reset";
-        GUI.operating_system = "Linux";
+        useAppInfoStore().operatingSystem = "Linux";
     });
 
     afterEach(() => {

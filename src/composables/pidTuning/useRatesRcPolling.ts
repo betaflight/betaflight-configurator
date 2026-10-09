@@ -28,8 +28,8 @@ export const RATES_RC_POLL_MS = 100;
 
 /**
  * Live stick data for the Rates sub-tab: polls MSP_RC so the rate curve labels and the throttle
- * curve follow the sticks. The timer is a plain setInterval (not a GUI interval, so it does not
- * show up in GUI's registry) and is cleared when the owning component unmounts.
+ * curve follow the sticks. The timer is a plain setInterval (not a js/timers interval, so it does
+ * not show up in that registry) and is cleared when the owning component unmounts.
  */
 export function useRatesRcPolling() {
     let rcUpdateInterval: ReturnType<typeof setInterval> | null = null;

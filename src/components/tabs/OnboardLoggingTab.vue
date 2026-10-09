@@ -19,7 +19,7 @@
         >
             <div class="content_wrapper">
                 <div class="tab_title">{{ $t("tabOnboardLogging") }}</div>
-                <WikiButton docUrl="logging" />
+                <WikiButton docUrl="onboard_logging" />
 
                 <div class="require-blackbox-unsupported note">
                     <p>{{ $t("blackboxNotSupported") }}</p>
@@ -315,7 +315,6 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
-import GUI from "../../js/gui";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -773,7 +772,7 @@ export default defineComponent({
         }
 
         async function flashSaveBegin(alsoErase = false) {
-            if (!GUI.connected_to || dataflashUsedSize.value === 0) {
+            if (!connectionStore.connectedTo || dataflashUsedSize.value === 0) {
                 return;
             }
 
@@ -952,35 +951,31 @@ export default defineComponent({
         }
 
         async function loadData() {
-            try {
-                await runTabLoad(
-                    async () => {
-                        await loadOnboardLoggingData();
+            await runTabLoad(
+                async () => {
+                    await loadOnboardLoggingData();
 
-                        // Populate UI state
-                        await loadBlackboxPort();
+                    // Populate UI state
+                    await loadBlackboxPort();
 
-                        blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
-                        blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
-                        debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
+                    blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                    blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                    debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
-                        // Initialize debug fields checkboxes
-                        if (showDebugFields.value) {
-                            const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
-                            debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                                return !bit_check(disabledMask, index);
-                            });
-                        }
+                    // Initialize debug fields checkboxes
+                    if (showDebugFields.value) {
+                        const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
+                        debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
+                            return !bit_check(disabledMask, index);
+                        });
+                    }
 
-                        updateVirtualGyro();
-                        markClean();
-                        updateHtml();
-                    },
-                    (error) => console.error("Failed to load onboard logging data", error),
-                );
-            } finally {
-                GUI.content_ready();
-            }
+                    updateVirtualGyro();
+                    markClean();
+                    updateHtml();
+                },
+                (error) => console.error("Failed to load onboard logging data", error),
+            );
         }
 
         onMounted(() => {

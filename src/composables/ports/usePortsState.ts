@@ -19,8 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { reactive, ref, computed, nextTick, onMounted } from "vue";
-import GUI from "../../js/gui";
+import { reactive, ref, computed, onMounted } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -78,9 +77,6 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
         });
         markClean();
         isLoading.value = false;
-        nextTick(() => {
-            GUI.content_ready();
-        });
     };
 
     const loadConfig = () => {
@@ -91,9 +87,6 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
             .catch((error) => {
                 console.error("Failed to load VTX config for ports tab:", error);
                 isLoading.value = false;
-                nextTick(() => {
-                    GUI.content_ready();
-                });
             });
     };
 

@@ -19,11 +19,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial.js";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 import { MspDataView } from "./msp/mspBytes";
+import { useNavigationStore } from "../stores/navigation";
 
 /** A request payload: the encoders read `.length` and index it, so an array-like of bytes. */
 export type MspPayload = ArrayLike<number> | false | undefined;
@@ -548,7 +548,7 @@ const MSP = {
         if ((obj.attempts ?? 1) < this.MAX_RETRIES) {
             obj.attempts = (obj.attempts ?? 1) + 1;
             console.warn(
-                `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+                `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${useNavigationStore().activeTab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
             void serial.send(obj.requestBuffer);
             this._arm_timer(obj);

@@ -3,11 +3,11 @@ import { defineComponent } from "vue";
 import { mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { useServosData } from "../../../../src/composables/servos/useServosData";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({ default: { interval_add: vi.fn(), interval_remove: vi.fn() } }));
+vi.mock("../../../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 
 type ServosData = ReturnType<typeof useServosData>;
 
@@ -57,7 +57,7 @@ describe("useServosData", () => {
 
         data.startPolling(onServoData);
         const [[servoName, servoTick, ...servoTiming], [statusName, statusTick, ...statusTiming]] = vi.mocked(
-            GUI.interval_add,
+            timers.addInterval,
         ).mock.calls;
         expect([servoTiming, statusTiming]).toEqual([
             [50, false],
@@ -72,7 +72,7 @@ describe("useServosData", () => {
         wrapper.unmount();
         expect(
             vi
-                .mocked(GUI.interval_remove)
+                .mocked(timers.removeInterval)
                 .mock.calls.map(([name]) => name)
                 .sort(),
         ).toEqual([servoName, statusName].sort());

@@ -2,7 +2,7 @@
     <BaseTab tab-name="led-strip" @mounted="onTabMounted">
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
-            <WikiButton docUrl="led-strip" />
+            <WikiButton docUrl="led_strip" />
 
             <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
@@ -337,7 +337,6 @@ import { useDirtyState } from "@/composables/useDirtyState";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
-import GUI from "@/js/gui";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
@@ -566,19 +565,15 @@ const specialColorButtons = computed(() => [
 
 // Lifecycle
 const onTabMounted = async () => {
-    try {
-        await runTabLoad(
-            async () => {
-                await loadData();
-                initializeGrid();
-                loadConfigValues();
-                markClean();
-            },
-            (error) => console.error("Failed to load LED strip data:", error),
-        );
-    } finally {
-        GUI.content_ready();
-    }
+    await runTabLoad(
+        async () => {
+            await loadData();
+            initializeGrid();
+            loadConfigValues();
+            markClean();
+        },
+        (error) => console.error("Failed to load LED strip data:", error),
+    );
 };
 
 // Handle Escape key to close color setup popup

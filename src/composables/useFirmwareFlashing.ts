@@ -22,7 +22,6 @@
 import { reactive } from "vue";
 import { get as getConfig } from "../js/ConfigStorage";
 import { useDialog } from "./useDialog";
-import GUI from "../js/gui";
 import ConfigInserter from "../js/ConfigInserter";
 import { getTracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
@@ -32,6 +31,7 @@ import DeviceHandler from "../js/device_handler";
 import { getConnectionState } from "../js/connection_state";
 import type { ParsedHex } from "../js/workers/hex_parser";
 import type { STM32FlashOptions } from "../js/protocols/webstm32";
+import { useConnectionStore } from "../stores/connection";
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 type FlashingMessage = (message: string | null, type: string) => unknown;
@@ -125,6 +125,7 @@ function errorMessageOf(error: unknown) {
  * Handles firmware state, parsing, and flashing workflows.
  */
 export function useFirmwareFlashing(params: FirmwareFlashingParams) {
+    const connectionStore = useConnectionStore();
     const { flashingMessage, flashProgress, FLASH_MESSAGE_TYPES, $t, logHead = "[FIRMWARE_FLASHER]" } = params;
     const dialog = useDialog();
 
@@ -494,7 +495,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             showDialogVerifyBoard,
         } = options;
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             return;
         }
 
@@ -614,7 +615,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             // nothing else grabs the port, and always finalise the UI in finally.
             // Also stand the MSP reconnect down and enter FLASHING so the connection state
             // reflects that the flasher owns the port (hard-blocks connect/reboot).
-            GUI.connect_lock = true;
+            connectionStore.connectLock = true;
             getConnectionState().beginDeviceReplacement();
             try {
                 const flashed = await flashEspFirmware({ filename });
@@ -623,7 +624,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 }
                 report("bin-complete", { flashed });
             } finally {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 getConnectionState().endFlashing();
                 resumeSponsorInterval?.();
                 enableFlashButton?.(true);
@@ -716,13 +717,13 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 `${logHead} Detected USB device:`,
                 device,
                 `rebootMode=${STM32.rebootMode}`,
-                `connectLock=${GUI.connect_lock}`,
+                `connectLock=${connectionStore.connectLock}`,
                 `flashOnConnect=${isFlashOnConnect}`,
             );
 
             updateDfuExitButtonState?.();
 
-            if (GUI.connect_lock && !STM32.rebootMode) {
+            if (connectionStore.connectLock && !STM32.rebootMode) {
                 console.log(`${logHead} Port event ignored: connect_lock active, no reboot pending`);
                 return;
             }
@@ -731,7 +732,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 const wasReboot = !!STM32.rebootMode;
                 STM32.rebootMode = 0;
                 if (wasReboot) {
-                    GUI.connect_lock = false;
+                    connectionStore.connectLock = false;
                 }
                 // After DFU reboot: call startFlashing directly — the unstable firmware
                 // dialog was already shown on the initial flash trigger.
@@ -751,7 +752,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         const onDeviceRemoved = async (devicePath: unknown) => {
             console.log(`${logHead} Device removed:`, devicePath);
 
-            if (GUI.connect_lock || STM32.rebootMode) {
+            if (connectionStore.connectLock || STM32.rebootMode) {
                 return;
             }
 

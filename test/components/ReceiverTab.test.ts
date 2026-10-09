@@ -3,29 +3,18 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { nextTick } from "vue";
 import ReceiverTab from "../../src/components/tabs/ReceiverTab.vue";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
 import { useConnectionStore } from "../../src/stores/connection";
 import { useFlightControllerStore } from "../../src/stores/fc";
+import { useNavigationStore } from "../../src/stores/navigation";
 
 const saveToEeprom = vi.fn();
 const saveAndReboot = vi.fn();
 
-// Partial: the tab's import graph reaches modules that read other GUI exports at load time.
-vi.mock("../../src/js/gui", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("../../src/js/gui")>();
-    return {
-        ...actual,
-        default: Object.assign(actual.default, {
-            content_ready: vi.fn(),
-            interval_add: vi.fn(),
-            interval_remove: vi.fn(),
-            active_tab: "receiver",
-        }),
-    };
-});
+vi.mock("../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn(), setRawRx: vi.fn() } }));
 vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, saveAndReboot }) }));
@@ -51,7 +40,7 @@ function mountTab() {
 
 const plotPull = () =>
     vi
-        .mocked(GUI.interval_add)
+        .mocked(timers.addInterval)
         .mock.calls.filter(([name]) => name === "receiver_pull")
         .at(-1)!;
 
@@ -68,6 +57,7 @@ describe("Receiver MSP wiring", () => {
     beforeEach(() => {
         vi.resetAllMocks();
         setActivePinia(createPinia());
+        useNavigationStore().activeTab = "receiver";
         localStorage.clear();
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(mspHelper.crunch).mockReturnValue([]);
@@ -83,14 +73,13 @@ describe("Receiver MSP wiring", () => {
         await mountLoaded();
 
         expect(vi.mocked(MSP.promise).mock.calls[0]).toEqual([MSPCodes.MSP_FEATURE_CONFIG]);
-        expect(GUI.interval_add).toHaveBeenCalledWith(
+        expect(timers.addInterval).toHaveBeenCalledWith(
             "receiver_pull_for_model_preview",
             expect.any(Function),
             33,
             false,
         );
-        expect(GUI.interval_add).toHaveBeenCalledWith("receiver_pull", expect.any(Function), 50, true);
-        expect(GUI.content_ready).toHaveBeenCalledOnce();
+        expect(timers.addInterval).toHaveBeenCalledWith("receiver_pull", expect.any(Function), 50, true);
     });
 
     it("starts the plot poll at the stored refresh rate", async () => {
@@ -112,7 +101,7 @@ describe("Receiver MSP wiring", () => {
 
         vm.refreshRate = 100;
         await nextTick();
-        expect(GUI.interval_remove).toHaveBeenCalledWith("receiver_pull");
+        expect(timers.removeInterval).toHaveBeenCalledWith("receiver_pull");
         expect(plotPull()[2]).toBe(100);
         plotPull()[1]();
         expect(vi.mocked(MSP.send_message).mock.calls.at(-1)![3]).toBe(onRcData);

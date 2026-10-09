@@ -10,7 +10,6 @@
 import { defineComponent, ref, onMounted } from "vue";
 import BuildApi from "../../js/BuildApi";
 import DarkTheme from "../../js/DarkTheme";
-import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
 import { ispConnected } from "../../js/utils/connection";
 
@@ -28,7 +27,7 @@ export default defineComponent({
         const content = ref("");
         const isVisible = ref(false);
         const intervalName = `sponsor_${props.sponsorType}`;
-        const { addInterval } = useInterval();
+        const { addInterval, pauseInterval, resumeInterval } = useInterval();
 
         const refresh = async () => {
             if (!ispConnected()) {
@@ -62,15 +61,15 @@ export default defineComponent({
         };
 
         const pause = () => {
-            GUI.interval_pause(intervalName);
+            pauseInterval(intervalName);
         };
 
         const resume = () => {
-            GUI.interval_resume(intervalName);
+            resumeInterval(intervalName);
         };
 
         onMounted(() => {
-            // Set up periodic refresh using GUI interval manager
+            // Set up periodic refresh using the interval registry
             addInterval(
                 intervalName,
                 async () => {

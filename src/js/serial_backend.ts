@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GUI, { TABS } from "./gui";
 import { i18n } from "./localization";
 // NOTE: this is a circular dependency, needs investigating
 import Features from "./Features";
@@ -49,14 +48,20 @@ import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
-import { switchTab } from "./tab_switch";
+import { selectDefaultTabWhenConnected, switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
-
-// Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
-// tab_switch.js; configuration_loaded is only ever written.
-const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
+import { TABS, tabSwitchCleanup } from "./tab_adapters";
+import { addTimeout, killAllIntervals, killAllTimeouts, removeTimeout } from "./timers";
+import { showCliPanel } from "./cli_panel";
+import {
+    DEFAULT_ALLOWED_FC_TABS_WHEN_CONNECTED,
+    DEFAULT_ALLOWED_TABS,
+    DEFAULT_ALLOWED_TABS_WHEN_DISCONNECTED,
+    DEFAULT_CLOUD_BUILD_TAB_OPTIONS,
+    useNavigationStore,
+} from "../stores/navigation";
 
 type ReadInfo = Parameters<typeof MSP.read>[0];
 
@@ -212,13 +217,14 @@ export function initializeSerialBackend() {
     // module) is gone — gui.js no longer owns any connection action.
 
     EventBus.$on("device-handler:auto-select-serial-device", function () {
+        const connectionStore = useConnectionStore();
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
+            !connectionStore.connectedTo &&
+            !connectionStore.connectingTo &&
             // The listener must also stay off the CLI tab: a live CLI session is not an MSP
             // connection and taking the port would end it. The reconnect cycle has its own,
             // wider rule — it runs when a reboot has already ended that session.
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            !["cli", "firmware_flasher"].includes(useNavigationStore().activeTab ?? "") &&
             DeviceHandler.devicePicker.autoConnect &&
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
@@ -237,7 +243,7 @@ export function initializeSerialBackend() {
         // event.detail.path is now a stable per-device id (WebSerial: "serial_N"),
         // so this match is device-specific: removing device A no longer triggers a
         // disconnect when device B is the connected one.
-        if (detail?.path && detail.path === GUI.connected_to) {
+        if (detail?.path && detail.path === useConnectionStore().connectedTo) {
             connectDisconnect();
         }
     });
@@ -292,7 +298,7 @@ async function sendConfigTracking() {
  * @returns {boolean} true while the flasher is active
  */
 function flasherOwnsPort() {
-    return GUI.active_tab === "firmware_flasher";
+    return useNavigationStore().activeTab === "firmware_flasher";
 }
 
 /**
@@ -339,10 +345,9 @@ function prepareDisconnect() {
     // mid-reboot disconnectForReboot() path (which must KEEP the REBOOTING/RECONNECTING phase so
     // the reconnect can continue). So the reconnect window is owned by those callers, not here.
 
-    GuiState.configuration_loaded = false;
-    GUI.timeout_kill_all();
-    GUI.interval_kill_all();
-    GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
+    killAllTimeouts();
+    killAllIntervals();
+    tabSwitchCleanup(() => (useNavigationStore().tabSwitchInProgress = false));
 }
 
 function beginDisconnect() {
@@ -394,7 +399,7 @@ function releaseKeptRebootLink() {
     // disconnecting under a live WebBluetooth.connect() would tear the device out from
     // under the coroutine. The attempt's own watchdog chain finishes the cleanup —
     // its handshake either completes or fails into the normal teardown.
-    if (serial.connected && !isConnected() && !GUI.connecting_to) {
+    if (serial.connected && !isConnected() && !useConnectionStore().connectingTo) {
         // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
         getConnectionState().markIntentionalDisconnect();
         serial.disconnect();
@@ -422,14 +427,14 @@ function softResetForReboot() {
 // "connect" if `isConnected` has already been toggled off (e.g. when the UI
 // state still shows "connected" but the internal flag just changed).
 export function disconnect() {
-    if (GUI.connect_lock || !isConnected()) {
+    if (useConnectionStore().connectLock || !isConnected()) {
         return;
     }
     beginDisconnect();
 }
 
 /**
- * GUI.connecting_to is set while an attempt is in flight. A second open() on the same SerialPort
+ * The connection store's connectingTo is set while an attempt is in flight. A second open() on the same SerialPort
  * gives an InvalidStateError, and its failure dialog hides that the first attempt was good. The
  * reboot loop and the auto-select listener each make this test before they call
  * connectDisconnect(). Make it here, for all callers.
@@ -437,8 +442,12 @@ export function disconnect() {
  * @returns {boolean} true when a connect attempt can start now
  */
 function canStartConnectionAction(selectedDevice: string): boolean {
+    const connectionStore = useConnectionStore();
     return (
-        !GUI.connect_lock && !GUI.connecting_to && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb")
+        !connectionStore.connectLock &&
+        !connectionStore.connectingTo &&
+        selectedDevice !== "noselection" &&
+        !selectedDevice.startsWith("usb")
     );
 }
 
@@ -461,7 +470,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     const deviceName = selectedDevice === "manual" ? DeviceHandler.devicePicker.portOverride : selectedDevice;
 
     console.log(`${logHead} Connecting to: ${deviceName}`);
-    GUI.connecting_to = deviceName;
+    useConnectionStore().connectingTo = deviceName;
 
     // lock port select & baud while we are connecting / connected
     DeviceHandler.devicePickerDisabled = true;
@@ -475,10 +484,10 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     // give them a wider window than the enumerated-serial default before the safety net calls
     // the attempt failed.
     const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
-    GUI.timeout_add(
+    addTimeout(
         "connectAttempt",
         function () {
-            if (GUI.connecting_to && !CONFIGURATOR.connectionValid) {
+            if (useConnectionStore().connectingTo && !CONFIGURATOR.connectionValid) {
                 abortConnection("connectionFailed");
             }
         },
@@ -514,8 +523,12 @@ function registerCliHotkey() {
             return;
         }
         const fcStore = useFlightControllerStore();
-        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            GUI.showCliPanel();
+        if (
+            serial.connected &&
+            useNavigationStore().activeTab !== "cli" &&
+            semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)
+        ) {
+            showCliPanel();
         }
     };
 }
@@ -525,7 +538,7 @@ function registerCliHotkey() {
  * @param {{automatic?: boolean}} [options] - automatic: the app started this, not the user
  */
 export function connectDisconnect({ automatic = false } = {}) {
-    if (GUI.connect_lock) {
+    if (useConnectionStore().connectLock) {
         return;
     }
 
@@ -539,7 +552,6 @@ export function connectDisconnect({ automatic = false } = {}) {
     }
 
     // GUI control overrides the user control
-    GuiState.configuration_loaded = false;
 
     if (isConnected()) {
         beginDisconnect();
@@ -598,23 +610,25 @@ function teardownConnectionUi() {
     // To trigger the UI updates by Vue reset the state.
     fcStore.resetState();
 
-    GUI.connected_to = false;
-    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+    const connectionStore = useConnectionStore();
+    const navigationStore = useNavigationStore();
+    connectionStore.connectedTo = false;
+    navigationStore.allowedTabs = [...DEFAULT_ALLOWED_TABS_WHEN_DISCONNECTED];
     // Release any in-progress operation lock (OSD save / flashing). The disconnect
     // invalidates that operation, and switchTab is silently rejected while the lock is
     // held — which would otherwise leave a blank content area after unmountVueTab().
-    GUI.connect_lock = false;
+    connectionStore.connectLock = false;
 
     // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
     // or switchTab silently rejects the disconnected tab.
-    const pendingTab = GuiState.pendingTab;
-    GuiState.pendingTab = null;
+    const pendingTab = navigationStore.pendingTab;
+    navigationStore.pendingTab = null;
     const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
 
     // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
     // burst) already sits on the destination, and unmounting there blanks the content
     // while switchTab no-ops on the same tab or races an in-flight mount.
-    if (GUI.active_tab !== target) {
+    if (navigationStore.activeTab !== target) {
         // Clear the active root-mounted tab before navigation selects the next one.
         try {
             unmountVueTab();
@@ -666,10 +680,10 @@ function finishClose() {
 // event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
 // mspHelper.enableArming — the link is already gone, so that MSP callback would never fire.
 function finishUnexpectedDisconnect() {
-    // Clear this connection's handshake watchdogs. GUI.timeout_add does NOT de-duplicate
+    // Clear this connection's handshake watchdogs. addTimeout does NOT de-duplicate
     // names, so a stale timer left armed here would fire into a healthy successor connection.
-    GUI.timeout_remove("connecting");
-    GUI.timeout_remove("connectAttempt");
+    removeTimeout("connecting");
+    removeTimeout("connectAttempt");
 
     // Before the UI teardown, so a late removedDevice cannot re-enter connectDisconnect()
     // against a still-"connected" state.
@@ -708,7 +722,7 @@ function setConnectionTimeout() {
     const duringRebootLoop = rebootReconnectTimerId !== false;
 
     // disconnect after the timeout with error if we don't get IDENT data
-    GUI.timeout_add(
+    addTimeout(
         "connecting",
         function () {
             if (CONFIGURATOR.connectionValid) {
@@ -777,8 +791,8 @@ function resetConnection() {
 }
 
 function abortConnection(messageKey?: string) {
-    GUI.timeout_remove("connecting"); // kill post-open connecting timer
-    GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
+    removeTimeout("connecting"); // kill post-open connecting timer
+    removeTimeout("connectAttempt"); // kill pre-open watchdog
 
     // Read before setPhase(FAILED) below, which ends the attempt it describes.
     const reportFailure = getConnectionState().failureIsUserFacing;
@@ -787,10 +801,12 @@ function abortConnection(messageKey?: string) {
     // the handshake (e.g. invalid API version) did not "fail to open". A manual/TCP/WebSocket
     // target (e.g. an ELRS Wi-Fi bridge) never opens a "serial port" either, so report a
     // network-appropriate failure rather than the misleading serial one.
-    const connectingTo = GUI.connecting_to || "";
+    const connectionStore = useConnectionStore();
+    const connectingTo = connectionStore.connectingTo || "";
     const isManualTarget =
         DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
-    const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
+    const effectiveKey =
+        messageKey ?? (connectionStore.connectedTo || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
     const message = i18n.getMessage(effectiveKey);
 
     // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
@@ -798,8 +814,8 @@ function abortConnection(messageKey?: string) {
     // settles to IDLE.
     getConnectionState().setPhase(ConnPhase.FAILED);
 
-    GUI.connected_to = false;
-    GUI.connecting_to = false;
+    connectionStore.connectedTo = false;
+    connectionStore.connectingTo = false;
 
     // FAILED is not a reconnecting phase, so selectActivePort() resumes its normal
     // fallback rather than staying aimed at a dead target.
@@ -862,13 +878,11 @@ function onOpen(openInfo: unknown) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
 
-        GUI.timeout_remove("connectAttempt"); // port opened — pre-open watchdog no longer needed
+        removeTimeout("connectAttempt"); // port opened — pre-open watchdog no longer needed
 
-        // update connected_to
-        GUI.connected_to = GUI.connecting_to;
-
-        // reset connecting_to
-        GUI.connecting_to = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectedTo = connectionStore.connectingTo;
+        connectionStore.connectingTo = false;
 
         // The link is open; the MSP handshake begins now. CONNECTING ->
         // HANDSHAKING. Readiness (finishOpen/connectCli) advances to CONNECTED/CLI;
@@ -940,9 +954,10 @@ function onOpen(openInfo: unknown) {
 
 function onOpenVirtual() {
     const fcStore = useFlightControllerStore();
-    GUI.timeout_remove("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
-    GUI.connected_to = GUI.connecting_to;
-    GUI.connecting_to = false;
+    removeTimeout("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
+    const connectionStore = useConnectionStore();
+    connectionStore.connectedTo = connectionStore.connectingTo;
+    connectionStore.connectingTo = false;
 
     // Readiness edge #3: virtual is ready immediately (no MSP chain) -> CONNECTED.
     getConnectionState().setPhase(ConnPhase.CONNECTED);
@@ -994,7 +1009,7 @@ function processCustomDefaults() {
                     buffer.push(mspHelper!.RESET_TYPES.CUSTOM_DEFAULTS);
                     MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
 
-                    GUI.timeout_add(
+                    addTimeout(
                         "disconnect",
                         function () {
                             connectDisconnect(); // disconnect
@@ -1011,7 +1026,7 @@ function processCustomDefaults() {
             },
         );
 
-        GUI.timeout_remove("connecting"); // kill connecting timer
+        removeTimeout("connecting"); // kill connecting timer
     } else {
         checkReportProblems();
     }
@@ -1181,23 +1196,22 @@ function finishOpen() {
     }
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && fcStore.config.buildOptions.length) {
-        GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
+        const allowedTabs = [...DEFAULT_ALLOWED_TABS];
 
-        for (const tab of GUI.defaultCloudBuildTabOptions) {
+        for (const tab of DEFAULT_CLOUD_BUILD_TAB_OPTIONS) {
             if (fcStore.config.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
-                GUI.allowedTabs.push(tab);
+                allowedTabs.push(tab);
             }
         }
 
         // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
-        if (
-            fcStore.config.buildOptions.some((opt) => opt.includes("USE_WING")) &&
-            !GUI.allowedTabs.includes("servos")
-        ) {
-            GUI.allowedTabs.push("servos");
+        if (fcStore.config.buildOptions.some((opt) => opt.includes("USE_WING")) && !allowedTabs.includes("servos")) {
+            allowedTabs.push("servos");
         }
+
+        useNavigationStore().allowedTabs = allowedTabs;
     } else {
-        GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
+        useNavigationStore().allowedTabs = [...DEFAULT_ALLOWED_FC_TABS_WHEN_CONNECTED];
     }
 
     onConnect();
@@ -1205,12 +1219,12 @@ function finishOpen() {
     // Readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
     getConnectionState().setPhase(ConnPhase.CONNECTED);
 
-    GUI.selectDefaultTabWhenConnected();
+    selectDefaultTabWhenConnected();
 }
 
 function connectCli() {
     CONFIGURATOR.connectionValid = true; // making it possible to open the CLI tab
-    GUI.allowedTabs = ["cli"];
+    useNavigationStore().allowedTabs = ["cli"];
 
     MSP.clearListeners();
     MSP.disconnect_cleanup();
@@ -1224,7 +1238,7 @@ function connectCli() {
 }
 
 function onConnect() {
-    GUI.timeout_remove("connecting"); // kill connecting timer
+    removeTimeout("connecting"); // kill connecting timer
 
     // A connection is now established: any pending save/reboot reconnect has completed.
     // Reaching a ready state (CONNECTED/CLI, dispatched right after this in
@@ -1239,7 +1253,7 @@ function onConnect() {
     initFeaturesOnConnect();
 }
 
-// Update which tabs are visible based on `GUI.allowedTabs` and board type
+// Update which tabs are visible based on the navigation store's allowedTabs and board type
 function updateTabVisibility() {
     const fcStore = useFlightControllerStore();
     const connectedItems = document.querySelectorAll<HTMLElement>("#tabs ul.mode-connected li");
@@ -1247,7 +1261,7 @@ function updateTabVisibility() {
         const classes = new Set(li.className.split(/\s+/));
         let found = false;
 
-        for (const value of GUI.allowedTabs) {
+        for (const value of useNavigationStore().allowedTabs) {
             const tabName = `tab_${value}`;
             if (classes.has(tabName)) {
                 found = true;
@@ -1293,7 +1307,11 @@ function onClosed(result: unknown) {
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
     // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
     // running the established-connection teardown.
-    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !getConnectionState().intentionalDisconnect) {
+    if (
+        useConnectionStore().connectingTo &&
+        !CONFIGURATOR.connectionValid &&
+        !getConnectionState().intentionalDisconnect
+    ) {
         abortConnection("connectionFailed");
         return;
     }
@@ -1454,7 +1472,7 @@ async function update_live_status() {
     // tab_switch_cleanup() clears the MSP queue, so a poll issued now would just be cancelled.
     // Skipping keeps the background poller from firing requests straight into that cleanup;
     // the interval resumes normally on the next tick once the switch has settled.
-    if (GUI.tab_switch_in_progress) {
+    if (useNavigationStore().tabSwitchInProgress) {
         return;
     }
 
@@ -1465,7 +1483,8 @@ async function update_live_status() {
     }
 
     // cli or presets tab do not use MSP connection
-    if (GUI.active_tab !== "cli" && GUI.active_tab !== "presets") {
+    const activeTab = useNavigationStore().activeTab;
+    if (activeTab !== "cli" && activeTab !== "presets") {
         await update_sensor_status();
     }
 }
@@ -1520,8 +1539,9 @@ export function reinitializeConnection() {
     // to answer, retries while Auto-Connect is on, and concludes on success or timeout —
     // including for serial, which previously had no owner at all and relied on a device event
     // reaching the auto-select listener.
-    if (["cli", "presets"].includes(GUI.active_tab)) {
-        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
+    const activeTab = useNavigationStore().activeTab;
+    if (activeTab === "cli" || activeTab === "presets") {
+        console.log(`${logHead} Rebooting in ${activeTab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
     } else {
         showRebootDialog();
@@ -1640,7 +1660,7 @@ function rebootReconnect() {
                 releaseKeptRebootLink();
                 return;
             }
-            if (mayConnect && !isConnected() && !GUI.connecting_to) {
+            if (mayConnect && !isConnected() && !useConnectionStore().connectingTo) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
                 // attempts serial_backend's disconnect listener is detached

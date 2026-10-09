@@ -20,9 +20,9 @@ vi.mock("../../src/js/protocols/devices", () => ({
     vendorIdNames: { 0x10c4: "CP210", 0x2e3c: "AT32" },
 }));
 
-// gui.js is small but imported by WebSerial for GUI.operating_system; mock it.
-vi.mock("../../src/js/gui", () => ({
-    default: { operating_system: "Linux" },
+// WebSerial reads the operating system from the app-info store; pin it.
+vi.mock("../../src/stores/appInfo", () => ({
+    useAppInfoStore: () => ({ operatingSystem: "Linux" }),
 }));
 
 // A minimal fake of the W3C SerialPort. Object identity is what matters here —

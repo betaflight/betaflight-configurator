@@ -1,7 +1,6 @@
 import "../components/init.js";
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization.js";
-import GUI from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { initializeSerialBackend } from "./serial_backend.js";
@@ -29,6 +28,7 @@ import { useNavigationStore } from "../stores/navigation.js";
 import { useDialogStore } from "../stores/dialog.js";
 import { MspCancelledError } from "./msp/mspErrors";
 import { isDeleteAccountPath, requestDeleteAccountFocus } from "./utils/deleteAccountLink";
+import { useAppInfoStore } from "../stores/appInfo";
 
 window.addEventListener("unhandledrejection", (event) => {
     if (event.reason instanceof MspCancelledError) {
@@ -158,7 +158,7 @@ function appReady() {
                 configuratorVersion: CONFIGURATOR.getDisplayVersion(),
                 gitRevision: CONFIGURATOR.gitRevision,
                 productName: CONFIGURATOR.productName,
-                operatingSystem: GUI.operating_system,
+                operatingSystem: useAppInfoStore().operatingSystem,
                 language: i18n.selectedLanguage,
             });
         });
@@ -197,7 +197,7 @@ async function startProcess() {
     // Initialize login manager
     await loginManager.initialize();
 
-    gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
+    gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: useAppInfoStore().operatingSystem }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
     // with Vue reactive system we don't need to call these,

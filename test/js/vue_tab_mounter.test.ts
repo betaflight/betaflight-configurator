@@ -1,19 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
-vi.mock("../../src/js/gui.js", () => {
-    const TABS = {};
-
-    return {
-        __esModule: true,
-        default: {
-            active_tab: null,
-            tab_switch_in_progress: false,
-        },
-        TABS,
-    };
-});
-
 vi.mock("../../src/js/vue_components.js", () => ({
     __esModule: true,
     VueTabComponents: {},
@@ -25,27 +12,21 @@ vi.mock("../../src/js/pinia_instance.js", async () => ({
     pinia: (await import("pinia")).createPinia(),
 }));
 
-import { buildTabAdapter, unmountVueTab } from "../../src/js/vue_tab_mounter.js";
-import GUI, { TABS } from "../../src/js/gui.js";
-import { useNavigationStore } from "../../src/stores/navigation.js";
-
-// vue_tab_mounter.js is unchecked JS, so the adapter it returns carries no hook types.
-interface TabAdapter {
-    cleanup: (callback?: () => void) => void;
-    expertModeChanged: (enabled: boolean) => void;
-    read?: unknown;
-    _vueComponent?: unknown;
-}
+import { buildTabAdapter, unmountVueTab } from "../../src/js/vue_tab_mounter";
+import { TABS } from "../../src/js/tab_adapters";
+import { useNavigationStore } from "../../src/stores/navigation";
 
 describe("unmountVueTab", () => {
-    it("clears tab_switch_in_progress — an unmount cancels the mount that would have cleared it", () => {
+    it("clears tabSwitchInProgress — an unmount cancels the mount that would have cleared it", () => {
         // Otherwise teardownConnectionUi's unmount + switchTab("landing") leaves the content
         // blank: the switch is silently refused and the flag never falls.
-        GUI.tab_switch_in_progress = true;
+        setActivePinia(createPinia());
+        const navigationStore = useNavigationStore();
+        navigationStore.tabSwitchInProgress = true;
 
         unmountVueTab();
 
-        expect(GUI.tab_switch_in_progress).toBe(false);
+        expect(navigationStore.tabSwitchInProgress).toBe(false);
     });
 });
 
@@ -68,14 +49,14 @@ describe("buildTabAdapter", () => {
             read: existingRead,
         };
 
-        const adapter = buildTabAdapter("presets", componentInstance, existingAdapter) as unknown as TabAdapter;
+        const adapter = buildTabAdapter("presets", componentInstance, existingAdapter);
 
         expect(adapter).toBe(existingAdapter);
         expect(adapter.read).toBe(existingRead);
         expect(adapter.cleanup).toBe(existingCleanup);
         expect(adapter._vueComponent).toBe(componentInstance);
 
-        adapter.expertModeChanged(true);
+        adapter.expertModeChanged?.(true);
         expect(navigationStore.expertMode).toBe(true);
     });
 
@@ -87,13 +68,9 @@ describe("buildTabAdapter", () => {
         };
 
         // null, not undefined: undefined would pick up the TABS[tabName] default instead.
-        const adapter = buildTabAdapter(
-            "presets",
-            componentInstance,
-            null as unknown as undefined,
-        ) as unknown as TabAdapter;
+        const adapter = buildTabAdapter("presets", componentInstance, null);
 
-        adapter.cleanup(callback);
+        adapter.cleanup?.(callback);
 
         expect(componentCleanup).toHaveBeenCalledWith(callback);
     });

@@ -1,5 +1,5 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
-import GUI from "../gui";
+import { useAppInfoStore } from "../../stores/appInfo";
 
 const logHead = "[WEBSERIAL]";
 
@@ -438,7 +438,7 @@ class WebSerial extends EventTarget {
     }
 
     checkIsNeedBatchWrite() {
-        const isMac = GUI.operating_system === "MacOS";
+        const isMac = useAppInfoStore().operatingSystem === "MacOS";
         return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
     }
 

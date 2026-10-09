@@ -3,12 +3,15 @@ import { defineComponent, ref } from "vue";
 import { mount } from "@vue/test-utils";
 import MSP, { type MspCallback } from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { useGpsData } from "../../../../src/composables/gps/useGpsData";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({
-    default: { interval_add: vi.fn(), interval_remove: vi.fn(), interval_pause: vi.fn(), interval_resume: vi.fn() },
+vi.mock("../../../../src/js/timers", () => ({
+    addInterval: vi.fn(),
+    removeInterval: vi.fn(),
+    pauseInterval: vi.fn(),
+    resumeInterval: vi.fn(),
 }));
 
 type GpsData = ReturnType<typeof useGpsData>;
@@ -36,7 +39,7 @@ function mountData() {
 
 /** Run one poll tick and return the codes it sent. */
 function runTick() {
-    const tick = vi.mocked(GUI.interval_add).mock.calls[0][1];
+    const tick = vi.mocked(timers.addInterval).mock.calls[0][1];
     vi.mocked(MSP.send_message).mockClear();
     tick();
     return vi.mocked(MSP.send_message).mock.calls.map(([code]) => code);
@@ -73,9 +76,9 @@ describe("useGpsData", () => {
 
         data.startPolling(ref(false), () => {});
 
-        expect(GUI.interval_add).toHaveBeenCalledExactlyOnceWith("gps_pull", expect.any(Function), 100, true);
+        expect(timers.addInterval).toHaveBeenCalledExactlyOnceWith("gps_pull", expect.any(Function), 100, true);
         wrapper.unmount();
-        expect(GUI.interval_remove).toHaveBeenCalledWith("gps_pull");
+        expect(timers.removeInterval).toHaveBeenCalledWith("gps_pull");
     });
 
     it("chains the telemetry requests without a mag and hands over after the IMU reply", () => {
@@ -125,8 +128,8 @@ describe("useGpsData", () => {
         data.resumePolling();
         data.stopPolling();
 
-        expect(GUI.interval_pause).toHaveBeenCalledWith("gps_pull");
-        expect(GUI.interval_resume).toHaveBeenCalledWith("gps_pull");
-        expect(GUI.interval_remove).toHaveBeenCalledWith("gps_pull");
+        expect(timers.pauseInterval).toHaveBeenCalledWith("gps_pull");
+        expect(timers.resumeInterval).toHaveBeenCalledWith("gps_pull");
+        expect(timers.removeInterval).toHaveBeenCalledWith("gps_pull");
     });
 });

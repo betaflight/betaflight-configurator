@@ -99,10 +99,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import SponsorTile from "../sponsor/SponsorTile.vue";
-import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 
 export default defineComponent({
@@ -121,10 +120,6 @@ export default defineComponent({
                 selectedLanguage.value = lang;
             }
         }
-
-        onMounted(() => {
-            GUI.content_ready();
-        });
 
         return {
             availableLanguages,

@@ -3,7 +3,7 @@ import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
 import UserApi from "./UserApi";
 import { switchTab } from "./tab_switch";
-import GUI from "./gui";
+import { useNavigationStore } from "../stores/navigation";
 
 /**
  * LoginManager - Handles user authentication using passkeys
@@ -244,7 +244,8 @@ class LoginManager {
         // Pick a tab that is valid for the current connection state —
         // "landing" is disconnected-only, so fall back to "setup" or the
         // first allowed tab when connected.
-        const fallback = ["landing", "setup", ...GUI.allowedTabs].find((tab) => GUI.allowedTabs.includes(tab));
+        const { allowedTabs } = useNavigationStore();
+        const fallback = ["landing", "setup", ...allowedTabs].find((tab) => allowedTabs.includes(tab));
         if (fallback) {
             switchTab(fallback, { mode: fallback === "landing" ? "disconnected" : "connected" });
         }

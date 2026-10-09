@@ -2,7 +2,7 @@
     <BaseTab tab-name="receiver">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabReceiver')"></div>
-            <WikiButton docUrl="Receiver" />
+            <WikiButton docUrl="receiver" />
             <UiBox highlight class="mb-3">
                 <p v-html="$t('receiverHelp')"></p>
             </UiBox>
@@ -630,7 +630,6 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
 import { entriesFromModeRanges } from "@/js/utils/modeRanges";
-import GUI from "@/js/gui";
 import Model from "@/js/model";
 import RateCurve, { axisRateCurveParams, type CurrentRates } from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
@@ -651,10 +650,12 @@ import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
+import { useNavigationStore } from "@/stores/navigation";
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
+const navigationStore = useNavigationStore();
 const { saveAndReboot, saveToEeprom } = useReboot();
 const { loadReceiverData, startModelPreviewPolling, startRcPolling, restartRcPolling } = useReceiverData();
 const { sendReceiverSettings, sendFeatureConfig } = useReceiverSave();
@@ -1207,7 +1208,7 @@ function openSticksWindow() {
     const windowHeight = 600;
 
     const rxFunction = (channels: number[]) => {
-        if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
+        if (connectionStore.connectionValid && navigationStore.activeTab !== "cli") {
             sendRawRx(channels);
             return true;
         }
@@ -1506,8 +1507,6 @@ onMounted(async () => {
     // Setup and start RC plot
     setupRxPlot();
     startRcPolling(refreshRate.value, updateRxPlot);
-
-    GUI.content_ready();
 });
 
 onUnmounted(() => {

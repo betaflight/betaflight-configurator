@@ -1,6 +1,6 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
-import GUI from "../gui";
+import { useAppInfoStore } from "../../stores/appInfo";
 
 const logHead = "[TAURI SERIAL]";
 
@@ -509,7 +509,7 @@ class TauriSerial extends EventTarget {
     }
 
     checkIsNeedBatchWrite() {
-        const isMac = GUI.operating_system === "MacOS";
+        const isMac = useAppInfoStore().operatingSystem === "MacOS";
         const vendorId = this.connectionInfo?.vendorId;
         return isMac && vendorId != null && vendorIdNames[vendorId] === "AT32";
     }
