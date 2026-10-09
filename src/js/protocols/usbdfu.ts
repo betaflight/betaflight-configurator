@@ -92,7 +92,8 @@ interface DfuFunctionalDescriptor {
     bmAttributes: number;
     wDetachTimeOut: number;
     wTransferSize: number;
-    bcdDFUVersion: number;
+    /** Absent when the Android plugin reads a 7-byte descriptor. */
+    bcdDFUVersion?: number;
 }
 
 /**
@@ -115,7 +116,8 @@ export interface DfuTransport extends EventTarget {
     getString(index: number): Promise<string>;
     getInterfaceDescriptors(interfaceNum: number): Promise<string[]>;
     getInterfaceDescriptor(interfaceIndex: number): Promise<Record<string, number> | null>;
-    getFunctionalDescriptor(interfaceIndex?: number): Promise<DfuFunctionalDescriptor>;
+    /** Null on Android when the plugin finds no functional descriptor. */
+    getFunctionalDescriptor(interfaceIndex?: number): Promise<DfuFunctionalDescriptor | null>;
     controlTransferIn(
         setup: DfuControlSetup,
         length: number,
@@ -501,7 +503,7 @@ export class UsbDfuProtocol extends EventTarget {
 
     getFunctionalDescriptor(
         _interface: number,
-        callback: (descriptor: Partial<DfuFunctionalDescriptor>, resultCode: number) => void,
+        callback: (descriptor: Partial<DfuFunctionalDescriptor> | null, resultCode: number) => void,
     ): void {
         this.transport
             .getFunctionalDescriptor(_interface)
