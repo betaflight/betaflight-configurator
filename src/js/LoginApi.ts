@@ -1,56 +1,102 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { get as getConfig, set as setConfig, remove as removeConfig } from "./ConfigStorage";
 import { startRegistration, startAuthentication, browserSupportsWebAuthn } from "@simplewebauthn/browser";
+import type {
+    PublicKeyCredentialCreationOptionsJSON,
+    PublicKeyCredentialRequestOptionsJSON,
+} from "@simplewebauthn/browser";
+
+/** The access token as it is persisted under the `accessToken` config key. */
+interface StoredAccessToken {
+    token?: string;
+    expiry?: number;
+}
+
+/*
+ * Response bodies of the login server. They are parsed JSON, so these are the contract, not a
+ * runtime guarantee; fields the code checks before use are optional.
+ */
+
+/** `/api/credentials`, `/api/assertion` and `/api/user/verify/{email}/login`. */
+interface UserTokenResponse {
+    token?: string;
+}
+
+/** `/api/token`. `expiry` is anything `new Date()` parses; it is validated before use. */
+interface AccessTokenResponse {
+    token?: string;
+    expiry?: string | number;
+}
+
+/** `/api/credentials/options`: passkey registration options plus the server's session key. */
+export interface CredentialOptions {
+    options: PublicKeyCredentialCreationOptionsJSON;
+    key: string;
+}
+
+/** `/api/assertion/options`: passkey authentication options plus the server's session key. */
+export interface AssertionOptions {
+    options: PublicKeyCredentialRequestOptionsJSON;
+    key: string;
+}
 
 export class TokenFailure extends Error {
-    constructor(message = "", ...args) {
-        super(message, ...args);
+    constructor(message = "", options?: ErrorOptions) {
+        super(message, options);
         this.name = "TokenFailure";
     }
 }
 
 export default class LoginApi {
-    _url = "https://login.betaflight.com";
-    /** @type {string | null} */
-    _accessToken = null;
-    /** @type {number | null} */
-    _accessExpiryMs = null;
-    /** @type {string | null} */
-    _userToken = null;
+    readonly _url = "https://login.betaflight.com";
+    _accessToken: string | null = null;
+    _accessExpiryMs: number | null = null;
+    _userToken: string | null = null;
 
-    userToken() {
+    userToken(): boolean {
         if (!this._userToken) {
-            const storedToken = getConfig("userToken");
+            // ConfigStorage.get() returns a `{ userToken: value }` record, never the bare value.
+            const storedToken = getConfig<string | undefined>("userToken").userToken;
             if (!storedToken) {
                 return false;
             }
 
-            // Handle both string format and object format
-            if (typeof storedToken === "string") {
-                this._userToken = storedToken;
-                console.info(`Loaded user token from storage (string format).`);
-                return true;
-            } else if (typeof storedToken === "object" && storedToken.userToken) {
-                this._userToken = storedToken.userToken;
-                console.info(`Loaded user token from storage (object format).`);
-                return true;
-            }
-
-            return false;
+            this._userToken = storedToken;
+            console.info("Loaded user token from storage.");
+            return true;
         }
         return true;
     }
 
-    async accessToken() {
+    async accessToken(): Promise<boolean> {
         if (!this._accessToken || !this._accessExpiryMs) {
-            const storedToken = getConfig("accessToken");
-            if (storedToken && typeof storedToken === "object") {
-                if (storedToken.accessToken?.token && storedToken.accessToken?.expiry) {
-                    this._accessToken = storedToken.accessToken.token;
-                    this._accessExpiryMs = storedToken.accessToken.expiry;
-                    console.info(
-                        `Loaded access token from storage, expiry: ${new Date(this._accessExpiryMs).toISOString()}`,
-                    );
-                }
+            const storedToken = getConfig<StoredAccessToken | undefined>("accessToken").accessToken;
+            if (storedToken?.token && storedToken.expiry) {
+                this._accessToken = storedToken.token;
+                this._accessExpiryMs = storedToken.expiry;
+                console.info(
+                    `Loaded access token from storage, expiry: ${new Date(this._accessExpiryMs).toISOString()}`,
+                );
             }
         }
 
@@ -77,7 +123,7 @@ export default class LoginApi {
             throw new Error(await response.text());
         }
 
-        const result = await response.json();
+        const result: AccessTokenResponse = await response.json();
         if (!result.token || !result.expiry) {
             throw new Error(`Invalid response: ${JSON.stringify(result)}`);
         }
@@ -100,7 +146,7 @@ export default class LoginApi {
         return true;
     }
 
-    async checkToken() {
+    async checkToken(): Promise<boolean> {
         if (this.userToken()) {
             try {
                 if (await this.accessToken()) {
@@ -118,11 +164,8 @@ export default class LoginApi {
     }
 
     /* PASSKEY Functionality */
-    /**
-     * @param {string} email
-     * @param {string} key the emailed verification code
-     */
-    async createCredentialOptions(email, key) {
+    /** @param key the emailed verification code */
+    async createCredentialOptions(email: string, key: string): Promise<CredentialOptions> {
         this.checkMediationSupport();
 
         const response = await fetch(`${this._url}/api/credentials/options`, {
@@ -130,14 +173,14 @@ export default class LoginApi {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: email, key: key }),
+            body: JSON.stringify({ email, key }),
         });
 
         if (!response.ok) {
             throw new Error(await response.text());
         }
 
-        const credentialOptions = await response.json();
+        const credentialOptions: CredentialOptions = await response.json();
 
         return {
             options: credentialOptions.options,
@@ -145,7 +188,7 @@ export default class LoginApi {
         };
     }
 
-    async createCredential(key, options) {
+    async createCredential(key: string, options: PublicKeyCredentialCreationOptionsJSON): Promise<void> {
         try {
             // SimpleWebAuthn handles the parsing and the navigator.credentials.create call
             // It returns a JSON-compatible object automatically.
@@ -158,7 +201,7 @@ export default class LoginApi {
                 },
                 body: JSON.stringify({
                     response: attestationResponse,
-                    key: key,
+                    key,
                 }),
             });
 
@@ -166,7 +209,7 @@ export default class LoginApi {
                 throw new Error(await credentialResponse.text());
             }
 
-            const result = await credentialResponse.json();
+            const result: UserTokenResponse = await credentialResponse.json();
             if (!result.token) {
                 throw new Error("Server did not return a valid token");
             }
@@ -179,8 +222,7 @@ export default class LoginApi {
         }
     }
 
-    /** @param {string} email */
-    async createAssertionOptions(email) {
+    async createAssertionOptions(email: string): Promise<AssertionOptions> {
         this.checkMediationSupport();
 
         const response = await fetch(`${this._url}/api/assertion/options`, {
@@ -188,14 +230,14 @@ export default class LoginApi {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: email }),
+            body: JSON.stringify({ email }),
         });
 
         if (!response.ok) {
             throw new Error(await response.text());
         }
 
-        const assertionOptions = await response.json();
+        const assertionOptions: AssertionOptions = await response.json();
 
         return {
             options: assertionOptions.options,
@@ -203,7 +245,7 @@ export default class LoginApi {
         };
     }
 
-    async verifyAssertion(key, options) {
+    async verifyAssertion(key: string, options: PublicKeyCredentialRequestOptionsJSON): Promise<void> {
         this.checkMediationSupport();
 
         try {
@@ -219,7 +261,7 @@ export default class LoginApi {
                 },
                 body: JSON.stringify({
                     response: assertionResponse,
-                    key: key,
+                    key,
                 }),
             });
 
@@ -227,7 +269,7 @@ export default class LoginApi {
                 throw new Error(await verificationResponse.text());
             }
 
-            const result = await verificationResponse.json();
+            const result: UserTokenResponse = await verificationResponse.json();
             if (!result.token) {
                 throw new Error("Server did not return a valid token");
             }
@@ -236,7 +278,9 @@ export default class LoginApi {
             console.info("Usertoken received and stored");
             await this.checkToken();
         } catch (err) {
-            if (err.name === "AbortError") {
+            // Not `instanceof Error`: an abort arrives as a DOMException, and not every
+            // environment makes that an Error subclass (jsdom does not).
+            if (typeof err === "object" && err !== null && "name" in err && err.name === "AbortError") {
                 console.info("Authentication was aborted");
                 return;
             }
@@ -244,7 +288,7 @@ export default class LoginApi {
         }
     }
 
-    async signOut() {
+    async signOut(): Promise<void> {
         // removeCurrentToken() builds its request from the current token before its first await,
         // so the local session can be cleared straight away. Clearing it only after the
         // revocation round-trip let a login made meanwhile have its new token wiped.
@@ -253,7 +297,7 @@ export default class LoginApi {
         await revocation;
     }
 
-    clearSession() {
+    clearSession(): void {
         removeConfig("userToken");
         removeConfig("accessToken");
         this._accessToken = null;
@@ -261,7 +305,7 @@ export default class LoginApi {
         this._userToken = null;
     }
 
-    async removeCurrentToken() {
+    async removeCurrentToken(): Promise<void> {
         if (!this.userToken()) {
             return;
         }
@@ -277,8 +321,7 @@ export default class LoginApi {
         }
     }
 
-    /** @param {string} email */
-    async requestTemporaryPassword(email) {
+    async requestTemporaryPassword(email: string): Promise<void> {
         const response = await fetch(`${this._url}/api/user/verify/${encodeURIComponent(email)}/request`, {
             method: "POST",
             headers: {
@@ -294,10 +337,8 @@ export default class LoginApi {
     /**
      * Verify an emailed code and obtain a refresh token without using a passkey.
      * Intended for browsers where passkey authentication is unreliable.
-     * @param {string} email
-     * @param {string} code
      */
-    async verifyLogin(email, code) {
+    async verifyLogin(email: string, code: string): Promise<void> {
         const response = await fetch(`${this._url}/api/user/verify/${encodeURIComponent(email)}/login`, {
             method: "POST",
             headers: {
@@ -310,7 +351,7 @@ export default class LoginApi {
             const text = await response.text();
             let errorMsg = text || response.statusText;
             try {
-                const body = JSON.parse(text);
+                const body: { error?: string } | null = JSON.parse(text);
                 if (body?.error) {
                     errorMsg = body.error;
                 }
@@ -320,7 +361,7 @@ export default class LoginApi {
             throw new Error(errorMsg);
         }
 
-        const result = await response.json();
+        const result: UserTokenResponse = await response.json();
         if (!result.token) {
             throw new Error("Server did not return a valid token");
         }
@@ -329,7 +370,7 @@ export default class LoginApi {
         await this.checkToken();
     }
 
-    async isSignedIn() {
+    async isSignedIn(): Promise<boolean> {
         try {
             return await this.checkToken();
         } catch (err) {
@@ -341,13 +382,13 @@ export default class LoginApi {
         }
     }
 
-    checkMediationSupport() {
+    checkMediationSupport(): void {
         if (!browserSupportsWebAuthn()) {
             throw new Error("WebAuthn/Passkeys are not supported by your browser");
         }
     }
 
-    async getAccessToken() {
+    async getAccessToken(): Promise<string | null> {
         try {
             if (!(await this.isSignedIn())) {
                 return null;
@@ -356,9 +397,9 @@ export default class LoginApi {
             if (this._accessToken) {
                 return this._accessToken;
             }
-        } catch (_error) {
+        } catch (error) {
             // Silently continue without auth headers
-            console.log(`Unable to obtain access token for Login API. ${_error}`);
+            console.log(`Unable to obtain access token for Login API. ${error}`);
         }
 
         return null;
