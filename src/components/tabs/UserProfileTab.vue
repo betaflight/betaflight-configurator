@@ -196,36 +196,7 @@ import { useDialog } from "@/composables/useDialog";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 import { consumeDeleteAccountFocus } from "../../js/utils/deleteAccountLink";
-import type UserApi from "../../js/UserApi";
-
-// Shapes of the build API's /api/user responses, as far as this tab reads them.
-interface UserProfile {
-    name?: string;
-    email?: string;
-    address?: string;
-    country?: string;
-    avatar?: string;
-}
-
-/** The client a token or passkey was issued to; the tab shows its address. */
-interface UserClient {
-    address?: string;
-}
-
-interface UserToken {
-    id: string | number;
-    created?: string;
-    expiry?: string;
-    details?: string;
-    client?: UserClient;
-}
-
-interface UserPasskey {
-    id: string | number;
-    createdAtUtc?: string;
-    updatedAtUtc?: string;
-    client?: UserClient;
-}
+import type { default as UserApi, UserPasskey, UserProfile, UserToken } from "../../js/UserApi";
 
 const { t } = useTranslation();
 const dialog = useDialog();
