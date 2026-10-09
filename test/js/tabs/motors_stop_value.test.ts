@@ -208,6 +208,14 @@ function findButton(container: HTMLElement, text: string): HTMLButtonElement {
     return button!;
 }
 
+/** The motor-testing enable switch, in the red notice box under motorsNotice. */
+function motorTestingSwitch(container: HTMLElement): HTMLButtonElement {
+    const notice = [...container.querySelectorAll("p")].find((el) => el.textContent === "motorsNotice");
+    const toggle = notice?.parentElement?.querySelector<HTMLButtonElement>('button[role="switch"]');
+    expect(toggle).toBeTruthy();
+    return toggle!;
+}
+
 function dialogCall(name: string) {
     const call = dialogOpen.mock.calls.find((c) => c[0] === name);
     expect(call).toBeDefined();
@@ -440,10 +448,18 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
         port.load.mockRejectedValue(new Error("MSP timeout"));
 
-        await mountReady({ enable3d: false, neutral: 1500 });
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
 
         expect(consoleError).toHaveBeenCalledWith("Failed to load motors data:", expect.any(Error));
         expect(initializeDefaults).not.toHaveBeenCalled();
+        // The motor stop snapshot was taken before the ESC sensor port failed; testing must stay off.
+        expect(motorTestingSwitch(container).disabled).toBe(true);
+    });
+
+    it("enables motor testing once the whole load has succeeded", async () => {
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        expect(motorTestingSwitch(container).disabled).toBe(false);
     });
 
     it("stays quiet when the load is cancelled by a tab switch or disconnect", async () => {
