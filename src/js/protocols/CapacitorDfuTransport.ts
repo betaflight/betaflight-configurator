@@ -1,4 +1,31 @@
-import CapacitorDfu from "./CapacitorDfu";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import CapacitorDfu, {
+    type CapacitorDfuPort,
+    type NativeDfuDevice,
+    type NativeFunctionalDescriptor,
+    type NativeInterfaceDescriptor,
+} from "./CapacitorDfu";
+import type { DfuControlSetup, DfuTransport } from "./usbdfu";
 
 /**
  * Capacitor DFU transport for Android.
@@ -7,7 +34,12 @@ import CapacitorDfu from "./CapacitorDfu";
  *
  * Events: "addedDevice", "removedDevice"
  */
-class CapacitorDfuTransport extends EventTarget {
+class CapacitorDfuTransport extends EventTarget implements DfuTransport {
+    logHead: string;
+    adapter: CapacitorDfu;
+    currentDeviceId: string | null;
+    currentPortPath: string | null;
+
     constructor() {
         super();
         this.logHead = "[Capacitor DFU Transport]";
@@ -17,37 +49,39 @@ class CapacitorDfuTransport extends EventTarget {
 
         // Forward device events from the adapter
         this.adapter.addEventListener("addedDevice", (e) => {
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: e.detail }));
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: (e as CustomEvent<CapacitorDfuPort>).detail }));
         });
 
         this.adapter.addEventListener("removedDevice", (e) => {
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: e.detail }));
+            this.dispatchEvent(
+                new CustomEvent("removedDevice", { detail: (e as CustomEvent<CapacitorDfuPort>).detail }),
+            );
         });
     }
 
-    get available() {
+    get available(): boolean {
         return !!this.adapter;
     }
 
     // CapacitorDfu.requestPermission() dispatches addedDevice internally
     // via handleDeviceAttached(), so callers must not dispatch again.
-    get emitsAddedDeviceOnPermissionGrant() {
+    get emitsAddedDeviceOnPermissionGrant(): boolean {
         return true;
     }
 
-    createPort(device) {
+    createPort(device: NativeDfuDevice): CapacitorDfuPort {
         return this.adapter.createPort(device);
     }
 
-    getDevices() {
+    getDevices(): Promise<CapacitorDfuPort[]> {
         return this.adapter.getDevices();
     }
 
-    requestPermission() {
+    requestPermission(): Promise<CapacitorDfuPort | null> {
         return this.adapter.requestPermission();
     }
 
-    async waitForDfuDevice(timeout = 10000, interval = 500) {
+    async waitForDfuDevice(timeout = 10000, interval = 500): Promise<CapacitorDfuPort | null> {
         const start = Date.now();
 
         while (Date.now() - start < timeout) {
@@ -73,8 +107,8 @@ class CapacitorDfuTransport extends EventTarget {
 
     // ===== Device Lifecycle =====
 
-    async open(devicePort) {
-        // devicePort.port contains the native device info
+    /** Opens one of the adapter's own ports, whose `port` is the native device info. */
+    async open(devicePort: CapacitorDfuPort): Promise<void> {
         const nativeDevice = devicePort.port;
         this.currentDeviceId = nativeDevice.deviceId;
         this.currentPortPath = devicePort.path;
@@ -87,7 +121,7 @@ class CapacitorDfuTransport extends EventTarget {
         console.log(`${this.logHead} DFU Device opened: ${result.productName}`);
     }
 
-    async claimInterface(interfaceNumber) {
+    async claimInterface(interfaceNumber: number): Promise<void> {
         const result = await this.adapter.claimInterface(interfaceNumber);
         if (!result.success) {
             throw new Error(`Failed to claim interface ${interfaceNumber}`);
@@ -95,7 +129,7 @@ class CapacitorDfuTransport extends EventTarget {
         console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
     }
 
-    async releaseInterface(interfaceNumber) {
+    async releaseInterface(interfaceNumber: number): Promise<void> {
         try {
             await this.adapter.releaseInterface(interfaceNumber);
             console.log(`${this.logHead} Released interface: ${interfaceNumber}`);
@@ -104,7 +138,7 @@ class CapacitorDfuTransport extends EventTarget {
         }
     }
 
-    async close() {
+    async close(): Promise<void> {
         try {
             await this.adapter.closeDevice();
             console.log(`${this.logHead} DFU Device closed`);
@@ -115,7 +149,7 @@ class CapacitorDfuTransport extends EventTarget {
         this.currentPortPath = null;
     }
 
-    async reset() {
+    async reset(): Promise<void> {
         try {
             await this.adapter.resetDevice();
             console.log(`${this.logHead} Reset Device`);
@@ -124,7 +158,7 @@ class CapacitorDfuTransport extends EventTarget {
         }
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): string | null {
         return this.currentPortPath;
     }
 
@@ -133,9 +167,8 @@ class CapacitorDfuTransport extends EventTarget {
     /**
      * Perform a USB control transfer IN (device -> host).
      * Uses DFU class request type (class, recipient: interface).
-     * @returns {Promise<{status: string, data: Uint8Array}>}
      */
-    async controlTransferIn(setup, length) {
+    async controlTransferIn(setup: DfuControlSetup, length: number): Promise<{ status: string; data: Uint8Array }> {
         const result = await this.adapter.controlTransferIn(setup.request, setup.value, setup.index, length);
         return { status: result.status, data: result.data };
     }
@@ -143,28 +176,30 @@ class CapacitorDfuTransport extends EventTarget {
     /**
      * Perform a USB control transfer OUT (host -> device).
      * Uses DFU class request type (class, recipient: interface).
-     * @returns {Promise<{status: string}>}
      */
-    async controlTransferOut(setup, data) {
+    async controlTransferOut(
+        setup: DfuControlSetup,
+        data?: ArrayBuffer | ArrayLike<number> | 0,
+    ): Promise<{ status: string }> {
         const result = await this.adapter.controlTransferOut(setup.request, setup.value, setup.index, data);
         return { status: result.status };
     }
 
     // ===== Descriptor Reading =====
 
-    getString(index) {
+    getString(index: number): Promise<string> {
         return this.adapter.getStringDescriptor(index);
     }
 
-    getInterfaceDescriptor(interfaceIndex) {
+    getInterfaceDescriptor(interfaceIndex: number): Promise<NativeInterfaceDescriptor | null> {
         return this.adapter.getInterfaceDescriptor(interfaceIndex);
     }
 
-    getInterfaceDescriptors(interfaceNum) {
+    getInterfaceDescriptors(interfaceNum: number): Promise<string[]> {
         return this.adapter.getInterfaceDescriptors(interfaceNum);
     }
 
-    getFunctionalDescriptor() {
+    getFunctionalDescriptor(): Promise<NativeFunctionalDescriptor | null> {
         return this.adapter.getFunctionalDescriptor();
     }
 }
