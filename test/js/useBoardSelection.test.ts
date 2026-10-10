@@ -1,9 +1,34 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope, type EffectScope } from "vue";
 import { createPinia, setActivePinia } from "pinia";
 import { useConnectionStore } from "../../src/stores/connection";
 
-import { useBoardSelection, type BoardSelectionParams } from "../../src/composables/useBoardSelection";
+import {
+    requireTargetReleases,
+    useBoardSelection,
+    type BoardSelectionParams,
+} from "../../src/composables/useBoardSelection";
 
 vi.mock("../../src/js/utils/connection", () => ({ ispConnected: () => true }));
 
@@ -112,5 +137,21 @@ describe("useBoardSelection", () => {
             .getSelectMenuItems()
             .flatMap((item) => (typeof item === "object" && item?.type === "label" ? [item.label] : []));
         expect(labels).toEqual(["firmwareFlasherOptionLabelVerifiedPartner", "constructor", "__proto__"]);
+    });
+});
+
+describe("requireTargetReleases", () => {
+    it("throws when the build server lists no releases, so the caller's catch logs it", async () => {
+        const buildApi = { loadTargetReleases: vi.fn().mockResolvedValue(null) };
+
+        await expect(requireTargetReleases(buildApi, "NOPE")).rejects.toThrow("NOPE");
+    });
+
+    it("passes a release list through", async () => {
+        const list = { releases: [{ release: "4.5.0", label: "4.5.0", type: "Stable" }] };
+
+        await expect(requireTargetReleases({ loadTargetReleases: vi.fn().mockResolvedValue(list) }, "X")).resolves.toBe(
+            list,
+        );
     });
 });
