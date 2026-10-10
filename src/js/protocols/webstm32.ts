@@ -180,7 +180,8 @@ class STM32Protocol {
      * @param {boolean} resetRebootMode - Whether to reset the reboot mode
      */
     handleError(resetRebootMode = true): void {
-        useConnectionStore().connectLock = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
         // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
@@ -191,10 +192,11 @@ class STM32Protocol {
     }
 
     handleConnect(connectionResult: unknown): void {
+        const connectionStore = useConnectionStore();
         console.log(`${this.logHead} Connected to serial port`, connectionResult);
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
-            useConnectionStore().connectLock = true;
+            connectionStore.connectLock = true;
             // The flasher now owns the raw port — stand the MSP reconnect down and
             // enter FLASHING (hard-blocks connect/reboot until the flash completes).
             getConnectionState().beginDeviceReplacement();
@@ -234,12 +236,13 @@ class STM32Protocol {
 
     // The rebooted board is in DFU but was never authorised for WebUSB: ask for it.
     private async requestDfuPermission(): Promise<void> {
+        const connectionStore = useConnectionStore();
         // Device not previously authorized via WebUSB.
         // Try requestPermission directly — browser may still honour the
         // original user gesture from the Flash button click.
         console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
         gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-        useConnectionStore().connectLock = false;
+        connectionStore.connectLock = false;
 
         const device = await DeviceHandler.dfuProtocol.requestPermission();
         if (device) {
@@ -298,7 +301,8 @@ class STM32Protocol {
     }
 
     onAbort(): void {
-        useConnectionStore().connectLock = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
         getConnectionState().endFlashing();
         this.rebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
@@ -373,6 +377,7 @@ class STM32Protocol {
         options: STM32FlashOptions,
         callback?: (() => void) | null,
     ): void {
+        const connectionStore = useConnectionStore();
         this.hex = hex;
         this.port = port;
         this.baud = baud;
@@ -402,7 +407,7 @@ class STM32Protocol {
         } else {
             this.rebootMode = 0; // FIRMWARE
 
-            useConnectionStore().connectLock = true;
+            connectionStore.connectLock = true;
             TABS.firmware_flasher.flashingMessage(
                 i18n.getMessage("stm32RebootingToBootloader"),
                 TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
@@ -601,7 +606,7 @@ class STM32Protocol {
         this.receive_buffer = [];
 
         // send over the actual data
-        serial.send(bufferOut);
+        void serial.send(bufferOut);
     }
     // val = single byte to be verified
     // data = response of n bytes from mcu (array)
@@ -1147,10 +1152,11 @@ class STM32Protocol {
         }
     }
     cleanup(): void {
+        const connectionStore = useConnectionStore();
         PortUsage.reset();
 
         // unlocking connect button
-        useConnectionStore().connectLock = false;
+        connectionStore.connectLock = false;
         // Flash complete — leave FLASHING so normal connect/reboot resume.
         getConnectionState().endFlashing();
 

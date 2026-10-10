@@ -43,11 +43,11 @@ import {
     validateTuningSliders,
     type PidSliderPositions,
 } from "../../src/composables/useTuningSliders";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
+import { useConnectionStore } from "../../src/stores/connection";
 
 const positions: PidSliderPositions = {
     pidsMode: 2,
@@ -66,15 +66,17 @@ let fcStore: ReturnType<typeof useFlightControllerStore>;
 describe("useTuningSliders", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        CONFIGURATOR.virtualMode = false;
+        connectionStore.virtualMode = false;
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
         vi.spyOn(mspHelper, "crunch").mockReturnValue([0xaa]);
     });
 
     afterEach(() => {
-        CONFIGURATOR.virtualMode = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = false;
         vi.restoreAllMocks();
         vi.clearAllMocks();
     });
@@ -168,7 +170,8 @@ describe("useTuningSliders", () => {
         });
 
         it("computes client-side in virtual mode, without MSP", async () => {
-            CONFIGURATOR.virtualMode = true;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualMode = true;
 
             await calculateNewPids(positions);
 
@@ -215,7 +218,8 @@ describe("useTuningSliders", () => {
         });
 
         it("computes client-side in virtual mode, without MSP", async () => {
-            CONFIGURATOR.virtualMode = true;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualMode = true;
 
             await run(1);
 
@@ -284,7 +288,8 @@ describe("useTuningSliders", () => {
         });
 
         it("validates client-side in virtual mode, then patches", async () => {
-            CONFIGURATOR.virtualMode = true;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualMode = true;
             startAllOn();
             simplified.validateVirtualSimplifiedTuning.mockImplementation(() => {
                 Object.assign(fcStore.tuningSliders, {

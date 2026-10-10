@@ -200,7 +200,7 @@ export default defineComponent({
         };
 
         const onTabCleanup = () => {
-            // First, clean up the CLI to set CONFIGURATOR.cliActive = false
+            // First, clean up the CLI to set the connection store's cliActive = false
             // This prevents serial_backend from trying to call TABS.cli.read()
             cli.cleanup();
 

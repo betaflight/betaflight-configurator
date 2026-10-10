@@ -1,24 +1,38 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
-// useConnectionStore is a thin reactive read-model over CONFIGURATOR, the device picker
-// and the lock manager. The store's heavy legacy collaborators are stubbed.
+// useConnectionStore owns the connection state and is a reactive read-model over the device
+// picker and the lock manager. The store's heavy legacy collaborators are stubbed.
 // ---------------------------------------------------------------------------
 
 const mspCleanup = vi.hoisted(() => vi.fn());
 
-// Both stubs are reactive because both real modules are — data_storage.ts wraps CONFIGURATOR in
-// reactive() and device_handler exports reactive(new DeviceHandler()). The store reads them through
-// computed(), which only invalidates on a reactive source, so a plain object literal here would
-// stub out the very property the store depends on and quietly freeze every proxy at its initial
-// value.
-vi.mock("../../src/js/data_storage", async () => {
-    const { reactive } = await import("vue");
-    return {
-        default: reactive({ connectionValid: false, virtualMode: false, cliActive: false, cliValid: false }),
-    };
-});
+// The stub is reactive because the real module is — device_handler exports
+// reactive(new DeviceHandler()). The store reads it through computed(), which only invalidates
+// on a reactive source, so a plain object literal here would stub out the very property the
+// store depends on and quietly freeze selectedDevice at its initial value.
 vi.mock("../../src/js/device_handler", async () => {
     const { reactive } = await import("vue");
     return { default: reactive({ devicePicker: { selectedDevice: "noselection" } }) };
@@ -27,17 +41,12 @@ vi.mock("../../src/js/msp", () => ({ default: { callbacks_cleanup: mspCleanup } 
 
 import { useConnectionStore } from "../../src/stores/connection";
 import { __resetLockManagerForTests } from "../../src/js/lock_manager";
-import CONFIGURATOR from "../../src/js/data_storage";
 import DeviceHandler from "../../src/js/device_handler";
 
 beforeEach(() => {
     setActivePinia(createPinia());
     __resetLockManagerForTests();
     mspCleanup.mockClear();
-    CONFIGURATOR.connectionValid = false;
-    CONFIGURATOR.virtualMode = false;
-    CONFIGURATOR.cliActive = false;
-    CONFIGURATOR.cliValid = false;
     DeviceHandler.devicePicker.selectedDevice = "noselection";
 });
 
@@ -89,32 +98,33 @@ describe("connectLock delegates to the LockManager", () => {
     });
 });
 
-// These four are the computed get/set proxies over the legacy CONFIGURATOR singleton, so the
-// write direction matters as much as the read: the singleton, not the store, is still the
-// storage. Pinned here because #4800 is going to move that storage.
-describe("CONFIGURATOR proxies", () => {
+// These used to be get/set proxies over the CONFIGURATOR singleton; the store now owns them.
+describe("store owns the connection flags (was CONFIGURATOR)", () => {
     it.each(["connectionValid", "virtualMode", "cliActive", "cliValid"] as const)(
-        "%s reads from the singleton",
+        "%s is store-owned, writable, default false",
         (field) => {
             const store = useConnectionStore();
             expect(store[field]).toBe(false);
 
-            CONFIGURATOR[field] = true;
+            store[field] = true;
 
             expect(store[field]).toBe(true);
         },
     );
 
-    it.each(["connectionValid", "virtualMode", "cliActive", "cliValid"] as const)(
-        "%s writes back to the singleton",
-        (field) => {
-            const store = useConnectionStore();
+    // A fresh Pinia must start disconnected: the flags no longer live in a module-level
+    // singleton that would carry one test's (or session's) state into the next.
+    it("starts from the defaults in a fresh Pinia", () => {
+        const previous = useConnectionStore();
+        previous.connectionValid = true;
+        previous.virtualApiVersion = "1.48.0";
 
-            store[field] = true;
+        setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
 
-            expect(CONFIGURATOR[field]).toBe(true);
-        },
-    );
+        expect(connectionStore.connectionValid).toBe(false);
+        expect(connectionStore.virtualApiVersion).toBe("0.0.1");
+    });
 });
 
 describe("selectedDevice", () => {

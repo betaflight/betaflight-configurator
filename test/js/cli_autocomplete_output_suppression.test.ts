@@ -1,11 +1,32 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
+import { useConnectionStore } from "../../src/stores/connection";
 
 // The builder's sentinel is set when a build starts.
 function currentSentinel(): string {
@@ -24,8 +45,9 @@ describe("useCli output suppression around CliAutoComplete", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
-        CONFIGURATOR.cliActive = true;
-        CONFIGURATOR.cliValid = true;
+        const connectionStore = useConnectionStore();
+        connectionStore.cliActive = true;
+        connectionStore.cliValid = true;
         useFlightControllerStore().config.flightControllerIdentifier = "BTFL";
         CliAutoComplete.builder = { state: "reset", numFails: 0, draining: false };
         CliAutoComplete.configEnabled = true;
@@ -43,11 +65,12 @@ describe("useCli output suppression around CliAutoComplete", () => {
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         CliAutoComplete.cleanup();
         vi.useRealTimers();
         vi.restoreAllMocks();
-        CONFIGURATOR.cliActive = false;
-        CONFIGURATOR.cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
     });
 
     function historyText() {

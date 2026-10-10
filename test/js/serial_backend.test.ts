@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
@@ -165,13 +186,7 @@ vi.mock("../../src/stores/connection", () => ({
 
 vi.mock("../../src/js/data_storage", () => ({
     __esModule: true,
-    default: {
-        connectionValid: false,
-        cliValid: false,
-        cliActive: false,
-        virtualMode: false,
-        API_VERSION_ACCEPTED: "1.46.0",
-    },
+    API_VERSION_ACCEPTED: "1.46.0",
     API_VERSION_1_45: "1.45.0",
     API_VERSION_1_46: "1.46.0",
     API_VERSION_1_47: "1.47.0",
@@ -219,13 +234,13 @@ import {
 } from "../../src/js/serial_backend";
 import DeviceHandler from "../../src/js/device_handler";
 import { set as setConfig } from "../../src/js/ConfigStorage";
-import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { EventBus } from "../../src/components/eventBus";
-import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
+import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state";
 import { useNavigationStore } from "../../src/stores/navigation";
+import { useConnectionStore } from "../../src/stores/connection";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -237,6 +252,7 @@ function resetMocks() {
     // serial_backend reads the real flightController store: give every test a fresh one,
     // whether or not its describe block installs a Pinia of its own.
     setActivePinia(createPinia());
+    const connectionStore = useConnectionStore();
     Object.keys(serialHandlers).forEach((k) => delete serialHandlers[k]);
     connectionStore.liveDataPaused = false;
     connectionStore.connectLock = false;
@@ -252,9 +268,9 @@ function resetMocks() {
     // Restore the port picker (the reboot test mutates these).
     DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
     DeviceHandler.devicePicker.autoConnect = false;
-    // Restore CONFIGURATOR flags the reboot/virtual tests mutate.
-    CONFIGURATOR.virtualMode = false;
-    CONFIGURATOR.connectionValid = false;
+    // Restore the connection flags the reboot/virtual tests mutate.
+    connectionStore.virtualMode = false;
+    connectionStore.connectionValid = false;
     // The reboot tests drive the connection state into REBOOTING/RECONNECTING via
     // reinitializeConnection(); reset the singleton so a later case can't inherit a
     // non-IDLE phase (and a stale isReconnecting) from execution order.
@@ -276,10 +292,11 @@ function establishConnection() {
 // Drive the module into a "connected" state for a VIRTUAL port. beginConnect passes
 // onOpenVirtual as serial.connect's third argument (only for the virtual port); the default
 // mock ignores it, so here we make serial.connect invoke that callback once, which sets
-// module isConnected = true (and CONFIGURATOR.virtualMode).
+// module isConnected = true (and the connection store's virtualMode).
 function establishVirtualConnection() {
+    const connectionStore = useConnectionStore();
     DeviceHandler.devicePicker.selectedDevice = "virtual";
-    CONFIGURATOR.virtualMode = true;
+    connectionStore.virtualMode = true;
     serial.connect.mockImplementationOnce((_port, _opts, onOpenVirtual) => {
         onOpenVirtual?.();
     });
@@ -712,6 +729,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
     });
 
     it("forces connectionValid false on reboot so the dialog waits for a real reconnect", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
@@ -721,11 +739,11 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             // the reboot starts. If left stale-true, the reboot dialog's check-timer would
             // conclude the reboot and null the shared reconnect window before the retry loop
             // arms — no reconnect ever runs. reinitializeConnection must reset it.
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
 
             reinitializeConnection();
 
-            expect(CONFIGURATOR.connectionValid).toBe(false);
+            expect(connectionStore.connectionValid).toBe(false);
         } finally {
             vi.advanceTimersByTime(30000); // drain the loop
             vi.useRealTimers();
@@ -879,13 +897,14 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     });
 
     it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.virtualMode = false;
-            CONFIGURATOR.connectionValid = true; // established before the reboot
+            connectionStore.virtualMode = false;
+            connectionStore.connectionValid = true; // established before the reboot
             establishConnection();
 
             vi.mocked(MSP.send_message).mockClear();
@@ -896,7 +915,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
-            expect(CONFIGURATOR.connectionValid).toBe(false);
+            expect(connectionStore.connectionValid).toBe(false);
 
             // A serial link that is still open after the flush means the FC did not reboot, or
             // the OS has not noticed yet. Dropping it would tear down a working connection and
@@ -914,11 +933,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // auto-select listener. That listener is still the fast path, but the cycle now backstops it
     // and ends the window either way.
     it("reconnects a serial target from the cycle when no device event arrives", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -934,11 +954,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     });
 
     it("a user disconnect during the reboot cancels the cycle and closes the window", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -959,6 +980,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // to wait for. For serial that is the port coming back — the user can reconnect to a device
     // that is actually there. (Was shouldConcludeRebootDialog's serial branch.)
     it("with Auto-Connect off, ends the window when OUR device is back — not any port", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
@@ -966,7 +988,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             DeviceHandler.portAvailable = true; // other serial ports are present throughout
             vi.mocked(DeviceHandler.isKnownDevicePath).mockReturnValue(true); // and one shares our path shape
             vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue(undefined); // but ours is away
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -991,11 +1013,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // The window is shared: another owner can conclude it first. A closed window reads as
     // NOT expired, so a loop testing expiry alone would spin forever.
     it("stops when another owner concludes the window", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();

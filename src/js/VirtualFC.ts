@@ -23,11 +23,12 @@ import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import { useFlightControllerStore } from "../stores/fc";
-import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
 import { getDebugModes } from "./utils/debugModes";
+import { useConnectionStore } from "../stores/connection";
 
 // pid.h PID_*_DEFAULT, pid.c resetPidProfile
 const DEFAULT_BETAFLIGHT_PIDS = [
@@ -135,6 +136,7 @@ const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
     setVirtualConfig() {
+        const connectionStore = useConnectionStore();
         const fcStore = useFlightControllerStore();
 
         fcStore.resetState();
@@ -142,7 +144,7 @@ const VirtualFC = {
 
         fcStore.config.flightControllerVersion = "2025.12.0";
         fcStore.config.flightControllerIdentifier = "BTFL";
-        fcStore.config.apiVersion = CONFIGURATOR.virtualApiVersion;
+        fcStore.config.apiVersion = connectionStore.virtualApiVersion;
         // Mirror MSP_STATUS_EX fields so virtual API 1.48 exposes battery profile UI.
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
             fcStore.config.numberOfBatteryProfiles = 3;

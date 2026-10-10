@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 import { MspDataView } from "./msp/mspBytes";
@@ -181,7 +180,8 @@ const MSP = {
     SDCARD_STATE_READY: 4,
 
     read(readInfo: MspReadInfo) {
-        if (CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             return;
         }
 
@@ -439,7 +439,8 @@ const MSP = {
         callback_sent?: (() => void) | false,
         callback_msp?: MspCallback | false,
     ): boolean {
-        if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || !serial.connected || connectionStore.virtualMode) {
             if (callback_msp) {
                 (callback_msp as () => void)();
             }
@@ -635,7 +636,8 @@ const MSP = {
         data?: MspPayload,
         { notifyTimeout = true }: { notifyTimeout?: boolean } = {},
     ): Promise<MspResponse | undefined> {
-        if (code === undefined || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || connectionStore.virtualMode) {
             return undefined;
         }
 

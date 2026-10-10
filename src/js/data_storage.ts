@@ -1,4 +1,23 @@
-import { reactive } from "vue";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 
 export const API_VERSION_1_39 = "1.39.0";
 export const API_VERSION_1_41 = "1.41.0";
@@ -9,56 +28,8 @@ export const API_VERSION_1_47 = "1.47.0";
 export const API_VERSION_1_48 = "1.48.0";
 export const API_VERSION_1_49 = "1.49.0";
 
-export interface Configurator {
-    // all versions are specified and compared using semantic versioning http://semver.org/
-    API_VERSION_ACCEPTED: string;
-    API_VERSION_MAX_SUPPORTED: string;
-
-    connectionValid: boolean;
-    connectionValidCliOnly: boolean;
-    virtualMode: boolean;
-    virtualApiVersion: string;
-    cliActive: boolean;
-    cliValid: boolean;
-    productName: string;
-    gitChangesetId: string;
-    version: string;
-    gitRevision: string;
-    latestVersion: string;
-    latestVersionReleaseUrl: string;
-
-    getDisplayVersion(): string;
-    isDevVersion(): boolean;
-}
-
-const CONFIGURATOR: Configurator = reactive({
-    API_VERSION_ACCEPTED: API_VERSION_1_44,
-    API_VERSION_MAX_SUPPORTED: API_VERSION_1_49,
-
-    connectionValid: false,
-    connectionValidCliOnly: false,
-    virtualMode: false,
-    virtualApiVersion: "0.0.1",
-    cliActive: false,
-    cliValid: false,
-    productName: "Betaflight App",
-    gitChangesetId: "unknown",
-    version: "0.0.1",
-    gitRevision: "norevision",
-    latestVersion: "0.0.1",
-    latestVersionReleaseUrl: "https://github.com/betaflight/betaflight-configurator/releases",
-
-    getDisplayVersion(): string {
-        if (this.version.indexOf(this.gitRevision) === -1) {
-            return `${this.version} (${this.gitRevision})`;
-        } else {
-            return `${this.version}`;
-        }
-    },
-
-    isDevVersion(): boolean {
-        return this.version.includes("debug");
-    },
-});
-
-export default CONFIGURATOR;
+// All versions are specified and compared using semantic versioning http://semver.org/
+/** The oldest firmware API version the app accepts. */
+export const API_VERSION_ACCEPTED = API_VERSION_1_44;
+/** The newest firmware API version the app supports. */
+export const API_VERSION_MAX_SUPPORTED = API_VERSION_1_49;
