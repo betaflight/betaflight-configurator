@@ -136,6 +136,7 @@ const DEFAULT_BETAFLIGHT_ADVANCED_TUNING = {
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
     setVirtualConfig() {
+        const connectionStore = useConnectionStore();
         const fcStore = useFlightControllerStore();
 
         fcStore.resetState();
@@ -143,7 +144,7 @@ const VirtualFC = {
 
         fcStore.config.flightControllerVersion = "2025.12.0";
         fcStore.config.flightControllerIdentifier = "BTFL";
-        fcStore.config.apiVersion = useConnectionStore().virtualApiVersion;
+        fcStore.config.apiVersion = connectionStore.virtualApiVersion;
         // Mirror MSP_STATUS_EX fields so virtual API 1.48 exposes battery profile UI.
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
             fcStore.config.numberOfBatteryProfiles = 3;

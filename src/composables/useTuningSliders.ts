@@ -124,6 +124,7 @@ export function readDTermFilterSliderPosition(): DTermFilterSliderPosition {
  * @param s  Slider values (all decimals 0.0-2.0)
  */
 export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | undefined> {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     fcStore.tuningSliders.slider_pids_mode = s.pidsMode;
     fcStore.tuningSliders.slider_d_gain = Math.round(s.dGain * 100);
@@ -138,7 +139,7 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
     // In virtual mode there is no FC to crunch the sliders, so compute the
     // resulting PID/feedforward/D-max values client-side (port of the firmware's
     // simplified_tuning.c) and resolve immediately.
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         applySimplifiedPids();
         return Promise.resolve(undefined);
     }
@@ -160,11 +161,12 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
  * @param multiplier  Gyro filter multiplier (decimal, e.g. 1.0)
  */
 export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse | undefined> {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     fcStore.tuningSliders.slider_gyro_filter = 1;
     fcStore.tuningSliders.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
 
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         applySimplifiedGyroFilters();
         return Promise.resolve(undefined);
     }
@@ -186,11 +188,12 @@ export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse
  * @param multiplier  D-term filter multiplier (decimal, e.g. 1.0)
  */
 export function calculateNewDTermFilters(multiplier: number): Promise<MspResponse | undefined> {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     fcStore.tuningSliders.slider_dterm_filter = 1;
     fcStore.tuningSliders.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
 
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         applySimplifiedDtermFilters();
         return Promise.resolve(undefined);
     }
@@ -210,6 +213,7 @@ export function calculateNewDTermFilters(multiplier: number): Promise<MspRespons
  * invalid slider modes are set to 0 (sliders off).  Returns a promise.
  */
 export function validateTuningSliders(): Promise<void> {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     const patchInvalidSliders = () => {
         if (!fcStore.tuningSliders.slider_pids_valid) {
@@ -225,7 +229,7 @@ export function validateTuningSliders(): Promise<void> {
 
     // In virtual mode, compare the stored PID/filter values against what the
     // sliders would produce client-side instead of asking the FC.
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         validateVirtualSimplifiedTuning();
         patchInvalidSliders();
         return Promise.resolve();

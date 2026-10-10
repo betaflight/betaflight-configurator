@@ -18,6 +18,7 @@ const RESULT_LINGER_MS = 1000;
 const TICK_MS = 100;
 
 const dialogStore = useDialogStore();
+const connectionStore = useConnectionStore();
 const open = ref(false);
 
 // The reboot window is nulled the moment the reboot concludes, so snapshot its numbers —
@@ -37,7 +38,7 @@ const status = computed(() => {
         return i18n.getMessage("rebootFlightController");
     }
     return i18n.getMessage(
-        useConnectionStore().connectionValid ? "rebootFlightControllerReady" : "rebootFlightControllerFailed",
+        connectionStore.connectionValid ? "rebootFlightControllerReady" : "rebootFlightControllerFailed",
     );
 });
 

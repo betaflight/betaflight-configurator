@@ -51,7 +51,7 @@ class MSPConnectorImpl {
     onTimeoutCallback: ConnectorCallback | undefined = undefined;
     onFailureCallback: ConnectorCallback | undefined;
     onDisconnectCallback: ConnectorCallback | undefined = undefined;
-    /** Used for connect timeout only; must not toggle useConnectionStore().connectionValid (main UI connect button). */
+    /** Used for connect timeout only; must not toggle the connection store's connectionValid (main UI connect button). */
     _mspApiVersionReceived = false;
 
     // Stored so removeEventListener gets the same reference addEventListener registered
@@ -112,6 +112,7 @@ class MSPConnectorImpl {
     }
 
     handleDisconnect(detail: unknown) {
+        const connectionStore = useConnectionStore();
         console.log("Disconnected", detail);
 
         serial.removeEventListener("receive", readSerialAdapter);
@@ -124,7 +125,7 @@ class MSPConnectorImpl {
         MSP.disconnect_cleanup();
 
         // Flashing path does not run serial_backend disconnectHandler; clear stale UI state if anything set it.
-        useConnectionStore().connectionValid = false;
+        connectionStore.connectionValid = false;
     }
 
     connect(

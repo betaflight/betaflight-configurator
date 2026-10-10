@@ -206,6 +206,7 @@ function connectFromDeeplink() {
 }
 
 export function initializeSerialBackend() {
+    const connectionStore = useConnectionStore();
     // Exposed via EventBus so modules that can't import serial_backend directly
     // (notably gui.js, which is on the other side of an import cycle) can still
     // request a connect/disconnect toggle.
@@ -217,7 +218,6 @@ export function initializeSerialBackend() {
     // module) is gone — gui.js no longer owns any connection action.
 
     EventBus.$on("device-handler:auto-select-serial-device", function () {
-        const connectionStore = useConnectionStore();
         if (
             !connectionStore.connectedTo &&
             !connectionStore.connectingTo &&
@@ -243,7 +243,7 @@ export function initializeSerialBackend() {
         // event.detail.path is now a stable per-device id (WebSerial: "serial_N"),
         // so this match is device-specific: removing device A no longer triggers a
         // disconnect when device B is the connected one.
-        if (detail?.path && detail.path === useConnectionStore().connectedTo) {
+        if (detail?.path && detail.path === connectionStore.connectedTo) {
             connectDisconnect();
         }
     });
@@ -391,6 +391,7 @@ function resetAppConnectionState() {
 // "disconnected". Drop it for real; a link that made it back to connected (or is
 // mid-handshake, owned by its stall watchdog) is left alone.
 function releaseKeptRebootLink() {
+    const connectionStore = useConnectionStore();
     if (!rebootLinkKept) {
         return;
     }
@@ -399,7 +400,7 @@ function releaseKeptRebootLink() {
     // disconnecting under a live WebBluetooth.connect() would tear the device out from
     // under the coroutine. The attempt's own watchdog chain finishes the cleanup —
     // its handshake either completes or fails into the normal teardown.
-    if (serial.connected && !isConnected() && !useConnectionStore().connectingTo) {
+    if (serial.connected && !isConnected() && !connectionStore.connectingTo) {
         // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
         getConnectionState().markIntentionalDisconnect();
         void serial.disconnect();
@@ -427,7 +428,8 @@ function softResetForReboot() {
 // "connect" if `isConnected` has already been toggled off (e.g. when the UI
 // state still shows "connected" but the internal flag just changed).
 export function disconnect() {
-    if (useConnectionStore().connectLock || !isConnected()) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.connectLock || !isConnected()) {
         return;
     }
     beginDisconnect();
@@ -456,6 +458,7 @@ function canStartConnectionAction(selectedDevice: string): boolean {
  * @param {boolean} automatic - the app started this attempt, not the user
  */
 function beginConnect(selectedDevice: string, automatic: boolean) {
+    const connectionStore = useConnectionStore();
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
@@ -470,7 +473,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     const deviceName = selectedDevice === "manual" ? DeviceHandler.devicePicker.portOverride : selectedDevice;
 
     console.log(`${logHead} Connecting to: ${deviceName}`);
-    useConnectionStore().connectingTo = deviceName;
+    connectionStore.connectingTo = deviceName;
 
     // lock port select & baud while we are connecting / connected
     DeviceHandler.devicePickerDisabled = true;
@@ -487,7 +490,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     addTimeout(
         "connectAttempt",
         function () {
-            if (useConnectionStore().connectingTo && !useConnectionStore().connectionValid) {
+            if (connectionStore.connectingTo && !connectionStore.connectionValid) {
                 abortConnection("connectionFailed");
             }
         },
@@ -538,7 +541,8 @@ function registerCliHotkey() {
  * @param {{automatic?: boolean}} [options] - automatic: the app started this, not the user
  */
 export function connectDisconnect({ automatic = false } = {}) {
-    if (useConnectionStore().connectLock) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.connectLock) {
         return;
     }
 
@@ -640,8 +644,9 @@ function teardownConnectionUi() {
 }
 
 function finishClose() {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
-    const wasConnected = useConnectionStore().connectionValid;
+    const wasConnected = connectionStore.connectionValid;
 
     if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
@@ -650,7 +655,7 @@ function finishClose() {
 
     void serial.disconnect();
 
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         onClosed(true);
     }
 
@@ -715,6 +720,7 @@ function dropStalledRebootConnection() {
 }
 
 function setConnectionTimeout() {
+    const connectionStore = useConnectionStore();
     // A reboot-driven reconnect stalls fast and retries: the loop is alive, so a link
     // that opened but never answers MSP belongs to a still-booting FC. The normal 10s
     // wait would eat the remaining reboot window (the loop skips ticks while a
@@ -725,7 +731,7 @@ function setConnectionTimeout() {
     addTimeout(
         "connecting",
         function () {
-            if (useConnectionStore().connectionValid) {
+            if (connectionStore.connectionValid) {
                 return;
             }
 
@@ -759,6 +765,7 @@ function setConnectionTimeout() {
 }
 
 function resetConnection() {
+    const connectionStore = useConnectionStore();
     clearLiveDataRefreshTimer();
 
     // Safety net: any normal teardown clears a lingering FLASHING state, so the
@@ -782,9 +789,9 @@ function resetConnection() {
     hide("#tabs ul.mode-connected-cli");
     show("#tabs ul.mode-disconnected");
 
-    useConnectionStore().connectionValid = false;
-    useConnectionStore().cliValid = false;
-    useConnectionStore().cliActive = false;
+    connectionStore.connectionValid = false;
+    connectionStore.cliValid = false;
+    connectionStore.cliActive = false;
 
     // unlock port select & baud
     DeviceHandler.devicePickerDisabled = false;
@@ -874,13 +881,13 @@ function read_serial_adapter(event: Event) {
 }
 
 function onOpen(openInfo: unknown) {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     if (openInfo) {
-        useConnectionStore().virtualMode = false;
+        connectionStore.virtualMode = false;
 
         removeTimeout("connectAttempt"); // port opened — pre-open watchdog no longer needed
 
-        const connectionStore = useConnectionStore();
         connectionStore.connectedTo = connectionStore.connectingTo;
         connectionStore.connectingTo = false;
 
@@ -1185,8 +1192,9 @@ function setRtc() {
 }
 
 function finishOpen() {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
-    useConnectionStore().connectionValid = true;
+    connectionStore.connectionValid = true;
 
     if (isCliOnlyMode()) {
         connectCli();
@@ -1221,7 +1229,8 @@ function finishOpen() {
 }
 
 function connectCli() {
-    useConnectionStore().connectionValid = true; // making it possible to open the CLI tab
+    const connectionStore = useConnectionStore();
+    connectionStore.connectionValid = true; // making it possible to open the CLI tab
     useNavigationStore().allowedTabs = ["cli"];
 
     MSP.clearListeners();
@@ -1277,9 +1286,10 @@ function updateTabVisibility() {
 
 // Initialize feature-related UI and fetch configs from the flight controller
 function initFeaturesOnConnect() {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
     if (fcStore.config.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        if (!useConnectionStore().virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
+        if (!connectionStore.virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
             fcStore.features.features = new Features(fcStore.config);
             fcStore.beepers.beepers = new Beepers(fcStore.config);
             fcStore.beepers.dshotBeaconConditions = new Beepers(fcStore.config, ["RX_LOST", "RX_SET"]);
@@ -1300,14 +1310,15 @@ function initFeaturesOnConnect() {
 }
 
 function onClosed(result: unknown) {
+    const connectionStore = useConnectionStore();
     // A "disconnect" that arrives while we are still in the connect phase (onOpen never ran, so
     // the link never became valid) is a *failed connection attempt*, not the loss of an
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
     // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
     // running the established-connection teardown.
     if (
-        useConnectionStore().connectingTo &&
-        !useConnectionStore().connectionValid &&
+        connectionStore.connectingTo &&
+        !connectionStore.connectionValid &&
         !getConnectionState().intentionalDisconnect
     ) {
         abortConnection("connectionFailed");
@@ -1369,7 +1380,8 @@ function onClosed(result: unknown) {
 }
 
 export function read_serial(info: ReadInfo) {
-    if (useConnectionStore().cliActive) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
         // CliTab.vue registers useCli's read here while the CLI tab is mounted.
@@ -1501,10 +1513,11 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection() {
+    const connectionStore = useConnectionStore();
     // Virtual has no FC to reboot: toggle the fake link, and toggle it back with Auto-Connect
     // on. No reboot window — nothing is going away that we have to wait for, and the phase
     // follows the toggle instead of being declared CONNECTED before the reconnect runs.
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         connectDisconnect();
         if (DeviceHandler.devicePicker.autoConnect) {
             setTimeout(() => connectDisconnect({ automatic: true }), 500);
@@ -1531,7 +1544,7 @@ export function reinitializeConnection() {
     // A BLE/manual link survives the reboot command (only the MCU restarts), so
     // connectionValid stays stale-true until the flush drops it ~1.5s later. Force it
     // false now so the reboot dialog and retry loop wait for a real reconnect.
-    useConnectionStore().connectionValid = false;
+    connectionStore.connectionValid = false;
 
     // One reconnect cycle for every hardware target. It owns the window: it waits for the FC
     // to answer, retries while Auto-Connect is on, and concludes on success or timeout —
@@ -1568,9 +1581,10 @@ export function scheduleRebootReconnect() {
  * Stops the timers and settles the window; harmless when no reboot is running.
  */
 export function cancelRebootReconnect() {
+    const connectionStore = useConnectionStore();
     stopRebootReconnect();
     if (getConnectionState().isRebootWindowOpen) {
-        getConnectionState().concludeReboot(useConnectionStore().connectionValid);
+        getConnectionState().concludeReboot(connectionStore.connectionValid);
     }
 }
 
@@ -1578,6 +1592,7 @@ export function cancelRebootReconnect() {
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
 function rebootReconnect() {
+    const connectionStore = useConnectionStore();
     // Cancel any prior reboot cycle (e.g. a second Save-and-Reboot within the window) so we
     // never run two overlapping retry loops.
     stopRebootReconnect();
@@ -1649,16 +1664,16 @@ function rebootReconnect() {
             // which is exactly what stops the flasher from picking up the board.
             const waitedOut = !mayConnect && (driven || flasherOwnsPort() || ourDeviceBack);
 
-            if (useConnectionStore().connectionValid || timedOut || waitedOut) {
+            if (connectionStore.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or nothing left to wait
                 // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
                 // link that never made it back to connected is dropped for real here.
-                getConnectionState().concludeReboot(useConnectionStore().connectionValid);
+                getConnectionState().concludeReboot(connectionStore.connectionValid);
                 releaseKeptRebootLink();
                 return;
             }
-            if (mayConnect && !isConnected() && !useConnectionStore().connectingTo) {
+            if (mayConnect && !isConnected() && !connectionStore.connectingTo) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
                 // attempts serial_backend's disconnect listener is detached

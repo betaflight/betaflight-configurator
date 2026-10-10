@@ -202,6 +202,7 @@ async function submitSupportData(
 }
 
 export function useCli(): Cli {
+    const connectionStore = useConnectionStore();
     const autocomplete = useCliAutocomplete();
 
     // outputHistory/cliBuffer are plain vars (not reactive) — avoids Vue Proxy overhead in the serial read hot path.
@@ -609,8 +610,8 @@ export function useCli(): Cli {
 
     const checkForReboot = () => {
         if (cliBuffer === "Rebooting") {
-            useConnectionStore().cliActive = false;
-            useConnectionStore().cliValid = false;
+            connectionStore.cliActive = false;
+            connectionStore.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
             reinitializeConnection();
         }
@@ -621,9 +622,9 @@ export function useCli(): Cli {
      * @returns true when autocomplete should start after the current read.
      */
     const validateCliEntry = (): boolean => {
-        if (!useConnectionStore().cliValid && cliEntrySawMarker) {
+        if (!connectionStore.cliValid && cliEntrySawMarker) {
             gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
-            useConnectionStore().cliValid = true;
+            connectionStore.cliValid = true;
             // begin output history with the prompt (last line of welcome message)
             // this is to match the content of the history with what the user sees on this tab
             outputHistory = CLI_PROMPT;
@@ -663,7 +664,7 @@ export function useCli(): Cli {
         outputSuppressed = suppressed;
 
         // a backspace has already taken its character back out of the history
-        if (useConnectionStore().cliValid && processCharacterInCliMode(byte, currentChar)) {
+        if (connectionStore.cliValid && processCharacterInCliMode(byte, currentChar)) {
             return;
         }
 
@@ -698,7 +699,7 @@ export function useCli(): Cli {
             const currentChar = String.fromCodePoint(byte);
             const isCRLF = byte === lineFeedCode || byte === carriageReturnCode;
 
-            if (!useConnectionStore().cliValid && (isCRLF || state.startProcessing)) {
+            if (!connectionStore.cliValid && (isCRLF || state.startProcessing)) {
                 startAutocompleteAfterRead = readCliEntryChar(currentChar) ?? startAutocompleteAfterRead;
                 continue;
             }
@@ -736,7 +737,7 @@ export function useCli(): Cli {
         outputSuppressed = false;
         state.startProcessing = false;
 
-        useConnectionStore().cliActive = true;
+        connectionStore.cliActive = true;
 
         // Wait for DOM to be ready
         await nextTick();
@@ -857,7 +858,6 @@ export function useCli(): Cli {
 
         // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
         // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
-        const connectionStore = useConnectionStore();
         const rebooting = connectionStore.connectionValid && connectionStore.cliValid && connectionStore.cliActive;
         if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {

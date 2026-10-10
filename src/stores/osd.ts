@@ -161,7 +161,8 @@ function encodeStatisticsPayload(
 }
 
 async function fetchOsdInfo(fcStore: FlightControllerStore) {
-    if (useConnectionStore().virtualMode) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.virtualMode) {
         return undefined;
     }
 
@@ -174,14 +175,15 @@ async function fetchOsdInfo(fcStore: FlightControllerStore) {
 }
 
 async function decodeOsdData(info: MspResponse | undefined) {
-    if (!useConnectionStore().virtualMode) {
+    const connectionStore = useConnectionStore();
+    if (!connectionStore.virtualMode) {
         await MSP.promise(MSPCodes.MSP_RX_CONFIG);
     }
 
     OSD.loadDisplayFields();
     OSD.chooseFields();
 
-    if (useConnectionStore().virtualMode) {
+    if (connectionStore.virtualMode) {
         VirtualFC.setupVirtualOSD();
 
         if (legacyOsd.msp.decodeVirtual) {
@@ -208,6 +210,7 @@ async function ensureDefaultFontLoaded() {
 }
 
 export const useOsdStore = defineStore("osd", () => {
+    const connectionStore = useConnectionStore();
     // Core OSD data state
     const videoSystem = ref<number | null>(null);
     const unitMode = ref<number | null>(null);
@@ -457,7 +460,7 @@ export const useOsdStore = defineStore("osd", () => {
                 }
             }
 
-            if (useConnectionStore().virtualMode && legacyOsd.virtualMode) {
+            if (connectionStore.virtualMode && legacyOsd.virtualMode) {
                 legacyOsd.virtualMode.warningFlags = warningFlags;
             }
 
@@ -483,7 +486,7 @@ export const useOsdStore = defineStore("osd", () => {
     }
 
     function encodeLayout(displayItem: OsdDisplayItem) {
-        if (useConnectionStore().virtualMode && legacyOsd.virtualMode) {
+        if (connectionStore.virtualMode && legacyOsd.virtualMode) {
             legacyOsd.virtualMode.itemPositions[displayItem.index] = helpers.pack.position(displayItem);
         }
 
@@ -495,7 +498,7 @@ export const useOsdStore = defineStore("osd", () => {
 
     function encodeTimer(timer: OsdTimer) {
         const virtualMode = legacyOsd.virtualMode;
-        if (useConnectionStore().virtualMode && virtualMode) {
+        if (connectionStore.virtualMode && virtualMode) {
             if (!virtualMode.timerData[timer.index]) {
                 virtualMode.timerData[timer.index] = {};
             }
@@ -529,7 +532,7 @@ export const useOsdStore = defineStore("osd", () => {
         }
 
         for (const stat of statItems.value) {
-            const payload = encodeStatisticsPayload(stat, useConnectionStore().virtualMode, legacyOsd.virtualMode);
+            const payload = encodeStatisticsPayload(stat, connectionStore.virtualMode, legacyOsd.virtualMode);
             await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, payload); // NOSONAR: sequential by design
         }
 

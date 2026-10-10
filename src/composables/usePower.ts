@@ -37,6 +37,7 @@ import type { CurrentMeter, CurrentMeterConfig, VoltageMeter, VoltageMeterConfig
 import { pauseInterval, resumeInterval } from "../js/timers";
 
 export function usePower() {
+    const connectionStore = useConnectionStore();
     const fcStore = useFlightControllerStore();
 
     const supported = computed(() => {
@@ -200,7 +201,6 @@ export function usePower() {
 
     // Change active battery profile
     const changeBatteryProfile = async (profileIndex: number) => {
-        const connectionStore = useConnectionStore();
         const previousProfile = activeBatteryProfile.value;
         const previousProfileName = batteryProfileName.value;
 
@@ -263,7 +263,7 @@ export function usePower() {
     // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
     const syncBatteryProfileFromFc = async () => {
         if (
-            useConnectionStore().virtualMode ||
+            connectionStore.virtualMode ||
             !hasBatteryProfiles.value ||
             isLoading.value ||
             syncingFromFc ||

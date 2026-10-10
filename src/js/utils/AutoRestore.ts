@@ -67,7 +67,8 @@ class AutoRestore {
     private _saving = false;
 
     canAttemptConnection(): boolean {
-        if (useConnectionStore().virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
             return false;
         }

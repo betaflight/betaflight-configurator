@@ -180,7 +180,8 @@ const MSP = {
     SDCARD_STATE_READY: 4,
 
     read(readInfo: MspReadInfo) {
-        if (useConnectionStore().virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             return;
         }
 
@@ -438,7 +439,8 @@ const MSP = {
         callback_sent?: (() => void) | false,
         callback_msp?: MspCallback | false,
     ): boolean {
-        if (code === undefined || !serial.connected || useConnectionStore().virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || !serial.connected || connectionStore.virtualMode) {
             if (callback_msp) {
                 (callback_msp as () => void)();
             }
@@ -634,7 +636,8 @@ const MSP = {
         data?: MspPayload,
         { notifyTimeout = true }: { notifyTimeout?: boolean } = {},
     ): Promise<MspResponse | undefined> {
-        if (code === undefined || useConnectionStore().virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || connectionStore.virtualMode) {
             return undefined;
         }
 

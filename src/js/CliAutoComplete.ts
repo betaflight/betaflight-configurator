@@ -143,10 +143,11 @@ const CliAutoComplete: CliAutoCompleteApi = {
     },
 
     setEnabled(enable) {
+        const connectionStore = useConnectionStore();
         if (this.configEnabled !== enable) {
             this.configEnabled = enable;
 
-            if (useConnectionStore().cliActive && useConnectionStore().cliValid) {
+            if (connectionStore.cliActive && connectionStore.cliValid) {
                 // cli is already open
                 if (this.isEnabled()) {
                     this.builderStart();
