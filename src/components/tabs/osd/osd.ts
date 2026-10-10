@@ -1733,7 +1733,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 681,
             positionable: true,
-            preview: "R10.1A",
+            preview: `R10.1${FONT.symbol(SYM.ARROW_EAST)}A`,
         },
         PSAS_TRIM_PITCH: {
             name: "PSAS TRIM PITCH",
@@ -1742,7 +1742,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 682,
             positionable: true,
-            preview: "P10.1A",
+            preview: `P10.1${FONT.symbol(SYM.ARROW_NORTH)}A`,
         },
         PSAS_TRIM_YAW: {
             name: "PSAS TRIM YAW",
@@ -1751,7 +1751,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 683,
             positionable: true,
-            preview: "Y10.1A",
+            preview: `Y10.1${FONT.symbol(SYM.ARROW_EAST)}A`,
         },
     };
 
