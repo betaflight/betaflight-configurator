@@ -314,7 +314,7 @@ class AutoRestore {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            const result = await serial.connect(port, { baudRate: baud }, undefined);
+            const result = await serial.connect(port, { baudRate: baud });
             if (!result) {
                 this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
             }

@@ -123,11 +123,7 @@ class AutoDetect {
 
             console.log("Connecting to serial port", port);
             gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
-            result = await serial.connect(
-                port,
-                { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 },
-                undefined,
-            );
+            result = await serial.connect(port, { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 });
         } catch (error) {
             console.error("Failed to connect:", error);
         } finally {

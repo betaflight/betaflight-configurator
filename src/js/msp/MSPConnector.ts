@@ -147,7 +147,7 @@ class MSPConnectorImpl {
         serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
         // The connect event above reports the result.
-        void serial.connect(this.port, { baudRate: this.baud }, undefined);
+        void serial.connect(this.port, { baudRate: this.baud });
     }
 
     disconnect(onDisconnectCallback: ConnectorCallback) {

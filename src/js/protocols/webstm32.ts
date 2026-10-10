@@ -398,7 +398,7 @@ class STM32Protocol {
 
         if (this.mspOptions.no_reboot) {
             this.prepareSerialPort();
-            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
+            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" });
         } else {
             this.rebootMode = 0; // FIRMWARE
 

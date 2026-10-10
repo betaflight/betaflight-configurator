@@ -99,7 +99,7 @@ class CapacitorDfuTransport extends EventTarget implements DfuTransport {
                 console.warn(`${this.logHead} waitForDfuDevice failed:`, e);
             }
 
-            await new Promise((r) => setTimeout(r, interval));
+            await new Promise((r) => setTimeout(r, interval)); // NOSONAR: polls one attempt at a time by design
         }
 
         return null;

@@ -38,6 +38,7 @@ describe("UserApi.deleteAccount", () => {
     });
 
     afterEach(() => {
+        vi.useRealTimers();
         vi.unstubAllGlobals();
     });
 
@@ -76,7 +77,6 @@ describe("UserApi.deleteAccount", () => {
         const result = expect(api.deleteAccount()).rejects.toThrow();
         await vi.advanceTimersByTimeAsync(30000);
         await result;
-        vi.useRealTimers();
     });
 
     it("does not call the API without an access token", async () => {

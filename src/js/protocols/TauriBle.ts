@@ -182,7 +182,7 @@ class TauriBle extends EventTarget {
     async _teardownListeners(): Promise<void> {
         for (const unlisten of this._unlisten) {
             try {
-                await unlisten();
+                await unlisten(); // NOSONAR: listeners are removed one at a time, in order
             } catch (e) {
                 console.error(`${this.logHead} Failed to remove listener: ${e}`);
             }

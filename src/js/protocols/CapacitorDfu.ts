@@ -152,13 +152,17 @@ class CapacitorDfu extends EventTarget {
         }
 
         this.ports = [];
-
-        void BetaflightDfu.addListener("deviceAttached", this.handleDeviceAttached.bind(this));
-        void BetaflightDfu.addListener("deviceDetached", this.handleDeviceDetached.bind(this));
-
-        void this.loadDevices();
+        this._bootstrap(BetaflightDfu);
 
         console.log(`${logHead} CapacitorDfu initialized`);
+    }
+
+    private _bootstrap(plugin: BetaflightDfuPlugin): void {
+        void plugin.addListener("deviceAttached", this.handleDeviceAttached.bind(this));
+        void plugin.addListener("deviceDetached", this.handleDeviceDetached.bind(this));
+
+        // loadDevices() catches and logs its own failures.
+        void this.loadDevices();
     }
 
     /** Lists a newly attached device, and returns it; undefined when it was already listed. */

@@ -53,11 +53,7 @@ describe("webstm32 honours the flashing options", () => {
 
         STM32.connect("serial_1", 115200, hex as never, { no_reboot: true, erase_chip: false });
 
-        expect(serial.connect).toHaveBeenCalledWith(
-            "serial_1",
-            expect.objectContaining({ baudRate: 115200 }),
-            undefined,
-        );
+        expect(serial.connect).toHaveBeenCalledWith("serial_1", expect.objectContaining({ baudRate: 115200 }));
         expect(mspConnect).not.toHaveBeenCalled();
     });
 
