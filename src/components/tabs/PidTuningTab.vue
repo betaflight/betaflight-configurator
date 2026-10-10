@@ -6,7 +6,7 @@
 
             <div class="flex items-start gap-3 flex-wrap mb-2">
                 <!-- Profile Selector -->
-                <div v-if="['pid', 'filter'].includes(activeSubtab)" class="flex flex-col gap-1 min-w-[130px]">
+                <div v-if="['pid', 'filter', 'psas'].includes(activeSubtab)" class="flex flex-col gap-1 min-w-[130px]">
                     <SettingRow :label="$t('pidTuningProfile')" :help="$t('pidTuningProfileTip')">
                         <USelect
                             v-model="currentProfile"
@@ -96,6 +96,7 @@
                         v-if="activeSubtab === 'filter'"
                         :expert-mode="expertModeEnabled"
                     />
+                    <PsasSubTab v-if="activeSubtab === 'psas'" />
                 </form>
             </div>
 
@@ -129,13 +130,14 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
+import PsasSubTab from "./pid-tuning/PsasSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
@@ -208,18 +210,33 @@ const rateProfileItems = computed(() => {
     return items;
 });
 
-const subtabItems = computed(() => [
-    { label: t("pidTuningSubTabPid"), value: "pid", icon: "i-lucide-sliders-horizontal" },
-    { label: t("pidTuningSubTabRates"), value: "rates", icon: "i-lucide-gauge" },
-    { label: t("pidTuningSubTabFilter"), value: "filter", icon: "i-lucide-filter" },
-]);
+const hasPSAS = () => {
+    const fcStore = useFlightControllerStore();
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
+};
+
+const subtabItems = computed(() => {
+    const items = [
+        { label: t("pidTuningSubTabPid"), value: "pid", icon: "i-lucide-sliders-horizontal" },
+        { label: t("pidTuningSubTabRates"), value: "rates", icon: "i-lucide-gauge" },
+        { label: t("pidTuningSubTabFilter"), value: "filter", icon: "i-lucide-filter" },
+    ];
+
+    if (hasPSAS()) {
+        items.push({ label: t("pidTuningSubTabPsas"), value: "psas", icon: "i-lucide-sliders-horizontal" });
+    }
+
+    return items;
+});
 
 // Profile name state lifted from child components
 const pidProfileName = ref("");
 const rateProfileName = ref("");
 
 const showProfileName = computed(
-    () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
+    () =>
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) &&
+        ["pid", "filter", "psas"].includes(activeSubtab.value),
 );
 const showRateProfileName = computed(
     () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",

@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  f583a0c46d 2026-09-25  (551 annotated fields)
+ *   API 1.49.0  610e068e2d 2026-09-27  (560 annotated fields)
  */
 
 /**
@@ -626,6 +626,21 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 scale: 1,
                 flags: Object.freeze(["Bungee", "Swing", "Ground Speed"]),
             }),
+            7: Object.freeze({
+                label: "Launch Exit Reason",
+                unit: null,
+                scale: 1,
+                enumTag: "launchWingExit_e",
+                values: Object.freeze([
+                    "LAUNCH_WING_EXIT_NONE",
+                    "LAUNCH_WING_EXIT_STICKS",
+                    "LAUNCH_WING_EXIT_ATTITUDE",
+                    "LAUNCH_WING_EXIT_ALTITUDE",
+                    "LAUNCH_WING_EXIT_TIMEOUT",
+                    "LAUNCH_WING_EXIT_HANDOVER",
+                    "LAUNCH_WING_EXIT_MODE_OFF",
+                ]),
+            }),
         }),
         LIDAR_TF: Object.freeze({
             0: Object.freeze({ label: "Distance", unit: "cm", scale: 1 }),
@@ -752,6 +767,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             5: Object.freeze({ label: "D Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             6: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+        }),
+        PSAS: Object.freeze({
+            0: Object.freeze({ label: "Main speed curve", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Stick speed curve", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Lift coefficient", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Accel Z required", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Accel Z delta", unit: null, scale: 0.1 }),
+            5: Object.freeze({ label: "Accel Z P", unit: null, scale: 0.1 }),
+            6: Object.freeze({ label: "Lift coeff delta", unit: null, scale: 0.01 }),
+            7: Object.freeze({ label: "AoA limiter is on", unit: null, scale: 1 }),
         }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
@@ -1127,6 +1152,15 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "FP_NAV_COMPLETE",
                 "FP_NAV_LANDING",
                 "FP_NAV_ABORTED",
+            ]),
+            launchWingExit_e: Object.freeze([
+                "LAUNCH_WING_EXIT_NONE",
+                "LAUNCH_WING_EXIT_STICKS",
+                "LAUNCH_WING_EXIT_ATTITUDE",
+                "LAUNCH_WING_EXIT_ALTITUDE",
+                "LAUNCH_WING_EXIT_TIMEOUT",
+                "LAUNCH_WING_EXIT_HANDOVER",
+                "LAUNCH_WING_EXIT_MODE_OFF",
             ]),
             launchWingState_e: Object.freeze([
                 "LAUNCH_WING_IDLE",
