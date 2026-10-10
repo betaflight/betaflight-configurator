@@ -47,13 +47,11 @@ export interface BuildRequestDetail {
  * still check it. A failed request is logged and returns `null`.
  */
 export default class BuildApi {
-    private readonly _url: string;
-    private readonly _cacheExpirationPeriod: number;
+    private readonly _url = "https://build.betaflight.com";
+    private readonly _cacheExpirationPeriod = 3600 * 1000;
     private readonly _loginApi: LoginApi | null;
 
     constructor(loginApi: LoginApi | null = new LoginApi()) {
-        this._url = "https://build.betaflight.com";
-        this._cacheExpirationPeriod = 3600 * 1000;
         this._loginApi = loginApi;
     }
 
