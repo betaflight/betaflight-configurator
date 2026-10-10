@@ -718,12 +718,12 @@ export default defineComponent({
                     2,
                 )}kB / s) with block size ${blockSize.value}.`,
             );
-            if (!Number.isNaN(totalBytesCompressed)) {
+            if (totalBytesCompressed !== null) {
                 console.log(
                     "Compressed into",
                     totalBytesCompressed,
                     "bytes with mean compression factor of",
-                    totalBytes / Number(totalBytesCompressed),
+                    totalBytes / totalBytesCompressed,
                 );
             }
 
@@ -826,11 +826,10 @@ export default defineComponent({
                         if (chunkDataView !== null) {
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
-                                if (Number.isNaN(bytesCompressed) || Number.isNaN(totalBytesCompressed)) {
+                                if (bytesCompressed == null || totalBytesCompressed === null) {
                                     totalBytesCompressed = null;
                                 } else {
-                                    // Number() spells out what `+=` did: null counts as 0, undefined as NaN
-                                    totalBytesCompressed = Number(totalBytesCompressed) + Number(bytesCompressed);
+                                    totalBytesCompressed += bytesCompressed;
                                 }
 
                                 // Clamp: the final chunk can push nextAddress past the

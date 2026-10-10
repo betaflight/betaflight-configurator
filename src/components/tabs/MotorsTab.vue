@@ -583,6 +583,7 @@ import { useMotorsSave } from "@/composables/motors/useMotorsSave";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 
 const fcStore = useFlightControllerStore();
@@ -789,11 +790,15 @@ const appliedMotorMincommand = ref(1000);
 // Gates motor testing/reordering until the snapshot above reflects the FC, not ref defaults.
 const appliedStateReady = ref(false);
 
-const syncAppliedMotorStopState = () => {
+const snapshotAppliedMotorStopState = () => {
     appliedIs3dEnabled.value = isFeatureEnabled("3D");
     appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
     appliedIsDigitalProtocol.value = digitalProtocolConfigured.value;
     appliedMotorMincommand.value = fcStore.motorConfig.mincommand;
+};
+
+const syncAppliedMotorStopState = () => {
+    snapshotAppliedMotorStopState();
     appliedStateReady.value = true;
 };
 
@@ -879,11 +884,21 @@ watch(
 );
 
 onMounted(async () => {
-    // Request MSP data. fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not
-    // MSP_PID_ADVANCED — sync only after that reply, or the snapshot reads the analog-protocol default.
-    await loadMotorsData(syncAppliedMotorStopState);
-
-    await loadEscSensorPort();
+    const loaded = await runTabLoad(
+        async () => {
+            // Request MSP data. fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not
+            // MSP_PID_ADVANCED — snapshot only after that reply, or the snapshot reads the analog-protocol default.
+            await loadMotorsData(snapshotAppliedMotorStopState);
+            await loadEscSensorPort();
+            // Only now, so a load that fails part-way leaves motor testing disabled
+            appliedStateReady.value = true;
+            return true;
+        },
+        (error) => console.error("Failed to load motors data:", error),
+    );
+    if (!loaded) {
+        return;
+    }
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();

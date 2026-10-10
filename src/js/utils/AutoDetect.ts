@@ -154,17 +154,23 @@ class AutoDetect {
         }
     }
 
-    onFinishClose() {
+    async onFinishClose() {
         const fcStore = useFlightControllerStore();
         const board = fcStore.config.boardName;
-        let found: unknown = false;
+        let found = false;
         if (board && typeof this._onBoardDetected === "function") {
-            found = this._onBoardDetected(board);
+            // The firmware flasher's callback is async; settle it before reporting, or a pending
+            // Promise counts as a match. Settle it before cleanup too: onClosed reads targetAvailable.
+            try {
+                found = await this._onBoardDetected(board);
+            } catch (error) {
+                console.error("Board detection callback failed:", error);
+            }
         } else if (board && this._boardOptions) {
             // fallback: just check if board exists in loaded targets
             found = this._boardOptions.some((b) => b.target === board);
         }
-        this.targetAvailable = !!found;
+        this.targetAvailable = found;
         gui_log(
             i18n.getMessage(
                 this.targetAvailable
@@ -182,7 +188,7 @@ class AutoDetect {
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
             this.cloudBuildOptions = fcStore.config.buildOptions;
         }
-        this.onFinishClose();
+        await this.onFinishClose();
     }
 
     async getBuildInfo() {
@@ -211,7 +217,7 @@ class AutoDetect {
 
         if (fcStore.config.apiVersion.includes("null") || semver.lt(fcStore.config.apiVersion, "1.39.0")) {
             // auto-detect is not supported
-            this.onFinishClose();
+            await this.onFinishClose();
         } else {
             await MSP.promise(MSPCodes.MSP_FC_VARIANT);
             await this.getBuildInfo();

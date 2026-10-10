@@ -78,17 +78,16 @@ describe("useLiveSensorData", () => {
         },
     );
 
-    it("stops every stream except pitot, which keeps running until unmount", () => {
+    it("stops every stream, pitot included, so none is left for unmount", () => {
         const { wrapper, data } = mountData();
         const names = startAll(data);
         expect(new Set(names.values()).size).toBe(PULLS.length); // one interval per stream
-        const allButPitot = PULLS.filter(([sensor]) => sensor !== "pitot").map(([sensor]) => names.get(sensor));
 
         data.stopPolling();
-        expect(removed()).toEqual(allButPitot);
+        expect(removed()).toEqual(PULLS.map(([sensor]) => names.get(sensor)));
 
         vi.mocked(timers.removeInterval).mockClear();
         wrapper.unmount();
-        expect(removed()).toEqual([names.get("pitot")]);
+        expect(removed()).toEqual([]);
     });
 });
