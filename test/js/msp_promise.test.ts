@@ -60,10 +60,11 @@ describe("MSP promise semantics", () => {
     let boundProcessData: typeof mspHelper.process_data;
 
     beforeEach(() => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         serialSendSpy = vi.spyOn(serial, "send").mockImplementation(async () => ({ bytesSent: 0 }));
         setProtocolConnected(true);
-        useConnectionStore().virtualMode = false;
+        connectionStore.virtualMode = false;
 
         MSP.callbacks = [];
         MSP.parked.clear();
@@ -201,7 +202,8 @@ describe("MSP promise semantics", () => {
         });
 
         it("resolves undefined without touching serial.send when virtualMode is true", async () => {
-            useConnectionStore().virtualMode = true;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualMode = true;
 
             await expect(MSP.promise(EEPROM_WRITE_CODE)).resolves.toBeUndefined();
             expect(serialSendSpy).not.toHaveBeenCalled();

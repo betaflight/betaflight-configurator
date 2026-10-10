@@ -37,8 +37,9 @@ describe("useCli output during CliAutoComplete build", () => {
 
     beforeEach(() => {
         setActivePinia(createPinia());
-        useConnectionStore().cliActive = true;
-        useConnectionStore().cliValid = true;
+        const connectionStore = useConnectionStore();
+        connectionStore.cliActive = true;
+        connectionStore.cliValid = true;
         CliAutoComplete.builder.state = "reset";
         useAppInfoStore().operatingSystem = "Linux";
 
@@ -48,9 +49,10 @@ describe("useCli output during CliAutoComplete build", () => {
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         vi.restoreAllMocks();
-        useConnectionStore().cliActive = false;
-        useConnectionStore().cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
         CliAutoComplete.builder.state = "reset";
     });
 

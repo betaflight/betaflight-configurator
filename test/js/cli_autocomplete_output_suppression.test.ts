@@ -45,8 +45,9 @@ describe("useCli output suppression around CliAutoComplete", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
-        useConnectionStore().cliActive = true;
-        useConnectionStore().cliValid = true;
+        const connectionStore = useConnectionStore();
+        connectionStore.cliActive = true;
+        connectionStore.cliValid = true;
         useFlightControllerStore().config.flightControllerIdentifier = "BTFL";
         CliAutoComplete.builder = { state: "reset", numFails: 0, draining: false };
         CliAutoComplete.configEnabled = true;
@@ -64,11 +65,12 @@ describe("useCli output suppression around CliAutoComplete", () => {
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         CliAutoComplete.cleanup();
         vi.useRealTimers();
         vi.restoreAllMocks();
-        useConnectionStore().cliActive = false;
-        useConnectionStore().cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
     });
 
     function historyText() {

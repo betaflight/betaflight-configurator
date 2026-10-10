@@ -58,7 +58,8 @@ describe("useBoardSelection", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
-        useConnectionStore().connectLock = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
 
         scope = effectScope();
         scope.run(() => {
@@ -67,17 +68,19 @@ describe("useBoardSelection", () => {
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         scope.stop();
         vi.runAllTimers();
-        useConnectionStore().connectLock = false;
+        connectionStore.connectLock = false;
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
     it("clears the detect-board timeout on scope dispose, so detectingBoard stays stuck", async () => {
+        const connectionStore = useConnectionStore();
         // The connectLock branch is the smallest surface that schedules the
         // 2000ms timeout without needing to entangle AutoDetect.verifyBoard.
-        useConnectionStore().connectLock = true;
+        connectionStore.connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);
@@ -90,7 +93,8 @@ describe("useBoardSelection", () => {
     });
 
     it("without dispose, the timeout still fires and resets detectingBoard (proves the test is not vacuous)", async () => {
-        useConnectionStore().connectLock = true;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);

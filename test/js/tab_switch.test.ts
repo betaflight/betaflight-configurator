@@ -49,8 +49,9 @@ function openedTab() {
 describe("selectDefaultTabWhenConnected", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
         useNavigationStore().allowedTabs = [...DEFAULT_ALLOWED_TABS];
-        useConnectionStore().connectionValid = true;
+        connectionStore.connectionValid = true;
         config.rememberLastTab = true;
         config.lastTab = undefined;
         mountVueTab.mockClear();

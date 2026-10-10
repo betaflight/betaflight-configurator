@@ -61,18 +61,20 @@ function getHistory(cli: Cli) {
 describe("useCli CLI-entry validation across serial read boundaries", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        useConnectionStore().cliActive = true;
-        useConnectionStore().cliValid = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.cliActive = true;
+        connectionStore.cliValid = false;
         CliAutoComplete.builder.state = "reset";
         useAppInfoStore().operatingSystem = "Linux";
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         CliAutoComplete.cleanup();
         CliAutoComplete.configEnabled = false;
         vi.restoreAllMocks();
-        useConnectionStore().cliActive = false;
-        useConnectionStore().cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
     });
 
     it("preserves same-read normal output before autocomplete starts", () => {
@@ -87,6 +89,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
     });
 
     it("validates when 'CLI' is split across reads and preserves subsequent traffic", () => {
+        const connectionStore = useConnectionStore();
         const cli = makeCli();
 
         feed(cli, ["\r\nEntering CL", "I Mode, type 'exit' to reboot, or 'help'\r\n\r\n# "]);
@@ -94,11 +97,12 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
 
         const history = getHistory(cli);
 
-        expect(useConnectionStore().cliValid).toBe(true);
+        expect(connectionStore.cliValid).toBe(true);
         expect(history).toContain("Betaflight / STM32F7X2");
     });
 
     it("validates a byte-fragmented banner and preserves subsequent traffic", () => {
+        const connectionStore = useConnectionStore();
         const cli = makeCli();
 
         feed(cli, BANNER.split(""));
@@ -106,7 +110,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
 
         const history = getHistory(cli);
 
-        expect(useConnectionStore().cliValid).toBe(true);
+        expect(connectionStore.cliValid).toBe(true);
         expect(history).toContain("Betaflight / STM32F7X2");
     });
 });

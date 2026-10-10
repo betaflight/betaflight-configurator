@@ -115,13 +115,15 @@ describe("store owns the connection flags (was CONFIGURATOR)", () => {
     // A fresh Pinia must start disconnected: the flags no longer live in a module-level
     // singleton that would carry one test's (or session's) state into the next.
     it("starts from the defaults in a fresh Pinia", () => {
-        useConnectionStore().connectionValid = true;
-        useConnectionStore().virtualApiVersion = "1.48.0";
+        const previous = useConnectionStore();
+        previous.connectionValid = true;
+        previous.virtualApiVersion = "1.48.0";
 
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
 
-        expect(useConnectionStore().connectionValid).toBe(false);
-        expect(useConnectionStore().virtualApiVersion).toBe("0.0.1");
+        expect(connectionStore.connectionValid).toBe(false);
+        expect(connectionStore.virtualApiVersion).toBe("0.0.1");
     });
 });
 

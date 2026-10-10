@@ -57,10 +57,10 @@ describe("useDataflashPull", () => {
         // The composable reads the app's Pinia instance (and makes it the active one), so the
         // composable and the test must share that instance to see the same connection store.
         setActivePinia(pinia);
+        connectionStore = useConnectionStore();
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        useConnectionStore().connectionValid = true;
-        connectionStore = useConnectionStore();
+        connectionStore.connectionValid = true;
         connectionStore.resumeLiveData();
         connectionStore.connectedTo = "/dev/ttyACM0";
 
@@ -85,7 +85,7 @@ describe("useDataflashPull", () => {
     });
 
     afterEach(() => {
-        useConnectionStore().connectionValid = false;
+        connectionStore.connectionValid = false;
         connectionStore.connectedTo = false;
         vi.restoreAllMocks();
     });
@@ -268,10 +268,10 @@ describe("useDataflashPull", () => {
             expect(dataflash.available.value).toBe(false);
 
             fcStore.dataflash.usedSize = 100;
-            useConnectionStore().connectionValid = false;
+            connectionStore.connectionValid = false;
             expect(dataflash.available.value).toBe(false);
 
-            useConnectionStore().connectionValid = true;
+            connectionStore.connectionValid = true;
             connectionStore.connectedTo = false;
             expect(dataflash.available.value).toBe(false);
         });

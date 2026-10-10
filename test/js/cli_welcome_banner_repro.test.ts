@@ -81,16 +81,18 @@ function countOccurrences(haystack: string, needle: string) {
 describe("useCli welcome-banner split-read handling (#5445)", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        useConnectionStore().cliActive = true;
-        useConnectionStore().cliValid = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.cliActive = true;
+        connectionStore.cliValid = false;
         CliAutoComplete.builder.state = "reset";
         useAppInfoStore().operatingSystem = "Linux";
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         vi.restoreAllMocks();
-        useConnectionStore().cliActive = false;
-        useConnectionStore().cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
         CliAutoComplete.builder.state = "reset";
     });
 
@@ -129,10 +131,11 @@ describe("useCli welcome-banner split-read handling (#5445)", () => {
 
     // Entry validation must not come at the cost of losing or corrupting normal CLI traffic.
     it.each(cases)("%s: normal command output after entry is preserved", (_label, chunks) => {
+        const connectionStore = useConnectionStore();
         const cli = makeCli();
 
         feed(cli, chunks);
-        expect(useConnectionStore().cliValid).toBe(true);
+        expect(connectionStore.cliValid).toBe(true);
 
         feed(cli, NORMAL_OUTPUT_CHUNKS);
 

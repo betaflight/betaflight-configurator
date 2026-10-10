@@ -66,7 +66,8 @@ describe("Virtual FC build options", () => {
     it.each(VIRTUAL_API_VERSIONS)(
         "keeps the features it enables available after option filtering on API %s",
         (apiVersion) => {
-            useConnectionStore().virtualApiVersion = apiVersion;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualApiVersion = apiVersion;
             VirtualFC.setVirtualConfig();
 
             const expectedStates = {

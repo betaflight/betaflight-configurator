@@ -34,10 +34,11 @@ let fcStore: ReturnType<typeof useFlightControllerStore>;
 describe("usePower", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        useConnectionStore().virtualMode = false;
-        useConnectionStore().virtualApiVersion = "0.0.1";
+        connectionStore.virtualMode = false;
+        connectionStore.virtualApiVersion = "0.0.1";
     });
 
     afterEach(() => {
@@ -45,8 +46,9 @@ describe("usePower", () => {
     });
 
     it("switches battery profiles in virtual mode", async () => {
-        useConnectionStore().virtualMode = true;
-        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const power = usePower();
@@ -61,8 +63,9 @@ describe("usePower", () => {
     });
 
     it("requests the battery profile name with the MSP2TEXT battery-profile type byte", async () => {
-        useConnectionStore().virtualMode = true;
-        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         // A wrong MSP2TextType member reaches the wire as the wrong type byte and the FC
@@ -78,8 +81,9 @@ describe("usePower", () => {
     });
 
     it("restores virtual battery profile state without MSP resync when profile switching fails", async () => {
-        useConnectionStore().virtualMode = true;
-        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const profileNameError = new Error("profile name failed");

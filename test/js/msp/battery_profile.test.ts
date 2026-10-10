@@ -74,13 +74,15 @@ describe("Battery Profiles", () => {
         // A fresh Pinia per test: the store starts from its initial state, and VirtualFC resolves
         // the same active Pinia.
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
         fcStore = useFlightControllerStore();
-        useConnectionStore().virtualApiVersion = "0.0.1";
+        connectionStore.virtualApiVersion = "0.0.1";
     });
 
     describe("VirtualFC", () => {
         it("reports battery profile support for API >= 1.48", () => {
-            useConnectionStore().virtualApiVersion = API_VERSION_1_48;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualApiVersion = API_VERSION_1_48;
             VirtualFC.setVirtualConfig();
 
             expect(fcStore.config.numberOfBatteryProfiles).toEqual(3);
@@ -88,7 +90,8 @@ describe("Battery Profiles", () => {
         });
 
         it("keeps legacy virtual firmware without battery profiles below API 1.48", () => {
-            useConnectionStore().virtualApiVersion = API_VERSION_1_47;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualApiVersion = API_VERSION_1_47;
             VirtualFC.setVirtualConfig();
 
             expect(fcStore.config.numberOfBatteryProfiles).toEqual(0);
