@@ -178,6 +178,7 @@ class Websocket extends EventTarget {
             if (this.ws !== ws) {
                 return;
             }
+            this.handleReceiveBytes({ detail: uint8Chunk });
             this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: uint8Chunk }));
         };
     }

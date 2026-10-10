@@ -136,7 +136,7 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         expect(connected).toHaveBeenCalledWith({ socketId: "ws://sitl.local:5761" });
     });
 
-    it("onmessage forwards the frame as bytes, but drops it if superseded while the blob decoded", async () => {
+    it("onmessage forwards and counts the frame, but drops it if superseded while the blob decoded", async () => {
         const socket = new Websocket();
         const received = vi.fn();
         socket.addEventListener("receive", (e) => received((e as CustomEvent<Uint8Array>).detail));
@@ -156,6 +156,7 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         await ws.onmessage?.call(ws, frame());
         expect(received).toHaveBeenCalledTimes(1);
         expect(received).toHaveBeenCalledWith(new Uint8Array([1, 2, 3]));
+        expect(socket.bytesReceived).toBe(3);
 
         // Start decoding a frame on the old socket, then reconnect before it resolves.
         const stale = ws.onmessage?.call(ws, frame());
@@ -164,6 +165,7 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         await stale;
         expect(decode).toHaveBeenCalledTimes(2);
         expect(received).toHaveBeenCalledTimes(1);
+        expect(socket.bytesReceived).toBe(3);
     });
 
     it("send counts the bytes it wrote and reports them", async () => {
