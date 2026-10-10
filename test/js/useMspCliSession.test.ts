@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import MSP, { type CliCallback } from "../../src/js/msp";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import {
     MIN_FC_VERSION_FOR_MSP_CLI,
     findCliError,
@@ -231,39 +232,40 @@ describe("useMspCliSession", () => {
     });
 
     describe("isMspCliSupported", () => {
-        const originalVersion = FC.CONFIG.flightControllerVersion;
+        let fcStore: ReturnType<typeof useFlightControllerStore>;
 
-        afterEach(() => {
-            FC.CONFIG.flightControllerVersion = originalVersion;
+        beforeEach(() => {
+            setActivePinia(createPinia());
+            fcStore = useFlightControllerStore();
         });
 
         it("returns false when no firmware version is connected", () => {
-            FC.CONFIG.flightControllerVersion = "";
+            fcStore.config.flightControllerVersion = "";
             expect(isMspCliSupported()).toBe(false);
         });
 
         it("returns false on firmware older than the minimum", () => {
-            FC.CONFIG.flightControllerVersion = "4.5.3";
+            fcStore.config.flightControllerVersion = "4.5.3";
             expect(isMspCliSupported()).toBe(false);
         });
 
         it("returns true on the minimum supported firmware", () => {
-            FC.CONFIG.flightControllerVersion = MIN_FC_VERSION_FOR_MSP_CLI;
+            fcStore.config.flightControllerVersion = MIN_FC_VERSION_FOR_MSP_CLI;
             expect(isMspCliSupported()).toBe(true);
         });
 
         it("returns true on newer firmware", () => {
-            FC.CONFIG.flightControllerVersion = "4.6.0";
+            fcStore.config.flightControllerVersion = "4.6.0";
             expect(isMspCliSupported()).toBe(true);
         });
 
         it("supports vendor firmware versions with underscore prerelease identifiers", () => {
-            FC.CONFIG.flightControllerVersion = "2025.12.3-alpha.KAACK_V19";
+            fcStore.config.flightControllerVersion = "2025.12.3-alpha.KAACK_V19";
             expect(isMspCliSupported()).toBe(true);
         });
 
         it("returns false for an invalid firmware version without throwing", () => {
-            FC.CONFIG.flightControllerVersion = "not-a-version";
+            fcStore.config.flightControllerVersion = "not-a-version";
             expect(() => isMspCliSupported()).not.toThrow();
             expect(isMspCliSupported()).toBe(false);
         });

@@ -122,8 +122,8 @@
 
         <PresetDetailsDialog
             :open="store.detailsState.open"
-            :preset="store.selectedPreset"
-            :repository="store.selectedPresetRepository"
+            :preset="store.selectedPreset ?? undefined"
+            :repository="store.selectedPresetRepository ?? undefined"
             :loading="store.detailsState.loading"
             :error="store.detailsState.error"
             :show-cli="store.detailsState.showCli"
@@ -137,9 +137,11 @@
             @apply="applyPresetSelection"
             @close="store.closePresetDetails()"
             @toggle-cli-visible="store.setDetailsCliVisible($event)"
-            @toggle-option="store.setOptionChecked($event.optionId, $event.checked)"
+            @toggle-option="
+                $event.checked ? store.selectOption($event.optionId) : store.deselectOption($event.optionId)
+            "
             @select-exclusive-option="store.setExclusiveOption($event.groupOptionIds, $event.selectedOptionId)"
-            @toggle-favorite="store.toggleFavorite(store.selectedPreset, store.selectedPresetRepository)"
+            @toggle-favorite="toggleSelectedPresetFavorite"
             @options-expanded-change="store.setOptionsExpanded($event)"
         />
 
@@ -230,7 +232,7 @@ import {
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { escapeHtml } from "@/js/utils/common";
 import { useConnectionStore } from "@/stores/connection";
 import FileSystem from "@/js/FileSystem";
@@ -240,6 +242,7 @@ import { update_sensor_status } from "@/js/serial_backend";
 
 const store = usePresetsStore();
 const connectionStore = useConnectionStore();
+const fcStore = useFlightControllerStore();
 const dialog = useDialog();
 const cliSession = useMspCliSession();
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
@@ -300,6 +303,13 @@ function handleDeactivateSource(sourceId: string) {
     store.setSourceActive(sourceId, false);
 }
 
+// The details dialog only emits while it shows a preset, so both are set whenever this runs.
+function toggleSelectedPresetFavorite() {
+    if (store.selectedPreset && store.selectedPresetRepository) {
+        store.toggleFavorite(store.selectedPreset, store.selectedPresetRepository);
+    }
+}
+
 async function ensureCliPresetActionSupported() {
     if (connectionStore.virtualMode) {
         await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsVirtualModeCliUnsupported"), {
@@ -313,7 +323,7 @@ async function ensureCliPresetActionSupported() {
             i18n.getMessage("warningTitle"),
             i18n.getMessage("mspCliFirmwareTooOld", {
                 required: MIN_FC_VERSION_FOR_MSP_CLI,
-                current: FC.CONFIG?.flightControllerVersion || "?",
+                current: fcStore.config?.flightControllerVersion || "?",
             }),
             { confirmText: i18n.getMessage("close") },
         );
@@ -407,7 +417,7 @@ async function loadConfigBackup() {
 
 function isPresetCompatible(preset: { firmware_version?: string[] }) {
     return preset.firmware_version?.some((firmwareVersion: string) =>
-        FC.CONFIG.flightControllerVersion.startsWith(firmwareVersion),
+        fcStore.config.flightControllerVersion.startsWith(firmwareVersion),
     );
 }
 
@@ -425,7 +435,7 @@ function pickPresetAfterVersionCheck() {
         i18n.getMessage("presetsWarningDialogTitle"),
         i18n.getMessage("presetsWarningWrongVersionConfirmation", [
             store.selectedPreset.firmware_version,
-            FC.CONFIG.flightControllerVersion,
+            fcStore.config.flightControllerVersion,
         ]),
         () => store.pickSelectedPreset(),
         null,

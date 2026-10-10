@@ -1,8 +1,9 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
 import GUI from "../../src/js/gui";
 import BFClipboard from "../../src/js/Clipboard";
 
@@ -38,6 +39,7 @@ function getHistory(cli: Cli) {
 
 describe("useCli CLI-entry validation across serial read boundaries", () => {
     beforeEach(() => {
+        setActivePinia(createPinia());
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = false;
         CliAutoComplete.builder.state = "reset";
@@ -47,7 +49,6 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
     afterEach(() => {
         CliAutoComplete.cleanup();
         CliAutoComplete.configEnabled = false;
-        FC.CONFIG.flightControllerIdentifier = "";
         vi.restoreAllMocks();
         CONFIGURATOR.cliActive = false;
         CONFIGURATOR.cliValid = false;
@@ -55,7 +56,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
 
     it("preserves same-read normal output before autocomplete starts", () => {
         const cli = makeCli();
-        FC.CONFIG.flightControllerIdentifier = "BTFL";
+        useFlightControllerStore().config.flightControllerIdentifier = "BTFL";
         CliAutoComplete.configEnabled = true;
         CliAutoComplete.initialize(vi.fn(), vi.fn(), () => Date.now() - cli.state.lastArrival > 250);
 

@@ -30,7 +30,7 @@ import MSPConnectorImpl from "../msp/MSPConnector";
 import GUI, { TABS as GUI_TABS } from "../gui";
 import { i18n } from "../localization";
 import MSP from "../msp";
-import FC from "../fc";
+import { useFlightControllerStore } from "../../stores/fc";
 import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import { MspCancelledError } from "../msp/mspErrors";
@@ -154,6 +154,11 @@ class STM32Protocol {
     rebootMode: number = 0;
     private readonly _boundHandleConnect: (event: Event) => void;
     private readonly _boundHandleDisconnect: (event: Event) => void;
+
+    // Resolved per access, as the FC shim was: tests install a fresh Pinia after import.
+    private get fcStore() {
+        return useFlightControllerStore();
+    }
 
     constructor() {
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
@@ -304,7 +309,12 @@ class STM32Protocol {
 
         MSP.promise(MSPCodes.MSP_BOARD_INFO)
             .then(() => {
-                if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                if (
+                    bit_check(
+                        this.fcStore.config.targetCapabilities,
+                        this.fcStore.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER,
+                    )
+                ) {
                     // Board has flash bootloader
                     gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
                     console.log(`${this.logHead} flash bootloader detected`);
@@ -319,7 +329,7 @@ class STM32Protocol {
                     this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
                         ? this.serialOptions.selectedBoard
                         : "NONE";
-                const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
+                const connectedBoard = this.fcStore.config.boardName ? this.fcStore.config.boardName : "UNKNOWN";
 
                 try {
                     if (
@@ -348,7 +358,7 @@ class STM32Protocol {
     }
 
     handleMSPConnect(): void {
-        gui_log(i18n.getMessage("apiVersionReceived", [FC.CONFIG.apiVersion]));
+        gui_log(i18n.getMessage("apiVersionReceived", [this.fcStore.config.apiVersion]));
 
         this.lookingForCapabilitiesViaMSP();
     }

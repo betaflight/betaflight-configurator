@@ -24,7 +24,7 @@ import { useNavigationStore } from "@/stores/navigation";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 
@@ -41,8 +41,9 @@ import { i18n } from "@/js/localization";
  * @returns {Promise<void>} resolves once the EEPROM write is acknowledged
  */
 async function saveToEeprom(): Promise<void> {
+    const fcStore = useFlightControllerStore();
     // Never persist while arming is possible (matches writeConfiguration).
-    if (!FC.CONFIG.armingDisabled) {
+    if (!fcStore.config.armingDisabled) {
         mspHelper.disableArming();
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);

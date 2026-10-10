@@ -611,14 +611,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useTranslation } from "i18next-vue";
-import FC from "@/js/fc";
-
+import { useFlightControllerStore } from "@/stores/fc";
 import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import WingCurvesChart from "./WingCurvesChart.vue";
 import getPsasHyperbolicCurves from "./WingPsasCurvesData";
 
 const { t } = useTranslation();
+const fcStore = useFlightControllerStore();
 
 // PSAS - Individual per-cell computed properties to avoid array destruction.
 // v-model.number writes a single number, so using array-level computeds would
@@ -628,237 +628,237 @@ const { t } = useTranslation();
 // Main settings
 // Roll
 const psasRollPilot = computed({
-    get: () => FC.PSAS_CONFIG.stick_gain[0],
+    get: () => fcStore.psasConfig.stick_gain[0],
     set: (val) => {
-        FC.PSAS_CONFIG.stick_gain[0] = val;
+        fcStore.psasConfig.stick_gain[0] = val;
     },
 });
 
 const psasRollDamping = computed({
-    get: () => FC.PSAS_CONFIG.damping_gain[0],
+    get: () => fcStore.psasConfig.damping_gain[0],
     set: (val) => {
-        FC.PSAS_CONFIG.damping_gain[0] = val;
+        fcStore.psasConfig.damping_gain[0] = val;
     },
 });
 
 // Pitch
 const psasPitchPilot = computed({
-    get: () => FC.PSAS_CONFIG.stick_gain[1],
+    get: () => fcStore.psasConfig.stick_gain[1],
     set: (val) => {
-        FC.PSAS_CONFIG.stick_gain[1] = val;
+        fcStore.psasConfig.stick_gain[1] = val;
     },
 });
 
 const psasPitchDamping = computed({
-    get: () => FC.PSAS_CONFIG.damping_gain[1],
+    get: () => fcStore.psasConfig.damping_gain[1],
     set: (val) => {
-        FC.PSAS_CONFIG.damping_gain[1] = val;
+        fcStore.psasConfig.damping_gain[1] = val;
     },
 });
 
 const psasPitchGyroHPF = computed({
-    get: () => FC.PSAS_CONFIG.pitch_damping_filter_freq,
+    get: () => fcStore.psasConfig.pitch_damping_filter_freq,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_damping_filter_freq = val;
+        fcStore.psasConfig.pitch_damping_filter_freq = val;
     },
 });
 
 const psasPitchStability = computed({
-    get: () => FC.PSAS_CONFIG.pitch_stability_gain,
+    get: () => fcStore.psasConfig.pitch_stability_gain,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_stability_gain = val;
+        fcStore.psasConfig.pitch_stability_gain = val;
     },
 });
 
 const psasPitchAccelZLPF = computed({
-    get: () => FC.PSAS_CONFIG.accel_z_filter_freq,
+    get: () => fcStore.psasConfig.accel_z_filter_freq,
     set: (val) => {
-        FC.PSAS_CONFIG.accel_z_filter_freq = val;
+        fcStore.psasConfig.accel_z_filter_freq = val;
     },
 });
 
 // Yaw
 const psasYawPilot = computed({
-    get: () => FC.PSAS_CONFIG.stick_gain[2],
+    get: () => fcStore.psasConfig.stick_gain[2],
     set: (val) => {
-        FC.PSAS_CONFIG.stick_gain[2] = val;
+        fcStore.psasConfig.stick_gain[2] = val;
     },
 });
 
 const psasYawDamping = computed({
-    get: () => FC.PSAS_CONFIG.damping_gain[2],
+    get: () => fcStore.psasConfig.damping_gain[2],
     set: (val) => {
-        FC.PSAS_CONFIG.damping_gain[2] = val;
+        fcStore.psasConfig.damping_gain[2] = val;
     },
 });
 
 const psasYawGyroHPF = computed({
-    get: () => FC.PSAS_CONFIG.yaw_damping_filter_freq,
+    get: () => fcStore.psasConfig.yaw_damping_filter_freq,
     set: (val) => {
-        FC.PSAS_CONFIG.yaw_damping_filter_freq = val;
+        fcStore.psasConfig.yaw_damping_filter_freq = val;
     },
 });
 
 const psasYawStability = computed({
-    get: () => FC.PSAS_CONFIG.yaw_stability_gain,
+    get: () => fcStore.psasConfig.yaw_stability_gain,
     set: (val) => {
-        FC.PSAS_CONFIG.yaw_stability_gain = val;
+        fcStore.psasConfig.yaw_stability_gain = val;
     },
 });
 
 const psasYawAccelYLPF = computed({
-    get: () => FC.PSAS_CONFIG.accel_y_filter_freq,
+    get: () => fcStore.psasConfig.accel_y_filter_freq,
     set: (val) => {
-        FC.PSAS_CONFIG.accel_y_filter_freq = val;
+        fcStore.psasConfig.accel_y_filter_freq = val;
     },
 });
 
 // Accel Z controller
 const psasAccelI = computed({
-    get: () => FC.PSAS_CONFIG.pitch_accel_i_gain,
+    get: () => fcStore.psasConfig.pitch_accel_i_gain,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_accel_i_gain = val;
+        fcStore.psasConfig.pitch_accel_i_gain = val;
     },
 });
 
 const psasAccelP = computed({
-    get: () => FC.PSAS_CONFIG.pitch_accel_p_gain,
+    get: () => fcStore.psasConfig.pitch_accel_p_gain,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_accel_p_gain = val;
+        fcStore.psasConfig.pitch_accel_p_gain = val;
     },
 });
 
 const psasGLoadMax = computed({
-    get: () => FC.PSAS_CONFIG.pitch_accel_max,
+    get: () => fcStore.psasConfig.pitch_accel_max,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_accel_max = val;
+        fcStore.psasConfig.pitch_accel_max = val;
     },
 });
 
 const psasGLoadMin = computed({
-    get: () => FC.PSAS_CONFIG.pitch_accel_min,
+    get: () => fcStore.psasConfig.pitch_accel_min,
     set: (val) => {
-        FC.PSAS_CONFIG.pitch_accel_min = val;
+        fcStore.psasConfig.pitch_accel_min = val;
     },
 });
 
 const psasServoTime = computed({
-    get: () => FC.PSAS_CONFIG.servo_time,
+    get: () => fcStore.psasConfig.servo_time,
     set: (val) => {
-        FC.PSAS_CONFIG.servo_time = val;
+        fcStore.psasConfig.servo_time = val;
     },
 });
 
 // AoA limiter
 const psasWingLoading = computed({
-    get: () => FC.PSAS_CONFIG.wing_load,
+    get: () => fcStore.psasConfig.wing_load,
     set: (val) => {
-        FC.PSAS_CONFIG.wing_load = val;
+        fcStore.psasConfig.wing_load = val;
     },
 });
 
 const psasAirDensity = computed({
-    get: () => FC.PSAS_CONFIG.air_density,
+    get: () => fcStore.psasConfig.air_density,
     set: (val) => {
-        FC.PSAS_CONFIG.air_density = val;
+        fcStore.psasConfig.air_density = val;
     },
 });
 
 const psasLiftCoefLPF = computed({
-    get: () => FC.PSAS_CONFIG.lift_coef_filter_freq,
+    get: () => fcStore.psasConfig.lift_coef_filter_freq,
     set: (val) => {
-        FC.PSAS_CONFIG.lift_coef_filter_freq = val;
+        fcStore.psasConfig.lift_coef_filter_freq = val;
     },
 });
 
 const psasLimiterGain = computed({
-    get: () => FC.PSAS_CONFIG.aoa_limiter_gain,
+    get: () => fcStore.psasConfig.aoa_limiter_gain,
     set: (val) => {
-        FC.PSAS_CONFIG.aoa_limiter_gain = val;
+        fcStore.psasConfig.aoa_limiter_gain = val;
     },
 });
 
 const psasLimiterCliftLimit = computed({
-    get: () => FC.PSAS_CONFIG.lift_c_limit,
+    get: () => fcStore.psasConfig.lift_c_limit,
     set: (val) => {
-        FC.PSAS_CONFIG.lift_c_limit = val;
+        fcStore.psasConfig.lift_c_limit = val;
     },
 });
 
 const psasLimiterForecast = computed({
-    get: () => FC.PSAS_CONFIG.aoa_limiter_forecast_time,
+    get: () => fcStore.psasConfig.aoa_limiter_forecast_time,
     set: (val) => {
-        FC.PSAS_CONFIG.aoa_limiter_forecast_time = val;
+        fcStore.psasConfig.aoa_limiter_forecast_time = val;
     },
 });
 
 const psasLimiterTauReturn = computed({
-    get: () => FC.PSAS_CONFIG.aoa_limiter_tau_return,
+    get: () => fcStore.psasConfig.aoa_limiter_tau_return,
     set: (val) => {
-        FC.PSAS_CONFIG.aoa_limiter_tau_return = val;
+        fcStore.psasConfig.aoa_limiter_tau_return = val;
     },
 });
 
 const psasRollToYawLink = computed({
-    get: () => FC.PSAS_CONFIG.roll_to_yaw_link,
+    get: () => fcStore.psasConfig.roll_to_yaw_link,
     set: (val) => {
-        FC.PSAS_CONFIG.roll_to_yaw_link = val;
+        fcStore.psasConfig.roll_to_yaw_link = val;
     },
 });
 
 const psasRollToYawLiftCoefStart = computed({
-    get: () => FC.PSAS_CONFIG.roll_yaw_clift_start,
+    get: () => fcStore.psasConfig.roll_yaw_clift_start,
     set: (val) => {
-        FC.PSAS_CONFIG.roll_yaw_clift_start = val;
+        fcStore.psasConfig.roll_yaw_clift_start = val;
     },
 });
 
 const psasRollToYawLiftCoefStop = computed({
-    get: () => FC.PSAS_CONFIG.roll_yaw_clift_stop,
+    get: () => fcStore.psasConfig.roll_yaw_clift_stop,
     set: (val) => {
-        FC.PSAS_CONFIG.roll_yaw_clift_stop = val;
+        fcStore.psasConfig.roll_yaw_clift_stop = val;
     },
 });
 
 const psasSpeedCurvesMainRollEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_enable[0] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[0] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_enable[0] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[0] = val ? 1 : 0;
     },
 });
 
 const psasSpeedCurvesPilotRollEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_stick_curve_enable[0] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[0] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_stick_curve_enable[0] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[0] = val ? 1 : 0;
     },
 });
 
 const psasSpeedCurvesMainPitchEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_enable[1] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[1] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_enable[1] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[1] = val ? 1 : 0;
     },
 });
 
 const psasSpeedCurvesPilotPitchEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_stick_curve_enable[1] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[1] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_stick_curve_enable[1] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[1] = val ? 1 : 0;
     },
 });
 
 const psasSpeedCurvesMainYawEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_enable[2] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[2] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_enable[2] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[2] = val ? 1 : 0;
     },
 });
 
 const psasSpeedCurvesPilotYawEnabled = computed({
-    get: () => FC.PSAS_CONFIG.speed_stick_curve_enable[2] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[2] !== 0,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_stick_curve_enable[2] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[2] = val ? 1 : 0;
     },
 });
 
@@ -881,63 +881,62 @@ const psasSpeedCurvesModeList = computed(() => [
 ]);
 
 const psasSpeedCurvesVref = computed({
-    get: () => FC.PSAS_CONFIG.speed_optimum_vref,
+    get: () => fcStore.psasConfig.speed_optimum_vref,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_optimum_vref = val;
+        fcStore.psasConfig.speed_optimum_vref = val;
     },
 });
 
 const psasSpeedCurvesMainPower = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_power,
+    get: () => fcStore.psasConfig.speed_main_curve_power,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_power = val;
+        fcStore.psasConfig.speed_main_curve_power = val;
     },
 });
 
 const psasSpeedCurvesRollPilotPower = computed({
-    get: () => FC.PSAS_CONFIG.speed_roll_stick_curve_power,
+    get: () => fcStore.psasConfig.speed_roll_stick_curve_power,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_roll_stick_curve_power = val;
+        fcStore.psasConfig.speed_roll_stick_curve_power = val;
     },
 });
 
 const psasSpeedCurvesMainCurveMin = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_min,
+    get: () => fcStore.psasConfig.speed_main_curve_min,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_min = val;
+        fcStore.psasConfig.speed_main_curve_min = val;
     },
 });
 
 const psasSpeedCurvesMainCurveMax = computed({
-    get: () => FC.PSAS_CONFIG.speed_main_curve_max,
+    get: () => fcStore.psasConfig.speed_main_curve_max,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_main_curve_max = val;
+        fcStore.psasConfig.speed_main_curve_max = val;
     },
 });
 
 const psasSpeedCurvesPilotCurveMin = computed({
-    get: () => FC.PSAS_CONFIG.speed_stick_curve_min,
+    get: () => fcStore.psasConfig.speed_stick_curve_min,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_stick_curve_min = val;
+        fcStore.psasConfig.speed_stick_curve_min = val;
     },
 });
 
 const psasSpeedCurvesPilotCurveMax = computed({
-    get: () => FC.PSAS_CONFIG.speed_stick_curve_max,
+    get: () => fcStore.psasConfig.speed_stick_curve_max,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_stick_curve_max = val;
+        fcStore.psasConfig.speed_stick_curve_max = val;
     },
 });
 
 const psasSpeedCurvesMode = computed({
-    get: () => FC.PSAS_CONFIG.speed_curve_mode,
+    get: () => fcStore.psasConfig.speed_curve_mode,
     set: (val) => {
-        FC.PSAS_CONFIG.speed_curve_mode = val;
+        fcStore.psasConfig.speed_curve_mode = val;
     },
 });
 
 // PSAS config - reactive reference
-const psasConfig = computed(() => FC.PSAS_CONFIG);
 const chartCurves = computed(() => {
     const curvesState = {
         showMain: true,
@@ -947,6 +946,6 @@ const chartCurves = computed(() => {
         showRollStick: true,
         rollStickActive: psasSpeedCurvesPilotRollEnabled.value,
     };
-    return getPsasHyperbolicCurves(psasConfig.value, curvesState);
+    return getPsasHyperbolicCurves(fcStore.psasConfig, curvesState);
 });
 </script>

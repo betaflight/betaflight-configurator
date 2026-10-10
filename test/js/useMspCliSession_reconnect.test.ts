@@ -53,14 +53,10 @@ vi.mock("../../src/js/serial_backend", () => ({
     cancelRebootReconnect,
 }));
 
-// Keep the rest of the import graph light — useMspCliSession also imports MSP and FC.
+// Keep the rest of the import graph light — useMspCliSession also imports MSP.
 vi.mock("../../src/js/msp", () => ({
     __esModule: true,
     default: { send_cli_command: vi.fn() },
-}));
-vi.mock("../../src/js/fc", () => ({
-    __esModule: true,
-    default: { CONFIG: { flightControllerVersion: "4.6.0" } },
 }));
 
 import { scheduleReconnect, cancelScheduledReconnect, saveAndReconnect } from "../../src/composables/useMspCliSession";

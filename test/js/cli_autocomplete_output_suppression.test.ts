@@ -1,14 +1,15 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
 import GUI from "../../src/js/gui";
 import BFClipboard from "../../src/js/Clipboard";
 
-// The builder's sentinel is set when a build starts; CliAutoComplete is JS and does not declare it.
+// The builder's sentinel is set when a build starts.
 function currentSentinel(): string {
-    return (CliAutoComplete.builder as { sentinel?: string }).sentinel!;
+    return CliAutoComplete.builder.sentinel!;
 }
 
 function bytes(str: string) {
@@ -22,9 +23,10 @@ describe("useCli output suppression around CliAutoComplete", () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
+        setActivePinia(createPinia());
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = true;
-        FC.CONFIG.flightControllerIdentifier = "BTFL";
+        useFlightControllerStore().config.flightControllerIdentifier = "BTFL";
         CliAutoComplete.builder = { state: "reset", numFails: 0, draining: false };
         CliAutoComplete.configEnabled = true;
         GUI.operating_system = "Linux";

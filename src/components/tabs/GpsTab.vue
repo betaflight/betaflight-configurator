@@ -319,9 +319,6 @@ import type { FeatureDefinition } from "../../js/Features";
 import type { GpsData } from "../../stores/fc.types";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
-import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
 import { updateTabList } from "../../js/utils/updateTabList";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
@@ -335,7 +332,8 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
-import { useInterval } from "../../composables/useInterval";
+import { useGpsData } from "../../composables/gps/useGpsData";
+import { useGpsSave } from "../../composables/gps/useGpsSave";
 import { useMapViewport } from "../../composables/useMapViewport";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving, withSaveFailureMessage } from "../../composables/useSaving";
@@ -847,35 +845,8 @@ export default defineComponent({
             requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
         };
 
-        const getMagData = () => {
-            if (hasMag.value) {
-                MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, updateUi);
-            } else {
-                updateUi();
-            }
-        };
-
-        const getImuData = () => {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, getMagData);
-        };
-
-        const getAttitudeData = () => {
-            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, getImuData);
-        };
-
-        const getGpsSvInfo = () => {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, getAttitudeData);
-        };
-
-        const getCompGpsData = () => {
-            MSP.send_message(MSPCodes.MSP_COMP_GPS, false, false, getGpsSvInfo);
-        };
-
-        const getRawGpsData = () => {
-            MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
-        };
-
-        const { addInterval, removeAllIntervals, pauseInterval, resumeInterval } = useInterval();
+        const { fetchGpsConfig, startPolling, pausePolling, resumePolling, stopPolling } = useGpsData();
+        const { sendGpsConfig } = useGpsSave();
 
         const checkConnectivity = () => {
             isOnline.value = ispConnected();
@@ -894,8 +865,7 @@ export default defineComponent({
                     return;
                 }
 
-                await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
+                await fetchGpsConfig();
 
                 Object.assign(gpsConfig, fcStore.gpsConfig || {});
 
@@ -911,7 +881,7 @@ export default defineComponent({
                 isWaiting.value = true;
                 showMap.value = false;
 
-                addInterval("gps_pull", getRawGpsData, 100, true);
+                startPolling(hasMag, updateUi);
             } catch (error) {
                 console.error("Failed to load GPS configuration", error);
                 isOnline.value = ispConnected();
@@ -942,13 +912,9 @@ export default defineComponent({
 
                 // The CLI has its own queue, so the telemetry poll's MSP chain has to stop for
                 // the port write below rather than run alongside it.
-                pauseInterval("gps_pull");
+                pausePolling();
                 try {
-                    await MSP.promise(
-                        MSPCodes.MSP_SET_FEATURE_CONFIG,
-                        mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                    );
-                    await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+                    await sendGpsConfig();
 
                     // gps_uart and gps_baud share the parameter group MSP_SET_GPS_CONFIG just
                     // wrote, and the persist below serialises that group, so this has to sit
@@ -968,7 +934,7 @@ export default defineComponent({
 
                     await saveAndReboot();
                 } finally {
-                    resumeInterval("gps_pull");
+                    resumePolling();
                 }
 
                 markClean(savedSnapshot);
@@ -999,7 +965,7 @@ export default defineComponent({
         });
 
         const teardown = () => {
-            removeAllIntervals();
+            stopPolling();
             teardownMapViewport();
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();

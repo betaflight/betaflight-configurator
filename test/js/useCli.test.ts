@@ -19,7 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import { useCli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import FileSystem from "../../src/js/FileSystem";
@@ -38,6 +39,10 @@ function sentText(send: ReturnType<typeof vi.spyOn>, call = 0): string {
 }
 
 describe("useCli", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+    });
+
     afterEach(() => {
         vi.restoreAllMocks();
     });

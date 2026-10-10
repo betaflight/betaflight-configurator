@@ -2,15 +2,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { usePower } from "../../src/composables/usePower";
 import CONFIGURATOR, { API_VERSION_1_48 } from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import VirtualFC from "../../src/js/VirtualFC";
 import MSP from "../../src/js/msp";
 import MSPCodes, { MSP2TextType } from "../../src/js/msp/MSPCodes";
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("usePower", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        FC.resetState();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         CONFIGURATOR.virtualMode = false;
         CONFIGURATOR.virtualApiVersion = "0.0.1";
     });
@@ -31,7 +34,7 @@ describe("usePower", () => {
 
         await power.changeBatteryProfile(2);
 
-        expect(FC.CONFIG.batteryProfile).toBe(2);
+        expect(fcStore.config.batteryProfile).toBe(2);
         expect(power.activeBatteryProfile.value).toBe(2);
     });
 
@@ -72,7 +75,7 @@ describe("usePower", () => {
 
         await expect(power.changeBatteryProfile(2)).rejects.toThrow(profileNameError);
 
-        expect(FC.CONFIG.batteryProfile).toBe(0);
+        expect(fcStore.config.batteryProfile).toBe(0);
         expect(power.activeBatteryProfile.value).toBe(0);
         expect(power.batteryProfileName.value).toBe(previousProfileName);
         expect(mspPromise).not.toHaveBeenCalledWith(MSPCodes.MSP_STATUS_EX);

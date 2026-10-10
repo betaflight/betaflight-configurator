@@ -22,7 +22,7 @@
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import FC from "../fc";
+import { useFlightControllerStore } from "../../stores/fc";
 import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
@@ -52,11 +52,11 @@ import type Beepers from "../Beepers";
 // serial_backend's initFeaturesOnConnect (or VirtualFC) replaces the reset value null with these
 // instances before any feature or beeper MSP is exchanged.
 function features(): Features {
-    return FC.FEATURE_CONFIG.features as Features;
+    return useFlightControllerStore().features.features as Features;
 }
 
 function beepers(which: "beepers" | "dshotBeaconConditions"): Beepers {
-    return FC.BEEPER_CONFIG[which] as Beepers;
+    return useFlightControllerStore().beepers[which] as Beepers;
 }
 
 // osd.js assigns OSD.data inside a function, where TypeScript does not see it.
@@ -305,76 +305,82 @@ class MspHelper {
     }
 
     static readPidSliderSettings(data: MspDataView) {
-        FC.TUNING_SLIDERS.slider_pids_mode = data.readU8();
-        FC.TUNING_SLIDERS.slider_master_multiplier = data.readU8();
-        FC.TUNING_SLIDERS.slider_roll_pitch_ratio = data.readU8();
-        FC.TUNING_SLIDERS.slider_i_gain = data.readU8();
-        FC.TUNING_SLIDERS.slider_d_gain = data.readU8();
-        FC.TUNING_SLIDERS.slider_pi_gain = data.readU8();
-        FC.TUNING_SLIDERS.slider_dmax_gain = data.readU8();
-        FC.TUNING_SLIDERS.slider_feedforward_gain = data.readU8();
-        FC.TUNING_SLIDERS.slider_pitch_pi_gain = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.tuningSliders.slider_pids_mode = data.readU8();
+        fcStore.tuningSliders.slider_master_multiplier = data.readU8();
+        fcStore.tuningSliders.slider_roll_pitch_ratio = data.readU8();
+        fcStore.tuningSliders.slider_i_gain = data.readU8();
+        fcStore.tuningSliders.slider_d_gain = data.readU8();
+        fcStore.tuningSliders.slider_pi_gain = data.readU8();
+        fcStore.tuningSliders.slider_dmax_gain = data.readU8();
+        fcStore.tuningSliders.slider_feedforward_gain = data.readU8();
+        fcStore.tuningSliders.slider_pitch_pi_gain = data.readU8();
         data.readU32(); // reserved for future use
         data.readU32(); // reserved for future use
     }
 
     static writePidSliderSettings(buffer: MspBuffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.TUNING_SLIDERS.slider_pids_mode)
-            .push8(FC.TUNING_SLIDERS.slider_master_multiplier)
-            .push8(FC.TUNING_SLIDERS.slider_roll_pitch_ratio)
-            .push8(FC.TUNING_SLIDERS.slider_i_gain)
-            .push8(FC.TUNING_SLIDERS.slider_d_gain)
-            .push8(FC.TUNING_SLIDERS.slider_pi_gain)
-            .push8(FC.TUNING_SLIDERS.slider_dmax_gain)
-            .push8(FC.TUNING_SLIDERS.slider_feedforward_gain)
-            .push8(FC.TUNING_SLIDERS.slider_pitch_pi_gain)
+            .push8(fcStore.tuningSliders.slider_pids_mode)
+            .push8(fcStore.tuningSliders.slider_master_multiplier)
+            .push8(fcStore.tuningSliders.slider_roll_pitch_ratio)
+            .push8(fcStore.tuningSliders.slider_i_gain)
+            .push8(fcStore.tuningSliders.slider_d_gain)
+            .push8(fcStore.tuningSliders.slider_pi_gain)
+            .push8(fcStore.tuningSliders.slider_dmax_gain)
+            .push8(fcStore.tuningSliders.slider_feedforward_gain)
+            .push8(fcStore.tuningSliders.slider_pitch_pi_gain)
             .push32(0) // reserved for future use
             .push32(0); // reserved for future use
     }
 
     static readDtermFilterSliderSettings(data: MspDataView) {
-        FC.TUNING_SLIDERS.slider_dterm_filter = data.readU8();
-        FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = data.readU8();
-        FC.FILTER_CONFIG.dterm_lowpass_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass2_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.tuningSliders.slider_dterm_filter = data.readU8();
+        fcStore.tuningSliders.slider_dterm_filter_multiplier = data.readU8();
+        fcStore.filterConfig.dterm_lowpass_hz = data.readU16();
+        fcStore.filterConfig.dterm_lowpass2_hz = data.readU16();
+        fcStore.filterConfig.dterm_lowpass_dyn_min_hz = data.readU16();
+        fcStore.filterConfig.dterm_lowpass_dyn_max_hz = data.readU16();
         data.readU32(); // reserved for future use
         data.readU32(); // reserved for future use
     }
 
     static writeDtermFilterSliderSettings(buffer: MspBuffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.TUNING_SLIDERS.slider_dterm_filter)
-            .push8(FC.TUNING_SLIDERS.slider_dterm_filter_multiplier)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass2_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz)
+            .push8(fcStore.tuningSliders.slider_dterm_filter)
+            .push8(fcStore.tuningSliders.slider_dterm_filter_multiplier)
+            .push16(fcStore.filterConfig.dterm_lowpass_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass2_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass_dyn_min_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass_dyn_max_hz)
             .push32(0) // reserved for future use
             .push32(0); // reserved for future use
     }
 
     static readGyroFilterSliderSettings(data: MspDataView) {
-        FC.TUNING_SLIDERS.slider_gyro_filter = data.readU8();
-        FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = data.readU8();
-        FC.FILTER_CONFIG.gyro_lowpass_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass2_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.tuningSliders.slider_gyro_filter = data.readU8();
+        fcStore.tuningSliders.slider_gyro_filter_multiplier = data.readU8();
+        fcStore.filterConfig.gyro_lowpass_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass2_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass_dyn_min_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass_dyn_max_hz = data.readU16();
         data.readU32(); // reserved for future use
         data.readU32(); // reserved for future use
     }
 
     static writeGyroFilterSliderSettings(buffer: MspBuffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.TUNING_SLIDERS.slider_gyro_filter)
-            .push8(FC.TUNING_SLIDERS.slider_gyro_filter_multiplier)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass2_hz)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
+            .push8(fcStore.tuningSliders.slider_gyro_filter)
+            .push8(fcStore.tuningSliders.slider_gyro_filter_multiplier)
+            .push16(fcStore.filterConfig.gyro_lowpass_hz)
+            .push16(fcStore.filterConfig.gyro_lowpass2_hz)
+            .push16(fcStore.filterConfig.gyro_lowpass_dyn_min_hz)
+            .push16(fcStore.filterConfig.gyro_lowpass_dyn_max_hz)
             .push32(0) // reserved for future use
             .push32(0); // reserved for future use
     }
@@ -534,8 +540,9 @@ class MspHelper {
     }
 
     async sendServoConfigurations() {
-        for (let servoIndex = 0; servoIndex < FC.SERVO_CONFIG.length; servoIndex++) {
-            const servoConfiguration = FC.SERVO_CONFIG[servoIndex];
+        const fcStore = useFlightControllerStore();
+        for (let servoIndex = 0; servoIndex < fcStore.servoConfig.length; servoIndex++) {
+            const servoConfiguration = fcStore.servoConfig[servoIndex];
             const buffer = new MspBuffer();
 
             buffer
@@ -554,8 +561,9 @@ class MspHelper {
     }
 
     async sendModeRanges() {
-        for (let modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
-            const modeRange = FC.MODE_RANGES[modeRangeIndex];
+        const fcStore = useFlightControllerStore();
+        for (let modeRangeIndex = 0; modeRangeIndex < fcStore.modeRanges.length; modeRangeIndex++) {
+            const modeRange = fcStore.modeRanges[modeRangeIndex];
             const buffer = new MspBuffer();
 
             buffer
@@ -565,7 +573,7 @@ class MspHelper {
                 .push8((modeRange.range.start - 900) / 25)
                 .push8((modeRange.range.end - 900) / 25);
 
-            const modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
+            const modeRangeExtra = fcStore.modeRangesExtra[modeRangeIndex];
 
             buffer.push8(modeRangeExtra.modeLogic).push8(modeRangeExtra.linkedTo);
 
@@ -574,8 +582,13 @@ class MspHelper {
     }
 
     async sendAdjustmentRanges() {
-        for (let adjustmentRangeIndex = 0; adjustmentRangeIndex < FC.ADJUSTMENT_RANGES.length; adjustmentRangeIndex++) {
-            const adjustmentRange = FC.ADJUSTMENT_RANGES[adjustmentRangeIndex];
+        const fcStore = useFlightControllerStore();
+        for (
+            let adjustmentRangeIndex = 0;
+            adjustmentRangeIndex < fcStore.adjustmentRanges.length;
+            adjustmentRangeIndex++
+        ) {
+            const adjustmentRange = fcStore.adjustmentRanges[adjustmentRangeIndex];
             const buffer = new MspBuffer();
 
             buffer
@@ -586,7 +599,7 @@ class MspHelper {
                 .push8((adjustmentRange.range.end - 900) / 25)
                 .push8(adjustmentRange.adjustmentFunction)
                 .push8(adjustmentRange.auxSwitchChannelIndex);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
                 buffer.push16(adjustmentRange.adjustmentCenter || 0).push16(adjustmentRange.adjustmentScale || 0);
             }
 
@@ -595,7 +608,8 @@ class MspHelper {
     }
 
     async sendVoltageConfig() {
-        for (const config of FC.VOLTAGE_METER_CONFIGS) {
+        const fcStore = useFlightControllerStore();
+        for (const config of fcStore.voltageMeterConfigs) {
             const buffer = new MspBuffer();
 
             buffer
@@ -609,7 +623,8 @@ class MspHelper {
     }
 
     async sendCurrentConfig() {
-        for (const config of FC.CURRENT_METER_CONFIGS) {
+        const fcStore = useFlightControllerStore();
+        for (const config of fcStore.currentMeterConfigs) {
             const buffer = new MspBuffer();
 
             buffer.push8(config.id).push16(config.scale).push16(config.offset);
@@ -619,29 +634,31 @@ class MspHelper {
     }
 
     async sendLedStripConfig() {
+        const fcStore = useFlightControllerStore();
         // API 1.46 shifted the colour (18 -> 22) and direction (22 -> 26) fields up in the mask.
-        const isNewLayout = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+        const isNewLayout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46);
         const colorOffset = isNewLayout ? 22 : 18;
         const directionOffset = isNewLayout ? 26 : 22;
 
-        for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
+        for (let ledIndex = 0; ledIndex < fcStore.ledStrip.length; ledIndex++) {
             const buffer = new MspBuffer();
 
             buffer.push(ledIndex);
-            buffer.push32(buildLedStripMask(FC.LED_STRIP[ledIndex], colorOffset, directionOffset));
+            buffer.push32(buildLedStripMask(fcStore.ledStrip[ledIndex], colorOffset, directionOffset));
 
             await MSP.promise(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer);
         }
     }
 
     async sendLedStripColors() {
-        if (FC.LED_COLORS.length == 0) {
+        const fcStore = useFlightControllerStore();
+        if (fcStore.ledColors.length == 0) {
             return;
         }
 
         const buffer = new MspBuffer();
 
-        for (const color of FC.LED_COLORS) {
+        for (const color of fcStore.ledColors) {
             buffer.push16(color.h).push8(color.s).push8(color.v);
         }
 
@@ -649,7 +666,8 @@ class MspHelper {
     }
 
     async sendLedStripModeColors() {
-        for (const modeColor of FC.LED_MODE_COLORS) {
+        const fcStore = useFlightControllerStore();
+        for (const modeColor of fcStore.ledModeColors) {
             const buffer = new MspBuffer();
 
             buffer.push8(modeColor.mode).push8(modeColor.direction).push8(modeColor.color);
@@ -659,10 +677,11 @@ class MspHelper {
     }
 
     sendLedStripConfigValues(onCompleteCallback?: () => void) {
+        const fcStore = useFlightControllerStore();
         const buffer = new MspBuffer();
-        buffer.push8(FC.LED_CONFIG_VALUES.brightness ?? 0);
-        buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta ?? 0);
-        buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq ?? 0);
+        buffer.push8(fcStore.ledConfigValues.brightness ?? 0);
+        buffer.push16(fcStore.ledConfigValues.rainbow_delta ?? 0);
+        buffer.push16(fcStore.ledConfigValues.rainbow_freq ?? 0);
         MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
     }
 
@@ -693,25 +712,26 @@ class MspHelper {
     }
 
     sendRxFailConfig(onCompleteCallback: () => void) {
+        const fcStore = useFlightControllerStore();
         let nextFunction = send_next_rxfail_config;
 
         let rxFailIndex = 0;
 
-        if (FC.RXFAIL_CONFIG.length == 0) {
+        if (fcStore.rxFailConfig.length == 0) {
             onCompleteCallback();
         } else {
             send_next_rxfail_config();
         }
 
         function send_next_rxfail_config() {
-            const rxFail = FC.RXFAIL_CONFIG[rxFailIndex];
+            const rxFail = fcStore.rxFailConfig[rxFailIndex];
 
             const buffer = new MspBuffer();
             buffer.push8(rxFailIndex).push8(rxFail.mode).push16(rxFail.value);
 
             // prepare for next iteration
             rxFailIndex++;
-            if (rxFailIndex == FC.RXFAIL_CONFIG.length) {
+            if (rxFailIndex == fcStore.rxFailConfig.length) {
                 nextFunction = onCompleteCallback;
             }
             MSP.send_message(MSPCodes.MSP_SET_RXFAIL_CONFIG, buffer, false, nextFunction);
@@ -735,16 +755,17 @@ class MspHelper {
 
     // Sends MSP_ARMING_DISABLE only when the FC is not already in `target`.
     private applyArmingState(target: ArmingState, onCompleteCallback?: () => void) {
+        const fcStore = useFlightControllerStore();
         if (
-            FC.CONFIG.armingDisabled === target.armingDisabled &&
-            FC.CONFIG.runawayTakeoffPreventionDisabled === target.runawayTakeoffPreventionDisabled
+            fcStore.config.armingDisabled === target.armingDisabled &&
+            fcStore.config.runawayTakeoffPreventionDisabled === target.runawayTakeoffPreventionDisabled
         ) {
             onCompleteCallback?.();
             return;
         }
 
-        FC.CONFIG.armingDisabled = target.armingDisabled;
-        FC.CONFIG.runawayTakeoffPreventionDisabled = target.runawayTakeoffPreventionDisabled;
+        fcStore.config.armingDisabled = target.armingDisabled;
+        fcStore.config.runawayTakeoffPreventionDisabled = target.runawayTakeoffPreventionDisabled;
 
         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, this.crunch(MSPCodes.MSP_ARMING_DISABLE), false, () => {
             if (target.armingDisabled) {
@@ -775,8 +796,9 @@ class MspHelper {
     }
 
     writeConfiguration(reboot: boolean, callback?: () => void) {
+        const fcStore = useFlightControllerStore();
         // We need some protection when testing motors on motors tab
-        if (!FC.CONFIG.armingDisabled) {
+        if (!fcStore.config.armingDisabled) {
             this.disableArming();
         }
 
@@ -811,24 +833,26 @@ const NOTHING_TO_DO = () => {
 // One decoder per MSP reply code; process_data dispatches here and logs codes with no entry.
 const DECODERS: Partial<Record<number, Decoder>> = {
     [MSPCodes.MSP_STATUS](data) {
-        FC.CONFIG.cycleTime = data.readU16();
-        FC.CONFIG.i2cError = data.readU16();
-        reportI2cErrors(FC.CONFIG.i2cError);
-        FC.CONFIG.activeSensors = data.readU16();
-        FC.CONFIG.mode = data.readU32();
-        FC.CONFIG.profile = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.config.cycleTime = data.readU16();
+        fcStore.config.i2cError = data.readU16();
+        reportI2cErrors(fcStore.config.i2cError);
+        fcStore.config.activeSensors = data.readU16();
+        fcStore.config.mode = data.readU32();
+        fcStore.config.profile = data.readU8();
     },
 
     [MSPCodes.MSP_STATUS_EX](data) {
-        FC.CONFIG.cycleTime = data.readU16();
-        FC.CONFIG.i2cError = data.readU16();
-        reportI2cErrors(FC.CONFIG.i2cError);
-        FC.CONFIG.activeSensors = data.readU16();
-        FC.CONFIG.mode = data.readU32();
-        FC.CONFIG.profile = data.readU8();
-        FC.CONFIG.cpuload = data.readU16();
-        FC.CONFIG.numProfiles = data.readU8();
-        FC.CONFIG.rateProfile = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.config.cycleTime = data.readU16();
+        fcStore.config.i2cError = data.readU16();
+        reportI2cErrors(fcStore.config.i2cError);
+        fcStore.config.activeSensors = data.readU16();
+        fcStore.config.mode = data.readU32();
+        fcStore.config.profile = data.readU8();
+        fcStore.config.cpuload = data.readU16();
+        fcStore.config.numProfiles = data.readU8();
+        fcStore.config.rateProfile = data.readU8();
 
         // Read flight mode flags
         const byteCount = data.readU8();
@@ -837,129 +861,140 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         }
 
         // Read arming disable flags
-        FC.CONFIG.armingDisableCount = data.readU8(); // Flag count
-        FC.CONFIG.armingDisableFlags = data.readU32();
+        fcStore.config.armingDisableCount = data.readU8(); // Flag count
+        fcStore.config.armingDisableFlags = data.readU32();
 
         // Read config state flags - bits to indicate the state of the configuration, reboot required, etc.
-        FC.CONFIG.configStateFlag = data.readU8();
+        fcStore.config.configStateFlag = data.readU8();
 
         // Read CPU temp, from API version 1.46
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.CONFIG.cpuTemp = data.readU16();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            fcStore.config.cpuTemp = data.readU16();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.CONFIG.numberOfRateProfiles = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.config.numberOfRateProfiles = data.readU8();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            FC.CONFIG.numberOfBatteryProfiles = data.readU8();
-            FC.CONFIG.batteryProfile = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
+            fcStore.config.numberOfBatteryProfiles = data.readU8();
+            fcStore.config.batteryProfile = data.readU8();
             // Grow batteryProfileNames to match actual profile count from FC
-            while (FC.CONFIG.batteryProfileNames.length < FC.CONFIG.numberOfBatteryProfiles) {
-                FC.CONFIG.batteryProfileNames.push("");
+            while (fcStore.config.batteryProfileNames.length < fcStore.config.numberOfBatteryProfiles) {
+                fcStore.config.batteryProfileNames.push("");
             }
         }
     },
 
     [MSPCodes.MSP_RAW_IMU](data) {
+        const fcStore = useFlightControllerStore();
         // 2048 for mpu6050, 1024 for mma (times 4 since we don't scale in the firmware)
         // currently we are unable to differentiate between the sensor types, so we are going with 2048
-        FC.SENSOR_DATA.accelerometer[0] = data.read16() / 2048;
-        FC.SENSOR_DATA.accelerometer[1] = data.read16() / 2048;
-        FC.SENSOR_DATA.accelerometer[2] = data.read16() / 2048;
+        fcStore.sensorData.accelerometer[0] = data.read16() / 2048;
+        fcStore.sensorData.accelerometer[1] = data.read16() / 2048;
+        fcStore.sensorData.accelerometer[2] = data.read16() / 2048;
 
         // properly scaled
-        FC.SENSOR_DATA.gyroscope[0] = data.read16() * (4 / 16.4);
-        FC.SENSOR_DATA.gyroscope[1] = data.read16() * (4 / 16.4);
-        FC.SENSOR_DATA.gyroscope[2] = data.read16() * (4 / 16.4);
+        fcStore.sensorData.gyroscope[0] = data.read16() * (4 / 16.4);
+        fcStore.sensorData.gyroscope[1] = data.read16() * (4 / 16.4);
+        fcStore.sensorData.gyroscope[2] = data.read16() * (4 / 16.4);
 
         // no clue about scaling factor
-        FC.SENSOR_DATA.magnetometer[0] = data.read16();
-        FC.SENSOR_DATA.magnetometer[1] = data.read16();
-        FC.SENSOR_DATA.magnetometer[2] = data.read16();
+        fcStore.sensorData.magnetometer[0] = data.read16();
+        fcStore.sensorData.magnetometer[1] = data.read16();
+        fcStore.sensorData.magnetometer[2] = data.read16();
     },
 
     [MSPCodes.MSP_SERVO](data) {
+        const fcStore = useFlightControllerStore();
         const servoCount = data.byteLength / 2;
         for (let i = 0; i < servoCount; i++) {
-            FC.SERVO_DATA[i] = data.readU16();
+            fcStore.servoData[i] = data.readU16();
         }
     },
 
     [MSPCodes.MSP_MOTOR](data) {
+        const fcStore = useFlightControllerStore();
         const motorCount = data.byteLength / 2;
         for (let i = 0; i < motorCount; i++) {
-            FC.MOTOR_DATA[i] = data.readU16();
+            fcStore.motorData[i] = data.readU16();
         }
     },
 
     [MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING](data) {
-        FC.MOTOR_OUTPUT_ORDER = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.motorOutputOrder = [];
         const arraySize = data.read8();
         for (let i = 0; i < arraySize; i++) {
-            FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
+            fcStore.motorOutputOrder[i] = data.readU8();
         }
     },
 
     [MSPCodes.MSP2_GET_VTX_DEVICE_STATUS](data) {
-        FC.VTX_DEVICE_STATUS = null;
+        const fcStore = useFlightControllerStore();
+        fcStore.vtxDeviceStatus = null;
         const dataLength = data.byteLength;
         if (dataLength > 0) {
             const vtxDeviceStatusData = new Uint8Array(dataLength);
             for (let i = 0; i < dataLength; i++) {
                 vtxDeviceStatusData[i] = data.readU8();
             }
-            FC.VTX_DEVICE_STATUS = vtxDeviceStatusFactory.createVtxDeviceStatus(vtxDeviceStatusData);
+            fcStore.vtxDeviceStatus = vtxDeviceStatusFactory.createVtxDeviceStatus(vtxDeviceStatusData);
         }
     },
 
     [MSPCodes.MSP_MOTOR_TELEMETRY](data) {
+        const fcStore = useFlightControllerStore();
         const telemMotorCount = data.readU8();
         for (let i = 0; i < telemMotorCount; i++) {
-            FC.MOTOR_TELEMETRY_DATA.rpm[i] = data.readU32(); // RPM
-            FC.MOTOR_TELEMETRY_DATA.invalidPercent[i] = data.readU16(); // 10000 = 100.00%
-            FC.MOTOR_TELEMETRY_DATA.temperature[i] = data.readU8(); // degrees celsius
-            FC.MOTOR_TELEMETRY_DATA.voltage[i] = data.readU16(); // 0.01V per unit
-            FC.MOTOR_TELEMETRY_DATA.current[i] = data.readU16(); // 0.01A per unit
-            FC.MOTOR_TELEMETRY_DATA.consumption[i] = data.readU16(); // mAh
+            fcStore.motorTelemetryData.rpm[i] = data.readU32(); // RPM
+            fcStore.motorTelemetryData.invalidPercent[i] = data.readU16(); // 10000 = 100.00%
+            fcStore.motorTelemetryData.temperature[i] = data.readU8(); // degrees celsius
+            fcStore.motorTelemetryData.voltage[i] = data.readU16(); // 0.01V per unit
+            fcStore.motorTelemetryData.current[i] = data.readU16(); // 0.01A per unit
+            fcStore.motorTelemetryData.consumption[i] = data.readU16(); // mAh
         }
     },
 
     [MSPCodes.MSP_RC](data) {
-        FC.RC.active_channels = data.byteLength / 2;
-        for (let i = 0; i < FC.RC.active_channels; i++) {
-            FC.RC.channels[i] = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.rc.active_channels = data.byteLength / 2;
+        for (let i = 0; i < fcStore.rc.active_channels; i++) {
+            fcStore.rc.channels[i] = data.readU16();
         }
     },
 
     [MSPCodes.MSP_RAW_GPS](data) {
-        FC.GPS_DATA.fix = data.readU8();
-        FC.GPS_DATA.numSat = data.readU8();
-        FC.GPS_DATA.latitude = data.read32();
-        FC.GPS_DATA.longitude = data.read32();
-        FC.GPS_DATA.alt = data.readU16();
-        FC.GPS_DATA.speed = data.readU16();
-        FC.GPS_DATA.ground_course = data.readU16();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.GPS_DATA.positionalDop = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.gpsData.fix = data.readU8();
+        fcStore.gpsData.numSat = data.readU8();
+        fcStore.gpsData.latitude = data.read32();
+        fcStore.gpsData.longitude = data.read32();
+        fcStore.gpsData.alt = data.readU16();
+        fcStore.gpsData.speed = data.readU16();
+        fcStore.gpsData.ground_course = data.readU16();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            fcStore.gpsData.positionalDop = data.readU16();
         }
     },
 
     [MSPCodes.MSP_COMP_GPS](data) {
-        FC.GPS_DATA.distanceToHome = data.readU16();
-        FC.GPS_DATA.directionToHome = data.readU16();
-        FC.GPS_DATA.update = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.gpsData.distanceToHome = data.readU16();
+        fcStore.gpsData.directionToHome = data.readU16();
+        fcStore.gpsData.update = data.readU8();
     },
 
     [MSPCodes.MSP_ATTITUDE](data) {
-        FC.SENSOR_DATA.kinematics[0] = data.read16() / 10.0; // x
-        FC.SENSOR_DATA.kinematics[1] = data.read16() / 10.0; // y
-        FC.SENSOR_DATA.kinematics[2] = data.read16();
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorData.kinematics[0] = data.read16() / 10.0; // x
+        fcStore.sensorData.kinematics[1] = data.read16() / 10.0; // y
+        fcStore.sensorData.kinematics[2] = data.read16();
     },
 
     [MSPCodes.MSP_ATTITUDE_QUATERNION](data) {
-        FC.SENSOR_DATA.quaternion = {
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorData.quaternion = {
             w: data.read16() / 32767,
             x: data.read16() / 32767,
             y: data.read16() / 32767,
@@ -968,31 +1003,36 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_ALTITUDE](data) {
-        FC.SENSOR_DATA.altitude = Number.parseFloat((data.read32() / 100.0).toFixed(2));
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorData.altitude = Number.parseFloat((data.read32() / 100.0).toFixed(2));
     },
 
     [MSPCodes.MSP_SONAR](data) {
-        FC.SENSOR_DATA.sonar = data.read32();
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorData.sonar = data.read32();
     },
 
     [MSPCodes.MSP_PITOT](data) {
-        FC.SENSOR_DATA.pitot = {
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorData.pitot = {
             airspeed: data.read32(),
             diffPressure: data.read32(),
         };
     },
 
     [MSPCodes.MSP_ANALOG](data) {
-        FC.ANALOG.voltage = data.readU8() / 10.0;
-        FC.ANALOG.mAhdrawn = data.readU16();
-        FC.ANALOG.rssi = data.readU16(); // 0-1023
-        FC.ANALOG.amperage = data.read16() / 100; // A
-        FC.ANALOG.voltage = data.readU16() / 100;
-        FC.ANALOG.last_received_timestamp = performance.now();
+        const fcStore = useFlightControllerStore();
+        fcStore.analogData.voltage = data.readU8() / 10.0;
+        fcStore.analogData.mAhdrawn = data.readU16();
+        fcStore.analogData.rssi = data.readU16(); // 0-1023
+        fcStore.analogData.amperage = data.read16() / 100; // A
+        fcStore.analogData.voltage = data.readU16() / 100;
+        fcStore.analogData.last_received_timestamp = performance.now();
     },
 
     [MSPCodes.MSP_VOLTAGE_METERS](data) {
-        FC.VOLTAGE_METERS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.voltageMeters = [];
         const voltageMeterLength = 2;
         for (let i = 0; i < data.byteLength / voltageMeterLength; i++) {
             const voltageMeter = {
@@ -1000,12 +1040,13 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 voltage: data.readU8() / 10.0,
             };
 
-            FC.VOLTAGE_METERS.push(voltageMeter);
+            fcStore.voltageMeters.push(voltageMeter);
         }
     },
 
     [MSPCodes.MSP_CURRENT_METERS](data) {
-        FC.CURRENT_METERS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.currentMeters = [];
         const currentMeterLength = 5;
         for (let i = 0; i < data.byteLength / currentMeterLength; i++) {
             const currentMeter = {
@@ -1014,23 +1055,25 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 amperage: data.readU16() / 1000, // A
             };
 
-            FC.CURRENT_METERS.push(currentMeter);
+            fcStore.currentMeters.push(currentMeter);
         }
     },
 
     [MSPCodes.MSP_BATTERY_STATE](data) {
-        FC.BATTERY_STATE.cellCount = data.readU8();
-        FC.BATTERY_STATE.capacity = data.readU16(); // mAh
+        const fcStore = useFlightControllerStore();
+        fcStore.batteryState.cellCount = data.readU8();
+        fcStore.batteryState.capacity = data.readU16(); // mAh
 
-        FC.BATTERY_STATE.voltage = data.readU8() / 10.0; // V
-        FC.BATTERY_STATE.mAhDrawn = data.readU16(); // mAh
-        FC.BATTERY_STATE.amperage = data.readU16() / 100; // A
-        FC.BATTERY_STATE.batteryState = data.readU8();
-        FC.BATTERY_STATE.voltage = data.readU16() / 100;
+        fcStore.batteryState.voltage = data.readU8() / 10.0; // V
+        fcStore.batteryState.mAhDrawn = data.readU16(); // mAh
+        fcStore.batteryState.amperage = data.readU16() / 100; // A
+        fcStore.batteryState.batteryState = data.readU8();
+        fcStore.batteryState.voltage = data.readU16() / 100;
     },
 
     [MSPCodes.MSP_VOLTAGE_METER_CONFIG](data) {
-        FC.VOLTAGE_METER_CONFIGS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.voltageMeterConfigs = [];
         const voltageMeterCount = data.readU8();
 
         for (let i = 0; i < voltageMeterCount; i++) {
@@ -1048,13 +1091,14 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                     vbatresdivmultiplier: data.readU8(),
                 };
 
-                FC.VOLTAGE_METER_CONFIGS.push(voltageMeterConfig);
+                fcStore.voltageMeterConfigs.push(voltageMeterConfig);
             }
         }
     },
 
     [MSPCodes.MSP_CURRENT_METER_CONFIG](data) {
-        FC.CURRENT_METER_CONFIGS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.currentMeterConfigs = [];
         const currentMeterCount = data.readU8();
         for (let i = 0; i < currentMeterCount; i++) {
             const subframeLength = data.readU8();
@@ -1072,21 +1116,22 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                     offset: data.read16(),
                 };
 
-                FC.CURRENT_METER_CONFIGS.push(currentMeterConfig);
+                fcStore.currentMeterConfigs.push(currentMeterConfig);
             }
         }
     },
 
     [MSPCodes.MSP_BATTERY_CONFIG](data) {
-        FC.BATTERY_CONFIG.vbatmincellvoltage = data.readU8() / 10; // 10-50
-        FC.BATTERY_CONFIG.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
-        FC.BATTERY_CONFIG.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
-        FC.BATTERY_CONFIG.capacity = data.readU16();
-        FC.BATTERY_CONFIG.voltageMeterSource = data.readU8();
-        FC.BATTERY_CONFIG.currentMeterSource = data.readU8();
-        FC.BATTERY_CONFIG.vbatmincellvoltage = data.readU16() / 100;
-        FC.BATTERY_CONFIG.vbatmaxcellvoltage = data.readU16() / 100;
-        FC.BATTERY_CONFIG.vbatwarningcellvoltage = data.readU16() / 100;
+        const fcStore = useFlightControllerStore();
+        fcStore.batteryConfig.vbatmincellvoltage = data.readU8() / 10; // 10-50
+        fcStore.batteryConfig.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+        fcStore.batteryConfig.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+        fcStore.batteryConfig.capacity = data.readU16();
+        fcStore.batteryConfig.voltageMeterSource = data.readU8();
+        fcStore.batteryConfig.currentMeterSource = data.readU8();
+        fcStore.batteryConfig.vbatmincellvoltage = data.readU16() / 100;
+        fcStore.batteryConfig.vbatmaxcellvoltage = data.readU16() / 100;
+        fcStore.batteryConfig.vbatwarningcellvoltage = data.readU16() / 100;
     },
 
     [MSPCodes.MSP_SET_BATTERY_CONFIG]() {
@@ -1094,160 +1139,172 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_RC_TUNING](data) {
-        FC.RC_TUNING.RC_RATE = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.RC_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.roll_pitch_rate = 0;
-        FC.RC_TUNING.roll_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.pitch_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.yaw_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.RC_TUNING.dynamic_THR_PID = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        const fcStore = useFlightControllerStore();
+        fcStore.rcTuning.RC_RATE = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.RC_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.roll_pitch_rate = 0;
+        fcStore.rcTuning.roll_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.pitch_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.yaw_rate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            fcStore.rcTuning.dynamic_THR_PID = Number.parseFloat((data.readU8() / 100).toFixed(2));
         } else {
             data.readU8();
         }
-        FC.RC_TUNING.throttle_MID = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.throttle_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.RC_TUNING.dynamic_THR_breakpoint = data.readU16();
+        fcStore.rcTuning.throttle_MID = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.throttle_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            fcStore.rcTuning.dynamic_THR_breakpoint = data.readU16();
         } else {
             data.readU16();
         }
-        FC.RC_TUNING.RC_YAW_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.rcYawRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.rcPitchRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.RC_PITCH_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.RC_TUNING.throttleLimitType = data.readU8();
-        FC.RC_TUNING.throttleLimitPercent = data.readU8();
-        FC.RC_TUNING.roll_rate_limit = data.readU16();
-        FC.RC_TUNING.pitch_rate_limit = data.readU16();
-        FC.RC_TUNING.yaw_rate_limit = data.readU16();
-        FC.RC_TUNING.rates_type = data.readU8();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.RC_TUNING.throttle_HOVER = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.RC_YAW_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.rcYawRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.rcPitchRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.RC_PITCH_EXPO = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.rcTuning.throttleLimitType = data.readU8();
+        fcStore.rcTuning.throttleLimitPercent = data.readU8();
+        fcStore.rcTuning.roll_rate_limit = data.readU16();
+        fcStore.rcTuning.pitch_rate_limit = data.readU16();
+        fcStore.rcTuning.yaw_rate_limit = data.readU16();
+        fcStore.rcTuning.rates_type = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.rcTuning.throttle_HOVER = Number.parseFloat((data.readU8() / 100).toFixed(2));
         }
     },
 
     [MSPCodes.MSP_PID](data) {
+        const fcStore = useFlightControllerStore();
         // PID data arrived, we need to scale it and save to appropriate bank / array
         for (let i = 0, needle = 0; i < data.byteLength / 3; i++, needle += 3) {
             // main for loop selecting the pid section
             for (let j = 0; j < 3; j++) {
-                FC.PIDS_ACTIVE[i][j] = data.readU8();
-                FC.PIDS[i][j] = FC.PIDS_ACTIVE[i][j];
+                fcStore.pidsActive[i][j] = data.readU8();
+                fcStore.pids[i][j] = fcStore.pidsActive[i][j];
             }
         }
     },
 
     [MSPCodes.MSP_ARMING_CONFIG](data) {
-        FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
-        data.readU8(); // was FC.ARMING_CONFIG.auto_disarm_kill_switch
-        FC.ARMING_CONFIG.small_angle = data.readU8();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.armingConfig.auto_disarm_delay = data.readU8();
+        data.readU8(); // was fcStore.armingConfig.auto_disarm_kill_switch
+        fcStore.armingConfig.small_angle = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.armingConfig.gyro_cal_on_first_arm = data.readU8();
         }
     },
 
     [MSPCodes.MSP_LOOP_TIME](data) {
-        FC.FC_CONFIG.loopTime = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.fcConfig.loopTime = data.readU16();
     },
 
     [MSPCodes.MSP_MISC](data) {
+        const fcStore = useFlightControllerStore();
         // 22 bytes
-        FC.RX_CONFIG.midrc = data.readU16();
-        FC.MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
-        FC.MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
-        FC.MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
-        FC.MISC.failsafe_throttle = data.readU16(); // 1000-2000
-        FC.GPS_CONFIG.provider = data.readU8();
-        FC.MISC.gps_baudrate = data.readU8();
-        FC.GPS_CONFIG.ublox_sbas = data.readU8();
-        FC.MISC.multiwiicurrentoutput = data.readU8();
-        FC.RSSI_CONFIG.channel = data.readU8();
-        FC.MISC.placeholder2 = data.readU8();
+        fcStore.rxConfig.midrc = data.readU16();
+        fcStore.motorConfig.minthrottle = data.readU16(); // 0-2000
+        fcStore.motorConfig.maxthrottle = data.readU16(); // 0-2000
+        fcStore.motorConfig.mincommand = data.readU16(); // 0-2000
+        fcStore.misc.failsafe_throttle = data.readU16(); // 1000-2000
+        fcStore.gpsConfig.provider = data.readU8();
+        fcStore.misc.gps_baudrate = data.readU8();
+        fcStore.gpsConfig.ublox_sbas = data.readU8();
+        fcStore.misc.multiwiicurrentoutput = data.readU8();
+        fcStore.rssiConfig.channel = data.readU8();
+        fcStore.misc.placeholder2 = data.readU8();
         data.read16(); // was mag_declination
-        FC.MISC.vbatscale = data.readU8(); // was FC.MISC.vbatscale - 10-200
-        FC.MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
-        FC.MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
-        FC.MISC.vbatwarningcellvoltage = data.readU8() / 10;
+        fcStore.misc.vbatscale = data.readU8(); // was fcStore.misc.vbatscale - 10-200
+        fcStore.misc.vbatmincellvoltage = data.readU8() / 10; // 10-50
+        fcStore.misc.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+        fcStore.misc.vbatwarningcellvoltage = data.readU8() / 10;
     },
 
     [MSPCodes.MSP_MOTOR_CONFIG](data) {
-        FC.MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
-        FC.MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
-        FC.MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
-        FC.MOTOR_CONFIG.motor_count = data.readU8();
-        FC.MOTOR_CONFIG.motor_poles = data.readU8();
-        FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
-        FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
+        const fcStore = useFlightControllerStore();
+        fcStore.motorConfig.minthrottle = data.readU16(); // 0-2000
+        fcStore.motorConfig.maxthrottle = data.readU16(); // 0-2000
+        fcStore.motorConfig.mincommand = data.readU16(); // 0-2000
+        fcStore.motorConfig.motor_count = data.readU8();
+        fcStore.motorConfig.motor_poles = data.readU8();
+        fcStore.motorConfig.use_dshot_telemetry = data.readU8() != 0;
+        fcStore.motorConfig.use_esc_sensor = data.readU8() != 0;
 
         // Introduced in 1.49
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            FC.MOTOR_CONFIG.motor_kv = data.readU16();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            fcStore.motorConfig.motor_kv = data.readU16();
         }
     },
 
     [MSPCodes.MSP_COMPASS_CONFIG](data) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
+        const fcStore = useFlightControllerStore();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            fcStore.compassConfig.mag_declination = data.read16() / 10;
         }
     },
 
     [MSPCodes.MSP_GPS_CONFIG](data) {
-        FC.GPS_CONFIG.provider = data.readU8();
-        FC.GPS_CONFIG.ublox_sbas = data.readU8();
-        FC.GPS_CONFIG.auto_config = data.readU8();
-        FC.GPS_CONFIG.auto_baud = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.gpsConfig.provider = data.readU8();
+        fcStore.gpsConfig.ublox_sbas = data.readU8();
+        fcStore.gpsConfig.auto_config = data.readU8();
+        fcStore.gpsConfig.auto_baud = data.readU8();
 
         // Introduced in API version 1.43
-        FC.GPS_CONFIG.home_point_once = data.readU8();
-        FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
+        fcStore.gpsConfig.home_point_once = data.readU8();
+        fcStore.gpsConfig.ublox_use_galileo = data.readU8();
     },
 
     [MSPCodes.MSP_GPS_RESCUE](data) {
-        FC.GPS_RESCUE.angle = data.readU16();
-        FC.GPS_RESCUE.returnAltitudeM = data.readU16();
-        FC.GPS_RESCUE.descentDistanceM = data.readU16();
-        FC.GPS_RESCUE.groundSpeed = data.readU16();
-        FC.GPS_RESCUE.throttleMin = data.readU16();
-        FC.GPS_RESCUE.throttleMax = data.readU16();
-        FC.GPS_RESCUE.throttleHover = data.readU16();
-        FC.GPS_RESCUE.sanityChecks = data.readU8();
-        FC.GPS_RESCUE.minSats = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.gpsRescue.angle = data.readU16();
+        fcStore.gpsRescue.returnAltitudeM = data.readU16();
+        fcStore.gpsRescue.descentDistanceM = data.readU16();
+        fcStore.gpsRescue.groundSpeed = data.readU16();
+        fcStore.gpsRescue.throttleMin = data.readU16();
+        fcStore.gpsRescue.throttleMax = data.readU16();
+        fcStore.gpsRescue.throttleHover = data.readU16();
+        fcStore.gpsRescue.sanityChecks = data.readU8();
+        fcStore.gpsRescue.minSats = data.readU8();
 
         // Introduced in API version 1.43
-        FC.GPS_RESCUE.ascendRate = data.readU16();
-        FC.GPS_RESCUE.descendRate = data.readU16();
-        FC.GPS_RESCUE.allowArmingWithoutFix = data.readU8();
-        FC.GPS_RESCUE.altitudeMode = data.readU8();
+        fcStore.gpsRescue.ascendRate = data.readU16();
+        fcStore.gpsRescue.descendRate = data.readU16();
+        fcStore.gpsRescue.allowArmingWithoutFix = data.readU8();
+        fcStore.gpsRescue.altitudeMode = data.readU8();
 
         // Introduced in API version 1.44
-        FC.GPS_RESCUE.minStartDistM = data.readU16();
+        fcStore.gpsRescue.minStartDistM = data.readU16();
 
         // Introduced in API version 1.46
-        FC.GPS_RESCUE.initialClimbM = data.readU16();
+        fcStore.gpsRescue.initialClimbM = data.readU16();
     },
 
     [MSPCodes.MSP_RSSI_CONFIG](data) {
-        FC.RSSI_CONFIG.channel = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.rssiConfig.channel = data.readU8();
     },
 
     [MSPCodes.MSP_MOTOR_3D_CONFIG](data) {
-        FC.MOTOR_3D_CONFIG.deadband3d_low = data.readU16();
-        FC.MOTOR_3D_CONFIG.deadband3d_high = data.readU16();
-        FC.MOTOR_3D_CONFIG.neutral = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.motor3dConfig.deadband3d_low = data.readU16();
+        fcStore.motor3dConfig.deadband3d_high = data.readU16();
+        fcStore.motor3dConfig.neutral = data.readU16();
     },
 
     [MSPCodes.MSP_BOXNAMES](data) {
+        const fcStore = useFlightControllerStore();
         let buff: number[] = [];
         let char = 0;
-        FC.AUX_CONFIG = []; // empty the array as new data is coming in
+        fcStore.auxConfig = []; // empty the array as new data is coming in
 
         buff = [];
         for (let i = 0; i < data.byteLength; i++) {
             char = data.readU8();
             if (char == 0x3b) {
                 // ; (delimeter char)
-                FC.AUX_CONFIG.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
+                fcStore.auxConfig.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
 
                 // empty buffer
                 buff = [];
@@ -1258,16 +1315,17 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_PIDNAMES](data) {
+        const fcStore = useFlightControllerStore();
         let buff: number[] = [];
         let char = 0;
-        FC.PID_NAMES = []; // empty the array as new data is coming in
+        fcStore.pidNames = []; // empty the array as new data is coming in
 
         buff = [];
         for (let i = 0; i < data.byteLength; i++) {
             char = data.readU8();
             if (char == 0x3b) {
                 // ; (delimeter char)
-                FC.PID_NAMES.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
+                fcStore.pidNames.push(String.fromCodePoint(...buff)); // convert bytes into ASCII and save as strings
 
                 // empty buffer
                 buff = [];
@@ -1278,17 +1336,19 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_BOXIDS](data) {
-        FC.AUX_CONFIG_IDS = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.auxConfigIds = []; // empty the array as new data is coming in
 
         for (let i = 0; i < data.byteLength; i++) {
-            FC.AUX_CONFIG_IDS.push(data.readU8());
+            fcStore.auxConfigIds.push(data.readU8());
         }
     },
 
     [MSPCodes.MSP_SERVO_MIX_RULES]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SERVO_CONFIGURATIONS](data) {
-        FC.SERVO_CONFIG = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.servoConfig = []; // empty the array as new data is coming in
         if (data.byteLength % 12 == 0) {
             for (let i = 0; i < data.byteLength; i += 12) {
                 const arr = {
@@ -1300,34 +1360,36 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                     reversedInputSources: data.readU32(),
                 };
 
-                FC.SERVO_CONFIG.push(arr);
+                fcStore.servoConfig.push(arr);
             }
         }
     },
 
     [MSPCodes.MSP_RC_DEADBAND](data) {
-        FC.RC_DEADBAND_CONFIG.deadband = data.readU8();
-        FC.RC_DEADBAND_CONFIG.yaw_deadband = data.readU8();
-        FC.RC_DEADBAND_CONFIG.alt_hold_deadband = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.rcDeadbandConfig.deadband = data.readU8();
+        fcStore.rcDeadbandConfig.yaw_deadband = data.readU8();
+        fcStore.rcDeadbandConfig.alt_hold_deadband = data.readU8();
 
-        FC.RC_DEADBAND_CONFIG.deadband3d_throttle = data.readU16();
+        fcStore.rcDeadbandConfig.deadband3d_throttle = data.readU16();
     },
 
     [MSPCodes.MSP_SENSOR_ALIGNMENT](data) {
-        FC.SENSOR_ALIGNMENT.align_gyro = data.readU8();
-        FC.SENSOR_ALIGNMENT.align_acc = data.readU8();
-        FC.SENSOR_ALIGNMENT.align_mag = data.readU8();
-        FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorAlignment.align_gyro = data.readU8();
+        fcStore.sensorAlignment.align_acc = data.readU8();
+        fcStore.sensorAlignment.align_mag = data.readU8();
+        fcStore.sensorAlignment.gyro_detection_flags = data.readU8();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
-            FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
-            FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
-            FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.sensorAlignment.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
+            fcStore.sensorAlignment.mag_align_roll = data.read16() / 10;
+            fcStore.sensorAlignment.mag_align_pitch = data.read16() / 10;
+            fcStore.sensorAlignment.mag_align_yaw = data.read16() / 10;
         } else {
-            FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
-            FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
-            FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
+            fcStore.sensorAlignment.gyro_to_use = data.readU8();
+            fcStore.sensorAlignment.gyro_1_align = data.readU8();
+            fcStore.sensorAlignment.gyro_2_align = data.readU8();
         }
     },
 
@@ -1336,8 +1398,9 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     [MSPCodes.MSP_SET_RAW_RC]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SET_PID]() {
+        const fcStore = useFlightControllerStore();
         console.log("PID settings saved");
-        FC.PIDS_ACTIVE = FC.PIDS.map((array) => array.slice());
+        fcStore.pidsActive = fcStore.pids.map((array) => array.slice());
     },
 
     [MSPCodes.MSP_SET_RC_TUNING]() {
@@ -1401,24 +1464,29 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_DEBUG](data) {
+        const fcStore = useFlightControllerStore();
         for (let i = 0; i < 8; i++) {
-            FC.SENSOR_DATA.debug[i] = data.read16();
+            fcStore.sensorData.debug[i] = data.read16();
         }
     },
 
     [MSPCodes.MSP_SET_MOTOR]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_UID](data) {
-        FC.CONFIG.uid[0] = data.readU32();
-        FC.CONFIG.uid[1] = data.readU32();
-        FC.CONFIG.uid[2] = data.readU32();
-        FC.CONFIG.deviceIdentifier =
-            FC.CONFIG.uid[0].toString(16) + FC.CONFIG.uid[1].toString(16) + FC.CONFIG.uid[2].toString(16);
+        const fcStore = useFlightControllerStore();
+        fcStore.config.uid[0] = data.readU32();
+        fcStore.config.uid[1] = data.readU32();
+        fcStore.config.uid[2] = data.readU32();
+        fcStore.config.deviceIdentifier =
+            fcStore.config.uid[0].toString(16) +
+            fcStore.config.uid[1].toString(16) +
+            fcStore.config.uid[2].toString(16);
     },
 
     [MSPCodes.MSP_ACC_TRIM](data) {
-        FC.CONFIG.accelerometerTrims[0] = data.read16(); // pitch
-        FC.CONFIG.accelerometerTrims[1] = data.read16();
+        const fcStore = useFlightControllerStore();
+        fcStore.config.accelerometerTrims[0] = data.read16(); // pitch
+        fcStore.config.accelerometerTrims[1] = data.read16();
     },
 
     [MSPCodes.MSP_SET_ACC_TRIM]() {
@@ -1426,23 +1494,25 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_GPS_SV_INFO](data) {
+        const fcStore = useFlightControllerStore();
         if (data.byteLength > 0) {
             const numCh = data.readU8();
 
             for (let i = 0; i < numCh; i++) {
-                FC.GPS_DATA.chn[i] = data.readU8();
-                FC.GPS_DATA.svid[i] = data.readU8();
-                FC.GPS_DATA.quality[i] = data.readU8();
-                FC.GPS_DATA.cno[i] = data.readU8();
+                fcStore.gpsData.chn[i] = data.readU8();
+                fcStore.gpsData.svid[i] = data.readU8();
+                fcStore.gpsData.quality[i] = data.readU8();
+                fcStore.gpsData.cno[i] = data.readU8();
             }
         }
     },
 
     [MSPCodes.MSP_RX_MAP](data) {
-        FC.RC_MAP = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.rcMap = []; // empty the array as new data is coming in
 
         for (let i = 0; i < data.byteLength; i++) {
-            FC.RC_MAP.push(data.readU8());
+            fcStore.rcMap.push(data.readU8());
         }
     },
 
@@ -1451,8 +1521,9 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_MIXER_CONFIG](data) {
-        FC.MIXER_CONFIG.mixer = data.readU8();
-        FC.MIXER_CONFIG.reverseMotorDir = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.mixerConfig.mixer = data.readU8();
+        fcStore.mixerConfig.reverseMotorDir = data.readU8();
     },
 
     [MSPCodes.MSP_FEATURE_CONFIG](data) {
@@ -1462,15 +1533,17 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_BEEPER_CONFIG](data) {
+        const fcStore = useFlightControllerStore();
         beepers("beepers").setDisabledMask(data.readU32());
-        FC.BEEPER_CONFIG.dshotBeaconTone = data.readU8();
+        fcStore.beepers.dshotBeaconTone = data.readU8();
         beepers("dshotBeaconConditions").setDisabledMask(data.readU32());
     },
 
     [MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG](data) {
-        FC.BOARD_ALIGNMENT_CONFIG.roll = data.read16(); // -180 - 360
-        FC.BOARD_ALIGNMENT_CONFIG.pitch = data.read16(); // -180 - 360
-        FC.BOARD_ALIGNMENT_CONFIG.yaw = data.read16();
+        const fcStore = useFlightControllerStore();
+        fcStore.boardAlignment.roll = data.read16(); // -180 - 360
+        fcStore.boardAlignment.pitch = data.read16(); // -180 - 360
+        fcStore.boardAlignment.yaw = data.read16();
     },
 
     [MSPCodes.MSP_SET_REBOOT](data) {
@@ -1487,16 +1560,17 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_API_VERSION](data) {
+        const fcStore = useFlightControllerStore();
         // A truncated/corrupt payload makes readU8() return null, producing an
         // unparseable version like "null.null.0". This happens intermittently
         // with MSP corruption / firmware issues and makes every downstream
         // semver comparison throw "Invalid Version". Validate the constructed
         // string and keep the semver-valid default ("0.0.0") otherwise, so the
         // connection logic can detect and abort the handshake cleanly.
-        FC.CONFIG.mspProtocolVersion = data.readU8();
+        fcStore.config.mspProtocolVersion = data.readU8();
         const apiVersion = `${data.readU8()}.${data.readU8()}.0`;
         if (semver.valid(apiVersion)) {
-            FC.CONFIG.apiVersion = apiVersion;
+            fcStore.config.apiVersion = apiVersion;
         } else {
             console.error(
                 `MSP_API_VERSION: received invalid version "${apiVersion}" - possible MSP corruption / firmware issue`,
@@ -1505,27 +1579,30 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_FC_VARIANT](data) {
+        const fcStore = useFlightControllerStore();
         let fcVariantIdentifier = "";
         for (let i = 0; i < 4; i++) {
             fcVariantIdentifier += String.fromCodePoint(data.readU8());
         }
-        FC.CONFIG.flightControllerIdentifier = fcVariantIdentifier;
+        fcStore.config.flightControllerIdentifier = fcVariantIdentifier;
     },
 
     [MSPCodes.MSP_FC_VERSION](data) {
+        const fcStore = useFlightControllerStore();
         const major = data.readU8();
         if (major < 10) {
             // use the old method (the 3 bytes)
-            FC.CONFIG.flightControllerVersion = `${major}.${data.readU8()}.${data.readU8()}`;
+            fcStore.config.flightControllerVersion = `${major}.${data.readU8()}.${data.readU8()}`;
         } else {
             // discard the next two bytes
             data.readU16();
             // the version is the text that follows
-            FC.CONFIG.flightControllerVersion = this.getText(data);
+            fcStore.config.flightControllerVersion = this.getText(data);
         }
     },
 
     [MSPCodes.MSP_BUILD_INFO](data) {
+        const fcStore = useFlightControllerStore();
         let buff: number[] = [];
         const dateLength = 11;
         buff = [];
@@ -1539,7 +1616,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         for (let i = 0; i < timeLength; i++) {
             buff.push(data.readU8());
         }
-        FC.CONFIG.buildInfo = String.fromCodePoint(...buff);
+        fcStore.config.buildInfo = String.fromCodePoint(...buff);
 
         const gitRevisionLength = 7;
         buff = [];
@@ -1547,85 +1624,88 @@ const DECODERS: Partial<Record<number, Decoder>> = {
             buff.push(data.readU8());
         }
 
-        FC.CONFIG.gitRevision = String.fromCodePoint(...buff);
-        console.log("Fw git rev:", FC.CONFIG.gitRevision);
+        fcStore.config.gitRevision = String.fromCodePoint(...buff);
+        console.log("Fw git rev:", fcStore.config.gitRevision);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
             // Numeric ids until processBuildOptions() replaces them with names.
             const optionIds: number[] = [];
-            FC.CONFIG.buildOptions = optionIds as unknown as string[];
+            fcStore.config.buildOptions = optionIds as unknown as string[];
             let option;
             while ((option = data.readU16())) {
                 optionIds.push(option);
             }
             // Humanize the build options
-            FC.processBuildOptions();
+            fcStore.processBuildOptions();
         }
     },
 
     [MSPCodes.MSP_BOARD_INFO](data) {
-        FC.CONFIG.boardIdentifier = "";
+        const fcStore = useFlightControllerStore();
+        fcStore.config.boardIdentifier = "";
 
         for (let i = 0; i < 4; i++) {
-            FC.CONFIG.boardIdentifier += String.fromCodePoint(data.readU8());
+            fcStore.config.boardIdentifier += String.fromCodePoint(data.readU8());
         }
 
-        FC.CONFIG.boardVersion = data.readU16();
-        FC.CONFIG.boardType = data.readU8();
+        fcStore.config.boardVersion = data.readU16();
+        fcStore.config.boardType = data.readU8();
 
-        FC.CONFIG.targetCapabilities = data.readU8();
-        FC.CONFIG.targetName = this.getText(data);
+        fcStore.config.targetCapabilities = data.readU8();
+        fcStore.config.targetName = this.getText(data);
 
-        FC.CONFIG.boardName = this.getText(data);
-        FC.CONFIG.manufacturerId = this.getText(data);
-        FC.CONFIG.signature = [];
+        fcStore.config.boardName = this.getText(data);
+        fcStore.config.manufacturerId = this.getText(data);
+        fcStore.config.signature = [];
 
         for (let i = 0; i < this.SIGNATURE_LENGTH; i++) {
-            FC.CONFIG.signature.push(data.readU8());
+            fcStore.config.signature.push(data.readU8());
         }
 
-        FC.CONFIG.mcuTypeId = data.readU8();
+        fcStore.config.mcuTypeId = data.readU8();
         // Introduced in API version 1.42
-        FC.CONFIG.configurationState = data.readU8();
+        fcStore.config.configurationState = data.readU8();
 
         // Introduced in API version 1.43
-        FC.CONFIG.sampleRateHz = data.readU16();
-        FC.CONFIG.configurationProblems = data.readU32();
+        fcStore.config.sampleRateHz = data.readU16();
+        fcStore.config.configurationProblems = data.readU32();
 
         // Refresh the hardware name (it's a calculated field)
-        FC.calculateHardwareName();
+        fcStore.calculateHardwareName();
     },
 
     [MSPCodes.MSP_NAME](data) {
+        const fcStore = useFlightControllerStore();
         let char = 0;
-        FC.CONFIG.name = "";
+        fcStore.config.name = "";
         while ((char = data.readU8()) !== null) {
-            FC.CONFIG.name += String.fromCodePoint(char);
+            fcStore.config.name += String.fromCodePoint(char);
         }
     },
 
     [MSPCodes.MSP2_GET_TEXT](data) {
+        const fcStore = useFlightControllerStore();
         // type byte
         const textType = data.readU8();
 
         switch (textType) {
             case MSP2TextType.PILOT_NAME:
-                FC.CONFIG.pilotName = this.getText(data);
+                fcStore.config.pilotName = this.getText(data);
                 break;
             case MSP2TextType.CRAFT_NAME:
-                FC.CONFIG.craftName = this.getText(data);
+                fcStore.config.craftName = this.getText(data);
                 break;
             case MSP2TextType.PID_PROFILE_NAME:
-                FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = this.getText(data);
+                fcStore.config.pidProfileNames[fcStore.config.profile] = this.getText(data);
                 break;
             case MSP2TextType.RATE_PROFILE_NAME:
-                FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = this.getText(data);
+                fcStore.config.rateProfileNames[fcStore.config.rateProfile] = this.getText(data);
                 break;
             case MSP2TextType.BUILDKEY:
-                FC.CONFIG.buildKey = this.getText(data);
+                fcStore.config.buildKey = this.getText(data);
                 break;
             case MSP2TextType.BATTERY_PROFILE_NAME:
-                FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = this.getText(data);
+                fcStore.config.batteryProfileNames[fcStore.config.batteryProfile] = this.getText(data);
                 break;
             default:
                 console.log("Unsupport text type");
@@ -1634,13 +1714,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES](data) {
-        FC.LED_CONFIG_VALUES.brightness = data.readU8();
-        FC.LED_CONFIG_VALUES.rainbow_delta = data.readU16();
-        FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.ledConfigValues.brightness = data.readU8();
+        fcStore.ledConfigValues.rainbow_delta = data.readU16();
+        fcStore.ledConfigValues.rainbow_freq = data.readU16();
     },
 
     [MSPCodes.MSP_CF_SERIAL_CONFIG](data) {
-        FC.SERIAL_CONFIG.ports = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.serialConfig.ports = [];
         const bytesPerPort = 1 + 2 + 1 * 4;
 
         const serialPortCount = data.byteLength / bytesPerPort;
@@ -1654,12 +1736,13 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 blackbox_baudrate: this.BAUD_RATES[data.readU8()],
             };
 
-            FC.SERIAL_CONFIG.ports.push(serialPort);
+            fcStore.serialConfig.ports.push(serialPort);
         }
     },
 
     [MSPCodes.MSP2_COMMON_SERIAL_CONFIG](data) {
-        FC.SERIAL_CONFIG.ports = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.serialConfig.ports = [];
         const count = data.readU8();
         const portConfigSize = data.remaining() / count;
         for (let ii = 0; ii < count; ii++) {
@@ -1672,7 +1755,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 telemetry_baudrate: this.BAUD_RATES[data.readU8()],
                 blackbox_baudrate: this.BAUD_RATES[data.readU8()],
             };
-            FC.SERIAL_CONFIG.ports.push(serialPort);
+            fcStore.serialConfig.ports.push(serialPort);
             while (start - data.remaining() < portConfigSize && data.remaining() > 0) {
                 data.readU8();
             }
@@ -1688,7 +1771,8 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_MODE_RANGES](data) {
-        FC.MODE_RANGES = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.modeRanges = []; // empty the array as new data is coming in
 
         const modeRangeCount = data.byteLength / 4; // 4 bytes per item.
 
@@ -1701,12 +1785,13 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                     end: 900 + data.readU8() * 25,
                 },
             };
-            FC.MODE_RANGES.push(modeRange);
+            fcStore.modeRanges.push(modeRange);
         }
     },
 
     [MSPCodes.MSP_MODE_RANGES_EXTRA](data) {
-        FC.MODE_RANGES_EXTRA = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.modeRangesExtra = []; // empty the array as new data is coming in
 
         const modeRangeExtraCount = data.readU8();
 
@@ -1716,14 +1801,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 modeLogic: data.readU8(),
                 linkedTo: data.readU8(),
             };
-            FC.MODE_RANGES_EXTRA.push(modeRangeExtra);
+            fcStore.modeRangesExtra.push(modeRangeExtra);
         }
     },
 
     [MSPCodes.MSP_ADJUSTMENT_RANGES](data) {
-        FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.adjustmentRanges = []; // empty the array as new data is coming in
 
-        const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
+        const bytesPerItem = semver.gte(fcStore.config.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
         const adjustmentRangeCount = data.byteLength / bytesPerItem;
 
         for (let i = 0; i < adjustmentRangeCount; i++) {
@@ -1736,67 +1822,70 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 },
                 adjustmentFunction: data.readU8(),
                 auxSwitchChannelIndex: data.readU8(),
-                adjustmentCenter: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
-                adjustmentScale: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
+                adjustmentCenter: semver.gte(fcStore.config.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
+                adjustmentScale: semver.gte(fcStore.config.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
             };
-            FC.ADJUSTMENT_RANGES.push(adjustmentRange);
+            fcStore.adjustmentRanges.push(adjustmentRange);
         }
     },
 
     [MSPCodes.MSP_RX_CONFIG](data) {
-        FC.RX_CONFIG.serialrx_provider = data.readU8();
-        FC.RX_CONFIG.stick_max = data.readU16();
-        FC.RX_CONFIG.stick_center = data.readU16();
-        FC.RX_CONFIG.stick_min = data.readU16();
-        FC.RX_CONFIG.spektrum_sat_bind = data.readU8();
-        FC.RX_CONFIG.rx_min_usec = data.readU16();
-        FC.RX_CONFIG.rx_max_usec = data.readU16();
-        data.readU8(); // was FC.RX_CONFIG.rcInterpolation
-        data.readU8(); // was FC.RX_CONFIG.rcInterpolationInterval
-        FC.RX_CONFIG.airModeActivateThreshold = data.readU16();
-        FC.RX_CONFIG.rxSpiProtocol = data.readU8();
-        FC.RX_CONFIG.rxSpiId = data.readU32();
-        FC.RX_CONFIG.rxSpiRfChannelCount = data.readU8();
-        FC.RX_CONFIG.fpvCamAngleDegrees = data.readU8();
-        data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
-        data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
-        FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.RX_CONFIG.rcSmoothingThrottleCutoff = data.readU8();
-            FC.RX_CONFIG.rcSmoothingAutoFactorThrottle = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.rxConfig.serialrx_provider = data.readU8();
+        fcStore.rxConfig.stick_max = data.readU16();
+        fcStore.rxConfig.stick_center = data.readU16();
+        fcStore.rxConfig.stick_min = data.readU16();
+        fcStore.rxConfig.spektrum_sat_bind = data.readU8();
+        fcStore.rxConfig.rx_min_usec = data.readU16();
+        fcStore.rxConfig.rx_max_usec = data.readU16();
+        data.readU8(); // was fcStore.rxConfig.rcInterpolation
+        data.readU8(); // was fcStore.rxConfig.rcInterpolationInterval
+        fcStore.rxConfig.airModeActivateThreshold = data.readU16();
+        fcStore.rxConfig.rxSpiProtocol = data.readU8();
+        fcStore.rxConfig.rxSpiId = data.readU32();
+        fcStore.rxConfig.rxSpiRfChannelCount = data.readU8();
+        fcStore.rxConfig.fpvCamAngleDegrees = data.readU8();
+        data.readU8(); // was fcStore.rxConfig.rcInterpolationChannels
+        data.readU8(); // was fcStore.rxConfig.rcSmoothingType
+        fcStore.rxConfig.rcSmoothingSetpointCutoff = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.rxConfig.rcSmoothingThrottleCutoff = data.readU8();
+            fcStore.rxConfig.rcSmoothingAutoFactorThrottle = data.readU8();
         } else {
-            FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
-            data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeCutoff
+            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
+            data.readU8(); // was fcStore.rxConfig.rcSmoothingDerivativeCutoff
         }
-        data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
-        FC.RX_CONFIG.usbCdcHidType = data.readU8();
-        FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
-        FC.RX_CONFIG.rcSmoothing = data.readU8();
+        data.readU8(); // was fcStore.rxConfig.rcSmoothingDerivativeType
+        fcStore.rxConfig.usbCdcHidType = data.readU8();
+        fcStore.rxConfig.rcSmoothingAutoFactor = data.readU8();
+        fcStore.rxConfig.rcSmoothing = data.readU8();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             const elrsUidLength = 6;
-            FC.RX_CONFIG.elrsUid = [];
+            fcStore.rxConfig.elrsUid = [];
             for (let i = 0; i < elrsUidLength; i++) {
-                FC.RX_CONFIG.elrsUid.push(data.readU8());
+                fcStore.rxConfig.elrsUid.push(data.readU8());
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.RX_CONFIG.elrsModelId = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.rxConfig.elrsModelId = data.readU8();
         }
     },
 
     [MSPCodes.MSP_FAILSAFE_CONFIG](data) {
-        FC.FAILSAFE_CONFIG.failsafe_delay = data.readU8();
-        FC.FAILSAFE_CONFIG.failsafe_off_delay = data.readU8();
-        FC.FAILSAFE_CONFIG.failsafe_throttle = data.readU16();
-        FC.FAILSAFE_CONFIG.failsafe_switch_mode = data.readU8();
-        FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay = data.readU16();
-        FC.FAILSAFE_CONFIG.failsafe_procedure = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.failsafeConfig.failsafe_delay = data.readU8();
+        fcStore.failsafeConfig.failsafe_off_delay = data.readU8();
+        fcStore.failsafeConfig.failsafe_throttle = data.readU16();
+        fcStore.failsafeConfig.failsafe_switch_mode = data.readU8();
+        fcStore.failsafeConfig.failsafe_throttle_low_delay = data.readU16();
+        fcStore.failsafeConfig.failsafe_procedure = data.readU8();
     },
 
     [MSPCodes.MSP_RXFAIL_CONFIG](data) {
-        FC.RXFAIL_CONFIG = []; // empty the array as new data is coming in
+        const fcStore = useFlightControllerStore();
+        fcStore.rxFailConfig = []; // empty the array as new data is coming in
 
         const channelCount = data.byteLength / 3;
         for (let i = 0; i < channelCount; i++) {
@@ -1804,194 +1893,201 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 mode: data.readU8(),
                 value: data.readU16(),
             };
-            FC.RXFAIL_CONFIG.push(rxfailChannel);
+            fcStore.rxFailConfig.push(rxfailChannel);
         }
     },
 
     [MSPCodes.MSP_ADVANCED_CONFIG](data) {
-        FC.PID_ADVANCED_CONFIG.gyro_sync_denom = data.readU8();
-        FC.PID_ADVANCED_CONFIG.pid_process_denom = data.readU8();
-        FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = data.readU8();
-        FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = EscProtocols.ReorderPwmProtocols(
-            FC.CONFIG.apiVersion,
+        const fcStore = useFlightControllerStore();
+        fcStore.pidAdvancedConfig.gyro_sync_denom = data.readU8();
+        fcStore.pidAdvancedConfig.pid_process_denom = data.readU8();
+        fcStore.pidAdvancedConfig.use_unsyncedPwm = data.readU8();
+        fcStore.pidAdvancedConfig.fast_pwm_protocol = EscProtocols.ReorderPwmProtocols(
+            fcStore.config.apiVersion,
             data.readU8(),
         );
-        FC.PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
-        FC.PID_ADVANCED_CONFIG.motorIdle = data.readU16() / 100;
+        fcStore.pidAdvancedConfig.motor_pwm_rate = data.readU16();
+        fcStore.pidAdvancedConfig.motorIdle = data.readU16() / 100;
         data.readU8(); // gyroUse32Khz is not supported
         // Introduced in 1.42
-        FC.PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
-        FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
-        FC.PID_ADVANCED_CONFIG.gyroHighFsr = data.readU8();
-        FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold = data.readU8();
-        FC.PID_ADVANCED_CONFIG.gyroCalibDuration = data.readU16();
-        FC.PID_ADVANCED_CONFIG.gyroOffsetYaw = data.readU16();
-        FC.PID_ADVANCED_CONFIG.gyroCheckOverflow = data.readU8();
-        FC.PID_ADVANCED_CONFIG.debugMode = data.readU8();
-        FC.PID_ADVANCED_CONFIG.debugModeCount = data.readU8();
+        fcStore.pidAdvancedConfig.motorPwmInversion = data.readU8();
+        fcStore.sensorAlignment.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
+        fcStore.pidAdvancedConfig.gyroHighFsr = data.readU8();
+        fcStore.pidAdvancedConfig.gyroMovementCalibThreshold = data.readU8();
+        fcStore.pidAdvancedConfig.gyroCalibDuration = data.readU16();
+        fcStore.pidAdvancedConfig.gyroOffsetYaw = data.readU16();
+        fcStore.pidAdvancedConfig.gyroCheckOverflow = data.readU8();
+        fcStore.pidAdvancedConfig.debugMode = data.readU8();
+        fcStore.pidAdvancedConfig.debugModeCount = data.readU8();
     },
 
     [MSPCodes.MSP_FILTER_CONFIG](data) {
-        FC.FILTER_CONFIG.gyro_lowpass_hz = data.readU8();
-        FC.FILTER_CONFIG.dterm_lowpass_hz = data.readU16();
-        FC.FILTER_CONFIG.yaw_lowpass_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_notch_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_notch_cutoff = data.readU16();
-        FC.FILTER_CONFIG.dterm_notch_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_notch_cutoff = data.readU16();
-        FC.FILTER_CONFIG.gyro_notch2_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_notch2_cutoff = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass_type = data.readU8();
-        FC.FILTER_CONFIG.gyro_hardware_lpf = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.filterConfig.gyro_lowpass_hz = data.readU8();
+        fcStore.filterConfig.dterm_lowpass_hz = data.readU16();
+        fcStore.filterConfig.yaw_lowpass_hz = data.readU16();
+        fcStore.filterConfig.gyro_notch_hz = data.readU16();
+        fcStore.filterConfig.gyro_notch_cutoff = data.readU16();
+        fcStore.filterConfig.dterm_notch_hz = data.readU16();
+        fcStore.filterConfig.dterm_notch_cutoff = data.readU16();
+        fcStore.filterConfig.gyro_notch2_hz = data.readU16();
+        fcStore.filterConfig.gyro_notch2_cutoff = data.readU16();
+        fcStore.filterConfig.dterm_lowpass_type = data.readU8();
+        fcStore.filterConfig.gyro_hardware_lpf = data.readU8();
         data.readU8(); // gyro_32khz_hardware_lpf not used
-        FC.FILTER_CONFIG.gyro_lowpass_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass2_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass_type = data.readU8();
-        FC.FILTER_CONFIG.gyro_lowpass2_type = data.readU8();
-        FC.FILTER_CONFIG.dterm_lowpass2_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_32khz_hardware_lpf = 0;
-        FC.FILTER_CONFIG.dterm_lowpass2_type = data.readU8();
-        FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = data.readU16();
-        FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = data.readU16();
-        FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass2_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass_type = data.readU8();
+        fcStore.filterConfig.gyro_lowpass2_type = data.readU8();
+        fcStore.filterConfig.dterm_lowpass2_hz = data.readU16();
+        fcStore.filterConfig.gyro_32khz_hardware_lpf = 0;
+        fcStore.filterConfig.dterm_lowpass2_type = data.readU8();
+        fcStore.filterConfig.gyro_lowpass_dyn_min_hz = data.readU16();
+        fcStore.filterConfig.gyro_lowpass_dyn_max_hz = data.readU16();
+        fcStore.filterConfig.dterm_lowpass_dyn_min_hz = data.readU16();
+        fcStore.filterConfig.dterm_lowpass_dyn_max_hz = data.readU16();
         // Introduced in 1.42
-        FC.FILTER_CONFIG.dyn_notch_range = data.readU8();
-        FC.FILTER_CONFIG.dyn_notch_width_percent = data.readU8();
-        FC.FILTER_CONFIG.dyn_notch_q = data.readU16();
-        FC.FILTER_CONFIG.dyn_notch_min_hz = data.readU16();
+        fcStore.filterConfig.dyn_notch_range = data.readU8();
+        fcStore.filterConfig.dyn_notch_width_percent = data.readU8();
+        fcStore.filterConfig.dyn_notch_q = data.readU16();
+        fcStore.filterConfig.dyn_notch_min_hz = data.readU16();
 
-        FC.FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
-        FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
+        fcStore.filterConfig.gyro_rpm_notch_harmonics = data.readU8();
+        fcStore.filterConfig.gyro_rpm_notch_min_hz = data.readU8();
         // Introduced in 1.43
-        FC.FILTER_CONFIG.dyn_notch_max_hz = data.readU16();
+        fcStore.filterConfig.dyn_notch_max_hz = data.readU16();
         // Introduced in 1.44
-        FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
-        FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
+        fcStore.filterConfig.dyn_lpf_curve_expo = data.readU8();
+        fcStore.filterConfig.dyn_notch_count = data.readU8();
         // Introduced in 1.48
         if (data.remaining() >= 7) {
-            FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz = data.readU16();
-            FC.FILTER_CONFIG.gyro_rpm_notch_q = data.readU16();
-            FC.FILTER_CONFIG.gyro_rpm_notch_weights = [];
+            fcStore.filterConfig.gyro_rpm_notch_fade_range_hz = data.readU16();
+            fcStore.filterConfig.gyro_rpm_notch_q = data.readU16();
+            fcStore.filterConfig.gyro_rpm_notch_weights = [];
             for (let i = 0; i < 3; i++) {
-                FC.FILTER_CONFIG.gyro_rpm_notch_weights.push(data.readU8());
+                fcStore.filterConfig.gyro_rpm_notch_weights.push(data.readU8());
             }
         }
     },
 
     [MSPCodes.MSP_SET_PID_ADVANCED]() {
+        const fcStore = useFlightControllerStore();
         console.log("Advanced PID settings saved");
-        FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
+        fcStore.advancedTuningActive = { ...fcStore.advancedTuning };
     },
 
     [MSPCodes.MSP_PID_ADVANCED](data) {
-        FC.ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
-        FC.ADVANCED_TUNING.yawItermIgnoreRate = data.readU16();
-        FC.ADVANCED_TUNING.yaw_p_limit = data.readU16();
-        FC.ADVANCED_TUNING.deltaMethod = data.readU8();
-        FC.ADVANCED_TUNING.vbatPidCompensation = data.readU8();
-        FC.ADVANCED_TUNING.feedforwardTransition = data.readU8();
-        FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
-        FC.ADVANCED_TUNING.toleranceBand = data.readU8();
-        FC.ADVANCED_TUNING.toleranceBandReduction = data.readU8();
-        FC.ADVANCED_TUNING.itermThrottleGain = data.readU8();
-        FC.ADVANCED_TUNING.pidMaxVelocity = data.readU16();
-        FC.ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
-        FC.ADVANCED_TUNING.levelAngleLimit = data.readU8();
-        FC.ADVANCED_TUNING.levelSensitivity = data.readU8();
-        FC.ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.ADVANCED_TUNING.antiGravityGain = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.advancedTuning.rollPitchItermIgnoreRate = data.readU16();
+        fcStore.advancedTuning.yawItermIgnoreRate = data.readU16();
+        fcStore.advancedTuning.yaw_p_limit = data.readU16();
+        fcStore.advancedTuning.deltaMethod = data.readU8();
+        fcStore.advancedTuning.vbatPidCompensation = data.readU8();
+        fcStore.advancedTuning.feedforwardTransition = data.readU8();
+        fcStore.advancedTuning.dtermSetpointWeight = data.readU8();
+        fcStore.advancedTuning.toleranceBand = data.readU8();
+        fcStore.advancedTuning.toleranceBandReduction = data.readU8();
+        fcStore.advancedTuning.itermThrottleGain = data.readU8();
+        fcStore.advancedTuning.pidMaxVelocity = data.readU16();
+        fcStore.advancedTuning.pidMaxVelocityYaw = data.readU16();
+        fcStore.advancedTuning.levelAngleLimit = data.readU8();
+        fcStore.advancedTuning.levelSensitivity = data.readU8();
+        fcStore.advancedTuning.itermThrottleThreshold = data.readU16();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            fcStore.advancedTuning.antiGravityGain = data.readU16();
         } else {
-            FC.ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
+            fcStore.advancedTuning.itermAcceleratorGain = data.readU16();
         }
 
-        FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU16();
-        FC.ADVANCED_TUNING.itermRotation = data.readU8();
-        FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
-        FC.ADVANCED_TUNING.itermRelax = data.readU8();
-        FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+        fcStore.advancedTuning.dtermSetpointWeight = data.readU16();
+        fcStore.advancedTuning.itermRotation = data.readU8();
+        fcStore.advancedTuning.smartFeedforward = data.readU8();
+        fcStore.advancedTuning.itermRelax = data.readU8();
+        fcStore.advancedTuning.itermRelaxType = data.readU8();
+        if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_48)) {
+            fcStore.advancedTuning.absoluteControlGain = data.readU8();
         } else {
             data.readU8();
         }
-        FC.ADVANCED_TUNING.throttleBoost = data.readU8();
-        FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
-        FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
-        FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
-        FC.ADVANCED_TUNING.feedforwardYaw = data.readU16();
-        FC.ADVANCED_TUNING.antiGravityMode = data.readU8();
+        fcStore.advancedTuning.throttleBoost = data.readU8();
+        fcStore.advancedTuning.acroTrainerAngleLimit = data.readU8();
+        fcStore.advancedTuning.feedforwardRoll = data.readU16();
+        fcStore.advancedTuning.feedforwardPitch = data.readU16();
+        fcStore.advancedTuning.feedforwardYaw = data.readU16();
+        fcStore.advancedTuning.antiGravityMode = data.readU8();
 
-        FC.ADVANCED_TUNING.dMaxRoll = data.readU8();
-        FC.ADVANCED_TUNING.dMaxPitch = data.readU8();
-        FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
-        FC.ADVANCED_TUNING.dMaxGain = data.readU8();
-        FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
+        fcStore.advancedTuning.dMaxRoll = data.readU8();
+        fcStore.advancedTuning.dMaxPitch = data.readU8();
+        fcStore.advancedTuning.dMaxYaw = data.readU8();
+        fcStore.advancedTuning.dMaxGain = data.readU8();
+        fcStore.advancedTuning.dMaxAdvance = data.readU8();
         // No Configurator UI for these; round-tripped as-is so saving other PID_ADVANCED
         // fields doesn't reset a value still active on firmware older than 2026.12.0.
-        FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
-        FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
+        fcStore.advancedTuning.useIntegratedYaw = data.readU8();
+        fcStore.advancedTuning.integratedYawRelax = data.readU8();
 
         // Introduced in 1.42
-        FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
+        fcStore.advancedTuning.itermRelaxCutoff = data.readU8();
 
         // Introduced in 1.43
-        FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
-        FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
-        FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
+        fcStore.advancedTuning.motorOutputLimit = data.readU8();
+        fcStore.advancedTuning.autoProfileCellCount = data.read8();
+        fcStore.advancedTuning.idleMinRpm = data.readU8();
 
         // Introduced in 1.44
-        FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
-        FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
-        FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
-        FC.ADVANCED_TUNING.feedforward_max_rate_limit = data.readU8();
-        FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
-        FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
-        FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
+        fcStore.advancedTuning.feedforward_averaging = data.readU8();
+        fcStore.advancedTuning.feedforward_smooth_factor = data.readU8();
+        fcStore.advancedTuning.feedforward_boost = data.readU8();
+        fcStore.advancedTuning.feedforward_max_rate_limit = data.readU8();
+        fcStore.advancedTuning.feedforward_jitter_factor = data.readU8();
+        fcStore.advancedTuning.vbat_sag_compensation = data.readU8();
+        fcStore.advancedTuning.thrustLinearization = data.readU8();
 
         // Introduced in 1.45
-        FC.ADVANCED_TUNING.tpaMode = data.readU8();
-        FC.ADVANCED_TUNING.tpaRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
-        FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
+        fcStore.advancedTuning.tpaMode = data.readU8();
+        fcStore.advancedTuning.tpaRate = Number.parseFloat((data.readU8() / 100).toFixed(2));
+        fcStore.advancedTuning.tpaBreakpoint = data.readU16();
 
-        FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
+        fcStore.advancedTuningActive = { ...fcStore.advancedTuning };
     },
 
     [MSPCodes.MSP_SENSOR_CONFIG](data) {
-        FC.SENSOR_CONFIG.acc_hardware = data.readU8();
-        FC.SENSOR_CONFIG.baro_hardware = data.readU8();
-        FC.SENSOR_CONFIG.mag_hardware = data.readU8();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.SENSOR_CONFIG.sonar_hardware = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorConfig.acc_hardware = data.readU8();
+        fcStore.sensorConfig.baro_hardware = data.readU8();
+        fcStore.sensorConfig.mag_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            fcStore.sensorConfig.sonar_hardware = data.readU8();
         }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.SENSOR_CONFIG.opticalflow_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.sensorConfig.opticalflow_hardware = data.readU8();
         }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            FC.SENSOR_CONFIG.pitot_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            fcStore.sensorConfig.pitot_hardware = data.readU8();
         }
     },
 
     [MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE](data) {
-        FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
-        FC.SENSOR_CONFIG_ACTIVE.acc_hardware = data.readU8();
-        FC.SENSOR_CONFIG_ACTIVE.baro_hardware = data.readU8();
-        FC.SENSOR_CONFIG_ACTIVE.mag_hardware = data.readU8();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.sensorConfigActive.gyro_hardware = data.readU8();
+        fcStore.sensorConfigActive.acc_hardware = data.readU8();
+        fcStore.sensorConfigActive.baro_hardware = data.readU8();
+        fcStore.sensorConfigActive.mag_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            fcStore.sensorConfigActive.sonar_hardware = data.readU8();
         }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.sensorConfigActive.opticalflow_hardware = data.readU8();
         }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            FC.SENSOR_CONFIG_ACTIVE.pitot_hardware = data.readU8();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            fcStore.sensorConfigActive.pitot_hardware = data.readU8();
         }
     },
 
     [MSPCodes.MSP2_MCU_INFO](data) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.MCU_INFO = {
+        const fcStore = useFlightControllerStore();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.mcuInfo = {
                 id: data.readU8(),
                 name: this.getText(data),
             };
@@ -1999,16 +2095,18 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP2_GYRO_SENSOR](data) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            FC.GYRO_SENSOR.gyro_count = data.readU8();
-            for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
-                FC.GYRO_SENSOR.gyro_hardware[i] = data.readU8();
+        const fcStore = useFlightControllerStore();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            fcStore.gyroSensor.gyro_count = data.readU8();
+            for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
+                fcStore.gyroSensor.gyro_hardware[i] = data.readU8();
             }
         }
     },
 
     [MSPCodes.MSP_LED_STRIP_CONFIG](data) {
-        FC.LED_STRIP = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.ledStrip = [];
 
         const ledCount = (data.byteLength - 2) / 4;
 
@@ -2024,13 +2122,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
         //Before API_VERSION_1_46 Parameters were 4 bit and Overlays 6 bit
 
-        const layout = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? LED_MASK_LAYOUT : LED_MASK_LAYOUT_PRE_1_46;
+        const layout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)
+            ? LED_MASK_LAYOUT
+            : LED_MASK_LAYOUT_PRE_1_46;
         if (layout === LED_MASK_LAYOUT_PRE_1_46) {
             ledOverlayLetters = ledOverlayLetters.filter((x) => x !== "y"); //remove rainbow because it's only supported after API 1.46
         }
 
         for (let i = 0; i < ledCount; i++) {
-            FC.LED_STRIP.push(decodeLedMask(data.readU32(), layout));
+            fcStore.ledStrip.push(decodeLedMask(data.readU32(), layout));
         }
     },
 
@@ -2039,7 +2139,8 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_LED_COLORS](data) {
-        FC.LED_COLORS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.ledColors = [];
 
         const ledcolorCount = data.byteLength / 4;
 
@@ -2049,7 +2150,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 s: data.readU8(),
                 v: data.readU8(),
             };
-            FC.LED_COLORS.push(color);
+            fcStore.ledColors.push(color);
         }
     },
 
@@ -2058,7 +2159,8 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_LED_STRIP_MODECOLOR](data) {
-        FC.LED_MODE_COLORS = [];
+        const fcStore = useFlightControllerStore();
+        fcStore.ledModeColors = [];
 
         const colorCount = data.byteLength / 3;
 
@@ -2068,7 +2170,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 direction: data.readU8(),
                 color: data.readU8(),
             };
-            FC.LED_MODE_COLORS.push(modeColor);
+            fcStore.ledModeColors.push(modeColor);
         }
     },
 
@@ -2077,21 +2179,22 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_DATAFLASH_SUMMARY](data) {
+        const fcStore = useFlightControllerStore();
         let flags = 0;
         if (data.byteLength >= 13) {
             flags = data.readU8();
-            FC.DATAFLASH.ready = (flags & 1) != 0;
-            FC.DATAFLASH.supported = (flags & 2) != 0;
-            FC.DATAFLASH.sectors = data.readU32();
-            FC.DATAFLASH.totalSize = data.readU32();
-            FC.DATAFLASH.usedSize = data.readU32();
+            fcStore.dataflash.ready = (flags & 1) != 0;
+            fcStore.dataflash.supported = (flags & 2) != 0;
+            fcStore.dataflash.sectors = data.readU32();
+            fcStore.dataflash.totalSize = data.readU32();
+            fcStore.dataflash.usedSize = data.readU32();
         } else {
             // Firmware version too old to support MSP_DATAFLASH_SUMMARY
-            FC.DATAFLASH.ready = false;
-            FC.DATAFLASH.supported = false;
-            FC.DATAFLASH.sectors = 0;
-            FC.DATAFLASH.totalSize = 0;
-            FC.DATAFLASH.usedSize = 0;
+            fcStore.dataflash.ready = false;
+            fcStore.dataflash.supported = false;
+            fcStore.dataflash.sectors = 0;
+            fcStore.dataflash.totalSize = 0;
+            fcStore.dataflash.usedSize = 0;
         }
     },
 
@@ -2102,29 +2205,31 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_SDCARD_SUMMARY](data) {
+        const fcStore = useFlightControllerStore();
         let flags = 0;
         flags = data.readU8();
 
-        FC.SDCARD.supported = (flags & 0x01) != 0;
-        FC.SDCARD.state = data.readU8();
-        FC.SDCARD.filesystemLastError = data.readU8();
-        FC.SDCARD.freeSizeKB = data.readU32();
-        FC.SDCARD.totalSizeKB = data.readU32();
+        fcStore.sdcard.supported = (flags & 0x01) != 0;
+        fcStore.sdcard.state = data.readU8();
+        fcStore.sdcard.filesystemLastError = data.readU8();
+        fcStore.sdcard.freeSizeKB = data.readU32();
+        fcStore.sdcard.totalSizeKB = data.readU32();
     },
 
     [MSPCodes.MSP_BLACKBOX_CONFIG](data) {
-        FC.BLACKBOX.supported = (data.readU8() & 1) != 0;
-        FC.BLACKBOX.blackboxDevice = data.readU8();
-        FC.BLACKBOX.blackboxRateNum = data.readU8();
-        FC.BLACKBOX.blackboxRateDenom = data.readU8();
-        FC.BLACKBOX.blackboxPDenom = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.blackbox.supported = (data.readU8() & 1) != 0;
+        fcStore.blackbox.blackboxDevice = data.readU8();
+        fcStore.blackbox.blackboxRateNum = data.readU8();
+        fcStore.blackbox.blackboxRateDenom = data.readU8();
+        fcStore.blackbox.blackboxPDenom = data.readU16();
 
         // Introduced in API version 1.44
-        FC.BLACKBOX.blackboxSampleRate = data.readU8();
+        fcStore.blackbox.blackboxSampleRate = data.readU8();
 
         // Introduced in API version 1.45
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.BLACKBOX.blackboxDisabledMask = data.readU32();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            fcStore.blackbox.blackboxDisabledMask = data.readU32();
         }
     },
 
@@ -2133,22 +2238,23 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_VTX_CONFIG](data) {
-        FC.VTX_CONFIG.vtx_type = data.readU8();
-        FC.VTX_CONFIG.vtx_band = data.readU8();
-        FC.VTX_CONFIG.vtx_channel = data.readU8();
-        FC.VTX_CONFIG.vtx_power = data.readU8();
-        FC.VTX_CONFIG.vtx_pit_mode = data.readU8() != 0;
-        FC.VTX_CONFIG.vtx_frequency = data.readU16();
-        FC.VTX_CONFIG.vtx_device_ready = data.readU8() != 0;
-        FC.VTX_CONFIG.vtx_low_power_disarm = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.vtxConfig.vtx_type = data.readU8();
+        fcStore.vtxConfig.vtx_band = data.readU8();
+        fcStore.vtxConfig.vtx_channel = data.readU8();
+        fcStore.vtxConfig.vtx_power = data.readU8();
+        fcStore.vtxConfig.vtx_pit_mode = data.readU8() != 0;
+        fcStore.vtxConfig.vtx_frequency = data.readU16();
+        fcStore.vtxConfig.vtx_device_ready = data.readU8() != 0;
+        fcStore.vtxConfig.vtx_low_power_disarm = data.readU8();
 
         // Introduced in API version 1.42
-        FC.VTX_CONFIG.vtx_pit_mode_frequency = data.readU16();
-        FC.VTX_CONFIG.vtx_table_available = data.readU8() != 0;
-        FC.VTX_CONFIG.vtx_table_bands = data.readU8();
-        FC.VTX_CONFIG.vtx_table_channels = data.readU8();
-        FC.VTX_CONFIG.vtx_table_powerlevels = data.readU8();
-        FC.VTX_CONFIG.vtx_table_clear = false;
+        fcStore.vtxConfig.vtx_pit_mode_frequency = data.readU16();
+        fcStore.vtxConfig.vtx_table_available = data.readU8() != 0;
+        fcStore.vtxConfig.vtx_table_bands = data.readU8();
+        fcStore.vtxConfig.vtx_table_channels = data.readU8();
+        fcStore.vtxConfig.vtx_table_powerlevels = data.readU8();
+        fcStore.vtxConfig.vtx_table_clear = false;
     },
 
     [MSPCodes.MSP_SET_VTX_CONFIG]() {
@@ -2156,21 +2262,22 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_VTXTABLE_BAND](data) {
-        FC.VTXTABLE_BAND.vtxtable_band_number = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.vtxTableBand.vtxtable_band_number = data.readU8();
 
         const bandNameLength = data.readU8();
-        FC.VTXTABLE_BAND.vtxtable_band_name = "";
+        fcStore.vtxTableBand.vtxtable_band_name = "";
         for (let i = 0; i < bandNameLength; i++) {
-            FC.VTXTABLE_BAND.vtxtable_band_name += String.fromCodePoint(data.readU8());
+            fcStore.vtxTableBand.vtxtable_band_name += String.fromCodePoint(data.readU8());
         }
 
-        FC.VTXTABLE_BAND.vtxtable_band_letter = String.fromCodePoint(data.readU8());
-        FC.VTXTABLE_BAND.vtxtable_band_is_factory_band = data.readU8() != 0;
+        fcStore.vtxTableBand.vtxtable_band_letter = String.fromCodePoint(data.readU8());
+        fcStore.vtxTableBand.vtxtable_band_is_factory_band = data.readU8() != 0;
 
         const bandFrequenciesLength = data.readU8();
-        FC.VTXTABLE_BAND.vtxtable_band_frequencies = [];
+        fcStore.vtxTableBand.vtxtable_band_frequencies = [];
         for (let i = 0; i < bandFrequenciesLength; i++) {
-            FC.VTXTABLE_BAND.vtxtable_band_frequencies.push(data.readU16());
+            fcStore.vtxTableBand.vtxtable_band_frequencies.push(data.readU16());
         }
     },
 
@@ -2179,13 +2286,14 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_VTXTABLE_POWERLEVEL](data) {
-        FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_number = data.readU8();
-        FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_value = data.readU16();
+        const fcStore = useFlightControllerStore();
+        fcStore.vtxTablePowerLevel.vtxtable_powerlevel_number = data.readU8();
+        fcStore.vtxTablePowerLevel.vtxtable_powerlevel_value = data.readU16();
 
         const powerLabelLength = data.readU8();
-        FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label = "";
+        fcStore.vtxTablePowerLevel.vtxtable_powerlevel_label = "";
         for (let i = 0; i < powerLabelLength; i++) {
-            FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label += String.fromCodePoint(data.readU8());
+            fcStore.vtxTablePowerLevel.vtxtable_powerlevel_label += String.fromCodePoint(data.readU8());
         }
     },
 
@@ -2200,26 +2308,27 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_CALCULATE_SIMPLIFIED_PID](data) {
-        if (FC.TUNING_SLIDERS.slider_pids_mode > 0) {
-            FC.PIDS[0][0] = data.readU8();
-            FC.PIDS[0][1] = data.readU8();
-            FC.PIDS[0][2] = data.readU8();
-            FC.ADVANCED_TUNING.dMaxRoll = data.readU8();
-            FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
+        const fcStore = useFlightControllerStore();
+        if (fcStore.tuningSliders.slider_pids_mode > 0) {
+            fcStore.pids[0][0] = data.readU8();
+            fcStore.pids[0][1] = data.readU8();
+            fcStore.pids[0][2] = data.readU8();
+            fcStore.advancedTuning.dMaxRoll = data.readU8();
+            fcStore.advancedTuning.feedforwardRoll = data.readU16();
 
-            FC.PIDS[1][0] = data.readU8();
-            FC.PIDS[1][1] = data.readU8();
-            FC.PIDS[1][2] = data.readU8();
-            FC.ADVANCED_TUNING.dMaxPitch = data.readU8();
-            FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
+            fcStore.pids[1][0] = data.readU8();
+            fcStore.pids[1][1] = data.readU8();
+            fcStore.pids[1][2] = data.readU8();
+            fcStore.advancedTuning.dMaxPitch = data.readU8();
+            fcStore.advancedTuning.feedforwardPitch = data.readU16();
         }
 
-        if (FC.TUNING_SLIDERS.slider_pids_mode > 1) {
-            FC.PIDS[2][0] = data.readU8();
-            FC.PIDS[2][1] = data.readU8();
-            FC.PIDS[2][2] = data.readU8();
-            FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
-            FC.ADVANCED_TUNING.feedforwardYaw = data.readU16();
+        if (fcStore.tuningSliders.slider_pids_mode > 1) {
+            fcStore.pids[2][0] = data.readU8();
+            fcStore.pids[2][1] = data.readU8();
+            fcStore.pids[2][2] = data.readU8();
+            fcStore.advancedTuning.dMaxYaw = data.readU8();
+            fcStore.advancedTuning.feedforwardYaw = data.readU16();
         }
     },
 
@@ -2232,9 +2341,10 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING](data) {
-        FC.TUNING_SLIDERS.slider_pids_valid = data.readU8();
-        FC.TUNING_SLIDERS.slider_gyro_valid = data.readU8();
-        FC.TUNING_SLIDERS.slider_dterm_valid = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.tuningSliders.slider_pids_valid = data.readU8();
+        fcStore.tuningSliders.slider_gyro_valid = data.readU8();
+        fcStore.tuningSliders.slider_dterm_valid = data.readU8();
     },
 
     [MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL]() {
@@ -2254,7 +2364,8 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_PID_CONTROLLER](data) {
-        FC.PID.controller = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.pidController.controller = data.readU8();
     },
 
     [MSPCodes.MSP_SET_PID_CONTROLLER]() {
@@ -2422,81 +2533,83 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP_WING](data) {
+        const fcStore = useFlightControllerStore();
         for (let i = 0; i < 3; i++) {
-            FC.WING_CONFIG.s_term[i] = data.readU8();
+            fcStore.wingConfig.s_term[i] = data.readU8();
         }
         for (let i = 0; i < 3; i++) {
-            FC.WING_CONFIG.spa_center[i] = data.readU16();
+            fcStore.wingConfig.spa_center[i] = data.readU16();
         }
         for (let i = 0; i < 3; i++) {
-            FC.WING_CONFIG.spa_width[i] = data.readU16();
+            fcStore.wingConfig.spa_width[i] = data.readU16();
         }
         for (let i = 0; i < 3; i++) {
-            FC.WING_CONFIG.spa_mode[i] = data.readU8();
+            fcStore.wingConfig.spa_mode[i] = data.readU8();
         }
 
-        FC.WING_CONFIG.tpa_curve_type = data.readU8();
-        FC.WING_CONFIG.tpa_curve_stall_throttle = data.readU8();
-        FC.WING_CONFIG.tpa_curve_pid_thr0 = data.readU16();
-        FC.WING_CONFIG.tpa_curve_pid_thr100 = data.readU16();
-        FC.WING_CONFIG.tpa_curve_expo = data.read8();
-        FC.WING_CONFIG.tpa_speed_type = data.readU8();
-        FC.WING_CONFIG.tpa_speed_basic_delay = data.readU16();
-        FC.WING_CONFIG.tpa_speed_basic_gravity = data.readU16();
-        FC.WING_CONFIG.tpa_speed_adv_prop_pitch = data.readU16();
-        FC.WING_CONFIG.tpa_speed_adv_mass = data.readU16();
-        FC.WING_CONFIG.tpa_speed_adv_drag_k = data.readU16();
-        FC.WING_CONFIG.tpa_speed_adv_thrust = data.readU16();
-        FC.WING_CONFIG.tpa_speed_max_voltage = data.readU16();
-        FC.WING_CONFIG.tpa_speed_pitch_offset = data.read16();
-        FC.WING_CONFIG.yaw_type = data.readU8();
-        FC.WING_CONFIG.angle_pitch_offset = data.read16();
+        fcStore.wingConfig.tpa_curve_type = data.readU8();
+        fcStore.wingConfig.tpa_curve_stall_throttle = data.readU8();
+        fcStore.wingConfig.tpa_curve_pid_thr0 = data.readU16();
+        fcStore.wingConfig.tpa_curve_pid_thr100 = data.readU16();
+        fcStore.wingConfig.tpa_curve_expo = data.read8();
+        fcStore.wingConfig.tpa_speed_type = data.readU8();
+        fcStore.wingConfig.tpa_speed_basic_delay = data.readU16();
+        fcStore.wingConfig.tpa_speed_basic_gravity = data.readU16();
+        fcStore.wingConfig.tpa_speed_adv_prop_pitch = data.readU16();
+        fcStore.wingConfig.tpa_speed_adv_mass = data.readU16();
+        fcStore.wingConfig.tpa_speed_adv_drag_k = data.readU16();
+        fcStore.wingConfig.tpa_speed_adv_thrust = data.readU16();
+        fcStore.wingConfig.tpa_speed_max_voltage = data.readU16();
+        fcStore.wingConfig.tpa_speed_pitch_offset = data.read16();
+        fcStore.wingConfig.yaw_type = data.readU8();
+        fcStore.wingConfig.angle_pitch_offset = data.read16();
     },
 
     [MSPCodes.MSP_SET_WING]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_PSAS_CONFIG](data) {
-        FC.PSAS_CONFIG.stick_gain[0] = data.readU8();
-        FC.PSAS_CONFIG.stick_gain[1] = data.readU8();
-        FC.PSAS_CONFIG.stick_gain[2] = data.readU8();
-        FC.PSAS_CONFIG.damping_gain[0] = data.readU16();
-        FC.PSAS_CONFIG.damping_gain[1] = data.readU16();
-        FC.PSAS_CONFIG.damping_gain[2] = data.readU16();
-        FC.PSAS_CONFIG.pitch_damping_filter_freq = data.readU16();
-        FC.PSAS_CONFIG.accel_z_filter_freq = data.readU8();
-        FC.PSAS_CONFIG.pitch_stability_gain = data.readU16();
-        FC.PSAS_CONFIG.pitch_accel_p_gain = data.readU16();
-        FC.PSAS_CONFIG.pitch_accel_i_gain = data.readU8();
-        FC.PSAS_CONFIG.pitch_accel_max = data.readU8();
-        FC.PSAS_CONFIG.pitch_accel_min = data.readU8();
-        FC.PSAS_CONFIG.yaw_damping_filter_freq = data.readU16();
-        FC.PSAS_CONFIG.accel_y_filter_freq = data.readU8();
-        FC.PSAS_CONFIG.yaw_stability_gain = data.readU16();
-        FC.PSAS_CONFIG.wing_load = data.readU16();
-        FC.PSAS_CONFIG.air_density = data.readU16();
-        FC.PSAS_CONFIG.lift_c_limit = data.readU8();
-        FC.PSAS_CONFIG.aoa_limiter_gain = data.readU8();
-        FC.PSAS_CONFIG.lift_coef_filter_freq = data.readU8();
-        FC.PSAS_CONFIG.aoa_limiter_forecast_time = data.readU8();
-        FC.PSAS_CONFIG.aoa_limiter_tau_return = data.readU8();
-        FC.PSAS_CONFIG.servo_time = data.readU16();
-        FC.PSAS_CONFIG.roll_yaw_clift_start = data.readU8();
-        FC.PSAS_CONFIG.roll_yaw_clift_stop = data.readU8();
-        FC.PSAS_CONFIG.roll_to_yaw_link = data.readU8();
-        FC.PSAS_CONFIG.speed_main_curve_enable[0] = data.readU8();
-        FC.PSAS_CONFIG.speed_main_curve_enable[1] = data.readU8();
-        FC.PSAS_CONFIG.speed_main_curve_enable[2] = data.readU8();
-        FC.PSAS_CONFIG.speed_stick_curve_enable[0] = data.readU8();
-        FC.PSAS_CONFIG.speed_stick_curve_enable[1] = data.readU8();
-        FC.PSAS_CONFIG.speed_stick_curve_enable[2] = data.readU8();
-        FC.PSAS_CONFIG.speed_optimum_vref = data.readU8();
-        FC.PSAS_CONFIG.speed_main_curve_power = data.readU8();
-        FC.PSAS_CONFIG.speed_roll_stick_curve_power = data.readU8();
-        FC.PSAS_CONFIG.speed_main_curve_min = data.readU16();
-        FC.PSAS_CONFIG.speed_main_curve_max = data.readU16();
-        FC.PSAS_CONFIG.speed_stick_curve_min = data.readU16();
-        FC.PSAS_CONFIG.speed_stick_curve_max = data.readU16();
-        FC.PSAS_CONFIG.speed_curve_mode = data.readU8();
+        const fcStore = useFlightControllerStore();
+        fcStore.psasConfig.stick_gain[0] = data.readU8();
+        fcStore.psasConfig.stick_gain[1] = data.readU8();
+        fcStore.psasConfig.stick_gain[2] = data.readU8();
+        fcStore.psasConfig.damping_gain[0] = data.readU16();
+        fcStore.psasConfig.damping_gain[1] = data.readU16();
+        fcStore.psasConfig.damping_gain[2] = data.readU16();
+        fcStore.psasConfig.pitch_damping_filter_freq = data.readU16();
+        fcStore.psasConfig.accel_z_filter_freq = data.readU8();
+        fcStore.psasConfig.pitch_stability_gain = data.readU16();
+        fcStore.psasConfig.pitch_accel_p_gain = data.readU16();
+        fcStore.psasConfig.pitch_accel_i_gain = data.readU8();
+        fcStore.psasConfig.pitch_accel_max = data.readU8();
+        fcStore.psasConfig.pitch_accel_min = data.readU8();
+        fcStore.psasConfig.yaw_damping_filter_freq = data.readU16();
+        fcStore.psasConfig.accel_y_filter_freq = data.readU8();
+        fcStore.psasConfig.yaw_stability_gain = data.readU16();
+        fcStore.psasConfig.wing_load = data.readU16();
+        fcStore.psasConfig.air_density = data.readU16();
+        fcStore.psasConfig.lift_c_limit = data.readU8();
+        fcStore.psasConfig.aoa_limiter_gain = data.readU8();
+        fcStore.psasConfig.lift_coef_filter_freq = data.readU8();
+        fcStore.psasConfig.aoa_limiter_forecast_time = data.readU8();
+        fcStore.psasConfig.aoa_limiter_tau_return = data.readU8();
+        fcStore.psasConfig.servo_time = data.readU16();
+        fcStore.psasConfig.roll_yaw_clift_start = data.readU8();
+        fcStore.psasConfig.roll_yaw_clift_stop = data.readU8();
+        fcStore.psasConfig.roll_to_yaw_link = data.readU8();
+        fcStore.psasConfig.speed_main_curve_enable[0] = data.readU8();
+        fcStore.psasConfig.speed_main_curve_enable[1] = data.readU8();
+        fcStore.psasConfig.speed_main_curve_enable[2] = data.readU8();
+        fcStore.psasConfig.speed_stick_curve_enable[0] = data.readU8();
+        fcStore.psasConfig.speed_stick_curve_enable[1] = data.readU8();
+        fcStore.psasConfig.speed_stick_curve_enable[2] = data.readU8();
+        fcStore.psasConfig.speed_optimum_vref = data.readU8();
+        fcStore.psasConfig.speed_main_curve_power = data.readU8();
+        fcStore.psasConfig.speed_roll_stick_curve_power = data.readU8();
+        fcStore.psasConfig.speed_main_curve_min = data.readU16();
+        fcStore.psasConfig.speed_main_curve_max = data.readU16();
+        fcStore.psasConfig.speed_stick_curve_min = data.readU16();
+        fcStore.psasConfig.speed_stick_curve_max = data.readU16();
+        fcStore.psasConfig.speed_curve_mode = data.readU8();
     },
 
     [MSPCodes.MSP_SET_PSAS_CONFIG]: NOTHING_TO_DO,
@@ -2517,30 +2630,35 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP_SET_BEEPER_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         const beeperDisabledMask = beepers("beepers").getDisabledMask();
         buffer.push32(beeperDisabledMask);
-        buffer.push8(FC.BEEPER_CONFIG.dshotBeaconTone);
+        buffer.push8(fcStore.beepers.dshotBeaconTone);
         buffer.push32(beepers("dshotBeaconConditions").getDisabledMask());
     },
 
     [MSPCodes.MSP_SET_MIXER_CONFIG](buffer) {
-        buffer.push8(FC.MIXER_CONFIG.mixer);
-        buffer.push8(FC.MIXER_CONFIG.reverseMotorDir);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.mixerConfig.mixer);
+        buffer.push8(fcStore.mixerConfig.reverseMotorDir);
     },
 
     [MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.BOARD_ALIGNMENT_CONFIG.roll)
-            .push16(FC.BOARD_ALIGNMENT_CONFIG.pitch)
-            .push16(FC.BOARD_ALIGNMENT_CONFIG.yaw);
+            .push16(fcStore.boardAlignment.roll)
+            .push16(fcStore.boardAlignment.pitch)
+            .push16(fcStore.boardAlignment.yaw);
     },
 
     [MSPCodes.MSP_SET_PID_CONTROLLER](buffer) {
-        buffer.push8(FC.PID.controller);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.pidController.controller);
     },
 
     [MSPCodes.MSP_SET_PID](buffer) {
-        for (const pid of FC.PIDS) {
+        const fcStore = useFlightControllerStore();
+        for (const pid of fcStore.pids) {
             for (let j = 0; j < 3; j++) {
                 buffer.push8(Number.parseInt(String(pid[j])));
             }
@@ -2548,163 +2666,175 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP_SET_RC_TUNING](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(Math.round(FC.RC_TUNING.RC_RATE * 100))
-            .push8(Math.round(FC.RC_TUNING.RC_EXPO * 100))
-            .push8(Math.round(FC.RC_TUNING.roll_rate * 100))
-            .push8(Math.round(FC.RC_TUNING.pitch_rate * 100))
-            .push8(Math.round(FC.RC_TUNING.yaw_rate * 100));
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            .push8(Math.round(fcStore.rcTuning.RC_RATE * 100))
+            .push8(Math.round(fcStore.rcTuning.RC_EXPO * 100))
+            .push8(Math.round(fcStore.rcTuning.roll_rate * 100))
+            .push8(Math.round(fcStore.rcTuning.pitch_rate * 100))
+            .push8(Math.round(fcStore.rcTuning.yaw_rate * 100));
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             buffer.push8(0);
         } else {
-            buffer.push8(Math.round(FC.RC_TUNING.dynamic_THR_PID * 100));
+            buffer.push8(Math.round(fcStore.rcTuning.dynamic_THR_PID * 100));
         }
-        buffer.push8(Math.round(FC.RC_TUNING.throttle_MID * 100));
-        buffer.push8(Math.round(FC.RC_TUNING.throttle_EXPO * 100));
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        buffer.push8(Math.round(fcStore.rcTuning.throttle_MID * 100));
+        buffer.push8(Math.round(fcStore.rcTuning.throttle_EXPO * 100));
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             buffer.push16(0);
         } else {
-            buffer.push16(FC.RC_TUNING.dynamic_THR_breakpoint);
+            buffer.push16(fcStore.rcTuning.dynamic_THR_breakpoint);
         }
-        buffer.push8(Math.round(FC.RC_TUNING.RC_YAW_EXPO * 100));
-        buffer.push8(Math.round(FC.RC_TUNING.rcYawRate * 100));
-        buffer.push8(Math.round(FC.RC_TUNING.rcPitchRate * 100));
-        buffer.push8(Math.round(FC.RC_TUNING.RC_PITCH_EXPO * 100));
-        buffer.push8(FC.RC_TUNING.throttleLimitType);
-        buffer.push8(FC.RC_TUNING.throttleLimitPercent);
+        buffer.push8(Math.round(fcStore.rcTuning.RC_YAW_EXPO * 100));
+        buffer.push8(Math.round(fcStore.rcTuning.rcYawRate * 100));
+        buffer.push8(Math.round(fcStore.rcTuning.rcPitchRate * 100));
+        buffer.push8(Math.round(fcStore.rcTuning.RC_PITCH_EXPO * 100));
+        buffer.push8(fcStore.rcTuning.throttleLimitType);
+        buffer.push8(fcStore.rcTuning.throttleLimitPercent);
 
         // Introduced in 1.42
-        buffer.push16(FC.RC_TUNING.roll_rate_limit);
-        buffer.push16(FC.RC_TUNING.pitch_rate_limit);
-        buffer.push16(FC.RC_TUNING.yaw_rate_limit);
+        buffer.push16(fcStore.rcTuning.roll_rate_limit);
+        buffer.push16(fcStore.rcTuning.pitch_rate_limit);
+        buffer.push16(fcStore.rcTuning.yaw_rate_limit);
 
         // Introduced in 1.43
-        buffer.push8(FC.RC_TUNING.rates_type);
+        buffer.push8(fcStore.rcTuning.rates_type);
 
         // Introduced in 1.47
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            buffer.push8(Math.round(FC.RC_TUNING.throttle_HOVER * 100));
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            buffer.push8(Math.round(fcStore.rcTuning.throttle_HOVER * 100));
         }
     },
 
     [MSPCodes.MSP_SET_RX_MAP](buffer) {
-        for (const channel of FC.RC_MAP) {
+        const fcStore = useFlightControllerStore();
+        for (const channel of fcStore.rcMap) {
             buffer.push8(channel);
         }
     },
 
     [MSPCodes.MSP_SET_ACC_TRIM](buffer) {
-        buffer.push16(FC.CONFIG.accelerometerTrims[0]).push16(FC.CONFIG.accelerometerTrims[1]);
+        const fcStore = useFlightControllerStore();
+        buffer.push16(fcStore.config.accelerometerTrims[0]).push16(fcStore.config.accelerometerTrims[1]);
     },
 
     [MSPCodes.MSP_SET_ARMING_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.ARMING_CONFIG.auto_disarm_delay)
+            .push8(fcStore.armingConfig.auto_disarm_delay)
             .push8(0) // was disarm_kill_switch
-            .push8(FC.ARMING_CONFIG.small_angle);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            buffer.push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm);
+            .push8(fcStore.armingConfig.small_angle);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            buffer.push8(fcStore.armingConfig.gyro_cal_on_first_arm);
         }
     },
 
     [MSPCodes.MSP_SET_LOOP_TIME](buffer) {
-        buffer.push16(FC.FC_CONFIG.loopTime);
+        const fcStore = useFlightControllerStore();
+        buffer.push16(fcStore.fcConfig.loopTime);
     },
 
     [MSPCodes.MSP_SET_MISC](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.RX_CONFIG.midrc ?? 0)
-            .push16(FC.MOTOR_CONFIG.minthrottle)
-            .push16(FC.MOTOR_CONFIG.maxthrottle)
-            .push16(FC.MOTOR_CONFIG.mincommand)
-            .push16(FC.MISC.failsafe_throttle)
-            .push8(FC.GPS_CONFIG.provider)
-            .push8(FC.MISC.gps_baudrate)
-            .push8(FC.GPS_CONFIG.ublox_sbas)
-            .push8(FC.MISC.multiwiicurrentoutput)
-            .push8(FC.RSSI_CONFIG.channel)
-            .push8(FC.MISC.placeholder2)
+            .push16(fcStore.rxConfig.midrc ?? 0)
+            .push16(fcStore.motorConfig.minthrottle)
+            .push16(fcStore.motorConfig.maxthrottle)
+            .push16(fcStore.motorConfig.mincommand)
+            .push16(fcStore.misc.failsafe_throttle)
+            .push8(fcStore.gpsConfig.provider)
+            .push8(fcStore.misc.gps_baudrate)
+            .push8(fcStore.gpsConfig.ublox_sbas)
+            .push8(fcStore.misc.multiwiicurrentoutput)
+            .push8(fcStore.rssiConfig.channel)
+            .push8(fcStore.misc.placeholder2)
             .push16(0) // was mag_declination
-            .push8(FC.MISC.vbatscale)
-            .push8(Math.round(FC.MISC.vbatmincellvoltage * 10))
-            .push8(Math.round(FC.MISC.vbatmaxcellvoltage * 10))
-            .push8(Math.round(FC.MISC.vbatwarningcellvoltage * 10));
+            .push8(fcStore.misc.vbatscale)
+            .push8(Math.round(fcStore.misc.vbatmincellvoltage * 10))
+            .push8(Math.round(fcStore.misc.vbatmaxcellvoltage * 10))
+            .push8(Math.round(fcStore.misc.vbatwarningcellvoltage * 10));
     },
 
     [MSPCodes.MSP_SET_MOTOR_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.MOTOR_CONFIG.minthrottle)
-            .push16(FC.MOTOR_CONFIG.maxthrottle)
-            .push16(FC.MOTOR_CONFIG.mincommand);
+            .push16(fcStore.motorConfig.minthrottle)
+            .push16(fcStore.motorConfig.maxthrottle)
+            .push16(fcStore.motorConfig.mincommand);
 
         // Introduced in 1.42
-        buffer.push8(FC.MOTOR_CONFIG.motor_poles);
-        buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
+        buffer.push8(fcStore.motorConfig.motor_poles);
+        buffer.push8(fcStore.motorConfig.use_dshot_telemetry ? 1 : 0);
 
         // Introduced in 1.49
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            buffer.push16(FC.MOTOR_CONFIG.motor_kv);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            buffer.push16(fcStore.motorConfig.motor_kv);
         }
     },
 
     [MSPCodes.MSP_SET_GPS_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.GPS_CONFIG.provider)
-            .push8(FC.GPS_CONFIG.ublox_sbas)
-            .push8(FC.GPS_CONFIG.auto_config)
-            .push8(FC.GPS_CONFIG.auto_baud);
+            .push8(fcStore.gpsConfig.provider)
+            .push8(fcStore.gpsConfig.ublox_sbas)
+            .push8(fcStore.gpsConfig.auto_config)
+            .push8(fcStore.gpsConfig.auto_baud);
 
         // Introduced in 1.43
-        buffer.push8(FC.GPS_CONFIG.home_point_once).push8(FC.GPS_CONFIG.ublox_use_galileo);
+        buffer.push8(fcStore.gpsConfig.home_point_once).push8(fcStore.gpsConfig.ublox_use_galileo);
     },
 
     [MSPCodes.MSP_SET_GPS_RESCUE](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.GPS_RESCUE.angle)
-            .push16(FC.GPS_RESCUE.returnAltitudeM)
-            .push16(FC.GPS_RESCUE.descentDistanceM)
-            .push16(FC.GPS_RESCUE.groundSpeed)
-            .push16(FC.GPS_RESCUE.throttleMin)
-            .push16(FC.GPS_RESCUE.throttleMax)
-            .push16(FC.GPS_RESCUE.throttleHover)
-            .push8(FC.GPS_RESCUE.sanityChecks)
-            .push8(FC.GPS_RESCUE.minSats);
+            .push16(fcStore.gpsRescue.angle)
+            .push16(fcStore.gpsRescue.returnAltitudeM)
+            .push16(fcStore.gpsRescue.descentDistanceM)
+            .push16(fcStore.gpsRescue.groundSpeed)
+            .push16(fcStore.gpsRescue.throttleMin)
+            .push16(fcStore.gpsRescue.throttleMax)
+            .push16(fcStore.gpsRescue.throttleHover)
+            .push8(fcStore.gpsRescue.sanityChecks)
+            .push8(fcStore.gpsRescue.minSats);
 
         // Introduced in 1.43
         buffer
-            .push16(FC.GPS_RESCUE.ascendRate)
-            .push16(FC.GPS_RESCUE.descendRate)
-            .push8(FC.GPS_RESCUE.allowArmingWithoutFix)
-            .push8(FC.GPS_RESCUE.altitudeMode);
+            .push16(fcStore.gpsRescue.ascendRate)
+            .push16(fcStore.gpsRescue.descendRate)
+            .push8(fcStore.gpsRescue.allowArmingWithoutFix)
+            .push8(fcStore.gpsRescue.altitudeMode);
 
         // Introduced in 1.44
-        buffer.push16(FC.GPS_RESCUE.minStartDistM);
+        buffer.push16(fcStore.gpsRescue.minStartDistM);
 
         // Introduced in 1.46
-        buffer.push16(FC.GPS_RESCUE.initialClimbM);
+        buffer.push16(fcStore.gpsRescue.initialClimbM);
     },
 
     [MSPCodes.MSP_SET_COMPASS_CONFIG](buffer) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            buffer.push16(Math.round(10.0 * Number.parseFloat(String(FC.COMPASS_CONFIG.mag_declination))));
+        const fcStore = useFlightControllerStore();
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            buffer.push16(Math.round(10.0 * Number.parseFloat(String(fcStore.compassConfig.mag_declination))));
         }
     },
 
     [MSPCodes.MSP_SET_RSSI_CONFIG](buffer) {
-        buffer.push8(FC.RSSI_CONFIG.channel);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.rssiConfig.channel);
     },
 
     [MSPCodes.MSP_SET_BATTERY_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(Math.round(FC.BATTERY_CONFIG.vbatmincellvoltage * 10))
-            .push8(Math.round(FC.BATTERY_CONFIG.vbatmaxcellvoltage * 10))
-            .push8(Math.round(FC.BATTERY_CONFIG.vbatwarningcellvoltage * 10))
-            .push16(FC.BATTERY_CONFIG.capacity)
-            .push8(FC.BATTERY_CONFIG.voltageMeterSource)
-            .push8(FC.BATTERY_CONFIG.currentMeterSource)
-            .push16(Math.round(FC.BATTERY_CONFIG.vbatmincellvoltage * 100))
-            .push16(Math.round(FC.BATTERY_CONFIG.vbatmaxcellvoltage * 100))
-            .push16(Math.round(FC.BATTERY_CONFIG.vbatwarningcellvoltage * 100));
+            .push8(Math.round(fcStore.batteryConfig.vbatmincellvoltage * 10))
+            .push8(Math.round(fcStore.batteryConfig.vbatmaxcellvoltage * 10))
+            .push8(Math.round(fcStore.batteryConfig.vbatwarningcellvoltage * 10))
+            .push16(fcStore.batteryConfig.capacity)
+            .push8(fcStore.batteryConfig.voltageMeterSource)
+            .push8(fcStore.batteryConfig.currentMeterSource)
+            .push16(Math.round(fcStore.batteryConfig.vbatmincellvoltage * 100))
+            .push16(Math.round(fcStore.batteryConfig.vbatmaxcellvoltage * 100))
+            .push16(Math.round(fcStore.batteryConfig.vbatwarningcellvoltage * 100));
     },
 
     [MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG]: NOTHING_TO_DO,
@@ -2712,62 +2842,65 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     [MSPCodes.MSP_SET_CURRENT_METER_CONFIG]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SET_RX_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.RX_CONFIG.serialrx_provider)
-            .push16(FC.RX_CONFIG.stick_max)
-            .push16(FC.RX_CONFIG.stick_center)
-            .push16(FC.RX_CONFIG.stick_min)
-            .push8(FC.RX_CONFIG.spektrum_sat_bind)
-            .push16(FC.RX_CONFIG.rx_min_usec)
-            .push16(FC.RX_CONFIG.rx_max_usec)
-            .push8(FC.RX_CONFIG.rcInterpolation)
-            .push8(FC.RX_CONFIG.rcInterpolationInterval)
-            .push16(FC.RX_CONFIG.airModeActivateThreshold)
-            .push8(FC.RX_CONFIG.rxSpiProtocol)
-            .push32(FC.RX_CONFIG.rxSpiId)
-            .push8(FC.RX_CONFIG.rxSpiRfChannelCount)
-            .push8(FC.RX_CONFIG.fpvCamAngleDegrees)
-            .push8(FC.RX_CONFIG.rcInterpolationChannels)
-            .push8(FC.RX_CONFIG.rcSmoothingType)
-            .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            buffer.push8(FC.RX_CONFIG.rcSmoothingThrottleCutoff);
-            buffer.push8(FC.RX_CONFIG.rcSmoothingAutoFactorThrottle);
+            .push8(fcStore.rxConfig.serialrx_provider)
+            .push16(fcStore.rxConfig.stick_max)
+            .push16(fcStore.rxConfig.stick_center)
+            .push16(fcStore.rxConfig.stick_min)
+            .push8(fcStore.rxConfig.spektrum_sat_bind)
+            .push16(fcStore.rxConfig.rx_min_usec)
+            .push16(fcStore.rxConfig.rx_max_usec)
+            .push8(fcStore.rxConfig.rcInterpolation)
+            .push8(fcStore.rxConfig.rcInterpolationInterval)
+            .push16(fcStore.rxConfig.airModeActivateThreshold)
+            .push8(fcStore.rxConfig.rxSpiProtocol)
+            .push32(fcStore.rxConfig.rxSpiId)
+            .push8(fcStore.rxConfig.rxSpiRfChannelCount)
+            .push8(fcStore.rxConfig.fpvCamAngleDegrees)
+            .push8(fcStore.rxConfig.rcInterpolationChannels)
+            .push8(fcStore.rxConfig.rcSmoothingType)
+            .push8(fcStore.rxConfig.rcSmoothingSetpointCutoff);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            buffer.push8(fcStore.rxConfig.rcSmoothingThrottleCutoff);
+            buffer.push8(fcStore.rxConfig.rcSmoothingAutoFactorThrottle);
         } else {
-            buffer.push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
-            buffer.push8(FC.RX_CONFIG.rcSmoothingInputType);
+            buffer.push8(fcStore.rxConfig.rcSmoothingFeedforwardCutoff);
+            buffer.push8(fcStore.rxConfig.rcSmoothingInputType);
         }
-        buffer.push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
+        buffer.push8(fcStore.rxConfig.rcSmoothingDerivativeType);
 
         // Introduced in 1.42
-        buffer.push8(FC.RX_CONFIG.usbCdcHidType).push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
+        buffer.push8(fcStore.rxConfig.usbCdcHidType).push8(fcStore.rxConfig.rcSmoothingAutoFactor);
 
         // Introduced in 1.44
-        buffer.push8(FC.RX_CONFIG.rcSmoothing);
+        buffer.push8(fcStore.rxConfig.rcSmoothing);
 
         // Introduced in 1.45
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.RX_CONFIG.elrsUid.forEach((b) => buffer.push8(b));
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            fcStore.rxConfig.elrsUid.forEach((b) => buffer.push8(b));
         }
 
         // Introduced in 1.47
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            buffer.push8(FC.RX_CONFIG.elrsModelId ?? 0);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            buffer.push8(fcStore.rxConfig.elrsModelId ?? 0);
         }
     },
 
     [MSPCodes.MSP_SET_FAILSAFE_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.FAILSAFE_CONFIG.failsafe_delay)
-            .push8(FC.FAILSAFE_CONFIG.failsafe_off_delay)
-            .push16(FC.FAILSAFE_CONFIG.failsafe_throttle)
-            .push8(FC.FAILSAFE_CONFIG.failsafe_switch_mode)
-            .push16(FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay)
-            .push8(FC.FAILSAFE_CONFIG.failsafe_procedure);
+            .push8(fcStore.failsafeConfig.failsafe_delay)
+            .push8(fcStore.failsafeConfig.failsafe_off_delay)
+            .push16(fcStore.failsafeConfig.failsafe_throttle)
+            .push8(fcStore.failsafeConfig.failsafe_switch_mode)
+            .push16(fcStore.failsafeConfig.failsafe_throttle_low_delay)
+            .push8(fcStore.failsafeConfig.failsafe_procedure);
     },
 
     [MSPCodes.MSP_SET_CF_SERIAL_CONFIG](buffer) {
-        for (const serialPort of FC.SERIAL_CONFIG.ports) {
+        const fcStore = useFlightControllerStore();
+        for (const serialPort of fcStore.serialConfig.ports) {
             buffer.push8(serialPort.identifier);
 
             const functionMask = this.serialPortFunctionsToMask(serialPort.functions);
@@ -2781,9 +2914,10 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG](buffer) {
-        buffer.push8(FC.SERIAL_CONFIG.ports.length);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.serialConfig.ports.length);
 
-        for (const serialPort of FC.SERIAL_CONFIG.ports) {
+        for (const serialPort of fcStore.serialConfig.ports) {
             buffer.push8(serialPort.identifier);
 
             const functionMask = this.serialPortFunctionsToMask(serialPort.functions);
@@ -2797,203 +2931,218 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP_SET_MOTOR_3D_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.MOTOR_3D_CONFIG.deadband3d_low)
-            .push16(FC.MOTOR_3D_CONFIG.deadband3d_high)
-            .push16(FC.MOTOR_3D_CONFIG.neutral);
+            .push16(fcStore.motor3dConfig.deadband3d_low)
+            .push16(fcStore.motor3dConfig.deadband3d_high)
+            .push16(fcStore.motor3dConfig.neutral);
     },
 
     [MSPCodes.MSP_SET_RC_DEADBAND](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.RC_DEADBAND_CONFIG.deadband)
-            .push8(FC.RC_DEADBAND_CONFIG.yaw_deadband)
-            .push8(FC.RC_DEADBAND_CONFIG.alt_hold_deadband)
-            .push16(FC.RC_DEADBAND_CONFIG.deadband3d_throttle);
+            .push8(fcStore.rcDeadbandConfig.deadband)
+            .push8(fcStore.rcDeadbandConfig.yaw_deadband)
+            .push8(fcStore.rcDeadbandConfig.alt_hold_deadband)
+            .push16(fcStore.rcDeadbandConfig.deadband3d_throttle);
     },
 
     [MSPCodes.MSP_SET_SENSOR_ALIGNMENT](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.SENSOR_ALIGNMENT.align_gyro)
-            .push8(FC.SENSOR_ALIGNMENT.align_acc)
-            .push8(FC.SENSOR_ALIGNMENT.align_mag);
+            .push8(fcStore.sensorAlignment.align_gyro)
+            .push8(fcStore.sensorAlignment.align_acc)
+            .push8(fcStore.sensorAlignment.align_mag);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             buffer
-                .push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask ?? 0) // replacing gyro_to_use
-                .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
-                .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
-                .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+                .push8(fcStore.sensorAlignment.gyro_enable_mask ?? 0) // replacing gyro_to_use
+                .push16(fcStore.sensorAlignment.mag_align_roll * 10)
+                .push16(fcStore.sensorAlignment.mag_align_pitch * 10)
+                .push16(fcStore.sensorAlignment.mag_align_yaw * 10);
         } else {
             buffer
-                .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
+                .push8(fcStore.sensorAlignment.gyro_to_use)
+                .push8(fcStore.sensorAlignment.gyro_1_align)
+                .push8(fcStore.sensorAlignment.gyro_2_align);
         }
     },
 
     [MSPCodes.MSP_SET_ADVANCED_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.PID_ADVANCED_CONFIG.gyro_sync_denom)
-            .push8(FC.PID_ADVANCED_CONFIG.pid_process_denom)
-            .push8(FC.PID_ADVANCED_CONFIG.use_unsyncedPwm)
-            .push8(EscProtocols.ReorderPwmProtocols(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol))
-            .push16(FC.PID_ADVANCED_CONFIG.motor_pwm_rate)
-            .push16(FC.PID_ADVANCED_CONFIG.motorIdle * 100)
+            .push8(fcStore.pidAdvancedConfig.gyro_sync_denom)
+            .push8(fcStore.pidAdvancedConfig.pid_process_denom)
+            .push8(fcStore.pidAdvancedConfig.use_unsyncedPwm)
+            .push8(
+                EscProtocols.ReorderPwmProtocols(
+                    fcStore.config.apiVersion,
+                    fcStore.pidAdvancedConfig.fast_pwm_protocol,
+                ),
+            )
+            .push16(fcStore.pidAdvancedConfig.motor_pwm_rate)
+            .push16(fcStore.pidAdvancedConfig.motorIdle * 100)
             .push8(0); // gyroUse32kHz not used
 
         // Introduced in 1.42
         buffer
-            .push8(FC.PID_ADVANCED_CONFIG.motorPwmInversion)
-            .push8(FC.SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
-            .push8(FC.PID_ADVANCED_CONFIG.gyroHighFsr)
-            .push8(FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
-            .push16(FC.PID_ADVANCED_CONFIG.gyroCalibDuration)
-            .push16(FC.PID_ADVANCED_CONFIG.gyroOffsetYaw)
-            .push8(FC.PID_ADVANCED_CONFIG.gyroCheckOverflow)
-            .push8(FC.PID_ADVANCED_CONFIG.debugMode);
+            .push8(fcStore.pidAdvancedConfig.motorPwmInversion)
+            .push8(fcStore.sensorAlignment.gyro_to_use) // We don't want to double up on storing this state
+            .push8(fcStore.pidAdvancedConfig.gyroHighFsr)
+            .push8(fcStore.pidAdvancedConfig.gyroMovementCalibThreshold)
+            .push16(fcStore.pidAdvancedConfig.gyroCalibDuration)
+            .push16(fcStore.pidAdvancedConfig.gyroOffsetYaw)
+            .push8(fcStore.pidAdvancedConfig.gyroCheckOverflow)
+            .push8(fcStore.pidAdvancedConfig.debugMode);
     },
 
     [MSPCodes.MSP_SET_FILTER_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.FILTER_CONFIG.gyro_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.yaw_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.gyro_notch_hz)
-            .push16(FC.FILTER_CONFIG.gyro_notch_cutoff)
-            .push16(FC.FILTER_CONFIG.dterm_notch_hz)
-            .push16(FC.FILTER_CONFIG.dterm_notch_cutoff)
-            .push16(FC.FILTER_CONFIG.gyro_notch2_hz)
-            .push16(FC.FILTER_CONFIG.gyro_notch2_cutoff)
-            .push8(FC.FILTER_CONFIG.dterm_lowpass_type)
-            .push8(FC.FILTER_CONFIG.gyro_hardware_lpf)
+            .push8(fcStore.filterConfig.gyro_lowpass_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass_hz)
+            .push16(fcStore.filterConfig.yaw_lowpass_hz)
+            .push16(fcStore.filterConfig.gyro_notch_hz)
+            .push16(fcStore.filterConfig.gyro_notch_cutoff)
+            .push16(fcStore.filterConfig.dterm_notch_hz)
+            .push16(fcStore.filterConfig.dterm_notch_cutoff)
+            .push16(fcStore.filterConfig.gyro_notch2_hz)
+            .push16(fcStore.filterConfig.gyro_notch2_cutoff)
+            .push8(fcStore.filterConfig.dterm_lowpass_type)
+            .push8(fcStore.filterConfig.gyro_hardware_lpf)
             .push8(0) // gyro_32khz_hardware_lpf not used
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_hz)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass2_hz)
-            .push8(FC.FILTER_CONFIG.gyro_lowpass_type)
-            .push8(FC.FILTER_CONFIG.gyro_lowpass2_type)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass2_hz)
-            .push8(FC.FILTER_CONFIG.dterm_lowpass2_type)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz)
-            .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
-            .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
+            .push16(fcStore.filterConfig.gyro_lowpass_hz)
+            .push16(fcStore.filterConfig.gyro_lowpass2_hz)
+            .push8(fcStore.filterConfig.gyro_lowpass_type)
+            .push8(fcStore.filterConfig.gyro_lowpass2_type)
+            .push16(fcStore.filterConfig.dterm_lowpass2_hz)
+            .push8(fcStore.filterConfig.dterm_lowpass2_type)
+            .push16(fcStore.filterConfig.gyro_lowpass_dyn_min_hz)
+            .push16(fcStore.filterConfig.gyro_lowpass_dyn_max_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass_dyn_min_hz)
+            .push16(fcStore.filterConfig.dterm_lowpass_dyn_max_hz);
 
         // Introduced in 1.42
         buffer
-            .push8(FC.FILTER_CONFIG.dyn_notch_range)
-            .push8(FC.FILTER_CONFIG.dyn_notch_width_percent)
-            .push16(FC.FILTER_CONFIG.dyn_notch_q)
-            .push16(FC.FILTER_CONFIG.dyn_notch_min_hz)
-            .push8(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics)
-            .push8(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
+            .push8(fcStore.filterConfig.dyn_notch_range)
+            .push8(fcStore.filterConfig.dyn_notch_width_percent)
+            .push16(fcStore.filterConfig.dyn_notch_q)
+            .push16(fcStore.filterConfig.dyn_notch_min_hz)
+            .push8(fcStore.filterConfig.gyro_rpm_notch_harmonics)
+            .push8(fcStore.filterConfig.gyro_rpm_notch_min_hz);
 
         // Introduced in 1.43
-        buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
+        buffer.push16(fcStore.filterConfig.dyn_notch_max_hz);
 
         // Introduced in 1.44
-        buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo).push8(FC.FILTER_CONFIG.dyn_notch_count);
+        buffer.push8(fcStore.filterConfig.dyn_lpf_curve_expo).push8(fcStore.filterConfig.dyn_notch_count);
 
         // Introduced in 1.48
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            buffer.push16(FC.FILTER_CONFIG.gyro_rpm_notch_fade_range_hz).push16(FC.FILTER_CONFIG.gyro_rpm_notch_q);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
+            buffer
+                .push16(fcStore.filterConfig.gyro_rpm_notch_fade_range_hz)
+                .push16(fcStore.filterConfig.gyro_rpm_notch_q);
             for (let i = 0; i < 3; i++) {
-                buffer.push8(FC.FILTER_CONFIG.gyro_rpm_notch_weights[i]);
+                buffer.push8(fcStore.filterConfig.gyro_rpm_notch_weights[i]);
             }
         }
     },
 
     [MSPCodes.MSP_SET_PID_ADVANCED](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.ADVANCED_TUNING.rollPitchItermIgnoreRate)
-            .push16(FC.ADVANCED_TUNING.yawItermIgnoreRate)
-            .push16(FC.ADVANCED_TUNING.yaw_p_limit)
-            .push8(FC.ADVANCED_TUNING.deltaMethod)
-            .push8(FC.ADVANCED_TUNING.vbatPidCompensation)
-            .push8(FC.ADVANCED_TUNING.feedforwardTransition)
-            .push8(Math.min(FC.ADVANCED_TUNING.dtermSetpointWeight, 254))
-            .push8(FC.ADVANCED_TUNING.toleranceBand)
-            .push8(FC.ADVANCED_TUNING.toleranceBandReduction)
-            .push8(FC.ADVANCED_TUNING.itermThrottleGain)
-            .push16(FC.ADVANCED_TUNING.pidMaxVelocity)
-            .push16(FC.ADVANCED_TUNING.pidMaxVelocityYaw)
-            .push8(FC.ADVANCED_TUNING.levelAngleLimit)
-            .push8(FC.ADVANCED_TUNING.levelSensitivity)
-            .push16(FC.ADVANCED_TUNING.itermThrottleThreshold);
+            .push16(fcStore.advancedTuning.rollPitchItermIgnoreRate)
+            .push16(fcStore.advancedTuning.yawItermIgnoreRate)
+            .push16(fcStore.advancedTuning.yaw_p_limit)
+            .push8(fcStore.advancedTuning.deltaMethod)
+            .push8(fcStore.advancedTuning.vbatPidCompensation)
+            .push8(fcStore.advancedTuning.feedforwardTransition)
+            .push8(Math.min(fcStore.advancedTuning.dtermSetpointWeight, 254))
+            .push8(fcStore.advancedTuning.toleranceBand)
+            .push8(fcStore.advancedTuning.toleranceBandReduction)
+            .push8(fcStore.advancedTuning.itermThrottleGain)
+            .push16(fcStore.advancedTuning.pidMaxVelocity)
+            .push16(fcStore.advancedTuning.pidMaxVelocityYaw)
+            .push8(fcStore.advancedTuning.levelAngleLimit)
+            .push8(fcStore.advancedTuning.levelSensitivity)
+            .push16(fcStore.advancedTuning.itermThrottleThreshold);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            buffer.push16(FC.ADVANCED_TUNING.antiGravityGain);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            buffer.push16(fcStore.advancedTuning.antiGravityGain);
         } else {
-            buffer.push16(FC.ADVANCED_TUNING.itermAcceleratorGain);
+            buffer.push16(fcStore.advancedTuning.itermAcceleratorGain);
         }
 
         buffer
-            .push16(FC.ADVANCED_TUNING.dtermSetpointWeight)
-            .push8(FC.ADVANCED_TUNING.itermRotation)
-            .push8(FC.ADVANCED_TUNING.smartFeedforward)
-            .push8(FC.ADVANCED_TUNING.itermRelax)
-            .push8(FC.ADVANCED_TUNING.itermRelaxType);
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            buffer.push8(FC.ADVANCED_TUNING.absoluteControlGain);
+            .push16(fcStore.advancedTuning.dtermSetpointWeight)
+            .push8(fcStore.advancedTuning.itermRotation)
+            .push8(fcStore.advancedTuning.smartFeedforward)
+            .push8(fcStore.advancedTuning.itermRelax)
+            .push8(fcStore.advancedTuning.itermRelaxType);
+        if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_48)) {
+            buffer.push8(fcStore.advancedTuning.absoluteControlGain);
         } else {
             buffer.push8(0);
         }
         buffer
-            .push8(FC.ADVANCED_TUNING.throttleBoost)
-            .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
-            .push16(FC.ADVANCED_TUNING.feedforwardRoll)
-            .push16(FC.ADVANCED_TUNING.feedforwardPitch)
-            .push16(FC.ADVANCED_TUNING.feedforwardYaw)
-            .push8(FC.ADVANCED_TUNING.antiGravityMode)
-            .push8(FC.ADVANCED_TUNING.dMaxRoll)
-            .push8(FC.ADVANCED_TUNING.dMaxPitch)
-            .push8(FC.ADVANCED_TUNING.dMaxYaw)
-            .push8(FC.ADVANCED_TUNING.dMaxGain)
-            .push8(FC.ADVANCED_TUNING.dMaxAdvance)
-            .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
-            .push8(FC.ADVANCED_TUNING.integratedYawRelax);
+            .push8(fcStore.advancedTuning.throttleBoost)
+            .push8(fcStore.advancedTuning.acroTrainerAngleLimit)
+            .push16(fcStore.advancedTuning.feedforwardRoll)
+            .push16(fcStore.advancedTuning.feedforwardPitch)
+            .push16(fcStore.advancedTuning.feedforwardYaw)
+            .push8(fcStore.advancedTuning.antiGravityMode)
+            .push8(fcStore.advancedTuning.dMaxRoll)
+            .push8(fcStore.advancedTuning.dMaxPitch)
+            .push8(fcStore.advancedTuning.dMaxYaw)
+            .push8(fcStore.advancedTuning.dMaxGain)
+            .push8(fcStore.advancedTuning.dMaxAdvance)
+            .push8(fcStore.advancedTuning.useIntegratedYaw)
+            .push8(fcStore.advancedTuning.integratedYawRelax);
 
         // Introduced in 1.42
-        buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
+        buffer.push8(fcStore.advancedTuning.itermRelaxCutoff);
 
         // Introduced in 1.43
         buffer
-            .push8(FC.ADVANCED_TUNING.motorOutputLimit)
-            .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
-            .push8(FC.ADVANCED_TUNING.idleMinRpm);
+            .push8(fcStore.advancedTuning.motorOutputLimit)
+            .push8(fcStore.advancedTuning.autoProfileCellCount)
+            .push8(fcStore.advancedTuning.idleMinRpm);
 
         // Introduced in 1.44
         buffer
-            .push8(FC.ADVANCED_TUNING.feedforward_averaging)
-            .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
-            .push8(FC.ADVANCED_TUNING.feedforward_boost)
-            .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
-            .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
-            .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
-            .push8(FC.ADVANCED_TUNING.thrustLinearization);
+            .push8(fcStore.advancedTuning.feedforward_averaging)
+            .push8(fcStore.advancedTuning.feedforward_smooth_factor)
+            .push8(fcStore.advancedTuning.feedforward_boost)
+            .push8(fcStore.advancedTuning.feedforward_max_rate_limit)
+            .push8(fcStore.advancedTuning.feedforward_jitter_factor)
+            .push8(fcStore.advancedTuning.vbat_sag_compensation)
+            .push8(fcStore.advancedTuning.thrustLinearization);
 
         // Introduced in 1.45
-        buffer.push8(FC.ADVANCED_TUNING.tpaMode ?? 0);
-        buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
-        buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+        buffer.push8(fcStore.advancedTuning.tpaMode ?? 0);
+        buffer.push8(Math.round(fcStore.advancedTuning.tpaRate * 100));
+        buffer.push16(fcStore.advancedTuning.tpaBreakpoint);
     },
 
     [MSPCodes.MSP_SET_SENSOR_CONFIG](buffer) {
-        buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
-        buffer.push8(FC.SENSOR_CONFIG.baro_hardware);
-        buffer.push8(FC.SENSOR_CONFIG.mag_hardware);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            buffer.push8(FC.SENSOR_CONFIG.sonar_hardware);
-            buffer.push8(FC.SENSOR_CONFIG.opticalflow_hardware);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.sensorConfig.acc_hardware);
+        buffer.push8(fcStore.sensorConfig.baro_hardware);
+        buffer.push8(fcStore.sensorConfig.mag_hardware);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            buffer.push8(fcStore.sensorConfig.sonar_hardware);
+            buffer.push8(fcStore.sensorConfig.opticalflow_hardware);
         }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_49)) {
-            buffer.push8(FC.SENSOR_CONFIG.pitot_hardware);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            buffer.push8(fcStore.sensorConfig.pitot_hardware);
         }
     },
 
     [MSPCodes.MSP_SET_NAME](buffer) {
+        const fcStore = useFlightControllerStore();
         const MSP_BUFFER_SIZE = 64;
-        for (let i = 0; i < FC.CONFIG.name.length && i < MSP_BUFFER_SIZE; i++) {
-            buffer.push8(FC.CONFIG.name.codePointAt(i)!);
+        for (let i = 0; i < fcStore.config.name.length && i < MSP_BUFFER_SIZE; i++) {
+            buffer.push8(fcStore.config.name.codePointAt(i)!);
         }
     },
 
@@ -3002,21 +3151,27 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP2_SET_TEXT](buffer, modifierCode) {
+        const fcStore = useFlightControllerStore();
         switch (modifierCode) {
             case MSP2TextType.PILOT_NAME:
-                this.setText(buffer, modifierCode, FC.CONFIG.pilotName, 16);
+                this.setText(buffer, modifierCode, fcStore.config.pilotName, 16);
                 break;
             case MSP2TextType.CRAFT_NAME:
-                this.setText(buffer, modifierCode, FC.CONFIG.craftName, 16);
+                this.setText(buffer, modifierCode, fcStore.config.craftName, 16);
                 break;
             case MSP2TextType.PID_PROFILE_NAME:
-                this.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.profile], 8);
+                this.setText(buffer, modifierCode, fcStore.config.pidProfileNames[fcStore.config.profile], 8);
                 break;
             case MSP2TextType.RATE_PROFILE_NAME:
-                this.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
+                this.setText(buffer, modifierCode, fcStore.config.rateProfileNames[fcStore.config.rateProfile], 8);
                 break;
             case MSP2TextType.BATTERY_PROFILE_NAME:
-                this.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
+                this.setText(
+                    buffer,
+                    modifierCode,
+                    fcStore.config.batteryProfileNames[fcStore.config.batteryProfile],
+                    8,
+                );
                 break;
             default:
                 console.log("Unsupported text type");
@@ -3027,35 +3182,41 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     [MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SET_BLACKBOX_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.BLACKBOX.blackboxDevice)
-            .push8(FC.BLACKBOX.blackboxRateNum)
-            .push8(FC.BLACKBOX.blackboxRateDenom)
-            .push16(FC.BLACKBOX.blackboxPDenom);
+            .push8(fcStore.blackbox.blackboxDevice)
+            .push8(fcStore.blackbox.blackboxRateNum)
+            .push8(fcStore.blackbox.blackboxRateDenom)
+            .push16(fcStore.blackbox.blackboxPDenom);
 
         // Introduced in 1.44
-        buffer.push8(FC.BLACKBOX.blackboxSampleRate);
+        buffer.push8(fcStore.blackbox.blackboxSampleRate);
 
         // Introduced in 1.45
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            buffer.push32(FC.BLACKBOX.blackboxDisabledMask);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            buffer.push32(fcStore.blackbox.blackboxDisabledMask);
         }
     },
 
     [MSPCodes.MSP_COPY_PROFILE](buffer) {
-        buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
+        const fcStore = useFlightControllerStore();
+        buffer
+            .push8(fcStore.copyProfile.type)
+            .push8(fcStore.copyProfile.dstProfile)
+            .push8(fcStore.copyProfile.srcProfile);
     },
 
     [MSPCodes.MSP_ARMING_DISABLE](buffer) {
+        const fcStore = useFlightControllerStore();
         let value;
-        if (FC.CONFIG.armingDisabled) {
+        if (fcStore.config.armingDisabled) {
             value = 1;
         } else {
             value = 0;
         }
         buffer.push8(value);
 
-        if (FC.CONFIG.runawayTakeoffPreventionDisabled) {
+        if (fcStore.config.runawayTakeoffPreventionDisabled) {
             value = 1;
         } else {
             value = 0;
@@ -3075,67 +3236,72 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP_SET_VTX_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push16(FC.VTX_CONFIG.vtx_frequency)
-            .push8(FC.VTX_CONFIG.vtx_power)
-            .push8(FC.VTX_CONFIG.vtx_pit_mode ? 1 : 0)
-            .push8(FC.VTX_CONFIG.vtx_low_power_disarm);
+            .push16(fcStore.vtxConfig.vtx_frequency)
+            .push8(fcStore.vtxConfig.vtx_power)
+            .push8(fcStore.vtxConfig.vtx_pit_mode ? 1 : 0)
+            .push8(fcStore.vtxConfig.vtx_low_power_disarm);
 
         // Introduced in 1.42
         buffer
-            .push16(FC.VTX_CONFIG.vtx_pit_mode_frequency)
-            .push8(FC.VTX_CONFIG.vtx_band)
-            .push8(FC.VTX_CONFIG.vtx_channel)
-            .push16(FC.VTX_CONFIG.vtx_frequency)
-            .push8(FC.VTX_CONFIG.vtx_table_bands)
-            .push8(FC.VTX_CONFIG.vtx_table_channels)
-            .push8(FC.VTX_CONFIG.vtx_table_powerlevels)
-            .push8(FC.VTX_CONFIG.vtx_table_clear ? 1 : 0);
+            .push16(fcStore.vtxConfig.vtx_pit_mode_frequency)
+            .push8(fcStore.vtxConfig.vtx_band)
+            .push8(fcStore.vtxConfig.vtx_channel)
+            .push16(fcStore.vtxConfig.vtx_frequency)
+            .push8(fcStore.vtxConfig.vtx_table_bands)
+            .push8(fcStore.vtxConfig.vtx_table_channels)
+            .push8(fcStore.vtxConfig.vtx_table_powerlevels)
+            .push8(fcStore.vtxConfig.vtx_table_clear ? 1 : 0);
     },
 
     [MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_number)
-            .push16(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_value)
-            .push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length);
+            .push8(fcStore.vtxTablePowerLevel.vtxtable_powerlevel_number)
+            .push16(fcStore.vtxTablePowerLevel.vtxtable_powerlevel_value)
+            .push8(fcStore.vtxTablePowerLevel.vtxtable_powerlevel_label.length);
 
-        for (let i = 0; i < FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length; i++) {
-            buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.codePointAt(i)!);
+        for (let i = 0; i < fcStore.vtxTablePowerLevel.vtxtable_powerlevel_label.length; i++) {
+            buffer.push8(fcStore.vtxTablePowerLevel.vtxtable_powerlevel_label.codePointAt(i)!);
         }
     },
 
     [MSPCodes.MSP_SET_VTXTABLE_BAND](buffer) {
-        buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_number);
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.vtxTableBand.vtxtable_band_number);
 
-        buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_name.length);
-        for (let i = 0; i < FC.VTXTABLE_BAND.vtxtable_band_name.length; i++) {
-            buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_name.codePointAt(i)!);
+        buffer.push8(fcStore.vtxTableBand.vtxtable_band_name.length);
+        for (let i = 0; i < fcStore.vtxTableBand.vtxtable_band_name.length; i++) {
+            buffer.push8(fcStore.vtxTableBand.vtxtable_band_name.codePointAt(i)!);
         }
 
-        if (FC.VTXTABLE_BAND.vtxtable_band_letter != "") {
-            buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_letter.codePointAt(0)!);
+        if (fcStore.vtxTableBand.vtxtable_band_letter != "") {
+            buffer.push8(fcStore.vtxTableBand.vtxtable_band_letter.codePointAt(0)!);
         } else {
             buffer.push8(" ".codePointAt(0)!);
         }
-        buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_is_factory_band ? 1 : 0);
+        buffer.push8(fcStore.vtxTableBand.vtxtable_band_is_factory_band ? 1 : 0);
 
-        buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_frequencies.length);
-        for (const frequency of FC.VTXTABLE_BAND.vtxtable_band_frequencies) {
+        buffer.push8(fcStore.vtxTableBand.vtxtable_band_frequencies.length);
+        for (const frequency of fcStore.vtxTableBand.vtxtable_band_frequencies) {
             buffer.push16(frequency);
         }
     },
 
     [MSPCodes.MSP_MULTIPLE_MSP](buffer) {
-        while (FC.MULTIPLE_MSP.msp_commands.length > 0) {
-            const mspCommand = FC.MULTIPLE_MSP.msp_commands.shift()!;
+        const fcStore = useFlightControllerStore();
+        while (fcStore.multipleMsp.msp_commands.length > 0) {
+            const mspCommand = fcStore.multipleMsp.msp_commands.shift()!;
             this.mspMultipleCache.push(mspCommand);
             buffer.push8(mspCommand);
         }
     },
 
     [MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING](buffer) {
-        buffer.push8(FC.MOTOR_OUTPUT_ORDER.length);
-        for (const motorIndex of FC.MOTOR_OUTPUT_ORDER) {
+        const fcStore = useFlightControllerStore();
+        buffer.push8(fcStore.motorOutputOrder.length);
+        for (const motorIndex of fcStore.motorOutputOrder) {
             buffer.push8(motorIndex);
         }
     },
@@ -3163,80 +3329,82 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
     },
 
     [MSPCodes.MSP_SET_WING](buffer) {
+        const fcStore = useFlightControllerStore();
         for (let i = 0; i < 3; i++) {
-            buffer.push8(FC.WING_CONFIG.s_term[i]);
+            buffer.push8(fcStore.wingConfig.s_term[i]);
         }
         for (let i = 0; i < 3; i++) {
-            buffer.push16(FC.WING_CONFIG.spa_center[i]);
+            buffer.push16(fcStore.wingConfig.spa_center[i]);
         }
         for (let i = 0; i < 3; i++) {
-            buffer.push16(FC.WING_CONFIG.spa_width[i]);
+            buffer.push16(fcStore.wingConfig.spa_width[i]);
         }
         for (let i = 0; i < 3; i++) {
-            buffer.push8(FC.WING_CONFIG.spa_mode[i]);
+            buffer.push8(fcStore.wingConfig.spa_mode[i]);
         }
         buffer
-            .push8(FC.WING_CONFIG.tpa_curve_type)
-            .push8(FC.WING_CONFIG.tpa_curve_stall_throttle)
-            .push16(FC.WING_CONFIG.tpa_curve_pid_thr0)
-            .push16(FC.WING_CONFIG.tpa_curve_pid_thr100)
-            .push8(FC.WING_CONFIG.tpa_curve_expo)
-            .push8(FC.WING_CONFIG.tpa_speed_type)
-            .push16(FC.WING_CONFIG.tpa_speed_basic_delay)
-            .push16(FC.WING_CONFIG.tpa_speed_basic_gravity)
-            .push16(FC.WING_CONFIG.tpa_speed_adv_prop_pitch)
-            .push16(FC.WING_CONFIG.tpa_speed_adv_mass)
-            .push16(FC.WING_CONFIG.tpa_speed_adv_drag_k)
-            .push16(FC.WING_CONFIG.tpa_speed_adv_thrust)
-            .push16(FC.WING_CONFIG.tpa_speed_max_voltage)
-            .push16(FC.WING_CONFIG.tpa_speed_pitch_offset)
-            .push8(FC.WING_CONFIG.yaw_type)
-            .push16(FC.WING_CONFIG.angle_pitch_offset);
+            .push8(fcStore.wingConfig.tpa_curve_type)
+            .push8(fcStore.wingConfig.tpa_curve_stall_throttle)
+            .push16(fcStore.wingConfig.tpa_curve_pid_thr0)
+            .push16(fcStore.wingConfig.tpa_curve_pid_thr100)
+            .push8(fcStore.wingConfig.tpa_curve_expo)
+            .push8(fcStore.wingConfig.tpa_speed_type)
+            .push16(fcStore.wingConfig.tpa_speed_basic_delay)
+            .push16(fcStore.wingConfig.tpa_speed_basic_gravity)
+            .push16(fcStore.wingConfig.tpa_speed_adv_prop_pitch)
+            .push16(fcStore.wingConfig.tpa_speed_adv_mass)
+            .push16(fcStore.wingConfig.tpa_speed_adv_drag_k)
+            .push16(fcStore.wingConfig.tpa_speed_adv_thrust)
+            .push16(fcStore.wingConfig.tpa_speed_max_voltage)
+            .push16(fcStore.wingConfig.tpa_speed_pitch_offset)
+            .push8(fcStore.wingConfig.yaw_type)
+            .push16(fcStore.wingConfig.angle_pitch_offset);
     },
 
     [MSPCodes.MSP_SET_PSAS_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
         buffer
-            .push8(FC.PSAS_CONFIG.stick_gain[0])
-            .push8(FC.PSAS_CONFIG.stick_gain[1])
-            .push8(FC.PSAS_CONFIG.stick_gain[2])
-            .push16(FC.PSAS_CONFIG.damping_gain[0])
-            .push16(FC.PSAS_CONFIG.damping_gain[1])
-            .push16(FC.PSAS_CONFIG.damping_gain[2])
-            .push16(FC.PSAS_CONFIG.pitch_damping_filter_freq)
-            .push8(FC.PSAS_CONFIG.accel_z_filter_freq)
-            .push16(FC.PSAS_CONFIG.pitch_stability_gain)
-            .push16(FC.PSAS_CONFIG.pitch_accel_p_gain)
-            .push8(FC.PSAS_CONFIG.pitch_accel_i_gain)
-            .push8(FC.PSAS_CONFIG.pitch_accel_max)
-            .push8(FC.PSAS_CONFIG.pitch_accel_min)
-            .push16(FC.PSAS_CONFIG.yaw_damping_filter_freq)
-            .push8(FC.PSAS_CONFIG.accel_y_filter_freq)
-            .push16(FC.PSAS_CONFIG.yaw_stability_gain)
-            .push16(FC.PSAS_CONFIG.wing_load)
-            .push16(FC.PSAS_CONFIG.air_density)
-            .push8(FC.PSAS_CONFIG.lift_c_limit)
-            .push8(FC.PSAS_CONFIG.aoa_limiter_gain)
-            .push8(FC.PSAS_CONFIG.lift_coef_filter_freq)
-            .push8(FC.PSAS_CONFIG.aoa_limiter_forecast_time)
-            .push8(FC.PSAS_CONFIG.aoa_limiter_tau_return)
-            .push16(FC.PSAS_CONFIG.servo_time)
-            .push8(FC.PSAS_CONFIG.roll_yaw_clift_start)
-            .push8(FC.PSAS_CONFIG.roll_yaw_clift_stop)
-            .push8(FC.PSAS_CONFIG.roll_to_yaw_link)
-            .push8(FC.PSAS_CONFIG.speed_main_curve_enable[0])
-            .push8(FC.PSAS_CONFIG.speed_main_curve_enable[1])
-            .push8(FC.PSAS_CONFIG.speed_main_curve_enable[2])
-            .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[0])
-            .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[1])
-            .push8(FC.PSAS_CONFIG.speed_stick_curve_enable[2])
-            .push8(FC.PSAS_CONFIG.speed_optimum_vref)
-            .push8(FC.PSAS_CONFIG.speed_main_curve_power)
-            .push8(FC.PSAS_CONFIG.speed_roll_stick_curve_power)
-            .push16(FC.PSAS_CONFIG.speed_main_curve_min)
-            .push16(FC.PSAS_CONFIG.speed_main_curve_max)
-            .push16(FC.PSAS_CONFIG.speed_stick_curve_min)
-            .push16(FC.PSAS_CONFIG.speed_stick_curve_max)
-            .push8(FC.PSAS_CONFIG.speed_curve_mode);
+            .push8(fcStore.psasConfig.stick_gain[0])
+            .push8(fcStore.psasConfig.stick_gain[1])
+            .push8(fcStore.psasConfig.stick_gain[2])
+            .push16(fcStore.psasConfig.damping_gain[0])
+            .push16(fcStore.psasConfig.damping_gain[1])
+            .push16(fcStore.psasConfig.damping_gain[2])
+            .push16(fcStore.psasConfig.pitch_damping_filter_freq)
+            .push8(fcStore.psasConfig.accel_z_filter_freq)
+            .push16(fcStore.psasConfig.pitch_stability_gain)
+            .push16(fcStore.psasConfig.pitch_accel_p_gain)
+            .push8(fcStore.psasConfig.pitch_accel_i_gain)
+            .push8(fcStore.psasConfig.pitch_accel_max)
+            .push8(fcStore.psasConfig.pitch_accel_min)
+            .push16(fcStore.psasConfig.yaw_damping_filter_freq)
+            .push8(fcStore.psasConfig.accel_y_filter_freq)
+            .push16(fcStore.psasConfig.yaw_stability_gain)
+            .push16(fcStore.psasConfig.wing_load)
+            .push16(fcStore.psasConfig.air_density)
+            .push8(fcStore.psasConfig.lift_c_limit)
+            .push8(fcStore.psasConfig.aoa_limiter_gain)
+            .push8(fcStore.psasConfig.lift_coef_filter_freq)
+            .push8(fcStore.psasConfig.aoa_limiter_forecast_time)
+            .push8(fcStore.psasConfig.aoa_limiter_tau_return)
+            .push16(fcStore.psasConfig.servo_time)
+            .push8(fcStore.psasConfig.roll_yaw_clift_start)
+            .push8(fcStore.psasConfig.roll_yaw_clift_stop)
+            .push8(fcStore.psasConfig.roll_to_yaw_link)
+            .push8(fcStore.psasConfig.speed_main_curve_enable[0])
+            .push8(fcStore.psasConfig.speed_main_curve_enable[1])
+            .push8(fcStore.psasConfig.speed_main_curve_enable[2])
+            .push8(fcStore.psasConfig.speed_stick_curve_enable[0])
+            .push8(fcStore.psasConfig.speed_stick_curve_enable[1])
+            .push8(fcStore.psasConfig.speed_stick_curve_enable[2])
+            .push8(fcStore.psasConfig.speed_optimum_vref)
+            .push8(fcStore.psasConfig.speed_main_curve_power)
+            .push8(fcStore.psasConfig.speed_roll_stick_curve_power)
+            .push16(fcStore.psasConfig.speed_main_curve_min)
+            .push16(fcStore.psasConfig.speed_main_curve_max)
+            .push16(fcStore.psasConfig.speed_stick_curve_min)
+            .push16(fcStore.psasConfig.speed_stick_curve_max)
+            .push8(fcStore.psasConfig.speed_curve_mode);
     },
 };
 
