@@ -196,7 +196,7 @@
 
                         <!-- Channel Map -->
                         <UiBox :title="$t('receiverChannelMap')" type="neutral" collapsible class="col-span-1">
-                            <SettingRow>
+                            <SettingRow data-setting-search-key="receiverChannelMap">
                                 <UFieldGroup>
                                     <UInput
                                         v-model="channelMapString"

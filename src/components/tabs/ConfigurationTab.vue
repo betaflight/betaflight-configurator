@@ -111,6 +111,10 @@
                                 v-for="feature in featuresList"
                                 :key="feature.bit"
                                 fullWidth
+                                :data-setting-search-key-runtime="'feature' + feature.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationFeatures', 'feature' + feature.name)
+                                "
                                 :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
                             >
                                 <USwitch
@@ -159,7 +163,15 @@
                                     size="xs"
                                 />
                             </div>
-                            <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
+                            <SettingRow
+                                v-for="cond in dshotBeaconConditionsList"
+                                :key="cond.bit"
+                                fullWidth
+                                :data-setting-search-key-runtime="'beeper' + cond.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationDshotBeeper', 'beeper' + cond.name)
+                                "
+                            >
                                 <USwitch
                                     :model-value="isDshotConditionEnabled(cond)"
                                     @update:model-value="(checked: boolean) => toggleDshotCondition(cond, checked)"
@@ -195,6 +207,10 @@
                                 :key="beeper.bit"
                                 v-show="beeper.visible !== false"
                                 fullWidth
+                                :data-setting-search-key-runtime="'beeper' + beeper.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationBeeper', 'beeper' + beeper.name)
+                                "
                             >
                                 <USwitch
                                     :model-value="isBeeperEnabled(beeper)"
@@ -245,6 +261,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import type { Beeper } from "../../js/Beepers";
+import { configurationDynamicSearchId } from "../settings-search/settingsSearch";
 
 export default defineComponent({
     name: "ConfigurationTab",
@@ -559,6 +576,7 @@ export default defineComponent({
             disableAllBeepers,
             isDshotConditionEnabled,
             toggleDshotCondition,
+            configurationDynamicSearchId,
             armingConfig,
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,
