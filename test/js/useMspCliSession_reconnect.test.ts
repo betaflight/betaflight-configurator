@@ -10,24 +10,24 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 // only BLE/manual reached the cycle.
 // ---------------------------------------------------------------------------
 
-const { GUI, connectDisconnect, disconnect, scheduleRebootReconnect, cancelRebootReconnect } = vi.hoisted(() => {
+const { timers, connectDisconnect, disconnect, scheduleRebootReconnect, cancelRebootReconnect } = vi.hoisted(() => {
     return {
-        GUI: {
-            // Minimal name-keyed timeout registry mirroring gui.js timeout_add/remove.
+        timers: {
+            // Minimal name-keyed timeout registry mirroring js/timers addTimeout/removeTimeout.
             _timers: new Map(),
-            timeout_add: vi.fn(function (name, code, timeout) {
-                GUI.timeout_remove(name);
+            addTimeout: vi.fn(function (name, code, timeout) {
+                timers.removeTimeout(name);
                 const id = setTimeout(() => {
-                    GUI._timers.delete(name);
+                    timers._timers.delete(name);
                     code();
                 }, timeout);
-                GUI._timers.set(name, id);
+                timers._timers.set(name, id);
             }),
-            timeout_remove: vi.fn(function (name) {
-                const id = GUI._timers.get(name);
+            removeTimeout: vi.fn(function (name) {
+                const id = timers._timers.get(name);
                 if (id !== undefined) {
                     clearTimeout(id);
-                    GUI._timers.delete(name);
+                    timers._timers.delete(name);
                     return true;
                 }
                 return false;
@@ -40,9 +40,10 @@ const { GUI, connectDisconnect, disconnect, scheduleRebootReconnect, cancelReboo
     };
 });
 
-vi.mock("../../src/js/gui", () => ({
+vi.mock("../../src/js/timers", () => ({
     __esModule: true,
-    default: GUI,
+    addTimeout: timers.addTimeout,
+    removeTimeout: timers.removeTimeout,
 }));
 
 vi.mock("../../src/js/serial_backend", () => ({
@@ -68,7 +69,7 @@ describe("useMspCliSession.scheduleReconnect", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.clearAllMocks();
-        GUI._timers.clear();
+        timers._timers.clear();
         __resetConnectionStateForTests();
         // Auto-Connect on is the reconnect path these cases characterize; the off case is
         // covered explicitly below. A real selected port is needed for the reconnect window.

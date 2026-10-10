@@ -49,7 +49,6 @@
 <script setup lang="ts">
 import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
-import GUI from "../../js/gui";
 import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
 import { bootstrapViewer } from "../../blackbox-viewer/main.js";
 import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init.js";
@@ -101,8 +100,6 @@ onMounted(async () => {
     // Keep the viewer theme in sync if the host theme changes while the tab is open.
     themeObserver = new MutationObserver(() => setBlackboxViewerDark(hostIsDark()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-    GUI.content_ready();
 });
 
 // Kept alive across tab switches: pause/resume instead of unmounting so the loaded log survives.

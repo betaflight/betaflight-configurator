@@ -23,7 +23,6 @@ import { ref, reactive, nextTick, type Ref } from "vue";
 import { i18n } from "../js/localization";
 import BFClipboard from "../js/Clipboard";
 import { generateFilename } from "../js/utils/generate_filename";
-import GUI from "../js/gui";
 import BuildApi from "../js/BuildApi";
 import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
@@ -36,6 +35,8 @@ import { get as getConfig } from "../js/ConfigStorage";
 import { useCliAutocomplete, type CliAutocomplete } from "./useCliAutocomplete";
 import { highlightCliLine } from "../js/CliSyntaxHighlight";
 import { escapeHtml } from "../js/utils/common";
+import { addTimeout, removeTimeout } from "../js/timers";
+import { useAppInfoStore } from "../stores/appInfo";
 
 const backspaceCode = 8;
 const lineFeedCode = 10;
@@ -370,7 +371,7 @@ export function useCli(): Cli {
             }
 
             if (commandArray.length > 0) {
-                GUI.timeout_add("CLI_send_slowly", () => sendCommandIterative(commandArray), processingDelay);
+                addTimeout("CLI_send_slowly", () => sendCommandIterative(commandArray), processingDelay);
             }
         }
 
@@ -579,13 +580,13 @@ export function useCli(): Cli {
     const processCharacterInCliMode = (charCode: number, currentChar: string): boolean => {
         switch (charCode) {
             case lineFeedCode:
-                if (GUI.operating_system === "Windows") {
+                if (useAppInfoStore().operatingSystem === "Windows") {
                     writeLineToOutput(cliBuffer);
                     cliBuffer = "";
                 }
                 break;
             case carriageReturnCode:
-                if (GUI.operating_system !== "Windows") {
+                if (useAppInfoStore().operatingSystem !== "Windows") {
                     writeLineToOutput(cliBuffer);
                     cliBuffer = "";
                 }
@@ -797,7 +798,7 @@ export function useCli(): Cli {
         );
 
         // Enter CLI mode
-        GUI.timeout_add(
+        addTimeout(
             "enter_cli",
             function enter_cli() {
                 const bufferOut = new ArrayBuffer(1);
@@ -814,8 +815,8 @@ export function useCli(): Cli {
      * @returns true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
      */
     const cleanup = (): boolean => {
-        GUI.timeout_remove("CLI_send_slowly");
-        GUI.timeout_remove("enter_cli");
+        removeTimeout("CLI_send_slowly");
+        removeTimeout("enter_cli");
 
         if (pastePollInterval) {
             clearInterval(pastePollInterval);

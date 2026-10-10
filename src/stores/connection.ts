@@ -30,22 +30,22 @@ import { getLockManager } from "../js/lock_manager";
  * when there is none.
  *
  * `false` rather than `null` or `""` because that is the sentinel the existing code writes —
- * `serial_backend.js` clears both fields with `= false` and every reader tests truthiness
- * (`if (!connectionStore.connectedTo)`, `GUI.connecting_to || ""`). Widening to `string | false`
+ * `serial_backend.ts` clears both fields with `= false` and every reader tests truthiness
+ * (`if (!connectionStore.connectedTo)`, `connectionStore.connectingTo || ""`). Widening to `string | false`
  * rather than leaving the `ref(false)` initializer to infer `boolean` is what makes
  * `connectedTo === "virtual"` in StatusBar.vue typecheck as the comparison it actually is.
  */
 export type ConnectionTarget = string | false;
 
 export const useConnectionStore = defineStore("connection", () => {
-    // The store OWNS the connection-target state (was GUI.connecting_to /
-    // GUI.connected_to). gui.js now delegates those fields here, so the store is
-    // the canonical home and the store no longer imports gui.js (which would
-    // cycle: gui -> store -> ... -> msp -> gui). connect_lock delegates to the
-    // reactive LockManager (single source of truth); clearMspQueue reaches msp via
-    // dynamic import to stay cycle-free.
+    // The store owns the connection-target state (was GUI.connecting_to /
+    // GUI.connected_to). connectLock delegates to the reactive LockManager (single
+    // source of truth); clearMspQueue reaches msp via dynamic import to stay cycle-free.
     const connectingTo = ref<ConnectionTarget>(false);
     const connectedTo = ref<ConnectionTarget>(false);
+
+    // True while the firmware flasher is writing; it blocks connecting and tab switches.
+    const flashingInProgress = ref(false);
 
     const connectLock = computed<boolean>({
         get: () => getLockManager().locked,
@@ -91,8 +91,8 @@ export const useConnectionStore = defineStore("connection", () => {
     }
 
     function clearMspQueue(): Promise<void> {
-        // Dynamic import keeps the store free of a static msp import (msp.js imports
-        // gui.js, which now imports this store — a static import would cycle).
+        // Dynamic import keeps the store free of a static msp import (msp.ts reaches
+        // this store through its own imports — a static import would cycle).
         // Returned so callers can await the drain before starting the next handshake.
         return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
@@ -101,6 +101,7 @@ export const useConnectionStore = defineStore("connection", () => {
         connectingTo,
         connectedTo,
         connectLock,
+        flashingInProgress,
         connectionValid,
         virtualMode,
         cliActive,

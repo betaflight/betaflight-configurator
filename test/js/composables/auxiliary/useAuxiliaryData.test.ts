@@ -3,13 +3,13 @@ import { defineComponent } from "vue";
 import { flushPromises, mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { mspHelper } from "../../../../src/js/msp/MSPHelper";
 import { useAuxiliaryData } from "../../../../src/composables/auxiliary/useAuxiliaryData";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../../../src/js/msp/MSPHelper", () => ({ mspHelper: { loadSerialConfig: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({ default: { interval_add: vi.fn(), interval_remove: vi.fn() } }));
+vi.mock("../../../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 
 type AuxiliaryData = ReturnType<typeof useAuxiliaryData>;
 
@@ -91,7 +91,7 @@ describe("useAuxiliaryData", () => {
         const { wrapper, data } = mountData();
 
         data.startPolling(onRcData);
-        const [[rcName, rcTick, ...rcTiming], [statusName, statusTick, ...statusTiming]] = vi.mocked(GUI.interval_add)
+        const [[rcName, rcTick, ...rcTiming], [statusName, statusTick, ...statusTiming]] = vi.mocked(timers.addInterval)
             .mock.calls;
         expect([rcTiming, statusTiming]).toEqual([
             [50, false],
@@ -106,7 +106,7 @@ describe("useAuxiliaryData", () => {
         wrapper.unmount();
         expect(
             vi
-                .mocked(GUI.interval_remove)
+                .mocked(timers.removeInterval)
                 .mock.calls.map(([name]) => name)
                 .sort(),
         ).toEqual([rcName, statusName].sort());

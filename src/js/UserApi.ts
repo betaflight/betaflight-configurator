@@ -1,16 +1,108 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import LoginApi from "./LoginApi";
 
 const DELETE_ACCOUNT_TIMEOUT_MS = 30000;
 
-export default class UserApi {
-    _url = "https://user.betaflight.com";
-    _loginApi;
+/*
+ * Response bodies of the user API, as far as the app reads them. They are parsed JSON, so these
+ * are the contract, not a runtime guarantee.
+ */
 
-    constructor(loginApi = new LoginApi()) {
+/** `/api/user`. */
+export interface UserProfile {
+    name?: string;
+    email?: string;
+    address?: string;
+    country?: string;
+    avatar?: string;
+}
+
+/** The client a token or passkey was issued to. */
+export interface UserClient {
+    address?: string;
+}
+
+/** One entry of `/api/user/tokens`. */
+export interface UserToken {
+    id: string | number;
+    created?: string;
+    expiry?: string;
+    details?: string;
+    client?: UserClient;
+}
+
+/** One entry of `/api/user/passkeys`. */
+export interface UserPasskey {
+    id: string | number;
+    createdAtUtc?: string;
+    updatedAtUtc?: string;
+    client?: UserClient;
+}
+
+/** A cloud backup as `/api/backups` lists it. */
+export interface Backup {
+    id: number | string;
+    name?: string;
+    description?: string;
+    created?: string;
+    key?: string;
+}
+
+/** `/api/backups`. */
+export interface BackupList {
+    backups?: Backup[];
+    message?: string;
+}
+
+/**
+ * The body of `PUT /api/backups/{Id}`. `Id` is capitalised because the server reads it that way.
+ * It admits `null` because BackupsTab's edit form starts out with no backup selected.
+ */
+export interface BackupUpdate {
+    Id: Backup["id"] | null;
+    name?: string;
+    description?: string;
+}
+
+/** A downloaded backup file: the name from Content-Disposition, and its text. */
+export interface BackupFile {
+    name: string;
+    file: string;
+}
+
+/** What UserApi needs from LoginApi. */
+export type AccessTokenSource = Pick<LoginApi, "getAccessToken" | "signOut">;
+
+export default class UserApi {
+    readonly _url = "https://user.betaflight.com";
+    _loginApi: AccessTokenSource;
+
+    constructor(loginApi: AccessTokenSource = new LoginApi()) {
         this._loginApi = loginApi;
     }
 
-    async _authHeaders() {
+    async _authHeaders(): Promise<{ Authorization: string }> {
+        // Still checked: a JavaScript caller can pass null, which the default does not replace.
         if (!this._loginApi) {
             throw new Error("Login API is not initialized.");
         }
@@ -20,14 +112,14 @@ export default class UserApi {
             if (token) {
                 return { Authorization: `Bearer ${token}` };
             }
-        } catch (_error) {
-            console.warn(`Unable to obtain access token for User API. ${_error}`);
+        } catch (error) {
+            console.warn(`Unable to obtain access token for User API. ${error}`);
         }
         throw new Error("Unable to obtain access token for User API.");
     }
 
     /* Profile Functionality */
-    async profile() {
+    async profile(): Promise<UserProfile> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user`, {
             method: "GET",
@@ -38,7 +130,7 @@ export default class UserApi {
 
         if (response.status === 401) {
             // token is bad - logout
-            this._loginApi.signOut();
+            void this._loginApi.signOut();
             throw new Error("Unauthorized access to User API.");
         }
 
@@ -48,7 +140,8 @@ export default class UserApi {
         return await response.json();
     }
 
-    async updateProfile(profile) {
+    /** Resolves to the server's parsed reply, which no caller reads. */
+    async updateProfile(profile: UserProfile): Promise<unknown> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user`, {
             method: "PUT",
@@ -66,7 +159,7 @@ export default class UserApi {
         return await response.json();
     }
 
-    async deleteAccount() {
+    async deleteAccount(): Promise<void> {
         const authHeaders = await this._authHeaders();
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), DELETE_ACCOUNT_TIMEOUT_MS);
@@ -88,7 +181,7 @@ export default class UserApi {
     }
 
     /* User Token Management Functionality */
-    async getTokens() {
+    async getTokens(): Promise<UserToken[]> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user/tokens`, {
             method: "GET",
@@ -103,7 +196,7 @@ export default class UserApi {
         return await response.json();
     }
 
-    async deleteToken(tokenId) {
+    async deleteToken(tokenId: UserToken["id"]): Promise<void> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user/tokens/${tokenId}`, {
             method: "DELETE",
@@ -118,7 +211,7 @@ export default class UserApi {
     }
 
     /* User Passkey Management Functionality */
-    async getPasskeys() {
+    async getPasskeys(): Promise<UserPasskey[]> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user/passkeys`, {
             method: "GET",
@@ -133,7 +226,7 @@ export default class UserApi {
         return await response.json();
     }
 
-    async deletePasskey(passkeyId) {
+    async deletePasskey(passkeyId: UserPasskey["id"]): Promise<void> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/user/passkeys/${passkeyId}`, {
             method: "DELETE",
@@ -148,7 +241,7 @@ export default class UserApi {
     }
 
     /* User Backup Functionality */
-    async getBackups() {
+    async getBackups(): Promise<BackupList> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups`, {
             method: "GET",
@@ -163,7 +256,7 @@ export default class UserApi {
         return await response.json();
     }
 
-    async deleteBackup(backupId) {
+    async deleteBackup(backupId: Backup["id"]): Promise<void> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/${backupId}`, {
             method: "DELETE",
@@ -177,7 +270,11 @@ export default class UserApi {
         }
     }
 
-    async uploadBackup(data) {
+    /**
+     * @param data the CLI dump, as plain text
+     * @returns the server's parsed reply, which no caller reads
+     */
+    async uploadBackup(data: string): Promise<unknown> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/file`, {
             method: "POST",
@@ -194,7 +291,7 @@ export default class UserApi {
         return await response.json();
     }
 
-    async downloadBackupFile(backupId) {
+    async downloadBackupFile(backupId: Backup["id"]): Promise<BackupFile> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/${backupId}/file`, {
             method: "GET",
@@ -216,7 +313,7 @@ export default class UserApi {
             const parts = contentDisposition.split("filename=");
             if (parts.length > 1) {
                 // Remove surrounding quotes and whitespace
-                filename = parts[1].trim().replaceAll(/(^["'])|(["']$)/g, "");
+                filename = parts[1].trim().replaceAll(/^["']|["']$/g, "");
             }
         }
 
@@ -229,7 +326,7 @@ export default class UserApi {
         };
     }
 
-    async updateBackup(backup) {
+    async updateBackup(backup: BackupUpdate): Promise<void> {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/${backup.Id}`, {
             method: "PUT",

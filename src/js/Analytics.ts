@@ -21,8 +21,8 @@
 
 import ShortUniqueId from "short-unique-id";
 import { set as setConfig, get as getConfig } from "./ConfigStorage";
-import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
+import { useAppInfoStore } from "../stores/appInfo";
 
 export interface AnalyticsSettings {
     sessionId: string;
@@ -74,7 +74,7 @@ function setupAnalytics(result: Record<string, unknown>) {
         appName: CONFIGURATOR.productName,
         appVersion: CONFIGURATOR.version,
         gitRevision: CONFIGURATOR.gitRevision,
-        os: GUI.operating_system,
+        os: useAppInfoStore().operatingSystem,
         checkForDebugVersions: checkForDebugVersions,
         optOut: optOut,
     };

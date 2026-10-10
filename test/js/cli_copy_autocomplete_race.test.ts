@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import GUI from "../../src/js/gui";
+import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
 
 function bytes(str: string) {
@@ -19,7 +19,7 @@ describe("useCli output during CliAutoComplete build", () => {
         CONFIGURATOR.cliActive = true;
         CONFIGURATOR.cliValid = true;
         CliAutoComplete.builder.state = "reset";
-        GUI.operating_system = "Linux";
+        useAppInfoStore().operatingSystem = "Linux";
 
         cli = useCli();
         cli.windowWrapperRef.value = document.createElement("div");

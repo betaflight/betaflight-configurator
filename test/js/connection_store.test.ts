@@ -8,7 +8,6 @@ import { createPinia, setActivePinia } from "pinia";
 
 const mspCleanup = vi.hoisted(() => vi.fn());
 
-vi.mock("../../src/js/gui", () => ({ default: { connecting_to: false, connected_to: false, connect_lock: false } }));
 // Both stubs are reactive because both real modules are — data_storage.ts wraps CONFIGURATOR in
 // reactive() and device_handler exports reactive(new DeviceHandler()). The store reads them through
 // computed(), which only invalidates on a reactive source, so a plain object literal here would
@@ -56,6 +55,14 @@ describe("store owns connection-target state (folded from GuiControl)", () => {
         store.connectedTo = "serial_1";
         expect(store.connectingTo).toBe("serial_1");
         expect(store.connectedTo).toBe("serial_1");
+    });
+
+    it("flashingInProgress is store-owned, writable, default false", () => {
+        const store = useConnectionStore();
+        expect(store.flashingInProgress).toBe(false);
+
+        store.flashingInProgress = true;
+        expect(store.flashingInProgress).toBe(true);
     });
 
     // A connection target is a device path or `false`, never a bare boolean `true`. The two
@@ -135,7 +142,7 @@ describe("live data refresh control", () => {
 });
 
 describe("clearMspQueue", () => {
-    // The dynamic import is what keeps the store out of the msp -> gui -> store cycle, so the
+    // The dynamic import is what keeps the store out of the msp -> store import cycle, so the
     // returned promise is the only way a caller can await the drain before the next handshake.
     it("returns a promise that resolves once the MSP queue has been drained", async () => {
         const store = useConnectionStore();

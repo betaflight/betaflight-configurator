@@ -73,7 +73,6 @@ import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { millitime } from "@/js/utils/common";
-import GUI from "@/js/gui";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import FileSystem from "@/js/FileSystem";
@@ -466,11 +465,10 @@ async function toggleLogging() {
 
 function sendInitialRequests() {
     if (!connectionStore.connectionValid) {
-        GUI.content_ready();
         return;
     }
 
-    requestInitialData(() => GUI.content_ready());
+    requestInitialData();
 }
 
 onMounted(() => {

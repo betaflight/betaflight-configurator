@@ -19,10 +19,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
 import { EventBus } from "../components/eventBus";
 import { useFlightControllerStore } from "../stores/fc";
+import { addTimeout, removeTimeout } from "./timers";
 
 const BUILDER_TIMEOUT_MS = 3000;
 
@@ -173,14 +173,14 @@ const CliAutoComplete: CliAutoCompleteApi = {
     cleanup() {
         this._builderWatchdogStop();
         this._drainStop();
-        GUI.timeout_remove("autocomplete_builder_defer");
+        removeTimeout("autocomplete_builder_defer");
         this.builder.state = "reset";
         this.builder.numFails = 0;
     },
 
     _drainStart() {
         this.builder.draining = true;
-        GUI.timeout_add("autocomplete_builder_drain", () => this._drainStop(), DRAIN_TIMEOUT_MS);
+        addTimeout("autocomplete_builder_drain", () => this._drainStop(), DRAIN_TIMEOUT_MS);
     },
 
     _drainParseLine(line) {
@@ -190,14 +190,14 @@ const CliAutoComplete: CliAutoCompleteApi = {
     },
 
     _drainStop() {
-        GUI.timeout_remove("autocomplete_builder_drain");
+        removeTimeout("autocomplete_builder_drain");
         this.builder.draining = false;
     },
 
     _builderWatchdogTouch() {
         this._builderWatchdogStop();
 
-        GUI.timeout_add(
+        addTimeout(
             "autocomplete_builder_watchdog",
             () => {
                 if (this.builder.numFails) {
@@ -218,7 +218,7 @@ const CliAutoComplete: CliAutoCompleteApi = {
     },
 
     _builderWatchdogStop() {
-        GUI.timeout_remove("autocomplete_builder_watchdog");
+        removeTimeout("autocomplete_builder_watchdog");
     },
 
     builderStart() {
@@ -228,7 +228,7 @@ const CliAutoComplete: CliAutoCompleteApi = {
 
         if (this.isIdle && !this.isIdle()) {
             // defer: starting now could swallow an in-flight command's response (isBuilding() suppresses all output)
-            GUI.timeout_add("autocomplete_builder_defer", () => this.builderStart(), 250);
+            addTimeout("autocomplete_builder_defer", () => this.builderStart(), 250);
             return;
         }
 

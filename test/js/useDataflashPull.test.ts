@@ -25,7 +25,6 @@ import { useDataflashPull, type DataflashPull } from "../../src/composables/useD
 import { useConnectionStore } from "../../src/stores/connection";
 import CONFIGURATOR from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
-import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { pinia } from "../../src/js/pinia_instance";
@@ -56,7 +55,7 @@ describe("useDataflashPull", () => {
     let reads: number[];
 
     beforeEach(() => {
-        // GUI.connected_to reads the app's Pinia instance (and makes it the active one), so the
+        // The composable reads the app's Pinia instance (and makes it the active one), so the
         // composable and the test must share that instance to see the same connection store.
         setActivePinia(pinia);
         fcStore = useFlightControllerStore();
@@ -64,7 +63,7 @@ describe("useDataflashPull", () => {
         CONFIGURATOR.connectionValid = true;
         connectionStore = useConnectionStore();
         connectionStore.resumeLiveData();
-        GUI.connected_to = "/dev/ttyACM0";
+        connectionStore.connectedTo = "/dev/ttyACM0";
 
         reportedUsedSize = 0;
         reads = [];
@@ -88,12 +87,12 @@ describe("useDataflashPull", () => {
 
     afterEach(() => {
         CONFIGURATOR.connectionValid = false;
-        GUI.connected_to = false;
+        connectionStore.connectedTo = false;
         vi.restoreAllMocks();
     });
 
     it("refuses to pull when not connected, without touching live data or MSP", async () => {
-        GUI.connected_to = false;
+        connectionStore.connectedTo = false;
 
         await expect(dataflash.pull()).rejects.toThrow("Not connected");
 
@@ -274,7 +273,7 @@ describe("useDataflashPull", () => {
             expect(dataflash.available.value).toBe(false);
 
             CONFIGURATOR.connectionValid = true;
-            GUI.connected_to = false;
+            connectionStore.connectedTo = false;
             expect(dataflash.available.value).toBe(false);
         });
     });

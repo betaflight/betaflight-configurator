@@ -41,13 +41,13 @@ import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
 import { updateTabList } from "../utils/updateTabList";
 import { showErrorDialog } from "../utils/showErrorDialog";
-import GUI, { TABS } from "../gui";
 import { OSD } from "../../components/tabs/osd/osd";
 import { reinitializeConnection } from "../serial_backend";
 import type { MspCallback, MspFrame, MspResponse } from "../msp";
 import type { CurrentMeterConfig, LedStripEntry } from "../../stores/fc.types";
 import type Features from "../Features";
 import type Beepers from "../Beepers";
+import { TABS, tabSwitchCleanup } from "../tab_adapters";
 
 // serial_backend's initFeaturesOnConnect (or VirtualFC) replaces the reset value null with these
 // instances before any feature or beeper MSP is exchanged.
@@ -807,7 +807,7 @@ class MspHelper {
                 gui_log(i18n.getMessage("configurationEepromSaved"));
                 console.log("Configuration saved to EEPROM");
                 if (reboot) {
-                    GUI.tab_switch_cleanup(function () {
+                    tabSwitchCleanup(function () {
                         return reinitializeConnection();
                     });
                 }

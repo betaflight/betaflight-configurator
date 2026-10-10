@@ -866,7 +866,6 @@ import { buildCharacterizationModel } from "../../js/utils/magModelExport";
 import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
 import Model from "../../js/model";
-import GUI from "../../js/gui";
 import { flightIndicator } from "../../../libraries/flightIndicators";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
@@ -2364,12 +2363,9 @@ const loadConfig = async () => {
             initModel();
             initInstruments();
             addInterval("sensors_attitude", pollAttitude, ATTITUDE_POLL_MS, true);
-
-            GUI.content_ready();
         },
         (e) => {
             console.error("Failed to load sensor config", e);
-            GUI.content_ready();
         },
     );
 };

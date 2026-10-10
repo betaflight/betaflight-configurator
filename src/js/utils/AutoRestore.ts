@@ -25,12 +25,12 @@ import { i18n } from "../localization";
 import MspHelper from "../msp/MSPHelper";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import GUI from "../gui";
 import { serial } from "../serial";
 import { MIN_FC_VERSION_FOR_MSP_CLI, isMspCliSupported } from "../../composables/useMspCliSession";
 import semver from "semver";
 import CONFIGURATOR from "../data_storage";
 import { useFlightControllerStore } from "../../stores/fc";
+import { addTimeout, removeTimeout } from "../timers";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const CONNECT_TIMEOUT_MS = 10000;
@@ -126,7 +126,7 @@ class AutoRestore {
         MSP.listen(this._mspHelper.process_data.bind(this._mspHelper));
 
         // Set connect timeout — if API version not received within CONNECT_TIMEOUT_MS, abort
-        GUI.timeout_add(
+        addTimeout(
             TIMEOUT_NAME,
             () => {
                 this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
@@ -137,7 +137,7 @@ class AutoRestore {
         try {
             // Query API version first
             await MSP.promise(MSPCodes.MSP_API_VERSION);
-            GUI.timeout_remove(TIMEOUT_NAME);
+            removeTimeout(TIMEOUT_NAME);
 
             // Handle potential API version parsing issues
             if (
@@ -289,7 +289,7 @@ class AutoRestore {
         MSP.disconnect_cleanup();
         useFlightControllerStore().resetState();
 
-        GUI.timeout_remove(TIMEOUT_NAME);
+        removeTimeout(TIMEOUT_NAME);
 
         callback({ success, errors: errorMsg, skipped: this._skipped });
     }
@@ -314,7 +314,7 @@ class AutoRestore {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            const result = await serial.connect(port, { baudRate: baud }, undefined);
+            const result = await serial.connect(port, { baudRate: baud });
             if (!result) {
                 this._cleanup(false, i18n.getMessage("firmwareFlasherRestoreConnectionFailed"));
             }

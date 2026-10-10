@@ -34,10 +34,10 @@ export function useLoggingData() {
      * Fetch RC and motor data once so the column headers know the channel and motor counts.
      * @param onReady called after the motor reply, i.e. once both have landed
      */
-    const requestInitialData = (onReady: () => void) => {
+    const requestInitialData = (onReady?: () => void) => {
         MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
             MSP.send_message(MSPCodes.MSP_MOTOR, false, false, () => {
-                onReady();
+                onReady?.();
             });
         });
     };

@@ -23,9 +23,9 @@ import semver from "semver";
 import MSP from "../../js/msp";
 import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
 import { mspHelper, type DataflashReadCallback } from "../../js/msp/MSPHelper";
-import GUI from "../../js/gui";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useAppInfoStore } from "@/stores/appInfo";
 
 export type { DataflashReadCallback } from "../../js/msp/MSPHelper";
 
@@ -97,7 +97,7 @@ export function useOnboardLoggingData() {
     /** Reboot the FC into USB mass storage, with the UTC variant on Linux. */
     const rebootToMassStorage = () => {
         const buffer: number[] = [];
-        if (GUI.operating_system === "Linux") {
+        if (useAppInfoStore().operatingSystem === "Linux") {
             buffer.push(mspHelper.REBOOT_TYPES.MSC_UTC);
         } else {
             buffer.push(mspHelper.REBOOT_TYPES.MSC);

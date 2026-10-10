@@ -3,19 +3,16 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import ServosTab from "../../src/components/tabs/ServosTab.vue";
 import { useFlightControllerStore } from "../../src/stores/fc";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
 
-vi.mock("../../src/js/gui", () => ({
-    default: {
-        content_ready: vi.fn(),
-        interval_add: vi.fn(),
-        interval_remove: vi.fn(),
-        timeout_add: vi.fn(),
-        timeout_remove: vi.fn(),
-    },
+vi.mock("../../src/js/timers", () => ({
+    addInterval: vi.fn(),
+    removeInterval: vi.fn(),
+    addTimeout: vi.fn(),
+    removeTimeout: vi.fn(),
 }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { sendServoConfigurations: vi.fn() } }));
@@ -68,7 +65,7 @@ describe("Servos MSP wiring", () => {
     });
 
     it("starts servo polling after the load and copies each reply into the bars", async () => {
-        const servoTick = vi.mocked(GUI.interval_add).mock.calls.find(([name]) => name === "servo_data_pull")![1];
+        const servoTick = vi.mocked(timers.addInterval).mock.calls.find(([name]) => name === "servo_data_pull")![1];
 
         servoTick();
         const [code, , , onServoData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
@@ -95,7 +92,7 @@ describe("Servos MSP wiring", () => {
         vm().liveMode = true;
         vm().servoConfigs[1].max = 1800;
         vm().onServoChange();
-        const preview = vi.mocked(GUI.timeout_add).mock.calls.find(([name]) => name === "servos_update")![1];
+        const preview = vi.mocked(timers.addTimeout).mock.calls.find(([name]) => name === "servos_update")![1];
 
         preview();
         await flushPromises();

@@ -29,13 +29,11 @@ const { intervalAdd, intervalRemove, intervalPause, intervalResume } = vi.hoiste
     intervalResume: vi.fn(),
 }));
 
-vi.mock("../../src/js/gui", () => ({
-    default: {
-        interval_add: intervalAdd,
-        interval_remove: intervalRemove,
-        interval_pause: intervalPause,
-        interval_resume: intervalResume,
-    },
+vi.mock("../../src/js/timers", () => ({
+    addInterval: intervalAdd,
+    removeInterval: intervalRemove,
+    pauseInterval: intervalPause,
+    resumeInterval: intervalResume,
 }));
 
 import { useInterval, type IntervalRegistry } from "../../src/composables/useInterval";
@@ -54,7 +52,7 @@ describe("useInterval", () => {
         intervalResume.mockReset();
     });
 
-    it("registers the interval with GUI, not firing first by default", () => {
+    it("registers the interval with the timer registry, not firing first by default", () => {
         const { scope, addInterval } = inScope();
         const code = () => {};
 
@@ -119,7 +117,7 @@ describe("useInterval", () => {
         expect(intervalRemove).not.toHaveBeenCalled();
     });
 
-    it("pause and resume forward GUI's found/not-found result", () => {
+    it("pause and resume forward the registry's found/not-found result", () => {
         const { scope, pauseInterval, resumeInterval } = inScope();
         intervalPause.mockReturnValueOnce(true).mockReturnValueOnce(false);
         intervalResume.mockReturnValueOnce(false);

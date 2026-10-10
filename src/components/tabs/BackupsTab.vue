@@ -267,16 +267,7 @@ import {
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
 import { useFlightControllerStore } from "@/stores/fc";
-import type UserApi from "@/js/UserApi";
-
-/** A cloud backup as the user API's `/api/backups` lists it. */
-interface Backup {
-    id: number | string;
-    name?: string;
-    description?: string;
-    created?: string;
-    key?: string;
-}
+import type { default as UserApi, Backup } from "@/js/UserApi";
 
 /** One failed command of a restore batch, as useMspCliSession's runBatch reports it. */
 interface RestoreFailure {
@@ -320,7 +311,7 @@ const restoreErrors = ref<RestoreFailure[]>([]);
 const restoreErrorsOpen = ref(false);
 const restoreSavePressed = ref(false);
 let userApi: UserApi | null = null;
-// LoginManager documents these as a bare `Function`, so they are typed by what it returns.
+// The unsubscribe functions LoginManager returns; take their type from there.
 let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
 let unsubscribeLogout: ReturnType<typeof loginManager.onLogout> | null = null;
 

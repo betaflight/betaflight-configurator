@@ -22,9 +22,10 @@
 import { set as setConfig } from "../ConfigStorage";
 import { checkSetupAnalytics } from "../Analytics";
 import { updateTabList } from "./updateTabList";
-import GUI, { TABS } from "../gui";
 import { EventBus } from "../../components/eventBus";
 import { useFlightControllerStore } from "../../stores/fc";
+import { useNavigationStore } from "../../stores/navigation";
+import { TABS } from "../tab_adapters";
 
 export function applyExpertMode(checked: boolean, { persist = true }: { persist?: boolean } = {}): void {
     if (globalThis.vm) {
@@ -40,10 +41,9 @@ export function applyExpertMode(checked: boolean, { persist = true }: { persist?
     const fcStore = useFlightControllerStore();
     updateTabList(fcStore.features?.features);
 
-    if (GUI.active_tab) {
-        // TABS is filled at runtime by the legacy tabs, so gui.js types it as `{}`.
-        const tabs = TABS as Record<string, { expertModeChanged?: (checked: boolean) => void } | undefined>;
-        tabs[GUI.active_tab]?.expertModeChanged?.(checked);
+    const activeTab = useNavigationStore().activeTab;
+    if (activeTab) {
+        TABS[activeTab]?.expertModeChanged?.(checked);
     }
 
     EventBus.$emit("expert-mode-change", checked);

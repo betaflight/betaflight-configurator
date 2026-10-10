@@ -29,8 +29,8 @@ import { ref, onMounted, onUnmounted, type Ref } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import GUI from "@/js/gui";
 import type { MotorTelemetryData } from "@/stores/fc.types";
+import { addInterval, removeInterval, type IntervalEntry } from "@/js/timers";
 
 export function useMotorDataPolling(_motorsTestingEnabled: Ref<boolean>) {
     const fcStore = useFlightControllerStore();
@@ -42,7 +42,7 @@ export function useMotorDataPolling(_motorsTestingEnabled: Ref<boolean>) {
         WhDrawn: 0,
     });
 
-    let pollingIntervalId: ReturnType<typeof GUI.interval_add> | null = null;
+    let pollingIntervalId: IntervalEntry | null = null;
 
     /**
      * Get motor data from FC
@@ -82,11 +82,11 @@ export function useMotorDataPolling(_motorsTestingEnabled: Ref<boolean>) {
      */
     const startPolling = () => {
         if (pollingIntervalId) {
-            GUI.interval_remove("motor_and_status_pull");
+            removeInterval("motor_and_status_pull");
         }
 
         // Poll every 50ms (20Hz) - matches original implementation
-        pollingIntervalId = GUI.interval_add("motor_and_status_pull", getMotorData, 50, true);
+        pollingIntervalId = addInterval("motor_and_status_pull", getMotorData, 50, true);
     };
 
     /**
@@ -94,7 +94,7 @@ export function useMotorDataPolling(_motorsTestingEnabled: Ref<boolean>) {
      */
     const stopPolling = () => {
         if (pollingIntervalId) {
-            GUI.interval_remove("motor_and_status_pull");
+            removeInterval("motor_and_status_pull");
             pollingIntervalId = null;
         }
     };

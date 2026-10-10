@@ -4,7 +4,7 @@
             <!-- Title and Documentation -->
             <div class="cf_column">
                 <div class="tab_title" v-html="$t('tabFlightPlan')"></div>
-                <WikiButton docUrl="flight-plan" />
+                <WikiButton docUrl="flight_plan" />
             </div>
 
             <div class="flex flex-col gap-[25px]">
@@ -87,7 +87,6 @@ import ElevationProfile from "./FlightPlan/ElevationProfile.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useConnectionStore } from "@/stores/connection";
 import { useBuildOptions } from "@/composables/useBuildOptions";
-import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 
@@ -111,8 +110,6 @@ onMounted(async () => {
             showLoadPromptDialog.value = true;
         }
     }
-
-    GUI.content_ready();
 });
 
 const handleSave = async () => {

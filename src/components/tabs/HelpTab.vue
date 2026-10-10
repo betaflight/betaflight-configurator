@@ -48,7 +48,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import BaseTab from "./BaseTab.vue";
-import GUI from "../../js/gui";
 import UiBox from "../elements/UiBox.vue";
 
 export default defineComponent({
@@ -56,17 +55,6 @@ export default defineComponent({
     components: {
         BaseTab,
         UiBox,
-    },
-    setup() {
-        // Called after tab is ready - equivalent to old content_ready callback
-        function onTabReady() {
-            GUI.content_ready();
-        }
-
-        return { onTabReady };
-    },
-    mounted() {
-        this.onTabReady();
     },
 });
 </script>

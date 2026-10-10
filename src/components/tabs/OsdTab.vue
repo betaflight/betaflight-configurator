@@ -2,7 +2,7 @@
     <BaseTab tab-name="osd">
         <div class="content_wrapper pb-15">
             <div class="tab_title">{{ $t("osdSetupTitle") }}</div>
-            <WikiButton docUrl="OSD" />
+            <WikiButton docUrl="osd" />
 
             <!-- Warning: No OSD Chip Detected -->
             <UiBox
@@ -690,14 +690,15 @@ import { getVisibleAlarmEntries } from "./osd/osd_alarms";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells, type PositionConfig } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
-import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { getTracking } from "@/js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_48 } from "@/js/data_storage";
+import { useConnectionStore } from "@/stores/connection";
 
 const osdStore = useOsdStore();
 const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
 const { hasBuildOption } = useBuildOptions();
 
 /** Anything with the name / text a field list sorts and labels by. */
@@ -1728,7 +1729,7 @@ function applyLegacyMobilePreviewZoom() {
 }
 
 function replaceLogoImage() {
-    if (GUI.connect_lock) {
+    if (connectionStore.connectLock) {
         return;
     }
 
@@ -1755,11 +1756,11 @@ function confirmFontUpload() {
 }
 
 async function flashFont() {
-    if (GUI.connect_lock) {
+    if (connectionStore.connectLock) {
         return;
     }
 
-    GUI.connect_lock = true;
+    connectionStore.connectLock = true;
 
     // Wait for any background load (avoid uploading a partially replaced font).
     // Give up if the selected preset is still not the loaded font.
@@ -1768,7 +1769,7 @@ async function flashFont() {
     if (presetFont && FONT.data?.loaded_font_file !== presetFont.file) {
         console.error(`Font preset ${presetFont.file} is not loaded, cannot upload`);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
         return;
     }
 
@@ -1785,7 +1786,7 @@ async function flashFont() {
             updatePreviewBuffer();
         } catch (err) {
             console.error("User cancelled custom font selection or error occurred", err);
-            GUI.connect_lock = false;
+            connectionStore.connectLock = false;
             return; // Cancel the upload process
         }
     }
@@ -1793,7 +1794,7 @@ async function flashFont() {
     // Warn before uploading a font (built-in or user supplied) that does not match the OSD's font mode.
     if (FONT.isSmallFont() !== isFbOsdSmallFont.value) {
         if (!confirmFontUpload()) {
-            GUI.connect_lock = false;
+            connectionStore.connectLock = false;
             return;
         }
     }
@@ -1826,7 +1827,7 @@ async function flashFont() {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
     } finally {
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
     }
 }
 
@@ -1872,7 +1873,6 @@ onMounted(async () => {
         LogoManager.init(FONT, SYM.LOGO);
     }
     applyLegacyMobilePreviewZoom();
-    GUI.content_ready();
 });
 
 onUnmounted(() => {

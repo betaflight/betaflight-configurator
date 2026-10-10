@@ -384,7 +384,6 @@ import WikiButton from "../elements/WikiButton.vue";
 import Dialog from "../elements/Dialog.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
-import GUI from "../../js/gui";
 import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
@@ -487,7 +486,6 @@ export default defineComponent({
 
             nextTick(() => {
                 i18n.localizePage();
-                GUI.content_ready();
             });
 
             // Start polling

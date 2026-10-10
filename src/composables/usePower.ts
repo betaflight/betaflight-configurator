@@ -29,12 +29,12 @@ import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../js/msp";
 import MSPCodes, { MSP2TextType } from "../js/msp/MSPCodes";
 import { useConnectionStore } from "../stores/connection";
-import GUI from "../js/gui";
 import { gui_log } from "../js/gui_log";
 import { isMspCancelled } from "../js/msp/mspErrors";
 import { useDirtyState } from "./useDirtyState";
 import { useReboot } from "./useReboot";
 import type { CurrentMeter, CurrentMeterConfig, VoltageMeter, VoltageMeterConfig } from "../stores/fc.types";
+import { pauseInterval, resumeInterval } from "../js/timers";
 
 export function usePower() {
     const fcStore = useFlightControllerStore();
@@ -210,7 +210,7 @@ export function usePower() {
             // Pause global and local polling to prevent MSP_STATUS_EX from
             // overwriting fcStore.config.batteryProfile with stale data during the switch
             connectionStore.pauseLiveData();
-            GUI.interval_pause("power_data_pull_slow");
+            pauseInterval("power_data_pull_slow");
 
             if (CONFIGURATOR.virtualMode) {
                 fcStore.config.batteryProfile = profileIndex;
@@ -252,7 +252,7 @@ export function usePower() {
         } finally {
             isLoading.value = false;
             connectionStore.resumeLiveData();
-            GUI.interval_resume("power_data_pull_slow");
+            resumeInterval("power_data_pull_slow");
         }
     };
 
