@@ -113,6 +113,22 @@ describe("mode range dirty serialization", () => {
         );
     });
 
+    it("reads a range saved on Auto back as Auto, not as channel 255", () => {
+        const modes = buildModes({ angle: [rangeEntry(-1, 1700, 2100)] });
+        const payload = buildModeRangePayload(modes, SLOT_COUNT);
+        // The FC stores the index as a U8, so the -1 sent for Auto comes back as 0xff.
+        const fromFc = {
+            ...payload,
+            modeRanges: payload.modeRanges.map((range) => ({
+                ...range,
+                auxChannelIndex: range.auxChannelIndex & 0xff,
+            })),
+        };
+
+        const [angle] = rebuildModes(modes, fromFc).filter((mode) => mode.id === 1);
+        expect(angle.entries).toEqual([rangeEntry(-1, 1700, 2100)]);
+    });
+
     it("normalizes slider values so grid snapping alone is not a change", () => {
         const snapped = buildModes({ angle: [rangeEntry(1, 1300, 1700)] });
         const unsnapped = buildModes({ angle: [rangeEntry(1, 1306, 1694)] });

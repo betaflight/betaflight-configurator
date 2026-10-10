@@ -45,7 +45,7 @@ function readSerialAdapter(e: Event) {
 }
 
 class MSPConnectorImpl {
-    baud: number | false | undefined = undefined;
+    baud: number | undefined = undefined;
     port: string | undefined = undefined;
     onConnectCallback: ConnectorCallback | undefined = undefined;
     onTimeoutCallback: ConnectorCallback | undefined = undefined;
@@ -129,7 +129,7 @@ class MSPConnectorImpl {
 
     connect(
         port: string,
-        baud: number | false | undefined,
+        baud: number | undefined,
         onConnectCallback: ConnectorCallback,
         onTimeoutCallback: ConnectorCallback,
         onFailureCallback: ConnectorCallback,

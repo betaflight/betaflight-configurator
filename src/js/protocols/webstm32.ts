@@ -106,7 +106,7 @@ class STM32Protocol {
     baud: number | null = null;
     port!: string;
     serialOptions!: STM32FlashOptions;
-    mspOptions?: { no_reboot: boolean; reboot_baud: number | false | undefined; erase_chip: boolean };
+    mspOptions?: { no_reboot: boolean; reboot_baud: number; erase_chip: boolean };
     callback: (() => void) | null | undefined = null;
     // Set by connect() before any upload step reads it.
     hex: ParsedHex | null = null;
@@ -380,16 +380,15 @@ class STM32Protocol {
         this.serialOptions = options;
 
         // we will crunch the options here since doing it inside initialization routine would be too late
+        // The reboot runs over MSP, so without an explicit rate use the one picked for MSP.
         this.mspOptions = {
             no_reboot: false,
-            reboot_baud: false,
+            reboot_baud: options.reboot_baud || DeviceHandler.devicePicker.selectedBauds,
             erase_chip: false,
         };
 
         if (options.no_reboot) {
             this.mspOptions.no_reboot = true;
-        } else {
-            this.mspOptions.reboot_baud = options.reboot_baud;
         }
 
         if (options.erase_chip) {

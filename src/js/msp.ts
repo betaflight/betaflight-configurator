@@ -219,9 +219,11 @@ const MSP = {
             // message received, store dataview
             this.dataView = new MspDataView(this.message_buffer, 0, this.message_length_expected);
         } else if (
-            (serial._protocol as { shouldBypassCrc?: (checksum: number) => boolean } | null)?.shouldBypassCrc?.(
-                expectedChecksum,
-            )
+            (
+                serial._protocol as {
+                    shouldBypassCrc?: (expectedChecksum: number, computedChecksum: number) => boolean;
+                } | null
+            )?.shouldBypassCrc?.(expectedChecksum, this.message_checksum)
         ) {
             // Capability check: only the Bluetooth protocols implement shouldBypassCrc,
             // for BT-11/CC2541 bridges that corrupt the MSP checksum to 0xff. Not gated

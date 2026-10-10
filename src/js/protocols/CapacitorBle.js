@@ -137,12 +137,12 @@ class CapacitorBle extends EventTarget {
         }
     }
 
-    shouldBypassCrc(expectedChecksum) {
+    shouldBypassCrc(expectedChecksum, computedChecksum) {
         const deviceDescription = this.deviceDescription;
         if (!deviceDescription) return false;
 
         const isBT11 = deviceDescription?.susceptibleToCrcCorruption ?? false;
-        return isBT11 && expectedChecksum === 0xff;
+        return isBT11 && expectedChecksum === 0xff && computedChecksum !== 0xff;
     }
 
     async send(data, callback) {

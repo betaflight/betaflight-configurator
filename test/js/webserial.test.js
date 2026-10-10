@@ -201,6 +201,21 @@ describe("WebSerial stable device identity", () => {
         await ws.disconnect();
     });
 
+    it("releases the reader lock when the read loop ends", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+
+        const port = makeFakePort();
+        const reader = { read: vi.fn().mockResolvedValue({ done: true }), cancel: vi.fn(), releaseLock: vi.fn() };
+        Object.defineProperty(port, "readable", { get: () => ({ getReader: () => reader }) });
+        ws.ports = [ws.createPort(port)];
+
+        await ws.connect(ws.ports[0].path, { baudRate: 115200 });
+        await vi.waitFor(() => expect(reader.releaseLock).toHaveBeenCalled());
+
+        await ws.disconnect();
+    });
+
     it("getNativePort() returns the underlying SerialPort for a stable id", async () => {
         const WebSerial = await loadWebSerial();
         const ws = new WebSerial();
