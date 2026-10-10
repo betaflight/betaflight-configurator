@@ -2612,10 +2612,8 @@ export default defineComponent({
             color: var(--warning);
         }
     }
-}
 
-/* Unstable firmware dialog list styling */
-#dialogUnstableFirmwareAcknowledgement {
+    /* list styling */
     :deep(ul) {
         margin-inline-start: 1.5rem;
         margin-top: 0.5rem;

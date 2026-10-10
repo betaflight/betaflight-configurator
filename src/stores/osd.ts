@@ -518,19 +518,19 @@ export const useOsdStore = defineStore("osd", () => {
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
+        // The writes go one at a time, in order: each is a separate MSP_SET_OSD_CONFIG the FC applies
+        // as it arrives, and the EEPROM write below must come after all of them.
         for (const item of displayItems.value) {
-            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item)); // NOSONAR: sequential by design
         }
 
         for (const timer of timers.value) {
-            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer)); // NOSONAR: sequential by design
         }
 
         for (const stat of statItems.value) {
-            await MSP.promise(
-                MSPCodes.MSP_SET_OSD_CONFIG,
-                encodeStatisticsPayload(stat, useConnectionStore().virtualMode, legacyOsd.virtualMode),
-            );
+            const payload = encodeStatisticsPayload(stat, useConnectionStore().virtualMode, legacyOsd.virtualMode);
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, payload); // NOSONAR: sequential by design
         }
 
         await beforePersist?.();

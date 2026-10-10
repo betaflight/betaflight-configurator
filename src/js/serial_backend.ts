@@ -270,7 +270,7 @@ export function initializeSerialBackend() {
     connectFromDeeplink();
 }
 
-async function sendConfigTracking() {
+function sendConfigTracking() {
     const fcStore = useFlightControllerStore();
     // It is set up before any connection.
     const tracking = getTracking();
@@ -402,7 +402,7 @@ function releaseKeptRebootLink() {
     if (serial.connected && !isConnected() && !useConnectionStore().connectingTo) {
         // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
         getConnectionState().markIntentionalDisconnect();
-        serial.disconnect();
+        void serial.disconnect();
     }
 }
 
@@ -505,7 +505,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
         getConnectionState().attemptStarted(automatic);
     }
 
-    serial.connect(
+    void serial.connect(
         deviceName,
         { baudRate: DeviceHandler.devicePicker.selectedBauds },
         selectedDevice === "virtual" ? onOpenVirtual : undefined,
@@ -648,7 +648,7 @@ function finishClose() {
         (document.getElementById("dialogResetToCustomDefaults") as HTMLDialogElement | null)?.close();
     }
 
-    serial.disconnect();
+    void serial.disconnect();
 
     if (useConnectionStore().virtualMode) {
         onClosed(true);
@@ -1019,14 +1019,14 @@ function processCustomDefaults() {
                     dialogStore.close();
 
                     setConnectionTimeout();
-                    checkReportProblems();
+                    void checkReportProblems();
                 },
             },
         );
 
         removeTimeout("connecting"); // kill connecting timer
     } else {
-        checkReportProblems();
+        void checkReportProblems();
     }
 }
 
@@ -1035,7 +1035,7 @@ function processBoardInfo() {
     gui_log(i18n.getMessage("boardInfoReceived", [fcStore.config.hardwareName, fcStore.config.boardVersion]));
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-        checkReportProblems();
+        void checkReportProblems();
     } else {
         processCustomDefaults();
     }
@@ -1078,7 +1078,7 @@ async function checkReportProblems() {
         dialogStore.open("ReportProblemsDialog", { problems }, { close: () => dialogStore.close() });
     }
 
-    processUid();
+    void processUid();
 }
 
 async function processBuildConfiguration() {
@@ -1138,7 +1138,7 @@ async function processUid() {
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", fcStore.config.deviceIdentifier));
 
     await processBuildConfiguration();
-    await sendConfigTracking();
+    sendConfigTracking();
 }
 
 async function processCraftName() {

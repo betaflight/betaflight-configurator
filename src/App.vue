@@ -1,7 +1,13 @@
 <template>
     <UApp :locale="uiLocale" :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
-            <div id="background" v-if="isMobileSidebarOpen" aria-hidden="true" @click="isRevealed = false"></div>
+            <div
+                id="background"
+                v-if="isMobileSidebarOpen"
+                aria-hidden="true"
+                @click="isRevealed = false"
+                @keydown.escape="isRevealed = false"
+            ></div>
             <div id="side_menu_swipe"></div>
             <div v-if="isLandingTab" class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
                 <div class="mobile-topbar__logo" :title="logoTooltip" aria-hidden="true"></div>

@@ -36,6 +36,13 @@ import { getLockManager } from "../js/lock_manager";
  */
 export type ConnectionTarget = string | false;
 
+function clearMspQueue(): Promise<void> {
+    // Dynamic import keeps the store free of a static msp import (msp.ts reaches
+    // this store through its own imports — a static import would cycle).
+    // Returned so callers can await the drain before starting the next handshake.
+    return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
+}
+
 export const useConnectionStore = defineStore("connection", () => {
     // The store owns the connection-target state (was GUI.connecting_to /
     // GUI.connected_to). connectLock delegates to the reactive LockManager (single
@@ -79,13 +86,6 @@ export const useConnectionStore = defineStore("connection", () => {
 
     function resumeLiveData(): void {
         liveDataPaused.value = false;
-    }
-
-    function clearMspQueue(): Promise<void> {
-        // Dynamic import keeps the store free of a static msp import (msp.ts reaches
-        // this store through its own imports — a static import would cycle).
-        // Returned so callers can await the drain before starting the next handshake.
-        return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
     }
 
     return {
