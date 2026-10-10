@@ -1733,7 +1733,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 681,
             positionable: true,
-            preview: "TRM R 10% ADJ",
+            preview: "R10.1A",
         },
         PSAS_TRIM_PITCH: {
             name: "PSAS TRIM PITCH",
@@ -1742,7 +1742,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 682,
             positionable: true,
-            preview: "TRM P 10% ADJ",
+            preview: "P10.1A",
         },
         PSAS_TRIM_YAW: {
             name: "PSAS TRIM YAW",
@@ -1751,7 +1751,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 683,
             positionable: true,
-            preview: "TRM Y 10% ADJ",
+            preview: "Y10.1A",
         },
     };
 
