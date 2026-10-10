@@ -68,16 +68,11 @@ export function useLiveSensorData() {
         );
     };
 
-    /**
-     * Stop the IMU, altitude, sonar and debug streams before the panel re-registers them.
-     * pitot_pull is not removed here, as before the move, so it keeps running until it is
-     * restarted or the panel unmounts.
-     */
+    /** Stop every sensor stream before the panel re-registers the ticked ones. */
     const stopPolling = () => {
-        removeInterval(PULLS.imu.name);
-        removeInterval(PULLS.altitude.name);
-        removeInterval(PULLS.sonar.name);
-        removeInterval(PULLS.debug.name);
+        for (const { name } of Object.values(PULLS)) {
+            removeInterval(name);
+        }
     };
 
     return { loadMotorConfig, loadAdvancedConfig, startPolling, stopPolling };

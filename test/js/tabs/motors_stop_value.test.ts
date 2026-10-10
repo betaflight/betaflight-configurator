@@ -145,6 +145,7 @@ vi.mock("@/js/utils/common", async (importOriginal) => ({
 import MotorsTab from "../../../src/components/tabs/MotorsTab.vue";
 import MSP from "../../../src/js/msp";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
+import { MspCancelledError } from "../../../src/js/msp/mspErrors";
 import UApp from "@nuxt/ui/components/App.vue";
 import { useFlightControllerStore } from "../../../src/stores/fc";
 import Features from "../../../src/js/Features";
@@ -205,6 +206,14 @@ function findButton(container: HTMLElement, text: string): HTMLButtonElement {
     const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.includes(text));
     expect(button).toBeTruthy();
     return button!;
+}
+
+/** The motor-testing enable switch, in the red notice box under motorsNotice. */
+function motorTestingSwitch(container: HTMLElement): HTMLButtonElement {
+    const notice = [...container.querySelectorAll("p")].find((el) => el.textContent === "motorsNotice");
+    const toggle = notice?.parentElement?.querySelector<HTMLButtonElement>('button[role="switch"]');
+    expect(toggle).toBeTruthy();
+    return toggle!;
 }
 
 function dialogCall(name: string) {
@@ -433,5 +442,33 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
 
         expect(stopAllMotors.mock.calls).toEqual([[1000], [1500]]);
+    });
+
+    it("logs a failed load and skips state init, instead of an unhandled rejection", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        port.load.mockRejectedValue(new Error("MSP timeout"));
+
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        expect(consoleError).toHaveBeenCalledWith("Failed to load motors data:", expect.any(Error));
+        expect(initializeDefaults).not.toHaveBeenCalled();
+        // The motor stop snapshot was taken before the ESC sensor port failed; testing must stay off.
+        expect(motorTestingSwitch(container).disabled).toBe(true);
+    });
+
+    it("enables motor testing once the whole load has succeeded", async () => {
+        const container = await mountReady({ enable3d: false, neutral: 1500 });
+
+        expect(motorTestingSwitch(container).disabled).toBe(false);
+    });
+
+    it("stays quiet when the load is cancelled by a tab switch or disconnect", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        port.load.mockRejectedValue(new MspCancelledError("cleared", undefined, "cleanup"));
+
+        await mountReady({ enable3d: false, neutral: 1500 });
+
+        expect(consoleError).not.toHaveBeenCalledWith("Failed to load motors data:", expect.anything());
+        expect(initializeDefaults).not.toHaveBeenCalled();
     });
 });

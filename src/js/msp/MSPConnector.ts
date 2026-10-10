@@ -54,6 +54,10 @@ class MSPConnectorImpl {
     /** Used for connect timeout only; must not toggle CONFIGURATOR.connectionValid (main UI connect button). */
     _mspApiVersionReceived = false;
 
+    // Stored so removeEventListener gets the same reference addEventListener registered
+    readonly boundHandleConnect = (e: Event) => this.handleConnect((e as CustomEvent).detail);
+    readonly boundHandleDisconnect = (e: Event) => this.handleDisconnect(e);
+
     _disconnectAfterMspTimeout() {
         void serial.disconnect((result: unknown) => {
             console.log("Disconnected", result);
@@ -113,8 +117,8 @@ class MSPConnectorImpl {
         serial.removeEventListener("receive", readSerialAdapter);
 
         // Calling in case event listeners were not removed
-        serial.removeEventListener("connect", (e: Event) => this.handleConnect((e as CustomEvent).detail));
-        serial.removeEventListener("disconnect", (e: Event) => this.handleDisconnect(e));
+        serial.removeEventListener("connect", this.boundHandleConnect);
+        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
 
         MSP.clearListeners();
         MSP.disconnect_cleanup();
@@ -136,11 +140,11 @@ class MSPConnectorImpl {
         this.onTimeoutCallback = onTimeoutCallback;
         this.onFailureCallback = onFailureCallback;
 
-        serial.removeEventListener("connect", (e: Event) => this.handleConnect((e as CustomEvent).detail));
-        serial.addEventListener("connect", (e: Event) => this.handleConnect((e as CustomEvent).detail), { once: true });
+        serial.removeEventListener("connect", this.boundHandleConnect);
+        serial.addEventListener("connect", this.boundHandleConnect, { once: true });
 
-        serial.removeEventListener("disconnect", (e: Event) => this.handleDisconnect(e));
-        serial.addEventListener("disconnect", (e: Event) => this.handleDisconnect(e), { once: true });
+        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
+        serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
         // serial.js types its optional callback as required; the connect event above reports the result.
         void serial.connect(this.port, { baudRate: this.baud }, undefined);
