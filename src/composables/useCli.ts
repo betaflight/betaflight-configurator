@@ -24,7 +24,6 @@ import { i18n } from "../js/localization";
 import BFClipboard from "../js/Clipboard";
 import { generateFilename } from "../js/utils/generate_filename";
 import BuildApi from "../js/BuildApi";
-import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
 import { serial } from "../js/serial";
@@ -37,6 +36,7 @@ import { highlightCliLine } from "../js/CliSyntaxHighlight";
 import { escapeHtml } from "../js/utils/common";
 import { addTimeout, removeTimeout } from "../js/timers";
 import { useAppInfoStore } from "../stores/appInfo";
+import { useConnectionStore } from "../stores/connection";
 
 const backspaceCode = 8;
 const lineFeedCode = 10;
@@ -609,8 +609,8 @@ export function useCli(): Cli {
 
     const checkForReboot = () => {
         if (cliBuffer === "Rebooting") {
-            CONFIGURATOR.cliActive = false;
-            CONFIGURATOR.cliValid = false;
+            useConnectionStore().cliActive = false;
+            useConnectionStore().cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
             reinitializeConnection();
         }
@@ -621,9 +621,9 @@ export function useCli(): Cli {
      * @returns true when autocomplete should start after the current read.
      */
     const validateCliEntry = (): boolean => {
-        if (!CONFIGURATOR.cliValid && cliEntrySawMarker) {
+        if (!useConnectionStore().cliValid && cliEntrySawMarker) {
             gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
-            CONFIGURATOR.cliValid = true;
+            useConnectionStore().cliValid = true;
             // begin output history with the prompt (last line of welcome message)
             // this is to match the content of the history with what the user sees on this tab
             outputHistory = CLI_PROMPT;
@@ -663,7 +663,7 @@ export function useCli(): Cli {
         outputSuppressed = suppressed;
 
         // a backspace has already taken its character back out of the history
-        if (CONFIGURATOR.cliValid && processCharacterInCliMode(byte, currentChar)) {
+        if (useConnectionStore().cliValid && processCharacterInCliMode(byte, currentChar)) {
             return;
         }
 
@@ -698,7 +698,7 @@ export function useCli(): Cli {
             const currentChar = String.fromCodePoint(byte);
             const isCRLF = byte === lineFeedCode || byte === carriageReturnCode;
 
-            if (!CONFIGURATOR.cliValid && (isCRLF || state.startProcessing)) {
+            if (!useConnectionStore().cliValid && (isCRLF || state.startProcessing)) {
                 startAutocompleteAfterRead = readCliEntryChar(currentChar) ?? startAutocompleteAfterRead;
                 continue;
             }
@@ -736,7 +736,7 @@ export function useCli(): Cli {
         outputSuppressed = false;
         state.startProcessing = false;
 
-        CONFIGURATOR.cliActive = true;
+        useConnectionStore().cliActive = true;
 
         // Wait for DOM to be ready
         await nextTick();
@@ -857,15 +857,16 @@ export function useCli(): Cli {
 
         // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
         // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
-        const rebooting = CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive;
+        const connectionStore = useConnectionStore();
+        const rebooting = connectionStore.connectionValid && connectionStore.cliValid && connectionStore.cliActive;
         if (rebooting) {
             send(getCliCommand("exit\r", cliBuffer), function () {
                 reinitializeConnection();
             });
         }
 
-        CONFIGURATOR.cliActive = false;
-        CONFIGURATOR.cliValid = false;
+        connectionStore.cliActive = false;
+        connectionStore.cliValid = false;
 
         CliAutoComplete.cleanup();
 

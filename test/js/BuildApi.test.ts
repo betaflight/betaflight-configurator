@@ -20,6 +20,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 const guiLog = vi.hoisted(() => vi.fn());
 vi.mock("../../src/js/gui_log", () => ({ gui_log: guiLog }));
@@ -29,7 +30,7 @@ vi.mock("../../src/js/localization", () => ({
 
 import BuildApi from "../../src/js/BuildApi";
 import type LoginApi from "../../src/js/LoginApi";
-import CONFIGURATOR from "../../src/js/data_storage";
+import { useAppInfoStore } from "../../src/stores/appInfo";
 
 const fetchMock = vi.fn();
 
@@ -47,6 +48,7 @@ function loginApi(token: string | null | Error): LoginApi {
 }
 
 beforeEach(() => {
+    setActivePinia(createPinia());
     vi.stubGlobal("fetch", fetchMock);
     fetchMock.mockReset();
     guiLog.mockReset();
@@ -63,7 +65,7 @@ describe("request headers", () => {
 
         await new BuildApi(loginApi("tok")).loadCommits("4.5");
 
-        expect(sentHeaders()).toEqual({ "X-CFG-VER": CONFIGURATOR.version, Authorization: "Bearer tok" });
+        expect(sentHeaders()).toEqual({ "X-CFG-VER": useAppInfoStore().version, Authorization: "Bearer tok" });
     });
 
     it.each([
@@ -74,7 +76,7 @@ describe("request headers", () => {
 
         await new BuildApi(loginApi(token)).loadCommits("4.5");
 
-        expect(sentHeaders()).toEqual({ "X-CFG-VER": CONFIGURATOR.version });
+        expect(sentHeaders()).toEqual({ "X-CFG-VER": useAppInfoStore().version });
     });
 
     it("works without a LoginApi", async () => {
@@ -82,7 +84,7 @@ describe("request headers", () => {
 
         await new BuildApi(null).loadCommits("4.5");
 
-        expect(sentHeaders()).toEqual({ "X-CFG-VER": CONFIGURATOR.version });
+        expect(sentHeaders()).toEqual({ "X-CFG-VER": useAppInfoStore().version });
     });
 });
 

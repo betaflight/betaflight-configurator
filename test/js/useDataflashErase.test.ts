@@ -1,30 +1,50 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { effectScope, nextTick } from "vue";
+import { effectScope, nextTick, type EffectScope } from "vue";
 import { useDataflashErase, DATAFLASH_ERASE_TIMEOUT_MS } from "../../src/composables/useDataflashErase";
 import { useConnectionStore } from "../../src/stores/connection";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { MspTimeoutError } from "../../src/js/msp/mspErrors";
 
-let fcStore;
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 describe("useDataflashErase", () => {
-    let scope;
-    let erase;
-    let connectionStore;
-    let eraseAcknowledgements;
-    let callbacks;
+    let scope: EffectScope;
+    let erase: ReturnType<typeof useDataflashErase>;
+    let connectionStore: ReturnType<typeof useConnectionStore>;
+    let eraseAcknowledgements: (() => void)[];
+    let callbacks: { onComplete: Mock; onError: Mock; onFinish: Mock };
 
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        CONFIGURATOR.connectionValid = true;
         connectionStore = useConnectionStore();
+        connectionStore.connectionValid = true;
         callbacks = {
             onComplete: vi.fn(),
             onError: vi.fn(),
@@ -32,9 +52,9 @@ describe("useDataflashErase", () => {
         };
         eraseAcknowledgements = [];
 
-        vi.spyOn(MSP, "send_message").mockImplementation((code, data, callbackSent, callbackMsp) => {
-            if (code === MSPCodes.MSP_DATAFLASH_ERASE) {
-                eraseAcknowledgements.push(callbackMsp);
+        vi.spyOn(MSP, "send_message").mockImplementation((code, _data, _callbackSent, callbackMsp) => {
+            if (code === MSPCodes.MSP_DATAFLASH_ERASE && callbackMsp) {
+                eraseAcknowledgements.push(callbackMsp as () => void);
             }
             return true;
         });
@@ -48,14 +68,14 @@ describe("useDataflashErase", () => {
 
     afterEach(() => {
         scope.stop();
-        CONFIGURATOR.connectionValid = false;
+        connectionStore.connectionValid = false;
         vi.runAllTimers();
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
     it("completes and resumes live data when dataflash reports ready", async () => {
-        MSP.promise.mockResolvedValue({});
+        vi.mocked(MSP.promise).mockResolvedValue(undefined);
         fcStore.dataflash.ready = true;
 
         await erase.start({ clearQueue: false });
@@ -70,13 +90,17 @@ describe("useDataflashErase", () => {
     });
 
     it("uses a watchdog-enabled final probe after the bounded erase window", async () => {
-        MSP.promise.mockRejectedValue(new MspTimeoutError("timed out", MSPCodes.MSP_DATAFLASH_SUMMARY));
+        vi.mocked(MSP.promise).mockRejectedValue(new MspTimeoutError("timed out", MSPCodes.MSP_DATAFLASH_SUMMARY));
 
         await erase.start({ clearQueue: false });
         eraseAcknowledgements[0]();
         await vi.advanceTimersByTimeAsync(DATAFLASH_ERASE_TIMEOUT_MS + 500);
 
-        expect(MSP.promise.mock.calls.at(-1)).toEqual([MSPCodes.MSP_DATAFLASH_SUMMARY, false, { notifyTimeout: true }]);
+        expect(vi.mocked(MSP.promise).mock.calls.at(-1)).toEqual([
+            MSPCodes.MSP_DATAFLASH_SUMMARY,
+            false,
+            { notifyTimeout: true },
+        ]);
         expect(erase.isErasing.value).toBe(false);
         expect(connectionStore.liveDataPaused).toBe(false);
         expect(callbacks.onError).toHaveBeenCalledOnce();
@@ -85,7 +109,7 @@ describe("useDataflashErase", () => {
 
     it("cleans up immediately when the physical connection closes", async () => {
         await erase.start({ clearQueue: false });
-        CONFIGURATOR.connectionValid = false;
+        connectionStore.connectionValid = false;
         await nextTick();
 
         expect(erase.isErasing.value).toBe(false);
@@ -95,15 +119,15 @@ describe("useDataflashErase", () => {
     });
 
     it("ignores a cancelled poll that settles after a new erase starts", async () => {
-        let resolveCancelledPoll;
-        MSP.promise
+        let resolveCancelledPoll: (value: undefined) => void = () => {};
+        vi.mocked(MSP.promise)
             .mockImplementationOnce(
                 () =>
                     new Promise((resolve) => {
                         resolveCancelledPoll = resolve;
                     }),
             )
-            .mockResolvedValueOnce({});
+            .mockResolvedValueOnce(undefined);
 
         await erase.start({ clearQueue: false });
         eraseAcknowledgements[0]();
@@ -113,7 +137,7 @@ describe("useDataflashErase", () => {
         await erase.start({ clearQueue: false });
         fcStore.dataflash.ready = true;
 
-        resolveCancelledPoll({});
+        resolveCancelledPoll(undefined);
         await vi.runAllTicks();
 
         expect(erase.isErasing.value).toBe(true);

@@ -25,9 +25,9 @@ import MSP from "../msp";
 import { useFlightControllerStore } from "../../stores/fc";
 import { serial } from "../serial";
 import MSPCodes from "./MSPCodes";
-import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
 import { addTimeout, removeTimeout } from "../timers";
+import { useConnectionStore } from "../../stores/connection";
 
 /**
  * This seems to be mainly used in firmware flasher parts.
@@ -51,7 +51,7 @@ class MSPConnectorImpl {
     onTimeoutCallback: ConnectorCallback | undefined = undefined;
     onFailureCallback: ConnectorCallback | undefined;
     onDisconnectCallback: ConnectorCallback | undefined = undefined;
-    /** Used for connect timeout only; must not toggle CONFIGURATOR.connectionValid (main UI connect button). */
+    /** Used for connect timeout only; must not toggle useConnectionStore().connectionValid (main UI connect button). */
     _mspApiVersionReceived = false;
 
     // Stored so removeEventListener gets the same reference addEventListener registered
@@ -124,7 +124,7 @@ class MSPConnectorImpl {
         MSP.disconnect_cleanup();
 
         // Flashing path does not run serial_backend disconnectHandler; clear stale UI state if anything set it.
-        CONFIGURATOR.connectionValid = false;
+        useConnectionStore().connectionValid = false;
     }
 
     connect(

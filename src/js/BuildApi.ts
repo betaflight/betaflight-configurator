@@ -22,8 +22,8 @@
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
-import CONFIGURATOR from "./data_storage";
 import LoginApi from "./LoginApi";
+import { useAppInfoStore } from "../stores/appInfo";
 import type { BuildOptionsResponse, TargetDetail } from "../components/tabs/firmware-flasher/flasherState";
 import type { FirmwareRelease, TargetDescriptor } from "../composables/useBoardSelection";
 import type { BuildResponse, BuildStatusResponse, CloudBuildRequest } from "../composables/useCloudBuild";
@@ -82,7 +82,7 @@ export default class BuildApi {
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
         });
@@ -100,7 +100,7 @@ export default class BuildApi {
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
         });
@@ -118,7 +118,7 @@ export default class BuildApi {
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
         });
@@ -149,7 +149,7 @@ export default class BuildApi {
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
         });
@@ -201,7 +201,7 @@ export default class BuildApi {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
             body: data,
@@ -223,7 +223,7 @@ export default class BuildApi {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
+                "X-CFG-VER": useAppInfoStore().version,
                 ...authHeaders,
             },
             body: JSON.stringify(request),

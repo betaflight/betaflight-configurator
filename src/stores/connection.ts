@@ -21,7 +21,6 @@
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import CONFIGURATOR from "../js/data_storage";
 import DeviceHandler from "../js/device_handler";
 import { getLockManager } from "../js/lock_manager";
 
@@ -52,26 +51,18 @@ export const useConnectionStore = defineStore("connection", () => {
         set: (val) => (getLockManager().locked = val),
     });
 
-    // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.ts)
-    const connectionValid = computed<boolean>({
-        get: () => CONFIGURATOR.connectionValid,
-        set: (val) => (CONFIGURATOR.connectionValid = val),
-    });
+    // True once the MSP handshake has finished, the CLI-only fallback has opened, or the
+    // virtual flight controller is connected.
+    const connectionValid = ref(false);
 
-    const virtualMode = computed<boolean>({
-        get: () => CONFIGURATOR.virtualMode,
-        set: (val) => (CONFIGURATOR.virtualMode = val),
-    });
+    // Connected to the virtual flight controller instead of a device.
+    const virtualMode = ref(false);
+    // The MSP API version the virtual flight controller reports, picked in the device picker.
+    const virtualApiVersion = ref("0.0.1");
 
-    const cliActive = computed<boolean>({
-        get: () => CONFIGURATOR.cliActive,
-        set: (val) => (CONFIGURATOR.cliActive = val),
-    });
-
-    const cliValid = computed<boolean>({
-        get: () => CONFIGURATOR.cliValid,
-        set: (val) => (CONFIGURATOR.cliValid = val),
-    });
+    // The CLI tab has put the flight controller in CLI mode, and the CLI has answered.
+    const cliActive = ref(false);
+    const cliValid = ref(false);
 
     const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
 
@@ -104,6 +95,7 @@ export const useConnectionStore = defineStore("connection", () => {
         flashingInProgress,
         connectionValid,
         virtualMode,
+        virtualApiVersion,
         cliActive,
         cliValid,
         clearMspQueue,

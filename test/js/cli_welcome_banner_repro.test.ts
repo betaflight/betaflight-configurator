@@ -1,10 +1,31 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
+import { useConnectionStore } from "../../src/stores/connection";
 
 // Reproduction harness for betaflight/betaflight-configurator#5445: "outputHistory can contain a
 // leaked/duplicated fragment of the CLI welcome banner when the firmware's serial output is split
@@ -60,16 +81,16 @@ function countOccurrences(haystack: string, needle: string) {
 describe("useCli welcome-banner split-read handling (#5445)", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        CONFIGURATOR.cliActive = true;
-        CONFIGURATOR.cliValid = false;
+        useConnectionStore().cliActive = true;
+        useConnectionStore().cliValid = false;
         CliAutoComplete.builder.state = "reset";
         useAppInfoStore().operatingSystem = "Linux";
     });
 
     afterEach(() => {
         vi.restoreAllMocks();
-        CONFIGURATOR.cliActive = false;
-        CONFIGURATOR.cliValid = false;
+        useConnectionStore().cliActive = false;
+        useConnectionStore().cliValid = false;
         CliAutoComplete.builder.state = "reset";
     });
 
@@ -111,7 +132,7 @@ describe("useCli welcome-banner split-read handling (#5445)", () => {
         const cli = makeCli();
 
         feed(cli, chunks);
-        expect(CONFIGURATOR.cliValid).toBe(true);
+        expect(useConnectionStore().cliValid).toBe(true);
 
         feed(cli, NORMAL_OUTPUT_CHUNKS);
 

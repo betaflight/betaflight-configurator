@@ -24,8 +24,8 @@ import MSP from "../../src/js/msp";
 import { serial } from "../../src/js/serial";
 import MspHelper from "../../src/js/msp/MSPHelper";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { MspCancelledError, MspTimeoutError, MspCrcError } from "../../src/js/msp/mspErrors";
+import { useConnectionStore } from "../../src/stores/connection";
 
 const EEPROM_WRITE_CODE = MSPCodes.MSP_EEPROM_WRITE;
 
@@ -63,7 +63,7 @@ describe("MSP promise semantics", () => {
         vi.useFakeTimers();
         serialSendSpy = vi.spyOn(serial, "send").mockImplementation(async () => ({ bytesSent: 0 }));
         setProtocolConnected(true);
-        CONFIGURATOR.virtualMode = false;
+        useConnectionStore().virtualMode = false;
 
         MSP.callbacks = [];
         MSP.parked.clear();
@@ -201,7 +201,7 @@ describe("MSP promise semantics", () => {
         });
 
         it("resolves undefined without touching serial.send when virtualMode is true", async () => {
-            CONFIGURATOR.virtualMode = true;
+            useConnectionStore().virtualMode = true;
 
             await expect(MSP.promise(EEPROM_WRITE_CODE)).resolves.toBeUndefined();
             expect(serialSendSpy).not.toHaveBeenCalled();

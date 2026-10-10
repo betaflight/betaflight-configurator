@@ -25,7 +25,7 @@
  * Tracks the current lifecycle PHASE plus the operational flags serial_backend reads
  * (linkOpen, intentionalDisconnect, the attempt's origin). Read by the serial, reboot and
  * flashing paths — serial_backend, device_handler, useMspCliSession, useFirmwareFlashing,
- * webstm32; the UI reads CONFIGURATOR.connectionValid, not this. State lives in Vue
+ * webstm32; the UI reads the connection store's connectionValid, not this. State lives in Vue
  * `ref`s, so a `computed` over a getter would track it if a consumer ever needs that. Leaf
  * module: at runtime it imports only `vue` (no Pinia, no serial_backend; the device_handler
  * import is type-only), so the serial/port layer can import it without a cycle or an

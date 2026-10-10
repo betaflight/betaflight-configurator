@@ -24,7 +24,7 @@ import semver from "semver";
 import { i18n } from "../js/localization";
 import { getTracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
-import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
+import { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../js/msp";
 import MSPCodes, { MSP2TextType } from "../js/msp/MSPCodes";
@@ -212,7 +212,7 @@ export function usePower() {
             connectionStore.pauseLiveData();
             pauseInterval("power_data_pull_slow");
 
-            if (CONFIGURATOR.virtualMode) {
+            if (connectionStore.virtualMode) {
                 fcStore.config.batteryProfile = profileIndex;
                 activeBatteryProfile.value = profileIndex;
                 await loadBatteryProfileName();
@@ -230,7 +230,7 @@ export function usePower() {
         } catch (error) {
             // Best-effort: resync UI with actual FC state in case the
             // profile switch partially succeeded on the FC side
-            if (CONFIGURATOR.virtualMode) {
+            if (connectionStore.virtualMode) {
                 fcStore.config.batteryProfile = previousProfile;
                 activeBatteryProfile.value = previousProfile;
                 batteryProfileName.value = previousProfileName;
@@ -262,7 +262,13 @@ export function usePower() {
     // Reload when that happens — but never during our own change (isLoading), an in-flight
     // load, virtual mode, or while the form has unsaved edits. Mirrors the PID-tuning fix (issue #5230).
     const syncBatteryProfileFromFc = async () => {
-        if (CONFIGURATOR.virtualMode || !hasBatteryProfiles.value || isLoading.value || syncingFromFc || dirty.value) {
+        if (
+            useConnectionStore().virtualMode ||
+            !hasBatteryProfiles.value ||
+            isLoading.value ||
+            syncingFromFc ||
+            dirty.value
+        ) {
             return;
         }
 

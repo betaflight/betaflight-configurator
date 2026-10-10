@@ -1,11 +1,33 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { usePower } from "../../src/composables/usePower";
-import CONFIGURATOR, { API_VERSION_1_48 } from "../../src/js/data_storage";
+import { API_VERSION_1_48 } from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import VirtualFC from "../../src/js/VirtualFC";
 import MSP from "../../src/js/msp";
 import MSPCodes, { MSP2TextType } from "../../src/js/msp/MSPCodes";
+import { useConnectionStore } from "../../src/stores/connection";
 
 let fcStore: ReturnType<typeof useFlightControllerStore>;
 
@@ -14,8 +36,8 @@ describe("usePower", () => {
         setActivePinia(createPinia());
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        CONFIGURATOR.virtualMode = false;
-        CONFIGURATOR.virtualApiVersion = "0.0.1";
+        useConnectionStore().virtualMode = false;
+        useConnectionStore().virtualApiVersion = "0.0.1";
     });
 
     afterEach(() => {
@@ -23,8 +45,8 @@ describe("usePower", () => {
     });
 
     it("switches battery profiles in virtual mode", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        useConnectionStore().virtualMode = true;
+        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const power = usePower();
@@ -39,8 +61,8 @@ describe("usePower", () => {
     });
 
     it("requests the battery profile name with the MSP2TEXT battery-profile type byte", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        useConnectionStore().virtualMode = true;
+        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         // A wrong MSP2TextType member reaches the wire as the wrong type byte and the FC
@@ -56,8 +78,8 @@ describe("usePower", () => {
     });
 
     it("restores virtual battery profile state without MSP resync when profile switching fails", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        useConnectionStore().virtualMode = true;
+        useConnectionStore().virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const profileNameError = new Error("profile name failed");

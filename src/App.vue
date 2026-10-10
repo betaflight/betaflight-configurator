@@ -10,7 +10,7 @@
             <div id="tab-content-container" :class="{ 'has-mobile-topbar': isLandingTab }">
                 <div class="tab_container" :class="{ reveal: isMobileSidebarOpen }">
                     <betaflight-logo
-                        :configurator-version="CONFIGURATOR.getDisplayVersion()"
+                        :configurator-version="appInfo.displayVersion"
                         :firmware-version="fcStore.config.flightControllerVersion"
                         :firmware-id="fcStore.config.flightControllerIdentifier"
                         :hardware-id="fcStore.config.hardwareName"
@@ -40,7 +40,7 @@
                 :cycle-time="fcStore.config.cycleTime"
                 :cpu-load="fcStore.config.cpuload"
                 :cpu-temperature="fcStore.config.cpuTemp"
-                :configurator-version="CONFIGURATOR.getDisplayVersion()"
+                :configurator-version="appInfo.displayVersion"
                 :firmware-version="fcStore.config.flightControllerVersion"
                 :firmware-target="fcStore.config.hardwareName"
             ></status-bar>
@@ -62,11 +62,11 @@ import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import PortUsageModule from "./js/port_usage.js";
-import CONFIGURATORModule from "./js/data_storage";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";
 import { useFlightControllerStore } from "./stores/fc";
 import { useConnectionStore } from "./stores/connection";
+import { useAppInfoStore } from "./stores/appInfo";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
@@ -103,9 +103,9 @@ function currentVm() {
     return syncedVm.value;
 }
 
-const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
+const appInfo = useAppInfoStore();
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
@@ -177,7 +177,7 @@ watch(isLandingTab, (isLanding) => {
 });
 
 const logoTooltip = computed(() => {
-    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
+    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${appInfo.displayVersion}`];
     const cfg = fcStore.config ?? {};
     if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
         lines.push(

@@ -1,11 +1,32 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
+import { useConnectionStore } from "../../src/stores/connection";
 
 // The firmware banner is transport-fragmented. Entry validation must therefore retain its state
 // across read() callbacks or a split inside "CLI" prevents validation and drops later output.
@@ -40,8 +61,8 @@ function getHistory(cli: Cli) {
 describe("useCli CLI-entry validation across serial read boundaries", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        CONFIGURATOR.cliActive = true;
-        CONFIGURATOR.cliValid = false;
+        useConnectionStore().cliActive = true;
+        useConnectionStore().cliValid = false;
         CliAutoComplete.builder.state = "reset";
         useAppInfoStore().operatingSystem = "Linux";
     });
@@ -50,8 +71,8 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
         CliAutoComplete.cleanup();
         CliAutoComplete.configEnabled = false;
         vi.restoreAllMocks();
-        CONFIGURATOR.cliActive = false;
-        CONFIGURATOR.cliValid = false;
+        useConnectionStore().cliActive = false;
+        useConnectionStore().cliValid = false;
     });
 
     it("preserves same-read normal output before autocomplete starts", () => {
@@ -73,7 +94,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
 
         const history = getHistory(cli);
 
-        expect(CONFIGURATOR.cliValid).toBe(true);
+        expect(useConnectionStore().cliValid).toBe(true);
         expect(history).toContain("Betaflight / STM32F7X2");
     });
 
@@ -85,7 +106,7 @@ describe("useCli CLI-entry validation across serial read boundaries", () => {
 
         const history = getHistory(cli);
 
-        expect(CONFIGURATOR.cliValid).toBe(true);
+        expect(useConnectionStore().cliValid).toBe(true);
         expect(history).toContain("Betaflight / STM32F7X2");
     });
 });

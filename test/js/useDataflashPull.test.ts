@@ -23,7 +23,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { setActivePinia } from "pinia";
 import { useDataflashPull, type DataflashPull } from "../../src/composables/useDataflashPull";
 import { useConnectionStore } from "../../src/stores/connection";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
@@ -60,7 +59,7 @@ describe("useDataflashPull", () => {
         setActivePinia(pinia);
         fcStore = useFlightControllerStore();
         fcStore.resetState();
-        CONFIGURATOR.connectionValid = true;
+        useConnectionStore().connectionValid = true;
         connectionStore = useConnectionStore();
         connectionStore.resumeLiveData();
         connectionStore.connectedTo = "/dev/ttyACM0";
@@ -86,7 +85,7 @@ describe("useDataflashPull", () => {
     });
 
     afterEach(() => {
-        CONFIGURATOR.connectionValid = false;
+        useConnectionStore().connectionValid = false;
         connectionStore.connectedTo = false;
         vi.restoreAllMocks();
     });
@@ -269,10 +268,10 @@ describe("useDataflashPull", () => {
             expect(dataflash.available.value).toBe(false);
 
             fcStore.dataflash.usedSize = 100;
-            CONFIGURATOR.connectionValid = false;
+            useConnectionStore().connectionValid = false;
             expect(dataflash.available.value).toBe(false);
 
-            CONFIGURATOR.connectionValid = true;
+            useConnectionStore().connectionValid = true;
             connectionStore.connectedTo = false;
             expect(dataflash.available.value).toBe(false);
         });

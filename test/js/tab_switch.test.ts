@@ -38,9 +38,9 @@ vi.mock("../../src/components/sidebar/sidebar_items.js", () => ({ sidebarItems: 
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 
-import CONFIGURATOR from "../../src/js/data_storage";
 import { selectDefaultTabWhenConnected } from "../../src/js/tab_switch";
 import { DEFAULT_ALLOWED_TABS, useNavigationStore } from "../../src/stores/navigation";
+import { useConnectionStore } from "../../src/stores/connection";
 
 function openedTab() {
     return mountVueTab.mock.calls.at(-1)?.[0];
@@ -50,7 +50,7 @@ describe("selectDefaultTabWhenConnected", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
         useNavigationStore().allowedTabs = [...DEFAULT_ALLOWED_TABS];
-        CONFIGURATOR.connectionValid = true;
+        useConnectionStore().connectionValid = true;
         config.rememberLastTab = true;
         config.lastTab = undefined;
         mountVueTab.mockClear();

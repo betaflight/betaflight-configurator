@@ -1,8 +1,29 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import VirtualFC from "../../src/js/VirtualFC";
 import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
-import CONFIGURATOR, {
+import {
     API_VERSION_1_44,
     API_VERSION_1_45,
     API_VERSION_1_46,
@@ -11,6 +32,7 @@ import CONFIGURATOR, {
 } from "../../src/js/data_storage";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import Features from "../../src/js/Features";
+import { useConnectionStore } from "../../src/stores/connection";
 
 const VIRTUAL_API_VERSIONS = [API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48];
 
@@ -44,7 +66,7 @@ describe("Virtual FC build options", () => {
     it.each(VIRTUAL_API_VERSIONS)(
         "keeps the features it enables available after option filtering on API %s",
         (apiVersion) => {
-            CONFIGURATOR.virtualApiVersion = apiVersion;
+            useConnectionStore().virtualApiVersion = apiVersion;
             VirtualFC.setVirtualConfig();
 
             const expectedStates = {

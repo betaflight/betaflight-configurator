@@ -23,13 +23,13 @@ import { useFlightControllerStore } from "@/stores/fc";
 import MSP, { type MspResponse } from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import CONFIGURATOR from "@/js/data_storage";
 import {
     applySimplifiedPids,
     applySimplifiedGyroFilters,
     applySimplifiedDtermFilters,
     validateVirtualSimplifiedTuning,
 } from "@/js/simplifiedTuning";
+import { useConnectionStore } from "@/stores/connection";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -138,7 +138,7 @@ export function calculateNewPids(s: PidSliderPositions): Promise<MspResponse | u
     // In virtual mode there is no FC to crunch the sliders, so compute the
     // resulting PID/feedforward/D-max values client-side (port of the firmware's
     // simplified_tuning.c) and resolve immediately.
-    if (CONFIGURATOR.virtualMode) {
+    if (useConnectionStore().virtualMode) {
         applySimplifiedPids();
         return Promise.resolve(undefined);
     }
@@ -164,7 +164,7 @@ export function calculateNewGyroFilters(multiplier: number): Promise<MspResponse
     fcStore.tuningSliders.slider_gyro_filter = 1;
     fcStore.tuningSliders.slider_gyro_filter_multiplier = Math.round(multiplier * 100);
 
-    if (CONFIGURATOR.virtualMode) {
+    if (useConnectionStore().virtualMode) {
         applySimplifiedGyroFilters();
         return Promise.resolve(undefined);
     }
@@ -190,7 +190,7 @@ export function calculateNewDTermFilters(multiplier: number): Promise<MspRespons
     fcStore.tuningSliders.slider_dterm_filter = 1;
     fcStore.tuningSliders.slider_dterm_filter_multiplier = Math.round(multiplier * 100);
 
-    if (CONFIGURATOR.virtualMode) {
+    if (useConnectionStore().virtualMode) {
         applySimplifiedDtermFilters();
         return Promise.resolve(undefined);
     }
@@ -225,7 +225,7 @@ export function validateTuningSliders(): Promise<void> {
 
     // In virtual mode, compare the stored PID/filter values against what the
     // sliders would produce client-side instead of asking the FC.
-    if (CONFIGURATOR.virtualMode) {
+    if (useConnectionStore().virtualMode) {
         validateVirtualSimplifiedTuning();
         patchInvalidSliders();
         return Promise.resolve();
