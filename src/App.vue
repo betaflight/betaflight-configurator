@@ -1,13 +1,7 @@
 <template>
     <UApp :locale="uiLocale" :tooltip="{ delayDuration: 100 }" portal="#main-wrapper">
         <div class="app-wrapper">
-            <div
-                id="background"
-                v-if="isMobileSidebarOpen"
-                aria-hidden="true"
-                @click="isRevealed = false"
-                @keydown.escape="isRevealed = false"
-            ></div>
+            <div id="background" v-if="isMobileSidebarOpen" aria-hidden="true" @click="isRevealed = false"></div>
             <div id="side_menu_swipe"></div>
             <div v-if="isLandingTab" class="mobile-topbar" :class="{ 'mobile-topbar--hidden': topbarHidden }">
                 <div class="mobile-topbar__logo" :title="logoTooltip" aria-hidden="true"></div>
@@ -63,7 +57,7 @@
 <script setup lang="ts">
 import { isAndroid } from "@/js/utils/checkCompatibility.js";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
-import { useMediaQuery } from "@vueuse/core";
+import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
@@ -128,6 +122,14 @@ const isCompactBreakpoint = useMediaQuery(
 );
 const isMobileSidebarOpen = computed(() => isCompactBreakpoint.value && isRevealed.value);
 const isSidebarExpanded = computed(() => !sidebarNarrow.value || isRevealed.value);
+
+// Escape closes the open drawer, the keyboard equivalent of a click on the backdrop. The backdrop
+// itself cannot take focus, so the listener is on the window; onKeyStroke removes it on unmount.
+onKeyStroke("Escape", () => {
+    if (isMobileSidebarOpen.value) {
+        isRevealed.value = false;
+    }
+});
 
 // Auto-close the drawer when leaving the mobile drawer breakpoint.
 watch(isCompactBreakpoint, (compact) => {

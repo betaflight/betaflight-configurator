@@ -266,9 +266,7 @@ export class ConnectionState {
 let _instance: ConnectionState | null = null;
 
 export function getConnectionState(): ConnectionState {
-    if (!_instance) {
-        _instance = new ConnectionState();
-    }
+    _instance ??= new ConnectionState();
     return _instance;
 }
 
