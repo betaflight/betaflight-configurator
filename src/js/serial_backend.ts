@@ -44,7 +44,7 @@ import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial";
-import { getConnectionState, State as ConnPhase } from "./connection_state.js";
+import { getConnectionState, State as ConnPhase } from "./connection_state";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";

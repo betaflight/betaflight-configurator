@@ -1,13 +1,35 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
- * connection_state.js — connection-status holder.
+ * connection_state.ts — connection-status holder.
  *
  * Tracks the current lifecycle PHASE plus the operational flags serial_backend reads
  * (linkOpen, intentionalDisconnect, the attempt's origin). Read by the serial, reboot and
  * flashing paths — serial_backend, device_handler, useMspCliSession, useFirmwareFlashing,
  * webstm32; the UI reads CONFIGURATOR.connectionValid, not this. State lives in Vue
  * `ref`s, so a `computed` over a getter would track it if a consumer ever needs that. Leaf
- * module: it imports only `vue` (no Pinia, no serial_backend), so the serial/port layer can
- * import it without a cycle or an active-pinia requirement.
+ * module: at runtime it imports only `vue` (no Pinia, no serial_backend; the device_handler
+ * import is type-only), so the serial/port layer can import it without a cycle or an
+ * active-pinia requirement.
  *
  * There is no transition table and no reconnect token. A reconnect uses the port from the last
  * selection. selectActivePort() reads isReconnecting and keeps that selection. It does not
@@ -16,6 +38,7 @@
  * loop then uses the new selection.
  */
 import { ref } from "vue";
+import type { DeviceDescriptor } from "./device_handler";
 
 /** Lifecycle phases (read-model values). */
 export const State = Object.freeze({
@@ -28,7 +51,16 @@ export const State = Object.freeze({
     RECONNECTING: "RECONNECTING",
     FLASHING: "FLASHING",
     FAILED: "FAILED",
-});
+} as const);
+
+export type Phase = (typeof State)[keyof typeof State];
+
+/** The open reboot reconnect window; see ConnectionState.requestReboot. */
+interface RebootWindow {
+    startedAt: number;
+    durationMs: number;
+    target: DeviceDescriptor | null;
+}
 
 /**
  * Phases during which a connect/reconnect attempt is in flight. selectActivePort()
@@ -37,8 +69,8 @@ export const State = Object.freeze({
  * on each retry, and dropping the guard there would let a transient device-list
  * refresh hijack the selection mid-handshake.
  */
-const RECONNECTING_STATES = Object.freeze(
-    new Set([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
+const RECONNECTING_STATES: ReadonlySet<Phase> = Object.freeze(
+    new Set<Phase>([State.CONNECTING, State.HANDSHAKING, State.REBOOTING, State.RECONNECTING]),
 );
 
 /**
@@ -47,48 +79,46 @@ const RECONNECTING_STATES = Object.freeze(
  * any other in-flight phase (CONNECTING/HANDSHAKING) is an unexpected drop and settles
  * to IDLE.
  */
-const REBOOT_OWNED_STATES = Object.freeze(new Set([State.REBOOTING, State.RECONNECTING]));
+const REBOOT_OWNED_STATES: ReadonlySet<Phase> = Object.freeze(new Set<Phase>([State.REBOOTING, State.RECONNECTING]));
 
-/** @param {string} phase @returns {boolean} the reboot owns this phase */
-function rebootOwns(phase) {
+/** The reboot owns this phase. */
+function rebootOwns(phase: Phase): boolean {
     return REBOOT_OWNED_STATES.has(phase);
 }
 
 export class ConnectionState {
-    constructor() {
-        this._state = ref(State.IDLE);
-        // The next close is user-initiated (so the disconnect handler doesn't run
-        // the unexpected-disconnect teardown on top of the intentional one).
-        this._intentionalDisconnect = ref(false);
-        // A transport link is currently open (was serial_backend's `isConnected`).
-        this._linkOpen = ref(false);
-        // The reboot reconnect window: { startedAt, durationMs } while a reboot is in
-        // progress, null otherwise. Single source of truth for how long the reconnect
-        // may take — the retry loop and the reboot dialog read the same snapshot, taken
-        // once per reboot.
-        this._rebootWindow = ref(null);
-        // The attempt in flight was started by the app, not the user.
-        this._automaticAttempt = ref(false);
-    }
+    private readonly _state = ref<Phase>(State.IDLE);
+    // The next close is user-initiated (so the disconnect handler doesn't run
+    // the unexpected-disconnect teardown on top of the intentional one).
+    private readonly _intentionalDisconnect = ref(false);
+    // A transport link is currently open (was serial_backend's `isConnected`).
+    private readonly _linkOpen = ref(false);
+    // The reboot reconnect window: { startedAt, durationMs, target } while a reboot is in
+    // progress, null otherwise. Single source of truth for how long the reconnect
+    // may take — the retry loop and the reboot dialog read the same snapshot, taken
+    // once per reboot.
+    private readonly _rebootWindow = ref<RebootWindow | null>(null);
+    // The attempt in flight was started by the app, not the user.
+    private readonly _automaticAttempt = ref(false);
 
-    get state() {
+    get state(): Phase {
         return this._state.value;
     }
 
-    get isFlashing() {
+    get isFlashing(): boolean {
         return this._state.value === State.FLASHING;
     }
 
     /** A connect/reconnect attempt is in flight — keep the current port selected, no fallback. */
-    get isReconnecting() {
+    get isReconnecting(): boolean {
         return RECONNECTING_STATES.has(this._state.value);
     }
 
     /**
      * A connect attempt begins. A reboot reconnect keeps its own phase.
-     * @param {boolean} [automatic=false] - the app started this attempt, not the user
+     * @param automatic - the app started this attempt, not the user
      */
-    attemptStarted(automatic = false) {
+    attemptStarted(automatic = false): void {
         this._automaticAttempt.value = automatic;
         if (!rebootOwns(this._state.value)) {
             this.setPhase(State.CONNECTING);
@@ -100,12 +130,12 @@ export class ConnectionState {
      * opened — a handshake rejected after the open is terminal. An app-initiated attempt
      * that never opened is retried by the next device event, so it stays quiet.
      */
-    get failureIsUserFacing() {
+    get failureIsUserFacing(): boolean {
         return !this._automaticAttempt.value || this._linkOpen.value;
     }
 
     /** Set the lifecycle phase. */
-    setPhase(phase) {
+    setPhase(phase: Phase): void {
         this._state.value = phase;
     }
 
@@ -116,11 +146,11 @@ export class ConnectionState {
      * a no-op if a reboot/reconnect is already in flight, but the window is always
      * refreshed — a second save inside the window restarts the clock, matching the
      * retry loop's own restart.
-     * @param {number} [windowMs=10000] - how long the reconnect may take
-     * @param {?object} [target=null] - which device is coming back (device_handler's
-     *   describeDevice output). Held opaquely: this module knows the window, not devices.
+     * @param windowMs - how long the reconnect may take
+     * @param target - which device is coming back (device_handler's describeDevice output).
+     *   Held opaquely: this module knows the window, not devices.
      */
-    requestReboot(windowMs = 10000, target = null) {
+    requestReboot(windowMs = 10000, target: DeviceDescriptor | null = null): void {
         this._rebootWindow.value = { startedAt: Date.now(), durationMs: windowMs, target };
         if (this.isReconnecting) {
             return;
@@ -129,38 +159,38 @@ export class ConnectionState {
     }
 
     /** A reboot reconnect window is open (from requestReboot until concludeReboot). */
-    get isRebootWindowOpen() {
+    get isRebootWindowOpen(): boolean {
         return this._rebootWindow.value !== null;
     }
 
     /** Duration of the open reboot window (0 if none) — snapshotted at requestReboot. */
-    get rebootWindowMs() {
+    get rebootWindowMs(): number {
         return this._rebootWindow.value?.durationMs ?? 0;
     }
 
     /** The device the open window is waiting for (null if none, or if it was not identified). */
-    get rebootTarget() {
+    get rebootTarget(): DeviceDescriptor | null {
         return this._rebootWindow.value?.target ?? null;
     }
 
     /** Start timestamp of the open reboot window (0 if none). */
-    get rebootWindowStartedAt() {
+    get rebootWindowStartedAt(): number {
         return this._rebootWindow.value?.startedAt ?? 0;
     }
 
     /** The open reboot window has run past its duration. False when no window is open. */
-    get rebootWindowExpired() {
+    get rebootWindowExpired(): boolean {
         const window = this._rebootWindow.value;
         return window !== null && Date.now() - window.startedAt > window.durationMs;
     }
 
     /** Enter the reconnect-wait phase (from a reboot, or a CLI save-and-reconnect). */
-    reconnectStarted() {
+    reconnectStarted(): void {
         this.setPhase(State.RECONNECTING);
     }
 
     /** Settle a reboot/reconnect window: reconnected -> CONNECTED, else -> IDLE. */
-    concludeReboot(reconnected) {
+    concludeReboot(reconnected: boolean): void {
         this._rebootWindow.value = null;
         this.setPhase(reconnected ? State.CONNECTED : State.IDLE);
     }
@@ -171,7 +201,7 @@ export class ConnectionState {
      * RECONNECTING are left untouched (their conclude settles them). Any other in-flight
      * phase — including an unexpected drop mid-CONNECTING/HANDSHAKING — settles to IDLE.
      */
-    notifyClosed() {
+    notifyClosed(): void {
         if (this._state.value === State.IDLE || rebootOwns(this._state.value)) {
             return;
         }
@@ -181,12 +211,12 @@ export class ConnectionState {
     // ---- Flashing ----------------------------------------------------------
 
     /** Stand the reconnect down and hand the raw port to the flasher (enter FLASHING). */
-    beginDeviceReplacement() {
+    beginDeviceReplacement(): void {
         this.setPhase(State.FLASHING);
     }
 
     /** Leave FLASHING back to IDLE. */
-    endFlashing() {
+    endFlashing(): void {
         if (this._state.value === State.FLASHING) {
             this.setPhase(State.IDLE);
         }
@@ -194,36 +224,36 @@ export class ConnectionState {
 
     // ---- Operational flags -------------------------------------------------
 
-    markIntentionalDisconnect() {
+    markIntentionalDisconnect(): void {
         this._intentionalDisconnect.value = true;
     }
 
-    clearIntentionalDisconnect() {
+    clearIntentionalDisconnect(): void {
         this._intentionalDisconnect.value = false;
     }
 
     /** Non-destructive peek: is the next close expected to be intentional? */
-    get intentionalDisconnect() {
+    get intentionalDisconnect(): boolean {
         return this._intentionalDisconnect.value;
     }
 
     /** Read-and-reset: was the close that just happened intentional? */
-    consumeIntentionalDisconnect() {
+    consumeIntentionalDisconnect(): boolean {
         const wasIntentional = this._intentionalDisconnect.value;
         this._intentionalDisconnect.value = false;
         return wasIntentional;
     }
 
-    get linkOpen() {
+    get linkOpen(): boolean {
         return this._linkOpen.value;
     }
 
-    setLinkOpen(open) {
+    setLinkOpen(open: boolean): void {
         this._linkOpen.value = Boolean(open);
     }
 
     /** Hard shutdown for page unload (pagehide): collapse to IDLE, ungated. */
-    shutdown() {
+    shutdown(): void {
         this._linkOpen.value = false;
         this._rebootWindow.value = null;
         if (this._state.value !== State.IDLE) {
@@ -233,9 +263,9 @@ export class ConnectionState {
 }
 
 // Lazily-constructed singleton (no module-init-order hazard).
-let _instance = null;
+let _instance: ConnectionState | null = null;
 
-export function getConnectionState() {
+export function getConnectionState(): ConnectionState {
     if (!_instance) {
         _instance = new ConnectionState();
     }
@@ -243,6 +273,6 @@ export function getConnectionState() {
 }
 
 /** Test helper: drop the singleton so each test starts clean. */
-export function __resetConnectionStateForTests() {
+export function __resetConnectionStateForTests(): void {
     _instance = null;
 }
