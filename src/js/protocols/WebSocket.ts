@@ -99,7 +99,7 @@ class Websocket extends EventTarget {
         };
     }
 
-    async getDevices(): Promise<WebsocketDevice[]> {
+    async getDevices(): Promise<WebsocketDevice[]> /* NOSONAR: implements the async SerialProtocol interface */ {
         return [];
     }
 
@@ -108,7 +108,7 @@ class Websocket extends EventTarget {
         return new Uint8Array(buffer);
     }
 
-    async connect(path: string): Promise<void> {
+    async connect(path: string): Promise<void> /* NOSONAR: implements the async SerialProtocol interface */ {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
@@ -183,7 +183,7 @@ class Websocket extends EventTarget {
         };
     }
 
-    async disconnect(): Promise<void> {
+    async disconnect(): Promise<void> /* NOSONAR: implements the async SerialProtocol interface */ {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
@@ -197,7 +197,7 @@ class Websocket extends EventTarget {
         }
     }
 
-    async send(
+    async /* NOSONAR: implements the async SerialProtocol interface */ send(
         data: WebsocketPayload,
         cb?: (result: { error: unknown; bytesSent: number }) => void,
     ): Promise<WebsocketSendResult> {
