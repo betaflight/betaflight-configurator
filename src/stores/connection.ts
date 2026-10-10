@@ -75,6 +75,10 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
 
+    // MSP CRC errors this session. msp.ts counts through MSP.packet_error, which delegates
+    // here so the status bar re-renders on every bad packet.
+    const packetErrors = ref(0);
+
     // Live data refresh control
     const liveDataPaused = ref(false);
 
@@ -103,6 +107,7 @@ export const useConnectionStore = defineStore("connection", () => {
         cliValid,
         clearMspQueue,
         selectedDevice,
+        packetErrors,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,
