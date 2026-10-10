@@ -231,10 +231,13 @@ function analyzeLog(data: Uint8Array, log: LogBoundary, targetPhaseMarginDeg: nu
     };
 }
 
-function computeSampleRate(sysConfig: SysConfig) {
+export function computeSampleRate(sysConfig: SysConfig) {
     const looptimeUs = sysConfig.looptime || 125;
     const pidDenom = sysConfig.pid_process_denom || 1;
-    const bbRate = sysConfig.frameIntervalPDenom || 1;
+    // "P interval:0" is the firmware's I-frame-only state: blackbox.c disables P
+    // frames when the requested rate is below the 32ms I-frame cadence, so the I
+    // interval is the divider between the frames that were actually logged.
+    const bbRate = sysConfig.frameIntervalPDenom || sysConfig.frameIntervalI || 1;
     return 1e6 / (looptimeUs * pidDenom * bbRate);
 }
 
