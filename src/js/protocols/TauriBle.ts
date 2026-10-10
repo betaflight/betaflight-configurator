@@ -77,8 +77,6 @@ class TauriBle extends EventTarget {
     _unlisten: UnlistenFn[];
     logHead: string;
     bt11_crc_corruption_logged: boolean;
-    /** Never assigned here: the check that reads it is shared with WebBluetooth, where it is not set either. */
-    message_checksum?: number;
 
     constructor() {
         super();
@@ -104,12 +102,9 @@ class TauriBle extends EventTarget {
         this.handleDisconnect = this.handleDisconnect.bind(this);
     }
 
-    /**
-     * Counts received bytes. Called directly with the chunk, and registered as the
-     * "receive" listener, whose CustomEvent carries the same chunk in `detail`.
-     */
-    handleReceiveBytes(info: Event | { detail: Uint8Array }): void {
-        this.bytesReceived += (info as { detail: Uint8Array }).detail.byteLength;
+    /** Counts received bytes. Registered as the "receive" listener, whose CustomEvent carries the chunk. */
+    handleReceiveBytes(info: Event): void {
+        this.bytesReceived += (info as CustomEvent<Uint8Array>).detail.byteLength;
     }
 
     handleDisconnect(): void {
@@ -133,8 +128,8 @@ class TauriBle extends EventTarget {
         return this._connectedDevice;
     }
 
-    isBT11CorruptionPattern(expectedChecksum: number): boolean {
-        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+    isBT11CorruptionPattern(expectedChecksum: number, computedChecksum?: number): boolean {
+        if (expectedChecksum !== 0xff || computedChecksum === 0xff) {
             return false;
         }
 
@@ -149,8 +144,8 @@ class TauriBle extends EventTarget {
         return this.deviceDescription?.susceptibleToCrcCorruption ?? false;
     }
 
-    shouldBypassCrc(expectedChecksum: number): boolean {
-        if (this.isBT11CorruptionPattern(expectedChecksum)) {
+    shouldBypassCrc(expectedChecksum: number, computedChecksum?: number): boolean {
+        if (this.isBT11CorruptionPattern(expectedChecksum, computedChecksum)) {
             if (!this.bt11_crc_corruption_logged) {
                 console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
                 this.bt11_crc_corruption_logged = true;
@@ -201,7 +196,6 @@ class TauriBle extends EventTarget {
 
             const dataUnlisten = await listen<number[]>("ble-data", (event) => {
                 const bytes = new Uint8Array(event.payload);
-                this.handleReceiveBytes({ detail: bytes });
                 this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
             });
             const closedUnlisten = await listen("ble-disconnected", () => {

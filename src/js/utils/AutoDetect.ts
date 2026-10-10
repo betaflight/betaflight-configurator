@@ -53,6 +53,8 @@ class AutoDetect {
     cloudBuildKey?: string;
     private _boardOptions?: BoardTarget[];
     private _onBoardDetected?: BoardDetectedCallback;
+    /** The teardown of the current attempt, so the failure paths can't run it twice. */
+    private _cleanup: Promise<void> | null = null;
 
     // Store bound event handlers to make removal more reliable
     readonly boundHandleConnect = this.handleConnect.bind(this);
@@ -114,7 +116,8 @@ class AutoDetect {
             return;
         }
 
-        let result: boolean | void = false;
+        this._cleanup = null;
+        let failed = false;
         try {
             // Register listeners just-in-time before connection attempt
             this._onBoardDetected = onBoardDetected;
@@ -123,12 +126,17 @@ class AutoDetect {
 
             console.log("Connecting to serial port", port);
             gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
-            result = await serial.connect(port, { baudRate: DeviceHandler.devicePicker.selectedBauds || 115200 });
+            const result = await serial.connect(port, {
+                baudRate: DeviceHandler.devicePicker.selectedBauds || 115200,
+            });
+            // Only an explicit false is a failure here. WebSocket resolves with no value and
+            // reports the outcome through its connect event, which onConnect handles.
+            failed = result === false;
         } catch (error) {
             console.error("Failed to connect:", error);
+            failed = true;
         } finally {
-            // Only run cleanup when connection attempt failed
-            if (!result) {
+            if (failed) {
                 void this.cleanup();
             }
         }
@@ -230,10 +238,17 @@ class AutoDetect {
             void this.requestBoardInformation();
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
+            void this.cleanup();
         }
     }
 
-    async cleanup() {
+    cleanup(): Promise<void> {
+        // A failed connect can be reported both by its return value and by the connect event.
+        this._cleanup ??= this.teardown();
+        return this._cleanup;
+    }
+
+    private async teardown() {
         // Disconnect first, so the once-registered disconnect handler can fire
         try {
             await serial.disconnect();

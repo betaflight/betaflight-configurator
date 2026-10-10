@@ -20,6 +20,7 @@ vi.mock("../../src/js/serial", () => ({
 
 import STM32 from "../../src/js/protocols/webstm32";
 import { serial } from "../../src/js/serial";
+import DeviceHandler from "../../src/js/device_handler";
 
 const hex = { data: [{ address: 0x08000000, bytes: 4, data: [1, 2, 3, 4] }], bytes_total: 4 };
 
@@ -37,7 +38,7 @@ function erase(eraseChip: boolean, extended: boolean) {
     stm32.hex = hex;
     stm32.page_size = 2048;
     stm32.useExtendedErase = extended;
-    stm32.mspOptions = { no_reboot: false, reboot_baud: false, erase_chip: eraseChip };
+    stm32.mspOptions = { no_reboot: false, reboot_baud: 115200, erase_chip: eraseChip };
     upload(4);
     return { messages: [...messages], sent };
 }
@@ -64,6 +65,21 @@ describe("webstm32 honours the flashing options", () => {
 
         expect(mspConnect).toHaveBeenCalledTimes(1);
         expect(serial.connect).not.toHaveBeenCalled();
+    });
+
+    it("reboots at the baud rate picked for MSP when no reboot rate is given", () => {
+        const mspConnect = vi.spyOn(STM32.mspConnector, "connect").mockImplementation(() => {});
+        DeviceHandler.devicePicker.selectedBauds = 57600;
+
+        STM32.connect("serial_1", 115200, hex as never, { no_reboot: false, erase_chip: false });
+
+        expect(mspConnect).toHaveBeenCalledWith(
+            "serial_1",
+            57600,
+            expect.any(Function),
+            expect.any(Function),
+            expect.any(Function),
+        );
     });
 
     it("erases the whole chip when asked, and only the image's pages otherwise", () => {

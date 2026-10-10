@@ -122,8 +122,8 @@ class WebBluetooth extends EventTarget {
         };
     }
 
-    isBT11CorruptionPattern(expectedChecksum) {
-        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+    isBT11CorruptionPattern(expectedChecksum, computedChecksum) {
+        if (expectedChecksum !== 0xff || computedChecksum === 0xff) {
             return false;
         }
 
@@ -139,10 +139,10 @@ class WebBluetooth extends EventTarget {
         return deviceDescription?.susceptibleToCrcCorruption ?? false;
     }
 
-    shouldBypassCrc(expectedChecksum) {
+    shouldBypassCrc(expectedChecksum, computedChecksum) {
         // Special handling for specific BT-11/CC2541 checksum corruption
         // Only apply workaround for known problematic devices
-        const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum);
+        const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum, computedChecksum);
         if (isBT11Device) {
             if (!this.bt11_crc_corruption_logged) {
                 console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);

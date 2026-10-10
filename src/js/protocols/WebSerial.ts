@@ -104,15 +104,10 @@ async function* streamAsyncIterable(
             }
         }
     } finally {
-        // Only release the lock if we still have the reader and it hasn't been released
+        // A reader has no `locked` flag (that lives on the stream), so release unconditionally.
+        // The spec makes releaseLock() a no-op on a reader that was already released.
         try {
-            // Always attempt once; spec allows releasing even if the stream
-            // is already closed.  `locked` is the boolean we can trust.
-            // NOTE: `locked` is a property of the ReadableStream, not of its reader, so this
-            // reads undefined and never releases. Kept as found; this change is a conversion.
-            if ((reader as ReadableStreamDefaultReader<Uint8Array> & { locked?: boolean })?.locked) {
-                reader.releaseLock();
-            }
+            reader.releaseLock();
         } catch (error) {
             console.warn(`${logHead} Error releasing reader lock:`, error);
         }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import MSP from "../../src/js/msp";
 import { serial } from "../../src/js/serial";
 
@@ -119,6 +119,21 @@ describe("MSP", () => {
             } finally {
                 serial._protocol = savedProtocol;
                 MSP.clearListeners();
+            }
+        });
+
+        it("hands the protocol both the received and the computed checksum", () => {
+            const savedProtocol = serial._protocol;
+            const shouldBypassCrc = vi.fn(() => false);
+            try {
+                serial._protocol = { shouldBypassCrc };
+                primeMessage();
+
+                MSP._dispatch_message(0xff);
+
+                expect(shouldBypassCrc).toHaveBeenCalledWith(0xff, 0x12);
+            } finally {
+                serial._protocol = savedProtocol;
             }
         });
     });
