@@ -206,6 +206,13 @@ class Websocket extends EventTarget {
         let bytesSent = 0;
         if (this.ws) {
             try {
+                // A closing or closed socket discards sent data without throwing, and
+                // disconnect() leaves this.ws set, so check before claiming the bytes.
+                if (this.ws.readyState === WebSocket.CLOSING || this.ws.readyState === WebSocket.CLOSED) {
+                    cb?.({ error: null, bytesSent: 0 });
+                    return { bytesSent: 0 };
+                }
+
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
                 bytesSent = data.byteLength;

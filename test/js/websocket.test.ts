@@ -30,6 +30,8 @@ class FakeWebSocket {
     // WebSocket.OPEN would read these too.
     static readonly CONNECTING = 0;
     static readonly OPEN = 1;
+    static readonly CLOSING = 2;
+    static readonly CLOSED = 3;
 
     url: string;
     protocols: string[];
@@ -198,5 +200,25 @@ describe("Websocket protocol — superseded socket guard (manual/SITL reconnect)
         const socket = new Websocket();
 
         expect(await socket.send(new Uint8Array([1, 2, 3, 4]))).toEqual({ bytesSent: 0 });
+    });
+
+    it.each([
+        ["CLOSING", FakeWebSocket.CLOSING],
+        ["CLOSED", FakeWebSocket.CLOSED],
+    ])("a send on a %s socket is not written and reports no bytes", async (_state, readyState) => {
+        vi.spyOn(console, "log").mockImplementation(() => {});
+        const socket = new Websocket();
+        await socket.connect("ws://localhost:5761");
+        const ws = currentSocket(socket);
+        open(ws);
+        (ws as unknown as FakeWebSocket).readyState = readyState;
+        const cb = vi.fn();
+
+        const result = await socket.send(new Uint8Array([1, 2, 3, 4]), cb);
+
+        expect(ws.send).not.toHaveBeenCalled();
+        expect(result).toEqual({ bytesSent: 0 });
+        expect(cb).toHaveBeenCalledWith({ error: null, bytesSent: 0 });
+        expect(socket.bytesSent).toBe(0);
     });
 });
