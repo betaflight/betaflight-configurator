@@ -10,30 +10,33 @@ import { createPinia, setActivePinia } from "pinia";
 
 // vi.mock factories are hoisted above all module-level declarations, so any
 // shared mutable objects they reference must be created with vi.hoisted().
-const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspHelperInstance } = vi.hoisted(() => {
+const {
+    timers,
+    connectionStore,
+    serial,
+    serialHandlers,
+    unmountVueTab,
+    switchTab,
+    selectDefaultTabWhenConnected,
+    dialogStore,
+    mspHelperInstance,
+} = vi.hoisted(() => {
     const serialHandlers: Record<string, (event: { detail: unknown }) => void> = {};
     return {
-        // GUI default object — only the members serial_backend touches.
-        GUI: {
-            connect_lock: false,
-            connected_to: false as string | false,
-            connecting_to: false as string | false,
-            configuration_loaded: false,
-            active_tab: "landing",
-            tab_switch_in_progress: false,
-            allowedTabs: [] as string[],
-            defaultAllowedTabsWhenDisconnected: ["landing", "firmware_flasher"],
-            defaultAllowedFCTabsWhenConnected: [],
-            defaultAllowedTabs: [],
-            defaultCloudBuildTabOptions: [],
-            pendingTab: null as string | null,
-            timeout_kill_all: vi.fn(),
-            interval_kill_all: vi.fn(),
-            timeout_add: vi.fn(),
-            timeout_remove: vi.fn(),
-            tab_switch_cleanup: vi.fn((cb) => cb && cb()),
-            showCliPanel: vi.fn(),
-            selectDefaultTabWhenConnected: vi.fn(),
+        // The timer registry: serial_backend's watchdogs never fire on their own here.
+        timers: {
+            addTimeout: vi.fn(),
+            removeTimeout: vi.fn(),
+            killAllTimeouts: vi.fn(),
+            killAllIntervals: vi.fn(),
+        },
+        // One shared object, so what serial_backend writes is what the test reads back.
+        connectionStore: {
+            liveDataPaused: false,
+            connectLock: false,
+            connectedTo: false as string | false,
+            connectingTo: false as string | false,
+            flashingInProgress: false,
         },
         // serial: capture the connect/disconnect handlers registered by beginConnect.
         serialHandlers,
@@ -49,6 +52,7 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
         },
         unmountVueTab: vi.fn(),
         switchTab: vi.fn(),
+        selectDefaultTabWhenConnected: vi.fn(),
         dialogStore: {
             activeDialog: null as { type: string } | null,
             open: vi.fn(),
@@ -65,13 +69,23 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
     };
 });
 
-vi.mock("../../src/js/gui.js", () => ({
+vi.mock("../../src/js/timers", () => ({
     __esModule: true,
-    default: GUI,
-    TABS: {},
+    ...timers,
 }));
 
-vi.mock("../../src/js/serial.js", () => ({
+vi.mock("../../src/js/tab_adapters", () => ({
+    __esModule: true,
+    TABS: {},
+    tabSwitchCleanup: vi.fn((cb) => cb && cb()),
+}));
+
+vi.mock("../../src/js/cli_panel", () => ({
+    __esModule: true,
+    showCliPanel: vi.fn(),
+}));
+
+vi.mock("../../src/js/serial", () => ({
     __esModule: true,
     serial,
 }));
@@ -136,6 +150,7 @@ vi.mock("../../src/js/vue_tab_mounter", () => ({
 vi.mock("../../src/js/tab_switch", () => ({
     __esModule: true,
     switchTab,
+    selectDefaultTabWhenConnected,
 }));
 
 vi.mock("../../src/stores/dialog", () => ({
@@ -145,7 +160,7 @@ vi.mock("../../src/stores/dialog", () => ({
 
 vi.mock("../../src/stores/connection", () => ({
     __esModule: true,
-    useConnectionStore: () => ({ liveDataPaused: false }),
+    useConnectionStore: () => connectionStore,
 }));
 
 vi.mock("../../src/js/data_storage", () => ({
@@ -210,6 +225,7 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { EventBus } from "../../src/components/eventBus";
 import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
+import { useNavigationStore } from "../../src/stores/navigation";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -222,12 +238,15 @@ function resetMocks() {
     // whether or not its describe block installs a Pinia of its own.
     setActivePinia(createPinia());
     Object.keys(serialHandlers).forEach((k) => delete serialHandlers[k]);
-    GUI.connect_lock = false;
-    GUI.connected_to = false;
-    GUI.connecting_to = false;
-    GUI.pendingTab = null;
-    GUI.active_tab = "landing";
-    GUI.allowedTabs = [];
+    connectionStore.liveDataPaused = false;
+    connectionStore.connectLock = false;
+    connectionStore.connectedTo = false;
+    connectionStore.connectingTo = false;
+    connectionStore.flashingInProgress = false;
+    const navigationStore = useNavigationStore();
+    navigationStore.pendingTab = null;
+    navigationStore.activeTab = "landing";
+    navigationStore.allowedTabs = [];
     serial.connected = false;
     dialogStore.activeDialog = null;
     // Restore the port picker (the reboot test mutates these).
@@ -281,7 +300,7 @@ describe("serial_backend connectDisconnect — attempt already in flight", () =>
         connectDisconnect();
 
         expect(serial.connect).toHaveBeenCalledTimes(1);
-        expect(GUI.connecting_to).toBe("/dev/ttyACM0");
+        expect(connectionStore.connectingTo).toBe("/dev/ttyACM0");
 
         connectDisconnect();
 
@@ -290,7 +309,7 @@ describe("serial_backend connectDisconnect — attempt already in flight", () =>
 
     it("connects again once the attempt has settled", () => {
         connectDisconnect();
-        GUI.connecting_to = false;
+        connectionStore.connectingTo = false;
 
         connectDisconnect();
 
@@ -316,7 +335,7 @@ describe("serial_backend connectDisconnect — manual target", () => {
 
         expect(serial.connect).toHaveBeenCalledTimes(1);
         expect(serial.connect.mock.calls[0][0]).toBe("tcp://192.168.4.1:5761");
-        expect(GUI.connecting_to).toBe("tcp://192.168.4.1:5761");
+        expect(connectionStore.connectingTo).toBe("tcp://192.168.4.1:5761");
     });
 });
 
@@ -354,12 +373,12 @@ describe("serial_backend connect deeplink", () => {
         // The transport is opened on the deeplink address, not the picker's device path.
         expect(serial.connect).toHaveBeenCalledTimes(1);
         expect(serial.connect.mock.calls[0][0]).toBe(DEEPLINK_TARGET);
-        expect(GUI.connecting_to).toBe(DEEPLINK_TARGET);
+        expect(connectionStore.connectingTo).toBe(DEEPLINK_TARGET);
         // Single-use: the parameter must not linger to reconnect on refresh.
         expect(window.location.search).toBe("");
 
         // Device enumeration is asynchronous; let it settle, then deliver the auto-select event it
-        // raises when it finds a serial port. The in-flight deeplink connect (GUI.connecting_to set)
+        // raises when it finds a serial port. The in-flight deeplink connect (connectionStore.connectingTo set)
         // must make that listener stand down instead of stealing the connection.
         await Promise.resolve();
         const autoSelect = vi
@@ -390,19 +409,19 @@ describe("serial_backend disconnect convergence", () => {
 
         // Pre-teardown baseline. Simulate leaving a connected tab so teardown takes the
         // blank-and-replace path (unmount old tab, switch to landing).
-        GUI.active_tab = "configuration";
+        useNavigationStore().activeTab = "configuration";
         switchTab.mockClear();
         unmountVueTab.mockClear();
-        GUI.connect_lock = true; // simulate an in-progress operation lock
-        GUI.connected_to = "/dev/ttyACM0";
+        connectionStore.connectLock = true; // simulate an in-progress operation lock
+        connectionStore.connectedTo = "/dev/ttyACM0";
 
         // Fire the protocol "disconnect" event -> disconnectHandler -> onClosed(true).
         serialHandlers.disconnect({ detail: true });
 
         expect(switchTab).toHaveBeenCalledWith("landing", { mode: "disconnected" });
         expect(unmountVueTab).toHaveBeenCalledTimes(1);
-        expect(GUI.connect_lock).toBe(false);
-        expect(GUI.connected_to).toBe(false);
+        expect(connectionStore.connectLock).toBe(false);
+        expect(connectionStore.connectedTo).toBe(false);
     });
 
     it("repeated disconnects while already on landing do NOT blank the content (no stuck black screen)", () => {
@@ -411,7 +430,7 @@ describe("serial_backend disconnect convergence", () => {
         // unmount here previously left a blank content area that switchTab() would not
         // remount (it no-ops on the same tab).
         establishConnection();
-        GUI.active_tab = "landing";
+        useNavigationStore().activeTab = "landing";
         unmountVueTab.mockClear();
 
         serialHandlers.disconnect({ detail: true });
@@ -444,14 +463,14 @@ describe("serial_backend disconnect convergence", () => {
 
     it("clears the dead connection's handshake watchdogs on an UNEXPECTED disconnect", () => {
         establishConnection();
-        GUI.timeout_remove.mockClear();
+        timers.removeTimeout.mockClear();
 
         serialHandlers.disconnect({ detail: true });
 
-        // GUI.timeout_add does not de-duplicate names, so a stale watchdog left armed
+        // addTimeout does not de-duplicate names, so a stale watchdog left armed
         // here would later fire into a healthy successor connection.
-        expect(GUI.timeout_remove).toHaveBeenCalledWith("connecting");
-        expect(GUI.timeout_remove).toHaveBeenCalledWith("connectAttempt");
+        expect(timers.removeTimeout).toHaveBeenCalledWith("connecting");
+        expect(timers.removeTimeout).toHaveBeenCalledWith("connectAttempt");
     });
 
     it("UNEXPECTED disconnect does NOT change the arming state", () => {
@@ -570,14 +589,14 @@ describe("serial_backend connect-failure dialog", () => {
 
         expect(infoDialogCount()).toBe(0);
         // Torn down, so the next event can attempt again and the UI is not stuck mid-connect.
-        expect(GUI.connecting_to).toBe(false);
+        expect(connectionStore.connectingTo).toBe(false);
         expect(DeviceHandler.devicePickerDisabled).toBe(false);
 
         serial.connect.mockClear();
         connectDisconnect({ automatic: true });
         expect(serial.connect).toHaveBeenCalled();
         serialHandlers.connect({ detail: true });
-        expect(GUI.connected_to).toBe("/dev/ttyACM0");
+        expect(connectionStore.connectedTo).toBe("/dev/ttyACM0");
         expect(infoDialogCount()).toBe(0);
     });
 
@@ -627,7 +646,7 @@ describe("serial_backend connect-failure dialog", () => {
         serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
 
         expect(infoDialogCount()).toBe(0);
-        expect(GUI.connecting_to).toBe(false);
+        expect(connectionStore.connectingTo).toBe(false);
     });
 
     it("makes no automatic attempt at all with Auto-Connect OFF", () => {
@@ -784,7 +803,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
     // disconnect handler so module-private state does not leak into later tests.
     it("removing a DIFFERENT device does NOT disconnect the active connection", () => {
         establishConnection();
-        GUI.connected_to = "serial_1"; // device B is the active connection
+        connectionStore.connectedTo = "serial_1"; // device B is the active connection
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -800,7 +819,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("removing the CONNECTED device DOES disconnect", () => {
         establishConnection();
-        GUI.connected_to = "serial_1";
+        connectionStore.connectedTo = "serial_1";
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -816,7 +835,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("a null/empty removal detail never triggers a disconnect", () => {
         establishConnection();
-        GUI.connected_to = "serial_1";
+        connectionStore.connectedTo = "serial_1";
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -833,7 +852,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("an empty removal path does not match connected_to === false", () => {
         establishConnection();
-        GUI.connected_to = false; // guard against the pre-fix empty-path bug
+        connectionStore.connectedTo = false; // guard against the pre-fix empty-path bug
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 

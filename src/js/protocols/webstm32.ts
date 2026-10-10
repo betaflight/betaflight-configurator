@@ -27,7 +27,6 @@
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
 import MSPConnectorImpl from "../msp/MSPConnector";
-import GUI, { TABS as GUI_TABS } from "../gui";
 import { i18n } from "../localization";
 import MSP from "../msp";
 import { useFlightControllerStore } from "../../stores/fc";
@@ -46,6 +45,9 @@ import DeviceHandler from "../device_handler";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { MspBuffer } from "../msp/mspBytes";
+import { TABS as TAB_ADAPTERS } from "../tab_adapters";
+import { addInterval, removeInterval } from "../timers";
+import { useConnectionStore } from "../../stores/connection";
 
 /** One contiguous block from the Intel HEX parser (`workers/hex_parser.ts`). */
 interface HexBlock {
@@ -85,8 +87,8 @@ interface FirmwareFlasherTabApi {
     FLASH_MESSAGE_TYPES: Record<FlashMessageType, string>;
 }
 
-// gui.js types every TABS entry as Record<string, unknown>; the tab registers the shape above.
-const TABS = GUI_TABS as unknown as { firmware_flasher: FirmwareFlasherTabApi };
+// TABS types every entry as a generic TabAdapter; the tab registers the shape above.
+const TABS = TAB_ADAPTERS as unknown as { firmware_flasher: FirmwareFlasherTabApi };
 
 function readSerialAdapter(event: Event): void {
     // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
@@ -178,7 +180,7 @@ class STM32Protocol {
      * @param {boolean} resetRebootMode - Whether to reset the reboot mode
      */
     handleError(resetRebootMode = true): void {
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
         // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
@@ -192,7 +194,7 @@ class STM32Protocol {
         console.log(`${this.logHead} Connected to serial port`, connectionResult);
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
-            GUI.connect_lock = true;
+            useConnectionStore().connectLock = true;
             // The flasher now owns the raw port — stand the MSP reconnect down and
             // enter FLASHING (hard-blocks connect/reboot until the flash completes).
             getConnectionState().beginDeviceReplacement();
@@ -237,7 +239,7 @@ class STM32Protocol {
         // original user gesture from the Flash button click.
         console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
         gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
 
         const device = await DeviceHandler.dfuProtocol.requestPermission();
         if (device) {
@@ -296,7 +298,7 @@ class STM32Protocol {
     }
 
     onAbort(): void {
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
         getConnectionState().endFlashing();
         this.rebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
@@ -396,12 +398,11 @@ class STM32Protocol {
 
         if (this.mspOptions.no_reboot) {
             this.prepareSerialPort();
-            // serial.js's JSDoc does not mark the callback optional.
-            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
+            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" });
         } else {
             this.rebootMode = 0; // FIRMWARE
 
-            GUI.connect_lock = true;
+            useConnectionStore().connectLock = true;
             TABS.firmware_flasher.flashingMessage(
                 i18n.getMessage("stm32RebootingToBootloader"),
                 TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
@@ -434,7 +435,7 @@ class STM32Protocol {
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);
 
-        GUI.interval_add(
+        addInterval(
             "STM32_timeout",
             () => {
                 if (this.upload_process_alive) {
@@ -449,7 +450,7 @@ class STM32Protocol {
                     );
 
                     // protocol got stuck, clear timer and disconnect
-                    GUI.interval_remove("STM32_timeout");
+                    removeInterval("STM32_timeout");
 
                     // exit
                     this.upload_procedure(99);
@@ -735,12 +736,12 @@ class STM32Protocol {
                 );
 
                 let sendCounter = 0;
-                GUI.interval_add(
+                addInterval(
                     "stm32_initialize_mcu",
                     () => {
                         this.send([0x7f], 1, (reply) => {
                             if (reply[0] === 0x7f || reply[0] === this.status.ACK || reply[0] === this.status.NACK) {
-                                GUI.interval_remove("stm32_initialize_mcu");
+                                removeInterval("stm32_initialize_mcu");
                                 console.log(`${this.logHead} Serial interface initialized on the MCU side`);
 
                                 // proceed to next step
@@ -751,7 +752,7 @@ class STM32Protocol {
                                     TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
                                 );
 
-                                GUI.interval_remove("stm32_initialize_mcu");
+                                removeInterval("stm32_initialize_mcu");
 
                                 // disconnect
                                 this.upload_procedure(99);
@@ -767,8 +768,8 @@ class STM32Protocol {
                                 TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
                             );
 
-                            GUI.interval_remove("stm32_initialize_mcu");
-                            GUI.interval_remove("STM32_timeout");
+                            removeInterval("stm32_initialize_mcu");
+                            removeInterval("STM32_timeout");
 
                             // exit
                             this.upload_procedure(99);
@@ -1132,7 +1133,7 @@ class STM32Protocol {
             }
             case 99: {
                 // disconnect
-                GUI.interval_remove("STM32_timeout"); // stop STM32 timeout timer (everything is finished now)
+                removeInterval("STM32_timeout"); // stop STM32 timeout timer (everything is finished now)
 
                 // close connection
                 if (serial.connectionId) {
@@ -1149,7 +1150,7 @@ class STM32Protocol {
         PortUsage.reset();
 
         // unlocking connect button
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
         // Flash complete — leave FLASHING so normal connect/reboot resume.
         getConnectionState().endFlashing();
 

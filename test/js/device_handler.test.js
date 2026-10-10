@@ -37,7 +37,7 @@ const { serial, dfuProtocol, isExpertModeEnabled, CapacitorDfuTransportMock } = 
     };
 });
 
-vi.mock("../../src/js/serial.js", () => ({
+vi.mock("../../src/js/serial", () => ({
     __esModule: true,
     serial,
 }));

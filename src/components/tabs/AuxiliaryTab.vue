@@ -2,7 +2,7 @@
     <BaseTab tab-name="auxiliary">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabAuxiliary") }}</div>
-            <WikiButton docUrl="modes" />
+            <WikiButton docUrl="auxiliary" />
 
             <div class="flex flex-col gap-4">
                 <UiBox highlight>
@@ -174,12 +174,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, onMounted, watch, nextTick } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, watch } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
-import GUI from "../../js/gui";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { runTabLoad } from "../../composables/useTabLoad";
 import { useAuxiliaryData } from "../../composables/auxiliary/useAuxiliaryData";
@@ -492,23 +491,18 @@ export default defineComponent({
         const { loadAuxiliaryData, startPolling } = useAuxiliaryData();
 
         const loadData = async () => {
-            try {
-                await runTabLoad(
-                    async () => {
-                        await loadAuxiliaryData();
+            await runTabLoad(
+                async () => {
+                    await loadAuxiliaryData();
 
-                        requiredModeRangeCount.value = fcStore.modeRanges.length;
-                        auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
-                        buildModesFromFC();
-                        updateMarkers();
-                        modesLoaded.value = true;
-                    },
-                    (error) => console.error("Failed to load auxiliary data", error),
-                );
-            } finally {
-                await nextTick();
-                GUI.content_ready();
-            }
+                    requiredModeRangeCount.value = fcStore.modeRanges.length;
+                    auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
+                    buildModesFromFC();
+                    updateMarkers();
+                    modesLoaded.value = true;
+                },
+                (error) => console.error("Failed to load auxiliary data", error),
+            );
         };
 
         onMounted(() => {

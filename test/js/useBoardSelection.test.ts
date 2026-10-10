@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope, type EffectScope } from "vue";
-import GUI from "../../src/js/gui";
+import { createPinia, setActivePinia } from "pinia";
+import { useConnectionStore } from "../../src/stores/connection";
 
 import { useBoardSelection, type BoardSelectionParams } from "../../src/composables/useBoardSelection";
 
@@ -31,7 +32,8 @@ describe("useBoardSelection", () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
-        GUI.connect_lock = false;
+        setActivePinia(createPinia());
+        useConnectionStore().connectLock = false;
 
         scope = effectScope();
         scope.run(() => {
@@ -42,15 +44,15 @@ describe("useBoardSelection", () => {
     afterEach(() => {
         scope.stop();
         vi.runAllTimers();
-        GUI.connect_lock = false;
+        useConnectionStore().connectLock = false;
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
     it("clears the detect-board timeout on scope dispose, so detectingBoard stays stuck", async () => {
-        // The GUI.connect_lock branch is the smallest surface that schedules the
+        // The connectLock branch is the smallest surface that schedules the
         // 2000ms timeout without needing to entangle AutoDetect.verifyBoard.
-        GUI.connect_lock = true;
+        useConnectionStore().connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);
@@ -63,7 +65,7 @@ describe("useBoardSelection", () => {
     });
 
     it("without dispose, the timeout still fires and resets detectingBoard (proves the test is not vacuous)", async () => {
-        GUI.connect_lock = true;
+        useConnectionStore().connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);

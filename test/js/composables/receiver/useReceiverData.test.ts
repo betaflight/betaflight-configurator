@@ -3,11 +3,11 @@ import { defineComponent } from "vue";
 import { mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { useReceiverData } from "../../../../src/composables/receiver/useReceiverData";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({ default: { interval_add: vi.fn(), interval_remove: vi.fn() } }));
+vi.mock("../../../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 
 type ReceiverData = ReturnType<typeof useReceiverData>;
 
@@ -26,7 +26,7 @@ function mountData() {
 
 const runTick = (name: string) => {
     vi.mocked(MSP.send_message).mockClear();
-    vi.mocked(GUI.interval_add)
+    vi.mocked(timers.addInterval)
         .mock.calls.filter(([added]) => added === name)
         .at(-1)![1]();
 };
@@ -68,7 +68,7 @@ describe("useReceiverData", () => {
         data.startModelPreviewPolling();
         data.startRcPolling(75, onRcData);
 
-        expect(vi.mocked(GUI.interval_add).mock.calls).toEqual([
+        expect(vi.mocked(timers.addInterval).mock.calls).toEqual([
             ["receiver_pull_for_model_preview", expect.any(Function), 33, false],
             ["receiver_pull", expect.any(Function), 75, true],
         ]);
@@ -78,8 +78,8 @@ describe("useReceiverData", () => {
         expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_RC, false, false, onRcData);
 
         wrapper.unmount();
-        expect(GUI.interval_remove).toHaveBeenCalledWith("receiver_pull_for_model_preview");
-        expect(GUI.interval_remove).toHaveBeenCalledWith("receiver_pull");
+        expect(timers.removeInterval).toHaveBeenCalledWith("receiver_pull_for_model_preview");
+        expect(timers.removeInterval).toHaveBeenCalledWith("receiver_pull");
     });
 
     it("restarts the plot polling by removing the old interval before adding the new one", () => {
@@ -87,11 +87,11 @@ describe("useReceiverData", () => {
 
         mountData().data.restartRcPolling(200, onRcData);
 
-        expect(GUI.interval_add).toHaveBeenCalledExactlyOnceWith("receiver_pull", expect.any(Function), 200, true);
-        expect(vi.mocked(GUI.interval_remove).mock.invocationCallOrder[0]).toBeLessThan(
-            vi.mocked(GUI.interval_add).mock.invocationCallOrder[0],
+        expect(timers.addInterval).toHaveBeenCalledExactlyOnceWith("receiver_pull", expect.any(Function), 200, true);
+        expect(vi.mocked(timers.removeInterval).mock.invocationCallOrder[0]).toBeLessThan(
+            vi.mocked(timers.addInterval).mock.invocationCallOrder[0],
         );
-        expect(GUI.interval_remove).toHaveBeenCalledWith("receiver_pull");
+        expect(timers.removeInterval).toHaveBeenCalledWith("receiver_pull");
         runTick("receiver_pull");
         expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_RC, false, false, onRcData);
     });

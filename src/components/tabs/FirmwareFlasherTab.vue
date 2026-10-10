@@ -125,7 +125,6 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
-import GUI, { TABS } from "../../js/gui";
 import { useCloudBuild } from "../../composables/useCloudBuild";
 import { useBoardSelection } from "../../composables/useBoardSelection";
 import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing";
@@ -161,6 +160,9 @@ import type { FirmwareData, FlashMessageTypes, ShowDialogVerifyBoard } from "../
 import type { DropdownMenuItem } from "@nuxt/ui";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
+import { TABS } from "../../js/tab_adapters";
+import { useConnectionStore } from "../../stores/connection";
+import { useNavigationStore } from "../../stores/navigation";
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 
@@ -183,6 +185,8 @@ export default defineComponent({
         SubtabNav,
     },
     setup() {
+        const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject<Translate>("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
@@ -311,7 +315,7 @@ export default defineComponent({
             state.flashProgressValue = Math.max(0, Math.min(100, n));
             if (n >= 100) {
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
             }
             return TABS.firmware_flasher;
         };
@@ -319,7 +323,7 @@ export default defineComponent({
         const resetFlashingState = () => {
             state.flashProgressValue = 0;
             state.flashingInProgress = false;
-            GUI.flashingInProgress = false;
+            connectionStore.flashingInProgress = false;
             enableFlashButton(
                 !!firmwareFlashing.getParsedHex() ||
                     !!firmwareFlashing.getUf2Binary() ||
@@ -948,9 +952,7 @@ export default defineComponent({
         };
 
         onMounted(async () => {
-            if (GUI.active_tab !== "firmware_flasher") {
-                GUI.active_tab = "firmware_flasher";
-            }
+            navigationStore.activeTab = "firmware_flasher";
 
             // Reset state on tab initialization
             activeFlasherStep.value = "board-build";
@@ -989,8 +991,6 @@ export default defineComponent({
                     return firmwareFlashing.getUf2Binary();
                 },
             };
-
-            GUI.content_ready(function () {});
 
             // Localize content
             i18n.localizePage();
@@ -1089,12 +1089,12 @@ export default defineComponent({
         };
 
         const startBackup = async (callback: () => void) => {
-            GUI.connect_lock = true;
+            connectionStore.connectLock = true;
 
             const aborted = function (message: string) {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
                 enableFlashButton(true);
                 enableLoadRemoteFileButton(true);
                 enableLoadFileButton(true);
@@ -1115,7 +1115,7 @@ export default defineComponent({
             };
 
             AutoBackup.execute((result) => {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 if (result) {
                     callBackWhenPortAvailable();
                 } else {
@@ -1429,7 +1429,7 @@ export default defineComponent({
         const handleExitDfu = async () => {
             await firmwareFlashing.exitDfu({
                 dfuExitButtonDisabled: state.dfuExitButtonDisabled,
-                connectLock: GUI.connect_lock,
+                connectLock: connectionStore.connectLock,
             });
         };
 
@@ -1447,12 +1447,12 @@ export default defineComponent({
             state.restoreInProgress = false;
             state.restoreCompleted = false;
             state.flashingInProgress = true;
-            GUI.flashingInProgress = true;
+            connectionStore.flashingInProgress = true;
             activeFlasherStep.value = "flash";
             await nextTick();
 
             const options = {
-                connectLock: GUI.connect_lock,
+                connectLock: connectionStore.connectLock,
                 firmwareType: state.firmware_type,
                 filename: state.filename,
                 flashOnConnect: state.flashOnConnect,
@@ -1476,7 +1476,7 @@ export default defineComponent({
                 await firmwareFlashing.runFlashWorkflow(options);
             } catch (error) {
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
                 throw error;
             }
         };
@@ -1680,7 +1680,7 @@ export default defineComponent({
                     const cliLines = hasDefaultsNoSave ? fileLines : ["defaults nosave", ...fileLines];
 
                     // Set connect lock to prevent tab switching interference
-                    GUI.connect_lock = true;
+                    connectionStore.connectLock = true;
                     state.restoreInProgress = true;
 
                     // Open wait dialog
@@ -1689,7 +1689,7 @@ export default defineComponent({
                     // Execute restore
                     AutoRestore.execute(cliLines, (result) => {
                         dialog.close();
-                        GUI.connect_lock = false;
+                        connectionStore.connectLock = false;
                         state.restoreInProgress = false;
 
                         if (result.success) {

@@ -2,7 +2,7 @@
     <BaseTab tab-name="pid_tuning">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabPidTuning") }}</div>
-            <WikiButton docUrl="PID-Tuning" />
+            <WikiButton docUrl="pid_tuning" />
 
             <div class="flex items-start gap-3 flex-wrap mb-2">
                 <!-- Profile Selector -->
@@ -131,7 +131,6 @@ import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SubtabNav from "@/components/elements/SubtabNav.vue";
-import GUI from "@/js/gui";
 import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
@@ -289,12 +288,10 @@ async function loadData() {
                 // left alone: a switch made here is unsaved until it reaches EEPROM.
                 pidTuningStore.markEditsClean();
 
-                GUI.content_ready();
                 return true;
             },
             (e) => {
                 console.error("[PidTuning] Failed to load data:", e);
-                GUI.content_ready();
             },
         );
     } finally {

@@ -23,7 +23,6 @@ import { ref, computed, type ComputedRef, type Ref } from "vue";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { mspHelper, type DataflashReadCallback } from "../js/msp/MSPHelper";
-import GUI from "../js/gui";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "../stores/connection";
 
@@ -58,7 +57,8 @@ export function useDataflashPull(): DataflashPull {
     const progress = ref(0);
 
     const available = computed(
-        () => !!GUI.connected_to && connectionStore.connectionValid && (fcStore.dataflash?.usedSize || 0) > 0,
+        () =>
+            !!connectionStore.connectedTo && connectionStore.connectionValid && (fcStore.dataflash?.usedSize || 0) > 0,
     );
 
     /**
@@ -70,7 +70,7 @@ export function useDataflashPull(): DataflashPull {
      *   summary/read flow fails (e.g. timeout, disconnect or queue drain).
      */
     async function pull(): Promise<Uint8Array> {
-        if (!GUI.connected_to) {
+        if (!connectionStore.connectedTo) {
             throw new Error("Not connected to a flight controller");
         }
 

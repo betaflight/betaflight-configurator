@@ -21,7 +21,7 @@
 
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
-import { serial } from "./serial.js";
+import { serial } from "./serial";
 import { getConnectionState } from "./connection_state.js";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
@@ -509,7 +509,7 @@ class DeviceHandler {
      * @returns {Promise} - Promise that resolves after updating the ports list
      */
     async updateDeviceList(deviceType: DeviceType): Promise<PortDevice[]> {
-        let ports = [];
+        let ports: PortDevice[] = [];
 
         try {
             switch (deviceType) {

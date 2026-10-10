@@ -330,7 +330,9 @@ watch(
 watch(
     () => settings.userLanguage,
     (value) => {
-        i18n.changeLanguage(value);
+        // The seed can be undefined (before i18n.init()), but the watcher only fires on a
+        // change, and the only writer is the language picker, which always emits a code.
+        i18n.changeLanguage(value!);
         i18n.localizePage();
     },
 );

@@ -2,7 +2,7 @@
     <BaseTab tab-name="failsafe">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabFailsafe')"></div>
-            <WikiButton docUrl="Failsafe" />
+            <WikiButton docUrl="failsafe" />
 
             <UiBox type="warning" highlight class="mb-4">
                 <p class="text-sm" v-html="$t('failsafeFeaturesHelpNew')"></p>
@@ -399,7 +399,6 @@ import { i18n } from "@/js/localization";
 import adjustBoxNameIfPeripheralWithModeID from "@/js/peripherals";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "@/js/data_storage";
-import GUI from "@/js/gui";
 
 // Procedure illustration images (same pattern as GpsTab's loadingBarsUrl)
 const procedureDropImage = new URL("../../images/icons/cf_failsafe_procedure1.svg", import.meta.url).href;
@@ -751,6 +750,5 @@ onMounted(async () => {
     await loadConfig();
     initializeDefaults();
     await nextTick();
-    GUI.content_ready();
 });
 </script>

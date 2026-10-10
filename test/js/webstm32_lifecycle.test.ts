@@ -10,10 +10,7 @@ const { flasher, endFlashing } = vi.hoisted(() => ({
     endFlashing: vi.fn(),
 }));
 
-vi.mock("../../src/js/gui", () => ({
-    default: { connect_lock: true, interval_remove: vi.fn() },
-    TABS: { firmware_flasher: flasher },
-}));
+vi.mock("../../src/js/tab_adapters", () => ({ TABS: { firmware_flasher: flasher } }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (k: string) => k } }));
 vi.mock("../../src/js/connection_state", () => ({ getConnectionState: () => ({ endFlashing }) }));
 vi.mock("../../src/js/serial", () => ({

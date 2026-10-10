@@ -850,7 +850,6 @@ import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextT
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
-import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight, type ForecastDay, type Reading } from "@/composables/usePreflight";
 import { useMapViewport } from "@/composables/useMapViewport";
@@ -1609,7 +1608,6 @@ export default defineComponent({
         // ── End NOTAM logic ───────────────────────────────────────────────────────
 
         onMounted(() => {
-            GUI.content_ready();
             nextTick(() => {
                 observeContainer();
                 if (preflight.location.latitude !== null) {

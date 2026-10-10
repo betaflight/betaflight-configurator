@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, inject } from "vue";
-import GUI from "../../js/gui";
+import { useNavigationStore } from "../../stores/navigation";
 
 /**
  * BaseTab provides common tab lifecycle management for Vue tabs.
@@ -30,19 +30,18 @@ export default defineComponent({
     },
     emits: ["mounted", "cleanup"],
     setup(props, { emit }) {
+        const navigationStore = useNavigationStore();
         // Access the global reactive model
         const model = inject("betaflightModel", null);
 
         onMounted(() => {
-            GUI.active_tab = props.tabName;
+            navigationStore.activeTab = props.tabName;
             emit("mounted");
         });
 
         onUnmounted(() => {
             // Clean up any intervals/timeouts when tab is destroyed
             // Global cleanup removed to allow tabs to manage their own intervals individually
-            // GUI.interval_kill_all();
-            // GUI.timeout_kill_all();
             emit("cleanup");
         });
 

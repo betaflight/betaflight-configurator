@@ -311,7 +311,6 @@ import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
-import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
 import { have_sensor } from "../../js/sensor_helpers";
 import { useSetupData } from "../../composables/setup/useSetupData";
@@ -321,6 +320,7 @@ import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
 import { flightIndicator } from "../../../libraries/flightIndicators";
+import { tabSwitchCleanup } from "../../js/tab_adapters";
 
 const { t } = useTranslation();
 
@@ -513,7 +513,7 @@ function confirmReset() {
     confirmResetOpen.value = false;
     resetSettings(function () {
         gui_log(t("initialSetupSettingsRestored"));
-        GUI.tab_switch_cleanup(function () {
+        tabSwitchCleanup(function () {
             // Re-initialize the Setup tab component directly (avoid legacy TABS reference)
             initialize();
         });
@@ -720,9 +720,6 @@ function process_html() {
 
     addInterval("setup_data_pull_fast", get_fast_data, 33, true);
     addInterval("setup_data_pull_slow", get_slow_data, 250, true);
-
-    // notify GUI that content is ready
-    GUI.content_ready(() => {});
 }
 
 function initializeInstruments() {

@@ -20,7 +20,7 @@
  */
 
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
-import { useNavigationStore } from "@/stores/navigation";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -58,10 +58,8 @@ export function useReboot() {
     // reboot timestamp).
     const reboot = () => reinitializeConnection();
 
-    const navigationStore = useNavigationStore();
-
     function cleanupAndReboot(resolve: () => void): void {
-        navigationStore.cleanup(() => {
+        tabSwitchCleanup(() => {
             reboot();
             resolve();
         });

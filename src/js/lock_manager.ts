@@ -29,10 +29,9 @@
  * resetConnection() clears it as a global safety net on any disconnect. So a single
  * boolean is sufficient; there is no genuine multi-owner nesting to track.
  *
- * It lives here (not in the Pinia store) as a lazily-constructed singleton so plain
- * modules (serial_backend, protocols) and gui.js can read/write it without an active
- * pinia or an import cycle. The reactive `ref` keeps GUI.connect_lock and the store's
- * connectLock computed updating.
+ * It lives here (not in the Pinia store) as a lazily-constructed singleton so it can be
+ * read/written without an active pinia or an import cycle. The reactive `ref` keeps the
+ * connection store's connectLock computed updating.
  */
 import { ref, type Ref } from "vue";
 
@@ -50,9 +49,9 @@ export class LockManager {
 
     /**
      * The coercion is load-bearing, not defensive tidiness: the setter is reached from
-     * unchecked JavaScript (`GUI.connect_lock`, serial_backend, the flashing protocols),
-     * so a truthy non-boolean still has to land in the ref as a boolean — otherwise
-     * `locked` would start returning the assigned value and break `=== true` readers.
+     * unchecked JavaScript (the flashing protocols), so a truthy non-boolean still has to
+     * land in the ref as a boolean — otherwise `locked` would start returning the assigned
+     * value and break `=== true` readers.
      */
     set locked(value: boolean) {
         this._locked.value = Boolean(value);

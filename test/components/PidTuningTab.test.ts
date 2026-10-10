@@ -29,7 +29,6 @@ vi.mock("../../src/composables/pidTuning/usePidTuningMsp", () => ({
 vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom }) }));
 vi.mock("../../src/composables/useDialog", () => ({ useDialog: () => ({ openCopyProfile }) }));
 vi.mock("../../src/composables/useTuningSliders", () => ({ validateTuningSliders: vi.fn() }));
-vi.mock("../../src/js/gui", () => ({ default: { content_ready: vi.fn() } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 vi.mock("../../src/js/utils/isExpertModeEnabled", () => ({ isExpertModeEnabled: () => false }));

@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { ref } from "vue";
 import UButton from "@nuxt/ui/components/Button.vue";
 import SensorsTab from "../../src/components/tabs/SensorsTab.vue";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { ipCoordinates } from "../../src/js/utils/ipGeolocation";
 
@@ -22,6 +22,14 @@ const gates = vi.hoisted(() => [] as { value: unknown }[][]);
 const writeFeaturePort = vi.hoisted(() => vi.fn());
 const saveAndReboot = vi.hoisted(() => vi.fn());
 
+vi.mock("../../src/js/timers", () => ({
+    addInterval: vi.fn(),
+    removeInterval: vi.fn(),
+    pauseInterval: vi.fn(),
+    resumeInterval: vi.fn(),
+    addTimeout: vi.fn(),
+    removeTimeout: vi.fn(),
+}));
 vi.mock("../../src/composables/sensors/useSensorsData", () => ({
     useSensorsData: (...args: { value: unknown }[]) => {
         gates.push(args);
@@ -83,7 +91,7 @@ function clickButton(wrapper: Wrapper, label: string) {
     button.vm.$emit("click", new MouseEvent("click"));
 }
 
-/** The registration of the named GUI interval or timeout. */
+/** The registration of the named interval or timeout. */
 function registered(spy: (...args: never[]) => unknown, name: string) {
     const call = vi.mocked(spy).mock.calls.find(([n]) => n === name) as unknown[] | undefined;
     if (!call) {
@@ -101,17 +109,6 @@ describe("SensorsTab MSP wiring", () => {
     beforeEach(() => {
         vi.resetAllMocks();
         gates.length = 0;
-        for (const method of [
-            "content_ready",
-            "interval_add",
-            "interval_remove",
-            "interval_pause",
-            "interval_resume",
-            "timeout_add",
-            "timeout_remove",
-        ] as const) {
-            vi.spyOn(GUI, method).mockImplementation(() => undefined as never);
-        }
         setActivePinia(createPinia());
         localStorage.clear();
         data.loadSensorsConfig.mockResolvedValue(undefined);
@@ -136,11 +133,11 @@ describe("SensorsTab MSP wiring", () => {
         mountTab();
         await flushPromises();
         expect(data.loadSensorsConfig).toHaveBeenCalledOnce();
-        expect(GUI.interval_add).not.toHaveBeenCalled();
+        expect(timers.addInterval).not.toHaveBeenCalled();
 
         release();
         await flushPromises();
-        expect(GUI.interval_add).toHaveBeenCalled();
+        expect(timers.addInterval).toHaveBeenCalled();
     });
 
     it("gates the config load and save on API 1.46 and 1.47, in that order", async () => {
@@ -180,7 +177,7 @@ describe("SensorsTab MSP wiring", () => {
         mountTab();
         await flushPromises();
 
-        const [, tick, period, first] = registered(GUI.interval_add, "sensors_attitude");
+        const [, tick, period, first] = registered(timers.addInterval, "sensors_attitude");
         expect([period, first]).toEqual([33, true]);
 
         tick();
@@ -198,10 +195,10 @@ describe("SensorsTab MSP wiring", () => {
 
         clickButton(wrapper, "sensorConfigCalibrate");
         expect(data.startAccCalibration).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
-        expect(GUI.interval_pause).toHaveBeenCalledWith("sensors_attitude");
+        expect(timers.pauseInterval).toHaveBeenCalledWith("sensors_attitude");
         expect(data.loadBoardInfo).not.toHaveBeenCalled();
 
-        const [, fire, timeout] = registered(GUI.timeout_add, "acc_calib_reset");
+        const [, fire, timeout] = registered(timers.addTimeout, "acc_calib_reset");
         expect(timeout).toBe(2000);
         fire();
         expect(data.loadBoardInfo).toHaveBeenCalledExactlyOnceWith(expect.any(Function));

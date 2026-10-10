@@ -4,8 +4,8 @@ import MSP, { type MspCallback } from "../../../../src/js/msp";
 import MSPCodes, { MSP2TextType } from "../../../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../../../src/js/msp/MSPHelper";
 import { MspCancelledError, MspTimeoutError } from "../../../../src/js/msp/mspErrors";
-import GUI from "../../../../src/js/gui";
 import { useFlightControllerStore } from "../../../../src/stores/fc";
+import { useAppInfoStore } from "../../../../src/stores/appInfo";
 import {
     SdcardState,
     isMspCancelled,
@@ -26,7 +26,6 @@ vi.mock("../../../../src/js/msp", () => ({
 vi.mock("../../../../src/js/msp/MSPHelper", () => ({
     mspHelper: { crunch: vi.fn(), REBOOT_TYPES: { MSC: 2, MSC_UTC: 3 } },
 }));
-vi.mock("../../../../src/js/gui", () => ({ default: { operating_system: "Windows" } }));
 
 const BASE_LOAD = [
     MSPCodes.MSP_FEATURE_CONFIG,
@@ -49,7 +48,7 @@ describe("useOnboardLoggingData", () => {
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(MSP.send_message).mockReturnValue(true);
         vi.mocked(mspHelper.crunch).mockImplementation((code, modifier) => [code, modifier ?? -1]);
-        GUI.operating_system = "Windows";
+        useAppInfoStore().operatingSystem = "Windows";
     });
 
     describe("loadOnboardLoggingData", () => {
@@ -104,7 +103,7 @@ describe("useOnboardLoggingData", () => {
         ["Linux", 3],
         ["Windows", 2],
     ])("on %s reboots into mass storage with type %i", (os, rebootType) => {
-        GUI.operating_system = os;
+        useAppInfoStore().operatingSystem = os;
 
         useOnboardLoggingData().rebootToMassStorage();
 

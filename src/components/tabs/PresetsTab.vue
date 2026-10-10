@@ -231,7 +231,6 @@ import {
     useMspCliSession,
 } from "@/composables/useMspCliSession";
 import { useDialog } from "@/composables/useDialog";
-import GUI from "@/js/gui";
 import { useFlightControllerStore } from "@/stores/fc";
 import { escapeHtml } from "@/js/utils/common";
 import { useConnectionStore } from "@/stores/connection";
@@ -257,7 +256,6 @@ function reportProgress({ index, total }: { index: number; total: number }) {
 
 async function onTabMounted() {
     store.initialize();
-    GUI.content_ready();
     void update_sensor_status();
     await store.reloadRepositories();
 }

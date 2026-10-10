@@ -21,13 +21,13 @@
 
 import MspHelper from "./MSPHelper";
 import { i18n } from "../localization";
-import GUI from "../gui";
 import MSP from "../msp";
 import { useFlightControllerStore } from "../../stores/fc";
 import { serial } from "../serial";
 import MSPCodes from "./MSPCodes";
 import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
+import { addTimeout, removeTimeout } from "../timers";
 
 /**
  * This seems to be mainly used in firmware flasher parts.
@@ -80,7 +80,7 @@ class MSPConnectorImpl {
             useFlightControllerStore().resetState();
 
             // disconnect after 10 seconds with error if we don't get IDENT data
-            GUI.timeout_add(
+            addTimeout(
                 "msp_connector",
                 () => {
                     if (!this._mspApiVersionReceived) {
@@ -100,7 +100,7 @@ class MSPConnectorImpl {
 
             MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
                 this._mspApiVersionReceived = true;
-                GUI.timeout_remove("msp_connector");
+                removeTimeout("msp_connector");
                 console.log("Connected");
 
                 this.onConnectCallback!();
@@ -146,8 +146,8 @@ class MSPConnectorImpl {
         serial.removeEventListener("disconnect", this.boundHandleDisconnect);
         serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-        // serial.js types its optional callback as required; the connect event above reports the result.
-        void serial.connect(this.port, { baudRate: this.baud }, undefined);
+        // The connect event above reports the result.
+        void serial.connect(this.port, { baudRate: this.baud });
     }
 
     disconnect(onDisconnectCallback: ConnectorCallback) {

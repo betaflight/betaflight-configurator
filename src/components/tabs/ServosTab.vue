@@ -156,7 +156,6 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useTranslation } from "i18next-vue";
-import GUI from "@/js/gui";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useTimeout } from "@/composables/useTimeout";
 import { useServosData } from "@/composables/servos/useServosData";
@@ -258,7 +257,6 @@ function updateServoData() {
 async function loadServoData() {
     if (!fcStore.config?.apiVersion) {
         isSupported.value = false;
-        GUI.content_ready();
         return;
     }
 
@@ -268,14 +266,12 @@ async function loadServoData() {
     } catch (e) {
         console.error("Failed to load servo configs", e);
         isSupported.value = false;
-        GUI.content_ready();
     }
 }
 
 function initializeUI() {
     if (!fcStore.servoConfig || fcStore.servoConfig.length === 0) {
         isSupported.value = false;
-        GUI.content_ready();
         return;
     }
 
@@ -297,8 +293,6 @@ function initializeUI() {
     originalConfigs.value = JSON.stringify(servoConfigs);
 
     startPolling(updateServoData);
-
-    GUI.content_ready();
 }
 
 onMounted(() => {

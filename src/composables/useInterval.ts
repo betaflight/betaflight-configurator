@@ -20,7 +20,7 @@
  */
 
 import { onScopeDispose } from "vue";
-import GUI from "../js/gui";
+import * as timers from "../js/timers";
 
 export interface IntervalRegistry {
     addInterval: (name: string, code: () => void, interval: number, first?: boolean) => void;
@@ -33,15 +33,15 @@ export interface IntervalRegistry {
 }
 
 function pauseInterval(name: string): boolean {
-    return GUI.interval_pause(name);
+    return timers.pauseInterval(name);
 }
 
 function resumeInterval(name: string): boolean {
-    return GUI.interval_resume(name);
+    return timers.resumeInterval(name);
 }
 
 /**
- * A composable for managing named intervals via GUI's interval registry.
+ * A composable for managing named intervals via the app's interval registry (js/timers).
  * All intervals added through this composable are automatically removed
  * when the owning effect scope is disposed (component unmount or scope stop).
  *
@@ -53,14 +53,14 @@ export function useInterval(): IntervalRegistry {
     const localIntervals: string[] = [];
 
     function addInterval(name: string, code: () => void, interval: number, first = false) {
-        GUI.interval_add(name, code, interval, first);
+        timers.addInterval(name, code, interval, first);
         if (!localIntervals.includes(name)) {
             localIntervals.push(name);
         }
     }
 
     function removeInterval(name: string) {
-        GUI.interval_remove(name);
+        timers.removeInterval(name);
         const idx = localIntervals.indexOf(name);
         if (idx !== -1) {
             localIntervals.splice(idx, 1);
@@ -68,7 +68,7 @@ export function useInterval(): IntervalRegistry {
     }
 
     function removeAllIntervals() {
-        localIntervals.forEach((name) => GUI.interval_remove(name));
+        localIntervals.forEach((name) => timers.removeInterval(name));
         localIntervals.length = 0;
     }
 

@@ -33,8 +33,8 @@ vi.mock("../../src/js/protocols/devices", () => ({
     vendorIdNames: { 0x2e3c: "AT32", 0x0483: "STM32" },
 }));
 
-vi.mock("../../src/js/gui", () => ({
-    default: { operating_system: "Linux" },
+vi.mock("../../src/stores/appInfo", () => ({
+    useAppInfoStore: () => ({ operatingSystem: "Linux" }),
 }));
 
 const { default: TauriSerial } = await import("../../src/js/protocols/TauriSerial");

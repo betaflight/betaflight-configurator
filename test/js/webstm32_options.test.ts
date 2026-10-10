@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const messages: string[] = [];
 
-vi.mock("../../src/js/gui", () => {
+vi.mock("../../src/js/tab_adapters", () => {
     const flasher = {
         FLASH_MESSAGE_TYPES: { NEUTRAL: 0, VALID: 1, INVALID: 2, ACTION: 3, FLASHING: 4, ERASING: 5 },
         flashingMessage: (message: string) => {
@@ -11,7 +11,7 @@ vi.mock("../../src/js/gui", () => {
         },
         flashProgress: () => flasher,
     };
-    return { default: { connect_lock: false }, TABS: { firmware_flasher: flasher } };
+    return { TABS: { firmware_flasher: flasher } };
 });
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (k: string) => k } }));
 vi.mock("../../src/js/serial", () => ({
@@ -53,11 +53,7 @@ describe("webstm32 honours the flashing options", () => {
 
         STM32.connect("serial_1", 115200, hex as never, { no_reboot: true, erase_chip: false });
 
-        expect(serial.connect).toHaveBeenCalledWith(
-            "serial_1",
-            expect.objectContaining({ baudRate: 115200 }),
-            undefined,
-        );
+        expect(serial.connect).toHaveBeenCalledWith("serial_1", expect.objectContaining({ baudRate: 115200 }));
         expect(mspConnect).not.toHaveBeenCalled();
     });
 

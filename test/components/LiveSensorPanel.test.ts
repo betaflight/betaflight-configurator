@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import LiveSensorPanel from "../../src/components/tabs/sensors/LiveSensorPanel.vue";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { useFlightControllerStore } from "../../src/stores/fc";
@@ -23,7 +23,7 @@ const graph = vi.hoisted(() => ({
     initializeGraphs: vi.fn(),
 }));
 
-vi.mock("../../src/js/gui", () => ({ default: { interval_add: vi.fn(), interval_remove: vi.fn() } }));
+vi.mock("../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/composables/useSensorGraph", () => ({ useSensorGraph: () => graph }));
 
@@ -72,7 +72,7 @@ describe("LiveSensorPanel polling", () => {
         mountPanel();
         await flushPromises();
 
-        const added = new Map(vi.mocked(GUI.interval_add).mock.calls.map(([name, , period]) => [name, period]));
+        const added = new Map(vi.mocked(timers.addInterval).mock.calls.map(([name, , period]) => [name, period]));
         // gyro/accel/mag share the IMU pull at the fastest of their three rates
         expect(Object.fromEntries(added)).toEqual({
             IMU_pull: 20,
@@ -91,7 +91,7 @@ describe("LiveSensorPanel polling", () => {
         ];
         for (const [name, code, sample] of expectations) {
             vi.mocked(MSP.send_message).mockClear();
-            const tick = vi.mocked(GUI.interval_add).mock.calls.find(([n]) => n === name)![1];
+            const tick = vi.mocked(timers.addInterval).mock.calls.find(([n]) => n === name)![1];
             tick();
             expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(code, false, false, expect.any(Function));
 

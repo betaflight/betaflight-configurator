@@ -23,8 +23,8 @@ import { reactive, nextTick, onScopeDispose } from "vue";
 import type { SelectMenuItem } from "@nuxt/ui";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
-import GUI from "../js/gui";
 import AutoDetect from "../js/utils/AutoDetect";
+import { useConnectionStore } from "../stores/connection";
 
 /** A board as the build API's `/api/targets` lists it. */
 export interface TargetDescriptor {
@@ -86,6 +86,7 @@ export interface BoardSelectionParams {
  * Manages board/target lists, firmware version options, and related UI interactions.
  */
 export function useBoardSelection(params: BoardSelectionParams) {
+    const connectionStore = useConnectionStore();
     const {
         buildApi,
         $t,
@@ -242,7 +243,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             state.selectedBoard = undefined;
         } else {
             try {
@@ -314,7 +315,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
             detectBoardTimeout = null;
         }
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             detectBoardTimeout = setTimeout(() => {
                 detectBoardTimeout = null;
                 state.detectingBoard = false;

@@ -318,7 +318,6 @@ import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextT
 import type { FeatureDefinition } from "../../js/Features";
 import type { GpsData } from "../../stores/fc.types";
 import BaseTab from "./BaseTab.vue";
-import GUI from "../../js/gui";
 import { updateTabList } from "../../js/utils/updateTabList";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
@@ -330,7 +329,7 @@ import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
-import { useNavigationStore } from "@/stores/navigation";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 import { useDialogStore } from "@/stores/dialog";
 import { useGpsData } from "../../composables/gps/useGpsData";
 import { useGpsSave } from "../../composables/gps/useGpsSave";
@@ -374,7 +373,6 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
         const { hasBuildOption } = useBuildOptions();
         const connectionStore = useConnectionStore();
-        const navigationStore = useNavigationStore();
         const dialogStore = useDialogStore();
 
         const { isSaving, runSave } = useSaving();
@@ -861,7 +859,6 @@ export default defineComponent({
         const loadGpsConfig = async () => {
             try {
                 if (!connectionStore.connectionValid) {
-                    GUI.content_ready();
                     return;
                 }
 
@@ -886,8 +883,6 @@ export default defineComponent({
                 console.error("Failed to load GPS configuration", error);
                 isOnline.value = ispConnected();
                 isWaiting.value = false;
-            } finally {
-                GUI.content_ready();
             }
         };
 
@@ -974,7 +969,7 @@ export default defineComponent({
         };
 
         onUnmounted(() => {
-            navigationStore.cleanup(teardown);
+            tabSwitchCleanup(teardown);
         });
 
         watch(showLoadMap, (visible) => {

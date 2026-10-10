@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { LockManager, getLockManager, __resetLockManagerForTests } from "../../src/js/lock_manager";
 
 // ---------------------------------------------------------------------------
-// The connection/flasher lock — a single reactive boolean behind GUI.connect_lock
-// and store.connectLock. One port-owning operation holds it at a time.
+// The connection/flasher lock — a single reactive boolean behind the connection
+// store's connectLock. One port-owning operation holds it at a time.
 // ---------------------------------------------------------------------------
 
 describe("LockManager", () => {

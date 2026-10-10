@@ -234,7 +234,6 @@ import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { useConfigurationData } from "@/composables/configuration/useConfigurationData";
-import GUI from "../../js/gui";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -416,11 +415,9 @@ export default defineComponent({
 
                     await initializeUI();
                     await nextTick();
-                    GUI.content_ready();
                 },
                 (e) => {
                     console.error("Failed to load configuration", e);
-                    GUI.content_ready();
                 },
             );
         };

@@ -24,16 +24,16 @@ const stub = (tag) =>
         [tag]: class extends EventTarget {},
     })[tag];
 
-vi.mock("../../src/js/protocols/WebSerial.js", () => ({ default: stub("WebSerial") }));
+vi.mock("../../src/js/protocols/WebSerial", () => ({ default: stub("WebSerial") }));
 vi.mock("../../src/js/protocols/WebBluetooth.js", () => ({ default: stub("WebBluetooth") }));
 vi.mock("../../src/js/protocols/WebSocket.js", () => ({ default: stub("Websocket") }));
-vi.mock("../../src/js/protocols/VirtualSerial.js", () => ({ default: stub("VirtualSerial") }));
+vi.mock("../../src/js/protocols/VirtualSerial", () => ({ default: stub("VirtualSerial") }));
 vi.mock("../../src/js/protocols/CapacitorSerial.js", () => ({ default: stub("CapacitorSerial") }));
 vi.mock("../../src/js/protocols/CapacitorBle.js", () => ({ default: stub("CapacitorBle") }));
 vi.mock("../../src/js/protocols/CapacitorTcp.js", () => ({ default: stub("CapacitorTcp") }));
-vi.mock("../../src/js/protocols/TauriSerial.js", () => ({ default: stub("TauriSerial") }));
+vi.mock("../../src/js/protocols/TauriSerial", () => ({ default: stub("TauriSerial") }));
 vi.mock("../../src/js/protocols/TauriTcp.js", () => ({ default: stub("TauriTcp") }));
-vi.mock("../../src/js/protocols/TauriBle.js", () => ({ default: stub("TauriBle") }));
+vi.mock("../../src/js/protocols/TauriBle", () => ({ default: stub("TauriBle") }));
 
 let serial;
 // The singleton builds its slot table at module load.

@@ -4,7 +4,7 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 import { useCli, type Cli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import CONFIGURATOR from "../../src/js/data_storage";
-import GUI from "../../src/js/gui";
+import { useAppInfoStore } from "../../src/stores/appInfo";
 import BFClipboard from "../../src/js/Clipboard";
 
 // The builder's sentinel is set when a build starts.
@@ -29,7 +29,7 @@ describe("useCli output suppression around CliAutoComplete", () => {
         useFlightControllerStore().config.flightControllerIdentifier = "BTFL";
         CliAutoComplete.builder = { state: "reset", numFails: 0, draining: false };
         CliAutoComplete.configEnabled = true;
-        GUI.operating_system = "Linux";
+        useAppInfoStore().operatingSystem = "Linux";
 
         cli = useCli();
         cli.windowWrapperRef.value = document.createElement("div");

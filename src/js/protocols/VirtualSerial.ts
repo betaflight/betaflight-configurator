@@ -1,4 +1,30 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 const VIRTUAL = "virtual";
+
+/** The one device this transport lists. Unlike a real port it has no display name. */
+export interface VirtualDevice {
+    path: typeof VIRTUAL;
+}
 
 /**
  * Stripped down version of previous nwjs based serial port implementation
@@ -10,6 +36,16 @@ const VIRTUAL = "virtual";
  * of special-casing "virtual" everywhere.
  */
 class VirtualSerial extends EventTarget {
+    connected: boolean;
+    connectionId: typeof VIRTUAL | false;
+    bitrate: number;
+    bytesReceived: number;
+    bytesSent: number;
+    failed: number;
+    connectionType: typeof VIRTUAL;
+    transmitting: boolean;
+    outputBuffer: unknown[];
+
     constructor() {
         super();
         this.connected = false;
@@ -22,7 +58,7 @@ class VirtualSerial extends EventTarget {
         this.transmitting = false;
         this.outputBuffer = [];
     }
-    connect(_port, _options) {
+    connect(_port?: unknown, _options?: unknown): boolean {
         this.connected = true;
         this.connectionId = VIRTUAL;
         this.bitrate = 115200;
@@ -31,7 +67,7 @@ class VirtualSerial extends EventTarget {
         this.dispatchEvent(new CustomEvent("connect", { detail: { connectionId: VIRTUAL } }));
         return true;
     }
-    disconnect() {
+    disconnect(): boolean {
         this.connected = false;
         this.outputBuffer = [];
         this.transmitting = false;
@@ -44,13 +80,11 @@ class VirtualSerial extends EventTarget {
         }
         return false;
     }
-    getConnectedDevice() {
+    getConnectedDevice(): typeof VIRTUAL | false {
         return this.connectionId;
     }
-    getDevices() {
-        return new Promise((resolve) => {
-            resolve([{ path: VIRTUAL }]);
-        });
+    getDevices(): Promise<VirtualDevice[]> {
+        return Promise.resolve([{ path: VIRTUAL }]);
     }
 }
 

@@ -1,14 +1,35 @@
-import WebSerial from "./protocols/WebSerial.js";
-import WebBluetooth from "./protocols/WebBluetooth.js";
-import Websocket from "./protocols/WebSocket.js";
-import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isAndroid, isTauri, isTauriMacOS } from "./utils/checkCompatibility.js";
-import CapacitorSerial from "./protocols/CapacitorSerial.js";
-import CapacitorBle from "./protocols/CapacitorBle.js";
-import CapacitorTcp from "./protocols/CapacitorTcp.js";
-import TauriSerial from "./protocols/TauriSerial.js";
-import TauriTcp from "./protocols/TauriTcp.js";
-import TauriBle from "./protocols/TauriBle.js";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import WebSerial from "./protocols/WebSerial";
+import WebBluetooth from "./protocols/WebBluetooth";
+import Websocket from "./protocols/WebSocket";
+import VirtualSerial, { type VirtualDevice } from "./protocols/VirtualSerial";
+import { isAndroid, isTauri, isTauriMacOS } from "./utils/checkCompatibility";
+import CapacitorSerial from "./protocols/CapacitorSerial";
+import CapacitorBle from "./protocols/CapacitorBle";
+import CapacitorTcp from "./protocols/CapacitorTcp";
+import TauriSerial from "./protocols/TauriSerial";
+import TauriTcp from "./protocols/TauriTcp";
+import TauriBle from "./protocols/TauriBle";
 
 // A host name, an IPv4 address, or an IPv6 address in brackets, with an optional port.
 // The pattern permits the underscore. mDNS host names can contain an underscore, for example
@@ -16,18 +37,97 @@ import TauriBle from "./protocols/TauriBle.js";
 const HOST = String.raw`(?:\[[0-9a-f:.]+\]|[a-z0-9._-]+)(?::\d+)?`;
 /**
  * Makes a regular expression for "<scheme>://host[:port][/path]".
- * @param {string} scheme - one scheme, or an alternation of schemes, for example "wss?".
- * @returns {RegExp} the case-insensitive pattern for that scheme.
+ * @param scheme - one scheme, or an alternation of schemes, for example "wss?".
+ * @returns the case-insensitive pattern for that scheme.
  */
-const urlPattern = (scheme) => new RegExp(`^(?:${scheme})://${HOST}(?:/.*)?$`, "i");
+const urlPattern = (scheme: string): RegExp => new RegExp(`^(?:${scheme})://${HOST}(?:/.*)?$`, "i");
 const WEBSOCKET_URL = urlPattern("wss?");
 const TCP_URL = urlPattern("tcp");
+
+/** The slot names a platform registers its transports under. */
+export type SerialProtocolName = "serial" | "bluetooth" | "tcp" | "websocket" | "virtual";
+
+/**
+ * What a caller connects to: a port path, a URL, "manual" or "virtual". A function also
+ * selects the virtual transport.
+ */
+export type SerialPath = string | (() => unknown);
+
+/**
+ * Options handed through to the transport's `connect`. Only the serial transports read
+ * them; the flasher asks for even parity and one stop bit for the STM32 bootloader.
+ */
+export interface SerialConnectOptions {
+    /** `false` when the flasher reboots over MSP with no reboot baud rate set (webstm32's default). */
+    baudRate?: number | false;
+    parityBit?: string;
+    stopBits?: number | string;
+}
+
+/** The payloads callers send. Every transport accepts both. */
+export type SerialPayload = ArrayBuffer | Uint8Array<ArrayBuffer>;
+
+/** What `send` reports, as its result and to the callback. 0 bytes means nothing was sent. */
+export interface SerialSendResult {
+    bytesSent: number;
+}
+
+/** A device as a transport lists it. Bluetooth ids are strings ("unknown" for the vendor). */
+export interface SerialDevice {
+    path: string;
+    displayName: string;
+    vendorId?: number | string;
+    productId?: number | string;
+}
+
+/** The virtual transport lists a bare path, with no display name. */
+type ListedDevice = SerialDevice | VirtualDevice;
+
+/**
+ * The part of a transport this facade calls. The transports differ in the rest: some have
+ * no `send` (virtual), no permission prompt (TCP, WebSocket), or no `connectionId` (TCP,
+ * WebSocket), and those members are optional here.
+ */
+export interface SerialProtocol extends EventTarget {
+    /** Unset on Android when the native plugin is missing: the constructor returns early. */
+    connected?: boolean;
+    connectionId?: string | false | null;
+    /** Traffic counters, read by port_usage. */
+    bitrate?: number;
+    bytesSent?: number;
+    bytesReceived?: number;
+    connect(path: SerialPath, options?: SerialConnectOptions): Promise<boolean | void> | boolean;
+    disconnect(): Promise<boolean | void> | boolean;
+    send?(data: SerialPayload): Promise<SerialSendResult>;
+    /** The facade reads a missing list as empty. */
+    getDevices?(): Promise<ListedDevice[] | undefined>;
+    requestPermissionDevice?(showAllDevices?: boolean): Promise<SerialDevice | null | undefined>;
+    forceClose?(): void;
+    getConnectedDevice(): unknown;
+    /** Bluetooth only: whether an MSP frame with this bad checksum is accepted anyway (see msp.ts). */
+    shouldBypassCrc?(expectedChecksum: number): boolean;
+}
+
+interface ProtocolSlot {
+    name: SerialProtocolName;
+    instance: SerialProtocol;
+}
 
 /**
  * Base Serial class that manages all protocol implementations
  * and handles event forwarding.
  */
 class Serial extends EventTarget {
+    /**
+     * The transport of the current connection. Read directly by msp.ts and port_usage.
+     * Null until the first connect, undefined after a connect to a slot this platform lacks.
+     */
+    _protocol: SerialProtocol | null | undefined;
+    _eventHandlers: Record<string, unknown>;
+    logHead: string;
+    _hasRawTcp: boolean;
+    _protocols: ProtocolSlot[];
+
     constructor() {
         super();
         this._protocol = null;
@@ -81,7 +181,7 @@ class Serial extends EventTarget {
     /**
      * Set up event forwarding from all protocols to the Serial class
      */
-    _setupEventForwarding() {
+    _setupEventForwarding(): void {
         // Device-enumeration events come from EVERY transport — device_handler builds
         // the combined device list from all of them.
         const deviceEvents = ["addedDevice", "removedDevice"];
@@ -98,7 +198,7 @@ class Serial extends EventTarget {
             }
 
             for (const eventType of [...deviceEvents, ...lifecycleEvents]) {
-                instance.addEventListener(eventType, (event) => {
+                instance.addEventListener(eventType, (event: Event) => {
                     // Drop lifecycle events arriving from a non-active transport.
                     if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
                         return;
@@ -118,39 +218,40 @@ class Serial extends EventTarget {
 
     /**
      * Tag a forwarded event's detail with its originating protocol.
-     * @param {Event} event - the source protocol event
-     * @param {string} protocolType - the originating protocol name
+     * @param event - the source protocol event
+     * @param protocolType - the originating protocol name
+     * @returns `receive` re-wrapped, an object detail tagged with its slot, a primitive as-is.
      */
-    _tagDetail(event, protocolType) {
+    _tagDetail(event: Event, protocolType: SerialProtocolName): unknown {
+        const { detail } = event as CustomEvent<unknown>;
         // 'receive' carries a raw data chunk; re-wrap as { data, protocolType }.
         if (event.type === "receive") {
-            return { data: event.detail, protocolType };
+            return { data: detail, protocolType };
         }
         // A PRIMITIVE detail (notably connect/disconnect dispatching `false` on a
         // failed open) is forwarded as-is — spreading `false` would turn it into a
         // truthy { protocolType }, so onOpen() would treat a failed open as success.
-        if (event.detail !== null && typeof event.detail === "object") {
-            return { ...event.detail, protocolType };
+        if (detail !== null && typeof detail === "object") {
+            return { ...detail, protocolType };
         }
-        return event.detail;
+        return detail;
     }
 
     /**
      * Finds a registered protocol instance by slot name.
-     * @param {string|undefined} name - the slot name ("serial", "tcp", "websocket", ...).
-     * @returns {EventTarget|undefined} The instance, or undefined when the platform does not
-     *   register that slot.
+     * @param name - the slot name ("serial", "tcp", "websocket", ...).
+     * @returns The instance, or undefined when the platform does not register that slot.
      */
-    _instance(name) {
+    _instance(name: string | undefined): SerialProtocol | undefined {
         return this._protocols.find((p) => p.name === name)?.instance;
     }
 
     /**
      * Selects the appropriate protocol based on port path
-     * @param {string|function|null} portPath - Port path or callback function for virtual mode
-     * @returns {EventTarget|undefined} The matching protocol instance, or undefined when none applies.
+     * @param portPath - Port path or callback function for virtual mode
+     * @returns The matching protocol instance, or undefined when none applies.
      */
-    selectProtocol(portPath) {
+    selectProtocol(portPath: SerialPath | null | undefined): SerialProtocol | undefined {
         // Determine which protocol to use based on port path
         const isFn = typeof portPath === "function";
         const s = typeof portPath === "string" ? portPath : "";
@@ -178,24 +279,30 @@ class Serial extends EventTarget {
      * Whether a manual target can be opened here, judged by its scheme. A browser has no raw
      * sockets, so a tcp:// address (SITL, the Betaflight bridge) is unreachable from one
      * however it is routed, and offering it only produces a connection that always fails.
-     * @param {string} target - a manual target (URL or bare host[:port])
-     * @returns {boolean} true when a transport on this platform understands it
+     * @param target - a manual target (URL or bare host[:port])
+     * @returns true when a transport on this platform understands it
      */
-    canOpen(target) {
+    canOpen(target: string): boolean {
         return !TCP_URL.test(typeof target === "string" ? target.trim() : "") || this._hasRawTcp;
     }
 
     /**
      * Connect to the specified port with options
-     * @param {string|function} path - Port path or callback for virtual mode
-     * @param {object} options - Connection options (baudRate, etc.)
+     * @param path - Port path or callback for virtual mode
+     * @param options - Connection options (baudRate, etc.)
+     * @param callback - Called with the result too. The WebSocket transport resolves with no value.
      */
-    async connect(path, options, callback) {
+    async connect(
+        path: SerialPath,
+        options?: SerialConnectOptions,
+        callback?: (result: boolean | void) => void,
+    ): Promise<boolean | void> {
         // Select the appropriate protocol based directly on the port path
-        let result = false;
+        let result: boolean | void = false;
         try {
             this._protocol = this.selectProtocol(path);
-            result = await this._protocol.connect(path, options);
+            // A path with no slot on this platform throws here, and is logged below.
+            result = await this._protocol!.connect(path, options);
         } catch (error) {
             console.error(
                 `${this.logHead} Error during connection to path '${path}' with protocol '${this._protocol?.constructor?.name || "undefined"}':`,
@@ -208,11 +315,11 @@ class Serial extends EventTarget {
 
     /**
      * Disconnect from the current connection
-     * @param {function} [callback] - Optional callback for backward compatibility
-     * @returns {Promise<boolean>} - Promise resolving to true if disconnection was successful
+     * @param callback - Optional callback for backward compatibility
+     * @returns Promise resolving to true if disconnection was successful
      */
-    async disconnect(callback) {
-        let result = false;
+    async disconnect(callback?: (result: boolean | void) => void): Promise<boolean | void> {
+        let result: boolean | void = false;
         try {
             result = (await this._protocol?.disconnect()) ?? false;
         } catch (error) {
@@ -228,8 +335,8 @@ class Serial extends EventTarget {
      * The callback is invoked here and only here. Protocols must not be handed
      * it, or every transport that fires it internally would deliver it twice.
      */
-    async send(data, callback) {
-        let result;
+    async send(data: SerialPayload, callback?: (result: SerialSendResult) => void): Promise<SerialSendResult> {
+        let result: SerialSendResult;
         try {
             // Guard the method too: virtual mode has no send(), and that is a
             // normal path, not an error to log.
@@ -244,10 +351,12 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'tcp', 'virtual')
-     * @returns {Promise<Array>} - List of devices
+     * @param protocolType - Optional protocol type ('serial', 'bluetooth', 'tcp', 'virtual')
+     * @returns List of devices. Only the virtual slot lists bare paths, with no display name.
      */
-    async getDevices(protocolType = null) {
+    getDevices(protocolType: "virtual"): Promise<VirtualDevice[]>;
+    getDevices(protocolType?: Exclude<SerialProtocolName, "virtual"> | null): Promise<SerialDevice[]>;
+    async getDevices(protocolType: string | null = null): Promise<ListedDevice[]> {
         try {
             // Get the appropriate protocol
             const targetProtocol = this._instance(protocolType?.toLowerCase());
@@ -272,22 +381,26 @@ class Serial extends EventTarget {
 
     /**
      * Request permission to access a device
-     * @param {boolean} showAllDevices - Whether to show all devices or only those with filters
-     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', etc.)
-     * @returns {Promise<Object>} - Promise resolving to the selected device
+     * @param showAllDevices - Whether to show all devices or only those with filters
+     * @param protocolType - Optional protocol type ('serial', 'bluetooth', etc.)
+     * @returns The selected device, or false/null/undefined when none was granted
      */
-    async requestPermissionDevice(showAllDevices = false, protocolType) {
-        let result = false;
+    async requestPermissionDevice(
+        showAllDevices = false,
+        protocolType?: string,
+    ): Promise<SerialDevice | false | null | undefined> {
+        let result: SerialDevice | false | null | undefined = false;
         try {
             const targetProtocol = this._instance(protocolType?.toLowerCase());
-            result = await targetProtocol?.requestPermissionDevice(showAllDevices);
+            // TCP and WebSocket have no prompt; asking one throws, and is logged below.
+            result = await targetProtocol?.requestPermissionDevice!(showAllDevices);
         } catch (error) {
             console.error(`${this.logHead} Error requesting device permission:`, error);
         }
         return result;
     }
 
-    forceClose() {
+    forceClose(): void {
         try {
             this._protocol?.forceClose?.();
         } catch (error) {
@@ -298,28 +411,28 @@ class Serial extends EventTarget {
     /**
      * Get the currently connected device
      */
-    getConnectedDevice() {
+    getConnectedDevice(): unknown {
         return this._protocol?.getConnectedDevice() || null;
     }
 
     /**
      * Get connection status
      */
-    get connected() {
+    get connected(): boolean {
         return this._protocol?.connected || false;
     }
 
     /**
      * Get connectionId
      */
-    get connectionId() {
+    get connectionId(): string | null {
         return this._protocol?.connectionId || null;
     }
 
     /**
      * Get protocol
      */
-    get protocol() {
+    get protocol(): string | null {
         return this._protocol ? this._protocol.constructor.name.toLowerCase() : null;
     }
 }

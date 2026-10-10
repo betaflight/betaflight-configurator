@@ -25,7 +25,7 @@ import { createPinia, setActivePinia } from "pinia";
 import type { ComponentPublicInstance } from "vue";
 import UInput from "@nuxt/ui/components/Input.vue";
 import AuxiliaryTab from "../../src/components/tabs/AuxiliaryTab.vue";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
@@ -33,9 +33,7 @@ import { channelPercent } from "../../src/js/utils/rcChannel";
 import { MspCancelledError } from "../../src/js/msp/mspErrors";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
-vi.mock("../../src/js/gui", () => ({
-    default: { content_ready: vi.fn(), interval_add: vi.fn(), interval_remove: vi.fn() },
-}));
+vi.mock("../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({
     mspHelper: { loadSerialConfig: (callback: () => void) => callback(), sendModeRanges: vi.fn() },
@@ -119,10 +117,12 @@ describe("Modes empty-state announcement", () => {
     it.each([new Error("MSP timeout"), new MspCancelledError("Disconnected", undefined, "disconnected")])(
         "does not misreport an unsuccessful load as no matching modes: %s",
         async (error) => {
-            vi.spyOn(console, "error").mockImplementation(() => {});
+            const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
             rejectLoad(error);
             await flushPromises();
-            expect(GUI.content_ready).toHaveBeenCalled();
+            // the load settled through its failure path: a real failure is logged, a cancel is not
+            expect(consoleError).toHaveBeenCalledTimes(error instanceof MspCancelledError ? 0 : 1);
+            expect(MSP.promise).toHaveBeenCalledOnce();
             expect(wrapper.find('[role="status"]').exists()).toBe(false);
         },
     );
@@ -149,7 +149,7 @@ describe("Modes MSP wiring", () => {
         Object.assign(fcStore.rc, { active_channels: 5, channels: [1500, 1500, 1000, 1500, 1234] });
         wrapper = mountTab();
         await flushPromises();
-        const rcTick = vi.mocked(GUI.interval_add).mock.calls.find(([name]) => name === "aux_data_pull")![1];
+        const rcTick = vi.mocked(timers.addInterval).mock.calls.find(([name]) => name === "aux_data_pull")![1];
 
         rcTick();
         const [code, , , onRcData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;

@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import SetupTab from "../../src/components/tabs/SetupTab.vue";
-import GUI from "../../src/js/gui";
+import * as timers from "../../src/js/timers";
+import { tabSwitchCleanup } from "../../src/js/tab_adapters";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { MspCancelledError } from "../../src/js/msp/mspErrors";
@@ -14,15 +15,8 @@ vi.mock("i18next-vue", () => ({
         t: (key: string, params?: Record<number, string>) => (params ? `${key}:${params[1]}` : key),
     }),
 }));
-vi.mock("../../src/js/gui", () => ({
-    default: {
-        content_ready: vi.fn(),
-        tab_switch_cleanup: vi.fn(),
-        interval_add: vi.fn(),
-        interval_remove: vi.fn(),
-    },
-    TABS: {},
-}));
+vi.mock("../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
+vi.mock("../../src/js/tab_adapters", () => ({ tabSwitchCleanup: vi.fn(), TABS: {} }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({
     mspHelper: { REBOOT_TYPES: { BOOTLOADER: 101, BOOTLOADER_FLASH: 102 } },
@@ -52,7 +46,7 @@ function mountTab() {
 }
 
 type Tick = () => void;
-const tick = (name: string) => vi.mocked(GUI.interval_add).mock.calls.find(([n]) => n === name)![1] as Tick;
+const tick = (name: string) => vi.mocked(timers.addInterval).mock.calls.find(([n]) => n === name)![1] as Tick;
 
 describe("Setup MSP wiring", () => {
     let wrapper: ReturnType<typeof mountTab> | undefined;
@@ -78,15 +72,13 @@ describe("Setup MSP wiring", () => {
         wrapper = mountTab();
         await flushPromises();
 
-        expect(GUI.content_ready).not.toHaveBeenCalled();
-        expect(GUI.interval_add).not.toHaveBeenCalled();
+        expect(timers.addInterval).not.toHaveBeenCalled();
     });
 
     it("polls attitude on the fast tick and shows each reply", async () => {
         wrapper = mountTab();
         await flushPromises();
-        expect(GUI.content_ready).toHaveBeenCalledOnce();
-        expect(GUI.interval_add).toHaveBeenCalledWith("setup_data_pull_fast", expect.any(Function), 33, true);
+        expect(timers.addInterval).toHaveBeenCalledWith("setup_data_pull_fast", expect.any(Function), 33, true);
 
         tick("setup_data_pull_fast")();
         const [code, , , onData] = vi.mocked(MSP.send_message).mock.calls.at(-1)!;
@@ -136,7 +128,7 @@ describe("Setup MSP wiring", () => {
 
         (onReset as Tick)();
         expect(gui_log).toHaveBeenCalledWith("initialSetupSettingsRestored");
-        vi.mocked(GUI.tab_switch_cleanup).mock.calls[0][0]!();
+        vi.mocked(tabSwitchCleanup).mock.calls[0][0]!();
         await flushPromises();
 
         expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_ACC_TRIM, false);

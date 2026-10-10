@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import ConfigurationTab from "../../src/components/tabs/ConfigurationTab.vue";
-import GUI from "../../src/js/gui";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { gui_log } from "../../src/js/gui_log";
@@ -10,7 +9,6 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 
 const saveAndReboot = vi.fn();
 
-vi.mock("../../src/js/gui", () => ({ default: { content_ready: vi.fn() }, TABS: {} }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn(() => []) } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
@@ -51,6 +49,7 @@ describe("Configuration MSP wiring", () => {
                     release = () => resolve(undefined);
                 }),
         );
+        fcStore.config.craftName = "quad";
         const mounted = mountTab();
         await flushPromises();
 
@@ -60,7 +59,7 @@ describe("Configuration MSP wiring", () => {
 
         // the load only checks between groups of requests, so the first group still completes
         expect(MSP.promise).toHaveBeenCalledTimes(4);
-        expect(GUI.content_ready).not.toHaveBeenCalled();
+        expect(mounted.vm.craftName).not.toBe("quad");
     });
 
     it("populates the UI once the load completes", async () => {
@@ -68,7 +67,6 @@ describe("Configuration MSP wiring", () => {
         wrapper = mountTab();
         await flushPromises();
 
-        expect(GUI.content_ready).toHaveBeenCalledOnce();
         expect(wrapper.vm.craftName).toBe("quad");
         expect(wrapper.vm.dirty).toBe(false);
     });

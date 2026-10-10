@@ -166,7 +166,6 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import ChannelRangePips from "@/components/elements/ChannelRangePips.vue";
-import GUI from "../../js/gui";
 import { useTranslation } from "i18next-vue";
 import { useAdjustmentsState } from "@/composables/adjustments/useAdjustmentsState";
 import { useAdjustmentsData } from "@/composables/adjustments/useAdjustmentsData";
@@ -197,7 +196,6 @@ onMounted(async () => {
     storeOriginals();
     await nextTick();
     startRcDataPolling();
-    GUI.content_ready();
 });
 </script>
 
