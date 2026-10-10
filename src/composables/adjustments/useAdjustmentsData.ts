@@ -22,8 +22,7 @@
 import { ref, reactive, computed } from "vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { API_VERSION_1_48 } from "../../js/data_storage";
-import { API_VERSION_1_49 } from "../../js/data_storage";
+import { API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 import { channelPercent } from "../../js/utils/rcChannel";
 import type { AdjustmentMode, AdjustmentSlot } from "./useAdjustmentsState";
