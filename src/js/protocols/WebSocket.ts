@@ -75,7 +75,7 @@ class Websocket extends EventTarget {
     }
 
     handleDisconnect(): void {
-        this.disconnect();
+        void this.disconnect();
     }
 
     createPort(url: string): WebsocketDevice {
