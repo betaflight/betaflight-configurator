@@ -222,8 +222,8 @@
                             "
                             :disabled="calibratingAccel"
                             :loading="calibratingAccel"
-                            size="xs"
-                            class="w-fit"
+                            size="lg"
+                            class="min-h-10 w-full justify-center whitespace-normal"
                             @click="onCalibrateAccel"
                         >
                             <template #trailing>
