@@ -174,18 +174,17 @@ class STM32Protocol {
     }
 
     /**
-     * Centralized error handling method that resets UI state and releases connection lock
-     * @param {boolean} resetRebootMode - Whether to reset the reboot mode
+     * Centralized error handling method that resets UI state, releases the connection lock
+     * and drops any pending reboot to the bootloader
      */
-    handleError(resetRebootMode = true): void {
+    handleError(): void {
         const connectionStore = useConnectionStore();
         connectionStore.connectLock = false;
         // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
-        if (resetRebootMode) {
-            this.connectionStore.bootloaderRebootMode = 0;
-        }
+        // Otherwise a DFU device appearing later would start a flash the UI has already reset.
+        connectionStore.bootloaderRebootMode = 0;
         this.serialOptions?.resetFlashingState?.();
     }
 
@@ -220,7 +219,7 @@ class STM32Protocol {
         serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
         if (!disconnectionResult || !this.connectionStore.bootloaderRebootMode) {
-            this.handleError(false);
+            this.handleError();
             return;
         }
 

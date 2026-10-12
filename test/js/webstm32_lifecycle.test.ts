@@ -46,4 +46,18 @@ describe("webstm32 lifecycle", () => {
         expect(resetFlashingState).toHaveBeenCalledTimes(1);
         expect(useConnectionStore().bootloaderRebootMode).toBe(0);
     });
+
+    it("drops the pending bootloader reboot when the serial port fails to close", async () => {
+        const connectionStore = useConnectionStore();
+        const resetFlashingState = vi.fn();
+        STM32.serialOptions = { resetFlashingState };
+        connectionStore.connectLock = true;
+        connectionStore.bootloaderRebootMode = 1;
+
+        await STM32.handleDisconnect(false);
+
+        expect(connectionStore.bootloaderRebootMode).toBe(0);
+        expect(connectionStore.connectLock).toBe(false);
+        expect(resetFlashingState).toHaveBeenCalledTimes(1);
+    });
 });
