@@ -21,21 +21,15 @@
 
 import { useLogStore } from "../stores/log";
 
-type LogStore = ReturnType<typeof useLogStore>;
-
-let cachedStore: LogStore | null = null;
-
-function getStore(): LogStore | null {
-    if (cachedStore) {
-        return cachedStore;
-    }
+// Not cached: a store held at module scope stays bound to the Pinia it came from, and calling its
+// action makes that Pinia the active one again, under any caller that has since moved on.
+function getStore(): ReturnType<typeof useLogStore> | null {
     try {
-        cachedStore = useLogStore();
+        return useLogStore();
     } catch {
-        // Pinia may not yet be active during early boot; fall back to null and retry later.
-        cachedStore = null;
+        // Pinia may not yet be active during early boot; drop the message.
+        return null;
     }
-    return cachedStore;
 }
 
 /**

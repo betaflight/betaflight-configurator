@@ -303,6 +303,7 @@ export class UsbDfuProtocol extends EventTarget {
         options?: DfuConnectOptions,
         callback?: () => void,
     ): Promise<void> {
+        const connectionStore = useConnectionStore();
         if (this._connecting) {
             console.warn(`${this.logHead} Connect already in progress, ignoring duplicate call`);
             return;
@@ -350,7 +351,7 @@ export class UsbDfuProtocol extends EventTarget {
             console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
             gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
-            useConnectionStore().connectLock = false;
+            connectionStore.connectLock = false;
             this.callback?.();
             return;
         }
@@ -359,7 +360,7 @@ export class UsbDfuProtocol extends EventTarget {
             console.error(`${this.logHead} Device not found: ${devicePath}`);
             gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
-            useConnectionStore().connectLock = false;
+            connectionStore.connectLock = false;
             this.callback?.();
             return;
         }
@@ -1486,10 +1487,11 @@ export class UsbDfuProtocol extends EventTarget {
     }
 
     cleanup(): void {
+        const connectionStore = useConnectionStore();
         this._connecting = false;
         this.releaseInterface(0);
 
-        useConnectionStore().connectLock = false;
+        connectionStore.connectLock = false;
 
         const timeSpent = Date.now() - this.upload_time_start!;
 

@@ -51,7 +51,7 @@ class AutoDetect {
     targetAvailable = false;
     cloudBuildOptions?: string[];
     cloudBuildKey?: string;
-    private _boardOptions?: BoardTarget[];
+    private _boardOptions?: BoardTarget[] | null;
     private _onBoardDetected?: BoardDetectedCallback;
 
     // Store bound event handlers to make removal more reliable

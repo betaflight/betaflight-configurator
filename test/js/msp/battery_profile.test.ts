@@ -1,11 +1,33 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it } from "vitest";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes, { MSP2TextType } from "../../../src/js/msp/MSPCodes";
 import { createPinia, setActivePinia } from "pinia";
 import { useFlightControllerStore } from "../../../src/stores/fc";
-import CONFIGURATOR, { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 import VirtualFC from "../../../src/js/VirtualFC";
 import { MspBuffer, MspDataView } from "../../../src/js/msp/mspBytes";
+import { useConnectionStore } from "../../../src/stores/connection";
 
 function processMessage(mspHelper: MspHelper, code: number, buffer: number[]) {
     mspHelper.process_data({
@@ -52,13 +74,15 @@ describe("Battery Profiles", () => {
         // A fresh Pinia per test: the store starts from its initial state, and VirtualFC resolves
         // the same active Pinia.
         setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
         fcStore = useFlightControllerStore();
-        CONFIGURATOR.virtualApiVersion = "0.0.1";
+        connectionStore.virtualApiVersion = "0.0.1";
     });
 
     describe("VirtualFC", () => {
         it("reports battery profile support for API >= 1.48", () => {
-            CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualApiVersion = API_VERSION_1_48;
             VirtualFC.setVirtualConfig();
 
             expect(fcStore.config.numberOfBatteryProfiles).toEqual(3);
@@ -66,7 +90,8 @@ describe("Battery Profiles", () => {
         });
 
         it("keeps legacy virtual firmware without battery profiles below API 1.48", () => {
-            CONFIGURATOR.virtualApiVersion = API_VERSION_1_47;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualApiVersion = API_VERSION_1_47;
             VirtualFC.setVirtualConfig();
 
             expect(fcStore.config.numberOfBatteryProfiles).toEqual(0);

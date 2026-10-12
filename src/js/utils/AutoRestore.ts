@@ -28,9 +28,9 @@ import MSPCodes from "../msp/MSPCodes";
 import { serial } from "../serial";
 import { MIN_FC_VERSION_FOR_MSP_CLI, isMspCliSupported } from "../../composables/useMspCliSession";
 import semver from "semver";
-import CONFIGURATOR from "../data_storage";
 import { useFlightControllerStore } from "../../stores/fc";
 import { addTimeout, removeTimeout } from "../timers";
+import { useConnectionStore } from "../../stores/connection";
 
 const DEFAULT_COMMAND_TIMEOUT_MS = 2000;
 const CONNECT_TIMEOUT_MS = 10000;
@@ -67,7 +67,8 @@ class AutoRestore {
     private _saving = false;
 
     canAttemptConnection(): boolean {
-        if (CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
             return false;
         }

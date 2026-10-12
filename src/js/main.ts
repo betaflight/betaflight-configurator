@@ -25,7 +25,6 @@ import { i18n } from "./localization";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics";
 import { initializeSerialBackend } from "./serial_backend";
-import CONFIGURATOR from "./data_storage";
 import CliAutoComplete from "./CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "./DarkTheme";
 import { loadUiScale } from "./UiScale";
@@ -78,13 +77,6 @@ async function loadMspDebugTools(): Promise<void> {
 document.addEventListener("DOMContentLoaded", function () {
     appReady();
 });
-
-function readConfiguratorVersionMetadata() {
-    // These are injected by vite. Check for undefined is needed to prevent race conditions
-    CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== "undefined" ? __APP_PRODUCTNAME__ : "Betaflight App";
-    CONFIGURATOR.version = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
-    CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== "undefined" ? __APP_REVISION__ : "unknown";
-}
 
 function cleanupLocalStorage() {
     // storage quota is 5MB, we need to clean up some stuff (more info see PR #2937)
@@ -168,8 +160,6 @@ function appReady() {
         void loadMspDebugTools();
     }
 
-    readConfiguratorVersionMetadata();
-
     cleanupLocalStorage();
 
     loadDeviceFilters().catch((err) => {
@@ -181,12 +171,13 @@ function appReady() {
 
         // Never null here: checkSetupAnalytics creates the tracker before calling back.
         checkSetupAnalytics(function (analyticsService) {
+            const appInfo = useAppInfoStore();
             analyticsService?.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "AppStart", {
                 sessionControl: "start",
-                configuratorVersion: CONFIGURATOR.getDisplayVersion(),
-                gitRevision: CONFIGURATOR.gitRevision,
-                productName: CONFIGURATOR.productName,
-                operatingSystem: useAppInfoStore().operatingSystem,
+                configuratorVersion: appInfo.displayVersion,
+                gitRevision: appInfo.gitRevision,
+                productName: appInfo.productName,
+                operatingSystem: appInfo.operatingSystem,
                 language: i18n.selectedLanguage,
             });
         });
@@ -226,7 +217,7 @@ async function startProcess() {
     await loginManager.initialize();
 
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: useAppInfoStore().operatingSystem }));
-    gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
+    gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: useAppInfoStore().displayVersion }));
 
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
