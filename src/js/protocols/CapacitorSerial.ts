@@ -21,6 +21,7 @@
 
 import { Capacitor, type PluginListenerHandle } from "@capacitor/core";
 import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes";
+import { registerListeners } from "./capacitorListeners";
 import type { SerialConnectOptions } from "../serial";
 
 /**
@@ -147,13 +148,13 @@ class CapacitorSerial extends EventTarget {
 
     // Kept out of the constructor body, which must not start async work (Sonar S7059).
     private _bootstrap(plugin: BetaflightSerialPlugin): void {
-        this._listening = Promise.all([
+        this._listening = registerListeners([
             // Listen for data received from native plugin
             plugin.addListener("dataReceived", this.handleDataReceived),
             // Listen for device attach/detach events
             plugin.addListener("deviceAttached", this.handleDeviceAttached),
             plugin.addListener("deviceDetached", this.handleDeviceDetached),
-        ]).then(() => undefined);
+        ]);
         // connect() awaits this and reports a failure as a failed connect. This handler only
         // keeps the rejection from going unhandled before then.
         this._listening.catch((error: unknown) =>

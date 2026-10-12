@@ -148,6 +148,11 @@ describe("CapacitorTcp", () => {
         await unheard.connect("tcp://10.0.0.1:5761");
 
         expect(plugin.connect).not.toHaveBeenCalled();
+        // The two listeners that did register are removed again.
+        const registered = plugin.addListener.mock.results.slice(-2).map((result) => result.value);
+        for (const registration of registered) {
+            expect((await registration).remove).toHaveBeenCalledTimes(1);
+        }
         expect(unheard.connected).toBe(false);
         expect(connected.mock.calls[0][0].detail).toBe(false);
         expect(logged).toHaveBeenCalledWith("[TCP] Failed to register the native listeners:", failure);

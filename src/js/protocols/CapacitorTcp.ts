@@ -21,6 +21,7 @@
 
 import { Capacitor, type PluginListenerHandle } from "@capacitor/core";
 import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/bytes";
+import { registerListeners } from "./capacitorListeners";
 import { bracketHost, unbracketHost } from "../utils/host";
 
 /**
@@ -111,7 +112,7 @@ class CapacitorTcp extends EventTarget {
 
     // Kept out of the constructor body, which must not start async work (Sonar S7059).
     private _bootstrap(plugin: BetaflightTcpPlugin): void {
-        this._listening = Promise.all([
+        this._listening = registerListeners([
             plugin.addListener("dataReceived", (ev) => {
                 const bytes = base64ToUint8Array(ev.data);
                 this.handleReceiveBytes({ detail: bytes });
@@ -126,7 +127,7 @@ class CapacitorTcp extends EventTarget {
                 console.log("TCP connection closed by peer");
                 this.handleDisconnect();
             }),
-        ]).then(() => undefined);
+        ]);
         // connect() awaits this and reports a failure as a failed connect. This handler only
         // keeps the rejection from going unhandled before then.
         this._listening.catch((error: unknown) =>
