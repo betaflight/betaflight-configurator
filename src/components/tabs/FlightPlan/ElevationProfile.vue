@@ -9,16 +9,16 @@
                     <strong>{{ $t("flightPlanFlightTime") }}:</strong> {{ totalFlightTime }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMinAlt") }}:</strong> {{ minAltitude }}ft
+                    <strong>{{ $t("flightPlanMinAlt") }}:</strong> {{ formatAltitude(minAltitude) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMaxAlt") }}:</strong> {{ maxAltitude }}ft
+                    <strong>{{ $t("flightPlanMaxAlt") }}:</strong> {{ formatAltitude(maxAltitude) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanGroundElev") }}:</strong> {{ groundElevation }}ft
+                    <strong>{{ $t("flightPlanGroundElev") }}:</strong> {{ formatAltitude(groundElevation) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMaxGroundElev") }}:</strong> {{ maxGroundElevation }}ft
+                    <strong>{{ $t("flightPlanMaxGroundElev") }}:</strong> {{ formatAltitude(maxGroundElevation) }}
                 </span>
             </div>
 
@@ -49,7 +49,7 @@
                             class="axis-label"
                             text-anchor="end"
                         >
-                            {{ tick.value }}ft
+                            {{ tick.value }}{{ altitudeUnit }}
                         </text>
                     </g>
 
@@ -174,7 +174,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            {{ $t("flightPlanAlt") }}: {{ hoveredPoint.altitude }}ft
+                            {{ $t("flightPlanAlt") }}: {{ formatAltitude(hoveredPoint.altitude) }}
                         </text>
                         <text
                             :x="hoveredPoint.tooltipX"
@@ -199,6 +199,7 @@
 import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan, type Waypoint } from "@/composables/useFlightPlan";
+import { useFlightPlanUnits } from "@/composables/useFlightPlanUnits";
 import { METERS_TO_FEET } from "@/js/utils/common";
 
 interface LatLon {
@@ -258,6 +259,7 @@ interface ScaledProfilePoint {
 type HoveredPoint = ScaledProfilePoint & { index: number; tooltipX: number; tooltipY: number };
 
 const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
+const { altitudeUnit, altitudeToDisplay, altitudeFromDisplay, formatAltitude, formatDistance } = useFlightPlanUnits();
 // Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
 const waypoints = positionalWaypoints;
 
@@ -344,12 +346,6 @@ const interpolatePoint = (lat1: number, lon1: number, lat2: number, lon2: number
         latitude: (φ * 180) / Math.PI,
         longitude: (λ * 180) / Math.PI,
     };
-};
-
-// Format distance for display (convert meters to nautical miles)
-const formatDistance = (meters: number) => {
-    const nauticalMiles = meters * METERS_TO_NAUTICAL_MILES;
-    return `${nauticalMiles.toFixed(2)}nm`;
 };
 
 // Calculate profile points with cumulative distance
@@ -453,10 +449,11 @@ const combinedMax = computed(() => {
     return Math.max(maxAltitude.value, maxGroundElevation.value);
 });
 
-// Y-axis ticks
+// Y-axis ticks. Tick values are round numbers in the selected display unit;
+// the chart itself is scaled in feet, so each tick converts back for its y position.
 const yAxisTicks = computed(() => {
     const min = 0; // Always start at sea level (0 ft AMSL)
-    const max = combinedMax.value;
+    const max = altitudeToDisplay(combinedMax.value);
     const range = max - min;
     const tickCount = 5;
     const step = Math.ceil(range / (tickCount - 1) / 10) * 10 || 50; // Round to nearest 10
@@ -466,7 +463,7 @@ const yAxisTicks = computed(() => {
 
     for (let i = 0; i < tickCount; i++) {
         const value = startValue + i * step;
-        const y = scaleY(value);
+        const y = scaleY(altitudeFromDisplay(value));
         ticks.push({ value, y });
     }
 
