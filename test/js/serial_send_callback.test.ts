@@ -1,4 +1,26 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import type { SerialProtocol } from "../../src/js/serial";
 
 // ---------------------------------------------------------------------------
 // serial.send() callback contract.
@@ -19,7 +41,7 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
     isTauriMacOS: () => false,
 }));
 
-const stub = (tag) =>
+const stub = (tag: string) =>
     ({
         [tag]: class extends EventTarget {},
     })[tag];
@@ -32,14 +54,14 @@ vi.mock("../../src/js/protocols/CapacitorSerial.js", () => ({ default: stub("Cap
 vi.mock("../../src/js/protocols/CapacitorBle.js", () => ({ default: stub("CapacitorBle") }));
 vi.mock("../../src/js/protocols/CapacitorTcp.js", () => ({ default: stub("CapacitorTcp") }));
 vi.mock("../../src/js/protocols/TauriSerial", () => ({ default: stub("TauriSerial") }));
-vi.mock("../../src/js/protocols/TauriTcp.js", () => ({ default: stub("TauriTcp") }));
+vi.mock("../../src/js/protocols/TauriTcp", () => ({ default: stub("TauriTcp") }));
 vi.mock("../../src/js/protocols/TauriBle", () => ({ default: stub("TauriBle") }));
 
-let serial;
+let serial: typeof import("../../src/js/serial").serial;
 // The singleton builds its slot table at module load.
-async function loadSerial() {
+async function loadSerial(): Promise<void> {
     vi.resetModules();
-    ({ serial } = await import("../../src/js/serial.js"));
+    ({ serial } = await import("../../src/js/serial"));
 }
 
 /**
@@ -47,10 +69,17 @@ async function loadSerial() {
  * handed, on every exit path. If the facade still passed one down, that is what
  * would produce the second invocation.
  */
-function fakeProtocol({ bytesSent = 0, throws = false, hasSend = true } = {}) {
-    const proto = { receivedCallbacks: [] };
+type SendCallback = (result: { error: unknown; bytesSent: number }) => void;
+
+interface FakeProtocol {
+    receivedCallbacks: (SendCallback | undefined)[];
+    send?: (data: unknown, cb?: SendCallback) => Promise<{ bytesSent: number }>;
+}
+
+function fakeProtocol({ bytesSent = 0, throws = false, hasSend = true } = {}): FakeProtocol & SerialProtocol {
+    const proto: FakeProtocol = { receivedCallbacks: [] };
     if (hasSend) {
-        proto.send = vi.fn(async (data, cb) => {
+        proto.send = vi.fn(async (_data: unknown, cb?: SendCallback) => {
             proto.receivedCallbacks.push(cb);
             cb?.({ error: null, bytesSent });
             if (throws) {
@@ -59,7 +88,8 @@ function fakeProtocol({ bytesSent = 0, throws = false, hasSend = true } = {}) {
             return { bytesSent };
         });
     }
-    return proto;
+    // Only send() is ever called on it.
+    return proto as FakeProtocol & SerialProtocol;
 }
 
 describe("serial.send callback contract", () => {
@@ -126,6 +156,8 @@ describe("serial.send callback contract", () => {
     });
 });
 
+type WebBluetoothModule = typeof import("../../src/js/protocols/WebBluetooth");
+
 describe("WebBluetooth.send return value", () => {
     // The facade's `?? { bytesSent: 0 }` is now the only value the caller sees,
     // so a transport that returns undefined would silently report every send as
@@ -140,7 +172,9 @@ describe("WebBluetooth.send return value", () => {
     });
 
     it("returns the byte count written, not undefined", async () => {
-        const { default: WebBluetooth } = await vi.importActual("../../src/js/protocols/WebBluetooth.js");
+        const { default: WebBluetooth } = await vi.importActual<WebBluetoothModule>(
+            "../../src/js/protocols/WebBluetooth",
+        );
         const ble = new WebBluetooth();
         ble.writeCharacteristic = { writeValue: vi.fn().mockResolvedValue(undefined) };
         ble.device = { gatt: { connected: true } };
@@ -152,7 +186,9 @@ describe("WebBluetooth.send return value", () => {
     });
 
     it("returns zero bytes when there is no write characteristic", async () => {
-        const { default: WebBluetooth } = await vi.importActual("../../src/js/protocols/WebBluetooth.js");
+        const { default: WebBluetooth } = await vi.importActual<WebBluetoothModule>(
+            "../../src/js/protocols/WebBluetooth",
+        );
         const ble = new WebBluetooth();
         ble.writeCharacteristic = null;
 
@@ -160,7 +196,9 @@ describe("WebBluetooth.send return value", () => {
     });
 
     it("returns zero bytes without writing when the GATT server is disconnected", async () => {
-        const { default: WebBluetooth } = await vi.importActual("../../src/js/protocols/WebBluetooth.js");
+        const { default: WebBluetooth } = await vi.importActual<WebBluetoothModule>(
+            "../../src/js/protocols/WebBluetooth",
+        );
         const ble = new WebBluetooth();
         ble.writeCharacteristic = { writeValue: vi.fn() };
         ble.device = { gatt: { connected: false } };
