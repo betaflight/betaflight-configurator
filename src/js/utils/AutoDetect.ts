@@ -51,7 +51,7 @@ class AutoDetect {
     targetAvailable = false;
     cloudBuildOptions?: string[];
     cloudBuildKey?: string;
-    private _boardOptions?: BoardTarget[];
+    private _boardOptions?: BoardTarget[] | null;
     private _onBoardDetected?: BoardDetectedCallback;
     /** The teardown of the current attempt, so the failure paths can't run it twice. */
     private _cleanup: Promise<void> | null = null;

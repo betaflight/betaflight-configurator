@@ -126,7 +126,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
 import { useCloudBuild } from "../../composables/useCloudBuild";
-import { useBoardSelection } from "../../composables/useBoardSelection";
+import { requireTargetReleases, useBoardSelection } from "../../composables/useBoardSelection";
 import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
@@ -837,6 +837,13 @@ export default defineComponent({
                 enableLoadFileButton(true);
             };
 
+            // With no board or release there is nothing to ask the build server for. The requests
+            // used to go out anyway, as ".../undefined", and their 404s ended in the same state.
+            if (!target || !releaseStr) {
+                await loadTargetDetail(null);
+                return;
+            }
+
             try {
                 const targetDetail = await buildApi.loadTarget(target, releaseStr);
                 await loadTargetDetail(targetDetail);
@@ -853,8 +860,10 @@ export default defineComponent({
             }
 
             try {
-                if (validateBuildKey()) {
-                    const options = await buildApi.loadOptionsByBuildKey(releaseStr, cloudBuild.state.cloudBuildKey);
+                // validateBuildKey() already requires a 32-character key; the local check narrows it.
+                const buildKey = cloudBuild.state.cloudBuildKey;
+                if (buildKey && validateBuildKey()) {
+                    const options = await buildApi.loadOptionsByBuildKey(releaseStr, buildKey);
                     if (options) {
                         buildOptions(options);
                         return;
@@ -1385,7 +1394,7 @@ export default defineComponent({
 
                 if (boardTarget) {
                     try {
-                        const targetReleases = await buildApi.loadTargetReleases(boardTarget);
+                        const targetReleases = await requireTargetReleases(buildApi, boardTarget);
                         await populateReleases({ target: boardTarget, releases: targetReleases.releases });
                     } catch (error) {
                         console.error(
@@ -2603,10 +2612,8 @@ export default defineComponent({
             color: var(--warning);
         }
     }
-}
 
-/* Unstable firmware dialog list styling */
-#dialogUnstableFirmwareAcknowledgement {
+    /* list styling */
     :deep(ul) {
         margin-inline-start: 1.5rem;
         margin-top: 0.5rem;
