@@ -176,4 +176,22 @@ describe("CapacitorSerial", () => {
         expect(removed.mock.calls[0][0].detail.path).toBe(PATH);
         expect(plugin.disconnect).not.toHaveBeenCalled();
     });
+
+    it("reports a failed connect when the native listeners could not be registered", async () => {
+        const failure = new Error("bridge not ready");
+        plugin.addListener.mockRejectedValueOnce(failure);
+        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+        const unheard = new CapacitorSerial();
+        await unheard.getDevices();
+        const connected = vi.fn();
+        unheard.addEventListener("connect", connected);
+
+        expect(await unheard.connect(PATH)).toBe(false);
+
+        expect(plugin.connect).not.toHaveBeenCalled();
+        expect(unheard.openRequested).toBe(false);
+        expect(connected.mock.calls[0][0].detail).toBe(false);
+        expect(logged).toHaveBeenCalledWith("[CAPACITORSERIAL] Failed to register the native listeners:", failure);
+        logged.mockRestore();
+    });
 });

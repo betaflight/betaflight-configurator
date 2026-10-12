@@ -207,4 +207,21 @@ describe("CapacitorBle transport", () => {
         expect(ble.connectionId).toBeNull();
         expect(disconnected.mock.calls[0][0].detail).toBe(true);
     });
+
+    it("reports a failed connect when the native listeners could not be registered", async () => {
+        const failure = new Error("bridge not ready");
+        plugin.addListener.mockRejectedValueOnce(failure);
+        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+        const unheard = new CapacitorBle();
+        const connected = vi.fn();
+        unheard.addEventListener("connect", connected);
+
+        expect(await unheard.connect(PATH)).toBe(false);
+
+        expect(plugin.connect).not.toHaveBeenCalled();
+        expect(unheard.connectionId).toBeNull();
+        expect(connected.mock.calls[0][0].detail).toBe(false);
+        expect(logged).toHaveBeenCalledWith("[CAPACITORBLE] Failed to register the native listeners:", failure);
+        logged.mockRestore();
+    });
 });

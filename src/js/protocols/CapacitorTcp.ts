@@ -74,6 +74,12 @@ class CapacitorTcp extends EventTarget {
     logHead: string;
     address: string;
     plugin: BetaflightTcpPlugin | undefined;
+    /**
+     * Settles once the native listeners are registered, and rejects if that failed.
+     * connect() awaits it, so a transport that cannot hear the device never reports a
+     * connection. Null when the plugin is missing.
+     */
+    _listening: Promise<void> | null;
 
     constructor() {
         super();
@@ -91,6 +97,7 @@ class CapacitorTcp extends EventTarget {
         this.address = "http://localhost:5761";
 
         this.plugin = BetaflightTcp;
+        this._listening = null;
 
         this.connect = this.connect.bind(this);
 
@@ -99,22 +106,32 @@ class CapacitorTcp extends EventTarget {
             return;
         }
 
-        void this.plugin.addListener("dataReceived", (ev) => {
-            const bytes = base64ToUint8Array(ev.data);
-            this.handleReceiveBytes({ detail: bytes });
-            // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
-            this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: bytes }));
-        });
+        this._bootstrap(this.plugin);
+    }
 
-        void this.plugin.addListener("dataReceivedError", (ev) => {
-            console.warn("TCP read error:", ev.error);
-            this.handleDisconnect();
-        });
-
-        void this.plugin.addListener("connectionClosed", () => {
-            console.log("TCP connection closed by peer");
-            this.handleDisconnect();
-        });
+    // Kept out of the constructor body, which must not start async work (Sonar S7059).
+    private _bootstrap(plugin: BetaflightTcpPlugin): void {
+        this._listening = Promise.all([
+            plugin.addListener("dataReceived", (ev) => {
+                const bytes = base64ToUint8Array(ev.data);
+                this.handleReceiveBytes({ detail: bytes });
+                // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
+                this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: bytes }));
+            }),
+            plugin.addListener("dataReceivedError", (ev) => {
+                console.warn("TCP read error:", ev.error);
+                this.handleDisconnect();
+            }),
+            plugin.addListener("connectionClosed", () => {
+                console.log("TCP connection closed by peer");
+                this.handleDisconnect();
+            }),
+        ]).then(() => undefined);
+        // connect() awaits this and reports a failure as a failed connect. This handler only
+        // keeps the rejection from going unhandled before then.
+        this._listening.catch((error: unknown) =>
+            console.error(`${this.logHead} Failed to register the native listeners:`, error),
+        );
     }
 
     /**
@@ -160,6 +177,7 @@ class CapacitorTcp extends EventTarget {
 
     async connect(path: string, _options?: unknown): Promise<void> {
         try {
+            await this._listening;
             const url = new URL(path);
             // The native plugin connects to a bare address.
             const host = unbracketHost(url.hostname);

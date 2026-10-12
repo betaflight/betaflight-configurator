@@ -103,6 +103,12 @@ class CapacitorSerial extends EventTarget {
     ports: CapacitorSerialPort[];
     currentDevice: CapacitorSerialPort | null;
     connectionId: string | null;
+    /**
+     * Settles once the native listeners are registered, and rejects if that failed.
+     * connect() awaits it, so a transport that cannot hear the device never reports a
+     * connection. Null when the plugin is missing.
+     */
+    _listening: Promise<void> | null;
 
     constructor() {
         super();
@@ -121,6 +127,7 @@ class CapacitorSerial extends EventTarget {
         this.ports = [];
         this.currentDevice = null;
         this.connectionId = null;
+        this._listening = null;
 
         if (!BetaflightSerial) {
             console.error(`${logHead} Native BetaflightSerial plugin is not available`);
@@ -133,17 +140,28 @@ class CapacitorSerial extends EventTarget {
         this.handleDeviceAttached = this.handleDeviceAttached.bind(this);
         this.handleDeviceDetached = this.handleDeviceDetached.bind(this);
 
-        // Listen for data received from native plugin
-        void BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
-
-        // Listen for device attach/detach events
-        void BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
-        void BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
-
-        // Load initial device list
-        void this.loadDevices();
+        this._bootstrap(BetaflightSerial);
 
         console.log(`${logHead} CapacitorSerial initialized`);
+    }
+
+    // Kept out of the constructor body, which must not start async work (Sonar S7059).
+    private _bootstrap(plugin: BetaflightSerialPlugin): void {
+        this._listening = Promise.all([
+            // Listen for data received from native plugin
+            plugin.addListener("dataReceived", this.handleDataReceived),
+            // Listen for device attach/detach events
+            plugin.addListener("deviceAttached", this.handleDeviceAttached),
+            plugin.addListener("deviceDetached", this.handleDeviceDetached),
+        ]).then(() => undefined);
+        // connect() awaits this and reports a failure as a failed connect. This handler only
+        // keeps the rejection from going unhandled before then.
+        this._listening.catch((error: unknown) =>
+            console.error(`${logHead} Failed to register the native listeners:`, error),
+        );
+
+        // Load initial device list. loadDevices() catches and logs its own failures.
+        void this.loadDevices();
     }
 
     handleDataReceived(event: { data: string }): void {
@@ -268,6 +286,8 @@ class CapacitorSerial extends EventTarget {
         this.openRequested = true;
 
         try {
+            await this._listening;
+
             const device = this.ports.find((port) => port.path === path);
             if (!device) {
                 console.error(`${logHead} Device not found:`, path);

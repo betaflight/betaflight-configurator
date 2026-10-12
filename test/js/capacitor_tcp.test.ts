@@ -136,4 +136,21 @@ describe("CapacitorTcp", () => {
         expect(tcp.connected).toBe(false);
         expect(disconnected.mock.calls[0][0].detail).toBe(true);
     });
+
+    it("reports a failed connect when the native listeners could not be registered", async () => {
+        const failure = new Error("bridge not ready");
+        plugin.addListener.mockRejectedValueOnce(failure);
+        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+        const unheard = new CapacitorTcp();
+        const connected = vi.fn();
+        unheard.addEventListener("connect", connected);
+
+        await unheard.connect("tcp://10.0.0.1:5761");
+
+        expect(plugin.connect).not.toHaveBeenCalled();
+        expect(unheard.connected).toBe(false);
+        expect(connected.mock.calls[0][0].detail).toBe(false);
+        expect(logged).toHaveBeenCalledWith("[TCP] Failed to register the native listeners:", failure);
+        logged.mockRestore();
+    });
 });

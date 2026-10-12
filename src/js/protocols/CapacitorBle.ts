@@ -84,6 +84,12 @@ class CapacitorBle extends EventTarget {
     bytesSent: number;
     bytesReceived: number;
     deviceDescription: BluetoothDeviceProfile | null;
+    /**
+     * Settles once the native listeners are registered, and rejects if that failed.
+     * connect() awaits it, so a transport that cannot hear the device never reports a
+     * connection. Null when the plugin is missing.
+     */
+    _listening: Promise<void> | null;
 
     constructor() {
         super();
@@ -97,23 +103,35 @@ class CapacitorBle extends EventTarget {
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.deviceDescription = null;
+        this._listening = null;
 
         if (!plugin) {
             console.warn(`${logHead} Native BetaflightBle plugin is not available`);
             return;
         }
 
-        void plugin.addListener("dataReceived", (event) => {
-            const data = base64ToUint8Array(event?.data);
-            this.bytesReceived += data.byteLength;
-            this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: data }));
-        });
+        this._bootstrap(plugin);
+    }
 
-        void plugin.addListener("disconnected", () => {
-            this.connected = false;
-            this.connectionId = null;
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-        });
+    // Kept out of the constructor body, which must not start async work (Sonar S7059).
+    private _bootstrap(native: BetaflightBlePlugin): void {
+        this._listening = Promise.all([
+            native.addListener("dataReceived", (event) => {
+                const data = base64ToUint8Array(event?.data);
+                this.bytesReceived += data.byteLength;
+                this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: data }));
+            }),
+            native.addListener("disconnected", () => {
+                this.connected = false;
+                this.connectionId = null;
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            }),
+        ]).then(() => undefined);
+        // connect() awaits this and reports a failure as a failed connect. This handler only
+        // keeps the rejection from going unhandled before then.
+        this._listening.catch((error: unknown) =>
+            console.error(`${logHead} Failed to register the native listeners:`, error),
+        );
     }
 
     getConnectedDevice(): CapacitorBleDevice | null {
@@ -173,6 +191,8 @@ class CapacitorBle extends EventTarget {
         this.deviceDescription = bluetoothDevices.find((d) => d.serviceUuid === device.serviceUuid) || null;
 
         try {
+            await this._listening;
+
             const result = await plugin.connect({
                 address: device.address,
                 serviceUuid: device.serviceUuid,
