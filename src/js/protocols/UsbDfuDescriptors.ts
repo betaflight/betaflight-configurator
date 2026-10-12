@@ -1,3 +1,55 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { DfuControlSetup } from "./usbdfu";
+
+/** A control transfer IN as the subclass reports it: the bytes read, valid when status is "ok". */
+export interface RawTransferInResult {
+    status: string;
+    data: Uint8Array;
+}
+
+/** A standard USB interface descriptor, field by field. */
+export interface UsbInterfaceDescriptor {
+    bLength: number;
+    bDescriptorType: number;
+    bInterfaceNumber: number;
+    bAlternateSetting: number;
+    bNumEndpoints: number;
+    bInterfaceClass: number;
+    bInterfaceSubclass: number;
+    bInterfaceProtocol: number;
+    iInterface: number;
+}
+
+/** A DFU functional descriptor as parsed here; every field is present. */
+export interface UsbDfuFunctionalDescriptor {
+    bLength: number;
+    bDescriptorType: number;
+    bmAttributes: number;
+    wDetachTimeOut: number;
+    wTransferSize: number;
+    bcdDFUVersion: number;
+}
+
 /**
  * USB descriptor reading for DFU transports.
  *
@@ -7,26 +59,34 @@
  * `_invalidateDescriptorCache()` whenever the underlying device changes.
  */
 class UsbDfuDescriptors extends EventTarget {
+    /** Set by the subclass in its constructor. */
+    declare logHead: string;
+    _langId: number | undefined;
+    _configDescriptor: Uint8Array | undefined;
+    _descriptorGeneration: number | undefined;
+
     // DFU functional descriptor bDescriptorType. NOTE: 0x21 is shared with the HID
     // descriptor type, so a bare type match is ambiguous on composite devices — it must
     // be qualified by a preceding DFU interface descriptor (see getFunctionalDescriptor).
-    static get DFU_FUNCTIONAL_DESCRIPTOR_TYPE() {
+    static get DFU_FUNCTIONAL_DESCRIPTOR_TYPE(): number {
         return 0x21;
     }
 
     /**
      * Perform a control transfer IN, returning the raw bytes.
      * @abstract
-     * @param {{requestType: string, recipient: string, request: number, value: number, index: number}} _setup
-     * @param {number} _length - Maximum bytes to read.
-     * @returns {Promise<{status: string, data: Uint8Array}>}
+     * @param _setup - the setup packet.
+     * @param _length - Maximum bytes to read.
      */
-    async _rawControlTransferIn(_setup, _length) {
+    async _rawControlTransferIn(
+        _setup: DfuControlSetup,
+        _length: number,
+    ): Promise<RawTransferInResult> /* NOSONAR: abstract; subclasses implement it asynchronously */ {
         throw new Error("_rawControlTransferIn must be implemented by the transport");
     }
 
     /** Drops descriptors cached against the previous device. */
-    _invalidateDescriptorCache() {
+    _invalidateDescriptorCache(): void {
         this._langId = undefined;
         this._configDescriptor = undefined;
         // A read already awaiting a transfer when the device changes must not
@@ -39,15 +99,14 @@ class UsbDfuDescriptors extends EventTarget {
      * Reject a USB operation that never settles, so a wedged device surfaces an
      * error instead of hanging the flash forever. Control transfers normally
      * complete in milliseconds, so this never fires during healthy operation.
-     * @template T
-     * @param {Promise<T>} promise - The USB operation to guard.
-     * @param {number} timeoutMs - Timeout in milliseconds.
-     * @param {string} label - Human-readable operation name for the timeout error.
-     * @returns {Promise<T>} Resolves with the operation result, or rejects on timeout.
+     * @param promise - The USB operation to guard.
+     * @param timeoutMs - Timeout in milliseconds.
+     * @param label - Human-readable operation name for the timeout error.
+     * @returns Resolves with the operation result, or rejects on timeout.
      */
-    _withTimeout(promise, timeoutMs, label) {
-        let timer;
-        const timeout = new Promise((_, reject) => {
+    _withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        const timeout = new Promise<never>((_, reject) => {
             timer = setTimeout(
                 () => reject(new Error(`${this.logHead} USB ${label} timed out after ${timeoutMs}ms`)),
                 timeoutMs,
@@ -66,13 +125,13 @@ class UsbDfuDescriptors extends EventTarget {
      * Cached after the first successful read.
      * Falls back to 0x0409 (English US) on failure.
      */
-    async getLangId() {
+    async getLangId(): Promise<number> {
         if (this._langId !== undefined) {
             return this._langId;
         }
 
         const generation = this._descriptorGeneration ?? 0;
-        const cache = (langId) => {
+        const cache = (langId: number): number => {
             if ((this._descriptorGeneration ?? 0) === generation) {
                 this._langId = langId;
             }
@@ -80,7 +139,7 @@ class UsbDfuDescriptors extends EventTarget {
         };
 
         try {
-            const setup = {
+            const setup: DfuControlSetup = {
                 requestType: "standard",
                 recipient: "device",
                 request: 6,
@@ -99,13 +158,13 @@ class UsbDfuDescriptors extends EventTarget {
         return cache(0x0409);
     }
 
-    async getString(index) {
+    async getString(index: number): Promise<string> {
         if (index === 0) {
             return "";
         }
 
         const langId = await this.getLangId();
-        const setup = {
+        const setup: DfuControlSetup = {
             requestType: "standard",
             recipient: "device",
             request: 6,
@@ -130,13 +189,13 @@ class UsbDfuDescriptors extends EventTarget {
      * Fetch the full configuration descriptor blob.
      * Cached for the lifetime of the current device connection.
      */
-    async getConfigDescriptor() {
+    async getConfigDescriptor(): Promise<Uint8Array> {
         if (this._configDescriptor) {
             return this._configDescriptor;
         }
 
         const generation = this._descriptorGeneration ?? 0;
-        const setup = {
+        const setup: DfuControlSetup = {
             requestType: "standard",
             recipient: "device",
             request: 6,
@@ -187,7 +246,7 @@ class UsbDfuDescriptors extends EventTarget {
         return result.data;
     }
 
-    async getInterfaceDescriptor(interfaceIndex) {
+    async getInterfaceDescriptor(interfaceIndex: number): Promise<UsbInterfaceDescriptor> {
         const buf = await this.getConfigDescriptor();
 
         // Walk the descriptor chain looking for the Nth interface descriptor (type 4)
@@ -225,10 +284,8 @@ class UsbDfuDescriptors extends EventTarget {
      * Count the interface descriptors (type 4) in the configuration blob. Alternate
      * settings each get their own descriptor, so this counts them individually, which
      * is what getInterfaceDescriptor indexes over.
-     * @param {Uint8Array} buf
-     * @returns {number}
      */
-    _countInterfaceDescriptors(buf) {
+    _countInterfaceDescriptors(buf: Uint8Array): number {
         let offset = 9;
         let count = 0;
         while (offset + 1 < buf.length) {
@@ -242,10 +299,9 @@ class UsbDfuDescriptors extends EventTarget {
 
     /**
      * Read all interface descriptor strings for a given interface number.
-     * @returns {Promise<string[]>}
      */
-    async getInterfaceDescriptors(interfaceNum) {
-        const descriptorStringArray = [];
+    async getInterfaceDescriptors(interfaceNum: number): Promise<string[]> {
+        const descriptorStringArray: string[] = [];
         const descriptorCount = this._countInterfaceDescriptors(await this.getConfigDescriptor());
 
         for (let i = 0; i < descriptorCount; i++) {
@@ -266,11 +322,10 @@ class UsbDfuDescriptors extends EventTarget {
 
     /**
      * Decode a DFU functional descriptor from `buf` at `offset`.
-     * @param {Uint8Array} buf - Buffer containing the descriptor.
-     * @param {number} [offset=0] - Byte offset of the descriptor's bLength field.
-     * @returns {{bLength:number,bDescriptorType:number,bmAttributes:number,wDetachTimeOut:number,wTransferSize:number,bcdDFUVersion:number}}
+     * @param buf - Buffer containing the descriptor.
+     * @param offset - Byte offset of the descriptor's bLength field.
      */
-    _parseFunctionalDescriptor(buf, offset = 0) {
+    _parseFunctionalDescriptor(buf: Uint8Array, offset = 0): UsbDfuFunctionalDescriptor {
         return {
             bLength: buf[offset],
             bDescriptorType: buf[offset + 1],
@@ -285,11 +340,8 @@ class UsbDfuDescriptors extends EventTarget {
      * True if `buf` at `offset` holds a complete DFU functional descriptor with a
      * usable, non-zero wTransferSize. Rejects HID descriptors (same 0x21 type) that are
      * shorter or that decode to a zero transfer size.
-     * @param {Uint8Array} buf
-     * @param {number} offset
-     * @returns {boolean}
      */
-    _isValidFunctionalDescriptor(buf, offset) {
+    _isValidFunctionalDescriptor(buf: Uint8Array, offset: number): boolean {
         const DFU = UsbDfuDescriptors.DFU_FUNCTIONAL_DESCRIPTOR_TYPE;
         if (buf[offset + 1] !== DFU) {
             return false;
@@ -315,9 +367,8 @@ class UsbDfuDescriptors extends EventTarget {
      * Because 0x21 is also the HID descriptor type, a match is only accepted when it sits
      * inside a DFU interface (bInterfaceClass 0xFE / bInterfaceSubClass 0x01) and is a
      * complete 9-byte descriptor with a non-zero wTransferSize.
-     * @returns {Promise<{bLength:number,bDescriptorType:number,bmAttributes:number,wDetachTimeOut:number,wTransferSize:number,bcdDFUVersion:number}>}
      */
-    async getFunctionalDescriptor() {
+    async getFunctionalDescriptor(): Promise<UsbDfuFunctionalDescriptor> {
         try {
             const buf = await this.getConfigDescriptor();
             let offset = 0;
@@ -348,7 +399,7 @@ class UsbDfuDescriptors extends EventTarget {
         }
 
         // Fallback: request it directly (works on classic ST/AT32/GD32 bootloaders).
-        const setup = {
+        const setup: DfuControlSetup = {
             requestType: "standard",
             recipient: "interface",
             request: 6,
