@@ -413,11 +413,47 @@
     "autotuneBandwidth": {
         "message": "Полоса пропускания"
     },
+    "autotuneCrossover": {
+        "message": "Частота среза по усилению"
+    },
     "autotunePhaseMargin": {
         "message": "Запас по фазе"
     },
+    "autotuneTargetCrossover": {
+        "message": "Предельная частота среза"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Макс. запас по фазе"
+    },
     "autotunePredictedSensitivity": {
         "message": "Прогнозируемая пиковая чувствительность"
+    },
+    "autotuneLoopDelay": {
+        "message": "Задержка контура"
+    },
+    "autotuneTargetMargin": {
+        "message": "Цель настройки"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Агрессивный"
+    },
+    "autotuneMarginNormal": {
+        "message": "Обычный"
+    },
+    "autotuneMarginConservative": {
+        "message": "Консервативный"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: этот аппарат не может достичь запаса по фазе $2° (его предел — около $3), поэтому коэффициент оставлен без изменений, а не подобран наугад. Выберите более низкую цель настройки или увеличьте D, чтобы поднять предел."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: по результатам измерения коэффициент нужно изменить в $2 раза, но за один проход допускается изменение не более чем в $3 раза. Указанная предельная частота среза не достигнута — примените коэффициенты, выполните ещё один полёт с CHIRP и повторите."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: здесь коэффициент ограничен пиковой чувствительностью, а не запасом по фазе. Выше частоты среза контур проходит близко к −1, поэтому рекомендация не достигает целевого запаса по фазе."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: ни одно значение коэффициента в пределах одного прохода не удерживает пиковую чувствительность в границах робастности. Предложенное значение — лучшее из доступных, но не безопасное: используйте его как отправную точку и повторите измерение."
     },
     "autotuneResonantPeak": {
         "message": "Резонансный пик"
@@ -433,6 +469,12 @@
     },
     "autotuneApplied": {
         "message": "Коэффициенты применены и сохранены."
+    },
+    "autotuneApplyConfirmText": {
+        "message": "При применении позиции ползунков настройки записываются в полётный контроллер и сохраняются в EEPROM. Рекомендованные коэффициенты могут нарушить устойчивость аппарата при первом арме, поэтому во время первого теста будьте готовы выполнить дизарм."
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "Применить рекомендованные коэффициенты?"
     },
     "autotuneApplyFailed": {
         "message": " Не удалось применить коэффициенты"
@@ -1891,6 +1933,30 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Примечание:</strong> <span class=\"message-negative\">НЕ ОТКЛЮЧАЙТЕ</span> MSP на первом в списке порту, если вы не знаете, что делаете. Сделав это можно случайно перепрошить и стереть конфигурацию."
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Произвольный текст OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Телеметрия"
+    },
+    "portsConflictTitle": {
+        "message": "Порт уже используется"
+    },
+    "portsConflictCancel": {
+        "message": "Отмена"
+    },
+    "portsSensorGyro": {
+        "message": "Гироскоп"
     },
     "portsTelemetryDisabled": {
         "message": "Отключено"
