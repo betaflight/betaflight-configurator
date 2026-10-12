@@ -58,8 +58,7 @@ export type SerialPath = string | (() => unknown);
  * them; the flasher asks for even parity and one stop bit for the STM32 bootloader.
  */
 export interface SerialConnectOptions {
-    /** `false` when the flasher reboots over MSP with no reboot baud rate set (webstm32's default). */
-    baudRate?: number | false;
+    baudRate?: number;
     parityBit?: string;
     stopBits?: number | string;
 }
@@ -104,8 +103,11 @@ export interface SerialProtocol extends EventTarget {
     requestPermissionDevice?(showAllDevices?: boolean): Promise<SerialDevice | null | undefined>;
     forceClose?(): void;
     getConnectedDevice(): unknown;
-    /** Bluetooth only: whether an MSP frame with this bad checksum is accepted anyway (see msp.ts). */
-    shouldBypassCrc?(expectedChecksum: number): boolean;
+    /**
+     * Bluetooth only: whether an MSP frame is accepted despite a checksum mismatch (see msp.ts).
+     * `expectedChecksum` is the byte received on the wire, `computedChecksum` the one MSP calculated.
+     */
+    shouldBypassCrc?(expectedChecksum: number, computedChecksum: number): boolean;
 }
 
 interface ProtocolSlot {

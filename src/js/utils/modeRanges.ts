@@ -67,6 +67,10 @@ export interface Mode {
 export const CHANNEL_STEP = 25;
 export const MIN_RANGE_GAP = 25;
 export const DEFAULT_RANGE: Range = { start: 1300, end: 1700 };
+/** The UI's "Auto" channel, for a range whose aux channel has not been picked yet. */
+export const AUTO_CHANNEL_INDEX = -1;
+/** How "Auto" comes back from the FC: the MSP field is a U8, so -1 is stored as 0xff. */
+const AUTO_CHANNEL_WIRE_VALUE = 0xff;
 
 export function snapChannel(value: number): number {
     const numericValue = Number(value);
@@ -123,7 +127,8 @@ export function entriesFromModeRanges(
                 modeId: range.id,
                 entry: {
                     kind: "range",
-                    auxChannelIndex: range.auxChannelIndex,
+                    auxChannelIndex:
+                        range.auxChannelIndex === AUTO_CHANNEL_WIRE_VALUE ? AUTO_CHANNEL_INDEX : range.auxChannelIndex,
                     modeLogic,
                     sliderRange: normalizeRangeValues([range.range.start, range.range.end]),
                 },

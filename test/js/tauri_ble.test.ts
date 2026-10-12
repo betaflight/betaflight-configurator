@@ -156,6 +156,16 @@ describe("TauriBle.connect", () => {
         expect(received).toEqual([new Uint8Array([1, 2, 3])]);
     });
 
+    it("counts each received chunk once", async () => {
+        mockCommands({ ble_connect: { serviceUuid: "svc-hm10" } });
+        const ble = new TauriBle();
+        await ble.connect("bluetooth_uuid-1");
+
+        listeners.get("ble-data")?.({ payload: [1, 2, 3] });
+
+        expect(ble.bytesReceived).toBe(3);
+    });
+
     it("reports failure and drops its listeners when Rust cannot connect", async () => {
         mockCommands({ ble_connect: new Error("no such peripheral") });
         const ble = new TauriBle();
@@ -241,6 +251,15 @@ describe("TauriBle.shouldBypassCrc", () => {
 
         expect(ble.shouldBypassCrc(0x12)).toBe(false);
         expect(ble.shouldBypassCrc(0xff)).toBe(true);
+    });
+
+    it("does not bypass when the computed checksum is 0xff too", async () => {
+        mockCommands({ ble_connect: { serviceUuid: "svc-cc2541" } });
+        const ble = new TauriBle();
+        await ble.connect("bluetooth_uuid-1");
+
+        expect(ble.shouldBypassCrc(0xff, 0x12)).toBe(true);
+        expect(ble.shouldBypassCrc(0xff, 0xff)).toBe(false);
     });
 
     it("stops bypassing once disconnected, even when a failed close kept the module's description", async () => {

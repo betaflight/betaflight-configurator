@@ -350,3 +350,26 @@ describe("(c) selectProtocol routes the stable bluetooth path to the BLE protoco
         expect(serial.selectProtocol("tcp://127.0.0.1:5761").constructor.name).toBe("Websocket");
     });
 });
+
+describe("WebBluetooth.shouldBypassCrc", () => {
+    async function connectedSusceptible() {
+        const WebBluetooth = await loadWebBluetooth();
+        const ble = new WebBluetooth();
+        ble.connected = true;
+        ble.deviceDescription = { name: "CC2541", susceptibleToCrcCorruption: true };
+        return ble;
+    }
+
+    it("bypasses a received 0xff checksum when the computed one differs", async () => {
+        const ble = await connectedSusceptible();
+
+        expect(ble.shouldBypassCrc(0xff, 0x12)).toBe(true);
+    });
+
+    it("does not bypass when the computed checksum is 0xff too, or the received one is not 0xff", async () => {
+        const ble = await connectedSusceptible();
+
+        expect(ble.shouldBypassCrc(0xff, 0xff)).toBe(false);
+        expect(ble.shouldBypassCrc(0x12, 0x34)).toBe(false);
+    });
+});
