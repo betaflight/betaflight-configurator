@@ -1,16 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-const { flasher, endFlashing } = vi.hoisted(() => ({
-    flasher: {
-        FLASH_MESSAGE_TYPES: { NEUTRAL: 0, VALID: 1, INVALID: 2 },
-        flashingMessage: () => flasher,
-        flashProgress: () => flasher,
-        resetFlashingState: vi.fn(),
-    },
+const { endFlashing } = vi.hoisted(() => ({
     endFlashing: vi.fn(),
 }));
 
-vi.mock("../../src/js/tab_adapters", () => ({ TABS: { firmware_flasher: flasher } }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (k: string) => k } }));
 vi.mock("../../src/js/connection_state", () => ({ getConnectionState: () => ({ endFlashing }) }));
 vi.mock("../../src/js/serial", () => ({
@@ -43,12 +36,13 @@ describe("webstm32 lifecycle", () => {
 
     it("resets the flasher tab when the user rejects a board mismatch", () => {
         const reboot = vi.spyOn(STM32, "reboot").mockImplementation(() => {});
-        flasher.resetFlashingState.mockClear();
+        const resetFlashingState = vi.fn();
+        STM32.serialOptions = { resetFlashingState };
 
         expect(() => STM32.onAbort()).not.toThrow();
 
         expect(reboot).toHaveBeenCalledTimes(1);
-        expect(flasher.resetFlashingState).toHaveBeenCalledTimes(1);
+        expect(resetFlashingState).toHaveBeenCalledTimes(1);
         expect(STM32.rebootMode).toBe(0);
     });
 });

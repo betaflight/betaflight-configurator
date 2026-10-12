@@ -74,6 +74,7 @@ interface HexFlashSettings {
     flashManualBaudRate?: number;
     filename?: string | null;
     resetFlashingState?: () => void;
+    requestDfuPermission?: () => void;
     selectedBoard?: string;
     localFirmwareLoaded?: boolean;
     showDialogVerifyBoard?: ShowDialogVerifyBoard;
@@ -381,6 +382,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -390,6 +392,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashingMessage,
             flashProgress,
             flashMessageTypes: FLASH_MESSAGE_TYPES,
+            resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -494,6 +498,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             setFlashOnConnect,
             selectedBoard,
             localFirmwareLoaded,
@@ -530,6 +535,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 flashManualBaudRate,
                 filename,
                 resetFlashingState,
+                requestDfuPermission,
                 selectedBoard,
                 localFirmwareLoaded,
                 showDialogVerifyBoard,
