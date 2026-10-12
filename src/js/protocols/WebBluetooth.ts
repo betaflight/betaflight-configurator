@@ -1,6 +1,84 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import { bluetoothDevices } from "./devices";
+import { bluetoothDevices, type BluetoothDeviceProfile } from "./devices";
+import type { SerialConnectOptions, SerialPayload } from "../serial";
+
+/** The W3C `BluetoothRemoteGATTCharacteristic`, as far as this transport uses it. */
+interface BleCharacteristic extends EventTarget {
+    readonly uuid: string;
+    readonly properties: { readonly notify: boolean };
+    /** The last value read or notified; unset before the first. */
+    readonly value?: DataView;
+    writeValue(value: Uint8Array<ArrayBuffer>): Promise<void>;
+    startNotifications(): Promise<unknown>;
+    stopNotifications(): Promise<unknown>;
+}
+
+/** The W3C `BluetoothRemoteGATTService`, as far as this transport uses it. */
+interface BleService {
+    readonly uuid: string;
+    getCharacteristics(): Promise<BleCharacteristic[]>;
+}
+
+/** The W3C `BluetoothRemoteGATTServer`, as far as this transport uses it. */
+interface BleServer {
+    getPrimaryServices(): Promise<BleService[]>;
+}
+
+/** The W3C `BluetoothDevice`, as far as this transport uses it. */
+export interface BleDevice extends EventTarget {
+    /** The browser's persistent identifier for the device. */
+    readonly id: string;
+    /** Absent when the device advertises no name. */
+    readonly name?: string;
+    readonly gatt?: {
+        readonly connected: boolean;
+        connect(): Promise<BleServer>;
+        disconnect(): void;
+    };
+}
+
+/** `navigator.bluetooth`. Its connect and disconnect events have the device as their target. */
+interface BluetoothApi extends EventTarget {
+    getAvailability(): Promise<boolean>;
+    requestDevice(options: { acceptAllDevices: boolean; optionalServices: string[] }): Promise<BleDevice>;
+}
+
+/** A device as this transport lists it. Bluetooth has no USB vendor id, so it reads "unknown". */
+export interface WebBluetoothPort {
+    path: string;
+    displayName: string;
+    vendorId: "unknown";
+    productId: string;
+    port: BleDevice;
+}
+
+type SendCallback = (result: { error: unknown; bytesSent: number }) => void;
+
+export interface WebBluetoothSendResult {
+    bytesSent: number;
+}
 
 /*  Certain flags needs to be enabled in the browser to use BT
  *
@@ -11,6 +89,36 @@ import { bluetoothDevices } from "./devices";
  */
 
 class WebBluetooth extends EventTarget {
+    connected: boolean;
+    openRequested: boolean;
+    openCanceled: boolean;
+    closeRequested: boolean;
+    transmitting: boolean;
+    // Never written by this transport; kept for parity with the other protocols.
+    connectionInfo: null;
+    lastWrite: null;
+    bitrate: number | undefined;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+    devices: WebBluetoothPort[];
+    device: BleDevice | null;
+    _teardown: Promise<boolean> | null;
+    logHead: string;
+    bluetooth: BluetoothApi | undefined;
+    bt11_crc_corruption_logged: boolean;
+    /** Unset until the first connect; a teardown resets it to false, not null. */
+    connectionId?: string | false;
+    /** Unset when Web Bluetooth is missing: the constructor returns early. */
+    writeQueue!: Promise<void>;
+    server: BleServer | undefined;
+    services: BleService[] | undefined;
+    service: BleService | undefined;
+    deviceDescription: BluetoothDeviceProfile | null | undefined;
+    writeCharacteristic: BleCharacteristic | null;
+    readCharacteristic: BleCharacteristic | null;
+    available?: boolean;
+
     constructor() {
         super();
 
@@ -35,7 +143,10 @@ class WebBluetooth extends EventTarget {
 
         this.logHead = "[BLUETOOTH]";
 
-        this.bluetooth = navigator?.bluetooth;
+        this.bluetooth = (navigator as (Navigator & { bluetooth?: BluetoothApi }) | undefined)?.bluetooth;
+
+        this.writeCharacteristic = null;
+        this.readCharacteristic = null;
 
         this.bt11_crc_corruption_logged = false;
 
@@ -54,22 +165,24 @@ class WebBluetooth extends EventTarget {
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleNotification = this.handleNotification.bind(this);
 
-        this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
-        this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
-        this.bluetooth.addEventListener("gattserverdisconnected", (e) => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target as BleDevice));
+        this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target as BleDevice));
+        this.bluetooth.addEventListener("gattserverdisconnected", (e) =>
+            this.handleRemovedDevice(e.target as BleDevice),
+        );
 
-        this.loadDevices();
+        void this.loadDevices();
     }
 
-    handleNewDevice(device) {
+    handleNewDevice(device: BleDevice): WebBluetoothPort {
         const added = this.createPort(device);
         this.devices.push(added);
-        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        this.dispatchEvent(new CustomEvent<WebBluetoothPort>("addedDevice", { detail: added }));
 
         return added;
     }
 
-    handleRemovedDevice(device) {
+    handleRemovedDevice(device: BleDevice): void {
         const removed = this.devices.find((port) => port.port === device);
 
         // The list does not hold this device. Both `disconnect` and `gattserverdisconnected`
@@ -80,10 +193,11 @@ class WebBluetooth extends EventTarget {
         }
 
         this.devices = this.devices.filter((port) => port.port !== device);
-        this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+        this.dispatchEvent(new CustomEvent<WebBluetoothPort>("removedDevice", { detail: removed }));
     }
 
-    handleReceiveBytes(info) {
+    // Added as a listener unbound: an EventTarget calls it with `this` set to the target.
+    handleReceiveBytes(info: { detail: { byteLength: number } }): void {
         this.bytesReceived += info.detail.byteLength;
     }
 
@@ -92,15 +206,15 @@ class WebBluetooth extends EventTarget {
     // re-entrant event our own gatt.disconnect() triggers. The device is intentionally NOT
     // removed from the list — BLE links drop transiently (reboot/boot bounce) and the paired
     // device can be reconnected by path, so removing it would only force needless re-discovery.
-    handleDisconnect() {
+    handleDisconnect(): void {
         if (this.closeRequested) {
             return;
         }
         console.warn(`${this.logHead} Unsolicited GATT disconnect (device dropped the link) — tearing down`);
-        this.disconnect();
+        void this.disconnect();
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): BleDevice | null {
         return this.device;
     }
 
@@ -112,17 +226,19 @@ class WebBluetooth extends EventTarget {
     // silently re-map to a different device. Mirrors CapacitorBle's
     // `bluetooth-${address}`; the `bluetooth` prefix keeps serial.js
     // selectProtocol routing to the BLE protocol.
-    createPort(device) {
+    createPort(device: BleDevice): WebBluetoothPort {
         return {
             path: `bluetooth_${device.id}`,
-            displayName: device.name,
+            // A device may advertise no name. Fall back to its id, as CapacitorBle falls back to
+            // the address, so the picker shows something and device_handler can match on it.
+            displayName: device.name || device.id,
             vendorId: "unknown",
             productId: device.id,
             port: device,
         };
     }
 
-    isBT11CorruptionPattern(expectedChecksum, computedChecksum) {
+    isBT11CorruptionPattern(expectedChecksum: number, computedChecksum: number): boolean {
         if (expectedChecksum !== 0xff || computedChecksum === 0xff) {
             return false;
         }
@@ -139,7 +255,7 @@ class WebBluetooth extends EventTarget {
         return deviceDescription?.susceptibleToCrcCorruption ?? false;
     }
 
-    shouldBypassCrc(expectedChecksum, computedChecksum) {
+    shouldBypassCrc(expectedChecksum: number, computedChecksum: number): boolean {
         // Special handling for specific BT-11/CC2541 checksum corruption
         // Only apply workaround for known problematic devices
         const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum, computedChecksum);
@@ -153,7 +269,7 @@ class WebBluetooth extends EventTarget {
         return false;
     }
 
-    async loadDevices() {
+    async loadDevices(): Promise<void> {
         try {
             const ports = await this.getDevices();
 
@@ -167,10 +283,10 @@ class WebBluetooth extends EventTarget {
         }
     }
 
-    async requestPermissionDevice() {
-        let newPermissionPort = null;
+    async requestPermissionDevice(): Promise<WebBluetoothPort | null | undefined> {
+        let newPermissionPort: WebBluetoothPort | null | undefined = null;
 
-        const uuids = [];
+        const uuids: string[] = [];
         bluetoothDevices.forEach((device) => {
             uuids.push(device.serviceUuid);
         });
@@ -178,7 +294,8 @@ class WebBluetooth extends EventTarget {
         const options = { acceptAllDevices: true, optionalServices: uuids };
 
         try {
-            const userSelectedPort = await this.bluetooth.requestDevice(options);
+            // Without Web Bluetooth this throws, and the catch below reports it.
+            const userSelectedPort = await this.bluetooth!.requestDevice(options);
             newPermissionPort = this.devices.find((port) => port.port === userSelectedPort);
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
@@ -190,19 +307,19 @@ class WebBluetooth extends EventTarget {
         return newPermissionPort;
     }
 
-    async getDevices() {
+    async getDevices(): Promise<WebBluetoothPort[]> /* NOSONAR: implements the async SerialProtocol interface */ {
         return this.devices;
     }
 
-    getAvailability() {
-        this.bluetooth.getAvailability().then((available) => {
+    getAvailability(): void {
+        void this.bluetooth!.getAvailability().then((available) => {
             console.log(`${this.logHead} Bluetooth available:`, available);
             this.available = available;
             return available;
         });
     }
 
-    async connect(path, options) {
+    async connect(path: string, options: SerialConnectOptions): Promise<void> {
         // Serialize behind an in-flight teardown: a connect started mid-teardown would
         // reset closeRequested under it and have its device/characteristics torn down
         // by the resumed cleanup. The teardown promise never rejects.
@@ -214,7 +331,8 @@ class WebBluetooth extends EventTarget {
         this.openRequested = true;
         this.closeRequested = false;
 
-        this.device = this.devices.find((device) => device.path === path).port;
+        // An unknown path throws here, and serial.connect() logs the rejection.
+        this.device = this.devices.find((device) => device.path === path)!.port;
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
@@ -226,7 +344,7 @@ class WebBluetooth extends EventTarget {
 
             await this.gattConnect();
 
-            gui_log(i18n.getMessage("bluetoothConnected", [this.device.name]));
+            gui_log(i18n.getMessage("bluetoothConnected", [this.device.name ?? ""]));
 
             await this.getServices();
             await this.getCharacteristics();
@@ -234,7 +352,7 @@ class WebBluetooth extends EventTarget {
             setupComplete = true;
         } catch (error) {
             console.error(`${this.logHead} Connection setup failed:`, error);
-            gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
+            gui_log(i18n.getMessage("bluetoothConnectionError", [String(error)]));
         }
 
         // gatt can report connected while setup threw and left no usable characteristics,
@@ -251,12 +369,12 @@ class WebBluetooth extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.device.addEventListener("disconnect", this.handleDisconnect);
-            this.addEventListener("receive", this.handleReceiveBytes);
+            this.device!.addEventListener("disconnect", this.handleDisconnect);
+            this.addEventListener("receive", this.handleReceiveBytes as unknown as EventListener);
 
             console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
-            this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
+            this.dispatchEvent(new CustomEvent<boolean>("connect", { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
             this.connectionId = path;
 
@@ -265,33 +383,35 @@ class WebBluetooth extends EventTarget {
             setTimeout(() => {
                 this.openRequested = false;
                 this.openCanceled = false;
-                this.disconnect(() => {
-                    this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-                });
+                // disconnect() takes no callback, so this used to pass one that never ran and the
+                // cancelled open never reported its result. Report it directly, as WebSerial does.
+                void this.disconnect();
+                this.dispatchEvent(new CustomEvent<boolean>("connect", { detail: false }));
             }, 150);
         } else if (this.openCanceled) {
             console.log(`${this.logHead} Connection didn't open and request was canceled`);
             this.openRequested = false;
             this.openCanceled = false;
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            this.dispatchEvent(new CustomEvent<boolean>("connect", { detail: false }));
         } else {
             this.openRequested = false;
             console.log(`${this.logHead} Failed to open bluetooth port`);
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            this.dispatchEvent(new CustomEvent<boolean>("connect", { detail: false }));
         }
     }
 
-    async gattConnect() {
-        this.server = await this.device.gatt?.connect();
+    async gattConnect(): Promise<void> {
+        this.server = await this.device!.gatt?.connect();
     }
 
-    async getServices() {
+    async getServices(): Promise<BleService | undefined> {
         console.log(`${this.logHead} Get primary services`);
 
-        this.services = await this.server.getPrimaryServices();
+        // No server (a device without GATT) throws here, and connect() logs it as a failed setup.
+        this.services = await this.server!.getPrimaryServices();
 
         this.service = this.services.find((service) => {
-            this.deviceDescription = bluetoothDevices.find((device) => device.serviceUuid == service.uuid);
+            this.deviceDescription = bluetoothDevices.find((device) => device.serviceUuid === service.uuid);
             return this.deviceDescription;
         });
 
@@ -301,55 +421,51 @@ class WebBluetooth extends EventTarget {
 
         gui_log(i18n.getMessage("bluetoothConnectionType", [this.deviceDescription.name]));
 
-        console.log(`${this.logHead} Connected to service:`, this.service.uuid);
+        console.log(`${this.logHead} Connected to service:`, this.service!.uuid);
 
         return this.service;
     }
 
-    async getCharacteristics() {
-        const characteristics = await this.service.getCharacteristics();
+    async getCharacteristics(): Promise<void> {
+        // getServices() ran first and threw unless it found a service and its description.
+        const description = this.deviceDescription!;
+        const characteristics = await this.service!.getCharacteristics();
 
-        characteristics.forEach((characteristic) => {
-            // console.log("Characteristic: ", characteristic);
-            if (characteristic.uuid == this.deviceDescription.writeCharacteristic) {
+        for (const characteristic of characteristics) {
+            if (characteristic.uuid === description.writeCharacteristic) {
                 this.writeCharacteristic = characteristic;
             }
 
-            if (characteristic.uuid == this.deviceDescription.readCharacteristic) {
+            if (characteristic.uuid === description.readCharacteristic) {
                 this.readCharacteristic = characteristic;
             }
-            return this.writeCharacteristic && this.readCharacteristic;
-        });
+        }
 
+        // The expected UUID used to go in Error's second argument, which takes an options
+        // object, so it never reached the message.
         if (!this.writeCharacteristic) {
-            throw new Error(
-                "Unexpected write characteristic found - should be",
-                this.deviceDescription.writeCharacteristic,
-            );
+            throw new Error(`Unexpected write characteristic found - should be ${description.writeCharacteristic}`);
         }
 
         if (!this.readCharacteristic) {
-            throw new Error(
-                "Unexpected read characteristic found - should be",
-                this.deviceDescription.readCharacteristic,
-            );
+            throw new Error(`Unexpected read characteristic found - should be ${description.readCharacteristic}`);
         }
 
         this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification);
     }
 
-    handleNotification(event) {
+    handleNotification(event: Event): void {
         // Create a proper Uint8Array directly from the DataView buffer
-        const dataView = event.target.value;
+        const dataView = (event.target as BleCharacteristic).value!;
         const buffer = new Uint8Array(
             dataView.buffer.slice(dataView.byteOffset, dataView.byteOffset + dataView.byteLength),
         );
 
         // Dispatch immediately instead of using setTimeout to avoid race conditions
-        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+        this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: buffer }));
     }
 
-    startNotifications() {
+    startNotifications(): Promise<unknown> {
         if (!this.readCharacteristic) {
             throw new Error("No read characteristic");
         }
@@ -361,7 +477,7 @@ class WebBluetooth extends EventTarget {
         return this.readCharacteristic.startNotifications();
     }
 
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         // If a GATT connect is still in flight, signal cancellation so the
         // connect() coroutine tears down on completion instead of resurrecting a
         // closed session with a late `connect` event (mirrors TauriSerial). Do
@@ -393,16 +509,16 @@ class WebBluetooth extends EventTarget {
         return this._teardown;
     }
 
-    async _performTeardown() {
-        const doCleanup = async () => {
-            this.removeEventListener("receive", this.handleReceiveBytes);
+    async _performTeardown(): Promise<boolean> {
+        const doCleanup = async (): Promise<void> => {
+            this.removeEventListener("receive", this.handleReceiveBytes as unknown as EventListener);
 
             if (this.device) {
                 this.device.removeEventListener("disconnect", this.handleDisconnect);
                 this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
 
-                // readCharacteristic may already be false from a prior teardown — guard
-                // before calling, or false.removeEventListener throws and aborts cleanup.
+                // readCharacteristic may already be null from a prior teardown — guard
+                // before calling, or null.removeEventListener throws and aborts cleanup.
                 if (this.readCharacteristic) {
                     this.readCharacteristic.removeEventListener("characteristicvaluechanged", this.handleNotification);
 
@@ -423,9 +539,9 @@ class WebBluetooth extends EventTarget {
                     this.device.gatt.disconnect();
                 }
 
-                this.writeCharacteristic = false;
-                this.readCharacteristic = false;
-                this.deviceDescription = false;
+                this.writeCharacteristic = null;
+                this.readCharacteristic = null;
+                this.deviceDescription = null;
                 this.device = null;
                 this.bt11_crc_corruption_logged = false;
             }
@@ -440,7 +556,7 @@ class WebBluetooth extends EventTarget {
 
             this.connectionId = false;
             this.bitrate = 0;
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            this.dispatchEvent(new CustomEvent<boolean>("disconnect", { detail: true }));
             // Report success explicitly — WebSerial/TauriSerial/VirtualSerial all return
             // true, and Serial.disconnect() coerces an undefined return to false.
             return true;
@@ -449,7 +565,7 @@ class WebBluetooth extends EventTarget {
             console.error(
                 `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            this.dispatchEvent(new CustomEvent<boolean>("disconnect", { detail: false }));
             return false;
         } finally {
             if (this.openCanceled) {
@@ -458,7 +574,7 @@ class WebBluetooth extends EventTarget {
         }
     }
 
-    async send(data, cb) {
+    async send(data: SerialPayload, cb?: SendCallback): Promise<WebBluetoothSendResult> {
         if (!this.writeCharacteristic || typeof this.writeCharacteristic.writeValue !== "function") {
             if (cb) {
                 cb({
@@ -489,7 +605,9 @@ class WebBluetooth extends EventTarget {
         this.writeQueue = this.writeQueue
             .then(async () => {
                 try {
-                    await this.writeCharacteristic.writeValue(dataBuffer);
+                    // Checked above; a teardown during an earlier queued write nulls it, and the
+                    // TypeError that follows lands in the catch below, as before.
+                    await this.writeCharacteristic!.writeValue(dataBuffer);
                     this.bytesSent += data.byteLength;
                     bytesSent = data.byteLength;
 

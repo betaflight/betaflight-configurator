@@ -47,7 +47,7 @@ const stub = (tag: string) =>
     })[tag];
 
 vi.mock("../../src/js/protocols/WebSerial", () => ({ default: stub("WebSerial") }));
-vi.mock("../../src/js/protocols/WebBluetooth.js", () => ({ default: stub("WebBluetooth") }));
+vi.mock("../../src/js/protocols/WebBluetooth", () => ({ default: stub("WebBluetooth") }));
 vi.mock("../../src/js/protocols/WebSocket", () => ({ default: stub("Websocket") }));
 vi.mock("../../src/js/protocols/VirtualSerial", () => ({ default: stub("VirtualSerial") }));
 vi.mock("../../src/js/protocols/CapacitorSerial", () => ({ default: stub("CapacitorSerial") }));
@@ -157,6 +157,8 @@ describe("serial.send callback contract", () => {
 });
 
 type WebBluetoothModule = typeof import("../../src/js/protocols/WebBluetooth");
+type Characteristic = NonNullable<InstanceType<WebBluetoothModule["default"]>["writeCharacteristic"]>;
+type Device = NonNullable<InstanceType<WebBluetoothModule["default"]>["device"]>;
 
 describe("WebBluetooth.send return value", () => {
     // The facade's `?? { bytesSent: 0 }` is now the only value the caller sees,
@@ -176,13 +178,14 @@ describe("WebBluetooth.send return value", () => {
             "../../src/js/protocols/WebBluetooth",
         );
         const ble = new WebBluetooth();
-        ble.writeCharacteristic = { writeValue: vi.fn().mockResolvedValue(undefined) };
-        ble.device = { gatt: { connected: true } };
+        ble.writeCharacteristic = { writeValue: vi.fn().mockResolvedValue(undefined) } as unknown as Characteristic;
+        ble.device = { gatt: { connected: true } } as unknown as Device;
         ble.writeQueue = Promise.resolve();
 
         const result = await ble.send(new Uint8Array(20));
 
         expect(result).toEqual({ bytesSent: 20 });
+        expect(ble.bytesSent).toBe(20);
     });
 
     it("returns zero bytes when there is no write characteristic", async () => {
@@ -200,10 +203,11 @@ describe("WebBluetooth.send return value", () => {
             "../../src/js/protocols/WebBluetooth",
         );
         const ble = new WebBluetooth();
-        ble.writeCharacteristic = { writeValue: vi.fn() };
-        ble.device = { gatt: { connected: false } };
+        const writeValue = vi.fn();
+        ble.writeCharacteristic = { writeValue } as unknown as Characteristic;
+        ble.device = { gatt: { connected: false } } as unknown as Device;
 
         expect(await ble.send(new Uint8Array(5))).toEqual({ bytesSent: 0 });
-        expect(ble.writeCharacteristic.writeValue).not.toHaveBeenCalled();
+        expect(writeValue).not.toHaveBeenCalled();
     });
 });

@@ -43,7 +43,7 @@ const stub = (tag: string) =>
     })[tag];
 
 vi.mock("../../src/js/protocols/WebSerial", () => ({ default: stub("WebSerial") }));
-vi.mock("../../src/js/protocols/WebBluetooth.js", () => ({ default: stub("WebBluetooth") }));
+vi.mock("../../src/js/protocols/WebBluetooth", () => ({ default: stub("WebBluetooth") }));
 vi.mock("../../src/js/protocols/WebSocket", () => ({ default: stub("Websocket") }));
 vi.mock("../../src/js/protocols/VirtualSerial", () => ({ default: stub("VirtualSerial") }));
 vi.mock("../../src/js/protocols/CapacitorSerial", () => ({ default: stub("CapacitorSerial") }));
