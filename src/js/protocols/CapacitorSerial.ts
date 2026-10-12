@@ -1,8 +1,91 @@
-import { Capacitor } from "@capacitor/core";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { Capacitor, type PluginListenerHandle } from "@capacitor/core";
 import { hexStringToUint8Array, uint8ArrayToHexString } from "../utils/bytes";
+import type { SerialConnectOptions } from "../serial";
+
+/**
+ * A USB device as the native plugin reports it (`createDeviceInfo` in
+ * BetaflightSerialPlugin.java). The manufacturer and product names are absent when the
+ * device has none.
+ */
+export interface NativeSerialDevice {
+    /** "vendorId:productId:deviceNum", the plugin's key for the device. */
+    deviceId: string;
+    vendorId: number;
+    productId: number;
+    deviceName: string;
+    deviceClass: number;
+    deviceSubclass: number;
+    manufacturer?: string | null;
+    product?: string | null;
+}
+
+/** The native BetaflightSerial Capacitor plugin. A call that fails rejects with a message. */
+interface BetaflightSerialPlugin {
+    addListener(eventName: "dataReceived", listener: (event: { data: string }) => void): Promise<PluginListenerHandle>;
+    addListener(
+        eventName: "deviceAttached" | "deviceDetached",
+        listener: (device: NativeSerialDevice) => void,
+    ): Promise<PluginListenerHandle>;
+    getDevices(): Promise<{ devices: NativeSerialDevice[] }>;
+    requestPermission(): Promise<{ devices: NativeSerialDevice[] }>;
+    connect(options: { deviceId: string; baudRate: number }): Promise<{ success: boolean; error?: string }>;
+    disconnect(): Promise<{ success: boolean }>;
+    write(options: { data: string }): Promise<{ bytesSent: number }>;
+}
+
+/** A port as this transport lists it; `device` is the native device info. */
+export interface CapacitorSerialPort {
+    path: string;
+    displayName: string;
+    vendorId: number;
+    productId: number;
+    device: NativeSerialDevice;
+}
+
+/** The `connect` detail on success, the shape WebSerial reports; `false` on failure. */
+export interface CapacitorSerialConnectionInfo {
+    usbVendorId: number;
+    usbProductId: number;
+}
+
+export interface CapacitorSerialSendResult {
+    bytesSent: number;
+}
 
 const logHead = "[CAPACITORSERIAL]";
-const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
+// `Capacitor.Plugins` is the legacy plugin registry, dropped from Capacitor's typings but
+// still populated at runtime with every native plugin, which is where this one is read from.
+const BetaflightSerial = (Capacitor as typeof Capacitor & { Plugins?: { BetaflightSerial?: BetaflightSerialPlugin } })
+    ?.Plugins?.BetaflightSerial;
+
+/**
+ * The plugin, for the methods only reached where it exists. Without it a call throws a
+ * TypeError, exactly as reading a method off the missing plugin did.
+ */
+function nativeSerial(): BetaflightSerialPlugin {
+    return BetaflightSerial!;
+}
 
 /**
  * Capacitor Serial protocol implementation for Android
@@ -10,14 +93,22 @@ const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
  * on Android devices using USB OTG
  */
 class CapacitorSerial extends EventTarget {
+    connected: boolean;
+    openRequested: boolean;
+    transmitting: boolean;
+    connectionInfo: CapacitorSerialConnectionInfo | null;
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    ports: CapacitorSerialPort[];
+    currentDevice: CapacitorSerialPort | null;
+    connectionId: string | null;
+
     constructor() {
         super();
 
-        if (!BetaflightSerial) {
-            console.error(`${logHead} Native BetaflightSerial plugin is not available`);
-            return;
-        }
-
+        // Set before the plugin check, so the fields hold their declared types even when
+        // the plugin is missing and the constructor returns early.
         this.connected = false;
         this.openRequested = false;
         this.transmitting = false;
@@ -31,6 +122,11 @@ class CapacitorSerial extends EventTarget {
         this.currentDevice = null;
         this.connectionId = null;
 
+        if (!BetaflightSerial) {
+            console.error(`${logHead} Native BetaflightSerial plugin is not available`);
+            return;
+        }
+
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.handleDataReceived = this.handleDataReceived.bind(this);
@@ -38,39 +134,39 @@ class CapacitorSerial extends EventTarget {
         this.handleDeviceDetached = this.handleDeviceDetached.bind(this);
 
         // Listen for data received from native plugin
-        BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
+        void BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
 
         // Listen for device attach/detach events
-        BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
-        BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
+        void BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
+        void BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
 
         // Load initial device list
-        this.loadDevices();
+        void this.loadDevices();
 
         console.log(`${logHead} CapacitorSerial initialized`);
     }
 
-    handleDataReceived(event) {
+    handleDataReceived(event: { data: string }): void {
         // Convert hex string to Uint8Array
         const data = hexStringToUint8Array(event.data);
         this.bytesReceived += data.length;
 
         // Dispatch receive event with the data
-        this.dispatchEvent(new CustomEvent("receive", { detail: data }));
+        this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: data }));
     }
 
-    handleDeviceAttached(device) {
+    handleDeviceAttached(device: NativeSerialDevice): CapacitorSerialPort | undefined {
         const added = this.createPort(device);
         if (this.ports.some((port) => port.path === added.path)) {
             return;
         }
         this.ports.push(added);
-        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        this.dispatchEvent(new CustomEvent<CapacitorSerialPort>("addedDevice", { detail: added }));
         console.log(`${logHead} Device attached:`, added.path);
         return added;
     }
 
-    handleDeviceDetached(device) {
+    handleDeviceDetached(device: NativeSerialDevice): void {
         const deviceKey = this.getDeviceKey(device);
         const removed = this.ports.find((port) => port.path === deviceKey);
 
@@ -91,12 +187,12 @@ class CapacitorSerial extends EventTarget {
 
             // Remove from ports list
             this.ports = this.ports.filter((port) => port.path !== deviceKey);
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+            this.dispatchEvent(new CustomEvent<CapacitorSerialPort>("removedDevice", { detail: removed }));
             console.log(`${logHead} Device detached:`, removed.path);
         }
     }
 
-    createPort(device) {
+    createPort(device: NativeSerialDevice): CapacitorSerialPort {
         const deviceKey = this.getDeviceKey(device);
         const displayName = this.getDisplayName(device);
 
@@ -109,12 +205,12 @@ class CapacitorSerial extends EventTarget {
         };
     }
 
-    getDeviceKey(device) {
+    getDeviceKey(device: NativeSerialDevice): string {
         // Use the deviceId directly from native - it already contains the VID:PID:deviceNum format
         return `capacitor-${device.deviceId}`;
     }
 
-    getDisplayName(device) {
+    getDisplayName(device: NativeSerialDevice): string {
         // Try to get a friendly name from manufacturer/product
         if (device.product) {
             return `Betaflight ${device.product}`;
@@ -126,9 +222,9 @@ class CapacitorSerial extends EventTarget {
         return `Betaflight VID:${device.vendorId} PID:${device.productId}`;
     }
 
-    async loadDevices() {
+    async loadDevices(): Promise<void> {
         try {
-            const result = await BetaflightSerial.getDevices();
+            const result = await nativeSerial().getDevices();
             this.ports = result.devices.map((device) => this.createPort(device));
             console.log(`${logHead} Loaded ${this.ports.length} devices`);
         } catch (error) {
@@ -137,12 +233,12 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
-    async requestPermissionDevice() {
-        let newPermissionPort = null;
+    async requestPermissionDevice(): Promise<CapacitorSerialPort | null | undefined> {
+        let newPermissionPort: CapacitorSerialPort | null | undefined = null;
 
         try {
             console.log(`${logHead} Requesting USB permissions...`);
-            const userSelectedPort = await BetaflightSerial.requestPermission();
+            const userSelectedPort = await nativeSerial().requestPermission();
             if (userSelectedPort?.devices?.length === 0) {
                 console.log(`${logHead} No device selected or permission denied`);
                 return null;
@@ -156,12 +252,12 @@ class CapacitorSerial extends EventTarget {
         return newPermissionPort;
     }
 
-    async getDevices() {
+    async getDevices(): Promise<CapacitorSerialPort[]> {
         await this.loadDevices();
         return this.ports;
     }
 
-    async connect(path, options) {
+    async connect(path: string, options?: SerialConnectOptions): Promise<boolean> {
         const baudRate = options?.baudRate ?? 115200;
         // Prevent double connections
         if (this.connected) {
@@ -185,7 +281,7 @@ class CapacitorSerial extends EventTarget {
 
             console.log(`${logHead} Connecting to device:`, deviceId, "at", baudRate, "baud");
 
-            const result = await BetaflightSerial.connect({
+            const result = await nativeSerial().connect({
                 deviceId: deviceId,
                 baudRate: baudRate,
             });
@@ -206,7 +302,9 @@ class CapacitorSerial extends EventTarget {
                     usbProductId: device.productId,
                 };
 
-                this.dispatchEvent(new CustomEvent("connect", { detail: this.connectionInfo }));
+                this.dispatchEvent(
+                    new CustomEvent<CapacitorSerialConnectionInfo | false>("connect", { detail: this.connectionInfo }),
+                );
                 return true;
             } else {
                 this.openRequested = false;
@@ -222,7 +320,7 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
-    cleanupConnectionState() {
+    cleanupConnectionState(): void {
         // Clean up connection state (shared between disconnect and device removal)
         this.connected = false;
         this.transmitting = false;
@@ -234,13 +332,13 @@ class CapacitorSerial extends EventTarget {
         this.bytesReceived = 0;
     }
 
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         if (!this.connected) {
             return true;
         }
 
         try {
-            await BetaflightSerial.disconnect();
+            await nativeSerial().disconnect();
 
             console.log(
                 `${logHead} Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
@@ -257,7 +355,10 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
-    async send(data, callback) {
+    async send(
+        data: ArrayBuffer | ArrayLike<number>,
+        callback?: (result: CapacitorSerialSendResult) => void,
+    ): Promise<CapacitorSerialSendResult> {
         if (!this.connected) {
             console.error(`${logHead} Failed to send data, not connected`);
             if (callback) {
@@ -266,12 +367,12 @@ class CapacitorSerial extends EventTarget {
             return { bytesSent: 0 };
         }
 
-        data = new Uint8Array(data);
+        const bytes = new Uint8Array(data);
 
         try {
             // Convert Uint8Array to hex string
-            const hexString = uint8ArrayToHexString(data);
-            const result = await BetaflightSerial.write({ data: hexString });
+            const hexString = uint8ArrayToHexString(bytes);
+            const result = await nativeSerial().write({ data: hexString });
 
             this.bytesSent += result.bytesSent;
 
@@ -288,7 +389,7 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): CapacitorSerialPort | null {
         return this.currentDevice;
     }
 }
