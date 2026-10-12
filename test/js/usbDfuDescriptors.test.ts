@@ -324,3 +324,16 @@ describe("_withTimeout", () => {
         await expect(transport._withTimeout(Promise.resolve(42), 1000, "fast")).resolves.toBe(42);
     });
 });
+
+describe("_rawControlTransferIn", () => {
+    it("rejects, rather than throws, when a transport does not implement it", async () => {
+        const base = new UsbDfuDescriptors();
+        const setup = { requestType: "standard", recipient: "device", request: 6, value: 0x300, index: 0 };
+
+        let result: Promise<unknown> | undefined;
+        expect(() => {
+            result = base._rawControlTransferIn(setup, 4);
+        }).not.toThrow();
+        await expect(result).rejects.toThrow("must be implemented");
+    });
+});

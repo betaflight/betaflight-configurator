@@ -78,11 +78,9 @@ class UsbDfuDescriptors extends EventTarget {
      * @param _setup - the setup packet.
      * @param _length - Maximum bytes to read.
      */
-    async _rawControlTransferIn(
-        _setup: DfuControlSetup,
-        _length: number,
-    ): Promise<RawTransferInResult> /* NOSONAR: abstract; subclasses implement it asynchronously */ {
-        throw new Error("_rawControlTransferIn must be implemented by the transport");
+    _rawControlTransferIn(_setup: DfuControlSetup, _length: number): Promise<RawTransferInResult> {
+        // A rejection, not a throw, as when this method was async.
+        return Promise.reject(new Error("_rawControlTransferIn must be implemented by the transport"));
     }
 
     /** Drops descriptors cached against the previous device. */

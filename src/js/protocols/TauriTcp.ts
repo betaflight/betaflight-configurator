@@ -192,14 +192,17 @@ class TauriTcp extends EventTarget {
     }
 
     async _teardownListeners(): Promise<void> {
-        for (const unlisten of this._unlisten) {
-            try {
-                // listen() may resolve an async unlisten — await so removal completes.
-                await unlisten();
-            } catch (e) {
-                console.error(`${this.logHead}Failed to remove listener: ${e}`);
-            }
-        }
+        // The listeners are independent, so remove them together. listen() may resolve an
+        // async unlisten, so wait for every removal to complete.
+        await Promise.all(
+            this._unlisten.map(async (unlisten) => {
+                try {
+                    await unlisten();
+                } catch (e) {
+                    console.error(`${this.logHead}Failed to remove listener: ${e}`);
+                }
+            }),
+        );
         this._unlisten = [];
     }
 

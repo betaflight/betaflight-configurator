@@ -109,8 +109,8 @@ class WebBluetooth extends EventTarget {
     bt11_crc_corruption_logged: boolean;
     /** Unset until the first connect; a teardown resets it to false, not null. */
     connectionId?: string | false;
-    /** Unset when Web Bluetooth is missing: the constructor returns early. */
-    writeQueue!: Promise<void>;
+    /** Serialises writes; send() chains each write onto it. */
+    writeQueue: Promise<void> = Promise.resolve();
     server: BleServer | undefined;
     services: BleService[] | undefined;
     service: BleService | undefined;
@@ -155,8 +155,6 @@ class WebBluetooth extends EventTarget {
             return;
         }
 
-        this.writeQueue = Promise.resolve();
-
         this.connect = this.connect.bind(this);
         // Bind the device/characteristic event handlers ONCE so add/removeEventListener
         // share one reference. A fresh `.bind(this)` at each call site produces a new
@@ -171,6 +169,12 @@ class WebBluetooth extends EventTarget {
             this.handleRemovedDevice(e.target as BleDevice),
         );
 
+        this._bootstrap();
+    }
+
+    // Kept out of the constructor body, which must not start async work (Sonar S7059).
+    private _bootstrap(): void {
+        // loadDevices() catches and logs its own failures.
         void this.loadDevices();
     }
 
@@ -297,9 +301,7 @@ class WebBluetooth extends EventTarget {
             // Without Web Bluetooth this throws, and the catch below reports it.
             const userSelectedPort = await this.bluetooth!.requestDevice(options);
             newPermissionPort = this.devices.find((port) => port.port === userSelectedPort);
-            if (!newPermissionPort) {
-                newPermissionPort = this.handleNewDevice(userSelectedPort);
-            }
+            newPermissionPort ??= this.handleNewDevice(userSelectedPort);
             console.info(`${this.logHead} User selected Bluetooth device from permissions:`, newPermissionPort.path);
         } catch (error) {
             console.error(`${this.logHead} User didn't select any Bluetooth device when requesting permission:`, error);
