@@ -20,6 +20,7 @@ vi.mock("../../src/js/serial", () => ({
 
 import STM32 from "../../src/js/protocols/webstm32";
 import { serial } from "../../src/js/serial";
+import { useConnectionStore } from "../../src/stores/connection";
 
 describe("webstm32 lifecycle", () => {
     it("finishes a flash through the serial disconnect callback", async () => {
@@ -43,6 +44,6 @@ describe("webstm32 lifecycle", () => {
 
         expect(reboot).toHaveBeenCalledTimes(1);
         expect(resetFlashingState).toHaveBeenCalledTimes(1);
-        expect(STM32.rebootMode).toBe(0);
+        expect(useConnectionStore().bootloaderRebootMode).toBe(0);
     });
 });

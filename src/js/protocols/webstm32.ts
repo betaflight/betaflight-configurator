@@ -148,13 +148,16 @@ class STM32Protocol {
     available_flash_size: number = 0;
     page_size: number = 0;
     useExtendedErase: boolean = false;
-    rebootMode: number = 0;
     private readonly _boundHandleConnect: (event: Event) => void;
     private readonly _boundHandleDisconnect: (event: Event) => void;
 
     // Resolved per access, as the FC shim was: tests install a fresh Pinia after import.
     private get fcStore() {
         return useFlightControllerStore();
+    }
+
+    private get connectionStore() {
+        return useConnectionStore();
     }
 
     constructor() {
@@ -181,7 +184,7 @@ class STM32Protocol {
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
         if (resetRebootMode) {
-            this.rebootMode = 0;
+            this.connectionStore.bootloaderRebootMode = 0;
         }
         this.serialOptions?.resetFlashingState?.();
     }
@@ -216,7 +219,7 @@ class STM32Protocol {
         serial.removeEventListener("connect", this._boundHandleConnect);
         serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
-        if (!disconnectionResult || !this.rebootMode) {
+        if (!disconnectionResult || !this.connectionStore.bootloaderRebootMode) {
             this.handleError(false);
             return;
         }
@@ -278,7 +281,7 @@ class STM32Protocol {
 
     reboot(): void {
         const buffer = new MspBuffer();
-        buffer.push8(this.rebootMode);
+        buffer.push8(this.connectionStore.bootloaderRebootMode);
         setTimeout(() => {
             const disconnectFromMsp = () => {
                 this.mspConnector.disconnect((disconnectionResult: unknown) => {
@@ -307,7 +310,7 @@ class STM32Protocol {
         const connectionStore = useConnectionStore();
         connectionStore.connectLock = false;
         getConnectionState().endFlashing();
-        this.rebootMode = 0;
+        this.connectionStore.bootloaderRebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
         this.reboot();
         this.serialOptions?.resetFlashingState?.();
@@ -327,11 +330,11 @@ class STM32Protocol {
                     // Board has flash bootloader
                     gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
                     console.log(`${this.logHead} flash bootloader detected`);
-                    this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
+                    this.connectionStore.bootloaderRebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
                 } else {
                     gui_log(i18n.getMessage("deviceRebooting_romBootloader"));
                     console.log(`${this.logHead} no flash bootloader detected`);
-                    this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+                    this.connectionStore.bootloaderRebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                 }
 
                 const selectedBoard =
@@ -407,7 +410,7 @@ class STM32Protocol {
             this.prepareSerialPort();
             void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" });
         } else {
-            this.rebootMode = 0; // FIRMWARE
+            this.connectionStore.bootloaderRebootMode = 0; // FIRMWARE
 
             connectionStore.connectLock = true;
             this.flashingMessage(i18n.getMessage("stm32RebootingToBootloader"), "NEUTRAL");
