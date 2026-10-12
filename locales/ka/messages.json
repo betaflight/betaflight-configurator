@@ -276,6 +276,10 @@
     "userLanguageSelect": {
         "message": "მონიშნე მთავარი ენა"
     },
+    "language_DEFAULT": {
+        "message": "სისტემის ნაგულისხმევი ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
+    },
     "language_ka": {
         "message": "ქართული",
         "description": "Don't translate!!!"
@@ -490,6 +494,12 @@
     },
     "autotuneApplied": {
         "message": "პარამეტრები გამოყენებულია და შენახულია."
+    },
+    "autotuneApplyConfirmText": {
+        "message": "გამოყენება tuning სლაიდერების მნიშვნელობებს გადაწერს ფრენის კონტროლერზე და შეინახავს მათ EEPROM-ში. რეკომენდებულმა gain-ებმა შეიძლება პირველი arm-ის დროს დრონის დესტაბილიზაცია გამოიწვიოს, ამიტომ მზად იყავით პირველი ტესტისას disarm-ისთვის."
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "გამოვიყენოთ რეკომენდებული gain-ები?"
     },
     "autotuneApplyFailed": {
         "message": "პარამეტრების გამოყენება ვერ მოხერხდა"
@@ -1034,7 +1044,7 @@
         "message": "Pitch:"
     },
     "initialSetupRoll": {
-        "message": "კრენი:"
+        "message": "Roll::"
     },
     "initialSetupInfoHead": {
         "message": "სისტემის ინფორმაცია"
@@ -6058,14 +6068,14 @@
         "message": "გამართვის ცვლადები გამართვისთვის 4-7"
     },
     "osdTextElementPIDRoll": {
-        "message": "PID კრენი",
+        "message": "PID Roll",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRoll": {
         "message": "Roll ღერძი PID კოეფიციენტები"
     },
     "osdTextElementPIDPitch": {
-        "message": "PID ტანგაჟი",
+        "message": "PID Pitch",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {
@@ -6114,7 +6124,7 @@
         "message": "ციფრული დახრის კუთხე გრადუსებში"
     },
     "osdTextElementRollAngle": {
-        "message": "კუთხე: კრენი",
+        "message": "კუთხე: Roll",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRollAngle": {
@@ -8233,6 +8243,12 @@
     "userProfileUpdateFailed": {
         "message": "პროფილის განახლება ვერ მოხერხდა"
     },
+    "userAccountDeleteSuccess": {
+        "message": "თქვენი Betaflight ანგარიში წაიშალა"
+    },
+    "userAccountDeleteFailed": {
+        "message": "ანგარიშის წაშლა ვერ მოხერხდა"
+    },
     "userBackupsLoadFailed": {
         "message": "სარეზერვო ასლების ჩატვირთვა ვერ მოხერხდა"
     },
@@ -8464,6 +8480,18 @@
     },
     "sectionUserPasskeys": {
         "message": "მომხმარებლის პაროლები"
+    },
+    "sectionDeleteAccount": {
+        "message": "ანგარიშის წაშლა"
+    },
+    "deleteAccountDescription": {
+        "message": "სამუდამოდ წაშალეთ თქვენი Betaflight-ის ანგარიში, მათ შორის პროფილი, passkey-ები, ავტორიზაციის ტოკენები და ღრუბლოვანი მარქაფები. ამ მოქმედების გაუქმება შეუძლებელია."
+    },
+    "actionDeleteAccount": {
+        "message": "ანგარიშის წაშლა"
+    },
+    "confirmDeleteAccount": {
+        "message": "ეს სამუდამოდ წაშლის თქვენს Betaflight ანგარიშს, მათ შორის თქვენს პროფილს, passkey-ებს, ავტორიზაციის ტოკენებსა და ყველა ღრუბლოვან მარქაფს. ამ მოქმედების გაუქმება და მონაცემების აღდგენა შეუძლებელია. დარწმუნებული ხართ, რომ გსურთ გაგრძელება?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "გასწორება პოზიციაზე",
@@ -9209,10 +9237,10 @@
         "message": "ძრავის KV. ეს მნიშვნელობა ძრავების ჩანართზე შეცვალეთ."
     },
     "pidTuningWingTpaAdvSpeedPitchOffset": {
-        "message": "ტანგაჟის წანაცვლება"
+        "message": "Pitch წანაცვლება"
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
-        "message": "ტანგაჟის წანაცვლება გრადუსებში*10, აპარატის სიჩქარის შესაფასებლად"
+        "message": "Pitch წანაცვლება გრადუსებში*10, აპარატის სიჩქარის შესაფასებლად"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "ჰიპერბოლური მრუდის პარამეტრები"
@@ -9260,9 +9288,9 @@
         "message": "დიფ. ბიძგი"
     },
     "pidTuningWingMiscPitchOffset": {
-        "message": "ტანგაჟის წანაცვლება"
+        "message": "Pitch წანაცვლება"
     },
     "pidTuningWingMiscPitchOffsetHelp": {
-        "message": "ტანგაჟის წანაცვლება angle რეჟიმებისთვის, დეციგრადუსებში. დადებითი მნიშვნელობები ფრთას ქვემოთ ხრის"
+        "message": "Pitch წანაცვლება angle რეჟიმებისთვის, დეციგრადუსებში. დადებითი მნიშვნელობები ფრთას ქვემოთ ხრის"
     }
 }
