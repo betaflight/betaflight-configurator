@@ -25,9 +25,9 @@ import MSP from "../msp";
 import { useFlightControllerStore } from "../../stores/fc";
 import { serial } from "../serial";
 import MSPCodes from "./MSPCodes";
-import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
 import { addTimeout, removeTimeout } from "../timers";
+import { useConnectionStore } from "../../stores/connection";
 
 /**
  * This seems to be mainly used in firmware flasher parts.
@@ -45,13 +45,13 @@ function readSerialAdapter(e: Event) {
 }
 
 class MSPConnectorImpl {
-    baud: number | false | undefined = undefined;
+    baud: number | undefined = undefined;
     port: string | undefined = undefined;
     onConnectCallback: ConnectorCallback | undefined = undefined;
     onTimeoutCallback: ConnectorCallback | undefined = undefined;
     onFailureCallback: ConnectorCallback | undefined;
     onDisconnectCallback: ConnectorCallback | undefined = undefined;
-    /** Used for connect timeout only; must not toggle CONFIGURATOR.connectionValid (main UI connect button). */
+    /** Used for connect timeout only; must not toggle the connection store's connectionValid (main UI connect button). */
     _mspApiVersionReceived = false;
 
     // Stored so removeEventListener gets the same reference addEventListener registered
@@ -112,6 +112,7 @@ class MSPConnectorImpl {
     }
 
     handleDisconnect(detail: unknown) {
+        const connectionStore = useConnectionStore();
         console.log("Disconnected", detail);
 
         serial.removeEventListener("receive", readSerialAdapter);
@@ -124,12 +125,12 @@ class MSPConnectorImpl {
         MSP.disconnect_cleanup();
 
         // Flashing path does not run serial_backend disconnectHandler; clear stale UI state if anything set it.
-        CONFIGURATOR.connectionValid = false;
+        connectionStore.connectionValid = false;
     }
 
     connect(
         port: string,
-        baud: number | false | undefined,
+        baud: number | undefined,
         onConnectCallback: ConnectorCallback,
         onTimeoutCallback: ConnectorCallback,
         onFailureCallback: ConnectorCallback,

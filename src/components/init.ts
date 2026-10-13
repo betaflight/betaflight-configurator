@@ -28,7 +28,6 @@ import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
 import DeviceHandler from "../js/device_handler";
 import PortUsage from "../js/port_usage.js";
-import CONFIGURATOR from "../js/data_storage";
 import { BetaflightComponents } from "../js/vue_components.js";
 import { getNuxtUiRouter } from "../js/nuxt_ui_router.js";
 import { pinia } from "../js/pinia_instance";
@@ -45,13 +44,12 @@ const CONNECTION = reactive({
  but these instance would eventually have more children
  which would find the use for those extra properties.
 
- Members that their own module mutates (DeviceHandler, CONFIGURATOR, ...) are made
+ Members that their own module mutates (DeviceHandler, ...) are made
  reactive in that module: the reactive() below only tracks writes made through this
  proxy, not writes through the module's own reference. FC is not on this model: the
  flightController Pinia store owns that state, so read it with useFlightControllerStore().
 */
 const betaflightModel = reactive({
-    CONFIGURATOR,
     PortUsage,
     DeviceHandler,
     CONNECTION,

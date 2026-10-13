@@ -125,21 +125,12 @@ export default defineComponent({
         const selectedDevice = ref(props.modelValue.selectedDevice); // Access through modelValue
         const selectedBauds = ref(props.modelValue.selectedBauds); // Access through modelValue
         const autoConnect = ref(props.modelValue.autoConnect); // Access through modelValue
-        const baudRates = ref([
-            { value: "1000000", label: "1000000" },
-            { value: "500000", label: "500000" },
-            { value: "250000", label: "250000" },
-            { value: "115200", label: "115200" },
-            { value: "57600", label: "57600" },
-            { value: "38400", label: "38400" },
-            { value: "28800", label: "28800" },
-            { value: "19200", label: "19200" },
-            { value: "14400", label: "14400" },
-            { value: "9600", label: "9600" },
-            { value: "4800", label: "4800" },
-            { value: "2400", label: "2400" },
-            { value: "1200", label: "1200" },
-        ]);
+        // Numeric values: the transports open the port with this rate, and the default (115200) is a number.
+        const baudRates = ref(
+            [1000000, 500000, 250000, 115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200].map(
+                (baud) => ({ value: baud, label: String(baud) }),
+            ),
+        );
 
         // Keep UI in sync when DeviceHandler (or parent) updates selectedDevice, e.g. after WebUSB permission dialog
         watch(

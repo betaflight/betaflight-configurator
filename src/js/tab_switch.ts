@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
@@ -48,7 +47,7 @@ function defaultLabel(tabKey: string): string {
 
 function canSwitchTab(requiresConnection: boolean): boolean {
     const connectionStore = useConnectionStore();
-    if (requiresConnection && !CONFIGURATOR.connectionValid) {
+    if (requiresConnection && !connectionStore.connectionValid) {
         gui_log(i18n.getMessage("tabSwitchConnectionRequired"));
         return false;
     }

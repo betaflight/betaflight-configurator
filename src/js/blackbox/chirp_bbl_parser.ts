@@ -35,7 +35,7 @@
 
 import { ArrayDataStream } from "./datastream";
 import "./decoders"; // side-effect: extends ArrayDataStream prototype
-import CONFIGURATOR from "../data_storage";
+import { API_VERSION_MAX_SUPPORTED } from "../data_storage";
 import { getDebugModeIndex } from "../utils/debugModes";
 
 /**
@@ -968,7 +968,7 @@ function validateDebugModeIsChirp(sysConfig: SysConfig, apiVersion: string | und
     } else if (hasApiVersion) {
         effectiveApiVersion = apiVersion;
     } else {
-        effectiveApiVersion = CONFIGURATOR.API_VERSION_MAX_SUPPORTED;
+        effectiveApiVersion = API_VERSION_MAX_SUPPORTED;
     }
     const debugChirpIndex = getDebugModeIndex("CHIRP", effectiveApiVersion);
     if (debugChirpIndex < 0) {

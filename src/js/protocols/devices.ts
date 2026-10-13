@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import BuildApi from "../BuildApi.js";
+import BuildApi from "../BuildApi";
 import { get as getConfig, set as setConfig } from "../ConfigStorage";
 
 /** A Bluetooth serial module: the GATT service it exposes and the characteristics to talk through. */

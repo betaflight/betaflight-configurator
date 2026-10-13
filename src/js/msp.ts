@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CONFIGURATOR from "./data_storage";
 import { serial } from "./serial";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 import { MspDataView } from "./msp/mspBytes";
@@ -181,7 +180,8 @@ const MSP = {
     SDCARD_STATE_READY: 4,
 
     read(readInfo: MspReadInfo) {
-        if (CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             return;
         }
 
@@ -219,9 +219,11 @@ const MSP = {
             // message received, store dataview
             this.dataView = new MspDataView(this.message_buffer, 0, this.message_length_expected);
         } else if (
-            (serial._protocol as { shouldBypassCrc?: (checksum: number) => boolean } | null)?.shouldBypassCrc?.(
-                expectedChecksum,
-            )
+            (
+                serial._protocol as {
+                    shouldBypassCrc?: (expectedChecksum: number, computedChecksum: number) => boolean;
+                } | null
+            )?.shouldBypassCrc?.(expectedChecksum, this.message_checksum)
         ) {
             // Capability check: only the Bluetooth protocols implement shouldBypassCrc,
             // for BT-11/CC2541 bridges that corrupt the MSP checksum to 0xff. Not gated
@@ -439,7 +441,8 @@ const MSP = {
         callback_sent?: (() => void) | false,
         callback_msp?: MspCallback | false,
     ): boolean {
-        if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || !serial.connected || connectionStore.virtualMode) {
             if (callback_msp) {
                 (callback_msp as () => void)();
             }
@@ -635,7 +638,8 @@ const MSP = {
         data?: MspPayload,
         { notifyTimeout = true }: { notifyTimeout?: boolean } = {},
     ): Promise<MspResponse | undefined> {
-        if (code === undefined || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || connectionStore.virtualMode) {
             return undefined;
         }
 

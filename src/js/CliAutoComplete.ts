@@ -19,10 +19,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CONFIGURATOR from "./data_storage";
 import { EventBus } from "../components/eventBus";
 import { useFlightControllerStore } from "../stores/fc";
 import { addTimeout, removeTimeout } from "./timers";
+import { useConnectionStore } from "../stores/connection";
 
 const BUILDER_TIMEOUT_MS = 3000;
 
@@ -143,10 +143,11 @@ const CliAutoComplete: CliAutoCompleteApi = {
     },
 
     setEnabled(enable) {
+        const connectionStore = useConnectionStore();
         if (this.configEnabled !== enable) {
             this.configEnabled = enable;
 
-            if (CONFIGURATOR.cliActive && CONFIGURATOR.cliValid) {
+            if (connectionStore.cliActive && connectionStore.cliValid) {
                 // cli is already open
                 if (this.isEnabled()) {
                     this.builderStart();
