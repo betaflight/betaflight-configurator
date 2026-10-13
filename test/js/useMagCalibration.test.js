@@ -84,6 +84,31 @@ describe("useMagCalibration", () => {
             expect(cal.phase.value).toBe(phaseBefore);
         });
 
+        it("starts a new quick calibration after the previous one completed", async () => {
+            await cal.startCalibration("quick");
+            await cal.completeCalibration();
+            expect(cal.phase.value).toBe("complete");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
+        it("starts a new calibration after the previous one ended in error", async () => {
+            await cal.startCalibration("quick");
+            // Mag readings never change, so the no-movement timeout fires.
+            vi.advanceTimersByTime(31000);
+            expect(cal.phase.value).toBe("error");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
         it("starts quick mode and triggers MSP_MAG_CALIBRATION", async () => {
             await cal.startCalibration("quick");
 
