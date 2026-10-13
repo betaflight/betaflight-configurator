@@ -8,16 +8,99 @@ export const PRESETS_STORAGE_KEYS = {
     showBackupWarning: "showPresetsWarningBackup",
 };
 
+/** An option as parsed by PresetParser; `id` is attached by attachOptionIds() when the details open. */
+export type PresetOption = {
+    id?: string;
+    name: string;
+    checked?: boolean;
+    childs?: PresetOption[];
+};
+
+export type IdentifiedPresetOption = Omit<PresetOption, "id" | "childs"> & {
+    id: string;
+    childs?: IdentifiedPresetOption[];
+};
+
+/** A preset as listed in a repository's index.json, plus the fields loadPreset() fills in. */
+export type Preset = {
+    hash?: string;
+    fullPath?: string;
+    title?: string;
+    description?: string[];
+    priority?: number;
+    status?: string;
+    category?: string;
+    keywords?: string[];
+    author?: string;
+    firmware_version?: string[];
+    hidden?: boolean;
+    force_options_review?: boolean;
+    completeWarning?: string;
+    options?: PresetOption[];
+    originalPresetCliStrings?: string[];
+};
+
+export type PresetSourceEntry = {
+    id: string;
+    name: string;
+    url: string;
+    gitHubBranch: string;
+    official: boolean;
+};
+
+export type PresetSearchParams = {
+    categories: string[];
+    keywords: string[];
+    authors: string[];
+    firmwareVersions: string[];
+    status: string[];
+    searchString: string;
+};
+
+export interface PresetLinkSource {
+    getPresetOnlineLink(preset: Preset): string;
+}
+
+export interface PresetIndexSource extends PresetLinkSource {
+    readonly index: { presets: Preset[] };
+}
+
+export interface FirmwareVersionSource {
+    readonly index: { uniqueValues: { firmware_version: string[] } };
+}
+
+export type PresetFitEntry<R> = {
+    key: string;
+    preset: Preset;
+    repository: R;
+};
+
+export type PresetEntryState = {
+    favoriteDate?: number;
+};
+
+export type PresetEntryStateGetter<R, S extends PresetEntryState> = (
+    preset: Preset,
+    repository: R,
+    presetKey: string,
+) => S;
+
+type PresetSortEntry = PresetEntryState & {
+    preset: Pick<Preset, "priority" | "title">;
+};
+
+type StoredPresetSource = Omit<PresetSourceEntry, "id"> & { id?: string };
+
 const OFFICIAL_SOURCE_ID = "presets-official-source";
 const BACKUP_SOURCE_ID = "presets-backup-source";
 let sourceIdSequence = 0;
 
-export function createSourceId() {
+export function createSourceId(): string {
     sourceIdSequence += 1;
     return `presets-source-${Date.now().toString(36)}-${sourceIdSequence.toString(36)}`;
 }
 
-export function createOfficialSource() {
+export function createOfficialSource(): PresetSource {
     const officialSource = new PresetSource(
         "Betaflight Official Presets",
         "https://presets.betaflight.com/firmware-presets/",
@@ -28,7 +111,7 @@ export function createOfficialSource() {
     return officialSource;
 }
 
-export function createSecondaryOfficialSource() {
+export function createSecondaryOfficialSource(): PresetSource {
     const backupSource = new PresetSource(
         "Betaflight Presets - GitHub BACKUP",
         "https://github.com/betaflight/firmware-presets",
@@ -39,11 +122,11 @@ export function createSecondaryOfficialSource() {
     return backupSource;
 }
 
-export function normalizeStoredSources(storedSources) {
+export function normalizeStoredSources(storedSources: unknown): PresetSourceEntry[] {
     const officialSource = createOfficialSource();
     const secondaryOfficialSource = createSecondaryOfficialSource();
-    let sources = Array.isArray(storedSources)
-        ? storedSources.map((source) => ({
+    let sources: PresetSourceEntry[] = Array.isArray(storedSources)
+        ? storedSources.map((source: StoredPresetSource) => ({
               ...source,
               id: source.id || createSourceId(),
           }))
@@ -61,36 +144,47 @@ export function normalizeStoredSources(storedSources) {
     return sources;
 }
 
-export function sanitizeActiveSourceIndexes(storedIndexes, sourceCount) {
+export function sanitizeActiveSourceIndexes(storedIndexes: unknown, sourceCount: number): number[] {
     const sanitizedIndexes = Array.isArray(storedIndexes)
-        ? storedIndexes.filter((index) => Number.isInteger(index) && index >= 0 && index < sourceCount)
+        ? storedIndexes.filter(
+              (index: unknown): index is number =>
+                  typeof index === "number" && Number.isInteger(index) && index >= 0 && index < sourceCount,
+          )
         : [];
 
     return sanitizedIndexes.length > 0 ? sanitizedIndexes : [0];
 }
 
-export function sanitizeActiveSourceIds(activeSourceIds, sources) {
+export function sanitizeActiveSourceIds(
+    activeSourceIds: unknown,
+    sources: readonly Pick<PresetSourceEntry, "id">[],
+): string[] {
     const validSourceIds = new Set(sources.map((source) => source.id));
     const sanitizedIds = Array.isArray(activeSourceIds)
-        ? activeSourceIds.filter((sourceId) => typeof sourceId === "string" && validSourceIds.has(sourceId))
+        ? activeSourceIds.filter(
+              (sourceId: unknown): sourceId is string => typeof sourceId === "string" && validSourceIds.has(sourceId),
+          )
         : [];
 
-    return sanitizedIds.length > 0 ? sanitizedIds : [sources[0]?.id].filter(Boolean);
+    return sanitizedIds.length > 0 ? sanitizedIds : [sources[0]?.id].filter((id): id is string => Boolean(id));
 }
 
-export function getPresetEntryKey(preset, repository) {
+export function getPresetEntryKey(preset: Preset, repository: PresetLinkSource): string {
     return repository.getPresetOnlineLink(preset);
 }
 
-export function collectUniqueValues(repositories, extractor) {
+export function collectUniqueValues<R, T>(repositories: readonly R[], extractor: (repository: R) => Iterable<T>): T[] {
     const values = repositories.map(extractor);
-    return [...values.reduce((result, value) => new Set([...result, ...value]), new Set())].sort((a, b) =>
+    return [...values.reduce((result, value) => new Set([...result, ...value]), new Set<T>())].sort((a, b) =>
         String(a).localeCompare(String(b), undefined, { sensitivity: "base" }),
     );
 }
 
-export function getDefaultFirmwareSelections(repositories, currentVersion) {
-    const selectedVersions = [];
+export function getDefaultFirmwareSelections(
+    repositories: readonly FirmwareVersionSource[],
+    currentVersion: string | undefined,
+): string[] {
+    const selectedVersions: string[] = [];
 
     for (const repository of repositories) {
         for (const firmwareVersion of repository.index.uniqueValues.firmware_version) {
@@ -103,8 +197,8 @@ export function getDefaultFirmwareSelections(repositories, currentVersion) {
     return [...new Set(selectedVersions)];
 }
 
-export function getCheckedOptionNames(options) {
-    const selected = [];
+export function getCheckedOptionNames(options: readonly PresetOption[]): string[] {
+    const selected: string[] = [];
 
     options.forEach((option) => {
         if (Array.isArray(option.childs)) {
@@ -124,13 +218,13 @@ export function getCheckedOptionNames(options) {
     return selected;
 }
 
-export function attachOptionIds(options, path = []) {
+export function attachOptionIds(options: readonly PresetOption[], path: number[] = []): IdentifiedPresetOption[] {
     return options.map((option, index) => {
         const optionId = [...path, index].join(".");
         const normalizedOption = {
             ...option,
             id: optionId,
-        };
+        } as IdentifiedPresetOption;
 
         if (Array.isArray(option.childs)) {
             normalizedOption.childs = attachOptionIds(option.childs, [...path, index]);
@@ -140,8 +234,8 @@ export function attachOptionIds(options, path = []) {
     });
 }
 
-export function getCheckedOptionIds(options) {
-    const selected = [];
+export function getCheckedOptionIds(options: readonly IdentifiedPresetOption[]): string[] {
+    const selected: string[] = [];
 
     options.forEach((option) => {
         if (Array.isArray(option.childs)) {
@@ -161,9 +255,9 @@ export function getCheckedOptionIds(options) {
     return selected;
 }
 
-export function getOptionNamesByIds(options, selectedOptionIds) {
-    const selectedIds = new Set(selectedOptionIds);
-    const selectedNames = [];
+export function getOptionNamesByIds(options: readonly PresetOption[], selectedOptionIds: Iterable<string>): string[] {
+    const selectedIds = new Set<string | undefined>(selectedOptionIds);
+    const selectedNames: string[] = [];
 
     options.forEach((option) => {
         if (Array.isArray(option.childs)) {
@@ -183,11 +277,14 @@ export function getOptionNamesByIds(options, selectedOptionIds) {
     return selectedNames;
 }
 
-export function applySelectedOptionIdsToOptions(options, selectedOptionIds) {
-    const selectedIds = new Set(selectedOptionIds);
+export function applySelectedOptionIdsToOptions(
+    options: readonly PresetOption[],
+    selectedOptionIds: Iterable<string>,
+): PresetOption[] {
+    const selectedIds = new Set<string | undefined>(selectedOptionIds);
 
     return options.map((option) => {
-        const normalizedOption = { ...option };
+        const normalizedOption: PresetOption = { ...option };
 
         if (Array.isArray(option.childs)) {
             normalizedOption.childs = option.childs.map((child) => ({
@@ -202,7 +299,7 @@ export function applySelectedOptionIdsToOptions(options, selectedOptionIds) {
     });
 }
 
-export function clonePresetForDetails(preset) {
+export function clonePresetForDetails<T>(preset: T): T {
     if (typeof structuredClone === "function") {
         try {
             return structuredClone(preset);
@@ -214,7 +311,7 @@ export function clonePresetForDetails(preset) {
     return JSON.parse(JSON.stringify(preset));
 }
 
-export function presetSearchPriorityComparer(entryA, entryB) {
+export function presetSearchPriorityComparer(entryA: PresetSortEntry, entryB: PresetSortEntry): number {
     if (entryA.favoriteDate && entryB.favoriteDate) {
         return entryB.favoriteDate - entryA.favoriteDate;
     }
@@ -235,11 +332,12 @@ export function presetSearchPriorityComparer(entryA, entryB) {
     });
 }
 
-export function isPresetFitSearchStatuses(preset, searchParams) {
-    return searchParams.status.length === 0 || searchParams.status.includes(preset.status);
+export function isPresetFitSearchStatuses(preset: Preset, searchParams: PresetSearchParams): boolean {
+    const statuses: readonly (string | undefined)[] = searchParams.status;
+    return statuses.length === 0 || statuses.includes(preset.status);
 }
 
-export function isPresetFitSearchCategories(preset, searchParams) {
+export function isPresetFitSearchCategories(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (searchParams.categories.length === 0) {
         return true;
     }
@@ -247,20 +345,21 @@ export function isPresetFitSearchCategories(preset, searchParams) {
     return preset.category !== undefined && searchParams.categories.includes(preset.category);
 }
 
-export function isPresetFitSearchKeywords(preset, searchParams) {
+export function isPresetFitSearchKeywords(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (searchParams.keywords.length === 0) {
         return true;
     }
 
-    if (!Array.isArray(preset.keywords)) {
+    const presetKeywords = preset.keywords;
+    if (!Array.isArray(presetKeywords)) {
         return false;
     }
 
-    const keywordsIntersection = searchParams.keywords.filter((value) => preset.keywords.includes(value));
+    const keywordsIntersection = searchParams.keywords.filter((value) => presetKeywords.includes(value));
     return keywordsIntersection.length > 0;
 }
 
-export function isPresetFitSearchAuthors(preset, searchParams) {
+export function isPresetFitSearchAuthors(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (searchParams.authors.length === 0) {
         return true;
     }
@@ -268,22 +367,21 @@ export function isPresetFitSearchAuthors(preset, searchParams) {
     return preset.author !== undefined && searchParams.authors.includes(preset.author.toLowerCase());
 }
 
-export function isPresetFitSearchFirmwareVersions(preset, searchParams) {
+export function isPresetFitSearchFirmwareVersions(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (searchParams.firmwareVersions.length === 0) {
         return true;
     }
 
-    if (!Array.isArray(preset.firmware_version)) {
+    const presetVersions = preset.firmware_version;
+    if (!Array.isArray(presetVersions)) {
         return false;
     }
 
-    const versionsIntersection = searchParams.firmwareVersions.filter((value) =>
-        preset.firmware_version.includes(value),
-    );
+    const versionsIntersection = searchParams.firmwareVersions.filter((value) => presetVersions.includes(value));
     return versionsIntersection.length > 0;
 }
 
-export function isPresetFitSearchString(preset, searchParams) {
+export function isPresetFitSearchString(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (!searchParams.searchString) {
         return true;
     }
@@ -299,7 +397,7 @@ export function isPresetFitSearchString(preset, searchParams) {
     return allWords.every((word) => totalLine.includes(word));
 }
 
-export function isPresetFitSearch(preset, searchParams) {
+export function isPresetFitSearch(preset: Preset, searchParams: PresetSearchParams): boolean {
     if (preset.hidden) {
         return false;
     }
@@ -314,9 +412,13 @@ export function isPresetFitSearch(preset, searchParams) {
     );
 }
 
-export function getFitPresets(repositories, searchParams, getPresetEntryState = () => ({})) {
-    const result = [];
-    const seenHashes = new Set();
+export function getFitPresets<R extends PresetIndexSource, S extends PresetEntryState = PresetEntryState>(
+    repositories: readonly R[],
+    searchParams: PresetSearchParams,
+    getPresetEntryState: PresetEntryStateGetter<R, S> = () => ({}) as S,
+): (PresetFitEntry<R> & S)[] {
+    const result: (PresetFitEntry<R> & S)[] = [];
+    const seenHashes = new Set<string | undefined>();
 
     for (const repository of repositories) {
         for (const preset of repository.index.presets) {
