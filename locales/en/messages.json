@@ -1443,6 +1443,27 @@
     "configurationMixer": {
         "message": "Mixer"
     },
+    "configurationEzLandingLabel": {
+        "message": "EZ LANDING"
+    },
+    "configurationEzLandingDescription": {
+        "message": "Reduces bouncing during landing"
+    },
+    "configurationEzLandingHelp": {
+        "message": "Enabling selects the EZ Landing mixer, which limits motor corrections at low throttle with centred sticks. Disabling selects the default Legacy mixer."
+    },
+    "configurationMixerRecoveryFailed": {
+        "message": "Save failed and the mixer could not be restored. Retry saving to apply the selected mixer."
+    },
+    "configurationMixerReadFailed": {
+        "message": "The current mixer could not be read. Reopen Configuration before saving."
+    },
+    "configurationSaveUnconfirmed": {
+        "message": "Save was not confirmed. Retry saving, or restart and reconnect to verify the controller's settings."
+    },
+    "configurationSavedRebootFailed": {
+        "message": "Configuration saved, but reboot failed. Reconnect to the flight controller."
+    },
     "configurationFeatures": {
         "message": "Other Features"
     },

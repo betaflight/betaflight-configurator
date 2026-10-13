@@ -2,6 +2,9 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { getSetting, getSettingInfo, setSetting } from "../../src/composables/useMspSetting";
 
+import { createPinia, setActivePinia } from "pinia";
+import { useConnectionStore } from "../../src/stores/connection";
+
 const { promise } = vi.hoisted(() => ({ promise: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise } }));
 
@@ -33,7 +36,46 @@ function infoReply(text, { total = null, from = 0 } = {}) {
 const sentText = (call) => new TextDecoder().decode(Uint8Array.from(call[1]));
 
 describe("useMspSetting", () => {
-    beforeEach(() => promise.mockReset());
+    beforeEach(() => {
+        promise.mockReset();
+        setActivePinia(createPinia());
+    });
+
+    describe("virtual settings", () => {
+        beforeEach(() => {
+            const connection = useConnectionStore();
+            connection.virtualMode = true;
+            connection.virtualApiVersion = "1.46.0";
+        });
+
+        it("provides mixer capability information without hardware MSP requests", async () => {
+            await expect(getSetting("mixer_type")).resolves.toBe("LEGACY");
+            await expect(getSettingInfo("mixer_type")).resolves.toMatchObject({
+                values: ["LEGACY", "LINEAR", "DYNAMIC", "EZLANDING"],
+            });
+            expect(promise).not.toHaveBeenCalled();
+        });
+
+        it("retains edits between reads and rejects invalid values without changing the mixer", async () => {
+            await expect(setSetting("mixer_type", "EZLANDING")).resolves.toBe("EZLANDING");
+            await expect(getSetting("mixer_type")).resolves.toBe("EZLANDING");
+            await expect(setSetting("mixer_type", "INVALID")).rejects.toThrow("refused");
+            await expect(getSetting("mixer_type")).resolves.toBe("EZLANDING");
+            await expect(setSetting("mixer_type", "LEGACY")).resolves.toBe("LEGACY");
+            expect(promise).not.toHaveBeenCalled();
+        });
+
+        it("does not claim unsupported settings or older mixer implementations", async () => {
+            await expect(getSetting("missing")).resolves.toBeNull();
+            await expect(getSettingInfo("missing")).resolves.toBeNull();
+            await expect(setSetting("missing", "ON")).rejects.toThrow("refused");
+            useConnectionStore().virtualApiVersion = "1.45.0";
+            await expect(getSetting("mixer_type")).resolves.toBeNull();
+            await expect(getSettingInfo("mixer_type")).resolves.toBeNull();
+            await expect(setSetting("mixer_type", "EZLANDING")).rejects.toThrow("refused");
+            expect(promise).not.toHaveBeenCalled();
+        });
+    });
 
     describe("getSetting", () => {
         it("asks for the setting by name and returns its value", async () => {
