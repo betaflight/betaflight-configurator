@@ -78,7 +78,13 @@ vi.mock("../../src/js/utils/ipGeolocation", async (importOriginal) => ({
     ...(await importOriginal<typeof import("../../src/js/utils/ipGeolocation")>()),
     ipCoordinates: vi.fn(),
 }));
-vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
+vi.mock("../../src/js/localization", () => ({
+    i18n: {
+        // Keep the key as the text; append placeholder values so labels that carry data can be asserted.
+        getMessage: (key: string, params?: Record<string, unknown>) =>
+            params ? `${key}:${JSON.stringify(params)}` : key,
+    },
+}));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 
 function mountTab() {
@@ -297,9 +303,12 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         replyStatus(CALIBRATING);
         await flushPromises();
         expect(calButton(wrapper).props()).toMatchObject({
-            label: "magCalibrationLegacyCountdown",
+            label: 'magCalibrationLegacyCountdown:{"seconds":30}',
             loading: true,
         });
+        vi.advanceTimersByTime(1000);
+        await flushPromises();
+        expect(calButton(wrapper).props("label")).toBe('magCalibrationLegacyCountdown:{"seconds":29}');
         expect(wrapper.text()).toContain("magCalibrationCollecting");
 
         // Firmware clears the flag: calibration is done and the button is usable again.
@@ -309,5 +318,16 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         expect(gui_log).toHaveBeenCalledWith("initialSetupMagCalibEnded");
         expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
         expect(wrapper.text()).toContain("magCalibrationUnguidedDone");
+    });
+    it("does not log a start or spin when the calibration command is not sent", async () => {
+        vi.mocked(MSP.send_message).mockReturnValue(false);
+        const wrapper = mountTab();
+        await flushPromises();
+
+        calButton(wrapper).vm.$emit("click", new MouseEvent("click"));
+        await flushPromises();
+        expect(gui_log).not.toHaveBeenCalledWith("initialSetupMagCalibStarted");
+        expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
+        expect(wrapper.text()).toContain("magCalibrationNotSent");
     });
 });

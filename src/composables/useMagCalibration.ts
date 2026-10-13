@@ -237,10 +237,16 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
             startDataPolling();
         } else {
-            // Quick / legacy mode: trigger firmware calibration
+            // Quick / legacy mode: trigger firmware calibration. send_message returns false when the
+            // command never left (disconnected or virtual mode); end the session instead of waiting
+            // for a calibration flag that will never arrive.
+            if (MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false) === false) {
+                phase.value = "error";
+                statusMessage.value = "magCalibrationNotSent";
+                return;
+            }
             phase.value = "waiting";
             statusMessage.value = "magCalibrationWaiting";
-            MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false);
             startDataPolling();
             startCompletionMonitor();
         }

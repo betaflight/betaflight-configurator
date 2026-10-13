@@ -7399,6 +7399,9 @@
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
     },
+    "magCalibrationNotSent": {
+        "message": "Calibration could not start: the flight controller did not receive the command."
+    },
     "magCalibrationLegacyStarting": {
         "message": "Starting..."
     },
