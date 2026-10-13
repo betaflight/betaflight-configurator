@@ -24,6 +24,19 @@ describe("auth store", () => {
         store.$dispose();
     });
 
+    it("stays logged out when the first session read fails", async () => {
+        const error = new Error("storage unavailable");
+        vi.spyOn(loginManager, "isUserLoggedIn").mockRejectedValue(error);
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+        const store = useAuthStore();
+        await flushPromises();
+
+        expect(store.isLoggedIn).toBe(false);
+        expect(consoleError).toHaveBeenCalledWith("Failed to read the login state", error);
+        store.$dispose();
+    });
+
     it("re-reads the session state on refresh", async () => {
         const isUserLoggedIn = vi.spyOn(loginManager, "isUserLoggedIn").mockResolvedValue(true);
         const store = useAuthStore();

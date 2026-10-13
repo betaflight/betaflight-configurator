@@ -42,7 +42,9 @@ export const useAuthStore = defineStore("auth", () => {
         unsubscribeLogout();
     });
 
-    refresh();
+    refresh().catch((error: unknown) => {
+        console.error("Failed to read the login state", error);
+    });
 
     return { isLoggedIn, refresh };
 });
