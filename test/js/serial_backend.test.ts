@@ -920,13 +920,125 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             // A serial link that is still open after the flush means the FC did not reboot, or
             // the OS has not noticed yet. Dropping it would tear down a working connection and
             // throw the user off the tab they just opened — the CLI-tab exit path does exactly
-            // this. The transport owns that link; only driven targets are dropped here.
+            // this. The transport owns that link; only driven targets and USB-UART bridges are
+            // dropped here.
             vi.advanceTimersByTime(1500);
             expect(serial.disconnect).not.toHaveBeenCalled();
         } finally {
             vi.advanceTimersByTime(30000); // drain the window
             vi.useRealTimers();
         }
+    });
+
+    describe("port behind a USB-UART bridge", () => {
+        // The bridge's USB side does not restart with the FC (e.g. ESP32 behind a CP2102), so
+        // the port stays open and no disconnect event ever arrives.
+        const describeAs = (vendorId: number, productId: number) =>
+            vi.mocked(DeviceHandler.describeDevice).mockImplementation((path) => ({ path, vendorId, productId }));
+
+        afterEach(() => {
+            vi.mocked(DeviceHandler.describeDevice).mockImplementation((path) => ({
+                path,
+                vendorId: 1155,
+                productId: 22336,
+            }));
+            vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue(undefined);
+        });
+
+        it("drops the surviving link at the flush delay and reopens it from the cycle", () => {
+            const connectionStore = useConnectionStore();
+            vi.useFakeTimers();
+            try {
+                describeAs(0x10c4, 0xea60); // CP210x
+                DeviceHandler.devicePicker.autoConnect = true;
+                connectionStore.connectionValid = true;
+                establishConnection();
+                serial.disconnect.mockClear();
+                serial.connect.mockClear();
+
+                reinitializeConnection();
+                expect(serial.disconnect).not.toHaveBeenCalled(); // reboot command still flushing
+
+                vi.advanceTimersByTime(1500);
+                expect(serial.disconnect).toHaveBeenCalledTimes(1);
+                expect(getConnectionState().isRebootWindowOpen).toBe(true);
+
+                vi.advanceTimersByTime(1000);
+                expect(serial.connect).toHaveBeenCalledTimes(1);
+                expect(vi.mocked(serial.connect).mock.calls[0][0]).toBe("/dev/ttyACM0"); // same path: no re-enumeration
+            } finally {
+                vi.advanceTimersByTime(30000);
+                vi.useRealTimers();
+            }
+        });
+
+        it("matches a vendor-wide bridge by vendor id alone", () => {
+            const connectionStore = useConnectionStore();
+            vi.useFakeTimers();
+            try {
+                describeAs(0x1a86, 0xbeef); // WCH, a product id not in any filter list
+                DeviceHandler.devicePicker.autoConnect = true;
+                connectionStore.connectionValid = true;
+                establishConnection();
+                serial.disconnect.mockClear();
+
+                reinitializeConnection();
+                vi.advanceTimersByTime(1500);
+                expect(serial.disconnect).toHaveBeenCalledTimes(1);
+            } finally {
+                vi.advanceTimersByTime(30000);
+                vi.useRealTimers();
+            }
+        });
+
+        it("leaves an unlisted product of a product-scoped vendor alone", () => {
+            const connectionStore = useConnectionStore();
+            vi.useFakeTimers();
+            try {
+                describeAs(0x04d8, 0x000a); // Microchip, but a PIC with native USB CDC
+                DeviceHandler.devicePicker.autoConnect = true;
+                connectionStore.connectionValid = true;
+                establishConnection();
+                serial.disconnect.mockClear();
+
+                reinitializeConnection();
+                vi.advanceTimersByTime(1500);
+                expect(serial.disconnect).not.toHaveBeenCalled();
+            } finally {
+                vi.advanceTimersByTime(30000);
+                vi.useRealTimers();
+            }
+        });
+
+        // Nothing reconnects with Auto-Connect off, and the port never left the list, so the
+        // window must end right after the drop instead of holding the UI for the full timeout.
+        it("with Auto-Connect off, drops the link and ends the window without reconnecting", () => {
+            const connectionStore = useConnectionStore();
+            vi.useFakeTimers();
+            try {
+                describeAs(0x0403, 0x6001); // FT232R
+                vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue({
+                    path: "/dev/ttyACM0",
+                    displayName: "/dev/ttyACM0",
+                });
+                DeviceHandler.devicePicker.autoConnect = false;
+                connectionStore.connectionValid = true;
+                establishConnection();
+                serial.disconnect.mockClear();
+                serial.connect.mockClear();
+
+                reinitializeConnection();
+                vi.advanceTimersByTime(1500);
+                expect(serial.disconnect).toHaveBeenCalledTimes(1);
+
+                vi.advanceTimersByTime(1000);
+                expect(getConnectionState().isRebootWindowOpen).toBe(false);
+                expect(serial.connect).not.toHaveBeenCalled();
+            } finally {
+                vi.advanceTimersByTime(30000);
+                vi.useRealTimers();
+            }
+        });
     });
 
     // Serial used to have no owner: the reconnect depended on an addedDevice event reaching the
