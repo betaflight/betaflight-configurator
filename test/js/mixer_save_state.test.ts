@@ -26,18 +26,12 @@ import { useMixerSaveStore } from "../../src/stores/mixerSave";
 
 beforeEach(() => setActivePinia(createPinia()));
 
-it("does not carry uncertain mixer state onto another connection", () => {
+it("does not carry an unconfirmed mixer write onto another connection", () => {
     const connection = useConnectionStore();
     connection.connectedTo = "first FC";
     const mixer = useMixerSaveStore();
-    mixer.loadedMixerType = "LEGACY";
-    mixer.controllerMixerType = "EZLANDING";
     mixer.mixerNeedsSave = true;
-    mixer.mixerPersistenceUncertain = true;
     connection.connectedTo = false;
     connection.connectedTo = "second FC";
-    expect(mixer.loadedMixerType).toBeNull();
-    expect(mixer.controllerMixerType).toBeNull();
     expect(mixer.mixerNeedsSave).toBe(false);
-    expect(mixer.mixerPersistenceUncertain).toBe(false);
 });

@@ -23,24 +23,18 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { useConnectionStore } from "./connection";
 
-/** Keep mixer recovery state across tab changes, without carrying it onto another connection. */
+/** Keep an unconfirmed mixer write dirty across tab changes until EEPROM acknowledges it. */
 export const useMixerSaveStore = defineStore("mixerSave", () => {
-    const loadedMixerType = ref<string | null>(null);
-    const controllerMixerType = ref<string | null>(null);
     const mixerNeedsSave = ref(false);
-    const mixerPersistenceUncertain = ref(false);
 
     const connection = useConnectionStore();
     watch(
         () => connection.connectedTo,
         () => {
-            loadedMixerType.value = null;
-            controllerMixerType.value = null;
             mixerNeedsSave.value = false;
-            mixerPersistenceUncertain.value = false;
         },
         { flush: "sync" },
     );
 
-    return { loadedMixerType, controllerMixerType, mixerNeedsSave, mixerPersistenceUncertain };
+    return { mixerNeedsSave };
 });

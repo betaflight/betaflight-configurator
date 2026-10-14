@@ -9,7 +9,7 @@ import { gui_log } from "../../src/js/gui_log";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { getSetting, getSettingInfo, setSetting } from "../../src/composables/useMspSetting";
 import Features from "../../src/js/Features";
-import { MspCancelledError, MspTimeoutError } from "../../src/js/msp/mspErrors";
+import { MspTimeoutError } from "../../src/js/msp/mspErrors";
 
 const saveToEeprom = vi.fn();
 const rebootAfterSave = vi.fn();
@@ -191,166 +191,66 @@ describe("Configuration MSP wiring", () => {
         };
     }
 
-    it("restores the old mixer after a later configuration write fails", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        vi.mocked(MSP.promise).mockRejectedValueOnce(new Error("feature write failed"));
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            expect(saveToEeprom).not.toHaveBeenCalled();
-            expect(rebootAfterSave).not.toHaveBeenCalled();
-            expect(wrapper!.vm.dirty).toBe(true);
-            wrapper!.vm.ezLandingEnabled = false;
-            expect(wrapper!.vm.dirty).toBe(false);
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-        } finally {
-            logged.mockRestore();
-        }
-    });
+    it.each(["mixer reply", "configuration write", "EEPROM"])(
+        "writes the selected value again after a failed %s, even when reverting to the original selection",
+        async (failure) => {
+            const controller = await loadEditableMixer();
+            wrapper!.vm.ezLandingEnabled = true;
+            const error = new MspTimeoutError("reply lost");
+            if (failure === "mixer reply") {
+                vi.mocked(setSetting).mockImplementationOnce(async () => {
+                    controller.change("EZLANDING");
+                    throw error;
+                });
+            } else if (failure === "configuration write") {
+                vi.mocked(MSP.promise).mockRejectedValueOnce(error);
+            } else {
+                saveToEeprom.mockRejectedValueOnce(error);
+            }
+            const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+            try {
+                await wrapper!.vm.saveConfig();
+                expect(controller.current()).toBe("EZLANDING");
+                expect(rebootAfterSave).not.toHaveBeenCalled();
+                wrapper!.vm.ezLandingEnabled = false;
+                expect(wrapper!.vm.dirty).toBe(true);
+                // Reopening the tab must not forget that RAM still needs saving.
+                wrapper!.unmount();
+                wrapper = mountTab();
+                await flushPromises();
+                expect(wrapper.vm.ezLandingEnabled).toBe(true);
+                expect(wrapper.vm.dirty).toBe(true);
+                wrapper.vm.ezLandingEnabled = false;
+                await wrapper.vm.saveConfig();
+                expect(setSetting).toHaveBeenLastCalledWith("mixer_type", "LEGACY");
+                expect(controller.current()).toBe("LEGACY");
+                expect(wrapper.vm.dirty).toBe(false);
+            } finally {
+                logged.mockRestore();
+            }
+        },
+    );
 
-    it("restores the mixer after EEPROM failure while keeping the requested edit unsaved", async () => {
-        const controller = await loadEditableMixer();
+    it("blocks saving if the mixer cannot be read while a previous write still needs saving", async () => {
+        await loadEditableMixer();
         wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new MspTimeoutError("EEPROM timed out"));
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            expect(wrapper!.vm.ezLandingEnabled).toBe(true);
-            expect(wrapper!.vm.dirty).toBe(true);
-            expect(rebootAfterSave).not.toHaveBeenCalled();
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("EZLANDING");
-            expect(wrapper!.vm.dirty).toBe(false);
-        } finally {
-            logged.mockRestore();
-        }
-    });
-
-    it("keeps a lost EEPROM acknowledgement pending even after RAM is restored", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new MspTimeoutError("EEPROM acknowledgement lost"));
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            wrapper!.vm.ezLandingEnabled = false;
-            expect(wrapper!.vm.dirty).toBe(true);
-            await wrapper!.vm.saveConfig();
-            expect(saveToEeprom).toHaveBeenCalledTimes(2);
-            expect(controller.current()).toBe("LEGACY");
-            expect(wrapper!.vm.dirty).toBe(false);
-        } finally {
-            logged.mockRestore();
-        }
-    });
-
-    it("retains uncertain persistence after leaving and reopening Configuration", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new MspTimeoutError("EEPROM acknowledgement lost"));
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            wrapper!.unmount();
-            wrapper = mountTab();
-            await flushPromises();
-            expect(wrapper.vm.ezLandingEnabled).toBe(false);
-            expect(wrapper.vm.dirty).toBe(true);
-            await wrapper.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            expect(wrapper.vm.dirty).toBe(false);
-        } finally {
-            logged.mockRestore();
-        }
-    });
-
-    it("does not persist unknown mixer state when a remounted capability probe fails", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new MspTimeoutError("EEPROM acknowledgement lost"));
+        saveToEeprom.mockRejectedValueOnce(new MspTimeoutError("reply lost"));
         const logged = vi.spyOn(console, "error").mockImplementation(() => {});
         const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
         try {
             await wrapper!.vm.saveConfig();
             wrapper!.unmount();
-            vi.mocked(getSetting).mockRejectedValueOnce(new MspTimeoutError("probe failed"));
+            vi.mocked(getSetting).mockRejectedValue(new MspTimeoutError("probe failed"));
             wrapper = mountTab();
             await flushPromises();
-            expect(wrapper.vm.ezLandingAvailable).toBe(false);
-            expect(wrapper.vm.dirty).toBe(true);
             saveToEeprom.mockClear();
             await wrapper.vm.saveConfig();
+            expect(wrapper.vm.dirty).toBe(true);
             expect(saveToEeprom).not.toHaveBeenCalled();
-            expect(controller.current()).toBe("LEGACY");
-            expect(gui_log).toHaveBeenCalledWith("configurationMixerReadFailed");
+            expect(gui_log).toHaveBeenLastCalledWith("configurationMixerReadFailed");
         } finally {
             logged.mockRestore();
             warning.mockRestore();
-        }
-    });
-
-    it("does not report a recovery error when a tab switch cancels the restore", async () => {
-        await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new Error("EEPROM refused"));
-        vi.mocked(getSetting).mockRejectedValueOnce(new MspCancelledError("tab switched"));
-        vi.mocked(gui_log).mockClear();
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(gui_log).not.toHaveBeenCalled();
-            expect(logged).not.toHaveBeenCalled();
-        } finally {
-            logged.mockRestore();
-        }
-    });
-
-    it("keeps recovery pending when rollback fails and writes Legacy on the next retry", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        saveToEeprom.mockRejectedValueOnce(new Error("EEPROM refused"));
-        vi.mocked(setSetting)
-            .mockImplementationOnce(async () => {
-                controller.change("EZLANDING");
-                return "EZLANDING";
-            })
-            .mockRejectedValueOnce(new MspTimeoutError("rollback timed out"));
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("EZLANDING");
-            wrapper!.vm.ezLandingEnabled = false;
-            expect(wrapper!.vm.dirty).toBe(true);
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            expect(setSetting).toHaveBeenLastCalledWith("mixer_type", "LEGACY");
-            expect(wrapper!.vm.dirty).toBe(false);
-        } finally {
-            logged.mockRestore();
-        }
-    });
-
-    it("recovers a mixer write that changed RAM but lost its acknowledgement", async () => {
-        const controller = await loadEditableMixer();
-        wrapper!.vm.ezLandingEnabled = true;
-        vi.mocked(setSetting).mockImplementationOnce(async () => {
-            controller.change("EZLANDING");
-            throw new MspTimeoutError("reply lost");
-        });
-        const logged = vi.spyOn(console, "error").mockImplementation(() => {});
-        try {
-            await wrapper!.vm.saveConfig();
-            expect(controller.current()).toBe("LEGACY");
-            expect(saveToEeprom).not.toHaveBeenCalled();
-            expect(wrapper!.vm.dirty).toBe(true);
-        } finally {
-            logged.mockRestore();
         }
     });
 

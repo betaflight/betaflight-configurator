@@ -82,7 +82,7 @@ export function useReboot() {
     /** Reboot after an already-acknowledged save, keeping reboot errors separate from persistence. */
     async function rebootAfterSave(): Promise<void> {
         await new Promise<void>((resolve) => tabSwitchCleanup(resolve));
-        await reboot();
+        reboot();
     }
 
     return {

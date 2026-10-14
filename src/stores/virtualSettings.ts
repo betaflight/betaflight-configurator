@@ -26,7 +26,11 @@ import { useConnectionStore } from "./connection";
 import { API_VERSION_1_46 } from "../js/data_storage";
 import type { SettingInfo } from "../composables/useMspSetting";
 
-const MIXER_TYPES = ["LEGACY", "LINEAR", "DYNAMIC", "EZLANDING"];
+const MIXER_TYPES = new Set(["LEGACY", "LINEAR", "DYNAMIC", "EZLANDING"]);
+
+function supports(setting: string): boolean {
+    return setting === "mixer_type" && semver.gte(useConnectionStore().virtualApiVersion, API_VERSION_1_46);
+}
 
 /**
  * VirtualFC resets its demo MSP data on reconnect. Named settings deliberately survive those
@@ -35,10 +39,6 @@ const MIXER_TYPES = ["LEGACY", "LINEAR", "DYNAMIC", "EZLANDING"];
  */
 export const useVirtualSettingsStore = defineStore("virtualSettings", () => {
     const mixerType = ref("LEGACY");
-
-    function supports(setting: string): boolean {
-        return setting === "mixer_type" && semver.gte(useConnectionStore().virtualApiVersion, API_VERSION_1_46);
-    }
 
     function getSetting(setting: string): string | null {
         return supports(setting) ? mixerType.value : null;
@@ -50,7 +50,7 @@ export const useVirtualSettingsStore = defineStore("virtualSettings", () => {
 
     function setSetting(setting: string, value: string | number): string {
         const selected = String(value).toUpperCase();
-        if (!supports(setting) || !MIXER_TYPES.includes(selected)) {
+        if (!supports(setting) || !MIXER_TYPES.has(selected)) {
             throw new Error(`The virtual flight controller refused ${setting} = ${value}`);
         }
         mixerType.value = selected;

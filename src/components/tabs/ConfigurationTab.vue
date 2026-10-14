@@ -252,7 +252,6 @@ import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
-import { isMspCancelled } from "../../js/msp/mspErrors";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { useConfigurationData } from "@/composables/configuration/useConfigurationData";
 import { gui_log } from "../../js/gui_log";
@@ -434,8 +433,6 @@ export default defineComponent({
             ezLandingAvailable,
             ezLandingEnabled,
             mixerNeedsSave,
-            restoreMixerConfig,
-            markMixerSaveAttempted,
             confirmMixerSaved,
         } = useConfigurationData();
         const dirty = computed(() => formDirty.value || mixerNeedsSave.value);
@@ -552,25 +549,8 @@ export default defineComponent({
                     fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
                 }
 
-                try {
-                    await sendConfigurationData();
-                    markMixerSaveAttempted();
-                    await saveToEeprom();
-                } catch (error) {
-                    if (isMounted.value && !isMspCancelled(error)) {
-                        try {
-                            await restoreMixerConfig();
-                        } catch (restoreError) {
-                            if (isMspCancelled(restoreError)) throw restoreError;
-                            console.error("Unable to restore the mixer after a failed save:", restoreError);
-                            throw withSaveFailureMessage(error, i18n.getMessage("configurationMixerRecoveryFailed"));
-                        }
-                    }
-                    if (mixerNeedsSave.value) {
-                        throw withSaveFailureMessage(error, i18n.getMessage("configurationSaveUnconfirmed"));
-                    }
-                    throw error;
-                }
+                await sendConfigurationData();
+                await saveToEeprom();
 
                 confirmMixerSaved();
                 markClean(savedSnapshot);
