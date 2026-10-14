@@ -412,12 +412,21 @@ export function isPresetFitSearch(preset: Preset, searchParams: PresetSearchPara
     );
 }
 
-export function getFitPresets<R extends PresetIndexSource, S extends PresetEntryState = PresetEntryState>(
+export function getFitPresets<R extends PresetIndexSource>(
     repositories: readonly R[],
     searchParams: PresetSearchParams,
-    getPresetEntryState: PresetEntryStateGetter<R, S> = () => ({}) as S,
-): (PresetFitEntry<R> & S)[] {
-    const result: (PresetFitEntry<R> & S)[] = [];
+): PresetFitEntry<R>[];
+export function getFitPresets<R extends PresetIndexSource, S extends PresetEntryState>(
+    repositories: readonly R[],
+    searchParams: PresetSearchParams,
+    getPresetEntryState: PresetEntryStateGetter<R, S>,
+): (PresetFitEntry<R> & S)[];
+export function getFitPresets<R extends PresetIndexSource>(
+    repositories: readonly R[],
+    searchParams: PresetSearchParams,
+    getPresetEntryState?: PresetEntryStateGetter<R, PresetEntryState>,
+): (PresetFitEntry<R> & PresetEntryState)[] {
+    const result: (PresetFitEntry<R> & PresetEntryState)[] = [];
     const seenHashes = new Set<string | undefined>();
 
     for (const repository of repositories) {
@@ -428,7 +437,7 @@ export function getFitPresets<R extends PresetIndexSource, S extends PresetEntry
                     key: presetKey,
                     preset,
                     repository,
-                    ...getPresetEntryState(preset, repository, presetKey),
+                    ...getPresetEntryState?.(preset, repository, presetKey),
                 });
                 seenHashes.add(preset.hash);
             }
