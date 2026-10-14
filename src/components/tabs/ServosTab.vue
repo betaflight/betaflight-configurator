@@ -425,23 +425,23 @@ function servoTiltEnabled() {
 }
 
 // Channel forwarding moves servos onto physical outputs (firmware
-// writeServos), so the output layout follows the edited configs.
+// writeServos). The layout follows the config on the FC (saved, or sent by
+// live mode), which is what the live servo values come from; edits settle on
+// Save.
 function slotLayoutOptions() {
-    return { servoTilt: servoTiltEnabled(), forwardedServos: forwardedServos(servoConfigs) };
+    return { servoTilt: servoTiltEnabled(), forwardedServos: forwardedServos(fcStore.servoConfig ?? []) };
 }
 
-// Change-direction rows in physical output order. Ordered from the saved
-// config rather than the live edits, so ticking a forwarding box doesn't make
-// rows jump mid-click; the order settles on Save.
-const servoConfigRows = computed(() => {
-    const options = { servoTilt: servoTiltEnabled(), forwardedServos: forwardedServos(fcStore.servoConfig ?? []) };
-    return servoOutputItems(mixerMode.value, options)
+// Change-direction rows in physical output order. Using the FC's layout also
+// keeps rows from jumping mid-click when a forwarding box is ticked.
+const servoConfigRows = computed(() =>
+    servoOutputItems(mixerMode.value, slotLayoutOptions())
         .filter((item) => item.target < servoConfigs.length)
         .map((item) => ({
             ...item,
             label: item.slot == null ? t("servosOutputUnused") : t("servosMixerOutputServo", { index: item.slot + 1 }),
-        }));
-});
+        })),
+);
 
 // The custom rule list only runs on CUSTOM_AIRPLANE / CUSTOM_TRI, so it is
 // only shown and edited there.
