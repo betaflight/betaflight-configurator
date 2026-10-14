@@ -3163,6 +3163,9 @@
     "servosMixerBox": {
         "message": "Box"
     },
+    "servosMixerBoxAlways": {
+        "message": "Always"
+    },
     "servosMixerBoxHelp": {
         "message": "Flight mode gate. Always = rule always applies. BOXSERVO1-3 = rule only applies while that mode is active."
     },

@@ -327,7 +327,7 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('servosButtonSave')"
-                    :disabled="(!configHasChanged && !mixerDirty) || mixerLoadFailed"
+                    :disabled="(!configHasChanged && !mixerDirty) || rulesUnknown"
                     :loading="isSaving"
                     size="xs"
                     @click="saveServoConfig"
@@ -351,7 +351,7 @@ import { useServosSave } from "@/composables/servos/useServosSave";
 import { clamp } from "@/js/utils/common";
 import {
     SERVO_MIX_INPUT_LABELS,
-    SERVO_MIX_BOX_LABELS,
+    SERVO_MIX_BOX_NAMES,
     SERVO_MIX_INPUT_STABILIZED_THROTTLE,
     SERVO_MIX_MIN,
     SERVO_MIX_MAX,
@@ -385,8 +385,7 @@ const originalConfigs = ref("");
 // Custom servo mixer rules, staged locally until Save.
 const servoMixRules = reactive<ServoRule[]>([]);
 const mixerDirty = ref(false);
-// Set when MSP_SERVO_MIX_RULES couldn't be parsed: the FC's rules are unknown,
-// so Save stays disabled rather than overwrite them with an empty list.
+// Set when MSP_SERVO_MIX_RULES couldn't be parsed: the FC's rules are unknown.
 const mixerLoadFailed = ref(false);
 
 const { addTimeout } = useTimeout();
@@ -446,6 +445,9 @@ const servoConfigRows = computed(() =>
 // The custom rule list only runs on CUSTOM_AIRPLANE / CUSTOM_TRI, so it is
 // only shown and edited there.
 const editsCustomRules = computed(() => usesCustomServoRules(mixerMode.value));
+// The FC's custom rules couldn't be read: block Save only where they are in
+// use, so a save can't overwrite them with an empty list.
+const rulesUnknown = computed(() => editsCustomRules.value && mixerLoadFailed.value);
 
 // Label a firmware servo target by the physical output carrying it ("Servo 1"
 // = first servo output). Targets the mixer doesn't drive keep their firmware
@@ -479,7 +481,10 @@ const cliTargetMap = computed(() =>
         .join(", "),
 );
 const servoMixInputItems = computed(() => SERVO_MIX_INPUT_LABELS.map((label, i) => ({ value: i, label })));
-const servoMixBoxItems = computed(() => SERVO_MIX_BOX_LABELS.map((label, i) => ({ value: i, label })));
+const servoMixBoxItems = computed(() => [
+    { value: 0, label: t("servosMixerBoxAlways") },
+    ...SERVO_MIX_BOX_NAMES.map((label, i) => ({ value: i + 1, label })),
+]);
 
 // Built-in rules of the active preset mixer (null on custom mixers and
 // multirotors). The STABILIZED_THROTTLE rule (AIRPLANE / FLYING_WING) drives
@@ -517,7 +522,9 @@ function loadServoMixRules() {
     mixerDirty.value = false;
     mixerLoadFailed.value = fcStore.servoRulesParseOk === false;
     if (mixerLoadFailed.value) {
-        gui_log(t("servosMixerLoadFailed"));
+        if (editsCustomRules.value) {
+            gui_log(t("servosMixerLoadFailed"));
+        }
         return;
     }
     servoMixRules.push(...activeServoMixRules(fcStore.servoRules));
@@ -591,7 +598,7 @@ function updateServoData() {
 }
 
 function saveServoConfig() {
-    if (mixerLoadFailed.value) {
+    if (rulesUnknown.value) {
         return;
     }
     // Rules are only rewritten when edited. MSP_SET_SERVO_MIX_RULE stores

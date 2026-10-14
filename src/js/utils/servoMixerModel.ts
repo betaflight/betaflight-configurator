@@ -58,7 +58,8 @@ export const SERVO_MIX_INPUT_LABELS = [
     "GIMBAL_ROLL",
 ];
 
-export const SERVO_MIX_BOX_LABELS = ["Always", "BOXSERVO1", "BOXSERVO2", "BOXSERVO3"];
+// Box 1-3 gate a rule on a BOXSERVO mode; box 0 ("always") is labelled by the tab.
+export const SERVO_MIX_BOX_NAMES = ["BOXSERVO1", "BOXSERVO2", "BOXSERVO3"];
 export const MAX_SERVO_RULES = 16;
 // Firmware MAX_SUPPORTED_SERVOS: servo targets are 0..7.
 const MAX_SUPPORTED_SERVOS = 8;
