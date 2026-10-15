@@ -20,7 +20,7 @@
  */
 
 import { usbDevices, type UsbDeviceId } from "./devices";
-import UsbDfuDescriptors from "./UsbDfuDescriptors.js";
+import UsbDfuDescriptors from "./UsbDfuDescriptors";
 import type { DfuControlSetup, DfuPort, DfuTransport } from "./usbdfu";
 
 /** The W3C `USBDevice`, as far as this transport uses it. */
