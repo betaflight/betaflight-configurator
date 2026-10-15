@@ -1,5 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, afterEach, beforeEach, vi } from "vitest";
-import UsbDfuDescriptors from "../../src/js/protocols/UsbDfuDescriptors.js";
+import UsbDfuDescriptors, { type RawTransferInResult } from "../../src/js/protocols/UsbDfuDescriptors";
+import type { DfuControlSetup } from "../../src/js/protocols/usbdfu";
 
 // The descriptor layer is pure parsing over control transfers, so it can be driven
 // entirely through a scripted _rawControlTransferIn with no USB backend at all.
@@ -7,8 +29,8 @@ import UsbDfuDescriptors from "../../src/js/protocols/UsbDfuDescriptors.js";
 const CONFIG = 0x200;
 const STRING = 0x300;
 
-/** @returns {number[]} a 9-byte configuration descriptor header */
-const configHeader = (totalLength) => [9, 2, totalLength & 0xff, totalLength >> 8, 1, 1, 0, 0x80, 50];
+/** @returns a 9-byte configuration descriptor header */
+const configHeader = (totalLength: number): number[] => [9, 2, totalLength & 0xff, totalLength >> 8, 1, 1, 0, 0x80, 50];
 
 /** @returns {number[]} a 9-byte interface descriptor */
 const interfaceDescriptor = ({ number = 0, alternate = 0, cls = 0xfe, subclass = 0x01, iInterface = 0 } = {}) => [
@@ -23,8 +45,8 @@ const interfaceDescriptor = ({ number = 0, alternate = 0, cls = 0xfe, subclass =
     iInterface,
 ];
 
-/** @returns {number[]} a 9-byte DFU functional descriptor */
-const functionalDescriptor = (transferSize) => [
+/** @returns a 9-byte DFU functional descriptor */
+const functionalDescriptor = (transferSize: number): number[] => [
     9,
     0x21,
     0x0b,
@@ -36,25 +58,38 @@ const functionalDescriptor = (transferSize) => [
     0x01,
 ];
 
-/** @returns {number[]} a USB string descriptor holding `text` as UTF-16LE */
-function stringDescriptor(text) {
+/** @returns a USB string descriptor holding `text` as UTF-16LE */
+function stringDescriptor(text: string): number[] {
     const bytes = [0, 3];
     for (const char of text) {
-        const code = char.codePointAt(0);
+        const code = char.codePointAt(0)!;
         bytes.push(code & 0xff, code >> 8);
     }
     bytes[0] = bytes.length;
     return bytes;
 }
 
-function buildConfig(parts) {
+function buildConfig(parts: number[][]): number[] {
     const body = parts.flat();
     const total = 9 + body.length;
     return [...configHeader(total), ...body];
 }
 
+interface Script {
+    config?: number[];
+    strings?: Record<number, string>;
+    langId?: number[];
+    standalone?: number[];
+}
+
 class ScriptedTransport extends UsbDfuDescriptors {
-    constructor({ config = [], strings = {}, langId = [4, 3, 0x09, 0x04], standalone } = {}) {
+    config: number[];
+    strings: Record<number, string>;
+    langId: number[];
+    standalone: number[] | undefined;
+    calls: { value: number; length: number }[];
+
+    constructor({ config = [], strings = {}, langId = [4, 3, 0x09, 0x04], standalone }: Script = {}) {
         super();
         this.logHead = "[test]";
         this.config = config;
@@ -64,7 +99,7 @@ class ScriptedTransport extends UsbDfuDescriptors {
         this.calls = [];
     }
 
-    async _rawControlTransferIn(setup, length) {
+    async _rawControlTransferIn(setup: DfuControlSetup, length: number): Promise<RawTransferInResult> {
         this.calls.push({ value: setup.value, length });
 
         if (setup.value === STRING) {
@@ -88,7 +123,7 @@ class ScriptedTransport extends UsbDfuDescriptors {
         return { status: "stall", data: new Uint8Array(0) };
     }
 
-    respond(bytes, length) {
+    respond(bytes: number[], length: number): RawTransferInResult {
         return { status: "ok", data: new Uint8Array(bytes.slice(0, length)) };
     }
 }
@@ -255,8 +290,8 @@ describe("_invalidateDescriptorCache", () => {
 
     it("keeps an in-flight read from caching against the new device", async () => {
         const transport = new ScriptedTransport({ config: buildConfig([interfaceDescriptor()]) });
-        let release;
-        const gate = new Promise((resolve) => {
+        let release!: () => void;
+        const gate = new Promise<void>((resolve) => {
             release = resolve;
         });
         const scripted = transport._rawControlTransferIn.bind(transport);
@@ -287,5 +322,18 @@ describe("_withTimeout", () => {
         const transport = new ScriptedTransport();
 
         await expect(transport._withTimeout(Promise.resolve(42), 1000, "fast")).resolves.toBe(42);
+    });
+});
+
+describe("_rawControlTransferIn", () => {
+    it("rejects, rather than throws, when a transport does not implement it", async () => {
+        const base = new UsbDfuDescriptors();
+        const setup = { requestType: "standard", recipient: "device", request: 6, value: 0x300, index: 0 };
+
+        let result: Promise<unknown> | undefined;
+        expect(() => {
+            result = base._rawControlTransferIn(setup, 4);
+        }).not.toThrow();
+        await expect(result).rejects.toThrow("must be implemented");
     });
 });

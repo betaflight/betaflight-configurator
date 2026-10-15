@@ -46,6 +46,7 @@ import { getOS } from "../utils/checkCompatibility";
 import WebUsbDfuTransport from "./WebUsbDfuTransport";
 import { useConnectionStore } from "../../stores/connection";
 import type { ParsedHex } from "../workers/hex_parser";
+import type { UsbInterfaceDescriptor } from "./UsbDfuDescriptors";
 
 // Error constant used when an already-authorized DFU device isn't found
 export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
@@ -115,7 +116,7 @@ export interface DfuTransport extends EventTarget {
     reset(): Promise<void>;
     getString(index: number): Promise<string>;
     getInterfaceDescriptors(interfaceNum: number): Promise<string[]>;
-    getInterfaceDescriptor(interfaceIndex: number): Promise<Record<string, number> | null>;
+    getInterfaceDescriptor(interfaceIndex: number): Promise<UsbInterfaceDescriptor | null>;
     /** Null on Android when the plugin finds no functional descriptor. */
     getFunctionalDescriptor(interfaceIndex?: number): Promise<DfuFunctionalDescriptor | null>;
     controlTransferIn(
@@ -488,7 +489,7 @@ export class UsbDfuProtocol extends EventTarget {
 
     getInterfaceDescriptor(
         _interface: number,
-        callback: (descriptor: Record<string, number> | null, resultCode: number) => void,
+        callback: (descriptor: Partial<UsbInterfaceDescriptor> | null, resultCode: number) => void,
     ): void {
         this.transport
             .getInterfaceDescriptor(_interface)

@@ -1,6 +1,50 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
-import { bracketHost, unbracketHost } from "../utils/host.js";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+import { bracketHost, unbracketHost } from "../utils/host";
+
+/** A port entry as this transport lists it; a TCP endpoint has no USB identity. */
+export interface TauriTcpDevice {
+    path: string;
+    displayName: string;
+    vendorId: number;
+    productId: number;
+    port: number;
+}
+
+/** A bridge as `mdns_browse` reports it (see mdns.rs). */
+interface MdnsBridge {
+    name: string;
+    addresses: string[];
+    port: number;
+}
+
+/** `connect` carries the canonical tcp:// URL, or `false` for a failed open. */
+export type TauriTcpConnectDetail = string | false;
+
+export interface TauriTcpSendResult {
+    bytesSent: number;
+}
 
 /**
  * Raw TCP transport for the Tauri desktop shell.
@@ -10,6 +54,20 @@ import { bracketHost, unbracketHost } from "../utils/host.js";
  * receives bytes via the `tcp-data` / `tcp-closed` events.
  */
 class TauriTcp extends EventTarget {
+    connected: boolean;
+    // Never written by this transport; kept for parity with the other protocols.
+    connectionInfo: null;
+    bitrate: number;
+    bytesSent: number;
+    bytesReceived: number;
+    failed: number;
+    logHead: string;
+    address: string;
+    _unlisten: UnlistenFn[];
+    devices: TauriTcpDevice[];
+    deviceMonitorInterval: ReturnType<typeof setInterval> | null;
+    deviceCheckInFlight: boolean;
+
     constructor() {
         super();
 
@@ -37,15 +95,15 @@ class TauriTcp extends EventTarget {
         this.startDeviceMonitoring();
     }
 
-    handleReceiveBytes(info) {
+    handleReceiveBytes(info: { detail: { byteLength: number } }): void {
         this.bytesReceived += info.detail.byteLength;
     }
 
-    handleDisconnect() {
-        this.disconnect();
+    handleDisconnect(): void {
+        void this.disconnect();
     }
 
-    _portInfo(path) {
+    _portInfo(path: string): TauriTcpDevice {
         return { path, displayName: "Betaflight TCP", vendorId: 0, productId: 0, port: 0 };
     }
 
@@ -53,30 +111,28 @@ class TauriTcp extends EventTarget {
     // (and ELRS users) routinely omit the scheme, and `new URL` rejects a schemeless
     // host, so prepend tcp:// before parsing. Defaults to the Betaflight bridge port.
     /**
-     * @param {string} path - "tcp://host:port", "host:port" or a bare "host".
-     * @returns {{host: string, port: number}}
+     * @param path - "tcp://host:port", "host:port" or a bare "host".
      */
-    _parseAddress(path) {
+    _parseAddress(path: string): { host: string; port: number } {
         const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(path) ? path : `tcp://${path}`;
         const url = new URL(withScheme);
         // The Rust side gives the host to to_socket_addrs(), which accepts a bare address only.
         return { host: unbracketHost(url.hostname), port: Number.parseInt(url.port, 10) || 5761 };
     }
 
-    createPort(url) {
+    createPort(url: string): TauriTcpDevice {
         this.address = url;
         return this._portInfo(url);
     }
 
-    getConnectedDevice() {
+    getConnectedDevice(): TauriTcpDevice {
         return this._portInfo(this.address);
     }
 
     /**
-     * @param {{name: string, addresses: string[], port: number}} bridge
-     * @returns {object|null} a port entry for the picker, or null when the bridge has no address yet
+     * @returns a port entry for the picker, or null when the bridge has no address yet
      */
-    _bridgePort(bridge) {
+    _bridgePort(bridge: MdnsBridge): TauriTcpDevice | null {
         const address = bridge.addresses[0];
         if (!address) {
             return null;
@@ -86,19 +142,21 @@ class TauriTcp extends EventTarget {
 
     /**
      * Bridges currently announcing `_betaflight._tcp` on the local network.
-     * @returns {Promise<Array>} port entries, one per bridge
+     * @returns port entries, one per bridge
      */
-    async getDevices() {
+    async getDevices(): Promise<TauriTcpDevice[]> {
         try {
-            const bridges = await invoke("mdns_browse");
-            this.devices = bridges.map((bridge) => this._bridgePort(bridge)).filter(Boolean);
+            const bridges = await invoke<MdnsBridge[]>("mdns_browse");
+            this.devices = bridges
+                .map((bridge) => this._bridgePort(bridge))
+                .filter((port): port is TauriTcpDevice => port !== null);
         } catch (e) {
             console.warn(`${this.logHead} mDNS browse failed:`, e);
         }
         return this.devices;
     }
 
-    startDeviceMonitoring() {
+    startDeviceMonitoring(): void {
         if (this.deviceMonitorInterval) {
             return;
         }
@@ -115,37 +173,40 @@ class TauriTcp extends EventTarget {
         }, 2000);
     }
 
-    stopDeviceMonitoring() {
+    stopDeviceMonitoring(): void {
         if (this.deviceMonitorInterval) {
             clearInterval(this.deviceMonitorInterval);
             this.deviceMonitorInterval = null;
         }
     }
 
-    async checkDeviceChanges() {
+    async checkDeviceChanges(): Promise<void> {
         const previous = this.devices;
         const current = await this.getDevices();
         for (const removed of previous.filter((old) => !current.some((now) => now.path === old.path))) {
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+            this.dispatchEvent(new CustomEvent<TauriTcpDevice>("removedDevice", { detail: removed }));
         }
         for (const added of current.filter((now) => !previous.some((old) => old.path === now.path))) {
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+            this.dispatchEvent(new CustomEvent<TauriTcpDevice>("addedDevice", { detail: added }));
         }
     }
 
-    async _teardownListeners() {
-        for (const unlisten of this._unlisten) {
-            try {
-                // listen() may resolve an async unlisten — await so removal completes.
-                await unlisten();
-            } catch (e) {
-                console.error(`${this.logHead}Failed to remove listener: ${e}`);
-            }
-        }
+    async _teardownListeners(): Promise<void> {
+        // The listeners are independent, so remove them together. listen() may resolve an
+        // async unlisten, so wait for every removal to complete.
+        await Promise.all(
+            this._unlisten.map(async (unlisten) => {
+                try {
+                    await unlisten();
+                } catch (e) {
+                    console.error(`${this.logHead}Failed to remove listener: ${e}`);
+                }
+            }),
+        );
         this._unlisten = [];
     }
 
-    async connect(path, _options) {
+    async connect(path: string, _options?: unknown): Promise<boolean> {
         try {
             const { host, port } = this._parseAddress(path);
 
@@ -155,10 +216,10 @@ class TauriTcp extends EventTarget {
             // otherwise reconnects leak listeners and duplicate receive/disconnect handling.
             await this._teardownListeners();
 
-            const dataUnlisten = await listen("tcp-data", (event) => {
+            const dataUnlisten = await listen<number[]>("tcp-data", (event) => {
                 const bytes = new Uint8Array(event.payload);
                 this.handleReceiveBytes({ detail: bytes });
-                this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
+                this.dispatchEvent(new CustomEvent<Uint8Array>("receive", { detail: bytes }));
             });
             const closedUnlisten = await listen("tcp-closed", () => {
                 this.handleDisconnect();
@@ -171,18 +232,18 @@ class TauriTcp extends EventTarget {
             // An IPv6 host gets its brackets again, because a URL needs them.
             this.address = `tcp://${bracketHost(host)}:${port}`;
             this.connected = true;
-            this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
+            this.dispatchEvent(new CustomEvent<TauriTcpConnectDetail>("connect", { detail: this.address }));
             return true;
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
             this.connected = false;
             await this._teardownListeners();
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            this.dispatchEvent(new CustomEvent<TauriTcpConnectDetail>("connect", { detail: false }));
             return false;
         }
     }
 
-    async disconnect() {
+    async disconnect(): Promise<boolean> {
         this.connected = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
@@ -200,7 +261,10 @@ class TauriTcp extends EventTarget {
         }
     }
 
-    async send(data, cb) {
+    async send(
+        data: ArrayBuffer | ArrayLike<number>,
+        cb?: (result: { error: unknown; bytesSent: number }) => void,
+    ): Promise<TauriTcpSendResult> {
         let actualBytesSent = 0;
         if (this.connected) {
             const bytes = new Uint8Array(data);
