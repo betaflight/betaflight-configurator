@@ -74,7 +74,7 @@ export default class PresetParser {
     // No `private` members: the presets store keeps repositories, and so this parser, in a ref().
     // UnwrapRef drops private members, and the unwrapped type then no longer matches the class.
     // Reg exp extracts file/path.txt from # include: file/path.txt
-    static readonly _sRegExpInclude = /^#\$[ ]+?INCLUDE:[ ]+?(?<filePath>\S+$)/;
+    static readonly _sRegExpInclude = /^#\$ +?INCLUDE: +?(?<filePath>\S+$)/;
 
     readonly _settings: PresetsIndexSettings;
 
@@ -295,13 +295,13 @@ export default class PresetParser {
     }
 
     _escapeRegex(string: string): string {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return string.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
     }
 
     removeUncheckedOptions(strings: string[], checkedOptions: string[]): string[] {
         let resultStrings: string[] = [];
         let isCurrentOptionExcluded = false;
-        const lowerCasedCheckedOptions = checkedOptions.map((optionName) => optionName.toLowerCase());
+        const lowerCasedCheckedOptions = new Set(checkedOptions.map((optionName) => optionName.toLowerCase()));
 
         strings.forEach((str) => {
             if (this._isLineAttribute(str)) {
@@ -310,7 +310,7 @@ export default class PresetParser {
                 if (this._isOptionBegin(line)) {
                     const optionNameLowCase = this._getOptionName(line).toLowerCase();
 
-                    if (!lowerCasedCheckedOptions.includes(optionNameLowCase)) {
+                    if (!lowerCasedCheckedOptions.has(optionNameLowCase)) {
                         isCurrentOptionExcluded = true;
                     }
                 } else if (this._isOptionEnd(line)) {
