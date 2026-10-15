@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
-import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
+import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks";
 import { get as getConfig, set as setConfig } from "../../src/js/ConfigStorage";
 
 // jsdom is neither Tauri nor Capacitor, so the seeded SITL target is the websockify address.
 const SITL = { name: "Betaflight SITL", url: "ws://127.0.0.1:6761" };
 
 const stored = () => getConfig("connectionBookmarks").connectionBookmarks;
-const seed = (bookmarks) => setConfig({ connectionBookmarks: bookmarks });
+const seed = (bookmarks: unknown) => setConfig({ connectionBookmarks: bookmarks });
 
 beforeEach(() => {
     localStorage.clear();
@@ -128,7 +128,7 @@ describe("reading back what was stored", () => {
 
         const bookmark = store.save("t".repeat(300), "n".repeat(300));
 
-        expect(bookmark.url).toHaveLength(253);
-        expect(bookmark.name).toHaveLength(253);
+        expect(bookmark?.url).toHaveLength(253);
+        expect(bookmark?.name).toHaveLength(253);
     });
 });
