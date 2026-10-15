@@ -152,6 +152,19 @@ describe("PresetParser.readPresetProperties", () => {
         expect(preset.warning).toBeUndefined();
         expect(preset.disclaimer).toBe("d");
     });
+
+    it("logs, instead of throwing, for a property the index has no metadata for", () => {
+        const error = vi.spyOn(console, "error").mockImplementation(() => {});
+        const settings = structuredClone(presetsIndexSettings);
+        delete settings.presetsFileMetadata.parser;
+        const preset: ParsedPreset = {};
+
+        new PresetParser(settings).readPresetProperties(preset, ["#$ PARSER: MARKED", "#$ DISCLAIMER: d"]);
+
+        expect(error).toHaveBeenCalledWith(expect.stringContaining("no metadata for the property 'parser'"));
+        expect(preset.parser).toBeUndefined();
+        expect(preset.disclaimer).toBe("d");
+    });
 });
 
 describe("PresetParser.removeUncheckedOptions", () => {

@@ -208,7 +208,16 @@ export default class PresetParser {
     }
 
     _parseProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
-        switch (this._settings.presetsFileMetadata[propertyName].type) {
+        // An index that predates a property (a custom preset source can serve an old
+        // index.json) has no metadata for it; the lookup is typed to say so.
+        const metadata: PresetsIndexSettings["presetsFileMetadata"][string] | undefined =
+            this._settings.presetsFileMetadata[propertyName];
+        if (!metadata) {
+            console.error(`Parcing preset: no metadata for the property '${propertyName}'`);
+            return;
+        }
+
+        switch (metadata.type) {
             case this._settings.MetadataTypes.STRING_ARRAY:
                 this._processArrayProperty(preset, line, propertyName);
                 break;
@@ -229,7 +238,7 @@ export default class PresetParser {
                 break;
             default:
                 console.error(
-                    `Parcing preset: unknown property type '${this._settings.presetsFileMetadata[propertyName].type}' for the property '${propertyName}'`,
+                    `Parcing preset: unknown property type '${metadata.type}' for the property '${propertyName}'`,
                 );
         }
     }
