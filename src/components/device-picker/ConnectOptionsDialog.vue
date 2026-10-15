@@ -100,14 +100,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
 import { i18n } from "../../js/localization";
-import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
-
-interface ConnectionBookmark {
-    /** the label shown in the list and the connect menu */
-    name: string;
-    /** the manual target, e.g. "tcp://192.168.4.1:5761" */
-    url: string;
-}
+import { useConnectionBookmarksStore, type ConnectionBookmark } from "../../stores/connectionBookmarks";
 
 const FIRMWARE_VERSIONS = [
     { value: "1.48.0", label: "MSP: 1.48 | Firmware: 2026.06.*" },
