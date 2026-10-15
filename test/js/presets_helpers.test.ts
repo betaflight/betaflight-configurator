@@ -8,6 +8,7 @@ import {
     getFitPresets,
     normalizeStoredSources,
 } from "../../src/stores/presets_helpers";
+import type { Preset } from "../../src/stores/presets_helpers";
 
 describe("presets helpers", () => {
     it("normalizes sources and keeps the official source first", () => {
@@ -80,11 +81,11 @@ describe("presets helpers", () => {
         const repositories = [
             {
                 index: { presets: [favoritePreset, secondPreset] },
-                getPresetOnlineLink: (preset) => `https://example.com/${preset.hash}`,
+                getPresetOnlineLink: (preset: Preset) => `https://example.com/${preset.hash}`,
             },
             {
                 index: { presets: [duplicatePreset] },
-                getPresetOnlineLink: (preset) => `https://example.com/dup-${preset.hash}`,
+                getPresetOnlineLink: (preset: Preset) => `https://example.com/dup-${preset.hash}`,
             },
         ];
 

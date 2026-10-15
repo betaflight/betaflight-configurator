@@ -57,7 +57,7 @@
 import { defineComponent, computed, ref } from "vue";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { useConnectionStore } from "../../stores/connection";
-import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
+import { useConnectionBookmarksStore, type ConnectionBookmark } from "../../stores/connectionBookmarks";
 import DeviceHandler, { type PortDevice } from "../../js/device_handler";
 import { serial } from "../../js/serial";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
@@ -99,7 +99,7 @@ function portItems(devices: PortDevice[], icon: string) {
 }
 
 /** Dropdown items connecting to each saved target's address. */
-function bookmarkItems(bookmarks: { name: string; url: string }[]) {
+function bookmarkItems(bookmarks: ConnectionBookmark[]) {
     return bookmarks.map((bookmark) => ({
         label: bookmark.name,
         icon: "i-lucide-bookmark",
