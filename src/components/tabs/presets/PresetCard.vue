@@ -18,14 +18,14 @@
         <div class="relative text-(--ui-text-highlighted)">
             <img
                 v-if="repository?.official"
-                class="w-[25px] h-[25px] rounded-[5px] p-[5px] bg-origin-content bg-no-repeat absolute right-[26px] top-[-5px]"
+                class="w-[25px] h-[25px] rounded-[5px] p-[5px] bg-origin-content bg-no-repeat absolute end-[26px] top-[-5px]"
                 :src="officialIcon"
                 alt=""
                 aria-hidden="true"
             />
             <button
                 type="button"
-                class="w-[35px] h-[35px] rounded-[5px] p-[5px] absolute right-[-6px] top-[-5px] border-0 flex items-center justify-center cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-1"
+                class="w-[35px] h-[35px] rounded-[5px] p-[5px] absolute end-[-6px] top-[-5px] border-0 flex items-center justify-center cursor-pointer focus-visible:outline-2 focus-visible:outline-(--ui-primary) focus-visible:outline-offset-1"
                 :style="{ backgroundColor: starBackgroundColor }"
                 :aria-pressed="isFavorite"
                 :aria-label="favoriteAriaLabel"
