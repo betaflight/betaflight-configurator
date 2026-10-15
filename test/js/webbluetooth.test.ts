@@ -1,4 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import type { BleDevice } from "../../src/js/protocols/WebBluetooth";
+import type { BluetoothDeviceProfile } from "../../src/js/protocols/devices";
 
 // ---------------------------------------------------------------------------
 // WebBluetooth stable device identity.
@@ -31,7 +54,7 @@ vi.mock("../../src/js/protocols/devices", () => ({
 }));
 
 vi.mock("../../src/js/localization", () => ({
-    i18n: { getMessage: (k) => k },
+    i18n: { getMessage: (k: string) => k },
 }));
 
 vi.mock("../../src/js/gui_log", () => ({
@@ -41,8 +64,8 @@ vi.mock("../../src/js/gui_log", () => ({
 // A minimal fake Web Bluetooth device. `id` is the browser's stable per-device
 // identifier — the value the path must key off.
 function makeFakeDevice(id = "abc123", name = "Speedybee") {
-    const listeners = {};
-    return {
+    const listeners: Record<string, unknown> = {};
+    const fake = {
         id,
         name,
         gatt: {
@@ -54,12 +77,17 @@ function makeFakeDevice(id = "abc123", name = "Speedybee") {
             }),
             disconnect: vi.fn(),
         },
-        addEventListener: vi.fn((t, h) => {
+        addEventListener: vi.fn((t: string, h: unknown) => {
             listeners[t] = h;
         }),
         removeEventListener: vi.fn(),
     };
+    // A partial fake: the transport never calls dispatchEvent on a device.
+    return fake as typeof fake & BleDevice;
 }
+
+/** A CustomEvent's detail, read off the plain Event a listener is typed with. */
+const detail = <T>(event: Event): T => (event as CustomEvent<T>).detail;
 
 beforeEach(() => {
     // Provide a navigator.bluetooth so the WebBluetooth constructor proceeds past
@@ -80,7 +108,7 @@ afterEach(() => {
 });
 
 async function loadWebBluetooth() {
-    const mod = await import("../../src/js/protocols/WebBluetooth.js");
+    const mod = await import("../../src/js/protocols/WebBluetooth");
     return mod.default;
 }
 
@@ -161,8 +189,8 @@ describe("WebBluetooth stable device identity", () => {
         const pathA = bt.devices[0].path;
         const pathB = bt.devices[1].path;
 
-        const removed = [];
-        bt.addEventListener("removedDevice", (e) => removed.push(e.detail?.path));
+        const removed: (string | undefined)[] = [];
+        bt.addEventListener("removedDevice", (e) => removed.push(detail<{ path: string } | undefined>(e)?.path));
 
         bt.handleRemovedDevice(deviceA);
 
@@ -183,10 +211,10 @@ describe("WebBluetooth stable device identity", () => {
 
         // Stub the gatt/notification pipeline so connect() reaches the success path
         // without exercising the (unchanged) characteristic logic.
-        bt.gattConnect = vi.fn(async () => {});
-        bt.getServices = vi.fn(async () => {});
-        bt.getCharacteristics = vi.fn(async () => {});
-        bt.startNotifications = vi.fn(async () => {});
+        bt.gattConnect = vi.fn(async () => undefined);
+        bt.getServices = vi.fn(async () => undefined);
+        bt.getCharacteristics = vi.fn(async () => undefined);
+        bt.startNotifications = vi.fn(async () => undefined);
 
         await bt.connect(pathB, { baudRate: 115200 });
 
@@ -209,7 +237,7 @@ describe("WebBluetooth openCanceled abort contract", () => {
         bt.openRequested = true;
         bt.connected = false;
 
-        const events = [];
+        const events: unknown[] = [];
         bt.addEventListener("disconnect", () => events.push("disconnect"));
 
         await bt.disconnect();
@@ -229,14 +257,14 @@ describe("WebBluetooth openCanceled abort contract", () => {
         // synchronous abort branch that emits connect:false.
         bt.gattConnect = vi.fn(async () => {
             bt.openCanceled = true;
-            bt.device.gatt.connected = false;
+            (bt.device!.gatt as { connected: boolean }).connected = false;
         });
-        bt.getServices = vi.fn(async () => {});
-        bt.getCharacteristics = vi.fn(async () => {});
-        bt.startNotifications = vi.fn(async () => {});
+        bt.getServices = vi.fn(async () => undefined);
+        bt.getCharacteristics = vi.fn(async () => undefined);
+        bt.startNotifications = vi.fn(async () => undefined);
 
-        const results = [];
-        bt.addEventListener("connect", (e) => results.push(e.detail));
+        const results: unknown[] = [];
+        bt.addEventListener("connect", (e) => results.push(detail(e)));
 
         await bt.connect(bt.devices[0].path, { baudRate: 115200 });
 
@@ -251,8 +279,8 @@ describe("WebBluetooth openCanceled abort contract", () => {
         const WebBluetooth = await loadWebBluetooth();
         const bt = new WebBluetooth();
 
-        const events = [];
-        bt.addEventListener("disconnect", (e) => events.push(e.detail));
+        const events: unknown[] = [];
+        bt.addEventListener("disconnect", (e) => events.push(detail(e)));
 
         // Normal teardown path (no in-flight open, nothing already closing). Serial.disconnect()
         // does `(await protocol.disconnect()) ?? false`, so an undefined return would report a
@@ -273,7 +301,7 @@ describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
         return {
             addEventListener: vi.fn(),
             removeEventListener: vi.fn(),
-            stopNotifications: vi.fn(async () => {}),
+            stopNotifications: vi.fn(async () => undefined),
             properties: { notify: true },
         };
     }
@@ -285,12 +313,13 @@ describe("WebBluetooth notification teardown (deaf-session prevention)", () => {
         bt.devices = [bt.createPort(device)];
         bt.device = device;
         const characteristic = makeReadCharacteristic();
-        bt.readCharacteristic = characteristic;
+        // A partial fake: teardown only removes its listener and stops notifications.
+        bt.readCharacteristic = characteristic as unknown as NonNullable<typeof bt.readCharacteristic>;
 
         await bt.disconnect();
 
         expect(characteristic.stopNotifications).toHaveBeenCalledTimes(1);
-        expect(bt.readCharacteristic).toBe(false); // teardown completed
+        expect(bt.readCharacteristic).toBeNull(); // teardown completed
         expect(device.gatt.disconnect).toHaveBeenCalled();
         // Order is the regression: notifications must stop BEFORE the link drops, or the
         // next connection's startNotifications() can no-op on BlueZ (deaf session).
@@ -308,10 +337,10 @@ describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
         bt.devices = [bt.createPort(device)];
 
         // Drive connect() to the "connected" branch (both device listeners get added).
-        bt.gattConnect = vi.fn(async () => {});
-        bt.getServices = vi.fn(async () => {});
-        bt.getCharacteristics = vi.fn(async () => {});
-        bt.startNotifications = vi.fn(async () => {});
+        bt.gattConnect = vi.fn(async () => undefined);
+        bt.getServices = vi.fn(async () => undefined);
+        bt.getCharacteristics = vi.fn(async () => undefined);
+        bt.startNotifications = vi.fn(async () => undefined);
 
         await bt.connect("bluetooth_dev-leak", { baudRate: 115200 });
         await bt.disconnect();
@@ -335,19 +364,19 @@ describe("(c) selectProtocol routes the stable bluetooth path to the BLE protoco
     // Exercises the REAL serial.selectProtocol on the exported singleton, proving
     // the new "bluetooth_<id>" path falls through to the WebBluetooth protocol.
     it("routes bluetooth_<id> to the WebBluetooth protocol", async () => {
-        const { serial } = await import("../../src/js/serial.js");
+        const { serial } = await import("../../src/js/serial");
 
-        expect(serial.selectProtocol("bluetooth_dev-aaaa").constructor.name).toBe("WebBluetooth");
-        expect(serial.selectProtocol("bluetooth_abc123").constructor.name).toBe("WebBluetooth");
+        expect(serial.selectProtocol("bluetooth_dev-aaaa")?.constructor.name).toBe("WebBluetooth");
+        expect(serial.selectProtocol("bluetooth_abc123")?.constructor.name).toBe("WebBluetooth");
     });
 
     it("does not misroute it to serial/virtual/tcp", async () => {
-        const { serial } = await import("../../src/js/serial.js");
+        const { serial } = await import("../../src/js/serial");
 
-        expect(serial.selectProtocol("bluetooth_dev-aaaa").constructor.name).not.toBe("WebSerial");
-        expect(serial.selectProtocol("serial_0").constructor.name).toBe("WebSerial");
-        expect(serial.selectProtocol("virtual").constructor.name).toBe("VirtualSerial");
-        expect(serial.selectProtocol("tcp://127.0.0.1:5761").constructor.name).toBe("Websocket");
+        expect(serial.selectProtocol("bluetooth_dev-aaaa")?.constructor.name).not.toBe("WebSerial");
+        expect(serial.selectProtocol("serial_0")?.constructor.name).toBe("WebSerial");
+        expect(serial.selectProtocol("virtual")?.constructor.name).toBe("VirtualSerial");
+        expect(serial.selectProtocol("tcp://127.0.0.1:5761")?.constructor.name).toBe("Websocket");
     });
 });
 
@@ -356,7 +385,7 @@ describe("WebBluetooth.shouldBypassCrc", () => {
         const WebBluetooth = await loadWebBluetooth();
         const ble = new WebBluetooth();
         ble.connected = true;
-        ble.deviceDescription = { name: "CC2541", susceptibleToCrcCorruption: true };
+        ble.deviceDescription = { name: "CC2541", susceptibleToCrcCorruption: true } as BluetoothDeviceProfile;
         return ble;
     }
 
@@ -371,5 +400,59 @@ describe("WebBluetooth.shouldBypassCrc", () => {
 
         expect(ble.shouldBypassCrc(0xff, 0xff)).toBe(false);
         expect(ble.shouldBypassCrc(0x12, 0x34)).toBe(false);
+    });
+});
+
+describe("WebBluetooth fixes surfaced by the TypeScript conversion", () => {
+    it("a cancelled open whose GATT link came up reports connect:false after closing it", async () => {
+        vi.useFakeTimers();
+        try {
+            const WebBluetooth = await loadWebBluetooth();
+            const bt = new WebBluetooth();
+            const device = makeFakeDevice("dev-late");
+            bt.devices = [bt.createPort(device)];
+            // The link comes up (gatt.connected stays true) but the open was cancelled meanwhile.
+            bt.gattConnect = vi.fn(async () => {
+                bt.openCanceled = true;
+            });
+            bt.getServices = vi.fn(async () => undefined);
+            bt.getCharacteristics = vi.fn(async () => undefined);
+            bt.startNotifications = vi.fn(async () => undefined);
+            const results: unknown[] = [];
+            bt.addEventListener("connect", (e) => results.push(detail(e)));
+
+            await bt.connect("bluetooth_dev-late", { baudRate: 115200 });
+            expect(results).toEqual([]);
+
+            await vi.advanceTimersByTimeAsync(150);
+
+            expect(results).toEqual([false]);
+            expect(bt.connected).toBe(false);
+            expect(device.gatt.disconnect).toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("names a device that advertises no name after its id", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const device = makeFakeDevice("dev-nameless", "");
+
+        expect(bt.createPort(device).displayName).toBe("dev-nameless");
+    });
+
+    it("names the expected characteristic when the service lacks it", async () => {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        bt.deviceDescription = {
+            name: "CC2541",
+            serviceUuid: "ffe0",
+            writeCharacteristic: "ffe1",
+            readCharacteristic: "ffe2",
+        };
+        bt.service = { uuid: "ffe0", getCharacteristics: vi.fn(async () => []) };
+
+        await expect(bt.getCharacteristics()).rejects.toThrow("should be ffe1");
     });
 });

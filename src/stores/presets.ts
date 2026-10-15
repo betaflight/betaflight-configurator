@@ -48,42 +48,11 @@ import {
     sanitizeActiveSourceIds,
     sanitizeActiveSourceIndexes,
 } from "./presets_helpers";
+import type { Preset, PresetSearchParams, PresetSourceEntry } from "./presets_helpers";
+
+export type { Preset, PresetOption, PresetSourceEntry } from "./presets_helpers";
 
 type PresetRepository = PresetsGithubRepo | PresetsWebsiteRepo;
-
-/** An option as parsed by PresetParser; `id` is attached by attachOptionIds() when the details open. */
-export type PresetOption = {
-    id?: string;
-    name: string;
-    checked?: boolean;
-    childs?: PresetOption[];
-};
-
-/** A preset as listed in a repository's index.json, plus the fields loadPreset() fills in. */
-export type Preset = {
-    hash?: string;
-    fullPath?: string;
-    title?: string;
-    priority?: number;
-    status?: string;
-    category?: string;
-    keywords?: string[];
-    author?: string;
-    firmware_version?: string[];
-    hidden?: boolean;
-    force_options_review?: boolean;
-    completeWarning?: string;
-    options?: PresetOption[];
-    originalPresetCliStrings?: string[];
-};
-
-export type PresetSourceEntry = {
-    id: string;
-    name: string;
-    url: string;
-    gitHubBranch: string;
-    official: boolean;
-};
 
 export type PresetEntry = {
     key: string;
@@ -101,15 +70,6 @@ export type PresetCliFailure = {
     response: string[];
 };
 
-type PresetSearchParams = {
-    categories: string[];
-    keywords: string[];
-    authors: string[];
-    firmwareVersions: string[];
-    status: string[];
-    searchString: string;
-};
-
 type FavoritePresetsApi = {
     add(preset: Preset, repo: PresetRepository): number;
     delete(preset: Preset, repo: PresetRepository): void;
@@ -121,18 +81,6 @@ type FavoritePresetsApi = {
 // FavoritePresets.js exports its singleton through an unannotated `let`, so it arrives as an
 // implicit `any`; this gives the store a typed view of the same object.
 const favoritePresets: FavoritePresetsApi = favoritePresetsModule.favoritePresets;
-
-// presets_helpers.js infers the callback as `() => {}` from its default, which rejects any
-// callback that takes the arguments getFitPresets() actually passes; same function, typed.
-const getFitPresetEntries = getFitPresets as unknown as (
-    repositories: readonly PresetRepository[],
-    searchParams: PresetSearchParams,
-    getPresetEntryState: (
-        preset: Preset,
-        repository: PresetRepository,
-        presetKey: string,
-    ) => Pick<PresetSearchEntry, "favoriteDate" | "isPicked">,
-) => PresetSearchEntry[];
 
 function createRepositoryFromSource(source: PresetSourceEntry): PresetRepository {
     if (PresetSource.isUrlGithubRepo(source.url)) {
@@ -233,8 +181,8 @@ export const usePresetsStore = defineStore("presets", () => {
         searchString: filters.searchString.trim(),
     }));
 
-    const filteredPresetEntries = computed(() =>
-        getFitPresetEntries(
+    const filteredPresetEntries = computed<PresetSearchEntry[]>(() =>
+        getFitPresets(
             repositories.value,
             searchParams.value,
             (preset: Preset, repository: PresetRepository, presetKey: string) => ({

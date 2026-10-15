@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import WebSerial from "./protocols/WebSerial";
+import WebSerial, { type WebSerialPort } from "./protocols/WebSerial";
 import WebBluetooth from "./protocols/WebBluetooth";
 import Websocket from "./protocols/WebSocket";
 import VirtualSerial, { type VirtualDevice } from "./protocols/VirtualSerial";
@@ -103,6 +103,8 @@ export interface SerialProtocol extends EventTarget {
     requestPermissionDevice?(showAllDevices?: boolean): Promise<SerialDevice | null | undefined>;
     forceClose?(): void;
     getConnectedDevice(): unknown;
+    /** Web Serial only: the raw W3C port behind a path, for esptool-js to own while flashing. */
+    getNativePort?(path: string): WebSerialPort | undefined;
     /**
      * Bluetooth only: whether an MSP frame is accepted despite a checksum mismatch (see msp.ts).
      * `expectedChecksum` is the byte received on the wire, `computedChecksum` the one MSP calculated.

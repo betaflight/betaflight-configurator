@@ -41,7 +41,7 @@ const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
 // Where a network-only browser starts looking. A browser has no raw sockets, so it reaches
 // SITL through the websockify proxy's own port rather than the raw 5761 — the same address
-// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.js.
+// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.ts.
 const DEFAULT_NETWORK_TARGET = "ws://127.0.0.1:6761";
 
 const networkOnly = isNetworkOnlyBrowser();

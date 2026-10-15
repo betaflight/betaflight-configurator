@@ -128,6 +128,20 @@ export default [
             "no-undef": "error",
         },
     },
+    {
+        // Folders that are fully TypeScript. `allowJs` is project-wide and TypeScript checks
+        // everything a file imports, so `allowJs: false` cannot be scoped to one folder.
+        files: ["src/composables/**/*.js"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "Program",
+                    message: "This folder is TypeScript-only: write a .ts file instead (#5542).",
+                },
+            ],
+        },
+    },
     // Must stay last: turns off every core/plugin rule that overlaps with Prettier.
     // The core `indent` rule in particular cannot express Prettier's extra offset for a
     // call inside a ternary branch, so `eslint --fix` and `prettier --write` used to
