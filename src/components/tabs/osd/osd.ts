@@ -2004,13 +2004,13 @@ function chooseDisplayFields(fcStore: FcStore) {
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
 
-        // Motor thermal estimator (firmware reports stator geometry in MSP_MOTOR_CONFIG only when built with it).
-        // The firmware enum places it before the optional pitot airspeed element.
-        if (hasMotorThermalEstimator(fcStore)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.MOTOR_TEMP_EST]);
-        }
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+        }
+        // Motor thermal estimator: appended after AIRSPEED, as in the firmware enum. Shown only when the
+        // firmware reports stator geometry in MSP_MOTOR_CONFIG (built with the estimator).
+        if (hasMotorThermalEstimator(fcStore)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.MOTOR_TEMP_EST]);
         }
     }
 }

@@ -1234,7 +1234,11 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         // Introduced in 1.49
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             fcStore.motorConfig.motor_kv = data.readU16();
-            // Motor thermal estimator geometry (firmware with USE_MOTOR_THERMAL): stator D [mm], stator H [0.1 mm], prop [0.1 in]
+            // Motor thermal estimator geometry (firmware with USE_MOTOR_THERMAL): stator D [mm], stator H [0.1 mm], prop [0.1 in].
+            // Cleared first so a firmware without the estimator never inherits values from a previous connection.
+            fcStore.motorConfig.motor_stator_diameter = 0;
+            fcStore.motorConfig.motor_stator_height = 0;
+            fcStore.motorConfig.motor_prop_diameter = 0;
             if (data.offset + 3 <= data.byteLength) {
                 fcStore.motorConfig.motor_stator_diameter = data.readU8();
                 fcStore.motorConfig.motor_stator_height = data.readU8();
