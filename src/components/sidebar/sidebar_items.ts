@@ -1,6 +1,54 @@
-import { configHasBuildOption } from "../../composables/useBuildOptions";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 
-export const sidebarItems = [
+import { configHasBuildOption, type BuildOptionsConfig } from "../../composables/useBuildOptions";
+
+/**
+ * When an entry is listed: `disconnected` before a connection, `connected` and
+ * `cli` with one, `shared` always, `loggedin` with a user session.
+ */
+export type SidebarMode = "disconnected" | "connected" | "cli" | "shared" | "loggedin";
+
+export interface SidebarItem {
+    key: string;
+    /** The tab to open, when it differs from `key` (one tab listed under two modes). */
+    tab?: string;
+    mode: SidebarMode;
+    i18n: string;
+    icon: string;
+    expert?: boolean;
+    /** Shown when the firmware has any of these build options. */
+    buildOptions?: string[];
+    /** Shown when this firmware feature is enabled. */
+    feature?: string;
+    hideInSidebar?: boolean;
+}
+
+export interface SidebarVisibilityContext {
+    expertMode: boolean;
+    config?: BuildOptionsConfig | null;
+    features?: { isEnabled?: (featureName: string) => boolean } | null;
+}
+
+export const sidebarItems: SidebarItem[] = [
     { key: "landing", mode: "disconnected", i18n: "tabLanding", icon: "i-lucide-home" },
     { key: "firmware_flasher", mode: "disconnected", i18n: "tabFirmwareFlasher", icon: "i-lucide-zap" },
     { key: "help", mode: "disconnected", i18n: "tabHelp", icon: "i-lucide-help-circle" },
@@ -51,7 +99,7 @@ export const sidebarItems = [
     { key: "user_profile", mode: "loggedin", i18n: "tabUserProfile", icon: "i-lucide-user", hideInSidebar: true },
 ];
 
-export function isItemVisible(item, ctx) {
+export function isItemVisible(item: SidebarItem, ctx: SidebarVisibilityContext): boolean {
     if (item.expert && !ctx.expertMode) {
         return false;
     }
