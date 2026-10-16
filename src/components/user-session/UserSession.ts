@@ -1,5 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import loginManager from "../../js/LoginManager";
+import type { UserProfile } from "../../js/UserApi";
 import { i18n } from "../../js/localization";
 
 // Login dialog modes
@@ -7,20 +29,35 @@ const MODE_PASSKEY = "passkey";
 const MODE_CODE_REQUEST = "code-request";
 const MODE_CODE_VERIFY = "code-verify";
 
+type LoginMode = typeof MODE_PASSKEY | typeof MODE_CODE_REQUEST | typeof MODE_CODE_VERIFY;
+
+/** The menu trigger: a DOM element, or a component whose root element is used. */
+type MenuTrigger = Element | { $el: Element };
+
+/** A Nuxt UI UInput, which exposes its native input as `inputRef`. */
+interface InputHandle {
+    inputRef?: HTMLInputElement | null;
+}
+
+/** The `message` of a thrown value, if it has one. */
+function errorMessage(error: unknown): string | undefined {
+    return (error as { message?: string } | null | undefined)?.message;
+}
+
 export function useUserSession() {
     const isLoggedIn = ref(false);
-    const profile = ref(null);
+    const profile = ref<UserProfile | null>(null);
     const menuOpen = ref(false);
-    const menuStyle = ref({});
-    const menuTriggerRef = ref(null);
+    const menuStyle = ref<Record<string, string>>({});
+    const menuTriggerRef = ref<MenuTrigger | null>(null);
 
     // Unified login dialog state
-    const loginMode = ref(MODE_PASSKEY);
+    const loginMode = ref<LoginMode>(MODE_PASSKEY);
     const loginEmail = ref("");
     const loginCode = ref("");
-    const loginError = ref(null);
+    const loginError = ref<string | null>(null);
     const loginSubmitting = ref(false);
-    const loginCodeInputRef = ref(null);
+    const loginCodeInputRef = ref<InputHandle | null>(null);
     const codeEmail = ref("");
 
     const loginDialogOpen = ref(false);
@@ -28,9 +65,9 @@ export function useUserSession() {
     const waitingMessage = ref("");
 
     // Legacy passkey-creation verification dialog
-    const verificationError = ref(null);
+    const verificationError = ref<string | null>(null);
     const verificationCode = ref("");
-    const verificationInputRef = ref(null);
+    const verificationInputRef = ref<InputHandle | null>(null);
     const verificationDialogOpen = ref(false);
     const currentVerificationEmail = ref("");
 
@@ -39,7 +76,7 @@ export function useUserSession() {
     });
 
     const avatarUrl = computed(() => {
-        return profile.value?.avatar || null;
+        return profile.value?.avatar || undefined;
     });
 
     const loginTitle = computed(() => {
@@ -62,8 +99,13 @@ export function useUserSession() {
         openLoginDialog();
     };
 
+    const triggerElement = (): Element | null => {
+        const trigger = menuTriggerRef.value;
+        return trigger && "$el" in trigger ? trigger.$el : trigger;
+    };
+
     const updateMenuPosition = () => {
-        const el = menuTriggerRef.value?.$el ?? menuTriggerRef.value;
+        const el = triggerElement();
         if (el) {
             const rect = el.getBoundingClientRect();
             menuStyle.value = {
@@ -96,12 +138,13 @@ export function useUserSession() {
         }
     };
 
-    const handleClickOutside = (event) => {
-        const triggerEl = menuTriggerRef.value?.$el ?? menuTriggerRef.value;
+    const handleClickOutside = (event: MouseEvent) => {
+        const triggerEl = triggerElement();
         const popup = document.getElementById("user-menu-popup");
 
-        const clickInsideTrigger = triggerEl?.contains(event.target);
-        const clickInsidePopup = popup?.contains(event.target);
+        const target = event.target as Node | null;
+        const clickInsideTrigger = triggerEl?.contains(target);
+        const clickInsidePopup = popup?.contains(target);
 
         if (!clickInsideTrigger && !clickInsidePopup) {
             menuOpen.value = false;
@@ -152,7 +195,7 @@ export function useUserSession() {
         verificationDialogOpen.value = false;
     };
 
-    const openVerificationDialog = (email) => {
+    const openVerificationDialog = (email: string) => {
         currentVerificationEmail.value = email;
         verificationCode.value = "";
         verificationError.value = null;
@@ -162,7 +205,7 @@ export function useUserSession() {
         });
     };
 
-    const showWaitingDialog = (message = i18n.getMessage("userLoggingIn")) => {
+    const showWaitingDialog = (message: string | null = i18n.getMessage("userLoggingIn")) => {
         waitingMessage.value = message || i18n.getMessage("userLoggingIn");
         waitingDialogOpen.value = true;
     };
@@ -232,7 +275,7 @@ export function useUserSession() {
             loginCode.value = "";
             focusCodeInput();
         } catch (error) {
-            loginError.value = error?.message || i18n.getMessage("userSendCodeFailed");
+            loginError.value = errorMessage(error) || i18n.getMessage("userSendCodeFailed");
         } finally {
             loginSubmitting.value = false;
         }
@@ -257,7 +300,7 @@ export function useUserSession() {
             await loginManager.loginWithEmailCode(codeEmail.value, code);
             closeLoginDialog();
         } catch (error) {
-            loginError.value = error?.message || i18n.getMessage("userLoginFailed");
+            loginError.value = errorMessage(error) || i18n.getMessage("userLoginFailed");
         } finally {
             loginSubmitting.value = false;
         }
@@ -278,8 +321,8 @@ export function useUserSession() {
     };
 
     // Register callbacks for login/logout events
-    let unsubscribeLogin;
-    let unsubscribeLogout;
+    let unsubscribeLogin: (() => void) | undefined;
+    let unsubscribeLogout: (() => void) | undefined;
 
     onMounted(async () => {
         await updateLoginState();
