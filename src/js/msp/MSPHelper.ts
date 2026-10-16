@@ -420,7 +420,31 @@ class MspHelper {
 
     // Removes and settles every pending request for the frame's code. Iterates in reverse because
     // it splices, and re-reads the queue each step because a callback may queue new requests.
+    // When MSP keeps several copies of one request on the wire (MAX_SAME_IN_FLIGHT > 1) a reply
+    // settles the oldest copy that is still waiting on its timer, plus every timer-less entry of
+    // that code (requests that attached to a pending copy, or whose retries ran out); later
+    // in-flight copies wait for their own reply, so each reply reaches its own caller.
     private settleCallbacks(dataHandler: MspFrame) {
+        if ((dataHandler.MAX_SAME_IN_FLIGHT ?? 1) > 1) {
+            let settledInFlight = false;
+            for (let i = 0; i < dataHandler.callbacks.length;) {
+                const entry = dataHandler.callbacks[i];
+                if (entry?.code !== dataHandler.code || (entry.timer && settledInFlight)) {
+                    i++;
+                    continue;
+                }
+                if (entry.timer) {
+                    settledInFlight = true;
+                    clearTimeout(entry.timer);
+                }
+                dataHandler.callbacks.splice(i, 1);
+                if (typeof entry.callback === "function") {
+                    deliverResponse(entry.callback, entry.errorAware, dataHandler);
+                }
+            }
+            return;
+        }
+
         for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) {
             const entry = dataHandler.callbacks[i];
             if (entry?.code !== dataHandler.code) {

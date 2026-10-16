@@ -456,3 +456,41 @@ describe("WebBluetooth fixes surfaced by the TypeScript conversion", () => {
         await expect(bt.getCharacteristics()).rejects.toThrow("should be ffe1");
     });
 });
+
+describe("WebBluetooth write chunking", () => {
+    // BLE-UART bridges (Flywoo BT-NANO V2, HM-10 style modules) take one 20-byte ATT payload
+    // per write at the default MTU and drop the rest, so longer MSP frames must be split.
+    async function sendThrough(length: number) {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        const writes: Uint8Array[] = [];
+        bt.device = makeFakeDevice("dev-chunk");
+        bt.writeCharacteristic = {
+            uuid: "0000ffe1-0000-1000-8000-00805f9b34fb",
+            properties: { notify: true },
+            writeValue: vi.fn(async (value: Uint8Array) => {
+                writes.push(new Uint8Array(value));
+            }),
+        } as unknown as NonNullable<typeof bt.writeCharacteristic>;
+        const payload = Array.from({ length }, (_, i) => i & 0xff);
+        const cb = vi.fn();
+        // MSP hands the transport an ArrayBuffer.
+        await bt.send(new Uint8Array(payload).buffer, cb);
+        await bt.writeQueue;
+        return { writes, payload, cb };
+    }
+
+    it("splits a frame longer than 20 bytes into 20-byte writes, in order", async () => {
+        // MSP_SET_RAW_RC with 9 channels: 6 header/CRC bytes + 18 payload bytes = 24.
+        const { writes, payload, cb } = await sendThrough(45);
+        expect(writes.map((w) => w.byteLength)).toEqual([20, 20, 5]);
+        expect(writes.flatMap((w) => Array.from(w))).toEqual(payload);
+        expect(cb).toHaveBeenCalledWith({ error: null, bytesSent: 45 });
+    });
+
+    it("sends a frame of up to 20 bytes as one write", async () => {
+        const { writes, cb } = await sendThrough(20);
+        expect(writes.map((w) => w.byteLength)).toEqual([20]);
+        expect(cb).toHaveBeenCalledWith({ error: null, bytesSent: 20 });
+    });
+});
