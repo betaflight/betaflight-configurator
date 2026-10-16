@@ -24,8 +24,6 @@ Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent b
 
 | Rule | Status | Enforcement target |
 |---|---|---|
-| No MSP calls from Vue components — wrap in a store action or composable | 🚧 | ESLint `no-restricted-imports`: ban `src/js/msp/**` from `src/components/**` (Phase 0) |
-| Only `src/stores/**` and `src/composables/**` may import `src/js/msp/**` | 🚧 | `eslint-plugin-boundaries`, scoped per converted domain (Phase 1) |
 | No new fields on `src/js/fc.js` — write to a Pinia store | 🚧 | Seal `fc.ts` interface once converted (Phase 2) |
 | Hydration from legacy is explicit: `store.hydrateFromLegacy(…)` | 🚧 | TS store interface forces the method (Phase 1, per domain) |
 | New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.js`, aligned with firmware `msp_protocol.h` | 🚧 | CI script diffing `MSPCodes.ts` against `msp_protocol.h` (Phase 1) |
