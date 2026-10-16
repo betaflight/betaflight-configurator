@@ -132,7 +132,9 @@ export default [
     {
         // Folders that are fully TypeScript. `allowJs` is project-wide and TypeScript checks
         // everything a file imports, so `allowJs: false` cannot be scoped to one folder.
-        files: ["src/composables/**/*.js"],
+        files: ["src/composables/**/*.js", "src/js/msp/**/*.js"],
+        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript.
+        ignores: ["src/js/msp/debug/**"],
         rules: {
             "no-restricted-syntax": [
                 "error",
