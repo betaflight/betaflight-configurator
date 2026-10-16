@@ -26,7 +26,7 @@ import { i18n } from "../js/localization";
 import { useFlightControllerStore } from "./fc";
 import { escapeHtml } from "../js/utils/common";
 import { useDialogStore } from "./dialog";
-import * as favoritePresetsModule from "../components/tabs/presets/FavoritePresets";
+import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
 import PickedPreset from "../components/tabs/presets/PickedPreset";
 import PresetsGithubRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
 import PresetsWebsiteRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo";
@@ -69,18 +69,6 @@ export type PresetCliFailure = {
     command: string;
     response: string[];
 };
-
-type FavoritePresetsApi = {
-    add(preset: Preset, repo: PresetRepository): number;
-    delete(preset: Preset, repo: PresetRepository): void;
-    getLastPickDate(preset: Preset, repo: PresetRepository): number | undefined;
-    saveToStorage(): void;
-    loadFromStorage(): void;
-};
-
-// FavoritePresets.js exports its singleton through an unannotated `let`, so it arrives as an
-// implicit `any`; this gives the store a typed view of the same object.
-const favoritePresets: FavoritePresetsApi = favoritePresetsModule.favoritePresets;
 
 function createRepositoryFromSource(source: PresetSourceEntry): PresetRepository {
     if (PresetSource.isUrlGithubRepo(source.url)) {
