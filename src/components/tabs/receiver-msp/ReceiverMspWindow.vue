@@ -306,6 +306,9 @@ function readGamepads(): Gamepad[] {
 }
 
 function selectGamepad(index: number) {
+    // The previous device's channels go back to their safe defaults first: a new profile that
+    // does not bind an AUX the old one drove would otherwise leave its last value on the wire.
+    Object.assign(stickValues, releaseBoundChannels(stickValues, profile.value));
     selectedGamepadIndex.value = index;
     gamepadLost.value = false;
     const pad = gamepadList.value.find((p) => p.index === index);
@@ -325,7 +328,12 @@ function refreshGamepadList() {
     const list = readGamepads().map((pad) => ({ index: pad.index, id: String(pad.id), mapping: pad.mapping }));
     const changed =
         list.length !== gamepadList.value.length ||
-        list.some((pad, i) => pad.index !== gamepadList.value[i].index || pad.id !== gamepadList.value[i].id);
+        list.some(
+            (pad, i) =>
+                pad.index !== gamepadList.value[i].index ||
+                pad.id !== gamepadList.value[i].id ||
+                pad.mapping !== gamepadList.value[i].mapping,
+        );
     if (changed) {
         gamepadList.value = list;
     }
@@ -342,7 +350,27 @@ function refreshGamepadList() {
     }
     if (selectedGamepadIndex.value === null && list.length) {
         selectGamepad(list[0].index);
+        return;
     }
+
+    // A different device can take over the index of the one that left between two polls. The
+    // bindings belong to the old one, so stop transmitting and start over with the new one.
+    const current = list.find((pad) => pad.index === selectedGamepadIndex.value);
+    if (current && !isProfileFor(current)) {
+        const wasTransmitting = enableTX.value && source.value === "gamepad";
+        if (wasTransmitting) {
+            enableTX.value = false;
+        }
+        selectGamepad(current.index);
+        gamepadLost.value = wasTransmitting;
+    }
+}
+
+// The profile was built for this device: same id, same layout.
+function isProfileFor(pad: GamepadListEntry) {
+    return (
+        pad.id === profile.value.gamepadId && (pad.mapping === "standard" ? "standard" : "") === profile.value.mapping
+    );
 }
 
 function pollGamepad() {
