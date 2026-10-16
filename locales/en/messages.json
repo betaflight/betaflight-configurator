@@ -6930,6 +6930,25 @@
         "message": "Autopilot mission aborted",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningTextMotorTemp": {
+        "message": "Motor hot (estimated)"
+    },
+    "osdWarningMotorTemp": {
+        "message": "Shows MOTOR HOT with the estimated winding temperature when it exceeds motor_thermal_warning"
+    },
+    "osdTextElementMotorTempEst": {
+        "message": "Motor temperature (estimated)"
+    },
+    "osdDescElementMotorTempEst": {
+        "message": "Estimated winding temperature of each motor, from rpm, battery voltage and the motor-command noise index. Blinks above the warning threshold."
+    },
+    "osdTextStatMotorTempEst": {
+        "message": "Motor temperature max/avg (estimated)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMotorTempEst": {
+        "message": "Hottest estimated motor winding temperature during the flight and the average over motors and time"
+    },
     "osdWarningAutopilotAbort": {
         "message": "Autopilot mission aborted",
         "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
