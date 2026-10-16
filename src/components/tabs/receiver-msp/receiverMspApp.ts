@@ -22,7 +22,7 @@
 import { createApp } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import ReceiverMspWindow from "./ReceiverMspWindow.vue";
-import windowWatcherUtil from "../../../js/utils/window_watchers";
+import { mirrorTheme } from "./themeMirror";
 import { getNuxtUiRouter } from "../../../js/nuxt_ui_router";
 
 // Import styles for the popup window
@@ -30,12 +30,11 @@ import "../../../css/opensans_webfontkit/fonts.css";
 import "../../../css/theme.css";
 import "../../../css/dark-theme.less";
 
-// Set up dark theme watcher to receive theme changes from the parent window
-windowWatcherUtil.bindWatchers(globalThis, {
-    darkTheme: (val: boolean) => {
-        document.documentElement.classList.toggle("dark", val);
-    },
-});
+// Follow the opener's dark mode and colour theme while this window is open.
+const opener = globalThis.opener;
+if (opener?.document) {
+    globalThis.addEventListener("pagehide", mirrorTheme(opener.document, document));
+}
 
 // Create and mount Vue app. This popup is a separate document with its own Vue
 // instance, so it has to register Nuxt UI itself; the router is required because
