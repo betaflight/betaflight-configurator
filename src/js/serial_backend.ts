@@ -150,9 +150,9 @@ function isBluetoothLink(): boolean {
 // hundred bytes per second, measured ~330 B/s on a Flywoo BT-NANO V2. At that rate a single
 // MSP_BOXNAMES reply (a 360-byte jumbo frame) outlasts the 1 s request timeout, the retry
 // asks the FC for it again while the first copy is still draining, and the bridge's UART
-// buffer overflows until the link drops. Box names never change while connected, so the
-// live cycle skips them over BLE, polls at a quarter of the serial rate and waits longer
-// for each reply.
+// buffer overflows until the link drops. Box names never change while connected, so over
+// BLE the live cycle fetches them once, polls at a quarter of the serial rate and waits
+// longer for each reply.
 const LIVE_DATA_INTERVAL_MS = 250;
 const LIVE_DATA_INTERVAL_BLE_MS = 1000;
 const MSP_TIMEOUT_DEFAULT_MS = 1000;
@@ -1492,8 +1492,10 @@ export async function update_sensor_status() {
     if (!(await requestLiveData(MSPCodes.MSP_BATTERY_STATE, "MSP_BATTERY_STATE"))) {
         return;
     }
-    // Static while connected; too big for a slow BLE bridge to refresh several times a second.
-    if (!isBluetoothLink() && !(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
+    // Static while connected and too big for a slow BLE bridge to refresh every cycle, so over
+    // BLE it is fetched only until the names are in (the status bar needs them).
+    const needBoxNames = !isBluetoothLink() || fcStore.auxConfig.length === 0;
+    if (needBoxNames && !(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
         return;
     }
     if (!(await requestLiveData(MSPCodes.MSP_STATUS_EX, "MSP_STATUS_EX"))) {

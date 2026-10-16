@@ -38,6 +38,10 @@ describe("MSP.MAX_SAME_IN_FLIGHT", () => {
         expect(send).toHaveBeenCalledTimes(1);
         expect(MSP.callbacks).toHaveLength(2);
 
+        // Clear these timers before dropping the entries, or they fire in a later test and resend.
+        for (const queued of MSP.callbacks) {
+            clearTimeout(queued.timer ?? undefined);
+        }
         MSP.callbacks = [];
         send.mockClear();
         MSP.MAX_SAME_IN_FLIGHT = 2;
@@ -75,6 +79,7 @@ describe("MSP.MAX_SAME_IN_FLIGHT", () => {
             return {
                 code: MSPCodes.MSP_ATTITUDE,
                 timer,
+                sent: inFlight,
                 callback: () => order.push(name),
             } as Partial<MspRequest> as MspRequest;
         };
@@ -106,6 +111,40 @@ describe("MSP.MAX_SAME_IN_FLIGHT", () => {
             expect(deduped.callbacks).toHaveLength(0);
         } finally {
             timers.forEach((t) => clearTimeout(t));
+        }
+    });
+
+    it("does not count a rider with its own timer as a copy on the wire", async () => {
+        const send = armSerial();
+        const helper = new MspHelper();
+        MSP.listen(helper.process_data.bind(helper));
+        try {
+            MSP.MAX_SAME_IN_FLIGHT = 2;
+            // Two copies go out; the third errorAware request attaches but arms its own timer.
+            void MSP.promise(MSPCodes.MSP_ATTITUDE);
+            void MSP.promise(MSPCodes.MSP_ATTITUDE);
+            const rider = MSP.promise(MSPCodes.MSP_ATTITUDE);
+            expect(send).toHaveBeenCalledTimes(2);
+            expect(MSP.callbacks.map((e) => e.sent)).toEqual([true, true, false]);
+
+            // One reply answers the oldest copy and the rider, not the second copy.
+            const reply = {
+                code: MSPCodes.MSP_ATTITUDE,
+                dataView: new MspDataView(new Int16Array([0, 0, 0]).buffer),
+                crcError: false,
+                unsupported: 0,
+                callbacks: MSP.callbacks,
+                MAX_SAME_IN_FLIGHT: MSP.MAX_SAME_IN_FLIGHT,
+            };
+            helper.process_data(reply);
+            await expect(rider).resolves.toBeDefined();
+            expect(MSP.callbacks.map((e) => e.sent)).toEqual([true]);
+
+            // With one copy left on the wire, the next request goes out instead of attaching.
+            void MSP.promise(MSPCodes.MSP_ATTITUDE);
+            expect(send).toHaveBeenCalledTimes(3);
+        } finally {
+            MSP.clearListeners();
         }
     });
 });

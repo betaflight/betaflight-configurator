@@ -54,6 +54,12 @@ export interface MspRequest {
     attempts?: number;
     start?: number;
     timer?: ReturnType<typeof setTimeout> | null;
+    /**
+     * Put on the wire, by the first send or a retry. False for an entry that attached to an
+     * identical copy already in flight: an errorAware one still arms its own timer, so the
+     * timer alone does not tell a transmitted copy from a rider.
+     */
+    sent?: boolean;
 }
 
 export type CliCallback = (lines: string[], error?: Error | null) => void;
@@ -515,11 +521,12 @@ const MSP = {
             }
         }
 
-        // Only copies still waiting on their timer count: a legacy entry whose retries ran out
-        // stays queued for a late reply but must not block fresh sends, or a single lost reply
-        // would freeze that poll for the rest of the session.
+        // Only transmitted copies still waiting on their timer count. A legacy entry whose
+        // retries ran out stays queued for a late reply but must not block fresh sends, or a
+        // single lost reply would freeze that poll for the rest of the session; a rider that
+        // attached to a copy was never sent, even when it arms a timer of its own.
         const sameInFlight = this.callbacks.filter(
-            (i) => i.code === code && i.timer && this._buffer_matches(i, view),
+            (i) => i.code === code && i.sent && i.timer && this._buffer_matches(i, view),
         ).length;
         // Payloads always go out; a payload-less repeat is sent while fewer than
         // MAX_SAME_IN_FLIGHT copies are pending, else it attaches to a pending one.
@@ -534,6 +541,7 @@ const MSP = {
             notifyTimeout,
             attempts: 1,
             start: performance.now(),
+            sent: sendNow,
         };
 
         // errorAware entries always arm their own timer (even when deduped) so an awaiter
@@ -580,6 +588,7 @@ const MSP = {
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${useNavigationStore().activeTab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
             void serial.send(obj.requestBuffer);
+            obj.sent = true;
             this._arm_timer(obj);
             return;
         }
@@ -634,6 +643,7 @@ const MSP = {
 
         entry.attempts = 1;
         entry.start = performance.now();
+        entry.sent = true;
         this._arm_timer(entry);
         this.callbacks.push(entry);
 
