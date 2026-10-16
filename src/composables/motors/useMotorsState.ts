@@ -52,6 +52,8 @@ export interface MotorDefaults {
     motorIdle: number;
     idleMinRpm: number;
     motor_kv: number;
+    motor_stator_diameter: number;
+    motor_stator_height: number;
 }
 
 export type MotorConfigKey = keyof MotorDefaults;
