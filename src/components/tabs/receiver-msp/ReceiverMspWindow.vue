@@ -306,9 +306,13 @@ function readGamepads(): Gamepad[] {
 }
 
 function selectGamepad(index: number) {
-    // The previous device's channels go back to their safe defaults first: a new profile that
-    // does not bind an AUX the old one drove would otherwise leave its last value on the wire.
-    Object.assign(stickValues, releaseBoundChannels(stickValues, profile.value));
+    // While the gamepad is the active source, the previous device's channels go back to their
+    // safe defaults first: a new profile that does not bind an AUX the old one drove would
+    // otherwise leave its last value on the wire. With the mouse active the gamepad drives
+    // nothing (switching to the mouse already released it) and the values belong to the user.
+    if (source.value === "gamepad") {
+        Object.assign(stickValues, releaseBoundChannels(stickValues, profile.value));
+    }
     selectedGamepadIndex.value = index;
     gamepadLost.value = false;
     const pad = gamepadList.value.find((p) => p.index === index);
