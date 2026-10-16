@@ -197,13 +197,18 @@ function isFiniteNumber(value: unknown): value is number {
     return typeof value === "number" && Number.isFinite(value);
 }
 
+/** Gamepad.id as text; anything that is not a string (missing, or a bad value) reads as "". */
+function gamepadIdText(id: unknown): string {
+    return typeof id === "string" ? id : "";
+}
+
 /**
  * Parse the vendor/product ids out of a Gamepad.id string.
  * Chromium: "C5 (Vendor: 2ca3 Product: 1020)", Firefox: "2ca3-1020-C5".
  * Either id is null when the string carries none.
  */
 export function parseGamepadId(id: unknown): { vendorId: number | null; productId: number | null; name: string } {
-    const text = String(id ?? "");
+    const text = gamepadIdText(id);
     let vendorId: number | null = null;
     let productId: number | null = null;
     let name = text;
@@ -211,12 +216,12 @@ export function parseGamepadId(id: unknown): { vendorId: number | null; productI
     const chromium = /vendor:\s*([0-9a-f]{1,4})\s+product:\s*([0-9a-f]{1,4})/i.exec(text);
     const firefox = /^([0-9a-f]{1,4})-([0-9a-f]{1,4})-(.*)$/i.exec(text);
     if (chromium) {
-        vendorId = parseInt(chromium[1], 16);
-        productId = parseInt(chromium[2], 16);
+        vendorId = Number.parseInt(chromium[1], 16);
+        productId = Number.parseInt(chromium[2], 16);
         name = text.slice(0, chromium.index).trim().replace(/\($/, "").trim();
     } else if (firefox) {
-        vendorId = parseInt(firefox[1], 16);
-        productId = parseInt(firefox[2], 16);
+        vendorId = Number.parseInt(firefox[1], 16);
+        productId = Number.parseInt(firefox[2], 16);
         name = firefox[3].trim();
     }
 
@@ -411,7 +416,7 @@ function emptyBindings(): Record<ChannelName, Binding> {
 export function createProfile(id: unknown, mapping = ""): GamepadProfile {
     const preset = findPreset(id);
     const profile: GamepadProfile = {
-        gamepadId: String(id ?? ""),
+        gamepadId: gamepadIdText(id),
         mapping: mapping === "standard" ? "standard" : "",
         presetName: preset?.name ?? null,
         auxCount: preset?.auxCount ?? DEFAULT_AUX_COUNT,
@@ -433,7 +438,7 @@ export function createProfile(id: unknown, mapping = ""): GamepadProfile {
         for (const name of CHANNEL_NAMES) {
             const binding = layout.bindings[name];
             if (binding) {
-                profile.bindings[name] = JSON.parse(JSON.stringify(binding)) as Binding;
+                profile.bindings[name] = structuredClone(binding);
             }
         }
         for (const [axis, cal] of Object.entries(layout.calibration ?? {})) {
@@ -558,15 +563,17 @@ export function snapshotGamepad(gamepad: GamepadLike | null | undefined): Gamepa
     }
     return {
         index: gamepad.index,
-        id: String(gamepad.id ?? ""),
+        id: gamepadIdText(gamepad.id),
         connected: gamepad.connected !== false,
         mapping: gamepad.mapping ?? "",
         timestamp: isFiniteNumber(gamepad.timestamp) ? gamepad.timestamp : 0,
         axes: Array.from(gamepad.axes ?? [], sanitizeAxis),
         buttons: Array.from(gamepad.buttons ?? [], (b): ButtonSnapshot => {
             const pressed = isButtonPressed(b);
-            const value = b && typeof b === "object" && isFiniteNumber(b.value) ? b.value : pressed ? 1 : 0;
-            return { pressed, value };
+            if (b && typeof b === "object" && isFiniteNumber(b.value)) {
+                return { pressed, value: b.value };
+            }
+            return { pressed, value: pressed ? 1 : 0 };
         }),
     };
 }
@@ -581,7 +588,10 @@ function readControl(snapshot: GamepadSnapshot | null | undefined, ref: ControlR
         return v === undefined ? null : sanitizeAxis(v);
     }
     const b = snapshot.buttons[ref.index];
-    return b === undefined ? null : b.pressed ? 1 : 0;
+    if (b === undefined) {
+        return null;
+    }
+    return b.pressed ? 1 : 0;
 }
 
 function signatureOf(snapshot: GamepadSnapshot | null | undefined, controls: ControlRef[]): number[] | null {

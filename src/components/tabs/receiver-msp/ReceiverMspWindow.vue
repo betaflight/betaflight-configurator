@@ -263,7 +263,7 @@ const selectedGamepadModel = computed({
 
 // The sticks plus as many AUX as the radio has; the mouse source keeps the classic four.
 const activeChannels = computed<ChannelName[]>(() =>
-    source.value === "mouse" ? [...CHANNEL_NAMES.slice(0, 4 + DEFAULT_AUX_COUNT)] : activeChannelNames(profile.value),
+    source.value === "mouse" ? CHANNEL_NAMES.slice(0, 4 + DEFAULT_AUX_COUNT) : activeChannelNames(profile.value),
 );
 const auxCount = computed(() => activeChannels.value.length - 4);
 
