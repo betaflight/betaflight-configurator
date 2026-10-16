@@ -1,6 +1,42 @@
-export function getTpaHyperbolicCurve(wingConfig, motorKv) {
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { WingConfig } from "../../../stores/fc.types";
+
+export interface TpaCurvePoint {
+    /** Airspeed in m/s. */
+    speed: number;
+    /** PID multiplier at that speed. */
+    multiplier: number;
+}
+
+export interface TpaChartCurve {
+    data: TpaCurvePoint[];
+    color: string;
+    active: boolean;
+}
+
+export function getTpaHyperbolicCurve(wingConfig: WingConfig, motorKv: number): TpaChartCurve[] {
     // The list of charts curves
-    const chartCurves = [
+    const chartCurves: TpaChartCurve[] = [
         {
             data: generateHyperbolicCurve(wingConfig, motorKv),
             color: getCssVar("--chart-curve-color", "#e24761"),
@@ -11,16 +47,16 @@ export function getTpaHyperbolicCurve(wingConfig, motorKv) {
     return chartCurves;
 }
 
-export function getCssVar(varName, fallback = "#000000") {
+export function getCssVar(varName: string, fallback = "#000000"): string {
     const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
     return value || fallback;
 }
 
 // Compute Wings maximal speed to follow BF firmware formulas (pid_init.c)
-function computeMaximalSpeed(wingConfig, motorKv) {
+function computeMaximalSpeed(wingConfig: WingConfig, motorKv: number): number {
     const G_ACCELERATION = 9.80665;
-    let maxSpeed;
-    if (wingConfig.tpa_speed_type == 1) {
+    let maxSpeed: number;
+    if (wingConfig.tpa_speed_type === 1) {
         if (wingConfig.tpa_speed_adv_mass === 0 || wingConfig.tpa_speed_adv_drag_k === 0) {
             return 1;
         }
@@ -58,7 +94,7 @@ function computeMaximalSpeed(wingConfig, motorKv) {
     return Math.max(maxSpeed, 1);
 }
 
-function scaleRange(value, fromMin, fromMax, toMin, toMax) {
+function scaleRange(value: number, fromMin: number, fromMax: number, toMin: number, toMax: number): number {
     if (fromMax - fromMin === 0) {
         return toMin;
     }
@@ -66,9 +102,9 @@ function scaleRange(value, fromMin, fromMax, toMin, toMax) {
 }
 
 // Hyperbolic curve definition
-function generateHyperbolicCurve(wingConfig, motorKv) {
+function generateHyperbolicCurve(wingConfig: WingConfig, motorKv: number): TpaCurvePoint[] {
     const steps = 100;
-    const data = [];
+    const data: TpaCurvePoint[] = [];
     const stallThrottle = wingConfig.tpa_curve_stall_throttle / 100;
     const pidStallThrottle = wingConfig.tpa_curve_pid_thr0 / 100;
     const pidFullThrottle = Math.max(wingConfig.tpa_curve_pid_thr100, 1) / 100;
@@ -90,7 +126,7 @@ function generateHyperbolicCurve(wingConfig, motorKv) {
 
     for (let i = 0; i <= steps; i++) {
         const x = i / steps;
-        let curveValue;
+        let curveValue: number;
         if (x < stallThrottle) {
             curveValue = pidStallThrottle;
         } else {
