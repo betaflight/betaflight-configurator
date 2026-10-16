@@ -116,6 +116,7 @@ import {
     applyStickCenters,
     mapGamepadToChannels,
     readStickCenters,
+    releaseBoundChannels,
     snapshotGamepad,
     switchPositionCount,
     type ChannelName,
@@ -369,6 +370,8 @@ function onFocusChange() {
 watch(source, (value) => {
     if (value === "mouse") {
         gamepadLost.value = false;
+        // Do not keep sending what the gamepad last set (an armed AUX, a raised throttle).
+        Object.assign(stickValues, releaseBoundChannels(stickValues, profile.value));
         return;
     }
     refreshGamepadList();

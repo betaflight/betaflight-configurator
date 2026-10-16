@@ -7,6 +7,7 @@ import {
     applyStickCenters,
     calibrateAxis,
     readStickCenters,
+    releaseBoundChannels,
     setStickCenter,
     channelsToMspArray,
     createBinding,
@@ -373,5 +374,43 @@ describe("multi-position switches", () => {
         profile.bindings.Aux2 = createSwitchBinding([{ type: "axis", index: 5 }], [[-1], [0], [1]]);
         const snapshot = makeSnapshot({ axes: [0, 0.7, 0, 0, 0, 1, 0] });
         expect(mapGamepadToChannels(snapshot, profile).Aux2).toBe(2000);
+    });
+});
+
+describe("switching away from the gamepad", () => {
+    it("returns every bound channel to its safe default and keeps the rest", () => {
+        const std = createProfile(DJI_ID, "standard"); // sticks + Aux1-3 bound, Aux4+ not
+        const live = {
+            ...DEFAULT_CHANNEL_VALUES,
+            Roll: 1700,
+            Pitch: 1300,
+            Throttle: 1858,
+            Yaw: 1600,
+            Aux1: 1500,
+            Aux2: 2000,
+            Aux3: 2000, // armed
+            Aux4: 1800, // set by its slider, not by the gamepad
+        };
+        const released = releaseBoundChannels(live, std);
+        expect(released).toEqual({
+            ...live,
+            Roll: 1500,
+            Pitch: 1500,
+            Throttle: 1000,
+            Yaw: 1500,
+            Aux1: 1000,
+            Aux2: 1000,
+            Aux3: 1000,
+        });
+        expect(live.Aux3).toBe(2000); // the input is left alone
+    });
+
+    it("leaves everything as is for a profile with nothing bound", () => {
+        const live = { ...DEFAULT_CHANNEL_VALUES, Throttle: 1400, Aux1: 2000 };
+        const empty = createProfile("Unknown pad");
+        for (const name of Object.keys(empty.bindings)) {
+            empty.bindings[name] = { kind: "none", index: 0, invert: false };
+        }
+        expect(releaseBoundChannels(live, empty)).toEqual(live);
     });
 });

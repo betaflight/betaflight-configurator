@@ -731,6 +731,25 @@ export function resolveBinding(
 }
 
 /**
+ * Channel values once the gamepad lets go: every channel the profile binds goes back to its
+ * safe default (sticks centred, throttle and AUX low), the rest keep their current value.
+ * Used when the input switches to the mouse, so the last gamepad frame (an armed AUX, a raised
+ * throttle) is not transmitted on until the mouse happens to touch it.
+ */
+export function releaseBoundChannels(
+    values: Readonly<ChannelValues>,
+    profile: Pick<GamepadProfile, "bindings">,
+): ChannelValues {
+    const released: ChannelValues = { ...values };
+    for (const name of CHANNEL_NAMES) {
+        if ((profile.bindings[name]?.kind ?? "none") !== "none") {
+            released[name] = DEFAULT_CHANNEL_VALUES[name];
+        }
+    }
+    return released;
+}
+
+/**
  * Map a whole snapshot to channel values. Unbound or unresolvable channels keep the
  * value from `fallback` (the current slider/stick value, or the safe defaults).
  */
