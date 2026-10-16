@@ -219,7 +219,7 @@ import { defineComponent } from "vue";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { useUserSession } from "./UserSession";
 import { switchTab } from "@/js/tab_switch.js";
-import { sidebarItems } from "@/components/sidebar/sidebar_items.js";
+import { sidebarItems } from "@/components/sidebar/sidebar_items";
 import { i18n } from "@/js/localization";
 
 export default defineComponent({
