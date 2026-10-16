@@ -1318,6 +1318,12 @@
     "initialSetupAccelCalibEnded": {
         "message": "Accelerometer calibration <span class=\"message-positive\">finished</span>"
     },
+    "initialSetupMagCalibStarted": {
+        "message": "Magnetometer calibration started"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Magnetometer calibration <span class=\"message-positive\">finished</span>"
+    },
     "initialSetupSettingsRestored": {
         "message": "Settings restored to <strong>default</strong>"
     },
@@ -7392,6 +7398,15 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
+    },
+    "magCalibrationNotSent": {
+        "message": "Calibration could not start: the flight controller did not receive the command."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "Starting..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "Calibrating... {{seconds}}s"
     },
     "magCalibrationCheck": {
         "message": "Check"
