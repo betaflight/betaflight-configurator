@@ -802,6 +802,42 @@ export interface WingConfig {
     angle_pitch_offset: number;
 }
 
+export interface PsasConfig {
+    stick_gain: number[];
+    damping_gain: number[];
+    pitch_damping_filter_freq: number;
+    accel_z_filter_freq: number;
+    pitch_stability_gain: number;
+    pitch_accel_p_gain: number;
+    pitch_accel_i_gain: number;
+    pitch_accel_max: number;
+    pitch_accel_min: number;
+    yaw_damping_filter_freq: number;
+    accel_y_filter_freq: number;
+    yaw_stability_gain: number;
+    wing_load: number;
+    air_density: number;
+    lift_c_limit: number;
+    aoa_limiter_gain: number;
+    lift_coef_filter_freq: number;
+    aoa_limiter_forecast_time: number;
+    aoa_limiter_tau_return: number;
+    servo_time: number;
+    roll_yaw_clift_start: number;
+    roll_yaw_clift_stop: number;
+    roll_to_yaw_link: number;
+    speed_main_curve_enable: number[];
+    speed_stick_curve_enable: number[];
+    speed_optimum_vref: number;
+    speed_main_curve_power: number;
+    speed_roll_stick_curve_power: number;
+    speed_main_curve_min: number;
+    speed_main_curve_max: number;
+    speed_stick_curve_min: number;
+    speed_stick_curve_max: number;
+    speed_curve_mode: number;
+}
+
 export interface FcState {
     adjustmentRanges: AdjustmentRange[];
     advancedTuning: AdvancedTuning;
@@ -878,4 +914,5 @@ export interface FcState {
     vtxConfig: VtxConfig;
     vtxDeviceStatus: VtxDeviceStatus | null;
     wingConfig: WingConfig;
+    psasConfig: PsasConfig;
 }
