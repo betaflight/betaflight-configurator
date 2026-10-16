@@ -571,8 +571,9 @@ export const usePresetsStore = defineStore("presets", () => {
                 return;
             }
 
-            presetForDetails.options = attachOptionIds(presetForDetails.options ?? []);
-            detailsState.selectedOptionIds = getCheckedOptionIds(presetForDetails.options);
+            const identifiedOptions = attachOptionIds(presetForDetails.options ?? []);
+            presetForDetails.options = identifiedOptions;
+            detailsState.selectedOptionIds = getCheckedOptionIds(identifiedOptions);
         } catch (error) {
             if (detailsRequestToken !== requestToken || selectedPresetEntry.value?.key !== presetKey) {
                 return;
