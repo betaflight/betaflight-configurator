@@ -103,6 +103,8 @@ export function useMotorsState() {
             motorIdle: fcStore.pidAdvancedConfig.motorIdle,
             idleMinRpm: fcStore.advancedTuning.idleMinRpm,
             motor_kv: fcStore.motorConfig.motor_kv,
+            motor_stator_diameter: fcStore.motorConfig.motor_stator_diameter,
+            motor_stator_height: fcStore.motorConfig.motor_stator_height,
         };
 
         // Store previous values for comparison

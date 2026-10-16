@@ -1214,6 +1214,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         // Introduced in 1.49
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             fcStore.motorConfig.motor_kv = data.readU16();
+            // Motor thermal estimator geometry (firmware with USE_MOTOR_THERMAL): stator D [mm], stator H [0.1 mm], prop [0.1 in]
+            if (data.offset + 3 <= data.byteLength) {
+                fcStore.motorConfig.motor_stator_diameter = data.readU8();
+                fcStore.motorConfig.motor_stator_height = data.readU8();
+                fcStore.motorConfig.motor_prop_diameter = data.readU8();
+            }
         }
     },
 
@@ -2672,6 +2678,12 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
         // Introduced in 1.49
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             buffer.push16(fcStore.motorConfig.motor_kv);
+            if (fcStore.motorConfig.motor_stator_diameter) {
+                buffer
+                    .push8(fcStore.motorConfig.motor_stator_diameter)
+                    .push8(fcStore.motorConfig.motor_stator_height)
+                    .push8(fcStore.motorConfig.motor_prop_diameter);
+            }
         }
     },
 

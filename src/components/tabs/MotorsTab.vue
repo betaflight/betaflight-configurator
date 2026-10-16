@@ -217,7 +217,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="isMotorKvSupported" :label="$t('configurationMotorKv')" fullWidth>
+                            <SettingRow v-if="isMotorKvSupported" :label="$t('configurationMotorKv')" :help="$t('configurationMotorKvHelp')" fullWidth>
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.motor_kv"
                                     :min="1"
@@ -228,6 +228,22 @@
                                     :format-options="{ useGrouping: false }"
                                     class="w-16"
                                 />
+                            </SettingRow>
+                            <SettingRow v-if="isMotorStatorSupported" :label="$t('configurationMotorStator')" :help="$t('configurationMotorStatorHelp')" fullWidth>
+                                <UInput
+                                    v-model="motorStatorInput"
+                                    list="motor-stator-sizes"
+                                    size="xs"
+                                    placeholder="2207"
+                                    class="w-20"
+                                    @input="normalizeStatorInput"
+                                    @blur="applyStatorSize"
+                                    @keydown.enter="applyStatorSize"
+                                />
+                                <datalist id="motor-stator-sizes">
+                                    <option v-for="size in motorStatorSizes" :key="size" :value="size" />
+                                </datalist>
+                                <span class="ml-2 text-xs text-muted">{{ motorStatorPreview }}</span>
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
@@ -1734,9 +1750,60 @@ const getTelemetryHtml = (index: number) => {
     return html;
 };
 
-const isMotorKvSupported = computed(
-    () => hasBuildOption("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
+const isMotorKvSupported = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
+
+// Stator size as printed on the motor ("2207", "2203.5", "1404"): firmware stores diameter [mm] and height [0.1 mm]
+const isMotorStatorSupported = computed(() => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0);
+const motorStatorSizes = ["0802", "1103", "1303.5", "1404", "1504", "1606", "1804", "2004", "2203", "2203.5", "2204", "2205", "2206", "2207", "2306", "2306.5", "2307", "2506", "2806.5", "2810", "3110"];
+const formatStatorSize = (d: number, h: number): string => {
+    if (!d || !h) {
+        return "";
+    }
+    const height = h % 10 ? (h / 10).toFixed(1) : String(h / 10);
+    return `${String(d).padStart(2, "0")}${height.padStart(h % 10 ? 4 : 2, "0")}`;
+};
+const motorStatorInput = ref("");
+watch(
+    () => [fcStore.motorConfig.motor_stator_diameter, fcStore.motorConfig.motor_stator_height],
+    ([d, h]) => {
+        motorStatorInput.value = formatStatorSize(d, h);
+    },
+    { immediate: true },
 );
+const parseStatorSize = (text: string | number): { d: number; h: number } | null => {
+    // accepts "2207", "2203.5", "2203,5" and "22035" (five digits = diameter + height in tenths)
+    const t = String(text).trim().replace(",", ".");
+    let m = /^(\d{2})(\d{1,2}(?:\.\d)?)$/.exec(t);
+    let d = 0;
+    let h = 0;
+    if (m) {
+        d = parseInt(m[1], 10);
+        h = Math.round(parseFloat(m[2]) * 10);
+    } else if ((m = /^(\d{2})(\d{3})$/.exec(t))) {
+        d = parseInt(m[1], 10);
+        h = parseInt(m[2], 10);
+    }
+    return d >= 5 && d <= 60 && h >= 10 && h <= 250 ? { d, h } : null;
+};
+const motorStatorPreview = computed(() => {
+    const parsed = parseStatorSize(motorStatorInput.value);
+    if (!parsed) {
+        return motorStatorInput.value.trim() ? "?" : "";
+    }
+    return `${parsed.d} × ${parsed.h / 10} mm`;
+});
+const normalizeStatorInput = () => {
+    motorStatorInput.value = String(motorStatorInput.value).replace(",", ".");
+};
+const applyStatorSize = () => {
+    const parsed = parseStatorSize(motorStatorInput.value);
+    if (parsed) {
+        fcStore.motorConfig.motor_stator_diameter = parsed.d;
+        fcStore.motorConfig.motor_stator_height = parsed.h;
+    }
+    // invalid input (or unchanged): show what the firmware holds
+    motorStatorInput.value = formatStatorSize(fcStore.motorConfig.motor_stator_diameter, fcStore.motorConfig.motor_stator_height);
+};
 
 onMounted(() => {
     // Polling is handled by useMotorDataPolling()
