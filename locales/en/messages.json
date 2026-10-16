@@ -1737,6 +1737,15 @@
     "configurationMotorKv": {
         "message": "Motor KV"
     },
+    "configurationMotorKvHelp": {
+        "message": "Motor velocity constant from the motor label (rpm per volt). Used by the RPM limiter and the motor thermal estimator."
+    },
+    "configurationMotorStator": {
+        "message": "Motor stator size"
+    },
+    "configurationMotorStatorHelp": {
+        "message": "Stator size as printed on the motor, e.g. 2207 or 2203.5 (diameter 22 mm, height 3.5 mm). Used by the motor thermal estimator to scale heat capacity and cooling."
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"
     },
