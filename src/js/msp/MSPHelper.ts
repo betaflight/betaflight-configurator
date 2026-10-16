@@ -421,6 +421,11 @@ class MspHelper {
     // Removes and settles every pending request for the frame's code. Iterates in reverse because
     // it splices, and re-reads the queue each step because a callback may queue new requests.
     private settleCallbacks(dataHandler: MspFrame) {
+        if ((dataHandler.MAX_SAME_IN_FLIGHT ?? 1) > 1) {
+            this.settleOldestCopy(dataHandler);
+            return;
+        }
+
         for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) {
             const entry = dataHandler.callbacks[i];
             if (entry?.code !== dataHandler.code) {
@@ -430,6 +435,39 @@ class MspHelper {
             clearTimeout(entry.timer ?? undefined);
             dataHandler.callbacks.splice(i, 1);
 
+            if (typeof entry.callback === "function") {
+                deliverResponse(entry.callback, entry.errorAware, dataHandler);
+            }
+        }
+    }
+
+    /**
+     * Settlement when MSP keeps several copies of one request on the wire (MAX_SAME_IN_FLIGHT
+     * > 1): a reply answers one transmitted copy, the oldest still waiting on its timer. It also
+     * settles every entry of that code that is not a separate copy on the wire: riders that
+     * attached to a copy (never sent, possibly with a timer of their own) and transmitted
+     * entries whose retries ran out. Later copies wait for their own reply. The entries are
+     * picked from the queue as it stands, so a request a callback queues is not answered by
+     * this reply.
+     */
+    private settleOldestCopy(dataHandler: MspFrame) {
+        let answered = false;
+        const settled = dataHandler.callbacks.filter((entry) => {
+            if (entry?.code !== dataHandler.code) {
+                return false;
+            }
+            const liveCopy = !!entry.sent && !!entry.timer;
+            if (liveCopy && answered) {
+                return false;
+            }
+            answered ||= liveCopy;
+            return true;
+        });
+        for (const entry of settled) {
+            clearTimeout(entry.timer ?? undefined);
+            dataHandler.callbacks.splice(dataHandler.callbacks.indexOf(entry), 1);
+        }
+        for (const entry of settled) {
             if (typeof entry.callback === "function") {
                 deliverResponse(entry.callback, entry.errorAware, dataHandler);
             }
