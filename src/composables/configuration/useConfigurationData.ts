@@ -19,13 +19,19 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
+import { storeToRefs } from "pinia";
 import semver from "semver";
 import MSP from "../../js/msp";
 import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { API_VERSION_1_45 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
+import { getSetting, getSettingInfo, setSetting } from "../useMspSetting";
+import { isMspCancelled } from "../../js/msp/mspErrors";
+import { useMixerSaveStore } from "../../stores/mixerSave";
+import { withSaveFailureMessage } from "../useSaving";
+import { i18n } from "../../js/localization";
 
 /**
  * MSP traffic for the Configuration tab: the initial load and the save writes.
@@ -33,6 +39,16 @@ import { useFlightControllerStore } from "@/stores/fc";
  */
 export function useConfigurationData() {
     const fcStore = useFlightControllerStore();
+    const mixerType = ref<string | null>(null);
+    const ezLandingAvailable = ref(false);
+    let loadedMixerType: string | null = null;
+    const { mixerNeedsSave } = storeToRefs(useMixerSaveStore());
+    const ezLandingEnabled = computed({
+        get: () => mixerType.value === "EZLANDING",
+        set: (enabled: boolean) => {
+            if (ezLandingAvailable.value) mixerType.value = enabled ? "EZLANDING" : "LEGACY";
+        },
+    });
 
     /**
      * Fetch everything the tab renders from; the replies land in the flightController store.
@@ -73,14 +89,64 @@ export function useConfigurationData() {
 
         await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
-        return isMounted.value;
+        if (!isMounted.value) return false;
+
+        return loadMixerType(isMounted);
     };
+
+    async function loadMixerType(isMounted: Ref<boolean>): Promise<boolean> {
+        try {
+            const currentMixerType = await getSetting("mixer_type");
+            if (!isMounted.value) return false;
+            const mixerInfo = currentMixerType === null ? null : await getSettingInfo("mixer_type");
+            if (!isMounted.value) return false;
+
+            loadedMixerType = currentMixerType;
+            mixerType.value = currentMixerType;
+            ezLandingAvailable.value =
+                currentMixerType !== null &&
+                !!mixerInfo?.values?.includes(currentMixerType) &&
+                mixerInfo.values.includes("EZLANDING") &&
+                mixerInfo.values.includes("LEGACY");
+        } catch (error) {
+            if (isMspCancelled(error)) throw error;
+            if (!isMounted.value) return false;
+
+            // Mixer capability discovery is optional; the remaining settings can still load.
+            mixerType.value = null;
+            ezLandingAvailable.value = false;
+            console.warn("Unable to read EZ Landing settings:", error);
+        }
+
+        return true;
+    }
 
     /**
      * Send the tab's settings to the FC from the flightController store. The caller writes the
      * edited values into the store first, and persists (EEPROM / reboot) afterwards.
      */
     const sendConfigurationData = async () => {
+        if (mixerNeedsSave.value && (!ezLandingAvailable.value || mixerType.value === null)) {
+            throw withSaveFailureMessage(
+                new Error("A mixer write is pending but its current settings could not be read"),
+                i18n.getMessage("configurationMixerReadFailed"),
+            );
+        }
+        // Preserve LINEAR/DYNAMIC when saving unrelated settings with the switch off.
+        const selectedMixerType = mixerType.value;
+        if (
+            ezLandingAvailable.value &&
+            selectedMixerType !== null &&
+            (mixerNeedsSave.value || selectedMixerType !== loadedMixerType)
+        ) {
+            // Retry even after reverting the switch: a failed request may already have changed RAM.
+            mixerNeedsSave.value = true;
+            const confirmed = await setSetting("mixer_type", selectedMixerType);
+            if (confirmed !== selectedMixerType) {
+                throw new Error("The flight controller did not confirm the selected mixer type");
+            }
+            loadedMixerType = confirmed;
+        }
         await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
         if (fcStore.beepers) {
@@ -106,5 +172,17 @@ export function useConfigurationData() {
         await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
     };
 
-    return { loadConfigurationData, sendConfigurationData };
+    function confirmMixerSaved(): void {
+        mixerNeedsSave.value = false;
+    }
+
+    return {
+        loadConfigurationData,
+        sendConfigurationData,
+        mixerType,
+        ezLandingAvailable,
+        ezLandingEnabled,
+        mixerNeedsSave,
+        confirmMixerSaved,
+    };
 }

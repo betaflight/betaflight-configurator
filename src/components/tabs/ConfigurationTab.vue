@@ -107,24 +107,44 @@
 
                         <!-- FEATURES -->
                         <UiBox :title="$t('configurationFeatures')" type="neutral" collapsible>
-                            <SettingRow
-                                v-for="feature in featuresList"
-                                :key="feature.bit"
-                                fullWidth
-                                :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
-                            >
-                                <USwitch
-                                    :model-value="isFeatureEnabled(feature)"
-                                    @update:model-value="(checked: boolean) => toggleFeature(feature, checked)"
-                                />
-                                <template #label>
-                                    <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{ feature.name }}</span>
-                                    <span
-                                        class="min-w-0 flex-1 text-xs leading-snug"
-                                        v-html="$t('feature' + feature.name)"
-                                    ></span>
-                                </template>
-                            </SettingRow>
+                            <template v-for="feature in featuresList" :key="feature.bit">
+                                <SettingRow
+                                    fullWidth
+                                    :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
+                                >
+                                    <USwitch
+                                        :model-value="isFeatureEnabled(feature)"
+                                        @update:model-value="(checked: boolean) => toggleFeature(feature, checked)"
+                                    />
+                                    <template #label>
+                                        <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{
+                                            feature.name
+                                        }}</span>
+                                        <span
+                                            class="min-w-0 flex-1 text-xs leading-snug"
+                                            v-html="$t('feature' + feature.name)"
+                                        ></span>
+                                    </template>
+                                </SettingRow>
+                                <SettingRow
+                                    v-if="feature.name === 'AIRMODE' && ezLandingAvailable"
+                                    fullWidth
+                                    :help="$t('configurationEzLandingHelp')"
+                                >
+                                    <USwitch
+                                        v-model="ezLandingEnabled"
+                                        :aria-label="$t('configurationEzLandingLabel')"
+                                    />
+                                    <template #label>
+                                        <span class="w-48 shrink-0 font-bold text-xs leading-snug">{{
+                                            $t("configurationEzLandingLabel")
+                                        }}</span>
+                                        <span class="min-w-0 flex-1 text-xs leading-snug">{{
+                                            $t("configurationEzLandingDescription")
+                                        }}</span>
+                                    </template>
+                                </SettingRow>
+                            </template>
                         </UiBox>
 
                         <!-- DSHOT BEACON -->
@@ -231,7 +251,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
 import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
-import { useSaving } from "@/composables/useSaving";
+import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { useConfigurationData } from "@/composables/configuration/useConfigurationData";
 import { gui_log } from "../../js/gui_log";
@@ -256,7 +276,7 @@ export default defineComponent({
     setup() {
         // Reactive State
         const fcStore = useFlightControllerStore();
-        const { saveAndReboot } = useReboot();
+        const { saveToEeprom, rebootAfterSave } = useReboot();
 
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
@@ -402,10 +422,20 @@ export default defineComponent({
                 beeperDisabledMask: fcStore.beepers?.beepers?.getDisabledMask?.() ?? 0,
                 dshotBeaconConditionsMask: fcStore.beepers?.dshotBeaconConditions?.getDisabledMask?.() ?? 0,
                 dshotBeaconTone: dshotBeaconTone.value,
+                mixerType: mixerType.value,
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
-        const { loadConfigurationData, sendConfigurationData } = useConfigurationData();
+        const { dirty: formDirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
+        const {
+            loadConfigurationData,
+            sendConfigurationData,
+            mixerType,
+            ezLandingAvailable,
+            ezLandingEnabled,
+            mixerNeedsSave,
+            confirmMixerSaved,
+        } = useConfigurationData();
+        const dirty = computed(() => formDirty.value || mixerNeedsSave.value);
 
         // Loading Logic
         const loadConfig = async () => {
@@ -520,13 +550,17 @@ export default defineComponent({
                 }
 
                 await sendConfigurationData();
+                await saveToEeprom();
 
+                confirmMixerSaved();
+                markClean(savedSnapshot);
                 gui_log(i18n.getMessage("configurationSaved"));
 
-                // Save to EEPROM and Reboot
-                await saveAndReboot();
-
-                markClean(savedSnapshot);
+                try {
+                    await rebootAfterSave();
+                } catch (error) {
+                    throw withSaveFailureMessage(error, i18n.getMessage("configurationSavedRebootFailed"));
+                }
             });
 
         onMounted(() => {
@@ -545,6 +579,8 @@ export default defineComponent({
             pilotName,
             showPilotName,
             featuresList,
+            ezLandingAvailable,
+            ezLandingEnabled,
             beepersList,
             dshotBeaconConditionsList,
             dshotBeaconTone,

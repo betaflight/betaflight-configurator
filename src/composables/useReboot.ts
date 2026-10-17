@@ -46,7 +46,10 @@ async function saveToEeprom(): Promise<void> {
     if (!fcStore.config.armingDisabled) {
         mspHelper.disableArming();
     }
-    await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    const response = await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    if (response?.unsupported === 1) {
+        throw new Error("The flight controller refused the EEPROM write");
+    }
     gui_log(i18n.getMessage("configurationEepromSaved"));
 }
 
@@ -76,8 +79,15 @@ export function useReboot() {
         });
     }
 
+    /** Reboot after an already-acknowledged save, keeping reboot errors separate from persistence. */
+    async function rebootAfterSave(): Promise<void> {
+        await new Promise<void>((resolve) => tabSwitchCleanup(resolve));
+        reboot();
+    }
+
     return {
         reboot,
+        rebootAfterSave,
         saveAndReboot,
         saveToEeprom,
     };

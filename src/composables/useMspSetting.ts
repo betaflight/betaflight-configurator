@@ -21,6 +21,8 @@
 
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
+import { useConnectionStore } from "../stores/connection";
+import { useVirtualSettingsStore } from "../stores/virtualSettings";
 
 /**
  * Named settings over MSP.
@@ -136,6 +138,9 @@ function parseInfo(text: string): SettingInfo {
  * @returns its value, or null when this build has no such setting
  */
 export async function getSetting(setting: string): Promise<string | null> {
+    if (useConnectionStore().virtualMode) {
+        return useVirtualSettingsStore().getSetting(setting);
+    }
     const response = (await MSP.promise(MSPCodes.MSP2_CLI_SETTING, encodeText(setting))) as MspResponse | undefined;
     if (!accepted(response)) {
         return null;
@@ -152,6 +157,9 @@ export async function getSetting(setting: string): Promise<string | null> {
  * @throws when the firmware refuses the write
  */
 export async function setSetting(setting: string, value: string | number): Promise<string> {
+    if (useConnectionStore().virtualMode) {
+        return useVirtualSettingsStore().setSetting(setting, value);
+    }
     const response = (await MSP.promise(MSPCodes.MSP2_CLI_SETTING, encodeText(`${setting} = ${value}`))) as
         MspResponse | undefined;
     if (!accepted(response)) {
@@ -170,6 +178,9 @@ export async function setSetting(setting: string, value: string | number): Promi
  * @returns the bounds, or null when this build has no such setting
  */
 export async function getSettingInfo(setting: string): Promise<SettingInfo | null> {
+    if (useConnectionStore().virtualMode) {
+        return useVirtualSettingsStore().getSettingInfo(setting);
+    }
     let offset = 0;
     let total = 0;
     let text = "";
