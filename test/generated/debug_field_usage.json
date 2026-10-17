@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "610e068e2d7302f9088a3b9e0b713854c089e326",
-            "date": "2026-09-27",
+            "commit": "25510be200e08b1e2d51276277bb23996b00aa5f",
+            "date": "2026-10-02",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1769,8 +1769,20 @@
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
+                "AUTOPILOT_CLIMB": {
+                    "fields": [0, 1, 2, 3, 4],
+                    "dynamic": false
+                },
+                "AUTOPILOT_GUIDANCE": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
                 "AUTOPILOT_HEADING": {
                     "fields": [0, 1, 2, 3, 4, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_LANDING": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {
@@ -1894,7 +1906,7 @@
                     "dynamic": false
                 },
                 "FLIGHT_PLAN": {
-                    "fields": [0, 1, 2],
+                    "fields": [0, 1, 2, 3, 4, 5],
                     "dynamic": false
                 },
                 "FPORT": {

@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  610e068e2d 2026-09-27  (560 annotated fields)
+ *   API 1.49.0  25510be200 2026-10-02  (584 annotated fields)
  */
 
 /**
@@ -149,6 +149,39 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             6: Object.freeze({ label: "Altitude A Term", unit: "us", scale: 1 }),
             7: Object.freeze({ label: "Altitude Feedforward Term", unit: "us", scale: 1 }),
         }),
+        AUTOPILOT_CLIMB: Object.freeze({
+            0: Object.freeze({ label: "Climb Rate Demand", unit: "cm/s", scale: 1 }),
+            1: Object.freeze({ label: "Climb Rate", unit: "cm/s", scale: 1 }),
+            2: Object.freeze({ label: "Pitch Integrator", unit: "deg", scale: 0.1 }),
+            3: Object.freeze({ label: "Pitch Demand From Trim", unit: "deg", scale: 0.1 }),
+            4: Object.freeze({ label: "Turn Pitch Rate", unit: "dps", scale: 0.1 }),
+        }),
+        AUTOPILOT_GUIDANCE: Object.freeze({
+            0: Object.freeze({ label: "Lateral Acceleration Demand", unit: "cm/s2", scale: 1 }),
+            1: Object.freeze({ label: "Bank Demand", unit: "deg", scale: 0.1 }),
+            2: Object.freeze({ label: "Radius Error", unit: "cm", scale: 1 }),
+            3: Object.freeze({ label: "Radial Speed", unit: "cm/s", scale: 1 }),
+            4: Object.freeze({ label: "Tangential Speed", unit: "cm/s", scale: 1 }),
+            5: Object.freeze({
+                label: "Guidance State",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Capture", "No Position", "Pilot"]),
+            }),
+            6: Object.freeze({
+                label: "Guidance",
+                unit: null,
+                scale: 1,
+                enumTag: "wingGuidance_e",
+                values: Object.freeze([
+                    "WING_GUIDANCE_LOITER",
+                    "WING_GUIDANCE_LINE",
+                    "WING_GUIDANCE_NO_POSITION",
+                    "WING_GUIDANCE_PILOT",
+                ]),
+            }),
+            7: Object.freeze({ label: "Look-Ahead Distance", unit: "m", scale: 1 }),
+        }),
         AUTOPILOT_HEADING: Object.freeze({
             0: Object.freeze({ label: "Heading", unit: "deg", scale: 0.1 }),
             1: Object.freeze({ label: "Target Heading", unit: "deg", scale: 0.1 }),
@@ -157,6 +190,46 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             4: Object.freeze({ label: "Yaw P Term", unit: "dps", scale: 0.1 }),
             6: Object.freeze({ label: "Position Hold Sensor Status", unit: null, scale: 1 }),
             7: Object.freeze({ label: "Yaw Disable Reason", unit: null, scale: 1 }),
+        }),
+        AUTOPILOT_LANDING: Object.freeze({
+            0: Object.freeze({
+                label: "Landing Phase",
+                unit: null,
+                scale: 1,
+                enumTag: "landingWingPhase_e",
+                values: Object.freeze([
+                    "LANDING_WING_IDLE",
+                    "LANDING_WING_LOITER_DOWN",
+                    "LANDING_WING_ALIGN",
+                    "LANDING_WING_DOWNWIND",
+                    "LANDING_WING_BASE",
+                    "LANDING_WING_FINAL",
+                    "LANDING_WING_FLARE",
+                    "LANDING_WING_TOUCHDOWN",
+                    "LANDING_WING_GO_AROUND",
+                    "LANDING_WING_DESCEND",
+                ]),
+            }),
+            1: Object.freeze({ label: "Go-Arounds Flown", unit: null, scale: 1 }),
+            2: Object.freeze({
+                label: "Last Go-Around Cause",
+                unit: null,
+                scale: 1,
+                enumTag: "landingWingGoAround_e",
+                values: Object.freeze([
+                    "LANDING_WING_GO_AROUND_NONE",
+                    "LANDING_WING_GO_AROUND_STICK",
+                    "LANDING_WING_GO_AROUND_OVERSHOOT",
+                    "LANDING_WING_GO_AROUND_SLOPE",
+                    "LANDING_WING_GO_AROUND_CROSS_TRACK",
+                    "LANDING_WING_GO_AROUND_POSITION",
+                ]),
+            }),
+            3: Object.freeze({ label: "Distance To Touchdown Along Final", unit: "m", scale: 1 }),
+            4: Object.freeze({ label: "Cross Track Error Right Of Final", unit: "m", scale: 0.1 }),
+            5: Object.freeze({ label: "Height Above Touchdown", unit: "cm", scale: 1 }),
+            6: Object.freeze({ label: "Landing Heading", unit: "deg", scale: 1 }),
+            7: Object.freeze({ label: "Still On The Ground", unit: null, scale: 1 }),
         }),
         AUTOPILOT_PID: Object.freeze({
             0: Object.freeze({ label: "Velocity (dbg-axis)", unit: "cm/s", scale: 1 }),
@@ -369,7 +442,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             0: Object.freeze({ label: "Setpoint (dbg-axis)", unit: "dps", scale: 1 }),
             1: Object.freeze({ label: "Setpoint Speed (dbg-axis)", unit: "dps2", scale: 100 }),
             2: Object.freeze({ label: "Feedforward Boost (dbg-axis)", unit: null, scale: 100 }),
-            3: Object.freeze({ label: "RC Command Delta (dbg-axis)", unit: null, scale: 0.1 }),
+            3: Object.freeze({ label: "RC Command Delta (dbg-axis)", unit: null, scale: 0.001 }),
             4: Object.freeze({ label: "Jitter Attenuator (dbg-axis)", unit: "%", scale: 1 }),
             5: Object.freeze({ label: "Duplicate Packet (dbg-axis)", unit: null, scale: 1 }),
             6: Object.freeze({ label: "Yaw Feedforward Without Hold", unit: null, scale: 100 }),
@@ -452,6 +525,9 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 ]),
             }),
             2: Object.freeze({ label: "Waypoint Index", unit: null, scale: 1 }),
+            3: Object.freeze({ label: "Distance To Go Along The Track", unit: "m", scale: 1 }),
+            4: Object.freeze({ label: "Cross Track Error Right", unit: "m", scale: 0.1 }),
+            5: Object.freeze({ label: "Turn Distance", unit: "m", scale: 1 }),
         }),
         FPORT: Object.freeze({
             0: Object.freeze({ label: "Frame Interval", unit: "us", scale: 1 }),
@@ -639,6 +715,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                     "LAUNCH_WING_EXIT_TIMEOUT",
                     "LAUNCH_WING_EXIT_HANDOVER",
                     "LAUNCH_WING_EXIT_MODE_OFF",
+                    "LAUNCH_WING_EXIT_HOLD",
                 ]),
             }),
         }),
@@ -1153,6 +1230,26 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "FP_NAV_LANDING",
                 "FP_NAV_ABORTED",
             ]),
+            landingWingGoAround_e: Object.freeze([
+                "LANDING_WING_GO_AROUND_NONE",
+                "LANDING_WING_GO_AROUND_STICK",
+                "LANDING_WING_GO_AROUND_OVERSHOOT",
+                "LANDING_WING_GO_AROUND_SLOPE",
+                "LANDING_WING_GO_AROUND_CROSS_TRACK",
+                "LANDING_WING_GO_AROUND_POSITION",
+            ]),
+            landingWingPhase_e: Object.freeze([
+                "LANDING_WING_IDLE",
+                "LANDING_WING_LOITER_DOWN",
+                "LANDING_WING_ALIGN",
+                "LANDING_WING_DOWNWIND",
+                "LANDING_WING_BASE",
+                "LANDING_WING_FINAL",
+                "LANDING_WING_FLARE",
+                "LANDING_WING_TOUCHDOWN",
+                "LANDING_WING_GO_AROUND",
+                "LANDING_WING_DESCEND",
+            ]),
             launchWingExit_e: Object.freeze([
                 "LAUNCH_WING_EXIT_NONE",
                 "LAUNCH_WING_EXIT_STICKS",
@@ -1161,6 +1258,7 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "LAUNCH_WING_EXIT_TIMEOUT",
                 "LAUNCH_WING_EXIT_HANDOVER",
                 "LAUNCH_WING_EXIT_MODE_OFF",
+                "LAUNCH_WING_EXIT_HOLD",
             ]),
             launchWingState_e: Object.freeze([
                 "LAUNCH_WING_IDLE",
@@ -1226,6 +1324,12 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "UPT1_FRAME_STATE_READING_DATA",
                 "UPT1_FRAME_STATE_WAIT_CKSUM",
                 "UPT1_FRAME_STATE_WAIT_FOOTER",
+            ]),
+            wingGuidance_e: Object.freeze([
+                "WING_GUIDANCE_LOITER",
+                "WING_GUIDANCE_LINE",
+                "WING_GUIDANCE_NO_POSITION",
+                "WING_GUIDANCE_PILOT",
             ]),
         }),
     });
