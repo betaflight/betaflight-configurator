@@ -101,10 +101,7 @@ enum MSPCodes {
     MSP_SET_PID_ADVANCED = 95,
     MSP_SENSOR_CONFIG = 96,
     MSP_SET_SENSOR_CONFIG = 97,
-    //MSP_SPECIAL_PARAMETERS:         98, // DEPRECATED
     MSP_SET_ARMING_DISABLED = 99,
-    //MSP_SET_SPECIAL_PARAMETERS:     99, // DEPRECATED
-    //MSP_IDENT:                      100, // DEPRECTED
     MSP_STATUS = 101,
     MSP_RAW_IMU = 102,
     MSP_SERVO = 103,
@@ -117,7 +114,6 @@ enum MSPCodes {
     MSP_ANALOG = 110,
     MSP_RC_TUNING = 111,
     MSP_PID = 112,
-    //MSP_BOX:                        113, // DEPRECATED
     MSP_BOXNAMES = 116,
     MSP_PIDNAMES = 117,
     MSP_WP = 118, // Not used
@@ -173,7 +169,6 @@ enum MSPCodes {
     MSP_SET_RAW_GPS = 201, // Not used
     MSP_SET_PID = 202,
     MSP_SET_WING = 203,
-    //MSP_SET_BOX:                    203, // DEPRECATED
     MSP_SET_RC_TUNING = 204,
     MSP_ACC_CALIBRATION = 205,
     MSP_MAG_CALIBRATION = 206,
