@@ -821,44 +821,44 @@ const psasRollToYawLiftCoefStop = computed({
 });
 
 const psasSpeedCurvesMainRollEnabled = computed({
-    get: () => fcStore.psasConfig.speed_main_curve_enable[0] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[0],
     set: (val) => {
-        fcStore.psasConfig.speed_main_curve_enable[0] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[0] = val;
     },
 });
 
 const psasSpeedCurvesPilotRollEnabled = computed({
-    get: () => fcStore.psasConfig.speed_stick_curve_enable[0] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[0],
     set: (val) => {
-        fcStore.psasConfig.speed_stick_curve_enable[0] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[0] = val;
     },
 });
 
 const psasSpeedCurvesMainPitchEnabled = computed({
-    get: () => fcStore.psasConfig.speed_main_curve_enable[1] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[1],
     set: (val) => {
-        fcStore.psasConfig.speed_main_curve_enable[1] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[1] = val;
     },
 });
 
 const psasSpeedCurvesPilotPitchEnabled = computed({
-    get: () => fcStore.psasConfig.speed_stick_curve_enable[1] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[1],
     set: (val) => {
-        fcStore.psasConfig.speed_stick_curve_enable[1] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[1] = val;
     },
 });
 
 const psasSpeedCurvesMainYawEnabled = computed({
-    get: () => fcStore.psasConfig.speed_main_curve_enable[2] !== 0,
+    get: () => fcStore.psasConfig.speed_main_curve_enable[2],
     set: (val) => {
-        fcStore.psasConfig.speed_main_curve_enable[2] = val ? 1 : 0;
+        fcStore.psasConfig.speed_main_curve_enable[2] = val;
     },
 });
 
 const psasSpeedCurvesPilotYawEnabled = computed({
-    get: () => fcStore.psasConfig.speed_stick_curve_enable[2] !== 0,
+    get: () => fcStore.psasConfig.speed_stick_curve_enable[2],
     set: (val) => {
-        fcStore.psasConfig.speed_stick_curve_enable[2] = val ? 1 : 0;
+        fcStore.psasConfig.speed_stick_curve_enable[2] = val;
     },
 });
 

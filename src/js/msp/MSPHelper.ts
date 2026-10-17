@@ -2596,12 +2596,13 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.psasConfig.roll_yaw_clift_start = data.readU8();
         fcStore.psasConfig.roll_yaw_clift_stop = data.readU8();
         fcStore.psasConfig.roll_to_yaw_link = data.readU8();
-        fcStore.psasConfig.speed_main_curve_enable[0] = data.readU8();
-        fcStore.psasConfig.speed_main_curve_enable[1] = data.readU8();
-        fcStore.psasConfig.speed_main_curve_enable[2] = data.readU8();
-        fcStore.psasConfig.speed_stick_curve_enable[0] = data.readU8();
-        fcStore.psasConfig.speed_stick_curve_enable[1] = data.readU8();
-        fcStore.psasConfig.speed_stick_curve_enable[2] = data.readU8();
+        const speed_curve_enable_mask = data.readU8();
+        fcStore.psasConfig.speed_main_curve_enable[0] = (speed_curve_enable_mask & 1) !== 0;
+        fcStore.psasConfig.speed_main_curve_enable[1] = (speed_curve_enable_mask & 2) !== 0;
+        fcStore.psasConfig.speed_main_curve_enable[2] = (speed_curve_enable_mask & 4) !== 0;
+        fcStore.psasConfig.speed_stick_curve_enable[0] = (speed_curve_enable_mask & 8) !== 0;
+        fcStore.psasConfig.speed_stick_curve_enable[1] = (speed_curve_enable_mask & 16) !== 0;
+        fcStore.psasConfig.speed_stick_curve_enable[2] = (speed_curve_enable_mask & 32) !== 0;
         fcStore.psasConfig.speed_optimum_vref = data.readU8();
         fcStore.psasConfig.speed_main_curve_power = data.readU8();
         fcStore.psasConfig.speed_roll_stick_curve_power = data.readU8();
@@ -2610,6 +2611,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.psasConfig.speed_stick_curve_min = data.readU16();
         fcStore.psasConfig.speed_stick_curve_max = data.readU16();
         fcStore.psasConfig.speed_curve_mode = data.readU8();
+        fcStore.psasConfig.psas_trim_enabled_mask = data.readU8();
+        fcStore.psasConfig.psas_trim_deadband = data.readU8();
+        fcStore.psasConfig.psas_trim_lowpass_time = data.readU16();
+        fcStore.psasConfig.psas_trim_rate = data.readU8();
+        fcStore.psasConfig.psas_trim_limit = data.readU8();
+        fcStore.psasConfig.psas_trim_tau_reset = data.readU16();
     },
 
     [MSPCodes.MSP_SET_PSAS_CONFIG]: NOTHING_TO_DO,
@@ -3391,12 +3398,14 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.psasConfig.roll_yaw_clift_start)
             .push8(fcStore.psasConfig.roll_yaw_clift_stop)
             .push8(fcStore.psasConfig.roll_to_yaw_link)
-            .push8(fcStore.psasConfig.speed_main_curve_enable[0])
-            .push8(fcStore.psasConfig.speed_main_curve_enable[1])
-            .push8(fcStore.psasConfig.speed_main_curve_enable[2])
-            .push8(fcStore.psasConfig.speed_stick_curve_enable[0])
-            .push8(fcStore.psasConfig.speed_stick_curve_enable[1])
-            .push8(fcStore.psasConfig.speed_stick_curve_enable[2])
+            .push8(
+                (fcStore.psasConfig.speed_main_curve_enable[0] ? 0 : 1) &
+                    (fcStore.psasConfig.speed_main_curve_enable[1] ? 0 : 2) &
+                    (fcStore.psasConfig.speed_main_curve_enable[2] ? 0 : 4) &
+                    (fcStore.psasConfig.speed_stick_curve_enable[0] ? 0 : 8) &
+                    (fcStore.psasConfig.speed_stick_curve_enable[1] ? 0 : 16) &
+                    (fcStore.psasConfig.speed_stick_curve_enable[2] ? 0 : 32),
+            )
             .push8(fcStore.psasConfig.speed_optimum_vref)
             .push8(fcStore.psasConfig.speed_main_curve_power)
             .push8(fcStore.psasConfig.speed_roll_stick_curve_power)
@@ -3404,7 +3413,13 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push16(fcStore.psasConfig.speed_main_curve_max)
             .push16(fcStore.psasConfig.speed_stick_curve_min)
             .push16(fcStore.psasConfig.speed_stick_curve_max)
-            .push8(fcStore.psasConfig.speed_curve_mode);
+            .push8(fcStore.psasConfig.speed_curve_mode)
+            .push8(fcStore.psasConfig.psas_trim_enabled_mask)
+            .push8(fcStore.psasConfig.psas_trim_deadband)
+            .push16(fcStore.psasConfig.psas_trim_lowpass_time)
+            .push8(fcStore.psasConfig.psas_trim_rate)
+            .push8(fcStore.psasConfig.psas_trim_limit)
+            .push16(fcStore.psasConfig.psas_trim_tau_reset);
     },
 };
 

@@ -826,8 +826,8 @@ export interface PsasConfig {
     roll_yaw_clift_start: number;
     roll_yaw_clift_stop: number;
     roll_to_yaw_link: number;
-    speed_main_curve_enable: number[];
-    speed_stick_curve_enable: number[];
+    speed_main_curve_enable: boolean[];
+    speed_stick_curve_enable: boolean[];
     speed_optimum_vref: number;
     speed_main_curve_power: number;
     speed_roll_stick_curve_power: number;
@@ -836,6 +836,12 @@ export interface PsasConfig {
     speed_stick_curve_min: number;
     speed_stick_curve_max: number;
     speed_curve_mode: number;
+    psas_trim_enabled_mask: number;
+    psas_trim_deadband: number;
+    psas_trim_lowpass_time: number;
+    psas_trim_rate: number;
+    psas_trim_limit: number;
+    psas_trim_tau_reset: number;
 }
 
 export interface FcState {
