@@ -2943,7 +2943,7 @@
         "description": "Help text to VTX PIT MODE mode"
     },
     "auxiliaryHelpMode_WPCAPTURE": {
-        "message": "Capture waypoints in flight: a short press adds the current position to the flight plan as a waypoint, holding the switch for 1.5 seconds deletes the last waypoint. Use <b>save</b> in the CLI to keep them",
+        "message": "Capture waypoints in flight: a short press adds the current position to the flight plan as a waypoint, holding the switch for 1.5 seconds deletes the last waypoint",
         "description": "Help text to WP CAPTURE mode"
     },
     "auxiliaryHelpMode_LAPTIMERRESET": {
