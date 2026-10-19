@@ -1,5 +1,5 @@
 <template>
-    <div class="status-bar">
+    <div class="blackbox-status-bar status-bar">
         <div class="flex items-center gap-3">
             <span v-if="appStore.statusVersion" class="status-item">{{ appStore.statusVersion }}</span>
             <span v-if="appStore.statusCells" class="status-item">{{ appStore.statusCells }}</span>
@@ -47,35 +47,39 @@ const appStore = useAppStore();
 const workspaceStore = useWorkspaceStore();
 </script>
 
-<style scoped>
-.status-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0.75rem;
-    height: 1.5rem;
-    font-size: 0.65rem;
-    color: var(--graph-text-secondary);
-    background: var(--surface-200, hsl(0, 0%, 92%));
-    border-top: 1px solid var(--border-color);
-}
+<style lang="less">
+/* .status-bar is also styled in main.less; the second class keeps these rules on this
+   component and ahead of it, as the scoped attribute did. */
+.blackbox-status-bar {
+    &.status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0.75rem;
+        height: 1.5rem;
+        font-size: 0.65rem;
+        color: var(--graph-text-secondary);
+        background: var(--surface-200, hsl(0, 0%, 92%));
+        border-top: 1px solid var(--border-color);
+    }
 
-:root.dark .status-bar {
-    background: var(--surface-100, hsl(0, 0%, 8%));
-    border-top-color: var(--surface-800, hsl(0, 0%, 25%));
-}
+    :root.dark &.status-bar {
+        background: var(--surface-100, hsl(0, 0%, 8%));
+        border-top-color: var(--surface-800, hsl(0, 0%, 25%));
+    }
 
-.status-item {
-    white-space: nowrap;
-}
+    .status-item {
+        white-space: nowrap;
+    }
 
-.status-flight-mode {
-    color: var(--color-primary-600);
-    font-weight: 600;
-}
+    .status-flight-mode {
+        color: var(--color-primary-600);
+        font-weight: 600;
+    }
 
-.status-lograte-warning {
-    color: var(--error-500);
-    font-weight: 600;
+    .status-lograte-warning {
+        color: var(--error-500);
+        font-weight: 600;
+    }
 }
 </style>

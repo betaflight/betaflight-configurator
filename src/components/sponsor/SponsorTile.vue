@@ -92,25 +92,27 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .sponsor-container {
-    min-height: 90px;
-    position: relative;
-}
+    & {
+        min-height: 90px;
+        position: relative;
+    }
 
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 1.5s ease;
-}
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 1.5s ease;
+    }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
 
-.fade-enter-active,
-.fade-leave-active {
-    position: absolute;
-    width: 100%;
+    .fade-enter-active,
+    .fade-leave-active {
+        position: absolute;
+        width: 100%;
+    }
 }
 </style>

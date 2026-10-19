@@ -1,5 +1,5 @@
 <template>
-    <UModal :open="open" :title="title" :close="false" :dismissible="false">
+    <UModal :open="open" :title="title" :close="false" :dismissible="false" class="rates-type-dialog">
         <template #body>
             <div class="dialogRatesTypeContent" v-html="note"></div>
         </template>
@@ -50,18 +50,20 @@ defineExpose({
 });
 </script>
 
-<style scoped>
-.dialogRatesTypeContent {
-    white-space: pre-line;
-}
+<style lang="less">
+.rates-type-dialog {
+    .dialogRatesTypeContent {
+        white-space: pre-line;
+    }
 
-/* Warning message styling (note uses v-html, so target message-negative) */
-.dialogRatesTypeContent :deep(.message-negative) {
-    display: inline-block;
-    color: var(--error-500);
-    background: rgba(255, 0, 0, 0.04);
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-weight: 600;
+    /* Warning message styling (note uses v-html, so target message-negative) */
+    .dialogRatesTypeContent .message-negative {
+        display: inline-block;
+        color: var(--error-500);
+        background: rgba(255, 0, 0, 0.04);
+        padding: 6px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
 }
 </style>

@@ -1652,94 +1652,96 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .mag-sphere-container {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    position: relative;
-}
+    & {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        position: relative;
+    }
 
-.mag-sphere-container canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
+    & canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
 
-.mag-sphere-proj-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-}
+    .mag-sphere-proj-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+    }
 
-.mag-sphere-axis-legend {
-    position: absolute;
-    top: 6px;
-    inset-inline-end: 6px;
-    display: flex;
-    gap: 8px;
-    font-size: 0.75em;
-    font-weight: bold;
-    pointer-events: none;
-}
+    .mag-sphere-axis-legend {
+        position: absolute;
+        top: 6px;
+        inset-inline-end: 6px;
+        display: flex;
+        gap: 8px;
+        font-size: 0.75em;
+        font-weight: bold;
+        pointer-events: none;
+    }
 
-.mag-sphere-axis-legend .axis-x {
-    color: var(--scene-axis-x);
-}
+    .mag-sphere-axis-legend .axis-x {
+        color: var(--scene-axis-x);
+    }
 
-.mag-sphere-axis-legend .axis-y {
-    color: var(--scene-axis-y);
-}
+    .mag-sphere-axis-legend .axis-y {
+        color: var(--scene-axis-y);
+    }
 
-.mag-sphere-axis-legend .axis-z {
-    color: var(--scene-axis-z);
-}
+    .mag-sphere-axis-legend .axis-z {
+        color: var(--scene-axis-z);
+    }
 
-.mag-sphere-axis-legend .axis-field {
-    color: var(--scene-field);
-}
+    .mag-sphere-axis-legend .axis-field {
+        color: var(--scene-field);
+    }
 
-.mag-sphere-axis-legend .axis-incl {
-    color: var(--scene-field);
-    opacity: 0.7;
-}
+    .mag-sphere-axis-legend .axis-incl {
+        color: var(--scene-field);
+        opacity: 0.7;
+    }
 
-.mag-sphere-age-legend {
-    position: absolute;
-    top: 26px;
-    inset-inline-end: 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65em;
-    color: rgba(255, 255, 255, 0.6);
-    pointer-events: none;
-}
+    .mag-sphere-age-legend {
+        position: absolute;
+        top: 26px;
+        inset-inline-end: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65em;
+        color: rgba(255, 255, 255, 0.6);
+        pointer-events: none;
+    }
 
-.mag-sphere-age-legend .age-gradient {
-    display: inline-block;
-    width: 48px;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(
-        to right,
-        hsl(234, 100%, 50%),
-        hsl(180, 100%, 50%),
-        hsl(120, 100%, 50%),
-        hsl(60, 100%, 50%),
-        hsl(0, 100%, 50%)
-    );
-}
+    .mag-sphere-age-legend .age-gradient {
+        display: inline-block;
+        width: 48px;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(
+            to right,
+            hsl(234, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(120, 100%, 50%),
+            hsl(60, 100%, 50%),
+            hsl(0, 100%, 50%)
+        );
+    }
 
-.mag-sphere-legend {
-    position: absolute;
-    bottom: 6px;
-    inset-inline-start: 6px;
-    inset-inline-end: 6px;
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.5);
-    pointer-events: none;
-    line-height: 1.3;
+    .mag-sphere-legend {
+        position: absolute;
+        bottom: 6px;
+        inset-inline-start: 6px;
+        inset-inline-end: 6px;
+        font-size: 0.7em;
+        color: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+        line-height: 1.3;
+    }
 }
 </style>

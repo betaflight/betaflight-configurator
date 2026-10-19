@@ -492,69 +492,71 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .flight-plan-map {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
+    & {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-.flight-plan-map :deep(> div:last-child) {
-    flex: 1;
-    min-height: 0;
-}
+    & > div:last-child {
+        flex: 1;
+        min-height: 0;
+    }
 
-.map-container {
-    flex: 1;
-    min-height: 480px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-100);
-    position: relative;
-}
-
-.map {
-    width: 100%;
-    height: 100%;
-}
-
-.map-loading {
-    position: absolute;
-    top: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface-100);
-    z-index: 1000;
-}
-
-.loading-message {
-    font-size: 1rem;
-    color: var(--text);
-    font-weight: 500;
-}
-
-.map-instructions {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background: var(--surface-100);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--surface-700);
-    text-align: center;
-}
-
-.map-instructions p {
-    margin: 0;
-}
-
-@media (max-width: 1055px) {
     .map-container {
-        min-height: 320px;
+        flex: 1;
+        min-height: 480px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--surface-500);
+        background: var(--surface-100);
+        position: relative;
+    }
+
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+
+    .map-loading {
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-100);
+        z-index: 1000;
+    }
+
+    .loading-message {
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .map-instructions {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: var(--surface-100);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: var(--surface-700);
+        text-align: center;
+    }
+
+    .map-instructions p {
+        margin: 0;
+    }
+
+    @media (max-width: 1055px) {
+        .map-container {
+            min-height: 320px;
+        }
     }
 }
 </style>

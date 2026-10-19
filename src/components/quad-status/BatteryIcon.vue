@@ -98,16 +98,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.quad-status-contents {
-    position: absolute;
-    top: 10px;
-    /* Insets match the SVG inner hole so a full bar keeps equal gaps on both sides. */
-    inset-inline-start: 14px;
-    height: 10px;
-    width: 29px;
-}
-
+<style lang="less">
 .battery-icon {
     position: relative;
     background-image: url(../../images/icons/cf_icon_bat_grey.svg);
@@ -120,11 +111,57 @@ export default defineComponent({
     margin-top: 4px;
     margin-inline-start: -4px;
     background-repeat: no-repeat;
-}
 
-.battery-status {
-    height: 11px;
-    max-width: 100%;
+    .quad-status-contents {
+        position: absolute;
+        top: 10px;
+        /* Insets match the SVG inner hole so a full bar keeps equal gaps on both sides. */
+        inset-inline-start: 14px;
+        height: 10px;
+        width: 29px;
+    }
+
+    .battery-status {
+        height: 11px;
+        max-width: 100%;
+    }
+
+    .battery-status.state-ok {
+        background-color: var(--success-500);
+    }
+    .battery-status.state-warning {
+        background-color: var(--error-500);
+    }
+
+    .battery-status.state-empty {
+        animation: error-blinker 1s linear infinite;
+    }
+
+    .battery-status.state-not-present {
+        background-color: transparent;
+    }
+
+    .battery-status.state-init {
+        background-color: var(--surface-500);
+    }
+
+    &.battery-icon--compact {
+        margin-top: 0;
+        margin-inline-start: 0;
+        height: 24px;
+        width: 48px;
+    }
+
+    &.battery-icon--compact .quad-status-contents {
+        top: 8px;
+        inset-inline-start: 11px;
+        width: 24px;
+        height: 8px;
+    }
+
+    &.battery-icon--compact .battery-status {
+        height: 9px;
+    }
 }
 
 @keyframes error-blinker {
@@ -134,42 +171,5 @@ export default defineComponent({
     50% {
         background-color: var(--error-500);
     }
-}
-
-.battery-status.state-ok {
-    background-color: var(--success-500);
-}
-.battery-status.state-warning {
-    background-color: var(--error-500);
-}
-
-.battery-status.state-empty {
-    animation: error-blinker 1s linear infinite;
-}
-
-.battery-status.state-not-present {
-    background-color: transparent;
-}
-
-.battery-status.state-init {
-    background-color: var(--surface-500);
-}
-
-.battery-icon--compact {
-    margin-top: 0;
-    margin-inline-start: 0;
-    height: 24px;
-    width: 48px;
-}
-
-.battery-icon--compact .quad-status-contents {
-    top: 8px;
-    inset-inline-start: 11px;
-    width: 24px;
-    height: 8px;
-}
-
-.battery-icon--compact .battery-status {
-    height: 9px;
 }
 </style>

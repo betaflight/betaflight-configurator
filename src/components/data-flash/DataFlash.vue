@@ -82,7 +82,7 @@ const usageClass = computed(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .data-flash {
     display: block;
     font-size: 10px;
@@ -94,106 +94,107 @@ const usageClass = computed(() => {
     background-color: var(--status-widget-background);
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
     padding-top: 5px;
-}
-.noflash_global {
-    color: var(--status-widget-muted);
-    text-align: center;
-    margin-top: 2px;
-}
 
-.dataflash-contents_global {
-    margin-top: 18px;
-    padding: 0;
-    border: 1px solid var(--status-widget-track);
-    background-color: var(--status-widget-track);
-    flex-direction: row;
-    flex-wrap: nowrap;
-    border-radius: 3px;
-    margin-inline-start: 5px;
-    margin-inline-end: 5px;
-}
-.dataflash-contents_global div {
-    height: 5px;
-    position: relative;
-    box-shadow: inset 0 0 5px rgb(0 0 0 / 20%);
-    border-radius: 2px;
-    width: 25%;
-    display: block;
-    background-color: var(--primary-500);
-}
+    .noflash_global {
+        color: var(--status-widget-muted);
+        text-align: center;
+        margin-top: 2px;
+    }
 
-.dataflash-contents_global div.dataflash-free_global--ok {
-    background-color: var(--success-500);
-}
+    .dataflash-contents_global {
+        margin-top: 18px;
+        padding: 0;
+        border: 1px solid var(--status-widget-track);
+        background-color: var(--status-widget-track);
+        flex-direction: row;
+        flex-wrap: nowrap;
+        border-radius: 3px;
+        margin-inline-start: 5px;
+        margin-inline-end: 5px;
+    }
+    .dataflash-contents_global div {
+        height: 5px;
+        position: relative;
+        box-shadow: inset 0 0 5px rgb(0 0 0 / 20%);
+        border-radius: 2px;
+        width: 25%;
+        display: block;
+        background-color: var(--primary-500);
+    }
 
-.dataflash-contents_global div.dataflash-free_global--warning {
-    background-color: var(--warning-500);
-}
+    .dataflash-contents_global div.dataflash-free_global--ok {
+        background-color: var(--success-500);
+    }
 
-.dataflash-contents_global div.dataflash-free_global--critical {
-    background-color: var(--error-500);
-}
-.dataflash-contents_global div span {
-    position: absolute;
-    top: -18px;
-    inset-inline-start: 0;
-    width: 120px;
-    text-align: start;
-    color: silver;
-}
+    .dataflash-contents_global div.dataflash-free_global--warning {
+        background-color: var(--warning-500);
+    }
 
-.data-flash--compact {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-    width: auto;
-    min-width: 156px;
-    height: auto;
-    padding: 0;
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-    background-image: none;
-    color: var(--text);
-    font-size: 11px;
-}
+    .dataflash-contents_global div.dataflash-free_global--critical {
+        background-color: var(--error-500);
+    }
+    .dataflash-contents_global div span {
+        position: absolute;
+        top: -18px;
+        inset-inline-start: 0;
+        width: 120px;
+        text-align: start;
+        color: silver;
+    }
 
-.data-flash--compact .dataflash-icon {
-    flex-shrink: 0;
-    width: 14px;
-    height: 14px;
-    opacity: 0.75;
-}
+    &.data-flash--compact {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        width: auto;
+        min-width: 156px;
+        height: auto;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        background-image: none;
+        color: var(--text);
+        font-size: 11px;
+    }
 
-.data-flash--compact .dataflash-contents_global {
-    flex: 1 1 auto;
-    margin: 0;
-    padding: 0;
-    border: none;
-    background-color: var(--surface-500);
-    border-radius: 3px;
-    overflow: hidden;
-    height: 9px;
-    width: auto;
-}
+    &.data-flash--compact .dataflash-icon {
+        flex-shrink: 0;
+        width: 14px;
+        height: 14px;
+        opacity: 0.75;
+    }
 
-.data-flash--compact .dataflash-contents_global div {
-    height: 9px;
-    border-radius: 3px 0 0 3px;
-    box-shadow: none;
-    overflow: hidden;
-    width: 0;
-}
+    &.data-flash--compact .dataflash-contents_global {
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background-color: var(--surface-500);
+        border-radius: 3px;
+        overflow: hidden;
+        height: 9px;
+        width: auto;
+    }
 
-.data-flash--compact .dataflash-free-label {
-    flex-shrink: 0;
-    font-variant-numeric: tabular-nums;
-}
+    &.data-flash--compact .dataflash-contents_global div {
+        height: 9px;
+        border-radius: 3px 0 0 3px;
+        box-shadow: none;
+        overflow: hidden;
+        width: 0;
+    }
 
-.data-flash--compact .noflash_global {
-    margin: 0;
-    text-align: start;
-    color: var(--text);
+    &.data-flash--compact .dataflash-free-label {
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &.data-flash--compact .noflash_global {
+        margin: 0;
+        text-align: start;
+        color: var(--text);
+    }
 }
 </style>

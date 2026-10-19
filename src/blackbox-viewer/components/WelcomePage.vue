@@ -73,7 +73,7 @@ function onDownload() {
 }
 </script>
 
-<style scoped>
+<style lang="less">
 .welcome-page {
     position: absolute;
     inset: 0;
@@ -83,77 +83,77 @@ function onDownload() {
     justify-content: center;
     background: var(--graph-background);
     overflow: hidden;
-}
 
-/* Dimmed graph image behind the dialog */
-.welcome-backdrop {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left center;
-    opacity: 0.28;
-    filter: saturate(0.9);
-    pointer-events: none;
-    user-select: none;
-}
+    /* Dimmed graph image behind the dialog */
+    .welcome-backdrop {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: left center;
+        opacity: 0.28;
+        filter: saturate(0.9);
+        pointer-events: none;
+        user-select: none;
+    }
 
-.welcome-dialog {
-    position: relative;
-    z-index: 1;
-    width: min(30rem, 90%);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-}
+    .welcome-dialog {
+        position: relative;
+        z-index: 1;
+        width: min(30rem, 90%);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
 
-.welcome-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-}
+    .welcome-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+    }
 
-.welcome-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text);
-    margin: 0;
-}
+    .welcome-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
 
-.welcome-tagline {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin: 0 0 0.5rem;
-    line-height: 1.4;
-}
+    .welcome-tagline {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0 0 0.5rem;
+        line-height: 1.4;
+    }
 
-.welcome-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    .welcome-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-.welcome-drop-hint {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
+    .welcome-drop-hint {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
 
-.welcome-help {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1;
-}
+    .welcome-help {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        line-height: 1;
+    }
 
-.welcome-help-icon {
-    width: 0.9rem;
-    height: 0.9rem;
-    flex: none;
+    .welcome-help-icon {
+        width: 0.9rem;
+        height: 0.9rem;
+        flex: none;
+    }
 }
 </style>

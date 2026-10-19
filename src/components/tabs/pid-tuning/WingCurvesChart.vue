@@ -322,15 +322,17 @@ watch(
 );
 </script>
 
-<style scoped>
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
+<style lang="less">
 .chart-container {
-    width: 100%;
-    height: 100%;
-    min-height: 150px;
+    canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    & {
+        width: 100%;
+        height: 100%;
+        min-height: 150px;
+    }
 }
 </style>

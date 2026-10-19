@@ -173,7 +173,8 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
+/* Both rules style this component's own two root elements, by classes nothing else uses. */
 .sidebar-nav {
     width: 100%;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
+    <div class="bottom-status-icons bottomStatusIcons" :class="{ 'bottomStatusIcons--compact': compact }">
         <UTooltip :text="$t('mainHelpArmed')">
             <UIcon
                 name="i-lucide-triangle-alert"
@@ -48,27 +48,31 @@ const setFailsafeActive = computed(
 const setActiveLink = computed(() => performance.now() - props.lastReceivedTimestamp < 300);
 </script>
 
-<style scoped>
-.bottomStatusIcons {
-    display: flex;
-    justify-content: space-between;
-    background-color: var(--status-widget-border);
-    height: 31px;
-    max-width: 105px;
-    margin-top: 2px;
-    border-end-start-radius: 5px;
-    border-end-end-radius: 5px;
-}
+<style lang="less">
+/* main.less styles .bottomStatusIcons too; the second class keeps this rule ahead of it, as the
+   scoped attribute did. */
+.bottom-status-icons {
+    &.bottomStatusIcons {
+        display: flex;
+        justify-content: space-between;
+        background-color: var(--status-widget-border);
+        height: 31px;
+        max-width: 105px;
+        margin-top: 2px;
+        border-end-start-radius: 5px;
+        border-end-end-radius: 5px;
+    }
 
-.bottomStatusIcons--compact {
-    height: auto;
-    max-width: none;
-    margin: 0;
-    padding: 0.1rem 0.25rem;
-    background-color: transparent;
-    border-radius: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    &.bottomStatusIcons--compact {
+        height: auto;
+        max-width: none;
+        margin: 0;
+        padding: 0.1rem 0.25rem;
+        background-color: transparent;
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 }
 </style>

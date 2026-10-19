@@ -141,190 +141,192 @@ export default defineComponent({
 }
 </style>
 
-<style scoped lang="less">
-.content_wrapper {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    height: unset;
-    overflow-y: auto;
-}
-
-.content_top {
-    height: 140px;
-    padding: 20px;
-    margin-bottom: 15px;
-}
-
-.text1,
-.text2,
-.text3 {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-weight: normal;
-    font-size: 12px;
-}
-
-.content_mid {
-    background-color: var(--surface-100);
-    overflow: hidden;
-    padding: 0 15px;
-    margin-top: auto;
-
-    .column {
-        .wrap2 {
-            padding: 10px;
-        }
-    }
-
-    h2 {
-        margin-bottom: 5px;
-        font-size: 13px;
-    }
-
-    h3 {
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
-
-    :deep(.list) {
-        ul {
-            margin-top: 2px;
-            padding-inline-start: 20px;
-            list-style: inside;
-        }
-        li {
-            padding: 2px 0;
-            list-style-type: disc;
-            margin-inline-start: 0;
-            display: list-item;
-        }
-    }
-
-    .text3 {
-        .wrap2 {
-            border: 3px solid var(--surface-300);
-            border-radius: 5px;
-            min-height: 187px;
-            font-size: 11px;
-        }
-        .donate {
-            margin-top: 10px;
-            text-align: center;
-        }
-    }
-}
-
-.donate {
-    img {
-        height: 2rem;
-        display: inline-block;
-    }
-}
-
-.content_foot {
-    clear: both;
-    padding: 10px 0 5px;
-}
-
-.logowrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-inline-start: auto;
-    margin-inline-end: auto;
-    margin-top: 5px;
-    color: var(--text);
-    font-size: 14px;
-    font-weight: 300;
-    text-align: center;
-
-    > div {
-        text-align: center;
-    }
-
-    img {
-        width: 600px;
-        margin: 5px;
-    }
-
-    span {
-        font-size: 22px;
-        font-weight: 300;
-    }
-}
-
-.socialMediaParagraph {
-    margin-bottom: 15px;
-
-    .logoSocialMedia {
-        float: inline-start;
-        width: 30px;
-
-        img {
-            height: 20px;
-            width: 20px;
-        }
-    }
-
-    .socialMediaLogo {
-        padding-top: 3px;
-    }
-
-    .socialMediaText {
-        margin-top: 0;
-        margin-inline-start: 35px;
-        display: block;
-        font-weight: normal;
-        font-size: 12px;
-    }
-}
-
-.languageSwitcher {
-    margin-inline-start: auto;
-    margin-inline-end: auto;
-    text-align: center;
-
-    .selected_language {
-        font-weight: bold;
-    }
-
-    .language-links {
+<style lang="less">
+.tab-landing {
+    .content_wrapper {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
+        flex-direction: column;
+        padding: 0;
+        height: unset;
+        overflow-y: auto;
     }
 
-    a {
-        font-weight: normal;
-        white-space: nowrap;
+    .content_top {
+        height: 140px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
 
-        &:not(:last-child) {
-            &:after {
-                content: ", ";
-                font-weight: normal;
+    .text1,
+    .text2,
+    .text3 {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-weight: normal;
+        font-size: 12px;
+    }
+
+    .content_mid {
+        background-color: var(--surface-100);
+        overflow: hidden;
+        padding: 0 15px;
+        margin-top: auto;
+
+        .column {
+            .wrap2 {
+                padding: 10px;
+            }
+        }
+
+        h2 {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        h3 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .list {
+            ul {
+                margin-top: 2px;
+                padding-inline-start: 20px;
+                list-style: inside;
+            }
+            li {
+                padding: 2px 0;
+                list-style-type: disc;
+                margin-inline-start: 0;
+                display: list-item;
+            }
+        }
+
+        .text3 {
+            .wrap2 {
+                border: 3px solid var(--surface-300);
+                border-radius: 5px;
+                min-height: 187px;
+                font-size: 11px;
+            }
+            .donate {
+                margin-top: 10px;
+                text-align: center;
             }
         }
     }
-}
 
-@media all and (max-width: 575px) {
-    .logowrapper {
-        width: auto;
+    .donate {
         img {
-            width: auto;
+            height: 2rem;
+            display: inline-block;
         }
     }
-}
 
-@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-    .content_top {
-        height: auto;
-        padding: 10px 20px;
+    .content_foot {
+        clear: both;
+        padding: 10px 0 5px;
     }
-    .logowrapper img {
-        display: none;
+
+    .logowrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-inline-start: auto;
+        margin-inline-end: auto;
+        margin-top: 5px;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 300;
+        text-align: center;
+
+        > div {
+            text-align: center;
+        }
+
+        img {
+            width: 600px;
+            margin: 5px;
+        }
+
+        span {
+            font-size: 22px;
+            font-weight: 300;
+        }
+    }
+
+    .socialMediaParagraph {
+        margin-bottom: 15px;
+
+        .logoSocialMedia {
+            float: inline-start;
+            width: 30px;
+
+            img {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        .socialMediaLogo {
+            padding-top: 3px;
+        }
+
+        .socialMediaText {
+            margin-top: 0;
+            margin-inline-start: 35px;
+            display: block;
+            font-weight: normal;
+            font-size: 12px;
+        }
+    }
+
+    .languageSwitcher {
+        margin-inline-start: auto;
+        margin-inline-end: auto;
+        text-align: center;
+
+        .selected_language {
+            font-weight: bold;
+        }
+
+        .language-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        a {
+            font-weight: normal;
+            white-space: nowrap;
+
+            &:not(:last-child) {
+                &:after {
+                    content: ", ";
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+
+    @media all and (max-width: 575px) {
+        .logowrapper {
+            width: auto;
+            img {
+                width: auto;
+            }
+        }
+    }
+
+    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        .content_top {
+            height: auto;
+            padding: 10px 20px;
+        }
+        .logowrapper img {
+            display: none;
+        }
     }
 }
 </style>

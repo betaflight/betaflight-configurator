@@ -339,40 +339,42 @@ defineExpose({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 @import "@/components/MotorOutputReordering/Styles.css";
 
 .motorOutputReordering-dialog {
-    width: 90%;
-    max-width: 900px;
-    max-height: 90vh;
-    border: 2px solid var(--surface-600);
-    border-radius: 3px;
-    background-color: var(--surface-100);
-    color: var(--text);
-    padding: 20px;
-    overflow-y: auto;
-}
+    & {
+        width: 90%;
+        max-width: 900px;
+        max-height: 90vh;
+        border: 2px solid var(--surface-600);
+        border-radius: 3px;
+        background-color: var(--surface-100);
+        color: var(--text);
+        padding: 20px;
+        overflow-y: auto;
+    }
 
-.motorOutputReordering-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.9); /* More opaque backdrop */
-}
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.9); /* More opaque backdrop */
+    }
 
-.componentContent {
-    margin-top: 15px;
-}
+    .componentContent {
+        margin-top: 15px;
+    }
 
-.buttons {
-    margin-top: 20px;
-    text-align: center;
-}
+    .buttons {
+        margin-top: 20px;
+        text-align: center;
+    }
 
-.regular-button {
-    margin: 5px;
-    cursor: pointer;
-}
+    .regular-button {
+        margin: 5px;
+        cursor: pointer;
+    }
 
-.regular-button.left {
-    margin-inline-end: 10px;
+    .regular-button.left {
+        margin-inline-end: 10px;
+    }
 }
 </style>

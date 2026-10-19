@@ -199,158 +199,160 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-.adjustments-container {
-    width: 100%;
-    margin: 20px 0;
-}
-
-.adjustments-summary {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    font-size: 13px;
-    color: var(--text-secondary);
-}
-
-.adjustments-header,
-.adjustment {
-    display: grid;
-    grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 7rem 5rem 5rem;
-    gap: 12px;
-    padding: 12px 16px;
-}
-
-.adjustments-header {
-    background: var(--ui-bg-muted);
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--text-primary);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.adjustments-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.adjustment {
-    background: transparent;
-    align-items: center;
-}
-
-.adjustment-disabled {
-    opacity: 0.4;
-}
-
-.adjustment-disabled .adjustment-channel,
-.adjustment-disabled .adjustment-range,
-.adjustment-disabled .adjustment-function,
-.adjustment-disabled .adjustment-via,
-.adjustment-disabled .adjustment-mode,
-.adjustment-disabled .adjustment-center,
-.adjustment-disabled .adjustment-scale {
-    pointer-events: none;
-}
-
-.adjustment-enable {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-}
-
-.row-index {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    font-weight: 600;
-    min-width: 1.2rem;
-}
-
-.adjustment-range {
-    min-width: 0;
-}
-
-.range-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.range-value {
-    font-size: 10px;
-    color: var(--text-secondary);
-    font-variant-numeric: tabular-nums;
-    min-width: 2rem;
-    text-align: center;
-}
-
-.range-slider {
-    position: relative;
-    flex: 1;
-    min-width: 0;
-}
-
-/* The slider is mirrored in RTL, so the marker rides the inline axis and its centering
-   shift has to be flipped by hand: translate is always physical. */
-.marker {
-    position: absolute;
-    top: 50%;
-    width: 2px;
-    height: 24px;
-    background: var(--primary-500);
-    transform: translate(-50%, -50%);
-    z-index: 3;
-    pointer-events: none;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-}
-
-html[dir="rtl"] .marker {
-    transform: translate(50%, -50%);
-}
-
-.mode-badge {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: var(--ui-bg-muted);
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-}
-
-.cell-na {
-    font-size: 13px;
-    color: var(--text-tertiary);
-    display: block;
-    text-align: center;
-}
-
-/* Responsive layout */
-@media (max-width: 1200px) {
-    .adjustments-header {
-        display: none;
+<style lang="less">
+.tab-adjustments {
+    .adjustments-container {
+        width: 100%;
+        margin: 20px 0;
     }
 
-    .adjustment {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 16px;
-    }
-
-    .adjustment > div::before {
-        content: attr(data-label);
-        font-weight: 600;
-        display: block;
-        margin-bottom: 8px;
+    .adjustments-summary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
         color: var(--text-secondary);
     }
 
+    .adjustments-header,
+    .adjustment {
+        display: grid;
+        grid-template-columns: 3.5rem 5rem 1fr 13rem 5rem 7rem 5rem 5rem;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .adjustments-header {
+        background: var(--ui-bg-muted);
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-primary);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .adjustments-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .adjustment {
+        background: transparent;
+        align-items: center;
+    }
+
+    .adjustment-disabled {
+        opacity: 0.4;
+    }
+
+    .adjustment-disabled .adjustment-channel,
+    .adjustment-disabled .adjustment-range,
+    .adjustment-disabled .adjustment-function,
+    .adjustment-disabled .adjustment-via,
+    .adjustment-disabled .adjustment-mode,
+    .adjustment-disabled .adjustment-center,
+    .adjustment-disabled .adjustment-scale {
+        pointer-events: none;
+    }
+
     .adjustment-enable {
-        justify-content: flex-start;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .row-index {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        font-weight: 600;
+        min-width: 1.2rem;
+    }
+
+    .adjustment-range {
+        min-width: 0;
+    }
+
+    .range-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .range-value {
+        font-size: 10px;
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+        min-width: 2rem;
+        text-align: center;
+    }
+
+    .range-slider {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* The slider is mirrored in RTL, so the marker rides the inline axis and its centering
+       shift has to be flipped by hand: translate is always physical. */
+    .marker {
+        position: absolute;
+        top: 50%;
+        width: 2px;
+        height: 24px;
+        background: var(--primary-500);
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        pointer-events: none;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    }
+
+    html[dir="rtl"] & .marker {
+        transform: translate(50%, -50%);
+    }
+
+    .mode-badge {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        background: var(--ui-bg-muted);
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+
+    .cell-na {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        display: block;
+        text-align: center;
+    }
+
+    /* Responsive layout */
+    @media (max-width: 1200px) {
+        .adjustments-header {
+            display: none;
+        }
+
+        .adjustment {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .adjustment > div::before {
+            content: attr(data-label);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .adjustment-enable {
+            justify-content: flex-start;
+        }
     }
 }
 </style>

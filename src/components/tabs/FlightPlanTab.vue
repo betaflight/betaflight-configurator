@@ -173,10 +173,12 @@ const declineLoadFromFC = () => {
 };
 </script>
 
-<style scoped>
-/* Bottom toolbar (CRITICAL: must be exactly 2rem) */
-.content_toolbar.toolbar_fixed_bottom {
-    position: fixed;
-    bottom: 2rem;
+<style lang="less">
+.tab-flight_plan {
+    /* Bottom toolbar (CRITICAL: must be exactly 2rem) */
+    .content_toolbar.toolbar_fixed_bottom {
+        position: fixed;
+        bottom: 2rem;
+    }
 }
 </style>

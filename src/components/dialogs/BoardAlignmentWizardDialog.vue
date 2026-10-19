@@ -956,239 +956,7 @@ watch(phase, (newPhase) => {
 defineExpose({ show, close });
 </script>
 
-<style scoped>
-.boardAlignmentWizard-dialog {
-    width: 90%;
-    max-width: 760px;
-    border: 2px solid var(--surface-600);
-    border-radius: 4px;
-    background-color: var(--surface-100);
-    color: var(--text);
-    padding: 0;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.boardAlignmentWizard-dialog p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.boardAlignmentWizard-dialog h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 4px 0;
-}
-
-.boardAlignmentWizard-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(4px);
-}
-
-.wizard-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.wizard-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--surface-300);
-}
-
-.wizard-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.wizard-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    line-height: 1;
-    cursor: pointer;
-    color: var(--text);
-    padding: 0 6px;
-}
-
-.wizard-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 16px;
-}
-
-.wizard-instructions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.wizard-steps {
-    margin: 6px 0 6px 18px;
-    padding: 0;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-.wizard-substep {
-    font-size: 13px;
-    color: var(--text-secondary, var(--text));
-    opacity: 0.75;
-    margin: 0;
-}
-
-.wizard-detail {
-    font-size: 13px;
-    color: var(--text);
-    opacity: 0.85;
-}
-
-.wizard-warning {
-    background: var(--warning-500-15, rgba(255, 187, 0, 0.15));
-    border-inline-start: 3px solid var(--warning-500);
-    padding: 8px 12px;
-    font-size: 13px;
-    border-radius: 2px;
-}
-
-.wizard-result-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 8px;
-}
-
-.wizard-result-table th,
-.wizard-result-table td {
-    padding: 4px 8px;
-    text-align: center;
-    border: 1px solid var(--surface-300);
-}
-
-.wizard-result-table th:first-child,
-.wizard-result-table td:first-child {
-    text-align: start;
-}
-
-.wizard-result-detected td {
-    font-weight: 600;
-    background: var(--surface-200);
-}
-
-.wizard-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: auto;
-    padding-top: 12px;
-}
-
-.regular-button {
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.regular-button.primary {
-    font-weight: 600;
-}
-
-.regular-button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-
-/* ---- Step timeline ---- */
-.wizard-timeline {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
-}
-
-.wizard-timeline-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    position: relative;
-}
-
-/* Connector line between steps */
-.wizard-timeline-step:not(:first-child)::before {
-    content: "";
-    position: absolute;
-    inset-inline-start: -50%;
-    inset-inline-end: 50%;
-    top: 11px;
-    height: 2px;
-    background: var(--surface-300);
-    z-index: 0;
-}
-
-.wizard-timeline-step.done:not(:first-child)::before,
-.wizard-timeline-step.confirmed:not(:first-child)::before,
-.wizard-timeline-step.active:not(:first-child)::before {
-    background: var(--primary-500);
-}
-
-.step-node {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    border: 2px solid var(--surface-400);
-    background: var(--surface-100);
-    color: var(--surface-500);
-    position: relative;
-    z-index: 1;
-    transition:
-        background 0.2s,
-        border-color 0.2s;
-}
-
-.wizard-timeline-step.active .step-node {
-    border-color: var(--primary-500);
-    background: var(--primary-500);
-    color: black;
-}
-
-.wizard-timeline-step.confirmed .step-node {
-    border-color: var(--success-500);
-    background: var(--success-500);
-    color: black;
-    animation: pulse-confirm 0.4s ease-out;
-}
-
-.wizard-timeline-step.done .step-node {
-    border-color: var(--success-500);
-    background: var(--success-500);
-    color: black;
-}
-
-.step-label {
-    font-size: 10px;
-    margin-top: 3px;
-    color: var(--surface-500);
-    text-align: center;
-}
-
-.wizard-timeline-step.active .step-label,
-.wizard-timeline-step.confirmed .step-label,
-.wizard-timeline-step.done .step-label {
-    color: var(--text);
-    font-weight: 600;
-}
-
+<style lang="less">
 @keyframes pulse-confirm {
     0% {
         transform: scale(1);
@@ -1203,65 +971,299 @@ defineExpose({ show, close });
     }
 }
 
-/* ---- Confirmed-phase flash ---- */
-.wizard-confirmed-badge {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 2px 10px;
-    background: var(--success-transparent-1);
-    border: 1px solid var(--success-500);
-    border-radius: 99px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--success-700);
-}
+.boardAlignmentWizard-dialog {
+    & {
+        width: 90%;
+        max-width: 760px;
+        border: 2px solid var(--surface-600);
+        border-radius: 4px;
+        background-color: var(--surface-100);
+        color: var(--text);
+        padding: 0;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        font-size: 14px;
+        line-height: 1.5;
+    }
 
-.wizard-model {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    & p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+    }
 
-.wizard-model-canvas-wrapper {
-    width: 100%;
-    height: 260px;
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-}
+    & h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+    }
 
-.wizard-model-canvas-wrapper canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block;
-}
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+    }
 
-.attitude-overlay {
-    position: absolute;
-    top: 0.5rem;
-    inset-inline-start: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--surface-950);
-    pointer-events: none;
+    .wizard-container {
+        display: flex;
+        flex-direction: column;
+    }
 
-    dl {
+    .wizard-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--surface-300);
+    }
+
+    .wizard-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .wizard-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        color: var(--text);
+        padding: 0 6px;
+    }
+
+    .wizard-body {
         display: grid;
-        grid-template-columns: auto auto;
-        gap: 0 0.4rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .wizard-instructions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .wizard-steps {
+        margin: 6px 0 6px 18px;
+        padding: 0;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .wizard-substep {
+        font-size: 13px;
+        color: var(--text-secondary, var(--text));
+        opacity: 0.75;
         margin: 0;
     }
 
-    dd {
-        white-space: pre;
-        margin: 0;
-        font-variant-numeric: tabular-nums;
+    .wizard-detail {
+        font-size: 13px;
+        color: var(--text);
+        opacity: 0.85;
     }
-}
 
-.yaw-reset-btn {
-    position: absolute;
-    top: 0.5rem;
-    inset-inline-end: 0.5rem;
-    z-index: 10;
+    .wizard-warning {
+        background: var(--warning-500-15, rgba(255, 187, 0, 0.15));
+        border-inline-start: 3px solid var(--warning-500);
+        padding: 8px 12px;
+        font-size: 13px;
+        border-radius: 2px;
+    }
+
+    .wizard-result-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+
+    .wizard-result-table th,
+    .wizard-result-table td {
+        padding: 4px 8px;
+        text-align: center;
+        border: 1px solid var(--surface-300);
+    }
+
+    .wizard-result-table th:first-child,
+    .wizard-result-table td:first-child {
+        text-align: start;
+    }
+
+    .wizard-result-detected td {
+        font-weight: 600;
+        background: var(--surface-200);
+    }
+
+    .wizard-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+    }
+
+    .regular-button {
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .regular-button.primary {
+        font-weight: 600;
+    }
+
+    .regular-button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    /* ---- Step timeline ---- */
+    .wizard-timeline {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .wizard-timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+    }
+
+    /* Connector line between steps */
+    .wizard-timeline-step:not(:first-child)::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: -50%;
+        inset-inline-end: 50%;
+        top: 11px;
+        height: 2px;
+        background: var(--surface-300);
+        z-index: 0;
+    }
+
+    .wizard-timeline-step.done:not(:first-child)::before,
+    .wizard-timeline-step.confirmed:not(:first-child)::before,
+    .wizard-timeline-step.active:not(:first-child)::before {
+        background: var(--primary-500);
+    }
+
+    .step-node {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        border: 2px solid var(--surface-400);
+        background: var(--surface-100);
+        color: var(--surface-500);
+        position: relative;
+        z-index: 1;
+        transition:
+            background 0.2s,
+            border-color 0.2s;
+    }
+
+    .wizard-timeline-step.active .step-node {
+        border-color: var(--primary-500);
+        background: var(--primary-500);
+        color: black;
+    }
+
+    .wizard-timeline-step.confirmed .step-node {
+        border-color: var(--success-500);
+        background: var(--success-500);
+        color: black;
+        animation: pulse-confirm 0.4s ease-out;
+    }
+
+    .wizard-timeline-step.done .step-node {
+        border-color: var(--success-500);
+        background: var(--success-500);
+        color: black;
+    }
+
+    .step-label {
+        font-size: 10px;
+        margin-top: 3px;
+        color: var(--surface-500);
+        text-align: center;
+    }
+
+    .wizard-timeline-step.active .step-label,
+    .wizard-timeline-step.confirmed .step-label,
+    .wizard-timeline-step.done .step-label {
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    /* ---- Confirmed-phase flash ---- */
+    .wizard-confirmed-badge {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 10px;
+        background: var(--success-transparent-1);
+        border: 1px solid var(--success-500);
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--success-700);
+    }
+
+    .wizard-model {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wizard-model-canvas-wrapper {
+        width: 100%;
+        height: 260px;
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .wizard-model-canvas-wrapper canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+    }
+
+    .attitude-overlay {
+        position: absolute;
+        top: 0.5rem;
+        inset-inline-start: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--surface-950);
+        pointer-events: none;
+
+        dl {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 0 0.4rem;
+            margin: 0;
+        }
+
+        dd {
+            white-space: pre;
+            margin: 0;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    .yaw-reset-btn {
+        position: absolute;
+        top: 0.5rem;
+        inset-inline-end: 0.5rem;
+        z-index: 10;
+    }
 }
 </style>
