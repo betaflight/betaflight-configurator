@@ -160,7 +160,6 @@ import type { FirmwareData, FlashMessageTypes, ShowDialogVerifyBoard } from "../
 import type { DropdownMenuItem } from "@nuxt/ui";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
-import { TABS } from "../../js/tab_adapters";
 import { useConnectionStore } from "../../stores/connection";
 import { useNavigationStore } from "../../stores/navigation";
 
@@ -303,21 +302,18 @@ export default defineComponent({
                 state.lastFlashResultText = state.progressLabelText;
                 state.lastFlashResultClass = state.progressLabelClass;
             }
-
-            return TABS.firmware_flasher;
         };
 
         const flashProgress = (value: number) => {
             const n = Number(value);
             if (!Number.isFinite(n)) {
-                return TABS.firmware_flasher;
+                return;
             }
             state.flashProgressValue = Math.max(0, Math.min(100, n));
             if (n >= 100) {
                 state.flashingInProgress = false;
                 connectionStore.flashingInProgress = false;
             }
-            return TABS.firmware_flasher;
         };
 
         const resetFlashingState = () => {
@@ -979,28 +975,6 @@ export default defineComponent({
             await setupUIHandlers();
             setupEventBusListeners();
 
-            // Register this module for backward compatibility
-            TABS.firmware_flasher = {
-                targets: boardSelection.state.targets,
-                validateBuildKey,
-                resetFlashingState,
-                preservePreFlashingState,
-                flashingMessage,
-                flashProgress,
-                cleanup,
-                FLASH_MESSAGE_TYPES,
-                requestDfuPermission,
-                get parsed_hex() {
-                    return firmwareFlashing.getParsedHex();
-                },
-                get hex() {
-                    return firmwareFlashing.getIntelHex();
-                },
-                get uf2_binary() {
-                    return firmwareFlashing.getUf2Binary();
-                },
-            };
-
             // Localize content
             i18n.localizePage();
         });
@@ -1086,6 +1060,7 @@ export default defineComponent({
                 flashManualBaudRate: state.flashManualBaudRate,
                 filename: state.filename,
                 resetFlashingState,
+                requestDfuPermission,
                 // Board verification options
                 selectedBoard: selectedBoardTarget ?? undefined,
                 localFirmwareLoaded: state.localFirmwareLoaded,

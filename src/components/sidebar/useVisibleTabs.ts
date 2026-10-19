@@ -20,7 +20,7 @@
  */
 
 import { computed, inject, type ComputedRef } from "vue";
-import { sidebarItems, isItemVisible } from "./sidebar_items.js";
+import { sidebarItems, isItemVisible } from "./sidebar_items";
 import { useConnectionStore } from "@/stores/connection";
 import { useAuthStore } from "@/stores/auth";
 import { useFlightControllerStore } from "@/stores/fc";

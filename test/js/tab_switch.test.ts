@@ -34,7 +34,7 @@ vi.mock("../../src/js/ConfigStorage", () => ({
 vi.mock("../../src/js/Analytics", () => ({ checkSetupAnalytics: vi.fn() }));
 vi.mock("../../src/js/tab_adapters", () => ({ tabSwitchCleanup: (callback: () => void) => callback() }));
 vi.mock("../../src/js/vue_tab_mounter", () => ({ mountVueTab, vueTabState: { activeTabName: null } }));
-vi.mock("../../src/components/sidebar/sidebar_items.js", () => ({ sidebarItems: [] }));
+vi.mock("../../src/components/sidebar/sidebar_items", () => ({ sidebarItems: [] }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 

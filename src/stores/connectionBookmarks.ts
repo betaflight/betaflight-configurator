@@ -10,6 +10,13 @@ const STORAGE_KEY = "connectionBookmarks";
 const MAX_BOOKMARKS = 50;
 const MAX_LENGTH = 253;
 
+export interface ConnectionBookmark {
+    /** the label shown in the connect menu */
+    name: string;
+    /** the manual target, e.g. "tcp://192.168.4.1:5761" */
+    url: string;
+}
+
 /**
  * SITL speaks raw TCP on 127.0.0.1:5761 and nothing else. A shell with a raw-TCP transport
  * (Tauri desktop, Capacitor Android) connects straight to it; a browser has no raw sockets,
@@ -17,7 +24,7 @@ const MAX_LENGTH = 253;
  * app connects to the proxy's own port — a different port, not 5761 with a ws:// scheme.
  * @see https://betaflight.com/docs/development/autopilot/SITL_Autopilot_Testing_Gazebo#connect-to-the-sitl
  */
-function sitlBookmark() {
+function sitlBookmark(): ConnectionBookmark {
     return {
         name: "Betaflight SITL",
         url: isTauri() || isAndroid() ? "tcp://127.0.0.1:5761" : "ws://127.0.0.1:6761",
@@ -26,30 +33,33 @@ function sitlBookmark() {
 
 // Non-strings are dropped rather than stringified: a stored `{"url": {}}` would otherwise
 // become the bookmark "[object Object]" and be offered in the connect menu.
-const clean = (value) => (typeof value === "string" ? value.trim().slice(0, MAX_LENGTH) : "");
+const clean = (value: unknown): string => (typeof value === "string" ? value.trim().slice(0, MAX_LENGTH) : "");
 
 // Manual targets are network addresses far more often than serial paths, so they compare
 // case-insensitively: "TCP://Quad.local" and "tcp://quad.local" are one bookmark.
-const key = (url) => clean(url).toLowerCase();
+const key = (url: string): string => clean(url).toLowerCase();
+
+const field = (entry: unknown, name: keyof ConnectionBookmark): unknown =>
+    typeof entry === "object" && entry !== null ? (entry as Record<string, unknown>)[name] : undefined;
 
 /**
  * localStorage is user-writable and survives downgrades, so nothing read back is trusted.
- * @param {*} stored - whatever was in storage
- * @returns {Array<{name: string, url: string}>} usable bookmarks, one per address
+ * @param stored - whatever was in storage
+ * @returns usable bookmarks, one per address
  */
-function sanitize(stored) {
-    const bookmarks = [];
-    const seen = new Set();
+function sanitize(stored: unknown): ConnectionBookmark[] {
+    const bookmarks: ConnectionBookmark[] = [];
+    const seen = new Set<string>();
 
     for (const entry of Array.isArray(stored) ? stored : []) {
-        const url = clean(entry?.url);
+        const url = clean(field(entry, "url"));
 
         if (!url || seen.has(key(url)) || bookmarks.length >= MAX_BOOKMARKS) {
             continue;
         }
 
         seen.add(key(url));
-        bookmarks.push({ name: clean(entry?.name) || url, url });
+        bookmarks.push({ name: clean(field(entry, "name")) || url, url });
     }
 
     return bookmarks;
@@ -66,9 +76,9 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
     // First run seeds SITL, so a simulator connection needs no typing. It is an ordinary
     // bookmark from then on: renameable, and gone for good once removed — the seeding
     // condition is "storage has never been written", not "the list is empty".
-    const bookmarks = ref(stored === undefined ? [sitlBookmark()] : sanitize(stored));
+    const bookmarks = ref<ConnectionBookmark[]>(stored === undefined ? [sitlBookmark()] : sanitize(stored));
 
-    function persist() {
+    function persist(): void {
         setConfig({ [STORAGE_KEY]: bookmarks.value });
     }
 
@@ -77,10 +87,9 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
     }
 
     /**
-     * @param {string} url
-     * @returns {?{name: string, url: string}} the bookmark pointing at this address
+     * @returns the bookmark pointing at this address
      */
-    function find(url) {
+    function find(url: string): ConnectionBookmark | null {
         const wanted = key(url);
 
         return wanted ? (bookmarks.value.find((bookmark) => key(bookmark.url) === wanted) ?? null) : null;
@@ -89,11 +98,11 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
     /**
      * Save an address, or rename the bookmark that already points at it. Saving is
      * idempotent so the same button works whether or not the target is known.
-     * @param {string} url - the manual target, e.g. "tcp://192.168.4.1:5761"
-     * @param {string} [name] - a label; the address itself when left empty
-     * @returns {?{name: string, url: string}} null when the address is empty or the list is full
+     * @param url - the manual target, e.g. "tcp://192.168.4.1:5761"
+     * @param name - a label; the address itself when left empty
+     * @returns null when the address is empty or the list is full
      */
-    function save(url, name = "") {
+    function save(url: string, name = ""): ConnectionBookmark | null {
         const address = clean(url);
         const existing = find(address);
 
@@ -101,7 +110,7 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
             return null;
         }
 
-        const bookmark = existing ?? { url: address, name: "" };
+        const bookmark: ConnectionBookmark = existing ?? { url: address, name: "" };
         bookmark.name = clean(name) || address;
 
         if (!existing) {
@@ -114,11 +123,11 @@ export const useConnectionBookmarksStore = defineStore("connectionBookmarks", ()
     }
 
     /**
-     * @param {string} url
-     * @returns {boolean} true when a bookmark was removed
+     * @returns true when a bookmark was removed
      */
-    function remove(url) {
-        const index = bookmarks.value.indexOf(find(url));
+    function remove(url: string): boolean {
+        const existing = find(url);
+        const index = existing ? bookmarks.value.indexOf(existing) : -1;
 
         if (index === -1) {
             return false;

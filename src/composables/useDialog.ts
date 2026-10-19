@@ -20,13 +20,10 @@
  */
 
 import type { RadioGroupItem, RadioGroupValue } from "@nuxt/ui";
-import { useDialogStore } from "@/stores/dialog";
+import { useDialogStore, type DialogListeners, type DialogProps, type DialogType } from "@/stores/dialog";
 
 /** A dialog button handler; callers pass null or omit it when the button only closes. */
 type DialogCallback = (() => void) | null | undefined;
-
-// `never[]` lets a listener declare whatever payload its dialog emits.
-type DialogListener = (...args: never[]) => unknown;
 
 export interface YesNoOptions {
     yesText?: string;
@@ -248,11 +245,7 @@ export function useDialog() {
     };
 
     /** Open any dialog component by name, for the ones without a dedicated helper above. */
-    const open = (
-        type: string,
-        props: Record<string, unknown> = {},
-        listeners: Record<string, DialogListener> = {},
-    ) => {
+    const open = (type: DialogType, props: DialogProps = {}, listeners: DialogListeners = {}) => {
         store.open(type, props, listeners);
     };
 

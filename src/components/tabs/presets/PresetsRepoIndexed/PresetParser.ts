@@ -1,10 +1,89 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { Preset, PresetOption } from "../../../../stores/presets";
+
+/** The `settings` block of a presets repository's index.json, as written by the firmware-presets indexer. */
+export interface PresetsIndexSettings {
+    /** The prefix of a metadata line in a preset file: `#$`. */
+    MetapropertyDirective: string;
+    PresetCategories: Record<string, string>;
+    PresetCategoriesPriorities: Record<string, number>;
+    MetadataTypes: Record<string, string>;
+    OptionsDirectives: {
+        OPTION_DIRECTIVE: string;
+        BEGIN_OPTION_DIRECTIVE: string;
+        END_OPTION_DIRECTIVE: string;
+        OPTION_CHECKED: string;
+        OPTION_UNCHECKED: string;
+        BEGIN_OPTION_GROUP_DIRECTIVE: string;
+        END_OPTION_GROUP_DIRECTIVE: string;
+        EXCLUSIVE_OPTION_GROUP: string;
+    };
+    PresetStatusEnum: string[];
+    ParserEnum: string[];
+    presetsFileMetadata: Record<string, { type: string; optional: boolean }>;
+}
+
+/** The fields readPresetProperties() reads from a preset file's metadata lines, on top of its index entry. */
+export interface PresetFileProperties {
+    description?: string[];
+    discussion?: string;
+    warning?: string;
+    disclaimer?: string;
+    include_warning?: string[];
+    include_disclaimer?: string[];
+    force_options_review?: boolean;
+    parser?: string;
+}
+
+export type ParsedPreset = Preset & PresetFileProperties;
+
+export interface PresetOptionGroup extends PresetOption {
+    childs: PresetOption[];
+    isExclusive: boolean;
+}
+
+/** A preset while its metadata lines are read; `_currentOptionGroup` is removed when reading ends. */
+type PresetBeingParsed = ParsedPreset & {
+    options: PresetOption[];
+    _currentOptionGroup?: PresetOptionGroup;
+};
+
+type PresetPropertyName = keyof PresetFileProperties;
+
 export default class PresetParser {
-    constructor(settings) {
+    // No `private` members: the presets store keeps repositories, and so this parser, in a ref().
+    // UnwrapRef drops private members, and the unwrapped type then no longer matches the class.
+    // Reg exp extracts file/path.txt from # include: file/path.txt
+    static readonly _sRegExpInclude = /^#\$ +?INCLUDE: +?(?<filePath>\S+$)/;
+
+    readonly _settings: PresetsIndexSettings;
+
+    constructor(settings: PresetsIndexSettings) {
         this._settings = settings;
     }
 
-    readPresetProperties(preset, strings) {
-        const propertiesToRead = [
+    readPresetProperties(preset: ParsedPreset, strings: string[]): void {
+        const propertiesToRead: PresetPropertyName[] = [
             "description",
             "discussion",
             "warning",
@@ -15,33 +94,38 @@ export default class PresetParser {
             "force_options_review",
             "parser",
         ];
-        const propertiesMetadata = {};
+        const propertiesMetadata: Partial<Record<PresetPropertyName, { type: string; optional: boolean }>> = {};
         preset.options = [];
+        const parsing = preset as PresetBeingParsed;
 
         propertiesToRead.forEach((propertyName) => {
             // metadata of each property, name, type, optional true/false; example:
             // keywords: {type: MetadataTypes.WORDS_ARRAY, optional: true}
             propertiesMetadata[propertyName] = this._settings.presetsFileMetadata[propertyName];
-            preset[propertyName] = undefined;
+            parsing[propertyName] = undefined;
         });
 
-        preset._currentOptionGroup = undefined;
+        parsing._currentOptionGroup = undefined;
 
         for (const line of strings) {
             if (line.startsWith(this._settings.MetapropertyDirective)) {
-                this._parseAttributeLine(preset, line, propertiesMetadata);
+                this._parseAttributeLine(parsing, line, propertiesMetadata);
             }
         }
 
-        delete preset._currentOptionGroup;
+        delete parsing._currentOptionGroup;
     }
 
-    _parseAttributeLine(preset, line, propertiesMetadata) {
+    _parseAttributeLine(
+        preset: PresetBeingParsed,
+        line: string,
+        propertiesMetadata: Partial<Record<PresetPropertyName, unknown>>,
+    ): void {
         line = line.slice(this._settings.MetapropertyDirective.length).trim(); // (#$ DESCRIPTION: foo) -> (DESCRIPTION: foo)
         const lowCaseLine = line.toLowerCase();
         let isProperty = false;
 
-        for (const propertyName in propertiesMetadata) {
+        for (const propertyName of Object.keys(propertiesMetadata) as PresetPropertyName[]) {
             const lineBeginning = `${propertyName.toLowerCase()}:`; // "description:"
 
             if (lowCaseLine.startsWith(lineBeginning)) {
@@ -56,7 +140,7 @@ export default class PresetParser {
         }
     }
 
-    _parseOptionDirective(preset, line) {
+    _parseOptionDirective(preset: PresetBeingParsed, line: string): void {
         const lowCaseLine = line.toLowerCase();
 
         if (lowCaseLine.startsWith(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE)) {
@@ -75,7 +159,7 @@ export default class PresetParser {
         }
     }
 
-    _getOption(line) {
+    _getOption(line: string): PresetOption {
         const directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE.length).trim();
         const directiveRemovedLowCase = directiveRemoved.toLowerCase();
         const OptionChecked = this._isOptionChecked(directiveRemovedLowCase);
@@ -97,12 +181,12 @@ export default class PresetParser {
         };
     }
 
-    _getOptionGroup(line) {
+    _getOptionGroup(line: string): PresetOptionGroup {
         const lowercaseLine = line.toLowerCase();
         const exlusiveDirective = this._settings.OptionsDirectives.EXCLUSIVE_OPTION_GROUP;
         const isExclusiveGroup = lowercaseLine.includes(exlusiveDirective);
 
-        let directiveRemoved;
+        let directiveRemoved: string;
         if (isExclusiveGroup) {
             const exclusiveDirectiveLength = exlusiveDirective.length;
             directiveRemoved = line
@@ -119,12 +203,21 @@ export default class PresetParser {
         };
     }
 
-    _isOptionChecked(lowCaseLine) {
+    _isOptionChecked(lowCaseLine: string): boolean {
         return lowCaseLine.includes(this._settings.OptionsDirectives.OPTION_CHECKED);
     }
 
-    _parseProperty(preset, line, propertyName) {
-        switch (this._settings.presetsFileMetadata[propertyName].type) {
+    _parseProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
+        // An index that predates a property (a custom preset source can serve an old
+        // index.json) has no metadata for it; the lookup is typed to say so.
+        const metadata: PresetsIndexSettings["presetsFileMetadata"][string] | undefined =
+            this._settings.presetsFileMetadata[propertyName];
+        if (!metadata) {
+            console.error(`Parcing preset: no metadata for the property '${propertyName}'`);
+            return;
+        }
+
+        switch (metadata.type) {
             case this._settings.MetadataTypes.STRING_ARRAY:
                 this._processArrayProperty(preset, line, propertyName);
                 break;
@@ -144,17 +237,22 @@ export default class PresetParser {
                 this._processParserProperty(preset, line, propertyName);
                 break;
             default:
-                this.console.err(
-                    `Parcing preset: unknown property type '${this._settings.presetsFileMetadata[propertyName].type}' for the property '${propertyName}'`,
+                console.error(
+                    `Parcing preset: unknown property type '${metadata.type}' for the property '${propertyName}'`,
                 );
         }
     }
 
-    _processParserProperty(preset, line, propertyName) {
-        preset[propertyName] = line;
+    // The value's type comes from the index metadata at run time, so these write through a plain record.
+    _fields(preset: PresetBeingParsed): Record<string, unknown> {
+        return preset as unknown as Record<string, unknown>;
     }
 
-    _processBooleanProperty(preset, line, propertyName) {
+    _processParserProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
+        this._fields(preset)[propertyName] = line;
+    }
+
+    _processBooleanProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
         const trueValues = ["true", "yes"];
 
         const lineLowCase = line.toLowerCase();
@@ -164,22 +262,24 @@ export default class PresetParser {
             result = true;
         }
 
-        preset[propertyName] = result;
+        this._fields(preset)[propertyName] = result;
     }
 
-    _processArrayProperty(preset, line, propertyName) {
-        if (!preset[propertyName]) {
-            preset[propertyName] = [];
+    _processArrayProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
+        const fields = this._fields(preset);
+
+        if (!fields[propertyName]) {
+            fields[propertyName] = [];
         }
 
-        preset[propertyName].push(line);
+        (fields[propertyName] as string[]).push(line);
     }
 
-    _processStringProperty(preset, line, propertyName) {
-        preset[propertyName] = line;
+    _processStringProperty(preset: PresetBeingParsed, line: string, propertyName: PresetPropertyName): void {
+        this._fields(preset)[propertyName] = line;
     }
 
-    _getOptionName(line) {
+    _getOptionName(line: string): string {
         const directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE.length).trim();
         const regExpRemoveChecked = new RegExp(
             this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_CHECKED}:`),
@@ -194,14 +294,14 @@ export default class PresetParser {
         return optionName;
     }
 
-    _escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    _escapeRegex(string: string): string {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
     }
 
-    removeUncheckedOptions(strings, checkedOptions) {
-        let resultStrings = [];
+    removeUncheckedOptions(strings: string[], checkedOptions: string[]): string[] {
+        let resultStrings: string[] = [];
         let isCurrentOptionExcluded = false;
-        const lowerCasedCheckedOptions = checkedOptions.map((optionName) => optionName.toLowerCase());
+        const lowerCasedCheckedOptions = new Set(checkedOptions.map((optionName) => optionName.toLowerCase()));
 
         strings.forEach((str) => {
             if (this._isLineAttribute(str)) {
@@ -210,7 +310,7 @@ export default class PresetParser {
                 if (this._isOptionBegin(line)) {
                     const optionNameLowCase = this._getOptionName(line).toLowerCase();
 
-                    if (!lowerCasedCheckedOptions.includes(optionNameLowCase)) {
+                    if (!lowerCasedCheckedOptions.has(optionNameLowCase)) {
                         isCurrentOptionExcluded = true;
                     }
                 } else if (this._isOptionEnd(line)) {
@@ -226,9 +326,9 @@ export default class PresetParser {
         return resultStrings;
     }
 
-    _removeExcessiveEmptyLines(strings) {
+    _removeExcessiveEmptyLines(strings: string[]): string[] {
         // removes empty lines if there are two or more in a row leaving just one empty line
-        const result = [];
+        const result: string[] = [];
         let lastStringEmpty = false;
 
         strings.forEach((str) => {
@@ -246,25 +346,25 @@ export default class PresetParser {
         return result;
     }
 
-    _isLineAttribute(line) {
+    _isLineAttribute(line: string): boolean {
         return line.trim().startsWith(this._settings.MetapropertyDirective);
     }
 
-    _isOptionBegin(line) {
+    _isOptionBegin(line: string): boolean {
         const lowCaseLine = line.toLowerCase();
         return lowCaseLine.startsWith(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE);
     }
 
-    _isOptionEnd(line) {
+    _isOptionEnd(line: string): boolean {
         const lowCaseLine = line.toLowerCase();
         return lowCaseLine.startsWith(this._settings.OptionsDirectives.END_OPTION_DIRECTIVE);
     }
 
-    _removeAttributeDirective(line) {
+    _removeAttributeDirective(line: string): string {
         return line.trim().slice(this._settings.MetapropertyDirective.length).trim();
     }
 
-    isIncludeFound(strings) {
+    isIncludeFound(strings: string[]): boolean {
         for (const str of strings) {
             const match = PresetParser._sRegExpInclude.exec(str);
 
@@ -276,6 +376,3 @@ export default class PresetParser {
         return false;
     }
 }
-
-// Reg exp extracts file/path.txt from # include: file/path.txt
-PresetParser._sRegExpInclude = /^#\$[ ]+?INCLUDE:[ ]+?(?<filePath>\S+$)/;
