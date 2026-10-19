@@ -1,6 +1,27 @@
-import { HUFFMAN_EOF } from "./huffman";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 
-export const defaultHuffmanTree = [
+import { HUFFMAN_EOF, type HuffmanTreeEntry } from "./huffman";
+
+export const defaultHuffmanTree: readonly HuffmanTreeEntry[] = [
     { value: 0x00, codeLen: 2, code: 0x0003 }, //  11
     { value: 0x01, codeLen: 3, code: 0x0005 }, //  101
     { value: 0x02, codeLen: 4, code: 0x0009 }, //  1001
@@ -260,8 +281,8 @@ export const defaultHuffmanTree = [
     { value: HUFFMAN_EOF, codeLen: 12, code: 0x0000 }, //  000000000000
 ];
 
-export const defaultHuffmanLenIndex = (function () {
-    const result = Array(defaultHuffmanTree.length).fill(-1);
+export const defaultHuffmanLenIndex: readonly number[] = (function () {
+    const result: number[] = new Array(defaultHuffmanTree.length).fill(-1);
 
     for (let i = 0; i < defaultHuffmanTree.length; ++i) {
         if (result[defaultHuffmanTree[i].codeLen] === -1) {
