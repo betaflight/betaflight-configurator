@@ -645,7 +645,7 @@ export function motorRunSummary(result: WizardResult): MotorRunSummary | null {
     }
     const strongestHz = result.motors.map((list) => {
         const own = list.filter((p) => !p.cable && p.gain > 0);
-        return own.length ? own.reduce((a, b) => (b.gain > a.gain ? b : a)).hz : null;
+        return own.length ? own.reduce((a, b) => (b.gain > a.gain ? b : a), own[0]).hz : null;
     });
     const standsOut = [false, false, false, false];
     let worst: MotorRunSummary["worst"] = null;
