@@ -2790,12 +2790,6 @@
     "flightPlanLongitude": {
         "message": "Longitud <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Altitud <span class=\"units\">pies AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "Velocidad <span class=\"units\">nudos</span>"
-    },
     "flightPlanType": {
         "message": "Tipo de punto de ruta"
     },
