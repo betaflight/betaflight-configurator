@@ -416,6 +416,10 @@ export function useCli(): Cli {
             ".txt",
             "cli-file",
         );
+        // Android returns null when the picker is dismissed; the other platforms throw AbortError.
+        if (!file) {
+            return;
+        }
         await FileSystem.writeFile(file, content);
     };
 

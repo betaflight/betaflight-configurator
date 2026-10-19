@@ -794,6 +794,10 @@ export default defineComponent({
                         `.${suffix}`,
                         "blackbox-dump-file",
                     );
+                    // Android returns null when the picker is dismissed; the other platforms throw AbortError.
+                    if (!fileWriter) {
+                        return;
+                    }
 
                     let nextAddress = 0;
                     // null once a chunk reports no compressed size
