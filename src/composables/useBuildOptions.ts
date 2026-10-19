@@ -24,7 +24,7 @@ import semver from "semver";
 import { useFlightControllerStore } from "../stores/fc";
 import type { FcConfig } from "../stores/fc.types";
 import { API_VERSION_1_45 } from "../js/data_storage";
-import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options.js";
+import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options";
 
 /**
  * The part of `fcStore.config` build-option gating reads. Partial, since a firmware that
