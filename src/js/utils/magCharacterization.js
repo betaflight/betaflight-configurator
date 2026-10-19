@@ -9,7 +9,7 @@
  * eulerToMatrix() in magAlignment.js produces.
  */
 
-import { ALIGNMENT_MATRICES } from "./magAlignment.js";
+import { ALIGNMENT_MATRICES } from "./magAlignment";
 import { radToDeg } from "./common.js";
 
 /**

@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Settings-independence (invariance) oracle for the improved-tumble pipeline.
  *
@@ -18,13 +39,14 @@ import {
     mat3mulVec,
     mat3transpose,
     ALIGNMENT_MATRICES,
-} from "../../src/js/utils/magAlignment.js";
-import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit.js";
-import { solveTiltAlignment } from "../../src/js/utils/magTiltAlign.js";
-import { check3DCoverage } from "../../src/js/utils/sphereFit.js";
+    type Mat3,
+} from "../../src/js/utils/magAlignment";
+import { fitEllipsoid } from "../../src/js/utils/ellipsoidFit";
+import { solveTiltAlignment } from "../../src/js/utils/magTiltAlign";
+import { check3DCoverage } from "../../src/js/utils/sphereFit";
 
 // Deterministic PRNG (mulberry32).
-function mulberry32(seed) {
+function mulberry32(seed: number) {
     let s = seed >>> 0;
     return () => {
         s = (s + 0x6d2b79f5) >>> 0;
@@ -36,7 +58,7 @@ function mulberry32(seed) {
 }
 
 const DEG = Math.PI / 180;
-function clamp(v, lo, hi) {
+function clamp(v: number, lo: number, hi: number) {
     if (v < lo) {
         return lo;
     }
@@ -47,7 +69,7 @@ function clamp(v, lo, hi) {
 }
 
 /** Geodesic distance between two rotation matrices (degrees). */
-function rotationAngleDeg(A, B) {
+function rotationAngleDeg(A: Mat3, B: Mat3) {
     const M = mat3mul(mat3transpose(A), B);
     const tr = M[0][0] + M[1][1] + M[2][2];
     return Math.acos(clamp((tr - 1) / 2, -1, 1)) / DEG;
@@ -65,7 +87,14 @@ function rotationAngleDeg(A, B) {
  * The pipeline should invert: raw ≈ R_captureT * (streamed + magZero),
  * then fitEllipsoid to recover b_s (as center), then solveTiltAlignment to recover R_true.
  */
-function makeCapturedTumble(rTrue, bSensor, inclDeg, rCapture, magZero, rng) {
+function makeCapturedTumble(
+    rTrue: Mat3,
+    bSensor: number[],
+    inclDeg: number,
+    rCapture: Mat3,
+    magZero: { x: number; y: number; z: number },
+    rng: () => number,
+) {
     const rTrueT = mat3transpose(rTrue);
 
     const I = inclDeg * DEG;
@@ -146,7 +175,9 @@ describe("magCalibration invariance", () => {
 
         // Ellipsoid fit
         const ep = fitEllipsoid(rawSamples.map((s) => ({ x: s.x, y: s.y, z: s.z })));
-        expect(ep).not.toBeNull();
+        if (!ep) {
+            throw new Error("the ellipsoid fit found no solution");
+        }
 
         // Build calibrated samples for tilt solve
         const { W_inv, center } = ep;
@@ -158,7 +189,9 @@ describe("magCalibration invariance", () => {
 
         // Solve tilt alignment
         const tiltResult = solveTiltAlignment(mCalSamples, INCL_DEG * DEG);
-        expect(tiltResult).not.toBeNull();
+        if (!tiltResult) {
+            throw new Error("the tilt solver found no alignment");
+        }
 
         // Recovered alignment must be within 8 degrees of R_true
         const recoveredR =

@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Oracle for solveTiltAlignment — the one piece of math with no prior-branch proof.
  *
@@ -13,13 +34,9 @@ import {
     mat3mulVec,
     mat3transpose,
     ALIGNMENT_MATRICES,
-} from "../../src/js/utils/magAlignment.js";
+    type Mat3,
+} from "../../src/js/utils/magAlignment";
 import { solveTiltAlignment, type MagTiltSample, type TiltAlignmentResult } from "../../src/js/utils/magTiltAlign";
-
-type Mat3 = number[][];
-
-// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
-const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
 
 const DEG = Math.PI / 180;
 const clamp = (v: number, lo: number, hi: number): number => (v < lo ? lo : v > hi ? hi : v);
@@ -93,7 +110,7 @@ function makeTumble(
 
 function recoveredMatrix(result: TiltAlignmentResult): Mat3 {
     return result.preset !== 9
-        ? alignmentMatrices[result.preset]
+        ? ALIGNMENT_MATRICES[result.preset]
         : eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw);
 }
 

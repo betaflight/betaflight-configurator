@@ -33,12 +33,11 @@
  * candidate is a proper rotation (det = +1) by construction. Handedness is therefore
  * guaranteed by the tilt-diversity coverage gate, not by a separate reflection test.
  */
-import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec } from "./magAlignment.js";
+import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec, type Mat3 } from "./magAlignment";
 import { snapToPreset, matrixToEuler } from "./magCharacterization.js";
 import { degToRad, radToDeg, clamp } from "./common";
 
 type Vec3 = [number, number, number];
-type Mat3 = number[][];
 type Euler = { roll: number; pitch: number; yaw: number };
 
 /** One tumble sample: calibrated mag (unit vector) and the tilt it was taken at (degrees). */
@@ -223,21 +222,17 @@ export function solveTiltAlignment(
     }
     const best = refined.reduce((a, b) => (a.cost < b.cost ? a : b), refined[0]);
 
-    // ALIGNMENT_MATRICES / ALIGNMENT_LABELS come from the untyped JS module keyed by the 1..8
-    // preset ids; snapToPreset only returns those (or 9, guarded here), so index by number.
-    const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
-    const alignmentLabels = ALIGNMENT_LABELS as Record<number, string>;
-
+    // snapToPreset only returns the 1..8 preset ids the tables are keyed by, or 9, guarded here.
     const bestMatrix = eulerToMatrix(best.roll, best.pitch, best.yaw);
     const snap = snapToPreset(bestMatrix);
-    const appliedMatrix = snap.alignment !== 9 ? alignmentMatrices[snap.alignment] : bestMatrix;
+    const appliedMatrix = snap.alignment !== 9 ? ALIGNMENT_MATRICES[snap.alignment] : bestMatrix;
     const euler: Euler =
         snap.alignment === 9 && snap.customAngles ? (snap.customAngles as Euler) : matrixToEuler(appliedMatrix);
 
     const round2 = (v: number): number => Math.round(v * 100) / 100;
     return {
         preset: snap.alignment,
-        label: snap.alignment === 9 ? "CUSTOM" : alignmentLabels[snap.alignment],
+        label: snap.alignment === 9 ? "CUSTOM" : ALIGNMENT_LABELS[snap.alignment],
         euler_zyx_deg: { roll: round2(euler.roll), pitch: round2(euler.pitch), yaw: round2(euler.yaw) },
         quality: {
             cost: best.cost,
