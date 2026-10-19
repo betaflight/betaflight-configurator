@@ -3171,12 +3171,6 @@
     "flightPlanLongitude": {
         "message": "Uzunlik <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Balandlik <span class=\"units\">ft AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "Tezlik <span class=\"units\">tugun</span>"
-    },
     "flightPlanType": {
         "message": "Yo‘l nuqtasi turi"
     },

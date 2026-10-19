@@ -2949,12 +2949,6 @@
     "flightPlanLongitude": {
         "message": "経度 <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "高度 <span class=\"units\">ft AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "速度 <span class=\"units\">ノット</span>"
-    },
     "flightPlanType": {
         "message": "ウェイポイント タイプ"
     },

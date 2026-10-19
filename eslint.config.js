@@ -4,6 +4,7 @@ import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 import tseslint from "typescript-eslint";
 import globals from "globals";
+import boundariesPlugin from "eslint-plugin-boundaries";
 
 export default [
     {
@@ -126,6 +127,66 @@ export default [
                 },
             ],
             "no-undef": "error",
+        },
+    },
+    {
+        // Folders that are fully TypeScript. `allowJs` is project-wide and TypeScript checks
+        // everything a file imports, so `allowJs: false` cannot be scoped to one folder.
+        files: ["src/composables/**/*.js", "src/stores/**/*.js", "src/js/msp/**/*.js"],
+        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript.
+        ignores: ["src/js/msp/debug/**"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "Program",
+                    message: "This folder is TypeScript-only: write a .ts file instead (#5542).",
+                },
+            ],
+        },
+    },
+    {
+        // A component that imports MSP talks to the flight controller itself, past the store
+        // that keeps FC state authoritative (#4800): MSP belongs in a store action or a composable.
+        // `src/js/**` is the transport layer that MSP itself is built from, so it may use it too.
+        // Type-only imports carry no runtime dependency, so they stay allowed (OSD's MspResponse).
+        files: ["src/**/*.js", "src/**/*.ts", "src/**/*.vue"],
+        plugins: {
+            boundaries: boundariesPlugin,
+        },
+        settings: {
+            "import/resolver": {
+                typescript: { project: "./tsconfig.json" },
+            },
+            // First match wins, so the MSP clients are carved out before the catch-all.
+            "boundaries/elements": [
+                {
+                    type: "msp-client",
+                    pattern: ["src/stores/**", "src/composables/**", "src/js/**"],
+                    partialMatch: false,
+                },
+                { type: "ui", pattern: "src/**", partialMatch: false },
+            ],
+            "boundaries/files": [{ category: "msp", pattern: ["src/js/msp.ts", "src/js/msp/**"] }],
+        },
+        rules: {
+            "boundaries/dependencies": [
+                "error",
+                {
+                    default: "allow",
+                    policies: [
+                        {
+                            from: { element: { type: "ui" } },
+                            disallow: {
+                                to: { file: { categories: "msp" } },
+                                dependency: { kind: "value" },
+                            },
+                            message:
+                                "Only stores, composables and src/js may import MSP: move the call into a store action or a composable (#4800).",
+                        },
+                    ],
+                },
+            ],
         },
     },
     // Must stay last: turns off every core/plugin rule that overlaps with Prettier.
