@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Lightweight CLI syntax highlighter using one-dark-pro color palette.
  *
@@ -19,10 +40,10 @@ import { escapeHtml } from "./utils/common";
  * HTML-escapes the line before applying highlighting to avoid XSS
  * when firmware echoes HTML-like text.
  *
- * @param {string} line - One line of CLI text (raw, unescaped).
- * @returns {string} The escaped line with <span> wrappers for syntax classes.
+ * @param line - One line of CLI text (raw, unescaped).
+ * @returns The escaped line with <span> wrappers for syntax classes.
  */
-export function highlightCliLine(line) {
+export function highlightCliLine(line: string): string {
     // Escape raw input to prevent XSS (we render with innerHTML elsewhere)
     line = escapeHtml(line);
 
@@ -38,8 +59,8 @@ export function highlightCliLine(line) {
     }
 
     const [, indent, firstWord, rest] = m;
-    let prefix;
-    let tokens;
+    let prefix: string;
+    let tokens: string;
 
     if (/^[a-z][a-z_]*$/.test(firstWord)) {
         // All-lowercase first word → CLI command (set, resource, board_name, version, …)
@@ -57,14 +78,19 @@ export function highlightCliLine(line) {
     return prefix + highlightTokens(tokens);
 }
 
-const TOKEN_RE = /(\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g;
+// One or more words followed by a colon ("Clock:", "MCU F405 Clock:").
+const LABEL_RE = /\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*:/;
+const HEX_RE = /\b0x[0-9A-Fa-f]+/;
+const DECIMAL_RE = /\b\d+(?:\.\d+)?/;
+// Alternation order is match priority; only the label is captured, to pick its class.
+const TOKEN_RE = new RegExp(`(${LABEL_RE.source})|${HEX_RE.source}|${DECIMAL_RE.source}`, "g");
 
 /**
  * Highlight labels (WORD:), hex literals, and decimal numbers
  * within a text fragment.
  */
-function highlightTokens(text) {
-    return text.replace(TOKEN_RE, (match, label) => {
+function highlightTokens(text: string): string {
+    return text.replace(TOKEN_RE, (match, label: string | undefined) => {
         if (label) return `<span class="cli-label">${match}</span>`;
         return `<span class="cli-num">${match}</span>`;
     });

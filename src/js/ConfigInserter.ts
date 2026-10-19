@@ -1,7 +1,41 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { HexBlock, ParsedHex } from "./workers/hex_parser";
+
+/** A position in a parsed image; byteIndex is unset when the address falls between blocks. */
+interface ImageIndex {
+    lineIndex: number;
+    byteIndex?: number;
+}
+
+interface CustomDefaultsArea {
+    startAddress: number;
+    endAddress: number;
+}
+
 const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
 const BLOCK_SIZE = 16384;
 
-function seek(firmware, address) {
+function seek(firmware: ParsedHex, address: number): ImageIndex {
     let index = 0;
     for (
         ;
@@ -11,7 +45,7 @@ function seek(firmware, address) {
         // empty for loop to increment index
     }
 
-    const result = {
+    const result: ImageIndex = {
         lineIndex: index,
     };
 
@@ -22,7 +56,8 @@ function seek(firmware, address) {
     return result;
 }
 
-function readUint32(firmware, index) {
+// Only called once seek() has found the address inside a block, so byteIndex is set.
+function readUint32(firmware: ParsedHex, index: Required<ImageIndex>): number {
     let result = 0;
     for (let position = 0; position < 4; position++) {
         result += firmware.data[index.lineIndex].data[index.byteIndex++] << (8 * position);
@@ -35,22 +70,21 @@ function readUint32(firmware, index) {
     return result;
 }
 
-function getCustomDefaultsArea(firmware) {
-    const result = {};
-
+function getCustomDefaultsArea(firmware: ParsedHex): CustomDefaultsArea | undefined {
     const index = seek(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS);
 
     if (index.byteIndex === undefined) {
         return;
     }
 
-    result.startAddress = readUint32(firmware, index);
-    result.endAddress = readUint32(firmware, index);
+    const position = { lineIndex: index.lineIndex, byteIndex: index.byteIndex };
+    const startAddress = readUint32(firmware, position);
+    const endAddress = readUint32(firmware, position);
 
-    return result;
+    return { startAddress, endAddress };
 }
 
-function generateData(firmware, input, startAddress) {
+function generateData(firmware: ParsedHex, input: string, startAddress: number): void {
     let address = startAddress;
 
     const index = seek(firmware, address);
@@ -62,9 +96,9 @@ function generateData(firmware, input, startAddress) {
     let inputIndex = 0;
     while (inputIndex < input.length) {
         const remaining = input.length - inputIndex;
-        const line = {
+        const line: HexBlock = {
             address: address,
-            bytes: BLOCK_SIZE > remaining ? remaining : BLOCK_SIZE,
+            bytes: Math.min(BLOCK_SIZE, remaining),
             data: [],
         };
 
@@ -73,7 +107,8 @@ function generateData(firmware, input, startAddress) {
         }
 
         for (let i = 0; i < line.bytes; i++) {
-            line.data.push(input.charCodeAt(inputIndex++));
+            // One entry per UTF-16 unit, matching `bytes`; codePointAt would differ at surrogate pairs.
+            line.data.push(input.charCodeAt(inputIndex++)); // NOSONAR
         }
 
         address = address + line.bytes;
@@ -87,7 +122,12 @@ function generateData(firmware, input, startAddress) {
 const CONFIG_LABEL = `Custom defaults inserted in`;
 
 export default class ConfigInserter {
-    insertConfig(firmware, config) {
+    /**
+     * Write `config` into the image's custom defaults area.
+     * @returns false when the image has no custom defaults area
+     * @throws when the area is too small or already holds data
+     */
+    insertConfig(firmware: ParsedHex, config: string): boolean {
         console.time(CONFIG_LABEL);
 
         const input = `# Betaflight\n${config}\0`;
