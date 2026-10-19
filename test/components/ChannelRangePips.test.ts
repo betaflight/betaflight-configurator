@@ -1,7 +1,28 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import ChannelRangePips from "../../src/components/elements/ChannelRangePips.vue";
-import { CHANNEL_MAX, CHANNEL_MIN } from "../../src/js/utils/rcChannel.js";
+import { CHANNEL_MAX, CHANNEL_MIN } from "../../src/js/utils/rcChannel";
 
 describe("ChannelRangePips", () => {
     it("positions each pip at its channel value's percentage of the range", () => {
@@ -9,7 +30,7 @@ describe("ChannelRangePips", () => {
             props: { pips: [CHANNEL_MIN, 1500, CHANNEL_MAX] },
         });
 
-        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.insetInlineStart);
+        const positions = wrapper.findAll<HTMLElement>(".pip").map((pip) => pip.element.style.insetInlineStart);
 
         expect(positions).toEqual(["0%", "50%", "100%"]);
     });
@@ -19,7 +40,7 @@ describe("ChannelRangePips", () => {
             props: { pips: [CHANNEL_MIN - 500, CHANNEL_MAX + 500] },
         });
 
-        const positions = wrapper.findAll(".pip").map((pip) => pip.element.style.insetInlineStart);
+        const positions = wrapper.findAll<HTMLElement>(".pip").map((pip) => pip.element.style.insetInlineStart);
 
         expect(positions).toEqual(["0%", "100%"]);
     });
@@ -33,7 +54,7 @@ describe("ChannelRangePips", () => {
         });
 
         expect(aux.find(".pip-marker").exists()).toBe(true);
-        expect(aux.find(".pip-marker").element.style.insetInlineStart).toBe("25%");
+        expect(aux.find<HTMLElement>(".pip-marker").element.style.insetInlineStart).toBe("25%");
         expect(adjustments.find(".pip-marker").exists()).toBe(false);
     });
 
