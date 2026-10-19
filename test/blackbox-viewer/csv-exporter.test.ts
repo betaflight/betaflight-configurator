@@ -21,34 +21,11 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CsvExporter } from "../../src/blackbox-viewer/csv-exporter";
-
-/** Stands in for Worker: records the script URL and posted request, and lets a test answer. */
-class FakeWorker {
-    static instances: FakeWorker[] = [];
-    url: string;
-    posted: unknown[] = [];
-    terminated = false;
-    onmessage: ((event: { data: unknown }) => void) | null = null;
-    onerror: ((event: Event) => void) | null = null;
-    onmessageerror: ((event: Event) => void) | null = null;
-
-    constructor(url: URL) {
-        this.url = url.pathname;
-        FakeWorker.instances.push(this);
-    }
-
-    postMessage(message: unknown) {
-        this.posted.push(message);
-    }
-
-    terminate() {
-        this.terminated = true;
-    }
-}
+import { FakeWorker } from "./fakeWorker";
 
 const flightLog = {
     getChunksInTimeRange: vi.fn(() => [{ frames: [[0, 1]] }, { frames: [[125, 2]] }]),
-    getMinTime: () => 0,
+    getMinTime: () => 10,
     getMaxTime: () => 125,
     getSysConfig: () => ({ looptime: 125 }),
     getMainFieldNames: () => ["time", "gyroADC[0]"],
@@ -56,7 +33,7 @@ const flightLog = {
 
 describe("CsvExporter", () => {
     beforeEach(() => {
-        FakeWorker.instances = [];
+        FakeWorker.instances.length = 0;
         vi.stubGlobal("Worker", FakeWorker);
     });
 
@@ -69,7 +46,7 @@ describe("CsvExporter", () => {
 
         const [worker] = FakeWorker.instances;
         expect(worker.url).toMatch(/\/webworkers\/csv-export-worker\.ts$/);
-        expect(flightLog.getChunksInTimeRange).toHaveBeenCalledWith(0, 125);
+        expect(flightLog.getChunksInTimeRange).toHaveBeenCalledWith(10, 125);
         expect(worker.posted).toEqual([
             {
                 sysConfig: { looptime: 125 },

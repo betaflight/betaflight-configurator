@@ -21,36 +21,13 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SpectrumExporter } from "../../src/blackbox-viewer/spectrum-exporter";
-
-/** Stands in for Worker: records the script URL and posted request, and lets a test answer. */
-class FakeWorker {
-    static instances: FakeWorker[] = [];
-    url: string;
-    posted: unknown[] = [];
-    terminated = false;
-    onmessage: ((event: { data: unknown }) => void) | null = null;
-    onerror: ((event: Event) => void) | null = null;
-    onmessageerror: ((event: Event) => void) | null = null;
-
-    constructor(url: URL) {
-        this.url = url.pathname;
-        FakeWorker.instances.push(this);
-    }
-
-    postMessage(message: unknown) {
-        this.posted.push(message);
-    }
-
-    terminate() {
-        this.terminated = true;
-    }
-}
+import { FakeWorker } from "./fakeWorker";
 
 const fftData = { fftOutput: Float64Array.from([1, 2]), blackBoxRate: 4000 };
 
 describe("SpectrumExporter", () => {
     beforeEach(() => {
-        FakeWorker.instances = [];
+        FakeWorker.instances.length = 0;
         vi.stubGlobal("Worker", FakeWorker);
     });
 

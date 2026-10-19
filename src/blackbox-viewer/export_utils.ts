@@ -22,12 +22,10 @@
 import FileSystem from "../js/FileSystem";
 import { CsvExporter, type CsvExportOptions } from "./csv-exporter";
 import { GpxExporter } from "./gpx-exporter";
+import type { ExportableFlightLog } from "./export_worker";
 import type { SpectrumExportOptions } from "./spectrum-exporter";
 
 type ExportFormat = "csv" | "gpx";
-
-/** What both exports read from a FlightLog (flightlog.js is still JavaScript). */
-type ExportableFlightLog = Parameters<typeof CsvExporter>[0] & Parameters<typeof GpxExporter>[0];
 
 /** What the spectrum export needs from the spectrum graph (graph_spectrum.js is still JavaScript). */
 interface SpectrumAnalyser {

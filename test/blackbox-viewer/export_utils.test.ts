@@ -31,30 +31,7 @@ const { fileSystem } = vi.hoisted(() => ({
 vi.mock("../../src/js/FileSystem", () => ({ default: fileSystem }));
 
 import { exportGpx } from "../../src/blackbox-viewer/export_utils";
-
-/** Stands in for Worker: records the script URL and posted request, and lets a test answer. */
-class FakeWorker {
-    static instances: FakeWorker[] = [];
-    url: string;
-    posted: unknown[] = [];
-    terminated = false;
-    onmessage: ((event: { data: unknown }) => void) | null = null;
-    onerror: ((event: Event) => void) | null = null;
-    onmessageerror: ((event: Event) => void) | null = null;
-
-    constructor(url: URL) {
-        this.url = url.pathname;
-        FakeWorker.instances.push(this);
-    }
-
-    postMessage(message: unknown) {
-        this.posted.push(message);
-    }
-
-    terminate() {
-        this.terminated = true;
-    }
-}
+import { FakeWorker } from "./fakeWorker";
 
 const flightLog = {
     getChunksInTimeRange: () => [{ frames: [[0, 1]] }],
@@ -78,7 +55,7 @@ async function startGpxExport() {
 
 describe("exportGpx", () => {
     beforeEach(() => {
-        FakeWorker.instances = [];
+        FakeWorker.instances.length = 0;
         vi.stubGlobal("Worker", FakeWorker);
         fileSystem.pickSaveFile.mockResolvedValue(picked);
         fileSystem.writeFile.mockResolvedValue(undefined);

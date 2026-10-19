@@ -19,6 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { runExportWorker } from "./export_worker";
+
 /** Format options; the worker reads only the column delimiter. */
 export interface SpectrumExportOptions {
     columnDelimiter: string;
@@ -47,17 +49,15 @@ export function SpectrumExporter(fftData: SpectrumData, opts: Partial<SpectrumEx
      */
     function dump(success: (csv: string) => void): void {
         const worker = new Worker(new URL("../js/webworkers/spectrum-export-worker.ts", import.meta.url));
-
-        worker.onmessage = (event: MessageEvent<string>) => {
-            success(event.data);
-            worker.terminate();
-        };
-
-        worker.postMessage({
-            fftOutput: fftData.fftOutput,
-            blackBoxRate: fftData.blackBoxRate,
-            opts: options,
-        });
+        runExportWorker(
+            worker,
+            {
+                fftOutput: fftData.fftOutput,
+                blackBoxRate: fftData.blackBoxRate,
+                opts: options,
+            },
+            success,
+        );
     }
 
     // exposed functions

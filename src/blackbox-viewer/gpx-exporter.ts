@@ -19,14 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** What the export reads from a FlightLog (flightlog.js is still JavaScript). */
-interface ExportableFlightLog {
-    getChunksInTimeRange(startTime: number, endTime: number): Array<{ frames: number[][] }>;
-    getMinTime(): number;
-    getMaxTime(): number;
-    getSysConfig(): Record<string, unknown>;
-    getMainFieldNames(): string[];
-}
+import { type ExportableFlightLog, logFrames, runExportWorker } from "./export_worker";
 
 /**
  * @param flightLog the log whose GPS track to export
@@ -37,28 +30,13 @@ export function GpxExporter(flightLog: ExportableFlightLog) {
      * @param failure is a callback triggered when the worker fails
      */
     function dump(success: (gpx: string) => void, failure: (event: Event) => void = () => {}): void {
-        const frames = flightLog
-                .getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime())
-                .map((chunk) => chunk.frames),
-            worker = new Worker(new URL("../js/webworkers/gpx-export-worker.ts", import.meta.url));
-
-        worker.onmessage = (event: MessageEvent<string>) => {
-            success(event.data);
-            worker.terminate();
-        };
-        worker.onerror = (event) => {
-            worker.terminate();
-            failure(event);
-        };
-        worker.onmessageerror = (event) => {
-            worker.terminate();
-            failure(event);
-        };
-        worker.postMessage({
+        const request = {
             sysConfig: flightLog.getSysConfig(),
             fieldNames: flightLog.getMainFieldNames(),
-            frames: frames,
-        });
+            frames: logFrames(flightLog),
+        };
+        const worker = new Worker(new URL("../js/webworkers/gpx-export-worker.ts", import.meta.url));
+        runExportWorker(worker, request, success, failure);
     }
 
     // exposed functions

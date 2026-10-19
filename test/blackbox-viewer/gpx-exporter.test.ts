@@ -21,30 +21,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { GpxExporter } from "../../src/blackbox-viewer/gpx-exporter";
-
-/** Stands in for Worker: records the script URL and posted request, and lets a test answer. */
-class FakeWorker {
-    static instances: FakeWorker[] = [];
-    url: string;
-    posted: unknown[] = [];
-    terminated = false;
-    onmessage: ((event: { data: unknown }) => void) | null = null;
-    onerror: ((event: Event) => void) | null = null;
-    onmessageerror: ((event: Event) => void) | null = null;
-
-    constructor(url: URL) {
-        this.url = url.pathname;
-        FakeWorker.instances.push(this);
-    }
-
-    postMessage(message: unknown) {
-        this.posted.push(message);
-    }
-
-    terminate() {
-        this.terminated = true;
-    }
-}
+import { FakeWorker } from "./fakeWorker";
 
 const flightLog = {
     getChunksInTimeRange: vi.fn(() => [{ frames: [[0, 1]] }, { frames: [[125, 2]] }]),
@@ -56,7 +33,7 @@ const flightLog = {
 
 describe("GpxExporter", () => {
     beforeEach(() => {
-        FakeWorker.instances = [];
+        FakeWorker.instances.length = 0;
         vi.stubGlobal("Worker", FakeWorker);
     });
 
