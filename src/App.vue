@@ -73,7 +73,7 @@ import {
     TAB_ADAPTER_REGISTRATION_KEY,
     vueTabState,
 } from "./js/vue_tab_mounter.js";
-import { VueTabComponents } from "./js/vue_tab_registry.js";
+import { VueTabComponents } from "./js/vue_tab_registry";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
