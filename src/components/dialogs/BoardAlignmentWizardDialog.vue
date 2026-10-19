@@ -1051,7 +1051,7 @@ defineExpose({ show, close });
 
 .wizard-warning {
     background: var(--warning-500-15, rgba(255, 187, 0, 0.15));
-    border-inline-start: 3px solid var(--warning-500, #f0b400);
+    border-inline-start: 3px solid var(--warning-500);
     padding: 8px 12px;
     font-size: 13px;
     border-radius: 2px;

@@ -81,7 +81,7 @@ function onDownload() {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--graph-background, #0c0c0c);
+    background: var(--graph-background);
     overflow: hidden;
 }
 

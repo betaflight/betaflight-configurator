@@ -57,7 +57,7 @@ const workspaceStore = useWorkspaceStore();
     font-size: 0.65rem;
     color: var(--graph-text-secondary);
     background: var(--surface-200, hsl(0, 0%, 92%));
-    border-top: 1px solid var(--border-color, #ccc);
+    border-top: 1px solid var(--border-color);
 }
 
 :root.dark .status-bar {
@@ -70,7 +70,7 @@ const workspaceStore = useWorkspaceStore();
 }
 
 .status-flight-mode {
-    color: var(--color-primary-600, #e69400);
+    color: var(--color-primary-600);
     font-weight: 600;
 }
 

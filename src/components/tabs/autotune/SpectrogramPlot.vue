@@ -227,9 +227,8 @@ function drawChirpMarkers(
 }
 
 function drawAxes(ctx: CanvasRenderingContext2D, spec: Spectrogram, maxFreq: number, plotW: number, plotH: number) {
-    const style = getComputedStyle(document.documentElement);
-    const textColor = style.getPropertyValue("--surface-600").trim() || "#888";
-    const lineColor = style.getPropertyValue("--surface-400").trim() || "#ccc";
+    const textColor = getCssVar("--surface-600");
+    const lineColor = getCssVar("--surface-400");
 
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = 1;

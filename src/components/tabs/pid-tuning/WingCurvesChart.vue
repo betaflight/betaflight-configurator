@@ -225,11 +225,11 @@ function drawChart() {
     const h = canvasHeight.value / dpr;
 
     const colors: ChartColors = {
-        axis: getCssVar("--chart-axis-color", "#555555"),
-        axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
-        tick: getCssVar("--chart-tick-color", "#888888"),
-        grid: getCssVar("--chart-grid-line-color", "#333333"),
-        curve: getCssVar("--chart-curve-color", "#e24761"),
+        axis: getCssVar("--chart-axis-color"),
+        axisLabel: getCssVar("--chart-axis-label-color"),
+        tick: getCssVar("--chart-tick-color"),
+        grid: getCssVar("--chart-grid-line-color"),
+        curve: getCssVar("--chart-curve-color"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);

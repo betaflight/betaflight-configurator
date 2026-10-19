@@ -1827,8 +1827,8 @@ export default defineComponent({
         .ip-consent-prompt {
             margin-top: 8px;
             padding: 8px 12px;
-            background: var(--surface-200, #fff8e1);
-            border: 1px solid var(--surface-400, #ffe082);
+            background: var(--surface-200);
+            border: 1px solid var(--surface-400);
             border-radius: 4px;
             display: flex;
             align-items: center;

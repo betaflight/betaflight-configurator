@@ -1953,9 +1953,9 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--surface-500, #999);
-    color: var(--text, #fff);
-    border: 1px solid var(--primary-800, #666);
+    background-color: var(--surface-500);
+    color: var(--text);
+    border: 1px solid var(--primary-800);
     transition:
         background-color 0.25s,
         transform 0.25s;
@@ -1966,7 +1966,7 @@ onUnmounted(() => {
 }
 
 .tab-osd-preset-btn:hover {
-    background-color: var(--surface-700, #666);
+    background-color: var(--surface-700);
     transform: scale(1.1);
 }
 
