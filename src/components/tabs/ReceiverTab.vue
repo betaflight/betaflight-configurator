@@ -1707,7 +1707,11 @@ onUnmounted(() => {
     }
 }
 
+/* D3 positions every tick label in absolute coordinates and anchors the y labels with
+   text-anchor: end. Under an RTL locale the inherited direction flips that anchor, so the
+   labels spill into the plot area. The graph is numeric, so keep it LTR in every locale. */
 :deep(#RX_plot) {
+    direction: ltr;
     height: 208px;
     color: var(--text);
     .line {

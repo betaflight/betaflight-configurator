@@ -402,7 +402,11 @@ class MspHelper {
         }
 
         if (dataHandler.unsupported) {
-            console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
+            // useMspSetting probes named settings and reads an error reply as "this build has no
+            // such setting", so for those codes it is an answer rather than something to report.
+            if (!PROBE_CODES.has(code)) {
+                console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
+            }
 
             if (code === MSPCodes.MSP_SET_REBOOT) {
                 (TABS.onboard_logging as { mscRebootFailedCallback: () => void }).mscRebootFailedCallback();
@@ -821,6 +825,8 @@ class MspHelper {
 
 // A decoder returns this when the frame only partly answers its requests, so they stay pending.
 const KEEP_PENDING = "keep-pending";
+
+const PROBE_CODES = new Set<number>([MSPCodes.MSP2_CLI_SETTING, MSPCodes.MSP2_CLI_SETTING_INFO]);
 
 type Decoder = (this: MspHelper, data: MspDataView, dataHandler: MspFrame) => void | typeof KEEP_PENDING;
 type Encoder = (this: MspHelper, buffer: MspBuffer, modifierCode: number | undefined) => void;
