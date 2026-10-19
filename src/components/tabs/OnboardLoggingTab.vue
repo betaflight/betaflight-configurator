@@ -781,7 +781,8 @@ export default defineComponent({
             // Refresh the occupied size
             requestDataflashSummary(async () => {
                 const maxBytes = fcStore.dataflash?.usedSize || 0;
-                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>> | undefined;
+                // Assigned before the first readDataflash(), so every onChunkRead sees it.
+                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>>;
 
                 try {
                     const prefix = "BLACKBOX_LOG";
