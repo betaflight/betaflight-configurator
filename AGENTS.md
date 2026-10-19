@@ -45,7 +45,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
-| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🚧 | Lint rule (#5542 phase 7) |
+| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🔧 | CodeRabbit flags a new block (`.coderabbit.yaml`). A lint rule follows once the legacy blocks are gone (#5542) |
 | No hard-coded colors — theme via CSS custom properties | 🚧 | Lint rule as an error once existing violations are gone (#5542 phase 7) |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
