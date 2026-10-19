@@ -17,7 +17,7 @@ import {
     signExtend5Bit,
     signExtend4Bit,
     signExtend2Bit,
-} from "./datastream.js";
+} from "./datastream";
 
 /**
  * Shared decoder for the "case 3" branch of both readTag2_3S32 and
