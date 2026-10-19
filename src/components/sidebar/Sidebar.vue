@@ -75,7 +75,7 @@ import DarkTheme, { setDarkTheme } from "@/js/DarkTheme";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { applyExpertMode } from "@/js/utils/applyExpertMode";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
-import { EventBus } from "@/components/eventBus.js";
+import { EventBus } from "@/components/eventBus";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
 import LogDialog from "@/components/dialogs/LogDialog.vue";
 
