@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 
 // Exercises the real predicates rather than mocking them, by driving the inputs they
@@ -5,23 +26,29 @@ import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 
 const TAURI = "__TAURI_INTERNALS__";
 
+// Globals the tests add and remove: the Tauri marker, and WebSocket for the no-transport case.
+const globals = globalThis as unknown as Record<string, unknown>;
+
 // jsdom leaves userAgentData and bluetooth undefined, so they have to be
 // defined rather than spied on. Recorded here so each test can drop them again.
-const stubbed = new Set();
+const stubbed = new Set<string>();
 
-function stubNavigator(property, value) {
+function stubNavigator(property: string, value: unknown) {
     Object.defineProperty(navigator, property, { value, configurable: true, writable: true });
     stubbed.add(property);
 }
 
 function restoreNavigator() {
     for (const property of stubbed) {
-        delete navigator[property];
+        delete (navigator as unknown as Record<string, unknown>)[property];
     }
     stubbed.clear();
 }
 
-function setUserAgent(userAgent, { platform, legacyPlatform } = {}) {
+function setUserAgent(
+    userAgent: string,
+    { platform, legacyPlatform }: { platform?: string; legacyPlatform?: string } = {},
+) {
     stubNavigator("userAgent", userAgent);
     // getOS() prefers userAgentData.platform when present, so pin it too.
     stubNavigator("userAgentData", platform ? { platform } : undefined);
@@ -32,7 +59,7 @@ function setUserAgent(userAgent, { platform, legacyPlatform } = {}) {
 
 async function loadCompatibility() {
     vi.resetModules();
-    return import("../../src/js/utils/checkCompatibility.js");
+    return import("../../src/js/utils/checkCompatibility");
 }
 
 const UA = {
@@ -42,12 +69,12 @@ const UA = {
 };
 
 beforeEach(() => {
-    delete globalThis[TAURI];
+    delete globals[TAURI];
 });
 
 afterEach(() => {
     restoreNavigator();
-    delete globalThis[TAURI];
+    delete globals[TAURI];
 });
 
 describe("getOS", () => {
@@ -86,7 +113,7 @@ describe("getOS", () => {
 
 describe("isTauriMacOS", () => {
     it("is true for a Tauri shell on macOS", async () => {
-        globalThis[TAURI] = {};
+        globals[TAURI] = {};
         setUserAgent(UA.mac, { platform: "macOS" });
         const { isTauriMacOS } = await loadCompatibility();
         expect(isTauriMacOS()).toBe(true);
@@ -105,8 +132,8 @@ describe("checkBluetoothSupport", () => {
             [UA.mac, { platform: "macOS" }],
             // The real WKWebView shell: no userAgentData at all.
             [UA.mac, { legacyPlatform: "MacIntel" }],
-        ]) {
-            globalThis[TAURI] = {};
+        ] as const) {
+            globals[TAURI] = {};
             setUserAgent(ua, extra);
             const { checkBluetoothSupport } = await loadCompatibility();
             expect(checkBluetoothSupport()).toBe(true);
@@ -115,7 +142,7 @@ describe("checkBluetoothSupport", () => {
     });
 
     it("falls back to the webview's Web Bluetooth on Tauri desktop", async () => {
-        globalThis[TAURI] = {};
+        globals[TAURI] = {};
         setUserAgent(UA.linux, { platform: "Linux" });
         const { checkBluetoothSupport } = await loadCompatibility();
 
@@ -152,27 +179,53 @@ describe("isNetworkOnlyBrowser", () => {
     it("is false when there is no WebSocket either", async () => {
         setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
         const { isNetworkOnlyBrowser } = await loadCompatibility();
-        const websocket = globalThis.WebSocket;
-        delete globalThis.WebSocket;
+        const websocket = globals.WebSocket;
+        delete globals.WebSocket;
 
         try {
             expect(isNetworkOnlyBrowser()).toBe(false);
         } finally {
-            globalThis.WebSocket = websocket;
+            globals.WebSocket = websocket;
         }
     });
 
     it("is false inside a Tauri shell, which has its own transports", async () => {
-        globalThis[TAURI] = {};
+        globals[TAURI] = {};
         setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
         const { isNetworkOnlyBrowser } = await loadCompatibility();
         expect(isNetworkOnlyBrowser()).toBe(false);
     });
 });
 
+describe("checkSerialSupport", () => {
+    it("reports support inside a Tauri shell, which has a native serial transport", async () => {
+        globals[TAURI] = {};
+        setUserAgent(UA.linux, { platform: "Linux" });
+        const { checkSerialSupport } = await loadCompatibility();
+        expect(checkSerialSupport()).toBe(true);
+    });
+});
+
+describe("isEmbeddedDeployment", () => {
+    afterEach(() => {
+        document.head.innerHTML = "";
+    });
+
+    it("is true only when the host injects the WebSocket transport tag", async () => {
+        const { isEmbeddedDeployment } = await loadCompatibility();
+        expect(isEmbeddedDeployment()).toBe(false);
+
+        document.head.innerHTML = '<meta name="bf-transport" content="websocket">';
+        expect(isEmbeddedDeployment()).toBe(true);
+
+        document.head.innerHTML = '<meta name="bf-transport" content="serial">';
+        expect(isEmbeddedDeployment()).toBe(false);
+    });
+});
+
 describe("checkCompatibility", () => {
     // The test-environment short circuit would make every assertion below vacuous.
-    const asProduction = async (run) => {
+    const asProduction = async (run: () => Promise<void>) => {
         const previous = process.env.NODE_ENV;
         process.env.NODE_ENV = "production";
         try {
@@ -198,13 +251,13 @@ describe("checkCompatibility", () => {
         await asProduction(async () => {
             setUserAgent(UA.mac, { legacyPlatform: "MacIntel" });
             const { checkCompatibility } = await loadCompatibility();
-            const websocket = globalThis.WebSocket;
-            delete globalThis.WebSocket;
+            const websocket = globals.WebSocket;
+            delete globals.WebSocket;
 
             try {
                 expect(() => checkCompatibility()).toThrow("No compatible browser found.");
             } finally {
-                globalThis.WebSocket = websocket;
+                globals.WebSocket = websocket;
                 document.body.innerHTML = "";
                 document.body.removeAttribute("style");
             }

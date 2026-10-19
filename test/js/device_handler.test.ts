@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { computed, toRaw } from "vue";
 
@@ -18,11 +39,12 @@ const { serial, dfuProtocol, isExpertModeEnabled, CapacitorDfuTransportMock } = 
         CapacitorDfuTransportMock: class {},
         serial: {
             connected: false,
-            connectionId: null,
-            getConnectedDevice: vi.fn(() => null),
+            connectionId: null as string | null,
+            // Transport-specific: a raw port, a native handle or a string.
+            getConnectedDevice: vi.fn((): unknown => null),
             addEventListener: vi.fn(),
             removeEventListener: vi.fn(),
-            getDevices: vi.fn(async () => []),
+            getDevices: vi.fn(async (): Promise<Array<{ path: string; displayName: string }>> => []),
             requestPermissionDevice: vi.fn(),
         },
         dfuProtocol: {
@@ -49,14 +71,16 @@ vi.mock("../../src/js/protocols/usbdfu", () => ({
     // assert which transport was chosen; the listener API is what DeviceHandler's
     // constructor touches.
     UsbDfuProtocol: class {
-        constructor(transport) {
+        transport: unknown;
+        usbDevice = null;
+        getConnectedDevice = vi.fn(() => null);
+        getDevices = vi.fn(async () => []);
+        requestPermission = vi.fn();
+        addEventListener = vi.fn();
+        removeEventListener = vi.fn();
+
+        constructor(transport: unknown) {
             this.transport = transport;
-            this.usbDevice = null;
-            this.getConnectedDevice = vi.fn(() => null);
-            this.getDevices = vi.fn(async () => []);
-            this.requestPermission = vi.fn();
-            this.addEventListener = vi.fn();
-            this.removeEventListener = vi.fn();
         }
     },
 }));
@@ -78,10 +102,10 @@ vi.mock("../../src/components/eventBus", () => ({
 
 vi.mock("../../src/js/ConfigStorage", () => ({
     __esModule: true,
-    get: (key, fallback) => ({ [key]: fallback }),
+    get: (key: string, fallback: unknown) => ({ [key]: fallback }),
 }));
 
-vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
+vi.mock("../../src/js/utils/checkCompatibility", () => ({
     __esModule: true,
     checkCompatibility: vi.fn(),
     checkBluetoothSupport: () => true,
@@ -93,13 +117,13 @@ vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
 }));
 
 import DeviceHandler from "../../src/js/device_handler";
-import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state.js";
+import { getConnectionState, __resetConnectionStateForTests } from "../../src/js/connection_state";
 
 // "Reconnect in progress" is now the connection state being in REBOOTING/RECONNECTING
 // while the previously-selected port stays put (was a frozen reconnect token, and
 // before that DeviceHandler.pinnedReconnectTarget). Helper to simulate it: select the
 // device, then enter the reconnect window.
-function pinReconnectTarget(path) {
+function pinReconnectTarget(path: string) {
     DeviceHandler.devicePicker.selectedDevice = path;
     getConnectionState().requestReboot();
 }
@@ -280,7 +304,8 @@ describe("DeviceHandler.selectActivePort — stale addedDevice suggestion", () =
         DeviceHandler.currentSerialPorts = [];
         isExpertModeEnabled.mockReturnValue(false);
 
-        const selected = DeviceHandler.selectActivePort({ path: "serial_5", displayName: "Betaflight STM" });
+        const ghost = { path: "serial_5", displayName: "Betaflight STM" };
+        const selected = DeviceHandler.selectActivePort(ghost);
 
         expect(selected).toBeUndefined();
         expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
@@ -384,7 +409,7 @@ describe("createDfuProtocol routing", () => {
     // fresh module graph with isAndroid flipped before the re-import.
     it("wraps the Capacitor transport on Android", async () => {
         vi.resetModules();
-        vi.doMock("../../src/js/utils/checkCompatibility.js", () => ({
+        vi.doMock("../../src/js/utils/checkCompatibility", () => ({
             __esModule: true,
             checkCompatibility: vi.fn(),
             checkBluetoothSupport: () => true,
@@ -401,7 +426,7 @@ describe("createDfuProtocol routing", () => {
             expect(handler.dfuProtocol).not.toBe(dfuProtocol);
             expect(handler.dfuProtocol.transport).toBeInstanceOf(CapacitorDfuTransportMock);
         } finally {
-            vi.doUnmock("../../src/js/utils/checkCompatibility.js");
+            vi.doUnmock("../../src/js/utils/checkCompatibility");
             vi.resetModules();
         }
     });

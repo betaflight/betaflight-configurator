@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { isAndroid } from "@/js/utils/checkCompatibility.js";
+import { isAndroid } from "@/js/utils/checkCompatibility";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";

@@ -1,18 +1,59 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { Capacitor } from "@capacitor/core";
+
+/**
+ * The parts of `navigator` this module feature-detects. lib.dom has none of them: User-Agent
+ * Client Hints are Chromium-only, and Web Serial, Web Bluetooth and WebUSB are not standard.
+ * Only their presence is read here; the transports type the APIs themselves.
+ */
+interface DetectableNavigator extends Navigator {
+    userAgentData?: { platform: string; brands: Array<{ brand: string; version: string }> };
+    serial?: unknown;
+    bluetooth?: unknown;
+    usb?: unknown;
+}
+
+function detectableNavigator(): DetectableNavigator {
+    return globalThis.navigator as DetectableNavigator;
+}
+
+/** What getOS() reports. */
+export type OperatingSystem = "MacOS" | "iOS" | "Windows" | "Android" | "Linux" | "ChromeOS" | "unknown";
 
 /**
  * Detect the host OS using the modern userAgentData API with a fallback to the
  * legacy navigator.platform / userAgent strings.
  *
- * @returns {string} Standardized OS name ("MacOS", "iOS", "Windows", "Android",
+ * @returns Standardized OS name ("MacOS", "iOS", "Windows", "Android",
  * "Linux", "ChromeOS") or "unknown".
  */
-export function getOS() {
-    let os = "unknown";
-    const userAgent = globalThis.navigator.userAgent;
+export function getOS(): OperatingSystem {
+    let os: OperatingSystem = "unknown";
+    const navigator = detectableNavigator();
+    const userAgent = navigator.userAgent;
     // userAgentData is Chromium-only: WKWebView (Tauri macOS) and Safari never
     // expose it, so fall back to the legacy navigator.platform ("MacIntel", "iPhone").
-    const platform = globalThis.navigator?.userAgentData?.platform ?? globalThis.navigator?.platform;
+    const platform = navigator?.userAgentData?.platform ?? navigator?.platform;
     const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
@@ -38,9 +79,10 @@ export function getOS() {
 }
 
 /**
- * @returns {boolean} Whether the current browser is Chromium-based (Chrome, Edge, …).
+ * @returns Whether the current browser is Chromium-based (Chrome, Edge, …).
  */
-export function isChromiumBrowser() {
+export function isChromiumBrowser(): boolean {
+    const navigator = detectableNavigator();
     if (navigator.userAgentData) {
         return navigator.userAgentData.brands.some((brand) => {
             return brand.brand == "Chromium";
@@ -53,9 +95,9 @@ export function isChromiumBrowser() {
 }
 
 /**
- * @returns {boolean} Whether running as a Capacitor native build on Android.
+ * @returns Whether running as a Capacitor native build on Android.
  */
-export function isAndroid() {
+export function isAndroid(): boolean {
     if (Capacitor.isNativePlatform()) {
         return Capacitor.getPlatform() === "android";
     }
@@ -63,9 +105,9 @@ export function isAndroid() {
 }
 
 /**
- * @returns {boolean} Whether running as a Capacitor native build on iOS.
+ * @returns Whether running as a Capacitor native build on iOS.
  */
-export function isIOS() {
+export function isIOS(): boolean {
     if (Capacitor.isNativePlatform()) {
         return Capacitor.getPlatform() === "ios";
     }
@@ -82,30 +124,30 @@ export function isIOS() {
  * When present, Serial/Bluetooth/USB browser API checks are
  * irrelevant — only WebSocket transport is needed.
  *
- * @returns {boolean} Whether the WebSocket transport metadata is present.
+ * @returns Whether the WebSocket transport metadata is present.
  */
-export function isEmbeddedDeployment() {
-    return document.querySelector('meta[name="bf-transport"]')?.content === "websocket";
+export function isEmbeddedDeployment(): boolean {
+    return document.querySelector<HTMLMetaElement>('meta[name="bf-transport"]')?.content === "websocket";
 }
 
 /**
- * @returns {boolean} Whether running inside a Tauri desktop shell.
+ * @returns Whether running inside a Tauri desktop shell.
  */
-export function isTauri() {
+export function isTauri(): boolean {
     return typeof globalThis !== "undefined" && "__TAURI_INTERNALS__" in globalThis;
 }
 
 /**
- * @returns {boolean} Whether running inside a Tauri shell on macOS.
+ * @returns Whether running inside a Tauri shell on macOS.
  */
-export function isTauriMacOS() {
+export function isTauriMacOS(): boolean {
     return isTauri() && getOS() === "MacOS";
 }
 
 /**
- * @returns {boolean} Whether running inside a Tauri desktop shell (macOS, Linux or Windows).
+ * @returns Whether running inside a Tauri desktop shell (macOS, Linux or Windows).
  */
-export function isTauriDesktop() {
+export function isTauriDesktop(): boolean {
     return isTauri();
 }
 
@@ -115,9 +157,9 @@ export function isTauriDesktop() {
  * deployment identified by the WebSocket transport metadata. Use this to gate
  * PWA-only behaviour such as service-worker registration and its update dialogs.
  *
- * @returns {boolean} Whether the runtime is a web/PWA context.
+ * @returns Whether the runtime is a web/PWA context.
  */
-export function isPwaContext() {
+export function isPwaContext(): boolean {
     return !Capacitor.isNativePlatform() && !isTauri() && !isEmbeddedDeployment();
 }
 
@@ -127,9 +169,11 @@ export function isPwaContext() {
  * reach a flight controller. Safari and Firefox land here; the native shells and
  * the bridge's own embedded deployment never do.
  *
- * @returns {boolean} Whether network is the only transport this runtime has.
+ * @returns Whether network is the only transport this runtime has.
  */
-export function isNetworkOnlyBrowser() {
+export function isNetworkOnlyBrowser(): boolean {
+    // isTauri() is also covered by checkSerialSupport() below; it is kept so the native shells
+    // read as one explicit exclusion.
     if (isEmbeddedDeployment() || Capacitor.isNativePlatform() || isTauri()) {
         return false;
     }
@@ -148,11 +192,11 @@ export function isNetworkOnlyBrowser() {
  * A browser without Serial/Bluetooth/USB is still compatible: it connects over the
  * network instead, and isNetworkOnlyBrowser() drives the notice that says so.
  *
- * @returns {boolean} True when a compatible transport (or native/Tauri shell,
+ * @returns True when a compatible transport (or native/Tauri shell,
  * or test environment) is available.
  * @throws {Error} When no compatible browser transport is found.
  */
-export function checkCompatibility() {
+export function checkCompatibility(): boolean {
     if (isEmbeddedDeployment()) {
         console.log("[COMPAT] Embedded deployment detected — skipping browser checks");
         return true;
@@ -174,7 +218,7 @@ export function checkCompatibility() {
 
     const compatible = isTestEnvironment || isNative || isTauriShell || hasWebTransport;
 
-    console.log("User Agent: ", navigator.userAgentData);
+    console.log("User Agent: ", detectableNavigator().userAgentData);
     console.log("Native: ", isNative);
     console.log("Chromium: ", isChromiumBrowser());
     console.log("Serial: ", hasSerialSupport);
@@ -236,13 +280,13 @@ export function checkCompatibility() {
 }
 
 /**
- * @returns {boolean} Whether a serial transport is available on this platform.
+ * @returns Whether a serial transport is available on this platform.
  */
-export function checkSerialSupport() {
+export function checkSerialSupport(): boolean {
     let result = false;
     if (isAndroid() || isTauri()) {
         result = true;
-    } else if (navigator.serial) {
+    } else if (detectableNavigator().serial) {
         result = true;
     } else if (isIOS()) {
         // Not implemented yet
@@ -252,16 +296,16 @@ export function checkSerialSupport() {
 }
 
 /**
- * @returns {boolean} Whether a Bluetooth transport is available on this platform.
+ * @returns Whether a Bluetooth transport is available on this platform.
  */
-export function checkBluetoothSupport() {
+export function checkBluetoothSupport(): boolean {
     let result = false;
     if (isAndroid()) {
         result = true;
     } else if (isTauriMacOS()) {
         // Native BLE transport, as WKWebView doesn't expose navigator.bluetooth.
         result = true;
-    } else if (navigator.bluetooth) {
+    } else if (detectableNavigator().bluetooth) {
         result = true;
     } else if (isIOS()) {
         // Not implemented yet
@@ -270,14 +314,14 @@ export function checkBluetoothSupport() {
 }
 
 /**
- * @returns {boolean} Whether a USB transport is available on this platform.
+ * @returns Whether a USB transport is available on this platform.
  */
-export function checkUsbSupport() {
+export function checkUsbSupport(): boolean {
     let result = false;
     if (isAndroid()) {
         // Native USB DFU, as the Android system webview has no WebUSB.
         result = true;
-    } else if (navigator.usb) {
+    } else if (detectableNavigator().usb) {
         result = true;
     } else if (isIOS()) {
         // Not implemented yet
