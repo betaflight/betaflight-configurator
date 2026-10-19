@@ -31,7 +31,7 @@
  * suite asserts against the same builders so the tested shape cannot drift from
  * the shipped shape.
  */
-import { matrixToEuler } from "./magCharacterization.js";
+import { matrixToEuler } from "./magCharacterization";
 import { ALIGNMENT_MATRICES, type Mat3 } from "./magAlignment";
 
 type Vec3 = { x: number; y: number; z: number };

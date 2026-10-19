@@ -34,7 +34,7 @@
  * guaranteed by the tilt-diversity coverage gate, not by a separate reflection test.
  */
 import { ALIGNMENT_MATRICES, ALIGNMENT_LABELS, eulerToMatrix, mat3mulVec, type Mat3 } from "./magAlignment";
-import { snapToPreset, matrixToEuler } from "./magCharacterization.js";
+import { snapToPreset, matrixToEuler } from "./magCharacterization";
 import { degToRad, radToDeg, clamp } from "./common";
 
 type Vec3 = [number, number, number];
@@ -226,8 +226,7 @@ export function solveTiltAlignment(
     const bestMatrix = eulerToMatrix(best.roll, best.pitch, best.yaw);
     const snap = snapToPreset(bestMatrix);
     const appliedMatrix = snap.alignment !== 9 ? ALIGNMENT_MATRICES[snap.alignment] : bestMatrix;
-    const euler: Euler =
-        snap.alignment === 9 && snap.customAngles ? (snap.customAngles as Euler) : matrixToEuler(appliedMatrix);
+    const euler: Euler = snap.alignment === 9 && snap.customAngles ? snap.customAngles : matrixToEuler(appliedMatrix);
 
     const round2 = (v: number): number => Math.round(v * 100) / 100;
     return {
