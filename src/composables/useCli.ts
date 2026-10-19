@@ -813,7 +813,7 @@ export function useCli(): Cli {
 
     /**
      * Tear down the CLI session.
-     * @returns true when leaving CLI initiated an FC reboot (`exit` + MSP_SET_REBOOT).
+     * @returns true when leaving CLI initiated an FC reboot (`exit` + MSP_REBOOT).
      */
     const cleanup = (): boolean => {
         removeTimeout("CLI_send_slowly");
@@ -856,7 +856,7 @@ export function useCli(): Cli {
             copyResetTimeout = null;
         }
 
-        // `exit` + MSP_SET_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
+        // `exit` + MSP_REBOOT reboots the FC. Keep tab_switch_in_progress held across the
         // handoff; prepareDisconnect (run on every reboot path) releases it after the disconnect.
         const rebooting = connectionStore.connectionValid && connectionStore.cliValid && connectionStore.cliActive;
         if (rebooting) {

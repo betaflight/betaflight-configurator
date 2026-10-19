@@ -74,13 +74,13 @@ describe("useSetupData", () => {
 
             useSetupData().rebootToBootloader();
 
-            expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_SET_REBOOT, [rebootType], false);
+            expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_REBOOT, [rebootType], false);
         });
 
         it.each([
             ["resetSettings", MSPCodes.MSP_RESET_CONF],
             ["requestAttitude", MSPCodes.MSP_ATTITUDE],
-            ["requestSonar", MSPCodes.MSP_SONAR],
+            ["requestSonar", MSPCodes.MSP_SONAR_ALTITUDE],
         ] as const)("%s hands the reply to the caller", (name, code) => {
             const onReply = vi.fn();
 

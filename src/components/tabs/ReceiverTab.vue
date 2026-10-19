@@ -637,8 +637,6 @@ import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
-import DarkTheme from "@/js/DarkTheme";
-import windowWatcherUtil from "@/js/utils/window_watchers";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { MD5 } from "crypto-es";
 import semver from "semver";
@@ -1231,9 +1229,6 @@ function openSticksWindow() {
         // initialised i18n instance — hand it over the same way as setRawRx above. This used to
         // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
         createdWindow.i18n = i18n;
-        DarkTheme.isDarkThemeEnabled((isEnabled: boolean) => {
-            windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
-        });
     }
 }
 
