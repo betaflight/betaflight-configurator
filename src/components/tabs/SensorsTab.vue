@@ -216,42 +216,46 @@
                             <UIcon name="i-lucide-alert-triangle" class="size-4 shrink-0" />
                             <span>{{ $t("sensorConfigAccNeedsCalibration") }}</span>
                         </div>
-                        <UButton
-                            :label="
-                                calibratingAccel ? $t('initialSetupButtonCalibratingText') : $t('sensorConfigCalibrate')
-                            "
-                            :disabled="calibratingAccel"
-                            :loading="calibratingAccel"
-                            size="xs"
-                            class="w-fit"
-                            @click="onCalibrateAccel"
-                        >
-                            <template #trailing>
-                                <HelpIcon :text="$t('sensorConfigAccCalibrateHelp')" />
-                            </template>
-                        </UButton>
-                        <SettingRow :label="$t('configurationAccelTrimRoll')">
-                            <UInputNumber
-                                v-model="accelTrims.roll"
-                                :step="1"
-                                :min="-300"
-                                :max="300"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
-                        <SettingRow :label="$t('configurationAccelTrimPitch')">
-                            <UInputNumber
-                                v-model="accelTrims.pitch"
-                                :step="1"
-                                :min="-300"
-                                :max="300"
-                                orientation="vertical"
-                                size="xs"
-                                class="w-16"
-                            />
-                        </SettingRow>
+                        <div class="grid w-fit max-w-full gap-2">
+                            <UButton
+                                :label="
+                                    calibratingAccel
+                                        ? $t('initialSetupButtonCalibratingText')
+                                        : $t('sensorConfigCalibrate')
+                                "
+                                :disabled="calibratingAccel"
+                                :loading="calibratingAccel"
+                                size="lg"
+                                class="min-h-10 w-full justify-center whitespace-normal"
+                                @click="onCalibrateAccel"
+                            >
+                                <template #trailing>
+                                    <HelpIcon :text="$t('sensorConfigAccCalibrateHelp')" />
+                                </template>
+                            </UButton>
+                            <SettingRow :label="$t('configurationAccelTrimRoll')">
+                                <UInputNumber
+                                    v-model="accelTrims.roll"
+                                    :step="1"
+                                    :min="-300"
+                                    :max="300"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow :label="$t('configurationAccelTrimPitch')">
+                                <UInputNumber
+                                    v-model="accelTrims.pitch"
+                                    :step="1"
+                                    :min="-300"
+                                    :max="300"
+                                    orientation="vertical"
+                                    size="xs"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                        </div>
                     </UiBox>
                 </div>
 
