@@ -2942,6 +2942,10 @@
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Capture waypoints in flight: a short press adds the current position to the flight plan as a waypoint, holding the switch for 1.5 seconds deletes the last waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Reset the transponder lap timer",
         "description": "Help text to LAP TIMER RESET mode"
