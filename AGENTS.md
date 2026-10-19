@@ -29,7 +29,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 | `src/js/**` is the transport and protocol layer (serial, MSP framing, flashing). It does not import components | 📐 | Review call |
 | FC state lives in `useFlightControllerStore()`. New fields go there, typed in `src/stores/fc.types.ts` — never a new module-level singleton | 🔧 | `vue-tsc` rejects untyped fields; a new singleton is a review call |
 | Side effects (MSP, network, persistence, polling) live in store actions or composables, not in components | 🔧 | MSP: the boundary rule above. Network and persistence: review call |
-| New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.ts`, aligned with firmware `msp_protocol.h` | 🚧 | CI diff of `MSPCodes.ts` against `msp_protocol.h` (#5542 phase 7) |
+| New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.ts`, aligned with firmware `msp_protocol.h` | ✅ | `scripts/check-msp-codes.mjs` against every supported firmware branch; weekly and on pull requests touching the table (`.github/workflows/msp-codes.yml`) |
 
 ### TypeScript — #5542
 
