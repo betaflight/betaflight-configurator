@@ -1,5 +1,6 @@
 <template>
     <div
+        data-ui-box
         class="relative rounded-lg border-2"
         :class="[
             !collapsible || isOpen ? (highlight ? typeClass.box : 'border-neutral-500/30') : 'border-transparent',
@@ -9,6 +10,7 @@
     >
         <div
             v-if="title"
+            data-ui-box-toggle
             :class="[
                 'flex gap-2 items-center w-fit p-1 px-3 rounded-full text-[13px] font-semibold absolute top-0 left-4 translate-y-[-50%]',
                 typeClass.pill,
