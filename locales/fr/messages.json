@@ -3257,11 +3257,31 @@
     "flightPlanLongitude": {
         "message": "Longitude<span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Altitude<span class=\"units\">fr AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Altitude <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "Vitesse<span class=\"units\">noeuds</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Altitude en {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "Vitesse <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "Vitesse en {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "Unités",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "Impériale (ft, kts, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "Métrique (m, km/h, km)"
     },
     "flightPlanType": {
         "message": "Type d'étape"

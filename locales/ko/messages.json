@@ -3019,12 +3019,6 @@
     "flightPlanLongitude": {
         "message": "경도 <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "고도 <span class=\"units\">ft AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "속도 <span class=\"units\">노트</span>"
-    },
     "flightPlanType": {
         "message": "웨이포인트 형식"
     },
