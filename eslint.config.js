@@ -132,9 +132,10 @@ export default [
     {
         // Folders that are fully TypeScript. `allowJs` is project-wide and TypeScript checks
         // everything a file imports, so `allowJs: false` cannot be scoped to one folder.
-        files: ["src/components/**/*.js", "src/composables/**/*.js", "src/stores/**/*.js", "src/js/msp/**/*.js"],
-        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript.
-        ignores: ["src/js/msp/debug/**"],
+        files: ["src/components/**/*.js", "src/composables/**/*.js", "src/stores/**/*.js", "src/js/**/*.js"],
+        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript. The
+        // vendored three.js renderer stays close to its upstream source, typed by a .d.ts.
+        ignores: ["src/js/msp/debug/**", "src/js/utils/three/**"],
         rules: {
             "no-restricted-syntax": [
                 "error",

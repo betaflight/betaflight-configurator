@@ -35,7 +35,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 
 | Rule | Status | Enforced by |
 |---|---|---|
-| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/components/**`, `src/composables/**`, `src/stores/**` and `src/js/msp/**` (except the dev-only `src/js/msp/debug/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
+| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/components/**`, `src/composables/**`, `src/stores/**` and `src/js/**` (except the dev-only `src/js/msp/debug/**` and the vendored `src/js/utils/three/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
 | `strict` typing; no `any` to silence the checker | 🔧 | `strict: true` + `vue-tsc`; `@typescript-eslint/no-explicit-any` |
 | A file you touch for other reasons converts to TypeScript in the same PR; a touched test converts to `.test.ts` | 📐 | Review call |
 
