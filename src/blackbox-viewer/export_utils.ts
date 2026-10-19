@@ -1,15 +1,51 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import FileSystem from "../js/FileSystem";
-import { CsvExporter } from "./csv-exporter.js";
-import { GpxExporter } from "./gpx-exporter.js";
+import { CsvExporter, type CsvExportOptions } from "./csv-exporter";
+import { GpxExporter } from "./gpx-exporter";
+import type { SpectrumExportOptions } from "./spectrum-exporter";
+
+type ExportFormat = "csv" | "gpx";
+
+/** What both exports read from a FlightLog (flightlog.js is still JavaScript). */
+type ExportableFlightLog = Parameters<typeof CsvExporter>[0] & Parameters<typeof GpxExporter>[0];
+
+/** What the spectrum export needs from the spectrum graph (graph_spectrum.js is still JavaScript). */
+interface SpectrumAnalyser {
+    getExportedFileName(): string | null | undefined;
+    exportSpectrumToCSV(onSuccess: (csv: string) => void, options: Partial<SpectrumExportOptions>): void;
+}
+
+/** Starts an export; calls `onSuccess` with the file contents, or `onFailure` where supported. */
+type DumpFn = (onSuccess: (data: string) => Promise<void>, onFailure: (error: unknown) => void) => void;
 
 // NOTE: the blackbox-viewer subsystem is English-only for now, so the picker
 // descriptions are plain strings rather than i18n keys.
-const EXPORT_DESCRIPTIONS = {
+const EXPORT_DESCRIPTIONS: Record<ExportFormat, string> = {
     csv: "CSV file",
     gpx: "GPX file",
 };
 
-function suggestedName(logFilename, fileExtension) {
+function suggestedName(logFilename: string | null | undefined, fileExtension: ExportFormat): string {
     // Strip the source log extension (e.g. "FOO.BBL" -> "FOO") before appending
     // the export extension.
     const base = (logFilename || "log").replace(/\.[^/.]+$/, "");
@@ -21,7 +57,7 @@ function suggestedName(logFilename, fileExtension) {
 // FileSystem wrapper. `dumpFn` receives success/failure callbacks where supported.
 // The returned promise only settles once the file has actually been written (or
 // the export failed/was cancelled), so callers can reliably await completion.
-async function saveExport(fileExtension, suggested, dumpFn) {
+async function saveExport(fileExtension: ExportFormat, suggested: string, dumpFn: DumpFn): Promise<void> {
     let file;
     try {
         file = await FileSystem.pickSaveFile(
@@ -31,7 +67,7 @@ async function saveExport(fileExtension, suggested, dumpFn) {
             "blackbox-export-file",
         );
     } catch (error) {
-        if (error?.name === "AbortError") {
+        if ((error as Error | undefined)?.name === "AbortError") {
             return; // user cancelled the dialog
         }
         console.error(`Failed to open save dialog for ${fileExtension.toUpperCase()} export:`, error);
@@ -43,8 +79,8 @@ async function saveExport(fileExtension, suggested, dumpFn) {
     }
 
     const startTime = performance.now();
-    await new Promise((resolve) => {
-        const onFailure = (error) => {
+    await new Promise<void>((resolve) => {
+        const onFailure = (error: unknown) => {
             console.error(`Failed to export ${fileExtension.toUpperCase()} file:`, error);
             resolve();
         };
@@ -73,19 +109,27 @@ async function saveExport(fileExtension, suggested, dumpFn) {
     });
 }
 
-export function exportCsv(flightLog, logFilename, options = {}) {
+export function exportCsv(
+    flightLog: ExportableFlightLog,
+    logFilename: string | null | undefined,
+    options: Partial<CsvExportOptions> = {},
+) {
     return saveExport("csv", suggestedName(logFilename, "csv"), (onSuccess, onFailure) =>
         CsvExporter(flightLog, options).dump(onSuccess, onFailure),
     );
 }
 
-export function exportGpx(flightLog, logFilename) {
+export function exportGpx(flightLog: ExportableFlightLog, logFilename: string | null | undefined) {
     return saveExport("gpx", suggestedName(logFilename, "gpx"), (onSuccess, onFailure) =>
         GpxExporter(flightLog).dump(onSuccess, onFailure),
     );
 }
 
-export function exportSpectrumToCsv(analyser, logFilename, options = {}) {
+export function exportSpectrumToCsv(
+    analyser: SpectrumAnalyser,
+    logFilename: string | null | undefined,
+    options: Partial<SpectrumExportOptions> = {},
+) {
     const fileName = analyser.getExportedFileName();
     if (!fileName) {
         console.warn("The export is not supported for this spectrum type");
