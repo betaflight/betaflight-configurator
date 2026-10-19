@@ -555,7 +555,7 @@ body.mobile-app-shell {
 }
 
 .cpu-bar--ok .cpu-bar__fill {
-    background-color: #59aa29;
+    background-color: var(--success-500);
 }
 
 .cpu-bar--warning .cpu-bar__fill {

@@ -52,7 +52,7 @@ const setActiveLink = computed(() => performance.now() - props.lastReceivedTimes
 .bottomStatusIcons {
     display: flex;
     justify-content: space-between;
-    background-color: #272727;
+    background-color: var(--status-widget-border);
     height: 31px;
     max-width: 105px;
     margin-top: 2px;

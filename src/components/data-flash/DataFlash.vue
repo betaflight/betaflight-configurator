@@ -89,14 +89,14 @@ const usageClass = computed(() => {
     width: 125px;
     height: 33px;
     border-radius: 5px;
-    border: 1px solid #272727;
+    border: 1px solid var(--status-widget-border);
     box-shadow: 0 1px 0 rgb(92 92 92 / 50%);
-    background-color: #434343;
+    background-color: var(--status-widget-background);
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
     padding-top: 5px;
 }
 .noflash_global {
-    color: #868686;
+    color: var(--status-widget-muted);
     text-align: center;
     margin-top: 2px;
 }
@@ -104,8 +104,8 @@ const usageClass = computed(() => {
 .dataflash-contents_global {
     margin-top: 18px;
     padding: 0;
-    border: 1px solid #4a4a4a;
-    background-color: #4a4a4a;
+    border: 1px solid var(--status-widget-track);
+    background-color: var(--status-widget-track);
     flex-direction: row;
     flex-wrap: nowrap;
     border-radius: 3px;

@@ -1862,7 +1862,7 @@ export default defineComponent({
     }
     .flash-status-error {
         background-color: var(--error-500);
-        color: #fff;
+        color: white;
     }
     .grid-box-spacer {
         height: 1rem;
@@ -2281,7 +2281,7 @@ export default defineComponent({
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: black;
             float: inline-end;
             font-weight: bold;
             font-size: 12px;
@@ -2323,7 +2323,7 @@ export default defineComponent({
         background-color: var(--primary-500);
         border-radius: 3px;
         border: 1px solid var(--primary-600);
-        color: #000;
+        color: black;
         float: inline-end;
         font-weight: bold;
         font-size: 12px;

@@ -2012,7 +2012,7 @@ onUnmounted(() => {
 
 .tab-osd-context-menu-display:hover {
     background-color: var(--surface-700);
-    color: #fff;
+    color: white;
 }
 
 .tab-osd-context-menu-content {
@@ -2085,13 +2085,13 @@ onUnmounted(() => {
     content: "\2022\20";
 }
 .tab-osd-logo-info-list li.valid {
-    color: #00a011;
+    color: var(--success-700);
 }
 .tab-osd-logo-info-list li.valid::before {
     content: "\2714\20";
 }
 .tab-osd-logo-info-list li.invalid {
-    color: #a01100;
+    color: var(--error-600);
 }
 .tab-osd-logo-info-list li.invalid::before {
     content: "\2715\20";

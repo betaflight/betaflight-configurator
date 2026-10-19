@@ -1159,20 +1159,20 @@ defineExpose({ show, close });
 .wizard-timeline-step.active .step-node {
     border-color: var(--primary-500);
     background: var(--primary-500);
-    color: #fff;
+    color: black;
 }
 
 .wizard-timeline-step.confirmed .step-node {
-    border-color: #22c55e;
-    background: #22c55e;
-    color: #fff;
+    border-color: var(--success-500);
+    background: var(--success-500);
+    color: black;
     animation: pulse-confirm 0.4s ease-out;
 }
 
 .wizard-timeline-step.done .step-node {
-    border-color: #22c55e;
-    background: #22c55e;
-    color: #fff;
+    border-color: var(--success-500);
+    background: var(--success-500);
+    color: black;
 }
 
 .step-label {
@@ -1208,12 +1208,12 @@ defineExpose({ show, close });
     display: inline-block;
     margin-top: 6px;
     padding: 2px 10px;
-    background: #22c55e22;
-    border: 1px solid #22c55e;
+    background: var(--success-transparent-1);
+    border: 1px solid var(--success-500);
     border-radius: 99px;
     font-size: 12px;
     font-weight: 600;
-    color: #16a34a;
+    color: var(--success-700);
 }
 
 .wizard-model {

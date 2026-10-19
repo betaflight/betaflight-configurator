@@ -1685,7 +1685,7 @@ onUnmounted(() => {
     border-end-end-radius: 3px;
     .value {
         padding: 4px;
-        color: #fff;
+        color: white;
         border-radius: 3px;
     }
     .ch1 {

@@ -1818,7 +1818,7 @@ export default defineComponent({
 
         .location-error {
             margin-top: 8px;
-            color: #e74c3c;
+            color: var(--error-500);
             em {
                 margin-inline-end: 4px;
             }
@@ -1837,7 +1837,7 @@ export default defineComponent({
             font-size: 12px;
 
             > em {
-                color: #b8860b;
+                color: var(--warning-700);
                 flex-shrink: 0;
             }
 
@@ -1862,20 +1862,20 @@ export default defineComponent({
         transition: background-color 0.3s;
 
         &.status-good {
-            background: linear-gradient(135deg, #1e8449, #27ae60);
-            color: #fff;
+            background: linear-gradient(135deg, var(--severity-good), var(--severity-good-light));
+            color: white;
         }
         &.status-moderate {
-            background: linear-gradient(135deg, #b7770a, #d4ac0d);
-            color: #000;
+            background: linear-gradient(135deg, var(--severity-moderate), var(--severity-moderate-light));
+            color: black;
         }
         &.status-warning {
-            background: linear-gradient(135deg, #a35309, #b7770a);
-            color: #fff;
+            background: linear-gradient(135deg, var(--severity-warning), var(--severity-moderate));
+            color: white;
         }
         &.status-danger {
-            background: linear-gradient(135deg, #922b21, #c0392b);
-            color: #fff;
+            background: linear-gradient(135deg, var(--severity-danger-dark), var(--severity-danger));
+            color: white;
         }
         &.status-unknown {
             background: var(--surface-400);
@@ -1936,19 +1936,19 @@ export default defineComponent({
 
     /* Status classes for values — WCAG AA compliant on light backgrounds */
     .status-good {
-        color: #1e8449;
+        color: var(--severity-good);
         font-weight: bold;
     }
     .status-moderate {
-        color: #b7770a;
+        color: var(--severity-moderate);
         font-weight: bold;
     }
     .status-warning {
-        color: #a35309;
+        color: var(--severity-warning);
         font-weight: bold;
     }
     .status-danger {
-        color: #c0392b;
+        color: var(--severity-danger);
         font-weight: bold;
     }
     .status-unknown {
@@ -2097,16 +2097,16 @@ export default defineComponent({
                     transition: width 0.5s ease;
 
                     &.status-good {
-                        background: #1e8449;
+                        background: var(--severity-good);
                     }
                     &.status-moderate {
-                        background: #b7770a;
+                        background: var(--severity-moderate);
                     }
                     &.status-warning {
-                        background: #a35309;
+                        background: var(--severity-warning);
                     }
                     &.status-danger {
-                        background: #c0392b;
+                        background: var(--severity-danger);
                     }
                 }
             }
@@ -2511,12 +2511,12 @@ export default defineComponent({
 
                 &:hover {
                     background: var(--primary-500);
-                    color: #fff;
+                    color: black;
                 }
 
                 &.active {
                     background: var(--primary-500);
-                    color: #fff;
+                    color: black;
                 }
             }
         }
@@ -2549,7 +2549,7 @@ export default defineComponent({
 
     /* Misc */
     .error-message {
-        color: #e74c3c;
+        color: var(--error-500);
         padding: 8px;
         em {
             margin-inline-end: 4px;

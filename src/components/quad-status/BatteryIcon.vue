@@ -137,7 +137,7 @@ export default defineComponent({
 }
 
 .battery-status.state-ok {
-    background-color: #59aa29;
+    background-color: var(--success-500);
 }
 .battery-status.state-warning {
     background-color: var(--error-500);

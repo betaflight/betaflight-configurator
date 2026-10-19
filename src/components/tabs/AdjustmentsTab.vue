@@ -301,7 +301,7 @@ onMounted(async () => {
     top: 50%;
     width: 2px;
     height: 24px;
-    background: #ff0;
+    background: var(--primary-500);
     transform: translate(-50%, -50%);
     z-index: 3;
     pointer-events: none;

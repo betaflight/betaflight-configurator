@@ -1217,8 +1217,8 @@ export default defineComponent({
         background-position: 21px 20px;
         background-size: 50px 50px;
         background-repeat: no-repeat;
-        background-color: #808080;
-        border: 1px solid #888888;
+        background-color: var(--surface-700);
+        border: 1px solid var(--surface-700);
         border-radius: 45px;
     }
 }
@@ -1317,8 +1317,8 @@ export default defineComponent({
         display: block;
     }
     .sdcard-icon {
-        background-color: #56ac1d;
-        border: 1px solid #5bbb1b;
+        background-color: var(--success-600);
+        border: 1px solid var(--success-500);
     }
 }
 .tab-onboard_logging.blackbox-supported {
@@ -1362,14 +1362,14 @@ export default defineComponent({
 }
 .tab-onboard_logging.sdcard-error {
     .sdcard-icon {
-        background-color: #e60000;
-        border: 1px solid #fe0000;
+        background-color: var(--error-500);
+        border: 1px solid var(--error-400);
     }
 }
 .tab-onboard_logging.sdcard-initializing {
     .sdcard-icon {
-        background-color: #64a5f6;
-        border: 1px solid #68a7ff;
+        background-color: var(--info-500);
+        border: 1px solid var(--info-500);
     }
 }
 </style>

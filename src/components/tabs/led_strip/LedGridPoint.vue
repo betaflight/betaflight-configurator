@@ -135,7 +135,7 @@ const colorStyle = computed(() => {
 /* Selection states */
 .gPoint.ui-selected {
     box-shadow: inset 0 0 8px rgba(255, 0, 255, 1) !important;
-    border: solid 1px #000 !important;
+    border: solid 1px black !important;
 }
 
 /* Function-specific backgrounds */

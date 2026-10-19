@@ -114,6 +114,10 @@ html {
     /* Dark rust used as foreground on light surfaces and on warning-tinted backgrounds — */
     /* meets WCAG 1.4.11 3:1 against --surface-400 (#d6d6d6) where -500/-600 do not. */
     --warning-700: #b34700;
+    /* Same for success text: 5:1 against white, where -500/-600 are under 2:1. */
+    --success-700: #4d7c0f;
+    /* Initialising and other in-progress states. */
+    --info-500: #64a5f6;
 
     --warning-transparent-1: rgba(255, 102, 0, 0.1);
     --warning-transparent-2: rgba(255, 102, 0, 0.2);
@@ -177,6 +181,26 @@ html {
     --map-waypoint-dragging: #00ff00;
     --map-waypoint-selected: #ff8c00;
     --map-waypoint-text: #ffffff;
+
+    /* The header's flash and sensor status widgets, dark in every theme. */
+    --status-widget-background: #434343;
+    --status-widget-border: #272727;
+    --status-widget-track: #4a4a4a;
+    --status-widget-muted: #868686;
+
+    /* CLI syntax highlighting (One Dark). */
+    --code-comment: #7f848e;
+    --code-label: #61afef;
+    --code-number: #e5c07b;
+
+    /* Preflight readiness, good to danger. Each badge is a gradient between two shades. */
+    --severity-good: #1e8449;
+    --severity-good-light: #27ae60;
+    --severity-moderate: #b7770a;
+    --severity-moderate-light: #d4ac0d;
+    --severity-warning: #a35309;
+    --severity-danger: #c0392b;
+    --severity-danger-dark: #922b21;
 }
 
 .dark {
@@ -201,6 +225,7 @@ html {
 
     /* Lighter shade so warning foregrounds keep 3:1 against dark surfaces. */
     --warning-700: #ff8533;
+    --success-700: #adf042;
 
     /* --surface-50 is nearly black in dark mode, where a 0.3 alpha shadow all but
        disappears and floating panels lose their separation from the page. */
@@ -238,6 +263,7 @@ html {
     --ui-bg-muted: var(--color-neutral-850);
 
     --warning-700: #ff8533;
+    --success-700: #adf042;
     --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.6);
     --text: hsl(0, 0%, 95%);
 

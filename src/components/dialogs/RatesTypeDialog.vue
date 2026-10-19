@@ -58,7 +58,7 @@ defineExpose({
 /* Warning message styling (note uses v-html, so target message-negative) */
 .dialogRatesTypeContent :deep(.message-negative) {
     display: inline-block;
-    color: var(--danger, #ff6666);
+    color: var(--error-500);
     background: rgba(255, 0, 0, 0.04);
     padding: 6px 8px;
     border-radius: 4px;
