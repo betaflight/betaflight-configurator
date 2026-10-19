@@ -449,6 +449,12 @@ class WebBluetooth extends EventTarget {
             throw new Error(`Unexpected write characteristic found - should be ${description.writeCharacteristic}`);
         }
 
+        // Many CC2541 modules (HM-10 firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with
+        // the CC2541 profile but carry both directions on FFE1 and have no FFE2.
+        if (!this.readCharacteristic && this.writeCharacteristic.properties?.notify) {
+            this.readCharacteristic = this.writeCharacteristic;
+        }
+
         if (!this.readCharacteristic) {
             throw new Error(`Unexpected read characteristic found - should be ${description.readCharacteristic}`);
         }

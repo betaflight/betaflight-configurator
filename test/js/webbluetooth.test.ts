@@ -48,7 +48,8 @@ vi.mock("../../src/js/protocols/devices", () => ({
             name: "CC2541",
             serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
             writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-            readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+            // Matches the real CC2541 profile in devices.ts.
+            readCharacteristic: "0000ffe2-0000-1000-8000-00805f9b34fb",
         },
     ],
 }));
@@ -63,7 +64,7 @@ vi.mock("../../src/js/gui_log", () => ({
 
 // A minimal fake Web Bluetooth device. `id` is the browser's stable per-device
 // identifier — the value the path must key off.
-function makeFakeDevice(id = "abc123", name = "Speedybee") {
+function makeFakeDevice(id = "abc123", name = "Speedybee", services: unknown[] = []) {
     const listeners: Record<string, unknown> = {};
     const fake = {
         id,
@@ -72,7 +73,7 @@ function makeFakeDevice(id = "abc123", name = "Speedybee") {
             connected: true,
             connect: vi.fn(async function () {
                 return {
-                    getPrimaryServices: vi.fn(async () => []),
+                    getPrimaryServices: vi.fn(async () => services),
                 };
             }),
             disconnect: vi.fn(),
@@ -357,6 +358,125 @@ describe("WebBluetooth listener hygiene (no leak across reconnects)", () => {
         for (const [, handler] of [...added, ...removed]) {
             expect(handler).toBe(bt.handleDisconnect);
         }
+    });
+});
+
+describe("WebBluetooth characteristic selection on the FFE0 service", () => {
+    const FFE0 = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    const FFE1 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    const FFE2 = "0000ffe2-0000-1000-8000-00805f9b34fb";
+    const GAP = "00001800-0000-1000-8000-00805f9b34fb";
+
+    type ValueChangedHandler = (event: { target: { value: DataView } }) => void;
+
+    function makeCharacteristic(
+        uuid: string,
+        properties: { write?: boolean; writeWithoutResponse?: boolean; notify?: boolean },
+    ) {
+        let onValueChanged: ValueChangedHandler | undefined;
+        return {
+            uuid,
+            properties,
+            addEventListener: vi.fn((type: string, handler: ValueChangedHandler) => {
+                if (type === "characteristicvaluechanged") {
+                    onValueChanged = handler;
+                }
+            }),
+            removeEventListener: vi.fn(),
+            startNotifications: vi.fn(async () => undefined),
+            stopNotifications: vi.fn(async () => undefined),
+            writeValue: vi.fn(async () => undefined),
+            emit(bytes: number[]) {
+                const value = new DataView(new Uint8Array(bytes).buffer);
+                onValueChanged?.({ target: { value } });
+            },
+        };
+    }
+
+    type FakeCharacteristic = ReturnType<typeof makeCharacteristic>;
+
+    async function connectTo(characteristics: FakeCharacteristic[]) {
+        const WebBluetooth = await loadWebBluetooth();
+        const bt = new WebBluetooth();
+        // FFE0 sits behind an unrelated service so service discovery has to pick it.
+        const device = makeFakeDevice("dev-ffe0", "TMOTORFC_009U9", [
+            { uuid: GAP, getCharacteristics: vi.fn(async () => []) },
+            { uuid: FFE0, getCharacteristics: vi.fn(async () => characteristics) },
+        ]);
+        bt.devices = [bt.createPort(device)];
+        const results: unknown[] = [];
+        bt.addEventListener("connect", (e) => results.push(detail(e)));
+        await bt.connect("bluetooth_dev-ffe0", { baudRate: 115200 });
+        return { bt, results };
+    }
+
+    // Measured on a T-Motor Velox F7 SE: FFE0 holds FFE1 (write, notify), FF02 (write) and
+    // FF03 (write, notify, the module's AT channel). The FC answers MSP on FFE1.
+    function tmotorModule() {
+        const ffe1 = makeCharacteristic(FFE1, { write: true, writeWithoutResponse: true, notify: true });
+        const characteristics = [
+            makeCharacteristic("0000ff03-0000-1000-8000-00805f9b34fb", {
+                write: true,
+                writeWithoutResponse: true,
+                notify: true,
+            }),
+            makeCharacteristic("0000ff02-0000-1000-8000-00805f9b34fb", { write: true, writeWithoutResponse: true }),
+            ffe1,
+        ];
+        return { ffe1, characteristics };
+    }
+
+    it("connects to a module that carries both directions on FFE1 and has no FFE2", async () => {
+        const { ffe1, characteristics } = tmotorModule();
+        const { bt, results } = await connectTo(characteristics);
+
+        expect(results).toEqual([true]);
+        expect(bt.connected).toBe(true);
+        expect(bt.writeCharacteristic).toBe(ffe1);
+        expect(bt.readCharacteristic).toBe(ffe1);
+        expect(ffe1.startNotifications).toHaveBeenCalledTimes(1);
+    });
+
+    it("delivers bytes notified on FFE1 as a receive event", async () => {
+        const { ffe1, characteristics } = tmotorModule();
+        const { bt } = await connectTo(characteristics);
+        const received: number[][] = [];
+        bt.addEventListener("receive", (e) => received.push(Array.from(detail<Uint8Array>(e))));
+
+        // MSP_API_VERSION reply: protocol 0, API 1.48.
+        ffe1.emit([0x24, 0x4d, 0x3e, 0x03, 0x01, 0x00, 0x01, 0x30, 0x33]);
+
+        expect(received).toEqual([[0x24, 0x4d, 0x3e, 0x03, 0x01, 0x00, 0x01, 0x30, 0x33]]);
+    });
+
+    it("does not use a write characteristic that cannot notify as the read characteristic", async () => {
+        const { bt, results } = await connectTo([makeCharacteristic(FFE1, { write: true })]);
+
+        expect(results).toEqual([false]);
+        expect(bt.connected).toBe(false);
+    });
+
+    it("still reads from FFE2 when the module has it", async () => {
+        const ffe1 = makeCharacteristic(FFE1, { write: true, notify: true });
+        const ffe2 = makeCharacteristic(FFE2, { notify: true });
+
+        const { bt, results } = await connectTo([ffe1, ffe2]);
+
+        expect(results).toEqual([true]);
+        expect(bt.writeCharacteristic).toBe(ffe1);
+        expect(bt.readCharacteristic).toBe(ffe2);
+        expect(ffe1.startNotifications).not.toHaveBeenCalled();
+    });
+
+    it("stops notifications once on disconnect when one characteristic serves both directions", async () => {
+        const { ffe1, characteristics } = tmotorModule();
+        const { bt } = await connectTo(characteristics);
+
+        await bt.disconnect();
+
+        expect(ffe1.stopNotifications).toHaveBeenCalledTimes(1);
+        expect(bt.readCharacteristic).toBeNull();
+        expect(bt.writeCharacteristic).toBeNull();
     });
 });
 

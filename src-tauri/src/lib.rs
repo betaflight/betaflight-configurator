@@ -8,6 +8,17 @@ mod tcp;
 mod ble;
 
 pub fn run() {
+    // WebKitGTK's DMA-BUF renderer leaves some composited layers unpainted on several Linux
+    // GPU/driver setups: the fixed bottom toolbar stays clickable but is never drawn (#5655).
+    // Disable it unless the user already chose a value, before the webview is created.
+    #[cfg(target_os = "linux")]
+    {
+        if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+            // SAFETY: called at the very start of run(), before Tauri or WebKitGTK spawn any
+            // threads, so no other thread can be reading the environment concurrently.
+            unsafe { std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1") };
+        }
+    }
     // Window state restores the last size, position and maximized/fullscreen state on launch.
     // `dialog` must be registered alongside `fs`: picking a file is what grants `fs` its scope
     // entry for the path the frontend then reads or writes.
