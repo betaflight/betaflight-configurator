@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
-import { getCssVar } from "./WingTpaCurvesData";
+import { getCssVar } from "@/js/utils/cssVar";
 
 interface CurvePoint {
     speed: number;

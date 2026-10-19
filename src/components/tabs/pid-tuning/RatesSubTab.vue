@@ -38,7 +38,7 @@
                     </div>
 
                     <!-- Roll -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">
                         {{ $t("controlAxisRoll") }}
                     </div>
                     <UInputNumber
@@ -91,7 +91,7 @@
                     </div>
 
                     <!-- Pitch -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">
                         {{ $t("controlAxisPitch") }}
                     </div>
                     <UInputNumber
@@ -144,7 +144,7 @@
                     </div>
 
                     <!-- Yaw -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">
                         {{ $t("controlAxisYaw") }}
                     </div>
                     <UInputNumber

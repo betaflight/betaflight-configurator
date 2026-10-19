@@ -1533,100 +1533,100 @@ onUnmounted(() => {
         gap: 0.5rem;
         &:nth-of-type(1) {
             :deep([data-slot="indicator"]) {
-                background-color: #e24761;
+                background-color: var(--color-channel-1);
             }
         }
         &:nth-of-type(2) {
             :deep([data-slot="indicator"]) {
-                background-color: #49c747;
+                background-color: var(--color-channel-2);
             }
         }
         &:nth-of-type(3) {
             :deep([data-slot="indicator"]) {
-                background-color: #477ac7;
+                background-color: var(--color-channel-3);
             }
         }
         &:nth-of-type(4) {
             :deep([data-slot="indicator"]) {
-                background-color: #f5a623;
+                background-color: var(--color-channel-4);
             }
         }
         &:nth-of-type(5) {
             :deep([data-slot="indicator"]) {
-                background-color: #159588;
+                background-color: var(--color-channel-5);
             }
         }
         &:nth-of-type(6) {
             :deep([data-slot="indicator"]) {
-                background-color: #50ae55;
+                background-color: var(--color-channel-6);
             }
         }
         &:nth-of-type(7) {
             :deep([data-slot="indicator"]) {
-                background-color: #cdda49;
+                background-color: var(--color-channel-7);
             }
         }
         &:nth-of-type(8) {
             :deep([data-slot="indicator"]) {
-                background-color: #fdc02f;
+                background-color: var(--color-channel-8);
             }
         }
         &:nth-of-type(9) {
             :deep([data-slot="indicator"]) {
-                background-color: #fc5830;
+                background-color: var(--color-channel-9);
             }
         }
         &:nth-of-type(10) {
             :deep([data-slot="indicator"]) {
-                background-color: #785549;
+                background-color: var(--color-channel-10);
             }
         }
         &:nth-of-type(11) {
             :deep([data-slot="indicator"]) {
-                background-color: #9e9e9e;
+                background-color: var(--color-channel-11);
             }
         }
         &:nth-of-type(12) {
             :deep([data-slot="indicator"]) {
-                background-color: #617d8a;
+                background-color: var(--color-channel-12);
             }
         }
         &:nth-of-type(13) {
             :deep([data-slot="indicator"]) {
-                background-color: #cf267d;
+                background-color: var(--color-channel-13);
             }
         }
         &:nth-of-type(14) {
             :deep([data-slot="indicator"]) {
-                background-color: #7a1464;
+                background-color: var(--color-channel-14);
             }
         }
         &:nth-of-type(15) {
             :deep([data-slot="indicator"]) {
-                background-color: #3a7a14;
+                background-color: var(--color-channel-15);
             }
         }
         &:nth-of-type(16) {
             :deep([data-slot="indicator"]) {
-                background-color: #14407a;
+                background-color: var(--color-channel-16);
             }
         }
     }
     ul.aux-unused {
         :deep([data-slot="indicator"]) {
-            background-color: #6b7280 !important;
+            background-color: var(--color-channel-aux-unused) !important;
         }
     }
 
     ul.aux-used {
         :deep([data-slot="indicator"]) {
-            background-color: #0891b2 !important;
+            background-color: var(--color-channel-aux-used) !important;
         }
     }
 
     ul.aux-active {
         :deep([data-slot="indicator"]) {
-            background-color: #22d3ee !important;
+            background-color: var(--color-channel-aux-active) !important;
             box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
         }
     }
@@ -1689,16 +1689,16 @@ onUnmounted(() => {
         border-radius: 3px;
     }
     .ch1 {
-        background-color: #e24761;
+        background-color: var(--color-channel-1);
     }
     .ch2 {
-        background-color: #49c747;
+        background-color: var(--color-channel-2);
     }
     .ch3 {
-        background-color: #477ac7;
+        background-color: var(--color-channel-3);
     }
     .ch4 {
-        background-color: #f5a623;
+        background-color: var(--color-channel-4);
     }
 }
 
@@ -1711,52 +1711,52 @@ onUnmounted(() => {
     color: var(--text);
     .line {
         &:nth-child(1) {
-            stroke: #e24761;
+            stroke: var(--color-channel-1);
         }
         &:nth-child(2) {
-            stroke: #49c747;
+            stroke: var(--color-channel-2);
         }
         &:nth-child(3) {
-            stroke: #477ac7;
+            stroke: var(--color-channel-3);
         }
         &:nth-child(4) {
-            stroke: #f5a623;
+            stroke: var(--color-channel-4);
         }
         &:nth-child(5) {
-            stroke: #159588;
+            stroke: var(--color-channel-5);
         }
         &:nth-child(6) {
-            stroke: #50ae55;
+            stroke: var(--color-channel-6);
         }
         &:nth-child(7) {
-            stroke: #cdda49;
+            stroke: var(--color-channel-7);
         }
         &:nth-child(8) {
-            stroke: #fdc02f;
+            stroke: var(--color-channel-8);
         }
         &:nth-child(9) {
-            stroke: #fc5830;
+            stroke: var(--color-channel-9);
         }
         &:nth-child(10) {
-            stroke: #785549;
+            stroke: var(--color-channel-10);
         }
         &:nth-child(11) {
-            stroke: #9e9e9e;
+            stroke: var(--color-channel-11);
         }
         &:nth-child(12) {
-            stroke: #7a6614;
+            stroke: var(--color-channel-12);
         }
         &:nth-child(13) {
-            stroke: #cf267d;
+            stroke: var(--color-channel-13);
         }
         &:nth-child(14) {
-            stroke: #7a1464;
+            stroke: var(--color-channel-14);
         }
         &:nth-child(15) {
-            stroke: #3a7a14;
+            stroke: var(--color-channel-15);
         }
         &:nth-child(16) {
-            stroke: #14407a;
+            stroke: var(--color-channel-16);
         }
     }
 }

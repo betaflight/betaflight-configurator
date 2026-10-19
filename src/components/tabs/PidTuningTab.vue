@@ -1271,13 +1271,13 @@ onMounted(async () => {
 
 /* ── PID row colors (not under .tab-pid_tuning) ──────────────────── */
 .pid_roll {
-    background-color: #e24761;
+    background-color: var(--color-axis-roll);
 }
 .pid_pitch {
-    background-color: #49c747;
+    background-color: var(--color-axis-pitch);
 }
 .pid_yaw {
-    background-color: #477ac7;
+    background-color: var(--color-axis-yaw);
 }
 .pid_roll,
 .pid_pitch,

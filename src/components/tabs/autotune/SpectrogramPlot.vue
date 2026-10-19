@@ -2,7 +2,7 @@
     <UiBox :title="$t('autotuneSpectrogramTitle')" type="neutral" collapsible>
         <div ref="container" class="w-full flex flex-col gap-3">
             <div v-for="axis in visibleAxes" :key="axis.key">
-                <span class="text-xs font-bold" :style="{ color: axis.color }">
+                <span class="text-xs font-bold" :style="{ color: `var(${axis.colorVar})` }">
                     {{ $t(axis.labelKey) }}
                 </span>
                 <canvas
@@ -20,13 +20,15 @@ import { ref, watch, onMounted, onUnmounted, nextTick, type ComponentPublicInsta
 import { useAutotuneStore } from "@/stores/autotune";
 import UiBox from "../../elements/UiBox.vue";
 import * as d3 from "d3";
+import { getCssVar } from "@/js/utils/cssVar";
 import type { AxisName } from "@/composables/useAutotune";
 import type { Spectrogram } from "@/js/blackbox/spectral_analysis";
 
 interface AxisDef {
     key: AxisName;
     labelKey: string;
-    color: string;
+    /** The axis colour's custom property, from theme.css. */
+    colorVar: string;
 }
 
 const store = useAutotuneStore();
@@ -34,9 +36,9 @@ const container = ref<HTMLElement | null>(null);
 const canvasRefs: Partial<Record<AxisName, HTMLCanvasElement>> = {};
 
 const AXIS_DEFS: AxisDef[] = [
-    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761" },
-    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747" },
-    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7" },
+    { key: "roll", labelKey: "autotuneAxisRoll", colorVar: "--color-axis-roll" },
+    { key: "pitch", labelKey: "autotuneAxisPitch", colorVar: "--color-axis-pitch" },
+    { key: "yaw", labelKey: "autotuneAxisYaw", colorVar: "--color-axis-yaw" },
 ];
 
 const MARGIN = { top: 4, right: 10, bottom: 24, left: 55 };
@@ -104,7 +106,7 @@ function drawAll() {
         if (!canvas || !spec || spec.numSegments === 0) {
             continue;
         }
-        drawSpectrogram(canvas, spec, axis.color);
+        drawSpectrogram(canvas, spec, getCssVar(axis.colorVar));
     }
 }
 

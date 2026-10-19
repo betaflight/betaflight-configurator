@@ -67,7 +67,12 @@ const phaseSvg = ref<SVGSVGElement | null>(null);
 const sensitivitySvg = ref<SVGSVGElement | null>(null);
 const stepSvg = ref<SVGSVGElement | null>(null);
 
-const AXIS_COLORS: Record<AxisName, string> = { roll: "#e24761", pitch: "#49c747", yaw: "#477ac7" };
+// d3 sets these as SVG attributes, which resolve `var()` like the surface colours below.
+const AXIS_COLORS: Record<AxisName, string> = {
+    roll: "var(--color-axis-roll)",
+    pitch: "var(--color-axis-pitch)",
+    yaw: "var(--color-axis-yaw)",
+};
 const AXES: { key: AxisName; labelKey: string; colorClass: string }[] = [
     { key: "roll", labelKey: "autotuneAxisRoll", colorClass: "toggle-roll" },
     { key: "pitch", labelKey: "autotuneAxisPitch", colorClass: "toggle-pitch" },

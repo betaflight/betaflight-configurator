@@ -24,6 +24,35 @@
     --color-primary-950: #482100;
 
     --color-neutral-850: oklch(23.5% 0 0);
+
+    /* Graph series, the same in every theme. Tailwind turns each into utilities (`bg-axis-roll`);
+       canvas and d3 code reads them with `getCssVar()`. */
+    --color-axis-roll: #e24761;
+    --color-axis-pitch: #49c747;
+    --color-axis-yaw: #477ac7;
+    --color-axis-throttle: #f5a623;
+
+    /* Receiver channels: the four sticks, then AUX 1-12. */
+    --color-channel-1: var(--color-axis-roll);
+    --color-channel-2: var(--color-axis-pitch);
+    --color-channel-3: var(--color-axis-yaw);
+    --color-channel-4: var(--color-axis-throttle);
+    --color-channel-5: #159588;
+    --color-channel-6: #50ae55;
+    --color-channel-7: #cdda49;
+    --color-channel-8: #fdc02f;
+    --color-channel-9: #fc5830;
+    --color-channel-10: #785549;
+    --color-channel-11: #9e9e9e;
+    --color-channel-12: #617d8a;
+    --color-channel-13: #cf267d;
+    --color-channel-14: #7a1464;
+    --color-channel-15: #3a7a14;
+    --color-channel-16: #14407a;
+    /* An AUX channel's bar by its use in Modes and Adjustments. */
+    --color-channel-aux-unused: #6b7280;
+    --color-channel-aux-used: #0891b2;
+    --color-channel-aux-active: #22d3ee;
 }
 
 html {
