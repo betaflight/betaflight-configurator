@@ -18,6 +18,7 @@ import FlightPlanTab from "../components/tabs/FlightPlanTab.vue";
 import LedStripTab from "../components/tabs/LedStripTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 import MotorsTab from "../components/tabs/MotorsTab.vue";
+import FrameTab from "../components/tabs/FrameTab.vue";
 import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 import OsdTab from "../components/tabs/OsdTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
@@ -49,6 +50,7 @@ export const VueTabComponents = {
     led_strip: LedStripTab,
     failsafe: FailsafeTab,
     motors: MotorsTab,
+    frame: FrameTab,
     receiver: ReceiverTab,
     osd: OsdTab,
     setup: SetupTab,

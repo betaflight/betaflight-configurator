@@ -20,6 +20,7 @@
  */
 
 import { configHasBuildOption, type BuildOptionsConfig } from "../../composables/useBuildOptions";
+import { resolveMixerModelFile } from "../../js/model";
 
 /**
  * When an entry is listed: `disconnected` before a connection, `connected` and
@@ -39,6 +40,8 @@ export interface SidebarItem {
     buildOptions?: string[];
     /** Shown when this firmware feature is enabled. */
     feature?: string;
+    /** Shown only for a quad mixer (Quad +, Quad X, Quad X 1234: four motors). */
+    quadOnly?: boolean;
     hideInSidebar?: boolean;
 }
 
@@ -46,6 +49,18 @@ export interface SidebarVisibilityContext {
     expertMode: boolean;
     config?: BuildOptionsConfig | null;
     features?: { isEnabled?: (featureName: string) => boolean } | null;
+    /** mixerConfig.mixer, 1-based; 0 before MSP_MIXER_CONFIG arrives. */
+    mixer?: number;
+    /** motorConfig.motor_count: a generic Custom mixer with 4 motors is a quad (a deadcat mmix). */
+    motorCount?: number;
+}
+
+/**
+ * A quad mixer: the frame test and the filter autotune are built for four motors in a quad. A generic Custom
+ * mixer with 4 motors counts too (as the 3D model does): that is where a deadcat mmix lives.
+ */
+export function isQuadMixer(mixer: number | undefined, motorCount = 0): boolean {
+    return mixer !== undefined && mixer > 0 && resolveMixerModelFile(mixer, motorCount) === "quad_x";
 }
 
 export const sidebarItems: SidebarItem[] = [
@@ -75,6 +90,7 @@ export const sidebarItems: SidebarItem[] = [
     },
     { key: "gps", mode: "connected", i18n: "tabGPS", icon: "i-lucide-map-pin", buildOptions: ["USE_GPS"] },
     { key: "motors", mode: "connected", i18n: "tabMotorTesting", icon: "i-lucide-fan" },
+    { key: "frame", mode: "connected", i18n: "tabFrame", icon: "i-lucide-drone", quadOnly: true },
     { key: "osd", mode: "connected", i18n: "tabOsd", icon: "i-lucide-monitor", feature: "OSD" },
     { key: "vtx", mode: "connected", i18n: "tabVtx", icon: "i-lucide-radio-tower" },
     { key: "led_strip", mode: "connected", i18n: "tabLedStrip", icon: "i-lucide-lightbulb", feature: "LED_STRIP" },
@@ -107,6 +123,9 @@ export function isItemVisible(item: SidebarItem, ctx: SidebarVisibilityContext):
         return false;
     }
     if (item.feature && !ctx.features?.isEnabled?.(item.feature)) {
+        return false;
+    }
+    if (item.quadOnly && !isQuadMixer(ctx.mixer, ctx.motorCount)) {
         return false;
     }
     return true;
