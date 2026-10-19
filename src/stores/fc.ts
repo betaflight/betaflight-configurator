@@ -359,21 +359,6 @@ export function createInitialState(): FcState {
             small_angle: 0,
             gyro_cal_on_first_arm: 0,
         },
-        fcConfig: {
-            loopTime: 0,
-        },
-        misc: {
-            // DEPRECATED = only used to store values that are written back to the fc as-is, do NOT use for any other purpose
-            failsafe_throttle: 0,
-            gps_baudrate: 0,
-            multiwiicurrentoutput: 0,
-            placeholder2: 0,
-            vbatscale: 0,
-            vbatmincellvoltage: 0,
-            vbatmaxcellvoltage: 0,
-            vbatwarningcellvoltage: 0,
-            batterymetertype: 1, // 1=ADC, 2=ESC
-        },
         motorConfig: {
             minthrottle: 0,
             maxthrottle: 0,

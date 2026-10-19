@@ -18,6 +18,7 @@
     "typecheck": "vue-tsc --noEmit",
     "generate:build-options": "node scripts/generate-build-options.mjs",
     "generate:debug-modes": "node scripts/generate-debug-modes.mjs",
+    "check:msp-codes": "node scripts/check-msp-codes.mjs",
     "android:dev": "node capacitor.config.generator.mjs --dev && npx cap run android",
     "android:open": "vite build && node capacitor.config.generator.mjs && npx cap open android",
     "android:run": "vite build && node capacitor.config.generator.mjs && npx cap run android",

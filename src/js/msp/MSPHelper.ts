@@ -408,7 +408,7 @@ class MspHelper {
                 console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
             }
 
-            if (code === MSPCodes.MSP_SET_REBOOT) {
+            if (code === MSPCodes.MSP_REBOOT) {
                 (TABS.onboard_logging as { mscRebootFailedCallback: () => void }).mscRebootFailedCallback();
             }
             return true;
@@ -757,7 +757,7 @@ class MspHelper {
         this.applyArmingState({ armingDisabled: false, runawayTakeoffPreventionDisabled: true }, onCompleteCallback);
     }
 
-    // Sends MSP_ARMING_DISABLE only when the FC is not already in `target`.
+    // Sends MSP_SET_ARMING_DISABLED only when the FC is not already in `target`.
     private applyArmingState(target: ArmingState, onCompleteCallback?: () => void) {
         const fcStore = useFlightControllerStore();
         if (
@@ -771,7 +771,7 @@ class MspHelper {
         fcStore.config.armingDisabled = target.armingDisabled;
         fcStore.config.runawayTakeoffPreventionDisabled = target.runawayTakeoffPreventionDisabled;
 
-        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, this.crunch(MSPCodes.MSP_ARMING_DISABLE), false, () => {
+        MSP.send_message(MSPCodes.MSP_SET_ARMING_DISABLED, this.crunch(MSPCodes.MSP_SET_ARMING_DISABLED), false, () => {
             if (target.armingDisabled) {
                 gui_log(i18n.getMessage("armingDisabled"));
             } else {
@@ -1013,7 +1013,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.sensorData.altitude = Number.parseFloat((data.read32() / 100.0).toFixed(2));
     },
 
-    [MSPCodes.MSP_SONAR](data) {
+    [MSPCodes.MSP_SONAR_ALTITUDE](data) {
         const fcStore = useFlightControllerStore();
         fcStore.sensorData.sonar = data.read32();
     },
@@ -1199,32 +1199,6 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             fcStore.armingConfig.gyro_cal_on_first_arm = data.readU8();
         }
-    },
-
-    [MSPCodes.MSP_LOOP_TIME](data) {
-        const fcStore = useFlightControllerStore();
-        fcStore.fcConfig.loopTime = data.readU16();
-    },
-
-    [MSPCodes.MSP_MISC](data) {
-        const fcStore = useFlightControllerStore();
-        // 22 bytes
-        fcStore.rxConfig.midrc = data.readU16();
-        fcStore.motorConfig.minthrottle = data.readU16(); // 0-2000
-        fcStore.motorConfig.maxthrottle = data.readU16(); // 0-2000
-        fcStore.motorConfig.mincommand = data.readU16(); // 0-2000
-        fcStore.misc.failsafe_throttle = data.readU16(); // 1000-2000
-        fcStore.gpsConfig.provider = data.readU8();
-        fcStore.misc.gps_baudrate = data.readU8();
-        fcStore.gpsConfig.ublox_sbas = data.readU8();
-        fcStore.misc.multiwiicurrentoutput = data.readU8();
-        fcStore.rssiConfig.channel = data.readU8();
-        fcStore.misc.placeholder2 = data.readU8();
-        data.read16(); // was mag_declination
-        fcStore.misc.vbatscale = data.readU8(); // was fcStore.misc.vbatscale - 10-200
-        fcStore.misc.vbatmincellvoltage = data.readU8() / 10; // 10-50
-        fcStore.misc.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
-        fcStore.misc.vbatwarningcellvoltage = data.readU8() / 10;
     },
 
     [MSPCodes.MSP_MOTOR_CONFIG](data) {
@@ -1499,7 +1473,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         console.log("Accelerometer trimms saved.");
     },
 
-    [MSPCodes.MSP_GPS_SV_INFO](data) {
+    [MSPCodes.MSP_GPSSVINFO](data) {
         const fcStore = useFlightControllerStore();
         if (data.byteLength > 0) {
             const numCh = data.readU8();
@@ -1552,7 +1526,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.boardAlignment.yaw = data.read16();
     },
 
-    [MSPCodes.MSP_SET_REBOOT](data) {
+    [MSPCodes.MSP_REBOOT](data) {
         const rebootType = data.read8();
         if (rebootType === this.REBOOT_TYPES.MSC || rebootType === this.REBOOT_TYPES.MSC_UTC) {
             if (data.read8() === 0) {
@@ -2100,7 +2074,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         }
     },
 
-    [MSPCodes.MSP2_GYRO_SENSOR](data) {
+    [MSPCodes.MSP2_GYRO_SENSOR_ACTIVE](data) {
         const fcStore = useFlightControllerStore();
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             fcStore.gyroSensor.gyro_count = data.readU8();
@@ -2378,10 +2352,6 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         console.log("PID controller changed");
     },
 
-    [MSPCodes.MSP_SET_LOOP_TIME]() {
-        console.log("Looptime saved");
-    },
-
     [MSPCodes.MSP_SET_ARMING_CONFIG]() {
         console.log("Arming config saved");
     },
@@ -2470,7 +2440,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         console.log("Copy profile");
     },
 
-    [MSPCodes.MSP_ARMING_DISABLE]() {
+    [MSPCodes.MSP_SET_ARMING_DISABLED]() {
         console.log("Arming disable");
     },
 
@@ -2686,32 +2656,6 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
             buffer.push8(fcStore.armingConfig.gyro_cal_on_first_arm);
         }
-    },
-
-    [MSPCodes.MSP_SET_LOOP_TIME](buffer) {
-        const fcStore = useFlightControllerStore();
-        buffer.push16(fcStore.fcConfig.loopTime);
-    },
-
-    [MSPCodes.MSP_SET_MISC](buffer) {
-        const fcStore = useFlightControllerStore();
-        buffer
-            .push16(fcStore.rxConfig.midrc ?? 0)
-            .push16(fcStore.motorConfig.minthrottle)
-            .push16(fcStore.motorConfig.maxthrottle)
-            .push16(fcStore.motorConfig.mincommand)
-            .push16(fcStore.misc.failsafe_throttle)
-            .push8(fcStore.gpsConfig.provider)
-            .push8(fcStore.misc.gps_baudrate)
-            .push8(fcStore.gpsConfig.ublox_sbas)
-            .push8(fcStore.misc.multiwiicurrentoutput)
-            .push8(fcStore.rssiConfig.channel)
-            .push8(fcStore.misc.placeholder2)
-            .push16(0) // was mag_declination
-            .push8(fcStore.misc.vbatscale)
-            .push8(Math.round(fcStore.misc.vbatmincellvoltage * 10))
-            .push8(Math.round(fcStore.misc.vbatmaxcellvoltage * 10))
-            .push8(Math.round(fcStore.misc.vbatwarningcellvoltage * 10));
     },
 
     [MSPCodes.MSP_SET_MOTOR_CONFIG](buffer) {
@@ -3165,7 +3109,7 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.copyProfile.srcProfile);
     },
 
-    [MSPCodes.MSP_ARMING_DISABLE](buffer) {
+    [MSPCodes.MSP_SET_ARMING_DISABLED](buffer) {
         const fcStore = useFlightControllerStore();
         let value;
         if (fcStore.config.armingDisabled) {
