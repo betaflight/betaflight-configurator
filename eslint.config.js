@@ -10,7 +10,7 @@ export default [
     {
         // Build output has to be ignored globally rather than per-config: a `dist/` left in the
         // tree otherwise gets linted as source, and minified bundles produce thousands of errors.
-        ignores: ["src/js/webworkers/**", "dist/**", "src/dist/**"],
+        ignores: ["dist/**", "src/dist/**"],
     },
     {
         files: ["**/*.js", "**/*.ts", "**/*.vue"],
