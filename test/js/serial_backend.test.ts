@@ -896,7 +896,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+    it("sends MSP_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
         const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
@@ -913,7 +913,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             reinitializeConnection();
 
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(connectionStore.connectionValid).toBe(false);
 
@@ -1042,7 +1042,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
         resetMocks();
     });
 
-    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_SET_REBOOT)", () => {
+    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_REBOOT)", () => {
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.autoConnect = true;
@@ -1056,7 +1056,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
             reinitializeConnection();
 
             // Virtual path just toggles the link — no reboot command.
-            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
             expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
             // Mocked enableArming doesn't auto-invoke its callback — drive it to finish the close.

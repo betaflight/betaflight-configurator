@@ -107,7 +107,7 @@ describe("useOnboardLoggingData", () => {
 
         useOnboardLoggingData().rebootToMassStorage();
 
-        expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_SET_REBOOT, [rebootType], false);
+        expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_REBOOT, [rebootType], false);
     });
 
     it("tells a cancelled read from a failed one", () => {
