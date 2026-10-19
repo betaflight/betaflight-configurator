@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Ported from betaflight-blackbox-log-viewer/src/decoders.js
  *
@@ -19,12 +40,31 @@ import {
     signExtend2Bit,
 } from "./datastream";
 
+// The tag readers are patched onto ArrayDataStream's prototype when this module is imported;
+// declaring them here puts them on the class type for every importer of this module.
+declare module "./datastream" {
+    interface ArrayDataStream {
+        readTag2_3S32(values: number[]): void;
+        readTag2_3SVariable(values: number[]): void;
+        readTag8_4S16_v1(values: number[]): void;
+        readTag8_4S16_v2(values: number[]): void;
+        readTag8_8SVB(values: number[], valueCount: number): void;
+    }
+}
+
+/** Shared "case 0" branch of both Tag2_3S readers: three 2-bit values packed in `leadByte`. */
+function readTag2_3S_case0(values: number[], leadByte: number): void {
+    values[0] = signExtend2Bit((leadByte >> 4) & 0x03);
+    values[1] = signExtend2Bit((leadByte >> 2) & 0x03);
+    values[2] = signExtend2Bit(leadByte & 0x03);
+}
+
 /**
  * Shared decoder for the "case 3" branch of both readTag2_3S32 and
  * readTag2_3SVariable: three values, each encoded with 1/2/3/4 bytes as
  * selected by consecutive pairs of bits in `leadByte`.
  */
-function readTag2_3S_case3(stream, values, leadByte) {
+function readTag2_3S_case3(stream: ArrayDataStream, values: number[], leadByte: number): void {
     for (let i = 0; i < 3; i++) {
         switch (leadByte & 0x03) {
             case 0:
@@ -56,14 +96,12 @@ function readTag2_3S_case3(stream, values, leadByte) {
     }
 }
 
-ArrayDataStream.prototype.readTag2_3S32 = function (values) {
+ArrayDataStream.prototype.readTag2_3S32 = function (this: ArrayDataStream, values: number[]) {
     let leadByte = this.readByte();
 
     switch (leadByte >> 6) {
         case 0:
-            values[0] = signExtend2Bit((leadByte >> 4) & 0x03);
-            values[1] = signExtend2Bit((leadByte >> 2) & 0x03);
-            values[2] = signExtend2Bit(leadByte & 0x03);
+            readTag2_3S_case0(values, leadByte);
             break;
         case 1:
             values[0] = signExtend4Bit(leadByte & 0x0f);
@@ -84,14 +122,12 @@ ArrayDataStream.prototype.readTag2_3S32 = function (values) {
     }
 };
 
-ArrayDataStream.prototype.readTag2_3SVariable = function (values) {
-    let leadByte = this.readByte();
+ArrayDataStream.prototype.readTag2_3SVariable = function (this: ArrayDataStream, values: number[]) {
+    const leadByte = this.readByte();
 
     switch (leadByte >> 6) {
         case 0:
-            values[0] = signExtend2Bit((leadByte >> 4) & 0x03);
-            values[1] = signExtend2Bit((leadByte >> 2) & 0x03);
-            values[2] = signExtend2Bit(leadByte & 0x03);
+            readTag2_3S_case0(values, leadByte);
             break;
         case 1: {
             values[0] = signExtend5Bit((leadByte & 0x3e) >> 1);
@@ -114,12 +150,13 @@ ArrayDataStream.prototype.readTag2_3SVariable = function (values) {
     }
 };
 
-ArrayDataStream.prototype.readTag8_4S16_v1 = function (values) {
-    const FIELD_ZERO = 0;
-    const FIELD_4BIT = 1;
-    const FIELD_8BIT = 2;
-    const FIELD_16BIT = 3;
+// Tag8_4S16 field sizes, two selector bits per field.
+const FIELD_ZERO = 0;
+const FIELD_4BIT = 1;
+const FIELD_8BIT = 2;
+const FIELD_16BIT = 3;
 
+ArrayDataStream.prototype.readTag8_4S16_v1 = function (this: ArrayDataStream, values: number[]) {
     let selector = this.readByte();
 
     for (let i = 0; i < 4; i++) {
@@ -149,12 +186,7 @@ ArrayDataStream.prototype.readTag8_4S16_v1 = function (values) {
     }
 };
 
-ArrayDataStream.prototype.readTag8_4S16_v2 = function (values) {
-    const FIELD_ZERO = 0;
-    const FIELD_4BIT = 1;
-    const FIELD_8BIT = 2;
-    const FIELD_16BIT = 3;
-
+ArrayDataStream.prototype.readTag8_4S16_v2 = function (this: ArrayDataStream, values: number[]) {
     let selector = this.readByte();
     let nibbleIndex = 0;
     let buffer = 0;
@@ -201,7 +233,7 @@ ArrayDataStream.prototype.readTag8_4S16_v2 = function (values) {
     }
 };
 
-ArrayDataStream.prototype.readTag8_8SVB = function (values, valueCount) {
+ArrayDataStream.prototype.readTag8_8SVB = function (this: ArrayDataStream, values: number[], valueCount: number) {
     if (valueCount === 1) {
         values[0] = this.readSignedVB();
     } else {
