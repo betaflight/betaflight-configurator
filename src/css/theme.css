@@ -141,6 +141,42 @@ html {
     --chart-grid-line-color: var(--surface-400);
     --chart-curve-color: var(--error-500);
     --chart-text-color: var(--text);
+
+    /* Fixed drawing colours, the same in every theme. Canvas, three.js and OpenLayers read
+       them with `getCssVar()`; CSS and d3 use `var()`. */
+    --chart-reference-color: #999;
+    --chart-danger-color: #c0392b;
+
+    /* Rates curves and their live stick positions. */
+    --rates-curve-roll: #ff0000;
+    --rates-curve-pitch: #00ff00;
+    --rates-curve-yaw: #0000ff;
+    --rates-stick-roll: #ff8080;
+    --rates-stick-pitch: #80ff80;
+    --rates-stick-yaw: #8080ff;
+    --rates-label-color: #888888;
+    --rates-throttle-curve: #ffbb00;
+
+    /* The magnetometer calibration scene and its 2D projections. */
+    --scene-background: #1a1a2e;
+    --scene-axis-x: #ff4444;
+    --scene-axis-y: #44ff44;
+    --scene-axis-z: #4444ff;
+    --scene-field: #ff8800;
+    --scene-marker: #ffff00;
+    --scene-compass: #aabbcc;
+    /* White at 75%, 10% and 30% over --scene-background, flattened. */
+    --scene-overlay-text: #c6c6cb;
+    --scene-overlay-text-active: #fff;
+    --scene-overlay-hover: #313143;
+    --scene-overlay-active: #5f5f6d;
+
+    /* Flight plan map. */
+    --map-route: #ff00ff;
+    --map-waypoint: #0080ff;
+    --map-waypoint-dragging: #00ff00;
+    --map-waypoint-selected: #ff8c00;
+    --map-waypoint-text: #ffffff;
 }
 
 .dark {

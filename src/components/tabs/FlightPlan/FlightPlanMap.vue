@@ -31,6 +31,7 @@ import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useMapViewport } from "@/composables/useMapViewport";
 import { ipCoordinates } from "@/js/utils/ipGeolocation";
+import { getCssVar } from "@/js/utils/cssVar";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -144,7 +145,7 @@ const setupMapLayers = () => {
         source: new SourceVector(),
         style: new Style({
             stroke: new Stroke({
-                color: "#FF00FF", // Magenta
+                color: getCssVar("--map-route"),
                 width: 3,
             }),
         }),
@@ -365,18 +366,18 @@ const updateMapFeatures = (autoFit = true) => {
         const isBeingDragged = draggingWaypointUid.value === wp.uid;
 
         // Determine color: green for dragging, orange for selected, blue for normal
-        let fillColor = "#0080FF"; // Blue for normal
+        let fillColor = getCssVar("--map-waypoint");
         let radius = 10;
         let strokeWidth = 2;
         let fontSize = "bold 12px sans-serif";
 
         if (isBeingDragged) {
-            fillColor = "#00FF00"; // Green for dragging
+            fillColor = getCssVar("--map-waypoint-dragging");
             radius = 16;
             strokeWidth = 3;
             fontSize = "bold 14px sans-serif";
         } else if (isSelected) {
-            fillColor = "#FF8C00"; // Orange for selected
+            fillColor = getCssVar("--map-waypoint-selected");
             radius = 14;
             strokeWidth = 3;
             fontSize = "bold 13px sans-serif";
@@ -391,14 +392,14 @@ const updateMapFeatures = (autoFit = true) => {
                         color: fillColor,
                     }),
                     stroke: new Stroke({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                         width: strokeWidth,
                     }),
                 }),
                 text: new Text({
                     text: String(wp.order + 1),
                     fill: new Fill({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                     }),
                     font: fontSize,
                 }),
